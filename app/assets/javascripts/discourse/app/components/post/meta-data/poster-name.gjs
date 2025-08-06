@@ -41,28 +41,28 @@ export default class PostMetaDataPosterName extends Component {
     return applyValueTransformer(
       "post-meta-data-poster-name-suppress-similar-name",
       true,
-      { post: this.args.post, name: this.name }
+      { post: this.args.post, user: this.user, name: this.name }
     );
   }
 
   get name() {
-    return userPrioritizedName(this.args.post);
+    return userPrioritizedName(this.user);
   }
 
   get nameFirst() {
-    return this.name === this.args.post.name;
+    return this.name === this.user.name;
   }
 
   get primaryGroupHref() {
-    return getURL(`/g/${this.args.post.primary_group_name}`);
+    return getURL(`/g/${this.user.primary_group_name}`);
   }
 
   get shouldDisplaySecondName() {
     return (
-      this.args.post.name &&
+      this.user.name &&
       this.siteSettings.display_name_on_posts &&
-      this.#sanitizeName(this.args.post.name) !==
-        this.#sanitizeName(this.args.post.username)
+      this.#sanitizeName(this.user.name) !==
+        this.#sanitizeName(this.user.username)
     );
   }
 
@@ -71,20 +71,17 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get userTitle() {
-    return applyValueTransformer(
-      "poster-name-user-title",
-      this.args.post.user_title,
-      {
-        post: this.args.post,
-      }
-    );
+    return applyValueTransformer("poster-name-user-title", this.user.title, {
+      post: this.args.post,
+      user: this.user,
+    });
   }
 
   get titleClassNames() {
     const classNames = [this.userTitle];
 
-    if (this.args.post.title_is_group && this.args.post.primary_group_name) {
-      classNames.push(this.args.post.primary_group_name);
+    if (this.args.post.title_is_group && this.user.primary_group_name) {
+      classNames.push(this.user.primary_group_name);
     }
 
     return classNames.map(
@@ -95,6 +92,7 @@ export default class PostMetaDataPosterName extends Component {
 
   get additionalClasses() {
     return applyValueTransformer("poster-name-class", [], {
+      post: this.args.post,
       user: this.user,
     });
   }
@@ -121,7 +119,7 @@ export default class PostMetaDataPosterName extends Component {
     <div class="names trigger-user-card">
       <PluginOutlet
         @name="post-meta-data-poster-name"
-        @outletArgs={{lazyHash post=@post}}
+        @outletArgs={{lazyHash post=@post user=this.user}}
       >
         <span
           class={{concatClass
@@ -142,9 +140,14 @@ export default class PostMetaDataPosterName extends Component {
           {{! use the position argument to choose between the first and second name if needed}}
           <PluginOutlet
             @name="post-meta-data-poster-name-user-link"
-            @outletArgs={{lazyHash position="first" name=this.name post=@post}}
+            @outletArgs={{lazyHash
+              position="first"
+              name=this.name
+              post=@post
+              user=this.user
+            }}
           >
-            <UserLink @user={{@post}}>
+            <UserLink @user={{@user}}>
               {{this.name}}
               {{#if this.showGlyph}}
                 {{#if (or @post.moderator @post.group_moderator)}}
@@ -173,6 +176,7 @@ export default class PostMetaDataPosterName extends Component {
                   position="second"
                   name=this.name
                   post=@post
+                  user=this.user
                 }}
               >
                 <UserLink @user={{@post}}>

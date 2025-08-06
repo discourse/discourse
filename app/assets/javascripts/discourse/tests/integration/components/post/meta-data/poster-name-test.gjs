@@ -106,9 +106,6 @@ module(
 
     test("renders badges that are passed in", async function (assert) {
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
       this.post.badges_granted = [
         { badge: { id: 1, icon: "heart", slug: "badge1", name: "Badge One" } },
         { badge: { id: 2, icon: "target", slug: "badge2", name: "Badge Two" } },
@@ -139,9 +136,6 @@ module(
 
     test("api.addPosterIcons", async function (assert) {
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
 
       withPluginApi((api) => {
         api.addPosterIcons((_, { username }) => {
@@ -190,9 +184,6 @@ module(
 
     test("poster name additional classes", async function (assert) {
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
       withPluginApi((api) => {
         api.registerValueTransformer(
           "poster-name-class",

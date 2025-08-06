@@ -444,7 +444,11 @@ export default class Post extends RestModel {
 
   @cached
   get user() {
-    return this.store.createRecord("user", {
+    // Using store.createRecord can lead to issues when updating existing models in the cache, potentially causing
+    // rendering errors if the cached model is currently being rendered.
+    // Instead, User.create ensures we get a fresh instance every time without affecting the cache.
+    // The @cached decorator ensures this computation only happens once and is cached until dependencies are updated.
+    return User.create({
       id: this.user_id,
       username: this.username,
       name: this.display_username,

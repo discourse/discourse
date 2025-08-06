@@ -754,12 +754,10 @@ module("Integration | Component | Post", function (hooks) {
 
   test("shows user status if enabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = true;
-    const status = {
+    this.post.user_status = {
       emoji: "tooth",
       description: "off to dentist",
     };
-
-    this.post.user = this.store.createRecord("user", { status });
 
     await renderComponent(this.post);
 
@@ -768,12 +766,10 @@ module("Integration | Component | Post", function (hooks) {
 
   test("doesn't show user status if disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
-    const status = {
+    this.post.user_status = {
       emoji: "tooth",
       description: "off to dentist",
     };
-
-    this.post.user = this.store.createRecord("user", { status });
 
     await renderComponent(this.post);
 

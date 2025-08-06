@@ -214,24 +214,8 @@ export default class User extends RestModel.extend(Evented) {
   @service appEvents;
   @service userTips;
 
-  @tracked admin;
-  @tracked avatar_template;
-  @tracked custom_fields;
-  @tracked dismissed_banner_key;
   @tracked do_not_disturb_until;
-  @tracked flair_bg_color;
-  @tracked flair_color;
-  @tracked flair_group_id;
-  @tracked flair_name;
-  @tracked flair_url;
-  @tracked id;
-  @tracked moderator;
-  @tracked name;
-  @tracked primary_group_name;
   @tracked status;
-  @tracked title;
-  @tracked trust_level;
-  @tracked username;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
