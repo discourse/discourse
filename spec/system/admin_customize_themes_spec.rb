@@ -83,6 +83,7 @@ describe "Admin Customize Themes", type: :system do
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
     visit("/admin/customize/themes/#{theme.id}")
+    expect(page).to have_css(".system-theme-info")
     expect(page).to have_css(".title button")
     expect(page).to have_no_css(".title button svg")
     expect(page).to have_no_css(".edit-code")
@@ -109,13 +110,19 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_css(".export")
     expect(page).to have_css(".extra-files")
     expect(page).to have_css(".theme-settings")
+    expect(page).to have_no_css(".system-theme-info")
 
-    allow(theme).to receive(:system?).and_return(true)
+    # Since we're only testing the one theme, we can stub the system? method
+    # for every theme to return true.
+    # This avoids needing to update the theme field data to point to a different theme id.
+    allow_any_instance_of(Theme).to receive(:system?).and_return(true)
+
     visit("/admin/customize/themes/#{theme.id}")
+    expect(page).to have_css(".system-theme-info")
     expect(page).to have_no_css(".created-by")
     expect(page).to have_no_css(".export")
     expect(page).to have_no_css(".extra-files")
-    expect(page).to have_no_css(".theme-settings")
+    expect(page).to have_css(".theme-settings")
   end
 
   describe "when editing theme translations" do
