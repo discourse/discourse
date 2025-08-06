@@ -923,6 +923,45 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when query string is `tags:tag1 tags:tag3,tag4`" do
+        fab!(:tag4) { Fabricate(:tag, name: "tag4") }
+
+        it "should only return topics tagged with tag1 and or tag3 or tag4 " do
+          topic_with_tag1_tag3 = Fabricate(:topic, tags: [tag, tag3])
+          topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
+          topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
+          Fabricate(:topic, tags: [tag3, tag4])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name} tags:#{tag3.name},#{tag4.name}")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_tag1_tag3.id,
+            topic_with_tag1_tag4.id,
+            topic_with_tag1_tag3_tag4.id,
+          )
+        end
+
+        it "should work even if the query is reverted" do
+          topic_with_tag1_tag3 = Fabricate(:topic, tags: [tag, tag3])
+          topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
+          topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
+          Fabricate(:topic, tags: [tag3, tag4])
+          puts Topic.count
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag3.name},#{tag4.name} tags:#{tag.name}")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_tag1_tag3.id,
+            topic_with_tag1_tag4.id,
+            topic_with_tag1_tag3_tag4.id,
+          )
+        end
+      end
       describe "when query string is `tags:tag1,tag2,tag3`" do
         it "should only return topics that are tagged with either tag1, tag2 or tag3" do
           topic_with_tag3 = Fabricate(:topic, tags: [tag3])
