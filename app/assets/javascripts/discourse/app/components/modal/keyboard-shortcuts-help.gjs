@@ -35,10 +35,7 @@ function buildHTML(keys1, keys2, shortcutsDelimiter) {
       keys
         .map((key) => {
           // Turns e.g. c into C and esc into Esc
-          key =
-            key.length === 1
-              ? key.toUpperCase()
-              : key.charAt(0).toUpperCase() + key.slice(1);
+          key = key.charAt(0).toUpperCase() + key.slice(1);
           return `<kbd>${key}</kbd>`;
         })
         .join(" ")
