@@ -165,8 +165,13 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    const urlToStore = url || this.router.currentURL;
-    this.routeHistory.addToHistory(urlToStore);
+    if (url) {
+      this._appURL = url;
+    } else if (this.router.currentURL?.startsWith("/chat")) {
+      this._appURL = "/";
+    } else {
+      this._appURL = this.router.currentURL;
+    }
   }
 
   storeChatURL(url) {

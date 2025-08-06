@@ -164,11 +164,6 @@ export default class AiConversationsSidebarManager extends Service {
     this._removeScrollListener();
   }
 
-  storeAppURL(url = null) {
-    const urlToStore = url || this.router.currentURL;
-    this.routeHistory.addToHistory(urlToStore);
-  }
-
   get lastKnownAppURL() {
     const lastForumUrl = this.routeHistory.history.find((url) => {
       return (

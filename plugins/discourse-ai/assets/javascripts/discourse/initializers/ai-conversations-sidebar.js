@@ -58,12 +58,6 @@ export default {
 
       const router = api.container.lookup("service:router");
 
-      router.on("routeWillChange", (transition) => {
-        if (transition?.to?.name === "discourse-ai-bot-conversations") {
-          aiConversationsSidebarManager.storeAppURL(router.currentURL);
-        }
-      });
-
       router.on("routeDidChange", setSidebarPanel);
     });
   },
