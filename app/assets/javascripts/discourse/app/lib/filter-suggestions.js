@@ -137,7 +137,8 @@ export default class FilterSuggestions {
 
       suggestions = suggestions.concat(userSuggestions);
     } catch {
-      // TODO Handle user search error gracefully
+      // skip suggestions in case of rate limit, etc...
+      suggestions = [];
     }
 
     try {
@@ -163,7 +164,7 @@ export default class FilterSuggestions {
 
       suggestions = suggestions.concat(groupSuggestions);
     } catch {
-      // TODO Handle group search error gracefully
+      // skip suggestions in case of rate limit, etc...
     }
 
     // Limit total results and prioritize exact matches

@@ -909,36 +909,33 @@ after_initialize do
     user_ids = []
     group_ids = []
 
-    names.each do |name|
-      if user_id = User.find_by_username(name)&.id
-        user_ids << user_id
-      elsif group_id = Group.find_by(name: name)&.id
-        group_ids << group_id
-      end
-    end
+    found_users = User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).to_h
+    user_ids.concat(found_users.values)
 
-    conditions = []
-    params = []
+    # a bit edge casey cause we have username_lower for users but not for groups
+    # we share a namespace though so in practice this is ok
+    remaining_names = names - found_users.keys
+    group_ids.concat(Group.where(name: remaining_names).pluck(:id)) if remaining_names.present?
+
+    next scope.where("1 = 0") if user_ids.empty? && group_ids.empty?
+
+    assignment_query = nil
 
     if user_ids.present?
-      conditions << "a.assigned_to_id IN (?) AND a.assigned_to_type = 'User' AND a.active"
-      params << user_ids
+      assignment_query =
+        assignment_query.or(
+          Assignment.active.where(assigned_to_type: "User", assigned_to_id: user_ids),
+        )
     end
 
     if group_ids.present?
-      conditions << "a.assigned_to_id IN (?) AND a.assigned_to_type = 'Group' AND a.active"
-      params << group_ids
+      assignment_query =
+        assignment_query.or(
+          Assignment.active.where(assigned_to_type: "Group", assigned_to_id: group_ids),
+        )
     end
 
-    if conditions.present?
-      sql_conditions = conditions.join(" OR ")
-      scope.where(
-        "topics.id IN (SELECT a.topic_id FROM assignments a WHERE #{sql_conditions})",
-        *params,
-      )
-    else
-      scope
-    end
+    scope.where(id: assignment_query.select(:topic_id))
   end
 
   register_modifier(:topics_filter_options) do |results, guardian|
