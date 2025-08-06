@@ -64,22 +64,9 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   get changedThemePreferences() {
-    // can't check against null, because the default scheme ID is null
-    if (
-      this._initialUserLightColorSchemeId === undefined &&
-      this.defaultTheme
-    ) {
-      this._captureInitialState();
-    }
-
-    const usingDefaultColors = this.isUsingDarkMode
-      ? this._initialUserDarkSchemeId !==
-        this._initialDefaultThemeDarkColorSchemeId
-      : this._initialUserLightSchemeId !==
-        this._initialDefaultThemeLightColorSchemeId;
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
-    return !usingDefaultColors || changedTheme;
+    return changedTheme;
   }
 
   get isUsingDarkMode() {
