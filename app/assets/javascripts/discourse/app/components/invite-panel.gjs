@@ -1,14 +1,15 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
 import TextField from "discourse/components/text-field";
-import htmlSafe from "discourse/helpers/html-safe";
 import { computedI18n } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";

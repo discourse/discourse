@@ -554,6 +554,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def is_last_reply?
+    topic.try(:highest_post_number) == post_number && post_number != 1
+  end
+
   def is_category_description?
     topic.present? && topic.is_category_topic? && is_first_post?
   end
@@ -625,6 +629,7 @@ class Post < ActiveRecord::Base
       )
 
     hiding_again = hidden_at.present?
+    should_reset_bumped_at = is_last_reply? && !whisper?
 
     Post.transaction do
       self.skip_validation = true
@@ -675,6 +680,8 @@ class Post < ActiveRecord::Base
         message_options: options,
       )
     end
+
+    topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def unhide!
@@ -698,6 +705,8 @@ class Post < ActiveRecord::Base
         )
         should_update_user_stat = false
       end
+
+      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
@@ -1162,6 +1171,7 @@ class Post < ActiveRecord::Base
         "track/@src",
         "video/@poster",
         "div/@data-video-src",
+        "div/@data-original-video-src",
       )
 
     links =
@@ -1326,15 +1336,22 @@ class Post < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+    get_localization(locale).present?
   end
 
   def in_user_locale?
-    locale == I18n.locale.to_s
+    LocaleNormalizer.is_same?(locale, I18n.locale)
   end
 
   def get_localization(locale = I18n.locale)
-    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    locale_str = locale.to_s.sub("-", "_")
+
+    # prioritise exact match
+    if match = post_localizations.find { |l| l.locale == locale_str }
+      return match
+    end
+
+    post_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

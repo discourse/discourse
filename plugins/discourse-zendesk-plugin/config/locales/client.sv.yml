@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    topic:
+      create_zendesk_issue: "Skapa Zendesk-ärende"
+      view_zendesk_issue: "Visa på Zendesk"
+    zendesk:
+      credentials_not_setup: Du har inte konfigurerat dina Zendesk-autentiseringsuppgifter.
+      url_not_set: Din Zendesk-URL har för tillfället inte ställts in.
+      general_error: Något gick fel.
+  site_settings:
+    zendesk_url: Din Zendesk-URL, t.ex. https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: Aktivera Zendesk-tillägget
+    zendesk_jobs_api_token: API-token för Zendesk-autentisering
+    zendesk_jobs_email: E-postadress som ska användas för Zendesk-autentisering
+    zendesk_job_push_all_posts: Gör alla inlägg i ett ämne till Zendesk-kommentarer? Om detta inaktiveras kommer endast det första inlägget att flyttas till Zendesk.
+    zendesk_job_push_only_author_posts: Flytta bara inlägg av den ursprungliga ämnesförfattaren till Zendesk. Gäller endast om `zendesk_job_push_all_posts` har aktiverats
+    zendesk_incoming_webhook_token: Token som skickas i nyttolasten från Zendesks utgående webhook. Krävs endast om `sync_comments_from_zendesk` har aktiverats.
+    zendesk_tags: Lista över taggar att lägga till i varje ärende

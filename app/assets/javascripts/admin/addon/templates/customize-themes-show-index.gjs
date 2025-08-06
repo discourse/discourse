@@ -1,6 +1,7 @@
 import { fn, hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
-import { and, not } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -9,10 +10,12 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
+import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
 import ThemeTranslation from "admin/components/theme-translation";
 import ColorPalettes from "select-kit/components/color-palettes";
 import ComboBox from "select-kit/components/combo-box";
@@ -117,7 +120,7 @@ export default RouteTemplate(
     {{#unless @controller.model.component}}
       {{#unless @controller.siteSettings.use_overhauled_theme_color_palette}}
         <section
-          class="form-horizontal theme settings control-unit theme-settings__color-scheme"
+          class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
         >
           <div class="row setting">
             <div class="setting-label">
@@ -135,7 +138,7 @@ export default RouteTemplate(
                 {{#if @controller.colorSchemeId}}
                   <DButton
                     @icon="pencil"
-                    @action={{@controller.editColorScheme}}
+                    @action={{@controller.editLightColorScheme}}
                     @title="admin.customize.theme.edit_color_scheme"
                   />
                 {{/if}}
@@ -147,16 +150,61 @@ export default RouteTemplate(
             </div>
 
             <div class="setting-controls">
-              {{#if @controller.colorSchemeChanged}}
+              {{#if @controller.lightColorSchemeChanged}}
                 <DButton
-                  @action={{@controller.changeScheme}}
+                  @action={{@controller.changeLightScheme}}
                   @icon="check"
-                  class="ok submit-edit"
+                  class="ok submit-light-edit"
                 />
                 <DButton
-                  @action={{@controller.cancelChangeScheme}}
+                  @action={{@controller.cancelChangeLightScheme}}
                   @icon="xmark"
-                  class="cancel cancel-edit"
+                  class="cancel cancel-light-edit"
+                />
+              {{/if}}
+            </div>
+          </div>
+        </section>
+        <section
+          class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
+        >
+          <div class="row setting">
+            <div class="setting-label">
+              {{i18n "admin.customize.theme.dark_color_scheme"}}
+            </div>
+
+            <div class="setting-value">
+              <div class="color-palette-input-group">
+                <ColorPalettes
+                  @content={{@controller.colorSchemes}}
+                  @value={{@controller.darkColorSchemeId}}
+                  @icon="paintbrush"
+                  @options={{hash filterable=true}}
+                />
+                {{#if @controller.darkColorSchemeId}}
+                  <DButton
+                    @icon="pencil"
+                    @action={{@controller.editDarkColorScheme}}
+                    @title="admin.customize.theme.edit_dark_color_scheme"
+                  />
+                {{/if}}
+              </div>
+
+              <div class="desc">{{i18n
+                  "admin.customize.theme.dark_color_scheme_select"
+                }}</div>
+            </div>
+            <div class="setting-controls">
+              {{#if @controller.darkColorSchemeChanged}}
+                <DButton
+                  @action={{@controller.changeDarkScheme}}
+                  @icon="check"
+                  class="ok submit-dark-edit"
+                />
+                <DButton
+                  @action={{@controller.cancelChangeDarkScheme}}
+                  @icon="xmark"
+                  class="cancel cancel-dark-edit"
                 />
               {{/if}}
             </div>
@@ -199,34 +247,32 @@ export default RouteTemplate(
       </section>
     {{/if}}
 
-    {{#unless @controller.model.system}}
-      {{#unless @controller.model.remote_theme.is_git}}
-        <div class="control-unit">
-          <div class="mini-title">{{i18n
-              "admin.customize.theme.css_html"
+    {{#unless
+      (or @controller.model.system @controller.model.remote_theme.is_git)
+    }}
+      <div class="control-unit">
+        <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
+        {{#if @controller.model.hasEditedFields}}
+          <div class="description">{{i18n
+              "admin.customize.theme.custom_sections"
             }}</div>
-          {{#if @controller.model.hasEditedFields}}
-            <div class="description">{{i18n
-                "admin.customize.theme.custom_sections"
-              }}</div>
-            <ul>
-              {{#each @controller.editedFieldsFormatted as |field|}}
-                <li>{{field}}</li>
-              {{/each}}
-            </ul>
-          {{else}}
-            <div class="description">
-              {{i18n "admin.customize.theme.edit_css_html_help"}}
-            </div>
-          {{/if}}
+          <ul>
+            {{#each @controller.editedFieldsFormatted as |field|}}
+              <li>{{field}}</li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="description">
+            {{i18n "admin.customize.theme.edit_css_html_help"}}
+          </div>
+        {{/if}}
 
-          <DButton
-            @action={{@controller.editTheme}}
-            @label="admin.customize.theme.edit_css_html"
-            class="btn-default edit edit-code"
-          />
-        </div>
-      {{/unless}}
+        <DButton
+          @action={{@controller.editTheme}}
+          @label="admin.customize.theme.edit_css_html"
+          class="btn-default edit edit-code"
+        />
+      </div>
 
       <div class="control-unit">
         <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
@@ -286,6 +332,33 @@ export default RouteTemplate(
             {{/each}}
           </ul>
         </details>
+      </div>
+    {{/if}}
+
+    {{#if @controller.hasThemeableSiteSettings}}
+      <div class="control-unit">
+        <div class="mini-title">{{i18n
+            "admin.customize.theme.theme_site_settings"
+          }}</div>
+        <p><i>{{htmlSafe
+              (i18n
+                "admin.customize.theme.overriden_site_settings_explanation"
+                themeSiteSettingsConfigUrl=(getURL
+                  "/admin/config/theme-site-settings"
+                )
+              )
+            }}</i></p>
+        <section
+          class="form-horizontal theme settings theme-site-settings control-unit"
+        >
+          {{#each @controller.themeSiteSettings as |setting|}}
+            <ThemeSiteSettingEditor
+              @setting={{setting}}
+              @model={{@controller.model}}
+              class="theme-site-setting control-unit"
+            />
+          {{/each}}
+        </section>
       </div>
     {{/if}}
 

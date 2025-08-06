@@ -220,9 +220,7 @@ ja:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
         channels_list: "チャットのチャンネルリスト"
-      no_direct_message_channels: "まだダイレクトメッセージに参加していません！"
       no_direct_message_channels_cta: "会話を始める"
-      no_public_channels: "まだチャンネルに参加していません！"
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       only_chat_push_notifications:

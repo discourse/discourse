@@ -315,15 +315,21 @@ export default class PostTextSelection extends Component {
 
     if (supportsFastEdit) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
-      const matches = cooked.innerHTML.match(regexp);
+      try {
+        const matches = cooked.innerHTML.match(regexp);
 
-      if (
-        quoteState.buffer.length === 0 ||
-        quoteState.buffer.includes("|") || // tables are too complex
-        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        quoteState.buffer.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
-        matches?.length !== 1 // duplicates are too complex
-      ) {
+        if (
+          quoteState.buffer.length === 0 ||
+          quoteState.buffer.includes("|") || // tables are too complex
+          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+          quoteState.buffer.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
+          matches?.length !== 1 // duplicates are too complex
+        ) {
+          supportsFastEdit = false;
+        }
+      } catch {
+        // If the regex is too large, it will throw an error.
+        // In this case, we just disable fast edit.
         supportsFastEdit = false;
       }
     }

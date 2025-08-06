@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  reports:
+    currently_away:
+      title: Tällä hetkellä poissa olevat käyttäjät
+      labels:
+        username: Käyttäjätunnus
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Tapahtuma alkoi
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Antamaasi juhlapyhäaluetta ei ole olemassa."
+    discourse_calendar_enable_holiday_failed: "Tätä juhlapyhää ei voitu ottaa käyttöön; se on jo käytössä tai sitä ei ole poistettu käytöstä."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Tapahtuma – joukkokutsu onnistui"
+      subject_template: "Joukkokutsun käsittely onnistui"
+      text_body_template: "Joukkokutsutiedostosi on käsitelty, %{processed} kutsuttua luotiin lähetetty."
+    discourse_post_event_bulk_invite_failed:
+      title: "Tapahtuma – joukkokutsu epäonnistui"
+      subject_template: "Joukkokutsun käsittelyssä tapahtui virhe"
+      text_body_template: |
+        Joukkokutsutiedostosi käsiteltiin, %{processed} kutsuttua luotiin %{failed} virheellä.
+
+        Tässä on loki:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Tekstirivien enimmäismäärä tapahtumaa kohden kalenterissa."
+    map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
+    map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
+    calendar_enabled: "Ota discourse-calendar-lisäosa käyttöön. Tämä lisää tuen [calendar][/calendar]-tunnisteelle ketjun ensimmäisessä viestissä."
+    discourse_post_event_enabled: "Ottaa tapahtumaominaisuudet käyttöön. Huomautus: edellyttää myös, että \"calendar enabled\" on käytössä."
+    displayed_invitees_limit: "Rajoittaa tapahtumassa näytettävien kutsuttujen määrää."
+    display_post_event_date_on_topic_title: "Näyttää tapahtuman päivämäärän ketjun otsikon jälkeen."
+    use_local_event_date: "Käytä paikallista päivämäärää ketjun otsikon jälkeen suhteellisen ajan sijaan."
+    discourse_post_event_allowed_on_groups: "Ryhmät, jotka saavat luoda tapahtumia."
+    discourse_post_event_allowed_custom_fields: "Antaa jokaisen tapahtuman määrittää mukautettujen kenttien arvon."
+    discourse_post_event_edit_notifications_time_extension: "Pidentää (minuutteina) tapahtuman päättymisen jälkeistä aikaa, jolloin \"menossa\" olevat kutsutut saavat edelleen ilmoituksen alkuperäisen viestin muokkauksesta."
+    holiday_calendar_topic_id: "Henkilökunnan loma-/poissaolokalenterin ketjun tunnus."
+    holiday_status_emoji: Määrittää lomatilassa käytettävän emojin.
+    delete_expired_event_posts_after: "Viestit, joissa on vanhentuneita tapahtumia, poistetaan automaattisesti (n) tunnin kuluttua. Poista poisto käytöstä asettamalla arvoksi -1."
+    all_day_event_start_time: "Tapahtumat, joille ei ole määritetty alkamisaikaa, alkavat tähän aikaan. Muoto on tt:mm. Esim. kirjoita klo 6.00 muodossa 06:00."
+    all_day_event_end_time: "Tapahtumat, joille ei ole määritetty loppumisaikaa, päättyvät tähän aikaan. Muoto on tt:mm. Esim. kirjoita klo 18.00 muodossa 18:00."
+    all_day_event_time_error: "Virheellinen aika. Muodon täytyy olla tt:mm (esim. 08:00)."
+    calendar_categories: "Näytä kalenteri alueen yläosassa. Pakolliset asetukset ovat categoryId ja postId. esim.: categoryId=6;postId=453\n Muut kelvolliset asetukset: tzPicker, weekends ja defaultView."
+    calendar_categories_outlet: "Mahdollistaa sen muuttamisen, missä julkaisukohdassa alueen kalenteri näytetään."
+    working_days: "Aseta työpäivät. Voit näyttää ryhmän saatavuuden käyttämällä viestissä `timezones`-tunnistetta, esim.: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "Työajan alkamisaika."
+    working_day_end_hour: "Työajan päättymisaika."
+    close_to_working_day_hours_extension: "Aseta pidennysaika työaikana aikavyöhykkeiden korostamiseksi."
+    events_calendar_categories: "Näytä tapahtumakalenteri alueen yläosassa."
+    sort_categories_by_event_start_date_enabled: "Ota käyttöön alueen ketjujen lajittelu tapahtuman alkamispäivän mukaan."
+    disable_resorting_on_categories_enabled: "Salli alueiden poistaa käytöstä käyttäjien mahdollisuus lajitella tapahtuman luokan mukaan."
+    calendar_automatic_holidays_enabled: "Aseta lomatila automaattisesti käyttäjän alueen mukaan (huomaa: voit poistaa tietyt automaattiset lomat käytöstä lisäosan asetuksissa)"
+    event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
+    sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
+    include_expired_events_on_calendar: "Sisällytä menneet/vanhentuneet tapahtumat Alueen kalenteri- ja Tulevat tapahtumat -näkymiin."
+  discourse_calendar:
+    invite_user_notification: "%{username} kutsui sinut: %{description}"
+    calendar_must_be_in_first_post: "Kalenteritunnistetta voi käyttää vain ketjun ensimmäisessä viestissä."
+    more_than_one_calendar: "Yhdessä viestissä voi olla vain yksi kalenteri."
+    more_than_two_dates: "Kalenteriketjun viesti voi sisältää enintään kaksi päivämäärää."
+    event_expired: "Tapahtuma on vanhentunut"
+    holiday_status:
+      description: "Lomalla"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} on alkamassa."
+      after_event_reminder: "%{title} on päättynyt."
+      ongoing_event_reminder: "%{title} on käynnissä."
+    errors:
+      bulk_invite:
+        max_invitees: "Ensimmäiset %{max_invittes} kutsuttua on luotu. Kokeile jakaa tiedosto pienempiin osiin."
+        error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
+      models:
+        event:
+          only_one_event: "Viestissä voi olla vain yksi tapahtuma."
+          must_be_in_first_post: "Tapahtuma voi olla vain ketjun ensimmäisessä viestissä."
+          raw_invitees_length: "Tapahtuma on rajoitettu %{count} käyttäjään/ryhmään."
+          raw_invitees:
+            only_group: "Tapahtuma hyväksyy vain ryhmien nimiä."
+          ends_at_before_starts_at: "Tapahtuma ei voi päättyä ennen kuin se alkaa."
+          start_must_be_present_and_a_valid_date: "Tapahtuma vaatii kelvollisen alkamispäivän."
+          end_must_be_a_valid_date: "Päättymispäivän täytyy olla kelvollinen päivämäärä."
+          invalid_recurrence: "Toistuvuuden on oltava jokin seuraavista: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Aikavyöhykettä ei tunnisteta."
+          acting_user_not_allowed_to_create_event: "Nykyinen käyttäjä ei saa luoda tapahtumia."
+          acting_user_not_allowed_to_act_on_this_event: "Nykyinen käyttäjä ei saa tehdä toimia tässä tapahtumassa."
+          invalid_allowed_groups: "Virheelliset sallitut ryhmät."
+          acting_user_not_allowed_to_invite_these_groups: "Nykyinen käyttäjä ei saa kutsua näitä ryhmiä."
+          custom_field_is_invalid: "Mukautettua kenttää %{field} ei sallita."
+          name:
+            length: "Tapahtuman nimen täytyy olla %{minimum}–%{maximum} merkin pituinen."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Tapahtumamuistutus"

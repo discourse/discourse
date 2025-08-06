@@ -90,7 +90,12 @@ async function pressEnter(selector, modifier) {
         });
         server.put("/admin/users/5/silence", () => {
           return helper.response({
-            silenced: true,
+            silence: {
+              silence_reason: "spamming",
+              silenced_at: "",
+              silenced_till: "",
+              silenced_by: "",
+            },
           });
         });
         server.post("/post_actions", () => {

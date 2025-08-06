@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    discourse_templates_enabled: "Permitir a los usuarios con acceso de visualización en la categoría especificada a continuación utilizar las plantillas disponibles"
+    discourse_templates_categories: "Categorías de las que obtener las plantillas"
+    discourse_templates_enable_private_templates: "Permite el uso de plantillas privadas"
+    discourse_templates_groups_allowed_private_templates: "Los grupos pueden usar plantillas privadas. Siempre se permite a los miembros del personal."
+  default_category_template:
+    name: Plantillas
+    description: |
+      Esta categoría se utiliza para almacenar plantillas.
+
+      Las plantillas permiten a los usuarios almacenar contenidos que se repiten con frecuencia.
+
+      Cada tema de esta categoría representa una plantilla diferente. **El primer mensaje** de cada tema se utiliza como modelo para la plantilla.
+
+      Ten en cuenta que todo usuario con acceso en esta categoría podrá utilizar plantillas.

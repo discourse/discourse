@@ -8,7 +8,7 @@
 }
 
 @mixin separator {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 }
 
 :root {
@@ -107,6 +107,7 @@
       right: 0;
       top: unset;
       width: unset;
+      border-radius: var(--d-border-radius);
     }
   }
 

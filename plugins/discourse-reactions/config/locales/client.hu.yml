@@ -14,7 +14,7 @@ hu:
     discourse_reactions:
       reactions_title: "Reakciók"
       state_panel:
-        more_users: "és %{count} további…"
+        more_users: "és még további %{count}..."
       reaction:
         forbidden: "Ez a reakció túl régen lett létrehozva. Már nem lehet módosítani vagy eltávolítani."
       picker:
@@ -24,15 +24,15 @@ hu:
       main_reaction:
         add: "Bejegyzés kedvelése"
         remove: "Kedvelés eltávolítása"
-        cant_remove: "Kedvelés nem távolítható el"
-        unauthenticated: "Kérjük, regisztráljon vagy jelentkezzen be, hogy kedvelni tudja ezt a bejegyzést"
+        cant_remove: "Már nem távolíthatja el a kedvelést"
+        unauthenticated: "Regisztráljon vagy jelentkezzen be, hogy kedvelni tudja ezt a bejegyzést"
     notifications:
       reaction_1_user_multiple_posts:
         one: "%{count} reakciót váltott ki a bejegyzés"
         other: "%{count} reakciót váltottak ki a bejegyzések"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
-        one: "%{username} és még %{count} fő"
-        other: "%{username} és még %{count} fő"
+        one: "%{username} és még %{count} felhasználó"
+        other: "%{username} és még %{count} felhasználó"
       titles:
         reaction: "új reakció"

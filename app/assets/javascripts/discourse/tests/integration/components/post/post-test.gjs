@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 
@@ -286,35 +286,41 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    assert.strictEqual(count(".topic-post.whisper"), 1);
-    assert.strictEqual(count(".post-info.whisper"), 1);
+    assert.dom(".topic-post.whisper").exists({ count: 1 });
+    assert.dom(".post-info.whisper").exists({ count: 1 });
   });
 
   test("language", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });
 
   test("outdated localization", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
     this.post.localization_outdated = true;
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language_and_outdated", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });
@@ -372,7 +378,7 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post, { prevPost });
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom(".avoid-tab").exists({ count: 1 }, "has the avoid tab class");
   });
 
   test("reply directly above", async function (assert) {
@@ -392,10 +398,10 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post, { prevPost });
 
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom(".avoid-tab").exists({ count: 1 }, "has the avoid tab class");
     await click("a.reply-to-tab");
-    assert.strictEqual(count("section.embedded-posts.top .cooked"), 1);
-    assert.strictEqual(count("section.embedded-posts .d-icon-arrow-up"), 1);
+    assert.dom("section.embedded-posts.top .cooked").exists({ count: 1 });
+    assert.dom("section.embedded-posts .d-icon-arrow-up").exists({ count: 1 });
   });
 
   test("cooked content hidden", async function (assert) {

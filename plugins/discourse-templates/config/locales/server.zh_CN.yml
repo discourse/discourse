@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    discourse_templates_enabled: "允许对下面指定的类别具有查看访问权限的用户使用可用模板"
+    discourse_templates_categories: "要从中获取模板的类别"
+    discourse_templates_enable_private_templates: "允许使用私有模板"
+    discourse_templates_groups_allowed_private_templates: "允许使用私有模板的群组。始终允许管理人员使用。"
+  default_category_template:
+    name: 模板
+    description: |
+      此类别用于存储模板。
+
+      模板允许用户存储内容以便经常重复使用。
+
+      此类别中的每个话题都代表一个不同的模板。每个话题的**第一篇帖子**用作模板的模型。
+
+      请注意，每个具有此类别访问权限的用户都可以使用模板。

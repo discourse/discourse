@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
@@ -8,6 +9,7 @@ import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
@@ -23,7 +25,6 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import dasherizeHelper from "discourse/helpers/dasherize";
 import editableValue from "discourse/helpers/editable-value";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import reviewableStatus from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";

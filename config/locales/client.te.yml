@@ -198,18 +198,11 @@ te:
       search: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
-      broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
       error_caused_by: "'%{name}' వల్ల ఏర్పడింది. నవీకరించడానికి, మళ్లీ కాన్ఫిగర్ చేయడానికి లేదా నిలిపివేయడానికి <a target='blank' href='%{path}'>ఇక్కడ క్లిక్ చేయండి</a>."
       only_admins: "(ఈ సందేశం సైట్ నిర్వాహకులకు మాత్రమే చూపబడుతుంది)"
     broken_decorator_alert: "మీ సైట్‌లోని ఒక పోస్ట్ కంటెంట్ డెకరేటర్ లోపాన్ని కలిగించినందున పోస్ట్‌లు సరిగ్గా ప్రదర్శించబడకపోవచ్చు."
     broken_page_change_alert: "onPageChange హ్యాండ్లర్ లోపాన్ని లేవనెత్తింది. మరింత సమాచారం కోసం బ్రౌజర్ డెవలపర్ సాధనాలను తనిఖీ చేయండి."
     broken_plugin_alert: "'%{name}' ప్లగిన్ వల్ల ఏర్పడింది"
-    critical_deprecation:
-      notice: "<b>[అడ్మిన్ నోటీసు]</b> రాబోయే డిస్కోర్స్ కోర్ మార్పులకు అనుకూలత కోసం థీమ్‌లు లేదా ప్లగ్ఇన్‌ని నవీకరించడం అవసరం."
-      id: "(ఐడి:<em>%{id}</em>)"
-      linked_id: "(ఐడి:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "గుర్తించబడిన థీమ్: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "గుర్తించబడిన ప్లగిన్: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "ఆసియా పసిఫిక్ (టోక్యో)"
@@ -1188,6 +1181,9 @@ te:
         regular: "రెగ్యులరు"
         dark: "డార్క్ మోడ్"
         default_dark_scheme: "(సైట్ డిఫాల్ట్)"
+        interface_modes:
+          light: "లేత"
+          dark: "డార్క్"
       dark_mode: "డార్క్ మోడ్"
       text_size_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ వచన పరిమాణంగా చేయండి"
       allow_private_messages: "నాకు వ్యక్తిగత సందేశాలను పంపడానికి ఇతర సభ్యులను అనుమతించండి"
@@ -1210,6 +1206,7 @@ te:
       suspended_notice: "ఈ సభ్యుడు %{date} వరకూ సస్పెండయ్యాడు"
       suspended_permanently: "ఈ సభ్యుడు సస్పెండ్ చేయబడ్డారు."
       suspended_reason: "కారణం:"
+      silenced_reason: "కారణం:"
       github_profile: "గిట్ హబ్"
       email_activity_summary: "కార్యాచరణ సారాంశం"
       mailing_list_mode:
@@ -1659,7 +1656,8 @@ te:
         removed: "తీసివేయబడింది"
         search: "ఆహ్వానాలను శోధించడానికి రాయండి…"
         user: "ఆహ్వానించిన సభ్యుడు"
-        none: "ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
+        none:
+          title: "ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
         truncated:
           one: "మొదటి ఆహ్వానాన్ని చూపుతోంది."
           other: "మొదటి %{count} ఆహ్వానాలను చూపుతోంది."
@@ -2177,7 +2175,6 @@ te:
       unlist: "జాబితా నుంచి తొలగించిన"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       toggle_whisper: "గుసగుసలను టోగుల్ చేయండి"
-      toggle_unlisted: "జాబితా చేయనవి టోగుల్ చేయండి"
       insert_table: "పట్టికను చొప్పించండి"
       posting_not_on_topic: "ఏ విషయానికి మీరు ప్రత్యుత్తరం ఇవ్వాలనుకుంటున్నారు?"
       saved_local_draft_tip: "స్థానికంగా సేవ్ చేయబడింది"
@@ -4251,6 +4248,8 @@ te:
             badges:
               content: "బ్యాడ్జీలు"
               title: "సంపాదించడానికి అన్ని బ్యాడ్జ్‌లు అందుబాటులో ఉన్నాయి"
+            filter:
+              content: "ఫిల్టర్ చేయండి"
             topics:
               content: "విషయాలు"
               title: "అన్ని విషయాలు"
@@ -4393,6 +4392,9 @@ te:
           copy: "కాపీ..."
           paste: "అతికించండి..."
           save: "ఇలా సేవ్ చేయండి..."
+    filter:
+      description:
+        yesterday: "నిన్న"
     discovery:
       headings:
         categories: "అన్ని వర్గాలు"
@@ -4402,7 +4404,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
           always: "ఎల్లప్పుడూ"
@@ -4520,6 +4521,8 @@ te:
           title: "వెబ్‌బూక్స్"
         embedding:
           title: "పొందుపరచడం"
+      theme_site_settings:
+        default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
         result_types:
@@ -5053,6 +5056,11 @@ te:
         author: " %{author} రాసిన"
         experimental_badge: "ప్రయోగాత్మకమైన"
         learn_more: "మరింత తెలుసుకోండి"
+        filters:
+          all: "అన్నీ"
+          enabled: "ప్రారంభించబడింది"
+          disabled: "నిలిపివేయబడింది"
+          reset: "రీసెట్ చేయండి"
       navigation_menu:
         sidebar: "సైడ్‌బార్"
         header_dropdown: "హెడర్ లో డ్రాప్‌డౌన్"
@@ -5169,7 +5177,7 @@ te:
           theme: "థీమ్"
           component: "భాగం"
           components: "భాగాలు"
-          search_placeholder: "శోధించడానికి టైప్ చేయండి…"
+          filter_all: "అన్నీ"
           theme_name: "థీమ్ పేరు"
           component_name: "భాగం పేరు"
           themes_intro: "ప్రారంభించడానికి ఇప్పటికే ఉన్న థీమ్‌ను ఎంచుకోండి లేదా కొత్తదాన్ని ఇన్‌స్టాల్ చేయండి"
@@ -5283,11 +5291,7 @@ te:
           up_to_date: "థీమ్ తాజాగా ఉంది, చివరిగా తనిఖీ చేయబడింది:"
           has_overwritten_history: "Git చరిత్ర ఫోర్స్ పుష్ ద్వారా భర్తీ చేయబడినందున ప్రస్తుత థీమ్ వెర్షన్ ఉనికిలో లేదు."
           add: "జోడించండి"
-          theme_settings: "థీమ్ సెట్టింగ్‌లు"
-          edit_objects_theme_setting: "ఆబ్జెక్ట్స్ సెట్టింగ్ ఎడిటర్"
-          overriden_settings_explanation: "ఓవర్‌రైడ్ సెట్టింగ్‌లు చుక్కతో గుర్తించబడతాయి మరియు హైలైట్ చేయబడిన రంగును కలిగి ఉంటాయి. ఈ సెట్టింగ్‌లను డిఫాల్ట్ విలువకు రీసెట్ చేయడానికి, వాటి ప్రక్కన ఉన్న రీసెట్ బటన్‌ను నొక్కండి."
           no_settings: "ఈ థీమ్‌కు సెట్టింగ్‌లు లేవు."
-          theme_translations: "థీమ్ అనువాదాలు"
           empty: "అంశాలు లేవు"
           commits_behind:
             one: "థీమ్ కు %{count} అప్డేట్ ఉంది!"
@@ -5339,6 +5343,11 @@ te:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"
             description: "బేస్ పాలెట్:"
           title: "రంగులు"
+          edit: "సవరించండి"
+          filters:
+            all: "అన్నీ"
+          active_badge:
+            text: "క్రియాశీల"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
           copy_name_prefix: "దీనికి నకలు"
           undo: "రద్దు చేయండి"
@@ -5882,7 +5891,6 @@ te:
         activity: కలాపం
         like_count: ఇష్టాలు ఇచ్చినవి/స్వీకరించినవి
         last_100_days: "గత నూరు రోజుల్లో"
-        private_topics_count: ప్రైవేటు విషయాలు
         posts_read_count: చదివిన పోస్ట్‌లు
         post_count: పోస్ట్‌లు సృష్టించబడ్డాయి
         second_factor_enabled: రెండు-కారకాల ప్రమాణీకరణ ప్రారంభించబడింది

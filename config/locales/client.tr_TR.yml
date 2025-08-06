@@ -201,19 +201,12 @@ tr_TR:
       search: "Ara"
     themes:
       default_description: "Varsayılan"
-      broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
       error_caused_by: "\"%{name}\" neden oldu. Güncellemek, yeniden yapılandırmak veya devre dışı bırakmak için <a target='blank' href='%{path}'>buraya tıklayın</a>."
       only_admins: "(bu mesaj sadece site yöneticilerine gösterilir)"
     broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."
     broken_page_change_alert: "Bir onPageChange işleyicisi hata verdi. Daha fazla bilgi için tarayıcı geliştirici araçlarını kontrol edin."
     broken_plugin_alert: "'%{name}' eklentisinden kaynaklanıyor"
     broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
-    critical_deprecation:
-      notice: "<b>[Yönetici Bildirisi]</b> Temalarınızdan veya eklentilerinizden birinin, yaklaşan Discourse temel değişiklikleriyle uyumluluk için güncellenmesi gerekiyor."
-      id: "(kimlik:<em>%{id}</em>)"
-      linked_id: "(kimlik:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tanımlanan tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Tanımlanan eklenti: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -1304,7 +1297,6 @@ tr_TR:
         description: "Yeni kullanıcı ipuçlarını ve rozetlerini atla"
       reset_seen_user_tips: "Kullanıcı ipuçlarını tekrar göster"
       theme_default_on_all_devices: "Bu temayı bütün cihazlarımda varsayılan yap"
-      color_scheme_default_on_all_devices: "Tüm cihazlarımda varsayılan renk paletini ayarla"
       color_scheme: "Renk Paleti"
       color_schemes:
         default_description: "Tema varsayılanı"
@@ -1314,6 +1306,9 @@ tr_TR:
         regular: "Normal"
         dark: "Koyu mod"
         default_dark_scheme: "(site varsayılanı)"
+        interface_modes:
+          light: "Açık"
+          dark: "Koyu"
       dark_mode: "Koyu Mod"
       dark_mode_enable: "Otomatik koyu mod renk paletini etkinleştir"
       text_size_default_on_all_devices: "Bunu bütün cihazlarımda varsayılan metin boyutu yap"
@@ -1339,6 +1334,8 @@ tr_TR:
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı uzaklaştırıldı."
       suspended_reason: "Sebep: "
+      silenced_permanently: "Bu kullanıcı susturuldu."
+      silenced_reason: "Neden: "
       github_profile: "Github"
       email_activity_summary: "Aktivite özeti"
       mailing_list_mode:
@@ -1859,7 +1856,8 @@ tr_TR:
         removed: "Kaldırıldı"
         search: "davetlerde aramak için yazın…"
         user: "Davet Edilen Kullanıcı"
-        none: "Görüntülenecek davet yok."
+        none:
+          title: "Görüntülenecek davet yok."
         truncated:
           one: "İlk davet gösteriliyor."
           other: "İlk %{count} davet gösteriliyor."
@@ -2495,7 +2493,6 @@ tr_TR:
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıltıyı Aç/Kapat"
-      toggle_unlisted: "Liste Dışı Aç/Kapat"
       insert_table: "Tablo ekle"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"
@@ -4696,6 +4693,8 @@ tr_TR:
             badges:
               content: "Rozetler"
               title: "Kazanılabilecek tüm rozetler"
+            filter:
+              content: "Filtre"
             topics:
               content: "Konular"
               title: "Tüm konular"
@@ -4843,6 +4842,12 @@ tr_TR:
           paste: "Yapıştır..."
           save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
+    filter:
+      description:
+        yesterday: "Dün"
+        last_week: "Geçen hafta"
+        last_month: "Geçen ay"
+        last_year: "Geçen yıl"
     discovery:
       headings:
         multi_tag:
@@ -4854,7 +4859,7 @@ tr_TR:
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
-      filter_reports: Raporları filtrele
+      filter_reports: "Raporları filtrele..."
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -5094,7 +5099,6 @@ tr_TR:
               title: "Arama günlükleri"
         plugins:
           title: "Yüklü eklentiler"
-          header_description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür"
         api_keys:
           title: "API anahtarları"
           header_description: "API anahtarları özelliği, Discourse'u harici sistemlerle güvenli bir şekilde entegre etmenize ve eylemleri otomatikleştirmenize olanak tanır. Yöneticiler, kaynaklara ve hassas verilere erişimi kontrol etmek için belirli kapsamlara sahip anahtarlar oluşturabilir. Kapsamlar işlevselliği sınırlayarak gelişmiş güvenlik sağlar."
@@ -5103,6 +5107,8 @@ tr_TR:
         embedding:
           title: "Gömme"
           header_description: "Discourse, IFRAME oluşturan bir Javascript API'si kullanarak bir konudaki yorumları uzak bir siteye yerleştirme yeteneğine sahiptir"
+      theme_site_settings:
+        default_value: "Varsayılan"
       search:
         title: "Ara"
         result_types:
@@ -5805,6 +5811,11 @@ tr_TR:
         author: "Yazan: %{author}"
         experimental_badge: "deneysel"
         learn_more: "Daha fazla bilgi edinin"
+        filters:
+          all: "Tümü"
+          enabled: "Etkin mi"
+          disabled: "Devre Dışı"
+          reset: "Sıfırla"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
@@ -5930,7 +5941,8 @@ tr_TR:
           theme: "Tema"
           component: "Bileşen"
           components: "Bileşenler"
-          search_placeholder: "aramak için yazın…"
+          filter_all: "Tümü"
+          filter_user_selectable: "Kullanıcı tarafından seçilebilir"
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"
@@ -6057,11 +6069,7 @@ tr_TR:
           up_to_date: "Tema güncel, son kontrol:"
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
           add: "Ekle"
-          theme_settings: "Tema Ayarları"
-          edit_objects_theme_setting: "Nesneler Ayar Düzenleyicisi"
-          overriden_settings_explanation: "Geçersiz kılınan ayarlar bir nokta ile işaretlenir ve vurgulanmış bir renge sahiptir. Bu ayarları varsayılan değere sıfırlamak için yanlarındaki sıfırlama düğmesine basın."
           no_settings: "Bu temanın ayarı yok."
-          theme_translations: "Tema Çevirileri"
           empty: "Öge yok"
           commits_behind:
             one: "Tema %{count} taahhüt geride!"
@@ -6131,7 +6139,12 @@ tr_TR:
             title: "Temel renk paletini seçin"
             description: "Temel palet:"
           title: "Renkler"
-          edit: "Renk paletlerini düzenle"
+          edit: "Düzenle"
+          filters:
+            all: "Hepsi"
+            user_selectable: "Kullanıcı tarafından seçilebilir"
+          active_badge:
+            text: "Aktif"
           long_title: "Renk paletleri"
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
@@ -6763,7 +6776,6 @@ tr_TR:
         activity: Aktivite
         like_count: Verilen / Alınan Beğeniler
         last_100_days: "son 100 günde"
-        private_topics_count: Özel Konular
         posts_read_count: Okunan Gönderiler
         post_count: Oluşturulan Gönderiler
         second_factor_enabled: İki Adımlı Kimlik Doğrulama Etkin

@@ -19,6 +19,10 @@ module DiscourseWebauthn
       raise(ChallengeMismatchError, I18n.t("webauthn.validation.challenge_mismatch_error"))
     end
 
+    def clear_challenge
+      DiscourseWebauthn.clear_challenge(@current_user, @session)
+    end
+
     def validate_origin
       return if origin_match?
       raise(InvalidOriginError, I18n.t("webauthn.validation.invalid_origin_error"))

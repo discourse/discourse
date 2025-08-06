@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    policy_enabled: "Autoriser les politiques ?"
+    policy_restrict_to_staff_posts: "Les politiques ne peuvent apparaître que sur les messages du personnel"
+    policy_easy_revoke: "Afficher les boutons d'acceptation et de révocation en même temps"
+  discourse_policy:
+    errors:
+      user_missing: "L'utilisateur n'existe pas dans le groupe"
+      group_not_found: "Groupe introuvable pour la politique"
+      no_policy: "Aucune politique n'existe pour le message"
+      staff_only: "Les politiques ne peuvent s'appliquer qu'aux messages du personnel"
+  reports:
+    unaccepted-policies:
+      title: Politiques non acceptées
+      labels:
+        topic_id: ID du sujet
+        user_id: ID de l'utilisateur
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Une politique a besoin de votre examen : %{topic_title}"
+      visit_topic: "Consulter le sujet"
+      visit_link_to_respond: "%{visit_topic_link} pour répondre."
+      unsubscribe: "Modifiez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
+      your_policy_email_settings: "préférences de fréquence des e-mails liés aux politiques"
+  unsubscribe:
+    policy_emails:
+      select_title: "Définissez la fréquence des e-mails d'alerte liés aux politiques sur :"
+      never: Jamais
+      when_away: Seulement en cas d'absence
+      always: Toujours

@@ -14,6 +14,6 @@ vi:
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
-        other: "%{username} và %{count} khác"
+        other: "%{username} và %{count} người khác"
       titles:
         reaction: "phản ứng mới"

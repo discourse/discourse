@@ -1,0 +1,246 @@
+# Italian holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2008-11-23.
+# Sources:
+# - http://en.wikipedia.org/wiki/Holidays_in_Italy
+#
+# Changes 2019-03-11
+# - add Rome region (it_rm)
+# - add Festa di San Pietro e Paolo for it_rm region
+#
+# Sources:
+# - https://en.wikipedia.org/wiki/Feast_of_Saints_Peter_and_Paul
+# - https://www.officeholidays.com/countries/global/st_peter_and_paul.php
+#
+# Changes 2019-06-28
+# - add Florence region (it_fi)
+# - add Genoa region (it_ge)
+# - add Turin region (it_to)
+# - add Festa di San Giovanni Battista for it_fi, it_ge, it_to regions
+# Sources:
+# - https://www.officeholidays.com/holidays/italy/st-johns-day
+#
+# Changes 2019-09-18
+# - add Venetian regions (it_vr, it_vi, it_pd, it_ro, it_tv, it_bl, it_ve)
+# - add patron's feast for each venetian region
+# Sources:
+# - https://it.wikipedia.org/wiki/Santi_patroni_cattolici_delle_citt%C3%A0_capoluogo_di_provincia_italiane
+---
+months:
+  0:
+  - name: Pasqua
+    regions: [it]
+    function: easter(year)
+  - name: Lunedì dell'Angelo
+    regions: [it]
+    function: easter(year)
+    function_modifier: 1
+  1:
+  - name: Capodanno
+    regions: [it]
+    mday: 1
+  - name: Epifania
+    regions: [it]
+    mday: 6
+  4:
+  - name: Festa della Liberazione
+    regions: [it]
+    mday: 25
+  - name: Festa di San Marco Evangelista
+    regions: [it_ve]
+    mday: 25
+  - name: Festa di San Liberale
+    regions: [it_tv]
+    mday: 27
+  5:
+  - name: Festa dei Lavoratori
+    regions: [it]
+    mday: 1  
+  - name: Festa di San Zeno
+    regions: [it_vr]
+    mday: 21 
+  6:
+  - name: Festa della Repubblica
+    regions: [it]
+    mday: 2
+  - name: Festa di Sant'Antonio di Padova
+    regions: [it_pd]
+    mday: 13    
+  - name: Festa di San Giovanni Battista
+    regions: [it_fi, it_ge, it_to]
+    mday: 24
+  - name: Festa di San Pietro e Paolo
+    regions: [it_rm]
+    mday: 29
+  8:  
+  - name: Assunzione
+    regions: [it]
+    mday: 15
+  9:  
+  - name: Festa della Madonna di Monte Berico
+    regions: [it_vi]
+    mday: 8    
+  11:
+  - name: Ognissanti
+    regions: [it]
+    mday: 1
+  - name: Festa di San Martino
+    regions: [it_bl]
+    mday: 11
+  - name: Festa di San Bellino
+    regions: [it_ro]
+    mday: 26
+  12:
+  - name: Immacolata Concezione
+    regions: [it]
+    mday: 8
+  - name: Natale
+    regions: [it]
+    mday: 25
+  - name: Santo Stefano
+    regions: [it]
+    mday: 26
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Capodanno"
+  - given:
+      date: '2007-01-06'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Epifania"
+  - given:
+      date: '2007-04-08'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Pasqua"
+  - given:
+      date: '2007-04-09'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Lunedì dell'Angelo"
+  - given:
+      date: '2007-04-25'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Festa della Liberazione"
+
+  # This is a valid test but unfortunately we have no way right now to handle two holidays that occur on the same day in tests.
+  # Allowing for it will require some kind of update to the test def here to say 'I expect this to be the second result returned'
+  # and this will require ruby updates.
+  #
+  #- given:
+  #    date: '2019-04-25'
+  #    regions: ["it_ve"]
+  #    options: ["informal"]
+  #  expect:
+  #    name: "Festa di San Marco Evangelista"
+
+  - given:
+      date: '2019-04-27'
+      regions: ["it_tv"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Liberale"
+  - given:
+      date: '2007-05-01'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Festa dei Lavoratori"
+  - given:
+      date: '2019-05-21'
+      regions: ["it_vr"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Zeno"
+  - given:
+      date: '2007-06-02'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Festa della Repubblica"
+  - given:
+      date: '2019-06-13'
+      regions: ["it_pd"]
+      options: ["informal"]
+    expect:
+      name: "Festa di Sant'Antonio di Padova"
+  - given:
+      date: '2019-06-24'
+      regions: ["it_fi", "it_ge", "it_to"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Giovanni Battista"
+  - given:
+      date: '2019-06-24'
+      regions: ["it"]
+    expect:
+      holiday: false
+  - given:
+      date: '2019-06-29'
+      regions: ["it_rm"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Pietro e Paolo"
+  - given:
+      date: '2019-06-29'
+      regions: ["it"]
+    expect:
+      holiday: false
+  - given:
+      date: '2007-08-15'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Assunzione"
+  - given:
+      date: '2019-09-08'
+      regions: ["it_vi"]
+      options: ["informal"]
+    expect:
+      name: "Festa della Madonna di Monte Berico"
+  - given:
+      date: '2007-11-01'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Ognissanti"
+  - given:
+      date: '2019-11-11'
+      regions: ["it_bl"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Martino"
+  - given:
+      date: '2019-11-26'
+      regions: ["it_ro"]
+      options: ["informal"]
+    expect:
+      name: "Festa di San Bellino"
+  - given:
+      date: '2007-12-08'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Immacolata Concezione"
+  - given:
+      date: '2007-12-25'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Natale"
+  - given:
+      date: '2007-12-26'
+      regions: ["it"]
+      options: ["informal"]
+    expect:
+      name: "Santo Stefano"

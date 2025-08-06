@@ -27,6 +27,7 @@ el:
         millions: "%{number}εκατ."
     dates:
       time: "HH:mm"
+      time_short: "ω:λλ"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
@@ -201,10 +202,10 @@ el:
     broken_plugin_alert: "Προκλήθηκε από το πρόσθετο '%{name}'"
     broken_transformer_alert: "Παρουσιάστηκε σφάλμα. Ο ιστότοπός σας ενδέχεται να μην λειτουργεί σωστά."
     critical_deprecation:
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Ταυτοποιημένο θέμα: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Ταυτοποιημένο πρότυπο: '%{name}'"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>μάθετε περισσότερα</em></a>)"
+      theme_source: "Θέμα <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Πρόσθετο '%{name}'"
+      unknown_source: "Ένα από τα θέματα ή τα πρόσθετα σας"
     s3:
       regions:
         ap_northeast_1: "Ασία Ειρηνικός (Τόκιο)"
@@ -699,15 +700,38 @@ el:
         reviewable_post:
           title: "Ανάρτηση"
           noun: "ανάρτηση"
+      assigned_to: "Ανατέθηκε σε"
+      moderator_actions: "Ενέργειες επόπτη"
+      timeline_and_notes: "Χρονοδιάγραμμα & σημειώσεις"
+      timeline:
+        target_created: "Ανάρτηση δημιουργήθηκε"
+        target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
+        view_conversation: "προβολή ΠΜ"
+        note_added: "Σημείωση επόπτη"
+        note_added_by: "Σημείωση επόπτη από %{username} · %{relativeDate}"
+        no_events: "Δεν υπάρχουν συμβάντα χρονοδιαγράμματος για προβολή"
       notes:
+        add_note_button: "Προσθήκη σημείωσης"
+        placeholder: "Γράψτε τη σημείωση σας εδώ..."
+        chars_remaining: "%{count} χαρακτήρες απομένουν"
+        delete_note: "Διαγραφή αυτής της σημείωσης"
         delete: "Σβήσιμο"
+      new_topic_label: "Νέο θέμα"
+      posted_in: "Δημοσιεύτηκε σε"
       review_user: "Χρήστης"
+      need_help: "Χρειάζεστε βοήθεια;"
       copy_link: "Αντιγραφή συνδέσμου"
+      view_source: "Προβολή πηγής"
       insights:
+        user_activity: "Δραστηριότητα χρήστη"
         activities:
+          new_account: "νέος λογαριασμός"
+          trust_level: "επίπεδο εμπιστοσύνης: %{trustLevelName}"
           posts:
             one: "%{count} ανάρτηση"
             other: "%{count} αναρτήσεις"
+        solution_marked: "Λύση επισημάνθηκε"
+        topic_has_solution: "Αυτό το θέμα έχει λύση"
         visibility: "Ορατότητα"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
@@ -1241,6 +1265,10 @@ el:
         regular: "Τακτικός"
         dark: "Σκοτεινή λειτουργία"
         default_dark_scheme: "(προεπιλογή ιστότοπου)"
+        interface_modes:
+          auto: "Αυτόματο"
+          light: "Ανοιχτό"
+          dark: "Σκούρο"
       dark_mode: "Σκοτεινή λειτουργία"
       text_size_default_on_all_devices: "Όρισε αυτό ως προεπιλεγμένο μέγεθος κειμένου σε όλες τις συσκευές μου"
       allow_private_messages: "Επίτρεψε σε άλλους χρήστες να μου στέλνουν προσωπικά μηνύματα"
@@ -1263,6 +1291,9 @@ el:
       suspended_notice: "Αυτός ο χρήστης είναι σε αποβολή μέχρι τις %{date}."
       suspended_permanently: "Ο χρήστης είναι αποβλημένος."
       suspended_reason: "Αιτιολογία:"
+      silenced_notice: "Αυτός ο χρήστης έχει τεθεί σε σιωπή μέχρι %{date}."
+      silenced_permanently: "Χρήστης σε σιγή."
+      silenced_reason: "Αιτία:"
       github_profile: "GitHub"
       email_activity_summary: "Περίληψη Ενεργειών"
       mailing_list_mode:
@@ -1404,6 +1435,8 @@ el:
         use: "Χρησιμοποιήστε την εφαρμογή Authenticator"
         disable: "Απενεργοποίηση"
         delete: "Διαγραφή"
+        delete_backup_codes_confirm_title: "Διαγραφή εφεδρικών κωδικών"
+        delete_backup_codes_confirm_message: "Διαγράφετε εφεδρικούς κωδικούς. Δεν μπορείτε να αναιρέσετε αυτήν την ενέργεια. Εάν αλλάξετε γνώμη, θα πρέπει να δημιουργήσετε ξανά εφεδρικούς κωδικούς."
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         totp:
@@ -1658,7 +1691,8 @@ el:
         removed: "Αφαιρέθηκε"
         search: "πληκτρολογήστε για αναζήτηση προσκλήσεων…"
         user: "Προσκεκλημένος Χρήστης"
-        none: "Δεν υπάρχουν προσκλήσεις για προβολή."
+        none:
+          title: "Δεν υπάρχουν προσκλήσεις για προβολή."
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
           other: "Προβάλονται οι πρώτες %{count} προσκλήσεις."
@@ -1724,6 +1758,7 @@ el:
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       confirm_access:
         title: "Επιβεβαίωση πρόσβασης"
+        incorrect_password: "Ο κωδικός πρόσβασης που εισήχθη είναι λανθασμένος."
         logged_in_as: "Είστε συνδεδεμένοι ως: "
         forgot_password: "Ξεχάσατε τον κωδικό σας;"
       password:
@@ -1881,6 +1916,8 @@ el:
       errors_summary_title: "Αυτή η φόρμα περιέχει σφάλματα:"
       dirty_form: "Δεν έχετε υποβάλει τις αλλαγές σας! Είστε σίγουροι ότι θέλετε να αποχωρήσετε;"
       errors:
+        starts_with: "Πρέπει να ξεκινά με %{prefix}"
+        ends_with: "Πρέπει να τελειώνει με %{suffix}"
         required: "Απαιτείται"
         date_before_or_equal: "Πρέπει να είναι πριν ή ίσα με %{date}"
         date_after_or_equal: "Πρέπει να είναι μετά ή ίσα με %{date}"
@@ -1905,6 +1942,7 @@ el:
       login_disabled: "Η δυνατότητα σύνδεσης έχει απενεργοποιηθεί όσο η ιστοσελίδα είναι σε κατάσταση μόνο ανάγνωσης."
       logout_disabled: "Η αποσύνδεση δεν είναι διαθέσιμη ενώ η ιστοσελίδα είναι σε λειτουργία μόνο ανάγνωσης."
     learn_more: "Μάθετε περισσότερα…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Μάθετε περισσότερα…</a>"
     mute: Σίγαση
     unmute: Αναίρεση σίγασης
     last_post: Αναρτήθηκε
@@ -2040,11 +2078,13 @@ el:
       security_key_not_allowed_error: "Η διαδικασία ελέγχου ταυτότητας κλειδιού ασφαλείας είτε έληξε είτε ακυρώθηκε."
       security_key_no_matching_credential_error: "Δε βρέθηκαν διαπιστευτήρια που να ταιριάζουν στο παρεχόμενο κλειδί ασφαλείας."
       security_key_support_missing_error: "Η τρέχουσα συσκευή ή το πρόγραμμα περιήγησής σας δεν υποστηρίζει τη χρήση κλειδιών ασφαλείας. Παρακαλώ χρησιμοποιήστε διαφορετική μέθοδο."
+      passkey_security_error: "Παρουσιάστηκε σφάλμα ασφαλείας: %{message}"
       email_placeholder: "Email / Όνομα χρήστη"
       caps_lock_warning: "Είναι ενεργά τα ΚΕΦΑΛΑΙΑ"
       error: "Άγνωστο σφάλμα"
       cookies_error: "Το πρόγραμμα περιήγησής σας φαίνεται να έχει απενεργοποιήσει τα cookies. Ίσως να μη μπορείτε να συνδεθείτε χωρίς να τα ενεργοποιήσετε πρώτα."
       rate_limit: "Παρακαλώ περιμένετε προτού προσπαθήσετε ξανά να συνδεθείτε."
+      password_expired: "Ο κωδικός πρόσβασης έληξε. Παρακαλούμε <a href='%{reset_url}'>επαναφέρετε τον κωδικό πρόσβασης σας</a>."
       blank_username: "Παρακαλώ εισαγάγετε το email ή το όνομα χρήστη σας."
       blank_username_or_password: "Παρακαλώ δώσε την διεύθυνση email σου ή το όνομα χρήστη σου καθώς και τον κωδικό πρόσβασής σου."
       reset_password: "Επαναφορά Κωδικού Πρόσβασης"
@@ -2119,6 +2159,7 @@ el:
       continue: "Συνεχίστε στην %{site_name}"
     emoji_set:
       openmoji: OpenMoji
+      standard: Τυπικό
     category_page_style:
       categories_only: "Μόνο Κατηγορίες"
       categories_with_featured_topics: "Κατηγορίες με Προτεινόμενα Θέματα"
@@ -2206,7 +2247,6 @@ el:
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
       toggle_whisper: "Εναλλαγή Ψιθύρων"
-      toggle_unlisted: "Εναλλαγή Κρυφών"
       insert_table: "Εισαγωγή Πίνακα"
       posting_not_on_topic: "Σε ποιο θέμα θέλετε να απαντήσετε;"
       saved_local_draft_tip: "αποθηκεύτηκε τοπικά"
@@ -2222,6 +2262,8 @@ el:
         save: "Αποθήκευση μετάφρασης"
         original_content: "Αρχικό περιεχόμενο ανάρτησης"
         placeholder: "Εισάγετε τη μετάφραση για την ανάρτηση εδώ..."
+      cannot_see_group_mention:
+        not_mentionable: "Δεν μπορείτε να επισημάνετε την ομάδα @%{group}."
       duplicate_link: "Φαίνεται ότι ο σύνδεσμος σας προς <b>%{domain}</b> έχει ήδη αναρτηθεί στο θέμα από <b>@%{username}</b> σε μία <a href='%{post_url}'>απάντηση πριν από %{ago}</a> – θέλετε σίγουρα να αναρτήσετε τον σύνδεσμο ξανά;"
       reference_topic_title: "ΑΠ: %{title}"
       error:
@@ -2275,6 +2317,11 @@ el:
       italic_label: "I"
       italic_title: "Έμφαση"
       italic_text: "κείμενο σε έμφαση"
+      heading_title: "Κεφαλίδες"
+      heading_level_n: "Κεφαλίδα %{levelNumber}"
+      heading_level_n_title: "Κεφαλίδα %{levelNumber}"
+      heading_level_paragraph: "Παράγραφος"
+      heading_level_paragraph_title: "Παράγραφος"
       link_title: "Σύνδεσμος"
       link_description: "δώσε εδώ μια περιγραφή για το σύνδεσμο"
       link_dialog_title: "Εισαγωγή συνδέσμου"
@@ -2287,6 +2334,7 @@ el:
       link_url_placeholder: "Επικολλήστε σύνδεσμο ή αναζητείστε θέματα"
       blockquote_title: "Blockquote"
       blockquote_text: "Blockquote"
+      heading_text: "Κεφαλίδα"
       code_title: "Προ-διαμορφωμένο κείμενο"
       code_text: "το προ-διαμορφωμένο κείμενο να μπει σε εσοχή με 4 κενά"
       paste_code_text: "πληκτρολογήστε ή επικολλήστε τον κώδικα εδώ"
@@ -2363,6 +2411,7 @@ el:
         high_priority:
           one: "%{count} αδιάβαστη ειδοποίηση υψηλής προτεραιότητας"
           other: "%{count} αδιάβαστες ειδοποιήσεις υψηλής προτεραιότητας"
+      paused: "Οι ειδοποιήσεις τέθηκαν σε παύση"
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα θέματα σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
       empty: "Δεν βρέθηκαν ειδοποιήσεις."
@@ -2470,6 +2519,7 @@ el:
       relevance: "Συνάφεια"
       latest_post: "Νεότερη Ανάρτηση"
       latest_topic: "Τελευταίο Θέμα"
+      last_read: "Τελευταίο αναγνωσμένο"
       most_viewed: "Περισσότερες Εμφανίσεις"
       most_liked: "Περισσότερα \"Μου Αρέσει\""
       select_all: "Επιλογή Όλων"
@@ -2503,6 +2553,7 @@ el:
       in_messages: "σε μηνύματα"
       in_topics_posts: "σε όλα τα θέματα και τις αναρτήσεις"
       enter_hint: "ή πατήστε Enter"
+      mobile_enter_hint: "ή πατήστε Αναζήτηση"
       in_posts_by: "σε δημοσιεύσεις από %{username}"
       recent: "Πρόσφατες Αναζητήσεις"
       clear_recent: "Εκκαθάριση Πρόσφατων Αναζητήσεων"
@@ -4115,6 +4166,8 @@ el:
             badges:
               content: "Παράσημα"
               title: "Όλα τα διαθέσιμα παράσημα για να κερδίσετε"
+            filter:
+              content: "Φίλτρο"
             topics:
               content: "Θέματα"
               title: "Όλα τα θέματα"
@@ -4212,6 +4265,9 @@ el:
         entries: "καταχωρήσεις"
         about: "Σχετικά"
     powered_by_discourse: "Με την υποστήριξη του Discourse"
+    filter:
+      description:
+        yesterday: "Χτες"
     discovery:
       headings:
         multi_tag:
@@ -4222,7 +4278,7 @@ el:
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"
-      filter_reports: Φιλτράρισμα αναφορών
+      filter_reports: "Φιλτράρισμα αναφορών..."
       tags:
         remove_muted_tags_from_latest:
           always: "πάντα"
@@ -4340,6 +4396,8 @@ el:
           title: "Webhooks"
         embedding:
           title: "Ενσωμάτωση"
+      theme_site_settings:
+        default_value: "Προεπιλογή"
       search:
         title: "Αναζήτηση"
         result_types:
@@ -4739,6 +4797,11 @@ el:
         author: "Του/της %{author}"
         experimental_badge: "πειραματικό"
         learn_more: "Μάθε περισσότερα"
+        filters:
+          all: "Όλα"
+          enabled: "Ενεργοποιημένα"
+          disabled: "Απενεργοποιημένο"
+          reset: "Επαναφορά"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:
@@ -4842,7 +4905,7 @@ el:
           theme: "Θέμα"
           component: "Συστατικό"
           components: "Συστατικά"
-          search_placeholder: "πληκτρολογήστε για αναζήτηση…"
+          filter_all: "Όλα"
           theme_name: "Όνομα θέματος"
           component_name: "Όνομα συστατικού"
           themes_intro: "Επιλέξτε ένα υπάρχον θέμα ή εγκαταστήστε ένα νέο για να ξεκινήσετε"
@@ -4945,9 +5008,7 @@ el:
           updating: "Ενημερώνεται…"
           up_to_date: "Το θέμα είναι ενημερωμένο, τελευταίος έλεγχος:"
           add: "Προσθήκη"
-          theme_settings: "Ρυθμίσεις θέματος"
           no_settings: "Αυτό το θέμα δεν έχει ρυθμίσεις."
-          theme_translations: "Μεταφράσεις θέματος"
           empty: "Δεν υπάρχουν στοιχεία"
           commits_behind:
             one: "Το θέμα είναι %{count} έκδοση πίσω!"
@@ -4991,6 +5052,11 @@ el:
             title: "Επιλογή βασικής παλέτας χρωμάτων"
             description: "Βασική παλέτα:"
           title: "Χρώματα"
+          edit: "Επεξεργασία"
+          filters:
+            all: "Όλα"
+          active_badge:
+            text: "Ενεργοί"
           about: "Τροποποιήστε τα χρώματα που χρησιμοποιούνται από τα θέματα σας. Δημιουργήστε μια νέα παλέτα χρωμάτων για να ξεκινήσετε."
           copy_name_prefix: "Αντίγραφο του"
           undo: "Αναίρεση"
@@ -5405,7 +5471,6 @@ el:
         activity: Δραστηριότητα
         like_count: Μου αρέσει που δόθηκαν / λήφθηκαν
         last_100_days: "τις τελευταίες 100 ημέρες"
-        private_topics_count: Ιδιωτικά Θέματα
         posts_read_count: Διαβασμένες Αναρτήσεις
         post_count: Δημιουργημένες Αναρτήσεις
         topics_entered: Προβεβλημένα Θέματα

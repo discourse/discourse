@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  reports:
+    currently_away:
+      title: ユーザーは現在退席中
+      labels:
+        username: ユーザー名
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: イベント開始
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "指定された祝祭日の地域は存在しません。"
+    discourse_calendar_enable_holiday_failed: "この祝祭日を有効にできませんでした。すでに有効であるか無効になっていません。"
+    discourse_post_event_bulk_invite_succeeded:
+      title: "イベント - 一括招待に成功しました"
+      subject_template: "一括招待は正常に処理されました"
+      text_body_template: "あなたの一括招待ファイルの処理が完了し、%{processed} 人の招待者が作成されました。"
+    discourse_post_event_bulk_invite_failed:
+      title: "イベント - 一括招待に失敗しました"
+      subject_template: "一括招待の処理にエラーが発生しました"
+      text_body_template: |
+        あなたの一括招待ファイルは処理され、%{processed} 人の招待者の作成に %{failed} 個のエラーが発生しました。
+
+        こちらがログです。
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "カレンダー内のイベントごとの最大テキスト行数。"
+    map_events_to_color: "各タグまたはカテゴリに色を割り当てる。"
+    map_events_title: "カテゴリごとに '今後のイベント' の 'イベント' を上書きします。"
+    calendar_enabled: "discourse-calendar プラグインを有効にします。これにより、トピックの最初の投稿に [calendar][/calendar] タグのサポートが追加されます。"
+    discourse_post_event_enabled: "イベント機能を有効にします。注意: `calendar enabled` も有効である必要があります。"
+    displayed_invitees_limit: "イベントに表示される招待者数を制限します。"
+    display_post_event_date_on_topic_title: "トピックタイトルの後にイベントの日付を表示します。"
+    use_local_event_date: "トピックタイトルの後に、相対時間ではなく、現地の日付を使用します。"
+    discourse_post_event_allowed_on_groups: "イベントを作成できるグループ。"
+    discourse_post_event_allowed_custom_fields: "各イベントにカスタムフィールドの値を設定できるようにします。"
+    discourse_post_event_edit_notifications_time_extension: "`going` 参加者が元の投稿の編集に関する通知を受け取り続けるイベント終了後の期間を延長（分単位）します。"
+    holiday_calendar_topic_id: "スタッフの休暇/不在カレンダーのトピック ID。"
+    holiday_status_emoji: 休暇ステータスに使用される絵文字を定義します。
+    delete_expired_event_posts_after: "期限切れのイベントのある投稿は、（n）時間後に自動的に削除されます。削除を無効にするには、-1 に設定します。"
+    all_day_event_start_time: "開始時刻が指定されていないイベントはこの時刻に開始します。フォーマットは HH:mm です。午前 6 時の場合は、06:00 と入力します"
+    all_day_event_end_time: "終了時刻が指定されていないイベントはこの時刻に終了します。フォーマットは HH:mm です。午後 6 時の場合は、18:00 と入力します"
+    all_day_event_time_error: "無効な時刻です。フォーマットは HH:mm である必要があります（例: 08:00）。"
+    calendar_categories: "カテゴリの先頭にカレンダーを表示します。categoriId と postId は必須の設定です。例: categoryId=6;postId=453\n 他の有効な設定: tzPicker、weekends、defaultView。"
+    calendar_categories_outlet: "カテゴリカレンダーを表示する場所を変更できるようにします。"
+    working_days: "稼働日を設定します。投稿に `timezones` タグを使用して、グループの空き状況を表示できます。例: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "稼働時間の開始時刻。"
+    working_day_end_hour: "稼働時間の終了時刻。"
+    close_to_working_day_hours_extension: "稼働時間の延長時間を設定して、タイムゾーンを強調表示します。"
+    events_calendar_categories: "カテゴリの上にイベントカレンダーを表示します。"
+    sort_categories_by_event_start_date_enabled: "イベント開始日順によるカテゴリトピックの並べ替えを有効にします。"
+    disable_resorting_on_categories_enabled: "ユーザーがイベントカテゴリで並べ替える機能をカテゴリで無効にできるようにします。"
+    calendar_automatic_holidays_enabled: "ユーザーの地域に基づいて休暇ステータスを自動的に設定します (注意: 特定の自動休暇はプラグインの設定で無効にできます)"
+    event_participation_buttons: "ユーザーが使用できるイベント参加ボタンのリスト。"
+    sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
+    include_expired_events_on_calendar: "カテゴリカレンダーと今後のイベントビューに過去/期限切れのイベントを含める。"
+  discourse_calendar:
+    invite_user_notification: "%{username} があなたを招待しました: %{description}"
+    calendar_must_be_in_first_post: "Calendar タグは、トピックの最初の投稿でのみ使用できます。"
+    more_than_one_calendar: "投稿に複数のカレンダーを含めることはできません。"
+    more_than_two_dates: "カレンダートピックの投稿には、3 つ以上の日付を含めることはできません。"
+    event_expired: "イベント終了"
+    holiday_status:
+      description: "休暇中"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} は間もなく開始します。"
+      after_event_reminder: "%{title} は終了しました。"
+      ongoing_event_reminder: "%{title} は進行中です。"
+    errors:
+      bulk_invite:
+        max_invitees: "最初の %{max_invittes} 人の招待者が作成されました。ファイルをより小さく分割してください。"
+        error: "そのファイルをアップロード中にエラーが発生しました。後でもう一度お試しください。"
+      models:
+        event:
+          only_one_event: "投稿には 1 つのイベントのみを含めることができます。"
+          must_be_in_first_post: "イベントは、トピックの最初の投稿にのみ含めることができます。"
+          raw_invitees_length: "イベントは、%{count} ユーザー/グループに制限されています。"
+          raw_invitees:
+            only_group: "イベントにはグループ名のみを使用できます。"
+          ends_at_before_starts_at: "イベントを開始時刻より前に終了されることはできません。"
+          start_must_be_present_and_a_valid_date: "イベントには有効な開始日が必要です。"
+          end_must_be_a_valid_date: "終了日は有効な日付である必要があります。"
+          invalid_recurrence: "繰り返しは、every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday のいずれかである必要があります。"
+          invalid_timezone: "タイムゾーンが認識されません。"
+          acting_user_not_allowed_to_create_event: "現在のユーザーは、イベントを作成できません。"
+          acting_user_not_allowed_to_act_on_this_event: "現在のユーザーはこのイベントにアクションを実行することはできません。"
+          invalid_allowed_groups: "許可されたグループは無効です。"
+          acting_user_not_allowed_to_invite_these_groups: "現在のユーザーはこれらのグループを招待できません。"
+          custom_field_is_invalid: "カスタムフィールド `%{field}` は許可されていません。"
+          name:
+            length: "イベント名の長さは、%{minimum}～%{maximum} 文字である必要があります。"
+  discourse_push_notifications:
+    popup:
+      event_reminder: "イベントのリマインダー"

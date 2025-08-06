@@ -1,6 +1,10 @@
-document.addEventListener("discourse-init", (e) => {
+document.addEventListener("discourse-init", async (e) => {
   performance.mark("discourse-init");
   const config = e.detail;
-  const app = require(`${config.modulePrefix}/app`)["default"].create(config);
+  const { default: klass, loadThemes } = require(`${config.modulePrefix}/app`);
+
+  await loadThemes();
+
+  const app = klass.create(config);
   app.start();
 });

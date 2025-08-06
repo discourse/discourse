@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  reports:
+    currently_away:
+      title: Користувачі зараз відсутні
+      labels:
+        username: Імʼя користувача
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Подія розпочалася
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Вказаного вами регіону відпочинку не існує."
+    discourse_calendar_enable_holiday_failed: "Це свято не можна ввімкнути, воно вже ввімкнено або не вимкнено."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Подія - масове запрошення виконано"
+      subject_template: "Масове запрошення успішно оброблено"
+      text_body_template: "Ваш файл масового запрошення оброблено, створено %{processed} запрошень."
+    discourse_post_event_bulk_invite_failed:
+      title: "Подія - масове запрошення не вдалося"
+      subject_template: "Масове запрошення оброблено з помилками"
+      text_body_template: |
+        Ваш файл масового запрошення оброблено, створено %{processed} запрошень із %{failed} помилками.
+
+        Ось журнал:
+
+        ```текст
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Максимальна кількість рядків тексту на подію в календарі."
+    map_events_to_color: "Призначити колір для кожного тегу або категорії."
+    map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
+    calendar_enabled: "Увімкніть плагін календаря дискурсу. Це додасть підтримку тегу [calendar][/calendar] у першій публікації теми."
+    discourse_post_event_enabled: "Вмикає функції подій. Примітка: також має бути увімкнено `календар`."
+    displayed_invitees_limit: "Обмежує кількість запрошених, що відображаються в події."
+    display_post_event_date_on_topic_title: "Відображає дату події після назви теми."
+    use_local_event_date: "Використовувати локальну дату після назви теми замість відносного часу."
+    discourse_post_event_allowed_on_groups: "Групи, яким дозволено створювати події."
+    discourse_post_event_allowed_custom_fields: "Дозволяє кожній події встановлювати значення користувацьких полів."
+    discourse_post_event_edit_notifications_time_extension: "Збільшує (у хвилинах) період після завершення події, коли запрошені, які `беруть участь` ще отримують сповіщення про редагування в оригінальному дописі."
+    holiday_calendar_topic_id: "Ідентифікатор теми календаря свят/відсутності персоналу."
+    holiday_status_emoji: Визначає емодзі, які використовуються для статусу свята.
+    delete_expired_event_posts_after: "Публікації з простроченими подіями будуть автоматично видалені через (n) годин. Встановіть -1, щоб вимкнути видалення."
+    all_day_event_start_time: "Події, у яких не вказано час початку, почнуться в цей час. Формат HH:мм. На 6:00 ранку введіть 06:00"
+    all_day_event_end_time: "Події, у яких не вказано час закінчення, закінчуються в цей час. Формат HH:мм. Для 18:00 введіть 18:00"
+    all_day_event_time_error: "Неправильний час. Формат має бути HH:mm (наприклад: 08:00)."
+    calendar_categories: "Відображати календар у верхній частині категорії. Обов’язковими параметрами є categoryId і postId. наприклад: categoryId=6;postId=453\n Інші дійсні налаштування: tzPicker, вихідні та defaultView."
+    calendar_categories_outlet: "Дозволяє змінити точку, де повинен відображатись календар категорій."
+    working_days: "Встановіть робочі дні. Ви можете відобразити доступність групи за допомогою тегу `timezones` у повідомленні, наприклад: `[timezones group=admins]`[timezones]"
+    working_day_start_hour: "Час початку робочого дня."
+    working_day_end_hour: "Час закінчення робочого дня."
+    close_to_working_day_hours_extension: "Встановіть час продовження в робочі дні з врахуванням часових поясів."
+    events_calendar_categories: "Відображати календар подій у верхній частині категорії."
+    sort_categories_by_event_start_date_enabled: "Увімкнути сортування тем категорії за датою початку події."
+    disable_resorting_on_categories_enabled: "Дозволити категоріям вимкнути можливість для користувачів сортувати за категорією події."
+    calendar_automatic_holidays_enabled: "Автоматично визначати стан свята на основі регіону користувачів (зверніть увагу: ви можете відключити певні автоматичні свята в налаштуваннях плагінів)"
+    event_participation_buttons: "Список кнопок участі у заходах, які можуть використовувати користувачі."
+    sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
+    include_expired_events_on_calendar: "Включати минулі/завершені події в перегляд календаря категорій і майбутніх подій."
+  discourse_calendar:
+    invite_user_notification: "%{username} запросили Вас на: %{description}"
+    calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
+    more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."
+    more_than_two_dates: "Повідомлення календаря теми не може містити більше двох дат."
+    event_expired: "Подія закінчилася"
+    holiday_status:
+      description: "У відпустці"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} ось-ось розпочнеться."
+      after_event_reminder: "%{title} закінчилась."
+      ongoing_event_reminder: "%{title} триває."
+    errors:
+      bulk_invite:
+        max_invitees: "Створено перші %{max_invittes} запрошених. Спробуйте розбити файл на менші частини."
+        error: "Під час завантаження цього файлу сталася помилка. Будь ласка, спробуйте пізніше."
+      models:
+        event:
+          only_one_event: "У дописі може бути лише одна подія."
+          must_be_in_first_post: "Подія може бути лише в першому дописі теми."
+          raw_invitees_length: "Подія обмежена %{count} користувачами/групами."
+          raw_invitees:
+            only_group: "Подія приймає лише назви груп."
+          ends_at_before_starts_at: "Подія не може закінчитися до початку."
+          start_must_be_present_and_a_valid_date: "Подія вимагає дійсної дати початку."
+          end_must_be_a_valid_date: "Дата закінчення повинна бути дійсною датою."
+          invalid_recurrence: "Періодичність повинна бути однією з наступних: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Часовий пояс не розпізнано."
+          acting_user_not_allowed_to_create_event: "Поточний користувач не може створювати події."
+          acting_user_not_allowed_to_act_on_this_event: "Поточний користувач не має права впливати на цю подію."
+          invalid_allowed_groups: "Неправильні дозволені групи."
+          acting_user_not_allowed_to_invite_these_groups: "Поточний користувач не має права запрошувати ці групи."
+          custom_field_is_invalid: "Користувацьке поле `%{field}` не допускається."
+          name:
+            length: "Довжина назви події має бути від %{minimum} до %{maximum} символів."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Нагадування про подію"

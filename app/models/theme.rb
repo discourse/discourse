@@ -6,11 +6,12 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 91
+  BASE_COMPILER_VERSION = 97
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
+    dark_color_scheme_id
     default
     locale
     translations
@@ -36,6 +37,7 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  belongs_to :dark_color_scheme, class_name: "ColorScheme"
   alias_method :color_palette, :color_scheme
 
   has_many :theme_fields, dependent: :destroy, validate: false
@@ -93,6 +95,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
+  has_many :theme_site_settings, dependent: :destroy
 
   validate :component_validations
   validate :validate_theme_fields
@@ -107,6 +110,7 @@ class Theme < ActiveRecord::Base
         -> do
           include_basic_relations.includes(
             :theme_settings,
+            :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
@@ -126,10 +130,9 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  scope :not_components, -> { where(component: false) }
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
-  scope :with_experimental_system_themes,
-        -> { where("id > 0 OR id IN (?)", Theme.experimental_system_theme_ids) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -203,20 +206,19 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def load_all_extra_js
+    theme_fields
+      .where(target_id: Theme.targets[:extra_js])
+      .order(:name, :id)
+      .pluck(:name, :value)
+      .to_h
+  end
+
   def update_javascript_cache!
-    all_extra_js =
-      theme_fields
-        .where(target_id: Theme.targets[:extra_js])
-        .order(:name, :id)
-        .pluck(:name, :value)
-        .to_h
-
+    all_extra_js = load_all_extra_js
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
       js_compiler.append_tree(all_extra_js)
-      settings_hash = build_settings_hash
-
-      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
 
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
@@ -319,6 +321,17 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  def self.expire_site_setting_cache!
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
+
+    Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(nil))
+  end
+
   def self.clear_default!
     SiteSetting.default_theme_id = -1
     expire_site_cache!
@@ -348,18 +361,14 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.experimental_system_theme_ids
-    Theme::CORE_THEMES
-      .select { |k, v| SiteSetting.experimental_system_themes_map.include?(k) }
-      .values
-  end
-
   def set_default!
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))
     end
+
+    # NOTE: The cache is expired in the 014-track-setting-changes.rb
+    # initializer, so we don't need to do it here.
     SiteSetting.default_theme_id = id
-    Theme.expire_site_cache!
   end
 
   def default?
@@ -469,6 +478,7 @@ class Theme < ActiveRecord::Base
         extra_js: 6,
         tests_js: 7,
         migrations: 8,
+        about: 9,
       )
   end
 
@@ -547,7 +557,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
         HTML
       end
     when :translations
@@ -1042,15 +1052,10 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
-    compiler.append_tree(migrations_tree, include_variables: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
+    compiler.append_tree(load_all_extra_js)
+    compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)
-
-    compiler.append_raw_script "test_setup.js", <<~JS
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
-      })();
-    JS
 
     content = compiler.content
 
@@ -1071,7 +1076,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 
   def find_or_create_owned_color_palette
@@ -1148,19 +1158,20 @@ end
 #
 # Table name: themes
 #
-#  id               :integer          not null, primary key
-#  name             :string           not null
-#  user_id          :integer          not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  compiler_version :integer          default(0), not null
-#  user_selectable  :boolean          default(FALSE), not null
-#  hidden           :boolean          default(FALSE), not null
-#  color_scheme_id  :integer
-#  remote_theme_id  :integer
-#  component        :boolean          default(FALSE), not null
-#  enabled          :boolean          default(TRUE), not null
-#  auto_update      :boolean          default(TRUE), not null
+#  id                   :integer          not null, primary key
+#  auto_update          :boolean          default(TRUE), not null
+#  compiler_version     :integer          default(0), not null
+#  component            :boolean          default(FALSE), not null
+#  enabled              :boolean          default(TRUE), not null
+#  hidden               :boolean          default(FALSE), not null
+#  name                 :string           not null
+#  user_selectable      :boolean          default(FALSE), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  color_scheme_id      :integer
+#  dark_color_scheme_id :integer
+#  remote_theme_id      :integer
+#  user_id              :integer          not null
 #
 # Indexes
 #

@@ -5,7 +5,7 @@
   flex-grow: 1;
   max-width: 100%;
 
-  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+  .d-editor-textarea-wrapper textarea.d-editor-input.--markdown-monospace {
     font-family: var(--d-font-family--monospace);
     font-variant-ligatures: none;
 
@@ -320,12 +320,21 @@
   gap: var(--space-2);
   margin: 0.25rem 0;
 
-  .composer-toggle-switch {
-    padding: 0 0.5rem;
+  @include viewport.until(sm) {
+    flex-wrap: nowrap;
+    padding-block: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
-  @include viewport.until(sm) {
-    font-size: var(--font-down-1-rem);
+  .composer-toggle-switch {
+    padding: 0 0.5rem;
   }
 
   .btn:focus-visible {
@@ -439,7 +448,6 @@
     border-radius: var(--d-border-radius);
     padding: var(--translation-preview-padding);
     position: relative;
-    height: 100%;
     padding-top: calc(var(--translation-preview-padding) * 2);
 
     &__header {

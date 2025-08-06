@@ -62,6 +62,8 @@ class UserCardSerializer < BasicUserSerializer
              :title,
              :suspend_reason,
              :suspended_till,
+             :silence_reason,
+             :silenced_till,
              :badge_count,
              :user_fields,
              :custom_fields,
@@ -156,6 +158,14 @@ class UserCardSerializer < BasicUserSerializer
 
   def include_suspended_till?
     object.suspended?
+  end
+
+  def include_silence_reason?
+    scope.can_see_silencing_reason?(object) && object.silenced?
+  end
+
+  def include_silenced_till?
+    object.silenced?
   end
 
   def user_fields

@@ -16,13 +16,9 @@
 #reply-control.hide-preview:not(.draft) {
   @include viewport.from(sm) {
     background: var(--d-content-background);
-    border-top-right-radius: var(--d-border-radius);
-    border-top-left-radius: var(--d-border-radius);
 
     .grippie {
       background: var(--tertiary-low);
-      border-top-right-radius: var(--d-border-radius);
-      border-top-left-radius: var(--d-border-radius);
     }
 
     .user-selector,
@@ -55,7 +51,7 @@
 
     .d-editor-textarea-wrapper {
       border: 0;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       border-radius: 0;
 
       &.in-focus {

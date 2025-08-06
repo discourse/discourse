@@ -171,19 +171,12 @@ zh_TW:
       search: "搜索"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
       error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
       only_admins: "（此消息僅向網站管理員顯示）"
     broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"
     broken_page_change_alert: "onPageChange 處理器產生錯誤。請檢查瀏覽器開發工具以取得更多資訊。"
     broken_plugin_alert: "由外掛程式引起 '%{name}'"
     broken_transformer_alert: "出現錯誤。您的網站可能無法正常運作。"
-    critical_deprecation:
-      notice: "<b>[管理員通知]</b>您的主題或外掛之一需要更新，以相容於即將發生的 Discourse 核心變更。"
-      id: "（編號：<em>%{id}</em>）"
-      linked_id: "（編號：<a href='%{url}' target='_blank'><em>%{id}</em></a>）"
-      theme_source: "已識別的主題：<a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "已識別的外掛程式：'%{name}'"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -1219,7 +1212,6 @@ zh_TW:
         description: "跳過新使用者登入時的提示和徽章"
       reset_seen_user_tips: "再次顯示使用者提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme_default_on_all_devices: "在我的所有裝置上設定預設調色盤"
       color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
@@ -1229,6 +1221,10 @@ zh_TW:
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
+        interface_modes:
+          auto: "自動"
+          light: "輕亮"
+          dark: "黑暗"
       dark_mode: "夜間模式"
       dark_mode_enable: "啟用自動深色模式調色板"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
@@ -1254,6 +1250,8 @@ zh_TW:
       suspended_notice: "該使用者已被停權至 %{date}。"
       suspended_permanently: "該使用者已被停權。"
       suspended_reason: "原因: "
+      silenced_permanently: "該使用者已被禁言."
+      silenced_reason: "原因: "
       github_profile: "GitHub"
       email_activity_summary: "活動摘要"
       mailing_list_mode:
@@ -1753,7 +1751,8 @@ zh_TW:
         removed: "已移除"
         search: "輸入以搜索邀請…"
         user: "受邀請的使用者"
-        none: "沒有可顯示的邀請"
+        none:
+          title: "沒有可顯示的邀請"
         truncated:
           other: "只顯示前 %{count} 個邀請。"
         redeemed: "已接受的邀請"
@@ -2332,7 +2331,6 @@ zh_TW:
       unlist: "不公開"
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
-      toggle_unlisted: "切換 不公開"
       insert_table: "插入表格"
       posting_not_on_topic: "你想要回覆哪個話題?"
       saved_local_draft_tip: "本地儲存完畢"
@@ -4422,6 +4420,8 @@ zh_TW:
             badges:
               content: "徽章"
               title: "所有可獲得的徽章"
+            filter:
+              content: "過濾器"
             topics:
               content: "討論話題"
               title: "所有話題"
@@ -4564,6 +4564,9 @@ zh_TW:
           save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
+    filter:
+      description:
+        yesterday: "昨天"
     discovery:
       headings:
         multi_tag:
@@ -4575,7 +4578,7 @@ zh_TW:
     admin:
       title: "論壇管理員"
       moderator: "板主"
-      filter_reports: 過濾報告
+      filter_reports: "過濾報告..."
       tags:
         remove_muted_tags_from_latest:
           always: "總是"
@@ -4839,7 +4842,6 @@ zh_TW:
               header_description: "檢視已執行的搜尋記錄"
         plugins:
           title: "已安裝外掛"
-          header_description: "您安裝的任何 Discourse 插件，或由 Discourse 托管預安裝的插件都將出現在此清單中"
         api_keys:
           title: "API 密鑰"
           header_description: "API 金鑰功能可讓您安全地將 Discourse 與外部系統整合，並自動執行動作。管理員可以建立具有特定範圍的金鑰，以控制對資源和敏感資料的存取權限。範圍限制功能，確保增強安全性。"
@@ -4851,6 +4853,8 @@ zh_TW:
         embedding:
           title: "嵌入"
           header_description: "Discourse 能夠使用創建 IFRAME 的 Javascript API 將主題中的註釋嵌入遠程網站中"
+      theme_site_settings:
+        default_value: "預設"
       search:
         title: "搜索"
         result_types:
@@ -5523,6 +5527,11 @@ zh_TW:
         author: "作者 %{author}"
         experimental_badge: "實驗性"
         learn_more: "了解更多"
+        filters:
+          all: "全部"
+          enabled: "啟用"
+          disabled: "停用"
+          reset: "重置"
       navigation_menu:
         sidebar: "側選單"
         header_dropdown: "標題下拉選單"
@@ -5648,7 +5657,8 @@ zh_TW:
           theme: "佈景主題"
           component: "元件"
           components: "元件"
-          search_placeholder: "輸入以搜尋…"
+          filter_all: "全部"
+          filter_user_selectable: "使用者可選"
           theme_name: "佈景主題名稱"
           component_name: "元件名稱"
           themes_intro: "選擇現有或安裝新佈景主題以開始"
@@ -5777,11 +5787,7 @@ zh_TW:
           up_to_date: "佈景主題已是最新版本，上次檢查時間："
           has_overwritten_history: "目前的主題版本不再存在，因為 Git 歷史記錄被強制推覆了。"
           add: "新增"
-          theme_settings: "佈景主題設定"
-          edit_objects_theme_setting: "物件設定編輯器"
-          overriden_settings_explanation: "覆蓋的設定以點標記並以突出顯示的顏色顯示。若要將這些設定重設為預設值，請按下旁邊的重設按鈕。"
           no_settings: "此佈景主題無設定"
-          theme_translations: "佈景主題轉譯"
           empty: "沒有物件"
           commits_behind:
             other: "佈景主題落後了%{count}個變更！"
@@ -5862,7 +5868,12 @@ zh_TW:
             title: "選擇調色盤"
             description: "基本顏色："
           title: "顏色"
-          edit: "編輯調色盤"
+          edit: "編輯"
+          filters:
+            all: "全部"
+            user_selectable: "使用者可選"
+          active_badge:
+            text: "啟用"
           long_title: "調色盤"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
           new_name: "新的調色盤"
@@ -6489,7 +6500,6 @@ zh_TW:
         activity: 活動
         like_count: 已給出 / 收到的讚
         last_100_days: "在過去 100 天內"
-        private_topics_count: 私人話題
         posts_read_count: 讀過的貼文
         post_count: 已發表的貼文
         second_factor_enabled: 啟用雙重認證

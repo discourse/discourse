@@ -112,11 +112,17 @@ body.signup-page {
     margin-bottom: 1em;
 
     input,
-    .select-kit-header {
+    .select-kit-header,
+    textarea {
       padding: 0.75em 0.77em;
       min-width: 250px;
       margin-bottom: 0.25em;
       width: 100%;
+    }
+
+    textarea {
+      border: var(--d-input-border);
+      border-radius: var(--d-input-border-radius);
     }
 
     input:not(.filter-input):focus {
@@ -235,7 +241,7 @@ body.signup-page {
     white-space: nowrap;
 
     .btn-social {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.75em 0.77em; // matches input padding
     }
   }
@@ -340,9 +346,11 @@ body.signup-page {
 
   .user-fields .input-group {
     .user-field {
-      &.text {
+      &.text,
+      &.textarea {
         &.value-entered label.alt-placeholder.control-label,
-        input:focus + label.alt-placeholder.control-label {
+        input:focus + label.alt-placeholder.control-label,
+        textarea:focus + label.alt-placeholder.control-label {
           top: -8px;
           left: calc(1em - 0.25em);
           background-color: var(--secondary);

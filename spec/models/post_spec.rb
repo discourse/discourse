@@ -1559,6 +1559,42 @@ RSpec.describe Post do
       t.reload
       expect(t.visible).to eq(false)
     end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper])
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when hiding a whisper" do
+        whisper_post.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when hiding the last visible reply" do
+        last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when hiding a reply that is not the last" do
+        second_last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   describe "#unhide!" do
@@ -1618,6 +1654,42 @@ RSpec.describe Post do
       expect do post_2.unhide! end.to change { post_2.user.user_stat.reload.post_count }.from(0).to(
         1,
       )
+    end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror, hidden: true)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:, hidden: true)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper], hidden: true)
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when unhiding a whisper" do
+        whisper_post.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when unhiding the last visible reply" do
+        last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when unhiding a reply that is not the last" do
+        second_last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
     end
   end
 
@@ -2389,12 +2461,29 @@ RSpec.describe Post do
       I18n.locale = "ja"
       post = Fabricate(:post)
       zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
       ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
 
       expect(post.get_localization(:zh_CN)).to eq(zh_localization)
       expect(post.get_localization("zh-CN")).to eq(zh_localization)
       expect(post.get_localization("xx")).to eq(nil)
       expect(post.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      ja_jp_localization = Fabricate(:post_localization, post: post, locale: "ja_JP")
+
+      expect(post.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      post = Fabricate(:post)
+      pt_localization = Fabricate(:post_localization, post: post, locale: "pt")
+
+      expect(post.get_localization).to eq(pt_localization)
     end
   end
 
@@ -2403,6 +2492,8 @@ RSpec.describe Post do
       I18n.locale = "ja"
       post = Fabricate(:post, locale: "ja")
 
+      expect(post.in_user_locale?).to eq(true)
+      post.update!(locale: "ja_JP")
       expect(post.in_user_locale?).to eq(true)
 
       post.update!(locale: "es")

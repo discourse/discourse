@@ -121,7 +121,7 @@
 
 .topic-status-info,
 .topic-timer-info {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   margin: 0;
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
@@ -377,7 +377,7 @@
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
 
     li:last-of-type {
       margin-bottom: 1em;
@@ -391,6 +391,8 @@
   .track-link {
     display: flex;
     align-items: center;
+    gap: var(--space-2);
+    color: var(--primary-med-or-secondary-med);
 
     span:not(.badge) {
       @include ellipsis;
@@ -404,13 +406,13 @@
     li {
       margin-bottom: 0.5em;
 
-      a[href] {
-        color: var(--primary-med-or-secondary-med);
-      }
-
       .d-icon {
         font-size: var(--font-down-2);
-        margin: 0 0.5em 0 0;
+      }
+
+      .emoji {
+        width: 1em;
+        height: 1em;
       }
     }
   }

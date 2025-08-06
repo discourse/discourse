@@ -938,7 +938,6 @@ bs_BA:
     sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
-    default_theme_name: "Uobičajen"
   edit_this_page: "Edit this page"
   csv_export:
     boolean_yes: "Da"

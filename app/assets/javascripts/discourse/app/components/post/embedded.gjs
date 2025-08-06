@@ -33,7 +33,7 @@ const PostEmbedded = <template>
         <PostCookedHtml
           @post={{@post}}
           @highlightTerm={{@highlightTerm}}
-          @streamElement={{false}}
+          @streamElement={{@streamElement}}
         />
       </div>
     </div>

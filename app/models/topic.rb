@@ -1021,7 +1021,7 @@ class Topic < ActiveRecord::Base
 
   cattr_accessor :update_featured_topics
 
-  def changed_to_category(new_category)
+  def changed_to_category(new_category, silent: nil)
     return true if new_category.blank? || Category.exists?(topic_id: id)
 
     if new_category.id == SiteSetting.uncategorized_category_id &&
@@ -1053,7 +1053,9 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if !SiteSetting.disable_category_edit_notifications && (post = self.ordered_posts.first)
+        skip_alert = silent || SiteSetting.disable_category_edit_notifications
+
+        if !skip_alert && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(
@@ -1130,7 +1132,7 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  def change_category_to_id(category_id)
+  def change_category_to_id(category_id, silent: nil)
     return false if private_message?
 
     new_category_id = category_id.to_i
@@ -1144,7 +1146,7 @@ class Topic < ActiveRecord::Base
 
     reviewables.update_all(category_id: new_category_id)
 
-    changed_to_category(cat)
+    changed_to_category(cat, silent: silent)
   end
 
   def remove_allowed_group(removed_by, name)
@@ -1920,11 +1922,13 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at(post_id = nil)
+  def reset_bumped_at(post_or_post_id = nil)
     post =
-      (
-        if post_id
-          Post.find_by(id: post_id)
+      if post_or_post_id.is_a?(Post)
+        post_or_post_id
+      else
+        if post_or_post_id
+          Post.find_by(id: post_or_post_id)
         else
           ordered_posts.where(
             user_deleted: false,
@@ -1932,7 +1936,7 @@ class Topic < ActiveRecord::Base
             post_type: Post.types[:regular],
           ).last || first_post
         end
-      )
+      end
 
     return if !post
 
@@ -2137,11 +2141,18 @@ class Topic < ActiveRecord::Base
   end
 
   def in_user_locale?
-    locale == I18n.locale.to_s
+    LocaleNormalizer.is_same?(locale, I18n.locale)
   end
 
   def get_localization(locale = I18n.locale)
-    topic_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    locale_str = locale.to_s.sub("-", "_")
+
+    # prioritise exact match
+    if match = topic_localizations.find { |l| l.locale == locale_str }
+      return match
+    end
+
+    topic_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

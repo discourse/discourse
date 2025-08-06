@@ -88,9 +88,7 @@ export default class BulkTopicActions extends Component {
     const options = {};
 
     if (this.isSilent) {
-      const newType =
-        operation.type === "close" ? "silent_close" : operation.type;
-      operation.type = newType;
+      operation.silent = true;
     }
 
     if (this.isCloseAction && this.closeNote) {
@@ -229,12 +227,12 @@ export default class BulkTopicActions extends Component {
     this.loading = false;
     if (this.errors) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("generic_error") },
       });
     } else {
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("topics.bulk.completed") },
       });
     }

@@ -575,6 +575,7 @@ pt_BR:
         one: "\"%{username}\" já é membro deste grupo."
         other: "Os seguintes usuários(as) já são membros deste grupo:%{username}"
       invalid_domain: "\"%{domain}\" não é um domínio válido."
+      too_many_domains: "Excesso de domínios. Máximo de %{max}."
       invalid_incoming_email: "\"%{email}\" não é um endereço de e-mail válido."
       email_already_used_in_group: "\"%{email}\" já foi utilizado pelo grupo \"%{group_name}\"."
       email_already_used_in_category: "\"%{email}\" já foi utilizado pela categoria \"%{category_name}\"."
@@ -4130,7 +4131,6 @@ pt_BR:
     solarized_dark_theme_name: "Cor escura solarizada"
     wcag_dark: "WCAG escuro"
     wcag_dark_theme_name: "WCAG escuro"
-    default_theme_name: "Padrão"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
@@ -4755,10 +4755,6 @@ pt_BR:
         Este emblema é concedido por ter acessado 365 dias consecutivos. Uau, um ano inteiro!
     badge_title_metadata: "%{display_name} emblema em %{site_title}"
   admin_login:
-    success: "E-mail enviado"
-    errors:
-      unknown_email_address: "endereço de e-mail desconhecido."
-      invalid_token: "token inválido."
     email_input: "E-mail do(a) administrador(a)"
     submit_button: "Enviar e-mail"
     safe_mode: "Modo de segurança: desativa todos os temas/plugins ao fazer login"
@@ -4990,6 +4986,7 @@ pt_BR:
       restored: Restaurado(a)
     bulk_user_delete: "excluído(a) numa operação de exclusão em massa"
     cli_bulk_post_delete: "Excluído em massa da tarefa rake"
+    imap_email_deleted: "O e-mail foi excluído do servidor IMAP"
   reviewables:
     already_handled: "Obrigado, mas já analisamos esta postagem e determinamos que não precisa ser sinalizada novamente."
     already_handled_and_user_not_exist: "Obrigado, mas alguém já revisou e esse(a) usuário(a) não existe mais."

@@ -111,7 +111,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".no-results-suggestion").exists();
     assert.dom(".google-search-form").exists();
 
-    await fillIn(".search-query", "discourse");
+    await fillIn(".search-query", "consectetur");
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
@@ -120,7 +120,7 @@ acceptance("Search - Full Page", function (needs) {
   test("search for personal messages", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "discourse in:messages");
+    await fillIn(".search-query", "consectetur in:messages");
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
@@ -538,11 +538,11 @@ acceptance("Search - Full Page", function (needs) {
   test("adds visited class to visited topics", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "discourse");
+    await fillIn(".search-query", "consectetur");
     await click(".search-cta");
     assert.dom(".visited").doesNotExist();
 
-    await fillIn(".search-query", "discourse visited");
+    await fillIn(".search-query", "consectetur visited");
     await click(".search-cta");
     assert.dom(".visited").exists({ count: 1 });
   });
@@ -550,7 +550,7 @@ acceptance("Search - Full Page", function (needs) {
   test("result link click tracking is invoked", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "discourse");
+    await fillIn(".search-query", "consectetur");
     await click(".search-cta");
 
     await click("a.search-link:first-child");

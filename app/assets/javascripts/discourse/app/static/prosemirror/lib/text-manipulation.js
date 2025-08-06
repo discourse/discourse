@@ -1,14 +1,16 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
-import { TextSelection } from "prosemirror-state";
+import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
@@ -21,6 +23,8 @@ import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
+  @service siteSettings;
+
   allowPreview = false;
 
   /** @type {import("prosemirror-model").Schema} */
@@ -78,16 +82,32 @@ export default class ProsemirrorTextManipulation {
 
   putCursorAtEnd() {
     this.focus();
-    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
+
+    next(() => {
+      this.view.dispatch(
+        this.view.state.tr
+          .setSelection(Selection.atEnd(this.view.state.doc))
+          .scrollIntoView()
+      );
+    });
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    $(this.view.dom).autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.floatkit_autocomplete_composer) {
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwner(this),
+        this.view.dom,
+        this.autocompleteHandler,
+        options
+      );
+    } else {
+      // @ts-ignore
+      $(this.view.dom).autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 
   applySurroundSelection(head, tail, exampleKey) {
@@ -506,6 +526,7 @@ class ProsemirrorPlaceholderHandler {
   }
 
   progress() {}
+
   progressComplete() {}
 
   cancelAll() {

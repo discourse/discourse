@@ -7,7 +7,7 @@ import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
-    withPluginApi("0.8.7", (api) => {
+    withPluginApi((api) => {
       function handleVideoPlaceholderClick(helper, event) {
         const parentDiv = event.target.closest(".video-placeholder-container");
         const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");

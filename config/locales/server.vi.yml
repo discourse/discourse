@@ -1896,7 +1896,6 @@ vi:
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
     base_theme_name: "Cơ bản"
-    default_theme_name: "Mặc định"
   edit_this_page: "Sửa trang này"
   csv_export:
     boolean_yes: "Đồng ý"
@@ -2066,7 +2065,6 @@ vi:
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
-    success: "Gửi mail lỗi"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:

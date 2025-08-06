@@ -256,19 +256,12 @@ ru:
       search: "Найти"
     themes:
       default_description: "По умолчанию"
-      broken_theme_alert: "Сайт может не работать: в теме (компоненте) есть ошибки."
       error_caused_by: "Ошибка из-за темы «%{name}». <a target='blank' href='%{path}'>Нажмите здесь</a>, чтобы обновить, перенастроить или отключить ее."
       only_admins: "(это сообщение отображается только для администраторов сайта)"
     broken_decorator_alert: "Сообщения могут отображаться неправильно: один из декораторов контента сообщений вызвал ошибку."
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     broken_transformer_alert: "Произошла ошибка. Ваш сайт может работать некорректно."
-    critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse."
-      id: "(ID:<em>%{id}</em>)"
-      linked_id: "(ID:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Выявленный плагин: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азиатско-Тихоокеанский регион (Токио)"
@@ -1448,7 +1441,6 @@ ru:
         description: "Не выдавать награды и не показывать советы новым пользователям"
       reset_seen_user_tips: "Показать советы для пользователей еще раз"
       theme_default_on_all_devices: "Сделать эту тему темой по умолчанию на всех моих устройствах"
-      color_scheme_default_on_all_devices: "Установить цветовую палитру по умолчанию на всех моих устройствах"
       color_scheme: "Цветовая палитра"
       color_schemes:
         default_description: "Тема по умолчанию"
@@ -1458,6 +1450,9 @@ ru:
         regular: "Обычная"
         dark: "Тёмный режим"
         default_dark_scheme: "(цветовая схема по умолчанию)"
+        interface_modes:
+          light: "Светлая"
+          dark: "Тёмная"
       dark_mode: "Тёмный режим"
       dark_mode_enable: "Включать цветовую палитру темного режима автоматически"
       text_size_default_on_all_devices: "Сделать это размер текста размером по умолчанию на всех моих устройствах"
@@ -1483,6 +1478,8 @@ ru:
       suspended_notice: "Пользователь заблокирован до %{date}."
       suspended_permanently: "Этот пользователь заблокирован."
       suspended_reason: "Причина: "
+      silenced_permanently: "Этот пользователь заморожен."
+      silenced_reason: "Причина: "
       github_profile: "GitHub"
       email_activity_summary: "Сводка активности"
       mailing_list_mode:
@@ -2039,7 +2036,8 @@ ru:
         removed: "Отозваны"
         search: "поиск приглашений…"
         user: "Кто приглашён"
-        none: "Нет приглашений для отображения."
+        none:
+          title: "Нет приглашений для отображения."
         truncated:
           one: "Показано первое %{count} приглашение"
           few: "Показаны первые %{count} приглашения"
@@ -2713,7 +2711,6 @@ ru:
       unlist: "тема скрыта"
       add_warning: "Официальное предупреждение."
       toggle_whisper: "Скрытое сообщение"
-      toggle_unlisted: "Скрыть"
       insert_table: "Вставить таблицу"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
       saved_local_draft_tip: "сохранено локально"
@@ -5149,6 +5146,8 @@ ru:
             badges:
               content: "Награды"
               title: "Все награды, которые можно получить"
+            filter:
+              content: "Фильтр"
             topics:
               content: "Темы"
               title: "Все темы"
@@ -5308,6 +5307,12 @@ ru:
           paste: "Вставить..."
           save: "Сохранить как..."
     powered_by_discourse: "На платформе Discourse"
+    filter:
+      description:
+        yesterday: "Вчера"
+        last_week: "На прошлой неделе"
+        last_month: "В прошлом месяце"
+        last_year: "За последний год"
     discovery:
       headings:
         multi_tag:
@@ -5319,7 +5324,7 @@ ru:
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
-      filter_reports: Фильтр отчетов
+      filter_reports: "Фильтр отчетов..."
       tags:
         remove_muted_tags_from_latest:
           always: "Всегда"
@@ -5508,7 +5513,6 @@ ru:
               title: "Журналы поиска"
         plugins:
           title: "Установленные плагины"
-          header_description: "В этом списке появятся все установленные вами плагины Discourse или плагины, которые предустановлены вместе с хостингом Discourse"
         api_keys:
           title: "API-ключи"
           header_description: "Функция API-ключей позволяет безопасно интегрировать Discourse с внешними системами и автоматизировать действия. Администраторы могут создавать ключи с определенными областями действия для управления доступом к ресурсам и конфиденциальным данным. Области действия ограничивают функциональность, обеспечивая повышенную безопасность."
@@ -5517,6 +5521,8 @@ ru:
         embedding:
           title: "Встраивание"
           header_description: "Discourse имеет возможность встраивать комментарии из темы на удаленный сайт с помощью API Javascript, который создает IFRAME"
+      theme_site_settings:
+        default_value: "Домашнюю страницу"
       search:
         title: "Найти"
         result_types:
@@ -6243,6 +6249,11 @@ ru:
         author: "Автор: %{author}"
         experimental_badge: "экспериментальный"
         learn_more: "Подробнее"
+        filters:
+          all: "Все"
+          enabled: "Включено"
+          disabled: "Отключен"
+          reset: "Сбросить"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
@@ -6368,7 +6379,8 @@ ru:
           theme: "Тема"
           component: "Компонент"
           components: "Компоненты"
-          search_placeholder: "введите для поиска…"
+          filter_all: "Все"
+          filter_user_selectable: "Выбирается пользователем"
           theme_name: "Название темы"
           component_name: "Название компонента"
           themes_intro: "Для начала выберите существующую тему или установите новую"
@@ -6499,11 +6511,7 @@ ru:
           up_to_date: "Установлена актуальная версия темы, последняя проверка:"
           has_overwritten_history: "Текущая версия темы больше не существует, поскольку история Git-репозитория была принудительно перезаписана."
           add: "Добавить"
-          theme_settings: "Настройки темы"
-          edit_objects_theme_setting: "Редактор настроек объектов"
-          overriden_settings_explanation: "Переопределенные настройки отмечены точкой и выделены цветом. Чтобы сбросить эти настройки до значения по умолчанию, нажмите кнопку сброса рядом с ними."
           no_settings: "Эта тема не имеет настроек."
-          theme_translations: "Перевод темы"
           empty: "Нет компонентов"
           commits_behind:
             one: "Тема отстает на %{count} коммит!"
@@ -6583,7 +6591,12 @@ ru:
             title: "Выберите базовую цветовую палитру"
             description: "Базовая палитра:"
           title: "Цвета"
-          edit: "Редактировать цветовые палитры"
+          edit: "Изменить"
+          filters:
+            all: "Все настройки"
+            user_selectable: "Выбирается пользователем"
+          active_badge:
+            text: "Активна"
           long_title: "Цветовые палитры"
           about: "Измените цвета, используемые в темах. Создайте новую цветовую палитру."
           new_name: "Новая цветовая палитра"
@@ -7235,7 +7248,6 @@ ru:
         activity: Активность
         like_count: Лайков поставлено / получено
         last_100_days: "за последние 100 дней"
-        private_topics_count: Личные темы
         posts_read_count: Прочитано сообщений
         post_count: Создано сообщений
         second_factor_enabled: Двухфакторная аутентификация включена

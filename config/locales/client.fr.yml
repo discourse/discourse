@@ -201,19 +201,12 @@ fr:
       search: "Recherche"
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
       error_caused_by: "Causée par « %{name} ». <a target='blank' href='%{path}'>Cliquez ici</a> pour mettre à jour, reconfigurer or désactiver."
       only_admins: "(ce message n'est visible que pour les administrateurs du site)"
     broken_decorator_alert: "Les publications risquent de ne pas s'afficher correctement, car l'un des décorateurs de contenu de publication de votre site a généré une erreur."
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     broken_transformer_alert: "Une erreur s'est produite. Votre site risque de ne pas fonctionner correctement."
-    critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou l'une de vos extensions doit être mise à jour pour assurer la compatibilité avec les prochaines modifications principales de Discourse."
-      id: "(id :<em>%{id}</em>)"
-      linked_id: "(id :<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
-      plugin_source: "Extension identifiée : « %{name} »"
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -1288,7 +1281,6 @@ fr:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
       reset_seen_user_tips: "Afficher à nouveau les conseils d'utilisation"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      color_scheme_default_on_all_devices: "Définir la palette de couleurs par défaut sur tous mes appareils"
       color_scheme: "Palette de couleurs"
       color_schemes:
         default_description: "Couleur du thème"
@@ -1298,6 +1290,9 @@ fr:
         regular: "Normal"
         dark: "Mode sombre"
         default_dark_scheme: "(par défaut)"
+        interface_modes:
+          light: "Clair"
+          dark: "Sombre"
       dark_mode: "Mode sombre"
       dark_mode_enable: "Activer la palette de couleurs du mode sombre automatiquement"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
@@ -1323,6 +1318,8 @@ fr:
       suspended_notice: "L'utilisateur est suspendu jusqu'au %{date}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison : "
+      silenced_permanently: "Cet utilisateur est mis en sourdine."
+      silenced_reason: "Raison : "
       github_profile: "GitHub"
       email_activity_summary: "Résumé d'activité"
       mailing_list_mode:
@@ -1841,7 +1838,8 @@ fr:
         removed: "Supprimé"
         search: "commencez votre saisie pour rechercher vos invitations…"
         user: "Utilisateur(rice) invité(e)"
-        none: "Aucune invitation à afficher."
+        none:
+          title: "Aucune invitation à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les %{count} premières invitations."
@@ -2453,7 +2451,6 @@ fr:
       unlist: "invisible"
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Activer/désactiver le murmure"
-      toggle_unlisted: "Activer/désactiver la visibilité"
       insert_table: "Insérer un tableau"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saved_local_draft_tip: "enregistré sur votre appareil"
@@ -4647,6 +4644,8 @@ fr:
             badges:
               content: "Badges"
               title: "Tous les badges disponibles à gagner"
+            filter:
+              content: "Filtre"
             topics:
               content: "Sujets"
               title: "Tous les sujets"
@@ -4794,6 +4793,12 @@ fr:
           paste: "Coller..."
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
+    filter:
+      description:
+        yesterday: "Hier"
+        last_week: "La semaine dernière"
+        last_month: "Le mois dernier"
+        last_year: "L'année dernière"
     discovery:
       headings:
         multi_tag:
@@ -4805,7 +4810,7 @@ fr:
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
-      filter_reports: Filtrer les rapports
+      filter_reports: "Filtrer les rapports..."
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -4996,7 +5001,6 @@ fr:
               title: "Journaux de recherche"
         plugins:
           title: "Extensions installées"
-          header_description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste"
         api_keys:
           title: "Clés d'API"
           header_description: "La fonctionnalité des clés d'API vous permet d'intégrer Discourse à des systèmes externes en toute sécurité et d'automatiser les actions. Les administrateurs peuvent créer des clés avec des autorisations spécifiques pour contrôler l'accès aux ressources et aux données sensibles. Les autorisations limitent les fonctionnalités et garantissent ainsi une sécurité accrue."
@@ -5005,6 +5009,8 @@ fr:
         embedding:
           title: "Intégration"
           header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+      theme_site_settings:
+        default_value: "Par défaut"
       search:
         title: "Recherche"
         result_types:
@@ -5707,6 +5713,11 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
+        filters:
+          all: "Tout"
+          enabled: "Activé"
+          disabled: "Désactivée"
+          reset: "Réinitialiser"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -5832,7 +5843,8 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
-          search_placeholder: "saisissez pour rechercher…"
+          filter_all: "Tout"
+          filter_user_selectable: "Sélectionnable par l'utilisateur"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"
@@ -5959,11 +5971,7 @@ fr:
           up_to_date: "Thème à jour, dernière vérification :"
           has_overwritten_history: "La version actuelle du thème n'existe plus car l'historique Git a été écrasé par une mise à jour forcée."
           add: "Ajouter"
-          theme_settings: "Paramètres du thème"
-          edit_objects_theme_setting: "Éditeur de configuration d'objets"
-          overriden_settings_explanation: "Les paramètres annulés sont signalés par un point et sont surlignés par une couleur. Pour rétablir la valeur par défaut de ces paramètres, appuyez sur le bouton de réinitialisation situé à côté."
           no_settings: "Ce thème n'a pas de paramètres."
-          theme_translations: "Traductions de thème"
           empty: "Aucun élément"
           commits_behind:
             one: "Le thème est en retard de %{count} commit !"
@@ -6033,7 +6041,12 @@ fr:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
           title: "Couleurs"
-          edit: "Modifier les palettes de couleurs"
+          edit: "Modifier"
+          filters:
+            all: "Tout"
+            user_selectable: "Sélectionnable par l'utilisateur"
+          active_badge:
+            text: "Actif"
           long_title: "Palettes de couleurs"
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
@@ -6665,7 +6678,6 @@ fr:
         activity: Activité
         like_count: '« J''aime » donnés/reçus'
         last_100_days: "au cours des 100 derniers jours"
-        private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
         second_factor_enabled: Validation en deux étapes activée

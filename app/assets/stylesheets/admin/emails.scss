@@ -1,7 +1,25 @@
 // Styles for admin/emails
 
 // Emails
+.admin-email-logs {
+  .admin-container {
+    margin-top: 0;
+  }
+}
+
 .email-list {
+  th {
+    white-space: nowrap;
+    min-width: 6rem;
+  }
+
+  .email-logs-user {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+    min-width: 200px;
+  }
+
   .filters input {
     width: 100%;
   }
@@ -18,28 +36,31 @@
 
   .username div {
     max-width: 180px;
-
-    @include ellipsis;
   }
 
   .addresses p {
     margin: 2px 0;
     max-width: 200px;
-
-    @include ellipsis;
   }
 
-  .sent-email-address a {
-    // prevent long email addresses from breaking the layout
+  a {
+    // prevent long links from breaking the layout
     display: inline-block;
     max-width: 300px;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    + a {
+      margin-top: var(--space-2);
+    }
+
+    &[href^="mailto:"] {
+      // don't aggressively wrap email addresses
+      min-width: 250px;
+    }
   }
 
-  .email-address {
-    max-width: 250px;
-
-    @include ellipsis;
+  code {
+    white-space: pre-wrap;
   }
 
   .email-details {
@@ -96,7 +117,7 @@
 
 .admin-list-item {
   width: 100%;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding: 0.25em 0;
 }
 

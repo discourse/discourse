@@ -146,7 +146,6 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
-  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -154,8 +153,10 @@ import {
   changeSetting,
   createWidget,
   decorateWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
   queryRegistry,
   reopenWidget,
+  warnWidgetsDeprecation,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
@@ -605,9 +606,6 @@ class PluginApi {
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
    *
-   * Decoration normally happens in a detached DOM. Use `options.afterAdopt`
-   * to decorate html content after it is adopted by the main `document`.
-   *
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
@@ -621,16 +619,9 @@ class PluginApi {
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
+    addDecorator(callback);
 
-    this.onAppEvent(
-      opts.afterAdopt
-        ? "decorate-post-cooked-element:after-adopt"
-        : "decorate-post-cooked-element:before-adopt",
-      callback
-    );
-
-    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
+    this.onAppEvent("decorate-post-cooked-element", callback);
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -750,7 +741,7 @@ class PluginApi {
     }
 
     // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
       decorateWidget(`poster-name:${loc}`, (dec) => {
         const attrs = dec.attrs;
         let results = cb(attrs.userCustomFields || {}, attrs);
@@ -3451,6 +3442,10 @@ class PluginApi {
       deprecated(
         `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
         POST_STREAM_DEPRECATION_OPTIONS
+      );
+    } else {
+      warnWidgetsDeprecation(
+        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
       );
     }
   }

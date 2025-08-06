@@ -3980,7 +3980,6 @@ it:
     solarized_dark_theme_name: "Scuro solare"
     wcag_dark: "WCAG Scuro"
     wcag_dark_theme_name: "WCAG Scuro"
-    default_theme_name: "Predefinito"
     light_theme_name: "Chiaro"
     dark_theme_name: "Scuro"
     neutral_theme_name: "Neutro"
@@ -4348,10 +4347,6 @@ it:
         Questo distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "distintivo %{display_name} su %{site_title}"
   admin_login:
-    success: "Email inviata"
-    errors:
-      unknown_email_address: "Indirizzo email sconosciuto."
-      invalid_token: "Token non valido."
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
     safe_mode: "Modalità sicura: disabilita tutti i temi/plugin quando accedi"

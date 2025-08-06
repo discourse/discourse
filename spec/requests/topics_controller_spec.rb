@@ -2517,6 +2517,28 @@ RSpec.describe TopicsController do
       expect(user_options_queries.size).to eq(1) # for all mentioned users
     end
 
+    context "when content_localization_enabled true" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      end
+
+      it "does not result in N+1 queries when loading a localized post" do
+        3.times do
+          Fabricate(:post_localization, post: Fabricate(:post, topic:, locale: "ja"), locale: "en")
+        end
+
+        queries =
+          track_sql_queries do
+            sign_in(admin)
+            get "/t/#{topic.slug}/#{topic.id}.json"
+          end
+
+        queries = queries.filter { |q| q =~ /FROM "?post_localizations"?/ }
+        expect(queries.size).to eq(1)
+      end
+    end
+
     context "with serialize_post_user_badges" do
       fab!(:badge)
       before do
@@ -3743,7 +3765,7 @@ RSpec.describe TopicsController do
 
     describe "when logged in" do
       before { sign_in(user) }
-      let!(:operation) { { type: "change_category", category_id: "1" } }
+      let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
 
       it "requires a list of topic_ids or filter" do

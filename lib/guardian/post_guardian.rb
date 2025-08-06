@@ -3,7 +3,7 @@
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
   def unrestricted_link_posting?
-    authenticated? && (is_staff? || @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map))
+    authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
 
   def link_posting_access
@@ -159,7 +159,7 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
+    if is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category)
       return can_create_post?(post.topic)
     end
     return false if !can_see_post_topic?(post)
@@ -201,8 +201,7 @@ module PostGuardian
   end
 
   def is_in_edit_post_groups?
-    SiteSetting.edit_all_post_groups.present? &&
-      user.in_any_groups?(SiteSetting.edit_all_post_groups.to_s.split("|").map(&:to_i))
+    user.in_any_groups?(SiteSetting.edit_all_post_groups_map)
   end
 
   def can_edit_hidden_post?(post)
@@ -212,7 +211,11 @@ module PostGuardian
   end
 
   def can_delete_post_or_topic?(post)
-    post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
+    if post.is_first_post?
+      post.topic && can_delete_topic?(post.topic)
+    else
+      can_delete_post?(post)
+    end
   end
 
   def can_delete_post?(post)
@@ -221,7 +224,7 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    return true if is_staff? || is_category_group_moderator?(post.topic&.category)
+    return true if is_category_group_moderator?(post.topic&.category)
 
     return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
@@ -384,7 +387,7 @@ module PostGuardian
   end
 
   def can_see_deleted_posts?(category = nil)
-    is_staff? || is_category_group_moderator?(category) ||
+    is_category_group_moderator?(category) ||
       @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
@@ -401,7 +404,7 @@ module PostGuardian
   end
 
   def trusted_with_post_edits?
-    is_staff? || @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+    @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
   end
 
   private

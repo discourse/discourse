@@ -1333,7 +1333,7 @@ class User < ActiveRecord::Base
   end
 
   def silence_reason
-    silenced_record.try(:details) if silenced?
+    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
   end
 
   def silenced_at
@@ -1349,12 +1349,14 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    suspend_record.try(:details) if suspended?
+    text = suspend_record.try(:details) if suspended?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
   end
 
   def suspend_reason
     if details = full_suspend_reason
-      return details.split("\n")[0]
+      return details.split("<br>")[0]
     end
 
     nil
@@ -1630,6 +1632,10 @@ class User < ActiveRecord::Base
       .where(disagreed_at: nil)
       .where(post_action_type_id: post_action_type_view.notify_flag_type_ids)
       .count
+  end
+
+  def number_of_silencings
+    UserHistory.for(self, :silence_user).count
   end
 
   def number_of_suspensions

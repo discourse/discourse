@@ -282,7 +282,7 @@ class ApplicationController < ActionController::Base
 
     show_json_errors =
       (request.format && request.format.json?) || (request.xhr?) ||
-        ((params[:external_id] || "").ends_with? ".json")
+        ((params[:external_id] || "").to_s.ends_with?(".json"))
 
     if type == :not_found && opts[:check_permalinks]
       url = opts[:original_path] || request.fullpath

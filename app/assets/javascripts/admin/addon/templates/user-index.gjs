@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -9,7 +10,6 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -228,35 +228,39 @@ export default RouteTemplate(
         />
       </div>
 
-      <div class="display-row last-ip">
-        <div class="field">{{i18n "user.ip_address.title"}}</div>
-        <div class="value">{{@controller.model.ip_address}}</div>
-        <div class="controls">
-          {{#if @controller.currentUser.staff}}
-            {{#if @controller.model.ip_address}}
-              <IpLookup
-                @ip={{@controller.model.ip_address}}
-                @userId={{@controller.model.id}}
-              />
+      {{#if @controller.model.include_ip}}
+        <div class="display-row last-ip">
+          <div class="field">{{i18n "user.ip_address.title"}}</div>
+          <div class="value">{{@controller.model.ip_address}}</div>
+          <div class="controls">
+            {{#if @controller.currentUser.can_see_ip}}
+              {{#if @controller.model.ip_address}}
+                <IpLookup
+                  @ip={{@controller.model.ip_address}}
+                  @userId={{@controller.model.id}}
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
+          </div>
         </div>
-      </div>
+      {{/if}}
 
-      <div class="display-row registration-ip">
-        <div class="field">{{i18n "user.registration_ip_address.title"}}</div>
-        <div class="value">{{@controller.model.registration_ip_address}}</div>
-        <div class="controls">
-          {{#if @controller.currentUser.staff}}
-            {{#if @controller.model.registration_ip_address}}
-              <IpLookup
-                @ip={{@controller.model.registration_ip_address}}
-                @userId={{@controller.model.id}}
-              />
+      {{#if @controller.model.include_ip}}
+        <div class="display-row registration-ip">
+          <div class="field">{{i18n "user.registration_ip_address.title"}}</div>
+          <div class="value">{{@controller.model.registration_ip_address}}</div>
+          <div class="controls">
+            {{#if @controller.currentUser.can_see_ip}}
+              {{#if @controller.model.registration_ip_address}}
+                <IpLookup
+                  @ip={{@controller.model.registration_ip_address}}
+                  @userId={{@controller.model.id}}
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
+          </div>
         </div>
-      </div>
+      {{/if}}
 
       {{#if @controller.showBadges}}
         <div class="display-row">
@@ -575,9 +579,9 @@ export default RouteTemplate(
           </div>
           <div class="controls">
             <strong>{{i18n "admin.user.suspend_reason"}}</strong>:
-            <div
-              class="full-reason"
-            >{{@controller.model.full_suspend_reason}}</div>
+            <div class="full-reason">{{htmlSafe
+                @controller.model.full_suspend_reason
+              }}</div>
           </div>
         </div>
       {{/if}}

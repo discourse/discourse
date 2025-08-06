@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  site_settings:
+    discourse_math_enabled: "Omogoči vtičnik Discourse Math (dodana bo posebna obdelava vnosov, razmejenih z $ in $$)"
+    discourse_math_provider: "Privzeti ponudnik matematičnega upodabljanja"
+    discourse_math_zoom_on_hover: "Povečanje na 200% ob lebdenju (samo za MathJax)"
+    discourse_math_enable_accessibility: "Omogoči nastavitve dostopnosti (samo za MathJax)"
+    discourse_math_enable_asciimath: "Omogoči asciimath (dodana bo posebna obdelava vnosov, razmejenih s %) (samo za MathJax)"

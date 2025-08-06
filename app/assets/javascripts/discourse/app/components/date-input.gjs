@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 /* global Pikaday:true */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";

@@ -173,7 +173,6 @@ zh_CN:
       search: "搜索"
     themes:
       default_description: "默认"
-      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向网站管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发了错误。"
@@ -181,11 +180,11 @@ zh_CN:
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     critical_deprecation:
-      notice: "<b>[管理员通知]</b> 您的一个主题或插件需要更新，以便与即将发布的 Discourse 核心更改兼容。"
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "确定的主题：<a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "确定的插件：'%{name}'"
+      notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。 (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>了解更多</em></a>)"
+      theme_source: "主题 <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "插件 '%{name}'"
+      unknown_source: "您的某个主题或插件"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -1271,7 +1270,7 @@ zh_CN:
         description: "跳过新用户入门提示和徽章"
       reset_seen_user_tips: "再次显示用户提示"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
-      color_scheme_default_on_all_devices: "在我的所有设备上设置默认调色板"
+      color_scheme_default_on_all_devices: "在我的所有设备上设置默认调色板和模式"
       color_scheme: "调色板"
       color_schemes:
         default_description: "默认主题"
@@ -1281,6 +1280,12 @@ zh_CN:
         regular: "常规"
         dark: "深色模式"
         default_dark_scheme: "（网站默认）"
+        interface_mode: "模式"
+        interface_mode_instructions: "'Auto' 使用您的系统偏好设置来设置浅色或深色模式。"
+        interface_modes:
+          auto: "自动"
+          light: "亮"
+          dark: "深色"
       dark_mode: "深色模式"
       dark_mode_enable: "启用自动深色模式调色板"
       text_size_default_on_all_devices: "将其设为我所有设备上的默认文本大小"
@@ -1306,6 +1311,9 @@ zh_CN:
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
+      silenced_notice: "该用户将被禁言直至 %{date}。"
+      silenced_permanently: "此用户已被禁言."
+      silenced_reason: "原因："
       github_profile: "GitHub"
       email_activity_summary: "活动总结"
       mailing_list_mode:
@@ -1373,6 +1381,8 @@ zh_CN:
           other: '<span class="%{className}">%{count}</span> 篇被举报的帖子'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇删除的帖子'
+        silencings:
+          other: '<span class="%{className}">%{count}</span> 禁言'
         suspensions:
           other: '<span class="%{className}">%{count}</span> 个封禁'
         warnings_received:
@@ -1807,7 +1817,8 @@ zh_CN:
         removed: "已移除"
         search: "输入以搜索邀请…"
         user: "邀请用户"
-        none: "没有要显示的邀请。"
+        none:
+          title: "没有要显示的邀请。"
         truncated:
           other: "正在显示前 %{count} 个邀请。"
         redeemed: "已确认的邀请"
@@ -2328,6 +2339,9 @@ zh_CN:
       disabled: "不显示"
       sidebar_footer: "在侧边栏页脚中显示"
       header: "在页眉中显示"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "富文本"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2406,7 +2420,6 @@ zh_CN:
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
-      toggle_unlisted: "切换取消公开"
       insert_table: "插入表"
       posting_not_on_topic: "您想回复哪个话题？"
       saved_local_draft_tip: "已保存到本地"
@@ -2475,6 +2488,8 @@ zh_CN:
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
       reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 排版。"
+      reply_placeholder_rte: "在此处输入。使用工具栏或 Markdown 进行格式化。拖放或粘贴图片。"
+      reply_placeholder_rte_no_images: "在此处输入。使用工具栏或 Markdown 进行格式化。"
       reply_placeholder_choose_category: "先选择一个类别，然后在此处输入。"
       view_new_post: "查看您的新帖子。"
       saving: "正在保存"
@@ -2492,6 +2507,11 @@ zh_CN:
       italic_label: "I"
       italic_title: "强调"
       italic_text: "强调文本"
+      heading_title: "标题"
+      heading_level_n: "标题 %{levelNumber}"
+      heading_level_n_title: "标题 %{levelNumber}"
+      heading_level_paragraph: "段落"
+      heading_level_paragraph_title: "段落"
       link_title: "链接"
       link_description: "在此处输入链接描述"
       link_dialog_title: "插入链接"
@@ -2504,6 +2524,7 @@ zh_CN:
       link_url_placeholder: "粘贴链接或搜索话题"
       blockquote_title: "块引用"
       blockquote_text: "块引用"
+      heading_text: "标题"
       code_title: "预先格式化的文本"
       code_text: "将预先格式化的文本缩进 4 个空格"
       paste_code_text: "在此处键入或粘贴代码"
@@ -2952,9 +2973,6 @@ zh_CN:
         filter: "没有话题。"
         education:
           topic_tracking_preferences: '您可以在 <a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的主题跟踪设置。'
-          unread: "没有什么未读的...令人印象深刻！"
-          new_new: "目前没什么新东西... 稍后再回来看看！"
-          new: "目前没什么新东西... 稍后再回来看看！"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
@@ -4548,6 +4566,8 @@ zh_CN:
             badges:
               content: "徽章"
               title: "所有可获得的徽章"
+            filter:
+              content: "筛选"
             topics:
               content: "话题"
               title: "所有话题"
@@ -4697,6 +4717,12 @@ zh_CN:
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
     safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
+    filter:
+      description:
+        yesterday: "昨天"
+        last_week: "上周"
+        last_month: "上个月"
+        last_year: "去年"
     discovery:
       headings:
         all:
@@ -4755,7 +4781,7 @@ zh_CN:
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
-      filter_reports: 筛选举报
+      filter_reports: "筛选举报..."
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
@@ -4764,13 +4790,13 @@ zh_CN:
       reports:
         title: "可用报告列表"
         meta_doc: "报告是帮助您了解网站上所发生事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
-        sidebar_title: "举报"
+        sidebar_title: "报告"
         back: "返回到所有报告"
       config_sections:
         account:
           title: "帐户"
         reports:
-          title: "举报"
+          title: "报告"
         community:
           title: "社区"
         appearance:
@@ -4999,7 +5025,7 @@ zh_CN:
           header_description: "关注词是一种审核工具，可以执行多种不同的操作，包括屏蔽、审查、链接或举报包含某些词的帖子"
         color_palettes:
           title: "调色板"
-          header_description: "调色板定义了整个网站界面使用的核心颜色，而主题可以提供额外的样式、布局和组件。两者可以协同工作，打造出您网站的独特外观和感觉，并且两者都可供用户选择他们喜欢的颜色."
+          header_description: "这些调色板控制整个社区使用的颜色。当您将调色板设置为可供用户选择时，成员可以从自己的喜好中选择自己的首选颜色。"
         emoji:
           title: "表情符号"
           header_description: "添加可供所有人使用的新表情符号。选择多个文件，使用其文件名创建表情符号。所选群组将用于同时添加的所有文件。"
@@ -5080,7 +5106,6 @@ zh_CN:
               header_description: "查看已执行搜索的日志"
         plugins:
           title: "安装的插件"
-          header_description: "您安装的任何 Discourse 插件，或由 Discourse 托管预安装的插件都将出现在此列表中"
         api_keys:
           title: "API 密钥"
           header_description: "API 密钥功能可让您安全地将 Discourse 与外部系统集成并自动执行操作。管理员可以创建具有特定范围的密钥来控制对资源和敏感数据的访问。范围限制功能，确保增强的安全性。"
@@ -5092,6 +5117,10 @@ zh_CN:
         embedding:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
+      theme_site_settings:
+        setting: "设置"
+        default_value: "默认"
+        overridden_value: "覆盖值： %{value}"
       search:
         modal_title: "在管理员页面中搜索所有内容"
         title: "搜索"
@@ -5782,7 +5811,7 @@ zh_CN:
             filter_by_used: "已使用"
             filter_by_unused: "未使用"
             filter_by_updates_available: "有可用更新"
-            search_components: "输入组件名"
+            search_components: "按组件名称或描述过滤..."
             new_update_for_component: "%{name} 有新的更新可用！"
             component_up_to_date: '“%{name}” 已是最新。'
             updated_successfully: '“%{name}” 已成功更新。'
@@ -5838,6 +5867,11 @@ zh_CN:
         author: "作者 %{author}"
         experimental_badge: "实验性"
         learn_more: "了解详情"
+        filters:
+          all: "所有"
+          enabled: "已启用"
+          disabled: "已禁用"
+          reset: "重置"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"
@@ -5963,7 +5997,10 @@ zh_CN:
           theme: "主题"
           component: "组件"
           components: "组件"
-          search_placeholder: "输入以搜索…"
+          search_placeholder: "按主题名称或描述过滤..."
+          filter_all: "所有"
+          filter_user_selectable: "用户可选"
+          no_themes_found: "没有符合您筛选条件的主题"
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"
@@ -6101,11 +6138,8 @@ zh_CN:
           up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
-          theme_settings: "主题设置"
-          edit_objects_theme_setting: "对象设置编辑器"
-          overriden_settings_explanation: "被覆盖的设置标有一个点并具有突出显示的颜色。要将这些设置重置为默认值，请按它们旁边的重置按钮。"
+          overriden_site_settings_explanation: "主题可以自定义的网站设置。单击 \"重置 \"可恢复网站设置的默认值。您可以在<a href='%{themeSiteSettingsConfigUrl}'>主题网站设置配置页面</a>看到被主题覆盖的所有网站设置。"
           no_settings: "此主题没有设置。"
-          theme_translations: "主题翻译"
           empty: "无条目"
           commits_behind:
             other: "主题落后了 %{count} 次提交！"
@@ -6190,8 +6224,24 @@ zh_CN:
           select_base:
             title: "选择基础调色板"
             description: "基础调色板："
+          preference_warning: "您已更改 <a href='%{link}'>您的个人主题设置</a>，因此您可能看不到调色板的更改。未更改默认值的访客仍将看到您在此处所做的更改。"
+          dark_mode_warning: "您目前正在使用暗黑模式。设置活动调色板时，颜色将应用于主题的亮色模式。如果您想更改默认的暗黑模式颜色，请编辑 <a href='%{link}'>暗黑模式站点设置</a>。"
           title: "颜色"
-          edit: "编辑调色板"
+          edit: "编辑"
+          set_default_success: "%{schemeName} 设置为 %{themeName} 的激活调色板"
+          saved_refreshing: "保存！正在刷新颜色..."
+          from_theme: "来自主题： %{name}"
+          filters:
+            search_placeholder: "按调色板或主题名称筛选..."
+            all: "所有"
+            user_selectable: "用户可选"
+            from_theme: "来自主题"
+            no_results: "未找到调色板"
+          active_badge:
+            text: "有效"
+            title: "激活调色板"
+          system_palette: "这是一个内置调色板，无法编辑或删除。"
+          back_to_colors: "返回调色板"
           long_title: "调色板"
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
@@ -6838,7 +6888,7 @@ zh_CN:
         activity: 活动
         like_count: 点赞/获赞
         last_100_days: "在最近 100 天"
-        private_topics_count: 不公开话题
+        private_topics_count: 个人信息
         posts_read_count: 已读帖子
         post_count: 创建的帖子
         second_factor_enabled: 双重身份验证已启用

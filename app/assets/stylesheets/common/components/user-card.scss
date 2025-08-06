@@ -225,6 +225,15 @@
       }
     }
 
+    .silenced {
+      color: var(--danger);
+
+      .silence-reason-title,
+      .silence-date {
+        font-weight: bold;
+      }
+    }
+
     .profile-hidden,
     .inactive-user {
       font-size: var(--font-up-1);
@@ -298,7 +307,7 @@
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       color: var(--primary);
     }
 

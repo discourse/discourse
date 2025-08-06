@@ -20,12 +20,28 @@ class SystemThemesManager
         else
           "#{remote_theme.color_scheme.name} Dark"
         end
-      remote_theme
-        .color_schemes
-        .where(name: alternative_theme_name)
-        .first
-        &.update!(user_selectable: true)
+
+      alternative_color_scheme =
+        remote_theme.color_schemes.where(name: alternative_theme_name).first
+      alternative_color_scheme&.update!(user_selectable: true)
+      if remote_theme.dark_color_scheme.blank? && alternative_color_scheme
+        remote_theme.update!(dark_color_scheme: alternative_color_scheme)
+      end
     end
+    remote_theme.update_column(:enabled, true)
     Stylesheet::Manager.clear_theme_cache!
+  end
+
+  # Don't want user history created from theme site setting changes
+  # from system themes polluting specs.
+  def self.clear_system_theme_user_history!
+    return if !Rails.env.test?
+
+    Theme::CORE_THEMES.each_key do |theme_name|
+      UserHistory
+        .where(action: UserHistory.actions[:change_theme_site_setting])
+        .where("subject ILIKE :theme_name", theme_name: "#{theme_name}:%")
+        .destroy_all
+    end
   end
 end

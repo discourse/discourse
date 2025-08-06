@@ -12,6 +12,7 @@ RSpec.describe "Chat composer", type: :system do
   let(:open_thread) { PageObjects::Pages::ChatThread.new }
 
   before do
+    SiteSetting.floatkit_autocomplete_composer = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
@@ -240,15 +241,11 @@ RSpec.describe "Chat composer", type: :system do
 
       file_path = file_from_fixtures("logo.png", "images").path
       cdp.with_slow_upload do
-        attach_file(file_path) do
-          channel_page.open_action_menu
-          channel_page.click_action_button("chat-upload-btn")
-        end
-
+        attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")
-        page.find(".chat-composer-upload").hover
-        page.find(".chat-composer-upload__remove-btn").click
+        find(".chat-composer-upload").hover
+        find(".chat-composer-upload__remove-btn").click
       end
     end
   end
@@ -320,6 +317,31 @@ RSpec.describe "Chat composer", type: :system do
         open_thread.send_message("+👍")
 
         expect(open_thread).to have_reaction(thread_message, "+1")
+      end
+    end
+  end
+
+  context "with floatkit autocomplete disabled" do
+    before { SiteSetting.floatkit_autocomplete_composer = false }
+
+    context "when adding an emoji through the autocomplete" do
+      it "adds the emoji to the composer" do
+        chat_page.visit_channel(channel_1)
+        find(".chat-composer__input").send_keys(":gri")
+        find(".emoji-shortname", text: "grimacing").click
+
+        expect(channel_page.composer).to have_value(":grimacing: ")
+      end
+
+      it "doesn't suggest denied emojis and aliases" do
+        SiteSetting.emoji_deny_list = "peach|poop"
+        chat_page.visit_channel(channel_1)
+
+        find(".chat-composer__input").fill_in(with: ":peac")
+        expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+
+        find(".chat-composer__input").fill_in(with: ":hank") # alias
+        expect(page).to have_no_selector(".emoji-shortname", text: "poop")
       end
     end
   end

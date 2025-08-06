@@ -17,7 +17,7 @@ end
 #
 # Table name: chat_mention_notifications
 #
-#  chat_mention_id :integer          not null
+#  chat_mention_id :bigint           not null
 #  notification_id :bigint           not null
 #
 # Indexes

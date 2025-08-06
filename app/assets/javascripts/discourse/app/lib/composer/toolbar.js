@@ -193,8 +193,6 @@ export default class Toolbar extends ToolbarBase {
       active: ({ state }) => state.inItalic,
     });
 
-    const headingLabel = getButtonLabel("composer.heading_label", "H");
-    const unformattedHeadingIcon = headingLabel ? null : "discourse-text";
     this.addButton({
       id: "heading",
       group: "fontStyles",
@@ -211,16 +209,16 @@ export default class Toolbar extends ToolbarBase {
       },
       icon: ({ state }) => {
         if (!state || !state.inHeading) {
-          return unformattedHeadingIcon;
+          return "discourse-text";
         }
 
         if (state.inHeadingLevel > 4) {
-          return unformattedHeadingIcon;
+          return "discourse-text";
         }
 
         return `discourse-h${state.inHeadingLevel}`;
       },
-      label: headingLabel,
+      title: "composer.heading_title",
       popupMenu: {
         options: () => {
           const headingOptions = [];
@@ -234,6 +232,7 @@ export default class Toolbar extends ToolbarBase {
               translatedTitle: i18n("composer.heading_level_n_title", {
                 levelNumber: headingLevel,
               }),
+              shortcut: "Alt+" + headingLevel,
               condition: true,
               showActiveIcon: true,
               active: ({ state }) => {
@@ -257,6 +256,7 @@ export default class Toolbar extends ToolbarBase {
             title: "composer.heading_level_paragraph_title",
             condition: true,
             showActiveIcon: true,
+            shortcut: "Alt+0",
             active: ({ state }) => state?.inParagraph,
             action: this.onHeadingMenuAction.bind(this),
           });

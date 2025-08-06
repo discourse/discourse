@@ -39,7 +39,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("allThemes", "component", false) availableParentThemes;
   @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
   @mapBy("availableParentThemes", "name") availableThemesNames;
-  @mapBy("availableActiveParentThemes", "name") availableActiveThemesNames;
   @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
   @mapBy("availableChildThemes", "name") availableComponentsNames;
   @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
@@ -47,7 +46,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
+  @notEmpty("model.themeable_site_settings") hasThemeableSiteSettings;
   @readOnly("model.settings") settings;
+  @readOnly("model.themeable_site_settings") themeSiteSettings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
@@ -59,13 +60,18 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach((target) => {
       const fields = this.editedFieldsForTarget(target);
+      if (target === "common" && this.model.getField("common", "js")) {
+        fields.push({
+          name: "js",
+        });
+      }
       if (fields.length < 1) {
         return;
       }
       let resultString = i18n("admin.customize.theme." + target);
       const formattedFields = fields
         .map((f) => i18n("admin.customize.theme." + f.name + ".text"))
-        .join(" , ");
+        .join(", ");
       resultString += `: ${formattedFields}`;
       descriptions.push(resultString);
     });
@@ -73,9 +79,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @discourseComputed("colorSchemeId", "model.color_scheme_id")
-  colorSchemeChanged(colorSchemeId, existingId) {
+  lightColorSchemeChanged(colorSchemeId, existingId) {
     colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
+
     return colorSchemeId !== existingId;
+  }
+
+  @discourseComputed("darkColorSchemeId", "model.dark_color_scheme_id")
+  darkColorSchemeChanged(darkColorSchemeId, existingId) {
+    darkColorSchemeId =
+      darkColorSchemeId === null ? null : parseInt(darkColorSchemeId, 10);
+    return darkColorSchemeId !== existingId;
   }
 
   @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
@@ -100,7 +114,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       choices: this.availableThemesNames,
       default: this.parentThemesNames.join("|"),
       value: this.parentThemesNames.join("|"),
-      defaultValues: this.availableActiveThemesNames.join("|"),
+      defaultValues: this.availableThemesNames.join("|"),
       allThemes: this.allThemes,
       setDefaultValuesLabel: i18n("admin.customize.theme.add_all_themes"),
     });
@@ -278,7 +292,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   get availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    return this.siteSettings.available_locales;
   }
 
   get locale() {
@@ -300,18 +314,33 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  cancelChangeScheme() {
+  cancelChangeLightScheme() {
     this.set("colorSchemeId", this.get("model.color_scheme_id"));
   }
 
   @action
-  changeScheme() {
+  cancelChangeDarkScheme() {
+    this.set("darkColorSchemeId", this.get("model.dark_color_scheme_id"));
+  }
+
+  @action
+  changeLightScheme() {
     let schemeId = this.colorSchemeId;
     this.set(
       "model.color_scheme_id",
       schemeId === null ? null : parseInt(schemeId, 10)
     );
     this.model.saveChanges("color_scheme_id");
+  }
+
+  @action
+  changeDarkScheme() {
+    let schemeId = this.darkColorSchemeId;
+    this.set(
+      "model.dark_color_scheme_id",
+      schemeId === null ? null : parseInt(schemeId, 10)
+    );
+    this.model.saveChanges("dark_color_scheme_id");
   }
 
   @action
@@ -434,7 +463,15 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  editColorScheme() {
+  editLightColorScheme() {
     this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
+  }
+
+  @action
+  editDarkColorScheme() {
+    this.router.transitionTo(
+      "adminCustomize.colors.show",
+      this.darkColorSchemeId
+    );
   }
 }

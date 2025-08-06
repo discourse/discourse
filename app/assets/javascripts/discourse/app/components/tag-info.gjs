@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -35,8 +36,9 @@ export default class TagInfo extends Component {
   newTagName = null;
   newTagDescription = null;
 
+  @reads("currentUser.canEditTags") canEditTags;
   @reads("currentUser.staff") canAdminTag;
-  @and("canAdminTag", "showEditControls") editSynonymsMode;
+  @and("canEditTags", "showEditControls") editSynonymsMode;
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
@@ -280,7 +282,7 @@ export default class TagInfo extends Component {
           {{else}}
             <div class="tag-name-wrapper">
               {{discourseTag this.tagInfo.name tagName="div"}}
-              {{#if this.canAdminTag}}
+              {{#if this.canEditTags}}
                 <a
                   href
                   {{on "click" this.edit}}
@@ -338,13 +340,15 @@ export default class TagInfo extends Component {
                     >
                       {{icon "link-slash" title="tagging.remove_synonym"}}
                     </a>
-                    <a
-                      href
-                      {{on "click" (fn this.deleteSynonym tag)}}
-                      class="delete-synonym"
-                    >
-                      {{icon "trash-can" title="tagging.delete_tag"}}
-                    </a>
+                    {{#if this.canAdminTag}}
+                      <a
+                        href
+                        {{on "click" (fn this.deleteSynonym tag)}}
+                        class="delete-synonym"
+                      >
+                        {{icon "trash-can" title="tagging.delete_tag"}}
+                      </a>
+                    {{/if}}
                   {{/if}}
                 </div>
               {{/each}}
@@ -378,7 +382,7 @@ export default class TagInfo extends Component {
             </div>
           </section>
         {{/if}}
-        {{#if this.canAdminTag}}
+        {{#if this.canEditTags}}
           <PluginOutlet
             @name="tag-custom-settings"
             @outletArgs={{lazyHash tag=this.tagInfo}}

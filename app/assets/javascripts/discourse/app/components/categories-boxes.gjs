@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -128,12 +129,11 @@ export default class CategoriesBoxes extends Component {
                   <div class="subcategories">
                     {{#each c.subcategories as |sc|}}
                       <a class="subcategory" href={{sc.url}}>
-                        <span class="subcategory-image-placeholder">
-                          {{#if sc.uploaded_logo.url}}
+                        {{#if sc.uploaded_logo.url}}
+                          <span class="subcategory-image-placeholder">
                             <CategoryLogo @category={{sc}} />
-                          {{/if}}
-                        </span>
-
+                          </span>
+                        {{/if}}
                         {{categoryLink sc hideParent="true"}}
                       </a>
                     {{/each}}

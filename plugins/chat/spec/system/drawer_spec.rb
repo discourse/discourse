@@ -12,6 +12,23 @@ RSpec.describe "Drawer", type: :system do
     chat_page.prefers_drawer
   end
 
+  it "handles transitions between drawer and full page and applies appropriate classes" do
+    visit("/")
+
+    chat_page.open_from_header
+    expect(page).to have_css(
+      "body.has-drawer-chat.has-chat.chat-drawer-active.chat-drawer-expanded",
+    )
+    expect(page).to have_css("html.has-drawer-chat.has-chat")
+    expect(page).to have_no_css("body.has-full-page-chat")
+
+    drawer_page.maximize
+    expect(page).to have_css("body.has-chat.has-full-page-chat")
+    expect(page).to have_css("html.has-chat.has-full-page-chat")
+    expect(page).to have_no_css("body.has-drawer-chat")
+    expect(page).to have_no_css("html.has-drawer-chat")
+  end
+
   context "when on channel" do
     fab!(:channel, :chat_channel)
     fab!(:membership) do

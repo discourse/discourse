@@ -14,7 +14,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -90,7 +90,7 @@ describe "Search", type: :system do
       SearchIndexer.index(topic, force: true)
       SiteSetting.rate_limit_search_anon_user_per_minute = 4
       RateLimiter.enable
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -116,7 +116,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -153,7 +153,9 @@ describe "Search", type: :system do
     end
 
     describe "with search icon in header" do
-      before { SiteSetting.search_experience = "search_icon" }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_icon")
+      end
 
       it "displays the correct search mode" do
         visit("/")
@@ -163,7 +165,13 @@ describe "Search", type: :system do
     end
 
     describe "with search field in header" do
-      before { SiteSetting.search_experience = "search_field" }
+      before do
+        Fabricate(
+          :theme_site_setting_with_service,
+          name: "search_experience",
+          value: "search_field",
+        )
+      end
 
       it "displays the correct search mode" do
         visit("/")
@@ -219,7 +227,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       sign_in(admin)
     end
 
@@ -241,6 +249,60 @@ describe "Search", type: :system do
       expect(
         find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
       ).to have_content(tag1.name)
+    end
+  end
+
+  describe "Private Message Icon in Search Results" do
+    fab!(:user)
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:pm_topic) do
+      Fabricate(
+        :private_message_topic,
+        user: user,
+        recipient: other_user,
+        title: "PM about searchable things",
+      )
+    end
+    fab!(:pm_post) do
+      Fabricate(:post, topic: pm_topic, user: user, raw: "Secret PM content searchable")
+    end
+    fab!(:regular_topic) { Fabricate(:topic, title: "Regular topic about searchable things") }
+    fab!(:regular_post) do
+      Fabricate(:post, topic: regular_topic, raw: "Regular post content searchable")
+    end
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(pm_topic, force: true)
+      SearchIndexer.index(regular_topic, force: true)
+      sign_in(user)
+    end
+
+    after { SearchIndexer.disable }
+
+    it "handles different PM search filters correctly" do
+      pm_filters = %w[in:messages in:personal in:personal-direct in:all-pms]
+
+      pm_filters.each do |filter|
+        visit("/search?q=searchable%20#{filter}")
+        if page.has_css?(".fps-result", minimum: 1)
+          expect(page).to have_css(".fps-result .topic-status .d-icon-envelope", count: 0),
+          "Expected no PM icons for filter: #{filter}"
+        end
+      end
+    end
+
+    it "shows PM envelope icon in mixed search results with in:all filter" do
+      # Search with in:all filter to get mixed results (both PM and public topics)
+      visit("/search?q=searchable%20in:all")
+
+      # The PM envelope icon should be on the PM topic specifically
+      pm_result = page.find(".fps-result", text: "PM about searchable things")
+      expect(pm_result).to have_css(".topic-status .d-icon-envelope")
+
+      # The regular topic should NOT have the PM envelope icon
+      regular_result = page.find(".fps-result", text: "Regular topic about searchable things")
+      expect(regular_result).to have_no_css(".topic-status .d-icon-envelope")
     end
   end
 end

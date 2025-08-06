@@ -629,6 +629,9 @@ aside.quote {
   margin-bottom: 1em;
 
   .title {
+    display: flex;
+    align-items: start;
+    gap: var(--space-2);
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
 
@@ -639,13 +642,36 @@ aside.quote {
       cursor: pointer;
     }
 
-    // blockquote is underneath this and has top margin
-    .avatar {
-      margin-right: 0.5em;
+    a {
+      @include ellipsis;
     }
 
-    img {
-      margin-top: -0.26em;
+    .badge-category__wrapper {
+      align-self: center;
+    }
+
+    .quote-controls {
+      min-height: 24px; // match avatar height for alignment
+    }
+
+    // empty control div can impact layout, so hide it
+    &:not([data-has-quote-controls]) {
+      .quote-controls {
+        display: none;
+      }
+    }
+  }
+
+  .quote-title__text-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    min-width: 0;
+
+    .badge-category__wrapper {
+      align-self: auto;
     }
   }
 
@@ -677,9 +703,10 @@ aside.quote {
 }
 
 .quote-controls {
-  float: right;
   display: flex;
   align-items: center;
+  margin-left: auto;
+  order: 2; // for non-glimmer post stream
 
   a {
     margin-left: 0.3em;
@@ -740,6 +767,10 @@ aside.quote {
 
 .topic-post.staged {
   opacity: 0.4;
+}
+
+.post-stream--cloaked {
+  min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
 }
 
 .quote-button {
@@ -935,7 +966,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     padding-top: 0.5em;
   }
 }
@@ -1091,12 +1122,20 @@ kbd {
 
 // we assume blockquotes have their own margins, so all blockquotes
 // will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
+blockquote,
+blockquote .post__contents-cooked-quote {
+  > *:first-child {
+    margin-top: 0 !important;
+  }
 
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  table {
+    table-layout: fixed; // prevents table from expanding past the post body width
+    width: 100%;
+  }
 }
 
 .gap {
@@ -1153,7 +1192,7 @@ blockquote > *:last-child {
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .topic-avatar {
@@ -1343,7 +1382,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   align-items: center;
   justify-content: center;
 
@@ -1485,7 +1524,7 @@ span.mention {
   box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
   max-width: calc(

@@ -249,6 +249,7 @@ Discourse::Application.routes.draw do
           get "preview" => "themes#preview"
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
+          put "site-setting" => "themes#update_theme_site_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
           put "change-colors" => "themes#change_colors"
         end
@@ -409,6 +410,7 @@ Discourse::Application.routes.draw do
         resources :site_settings, only: %i[index]
         get "analytics-and-seo" => "site_settings#index"
         get "content" => "site_settings#index"
+        get "content/settings" => "site_settings#index"
         get "content/sharing" => "site_settings#index"
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"
@@ -436,6 +438,7 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
+        get "theme-site-settings" => "theme_site_settings#index"
         get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
@@ -494,7 +497,7 @@ Discourse::Application.routes.draw do
           format: :js,
         }
 
-    resources :session, id: RouteFormat.username, only: %i[create destroy become] do
+    resources :session, id: RouteFormat.username, only: %i[create destroy] do
       get "become" if !Rails.env.production?
 
       collection { post "forgot_password" }

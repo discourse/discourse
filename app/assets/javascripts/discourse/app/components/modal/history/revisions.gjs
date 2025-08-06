@@ -1,14 +1,16 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { and, eq, not, or } from "truth-helpers";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
@@ -22,6 +24,8 @@ function tagClasses(tagChanges, state, className) {
 }
 
 export default class Revisions extends Component {
+  @service languageNameLookup;
+
   get fakePreviousTagsTopic() {
     // discourseTags expects a topic structure
     return EmberObject.create({
@@ -44,17 +48,15 @@ export default class Revisions extends Component {
   }
 
   get previousLocale() {
-    return (
-      this.get("model.locale_changes.previous") ||
-      i18n("post.revisions.locale.no_locale_set")
-    );
+    const locale = this.get("model.locale_changes.previous");
+    const language = this.languageNameLookup.getLanguageName(locale);
+    return language || i18n("post.revisions.locale.no_locale_set");
   }
 
   get currentLocale() {
-    return (
-      this.get("model.locale_changes.current") ||
-      i18n("post.revisions.locale.locale_removed")
-    );
+    const locale = this.get("model.locale_changes.current");
+    const language = this.languageNameLookup.getLanguageName(locale);
+    return language || i18n("post.revisions.locale.locale_removed");
   }
 
   <template>

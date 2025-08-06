@@ -200,19 +200,12 @@ nl:
       search: "Zoeken"
     themes:
       default_description: "Standaard"
-      broken_theme_alert: "Je website werkt mogelijk niet, omdat het thema/onderdeel fouten bevat."
       error_caused_by: "Veroorzaakt door '%{name}'. <a target='blank' href='%{path}'>Klik hier</a> om bij te werken, opnieuw te configureren of uit te schakelen."
       only_admins: "(dit bericht wordt alleen getoond aan sitebeheerders)"
     broken_decorator_alert: "Berichten worden mogelijk niet correct weergegeven omdat een van de bewerkers van de inhoud op je site een fout heeft gemeld."
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     broken_transformer_alert: "Er is een fout opgetreden. Je site werkt mogelijk niet goed."
-    critical_deprecation:
-      notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse."
-      id: "(ID: <em>%{id}</em>)"
-      linked_id: "(ID: <a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Geïdentificeerd thema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Geïdentificeerde plug-in: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -1286,7 +1279,6 @@ nl:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
-      color_scheme_default_on_all_devices: "Standaard kleurenpalet instellen op al mijn apparaten"
       color_scheme: "Kleurenpalet"
       color_schemes:
         default_description: "Standaard voor thema"
@@ -1296,6 +1288,9 @@ nl:
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"
+        interface_modes:
+          light: "Licht"
+          dark: "Donker"
       dark_mode: "Donkere modus"
       dark_mode_enable: "Automatisch kleurenpalet voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
@@ -1321,6 +1316,8 @@ nl:
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
+      silenced_permanently: "Deze gebruiker is gedempt."
+      silenced_reason: "Reden: "
       github_profile: "GitHub"
       email_activity_summary: "Activiteitsamenvatting"
       mailing_list_mode:
@@ -1839,7 +1836,8 @@ nl:
         removed: "Verwijderd"
         search: "typ om uitnodigingen te zoeken…"
         user: "Uitgenodigde gebruiker"
-        none: "Geen uitnodigingen om weer te geven."
+        none:
+          title: "Geen uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt weergegeven."
           other: "De eerste %{count} uitnodigingen worden weergegeven."
@@ -2451,7 +2449,6 @@ nl:
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluisteren in-/uitschakelen"
-      toggle_unlisted: "Onzichtbaar in-/uitschakelen"
       insert_table: "Tabel invoegen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"
@@ -4645,6 +4642,8 @@ nl:
             badges:
               content: "Badges"
               title: "Alle beschikbare badges om te verdienen"
+            filter:
+              content: "Filter"
             topics:
               content: "Topics"
               title: "Alle topics"
@@ -4792,6 +4791,12 @@ nl:
           paste: "Plakken..."
           save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
+    filter:
+      description:
+        yesterday: "Gisteren"
+        last_week: "Vorige week"
+        last_month: "Vorige maand"
+        last_year: "Afgelopen jaar"
     discovery:
       headings:
         multi_tag:
@@ -4803,7 +4808,7 @@ nl:
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
-      filter_reports: Rapporten filteren
+      filter_reports: "Rapporten filteren..."
       tags:
         remove_muted_tags_from_latest:
           always: "altijd"
@@ -4992,7 +4997,6 @@ nl:
               title: "Zoeklogs"
         plugins:
           title: "Geïnstalleerde plug-ins"
-          header_description: "Alle Discourse-plug-ins die je hebt geïnstalleerd, of plug-ins die vooraf zijn geïnstalleerd bij Discourse-hosting, worden in deze lijst weergegeven"
         api_keys:
           title: "API-sleutels"
           header_description: "Met de functie API-sleutels kun je Discourse veilig integreren met externe systemen en handelingen automatiseren. Beheerders kunnen sleutels met specifieke bereiken maken om de toegang tot bronnen en gevoelige gegevens te controleren. Bereiken beperken de functionaliteit en zorgen voor een betere beveiliging."
@@ -5001,6 +5005,8 @@ nl:
         embedding:
           title: "Insluiting"
           header_description: "Discourse heeft de mogelijkheid om de reacties van een topic in te sluiten op een externe site met behulp van een Javascript-API die een iFRAME maakt"
+      theme_site_settings:
+        default_value: "Standaard"
       search:
         title: "Zoeken"
         result_types:
@@ -5703,6 +5709,11 @@ nl:
         author: "Van %{author}"
         experimental_badge: "experimenteel"
         learn_more: "Meer informatie"
+        filters:
+          all: "Alles"
+          enabled: "Ingeschakeld"
+          disabled: "Uitgeschakeld"
+          reset: "Resetten"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
@@ -5828,7 +5839,8 @@ nl:
           theme: "Thema"
           component: "Onderdeel"
           components: "Onderdelen"
-          search_placeholder: "typ om te zoeken…"
+          filter_all: "Alles"
+          filter_user_selectable: "Door gebruiker te selecteren"
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"
@@ -5955,11 +5967,7 @@ nl:
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
-          theme_settings: "Thema-instellingen"
-          edit_objects_theme_setting: "Objectinstellingeneditor"
-          overriden_settings_explanation: "Overschreven instellingen zijn gemarkeerd met een punt en een kleur. Druk op de resetknop ernaast om de standaardwaarden van deze instellingen te herstellen."
           no_settings: "Dit thema heeft geen instellingen."
-          theme_translations: "Themavertalingen"
           empty: "Geen items"
           commits_behind:
             one: "Thema loopt %{count} commit achter!"
@@ -6029,7 +6037,12 @@ nl:
             title: "Basiskleurenpalet selecteren"
             description: "Basispalet"
           title: "Kleuren"
-          edit: "Kleurenpaletten bewerken"
+          edit: "Bewerken"
+          filters:
+            all: "Alle"
+            user_selectable: "Door gebruiker te selecteren"
+          active_badge:
+            text: "Actief"
           long_title: "Kleurenpaletten"
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
@@ -6661,7 +6674,6 @@ nl:
         activity: Activiteit
         like_count: Gegeven / ontvangen likes
         last_100_days: "de afgelopen 100 dagen"
-        private_topics_count: Privétopics
         posts_read_count: Gelezen berichten
         post_count: Gemaakte berichten
         second_factor_enabled: Tweeledige verificatie ingeschakeld

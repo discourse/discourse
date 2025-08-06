@@ -102,9 +102,27 @@ const extension = {
       state.write("[/quote]\n\n");
     },
   },
-  plugins({ pmState: { Plugin, NodeSelection } }) {
+  plugins({
+    pmState: { Plugin, NodeSelection },
+    pmModel: { Slice, Fragment },
+  }) {
     return new Plugin({
       props: {
+        transformPasted(slice, view) {
+          if (
+            view.endOfTextblock("forward") &&
+            slice.content.childCount === 1 &&
+            slice.content.firstChild.type.name === "quote"
+          ) {
+            const quote = slice.content.firstChild;
+            const paragraph = view.state.schema.nodes.paragraph.create();
+
+            return Slice.maxOpen(Fragment.from([quote, paragraph]), false);
+          }
+
+          return slice;
+        },
+
         handleClickOn(view, pos, node, nodePos, event) {
           if (
             node.type.name === "quote" &&

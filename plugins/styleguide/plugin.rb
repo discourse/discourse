@@ -8,7 +8,6 @@
 
 register_asset "stylesheets/styleguide.scss"
 enabled_site_setting :styleguide_enabled
-hide_plugin
 
 require_relative "lib/styleguide/engine"
 

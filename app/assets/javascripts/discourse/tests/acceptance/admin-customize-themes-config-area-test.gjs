@@ -13,7 +13,7 @@ acceptance("Admin - Config areas - Themes", function (needs) {
   });
 
   test("admin-themes-grid-additional-cards plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-themes-grid-additional-cards",
         <template>
@@ -36,7 +36,7 @@ acceptance("Admin - Config areas - Themes", function (needs) {
   });
 
   test("admin-config-area-themes-new-button plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-config-area-themes-new-button",
         <template>

@@ -61,9 +61,8 @@ export default function () {
       "adminCustomize",
       { path: "/customize", resetNamespace: true },
       function () {
-        this.route("colors", function () {
-          this.route("show", { path: "/:scheme_id" });
-        });
+        this.route("colors");
+        this.route("colors-show", { path: "/colors/:scheme_id" });
         this.route(
           "adminCustomizeThemes",
           { path: "/:type", resetNamespace: true },
@@ -251,6 +250,7 @@ export default function () {
         );
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });
+          this.route("settings");
           this.route("sharing");
           this.route("postsAndTopics", { path: "/posts-and-topics" });
           this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
@@ -380,6 +380,7 @@ export default function () {
         this.route("spam", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("theme-site-settings");
 
         this.route(
           "colorPalettes",

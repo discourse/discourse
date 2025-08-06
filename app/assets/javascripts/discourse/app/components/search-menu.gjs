@@ -18,7 +18,6 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -30,6 +29,7 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -118,6 +118,15 @@ export default class SearchMenu extends Component {
     return (
       !this.isPMInboxCleared &&
       this.search.searchContext?.type === "private_messages"
+    );
+  }
+
+  get isPMOnly() {
+    // Check if search is filtered to private messages only
+    const searchTerm = this.search.activeGlobalSearchTerm || "";
+    return (
+      this.inPMInboxContext ||
+      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(searchTerm)
     );
   }
 
@@ -472,6 +481,7 @@ export default class SearchMenu extends Component {
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
           @inPMInboxContext={{this.inPMInboxContext}}
+          @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
@@ -488,6 +498,7 @@ export default class SearchMenu extends Component {
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
             @inPMInboxContext={{this.inPMInboxContext}}
+            @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}

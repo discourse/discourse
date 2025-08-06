@@ -41,7 +41,16 @@ module CategoryBadge
   def self.style_for_browser(category, opts)
     data = shared_data(category, opts)
 
-    class_names = "badge-category #{data[:parent_category] ? "--has-parent" : ""}"
+    style_class =
+      if category.respond_to?(:style_type) && category.style_type.present?
+        case category.style_type
+        when "icon"
+          "--style-icon"
+        when "emoji"
+          "--style-emoji"
+        end
+      end || "--style-square"
+    class_names = "badge-category #{style_class} #{data[:parent_category] ? "--has-parent" : ""}"
     description = category.description_text ? "title='#{category.description_text}'" : ""
 
     badge_styles = {
@@ -57,6 +66,13 @@ module CategoryBadge
     result << " style='#{map_styles_to_string(badge_styles)}'"
     result << " data-parent-category-id='#{data[:parent_category].id}'" if data[:parent_category]
     result << " data-drop-close='true' class='#{class_names}' #{description}>"
+
+    if category.style_type == "icon" && category.icon.present?
+      result << SvgSprite.raw_svg(category.icon)
+    elsif category.style_type == "emoji" && category.emoji.present?
+      result << Emoji.codes_to_img(":#{category.emoji}:")
+    end
+
     result << "<span class='badge-category__name'>"
     result << ERB::Util.html_escape(category.name)
     result << "</span></span>"

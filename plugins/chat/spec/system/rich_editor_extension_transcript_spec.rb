@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 describe "chat transcripts in rich editor", type: :system do
-  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:current_user) do
+    Fabricate(
+      :user,
+      refresh_auto_groups: true,
+      composition_mode: UserOption.composition_mode_types[:rich],
+    )
+  end
   fab!(:channel, :chat_channel)
   fab!(:message_1) do
     Fabricate(:chat_message, user: current_user, chat_channel: channel, created_at: 2.days.ago)
@@ -14,14 +20,12 @@ describe "chat transcripts in rich editor", type: :system do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.rich_editor = true
     sign_in(current_user)
   end
 
   it "works for single messages" do
     page.visit "/new-topic"
     expect(composer).to be_opened
-    composer.toggle_rich_editor
     composer.focus
 
     markdown =
@@ -47,7 +51,6 @@ describe "chat transcripts in rich editor", type: :system do
   it "works for multiple messages" do
     page.visit "/new-topic"
     expect(composer).to be_opened
-    composer.toggle_rich_editor
     composer.focus
 
     markdown =

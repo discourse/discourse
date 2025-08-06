@@ -196,7 +196,6 @@ bg:
       search: "Търсене"
     themes:
       default_description: "По подразбиране"
-      broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
       error_caused_by: "Причинено от '%{name}'. <a target='blank' href='%{path}'>Щракнете тук</a> за да актуализирате, преконфигурирате или деактивирате."
       only_admins: "(това съобщение се показва само на администраторите на сайта)"
     broken_decorator_alert: "Публикациите може да не се показват правилно, тъй като един от декораторите на съдържанието на публикациите на вашия сайт сигнализира за грешка."
@@ -1171,6 +1170,8 @@ bg:
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"
+      silenced_permanently: "Този потребител е заглушен."
+      silenced_reason: "Причина:"
       github_profile: "GitHub"
       email_activity_summary: "Сумарна активност"
       mailing_list_mode:
@@ -1591,7 +1592,8 @@ bg:
         reinvited: "Поканата е изпратена отново"
         removed: "Премахнато"
         user: "Поканени потребители"
-        none: "Няма покани за показване."
+        none:
+          title: "Няма покани за показване."
         truncated:
           one: "Показване на първата покана."
           other: "Показване на пъврите %{count} покани."
@@ -2058,7 +2060,6 @@ bg:
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
       toggle_whisper: "Включи шепот"
-      toggle_unlisted: "Превключване на неизброени"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
       saved_local_draft_tip: "запазено локално"
       drafts_offline: "чернови офлайн"
@@ -3407,6 +3408,8 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
+            filter:
+              content: "Филтър"
             topics:
               content: "Теми"
             faq:
@@ -3444,6 +3447,9 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    filter:
+      description:
+        yesterday: "Вчера"
     discovery:
       headings:
         categories: "Всички категории"
@@ -3539,6 +3545,8 @@ bg:
               header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
         embedding:
           title: "Ембедване"
+      theme_site_settings:
+        default_value: "По подразбиране"
       search:
         title: "Търсене"
       dashboard:
@@ -3754,6 +3762,11 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
+        filters:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          reset: "Нулиране"
       navigation_menu:
         sidebar: "Странична лента"
       backups:
@@ -3839,6 +3852,7 @@ bg:
           disabled_filter: "Деактивирани"
         theme:
           theme: "Тема"
+          filter_all: "Всички"
           customize_desc: "Персонализация:"
           create: "Създай"
           create_type: "Тип"
@@ -3879,6 +3893,11 @@ bg:
               too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
+          edit: "Редактирай"
+          filters:
+            all: "Всички"
+          active_badge:
+            text: "Активни"
           copy_name_prefix: "Копие на"
           undo: "Отмени"
           undo_title: "Върнете промените направени на този цвят до последно запазените."
@@ -4205,7 +4224,6 @@ bg:
         activity: Активност
         like_count: Харесвания Дадени / Получени
         last_100_days: "В последните 100 дни "
-        private_topics_count: Частни теми
         posts_read_count: Прочетени публикации
         post_count: Създадени публикации
         topics_entered: Прегледани теми

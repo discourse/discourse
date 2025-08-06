@@ -58,6 +58,12 @@ export default class AdminPluginsListItem extends Component {
     return "";
   }
 
+  get isPreinstalled() {
+    return this.args.plugin.url?.includes(
+      "/discourse/discourse/tree/main/plugins/"
+    );
+  }
+
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
@@ -96,9 +102,10 @@ export default class AdminPluginsListItem extends Component {
               href={{@plugin.linkUrl}}
               rel="noopener noreferrer"
               target="_blank"
+              class="admin-plugins-list__about-link"
             >
-              {{i18n "admin.plugins.learn_more"}}
               {{icon "up-right-from-square"}}
+              {{i18n "admin.plugins.learn_more"}}
             </a>
           {{/if}}
         </div>
@@ -113,7 +120,13 @@ export default class AdminPluginsListItem extends Component {
             @outletArgs={{lazyHash plugin=@plugin}}
           >
             {{@plugin.version}}<br />
-            <PluginCommitHash @plugin={{@plugin}} />
+            {{#if this.isPreinstalled}}
+              <span class="admin-plugins-list__preinstalled">
+                {{i18n "admin.plugins.preinstalled"}}
+              </span>
+            {{else}}
+              <PluginCommitHash @plugin={{@plugin}} />
+            {{/if}}
           </PluginOutlet>
         </div>
       </td>

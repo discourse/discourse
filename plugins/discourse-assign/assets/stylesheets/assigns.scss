@@ -1,0 +1,295 @@
+.user-content {
+  .assign-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5em;
+
+    .assign-messages-assigned {
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.assigned-to {
+  .d-icon,
+  i.fa {
+    margin-right: 0.25em;
+    color: var(--primary-medium);
+  }
+
+  .assign-text {
+    margin-right: 0.25em;
+  }
+
+  .composer-popup & {
+    margin-left: 0.5em;
+  }
+
+  .assignee:not(:last-child)::after {
+    content: ", ";
+  }
+
+  .more-button {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    vertical-align: middle;
+  }
+}
+
+.topic-body {
+  .assigned-to {
+    padding-left: 11px;
+  }
+}
+
+.cant-act-flagged-post {
+  padding: 0.5em;
+  border: 1px dashed var(--primary-medium);
+  color: var(--primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topic-assigned-to {
+  min-width: 15%;
+  width: 15%;
+}
+
+.list-tags.assigned {
+  margin-left: 5px;
+}
+
+.d-modal.assign {
+  .d-modal__body {
+    overflow-y: unset;
+  }
+
+  label {
+    font-weight: bold;
+
+    .label-optional {
+      color: var(--primary-medium);
+      font-weight: normal;
+    }
+  }
+
+  .target {
+    .combo-box {
+      width: 100%;
+    }
+  }
+
+  .email-group-user-chooser {
+    width: 100%;
+
+    .select-kit-header {
+      outline: 0 !important;
+    }
+
+    .select-kit-body {
+      position: absolute !important;
+      transform: none !important;
+      max-width: 100%;
+    }
+
+    &-filter.is-expanded {
+      border: 1px solid var(--tertiary);
+    }
+
+    .caret-icon {
+      color: var(--primary-medium);
+    }
+
+    .user-wrapper {
+      display: flex;
+      align-items: baseline;
+      line-height: var(--line-height-small);
+      overflow: hidden;
+      pointer-events: all;
+    }
+
+    .name {
+      display: contents;
+    }
+
+    .identifier {
+      margin-right: 0.5rem;
+    }
+
+    .user-status-message {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      margin-left: 0.5em;
+
+      .emoji {
+        height: var(--font-0);
+        width: var(--font-0);
+      }
+    }
+
+    .suggestions-label {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0.25em 0.25em 0 0;
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-3);
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+  .control-group.assignee-error {
+    .select-kit-header {
+      border-color: var(--danger);
+    }
+
+    .error-label {
+      color: var(--danger);
+      font-size: var(--font-down-1);
+    }
+  }
+}
+
+.topic-list-item {
+  .private-message-icon {
+    margin-right: 5px;
+  }
+}
+
+#topic-footer-dropdown-reassign {
+  .name {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+  }
+
+  .avatar {
+    width: 1.19em;
+    height: 1.19em;
+  }
+
+  .avatar.overlap {
+    z-index: 1;
+    margin-right: -0.4em;
+  }
+
+  .d-icon,
+  i.fa {
+    color: var(--primary-medium);
+  }
+
+  .d-icon {
+    margin-left: 0.165em;
+    margin-right: 0.165em;
+  }
+}
+
+// Group assigns sidebar nav
+.group-assignments {
+  // a little extra space for long names
+  min-width: 250px;
+
+  li a {
+    display: grid;
+    grid-template-areas: " avatar names count";
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 0.5em 13px;
+
+    .assign-image {
+      width: 45px;
+      margin-right: 0.5em;
+      text-align: center;
+      grid-area: avatar;
+
+      a {
+        padding: 0;
+        padding-right: 0.5em;
+      }
+
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .assign-names {
+      font-size: var(--font-down-1);
+      grid-area: names;
+      overflow: hidden;
+      line-height: normal;
+    }
+
+    .assign-name {
+      @include ellipsis;
+      margin-top: 3px;
+    }
+
+    .assign-username {
+      font-weight: bold;
+
+      @include ellipsis;
+    }
+
+    .assign-count {
+      font-size: var(--font-up-2);
+      grid-area: count;
+    }
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .search-div {
+    padding: 0 0;
+  }
+}
+
+.assigned-topic-list-header .topic-list-data.num:last-of-type {
+  margin-right: 50px; // account for button in topic-list-items in topic-list-refactor
+}
+
+.assigned-topic-list-item {
+  .topic-list-data {
+    .topic-item-stats .category a {
+      max-width: 145px;
+    }
+  }
+}
+
+.private-assign {
+  // when assigns are not public, make the description look like a whisper
+  .small-action-custom-message {
+    font-style: italic;
+    color: var(--primary-medium);
+  }
+}
+
+.desktop-view {
+  .group-assign {
+    .user-secondary-navigation {
+      grid-column: 1;
+      grid-row: 2/4;
+    }
+
+    .group-assignments {
+      margin-top: 1.25em;
+    }
+
+    .user-content-wrapper .user-content {
+      grid-column: 2;
+    }
+
+    .nav-stacked {
+      width: 100%;
+      margin-right: 2em;
+    }
+  }
+}

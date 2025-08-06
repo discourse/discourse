@@ -141,16 +141,10 @@
     margin-top: 20px;
   }
 
-  .color-schemes li {
-    .d-icon {
-      margin-right: 0.25em;
-      color: var(--primary-medium);
-    }
-  }
-
   .show-current-style {
     display: inline-block;
     vertical-align: top;
+    max-width: var(--admin-content-max-width);
 
     .title {
       font-family: var(--heading-font-family);
@@ -696,7 +690,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 }
 
@@ -803,7 +797,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .form-display {
       width: 25%;
@@ -940,7 +934,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
     }
   }
@@ -962,57 +956,15 @@
   }
 }
 
-.about-customize-colors {
-  text-align: center;
-  width: 65%;
-  margin-left: 30%;
-}
-
-.desktop-view .admin-customize {
-  .show-current-style {
-    width: 68%;
-
-    &.legacy {
-      padding-left: 2%;
-    }
-
-    .title {
-      input {
-        width: 80%;
-      }
-    }
-  }
-
-  .themes-list {
-    width: 28%;
-  }
-
-  .back-to-themes-and-components {
-    margin-bottom: 1em;
-  }
+.back-to-themes-and-components {
+  margin-bottom: 1em;
 }
 
 .mobile-view .admin-customize {
-  .show-current-style {
-    padding: 0;
-    width: 100%;
-  }
-
-  .themes-list,
-  .color-schemes {
-    width: 100%;
-    margin-bottom: 1em;
-  }
-
   .admin-container {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-  }
-
-  .content-list.color-schemes ul {
-    max-height: 250px;
-    overflow-x: auto;
   }
 
   .color-scheme {

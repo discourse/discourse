@@ -197,19 +197,12 @@ da:
       search: "Søg"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
       error_caused_by: "Forårsaget af '%{name}'. <a target='blank' href='%{path}'>Klik her</a> for at opdatere, omkonfigurere, eller slå fra."
       only_admins: "(denne meddelelse vises kun til webstedsadministratorer)"
     broken_decorator_alert: "Indlæg vises muligvis ikke korrekt, fordi en af indlægsindholddekoratørerne på dit websted gav en fejl."
     broken_page_change_alert: "En onPageChange kodestump udløste en fejl. Se yderligere information i browserens udviklingsværktøjer."
     broken_plugin_alert: "Forårsaget af plugin '%{name}'"
     broken_transformer_alert: "Der opstod en fejl. Dit websted fungerer muligvis ikke korrekt."
-    critical_deprecation:
-      notice: "<b>[Admin-meddelelse]</b> Et af dine temaer eller plugins skal opdateres for at være kompatible med kommende Discourse-kerneændringer."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identificeret tema: <a target='_blank' href='%{path}'>'%{name}'.</a>"
-      plugin_source: "Identificeret plugin: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asien (Tokyo)"
@@ -1227,6 +1220,10 @@ da:
         regular: "Almindelig"
         dark: "Mørk tilstand"
         default_dark_scheme: "(standard for websted)"
+        interface_modes:
+          auto: "Auto"
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Tilstand"
       text_size_default_on_all_devices: "Gør dette til standard tekststørrelse på alle mine enheder"
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"
@@ -1247,6 +1244,7 @@ da:
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er suspenderet."
       suspended_reason: "Begrundelse: "
+      silenced_reason: "Begrundelse: "
       github_profile: "GitHub"
       email_activity_summary: "Resumé over aktivitet"
       mailing_list_mode:
@@ -1653,7 +1651,8 @@ da:
         reinvited: "Invitation gensendt"
         removed: "Fjernet"
         user: "Inviteret bruger"
-        none: "Ingen invitationer at vise."
+        none:
+          title: "Ingen invitationer at vise."
         truncated:
           one: "Viser den første invitation."
           other: "Viser de første %{count} invitationer."
@@ -2163,7 +2162,6 @@ da:
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
       toggle_whisper: "Slå hvisken til/fra"
-      toggle_unlisted: "Slå listning til/fra"
       insert_table: "Indsæt tabel"
       posting_not_on_topic: "Hvilket emne vil du svare på?"
       saved_local_draft_tip: "gemt lokalt"
@@ -4000,6 +3998,8 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
+            filter:
+              content: "Filter"
             topics:
               content: "Emner"
               title: "Alle emner"
@@ -4084,6 +4084,9 @@ da:
           paste: "Indsæt..."
           save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
+    filter:
+      description:
+        yesterday: "I går"
     discovery:
       headings:
         multi_tag:
@@ -4095,7 +4098,7 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtrer rapporter
+      filter_reports: "Filtrer rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "altid"
@@ -4251,6 +4254,9 @@ da:
           title: "Webhooks"
         embedding:
           title: "Indlejring"
+      theme_site_settings:
+        setting: "Indstilling"
+        default_value: "Standard"
       search:
         title: "Søg"
         result_types:
@@ -4778,6 +4784,11 @@ da:
         author: "Af %{author}"
         experimental_badge: "eksperimentel"
         learn_more: "Lær mere"
+        filters:
+          all: "Alle"
+          enabled: "Aktiveret"
+          disabled: "Deaktiveret"
+          reset: "Nulstil"
       navigation_menu:
         sidebar: "Sidebjælke"
       backups:
@@ -4887,6 +4898,8 @@ da:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
+          filter_all: "Alle"
+          filter_user_selectable: "Kan vælges af brugeren"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"
@@ -4995,9 +5008,7 @@ da:
           up_to_date: "Tema er opdateret, senest tjekket:"
           has_overwritten_history: "Nuværende temaversion findes ikke længere, fordi Git-historien er blevet overskrevet af et tvangsskub (push)"
           add: "Tilføj"
-          theme_settings: "Tema indstillinger"
           no_settings: "Dette tema har ingen indstillinger."
-          theme_translations: "Temaoversættelser"
           empty: "Ingen punkter"
           commits_behind:
             one: "Temaet er %{count} 'commit' bagud!"
@@ -5053,6 +5064,12 @@ da:
             title: "Vælg basisfarvepalet"
             description: "Basispalet:"
           title: "Farver"
+          edit: "Rediger"
+          filters:
+            all: "Alle"
+            user_selectable: "Kan vælges af brugeren"
+          active_badge:
+            text: "Aktiv"
           long_title: "Farvepaletter"
           about: "Rediger de farver, der bruges af dine temaer. Opret en ny farvepalet for at starte."
           new_name: "Ny farvepalet"
@@ -5551,7 +5568,6 @@ da:
         activity: Aktivitet
         like_count: Likes Givet / Modtaget
         last_100_days: "de sidste 100 dage"
-        private_topics_count: Private emner
         posts_read_count: Læste indlæg
         post_count: Oprettede indlæg
         second_factor_enabled: To-faktor-godkendelse aktiveret

@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    rss_polling_enabled: "[RSS-Abfrage] Importieren von eingebetteten Beiträgen aus mehreren RSS-Feeds ermöglichen"
+    rss_polling_frequency: "[RSS Abfrage] Häufigkeit der Feed-Abfrage (in Minuten)"
+    rss_polling_use_pubdate: "[RSS-Abfrage] Setze das Erstellungsdatum des Themas auf das im RSS-Feed gefundene Veröffentlichungsdatum"
+    rss_polling_update_tags: "[RSS Abfrage] Aktualisiere Schlagwörter des Themas, wenn es aktualisiert wird. Wenn du diese Option deaktivierst, werden die ursprünglichen Schlagwörter übernommen, aber weitere Änderungen nicht mehr vorgenommen."

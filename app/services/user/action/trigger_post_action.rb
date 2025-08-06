@@ -9,7 +9,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
   delegate :user, to: :guardian, private: true
 
   def call
-    return if post.blank? || post_action.blank?
+    return if post.blank? || post_action.blank? || post_action == "none"
     send(post_action)
   rescue NoMethodError
   end

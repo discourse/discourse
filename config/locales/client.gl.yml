@@ -1001,6 +1001,9 @@ gl:
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(predeterminado do sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Escuro"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
@@ -1019,6 +1022,8 @@ gl:
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "
+      silenced_permanently: "Este usuario está silenciado."
+      silenced_reason: "Motivo: "
       github_profile: "Github"
       email_activity_summary: "Resumo da actividade"
       mailing_list_mode:
@@ -1397,7 +1402,8 @@ gl:
         reinvited: "Convite reenviado"
         removed: "Retirado"
         user: "Usuario convidado"
-        none: "Non hai convites que amosar."
+        none:
+          title: "Non hai convites que amosar."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros %{count} convites."
@@ -1785,7 +1791,6 @@ gl:
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
       toggle_whisper: "Trocar rumor"
-      toggle_unlisted: "Trocar fóra da lista"
       posting_not_on_topic: "A que tema quere responder?"
       saved_local_draft_tip: "gardado localmente"
       drafts_offline: "borradores sen conexión"
@@ -3373,6 +3378,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
             faq:
@@ -3413,6 +3420,9 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    filter:
+      description:
+        yesterday: "Onte"
     discovery:
       headings:
         multi_tag:
@@ -3423,7 +3433,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3545,6 +3555,8 @@ gl:
           title: "Enganches de web (webhooks)"
         embedding:
           title: "Incorporando"
+      theme_site_settings:
+        default_value: "Predeterminado"
       search:
         title: "Buscar"
         result_types:
@@ -3926,6 +3938,11 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        filters:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restabelecer"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -4020,6 +4037,7 @@ gl:
           theme: "Tema"
           component: "Compoñente"
           components: "Compoñentes"
+          filter_all: "Todas"
           theme_name: "Nome do tema"
           component_name: "Nome do compoñente"
           themes_intro: "Seleccione un tema existente ou instale un novo para comezar"
@@ -4120,9 +4138,7 @@ gl:
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"
-          theme_settings: "Configuración do tema"
           no_settings: "Este tema non ten axustes."
-          theme_translations: "Traducións do tema"
           empty: "Sen elementos"
           commits_behind:
             one: "O tema está %{count} commit por atrás!"
@@ -4171,6 +4187,11 @@ gl:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todas"
+          active_badge:
+            text: "Activo"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"
@@ -4610,7 +4631,6 @@ gl:
         activity: Actividade
         like_count: Valoracións dadas / recibidas
         last_100_days: "nos últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicacións lidas
         post_count: Publicacións creadas
         second_factor_enabled: Activada a autenticación de dobre factor

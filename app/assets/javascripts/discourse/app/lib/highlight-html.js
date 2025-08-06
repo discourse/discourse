@@ -17,7 +17,14 @@ function highlight(node, pattern, nodeName, className) {
   }
 
   if (node.nodeType === Node.TEXT_NODE) {
-    const match = node.data.match(pattern);
+    let match;
+    try {
+      match = node.data.match(pattern);
+    } catch {
+      // If the regex is too large, it will throw an error.
+      // In this case, we just return the original node without highlighting.
+      return 0;
+    }
 
     if (!match) {
       return 0;

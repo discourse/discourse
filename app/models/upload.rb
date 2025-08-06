@@ -23,6 +23,8 @@ class Upload < ActiveRecord::Base
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
   has_many :optimized_images, dependent: :destroy
+  has_many :optimized_videos, dependent: :destroy
+  has_many :optimized_video_uploads, through: :optimized_videos, source: :optimized_upload
   has_many :user_uploads, dependent: :destroy
   has_many :upload_references, dependent: :destroy
   has_many :posts, through: :upload_references, source: :target, source_type: "Post"

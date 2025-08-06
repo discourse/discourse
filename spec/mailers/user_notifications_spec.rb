@@ -682,152 +682,6 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe ".user_mentioned" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
-    let(:category) { Fabricate(:category, name: "India") }
-
-    let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
-
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
-    let(:response) do
-      Fabricate(
-        :basic_reply,
-        topic: post.topic,
-        user: response_by_user,
-        raw: "@#{user.username} response to post",
-      )
-    end
-    let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
-
-    context "when prioritize_username_in_ux is false" do
-      before { SiteSetting.prioritize_username_in_ux = false }
-      context "when user has name" do
-        it "generates a correct email" do
-          mail =
-            UserNotifications.user_mentioned(
-              user,
-              post: response,
-              notification_type: notification.notification_type,
-              notification_data_hash: notification.data_hash,
-            )
-
-          # from should include full user name
-          expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
-
-          # subject should include category name
-          expect(mail.subject).to match(/India/)
-
-          mail_html = mail.html_part.body.to_s
-
-          expect(mail_html.scan(%r{@#{user.name}</a> response to post}).count).to eq(1)
-
-          expect(mail_html.scan(/Visit Topic/).count).to eq(1)
-
-          expect(mail_html.scan(/to respond/).count).to eq(1)
-
-          # 1 unsubscribe
-          expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
-
-          # side effect, topic user is updated with post number
-          tu = TopicUser.get(post.topic_id, user)
-          expect(tu.last_emailed_post_number).to eq(response.post_number)
-        end
-      end
-
-      context "when several users are mentioned in the same email" do
-        fab!(:user1) { Fabricate(:user, name: "Cool User1 Name") }
-        fab!(:user2, :user)
-        fab!(:user3) { Fabricate(:user, name: "Cool User2 Name") }
-
-        let(:response) do
-          Fabricate(
-            :basic_reply,
-            topic: post.topic,
-            user: response_by_user,
-            raw:
-              "@#{user.username} @#{user1.username} @#{user2.username} @#{user3.username} response to post",
-          )
-        end
-        let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
-
-        it "generates a correct email" do
-          user2.name = nil
-          user2.save
-
-          mail =
-            UserNotifications.user_mentioned(
-              user,
-              post: response,
-              notification_type: notification.notification_type,
-              notification_data_hash: notification.data_hash,
-            )
-
-          # from should include full user name
-          expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
-
-          # subject should include category name
-          expect(mail.subject).to match(/India/)
-
-          mail_html = mail.html_part.body.to_s
-
-          expect(mail_html.scan(/@#{user.name}/).count).to eq(1)
-          expect(mail_html.scan(/@#{user1.name}/).count).to eq(1)
-          # Make sure it can handle users without usernames in the same email
-          expect(mail_html.scan(/@#{user2.username}/).count).to eq(1)
-          expect(mail_html.scan(/@#{user3.name}/).count).to eq(1)
-
-          expect(mail_html.scan(/Visit Topic/).count).to eq(1)
-
-          expect(mail_html.scan(/to respond/).count).to eq(1)
-
-          # 1 unsubscribe
-          expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
-
-          # side effect, topic user is updated with post number
-          tu = TopicUser.get(post.topic_id, user)
-          expect(tu.last_emailed_post_number).to eq(response.post_number)
-        end
-      end
-
-      context "when user doesn't have a name" do
-        it "generates a correct email" do
-          user.name = nil
-          user.save
-
-          mail =
-            UserNotifications.user_mentioned(
-              user,
-              post: response,
-              notification_type: notification.notification_type,
-              notification_data_hash: notification.data_hash,
-            )
-
-          # from should include full user name
-          expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
-
-          # subject should include category name
-          expect(mail.subject).to match(/India/)
-
-          mail_html = mail.html_part.body.to_s
-
-          expect(mail_html.scan(%r{@#{user.username}</a> response to post}).count).to eq(1)
-
-          expect(mail_html.scan(/Visit Topic/).count).to eq(1)
-
-          expect(mail_html.scan(/to respond/).count).to eq(1)
-
-          # 1 unsubscribe
-          expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
-
-          # side effect, topic user is updated with post number
-          tu = TopicUser.get(post.topic_id, user)
-          expect(tu.last_emailed_post_number).to eq(response.post_number)
-        end
-      end
-    end
-  end
-
   describe ".user_posted" do
     let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
     let(:topic) { Fabricate(:topic, title: "Super cool topic") }
@@ -1450,6 +1304,56 @@ RSpec.describe UserNotifications do
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
+    end
+  end
+
+  describe "#notification_email" do
+    let!(:plugin) { Plugin::Instance.new }
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    let(:category) { Fabricate(:category, name: "India") }
+
+    let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
+
+    let(:user) { Fabricate(:user) }
+    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
+    let(:response) do
+      Fabricate(
+        :basic_reply,
+        topic: post.topic,
+        user: response_by_user,
+        raw: "@#{user.username} response to post",
+      )
+    end
+    let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+    let!(:modify_post) do
+      Proc.new do |email_options|
+        email_options[:post].cooked = "modified post"
+        email_options
+      end
+    end
+
+    it "allows plugins to control #notification_email" do
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
+
+      mail =
+        UserNotifications.user_mentioned(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      mail_html = mail.html_part.body.to_s
+      expect(mail_html.scan("modified post").count).to eq(1)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
     end
   end
 

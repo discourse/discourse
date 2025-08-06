@@ -27,6 +27,7 @@ export default class UserController extends Controller {
   @gt("model.number_of_flags_given", 0) hasGivenFlags;
   @gt("model.number_of_flagged_posts", 0) hasFlaggedPosts;
   @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
+  @gt("model.number_of_silencings", 0) hasBeenSilenced;
   @gt("model.number_of_suspensions", 0) hasBeenSuspended;
   @gt("model.warnings_received_count", 0) hasReceivedWarnings;
   @gt("model.number_of_rejected_posts", 0) hasRejectedPosts;
@@ -36,6 +37,7 @@ export default class UserController extends Controller {
     "hasGivenFlags",
     "hasFlaggedPosts",
     "hasDeletedPosts",
+    "hasBeenSilenced",
     "hasBeenSuspended",
     "hasReceivedWarnings",
     "hasRejectedPosts"
@@ -91,9 +93,9 @@ export default class UserController extends Controller {
     };
   }
 
-  @discourseComputed("model.suspended", "currentUser.staff")
-  isNotSuspendedOrIsStaff(suspended, isStaff) {
-    return !suspended || isStaff;
+  @discourseComputed("model.suspended", "model.silenced", "currentUser.staff")
+  isNotRestrictedOrIsStaff(suspended, silenced, isStaff) {
+    return (!suspended && !silenced) || isStaff;
   }
 
   @discourseComputed("model.trust_level")
@@ -210,13 +212,22 @@ export default class UserController extends Controller {
     return this.site.desktopView;
   }
 
-  @action
-  showSuspensions(event) {
-    event?.preventDefault();
-    this.adminTools.showActionLogs(this, {
-      target_user: this.get("model.username"),
-      action_name: "suspend_user",
-    });
+  get silencingsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "silence_user",
+      },
+    };
+  }
+
+  get suspensionsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "suspend_user",
+      },
+    };
   }
 
   @action

@@ -201,19 +201,12 @@ fi:
       search: "Hae"
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
       error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>klikkaamalla tätä</a>."
       only_admins: "(tämä viesti näytetään vain sivuston ylläpitäjille)"
     broken_decorator_alert: "Viestit eivät välttämättä näy oikein, koska yksi sivustosi viestien sisällön somistajista ilmoitti virheestä."
     broken_page_change_alert: "onPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
     broken_plugin_alert: "Lisäosan \"%{name}\" aiheuttama"
     broken_transformer_alert: "Tapahtui virhe. Sivustosi ei ehkä toimi oikein."
-    critical_deprecation:
-      notice: "<b>[Ylläpitäjän huomautus]</b> Jokin teemoistasi tai lisäosistasi täytyy päivittää, jotta se olisi yhteensopiva tulevien Discoursen ydinmuutosten kanssa."
-      id: "(tunnus:<em>%{id}</em>)"
-      linked_id: "(tunnus:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tunnistettu teema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Tunnistettu lisäosa: \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -1309,7 +1302,6 @@ fi:
         description: "Ohita uuden käyttäjän aloittamisvinkit ja kunniamerkit"
       reset_seen_user_tips: "Näytä käyttäjävinkkejä uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
-      color_scheme_default_on_all_devices: "Aseta oletusväripaletti kaikille laitteilleni"
       color_scheme: "Väripaletti"
       color_schemes:
         default_description: "Teeman oletus"
@@ -1319,6 +1311,10 @@ fi:
         regular: "Tavallinen"
         dark: "Tumma tila"
         default_dark_scheme: "(sivuston oletus)"
+        interface_modes:
+          auto: "Auto"
+          light: "Vaalea"
+          dark: "Tumma"
       dark_mode: "Tumma tila"
       dark_mode_enable: "Ota käyttöön automaattinen tumman tilan väripaletti"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
@@ -1344,6 +1340,8 @@ fi:
       suspended_notice: "Tämä käyttäjätili on estetty %{date} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy: "
+      silenced_permanently: "Käyttäjä on hiljennetty."
+      silenced_reason: "Syy: "
       github_profile: "GitHub"
       email_activity_summary: "Yhteenveto tapahtumista"
       mailing_list_mode:
@@ -1864,7 +1862,8 @@ fi:
         removed: "Poistettu"
         search: "kirjoita hakeaksesi kutsuja…"
         user: "Kutsuttu käyttäjä"
-        none: "Ei näytettäviä kutsuja."
+        none:
+          title: "Ei näytettäviä kutsuja."
         truncated:
           one: "Näytetään ensimmäinen kutsu."
           other: "Näytetään ensimmäiset %{count} kutsua."
@@ -2503,7 +2502,6 @@ fi:
       unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Kuiskaus päälle/pois"
-      toggle_unlisted: "Listaus päälle/pois"
       insert_table: "Lisää taulukko"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saved_local_draft_tip: "tallennettu paikallisesti"
@@ -4745,6 +4743,8 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
+            filter:
+              content: "Suodatin"
             topics:
               content: "Ketjut"
               title: "Kaikki ketjut"
@@ -4896,6 +4896,12 @@ fi:
           save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
     safari_15_warning: "Selaimesi on pian yhteensopimaton tämän yhteisön kanssa. Jos haluat jatkaa osallistumista täällä, päivitä selaimesi tai <a href='%{url}'>lue lisää</a>."
+    filter:
+      description:
+        yesterday: "Eilen"
+        last_week: "Viime viikko"
+        last_month: "Viime kuukausi"
+        last_year: "Viime vuosi"
     discovery:
       headings:
         all:
@@ -4968,7 +4974,7 @@ fi:
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
-      filter_reports: Suodata raportteja
+      filter_reports: "Suodata raportteja..."
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
@@ -5213,7 +5219,6 @@ fi:
           header_description: "Tarkkaillut sanat ovat valvontatyökaluja, jotka voivat suorittaa useita erilaisia toimintoja, kuten estää, sensuroida, linkittää tai liputtaa tiettyjä sanoja sisältäviä viestejä"
         color_palettes:
           title: "Väripaletit"
-          header_description: "Väripaletit määrittelevät ydinvärit, joita käytetään sivuston käyttöliittymässä, kun taas teemat voivat tarjota lisää muotoilua, asetteluja ja komponentteja. Molemmat voivat työskennellä yhdessä luoda sivuston ainutlaatuinen ulkoasu ja tunne, ja molemmat voidaan asettaa saataville käyttäjille valita mieltymys."
         emoji:
           title: "Emojit"
           header_description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan."
@@ -5294,7 +5299,6 @@ fi:
               header_description: "Tarkastele suoritettujen hakujen lokia"
         plugins:
           title: "Asennetut lisäosat"
-          header_description: "Kaikki asentamasi Discourse-lisäosat tai lisäosat, jotka kuuluvat esiasennettuina Discourse-isännöintiin, näkyvät tässä luettelossa"
         api_keys:
           title: "API-avaimet"
           header_description: "API-avainten avulla voit integroida turvallisesti Discoursen ulkoisiin järjestelmiin ja automatisoida toimintoja. Ylläpitäjät voivat luoda avaimia tietyillä laajuuksilla hallitakseen pääsyä resursseihin ja arkaluontoisiin tietoihin. Laajuudet rajoittavat toimintoja ja näin ollen parantavat turvallisuutta."
@@ -5306,6 +5310,9 @@ fi:
         embedding:
           title: "Upottaminen"
           header_description: "Discourse voi upottaa kommentit ketjusta etäsivustolla Javascript APIn avulla, joka luo iframen"
+      theme_site_settings:
+        setting: "Asetus"
+        default_value: "Oletus"
       search:
         modal_title: "Hae kaikkea admin-osiossa"
         title: "Hae"
@@ -5977,7 +5984,6 @@ fi:
           install: "Asenna"
           themes:
             title: "Teemat"
-            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
@@ -6013,7 +6019,6 @@ fi:
             filter_by_used: "Käytetty"
             filter_by_unused: "Käyttämätön"
             filter_by_updates_available: "Päivityksiä saatavilla"
-            search_components: "Kirjoita komponentin nimi"
             new_update_for_component: "Uusi päivitys saatavilla %{name}!"
             component_up_to_date: '"%{name}" on ajan tasalla.'
             updated_successfully: '"%{name}" on päivitetty onnistuneesti.'
@@ -6068,6 +6073,11 @@ fi:
         author: "Käyttäjältä %{author}"
         experimental_badge: "kokeellinen"
         learn_more: "Lue lisää"
+        filters:
+          all: "Kaikki"
+          enabled: "Käytössä"
+          disabled: "Pois käytöstä"
+          reset: "Palauta"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
@@ -6193,7 +6203,8 @@ fi:
           theme: "Teema"
           component: "Komponentti"
           components: "Komponentit"
-          search_placeholder: "kirjoita etsiäksesi…"
+          filter_all: "Kaikki"
+          filter_user_selectable: "Käyttäjän valittavissa"
           theme_name: "Teeman nimi"
           component_name: "Komponentin nimi"
           themes_intro: "Aloita valitsemalla olemassa oleva teema tai asenna uusi"
@@ -6333,11 +6344,7 @@ fi:
           up_to_date: "Teema on ajan tasalla, viimeksi tarkastettu:"
           has_overwritten_history: "Nykyistä teemaversiota ei enää ole, koska pakotettu työntö on korvannut git-historian."
           add: "Lisää"
-          theme_settings: "Teeman asetukset"
-          edit_objects_theme_setting: "Objektien asetuseditori"
-          overriden_settings_explanation: "Ohitetut asetukset on merkitty pisteellä, ja niissä on korostettu väri. Palauta nämä asetukset oletusarvoihin painamalla niiden vieressä olevaa nollauspainiketta."
           no_settings: "Teemalla ei ole asetuksia."
-          theme_translations: "Teeman käännökset"
           empty: "Ei kohteita"
           commits_behind:
             one: "Teema on %{count} solmitun muutoksen jäljessä!"
@@ -6429,7 +6436,12 @@ fi:
             title: "Valitse perusväripaletti"
             description: "Peruspaletti:"
           title: "Värit"
-          edit: "Muokkaa väripaletteja"
+          edit: "Muokkaa"
+          filters:
+            all: "Kaikki"
+            user_selectable: "Käyttäjän valittavissa"
+          active_badge:
+            text: "Aktiivinen"
           long_title: "Väripaletit"
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
@@ -7082,7 +7094,7 @@ fi:
         activity: Toiminta
         like_count: Tykkäyksiä annettu/saatu
         last_100_days: "edellisen 100 päivän aikana"
-        private_topics_count: Yksityiset ketjut
+        private_topics_count: Henkilökohtaiset viestit
         posts_read_count: Luettuja viestejä
         post_count: Kirjoitettuja viestejä
         second_factor_enabled: Kaksivaiheinen tunnistus käytössä

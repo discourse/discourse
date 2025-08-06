@@ -200,19 +200,12 @@ it:
       search: "Cerca"
     themes:
       default_description: "Predefinito"
-      broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
       error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per aggiornare, riconfigurare o disattivare."
       only_admins: "(questo messaggio è mostrato solo agli amministratori del sito)"
     broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori dei contenuti dei messaggi sul tuo sito ha generato un errore."
     broken_page_change_alert: "Un gestore onPageChange ha generato un errore. Controlla gli strumenti per sviluppatori del browser per ulteriori informazioni."
     broken_plugin_alert: "Causato dal plugin '%{name}'"
     broken_transformer_alert: "Si è verificato un errore. Il tuo sito potrebbe non funzionare correttamente."
-    critical_deprecation:
-      notice: "<b>[Avviso amministratore]</b> Uno dei tuoi temi o plugin necessita di aggiornamento per compatibilità con le prossime modifiche principali di Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tema identificato: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Plugin identificato: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
@@ -1286,7 +1279,6 @@ it:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
       reset_seen_user_tips: "Mostra di nuovo i suggerimenti per gli utenti"
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
-      color_scheme_default_on_all_devices: "Imposta questo schema colori predefinito su tutti i miei dispositivi"
       color_scheme: "Schema di colori"
       color_schemes:
         default_description: "Tema predefinito"
@@ -1296,6 +1288,9 @@ it:
         regular: "Normale"
         dark: "Modalità scura"
         default_dark_scheme: "(predefinito del sito)"
+        interface_modes:
+          light: "Chiaro"
+          dark: "Scuro"
       dark_mode: "Modalità scura"
       dark_mode_enable: "Attiva lo schema di colori automatico della modalità scura"
       text_size_default_on_all_devices: "Rendi questa la dimensione del testo predefinita su tutti i miei dispositivi"
@@ -1321,6 +1316,8 @@ it:
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
+      silenced_permanently: "Questo utente è silenziato."
+      silenced_reason: "Motivo:"
       github_profile: "GitHub"
       email_activity_summary: "Riepilogo Attività"
       mailing_list_mode:
@@ -1839,7 +1836,8 @@ it:
         removed: "Rimosso"
         search: "Digita per cercare inviti…"
         user: "Utente Invitato"
-        none: "Nessun invito da visualizzare."
+        none:
+          title: "Nessun invito da visualizzare."
         truncated:
           one: "Visualizzazione del primo invito."
           other: "Visualizzazione dei primi %{count} inviti."
@@ -2451,7 +2449,6 @@ it:
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
-      toggle_unlisted: "Rendi Invisibile"
       insert_table: "Inserisci tabella"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"
@@ -4645,6 +4642,8 @@ it:
             badges:
               content: "Distintivi"
               title: "Tutti i distintivi disponibili"
+            filter:
+              content: "Filtro"
             topics:
               content: "Argomenti"
               title: "Tutti gli argomenti"
@@ -4792,6 +4791,12 @@ it:
           paste: "Incolla..."
           save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
+    filter:
+      description:
+        yesterday: "Ieri"
+        last_week: "Ultima settimana"
+        last_month: "Ultimo mese"
+        last_year: "Ultimo anno"
     discovery:
       headings:
         multi_tag:
@@ -4803,7 +4808,7 @@ it:
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
-      filter_reports: Filtra report
+      filter_reports: "Filtra report..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4996,7 +5001,6 @@ it:
               title: "Log di ricerca"
         plugins:
           title: "Plugin installati"
-          header_description: "Tutti i plugin di Discourse che hai installato o quelli preinstallati con l'hosting di Discourse appariranno in questo elenco"
         api_keys:
           title: "Chiavi API"
           header_description: "La funzionalità delle chiavi API consente di integrare in modo sicuro Discourse con sistemi esterni e automatizzare le azioni. Gli amministratori possono creare chiavi con ambiti specifici per controllare l'accesso alle risorse e ai dati sensibili. Gli ambiti limitano la funzionalità, garantendo una maggiore sicurezza."
@@ -5005,6 +5009,8 @@ it:
         embedding:
           title: "Integrazione"
           header_description: "Discourse ha la capacità di incorporare i commenti di un argomento in un sito remoto utilizzando un'API Javascript che crea un IFRAME"
+      theme_site_settings:
+        default_value: "Predefinito"
       search:
         title: "Cerca"
         result_types:
@@ -5707,6 +5713,11 @@ it:
         author: "Da %{author}"
         experimental_badge: "sperimentale"
         learn_more: "Ulteriori informazioni"
+        filters:
+          all: "Tutte"
+          enabled: "Abilitato"
+          disabled: "Disabilitati"
+          reset: "Reimposta"
       navigation_menu:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
@@ -5832,7 +5843,8 @@ it:
           theme: "Tema"
           component: "Componente"
           components: "Componenti"
-          search_placeholder: "digita per cercare…"
+          filter_all: "Tutte"
+          filter_user_selectable: "Selezionabile dall'utente"
           theme_name: "Nome del Tema"
           component_name: "Nome del Componente"
           themes_intro: "Seleziona un tema esistente o installane uno nuovo per iniziare"
@@ -5959,11 +5971,7 @@ it:
           up_to_date: "Il tema è aggiornato, ultima verifica:"
           has_overwritten_history: "La versione attuale del tema non esiste più perché la cronologia Git è stata sovrascritta da un push forzato."
           add: "Aggiungi"
-          theme_settings: "Impostazioni Tema"
-          edit_objects_theme_setting: "Editor impostazione oggetti"
-          overriden_settings_explanation: "Le impostazioni sostituite sono contrassegnate da un punto e hanno un colore evidenziato. Per ripristinare queste impostazioni al valore predefinito, premi il pulsante di ripristino accanto a esse."
           no_settings: "Questo tema non ha impostazioni."
-          theme_translations: "Traduzioni Tema"
           empty: "Nessun elemento"
           commits_behind:
             one: "Il tema è indietro di %{count} commit!"
@@ -6033,7 +6041,12 @@ it:
             title: "Seleziona la tavolozza dei colori di base"
             description: "Tavolozza di base:"
           title: "Colori"
-          edit: "Modifica schemi di colori"
+          edit: "Modifica"
+          filters:
+            all: "Tutte"
+            user_selectable: "Selezionabile dall'utente"
+          active_badge:
+            text: "Attivi"
           long_title: "Schemi di colori"
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
           new_name: "Nuovo schema di colori"
@@ -6665,7 +6678,6 @@ it:
         activity: Attività
         like_count: '"Mi piace" Assegnati / Ricevuti'
         last_100_days: "negli ultimi 100 giorni"
-        private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
         post_count: Messaggi Creati
         second_factor_enabled: Autenticazione a due fattori abilitata

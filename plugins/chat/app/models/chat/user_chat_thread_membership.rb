@@ -20,16 +20,18 @@ end
 #
 # Table name: user_chat_thread_memberships
 #
-#  id                        :bigint           not null, primary key
-#  user_id                   :bigint           not null
-#  thread_id                 :bigint           not null
-#  last_read_message_id      :bigint
-#  notification_level        :integer          default("tracking"), not null
-#  thread_title_prompt_seen  :boolean          default(false), not null
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
+#  id                                  :bigint           not null, primary key
+#  user_id                             :bigint           not null
+#  thread_id                           :bigint           not null
+#  last_read_message_id                :bigint
+#  notification_level                  :integer          default("tracking"), not null
+#  created_at                          :datetime         not null
+#  updated_at                          :datetime         not null
+#  thread_title_prompt_seen            :boolean          default(FALSE), not null
+#  last_unread_message_when_emailed_id :bigint
 #
 # Indexes
 #
-#  user_chat_thread_unique_memberships  (user_id,thread_id) UNIQUE
+#  idx_user_chat_thread_memberships_on_thread_id_user_id  (thread_id,user_id)
+#  user_chat_thread_unique_memberships                    (user_id,thread_id) UNIQUE
 #

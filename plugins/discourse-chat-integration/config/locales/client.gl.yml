@@ -1,0 +1,226 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integracións de chat"
+  js:
+    chat_integration:
+      menu_title: "Integracións de chat"
+      settings: "Configuración"
+      no_providers: "Cómpre activar algúns fornecedores na configuración do complemento"
+      channels_with_errors: "Algunhas das canles deste fornecedor fallaron a última vez que se enviaron mensaxes. Prema na icona(s) de erro para saber máis."
+      channel_exception: "Produciuse un erro descoñecido a última vez que se enviou unha mensaxe por esta canle."
+      group_mention_template: "Mencións de: @%{name}"
+      group_message_template: "Mensaxes a: @%{name}"
+      choose_group: "(escolla un grupo)"
+      all_categories: "(todas as categorías)"
+      all_tags: "(todas as etiquetas)"
+      create_rule: "Crear regra"
+      create_channel: "Crear canle"
+      delete_channel: "Eliminar"
+      test_channel: "Proba"
+      edit_channel: "Editar"
+      channel_delete_confirm: "Confirma que quere eliminar esta canle? Todas as regras asociadas serán eliminadas."
+      test_modal:
+        title: "Enviar unha mensaxe de proba"
+        topic: "Tema"
+        send: "Enviar mensaxe de proba"
+        close: "Pechar"
+        error: "Produciuse un erro descoñecido ao enviar a mensaxe. Consulte os rexistros do sitio para obter máis información."
+        success: "A mensaxe enviouse correctamente"
+      type:
+        normal: Normal
+        group_message: Mensaxe de grupo
+        group_mention: Mención de grupo
+      filter:
+        mute: 'Silenciar'
+        follow: 'Só a primeira publicación'
+        watch: 'Todas as publicacións e respostas'
+        thread: 'Todas as publicacións cos fíos de resposta'
+      rule_table:
+        filter: "Filtro"
+        category: "Categoría"
+        tags: "Etiquetas"
+        edit_rule: "Editar"
+        delete_rule: "Eliminar"
+      edit_channel_modal:
+        title: "Editar canle"
+        save: "Gardar canle"
+        cancel: "Cancelar"
+        provider: "Fornecedor"
+        channel_validation:
+          ok: "Correcto"
+          fail: "Formato incorrecto"
+      edit_rule_modal:
+        title: Editar regra
+        save: Gardar regra
+        cancel: Cancelar
+        provider: Fornecedor
+        type: Tipo
+        channel: Canle
+        filter: Filtro
+        category: Categoría
+        group: Grupo
+        tags: Etiquetas
+        instructions:
+          type: "Cambiar o tipo que dispara avisos para mensaxes de grupos ou mencións"
+          filter: "Nivel de aviso. O silenciamento sobrescribe outras regras que coincidan"
+          category: "Esta regra soamente se aplicará a asunto na categoría especificada"
+          group: "Esta regra aplicaráselles ás publicacións que teñan referenciado a este grupo"
+          tags: "Se é así especificado, esta regra soamente se lle aplicará aos asuntos que teñan cando menos unha destas etiquetas"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canle
+              help: "i.e. #canle, @usuario."
+          errors:
+            action_prohibited: "O bot non ten permisos para publicar nesta canle"
+            channel_not_found: "A canle especificada non existe en Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome para describir a canle. Non se utiliza para conectar co Telegram."
+            chat_id:
+              title: ID de chat
+              help: Un número que lle ofreceu o bot, ou un identificador dunha canle de difusión na forma @nomedacanle
+          errors:
+            channel_not_found: "A canle especificada non existe no Telegram"
+            forbidden: "O bot non ten permisos para publicar nesta canle"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome para describir a canle. Non se utiliza para a conexión co Discord."
+            webhook_url:
+              title: URL do gancho
+              help: O URL do gancho creado na configuración do seu servidor Discord
+        guilded:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: URL do gancho
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canle
+              help: "i.e. #canle, @usuario."
+          errors:
+            channel_not_found: "A canle especificada non existe no Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome para describir a canle. Non se utiliza para a conexión con Matrix."
+            room_id:
+              title: "ID de sala"
+              help: "O «identificador privado» da sala. Debería parecerse a algo como !abcdefg:matrix.org"
+          errors:
+            unknown_token: "O token de acceso non é correcto"
+            unknown_room: "O ID da sala non é correcto"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Stream"
+              help: "O nome do fluxo Zulip ao que debería enviarse a mensaxe. i.e. «xeral»"
+            subject:
+              title: "Asunto"
+              help: "O asunto que deben ter estas mensaxes enviadas polo bot"
+          errors:
+            does_not_exist: "Ese fluxo non existe en Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Canle
+              help: "i.e. #canle, @usuario."
+          errors:
+            invalid_channel: "Esa canle non existe en Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nome"
+              help: "O nome dunha sala Gitter, i.e. gitterHQ/servizos."
+            webhook_url:
+              title: "URL do gancho"
+              help: "O URL ofrecido cando vostede crea unha nova integración nunha sala do Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Token de fluxo"
+              help: "O token de fluxo ofrecido despois de crear unha fonte para un fluxo ao que desexa enviar mensaxes."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Nome da instancia do GroupMe"
+              help: "nome da instancia do Groupme como aparece na configuración do sitio. Utilice «todos» para enviala a todas as instancias"
+          errors:
+            not_found: "Non se atopou o camiño no que intentou publicar a súa mensaxe. Comprobe o ID do bot na configuración do sitio."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome de canle do Teams i.e. discourse"
+            webhook_url:
+              title: "URL do gancho"
+          errors:
+            invalid_channel: "Esa canle non existe en Microsoft Teams"
+        powerautomate:
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome para a canle (só se mostra na interface de administración do Discourse)"
+            webhook_url:
+              title: "URL do gancho"
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome de espazo Webex i.e. discourse"
+            webhook_url:
+              title: "URL do gancho"
+          errors:
+            invalid_channel: "Esa canle non existe en Webex"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "Nome"
+              help: "Un nome para a canle (só se mostra na interface de administración do Discourse)"
+            webhook_url:
+              title: "URL do gancho"
+              help: "O URL ofrecido cando vostede crea un novo gancho"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Mensaxe
+            url:
+              label: URL
+            channel:
+              label: Canle
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Fornecedor

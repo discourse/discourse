@@ -1,0 +1,437 @@
+# Colombian holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2018-06-01.
+#
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Colombia
+# - https://publicholidays.co/
+# - https://www.calendariodecolombia.com/
+# - https://www.officeholidays.com/countries/colombia/
+# - https://www.timeanddate.com/holidays/colombia/
+# - http://www.bank-holidays.com/country/Colombia_42.htm
+---
+methods:
+  # Movable holiday: when they do not fall on a Monday, these holidays are observed the following Monday.
+  to_following_monday_if_not_monday:
+    arguments: date
+    ruby: |
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  epiphany:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 1, 6 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  saint_josephs_day:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 3, 19 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  saint_peter_and_saint_paul:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 6, 29 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  assumption_of_mary:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 8, 15 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  columbus_day:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 10, 12 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  all_saints_day:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 11, 1 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+  independence_of_cartagena:
+    arguments: year
+    ruby: |
+      date = Date.civil( year, 11, 11 )
+      if date.wday > 1
+        date += ( 8 - date.wday )
+      elsif date.wday == 0
+        date += 1
+      end
+      date
+months:
+  0:
+  - name: Jueves Santo
+    regions: [co]
+    function: easter(year)
+    function_modifier: -3
+  - name: Viernes Santo
+    regions: [co]
+    function: easter(year)
+    function_modifier: -2
+  - name: Día de la Ascensión
+    regions: [co]
+    function: easter(year)
+    function_modifier: 43
+  - name: Corpus Christi
+    regions: [co]
+    function: easter(year)
+    function_modifier: 64
+  - name: Sagrado Corazón
+    regions: [co]
+    function: easter(year)
+    function_modifier: 71
+  1:
+  - name: Año Nuevo
+    regions: [co]
+    mday: 1
+  - name: Día de los Reyes Magos
+    regions: [co]
+    function: epiphany(year)
+  3:
+  - name: Día de San José
+    regions: [co]
+    function: saint_josephs_day(year)
+  5:
+  - name: Día del Trabajo
+    regions: [co]
+    mday: 1
+  6:
+  - name: San Pedro y San Pablo
+    regions: [co]
+    function: saint_peter_and_saint_paul(year)
+  7:
+  - name: Día de la Independencia
+    regions: [co]
+    mday: 20
+  8:
+  - name: Batalla de Boyacá
+    regions: [co]
+    mday: 7
+  - name: La Asunción de la Virgen
+    regions: [co]
+    function: assumption_of_mary(year)
+  10:
+  - name: Día de la Raza
+    regions: [co]
+    function: columbus_day(year)
+  11:
+  - name: Día de Todos los Santos
+    regions: [co]
+    function: all_saints_day(year)
+  - name: Independencia de Cartagena
+    regions: [co]
+    function: independence_of_cartagena(year)
+  12:
+  - name: Día de la Inmaculada Concepción
+    regions: [co]
+    mday: 8
+  - name: Navidad
+    regions: [co]
+    mday: 25
+tests:
+  # Año Nuevo
+  - given:
+      date: '2014-01-01'
+      regions: ['co']
+    expect:
+      name: 'Año Nuevo'
+  - given:
+      date: '2017-01-01'
+      regions: ['co']
+    expect:
+      name: 'Año Nuevo'
+  # Día de los Reyes Magos
+  - given:
+      date: '2014-01-06'
+      regions: ['co']
+    expect:
+      name: 'Día de los Reyes Magos'
+  - given:
+      date: '2015-01-12'
+      regions: ['co']
+    expect:
+      name: 'Día de los Reyes Magos'
+  - given:
+      date: '2017-01-09'
+      regions: ['co']
+    expect:
+      name: 'Día de los Reyes Magos'
+  # Día de San José
+  - given:
+      date: '2014-03-24'
+      regions: ['co']
+    expect:
+      name: 'Día de San José'
+  - given:
+      date: '2017-03-20'
+      regions: ['co']
+    expect:
+      name: 'Día de San José'
+  - given:
+      date: '2018-03-19'
+      regions: ['co']
+    expect:
+      name: 'Día de San José'
+  # Jueves Santo
+  - given:
+      date: '2015-04-02'
+      regions: ['co']
+    expect:
+      name: 'Jueves Santo'
+  - given:
+      date: '2017-04-13'
+      regions: ['co']
+    expect:
+      name: 'Jueves Santo'
+  - given:
+      date: '2018-03-29'
+      regions: ['co']
+    expect:
+      name: 'Jueves Santo'
+  # Viernes Santo
+  - given:
+      date: '2014-04-18'
+      regions: ['co']
+    expect:
+      name: 'Viernes Santo'
+  - given:
+      date: '2016-03-25'
+      regions: ['co']
+    expect:
+      name: 'Viernes Santo'
+  - given:
+      date: '2018-03-30'
+      regions: ['co']
+    expect:
+      name: 'Viernes Santo'
+  # Día del Trabajo
+  - given:
+      date: '2013-05-01'
+      regions: ['co']
+    expect:
+      name: 'Día del Trabajo'
+  - given:
+      date: '2016-05-01'
+      regions: ['co']
+    expect:
+      name: 'Día del Trabajo'
+  # Día de la Ascensión
+  - given:
+      date: '2014-06-02'
+      regions: ['co']
+    expect:
+      name: 'Día de la Ascensión'
+  - given:
+      date: '2016-05-09'
+      regions: ['co']
+    expect:
+      name: 'Día de la Ascensión'
+  - given:
+      date: '2017-05-29'
+      regions: ['co']
+    expect:
+      name: 'Día de la Ascensión'
+  # Corpus Christi
+  - given:
+      date: '2014-06-23'
+      regions: ['co']
+    expect:
+      name: 'Corpus Christi'
+  - given:
+      date: '2016-05-30'
+      regions: ['co']
+    expect:
+      name: 'Corpus Christi'
+  - given:
+      date: '2017-06-19'
+      regions: ['co']
+    expect:
+      name: 'Corpus Christi'
+  # Sagrado Corazón
+  - given:
+      date: '2014-06-30'
+      regions: ['co']
+    expect:
+      name: 'Sagrado Corazón'
+  - given:
+      date: '2016-06-06'
+      regions: ['co']
+    expect:
+      name: 'Sagrado Corazón'
+  - given:
+      date: '2017-06-26'
+      regions: ['co']
+    expect:
+      name: 'Sagrado Corazón'
+  # San Pedro y San Pablo
+  - given:
+      date: '2016-07-04'
+      regions: ['co']
+    expect:
+      name: 'San Pedro y San Pablo'
+  - given:
+      date: '2017-07-03'
+      regions: ['co']
+    expect:
+      name: 'San Pedro y San Pablo'
+  # Día de la Independencia
+  - given:
+      date: '2014-07-20'
+      regions: ['co']
+    expect:
+      name: 'Día de la Independencia'
+  - given:
+      date: '2016-07-20'
+      regions: ['co']
+    expect:
+      name: 'Día de la Independencia'
+  - given:
+      date: '2018-07-20'
+      regions: ['co']
+    expect:
+      name: 'Día de la Independencia'
+  # Batalla de Boyacá
+  - given:
+      date: '2014-08-07'
+      regions: ['co']
+    expect:
+      name: 'Batalla de Boyacá'
+  - given:
+      date: '2016-08-07'
+      regions: ['co']
+    expect:
+      name: 'Batalla de Boyacá'
+  - given:
+      date: '2018-08-07'
+      regions: ['co']
+    expect:
+      name: 'Batalla de Boyacá'
+  # La Asunción de la Virgen
+  - given:
+      date: '2014-08-18'
+      regions: ['co']
+    expect:
+      name: 'La Asunción de la Virgen'
+  - given:
+      date: '2016-08-15'
+      regions: ['co']
+    expect:
+      name: 'La Asunción de la Virgen'
+  - given:
+      date: '2017-08-21'
+      regions: ['co']
+    expect:
+      name: 'La Asunción de la Virgen'
+  # Día de la Raza
+  - given:
+      date: '2014-10-13'
+      regions: ['co']
+    expect:
+      name: 'Día de la Raza'
+  - given:
+      date: '2016-10-17'
+      regions: ['co']
+    expect:
+      name: 'Día de la Raza'
+  - given:
+      date: '2017-10-16'
+      regions: ['co']
+    expect:
+      name: 'Día de la Raza'
+  # Día de Todos los Santos
+  - given:
+      date: '2014-11-03'
+      regions: ['co']
+    expect:
+      name: 'Día de Todos los Santos'
+  - given:
+      date: '2016-11-07'
+      regions: ['co']
+    expect:
+      name: 'Día de Todos los Santos'
+  - given:
+      date: '2017-11-06'
+      regions: ['co']
+    expect:
+      name: 'Día de Todos los Santos'
+  # Independencia de Cartagena
+  - given:
+      date: '2014-11-17'
+      regions: ['co']
+    expect:
+      name: 'Independencia de Cartagena'
+  - given:
+      date: '2016-11-14'
+      regions: ['co']
+    expect:
+      name: 'Independencia de Cartagena'
+  - given:
+      date: '2017-11-13'
+      regions: ['co']
+    expect:
+      name: 'Independencia de Cartagena'
+  # Día de la Inmaculada Concepción
+  - given:
+      date: '2013-12-08'
+      regions: ['co']
+    expect:
+      name: 'Día de la Inmaculada Concepción'
+  - given:
+      date: '2014-12-08'
+      regions: ['co']
+    expect:
+      name: 'Día de la Inmaculada Concepción'
+  - given:
+      date: '2016-12-08'
+      regions: ['co']
+    expect:
+      name: 'Día de la Inmaculada Concepción'
+  # Navidad
+  - given:
+      date: '2014-12-25'
+      regions: ['co']
+    expect:
+      name: 'Navidad'
+  - given:
+      date: '2016-12-25'
+      regions: ['co']
+    expect:
+      name: 'Navidad'
+  - given:
+      date: '2017-12-25'
+      regions: ['co']
+    expect:
+      name: 'Navidad'

@@ -1181,7 +1181,7 @@ RSpec.describe UsersController do
       context "with an admin api key" do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
-        it "creates the user as active with a an admin key" do
+        it "creates the user as active with an admin key" do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
@@ -1934,7 +1934,7 @@ RSpec.describe UsersController do
                  username: "dude",
                  password: "P4ssw0rd$$",
                  user_fields: {
-                   [tennis_field.id] => "Nadal",
+                   tennis_field.id => "Nadal",
                  },
                )
 
@@ -4172,6 +4172,17 @@ RSpec.describe UsersController do
         get "/my/preferences"
         expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
       end
+
+      it "works with mixed case params" do
+        group = Fabricate(:group, name: "MyGroup")
+        group.add(user1)
+        group.save
+
+        sign_in(user1)
+
+        get "/my/messages/group/#{group.name}"
+        expect(response).to redirect_to("/u/#{user1.username}/messages/group/#{group.name}")
+      end
     end
   end
 
@@ -4592,6 +4603,31 @@ RSpec.describe UsersController do
         UserActionManager.enable
         post = create_post(user: likee)
         PostActionCreator.like(liker, post)
+      end
+    end
+
+    context "when content localization enabled" do
+      fab!(:topic) { Fabricate(:topic, user:, locale: "en") }
+      fab!(:es_localization) { Fabricate(:topic_localization, topic:, locale: "es") }
+      fab!(:de_localization) { Fabricate(:topic_localization, topic:, locale: "de") }
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "es|de"
+      end
+
+      it "returns localized topic titles in summary" do
+        I18n.stubs(:locale).returns(:es)
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topics"][0]["fancy_title"]).to eq(es_localization.fancy_title)
+
+        I18n.stubs(:locale).returns(:de)
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topics"][0]["fancy_title"]).to eq(de_localization.fancy_title)
       end
     end
   end
@@ -6462,7 +6498,7 @@ RSpec.describe UsersController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"][0]).to eq(
-        "param is missing or the value is empty: name",
+        "param is missing or the value is empty or invalid: name",
       )
     end
 
@@ -7176,8 +7212,10 @@ RSpec.describe UsersController do
 
     after { DiscoursePluginRegistry.reset! }
 
-    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
-    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
+    fab!(:topic)
+    fab!(:post)
+    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
+    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
     let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
     let(:bookmark4) { Fabricate(:bookmark) }
 
@@ -7277,6 +7315,45 @@ RSpec.describe UsersController do
       include_examples "invalid limit params",
                        "/u/someusername/bookmarks.json",
                        described_class::BOOKMARKS_LIMIT
+    end
+
+    describe "when a notification topic has localizations" do
+      fab!(:jap_user) { Fabricate(:user, locale: "ja") }
+      fab!(:topic_localization_es) do
+        Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Hola Mundo")
+      end
+      fab!(:topic_localization_ja) do
+        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
+      end
+
+      before do
+        topic.update(locale: "en")
+        user1.update(locale: "ja")
+      end
+
+      it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        sign_in(user1)
+
+        get "/u/#{user1.username}/bookmarks.json"
+        expect(response.status).to eq(200)
+        response_bookmarks = response.parsed_body["user_bookmark_list"]["bookmarks"]
+        expect(response_bookmarks.map { |b| b["fancy_title"] }).to include(
+          topic_localization_ja.fancy_title,
+        )
+      end
+
+      it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
+        SiteSetting.content_localization_enabled = false
+        SiteSetting.allow_user_locale = true
+        sign_in(user1)
+
+        get "/u/#{user1.username}/bookmarks.json"
+        expect(response.status).to eq(200)
+        response_bookmarks = response.parsed_body["user_bookmark_list"]["bookmarks"]
+        expect(response_bookmarks.map { |b| b["fancy_title"] }).to include(topic.fancy_title)
+      end
     end
   end
 
@@ -7877,6 +7954,68 @@ RSpec.describe UsersController do
         read_notifications = response.parsed_body["read_notifications"]
         expect(topics.size).to eq(0)
         expect(read_notifications.size).to eq(0)
+      end
+    end
+  end
+
+  describe "#staff_info" do
+    context "when logged out" do
+      it "responds with 403" do
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        Fabricate(:user_history, action: UserHistory.actions[:suspend_user], target_user: user)
+        Fabricate(:reviewable_flagged_post, target_created_by: user)
+      end
+
+      it "responds with 403 for normal users" do
+        sign_in(user)
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 200 for moderators" do
+        sign_in(moderator)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "responds with 200 for admins" do
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "delegates work to `User`" do
+        user_instance = mock
+        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user_instance)
+
+        result = {}
+
+        %i[
+          number_of_deleted_posts
+          number_of_flagged_posts
+          number_of_flags_given
+          number_of_silencings
+          number_of_suspensions
+          warnings_received_count
+          number_of_rejected_posts
+        ].each do |info|
+          user_instance.expects(info).returns(user.public_send(info))
+          result[info.to_s] = user.public_send(info)
+        end
+
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.parsed_body).to eq(result)
       end
     end
   end

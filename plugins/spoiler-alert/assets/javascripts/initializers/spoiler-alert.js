@@ -56,7 +56,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.spoiler_enabled) {
-      withPluginApi("1.15.0", initializeSpoiler);
+      withPluginApi(initializeSpoiler);
     }
   },
 };

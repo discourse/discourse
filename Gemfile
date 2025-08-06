@@ -8,16 +8,15 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 7.2.0"
-gem "actionpack", "~> 7.2.0"
-gem "actionview", "~> 7.2.0"
-gem "activemodel", "~> 7.2.0"
-gem "activerecord", "~> 7.2.0"
-gem "activesupport", "~> 7.2.0"
-gem "railties", "~> 7.2.0"
+gem "actionmailer", "~> 8.0.0"
+gem "actionpack", "~> 8.0.0"
+gem "actionview", "~> 8.0.0"
+gem "activemodel", "~> 8.0.0"
+gem "activerecord", "~> 8.0.0"
+gem "activesupport", "~> 8.0.0"
+gem "railties", "~> 8.0.0"
 
 gem "propshaft"
-
 gem "json"
 
 # this will eventually be added to rails,
@@ -30,6 +29,10 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
+# NOTE: hiredis-client is recommended for high performance use of Redis
+# however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387
+# for now we are sticking with the socked based implementation that is not sensitive to this issue
+# gem "hiredis-client"
 gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
@@ -59,6 +62,7 @@ gem "fastimage"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-mediaconvert", require: false
 gem "excon", require: false
 gem "unf", require: false
 
@@ -96,12 +100,12 @@ gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
-gem "execjs", require: false
 gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+# When unicorn is not used anymore, we can use Rack 3
+gem "rack", "< 3"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -113,6 +117,8 @@ gem "net-smtp", require: false
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
+
+gem "goldiloader", require: false
 
 group :test do
   gem "capybara", require: false
@@ -144,7 +150,7 @@ group :test, :development do
 
   gem "rswag-specs"
 
-  gem "annotate"
+  gem "annotaterb"
 
   gem "syntax_tree"
 
@@ -281,3 +287,28 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+
+# for discourse-zendesk-plugin
+gem "inflection", require: false
+gem "multipart-post", require: false
+gem "faraday-multipart", require: false
+gem "zendesk_api", require: false
+
+# for discourse-subscriptions
+gem "stripe", require: false
+
+# for discourse-github
+gem "sawyer", require: false
+gem "octokit", require: false
+
+# for discourse-ai
+gem "tokenizers", require: false
+gem "tiktoken_ruby", require: false
+gem "discourse_ai-tokenizers", require: false
+gem "ed25519" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", require: false
+gem "ruby-rc4", require: false
+gem "hashery", require: false
+gem "ttfunk", require: false
+gem "afm", require: false
+gem "pdf-reader", require: false

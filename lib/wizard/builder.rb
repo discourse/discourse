@@ -39,17 +39,12 @@ class Wizard
           value: SiteSetting.site_description,
         )
 
-        languages =
-          step.add_field(
-            id: "default_locale",
-            type: "dropdown",
-            required: false,
-            value: SiteSetting.default_locale,
-          )
-
-        LocaleSiteSetting.values.each do |locale|
-          languages.add_choice(locale[:value], label: locale[:name])
-        end
+        step.add_field(
+          id: "default_locale",
+          type: "dropdown",
+          required: false,
+          value: SiteSetting.default_locale,
+        )
 
         step.on_update do |updater|
           updater.ensure_changed(:title)

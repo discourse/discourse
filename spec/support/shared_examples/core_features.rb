@@ -160,7 +160,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       before do
         SearchIndexer.enable
         topics.each { SearchIndexer.index(_1, force: true) }
-        SiteSetting.enable_welcome_banner = false
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       end
 
       after { SearchIndexer.disable }

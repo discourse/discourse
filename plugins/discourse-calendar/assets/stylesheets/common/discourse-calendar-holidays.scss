@@ -1,0 +1,9 @@
+.region-input {
+  width: 50%;
+}
+
+.disabled td {
+  background-color: var(--primary-very-low);
+  color: var(--primary-medium);
+  font-style: italic;
+}

@@ -25,14 +25,14 @@ import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import userSearch from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
@@ -41,6 +41,9 @@ import {
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
+import DAutocompleteModifier, {
+  SKIP,
+} from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import Button from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -105,10 +108,9 @@ export default class ChatComposer extends Component {
 
   @action
   setupAutocomplete(textarea) {
-    const $textarea = $(textarea);
-    this.#applyUserAutocomplete($textarea);
-    this.#applyEmojiAutocomplete($textarea);
-    this.#applyCategoryHashtagAutocomplete($textarea);
+    this.#applyUserAutocomplete(textarea);
+    this.#applyEmojiAutocomplete(textarea);
+    this.#applyCategoryHashtagAutocomplete(textarea);
   }
 
   @action
@@ -118,6 +120,21 @@ export default class ChatComposer extends Component {
     if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
+  }
+
+  applyAutocomplete(textarea, options) {
+    if (!this.siteSettings.floatkit_autocomplete_composer) {
+      const $textarea = $(textarea);
+      return $textarea.autocomplete(options);
+    }
+
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      options
+    );
   }
 
   @action
@@ -451,16 +468,17 @@ export default class ChatComposer extends Component {
     this.draft.mentionedUsers.set(user.id, user);
   }
 
-  #applyUserAutocomplete($textarea) {
+  #applyUserAutocomplete(textarea) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
 
-    $textarea.autocomplete({
+    this.applyAutocomplete(textarea, {
       template: userAutocomplete,
       key: "@",
       width: "100%",
       treatAsTextarea: true,
+      fixedTextareaPosition: true,
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
         if (obj.isUser) {
@@ -498,28 +516,31 @@ export default class ChatComposer extends Component {
     });
   }
 
-  #applyCategoryHashtagAutocomplete($textarea) {
-    setupHashtagAutocomplete(
-      this.site.hashtag_configurations["chat-composer"],
-      $textarea,
-      this.siteSettings,
-      {
-        treatAsTextarea: true,
-        afterComplete: (text, event) => {
-          event.preventDefault();
-          this.composer.textarea.value = text;
-          this.composer.focus();
-        },
-      }
+  #applyCategoryHashtagAutocomplete(textarea) {
+    this.applyAutocomplete(
+      textarea,
+      hashtagAutocompleteOptions(
+        this.site.hashtag_configurations["chat-composer"],
+        this.siteSettings,
+        {
+          fixedTextareaPosition: true,
+          treatAsTextarea: true,
+          afterComplete: (text, event) => {
+            event.preventDefault();
+            this.composer.textarea.value = text;
+            this.composer.focus();
+          },
+        }
+      )
     );
   }
 
-  #applyEmojiAutocomplete($textarea) {
+  #applyEmojiAutocomplete(textarea) {
     if (!this.siteSettings.enable_emoji) {
       return;
     }
 
-    $textarea.autocomplete({
+    this.applyAutocomplete(textarea, {
       template: renderEmojiAutocomplete,
       key: ":",
       afterComplete: (text, event) => {
@@ -528,6 +549,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
       },
       treatAsTextarea: true,
+      fixedTextareaPosition: true,
       onKeyUp: (text, cp) => {
         const matches =
           /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
@@ -542,7 +564,10 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          $textarea.autocomplete({ cancel: true });
+          if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
+            const $textarea = $(textarea);
+            $textarea.autocomplete({ cancel: true });
+          }
 
           const menuOptions = {
             identifier: "emoji-picker",

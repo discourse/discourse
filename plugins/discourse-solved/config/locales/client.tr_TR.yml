@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse Çözüldü"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "kabul edildi"
+    solutions: "Çözümler"
+    solved:
+      title: "Çözüldü"
+      allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
+      solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
+      accept_answer: "Bu yanıtın sorunu çözüp çözmediğini seçin"
+      accepted_description: "Bu, bu konu için kabul edilen çözümdür"
+      has_no_accepted_answer: "Bu konunun çözümü yok"
+      unaccept_answer: "Bu yanıt artık sorunu çözmüyorsa seçimi kaldırın"
+      accepted_answer: "Çözüm"
+      solution: "Çözüm"
+      solution_summary:
+        one: "çözüm"
+        other: "çözüm"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "tümü"
+        solved: "çözüldü"
+        unsolved: "çözülmedi"
+      no_solved_topics_title: "Henüz hiçbir konuyu çözmediniz"
+      no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
+      no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
+      no_answer:
+        title: Sorunuz yanıtlandı mı?
+        description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
+      notification:
+        title: "gönderiniz çözüm olarak işaretlendi"
+    topic_statuses:
+      solved:
+        help: "Bu konunun bir çözümü var"
+    search:
+      advanced:
+        statuses:
+          solved: "çözüldü"
+          unsolved: "çözülmedi"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Çözülmüş Olay"
+          accepted_solution: "Bir kullanıcı bir gönderiyi kabul edilen yanıt olarak işaretlediğinde"
+          unaccepted_solution: "Bir kullanıcı bir gönderiyi kabul edilmeyen yanıt olarak işaretlediğinde"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Bir çözümü kabul edin/kabulünü kaldırın.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < GS1
+            tl2: < GS2
+            tl3: < GS3
+            tl4: < GS4
+            any: Herhangi biri
+          fields:
+            maximum_trust_level:
+              label: Güven Seviyesi
+              description: Bu Güven Seviyesi altındaki kullanıcılar bu otomasyonu tetikler

@@ -2379,6 +2379,7 @@ zh_CN:
     about_page_extra_groups_order: "关于页面上额外群组的顺序。"
     adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
+    default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术含量更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和主题。支持的语言环境在 'content localization supported locales' 中设置。"
@@ -2470,6 +2471,22 @@ zh_CN:
     results_page: "'%{term}' 的搜索结果"
     audio: "[音频]"
     video: "[视频]"
+  filter:
+    description:
+      status: "根据状态筛选话题"
+      in: "在个人列表中筛选话题"
+      order: "按特定字段排序话题"
+      category: "显示特定类别中的话题"
+      category_any: "显示任意指定类别中的话题（以逗号分隔）"
+      exclude_category: "排除特定类别的话题"
+      category_without_subcategories: "只显示父类别中的话题，不显示子类别"
+      exclude_category_without_subcategories: "仅从父类别中排除话题，不排除子类别"
+      tag: "显示带有特定标签的话题"
+      tags_any: "显示具有任意指定标签的话题（以逗号分隔）"
+      tags_all: "显示带有所有指定标签的主题（以加号分隔）"
+      exclude_tag: "排除带有特定标签的话题"
+      exclude_tags_any: "排除带有任何指定标签的话题（以逗号分隔）"
+      exclude_tags_all: "排除带有所有指定标签的话题（以加号分隔）"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"
@@ -4097,7 +4114,6 @@ zh_CN:
     solarized_dark_theme_name: "Solarized 深色"
     wcag_dark: "WCAG 暗"
     wcag_dark_theme_name: "WCAG 暗"
-    default_theme_name: "默认"
     light_theme_name: "浅色"
     dark_theme_name: "深色"
     neutral_theme_name: "中性"
@@ -4721,10 +4737,6 @@ zh_CN:
         连续 365 天访问论坛会被授予此徽章。哇哦，一整年！
     badge_title_metadata: "%{site_title}上的%{display_name}徽章"
   admin_login:
-    success: "电子邮件已发送"
-    errors:
-      unknown_email_address: "未知的电子邮件地址。"
-      invalid_token: "无效令牌。"
     email_input: "管理员电子邮件"
     submit_button: "发送电子邮件"
     safe_mode: "安全模式：登录时禁用所有主题/插件"

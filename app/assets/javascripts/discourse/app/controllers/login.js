@@ -150,12 +150,7 @@ export default class LoginPageController extends Controller {
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
-          const ssoDestinationUrl = cookie("sso_destination_url");
-
-          if (ssoDestinationUrl) {
-            removeCookie("sso_destination_url");
-            window.location.assign(ssoDestinationUrl);
-          } else if (destinationUrl) {
+          if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
           } else if (this.referrerTopicUrl) {
@@ -208,6 +203,11 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  loginPasswordChanged(event) {
+    this.loginPassword = event.target.value;
+  }
+
+  @action
   showCreateAccount(createAccountProps = {}) {
     if (this.site.isReadOnly) {
       this.dialog.alert(i18n("read_only_mode.login_disabled"));
@@ -249,7 +249,6 @@ export default class LoginPageController extends Controller {
     if (this.loginDisabled) {
       return;
     }
-
     if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
       this.flash = i18n("login.blank_username_or_password");
       this.flashType = "error";
@@ -322,20 +321,12 @@ export default class LoginPageController extends Controller {
           hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
         };
 
-        const destinationUrl = cookie("destination_url");
-        const ssoDestinationUrl = cookie("sso_destination_url");
-
         applyHiddenFormInputValue(this.loginName, "username");
         applyHiddenFormInputValue(this.loginPassword, "password");
 
-        if (ssoDestinationUrl) {
-          removeCookie("sso_destination_url");
-          window.location.assign(ssoDestinationUrl);
-          return;
-        } else if (destinationUrl) {
-          // redirect client to the original URL
+        const destinationUrl = cookie("destination_url");
+        if (destinationUrl) {
           removeCookie("destination_url");
-
           applyHiddenFormInputValue(destinationUrl, "redirect");
         } else if (this.referrerTopicUrl) {
           applyHiddenFormInputValue(this.referrerTopicUrl, "redirect");

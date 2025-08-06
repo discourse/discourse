@@ -172,19 +172,12 @@ ja:
       search: "検索"
     themes:
       default_description: "デフォルト"
-      broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
       error_caused_by: "原因は '%{name}' です。<a target='blank' href='%{path}'>ここをクリック</a>して、更新、再構成、または無効にしてください。"
       only_admins: "(このメッセージはサイト管理者にのみ表示されます)"
     broken_decorator_alert: "サイトのいずれかの投稿コンテンツデコレータでエラーが発生したため、投稿が正しく表示されない可能性があります。"
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     broken_transformer_alert: "エラーが発生しました。サイトが正しく動作しない可能性があります。"
-    critical_deprecation:
-      notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります。"
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "検出されたテーマ: <a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "検出されたプラグイン: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -1205,7 +1198,6 @@ ja:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
       reset_seen_user_tips: "ユーザーヒントをもう一度表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
-      color_scheme_default_on_all_devices: "デフォルトの色パレットをすべてのデバイスに設定する"
       color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
@@ -1215,6 +1207,9 @@ ja:
         regular: "通常"
         dark: "ダークモード"
         default_dark_scheme: "(サイトのデフォルト)"
+        interface_modes:
+          light: "ライト"
+          dark: "ダーク"
       dark_mode: "ダークモード"
       dark_mode_enable: "ダークモードの色パレットを自動的に有効にする"
       text_size_default_on_all_devices: "これをすべてのデバイスのデフォルトのテキストサイズにする"
@@ -1240,6 +1235,8 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
+      silenced_permanently: "このユーザーは投稿を禁止されています."
+      silenced_reason: "理由: "
       github_profile: "GitHub"
       email_activity_summary: "アクティビティの概要"
       mailing_list_mode:
@@ -1739,7 +1736,8 @@ ja:
         removed: "削除"
         search: "招待履歴を検索…"
         user: "招待したユーザー"
-        none: "表示する招待はありません。"
+        none:
+          title: "表示する招待はありません。"
         truncated:
           other: "最初の %{count} 件の招待を表示しています。"
         redeemed: "承諾済みの招待"
@@ -2320,7 +2318,6 @@ ja:
       unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
       toggle_whisper: "ささやきを切り替える"
-      toggle_unlisted: "非表示を切り替える"
       insert_table: "テーブルを挿入"
       posting_not_on_topic: "どのトピックに返信しますか？"
       saved_local_draft_tip: "ローカルに保存しました"
@@ -4393,6 +4390,8 @@ ja:
             badges:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
+            filter:
+              content: "フィルター"
             topics:
               content: "トピック"
               title: "すべてのトピック"
@@ -4534,6 +4533,12 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    filter:
+      description:
+        yesterday: "昨日"
+        last_week: "先週"
+        last_month: "先月"
+        last_year: "昨年"
     discovery:
       headings:
         multi_tag:
@@ -4545,7 +4550,7 @@ ja:
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
-      filter_reports: レポートをフィルタ
+      filter_reports: "レポートをフィルタ..."
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -4734,6 +4739,8 @@ ja:
         embedding:
           title: "埋め込み"
           header_description: "Discourse には、IFRAME を作成する JavaScript API を使用して、リモートサイトのトピックのコメントを埋め込む機能があります。"
+      theme_site_settings:
+        default_value: "デフォルト"
       search:
         title: "検索"
         result_types:
@@ -5427,6 +5434,11 @@ ja:
         author: "作成者: %{author}"
         experimental_badge: "実験的"
         learn_more: "もっと詳しく"
+        filters:
+          all: "すべて"
+          enabled: "有効"
+          disabled: "無効"
+          reset: "リセット"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -5552,7 +5564,8 @@ ja:
           theme: "テーマ"
           component: "コンポーネント"
           components: "コンポーネント"
-          search_placeholder: "入力して検索…"
+          filter_all: "すべて"
+          filter_user_selectable: "ユーザー選択可能"
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"
@@ -5677,11 +5690,7 @@ ja:
           up_to_date: "テーマは最新です。最終確認日:"
           has_overwritten_history: "現在のテーマのバージョンは、Git 履歴が強制プッシュで上書きされたため、存在しなくなりました。"
           add: "追加"
-          theme_settings: "テーマの設定"
-          edit_objects_theme_setting: "オブジェクト設定エディター"
-          overriden_settings_explanation: "オーバーライドされた設定はドットでマークされ、ハイライト表示されます。これらの設定をデフォルトの値にリセットするには、その横にあるリセットボタンを押します。"
           no_settings: "このテーマには設定がありません。"
-          theme_translations: "テーマの翻訳"
           empty: "項目なし"
           commits_behind:
             other: "テーマは %{count} コミット遅れです！"
@@ -5746,7 +5755,12 @@ ja:
             title: "基本色パレットを選択してください"
             description: "基本パレット:"
           title: "色"
-          edit: "色パレットを編集"
+          edit: "編集"
+          filters:
+            all: "すべて"
+            user_selectable: "ユーザー選択可能"
+          active_badge:
+            text: "アクティブ"
           long_title: "色パレット"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
@@ -6373,7 +6387,6 @@ ja:
         activity: アクティビティ
         like_count: '「いいね！」した数/された数'
         last_100_days: "過去 100 日間"
-        private_topics_count: 非公開トピック
         posts_read_count: 既読の投稿数
         post_count: 作成した投稿数
         second_factor_enabled: 二要素認証が有効です

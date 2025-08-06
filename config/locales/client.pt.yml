@@ -197,17 +197,12 @@ pt:
       search: "Pesquisar"
     themes:
       default_description: "Predefinição"
-      broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é exibida apenas para administradores do site)"
     broken_decorator_alert: "As publicações podem não ser apresentadas corretamente porque um dos decoradores de conteúdo da publicação no seu sítio gerou um erro."
     broken_page_change_alert: "O manipulador onPageChange gerou um erro. Consulte as ferramentas de programador do navegador para obter mais informações."
     broken_plugin_alert: "Causado pelo plugin '%{name}'"
     broken_transformer_alert: "Ocorreu um erro. O seu sítio pode não funcionar corretamente."
-    critical_deprecation:
-      notice: "<b>[Aviso do administrador]</b> Um dos seus temas ou plugins precisa de ser atualizado para ser compatível com as próximas alterações ao núcleo do Discourse."
-      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Plugin identificado: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
@@ -1300,7 +1295,6 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Define a paleta de cores predefinida em todos os meus dispositivos"
       color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
@@ -1335,6 +1329,8 @@ pt:
       suspended_notice: "Este utilizador está suspenso até %{date}."
       suspended_permanently: "Este utilizador está suspenso"
       suspended_reason: "Motivo: "
+      silenced_permanently: "Este utilizador está silenciado."
+      silenced_reason: "Motivo:"
       github_profile: "GitHub"
       email_activity_summary: "Sumário de actividade"
       mailing_list_mode:
@@ -1857,7 +1853,8 @@ pt:
         removed: "Removido"
         search: "digite para pesquisar convites…"
         user: "Utilizador Convidado"
-        none: "Sem convites para exibir."
+        none:
+          title: "Sem convites para exibir."
         truncated:
           one: "A exibir o primeiro convite."
           other: "A exibir os primeiros %{count} convites."
@@ -2461,7 +2458,6 @@ pt:
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
       toggle_whisper: "Alternar Sussuro"
-      toggle_unlisted: "Alternar Não Listado"
       insert_table: "Inserir tabela"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"
@@ -4088,6 +4084,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            filter:
+              content: "Filtrar"
             topics:
               content: "Tópicos"
             faq:
@@ -4125,6 +4123,9 @@ pt:
         show: "Mostrar"
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
+    filter:
+      description:
+        yesterday: "Ontem"
     discovery:
       headings:
         multi_tag:
@@ -4135,7 +4136,7 @@ pt:
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar relatórios
+      filter_reports: "Filtrar relatórios..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4249,6 +4250,8 @@ pt:
           title: "Webhooks"
         embedding:
           title: "Incorporação"
+      theme_site_settings:
+        default_value: "Predefinição"
       search:
         title: "Pesquisar"
         result_types:
@@ -4619,6 +4622,11 @@ pt:
         howto: "Como instalo plugins?"
         author: "Por %{author}"
         learn_more: "Saiba mais"
+        filters:
+          all: "Todos"
+          enabled: "Ativado"
+          disabled: "Desativado"
+          reset: "Repor"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:
@@ -4716,6 +4724,7 @@ pt:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
+          filter_all: "Todos"
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
@@ -4772,9 +4781,7 @@ pt:
           up_to_date: "O tema está atualizado, verificado pela última vez:"
           has_overwritten_history: "A versão do tema atual não existe mais porque o histórico do Git foi sobrescrito por um push forçado."
           add: "Adicionar"
-          theme_settings: "Configurações de Tema"
           no_settings: "Este tema não tem configurações."
-          theme_translations: "Traduções do Tema"
           empty: "Sem itens"
           commits_behind:
             one: "O tema está %{count} commit atrás!"
@@ -4820,6 +4827,11 @@ pt:
           select_base:
             description: "Paleta de base:"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todos"
+          active_badge:
+            text: "Ativo"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
           copy_name_prefix: "Cópia de"
           undo: "Desfazer"
@@ -5161,7 +5173,6 @@ pt:
         activity: Atividade
         like_count: Gostos Dados / Recebidos
         last_100_days: "nos últimos 100 dias"
-        private_topics_count: Tópicos Privados
         posts_read_count: Publicações lidas
         post_count: Mensagens Criadas
         topics_entered: Tópicos Visualizados

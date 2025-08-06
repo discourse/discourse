@@ -2,6 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import LoginMethod from "discourse/models/login-method";
+import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import pretender, {
   parsePostData,
@@ -56,9 +57,7 @@ acceptance("Create Account", function () {
   });
 
   test("validate username", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
-
+    await visit("/signup");
     await fillIn("#new-account-email", "z@z.co");
     await click(".signup-fullpage .btn-primary");
 
@@ -68,8 +67,7 @@ acceptance("Create Account", function () {
   });
 
   test("hidden instructions", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     assert
       .dom("#account-email-validation-more-info")
@@ -84,8 +82,7 @@ acceptance("Create Account", function () {
     this.siteSettings.show_signup_form_password_instructions = true;
     this.siteSettings.show_signup_form_full_name_instructions = true;
 
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     assert
       .dom("#username-validation-more-info")
@@ -113,21 +110,34 @@ acceptance("Create Account", function () {
   });
 
   test("can sign in using a third-party auth", async function (assert) {
-    sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
+    sinon.stub(LoginMethod, "buildPostForm").callsFake((url, params) => {
       assert.step("buildPostForm");
-      assert.strictEqual(url, "/auth/facebook?signup=true");
+      assert.strictEqual(url, "/auth/facebook");
+      assert.deepEqual(params, { signup: true });
     });
 
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
+    await click("#login-buttons button");
+
+    assert.verifySteps(["buildPostForm"]);
+  });
+
+  test("it passes the email if it's stored in the session", async function (assert) {
+    Session.current().email = "foo@bar.com";
+
+    sinon.stub(LoginMethod, "buildPostForm").callsFake((_url, { email }) => {
+      assert.step("buildPostForm");
+      assert.strictEqual(email, "foo@bar.com");
+    });
+
+    await visit("/signup");
     await click("#login-buttons button");
 
     assert.verifySteps(["buildPostForm"]);
   });
 
   test("does not show passkeys button", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     assert
       .dom(".signup-fullpage .btn-primary")
@@ -143,8 +153,7 @@ acceptance("Create Account - full name requirement", function () {
     site.set("full_name_required_for_signup", true);
     site.set("full_name_visible_in_signup", true);
 
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     await fillIn("#new-account-email", "z@z.co");
     await fillIn("#new-account-username", "good-tuna");
@@ -178,8 +187,7 @@ acceptance("Create Account - full name requirement", function () {
     site.set("full_name_required_for_signup", false);
     site.set("full_name_visible_in_signup", false);
 
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     assert.dom("#new-account-name").doesNotExist();
 
@@ -209,8 +217,7 @@ acceptance("Create Account - full name requirement", function () {
     site.set("full_name_required_for_signup", false);
     site.set("full_name_visible_in_signup", true);
 
-    await visit("/");
-    await click("header .sign-up-button");
+    await visit("/signup");
 
     assert.dom("#new-account-name").exists();
 

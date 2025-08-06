@@ -138,6 +138,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       tabindex="-1"
       @triggerClass={{concatClass "toolbar__button" @class}}
       @class="toolbar-popup-menu-options"
+      title={{@title}}
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}
@@ -152,10 +153,7 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
-                class={{concatClass
-                  "no-text"
-                  (if (this.getActive option) "--active")
-                }}
+                class={{concatClass (if (this.getActive option) "--active")}}
               />
             </dropdown.item>
           {{/each}}

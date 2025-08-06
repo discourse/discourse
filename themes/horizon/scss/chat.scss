@@ -5,10 +5,16 @@
 }
 
 .c-navbar-container {
+  background-color: var(--d-content-background);
+
   .full-page-chat & {
     padding: 0 1.5em;
   }
-  background-color: var(--d-content-background);
+
+  .chat-drawer.is-collapsed & {
+    background: var(--tertiary-low);
+    opacity: 0.7;
+  }
 }
 
 body.has-full-page-chat {
@@ -31,15 +37,24 @@ body.has-full-page-chat {
 
 .chat-drawer-outlet-container {
   z-index: z("composer", "content");
+  padding-bottom: 0;
+  right: var(--main-grid-gap);
 
-  .peek-mode-active & {
-    padding-bottom: 0;
-    left: unset;
-    right: var(--main-grid-gap);
+  &:has(.is-expanded) {
+    z-index: calc(z("composer", "dropdown") + 1);
+  }
+}
 
-    &:has(.is-expanded) {
-      z-index: calc(z("composer", "dropdown") + 1);
-    }
+// the below are elements whose z-index needs to be adjusted due to the above change
+.chat-message-actions-container {
+  .has-drawer-chat & {
+    z-index: calc(z("composer", "dropdown") + 1);
+  }
+}
+
+.fk-d-menu[data-identifier="usercard"] {
+  .has-drawer-chat & {
+    z-index: z("modal", "dialog");
   }
 }
 

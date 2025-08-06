@@ -170,14 +170,13 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.with_experimental_system_themes.strict_loading.include_relations.order(:name)
+    @themes = Theme.strict_loading.include_relations.order(:name)
 
     @color_schemes =
       ColorScheme
         .strict_loading
         .all
         .without_theme_owned_palettes
-        .with_experimental_system_theme_palettes
         .includes(:theme, color_scheme_colors: :color_scheme)
         .to_a
 
@@ -222,7 +221,14 @@ class Admin::ThemesController < Admin::AdminController
       raise Discourse::InvalidAccess.new
     end
 
-    %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
+    %i[
+      name
+      color_scheme_id
+      dark_color_scheme_id
+      user_selectable
+      enabled
+      auto_update
+    ].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
@@ -351,6 +357,30 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def update_theme_site_setting
+    Themes::ThemeSiteSettingManager.call(
+      params: {
+        theme_id: params[:id],
+        name: params[:name],
+        value: params[:value],
+      },
+      guardian:,
+    ) do
+      on_success do |theme_site_setting:|
+        if theme_site_setting.present?
+          render json: success_json.merge(theme_site_setting.as_json(only: %i[name value theme_id]))
+        else
+          render json: success_json
+        end
+      end
+      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ensure_setting_is_themeable) do
+        render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+    end
+  end
+
   def schema
   end
 
@@ -409,6 +439,7 @@ class Admin::ThemesController < Admin::AdminController
         params.require(:theme).permit(
           :name,
           :color_scheme_id,
+          :dark_color_scheme_id,
           :default,
           :user_selectable,
           :component,

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
@@ -10,6 +9,7 @@ import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { bind } from "discourse/lib/decorators";
@@ -25,15 +25,17 @@ export default class PostMetaDataPosterName extends Component {
   showNameAndGroup = true;
   showGlyph = true;
 
-  constructor() {
-    super(...arguments);
-    this.#trackUserStatus();
-  }
+  trackUserStatus = helperFn(({ user }, on) => {
+    if (!this.userStatus.isEnabled) {
+      return;
+    }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopTrackingUserStatus();
-  }
+    user?.statusManager?.trackStatus();
+
+    on.cleanup(() => {
+      user?.statusManager?.stopTrackingStatus();
+    });
+  });
 
   get suppressSimilarName() {
     return applyValueTransformer(
@@ -65,12 +67,21 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get user() {
-    // TODO where does user comes from?
     return this.args.post.user;
   }
 
+  get userTitle() {
+    return applyValueTransformer(
+      "poster-name-user-title",
+      this.args.post.user_title,
+      {
+        post: this.args.post,
+      }
+    );
+  }
+
   get titleClassNames() {
-    const classNames = [this.args.post.user_title];
+    const classNames = [this.userTitle];
 
     if (this.args.post.title_is_group && this.args.post.primary_group_name) {
       classNames.push(this.args.post.primary_group_name);
@@ -86,12 +97,6 @@ export default class PostMetaDataPosterName extends Component {
     return applyValueTransformer("poster-name-class", [], {
       user: this.user,
     });
-  }
-
-  @bind
-  refreshUserStatus() {
-    this.#stopTrackingUserStatus();
-    this.#trackUserStatus();
   }
 
   @bind
@@ -111,23 +116,9 @@ export default class PostMetaDataPosterName extends Component {
       : name;
   }
 
-  #trackUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.trackStatus();
-    }
-  }
-
-  #stopTrackingUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.stopTrackingStatus();
-    }
-  }
-
   <template>
-    <div
-      class="names trigger-user-card"
-      {{didUpdate this.refreshUserStatus this.user}}
-    >
+    {{this.trackUserStatus user=this.user}}
+    <div class="names trigger-user-card">
       <PluginOutlet
         @name="post-meta-data-poster-name"
         @outletArgs={{lazyHash post=@post}}
@@ -157,7 +148,10 @@ export default class PostMetaDataPosterName extends Component {
               {{this.name}}
               {{#if this.showGlyph}}
                 {{#if (or @post.moderator @post.group_moderator)}}
-                  {{icon "shield-halved" title=(i18n "user.moderator_tooltip")}}
+                  {{icon
+                    "shield-halved"
+                    translatedTitle=(i18n "user.moderator_tooltip")
+                  }}
                 {{/if}}
               {{/if}}
             </UserLink>
@@ -192,17 +186,17 @@ export default class PostMetaDataPosterName extends Component {
             </span>
           {{/if}}
 
-          {{#if @post.user_title}}
+          {{#if this.userTitle}}
             <span class={{concatClass "user-title" this.titleClassNames}}>
               {{#if (and @post.primary_group_name @post.title_is_group)}}
                 <GroupLink
                   @name={{@post.primary_group_name}}
                   @href={{this.primaryGroupHref}}
                 >
-                  {{@post.user_title}}
+                  {{this.userTitle}}
                 </GroupLink>
               {{else}}
-                {{@post.user_title}}
+                {{this.userTitle}}
               {{/if}}
             </span>
           {{/if}}

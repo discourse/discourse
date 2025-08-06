@@ -1,0 +1,194 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integrações de conversação"
+  js:
+    chat_integration:
+      menu_title: "Integrações de conversação"
+      settings: "Configurações"
+      no_providers: "Precisa de ativar alguns provedores nas definições do ''plug-in''"
+      channel_exception: "Ocorreu um erro desconhecido quando foi enviada uma mensagem para este canal."
+      group_mention_template: "Menções de: @%{name}"
+      group_message_template: "Mensagens para: @%{name}"
+      choose_group: "(escolher um grupo)"
+      all_categories: "(todas as categorias)"
+      all_tags: "(todas as etiquetas)"
+      create_rule: "Criar Regra"
+      create_channel: "Criar Canal"
+      delete_channel: "Eliminar"
+      test_channel: "Testar"
+      edit_channel: "Editar"
+      channel_delete_confirm: "Tem a certeza que deseja eliminar este canal? Todas as regras associadas serão eliminadas."
+      test_modal:
+        title: "Enviar uma mensagem de teste"
+        topic: "Tópico"
+        send: "Enviar Mensagem de Teste"
+        close: "Fechar"
+        error: "Ocorreu um erro desconhecido enquanto enviava a mensagem. Verifique os registos do ''site'' para mais informação."
+        success: "Mensagem enviada com sucesso"
+      type:
+        normal: Normal
+        group_message: Mensagens de Grupo
+        group_mention: Menção de Grupo
+      filter:
+        mute: 'Silenciar'
+        follow: 'Apenas a primeira mensagem'
+        watch: 'Todas as mensagens e respostas'
+      rule_table:
+        filter: "Filtrar"
+        category: "Categoria"
+        tags: "Etiquetas"
+        edit_rule: "Editar"
+        delete_rule: "Eliminar"
+      edit_channel_modal:
+        title: "Editar Canal"
+        save: "Guardar Canal"
+        cancel: "Cancelar"
+        provider: "Provedor"
+        channel_validation:
+          ok: "Válida"
+          fail: "Formato inválido"
+      edit_rule_modal:
+        title: Editar Regra
+        save: Guardar Regra
+        cancel: Cancelar
+        provider: Provedor
+        type: Tipo
+        channel: Canal
+        filter: Filtrar
+        category: Categoria
+        group: Grupo
+        tags: Etiquetas
+        instructions:
+          type: "Alterar o tipo para acionar as notificações para as mensagens ou menções de grupo"
+          filter: "Nível de notificação. Silêncio sobrepõe-se a outras regras correspondentes"
+          category: "Esta regra aplica-se apenas para os tópicos na categoria especificada"
+          group: "Esta regra será aplicada às mensagens que fazem referência a este grupo"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canal
+              help: "exemplo:. #channel, @username."
+          errors:
+            action_prohibited: "O robô não tem permissão para publicar para esse canal"
+            channel_not_found: "O canal especificado não existe no slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nome"
+              help: "O nome para descrever o canal. Este não é utilizado para a ligação ao Telegram"
+            chat_id:
+              title: Id. da Conversa
+          errors:
+            channel_not_found: "O canal especificado não existe no Telegram"
+            forbidden: "O robô não tem permissão para publicar neste canal"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: URL de Webhook
+              help: O URL de ''webhook'' criado nas definições do seu servidor Discord
+        guilded:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: URL de Webhook
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canal
+              help: "exemplo:. #channel, @username."
+          errors:
+            channel_not_found: "O canal especificado não existe no Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nome"
+            room_id:
+              title: "Id. da Sala"
+          errors:
+            unknown_token: "O código de acesso é inválido"
+            unknown_room: "A Id. da Sala é inválida"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Fluxo"
+              help: "O nome do fluxo Zulip ao qual a mensagem deveria ser enviada. por exemplo. 'geral'"
+            subject:
+              title: "Assunto"
+              help: "O assunto que estas mensagens enviadas pelo robô deveriam receber"
+          errors:
+            does_not_exist: "Esse fluxo não existe no Zulip"
+        rocketchat:
+          title: "Conversação Rocket"
+          param:
+            identifier:
+              title: Canal
+              help: "exemplo:. #channel, @username."
+          errors:
+            invalid_channel: "Esse canal não existe na Conversação Rocket"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome da sala do Gitter, exemplo: gitterHQ/services."
+            webhook_url:
+              title: "URL de Webhook"
+        flowdock:
+          title: "Flowdock"
+        teams:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: "URL de Webhook"
+        powerautomate:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: "URL de Webhook"
+        webex:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: "URL de Webhook"
+        google:
+          param:
+            name:
+              title: "Nome"
+            webhook_url:
+              title: "URL de Webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Mensagem
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Provedor

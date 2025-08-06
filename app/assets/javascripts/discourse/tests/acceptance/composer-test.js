@@ -469,13 +469,29 @@ import { i18n } from "discourse-i18n";
 
         assert
           .dom(".d-editor-input")
-          .hasNoValue("discards draft and reset composer textarea");
+          .hasValue(
+            "This is a draft of the first post",
+            "loads the existing draft"
+          );
+      });
+
+      test("Loads draft in composer when clicking reply on a topic with existing draft", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        await click("#topic-footer-buttons .btn.create");
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue("This is a draft of the first post");
       });
 
       test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
         pretender.post("/drafts.json", function () {
           assert.step("saveDraft");
           return response(200, {});
+        });
+        pretender.get("/drafts/topic_280.json", function () {
+          return response(200, { draft: null });
         });
 
         await visit("/t/internationalization-localization/280");
@@ -661,7 +677,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between edit and reply on the OP", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
 
         await click(".topic-post[data-post-number='1'] button.edit");
         assert
@@ -684,7 +700,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between edit and reply on a reply", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
 
         await click(".topic-post[data-post-number='2'] button.edit");
         assert
@@ -788,7 +804,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between reply and createTopic", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
         await click(".topic-post[data-post-number='1'] button.reply");
 
         await selectKit(".composer-actions").expand();
@@ -844,11 +860,11 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
-        await visit("/t/topic-with-whisper/960");
+        await visit("/t/topic-with-whisper/54081");
 
         await click(".topic-post[data-post-number='3'] button.reply");
         await click("#reply-control .save-or-cancel button.cancel");
-        await click(".topic-footer-main-buttons button.create");
+        await click(".timeline-footer-controls button.create");
         await click(".reply-details summary div");
         assert
           .dom('.reply-details li[data-value="toggle_whisper"]')
@@ -998,7 +1014,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("modified placeholder with composer-editor-reply-placeholder is rendered", async function (assert) {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.registerValueTransformer(
             "composer-editor-reply-placeholder",
             () => {
@@ -1148,7 +1164,7 @@ import { i18n } from "discourse-i18n";
       }
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.customizeComposerText({
             actionTitle(model) {
               if (customComposerAction(model)) {
@@ -1192,7 +1208,7 @@ import { i18n } from "discourse-i18n";
       });
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("1.5.0", (api) => {
+        withPluginApi((api) => {
           api.addComposerSaveErrorCallback((error) => {
             if (error.match(/PLUGIN_XYZ ERROR/)) {
               // handle error
@@ -1456,9 +1472,14 @@ import { i18n } from "discourse-i18n";
         glimmer_post_stream_mode: postStreamMode,
         allow_uncategorized_topics: true,
       });
+      needs.pretender((server, helper) => {
+        server.get("/drafts/topic_280.json", function () {
+          return helper.response(200, { draft: null });
+        });
+      });
 
       test("buttons can support a shortcut", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");
@@ -1540,7 +1561,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can support a shortcut that triggers a custom action", async function (assert) {
-        withPluginApi("1.37.1", (api) => {
+        withPluginApi((api) => {
           api.onToolbarCreate((toolbar) => {
             toolbar.addButton({
               id: "smile",
@@ -1626,7 +1647,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can be added conditionally", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  theme_metadata:
+    description: "O tema clássico do Discourse é adequado para a personalização de acordo com as necessidades específicas de sua comunidade."

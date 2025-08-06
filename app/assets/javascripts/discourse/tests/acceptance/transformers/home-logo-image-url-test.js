@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("home-logo-image-url transformer", function () {
   test("applying a value transformation", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "home-logo-image-url",
         ({ value }) => "/transformed" + value

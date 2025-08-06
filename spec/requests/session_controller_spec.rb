@@ -1484,7 +1484,7 @@ RSpec.describe SessionController do
              xhr: true,
              headers: headers
 
-        location = response.cookies["sso_destination_url"]
+        location = response.cookies["destination_url"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
@@ -1809,7 +1809,7 @@ RSpec.describe SessionController do
                headers: headers
           expect(response.status).to eq(200)
           # the frontend will take care of actually redirecting the user
-          redirect_url = response.cookies["sso_destination_url"]
+          redirect_url = response.cookies["destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(true)
@@ -1831,7 +1831,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          redirect_url = response.cookies["sso_destination_url"]
+          redirect_url = response.cookies["destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(nil)
@@ -2058,11 +2058,14 @@ RSpec.describe SessionController do
         end
 
         before do
-          simulate_localhost_webauthn_challenge
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by failing login once
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          read_secure_session[
+            DiscourseWebauthn.session_challenge_key(user)
+          ] = valid_security_key_challenge_data[:challenge]
         end
 
         context "when the security key params are blank and a random second factor token is provided" do
@@ -2120,10 +2123,23 @@ RSpec.describe SessionController do
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["error"]).not_to be_present
+
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
             expect(user.user_auth_tokens.count).to eq(1)
+
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: valid_security_key_auth_post_data,
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
+
+            expect(response.parsed_body["error"]).to eq(
+              I18n.t("webauthn.validation.challenge_mismatch_error"),
+            )
           end
         end
 

@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    discourse_policy:
+      title: "Pravidlá"
+      accepted_tooltip: "Používatelia, ktorí prijali tieto zásady"
+      not_accepted_tooltip: "Používatelia, ktorí neakceptovali tieto pravidlá"
+      accept_policy: "Prijať pravidlá"
+      revoke_policy: "Zrušiť politiku"
+      edit_reason: "Nastavenia pravidiel boli upravené"
+      no_possible_users: "Táto politika nemá žiadnych možných používateľov"
+      accept_policy_template: "Súhlasím s týmito pravidlami"
+      builder:
+        title: Pravidlá
+        attach: Vytvoriť pravidlá
+        save: Uloženie zmien
+        insert: Vložiť
+        errors:
+          group: Vyžaduje sa skupina
+          version: Vyžaduje sa verzia
+        groups:
+          label: Skupiny
+          description: Skupiny spojené s týmito pravidlami
+        version:
+          label: Verzia
+          description: Verzia pravidiel, zmena verzie prinúti ľudí, aby ju znovu prijali
+        renew:
+          label: Obnoviť
+          description: Obnoviť pravidlá každých x dní
+        renew-start:
+          label: Obnoviť Začiatok
+          description: Kedy by sa mali pravidlá obnoviť
+        reminder:
+          label: Pripomienka
+          description: Ako často sa má posielať pripomienka na prijatie pravidiel
+          no_reminder: (Žiadna pripomienka)
+        accept:
+          label: Prijať
+          description: Text použitý na tlačidle akceptovať
+        revoke:
+          label: Zrušiť
+          description: Text použitý na tlačidle odvolania
+        private:
+          label: Súkromné?
+          description: Uchovávajte stav politiky v tajnosti pre administrátorov
+        send-email:
+          label: Poslať email?
+          description: Upozorniť používateľov na nové pravidlá e-mailom
+        add-users-to-group:
+          label: Pridať používateľov do skupiny
+          description: Pridajte používateľov do nasledujúcej skupiny, keď prijmú tieto pravidlá
+      preferences:
+        title: Zásady
+        policy_emails:
+          always_description: E-mail vám pošleme iba v prípade, že ste sa prihlásili aj na odber e-mailov o novej aktivite.
+          away_description: E-mail vám pošleme len vtedy, ak sme vás za posledných 10 minút nevideli, keď sa zmení stav pravidiel, a len vtedy, ak ste sa prihlásili aj na odber e-mailov o nových aktivitách.
+          label: Pošlite mi e-mail, keď je potrebné skontrolovať nejakú zásadu
+          email_frequency_options:
+            never: Nikdy
+            when_away: Len keď je preč
+            always: Vždy

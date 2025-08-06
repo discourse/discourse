@@ -990,6 +990,8 @@ lv:
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_permanently: "Šī lietotāja darbība ir apturēta."
       suspended_reason: "Iemesls:"
+      silenced_permanently: "Šis lietotājs ir izslēgts."
+      silenced_reason: "Iemesls:"
       github_profile: "GitHub"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
@@ -1329,7 +1331,8 @@ lv:
         reinvited: "Ielūgums atkārtots"
         removed: "Noņemts"
         user: "Ielūgtie lietotāji"
-        none: "Nav uzaicinājumu ko parādīt."
+        none:
+          title: "Nav uzaicinājumu ko parādīt."
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
@@ -1681,7 +1684,6 @@ lv:
       unlist: "paslēpts"
       add_warning: "Šis ir oficiāls brīdinājums."
       toggle_whisper: "Čukstēšana"
-      toggle_unlisted: "Paslēpšana no tēmu saraksta"
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"
@@ -2820,6 +2822,8 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
+            filter:
+              content: "Filtrs"
             topics:
               content: "Tēmas"
             faq:
@@ -2855,6 +2859,9 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    filter:
+      description:
+        yesterday: "Vakar"
     discovery:
       headings:
         categories: "Visas sadaļas"
@@ -2956,6 +2963,8 @@ lv:
               header_description: "URL kas ir šajā sarakstā tika publicēti no lietotājiem, kas ir identificēti kā spameri"
         embedding:
           title: "Ieguldīšana"
+      theme_site_settings:
+        default_value: "Noklusējums"
       search:
         title: "Meklēt"
         result_types:
@@ -3204,6 +3213,11 @@ lv:
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
         learn_more: "Uzzināt vairāk"
+        filters:
+          all: "Visi"
+          enabled: "Ieslēgts"
+          disabled: "Atslēgt"
+          reset: "Atlikt"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -3283,6 +3297,7 @@ lv:
           disabled_filter: "Atslēgt"
         theme:
           theme: "Tēma"
+          filter_all: "Visi"
           customize_desc: "Pielāgot:"
           title: "Dizaini"
           create: "Izveidot"
@@ -3333,6 +3348,11 @@ lv:
             required: "*nepieciešams"
         colors:
           title: "Krāsas"
+          edit: "Labot"
+          filters:
+            all: "Visi"
+          active_badge:
+            text: "Aktīvs"
           undo: "Atsaukt"
           revert: "Atgriezt"
           primary:
@@ -3598,7 +3618,6 @@ lv:
         activity: Aktivitāte
         like_count: '"Patīk" doti / saņemti'
         last_100_days: "Pēdējās 100 dienās"
-        private_topics_count: Privātas tēmas
         posts_read_count: Ieraksti izlasīti
         post_count: Ieraksti
         topics_entered: Tēmas apskatītas.

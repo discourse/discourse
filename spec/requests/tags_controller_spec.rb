@@ -1341,10 +1341,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails if not staff user" do
+    it "fails if user not in allowed group" do
       sign_in(user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
+      expect(response.status).to eq(200)
     end
 
     context "when signed in as admin" do
