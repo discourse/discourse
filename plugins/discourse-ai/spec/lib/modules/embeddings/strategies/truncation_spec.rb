@@ -73,14 +73,35 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
   end
 
   describe "#prepare_query_text" do
-    context "when search is asymetric" do
+    context "when search is asymmetric" do
       it "includes search prefix" do
         open_ai_embedding_def.update!(search_prompt: prefix)
 
         prepared_query_text =
-          truncation.prepare_query_text("searching", open_ai_embedding_def, asymetric: true)
+          truncation.prepare_query_text("searching", open_ai_embedding_def, asymmetric: true)
 
         expect(prepared_query_text.starts_with?(prefix)).to eq(true)
+      end
+    end
+
+    context "when search is not asymmetric" do
+      it "does not include search prefix" do
+        open_ai_embedding_def.update!(search_prompt: prefix)
+
+        prepared_query_text =
+          truncation.prepare_query_text("searching", open_ai_embedding_def, asymmetric: false)
+
+        expect(prepared_query_text).to eq("searching")
+        expect(prepared_query_text.starts_with?(prefix)).to eq(false)
+      end
+
+      it "defaults to not asymmetric when parameter is not provided" do
+        open_ai_embedding_def.update!(search_prompt: prefix)
+
+        prepared_query_text = truncation.prepare_query_text("searching", open_ai_embedding_def)
+
+        expect(prepared_query_text).to eq("searching")
+        expect(prepared_query_text.starts_with?(prefix)).to eq(false)
       end
     end
   end

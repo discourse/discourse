@@ -39,8 +39,7 @@
     .excerpt {
       width: 100%;
       line-height: var(--line-height-large);
-      margin-top: 0.15em;
-      margin-bottom: 0.15em;
+      margin-bottom: var(--space-2);
       color: currentcolor;
 
       &__contents {
@@ -70,5 +69,12 @@
       align-self: end;
       margin-bottom: -0.15em; // vertical alignment
     }
+  }
+}
+
+.user-navigation-secondary {
+  .topic-list-layout-trigger {
+    // put PM toggle before new PM button
+    order: -1;
   }
 }

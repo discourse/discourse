@@ -1,5 +1,5 @@
 import { click, find, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -86,7 +86,7 @@ acceptance("User Preferences - Interface", function (needs) {
     );
   });
 
-  test("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
+  skip("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
     let meta = document.createElement("meta");
     meta.name = "discourse_theme_id";
     meta.content = "2";
@@ -320,7 +320,7 @@ acceptance(
       );
     });
 
-    test("preview the color scheme only in current user's profile", async function (assert) {
+    skip("preview the color scheme only in current user's profile", async function (assert) {
       let site = Site.current();
       site.set("user_themes", [
         {

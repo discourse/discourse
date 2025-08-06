@@ -10,10 +10,12 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
@@ -24,22 +26,25 @@ const FilterNavigationMenuList = <template>
   {{#if @data.filteredTips.length}}
     <DropdownMenu as |dropdown|>
       {{#each @data.filteredTips as |item index|}}
-        <dropdown.item>
-          <DButton
-            class={{concatClass
-              "filter-navigation__tip-button"
-              (if (eq index @data.selectedIndex) "--selected")
-            }}
-            @action={{fn @data.selectItem item}}
-          >
+        <dropdown.item
+          class={{concatClass
+            "filter-navigation__tip-item"
+            (if (eq index @data.selectedIndex) "--selected")
+          }}
+          {{on "click" (fn @data.selectItem item)}}
+        >
+          {{#if item.category}}
+            {{categoryBadge item.category allowUncategorized=true}}
+          {{else}}
             <span class="filter-navigation__tip-name">
               {{item.name}}
             </span>
+
             {{#if item.description}}
               <span class="filter-navigation__tip-description">—
                 {{item.description}}</span>
             {{/if}}
-          </DButton>
+          {{/if}}
         </dropdown.item>
       {{/each}}
     </DropdownMenu>
@@ -79,6 +84,16 @@ export default class FilterNavigationMenu extends Component {
   });
 
   @tracked _selectedIndex = -1;
+
+  constructor() {
+    super(...arguments);
+    window.addEventListener("resize", this.resizeDMenu);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("resize", this.resizeDMenu);
+  }
 
   get selectedIndex() {
     return this._selectedIndex;
@@ -371,6 +386,12 @@ export default class FilterNavigationMenu extends Component {
   async openFilterMenu() {
     if (this.dMenuInstance) {
       this.dMenuInstance.show();
+
+      // HACK: We don't have a nice way for DMenu to be the same width as
+      // the input element, so we set it manually.
+      schedule("afterRender", () => {
+        this.resizeDMenu();
+      });
       return;
     }
 
@@ -384,11 +405,20 @@ export default class FilterNavigationMenu extends Component {
     // HACK: We don't have a nice way for DMenu to be the same width as
     // the input element, so we set it manually.
     schedule("afterRender", () => {
-      if (this.dMenuInstance?.content) {
-        this.dMenuInstance.content.style.width =
-          this.inputElement.offsetWidth + "px";
-      }
+      this.resizeDMenu();
     });
+  }
+
+  @bind
+  resizeDMenu() {
+    if (!this.inputElement || !this.dMenuInstance) {
+      return;
+    }
+
+    if (this.dMenuInstance.content) {
+      this.dMenuInstance.content.style.width =
+        this.inputElement.offsetWidth + "px";
+    }
   }
 
   @action

@@ -106,6 +106,7 @@ export default class FilterSuggestions {
         description: `${category.name}`,
         isSuggestion: true,
         term: category.slug,
+        category,
       }));
   }
 
