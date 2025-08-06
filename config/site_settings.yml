@@ -3678,6 +3678,12 @@ uncategorized:
     default: "above_topic_content"
     area: "interface"
 
+  welcome_banner_page_visibility:
+    client: true
+    enum: "WelcomeBannerPageVisibility"
+    default: "top_menu_pages"
+    area: "interface"
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"

@@ -2785,6 +2785,11 @@ en:
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Top menu pages"
+      homepage: "Homepage"
+      discovery: "Discovery"
+      all_pages: "All pages"
     composition_mode:
       markdown: "Markdown"
       rich: "Rich text"
