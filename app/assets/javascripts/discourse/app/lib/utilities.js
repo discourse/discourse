@@ -784,3 +784,20 @@ export function isPrimaryTab() {
 export function optionalRequire(path, name = "default") {
   return require.has(path) && require(path)[name];
 }
+
+// Keep in sync with `NO_DESTINATION_COOKIE` in `app/controllers/application_controller.rb`
+const NO_DESTINATION_COOKIE = [
+  "/login",
+  "/signup",
+  "/session/",
+  "/auth/",
+  "/uploads/",
+];
+
+export function isValidDestinationUrl(url) {
+  return (
+    url &&
+    url !== getURL("/") &&
+    !NO_DESTINATION_COOKIE.some((p) => url.startsWith(getURL(p)))
+  );
+}

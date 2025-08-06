@@ -21,7 +21,7 @@ OmniAuth.config.before_request_phase do |env|
   request.session[:auth_reconnect] = !!request.params["reconnect"]
 
   # If the client provided an origin, store in session to redirect back
-  request.session[:destination_url] = request.params["origin"]
+  request.session[:destination_url] = request.params["origin"] if request.params["origin"].present?
 end
 
 OmniAuth.config.on_failure do |env|
