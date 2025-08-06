@@ -33,12 +33,10 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     {{bodyClass "signup-page"}}
 
-    {{#if @controller.isRedirectingToExternalAuth}}
-      {{! Hide the signup form if the site has only one external }}
-      {{! authentication method and is being automatically redirected to it }}
-      {{loadingSpinner}}
-    {{else}}
-      <div class="signup-fullpage">
+    <div class="signup-fullpage">
+      {{#if @controller.isRedirectingToExternalAuth}}
+        {{loadingSpinner size="large"}}
+      {{else}}
         <FlashMessage
           @flash={{@controller.flash}}
           @type={{@controller.flashType}}
@@ -342,7 +340,7 @@ export default RouteTemplate(
             />
           {{/if}}
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 );
