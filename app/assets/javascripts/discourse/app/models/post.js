@@ -203,7 +203,6 @@ export default class Post extends RestModel {
   @trackedPostProperty topic_id;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
-  @trackedPostProperty user;
   @trackedPostProperty user_deleted;
   @trackedPostProperty user_id;
   @trackedPostProperty user_suspended;
@@ -440,6 +439,37 @@ export default class Post extends RestModel {
     }
 
     return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
+  @cached
+  get user() {
+    if (!this.user_id || !this.username) {
+      // If we don't have at least user_id and username, we can't create a User instance.
+      return null;
+    }
+
+    // Using store.createRecord can lead to issues when updating existing models in the cache, potentially causing
+    // rendering errors if the cached model is currently being rendered.
+    // Instead, User.create ensures we get a fresh instance every time without affecting the cache.
+    // The @cached decorator ensures this computation only happens once and is cached until dependencies are updated.
+    return User.create({
+      id: this.user_id,
+      username: this.username,
+      name: this.name,
+      admin: this.admin,
+      avatar_template: this.avatar_template,
+      flair_bg_color: this.flair_bg_color,
+      flair_color: this.flair_color,
+      flair_group_id: this.flair_group_id,
+      flair_name: this.flair_name,
+      flair_url: this.flair_url,
+      moderator: this.moderator,
+      primary_group_name: this.primary_group_name,
+      status: this.user_status,
+      title: this.user_title,
+      trust_level: this.trust_level,
+      custom_fields: this.user_custom_fields,
+    });
   }
 
   afterUpdate(res) {
