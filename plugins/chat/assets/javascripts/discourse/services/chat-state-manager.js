@@ -180,22 +180,20 @@ export default class ChatStateManager extends Service {
     this._chatURL = url;
   }
 
+  isForumURL(url) {
+    return (
+      url && !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
+    );
+  }
+
   get lastKnownAppURL() {
-    if (
-      this._appURL &&
-      this._appURL !== "/" &&
-      !this._appURL.startsWith("/chat") &&
-      !this._appURL.startsWith("/discourse-ai/ai-bot")
-    ) {
+    if (this.isForumURL(this._appURL)) {
       return this._appURL;
     }
 
-    const lastForumUrl = this.routeHistory.history.find((url) => {
-      return (
-        !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
-      );
-    });
-
+    const lastForumUrl = this.routeHistory.history.find((url) =>
+      this.isForumURL(url)
+    );
     return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
