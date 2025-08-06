@@ -78,6 +78,7 @@ export default class FilterSuggestions {
     // Create a set of already used terms for duplicate checking
     const usedTerms = new Set(previousTerms.map((t) => t.toLowerCase()));
 
+    // Extra entries are things like wildcards (*) or general terms like "anyone"
     if (this.tip.extra_entries && usedTerms.size === 0) {
       const extraSuggestions = this.tip.extra_entries
         .filter((entry) => {
