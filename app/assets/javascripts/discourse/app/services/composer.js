@@ -1656,40 +1656,19 @@ export default class ComposerService extends Service {
   }
 
   saveAndCloseComposer() {
-    this.skipAutoSave = true;
-
-    if (this._saveDraftDebounce) {
-      cancel(this._saveDraftDebounce);
+    // Always save the draft if the user had typed something
+    // or had started setting up a title/tags/category
+    if (this.model.anyDirty) {
+      this.skipAutoSave = true;
+      this._saveDraft(true);
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      this.skipAutoSave = false;
+      return true;
     }
 
-    return new Promise((resolve) => {
-      if (
-        this.get("model.hasMetaData") ||
-        this.get("model.replyDirty") ||
-        this.get("model.titleDirty")
-      ) {
-        // Always save the draft if the user had typed something
-        // or had started setting up a title/tags/category
-        this._saveDraft();
-        this.model.clearState();
-        this.close();
-        this.appEvents.trigger("composer:cancelled");
-        return resolve(true);
-      } else {
-        // If the user didn't type anything, get rid of the draft
-        this.destroyDraft()
-          .then(() => {
-            this.model.clearState();
-            this.close();
-          })
-          .finally(() => {
-            this.appEvents.trigger("composer:cancelled");
-            resolve();
-          });
-      }
-    }).finally(() => {
-      this.skipAutoSave = false;
-    });
+    return false;
   }
 
   unshrink() {
@@ -1704,7 +1683,9 @@ export default class ComposerService extends Service {
     this.collapse();
   }
 
-  _saveDraft() {
+  _saveDraft(showToast = false) {
+    cancel(this._saveDraftDebounce);
+
     if (!this.model) {
       return;
     }
@@ -1722,6 +1703,14 @@ export default class ComposerService extends Service {
       }
 
       this._saveDraftPromise = this.model.saveDraft().finally(() => {
+        if (showToast) {
+          this.toasts.success({
+            duration: "short",
+            data: {
+              message: i18n("composer.draft_saved"),
+            },
+          });
+        }
         this._lastDraftSaved = Date.now();
         this._saveDraftPromise = null;
       });

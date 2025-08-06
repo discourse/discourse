@@ -342,22 +342,24 @@ export default class ComposerContainer extends Component {
                   @disableSubmit={{this.composer.disableSubmit}}
                 />
 
-                <DButton
-                  @action={{this.composer.saveAndClose}}
-                  @icon={{if
-                    this.site.mobileView
-                    (if this.composer.canEdit "xmark" "trash-can")
-                    null
-                  }}
-                  class="cancel btn-transparent"
-                  @preventFocus={{true}}
-                  @title="composer.save_and_close"
-                  @label={{if
-                    this.site.mobileView
-                    null
-                    "composer.save_and_close"
-                  }}
-                />
+                {{#if this.composer.model.replyDirty}}
+                  <DButton
+                    @action={{this.composer.saveAndClose}}
+                    @icon={{if
+                      this.site.mobileView
+                      (if this.composer.canEdit "xmark" "trash-can")
+                      null
+                    }}
+                    class="cancel btn-transparent"
+                    @preventFocus={{true}}
+                    @title="composer.save_and_close"
+                    @label={{if
+                      this.site.mobileView
+                      null
+                      "composer.save_and_close"
+                    }}
+                  />
+                {{/if}}
 
                 {{#if this.site.mobileView}}
 
