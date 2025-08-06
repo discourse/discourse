@@ -148,11 +148,18 @@ module Jobs
     end
 
     def staff_action_export
+      start_date = @extra[:start_date]&.to_time if @extra
+      end_date = @extra[:end_date]&.to_time if @extra
+
+      query = UserHistory
+      query = query.where("created_at >= ?", start_date) if start_date.present?
+      query = query.where("created_at <= ?", end_date) if end_date.present?
+
       staff_action_data =
         if @current_user.admin?
-          UserHistory.only_staff_actions
+          query.only_staff_actions
         else
-          UserHistory.where(admin_only: false).only_staff_actions
+          query.where(admin_only: false).only_staff_actions
         end
 
       staff_action_data.find_each(order: :desc) do |staff_action|
