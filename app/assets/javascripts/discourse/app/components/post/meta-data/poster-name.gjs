@@ -97,6 +97,10 @@ export default class PostMetaDataPosterName extends Component {
     });
   }
 
+  get shouldShowUserStatus() {
+    return this.userStatus.isEnabled && this.user.status;
+  }
+
   @bind
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
@@ -205,7 +209,7 @@ export default class PostMetaDataPosterName extends Component {
             </span>
           {{/if}}
 
-          {{#if (and this.userStatus.isEnabled this.user.status)}}
+          {{#if this.shouldShowUserStatus}}
             <span class="user-status-message-wrap">
               <UserStatusMessage @status={{this.user.status}} />
             </span>
