@@ -35,8 +35,8 @@ export function listColorSchemes(site, options = {}) {
     id: -1,
     name: `${i18n("user.color_schemes.default_description")}`,
     colors: options.darkOnly
-      ? defaultDarkColorScheme?.colors
-      : defaultLightColorScheme?.colors,
+      ? defaultDarkColorScheme?.colors || []
+      : defaultLightColorScheme?.colors || [],
   });
 
   return results.length === 0 ? null : results;

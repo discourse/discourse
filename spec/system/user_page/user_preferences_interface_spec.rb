@@ -67,6 +67,7 @@ describe "User preferences | Interface", type: :system do
       before do
         dark = ColorScheme.find_by(base_scheme_id: "Dark")
         ColorScheme.where.not(id: dark.id).destroy_all
+        dark.update!(user_selectable: false)
         user.user_option.update!(dark_scheme_id: dark.id, theme_ids: [SiteSetting.default_theme_id])
       end
 
