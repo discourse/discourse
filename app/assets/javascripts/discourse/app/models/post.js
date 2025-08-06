@@ -443,6 +443,11 @@ export default class Post extends RestModel {
 
   @cached
   get user() {
+    if (!this.user_id || !this.username) {
+      // If we don't have at least user_id and username, we can't create a User instance.
+      return null;
+    }
+
     // Using store.createRecord can lead to issues when updating existing models in the cache, potentially causing
     // rendering errors if the cached model is currently being rendered.
     // Instead, User.create ensures we get a fresh instance every time without affecting the cache.
@@ -450,7 +455,7 @@ export default class Post extends RestModel {
     return User.create({
       id: this.user_id,
       username: this.username,
-      name: this.display_username,
+      name: this.name,
       admin: this.admin,
       avatar_template: this.avatar_template,
       flair_bg_color: this.flair_bg_color,

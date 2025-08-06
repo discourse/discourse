@@ -37,14 +37,6 @@ export default class PostMetaDataPosterName extends Component {
     });
   });
 
-  get suppressSimilarName() {
-    return applyValueTransformer(
-      "post-meta-data-poster-name-suppress-similar-name",
-      true,
-      { post: this.args.post, user: this.user, name: this.name }
-    );
-  }
-
   get name() {
     return userPrioritizedName(this.user);
   }
@@ -61,8 +53,7 @@ export default class PostMetaDataPosterName extends Component {
     return (
       this.user.name &&
       this.siteSettings.display_name_on_posts &&
-      this.#sanitizeName(this.user.name) !==
-        this.#sanitizeName(this.user.username)
+      !this.#suppressSimilarName
     );
   }
 
@@ -112,10 +103,26 @@ export default class PostMetaDataPosterName extends Component {
     return badge;
   }
 
+  get #suppressSimilarName() {
+    const sanitizedName = this.#sanitizeName(this.user.name);
+    const sanitizedUsername = this.#sanitizeName(this.user.username);
+
+    return applyValueTransformer(
+      "post-meta-data-poster-name-suppress-similar-name",
+      sanitizedName === sanitizedUsername,
+      {
+        name: this.user.name,
+        post: this.args.post,
+        sanitizedName,
+        sanitizedUsername,
+        user: this.user,
+        username: this.user.username,
+      }
+    );
+  }
+
   #sanitizeName(name) {
-    return this.suppressSimilarName
-      ? name.toLowerCase().replace(/[\s._-]/g, "")
-      : name;
+    return name?.toLowerCase()?.replace(/[\s._-]/g, "");
   }
 
   <template>
@@ -129,14 +136,14 @@ export default class PostMetaDataPosterName extends Component {
           class={{concatClass
             "first"
             (if this.nameFirst "full-name" "username")
-            (if @post.staff "staff")
-            (if @post.admin "admin")
-            (if @post.moderator "moderator")
+            (if this.user.staff "staff")
+            (if this.user.admin "admin")
+            (if this.user.moderator "moderator")
             (if @post.group_moderator "category-moderator")
             (if @post.new_user "new-user")
             (if
-              @post.primary_group_name
-              (concat "group--" @post.primary_group_name)
+              this.user.primary_group_name
+              (concat "group--" this.user.primary_group_name)
             )
             this.additionalClasses
           }}
@@ -151,10 +158,10 @@ export default class PostMetaDataPosterName extends Component {
               user=this.user
             }}
           >
-            <UserLink @user={{@user}}>
+            <UserLink @user={{this.user}}>
               {{this.name}}
               {{#if this.showGlyph}}
-                {{#if (or @post.moderator @post.group_moderator)}}
+                {{#if (or this.user.moderator @post.group_moderator)}}
                   {{icon
                     "shield-halved"
                     translatedTitle=(i18n "user.moderator_tooltip")
@@ -183,11 +190,11 @@ export default class PostMetaDataPosterName extends Component {
                   user=this.user
                 }}
               >
-                <UserLink @user={{@post}}>
+                <UserLink @user={{this.user}}>
                   {{#if this.nameFirst}}
-                    {{formatUsername @post.username}}
+                    {{formatUsername this.user.username}}
                   {{else}}
-                    {{@post.name}}
+                    {{this.user.name}}
                   {{/if}}
                 </UserLink>
               </PluginOutlet>
@@ -196,9 +203,9 @@ export default class PostMetaDataPosterName extends Component {
 
           {{#if this.userTitle}}
             <span class={{concatClass "user-title" this.titleClassNames}}>
-              {{#if (and @post.primary_group_name @post.title_is_group)}}
+              {{#if (and this.user.primary_group_name @post.title_is_group)}}
                 <GroupLink
-                  @name={{@post.primary_group_name}}
+                  @name={{this.user.primary_group_name}}
                   @href={{this.primaryGroupHref}}
                 >
                   {{this.userTitle}}
@@ -221,7 +228,7 @@ export default class PostMetaDataPosterName extends Component {
                 <span class={{concat "user-badge-button-" badge.slug}}>
                   <UserBadge
                     @badge={{this.withBadgeDescription badge}}
-                    @user={{@post.user}}
+                    @user={{this.user}}
                     @showName={{false}}
                   />
                 </span>
