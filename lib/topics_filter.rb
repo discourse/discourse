@@ -34,7 +34,6 @@ class TopicsFilter
       values = hash["values"]
 
       filter_values = extract_and_validate_value_for(filter, values)
-
       case filter
       when "activity-before"
         filter_by_activity(before: filter_values)
@@ -673,7 +672,6 @@ class TopicsFilter
   def include_topics_with_all_tags(tag_ids)
     tag_ids.each do |tag_id|
       sql_alias = topic_tags_alias
-
       @scope =
         @scope.joins(
           "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag_id}",
