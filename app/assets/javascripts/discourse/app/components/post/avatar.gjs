@@ -12,6 +12,10 @@ export default class PostAvatar extends Component {
   @cached
   get user() {
     const user = this.args.post.user;
+    if (!user) {
+      return null;
+    }
+
     const avatarTemplate = applyValueTransformer(
       "post-avatar-template",
       this.args.post.avatar_template,
@@ -37,7 +41,7 @@ export default class PostAvatar extends Component {
   }
 
   get userWasDeleted() {
-    return !this.args.post.user_id;
+    return !this.args.post.user;
   }
 
   get additionalClasses() {
