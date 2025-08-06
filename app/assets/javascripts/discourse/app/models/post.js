@@ -149,7 +149,6 @@ export default class Post extends RestModel {
 
   @service currentUser;
   @service site;
-  @service store;
 
   @tracked customShare = null;
 
