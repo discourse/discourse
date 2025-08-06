@@ -167,12 +167,16 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    if (url) {
-      this._appURL = url;
-    } else if (this.router.currentURL?.startsWith("/chat")) {
-      this._appURL = "/";
+    const urlToStore = url || this.router.currentURL;
+
+    if (
+      urlToStore &&
+      !urlToStore.startsWith("/chat") &&
+      !urlToStore.startsWith("/discourse-ai/ai-bot")
+    ) {
+      this._appURL = urlToStore;
     } else {
-      this._appURL = this.router.currentURL;
+      this._appURL = "/";
     }
   }
 
@@ -180,21 +184,14 @@ export default class ChatStateManager extends Service {
     this._chatURL = url;
   }
 
-  isForumURL(url) {
-    return (
-      url && !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
-    );
-  }
-
   get lastKnownAppURL() {
-    if (this.isForumURL(this._appURL)) {
-      return this._appURL;
+    const url = this._appURL;
+
+    if (url && url !== "/") {
+      return url;
     }
 
-    const lastForumUrl = this.routeHistory.history.find((url) =>
-      this.isForumURL(url)
-    );
-    return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
+    return this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   get lastKnownChatURL() {
