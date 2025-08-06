@@ -73,15 +73,12 @@ module(
     test("lastKnownAppURL", function (assert) {
       assert.strictEqual(this.subject.lastKnownAppURL, "/latest");
 
-      sinon
-        .stub(this.subject.routeHistory, "history")
-        .value(["/foo", "/chat", "/admin"]);
+      sinon.stub(this.subject.router, "currentURL").value("/foo");
+      this.subject.storeAppURL();
 
       assert.strictEqual(this.subject.lastKnownAppURL, "/foo");
 
-      sinon
-        .stub(this.subject.routeHistory, "history")
-        .value(["/bar", "/discourse-ai/ai-bot", "/foo"]);
+      this.subject.storeAppURL("/bar");
 
       assert.strictEqual(this.subject.lastKnownAppURL, "/bar");
     });
