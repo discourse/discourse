@@ -56,9 +56,9 @@ export default {
         aiConversationsSidebarManager.stopForcingCustomSidebar();
       };
 
-      const router = api.container.lookup("service:router");
-
-      router.on("routeDidChange", setSidebarPanel);
+      api.container
+        .lookup("service:router")
+        .on("routeDidChange", setSidebarPanel);
     });
   },
 };
