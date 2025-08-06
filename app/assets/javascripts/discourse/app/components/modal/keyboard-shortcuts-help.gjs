@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import FilterInput from "discourse/components/filter-input";
-import withEventValue from "discourse/helpers/with-event-value";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -35,7 +33,14 @@ function buildHTML(keys1, keys2, shortcutsDelimiter) {
     .reject((keys) => keys.length === 0)
     .map((keys) =>
       keys
-        .map((k) => `<kbd>${k.length === 1 ? k.toUpperCase() : k}</kbd>`)
+        .map((key) => {
+          // Turns e.g. c into C and esc into Esc
+          key =
+            key.length === 1
+              ? key.toUpperCase()
+              : key.charAt(0).toUpperCase() + key.slice(1);
+          return `<kbd>${key}</kbd>`;
+        })
         .join(" ")
     )
     .map((keys) =>
