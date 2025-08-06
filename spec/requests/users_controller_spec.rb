@@ -3635,8 +3635,19 @@ RSpec.describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "raises an error when discourse_connect_overrides_avatar is disabled" do
+      it "raises an error when discourse_connect_overrides_avatar is enabled" do
         SiteSetting.discourse_connect_overrides_avatar = true
+        put "/u/#{user1.username}/preferences/avatar/pick.json",
+            params: {
+              upload_id: upload.id,
+              type: "custom",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "raises an error when auth_overrides_avatar is enabled" do
+        SiteSetting.auth_overrides_avatar = true
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
