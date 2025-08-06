@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import helperFn from "discourse/helpers/helper-fn";
-import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
@@ -35,9 +34,7 @@ export default class UserTip extends Component {
         this.args.triggerSelector &&
         document.querySelector(this.args.triggerSelector);
 
-      let buttonText = escape(
-        i18n(this.args.buttonLabel || "user_tips.button")
-      );
+      let buttonText = i18n(this.args.buttonLabel || "user_tips.button");
       if (this.args.buttonIcon) {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
       }
@@ -51,11 +48,9 @@ export default class UserTip extends Component {
         component: UserTipContainer,
         data: {
           id: this.args.id,
-          titleText: escape(this.args.titleText),
+          titleText: this.args.titleText,
           contentHtml: this.args.contentHtml || null,
-          contentText: this.args.contentText
-            ? escape(this.args.contentText)
-            : null,
+          contentText: this.args.contentText || null,
           buttonText,
           buttonSkipText: i18n("user_tips.skip"),
           showSkipButton: this.args.showSkipButton,
