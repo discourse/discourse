@@ -3,6 +3,7 @@ import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import { CHAT_PANEL } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
@@ -27,7 +28,7 @@ export default class ChatStateManager extends Service {
   @service router;
   @service site;
   @service chatDrawerRouter;
-  @service lastForumUrl;
+  @service routeHistory;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
@@ -164,7 +165,8 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    this.lastForumUrl.storeUrl(url);
+    const urlToStore = url || this.router.currentURL;
+    this.routeHistory.addToHistory(urlToStore);
   }
 
   storeChatURL(url) {
@@ -172,7 +174,13 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownAppURL() {
-    return this.lastForumUrl.url;
+    const lastForumUrl = this.routeHistory.history.find((url) => {
+      return (
+        !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
+      );
+    });
+
+    return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   get lastKnownChatURL() {

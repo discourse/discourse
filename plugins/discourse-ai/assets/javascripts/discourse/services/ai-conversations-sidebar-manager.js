@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
 
@@ -18,7 +19,8 @@ export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
   @service sidebarState;
   @service messageBus;
-  @service lastForumUrl;
+  @service routeHistory;
+  @service router;
 
   @tracked topics = [];
   @tracked sections = new TrackedArray();
@@ -163,11 +165,18 @@ export default class AiConversationsSidebarManager extends Service {
   }
 
   storeAppURL(url = null) {
-    this.lastForumUrl.storeUrl(url);
+    const urlToStore = url || this.router.currentURL;
+    this.routeHistory.addToHistory(urlToStore);
   }
 
   get lastKnownAppURL() {
-    return this.lastForumUrl.url;
+    const lastForumUrl = this.routeHistory.history.find((url) => {
+      return (
+        !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
+      );
+    });
+
+    return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   async fetchMessages() {
