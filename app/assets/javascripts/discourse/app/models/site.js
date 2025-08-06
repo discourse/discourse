@@ -111,7 +111,10 @@ export default class Site extends RestModel {
     if (this.siteSettings.viewport_based_mobile_mode) {
       return !this.capabilities.viewport.sm;
     } else {
-      if (!(this.#siteInitialized ||= getOwnerWithFallback(this)._booted)) {
+      this.#siteInitialized ||=
+        getOwnerWithFallback(this).lookup("application:main")._booted;
+
+      if (!this.#siteInitialized) {
         deprecated(
           "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization is deprecated and " +
             "will be forbidden in future versions, as this can cause layout errors during browser resizing. " +
