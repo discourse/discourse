@@ -64,6 +64,29 @@ describe "Admin staff action logs", type: :system do
     expect(staff_action_logs_page).to have_log_row(history_3)
   end
 
+  it "can export filtered logs" do
+    visit "/admin/logs/staff_action_logs"
+
+    staff_action_logs_page.filter_by_action(:change_site_setting)
+
+    expect(page).to have_css(
+      ".staff-action-logs-filters .filter",
+      text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+    )
+
+    expect(page).to have_css(".export-staff-action-logs")
+
+    expect do
+      staff_action_logs_page.click_export_button
+
+      expect(page).to have_text(I18n.t("admin_js.admin.export_csv.success"))
+    end.to change { Jobs::ExportCsvFile.jobs.size }.by(1)
+
+    job = Jobs::ExportCsvFile.jobs.last
+    args = job["args"].first["args"]
+    expect(args).to include({ "action_id" => UserHistory.actions[:change_site_setting].to_s })
+  end
+
   it "displays no result" do
     visit "/admin/logs/staff_action_logs"
     staff_action_logs_page.filter_by_action(:toggle_flag)
