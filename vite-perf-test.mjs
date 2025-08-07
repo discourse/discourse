@@ -8,7 +8,7 @@ import stripAnsi from "strip-ansi";
 const browser = await puppeteer.launch({
   executablePath: Launcher.getInstallations()[0],
   // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
-  headless: false,
+  headless: true,
   args: ["--no-sandbox"],
 });
 
@@ -150,7 +150,9 @@ async function startVite(args) {
 
 try {
   const tmpDir = process.env["TMPDIR"];
-  await execa`rm -rf ${tmpDir}/embroider node_modules/.embroider`;
+  await execa({
+    shell: "/bin/zsh",
+  })`rm -rf app/assets/javascripts/discourse/dist ${tmpDir}embroider ${tmpDir}broccoli-*(N) app/assets/javascripts/discourse/node_modules/.embroider`;
 
   await startVite("server");
   await startVite("server");
