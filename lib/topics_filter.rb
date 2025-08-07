@@ -578,11 +578,6 @@ class TopicsFilter
   def filter_tags(values:)
     return if !SiteSetting.tagging_enabled?
 
-    exclude_all_tags = []
-    exclude_any_tags = []
-    include_any_tags = []
-    include_all_tags = []
-
     values.each do |key_prefix, value|
       break if key_prefix && key_prefix != "-"
 
@@ -596,45 +591,25 @@ class TopicsFilter
             true
           end
 
-        (
-          case [key_prefix, match_all]
-          in ["-", true]
-            exclude_all_tags
-          in ["-", false]
-            exclude_any_tags
-          in [nil, true]
-            include_all_tags
-          in [nil, false]
-            include_any_tags
+        tags = tag_names.split(delimiter)
+        tag_ids = tag_ids_from_tag_names(tags)
+
+        case [key_prefix, match_all]
+        in ["-", false]
+          exclude_topics_with_any_tags(tag_ids)
+        in ["-", true]
+          exclude_topics_with_all_tags(tag_ids)
+        in [nil, false]
+          include_topics_with_any_tags(tag_ids)
+        in [nil, true]
+          has_invalid_tags = tag_ids.length < tags.length
+
+          if has_invalid_tags
+            @scope = @scope.none
+          else
+            include_topics_with_all_tags(tag_ids)
           end
-        ).concat(tag_names.split(delimiter))
-      end
-    end
-
-    if exclude_all_tags.present?
-      exclude_topics_with_all_tags(tag_ids_from_tag_names(exclude_all_tags))
-    end
-
-    if exclude_any_tags.present?
-      exclude_topics_with_any_tags(tag_ids_from_tag_names(exclude_any_tags))
-    end
-
-    if include_any_tags.present?
-      include_topics_with_any_tags(tag_ids_from_tag_names(include_any_tags))
-    end
-
-    if include_all_tags.present?
-      has_invalid_tags = false
-
-      all_tag_ids =
-        tag_ids_from_tag_names(include_all_tags) do |tag_ids, _|
-          has_invalid_tags = tag_ids.length < include_all_tags.length
         end
-
-      if has_invalid_tags
-        @scope = @scope.none
-      else
-        include_topics_with_all_tags(all_tag_ids)
       end
     end
   end

@@ -886,6 +886,7 @@ RSpec.describe TopicsFilter do
           topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
           topic_with_tag2_tag3 = Fabricate(:topic, tags: [tag2, tag3])
           topic_with_tag2_tag4 = Fabricate(:topic, tags: [tag2, tag4])
+
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
