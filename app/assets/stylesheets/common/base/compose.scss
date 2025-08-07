@@ -29,6 +29,18 @@ html.composer-open:not(.has-full-page-chat) {
     margin: auto;
     border-top: 3px double var(--tertiary-medium);
   }
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+
+  // @include viewport.between(sm, lg) {
+  //   .keyboard-visible & {
+  //     &::before {
+  //       display: none;
+  //     }
+  //   }
+  // }
 }
 
 #reply-control {
@@ -113,7 +125,7 @@ html.composer-open:not(.has-full-page-chat) {
     box-sizing: border-box;
     height: var(--composer-height);
     min-height: var(--min-height);
-    max-height: calc(100vh - var(--header-offset, 4em));
+    max-height: calc(100dvh - var(--header-offset, 4em));
     padding-bottom: var(--composer-ipad-padding);
 
     @include viewport.until(sm) {
@@ -122,6 +134,16 @@ html.composer-open:not(.has-full-page-chat) {
       transform: none;
       height: 100dvh;
       max-height: unset;
+    }
+
+    .keyboard-visible & {
+      max-height: calc(
+        (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
+      );
+
+      .reply-area {
+        padding-bottom: 0.375em;
+      }
     }
   }
 
@@ -734,10 +756,6 @@ html.composer-open:not(.has-full-page-chat) {
       // this adds a solid box shadow below, looks cleaner
       box-shadow: 0 150px 0 0 var(--secondary);
 
-      &.open {
-        z-index: z("mobile-composer");
-      }
-
       &.draft,
       &.saving {
         padding-bottom: env(safe-area-inset-bottom);
@@ -754,18 +772,6 @@ html.composer-open:not(.has-full-page-chat) {
       }
     }
 
-    &.keyboard-visible #reply-control.open {
-      height: calc(var(--composer-vh, 1vh) * 100);
-
-      .grippie {
-        display: none;
-      }
-
-      .reply-area {
-        padding-bottom: 0.375em;
-      }
-    }
-
     &.composer-open .with-topic-progress {
       bottom: calc(var(--composer-height));
     }
@@ -774,14 +780,6 @@ html.composer-open:not(.has-full-page-chat) {
 
 .mobile-device {
   #reply-control {
-    .grippie {
-      display: none;
-    }
-
-    &.open.show-preview {
-      height: 70vh;
-    }
-
     &.show-preview {
       .submit-panel {
         padding-top: 0.5em;
@@ -825,11 +823,13 @@ html.composer-open:not(.has-full-page-chat) {
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
 .ios-device {
-  #reply-control {
+  @include viewport.between(sm, lg) {
     // the two properties below are equivalent to bottom: 0
-    top: calc(var(--composer-vh, 1vh) * 100);
-    transform: translateY(-100%);
-    bottom: unset;
+    #reply-control {
+      top: calc(var(--composer-vh, 1vh) * 100);
+      transform: translateY(-100%);
+      bottom: unset;
+    }
   }
 
   &.footer-nav-visible {
