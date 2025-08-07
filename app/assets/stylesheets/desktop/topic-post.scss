@@ -78,28 +78,8 @@ section.post-menu-area {
 }
 
 nav.post-controls {
-  // for consistency, try to control spacing by editing these variables
-  --control-margin: 0.33em;
-  --control-icon-space: 0.33em;
-
   .actions {
-    button {
-      margin-left: var(--control-margin);
-
-      &.btn-icon-text,
-      &.create {
-        margin-left: calc(var(--control-margin) * 1.52);
-
-        .d-icon {
-          margin-right: var(--control-icon-space);
-        }
-      }
-    }
-
-    // Some buttons can be doubled up, like likes or flags
-    .double-button {
-      margin-left: var(--control-margin);
-    }
+    gap: var(--space-2);
   }
 
   .show-replies {
@@ -111,11 +91,6 @@ nav.post-controls {
 
     .topic-post & {
       margin-right: var(--space-2);
-    }
-
-    .d-icon {
-      margin-inline: var(--control-icon-space);
-      margin-left: 0;
     }
 
     &[aria-expanded="true"] {
