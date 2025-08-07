@@ -166,9 +166,7 @@ export default class AiConversationsSidebarManager extends Service {
 
   get lastKnownAppURL() {
     const lastForumUrl = this.routeHistory.history.find((url) => {
-      return (
-        !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
-      );
+      return !url.startsWith("/discourse-ai");
     });
 
     return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);

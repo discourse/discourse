@@ -33,7 +33,7 @@ export default class AiBotHeaderIcon extends Component {
 
   get title() {
     if (this.clickShouldRouteOutOfConversations) {
-      return i18n("sidebar.panels.forum.label");
+      return i18n("discourse_ai.ai_bot.exit");
     }
 
     return i18n("discourse_ai.ai_bot.shortcut_title");
