@@ -390,6 +390,7 @@
     gap: 0.5em;
 
     .discourse-tags {
+      --tag-text-color: var(--header_primary-high);
       display: inline;
 
       @include ellipsis;
