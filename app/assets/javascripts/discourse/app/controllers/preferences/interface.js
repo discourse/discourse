@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
+import { not, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -50,6 +51,12 @@ export default class InterfaceController extends Controller {
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
+
+  @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
+
+  @not("currentSchemeCanBeSelected") showColorSchemeNoneItem;
+
+  selectedColorSchemeNoneLabel = i18n("user.color_schemes.default_description");
 
   init() {
     super.init(...arguments);
@@ -243,14 +250,13 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @discourseComputed("userSelectableColorSchemes")
-  showColorSchemeSelector(lightSchemes) {
-    return lightSchemes && lightSchemes.length > 1;
-  }
-
   @discourseComputed("userSelectableDarkColorSchemes")
   showDarkColorSchemeSelector(darkSchemes) {
-    return darkSchemes && darkSchemes.length > 1;
+    // when a default dark scheme is set
+    // dropdown has two items (disable / use site default)
+    // but we show a checkbox in that case
+    const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
+    return darkSchemes && darkSchemes.length > minToShow;
   }
 
   get interfaceColorModes() {
