@@ -7328,6 +7328,7 @@ en:
           modal_title: "Details"
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
+          filter_date_time: "Filter date and time"
           actions:
             permanently_delete_post_revisions: "permanently delete post revisions"
             delete_user: "delete user"

@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
+  include Localizable
 
   self.ignored_columns = [
     "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
@@ -66,8 +67,6 @@ class Post < ActiveRecord::Base
            dependent: :destroy
 
   has_many :user_actions, foreign_key: :target_post_id
-
-  has_many :post_localizations, dependent: :destroy
 
   belongs_to :image_upload, class_name: "Upload"
 
@@ -1341,17 +1340,6 @@ class Post < ActiveRecord::Base
 
   def in_user_locale?
     LocaleNormalizer.is_same?(locale, I18n.locale)
-  end
-
-  def get_localization(locale = I18n.locale)
-    locale_str = locale.to_s.sub("-", "_")
-
-    # prioritise exact match
-    if match = post_localizations.find { |l| l.locale == locale_str }
-      return match
-    end
-
-    post_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

@@ -303,7 +303,7 @@ en:
         one: "%{count} file"
         other: "%{count} files"
       you_flagged: "You flagged this message"
-      exit: "back"
+      exit: "exit chat"
       channel_status:
         read_only_header: "Channel is read only"
         read_only: "Read Only"

@@ -38,9 +38,9 @@ module Migrations::Database::IntermediateDB
         email_previous_replies,
         enable_allowed_pm_users,
         enable_defer,
+        enable_markdown_monospace_font,
         enable_quoting,
         enable_smart_lists,
-        enable_markdown_monospace_font,
         external_links_in_new_tab,
         hide_presence,
         hide_profile,
@@ -48,6 +48,7 @@ module Migrations::Database::IntermediateDB
         homepage_id,
         ignore_channel_wide_mention,
         include_tl0_in_digests,
+        interface_color_mode,
         last_redirected_to_top_at,
         like_notification_frequency,
         mailing_list_mode,
@@ -75,7 +76,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?
+        ?, ?, ?, ?
       )
     SQL
 
@@ -110,9 +111,9 @@ module Migrations::Database::IntermediateDB
       email_previous_replies: nil,
       enable_allowed_pm_users: nil,
       enable_defer: nil,
+      enable_markdown_monospace_font: nil,
       enable_quoting: nil,
       enable_smart_lists: nil,
-      enable_markdown_monospace_font: nil,
       external_links_in_new_tab: nil,
       hide_presence: nil,
       hide_profile: nil,
@@ -120,6 +121,7 @@ module Migrations::Database::IntermediateDB
       homepage_id: nil,
       ignore_channel_wide_mention: nil,
       include_tl0_in_digests: nil,
+      interface_color_mode: nil,
       last_redirected_to_top_at: nil,
       like_notification_frequency: nil,
       mailing_list_mode: nil,
@@ -176,9 +178,9 @@ module Migrations::Database::IntermediateDB
         email_previous_replies,
         ::Migrations::Database.format_boolean(enable_allowed_pm_users),
         ::Migrations::Database.format_boolean(enable_defer),
+        ::Migrations::Database.format_boolean(enable_markdown_monospace_font),
         ::Migrations::Database.format_boolean(enable_quoting),
         ::Migrations::Database.format_boolean(enable_smart_lists),
-        ::Migrations::Database.format_boolean(enable_markdown_monospace_font),
         ::Migrations::Database.format_boolean(external_links_in_new_tab),
         ::Migrations::Database.format_boolean(hide_presence),
         ::Migrations::Database.format_boolean(hide_profile),
@@ -186,6 +188,7 @@ module Migrations::Database::IntermediateDB
         homepage_id,
         ::Migrations::Database.format_boolean(ignore_channel_wide_mention),
         ::Migrations::Database.format_boolean(include_tl0_in_digests),
+        interface_color_mode,
         ::Migrations::Database.format_datetime(last_redirected_to_top_at),
         like_notification_frequency,
         ::Migrations::Database.format_boolean(mailing_list_mode),

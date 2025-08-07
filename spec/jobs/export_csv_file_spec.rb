@@ -72,6 +72,73 @@ RSpec.describe Jobs::ExportCsvFile do
         admin.uploads.each(&:destroy!)
       end
     end
+
+    context "when exporting staff action" do
+      it "exports staff action logs with date filters" do
+        freeze_time
+        (1..10).each do |i|
+          Fabricate(
+            :user_history,
+            action: UserHistory.actions[:suspend_user],
+            created_at: i.days.ago,
+          )
+        end
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(
+            user_id: admin.id,
+            entity: "staff_action",
+            args: {
+              # Fine-tuning for 1 minute to ensure we capture the correct range
+              start_date: (5.days.ago - 1.minutes).iso8601,
+              end_date: (2.days.ago + 1.minutes).iso8601,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each do |entry|
+            content = zip_file.read(entry)
+            expect(CSV.parse(content).size).to eq(5) # [header, 2, 3, 4, 5]
+          end
+        end
+      end
+
+      it "delegates to UserHistory.staff_action_records" do
+        Fabricate(:user_history, action: UserHistory.actions[:suspend_user])
+        Fabricate(:user_history, action: UserHistory.actions[:change_site_setting])
+        Fabricate(:user_history, action: UserHistory.actions[:delete_theme])
+
+        res =
+          UserHistory.staff_action_records(
+            admin,
+            action_id: UserHistory.actions[:suspend_user].to_s,
+          )
+
+        UserHistory
+          .expects(:staff_action_records)
+          .with(
+            admin,
+            HashWithIndifferentAccess.new("action_id" => UserHistory.actions[:suspend_user].to_s),
+          )
+          .returns(res)
+
+        Jobs::ExportCsvFile.new.execute(
+          user_id: admin.id,
+          entity: "staff_action",
+          args: {
+            "action_id" => UserHistory.actions[:suspend_user].to_s,
+          },
+        )
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each do |entry|
+            content = zip_file.read(entry)
+            expect(CSV.parse(content).size).to eq(2)
+          end
+        end
+      end
+    end
   end
 
   describe ".report_export" do

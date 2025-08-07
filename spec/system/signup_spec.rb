@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "signup scenarios" do
-  let(:signup_form) { PageObjects::Pages::Signup.new }
-  let(:login_form) { PageObjects::Pages::Login.new }
+  let(:signup_page) { PageObjects::Pages::Signup.new }
+  let(:login_page) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite) }
@@ -12,27 +12,27 @@ shared_examples "signup scenarios" do
     before { Jobs.run_immediately! }
 
     it "can signup" do
-      signup_form
+      signup_page
         .open
         .fill_email(invite.email)
         .fill_username("john")
         .fill_password("supersecurepassword")
-      expect(signup_form).to have_valid_fields
+      expect(signup_page).to have_valid_fields
 
-      signup_form.click_create_account
+      signup_page.click_create_account
 
       expect(page).to have_current_path("/u/account-created")
     end
 
     it "can signup and activate account" do
-      signup_form
+      signup_page
         .open
         .fill_email(invite.email)
         .fill_username("john")
         .fill_password("supersecurepassword")
-      expect(signup_form).to have_valid_fields
+      expect(signup_page).to have_valid_fields
 
-      signup_form.click_create_account
+      signup_page.click_create_account
       expect(page).to have_current_path("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
@@ -49,14 +49,14 @@ shared_examples "signup scenarios" do
     end
 
     it "can access 2FA preferences screen after signing up and activating account" do
-      signup_form
+      signup_page
         .open
         .fill_email(invite.email)
         .fill_username("john")
         .fill_password("supersecurepassword")
-      expect(signup_form).to have_valid_fields
+      expect(signup_page).to have_valid_fields
 
-      signup_form.click_create_account
+      signup_page.click_create_account
       expect(page).to have_current_path("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
@@ -102,11 +102,11 @@ shared_examples "signup scenarios" do
     end
 
     it "cannot signup with a common password" do
-      signup_form.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
-      expect(signup_form).to have_valid_fields
+      signup_page.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
+      expect(signup_page).to have_valid_fields
 
-      signup_form.click_create_account
-      expect(signup_form).to have_content(
+      signup_page.click_create_account
+      expect(signup_page).to have_content(
         I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
       )
     end
@@ -115,30 +115,30 @@ shared_examples "signup scenarios" do
       before { SiteSetting.invite_code = "cupcake" }
 
       it "can signup with valid code" do
-        signup_form
+        signup_page
           .open
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_code("cupcake")
-        expect(signup_form).to have_valid_fields
+        expect(signup_page).to have_valid_fields
 
-        signup_form.click_create_account
+        signup_page.click_create_account
         expect(page).to have_current_path("/u/account-created")
       end
 
       it "cannot signup with invalid code" do
-        signup_form
+        signup_page
           .open
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_code("pudding")
-        expect(signup_form).to have_valid_fields
+        expect(signup_page).to have_valid_fields
 
-        signup_form.click_create_account
-        expect(signup_form).to have_content(I18n.t("login.wrong_invite_code"))
-        expect(signup_form).to have_no_css(".account-created")
+        signup_page.click_create_account
+        expect(signup_page).to have_content(I18n.t("login.wrong_invite_code"))
+        expect(signup_page).to have_no_css(".account-created")
       end
     end
 
@@ -153,31 +153,31 @@ shared_examples "signup scenarios" do
       end
 
       it "can signup when filling the custom field" do
-        signup_form
+        signup_page
           .open
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_custom_field("Occupation", "Jedi")
-        expect(signup_form).to have_valid_fields
+        expect(signup_page).to have_valid_fields
 
-        signup_form.click_create_account
+        signup_page.click_create_account
         expect(page).to have_current_path("/u/account-created")
       end
 
       it "cannot signup without filling the custom field" do
-        signup_form
+        signup_page
           .open
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
 
-        expect(signup_form).to have_content("What you do for work")
+        expect(signup_page).to have_content("What you do for work")
 
-        signup_form.click_create_account
-        expect(signup_form).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
-        expect(signup_form).to have_no_css(".account-created")
-        expect(signup_form).to have_css(".tip.bad", text: "Please enter a value for \"Occupation\"")
+        signup_page.click_create_account
+        expect(signup_page).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
+        expect(signup_page).to have_no_css(".account-created")
+        expect(signup_page).to have_css(".tip.bad", text: "Please enter a value for \"Occupation\"")
       end
     end
 
@@ -188,51 +188,51 @@ shared_examples "signup scenarios" do
       end
 
       it "can signup but cannot login until approval" do
-        signup_form
+        signup_page
           .open
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
-        expect(signup_form).to have_valid_fields
-        signup_form.click_create_account
+        expect(signup_page).to have_valid_fields
+        signup_page.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
         expect(page).to have_current_path("/u/account-created")
 
         visit "/"
-        login_form.open
-        login_form.fill_username("john")
-        login_form.fill_password("supersecurepassword")
-        login_form.click_login
-        expect(login_form).to have_content(I18n.t("login.not_approved"))
+        login_page.open
+        login_page.fill_username("john")
+        login_page.fill_password("supersecurepassword")
+        login_page.click_login
+        expect(login_page).to have_content(I18n.t("login.not_approved"))
 
         user = User.find_by(username: "john")
         user.update!(approved: true)
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-        login_form.click_login
+        login_page.click_login
 
         expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
       it "can login directly when using an auto approved email" do
-        signup_form
+        signup_page
           .open
           .fill_email("johndoe@awesomeemail.com")
           .fill_username("john")
           .fill_password("supersecurepassword")
 
-        expect(signup_form).to have_valid_fields
+        expect(signup_page).to have_valid_fields
 
-        signup_form.click_create_account
+        signup_page.click_create_account
 
         expect(page).to have_current_path("/u/account-created")
 
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user:).token)
         visit "/"
-        login_form.open.fill_username("john").fill_password("supersecurepassword").click_login
+        login_page.open.fill_username("john").fill_password("supersecurepassword").click_login
 
         expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -244,13 +244,13 @@ shared_examples "signup scenarios" do
 
       it "can signup and activate account" do
         visit("/discuss/signup")
-        signup_form
+        signup_page
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
-        expect(signup_form).to have_valid_fields
+        expect(signup_page).to have_valid_fields
 
-        signup_form.click_create_account
+        signup_page.click_create_account
         expect(page).to have_current_path("/discuss/u/account-created")
 
         mail = ActionMailer::Base.deliveries.first
@@ -275,27 +275,27 @@ shared_examples "signup scenarios" do
     end
 
     it "cannot signup" do
-      signup_form
+      signup_page
         .open
         .fill_email("blocked@example.com")
         .fill_username("john")
         .fill_password("supersecurepassword")
-      expect(signup_form).to have_valid_username
-      expect(signup_form).to have_valid_password
-      expect(signup_form).to have_content(I18n.t("user.email.not_allowed"))
+      expect(signup_page).to have_valid_username
+      expect(signup_page).to have_valid_password
+      expect(signup_page).to have_content(I18n.t("user.email.not_allowed"))
     end
   end
 
   context "when site is invite only" do
     before { SiteSetting.invite_only = true }
 
-    it "cannot open the signup modal" do
-      signup_form.open
-      expect(signup_form).to be_closed
+    it "cannot open the signup page" do
+      signup_page.open
+      expect(signup_page).to be_closed
       expect(page).to have_no_css(".sign-up-button")
 
-      login_form.open_from_header
-      expect(login_form).to have_no_css("#new-account-link")
+      login_page.open_from_header
+      expect(login_page).to have_no_css("#new-account-link")
     end
 
     it "can signup with invite link" do
@@ -333,8 +333,8 @@ shared_examples "signup scenarios" do
         before { SiteSetting.login_required = true }
 
         it "displays the name field" do
-          signup_form.open
-          expect(signup_form).to have_name_input
+          signup_page.open
+          expect(signup_page).to have_name_input
         end
       end
 
@@ -342,8 +342,8 @@ shared_examples "signup scenarios" do
         before { SiteSetting.enable_names = false }
 
         it "hides the name field" do
-          signup_form.open
-          expect(signup_form).to have_no_name_input
+          signup_page.open
+          expect(signup_page).to have_no_name_input
         end
       end
     end
@@ -352,8 +352,8 @@ shared_examples "signup scenarios" do
       before { SiteSetting.full_name_requirement = "hidden_at_signup" }
 
       it "hides the name field" do
-        signup_form.open
-        expect(signup_form).to have_no_name_input
+        signup_page.open
+        expect(signup_page).to have_no_name_input
       end
     end
 
@@ -361,16 +361,16 @@ shared_examples "signup scenarios" do
       before { SiteSetting.full_name_requirement = "required_at_signup" }
 
       it "displays the name field" do
-        signup_form.open
-        expect(signup_form).to have_name_input
+        signup_page.open
+        expect(signup_page).to have_name_input
       end
 
       context "when enable_names is false" do
         before { SiteSetting.enable_names = false }
 
         it "hides the name field" do
-          signup_form.open
-          expect(signup_form).to have_no_name_input
+          signup_page.open
+          expect(signup_page).to have_no_name_input
         end
       end
     end
@@ -381,13 +381,13 @@ shared_examples "signup scenarios" do
       user_field_text = Fabricate(:user_field)
       user_field_dropdown = Fabricate(:user_field_dropdown)
 
-      signup_form.open
+      signup_page.open
       find(".signup-page-cta__signup").click
 
-      expect(signup_form).to have_content(
+      expect(signup_page).to have_content(
         I18n.t("js.user_fields.required", name: user_field_text.name),
       )
-      expect(signup_form).to have_content(
+      expect(signup_page).to have_content(
         I18n.t("js.user_fields.required_select", name: user_field_dropdown.name),
       )
     end
