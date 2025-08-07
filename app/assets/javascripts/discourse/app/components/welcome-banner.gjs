@@ -118,7 +118,7 @@ export default class WelcomeBanner extends Component {
                 @icon="magnifying-glass"
                 @title="search.open_advanced"
                 @href="/search?expanded=true"
-                class="search-icon"
+                class="search-icon btn-transparent"
               />
               <SearchMenu
                 @location="welcome-banner"

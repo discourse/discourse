@@ -247,6 +247,7 @@ export default class TopicMapSummary extends Component {
         @arrow={{true}}
         @identifier="topic-map__views"
         @interactive={{true}}
+        @triggerClass="btn-flat"
         @triggers="click"
         @modalForMobile={{true}}
         @placement="right"

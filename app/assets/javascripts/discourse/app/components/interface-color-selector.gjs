@@ -51,7 +51,7 @@ export default class InterfaceColorSelector extends Component {
         <DropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              class="interface-color-selector__light-option"
+              class="interface-color-selector__light-option btn-flat"
               @icon="sun"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.light"
@@ -61,7 +61,7 @@ export default class InterfaceColorSelector extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="interface-color-selector__dark-option"
+              class="interface-color-selector__dark-option btn-flat"
               @icon="moon"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.dark"
@@ -71,7 +71,7 @@ export default class InterfaceColorSelector extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="interface-color-selector__auto-option"
+              class="interface-color-selector__auto-option btn-flat"
               @icon="circle-half-stroke"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.auto"

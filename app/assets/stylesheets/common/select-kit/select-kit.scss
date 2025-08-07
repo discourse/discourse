@@ -38,8 +38,8 @@
       align-items: center;
       justify-content: center;
       border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
-      box-shadow: var(--shadow-dropdown);
+      border: 1px solid var(--d-popover-border-color);
+      box-shadow: var(--d-popover-box-shadow);
       background: var(--secondary);
       max-width: 600px;
     }

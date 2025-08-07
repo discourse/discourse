@@ -72,6 +72,7 @@ export default class ComposerToolbarButtons extends Component {
                 "toolbar__button"
                 button.className
                 (if (this.isButtonActive button) "--active")
+                "btn-transparent"
               }}
               rel={{if button.href "noopener noreferrer"}}
               target={{if button.href "_blank"}}
