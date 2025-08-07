@@ -15,7 +15,6 @@ const extension = {
       },
       content: "heading? bullet_list poll_info?",
       group: "block",
-      draggable: true,
       selectable: true,
       isolating: true,
       defining: true,
