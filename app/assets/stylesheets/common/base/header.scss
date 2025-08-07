@@ -292,6 +292,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -390,7 +391,6 @@
     gap: 0.5em;
 
     .discourse-tags {
-      --tag-text-color: var(--header_primary-high);
       display: inline;
 
       @include ellipsis;
