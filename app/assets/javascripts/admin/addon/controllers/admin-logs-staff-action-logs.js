@@ -156,6 +156,7 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   exportStaffActionLogs() {
     exportEntity("staff_action", {
+      ...this.filters,
       start_date: this.startDate?.toISOString(),
       end_date: this.endDate?.toISOString(),
     }).then(outputExportResult);
