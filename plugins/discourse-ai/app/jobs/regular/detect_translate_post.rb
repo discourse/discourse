@@ -41,9 +41,7 @@ module Jobs
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-
-        regionless_locale = locale.split("_").first
-        exists = post.post_localizations.where("locale LIKE ?", "#{regionless_locale}%").exists?
+        exists = post.localizations.matching_locale(locale).exists?
 
         if exists && !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
           next

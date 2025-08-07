@@ -19,6 +19,7 @@ import { bind } from "discourse/lib/decorators";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
+import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 
 const MAX_RESULTS = 20;
 
@@ -26,27 +27,25 @@ const FilterNavigationMenuList = <template>
   {{#if @data.filteredTips.length}}
     <DropdownMenu as |dropdown|>
       {{#each @data.filteredTips as |item index|}}
-        <dropdown.item>
-          <DButton
-            class={{concatClass
-              "filter-navigation__tip-button"
-              (if (eq index @data.selectedIndex) "--selected")
-            }}
-            @action={{fn @data.selectItem item}}
-          >
-            {{#if item.category}}
-              {{categoryBadge item.category allowUncategorized=true}}
-            {{else}}
-              <span class="filter-navigation__tip-name">
-                {{item.name}}
-              </span>
+        <dropdown.item
+          class={{concatClass
+            "filter-navigation__tip-item"
+            (if (eq index @data.selectedIndex) "--selected")
+          }}
+          {{on "click" (fn @data.selectItem item)}}
+        >
+          {{#if item.category}}
+            {{categoryBadge item.category allowUncategorized=true}}
+          {{else}}
+            <span class="filter-navigation__tip-name">
+              {{item.name}}
+            </span>
 
-              {{#if item.description}}
-                <span class="filter-navigation__tip-description">—
-                  {{item.description}}</span>
-              {{/if}}
+            {{#if item.description}}
+              <span class="filter-navigation__tip-description">—
+                {{item.description}}</span>
             {{/if}}
-          </DButton>
+          {{/if}}
         </dropdown.item>
       {{/each}}
     </DropdownMenu>
@@ -402,6 +401,7 @@ export default class FilterNavigationMenu extends Component {
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
       maxWidth: 2000,
+      visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
     });
 
     // HACK: We don't have a nice way for DMenu to be the same width as

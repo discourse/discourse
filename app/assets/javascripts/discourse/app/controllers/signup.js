@@ -35,6 +35,7 @@ export default class SignupPageController extends Controller {
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -450,12 +451,6 @@ export default class SignupPageController extends Controller {
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const destinationUrl = this.authOptions?.destination_url;
-
-    if (!isEmpty(destinationUrl)) {
-      cookie("destination_url", destinationUrl, { path: "/" });
-    }
-
     // Add the userFields to the data
     if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
@@ -475,29 +470,31 @@ export default class SignupPageController extends Controller {
           this._challengeExpiry = 1;
 
           // Trigger the browser's password manager using the hidden static login form:
-          const hiddenLoginForm = document.querySelector("#hidden-login-form");
-          if (hiddenLoginForm) {
-            hiddenLoginForm.querySelector("input[name=username]").value =
-              attrs.accountUsername;
-            hiddenLoginForm.querySelector("input[name=password]").value =
-              attrs.accountPassword;
-            hiddenLoginForm.querySelector("input[name=redirect]").value =
-              userPath("account-created");
-            hiddenLoginForm.submit();
+          const _form = document.getElementById("hidden-login-form");
+          if (_form) {
+            const set = (key, value) => {
+              _form.querySelector(`input[name=${key}]`).value = value;
+            };
+
+            set("username", this.accountUsername);
+            set("password", this.accountPassword);
+
+            const destinationUrl = cookie("destination_url");
+            if (destinationUrl) {
+              removeCookie("destination_url");
+              set("redirect", destinationUrl);
+            } else {
+              set("redirect", userPath("account-created"));
+            }
+
+            _form.submit();
           }
+
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
             this.isDeveloper = true;
-          }
-          if (
-            result.errors &&
-            result.errors.email &&
-            result.errors.email.length > 0 &&
-            result.values
-          ) {
-            this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
             this.passwordValidationHelper.rejectedPasswords.push(

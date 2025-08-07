@@ -20,8 +20,6 @@ describe Post do
       context "when the post has a valid event" do
         context "when the event markup is removed" do
           it "destroys the associated event" do
-            start = Time.now.utc.iso8601(3)
-
             post = create_post_with_event(user)
 
             expect(post.reload.event.persisted?).to eq(true)

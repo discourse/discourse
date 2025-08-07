@@ -9,6 +9,7 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
+import { TABLE_AI_LAYOUT, TABLE_LAYOUT } from "../services/gists";
 
 export default class AiGistToggle extends Component {
   @service gists;
@@ -16,12 +17,12 @@ export default class AiGistToggle extends Component {
   get buttons() {
     return [
       {
-        id: "table",
+        id: TABLE_LAYOUT,
         label: "discourse_ai.summarization.topic_list_layout.button.compact",
         icon: "discourse-table",
       },
       {
-        id: "table-ai",
+        id: TABLE_AI_LAYOUT,
         label: "discourse_ai.summarization.topic_list_layout.button.expanded",
         icon: "discourse-table-sparkles",
         description:
@@ -31,7 +32,7 @@ export default class AiGistToggle extends Component {
   }
 
   get selectedOptionId() {
-    return this.gists.get("preference");
+    return this.gists.currentPreference;
   }
 
   get currentButton() {
@@ -48,13 +49,13 @@ export default class AiGistToggle extends Component {
 
   @action
   onSelect(optionId) {
-    this.gists.setPreference(optionId);
+    this.gists.setPreference(optionId, this.gists.isPm);
     this.dMenu.close();
   }
 
   <template>
-    {{#if this.gists.shouldShow}}
-      {{bodyClass (concat "topic-list-layout-" this.gists.preference)}}
+    {{#if this.gists.showToggle}}
+      {{bodyClass (concat "topic-list-layout-" this.gists.currentPreference)}}
       <DMenu
         @modalForMobile={{true}}
         @autofocus={{true}}

@@ -7,7 +7,7 @@ on:
       - stable
 
 concurrency:
-  group: publish-assets-${{ format('{0}-{1}', github.ref, github.job) }}
+  group: publish-assets-${{ format('{0}-{1}', github.run_number, github.job) }}
   cancel-in-progress: true
 
 jobs:
