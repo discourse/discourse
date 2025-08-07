@@ -45,6 +45,10 @@
       border: none;
     }
 
+    .nav-pills li a {
+      box-shadow: none;
+    }
+
     @include viewport.until(md) {
       width: 100%;
       margin-top: 0.5em;
