@@ -121,3 +121,4 @@ openapi/*
 
 # direnv.net
 .direnv
+/app/assets/javascripts/discourse/tmp

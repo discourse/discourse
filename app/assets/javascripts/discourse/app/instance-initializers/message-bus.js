@@ -54,6 +54,7 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
+    return;
     // We don't use the message bus in testing
     if (isTesting()) {
       return;
@@ -96,8 +97,8 @@ export default {
     const interval = setInterval(() => {
       if (document.readyState === "complete") {
         if (
-          router.currentRouteName === "topic.fromParams" ||
-          router.currentRouteName === "topic.fromParamsNear"
+          router.currentRouteName === "topic.from-params" ||
+          router.currentRouteName === "topic.from-params-near"
         ) {
           _deferredViewTopicId = router.currentRoute.parent.params.id;
         }

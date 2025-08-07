@@ -1,7 +1,7 @@
 import { getProperties } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MessageBus from "message-bus-client";
+// import MessageBus from "message-bus-client";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { NotificationLevels } from "discourse/lib/notification-levels";

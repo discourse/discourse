@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MessageBus from "message-bus-client";
+// import MessageBus from "message-bus-client";
 import { module, test } from "qunit";
 import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";

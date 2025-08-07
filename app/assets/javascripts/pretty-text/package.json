@@ -4,9 +4,6 @@
   "description": "Discourse's text rendering utilities",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  "keywords": [
-    "ember-addon"
-  ],
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -46,8 +43,5 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
-  },
-  "ember": {
-    "edition": "default"
   }
 }
