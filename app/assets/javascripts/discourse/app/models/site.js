@@ -111,17 +111,20 @@ export default class Site extends RestModel {
     if (this.siteSettings.viewport_based_mobile_mode) {
       return !this.capabilities.viewport.sm;
     } else {
-      this.#siteInitialized ||=
-        getOwnerWithFallback(this).lookup("application:main")._booted;
+      this.#siteInitialized ||= getOwnerWithFallback(this).lookup(
+        "-application-instance:main"
+      )?._booted;
 
       if (!this.#siteInitialized) {
         deprecated(
-          "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization is deprecated and " +
-            "will be forbidden in future versions, as this can cause layout errors during browser resizing. " +
-            "Please move these checks to a component, transformer, or API callback.",
+          "Warning: Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is " +
+            "deprecated and will be forbidden in future updates. The mobile mode will be determined by the viewport " +
+            "size instead and as consequence using these checks during initialization can lead to errors and " +
+            "inconsistencies when the browser window is resized. Please move these checks to a component, " +
+            "transformer, or API callback that executes during page rendering.",
           {
             since: "v3.5.0.beta9-dev",
-            id: "discourse.site-check-view-initializing",
+            id: "discourse.static-mobile-mode-initializing",
           }
         );
       }
