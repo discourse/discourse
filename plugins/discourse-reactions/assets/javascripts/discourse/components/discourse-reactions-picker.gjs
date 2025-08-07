@@ -134,6 +134,7 @@ export default class DiscourseReactionsPicker extends Component {
           {{#each this.reactionInfo as |reaction|}}
             <DButton
               class={{concatClass
+                "btn-flat"
                 "pickable-reaction"
                 reaction.id
                 (if reaction.canUndo "can-undo")
