@@ -1,7 +1,7 @@
-import { isProduction } from "discourse/lib/environment";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
+import { isProduction } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 
 // Use the message bus for live reloading of components for faster development.
