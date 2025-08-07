@@ -28,8 +28,17 @@ export function buildKeymap(
     ...extractKeymap(extensions, params),
   };
 
-  keys["Mod-z"] = undo;
-  keys["Shift-Mod-z"] = redo;
+  // Chain core commands with existing extension commands
+  function chainWithExisting(key, coreCommand) {
+    if (keys[key]) {
+      keys[key] = chainCommands(keys[key], coreCommand);
+    } else {
+      keys[key] = coreCommand;
+    }
+  }
+
+  chainWithExisting("Mod-z", undo);
+  chainWithExisting("Shift-Mod-z", redo);
 
   const backspaceUnset = (state, dispatch, view) => {
     const $pos = atBlockStart(state, view);
@@ -39,17 +48,16 @@ export function buildKeymap(
     return false;
   };
 
-  keys["Backspace"] = chainCommands(
-    undoInputRule,
-    backspaceUnset,
-    joinTextblockBackward
+  chainWithExisting(
+    "Backspace",
+    chainCommands(undoInputRule, backspaceUnset, joinTextblockBackward)
   );
 
   if (!isMac) {
-    keys["Mod-y"] = redo;
+    chainWithExisting("Mod-y", redo);
   }
 
-  keys["Escape"] = selectParentNode;
+  chainWithExisting("Escape", selectParentNode);
 
   // The above keys are always included
   if (!includeDefault) {
@@ -58,35 +66,45 @@ export function buildKeymap(
 
   const schema = params.schema;
 
-  keys["Shift-Enter"] = chainCommands(exitCode, (state, dispatch) => {
-    if (dispatch) {
-      dispatch(
-        state.tr
-          .replaceSelectionWith(schema.nodes.hard_break.create())
-          .scrollIntoView()
-      );
-    }
-    return true;
-  });
+  chainWithExisting(
+    "Shift-Enter",
+    chainCommands(exitCode, (state, dispatch) => {
+      if (dispatch) {
+        dispatch(
+          state.tr
+            .replaceSelectionWith(schema.nodes.hard_break.create())
+            .scrollIntoView()
+        );
+      }
+      return true;
+    })
+  );
 
-  keys["Enter"] = splitListItem(schema.nodes.list_item);
+  chainWithExisting("Enter", splitListItem(schema.nodes.list_item));
 
-  keys["Mod-Shift-_"] = (state, dispatch) => {
+  chainWithExisting("Mod-Shift-_", (state, dispatch) => {
     dispatch?.(
       state.tr
         .replaceSelectionWith(schema.nodes.horizontal_rule.create())
         .scrollIntoView()
     );
     return true;
-  };
+  });
 
   return keys;
 }
 
 function extractKeymap(extensions, params) {
-  return {
-    ...extensions.map(({ keymap }) => {
+  const keymaps = extensions
+    .map(({ keymap }) => {
       return keymap instanceof Function ? keymap(params) : keymap;
-    }),
-  };
+    })
+    .filter(Boolean);
+
+  const combined = {};
+  keymaps.forEach((keymap) => {
+    Object.assign(combined, keymap);
+  });
+
+  return combined;
 }

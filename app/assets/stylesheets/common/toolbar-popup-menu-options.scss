@@ -26,7 +26,7 @@
   }
 }
 
-.toolbar-menu__heading-content {
+.fk-d-menu {
   .dropdown-menu {
     .btn {
       &.--active {
@@ -74,7 +74,11 @@
         font-size: var(--font-down-1-rem);
       }
     }
+  }
+}
 
+.toolbar-menu__heading-content {
+  .dropdown-menu {
     .btn[data-name="heading-1"] {
       .d-button-label__text,
       .d-icon[class*="d-icon-discourse"] {

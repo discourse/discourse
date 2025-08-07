@@ -507,6 +507,7 @@ export default class DEditor extends Component {
       lineVal: true,
     });
     return {
+      commands: this.textManipulation.commands,
       selected,
       selectText: (from, length) =>
         this.textManipulation.selectText(from, length, { scroll: false }),
