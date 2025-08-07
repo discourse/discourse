@@ -1,5 +1,7 @@
 const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
+const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
+
 export default {
   "virtual:main": (tree, { themeId }) => {
     let output = cleanMultiline(`
@@ -25,14 +27,14 @@ export default {
 
       let compatModuleName = filenameWithoutExtension;
 
-      if (moduleFilename.match(/(^|\/)connectors\//)) {
+      if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
         const isTemplate = moduleFilename.endsWith(".hbs");
         const isInTemplatesDirectory =
           moduleFilename.match(/(^|\/)templates\//);
 
         if (isTemplate && !isInTemplatesDirectory) {
           compatModuleName = compatModuleName.replace(
-            /(^|\/)connectors\//,
+            IS_CONNECTOR_REGEX,
             "$1templates/connectors/"
           );
         } else if (!isTemplate && isInTemplatesDirectory) {
@@ -40,7 +42,10 @@ export default {
         }
       }
 
-      output += `import * as Mod${i} from "./${filenameWithoutExtension}";\n`;
+      const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
+        ? moduleFilename
+        : filenameWithoutExtension;
+      output += `import * as Mod${i} from "./${importPath}";\n`;
       output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n\n`;
 
       i += 1;
