@@ -111,7 +111,7 @@ GEM
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
-    cbor (0.5.9.9)
+    cbor (0.5.10.1)
     certified (1.0.0)
     cgi (0.5.0)
     chunky_png (1.4.0)
@@ -918,7 +918,7 @@ CHECKSUMS
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-playwright-driver (0.5.7) sha256=875a1928077d56be8b484f84674901a2374752d7842d93de2045bbede1aad242
-  cbor (0.5.9.9) sha256=0a715109fb46ea906281d17a6dcbcdf6ddeca0932a3840cecfafd9c9d6cb6dbc
+  cbor (0.5.10.1) sha256=79cdf79f18dcd9ee97e0b849c6d573e5a2e3ddc1954d180f384d6ed2612b6df0
   certified (1.0.0) sha256=aa4cdf0e90e7ee96f6e0ce3daae39eaa8f0486124e0d92daf64d2105aeb9069c
   cgi (0.5.0) sha256=fe99f65bb2c146e294372ebb27602adbc3b4c008e9ea7038c6bd48c1ec9759da
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
