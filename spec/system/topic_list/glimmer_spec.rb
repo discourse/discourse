@@ -129,7 +129,7 @@ describe "glimmer topic list", type: :system do
   end
 
   it "unpins globally pinned topics on click" do
-    Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
+    topic = Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
     visit("/latest")
 
     expect(page).to have_css(".topic-list-item .d-icon-thumbtack:not(.unpinned)")
