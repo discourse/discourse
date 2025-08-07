@@ -82,12 +82,6 @@ nav.post-controls {
     gap: var(--space-1);
   }
 
-  @include viewport.until(sm) {
-    button {
-      font-size: var(--font-up-1);
-    }
-  }
-
   .show-replies {
     display: flex;
     align-items: center;
