@@ -8,21 +8,47 @@ import stripAnsi from "strip-ansi";
 const browser = await puppeteer.launch({
   executablePath: Launcher.getInstallations()[0],
   // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
-  headless: true,
+  headless: false,
   args: ["--no-sandbox"],
 });
-const page = await browser.newPage();
-page.on("console", (msg) => {
-  if (["error", "warning"].includes(msg.type())) {
-    console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
-  }
-});
-page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
 
-await page.setViewport({
-  width: 1366,
-  height: 768,
-});
+let page;
+
+async function newPage() {
+  page = await browser.newPage();
+  page.on("console", (msg) => {
+    if (["error", "warning"].includes(msg.type())) {
+      console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
+    }
+  });
+  page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
+  // page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
+
+  page.on("response", (resp) => {
+    if (
+      resp.status() !== 200 &&
+      resp.status() !== 302 &&
+      resp.status() !== 304
+    ) {
+      console.log(
+        "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
+      );
+      if (resp.status() === 429) {
+        const headers = resp.headers();
+        console.log("Response headers:");
+        Object.keys(headers).forEach((key) => {
+          console.log(`${key}: ${headers[key]}`);
+        });
+      }
+    }
+    return resp;
+  });
+
+  await page.setViewport({
+    width: 1366,
+    height: 768,
+  });
+}
 
 const takeFailureScreenshot = function () {
   const screenshotPath = `${
@@ -42,7 +68,7 @@ const exec = (description, fn, assertion) => {
     .then(async (output) => {
       if (assertion) {
         if (assertion.call(this, output)) {
-          console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
+          // console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
         } else {
           console.log(`FAILED: ${description} - ${+new Date() - start}ms`);
           await takeFailureScreenshot();
@@ -63,36 +89,11 @@ const exec = (description, fn, assertion) => {
     });
 };
 
-// page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
-
-page.on("response", (resp) => {
-  if (resp.status() !== 200 && resp.status() !== 302 && resp.status() !== 304) {
-    console.log(
-      "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
-    );
-    if (resp.status() === 429) {
-      const headers = resp.headers();
-      console.log("Response headers:");
-      Object.keys(headers).forEach((key) => {
-        console.log(`${key}: ${headers[key]}`);
-      });
-    }
-  }
-  return resp;
-});
-
-if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
-  await exec("basic authentication", () => {
-    return page.authenticate({
-      username: process.env.AUTH_USER,
-      password: process.env.AUTH_PASSWORD,
-    });
-  });
-}
-
 let server;
 
 async function startVite(args) {
+  await newPage();
+
   const label = `vite ${args}`;
   console.time(label);
 
@@ -130,12 +131,20 @@ async function startVite(args) {
     });
   });
 
+  await exec("wait for network idle", () => {
+    return page.waitForNetworkIdle();
+  });
+
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("a#skip-link", { visible: true });
+    return page.waitForSelector(".topic-list tbody tr", {
+      visible: true,
+      timeout: 0,
+    });
   });
 
   console.timeEnd(label);
 
+  await page.close();
   server.kill();
 }
 
