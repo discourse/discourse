@@ -903,10 +903,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\":\\""}}
 
       event: content_block_delta
-      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!"}}
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!\\n"}}
 
       event: content_block_delta
-      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\n there"}}
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " there"}}
 
       event: content_block_delta
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\"}"}}
