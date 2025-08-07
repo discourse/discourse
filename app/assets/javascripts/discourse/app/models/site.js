@@ -117,11 +117,11 @@ export default class Site extends RestModel {
 
       if (!this.#siteInitialized) {
         deprecated(
-          "Warning: Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is " +
-            "deprecated and will be forbidden in future updates. The mobile mode will be determined by the viewport " +
-            "size instead and as consequence using these checks during initialization can lead to errors and " +
-            "inconsistencies when the browser window is resized. Please move these checks to a component, " +
-            "transformer, or API callback that executes during page rendering.",
+          "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is deprecated. " +
+            "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
+            "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+            "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
+            " rendering.",
           {
             since: "v3.5.0.beta9-dev",
             id: "discourse.static-mobile-mode-initializing",
