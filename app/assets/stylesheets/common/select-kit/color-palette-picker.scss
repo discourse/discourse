@@ -2,8 +2,10 @@
   &.color-palette-picker {
     .color-palette-picker-row {
       gap: 0.5em;
+
       .preview {
         background: var(--secondary--preview, #fff);
+
         svg {
           height: 40px;
         }
