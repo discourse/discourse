@@ -6,6 +6,7 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
@@ -58,7 +59,7 @@ export default RouteTemplate(
                 }}</div>
             {{/if}}
             <div class="controls">
-              <ComboBox
+              <ColorPalettePicker
                 @content={{@controller.userSelectableColorSchemes}}
                 @value={{@controller.selectedColorSchemeId}}
                 @onChange={{@controller.loadColorScheme}}
@@ -73,7 +74,7 @@ export default RouteTemplate(
             <div class="control-subgroup dark-color-scheme">
               <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
               <div class="controls">
-                <ComboBox
+                <ColorPalettePicker
                   @content={{@controller.userSelectableDarkColorSchemes}}
                   @value={{@controller.selectedDarkColorSchemeId}}
                   @onChange={{@controller.loadDarkColorScheme}}
