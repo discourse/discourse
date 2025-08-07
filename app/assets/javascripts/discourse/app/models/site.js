@@ -116,6 +116,13 @@ export default class Site extends RestModel {
       )?._booted;
 
       if (!this.#siteInitialized) {
+        if (isTesting() || isRailsTesting()) {
+          throw new Error(
+            "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase. " +
+              "Move these checks to a component, transformer, or API callback that executes during page rendering."
+          );
+        }
+
         deprecated(
           "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is deprecated. " +
             "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
