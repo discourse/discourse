@@ -83,11 +83,11 @@ describe DiscoursePostEvent::EventSummarySerializer do
 
     it "returns next dates for the every day event" do
       json = described_class.new(every_day_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(365)
+      expect(json[:event_summary][:upcoming_dates].length).to eq(31)
       expect(json[:event_summary][:upcoming_dates].last).to eq(
         {
-          starts_at: "2023-12-31 15:00:00.000000000 +0000",
-          ends_at: "2023-12-31 16:00:00.000000000 +0000",
+          starts_at: "2023-01-31 15:00:00.000000000 +0000",
+          ends_at: "2023-01-31 16:00:00.000000000 +0000",
         },
       )
     end
@@ -97,8 +97,8 @@ describe DiscoursePostEvent::EventSummarySerializer do
       expect(json[:event_summary][:upcoming_dates].length).to eq(31)
       expect(json[:event_summary][:upcoming_dates].last).to eq(
         {
-          starts_at: "2023-12-24 15:00:00.000000000 +0000", # Sunday
-          ends_at: "2023-12-24 16:00:00.000000000 +0000",
+          starts_at: "2023-07-30 15:00:00.000000000 +0000", # Sunday
+          ends_at: "2023-07-30 16:00:00.000000000 +0000",
         },
       )
     end
@@ -130,8 +130,8 @@ describe DiscoursePostEvent::EventSummarySerializer do
       expect(json[:event_summary][:upcoming_dates].length).to eq(31)
       expect(json[:event_summary][:upcoming_dates].last).to eq(
         {
-          starts_at: "2023-12-29 15:00:00.000000000 +0000", # Friday
-          ends_at: "2023-12-29 16:00:00.000000000 +0000",
+          starts_at: "2023-02-13 15:00:00.000000000 +0000", # Friday
+          ends_at: "2023-02-13 16:00:00.000000000 +0000",
         },
       )
     end
