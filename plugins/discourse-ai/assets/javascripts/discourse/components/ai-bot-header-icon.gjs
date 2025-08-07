@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { defaultHomepage } from "discourse/lib/utilities";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import { composeAiBotMessage } from "../lib/ai-bot-helper";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
@@ -17,6 +17,7 @@ export default class AiBotHeaderIcon extends Component {
   @service router;
   @service sidebarState;
   @service siteSettings;
+  @service aiConversationsSidebarManager;
 
   get bots() {
     const availableBots = this.currentUser.ai_enabled_chat_bots
@@ -28,6 +29,14 @@ export default class AiBotHeaderIcon extends Component {
 
   get showHeaderButton() {
     return this.bots.length > 0 && this.siteSettings.ai_bot_add_to_header;
+  }
+
+  get title() {
+    if (this.clickShouldRouteOutOfConversations) {
+      return i18n("discourse_ai.ai_bot.exit");
+    }
+
+    return i18n("discourse_ai.ai_bot.shortcut_title");
   }
 
   get icon() {
@@ -45,18 +54,30 @@ export default class AiBotHeaderIcon extends Component {
     );
   }
 
-  @action
-  onClick() {
+  get href() {
     if (this.clickShouldRouteOutOfConversations) {
-      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      return getURL(this.aiConversationsSidebarManager.lastKnownAppURL || "/");
     }
 
     if (this.siteSettings.ai_bot_enable_dedicated_ux) {
-      this.appEvents.trigger("discourse-ai:bot-header-icon-clicked");
-      return this.router.transitionTo("discourse-ai-bot-conversations");
+      return getURL("/discourse-ai/ai-bot/conversations");
     }
 
-    composeAiBotMessage(this.bots[0], this.composer);
+    return null;
+  }
+
+  @action
+  onClick() {
+    if (!this.siteSettings.ai_bot_enable_dedicated_ux) {
+      composeAiBotMessage(this.bots[0], this.composer);
+    }
+
+    if (
+      this.siteSettings.ai_bot_enable_dedicated_ux &&
+      !this.clickShouldRouteOutOfConversations
+    ) {
+      this.appEvents.trigger("discourse-ai:bot-header-icon-clicked");
+    }
   }
 
   <template>
@@ -67,9 +88,10 @@ export default class AiBotHeaderIcon extends Component {
           @outletArgs={{lazyHash onClick=this.onClick icon=this.icon}}
         >
           <DButton
-            @action={{this.onClick}}
+            @href={{this.href}}
+            @action={{unless this.href this.onClick}}
             @icon={{this.icon}}
-            title={{i18n "discourse_ai.ai_bot.shortcut_title"}}
+            title={{this.title}}
             class="ai-bot-button icon btn-flat"
           />
         </PluginOutlet>
