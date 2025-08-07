@@ -28,7 +28,7 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree(
         {
           "connectors/outlet/blah-1.hbs" => "{{var}}",
-          "connectors/outlet/blah-1.js" => "export default {};",
+          "connectors/outlet/blah-1.js" => "export default class MyComponent {};",
         },
       )
       expect(compiler.content.to_s).to include(
@@ -36,8 +36,10 @@ RSpec.describe ThemeJavascriptCompiler do
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
+      expect(compiler.content.to_s).to include("createTemplateFactory")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
+        "theme-1/connectors/outlet/blah-1.hbs",
       )
 
       # Colocated under `/templates/connectors`
@@ -53,8 +55,10 @@ RSpec.describe ThemeJavascriptCompiler do
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
+      expect(compiler.content.to_s).to include("createTemplateFactory")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/templates/connectors/outlet/blah-1.js",
+        "theme-1/templates/connectors/outlet/blah-1.hbs",
       )
 
       # Not colocated
@@ -70,8 +74,10 @@ RSpec.describe ThemeJavascriptCompiler do
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
+      expect(compiler.content.to_s).to include("createTemplateFactory")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
+        "theme-1/templates/connectors/outlet/blah-1.hbs",
       )
 
       # colocation in discourse directory
@@ -139,6 +145,7 @@ RSpec.describe ThemeJavascriptCompiler do
       )
       expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
       expect(compiler.content).to include("setComponentTemplate")
+      expect(compiler.content).to include("createTemplateFactory")
     end
 
     it "handles colocated admin components" do
