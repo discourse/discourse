@@ -39,16 +39,20 @@ export default class UserColorPaletteSelector extends Component {
   get userColorPalettes() {
     const availablePalettes = listColorSchemes(this.site)
       ?.map((userPalette) => {
+        const hex = userPalette.colors.find(
+          (color) => color.name === "tertiary"
+        )?.hex;
         return {
           ...userPalette,
-          accent: `#${
-            userPalette.colors.find((color) => color.name === "tertiary").hex
-          }`,
+          accent: hex && `#${hex}`,
         };
       })
       .filter((userPalette) => {
         return HORIZON_PALETTES.some((palette) => {
-          return userPalette.name.toLowerCase().includes(palette.toLowerCase());
+          return (
+            userPalette.name.toLowerCase().includes(palette.toLowerCase()) &&
+            userPalette.accent
+          );
         });
       })
       .sort();
