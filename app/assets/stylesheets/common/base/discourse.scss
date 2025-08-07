@@ -75,7 +75,7 @@
   --y-shadow-offset: 0px;
   --blur-shadow: 0px;
   --spread-shadow: 0px;
-  --d-shadow-color: rgb(0, 0, 0, 0.1);
+  --d-shadow-color: transparent;
   --d-box-shadow: var(--x-shadow-offset) var(--y-shadow-offset)
     var(--blur-shadow) var(--spread-shadow) var(--d-shadow-color);
   --d-popover-box-shadow: var(--shadow-dropdown);
