@@ -126,7 +126,7 @@ export default class ReactionsReactionButton extends Component {
       {{else if @post.current_user_reaction}}
         <DButton
           type="button"
-          class="btn-icon btn no-text btn-flat reaction-button"
+          class="btn-icon no-text btn-flat reaction-button"
           title={{this.title}}
         >
           <img
@@ -138,7 +138,7 @@ export default class ReactionsReactionButton extends Component {
       {{else}}
         <DButton
           type="button"
-          class="btn-toggle-reaction-like btn btn-flat btn-icon no-text reaction-button"
+          class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           title={{this.title}}
         >
           {{icon
