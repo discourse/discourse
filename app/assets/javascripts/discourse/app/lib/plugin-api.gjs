@@ -5,7 +5,6 @@
 
 export const PLUGIN_API_VERSION = "2.1.1";
 
-import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -27,7 +26,6 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -2132,13 +2130,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
