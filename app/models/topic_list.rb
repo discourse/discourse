@@ -139,7 +139,7 @@ class TopicList
       { category: :parent_category },
     ]
 
-    topic_preloader_associations << :topic_localizations if SiteSetting.content_localization_enabled
+    topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]
