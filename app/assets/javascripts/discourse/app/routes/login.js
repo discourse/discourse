@@ -17,7 +17,7 @@ export default class extends DiscourseRoute {
   @service site;
   @service siteSettings;
 
-  isRedirecting = false;
+  #isRedirecting = false;
 
   beforeModel(transition) {
     const { from, wantsTo } = transition;
@@ -69,7 +69,7 @@ export default class extends DiscourseRoute {
     // Automatically kick off the external login if it's the only one available
     if (isOnlyOneExternalLoginMethod) {
       if (auth_immediately || login_required || !from || wantsTo) {
-        this.isRedirecting = true;
+        this.#isRedirecting = true;
         singleExternalLogin();
       } else {
         router.replaceWith("discovery.login-required");
@@ -78,6 +78,8 @@ export default class extends DiscourseRoute {
   }
 
   setupController(controller) {
+    const { enable_discourse_connect } = this.siteSettings;
+
     super.setupController(...arguments);
 
     // We're in the middle of an authentication flow
@@ -85,6 +87,8 @@ export default class extends DiscourseRoute {
       return;
     }
 
-    controller.isRedirectingToExternalAuth = this.isRedirecting;
+    // Shows the loading spinner while waiting for the redirection to external auth
+    controller.isRedirectingToExternalAuth =
+      this.#isRedirecting || enable_discourse_connect;
   }
 }
