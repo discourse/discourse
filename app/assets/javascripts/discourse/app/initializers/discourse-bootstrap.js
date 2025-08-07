@@ -77,8 +77,9 @@ export default {
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
-    session.userColorSchemeId = parseInt(setupData.userColorSchemeId, 10);
-    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10);
+    session.userColorSchemeId =
+      parseInt(setupData.userColorSchemeId, 10) || null;
+    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
     let iconList = setupData.svgIconList;
     if (isDevelopment() && iconList) {
