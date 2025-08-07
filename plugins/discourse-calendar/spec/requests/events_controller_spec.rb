@@ -29,6 +29,18 @@ module DiscoursePostEvent
         # TODO: There is still N+1 query problem here so uncomment this line when it is fixed
         # expect(new_queries.count).to eq(original_queries.count)
       end
+
+      context "when an event is recurring" do
+        before { event_1.update!(recurrence: "every_day") }
+
+        it "limits upcoming dates count to 31" do
+          get "/discourse-post-event/events.json"
+
+          expect(response.status).to eq(200)
+          events = response.parsed_body["events"]
+          expect(events[0]["upcoming_dates"].length).to eq(31)
+        end
+      end
     end
 
     context "with an existing post" do
