@@ -80,6 +80,13 @@ module DiscourseAi
         end
         # Escape the string as JSON and remove surrounding quotes
         escaped_json = raw_json.dump[1..-2]
+
+        # Assume we could have already processed some of the chunk which was stored in the parser's buffer.
+        already_processed_chunk = @parser.buf
+        escaped_json = escaped_json[already_processed_chunk.length..] if escaped_json.start_with?(
+          already_processed_chunk,
+        )
+
         @parser << escaped_json
       rescue DiscourseAi::Completions::ParserError
         @broken = true
