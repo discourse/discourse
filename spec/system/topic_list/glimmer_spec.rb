@@ -129,7 +129,7 @@ describe "glimmer topic list", type: :system do
   end
 
   it "unpins globally pinned topics on click" do
-    topic = Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
+    Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
     visit("/latest")
 
     expect(page).to have_css(".topic-list-item .d-icon-thumbtack:not(.unpinned)")
@@ -139,5 +139,24 @@ describe "glimmer topic list", type: :system do
 
     wait_for { TopicUser.exists?(topic:, user:) }
     expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
+  end
+
+  it "ensures visited topics have a different color" do
+    not_visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: not_visited_topic)
+
+    visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: visited_topic)
+
+    visit(visited_topic.url)
+
+    # Clicking the logo is "safer" than visiting /latest so the client-side
+    # app can update the visited status of the topic
+    find("#site-logo").click
+
+    visited_color = find(".topic-list .topic-list-item.visited a.title").style("color")
+    not_visited_color = find(".topic-list .topic-list-item:not(.visited) a.title").style("color")
+
+    expect(visited_color).to_not eq(not_visited_color)
   end
 end
