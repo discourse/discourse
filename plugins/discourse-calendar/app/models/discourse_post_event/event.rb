@@ -66,6 +66,8 @@ module DiscoursePostEvent
     def set_next_date
       next_dates = calculate_next_date
       return if !next_dates
+      # already scheduled so no need to create it again
+      return if event_dates.exists?(starts_at: next_dates[:starts_at])
 
       event_dates.create!(
         starts_at: next_dates[:starts_at],
