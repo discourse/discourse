@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
@@ -204,9 +205,11 @@ export default class DiscourseReactionsCounter extends Component {
         {{#if (and @post.yours this.onlyOneMainReaction)}}
           <div class="discourse-reactions-reaction-button my-likes">
             <DButton
+              type="button"
               class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-              @icon={{this.siteSettings.discourse_reactions_like_icon}}
-            />
+            >
+              {{icon this.siteSettings.discourse_reactions_like_icon}}
+            </DButton>
           </div>
         {{/if}}
       {{/if}}
