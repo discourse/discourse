@@ -24,6 +24,28 @@ module PageObjects
         page.find('.dark-mode input[type="checkbox"]')
       end
 
+      def light_scheme_dropdown
+        PageObjects::Components::SelectKit.new(".light-color-scheme .select-kit")
+      end
+
+      def dark_scheme_dropdown
+        PageObjects::Components::SelectKit.new(".dark-color-scheme .select-kit")
+      end
+
+      def has_light_scheme_css?(color_scheme)
+        expect(page).to have_css(
+          "link.light-scheme[data-scheme-id=\"#{color_scheme.id}\"]",
+          visible: false,
+        )
+      end
+
+      def has_dark_scheme_css?(color_scheme)
+        expect(page).to have_css(
+          "link.dark-scheme[data-scheme-id=\"#{color_scheme.id}\"]",
+          visible: false,
+        )
+      end
+
       def color_mode_dropdown
         PageObjects::Components::SelectKit.new(".interface-color-mode .select-kit")
       end
