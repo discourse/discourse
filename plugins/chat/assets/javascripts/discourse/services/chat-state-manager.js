@@ -28,7 +28,6 @@ export default class ChatStateManager extends Service {
   @service router;
   @service site;
   @service chatDrawerRouter;
-  @service routeHistory;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
