@@ -5,7 +5,11 @@ import { getColorSchemeStyles } from "discourse/lib/color-transformations";
 
 export default class ColorPalettePreview extends Component {
   get isBuiltInDefault() {
-    return this.args.scheme?.is_builtin_default || false;
+    return (
+      this.args.scheme?.is_builtin_default ||
+      !this.args.scheme?.colors?.length ||
+      false
+    );
   }
 
   get styles() {
@@ -27,7 +31,10 @@ export default class ColorPalettePreview extends Component {
           if (hex && !hex.startsWith("#")) {
             hex = `#${hex}`;
           }
-          return `--${color.name}--preview: ${hex}`;
+
+          const name = color.name.replaceAll("_", "-");
+
+          return `--${name}--preview: ${hex}`;
         })
         .join("; ") || "";
 
