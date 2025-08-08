@@ -65,27 +65,6 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
   });
 
-  test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
-    let site = Site.current();
-    site.set("user_themes", [
-      { theme_id: 1, name: "Cool Theme", color_scheme_id: null },
-    ]);
-
-    site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
-
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".light-color-scheme").exists("has regular dropdown");
-
-    assert.strictEqual(
-      selectKit(".light-color-scheme .select-kit").header().value(),
-      null
-    );
-    assert.strictEqual(
-      selectKit(".light-color-scheme .select-kit").header().label(),
-      i18n("user.color_schemes.default_description")
-    );
-  });
-
   skip("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
     let meta = document.createElement("meta");
     meta.name = "discourse_theme_id";
@@ -202,11 +181,14 @@ acceptance(
         );
     });
 
-    test("display 'Theme default' when default color scheme is not marked as selectable", async function (assert) {
+    test("always display 'Theme default'", async function (assert) {
       let meta = document.createElement("meta");
       meta.name = "discourse_theme_id";
       meta.content = "1";
       document.getElementsByTagName("head")[0].appendChild(meta);
+
+      let session = Session.current();
+      session.userColorSchemeId = -1;
 
       let site = Site.current();
       site.set("user_themes", [
@@ -219,14 +201,14 @@ acceptance(
 
       assert.dom(".light-color-scheme").exists("has regular dropdown");
       const dropdownObject = selectKit(".light-color-scheme .select-kit");
-      assert.strictEqual(dropdownObject.header().value(), null);
+      assert.strictEqual(dropdownObject.header().value(), "-1");
       assert.strictEqual(
         dropdownObject.header().label(),
         i18n("user.color_schemes.default_description")
       );
 
       await dropdownObject.expand();
-      assert.strictEqual(dropdownObject.rows().length, 1);
+      assert.strictEqual(dropdownObject.rows().length, 2);
 
       document.querySelector("meta[name='discourse_theme_id']").remove();
     });
@@ -302,8 +284,8 @@ acceptance(
       // dark scheme
       await selectKit(".dark-color-scheme .combobox").expand();
       assert.true(
-        selectKit(".dark-color-scheme .combobox").rowByValue(1).exists(),
-        "default dark scheme is included"
+        selectKit(".dark-color-scheme .combobox").rowByValue(3).exists(),
+        "user selectable dark scheme is included"
       );
 
       await click("button.undo-preview");
