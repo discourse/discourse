@@ -600,6 +600,16 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("hr")
     end
 
+    it "creates hard break when pressing Enter after double space at end of line" do
+      open_composer
+      composer.type_content("Line with double space  ")
+      composer.send_keys(:enter)
+      composer.type_content("Next line")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("Line with double space\nNext line")
+    end
+
     it "supports Backspace to reset a heading" do
       open_composer
       composer.type_content("# With text")

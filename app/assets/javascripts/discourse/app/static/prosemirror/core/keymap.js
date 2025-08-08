@@ -8,7 +8,7 @@ import {
 import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
 import { splitListItem } from "prosemirror-schema-list";
-import { atBlockStart } from "../lib/plugin-utils";
+import { atBlockStart, inNode } from "../lib/plugin-utils";
 
 const BACKSPACE_UNSET_NODES = ["heading", "code_block"];
 
@@ -69,7 +69,31 @@ export function buildKeymap(
     return true;
   });
 
-  keys["Enter"] = splitListItem(schema.nodes.list_item);
+  const doubleSpaceHardBreak = (state, dispatch) => {
+    const { $from } = state.selection;
+    if ($from.parent.type.spec.code || inNode(state, schema.nodes.code_block)) {
+      return false;
+    }
+
+    if ($from.nodeBefore?.text.endsWith("  ")) {
+      if (dispatch) {
+        const tr = state.tr.replaceRangeWith(
+          $from.pos - 2,
+          $from.pos,
+          schema.nodes.hard_break.create()
+        );
+
+        dispatch(tr.scrollIntoView());
+      }
+      return true;
+    }
+    return false;
+  };
+
+  keys["Enter"] = chainCommands(
+    doubleSpaceHardBreak,
+    splitListItem(schema.nodes.list_item)
+  );
 
   keys["Mod-Shift-_"] = (state, dispatch) => {
     dispatch?.(
