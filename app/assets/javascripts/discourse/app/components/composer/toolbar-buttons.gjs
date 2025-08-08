@@ -67,6 +67,7 @@ export default class ComposerToolbarButtons extends Component {
               @icon={{button.icon}}
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
+              aria-keyshortcuts={{button.ariaKeyshortcuts}}
               tabindex={{this.tabIndex button}}
               class={{concatClass
                 "toolbar__button"
