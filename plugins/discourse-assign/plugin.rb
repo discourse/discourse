@@ -914,7 +914,7 @@ after_initialize do
     group_ids = []
     group_ids.concat(Group.where(name: remaining_names).pluck(:id)) if remaining_names.present?
 
-    next scope.where("1 = 0") if user_ids.empty? && group_ids.empty?
+    next scope.none if user_ids.empty? && group_ids.empty?
 
     assignment_query = Assignment.none # needed cause we are adding .or later
 
