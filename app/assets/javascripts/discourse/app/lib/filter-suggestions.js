@@ -86,7 +86,6 @@ export default class FilterSuggestions {
         continue;
       }
 
-      // Add prefixed versions if applicable
       if (tip.prefixes && prefix) {
         const matchingPrefix = tip.prefixes.find((p) => p.name === prefix);
         if (matchingPrefix) {
@@ -98,7 +97,6 @@ export default class FilterSuggestions {
           });
         }
       } else if (!prefix) {
-        // Add the base tip
         filtered.push(tip);
 
         // Add all prefix variations if searching from empty
@@ -115,7 +113,6 @@ export default class FilterSuggestions {
       }
     }
 
-    // Sort by relevance
     return filtered.sort((a, b) => {
       const aStarts = a.name.toLowerCase().startsWith(searchLower);
       const bStarts = b.name.toLowerCase().startsWith(searchLower);
@@ -264,15 +261,11 @@ class FilterValueSuggester {
     if (!this.tip.delimiters || this.tip.delimiters.length === 0) {
       return results;
     }
-
-    // Tag suggestions should carry delimiters so the UI won't add space
     results.forEach((r) => (r.delimiters = this.tip.delimiters));
 
-    // Exclude already selected values
     const used = new Set(this.previousValues.map((v) => v.toLowerCase()));
     results = results.filter((r) => !used.has((r.term || "").toLowerCase()));
 
-    // If current term exactly matches a suggestion, offer delimiter actions
     const searchLower = (this.searchTerm || "").toLowerCase();
     if (
       searchLower &&
@@ -381,7 +374,6 @@ class FilterValueSuggester {
         }));
     }
 
-    // Add users
     try {
       const userData = { limit: 10 };
       if (this.searchTerm) {
