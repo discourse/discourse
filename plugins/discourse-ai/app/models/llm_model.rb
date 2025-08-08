@@ -55,7 +55,7 @@ class LlmModel < ActiveRecord::Base
         enable_responses_api: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default low medium high],
+          values: %w[default minimal low medium high],
           default: "default",
         },
       },
