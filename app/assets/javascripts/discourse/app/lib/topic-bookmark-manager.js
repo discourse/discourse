@@ -25,6 +25,10 @@ export default class TopicBookmarkManager {
           bookmark.bookmarkable_id === this.model.id &&
           bookmark.bookmarkable_type === this.type
       ) || this.bookmarkApi.buildNewBookmark(this.type, this.model.id);
+    this.reset();
+  }
+
+  reset() {
     this.trackedBookmark = new BookmarkFormData(this.bookmarkModel);
   }
 
@@ -33,15 +37,20 @@ export default class TopicBookmarkManager {
       .create(this.trackedBookmark)
       .then((updatedBookmark) => {
         this.trackedBookmark = updatedBookmark;
+        this._syncBookmarks(updatedBookmark.saveData);
       });
   }
 
   delete() {
-    return this.bookmarkApi.delete(this.trackedBookmark.id);
+    return this.bookmarkApi.delete(this.trackedBookmark.id).then(() => {
+      this.topicController.model.removeBookmark(this.trackedBookmark.id);
+    });
   }
 
   save() {
-    return this.bookmarkApi.update(this.trackedBookmark);
+    return this.bookmarkApi.update(this.trackedBookmark).then(() => {
+      this._syncBookmarks(this.trackedBookmark.saveData);
+    });
   }
 
   // noop for topics
@@ -73,13 +82,16 @@ export default class TopicBookmarkManager {
   }
 
   _syncBookmarks(data) {
-    if (!this.topicController.bookmarks) {
-      this.topicController.set("bookmarks", []);
+    if (!this.topicController.model.bookmarks) {
+      this.topicController.model.set("bookmarks", []);
     }
 
-    const bookmark = this.topicController.bookmarks.findBy("id", data.id);
+    const bookmark = this.topicController.model.bookmarks.find(
+      (bm) => bm.id === data.id
+    );
     if (!bookmark) {
-      this.topicController.bookmarks.pushObject(Bookmark.create(data));
+      this.topicController.model.bookmarks.pushObject(Bookmark.create(data));
+      this.topicController.model.incrementProperty("bookmarksWereChanged");
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;

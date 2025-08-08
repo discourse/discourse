@@ -1,5 +1,10 @@
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
+import { i18n } from "discourse-i18n";
 
 const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;
@@ -56,8 +61,7 @@ export default {
       dependentKeys: ["topic.details.can_flag_topic", "topic.isPrivateMessage"],
       displayed() {
         return (
-          this.get("topic.details.can_flag_topic") &&
-          !this.get("topic.isPrivateMessage")
+          this.topic.details.can_flag_topic && !this.topic.isPrivateMessage
         );
       },
     });
@@ -70,11 +74,54 @@ export default {
 
       // NOTE: These are null because the BookmarkMenu component is used
       // for this button instead in the template.
+
       icon() {
-        return null;
+        if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
+          return WITH_REMINDER_ICON;
+        }
+        return NO_REMINDER_ICON;
+      },
+      classNames() {
+        return this.topic.bookmarked
+          ? ["bookmark", "bookmarked"]
+          : ["bookmark"];
+      },
+      label() {
+        if (!this.topic.isPrivateMessage || this.site.mobileView) {
+          const topicBookmarkCount = this.topic.bookmarkCount;
+          if (topicBookmarkCount === 0) {
+            return "bookmarked.title";
+          } else if (topicBookmarkCount === 1) {
+            return "bookmarked.edit_bookmark";
+          } else {
+            return "bookmarked.clear_bookmarks";
+          }
+        }
       },
       translatedTitle() {
-        return null;
+        const topicBookmarkCount = this.topic.bookmarkCount;
+        if (topicBookmarkCount === 0) {
+          return i18n("bookmarked.help.bookmark");
+        } else if (topicBookmarkCount === 1) {
+          const anyTopicBookmarks = this.topic.bookmarks.some(
+            (bookmark) => bookmark.bookmarkable_type === "Topic"
+          );
+
+          if (anyTopicBookmarks) {
+            return i18n("bookmarked.help.edit_bookmark_for_topic");
+          } else {
+            return i18n("bookmarked.help.edit_bookmark");
+          }
+        } else if (
+          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
+        ) {
+          return i18n("bookmarked.help.unbookmark_with_reminder");
+        } else {
+          return i18n("bookmarked.help.unbookmark");
+        }
+      },
+      dropdown() {
+        return this.site.mobileView;
       },
     });
 
