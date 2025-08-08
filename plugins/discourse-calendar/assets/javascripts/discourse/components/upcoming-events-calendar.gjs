@@ -17,6 +17,7 @@ export default class UpcomingEventsCalendar extends Component {
   @service router;
   @service capabilities;
   @service siteSettings;
+  @service discoursePostEventService;
 
   @tracked resolvedEvents;
 
