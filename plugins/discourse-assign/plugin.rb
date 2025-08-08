@@ -909,6 +909,9 @@ after_initialize do
     found_names, user_ids =
       User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).transpose
 
+    found_names ||= []
+    user_ids ||= []
+
     # a bit edge casey cause we have username_lower for users but not for groups
     # we share a namespace though so in practice this is ok
     remaining_names = names - found_names
