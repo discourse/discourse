@@ -63,10 +63,6 @@ export default RouteTemplate(
                 @content={{@controller.userSelectableColorSchemes}}
                 @value={{@controller.selectedColorSchemeId}}
                 @onChange={{@controller.loadColorScheme}}
-                @options={{hash
-                  translatedNone=@controller.selectedColorSchemeNoneLabel
-                  autoInsertNoneItem=@controller.showColorSchemeNoneItem
-                }}
               />
             </div>
           </div>

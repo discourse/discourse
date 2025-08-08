@@ -11,6 +11,7 @@ class Topic < ActiveRecord::Base
   include Trashable
   include Searchable
   include LimitedEdit
+  include Localizable
   extend Forwardable
 
   EXTERNAL_ID_MAX_LENGTH = 50
@@ -30,8 +31,6 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
-
-  has_many :topic_localizations, dependent: :destroy
 
   def self.max_fancy_title_length
     400
@@ -2137,22 +2136,11 @@ class Topic < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    topic_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+    localizations.exists?(locale: locale.to_s.sub("-", "_"))
   end
 
   def in_user_locale?
     LocaleNormalizer.is_same?(locale, I18n.locale)
-  end
-
-  def get_localization(locale = I18n.locale)
-    locale_str = locale.to_s.sub("-", "_")
-
-    # prioritise exact match
-    if match = topic_localizations.find { |l| l.locale == locale_str }
-      return match
-    end
-
-    topic_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

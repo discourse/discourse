@@ -84,6 +84,8 @@ export const MENU = {
     contentClass: null,
     class: null,
     updateOnScroll: true,
+    matchTriggerMinWidth: false,
+    matchTriggerWidth: false,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

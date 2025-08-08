@@ -36,7 +36,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", i18n("sidebar.panels.forum.label"))
+      .hasAttribute("title", i18n("chat.exit"))
       .hasAttribute("href", "/latest");
 
     assert.dom(".d-icon-shuffle").exists();
@@ -68,7 +68,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", i18n("sidebar.panels.forum.label"))
+      .hasAttribute("title", i18n("chat.exit"))
       .hasAttribute("href", "/latest");
     assert.dom(".d-icon-shuffle").exists();
     assert.dom(".chat-channel-unread-indicator__number").doesNotExist();
