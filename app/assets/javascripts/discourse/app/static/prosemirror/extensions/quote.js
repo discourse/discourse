@@ -4,9 +4,6 @@ const extension = {
     quote: {
       content: "block+",
       group: "block",
-      inline: false,
-      selectable: true,
-      isolating: true,
       attrs: {
         username: { default: null },
         postNumber: { default: null },
