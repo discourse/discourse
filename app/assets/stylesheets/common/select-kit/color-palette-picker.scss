@@ -14,14 +14,15 @@
         background-color: var(--tertiary);
         color: var(--secondary);
         position: absolute;
-        left: 8px;
-        top: 8px;
+        left: 10px;
+        top: 10px;
         font-size: var(--font-down-6);
         text-transform: uppercase;
       }
 
       &__preview {
         background: var(--secondary--preview, #fff);
+        padding: 0.25em;
 
         svg {
           height: 40px;
