@@ -878,87 +878,97 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id, topic_with_tag_and_tag2_and_tag3.id)
       end
 
-      describe "when query string is `tags:tag1,tag2 tags:tag3,tag4`" do
-        fab!(:tag4) { Fabricate(:tag, name: "tag4") }
+      describe "when query string is `tags:front-end,back-end tags:pri-high,pri-low`" do
+        fab!(:front_end) { Fabricate(:tag, name: "front-end") }
+        fab!(:back_end) { Fabricate(:tag, name: "back-end") }
+        fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
+        fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
 
-        it "should only return topics that are tagged with tag1+tag3, tag1+tag4, tag2+tag3, tag2+tag4" do
-          topic_with_tag1_tag3 = Fabricate(:topic, tags: [tag, tag3])
-          topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
-          topic_with_tag2_tag3 = Fabricate(:topic, tags: [tag2, tag3])
-          topic_with_tag2_tag4 = Fabricate(:topic, tags: [tag2, tag4])
+        it "should only return topics that are tagged with front-end+pri-high, front-end+pri-low, back-end+pri-high, back-end+pri-low" do
+          topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
+          topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
+          topic_with_back_end_pri_high = Fabricate(:topic, tags: [back_end, pri_high])
+          topic_with_back_end_pri_low = Fabricate(:topic, tags: [back_end, pri_low])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [front_end, back_end])
 
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
               .filter_from_query_string(
-                "tags:#{tag.name},#{tag2.name} tags:#{tag3.name},#{tag4.name}",
+                "tags:#{front_end.name},#{back_end.name} tags:#{pri_high.name},#{pri_low.name}",
               )
               .pluck(:id),
           ).to contain_exactly(
-            topic_with_tag1_tag3.id,
-            topic_with_tag1_tag4.id,
-            topic_with_tag2_tag3.id,
-            topic_with_tag2_tag4.id,
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_back_end_pri_high.id,
+            topic_with_back_end_pri_low.id,
           )
         end
 
-        it "should return topics that are tagged with tag1+tag2+tag3, tag1+tag2+tag4, tag1+tag3+tag4, tag2+tag3+tag4" do
-          topic_with_tag1_tag2_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
-          topic_with_tag1_tag2_tag4 = Fabricate(:topic, tags: [tag, tag2, tag4])
-          topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
-          topic_with_tag2_tag3_tag4 = Fabricate(:topic, tags: [tag2, tag3, tag4])
+        it "should return topics that are tagged with front-end+back-end+pri-low or front-end+back-end+pri-high" do
+          topic_with_front_end_back_end_pri_low =
+            Fabricate(:topic, tags: [front_end, back_end, pri_low])
+          topic_with_front_end_back_end_pri_high =
+            Fabricate(:topic, tags: [front_end, back_end, pri_high])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [front_end, back_end])
 
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
               .filter_from_query_string(
-                "tags:#{tag.name},#{tag2.name} tags:#{tag3.name},#{tag4.name}",
+                "tags:#{front_end.name},#{back_end.name} tags:#{pri_low.name},#{pri_high.name}",
               )
               .pluck(:id),
           ).to contain_exactly(
-            topic_with_tag1_tag2_tag3.id,
-            topic_with_tag1_tag2_tag4.id,
-            topic_with_tag1_tag3_tag4.id,
-            topic_with_tag2_tag3_tag4.id,
+            topic_with_front_end_back_end_pri_low.id,
+            topic_with_front_end_back_end_pri_high.id,
           )
         end
       end
 
-      describe "when query string is `tags:tag1 tags:tag3,tag4`" do
-        fab!(:tag4) { Fabricate(:tag, name: "tag4") }
+      describe "when query string is `tags:front-end tags:pri-high,pri-low`" do
+        fab!(:front_end) { Fabricate(:tag, name: "front-end") }
+        fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
+        fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
 
-        it "should only return topics tagged with tag1 and or tag3 or tag4 " do
-          topic_with_tag1_tag3 = Fabricate(:topic, tags: [tag, tag3])
-          topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
-          topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
-          Fabricate(:topic, tags: [tag3, tag4])
+        it "should only return topics tagged with front-end and or pri-high or pri-low" do
+          topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
+          topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
+          topic_with_front_end_pri_high_pri_low =
+            Fabricate(:topic, tags: [front_end, pri_high, pri_low])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [pri_high, pri_low])
 
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("tags:#{tag.name} tags:#{tag3.name},#{tag4.name}")
+              .filter_from_query_string(
+                "tags:#{front_end.name} tags:#{pri_high.name},#{pri_low.name}",
+              )
               .pluck(:id),
           ).to contain_exactly(
-            topic_with_tag1_tag3.id,
-            topic_with_tag1_tag4.id,
-            topic_with_tag1_tag3_tag4.id,
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_front_end_pri_high_pri_low.id,
           )
-        end
 
-        it "should work even if the query is reverted" do
-          topic_with_tag1_tag3 = Fabricate(:topic, tags: [tag, tag3])
-          topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
-          topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
-          Fabricate(:topic, tags: [tag3, tag4])
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("tags:#{tag3.name},#{tag4.name} tags:#{tag.name}")
+              .filter_from_query_string(
+                "tags:#{pri_high.name},#{pri_low.name} tags:#{front_end.name}",
+              )
               .pluck(:id),
           ).to contain_exactly(
-            topic_with_tag1_tag3.id,
-            topic_with_tag1_tag4.id,
-            topic_with_tag1_tag3_tag4.id,
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_front_end_pri_high_pri_low.id,
           )
         end
       end
