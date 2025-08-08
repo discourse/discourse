@@ -67,10 +67,6 @@ input[type="color"]:focus,
   outline: 2px solid var(--accent-color);
 }
 
-#reply-control {
-  background-color: var(--background-color);
-}
-
 @include viewport.until(sm) {
   // pinned topic excerpts are hidden on small screens too
   .fk-d-menu__trigger.topic-list-layout-trigger {
