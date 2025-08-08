@@ -23,6 +23,7 @@
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
     "@fullcalendar/list": "^6.1.18",
+    "@fullcalendar/rrule": "^6.1.18",
     "@fullcalendar/timegrid": "^6.1.18",
     "@glimmer/syntax": "0.93.1",
     "@highlightjs/cdn-assets": "11.11.1",
@@ -58,7 +59,8 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.40.0"
+    "prosemirror-view": "^1.40.0",
+    "rrule": "^2.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

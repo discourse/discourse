@@ -47,16 +47,6 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
-            upcoming_dates: [
-              {
-                starts_at: tomorrow().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: tomorrow().format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-              {
-                starts_at: twoDays().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: twoDays().format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-            ],
             category_id: 1,
           },
           {

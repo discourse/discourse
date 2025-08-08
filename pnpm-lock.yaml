@@ -272,6 +272,9 @@ importers:
       '@fullcalendar/list':
         specifier: ^6.1.18
         version: 6.1.18(@fullcalendar/core@6.1.18)
+      '@fullcalendar/rrule':
+        specifier: ^6.1.18
+        version: 6.1.18(@fullcalendar/core@6.1.18)(rrule@2.8.1)
       '@fullcalendar/timegrid':
         specifier: ^6.1.18
         version: 6.1.18(@fullcalendar/core@6.1.18)
@@ -380,6 +383,9 @@ importers:
       prosemirror-view:
         specifier: ^1.40.0
         version: 1.40.0
+      rrule:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@babel/core':
         specifier: ^7.28.0
@@ -698,7 +704,7 @@ importers:
         version: 4.3.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5))
     devDependencies:
       ember-cli:
         specifier: ~6.6.0
@@ -1080,7 +1086,7 @@ importers:
         version: 5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5))
       fastestsmallesttextencoderdecoder:
         specifier: ^1.0.22
         version: 1.0.22
@@ -2165,6 +2171,12 @@ packages:
     resolution: {integrity: sha512-XPZI50mq3HXyDQ5sT3jmqQUuwG8zQb5H14dQIUAmOHAIFRA3WpkxlzrXO0U1SrosvGySMPyyNNxvMKI1Q/jL7A==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.18
+
+  '@fullcalendar/rrule@6.1.18':
+    resolution: {integrity: sha512-9I3ZQgpedog1odVLOmY4zFLuIauU1gGlN67+ZmCNA12hRpcp3LPI84FSm7q2fC/7SPw5C7R3092DU35+7ooe5Q==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.18
+      rrule: ^2.6.0
 
   '@fullcalendar/timegrid@6.1.18':
     resolution: {integrity: sha512-T/ouhs+T1tM8JcW7Cjx+KiohL/qQWKqvRITwjol8ktJ1e1N/6noC40/obR1tyolqOxMRWHjJkYoj9fUqfoez9A==}
@@ -7869,6 +7881,9 @@ packages:
       route-recognizer: ^0.3.4
       rsvp: ^4.8.5
 
+  rrule@2.8.1:
+    resolution: {integrity: sha512-hM3dHSBMeaJ0Ktp7W38BJZ7O1zOgaFEsn41PDk+yHoEtfLV+PoJt9E9xAlZiWgf/iqEqionN0ebHFZIDAp+iGw==}
+
   rrweb-cssom@0.7.1:
     resolution: {integrity: sha512-TrEMa7JGdVm0UThDJSx7ddw5nVm3UJS9o9CCIZ72B1vSyEZoziDqBYP3XIoi/12lKrJR8rE3jeFHMok2F/Mnsg==}
 
@@ -10609,6 +10624,11 @@ snapshots:
   '@fullcalendar/list@6.1.18(@fullcalendar/core@6.1.18)':
     dependencies:
       '@fullcalendar/core': 6.1.18
+
+  '@fullcalendar/rrule@6.1.18(@fullcalendar/core@6.1.18)(rrule@2.8.1)':
+    dependencies:
+      '@fullcalendar/core': 6.1.18
+      rrule: 2.8.1
 
   '@fullcalendar/timegrid@6.1.18(@fullcalendar/core@6.1.18)':
     dependencies:
@@ -14007,7 +14027,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8))):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.4.1
@@ -17619,6 +17639,10 @@ snapshots:
       '@glimmer/env': 0.1.7
       route-recognizer: 0.3.4
       rsvp: 4.8.5
+
+  rrule@2.8.1:
+    dependencies:
+      tslib: 2.8.1
 
   rrweb-cssom@0.7.1: {}
 

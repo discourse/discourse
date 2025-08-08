@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import CategoryCalendar from "../../components/category-calendar";
 
 export default class CategoryEventsCalendar extends Component {
   static shouldRender(_, ctx) {
@@ -8,7 +9,5 @@ export default class CategoryEventsCalendar extends Component {
     );
   }
 
-  <template>
-    <div id="category-events-calendar"></div>
-  </template>
+  <template><CategoryCalendar /></template>
 }
