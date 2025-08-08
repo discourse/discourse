@@ -757,8 +757,8 @@ class Reviewable < ActiveRecord::Base
     actions.add(:delete_user_block, bundle: bundle) do |a|
       a.icon = "ban"
       a.label = "reviewables.actions.reject_user.block.title"
-      a.description = "reviewables.actions.reject_user.block.description"
       a.require_reject_reason = require_reject_reason
+      a.description = "reviewables.actions.reject_user.block.description"
     end
   end
 
