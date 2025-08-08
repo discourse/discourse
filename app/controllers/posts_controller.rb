@@ -591,10 +591,13 @@ class PostsController < ApplicationController
         0
       ] if post_revision.modifications["category_id"].present? &&
         post_revision.modifications["category_id"][0] != topic.category.id
-      changes[:tags] = post_revision.modifications["tags"][0].split(
-        ",",
-      ) if post_revision.modifications["tags"].present? &&
-        post_revision.modifications["tags"][0] != topic.tags.pluck(:name).sort.join(",")
+      if post_revision.modifications["tags"].present?
+        revision_tags = post_revision.modifications["tags"][0]
+        revision_tags = revision_tags.is_a?(Array) ? revision_tags : revision_tags.split(",")
+        current_tags = topic.tags.pluck(:name)
+
+        changes[:tags] = revision_tags if revision_tags.sort != current_tags.sort
+      end
     end
     return render_json_error(I18n.t("revert_version_same")) if changes.length <= 0
     changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
