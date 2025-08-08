@@ -53,10 +53,8 @@ export default {
                 ...properties,
               };
 
-              router.transitionTo("login").then((login) => {
-                for (const [key, value] of Object.entries(props)) {
-                  login.controller.set(key, value);
-                }
+              router.transitionTo("login").then(({ controller }) => {
+                controller.setProperties(...props);
               });
 
               next(() => callback?.());
