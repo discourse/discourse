@@ -8,7 +8,6 @@ import loadFullCalendar from "discourse/lib/load-full-calendar";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import { formatEventName } from "../helpers/format-event-name";
-import addRecurrentEvents from "../lib/add-recurrent-events";
 import fullCalendarDefaultOptions from "../lib/full-calendar-default-options";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 import FullCalendar from "./full-calendar";
@@ -19,62 +18,11 @@ export default class UpcomingEventsCalendar extends Component {
   @service router;
   @service capabilities;
   @service siteSettings;
+  @service discoursePostEventService;
 
   @tracked resolvedEvents;
 
   _calendar = null;
-
-  constructor() {
-    super(...arguments);
-
-    this.resolvedEvents = this.args.events
-      ? this.args.events
-      : this.args.controller.model;
-  }
-
-  get displayFilters() {
-    return this.currentUser && this.args.controller;
-  }
-
-  @action
-  teardown() {
-    this._calendar?.destroy?.();
-    this._calendar = null;
-  }
-
-  @action
-  async renderCalendar(calendarNode) {
-    const calendarModule = await loadFullCalendar();
-
-    let headerToolbar;
-
-    if (!this.capabilities.viewport.sm) {
-      headerToolbar = {
-        left: "title prev,next,today",
-        center: "allEvents,mineEvents timeGridWeek,timeGridDay,listNextYear",
-        right: "",
-      };
-    } else {
-      headerToolbar = {
-        left: "allEvents,mineEvents prev,next,today",
-        center: "title",
-        right: "timeGridWeek,timeGridDay,listNextYear",
-      };
-    }
-
-    this._calendar = new calendarModule.Calendar(calendarNode, {
-      ...fullCalendarDefaultOptions(),
-
-      datesSet: (info) => {
-        if (this.router?.transitionTo) {
-          this.router.transitionTo({ queryParams: { view: info.view.type } });
-        }
-      },
-      headerToolbar,
-    });
-
-    this._calendar.render();
-  }
 
   get customButtons() {
     if (
@@ -109,10 +57,13 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   get events() {
-    const tagsColorsMap = JSON.parse(this.siteSettings.map_events_to_color);
-    const originalEventAndRecurrents = addRecurrentEvents(this.resolvedEvents);
+    if (!this.resolvedEvents) {
+      return [];
+    }
 
-    return (originalEventAndRecurrents || []).map((event) => {
+    const tagsColorsMap = JSON.parse(this.siteSettings.map_events_to_color);
+
+    return (this.resolvedEvents || []).map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
       let backgroundColor;
@@ -146,6 +97,7 @@ export default class UpcomingEventsCalendar extends Component {
       return {
         extendedProps: { postEvent: event },
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
+        rrule: event.rrule,
         start: startsAt,
         end: endsAt || startsAt,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
@@ -202,9 +154,22 @@ export default class UpcomingEventsCalendar extends Component {
     }
   }
 
+  @action
+  async fetchEvents(info) {
+    this.resolvedEvents = null;
+
+    const params = { include_details: "false" };
+    params.start_date = info.startStr;
+    params.end_date = info.endStr;
+
+    this.resolvedEvents =
+      await this.discoursePostEventService.fetchEvents(params);
+  }
+
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
+        @onDatesChange={{this.fetchEvents}}
         @events={{this.events}}
         @initialView={{@controller.view}}
         @customButtons={{this.customButtons}}

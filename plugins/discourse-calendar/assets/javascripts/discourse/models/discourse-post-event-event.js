@@ -24,6 +24,7 @@ export default class DiscoursePostEventEvent {
   }
 
   @tracked title;
+  @tracked rrule;
   @tracked name;
   @tracked categoryId;
   @tracked startsAt;
@@ -58,9 +59,9 @@ export default class DiscoursePostEventEvent {
 
   constructor(args = {}) {
     this.id = args.id;
+    this.rrule = args.rrule;
     this.name = args.name;
     this.categoryId = args.category_id;
-    this.upcomingDates = args.upcoming_dates;
     this.startsAt = args.starts_at;
     this.endsAt = args.ends_at;
     this.rawInvitees = args.raw_invitees;

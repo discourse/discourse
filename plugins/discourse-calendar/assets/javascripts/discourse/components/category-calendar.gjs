@@ -8,7 +8,6 @@ import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import { formatEventName } from "../helpers/format-event-name";
-import addRecurrentEvents from "../lib/add-recurrent-events";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 import FullCalendar from "./full-calendar";
 
@@ -109,8 +108,7 @@ export default class CategoryCalendar extends Component {
 
   @action
   formatedEvents(events = []) {
-    const recurrentEvents = addRecurrentEvents(events);
-    return recurrentEvents.map((event) => {
+    return events.map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
       let backgroundColor;
@@ -140,6 +138,7 @@ export default class CategoryCalendar extends Component {
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
+        rrule: event.rrule,
         end: endsAt || startsAt,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),

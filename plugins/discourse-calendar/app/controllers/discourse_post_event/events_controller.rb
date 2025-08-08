@@ -16,6 +16,9 @@ module DiscoursePostEvent
                  @events,
                  each_serializer: serializer,
                  scope: guardian,
+                 options: {
+                   dtstart: params[:start_date],
+                 },
                ).as_json
     end
 
@@ -124,6 +127,8 @@ module DiscoursePostEvent
         :limit,
         :before,
         :attending_user,
+        :start_date,
+        :end_date,
       )
     end
   end
