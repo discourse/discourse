@@ -49,13 +49,11 @@ module DiscourseSolved
           name: "status:solved",
           description: I18n.t("solved.filter.description.solved"),
           type: "text",
-          priority: 1,
         }
         results << {
           name: "status:unsolved",
           description: I18n.t("solved.filter.description.unsolved"),
           type: "text",
-          priority: 1,
         }
         results
       end

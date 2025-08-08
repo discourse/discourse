@@ -2,196 +2,349 @@ import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 export default class FilterSuggestions {
-  static async getFilterSuggestionsByType(
-    tip,
-    prefix,
-    filterName,
-    prevTerms,
-    lastTerm,
-    deps = {}
-  ) {
-    const suggestions = new FilterSuggestions(
-      tip,
-      prefix,
-      filterName,
-      prevTerms,
-      lastTerm,
-      deps
-    );
+  /**
+   * Main entry point - takes raw input text and available tips, returns suggestions
+   * @param {string} text - The full input text from the user
+   * @param {Array} tips - Available filter tips from the server
+   * @param {Object} context - Additional context (site data, etc.)
+   * @returns {Object} { suggestions: Array, activeFilter: string|null }
+   */
+  static async getSuggestions(text, tips = [], context = {}) {
+    const parser = new FilterParser(text);
+    const lastSegment = parser.getLastSegment();
+
+    // No input or just whitespace - show top-level filters
+    if (!lastSegment.word) {
+      return {
+        suggestions: this.getTopLevelTips(tips),
+        activeFilter: null,
+      };
+    }
+
+    // Check if we're in a filter value context (e.g., "category:val")
+    if (lastSegment.filterName && lastSegment.hasColon) {
+      const tip = this.findTipForFilter(lastSegment.filterName, tips);
+
+      if (tip?.type) {
+        const suggestions = await this.getFilterValueSuggestions(
+          tip,
+          lastSegment,
+          context
+        );
+
+        return {
+          suggestions,
+          activeFilter: lastSegment.filterName,
+        };
+      }
+    }
+
+    // Otherwise, filter the available tips based on what user typed
+    return {
+      suggestions: this.filterTips(tips, lastSegment.word, lastSegment.prefix),
+      activeFilter: null,
+    };
+  }
+
+  static getTopLevelTips(tips) {
+    return tips
+      .filter((tip) => tip.priority === 1)
+      .sort((a, b) => {
+        // First by priority (descending)
+        const priorityDiff = (b.priority || 0) - (a.priority || 0);
+        if (priorityDiff !== 0) {
+          return priorityDiff;
+        }
+        // Then alphabetically
+        return a.name.localeCompare(b.name);
+      })
+      .slice(0, 20);
+  }
+
+  static findTipForFilter(filterName, tips) {
+    return tips.find((tip) => {
+      const tipName = tip.name.replace(/:$/, "");
+      return tipName === filterName;
+    });
+  }
+
+  static filterTips(tips, searchTerm, prefix = "") {
+    const filtered = [];
+    const searchLower = searchTerm.toLowerCase();
+
+    for (const tip of tips) {
+      if (filtered.length >= 20) {
+        break;
+      }
+
+      const tipName = tip.name.toLowerCase();
+      const matches =
+        tipName.includes(searchLower) ||
+        (tip.alias && tip.alias.toLowerCase().includes(searchLower));
+
+      if (!matches) {
+        continue;
+      }
+
+      // Add prefixed versions if applicable
+      if (tip.prefixes && prefix) {
+        const matchingPrefix = tip.prefixes.find((p) => p.name === prefix);
+        if (matchingPrefix) {
+          filtered.push({
+            ...tip,
+            name: `${prefix}${tip.name}`,
+            description: matchingPrefix.description || tip.description,
+            isSuggestion: true,
+          });
+        }
+      } else if (!prefix) {
+        // Add the base tip
+        filtered.push(tip);
+
+        // Add all prefix variations if searching from empty
+        if (tip.prefixes && searchTerm === "") {
+          tip.prefixes.forEach((pfx) => {
+            filtered.push({
+              ...tip,
+              name: `${pfx.name}${tip.name}`,
+              description: pfx.description || tip.description,
+              isSuggestion: true,
+            });
+          });
+        }
+      }
+    }
+
+    // Sort by relevance
+    return filtered.sort((a, b) => {
+      const aStarts = a.name.toLowerCase().startsWith(searchLower);
+      const bStarts = b.name.toLowerCase().startsWith(searchLower);
+
+      if (aStarts && !bStarts) {
+        return -1;
+      }
+      if (!aStarts && bStarts) {
+        return 1;
+      }
+
+      return a.name.length - b.name.length;
+    });
+  }
+
+  static async getFilterValueSuggestions(tip, segment, context) {
+    const suggester = new FilterValueSuggester(tip, segment, context);
 
     switch (tip.type) {
       case "category":
-        return await suggestions.getCategorySuggestions();
+        return await suggester.getCategorySuggestions();
       case "tag":
-        return await suggestions.getTagSuggestions();
+        return await suggester.getTagSuggestions();
       case "username":
-        return await suggestions.getUserSuggestions();
-      case "date":
-        return await suggestions.getDateSuggestions();
-      case "number":
-        return await suggestions.getNumberSuggestions();
+        return await suggester.getUserSuggestions();
       case "username_group_list":
-        return await suggestions.getUsernameGroupListSuggestions();
+        return await suggester.getUsernameGroupListSuggestions();
+      case "date":
+        return suggester.getDateSuggestions();
+      case "number":
+        return suggester.getNumberSuggestions();
+      default:
+        return [];
+    }
+  }
+}
+
+/**
+ * Parses filter input text into structured segments
+ */
+class FilterParser {
+  constructor(text) {
+    this.text = text || "";
+    this.segments = this.parse();
+  }
+
+  parse() {
+    const words = this.text.split(/\s+/).filter((w) => w.length > 0);
+    this.endsWithSpace = this.text.endsWith(" ");
+    return words.map((word) => this.parseWord(word));
+  }
+
+  parseWord(word) {
+    const prefix = this.extractPrefix(word);
+    const withoutPrefix = word.substring(prefix.length);
+    const colonIndex = withoutPrefix.indexOf(":");
+
+    if (colonIndex > 0) {
+      const filterName = withoutPrefix.substring(0, colonIndex);
+      const value = withoutPrefix.substring(colonIndex + 1);
+
+      return {
+        word,
+        prefix,
+        filterName,
+        value,
+        hasColon: true,
+      };
+    }
+
+    return {
+      word,
+      prefix,
+      filterName: null,
+      value: null,
+      hasColon: false,
+    };
+  }
+
+  extractPrefix(word) {
+    const match = word.match(/^(-=|=-|-|=)/);
+    return match ? match[0] : "";
+  }
+
+  getLastSegment() {
+    const empty = {
+      word: "",
+      prefix: "",
+      filterName: null,
+      value: null,
+      hasColon: false,
+    };
+
+    if (this.endsWithSpace) {
+      return empty;
+    }
+    return this.segments[this.segments.length - 1] || empty;
+  }
+}
+
+class FilterValueSuggester {
+  constructor(tip, segment, context) {
+    this.tip = tip;
+    this.segment = segment;
+    this.context = context;
+    this.prefix = segment.prefix || "";
+    this.filterName = segment.filterName;
+
+    this.parseMultiValue();
+  }
+
+  parseMultiValue() {
+    const value = this.segment.value || "";
+
+    if (this.tip.delimiters && this.tip.delimiters.length > 0) {
+      const delimiterPattern = new RegExp(
+        `[${this.tip.delimiters.map((d) => this.escapeRegex(d.name)).join("")}]`
+      );
+
+      const parts = value.split(delimiterPattern);
+      this.previousValues = parts
+        .slice(0, -1)
+        .map((p) => p.trim())
+        .filter((p) => p);
+      this.searchTerm = parts[parts.length - 1].trim();
+      this.valuePrefix = value.substring(
+        0,
+        value.length - this.searchTerm.length
+      );
+    } else {
+      this.previousValues = [];
+      this.searchTerm = value;
+      this.valuePrefix = "";
     }
   }
 
-  constructor(tip, prefix, filterName, prevTerms, lastTerm, deps = {}) {
-    this.tip = tip;
-    this.prefix = prefix;
-    this.filterName = filterName;
-    this.prevTerms = prevTerms;
-    this.lastTerm = lastTerm;
-    this.deps = deps;
+  escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
   buildSuggestionName(term) {
-    return `${this.prefix}${this.filterName}:${this.prevTerms}${term}`;
+    return `${this.prefix}${this.filterName}:${this.valuePrefix}${term}`;
+  }
+
+  prepareDelimiterSuggestions(results) {
+    if (!this.tip.delimiters || this.tip.delimiters.length === 0) {
+      return results;
+    }
+
+    // Tag suggestions should carry delimiters so the UI won't add space
+    results.forEach((r) => (r.delimiters = this.tip.delimiters));
+
+    // Exclude already selected values
+    const used = new Set(this.previousValues.map((v) => v.toLowerCase()));
+    results = results.filter((r) => !used.has((r.term || "").toLowerCase()));
+
+    // If current term exactly matches a suggestion, offer delimiter actions
+    const searchLower = (this.searchTerm || "").toLowerCase();
+    if (
+      searchLower &&
+      results.some((r) => (r.term || "").toLowerCase() === searchLower)
+    ) {
+      this.tip.delimiters.forEach((delimiter) => {
+        results.push({
+          name: this.buildSuggestionName(`${this.searchTerm}${delimiter.name}`),
+          description: delimiter.description,
+          isSuggestion: true,
+          delimiters: this.tip.delimiters,
+        });
+      });
+    }
+
+    return results;
+  }
+
+  async getCategorySuggestions() {
+    const categories = this.context.site?.categories || [];
+    const searchLower = this.searchTerm.toLowerCase();
+
+    return categories
+      .filter((cat) => {
+        const name = cat.name.toLowerCase();
+        const slug = cat.slug.toLowerCase();
+        return (
+          !searchLower ||
+          name.includes(searchLower) ||
+          slug.includes(searchLower)
+        );
+      })
+      .slice(0, 10)
+      .map((cat) => ({
+        name: this.buildSuggestionName(cat.slug),
+        description: cat.name,
+        term: cat.slug,
+        category: cat,
+        isSuggestion: true,
+      }));
   }
 
   async getTagSuggestions() {
     try {
       const response = await ajax("/tags/filter/search.json", {
-        data: { q: this.lastTerm || "", limit: 5 },
+        data: { q: this.searchTerm || "", limit: 5 },
       });
-      return response.results.map((tag) => ({
+
+      let results = response.results.map((tag) => ({
         name: this.buildSuggestionName(tag.name),
         description: `${tag.count}`,
-        isSuggestion: true,
         term: tag.name,
+        isSuggestion: true,
       }));
+      results = this.prepareDelimiterSuggestions(results);
+      return results;
     } catch {
       return [];
     }
   }
 
-  async getUsernameGroupListSuggestions() {
-    let suggestions = [];
-
-    // Parse comma-separated terms - use the last term for searching
-    const terms = this.lastTerm ? this.lastTerm.split(",") : [];
-    const searchTerm = terms.length > 0 ? terms[terms.length - 1].trim() : "";
-    const previousTerms = terms
-      .slice(0, -1)
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
-
-    // Create a set of already used terms for duplicate checking
-    const usedTerms = new Set(previousTerms.map((t) => t.toLowerCase()));
-
-    // Extra entries are things like wildcards (*) or general terms like "anyone"
-    if (this.tip.extra_entries && usedTerms.size === 0) {
-      const extraSuggestions = this.tip.extra_entries
-        .filter((entry) => {
-          // Skip if already used
-          if (usedTerms.has(entry.name.toLowerCase())) {
-            return false;
-          }
-
-          if (!searchTerm) {
-            return true;
-          }
-          return (
-            entry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            entry.description.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        })
-        .map((entry) => {
-          const termWithCommas =
-            previousTerms.length > 0
-              ? `${previousTerms.join(",")},${entry.name}`
-              : entry.name;
-          return {
-            name: this.buildSuggestionName(termWithCommas),
-            description: entry.description,
-            isSuggestion: true,
-            term: entry.name,
-          };
-        });
-
-      suggestions = suggestions.concat(extraSuggestions);
-    }
-
-    // Add user suggestions
-    try {
-      const data = { limit: 10 };
-      if (searchTerm.length > 0) {
-        data.term = searchTerm;
-      } else {
-        data.last_seen_users = true;
-      }
-      const response = await ajax("/u/search/users.json", { data });
-      const userSuggestions = response.users
-        .filter((user) => !usedTerms.has(user.username.toLowerCase()))
-        .map((user) => {
-          const termWithCommas =
-            previousTerms.length > 0
-              ? `${previousTerms.join(",")},${user.username}`
-              : user.username;
-          return {
-            name: this.buildSuggestionName(termWithCommas),
-            description: user.name || "",
-            term: user.username,
-            isSuggestion: true,
-          };
-        });
-
-      suggestions = suggestions.concat(userSuggestions);
-    } catch {
-      // skip suggestions in case of rate limit, etc...
-      suggestions = [];
-    }
-
-    try {
-      const data = { limit: 5 };
-      if (searchTerm.length > 0) {
-        data.term = searchTerm;
-      }
-      const response = await ajax("/groups/search.json", { data });
-      const groupSuggestions = response
-        .map((group) => {
-          const termWithCommas =
-            previousTerms.length > 0
-              ? `${previousTerms.join(",")},${group.name}`
-              : group.name;
-          return {
-            name: this.buildSuggestionName(termWithCommas),
-            description: group.full_name || group.name,
-            term: group.name,
-            isSuggestion: true,
-          };
-        })
-        .filter((suggestion) => !usedTerms.has(suggestion.term.toLowerCase()));
-
-      suggestions = suggestions.concat(groupSuggestions);
-    } catch {
-      // skip suggestions in case of rate limit, etc...
-    }
-
-    // Limit total results and prioritize exact matches
-    return suggestions
-      .sort((a, b) => {
-        const aExact = a.term.toLowerCase() === searchTerm?.toLowerCase();
-        const bExact = b.term.toLowerCase() === searchTerm?.toLowerCase();
-        if (aExact && !bExact) {
-          return -1;
-        }
-        if (!aExact && bExact) {
-          return 1;
-        }
-        return 0;
-      })
-      .slice(0, 15);
-  }
-
   async getUserSuggestions() {
     try {
       const data = { limit: 10 };
-      if ((this.lastTerm || "").length > 0) {
-        data.term = this.lastTerm;
+      if (this.searchTerm) {
+        data.term = this.searchTerm;
       } else {
         data.last_seen_users = true;
       }
+
       const response = await ajax("/u/search/users.json", { data });
+
       return response.users.map((user) => ({
         name: this.buildSuggestionName(user.username),
         description: user.name || "",
@@ -203,51 +356,128 @@ export default class FilterSuggestions {
     }
   }
 
-  async getCategorySuggestions() {
-    const categories = this.deps.site?.categories || [];
-    return categories
-      .filter((category) => {
-        const name = category.name.toLowerCase();
-        const slug = category.slug.toLowerCase();
-        return name.includes(this.lastTerm) || slug.includes(this.lastTerm);
+  async getUsernameGroupListSuggestions() {
+    const usedTerms = new Set(this.previousValues.map((v) => v.toLowerCase()));
+    let suggestions = [];
+
+    // Add special entries (*, nobody, etc.) if no values selected yet
+    if (this.tip.extra_entries && usedTerms.size === 0) {
+      suggestions = this.tip.extra_entries
+        .filter((entry) => {
+          if (!this.searchTerm) {
+            return true;
+          }
+          const searchLower = this.searchTerm.toLowerCase();
+          return (
+            entry.name.toLowerCase().includes(searchLower) ||
+            entry.description.toLowerCase().includes(searchLower)
+          );
+        })
+        .map((entry) => ({
+          name: this.buildSuggestionName(entry.name),
+          description: entry.description,
+          term: entry.name,
+          isSuggestion: true,
+        }));
+    }
+
+    // Add users
+    try {
+      const userData = { limit: 10 };
+      if (this.searchTerm) {
+        userData.term = this.searchTerm;
+      } else {
+        userData.last_seen_users = true;
+      }
+
+      const userResponse = await ajax("/u/search/users.json", {
+        data: userData,
+      });
+      const userSuggestions = userResponse.users
+        .filter((user) => !usedTerms.has(user.username.toLowerCase()))
+        .map((user) => ({
+          name: this.buildSuggestionName(user.username),
+          description: user.name || "",
+          term: user.username,
+          isSuggestion: true,
+        }));
+
+      suggestions = suggestions.concat(userSuggestions);
+    } catch {
+      // Continue without user suggestions
+    }
+
+    try {
+      const groupData = { limit: 5 };
+      if (this.searchTerm) {
+        groupData.term = this.searchTerm;
+      }
+
+      const groupResponse = await ajax("/groups/search.json", {
+        data: groupData,
+      });
+      const groupSuggestions = groupResponse
+        .filter((group) => !usedTerms.has(group.name.toLowerCase()))
+        .map((group) => ({
+          name: this.buildSuggestionName(group.name),
+          description: group.full_name || group.name,
+          term: group.name,
+          isSuggestion: true,
+        }));
+
+      suggestions = suggestions.concat(groupSuggestions);
+    } catch {
+      // Continue without group suggestions
+    }
+
+    suggestions = this.prepareDelimiterSuggestions(suggestions);
+    return suggestions
+      .sort((a, b) => {
+        const searchLower = this.searchTerm?.toLowerCase();
+        const aExact = a.term.toLowerCase() === searchLower;
+        const bExact = b.term.toLowerCase() === searchLower;
+
+        if (aExact && !bExact) {
+          return -1;
+        }
+        if (!aExact && bExact) {
+          return 1;
+        }
+
+        return 0;
       })
-      .slice(0, 10)
-      .map((category) => ({
-        name: this.buildSuggestionName(category.slug),
-        description: `${category.name}`,
-        isSuggestion: true,
-        term: category.slug,
-        category,
-      }));
+      .slice(0, 15);
   }
 
-  async getDateSuggestions() {
-    const dateOptions = [
+  getDateSuggestions() {
+    const options = [
       { value: "1", key: "yesterday" },
       { value: "7", key: "last_week" },
       { value: "30", key: "last_month" },
       { value: "365", key: "last_year" },
     ];
 
-    return dateOptions
-      .filter((option) => {
-        const description = i18n(`filter.description.days.${option.key}`);
+    return options
+      .filter((opt) => {
+        if (!this.searchTerm) {
+          return true;
+        }
+        const desc = i18n(`filter.description.days.${opt.key}`);
         return (
-          !this.lastTerm ||
-          option.value.includes(this.lastTerm) ||
-          description.toLowerCase().includes(this.lastTerm.toLowerCase())
+          opt.value.includes(this.searchTerm) ||
+          desc.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
       })
-      .map((option) => ({
-        name: this.buildSuggestionName(option.value),
-        description: i18n(`filter.description.${option.key}`),
+      .map((opt) => ({
+        name: this.buildSuggestionName(opt.value),
+        description: i18n(`filter.description.${opt.key}`),
+        term: opt.value,
         isSuggestion: true,
-        term: option.value,
       }));
   }
 
-  async getNumberSuggestions() {
-    const numberOptions = [
+  getNumberSuggestions() {
+    const options = [
       { value: "0" },
       { value: "1" },
       { value: "5" },
@@ -255,14 +485,12 @@ export default class FilterSuggestions {
       { value: "20" },
     ];
 
-    return numberOptions
-      .filter(
-        (option) => !this.lastTerm || option.value.includes(this.lastTerm)
-      )
-      .map((option) => ({
-        name: this.buildSuggestionName(option.value),
+    return options
+      .filter((opt) => !this.searchTerm || opt.value.includes(this.searchTerm))
+      .map((opt) => ({
+        name: this.buildSuggestionName(opt.value),
+        term: opt.value,
         isSuggestion: true,
-        term: option.value,
       }));
   }
 }
