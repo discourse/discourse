@@ -2,11 +2,13 @@
 
 RSpec.describe Chat::ListChannelMessages do
   describe described_class::Contract, type: :model do
+    subject(:contract) { described_class.new(options:) }
+
+    let(:options) { OpenStruct.new(max_page_size: Chat::MessagesQuery::MAX_PAGE_SIZE) }
+
     it { is_expected.to validate_presence_of(:channel_id) }
-    it { is_expected.to allow_values(1, Chat::MessagesQuery::MAX_PAGE_SIZE, nil).for(:page_size) }
-    it do
-      is_expected.not_to allow_values(0, Chat::MessagesQuery::MAX_PAGE_SIZE + 1).for(:page_size)
-    end
+    it { is_expected.to allow_values(1, options.max_page_size, nil).for(:page_size) }
+    it { is_expected.not_to allow_values(0).for(:page_size) }
     it do
       is_expected.to validate_inclusion_of(:direction).in_array(
         Chat::MessagesQuery::VALID_DIRECTIONS,
@@ -14,12 +16,10 @@ RSpec.describe Chat::ListChannelMessages do
     end
 
     describe "#page_size" do
-      let(:contract) { described_class.new }
-
       context "when page_size is not set" do
-        it "defaults to MAX_PAGE_SIZE" do
+        it "defaults to options.max_page_size" do
           contract.validate
-          expect(contract.page_size).to eq(Chat::MessagesQuery::MAX_PAGE_SIZE)
+          expect(contract.page_size).to eq(options.max_page_size)
         end
       end
 
@@ -28,16 +28,27 @@ RSpec.describe Chat::ListChannelMessages do
 
         it "defaults to MAX_PAGE_SIZE" do
           contract.validate
-          expect(contract.page_size).to eq(Chat::MessagesQuery::MAX_PAGE_SIZE)
+          expect(contract.page_size).to eq(options.max_page_size)
         end
       end
 
       context "when page_size is set" do
-        before { contract.page_size = 5 }
+        context "when page_size is greater than max_page_size" do
+          before { contract.page_size = options.max_page_size + 1 }
 
-        it "does not change the value" do
-          contract.validate
-          expect(contract.page_size).to eq(5)
+          it "sets page_size to options.max_page_size" do
+            contract.validate
+            expect(contract.page_size).to eq(options.max_page_size)
+          end
+        end
+
+        context "when page_size is lesser than max_page_size" do
+          before { contract.page_size = 5 }
+
+          it "does not change the value" do
+            contract.validate
+            expect(contract.page_size).to eq(5)
+          end
         end
       end
     end
