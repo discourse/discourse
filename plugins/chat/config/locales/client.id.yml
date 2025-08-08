@@ -94,6 +94,7 @@ id:
         none: "Tidak ada"
       title: "obrolan"
       title_capitalized: "Obrolan"
+      exit: "kembali"
       channel_status:
         read_only: "Hanya Baca"
         archived: "Diarsipkan"
