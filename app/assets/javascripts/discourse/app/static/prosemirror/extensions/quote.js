@@ -8,7 +8,7 @@ const extension = {
       selectable: true,
       isolating: true,
       attrs: {
-        username: {},
+        username: { default: null },
         postNumber: { default: null },
         topicId: { default: null },
         full: { default: null },
@@ -102,6 +102,16 @@ const extension = {
       state.write("[/quote]\n\n");
     },
   },
+  inputRules: ({ utils: { convertFromMarkdown } }) => ({
+    match: /^\[quote([^\]]*)\]$/,
+    handler: (state, match, start, end) => {
+      const markdown = match[0] + "\n[/quote]";
+
+      return state.tr
+        .replaceWith(start - 1, end, convertFromMarkdown(markdown))
+        .scrollIntoView();
+    },
+  }),
   plugins({
     pmState: { Plugin, NodeSelection },
     pmModel: { Slice, Fragment },

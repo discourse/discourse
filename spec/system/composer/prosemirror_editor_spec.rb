@@ -281,6 +281,52 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<http://example.com>")
     end
+
+    it "supports [quote] to create a quote block" do
+      open_composer
+      composer.type_content("[quote]")
+
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote]\n\n[/quote]\n\n")
+    end
+
+    it "supports [quote=\"username\"] to create a quote block with attribution" do
+      open_composer
+      composer.type_content("[quote=\"johndoe\"]")
+
+      expect(rich).to have_css("aside.quote[data-username='johndoe'] .title", text: "johndoe:")
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote=\"johndoe\"]\n\n[/quote]\n\n")
+    end
+
+    it "supports [quote=\"username, post:1, topic:123\"] to create a quote block with full attribution" do
+      open_composer
+      composer.type_content("[quote=\"johndoe, post:1, topic:123\"]")
+
+      expect(rich).to have_css(
+        "aside.quote[data-username='johndoe'][data-post='1'][data-topic='123'] .title",
+        text: "johndoe:",
+      )
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote=\"johndoe, post:1, topic:123\"]\n\n[/quote]\n\n")
+    end
+
+    it "doesn't trigger quote input rule in the middle of text" do
+      open_composer
+      composer.type_content("This [quote] should not trigger")
+
+      expect(rich).to have_no_css("aside.quote")
+      expect(rich).to have_content("This [quote] should not trigger")
+    end
   end
 
   context "with oneboxing" do
