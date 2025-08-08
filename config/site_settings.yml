@@ -568,6 +568,10 @@ basic:
     client: true
     default: true
     area: "interface"
+  floatkit_autocomplete_input_fields:
+    client: true
+    default: true
+    area: "interface"
   floatkit_autocomplete_chat_composer:
     client: true
     default: true
