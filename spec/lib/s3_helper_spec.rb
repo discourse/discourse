@@ -410,7 +410,7 @@ RSpec.describe "S3Helper" do
       end
 
       it "assumes role when all credentials present" do
-        s3_helper = S3Helper.new
+        s3_helper = S3Helper.new("some-bucket", "", client: client)
 
         mock_credentials =
           instance_double(
@@ -433,7 +433,7 @@ RSpec.describe "S3Helper" do
       before { SiteSetting.s3_role_arn = "" }
 
       it "uses regular credentials" do
-        s3_helper = S3Helper.new
+        s3_helper = S3Helper.new("some-bucket", "", client: client)
 
         opts = s3_helper.s3_options(Upload.new)
 
