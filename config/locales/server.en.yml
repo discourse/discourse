@@ -5780,7 +5780,7 @@ en:
         complete: "Post approved."
       approve_post_closed:
         title: "Approve Post"
-        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
       reject_post:
         title: "Reject Post"
