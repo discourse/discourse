@@ -1564,5 +1564,30 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value(markdown + "\n\nThis is a test")
     end
+
+    it "lifts the first paragraph out of the quote with Backspace" do
+      open_composer
+
+      composer.type_content("[quote]Text")
+      expect(rich).to have_css("aside.quote blockquote p", text: "Text")
+
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_no_css("aside.quote")
+      expect(rich).to have_css("p", text: "Text")
+    end
+
+    it "breaks out of the quote with a double Enter" do
+      open_composer
+
+      composer.type_content("[quote]Inside")
+      composer.send_keys(:enter)
+      composer.send_keys(:enter)
+      composer.type_content("Outside")
+
+      expect(rich).to have_css("aside.quote blockquote p", text: "Inside")
+      expect(rich).to have_css("aside.quote + p", text: "Outside")
+    end
   end
 end
