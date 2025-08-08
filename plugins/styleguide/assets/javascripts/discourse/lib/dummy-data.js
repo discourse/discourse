@@ -138,7 +138,6 @@ export function createData(store) {
   let pmTopic = createTopic({
     archetype: "private_message",
     related_messages: [topic, topic],
-    suggested_topics: [topic],
   });
 
   const bunchOfTopics = [
