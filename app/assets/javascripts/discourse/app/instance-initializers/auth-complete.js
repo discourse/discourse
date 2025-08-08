@@ -53,7 +53,11 @@ export default {
                 ...properties,
               };
 
-              router.trigger("showLogin", props);
+              router.transitionTo("login").then((login) => {
+                for (const [key, value] of Object.entries(props)) {
+                  login.controller.set(key, value);
+                }
+              });
 
               next(() => callback?.());
             };
