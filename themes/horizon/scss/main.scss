@@ -87,12 +87,10 @@ body:not(.has-full-page-chat, .wizard) {
       }
 
       > *:not(.experimental-screen, .activate-account) {
-        @include viewport.from(lg) {
-          box-sizing: border-box;
-          max-width: 1000px;
-          margin-inline: auto;
-          padding-inline: var(--spacing-inline-l);
-        }
+        box-sizing: border-box;
+        max-width: 1000px;
+        margin-inline: auto;
+        padding-inline: var(--spacing-inline-l);
       }
     }
   }
