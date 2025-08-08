@@ -67,7 +67,7 @@ class ReviewableQueuedPost < Reviewable
       build_action(actions, :revise_and_reject_post)
     end
 
-    build_action(actions, :delete) if guardian.can_delete_post_or_topic?(post)
+    build_action(actions, :delete) if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
