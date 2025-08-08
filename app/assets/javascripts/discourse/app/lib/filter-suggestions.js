@@ -63,8 +63,10 @@ export default class FilterSuggestions {
 
   static findTipForFilter(filterName, tips) {
     return tips.find((tip) => {
-      const tipName = tip.name.replace(/:$/, "");
-      return tipName === filterName;
+      const normalize = (str) => (str ? str.replace(/:$/, "") : str);
+      return (
+        normalize(tip.name) === filterName || normalize(tip.alias) === filterName
+      );
     });
   }
 

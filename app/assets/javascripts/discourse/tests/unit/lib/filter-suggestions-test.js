@@ -10,6 +10,10 @@ function buildTips() {
       description: "Pick a category",
       type: "category",
       priority: 1,
+      prefixes: [
+        { name: "-", description: "exclude category" },
+        { name: "=", description: "no subcategories" },
+      ],
     },
     {
       name: "tag:",
@@ -18,7 +22,7 @@ function buildTips() {
       priority: 1,
       delimiters: [
         { name: ",", description: "add" },
-        { name: "+", description: "add" },
+        { name: "+", description: "intersect" },
       ],
     },
     {
@@ -99,6 +103,16 @@ module("Unit | Utility | filter-suggestions", function (hooks) {
       baseline.suggestions.map((s) => s.name),
       "shows top-level tips after trailing space"
     );
+  });
+
+  test("prefix filters works as expected", async function (assert) {
+    const tips = buildTips();
+    const { suggestions, activeFilter } =
+      await FilterSuggestions.getSuggestions("cat", tips, buildContext());
+    const names = suggestions.map((s) => s.name);
+
+    assert.strictEqual(names, ["category:", "-category:", "=category:"]);
+    assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
   });
 
   test("category value suggestions match category slug and set activeFilter", async function (assert) {
