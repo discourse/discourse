@@ -581,4 +581,42 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom("span.fk-d-menu__trigger").exists();
   });
+
+  test("@matchTriggerWidth", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @label="a long label"
+          @inline={{true}}
+          @matchTriggerWidth={{true}}
+          style="width: 200px;"
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({
+      width: "200px",
+    });
+  });
+
+  test("@matchTriggerMinWidth", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @label="a long label"
+          @inline={{true}}
+          @matchTriggerMinWidth={{true}}
+          style="width: 200px;"
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({
+      minWidth: "200px",
+    });
+  });
 });
