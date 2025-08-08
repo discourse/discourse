@@ -139,6 +139,17 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE user_badges
+(
+    badge_id      NUMERIC  NOT NULL,
+    created_at    DATETIME,
+    granted_at    DATETIME NOT NULL,
+    granted_by_id NUMERIC  NOT NULL,
+    is_favorite   BOOLEAN,
+    post_id       NUMERIC,
+    user_id       NUMERIC  NOT NULL
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,

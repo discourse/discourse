@@ -89,6 +89,13 @@ schema:
       columns:
         exclude:
           - "id"
+    user_badges:
+      columns:
+        exclude:
+          - "id"
+          - "notification_id"
+          - "featured_rank"
+          - "seq"
     user_emails:
       columns:
         include:
@@ -389,7 +396,6 @@ schema:
         - "user_auth_token_logs"
         - "user_auth_tokens"
         - "user_avatars"
-        - "user_badges"
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
         - "user_custom_fields"
