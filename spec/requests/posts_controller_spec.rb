@@ -2411,6 +2411,9 @@ RSpec.describe PostsController do
         },
       )
     end
+    let(:tag_only_revision) do
+      Fabricate(:post_revision, post: post, modifications: { "tags" => %w[tag1,tag2 tag2,tag3] })
+    end
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
@@ -2463,6 +2466,11 @@ RSpec.describe PostsController do
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "supports reverting tag-only revisions" do
+        put "/posts/#{post_id}/revisions/#{tag_only_revision.number}/revert.json"
         expect(response.status).to eq(200)
       end
     end
