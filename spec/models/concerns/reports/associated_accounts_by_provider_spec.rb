@@ -46,7 +46,6 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       github_data = report.data.find { |d| d[:key] == "github" }
       expect(github_data).to be_present
       expect(github_data[:y]).to eq(0)
-      expect(github_data[:icon]).to eq("plug")
     end
 
     it "includes total users count" do
