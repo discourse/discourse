@@ -224,7 +224,10 @@ module Discourse
 
     require "rbtrace" if ENV["RBTRACE"] == "1"
 
-    config.active_record.query_log_tags_enabled = true if ENV["RAILS_QUERY_LOG_TAGS"] == "1"
+    if ENV["RAILS_QUERY_LOG_TAGS"] == "1"
+      config.active_record.query_log_tags_enabled = true
+      ActiveRecord::QueryLogs.prepend_comment = true if ENV["RAILS_QUERY_LOG_PREPEND_COMMENT"] == "1"
+    end
 
     config.generators { |g| g.test_framework :rspec, fixture: false }
   end
