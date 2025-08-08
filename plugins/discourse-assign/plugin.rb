@@ -906,15 +906,12 @@ after_initialize do
       next scope.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
     end
 
-    user_ids = []
-    group_ids = []
-
-    found_users = User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).to_h
-    user_ids.concat(found_users.values)
+    found_names, user_ids = User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).transpose
 
     # a bit edge casey cause we have username_lower for users but not for groups
     # we share a namespace though so in practice this is ok
-    remaining_names = names - found_users.keys
+    remaining_names = names - found_names
+    group_ids = []
     group_ids.concat(Group.where(name: remaining_names).pluck(:id)) if remaining_names.present?
 
     next scope.where("1 = 0") if user_ids.empty? && group_ids.empty?
