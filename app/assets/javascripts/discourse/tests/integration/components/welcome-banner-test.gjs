@@ -18,11 +18,11 @@ module(
     test("applies the welcome_banner_location CSS class", async function (assert) {
       this.siteSettings.welcome_banner_location = "above_topic_content";
       await render(<template><WelcomeBanner /></template>);
-      assert.dom(".welcome-banner.--above-topic-content").exists();
+      assert.dom(".welcome-banner.--location-above-topic-content").exists();
 
       this.siteSettings.welcome_banner_location = "below_site_header";
       await render(<template><WelcomeBanner /></template>);
-      assert.dom(".welcome-banner.--below-site-header").exists();
+      assert.dom(".welcome-banner.--location-below-site-header").exists();
     });
 
     test("shows the logged in user message with the user's username", async function (assert) {
