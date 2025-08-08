@@ -40,12 +40,24 @@ export default class ProsemirrorTextManipulation {
   convertFromMarkdown;
   convertToMarkdown;
 
-  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
+  constructor(
+    owner,
+    {
+      schema,
+      view,
+      convertFromMarkdown,
+      convertToMarkdown,
+      commands,
+      customState,
+    }
+  ) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.commands = commands;
+    this.customState = customState;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -394,6 +406,7 @@ export default class ProsemirrorTextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      ...this.customState(this.view.state),
     });
   }
 }
