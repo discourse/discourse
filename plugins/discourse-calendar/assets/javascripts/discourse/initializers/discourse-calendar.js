@@ -37,9 +37,6 @@ function initializeDiscourseCalendar(api) {
   let _topicController;
   const outletName = siteSettings.calendar_categories_outlet;
 
-  const site = api.container.lookup("service:site");
-  const isMobileView = site && site.mobileView;
-
   const router = api.container.lookup("service:router");
 
   let selector = `.${outletName}-outlet`;
@@ -346,6 +343,8 @@ function initializeDiscourseCalendar(api) {
   }
 
   function _buildCalendar($calendar, timeZone) {
+    const isMobileView = api.container.lookup("service:site")?.mobileView;
+
     let $calendarTitle = document.querySelector(
       ".discourse-calendar-header > .discourse-calendar-title"
     );
@@ -519,6 +518,7 @@ function initializeDiscourseCalendar(api) {
     calendar.setOption("eventClick", ({ event, jsEvent }) => {
       destroyPopover();
       const { htmlContent, postNumber, postUrl } = event.extendedProps;
+      const isMobileView = api.container.lookup("service:site")?.mobileView;
 
       if (postUrl) {
         DiscourseURL.routeTo(postUrl);
@@ -636,14 +636,10 @@ function initializeDiscourseCalendar(api) {
       const event = _buildEvent(eventData);
       event.classNames = ["grouped-event"];
 
-      if (users.length > 2) {
-        event.title = `(${users.length}) ${localEventNames[0]}`;
-      } else if (users.length === 1) {
+      if (users.length === 1) {
         event.title = users[0].username;
       } else {
-        event.title = isMobileView
-          ? `(${users.length}) ${localEventNames[0]}`
-          : `(${users.length}) ` + users.map((u) => u.username).join(", ");
+        event.title = `(${users.length}) ${localEventNames[0]}`;
       }
 
       if (localEventNames.length > 1) {
