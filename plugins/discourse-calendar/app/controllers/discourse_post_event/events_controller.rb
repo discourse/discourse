@@ -16,6 +16,9 @@ module DiscoursePostEvent
                  @events,
                  each_serializer: BasicEventSerializer,
                  scope: guardian,
+                 options: {
+                   dtstart: params[:start_date],
+                 },
                ).as_json
     end
 
