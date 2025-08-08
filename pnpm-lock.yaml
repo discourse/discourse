@@ -32,8 +32,8 @@ importers:
         specifier: ^7.28.0
         version: 7.28.0(@babel/core@7.28.0)
       '@discourse/lint-configs':
-        specifier: ^2.30.0
-        version: 2.30.0(ember-template-lint@7.9.1)(eslint@9.32.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.0(typescript@5.6.3))
+        specifier: ^2.31.0
+        version: 2.31.0(ember-template-lint@7.9.2)(eslint@9.32.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -74,8 +74,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       ember-template-lint:
-        specifier: 7.9.1
-        version: 7.9.1
+        specifier: 7.9.2
+        version: 7.9.2
       esbuild:
         specifier: ^0.25.8
         version: 0.25.8
@@ -96,7 +96,7 @@ importers:
         version: 2.6.3(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.1.0
-        version: 3.1.0(ember-template-lint@7.9.1)
+        version: 3.1.0(ember-template-lint@7.9.2)
       lint-to-the-future-eslint:
         specifier: ^3.2.0
         version: 3.2.0(eslint@9.32.0)
@@ -119,8 +119,8 @@ importers:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
       stylelint:
-        specifier: 16.23.0
-        version: 16.23.0(typescript@5.6.3)
+        specifier: 16.23.1
+        version: 16.23.1(typescript@5.6.3)
       terser:
         specifier: ^5.43.1
         version: 5.43.1
@@ -1798,8 +1798,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.30.0':
-    resolution: {integrity: sha512-XkDBlsEwHdbtl80jgb/n5EhnxLRoMq8KPUbjGn2BYfZ+OgOXutORW4shE9nIp5yz7CeAmByjKMFOi7JRezZaww==}
+  '@discourse/lint-configs@2.31.0':
+    resolution: {integrity: sha512-cjV+JwL1C9FQzMdg5KkjE4p09a9+SaVqotmFOjEX8cxuQOkl98qV9GmC/4HH6JfV0tPHdbJEQ8rBGX63hb898Q==}
     peerDependencies:
       ember-template-lint: 7.9.1
       eslint: 9.32.0
@@ -2239,8 +2239,8 @@ packages:
   '@glimmer/syntax@0.93.1':
     resolution: {integrity: sha512-Dvq+Ni4Dcpn8kEiYN4ziTQxHrmPSchJCQJppXmFzdz77SFnhl0nWf7W8nnj88DNFEyBzKiTQCyCSuew4jrbgjA==}
 
-  '@glimmer/syntax@0.94.9':
-    resolution: {integrity: sha512-OBw8DqMzKO4LX4kJBhwfTUqtpbd7O9amQXNTfb1aS7pufio5Vu5Qi6mRTfdFj6RyJ//aSI/l0kxWt6beYW0Apg==}
+  '@glimmer/syntax@0.95.0':
+    resolution: {integrity: sha512-W/PHdODnpONsXjbbdY9nedgIHpglMfOzncf/moLVrKIcCfeQhw2vG07Rs/YW8KeJCgJRCLkQsi+Ix7XvrurGAg==}
 
   '@glimmer/tracking@1.1.2':
     resolution: {integrity: sha512-cyV32zsHh+CnftuRX84ALZpd2rpbDrhLhJnTXn9W//QpqdRZ5rdMsxSY9fOsj0CKEc706tmEU299oNnDc0d7tA==}
@@ -2314,6 +2314,10 @@ packages:
 
   '@handlebars/parser@2.0.0':
     resolution: {integrity: sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==}
+
+  '@handlebars/parser@2.2.1':
+    resolution: {integrity: sha512-D76vKOZFEGA9v6g0rZTYTQDUXNopCblW1Zeas3EEVrbdeh8gWrCEO9/goocKmcgtqAwv1Md76p58UQp7HeFTEw==}
+    engines: {node: ^18 || ^20 || ^22 || >=24}
 
   '@highlightjs/cdn-assets@11.11.1':
     resolution: {integrity: sha512-VEPdHzwelZ12hEX18BHduqxMZGolcUsrbeokHYxOUIm8X2+M7nx5QPtPeQgRxR9XjhdLv4/7DD5BWOlSrJ3k7Q==}
@@ -2935,6 +2939,12 @@ packages:
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
+
+  '@typescript-eslint/tsconfig-utils@8.39.0':
+    resolution: {integrity: sha512-Fd3/QjmFV2sKmvv3Mrj8r6N8CryYiCS8Wdb/6/rgOXAWGcFuc+VkQuG28uk/4kVNVZBQuuDHEDUpo/pQ32zsIQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.0.0'
 
   '@uppy/aws-s3@4.1.0':
     resolution: {integrity: sha512-xRip1Lo3He+3J3fP/SooEFQJKWMCVADTl8J375PzvpaeNnDFKa6W2XLEEl/fGy/K7vI4sH8Znz4+omdtSFCPSQ==}
@@ -4648,8 +4658,8 @@ packages:
     resolution: {integrity: sha512-SB9NcZ27OtoUk+gfalsc3QU17+54OoqR668qHcuvHByk4KAhGxCKlkm9EBlKJcGr7yceOOAJqohTcCEBqfRw9g==}
     engines: {node: '>= 0.10.0'}
 
-  ember-eslint-parser@0.5.10:
-    resolution: {integrity: sha512-QOmqeY53LIMc3/FgMnvt/KY/JhtyOZchda+VLJe994muhsS76EQ1lJaqv6lntq9Pc2R8coqiBKVfqlD0DeqnGg==}
+  ember-eslint-parser@0.5.11:
+    resolution: {integrity: sha512-YuYc+bxDGHhNdz2yEZebwwzdiErHLLGud/Q2VE6J7czuMQ/vdiL8SYWBHWyYK691MCFzrxVYpSJb89+yjXv8yg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@babel/core': ^7.23.6
@@ -4714,8 +4724,8 @@ packages:
     resolution: {integrity: sha512-jZ5D6KLKU8up/AynZltmKh4lkXBPgTGSPgomprI/55XvIVqn42UNUpEz7ra/mO3QiGODDZOUesbggPe49i38sQ==}
     engines: {node: 16.* || >= 18}
 
-  ember-template-lint@7.9.1:
-    resolution: {integrity: sha512-uh5WU2sJKkQgDgIQovwv1D0fw2/RJnmyAHqIhaTYk68CfKQ/O5v31c1iXNu71qv3xeONi3QPl/rBW0EMdIFXWA==}
+  ember-template-lint@7.9.2:
+    resolution: {integrity: sha512-j2vt1laRRn1yipSrVm6+E2UbVrERTDoX/ye66Kc+FtI+W+SJSAuEPvMA+t2sofkqvP0u+TEg8Bc66YbShblAgg==}
     engines: {node: ^18.18.0 || >= 20.9.0}
     hasBin: true
 
@@ -8400,8 +8410,8 @@ packages:
     peerDependencies:
       stylelint: ^16.0.2
 
-  stylelint@16.23.0:
-    resolution: {integrity: sha512-69T5aS2LUY306ekt1Q1oaSPwz/jaG9HjyMix3UMrai1iEbuOafBe2Dh8xlyczrxFAy89qcKyZWWtc42XLx3Bbw==}
+  stylelint@16.23.1:
+    resolution: {integrity: sha512-dNvDTsKV1U2YtiUDfe9d2gp902veFeo3ecCWdGlmLm2WFrAV0+L5LoOj/qHSBABQwMsZPJwfC4bf39mQm1S5zw==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
@@ -8724,8 +8734,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+  typescript@5.9.2:
+    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -10113,15 +10123,15 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.30.0(ember-template-lint@7.9.1)(eslint@9.32.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.0(typescript@5.6.3))':
+  '@discourse/lint-configs@2.31.0(ember-template-lint@7.9.2)(eslint@9.32.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.32.0)
       '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.28.0)
-      ember-template-lint: 7.9.1
+      ember-template-lint: 7.9.2
       eslint: 9.32.0
       eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.28.0(@babel/core@7.28.0)(eslint@9.32.0))(eslint@9.32.0)
-      eslint-plugin-ember: 12.7.0(@babel/core@7.28.0)(eslint@9.32.0)
+      eslint-plugin-ember: 12.7.0(@babel/core@7.28.0)(eslint@9.32.0)(typescript@5.9.2)
       eslint-plugin-import: 2.32.0(eslint@9.32.0)
       eslint-plugin-qunit: 8.2.5(eslint@9.32.0)
       eslint-plugin-simple-import-sort: 12.1.1(eslint@9.32.0)
@@ -10129,11 +10139,11 @@ snapshots:
       globals: 16.3.0
       prettier: 3.5.3
       prettier-plugin-ember-template-tag: 2.1.0(prettier@3.5.3)
-      stylelint: 16.23.0(typescript@5.6.3)
-      stylelint-config-standard: 38.0.0(stylelint@16.23.0(typescript@5.6.3))
-      stylelint-config-standard-scss: 15.0.1(postcss@8.5.6)(stylelint@16.23.0(typescript@5.6.3))
-      stylelint-scss: 6.12.1(stylelint@16.23.0(typescript@5.6.3))
-      typescript: 5.8.3
+      stylelint: 16.23.1(typescript@5.6.3)
+      stylelint-config-standard: 38.0.0(stylelint@16.23.1(typescript@5.6.3))
+      stylelint-config-standard-scss: 15.0.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.6.3))
+      stylelint-scss: 6.12.1(stylelint@16.23.1(typescript@5.6.3))
+      typescript: 5.9.2
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-typescript
@@ -10767,12 +10777,12 @@ snapshots:
       '@handlebars/parser': 2.0.0
       simple-html-tokenizer: 0.5.11
 
-  '@glimmer/syntax@0.94.9':
+  '@glimmer/syntax@0.95.0':
     dependencies:
       '@glimmer/interfaces': 0.94.6
       '@glimmer/util': 0.94.8
       '@glimmer/wire-format': 0.94.8
-      '@handlebars/parser': 2.0.0
+      '@handlebars/parser': 2.2.1
       simple-html-tokenizer: 0.5.11
 
   '@glimmer/tracking@1.1.2':
@@ -10880,6 +10890,8 @@ snapshots:
   '@glint/template@1.6.0-alpha.2': {}
 
   '@handlebars/parser@2.0.0': {}
+
+  '@handlebars/parser@2.2.1': {}
 
   '@highlightjs/cdn-assets@11.11.1': {}
 
@@ -11539,6 +11551,10 @@ snapshots:
       '@types/node': 24.2.0
     optional: true
 
+  '@typescript-eslint/tsconfig-utils@8.39.0(typescript@5.9.2)':
+    dependencies:
+      typescript: 5.9.2
+
   '@uppy/aws-s3@4.1.0(@uppy/core@4.2.2)':
     dependencies:
       '@uppy/companion-client': 4.1.0(@uppy/core@4.2.2)
@@ -12075,12 +12091,12 @@ snapshots:
 
   babel-plugin-ember-template-compilation@2.4.1:
     dependencies:
-      '@glimmer/syntax': 0.94.9
+      '@glimmer/syntax': 0.95.0
       babel-import-util: 3.0.1
 
   babel-plugin-ember-template-compilation@3.0.0:
     dependencies:
-      '@glimmer/syntax': 0.94.9
+      '@glimmer/syntax': 0.95.0
       babel-import-util: 3.0.1
       import-meta-resolve: 4.1.0
 
@@ -13819,11 +13835,12 @@ snapshots:
 
   ember-disable-prototype-extensions@1.1.3: {}
 
-  ember-eslint-parser@0.5.10(@babel/core@7.28.0)(eslint@9.32.0):
+  ember-eslint-parser@0.5.11(@babel/core@7.28.0)(eslint@9.32.0)(typescript@5.9.2):
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.32.0)
       '@glimmer/syntax': 0.93.1
+      '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
       content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
@@ -13831,6 +13848,7 @@ snapshots:
       svg-tags: 1.0.0
     transitivePeerDependencies:
       - eslint
+      - typescript
 
   ember-exam@9.1.0(@glint/template@1.6.0-alpha.2)(ember-qunit@9.0.3(@ember/test-helpers@5.2.2(@babel/core@7.28.0)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1))(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8)))(qunit@2.24.1)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8)):
     dependencies:
@@ -13975,7 +13993,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-template-lint@7.9.1:
+  ember-template-lint@7.9.2:
     dependencies:
       '@lint-todo/utils': 13.1.1
       content-tag: 3.1.3
@@ -14242,11 +14260,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ember@12.7.0(@babel/core@7.28.0)(eslint@9.32.0):
+  eslint-plugin-ember@12.7.0(@babel/core@7.28.0)(eslint@9.32.0)(typescript@5.9.2):
     dependencies:
       '@ember-data/rfc395-data': 0.0.4
       css-tree: 3.1.0
-      ember-eslint-parser: 0.5.10(@babel/core@7.28.0)(eslint@9.32.0)
+      ember-eslint-parser: 0.5.11(@babel/core@7.28.0)(eslint@9.32.0)(typescript@5.9.2)
       ember-rfc176-data: 0.3.18
       eslint: 9.32.0
       eslint-utils: 3.0.0(eslint@9.32.0)
@@ -14257,6 +14275,7 @@ snapshots:
       snake-case: 3.0.4
     transitivePeerDependencies:
       - '@babel/core'
+      - typescript
 
   eslint-plugin-import@2.32.0(eslint@9.32.0):
     dependencies:
@@ -16027,11 +16046,11 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.9.1):
+  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.9.2):
     dependencies:
       content-tag: 3.1.3
       debug: 4.4.1(supports-color@8.1.1)
-      ember-template-lint: 7.9.1
+      ember-template-lint: 7.9.2
       globby: 14.1.0
     transitivePeerDependencies:
       - supports-color
@@ -18221,33 +18240,33 @@ snapshots:
 
   styled_string@0.0.1: {}
 
-  stylelint-config-recommended-scss@15.0.1(postcss@8.5.6)(stylelint@16.23.0(typescript@5.6.3)):
+  stylelint-config-recommended-scss@15.0.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.6.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.6)
-      stylelint: 16.23.0(typescript@5.6.3)
-      stylelint-config-recommended: 16.0.0(stylelint@16.23.0(typescript@5.6.3))
-      stylelint-scss: 6.12.1(stylelint@16.23.0(typescript@5.6.3))
+      stylelint: 16.23.1(typescript@5.6.3)
+      stylelint-config-recommended: 16.0.0(stylelint@16.23.1(typescript@5.6.3))
+      stylelint-scss: 6.12.1(stylelint@16.23.1(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.6
 
-  stylelint-config-recommended@16.0.0(stylelint@16.23.0(typescript@5.6.3)):
+  stylelint-config-recommended@16.0.0(stylelint@16.23.1(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.23.0(typescript@5.6.3)
+      stylelint: 16.23.1(typescript@5.6.3)
 
-  stylelint-config-standard-scss@15.0.1(postcss@8.5.6)(stylelint@16.23.0(typescript@5.6.3)):
+  stylelint-config-standard-scss@15.0.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.23.0(typescript@5.6.3)
-      stylelint-config-recommended-scss: 15.0.1(postcss@8.5.6)(stylelint@16.23.0(typescript@5.6.3))
-      stylelint-config-standard: 38.0.0(stylelint@16.23.0(typescript@5.6.3))
+      stylelint: 16.23.1(typescript@5.6.3)
+      stylelint-config-recommended-scss: 15.0.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.6.3))
+      stylelint-config-standard: 38.0.0(stylelint@16.23.1(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.6
 
-  stylelint-config-standard@38.0.0(stylelint@16.23.0(typescript@5.6.3)):
+  stylelint-config-standard@38.0.0(stylelint@16.23.1(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.23.0(typescript@5.6.3)
-      stylelint-config-recommended: 16.0.0(stylelint@16.23.0(typescript@5.6.3))
+      stylelint: 16.23.1(typescript@5.6.3)
+      stylelint-config-recommended: 16.0.0(stylelint@16.23.1(typescript@5.6.3))
 
-  stylelint-scss@6.12.1(stylelint@16.23.0(typescript@5.6.3)):
+  stylelint-scss@6.12.1(stylelint@16.23.1(typescript@5.6.3)):
     dependencies:
       css-tree: 3.1.0
       is-plain-object: 5.0.0
@@ -18257,9 +18276,9 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.0
       postcss-value-parser: 4.2.0
-      stylelint: 16.23.0(typescript@5.6.3)
+      stylelint: 16.23.1(typescript@5.6.3)
 
-  stylelint@16.23.0(typescript@5.6.3):
+  stylelint@16.23.1(typescript@5.6.3):
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
@@ -18752,7 +18771,7 @@ snapshots:
 
   typescript@5.6.3: {}
 
-  typescript@5.8.3: {}
+  typescript@5.9.2: {}
 
   uc.micro@2.1.0: {}
 

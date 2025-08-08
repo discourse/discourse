@@ -20,6 +20,10 @@ function createFootnoteNodeView({
       if (!this.innerView) {
         this.open();
       }
+
+      if (this.innerView) {
+        this.innerView.dom.focus();
+      }
     }
 
     deselectNode() {
@@ -231,18 +235,31 @@ const extension = {
       }
     },
   },
-  inputRules: [
-    {
-      match: /\^\[(.*?)]$/,
-      handler: (state, match, start, end) => {
-        const content = state.doc.slice(start + 2, end).content;
-        const paragraph = state.schema.nodes.paragraph.create(null, content);
-        const footnote = state.schema.nodes.footnote.create(null, paragraph);
+  inputRules({ pmState: { NodeSelection } }) {
+    return [
+      {
+        match: /\^\[(.*?)]$/,
+        handler: (state, match, start, end) => {
+          const content = state.doc.slice(start + 2, end).content;
+          const paragraph = state.schema.nodes.paragraph.create(null, content);
+          const footnote = state.schema.nodes.footnote.create(null, paragraph);
 
-        return state.tr.replaceWith(start, end, footnote);
+          return state.tr.replaceWith(start, end, footnote);
+        },
       },
-    },
-  ],
+      {
+        match: /\[\^\d+]$/,
+        handler: (state, match, start, end) => {
+          const paragraph = state.schema.nodes.paragraph.create();
+          const footnote = state.schema.nodes.footnote.create(null, paragraph);
+
+          const tr = state.tr.replaceWith(start, end, footnote);
+          tr.setSelection(NodeSelection.create(tr.doc, start));
+          return tr;
+        },
+      },
+    ];
+  },
 };
 
 export default extension;
