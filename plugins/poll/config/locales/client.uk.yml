@@ -131,7 +131,6 @@ uk:
       error_while_fetching_voters: "На жаль, під час відображення тих, хто проголосував, сталася помилка."
       error_while_exporting_results: "На жаль, сталася помилка експорту результатів опитування."
       ui_builder:
-        title: Створити опитування
         insert: Вставити опитування
         help:
           options_min_count: Введіть принаймні 1 варіант.

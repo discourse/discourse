@@ -2016,7 +2016,6 @@ tr_TR:
     desktop_category_page_style: "Bu ayar, masaüstündeki /categories sayfasının görsel düzenini belirler. Öne çıkan konularla birlikte alt kategorilerin görüntülenmesi, en son konuların gösterilmesi veya en iyi konuların sunulması gibi seçenekleri içerir. Seçilen stil, kullanıcıların sitedeki kategorilerle nasıl etkileşime gireceğini ve kategorilerde nasıl gezineceğini etkiler."
     mobile_category_page_style: "Bu ayar, /categories sayfasının mobil cihazlardaki görsel düzenini belirler."
     category_colors: "Kategoriler için izin verilen onaltılık renk değerlerinin bir listesi."
-    default_dark_mode_color_scheme_id: "Koyu moddayken kullanılan renk paleti."
     dark_mode_none: "Hiçbiri"
     max_image_size_kb: "Maksimum görüntü yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük görüntüler yükleme sırasında sığacak şekilde yeniden boyutlandırılır."
     max_attachment_size_kb: "Maksimum ek dosya yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır."

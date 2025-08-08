@@ -11,8 +11,6 @@ cs:
         categories:
           discourse_details: "Discourse Details"
   js:
-    details:
-      title: Skrýt detaily
     composer:
       details_title: Souhrn
       details_text: "Tento text bude skrytý"

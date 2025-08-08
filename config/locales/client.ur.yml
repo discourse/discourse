@@ -1453,15 +1453,16 @@ ur:
         description: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں"
       reset_seen_user_tips: "صارف کی تجاویز دوبارہ دکھائیں"
       theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
+      color_scheme_default_on_all_devices: "میرے تمام آلات پر ڈیفالٹ کلر پیلیٹ اور موڈ سیٹ کریں۔"
       color_scheme: "رنگ پیلیٹ"
       color_schemes:
         default_description: "تھیم ڈیفالٹ"
-        disable_dark_scheme: "باقاعدہ طور پر"
         dark_instructions: "آپ اپنے آلے کے ڈارک موڈ کو ٹوگل کرکے ڈارک موڈ کلر پیلیٹ کا پیش منظر دیکھ سکتے ہیں۔"
         undo: "رِی سَیٹ"
-        regular: "معمولی"
+        regular: "لائٹ موڈ"
         dark: "ڈارک موڈ"
-        default_dark_scheme: "(سائٹ ڈیفالٹ)"
+        interface_mode: "موڈ"
+        interface_mode_instructions: "'آٹو' آپ کے سسٹم کی ترجیحات کو لائٹ یا ڈارک موڈ کے لیے استعمال کرتا ہے۔"
         interface_modes:
           auto: "خود بخود"
           light: "لائٹ"
@@ -1474,6 +1475,7 @@ ur:
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
       enable_smart_lists: "کمپوزر میں لکھتے وقت سمارٹ لسٹوں کو فعال کریں"
       enable_defer: "عنوانات کو بغیر پڑھے کے بطور نشان زد کریں"
+      enable_markdown_monospace_font: "کمپوزر کے مارک ڈاؤن موڈ میں مونو اسپیس فونٹ استعمال کریں۔"
       experimental_sidebar:
         enable: "سائڈبار کو فعال کریں"
         options: "اختیارات"
@@ -2592,6 +2594,8 @@ ur:
     welcome_banner_location:
       above_topic_content: "مندرجہ بالا موضوع کا مواد"
       below_site_header: "سائٹ ہیڈر کے نیچے"
+    welcome_banner_page_visibility:
+      homepage: "ہَوم پَیج"
     composition_mode:
       markdown: "مارک ڈاؤن"
       rich: "بھرپور متن"
@@ -2678,7 +2682,6 @@ ur:
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
-      insert_table: "ٹیبل داخل کریں"
       posting_not_on_topic: "کون سے ٹاپک کا آپ جواب دینا چاہتے ہیں؟"
       saved_local_draft_tip: "مقامی طور پر محفوظ کر لیا گیا"
       similar_topics: "آپ کا موضوع سے ملتا جلتا ہے۔۔۔"
@@ -2797,10 +2800,7 @@ ur:
       paste_code_text: "کوڈ یہاں ٹائپ یا پیسٹ کریں"
       upload_title: "اَپ لوڈ"
       upload_description: "یہاں اَپ لوڈ کی تفصیل درج کریں"
-      olist_title: "نمبروار فہرست"
-      ulist_title: "بلٹ والی لسٹ"
       list_item: "فہرست آئٹم"
-      toggle_direction: "سمت ٹَوگل کریں"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مینِمائز کریں"
       open: "کمپوزر پینل کھولیں"
@@ -6027,8 +6027,6 @@ ur:
           edit: "ترمیم کریں"
           filters:
             all: "تمام"
-          active_badge:
-            text: "فعال"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
           undo: "کالعدم کریں"

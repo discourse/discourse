@@ -2016,7 +2016,6 @@ nl:
     desktop_category_page_style: "Deze instelling bepaalt de visuele indeling van de pagina /categories op de desktop. Deze omvat opties zoals het weergeven van subcategorieën met uitgelichte topics, het weergeven van de nieuwste topics of het weergeven van toptopics. De gekozen stijl beïnvloedt de manier waarop gebruikers omgaan met en navigeren door categorieën op de site."
     mobile_category_page_style: "Deze instelling bepaalt de visuele lay-out van de pagina /categories op mobiele apparaten."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
-    default_dark_mode_color_scheme_id: "Het kleurenpalet dat wordt gebruikt in donkere modus."
     dark_mode_none: "Geen"
     max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
     max_attachment_size_kb: "De maximale grootte van te uploaden bijlagen. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."

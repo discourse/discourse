@@ -110,7 +110,6 @@ nl:
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
       error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
       ui_builder:
-        title: Poll maken
         insert: Poll invoegen
         help:
           options_min_count: Voer minimaal 1 optie in.

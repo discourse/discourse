@@ -11,8 +11,6 @@ pt_BR:
         categories:
           discourse_details: "Detalhes Discourse"
   js:
-    details:
-      title: Ocultar detalhes
     composer:
       details_title: Resumo
       details_text: "Este texto ficará oculto."

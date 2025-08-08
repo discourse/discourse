@@ -7,7 +7,6 @@
 nl:
   js:
     spoiler:
-      title: Spoiler vervagen
       label:
         show: "Verborgen inhoud weergeven"
     composer:

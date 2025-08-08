@@ -110,7 +110,6 @@ tr_TR:
       error_while_fetching_voters: "Üzgünüz, oy verenler gösterilirken bir hata oluştu."
       error_while_exporting_results: "Üzgünüz, anket sonuçlarını dışa aktarırken bir hata oluştu."
       ui_builder:
-        title: Anket Oluştur
         insert: Anket Ekle
         help:
           options_min_count: En az 1 seçenek girin.

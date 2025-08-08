@@ -1282,12 +1282,9 @@ es:
       color_scheme: "Paleta de colores"
       color_schemes:
         default_description: "Tema predeterminado"
-        disable_dark_scheme: "Igual que el normal"
         dark_instructions: "Puedes previsualizar la paleta de colores del modo oscuro activando el modo oscuro de tu dispositivo."
         undo: "Restablecer"
-        regular: "Habitual"
         dark: "Modo oscuro"
-        default_dark_scheme: "(valor predeterminado por el sitio)"
         interface_modes:
           light: "Claro"
           dark: "Oscuro"
@@ -2368,6 +2365,8 @@ es:
       required_at_signup: "Obligatorio"
       optional_at_signup: "Opcional"
       hidden_at_signup: "Opcional, oculto al registrarte"
+    welcome_banner_page_visibility:
+      homepage: "Página de inicio"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -2449,7 +2448,6 @@ es:
       unlist: "oculto"
       add_warning: "Esta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar susurro"
-      insert_table: "Insertar tabla"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a…"
@@ -2547,10 +2545,7 @@ es:
       paste_code_text: "escribe o pega el código aquí"
       upload_title: "Subir"
       upload_description: "introduce una descripción del archivo subido aquí"
-      olist_title: "Lista numerada"
-      ulist_title: "Lista con viñetas"
       list_item: "Lista de elementos"
-      toggle_direction: "Alternar dirección"
       help: "Ayuda de edición con Markdown"
       collapse: "minimizar el panel de edición"
       open: "abrir el panel de composición"
@@ -6042,8 +6037,6 @@ es:
           filters:
             all: "Todo"
             user_selectable: "Seleccionable por el usuario"
-          active_badge:
-            text: "Activo"
           long_title: "Paletas de colores"
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"

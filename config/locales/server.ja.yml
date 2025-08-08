@@ -1937,7 +1937,6 @@ ja:
     desktop_category_page_style: "この設定により、デスクトップ上の /categories ページの視覚的なレイアウトが決定します。注目のトピックを含むサブカテゴリの表示、最新のトピックの表示、トップトピックの紹介などのオプションが含まれます。スタイルの選択は、ユーザーがサイトのカテゴリをどのように操作して移動するかに影響します。"
     mobile_category_page_style: "この設定によって、モバイル上の /categories ページの視覚的なレイアウトが決まります。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
-    default_dark_mode_color_scheme_id: "ダークモードで使用される色パレット。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
     max_attachment_size_kb: "添付ファイルの最大アップロードサイズ。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"

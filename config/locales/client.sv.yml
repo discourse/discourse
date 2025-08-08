@@ -26,19 +26,19 @@ sv:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM, YYYY h:mm"
+      long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "MMM D, ÅÅÅÅ LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "MMM D, ÅÅÅÅ"
+      long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, YYYY <br/>LT"
       wrap_ago: "%{date} sedan"
@@ -105,7 +105,7 @@ sv:
         almost_x_years:
           one: "nästan %{count} år"
           other: "nästan %{count} år"
-        date_year: "MMM D, ÅÅÅÅ"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min sedan"
@@ -1183,11 +1183,8 @@ sv:
       color_scheme: "Färgpalett"
       color_schemes:
         default_description: "Temat Standard"
-        disable_dark_scheme: "Samma som vanlig"
         undo: "Återställ"
-        regular: "Vanlig"
         dark: "Mörkt läge"
-        default_dark_scheme: "(standard för webbplatsen)"
         interface_modes:
           light: "Ljust"
           dark: "Mörkt"
@@ -2103,6 +2100,8 @@ sv:
     full_name_requirement:
       required_at_signup: "Krävs"
       optional_at_signup: "Valfritt"
+    welcome_banner_page_visibility:
+      homepage: "Hemsida"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -2183,7 +2182,6 @@ sv:
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
-      insert_table: "Infoga tabell"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Ditt ämne liknar…"
@@ -2277,10 +2275,7 @@ sv:
       paste_code_text: "skriv eller klistra in din kod här"
       upload_title: "Bild"
       upload_description: "skriv en bildbeskrivning här"
-      olist_title: "Numrerad lista"
-      ulist_title: "Punktlista"
       list_item: "Listobjekt"
-      toggle_direction: "Växla riktning"
       help: "Markdown-redigeringshjälp"
       collapse: "minimera skaparpanelen"
       open: "öppna skaparpanelen"
@@ -5355,8 +5350,6 @@ sv:
           edit: "Redigera"
           filters:
             all: "Alla"
-          active_badge:
-            text: "Aktiv"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
           undo: "Ångra"

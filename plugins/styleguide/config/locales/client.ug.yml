@@ -89,8 +89,8 @@ ug:
           title: "تېما خەرىتىسى"
         site_header:
           title: "بېكەت بېشى"
-        suggested_topics:
-          title: "تەۋسىيە تېما"
+        more_topics:
+          title: "تېخىمۇ كۆپ تېما"
         post_menu:
           title: "يازما تىزىملىكى"
         modal:

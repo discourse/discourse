@@ -300,7 +300,6 @@ tr_TR:
         one: "%{count} dosya"
         other: "%{count} dosya"
       you_flagged: "Bu mesaja bayrak eklediniz"
-      exit: "geri"
       channel_status:
         read_only_header: "Kanal salt okunur"
         read_only: "Salt Okunur"
@@ -698,7 +697,6 @@ tr_TR:
           switch_channel_arrows: "%{shortcut} Kanalı değiştir"
           switch__unread_channel_arrows: "%{shortcut} Okunmamış kanalı değiştir"
           open_quick_channel_selector: "%{shortcut} Hızlı kanal seçiciyi aç"
-          open_insert_link_modal: "%{shortcut} Köprü ekle (yalnızca besteci)"
           composer_bold: "%{shortcut} Kalın (yalnızca besteci)"
           composer_italic: "%{shortcut} İtalik (yalnızca besteci)"
           composer_code: "%{shortcut} Kod (yalnızca besteci)"

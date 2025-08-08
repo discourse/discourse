@@ -102,7 +102,6 @@ ja:
       error_while_fetching_voters: "投票者を表示する際にエラーが発生しました。"
       error_while_exporting_results: "投票結果のエクスポート中にエラーが発生しました。"
       ui_builder:
-        title: 投票を作成
         insert: 投票の挿入
         help:
           options_min_count: 少なくとも1つのオプションを入力してください。

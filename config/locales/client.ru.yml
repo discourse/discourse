@@ -1444,12 +1444,9 @@ ru:
       color_scheme: "Цветовая палитра"
       color_schemes:
         default_description: "Тема по умолчанию"
-        disable_dark_scheme: "Обычная"
         dark_instructions: "Чтобы увидеть цветовую палитру темного режима, включите темный режим устройства."
         undo: "Сбросить"
-        regular: "Обычная"
         dark: "Тёмный режим"
-        default_dark_scheme: "(цветовая схема по умолчанию)"
         interface_modes:
           light: "Светлая"
           dark: "Тёмная"
@@ -2620,6 +2617,8 @@ ru:
       required_at_signup: "Обязательное"
       optional_at_signup: "Необязательно"
       hidden_at_signup: "Необязательно, скрыто при регистрации"
+    welcome_banner_page_visibility:
+      homepage: "Главная страница"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2711,7 +2710,6 @@ ru:
       unlist: "тема скрыта"
       add_warning: "Официальное предупреждение."
       toggle_whisper: "Скрытое сообщение"
-      insert_table: "Вставить таблицу"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
       saved_local_draft_tip: "сохранено локально"
       similar_topics: "Ваша тема похожа на…"
@@ -2827,10 +2825,7 @@ ru:
       paste_code_text: "введите или вставьте сюда код"
       upload_title: "Загрузка"
       upload_description: "впишите сюда описание файла"
-      olist_title: "Нумерованный список"
-      ulist_title: "Ненумерованный список"
       list_item: "Элемент списка"
-      toggle_direction: "Переключить направление"
       help: "Справка по форматированию (Markdown)"
       collapse: "свернуть панель редактора"
       open: "открыть панель редактора"
@@ -6595,8 +6590,6 @@ ru:
           filters:
             all: "Все настройки"
             user_selectable: "Выбирается пользователем"
-          active_badge:
-            text: "Активна"
           long_title: "Цветовые палитры"
           about: "Измените цвета, используемые в темах. Создайте новую цветовую палитру."
           new_name: "Новая цветовая палитра"

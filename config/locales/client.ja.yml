@@ -1201,12 +1201,9 @@ ja:
       color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
-        disable_dark_scheme: "通常と同じ"
         dark_instructions: "デバイスをダークモードに切り替えると、ダークモードの色パレットをプレビューできます。"
         undo: "リセット"
-        regular: "通常"
         dark: "ダークモード"
-        default_dark_scheme: "(サイトのデフォルト)"
         interface_modes:
           light: "ライト"
           dark: "ダーク"
@@ -2242,6 +2239,8 @@ ja:
       required_at_signup: "必須"
       optional_at_signup: "オプション"
       hidden_at_signup: "オプション、登録時に非表示"
+    welcome_banner_page_visibility:
+      homepage: "ホームページ"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2318,7 +2317,6 @@ ja:
       unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
       toggle_whisper: "ささやきを切り替える"
-      insert_table: "テーブルを挿入"
       posting_not_on_topic: "どのトピックに返信しますか？"
       saved_local_draft_tip: "ローカルに保存しました"
       similar_topics: "これに似たトピックがあります…"
@@ -2407,10 +2405,7 @@ ja:
       paste_code_text: "コードをここに入力または貼り付け"
       upload_title: "アップロード"
       upload_description: "アップロードの説明をここに入力"
-      olist_title: "番号付きリスト"
-      ulist_title: "箇条書き"
       list_item: "リスト項目"
-      toggle_direction: "方向の切り替え"
       help: "Markdown 編集のヘルプ"
       collapse: "コンポーザーパネルを最小化"
       open: "コンポーザーパネルを開く"
@@ -5759,8 +5754,6 @@ ja:
           filters:
             all: "すべて"
             user_selectable: "ユーザー選択可能"
-          active_badge:
-            text: "アクティブ"
           long_title: "色パレット"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"

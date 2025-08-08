@@ -1596,12 +1596,9 @@ ar:
       color_scheme: "لوحة الألوان"
       color_schemes:
         default_description: "السمة الافتراضية"
-        disable_dark_scheme: "مثل العادي"
         dark_instructions: "يمكنك معاينة لوحة ألوان الوضع الداكن عن طريق تفعيل الوضع الداكن لجهازك."
         undo: "إعادة التعيين"
-        regular: "العادي"
         dark: "الوضع الداكن"
-        default_dark_scheme: "(الوضع الافتراضي للموقع)"
         interface_modes:
           light: "فاتح"
           dark: "داكن"
@@ -2842,6 +2839,8 @@ ar:
       required_at_signup: "مطلوب"
       optional_at_signup: "اختياري"
       hidden_at_signup: "اختياري، يتم إخفاؤه عند التسجيل"
+    welcome_banner_page_visibility:
+      homepage: "الصفحة الرئيسية"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2943,7 +2942,6 @@ ar:
       unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
       toggle_whisper: "تفعيل الهمس"
-      insert_table: "إدراج جدول"
       posting_not_on_topic: "أي موضوع تريد الرد عليه؟"
       saved_local_draft_tip: "تم الحفظ محليًا"
       similar_topics: "موضوعك يشابه…"
@@ -3077,10 +3075,7 @@ ar:
       paste_code_text: "اكتب الرمز أو الصقه هنا"
       upload_title: "تحميل"
       upload_description: "أدخِل وصف التحميل هنا"
-      olist_title: "قائمة مرقَّمة"
-      ulist_title: "قائمة منقَّطة"
       list_item: "إدراج عنصر"
-      toggle_direction: "تبديل الاتجاه"
       help: "مساعدة تحرير Markdown"
       collapse: "تصغير لوحة الكتابة"
       open: "فتح لوحة الكتابة"
@@ -7132,8 +7127,6 @@ ar:
           filters:
             all: "الكل"
             user_selectable: "قابلة للاختيار من قِبل المستخدم"
-          active_badge:
-            text: "نشطة"
           long_title: "لوحات الألوان"
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"

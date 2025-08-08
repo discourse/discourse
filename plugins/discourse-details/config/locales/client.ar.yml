@@ -6,8 +6,6 @@
 
 ar:
   js:
-    details:
-      title: إخفاء التفاصيل
     composer:
       details_title: الملخص
       details_text: "سيُخفى هذا النص"

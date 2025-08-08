@@ -95,9 +95,6 @@ pt_BR:
               label: "Modelo"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Prompt do sistema"
-              description: "O prompt que será usado para triagem, verifique se responderá com uma única palavra que pode ser usada para acionar a ação"
             max_post_tokens:
               label: "Máximo de Tokens de Postagem"
               description: "A quantidade máxima de tokens para ler usando triagem LLM"
@@ -131,11 +128,6 @@ pt_BR:
             include_personal_messages:
               label: "Incluir mensagens pessoais"
               description: "Também verificar e fazer triagem de mensagens pessoais"
-            model:
-              label: "Modelo"
-              description: "Modelo de linguagem usado para triagem"
-            temperature:
-              label: "Temperatura"
     discourse_ai:
       title: "IA"
       features:
@@ -412,7 +404,7 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-0: "Modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-1: "Modelo mais inteligente da Anthropic"
           anthropic-claude-3-5-haiku-latest: "Rápido e econômico"
           google-gemini-2-5-flash: "Modelo leve, rápido e econômico com raciocínio multimodal"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multi-idioma leve e eficiente"

@@ -7,7 +7,6 @@
 fr:
   js:
     spoiler:
-      title: Flouter le texte
       label:
         show: "Afficher le contenu masqué"
     composer:

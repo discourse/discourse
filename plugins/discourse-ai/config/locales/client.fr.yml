@@ -95,9 +95,8 @@ fr:
               label: "Modèle"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Invite du système"
-              description: "L'invite qui sera utilisée pour le tri, assurez-vous qu'elle répond avec un seul mot que vous pouvez utiliser pour déclencher l'action"
+            triage_persona:
+              label: "Personnage"
             max_post_tokens:
               label: "Nombre maximum de jetons de publication"
               description: "Le nombre maximal de jetons à analyser à l'aide du triage LLM"
@@ -131,11 +130,6 @@ fr:
             include_personal_messages:
               label: "Inclure les messages personnels"
               description: "Analysez et triez également les messages personnels"
-            model:
-              label: "Modèle"
-              description: "Modèle linguistique utilisé pour le tri"
-            temperature:
-              label: "Température"
     discourse_ai:
       title: "IA"
       features:
@@ -412,7 +406,7 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-0: "Le modèle le plus intelligent d'Anthropic"
+          anthropic-claude-opus-4-1: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-3-5-haiku-latest: "Rapide et économique"
           google-gemini-2-5-flash: "Léger, rapide et économique avec raisonnement multimodal"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modèle multilingue léger et efficace"

@@ -1282,12 +1282,9 @@ it:
       color_scheme: "Schema di colori"
       color_schemes:
         default_description: "Tema predefinito"
-        disable_dark_scheme: "Come di norma"
         dark_instructions: "Puoi provare i colori del tema scuro attivandolo sul tuo dispositivo."
         undo: "Annulla"
-        regular: "Normale"
         dark: "Modalità scura"
-        default_dark_scheme: "(predefinito del sito)"
         interface_modes:
           light: "Chiaro"
           dark: "Scuro"
@@ -2368,6 +2365,8 @@ it:
       required_at_signup: "Obbligatorie"
       optional_at_signup: "Facoltativo"
       hidden_at_signup: "Facoltativo, nascosto all'iscrizione"
+    welcome_banner_page_visibility:
+      homepage: "Homepage"
     shortcut_modifier_key:
       shift: "Maiusc"
       ctrl: "Ctrl"
@@ -2448,8 +2447,7 @@ it:
       whisper: "sussurro"
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
-      toggle_whisper: "Attiva/Disattiva Sussurri"
-      insert_table: "Inserisci tabella"
+      toggle_whisper: "Attiva/disattiva sussurri"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a…"
@@ -2547,10 +2545,7 @@ it:
       paste_code_text: "digita o incolla il codice qui"
       upload_title: "Carica"
       upload_description: "inserisci qui la descrizione del caricamento"
-      olist_title: "Elenco Numerato"
-      ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
-      toggle_direction: "Attiva Direzione"
       help: "Aiuto Inserimento Markdown"
       collapse: "minimizza il pannello del composer"
       open: "Apri il pannello del composer"
@@ -6045,8 +6040,6 @@ it:
           filters:
             all: "Tutte"
             user_selectable: "Selezionabile dall'utente"
-          active_badge:
-            text: "Attivi"
           long_title: "Schemi di colori"
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
           new_name: "Nuovo schema di colori"

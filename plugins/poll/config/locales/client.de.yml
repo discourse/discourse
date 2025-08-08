@@ -115,7 +115,6 @@ de:
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
       error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
       ui_builder:
-        title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
           options_min_count: Gib mindestens eine Option ein.

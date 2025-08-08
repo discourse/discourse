@@ -82,8 +82,8 @@ ar:
           title: "خريطة الموضوع"
         site_header:
           title: "رأس الموقع"
-        suggested_topics:
-          title: "الموضوعات المقترحة"
+        more_topics:
+          title: "المزيد من الموضوعات"
         post_menu:
           title: "قائمة المشاركة"
         modal:

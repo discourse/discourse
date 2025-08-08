@@ -7,7 +7,6 @@
 tr_TR:
   js:
     spoiler:
-      title: Spoiler'ı Bulanıklaştır
       label:
         show: "Gizli içeriği göster"
     composer:

@@ -11,8 +11,6 @@ zh_CN:
         categories:
           discourse_details: "Discourse 细节"
   js:
-    details:
-      title: 隐藏详细信息
     composer:
       details_title: 总结
       details_text: "此文本将被隐藏"

@@ -334,7 +334,6 @@ uk:
         many: "%{count} файлів"
         other: "%{count} файлів"
       you_flagged: "Ви поскаржилися на це повідомлення"
-      exit: "назад"
       channel_status:
         read_only_header: "Канал тільки для читання"
         read_only: "Тільки для читання"
@@ -790,7 +789,6 @@ uk:
           switch_channel_arrows: "%{shortcut} Переключити канал"
           switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
-          open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"
           composer_italic: "%{shortcut} Курсив (лише в редакторі)"
           composer_code: "%{shortcut} Код (тільки в редакторі)"

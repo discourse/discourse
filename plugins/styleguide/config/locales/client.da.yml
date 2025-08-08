@@ -76,8 +76,8 @@ da:
           title: "Emnekort"
         site_header:
           title: "Sidehoved"
-        suggested_topics:
-          title: "Foreslåede emner"
+        more_topics:
+          title: "Flere emner"
         post_menu:
           title: "Send menu"
         modal:

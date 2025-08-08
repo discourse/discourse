@@ -1459,12 +1459,10 @@ de:
       color_scheme: "Farbpalette"
       color_schemes:
         default_description: "Theme-Standard"
-        disable_dark_scheme: "Gleich wie regulär"
         dark_instructions: "Du kannst die Farbpalette für den dunklen Modus ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
-        regular: "Regulär"
+        regular: "Heller Modus"
         dark: "Dunkler Modus"
-        default_dark_scheme: "(Website-Standard)"
         interface_mode: "Modus"
         interface_mode_instructions: "„Auto“ verwendet die Einstellungen deines Systems für den hellen oder dunklen Modus."
         interface_modes:
@@ -1479,6 +1477,7 @@ de:
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
+      enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -2591,6 +2590,8 @@ de:
     welcome_banner_location:
       above_topic_content: "Über Themeninhalt"
       below_site_header: "Unter der Kopfzeile"
+    welcome_banner_page_visibility:
+      homepage: "Homepage"
     composition_mode:
       markdown: "Markdown"
       rich: "Rich Text"
@@ -2677,7 +2678,6 @@ de:
       unlist: "unsichtbar"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
-      insert_table: "Tabelle einfügen"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit …"
@@ -2796,10 +2796,7 @@ de:
       paste_code_text: "tippe oder füge den Code hier ein"
       upload_title: "Hochladen"
       upload_description: "gib hier eine Beschreibung des Uploads ein"
-      olist_title: "Nummerierte Liste"
-      ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
-      toggle_direction: "Schreibrichtung wechseln"
       help: "Hilfe zur Markdown-Formatierung"
       collapse: "Editor minimieren"
       open: "Editor öffnen"
@@ -6268,13 +6265,14 @@ de:
             filter_by_used: "Verwendet"
             filter_by_unused: "Nicht verwendet"
             filter_by_updates_available: "Updates verfügbar"
+            search_components: "Nach Namen oder Beschreibung der Komponente filtern …"
             new_update_for_component: "Neues Update verfügbar für %{name}!"
             component_up_to_date: '„%{name}“ ist aktuell.'
             updated_successfully: '„%{name}“ wurde erfolgreich aktualisiert.'
             delete_confirm: 'Möchtest du wirklich „%{name}“ löschen?'
             deleted_successfully: '„%{name}“ wurde erfolgreich gelöscht.'
             no_components: "Keine Komponenten installiert."
-            no_components_found: "Keine Komponenten passen zu deinen Filtern."
+            no_components_found: "Keine Komponente passt zu deinen Filtern."
             badge_unused: "Nicht verwendet"
         user_fields:
           field: "Feld"
@@ -6457,8 +6455,10 @@ de:
           theme: "Theme"
           component: "Komponente"
           components: "Komponenten"
+          search_placeholder: "Nach Namen oder Beschreibung des Themes filtern …"
           filter_all: "Alle"
           filter_user_selectable: "Vom Benutzer wählbar"
+          no_themes_found: "Kein Theme passt zu deinen Filtern"
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
@@ -6500,9 +6500,12 @@ de:
           color_scheme_user_selectable: "Farbpalette kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
+          dark_color_scheme: "Dunkle Farbpalette"
           edit_color_scheme: "Farbpalette bearbeiten"
+          edit_dark_color_scheme: "Dunkle Farbpalette bearbeiten"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme"
+          dark_color_scheme_select: "Wähle Farben im dunklen Modus für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
           add_all_themes: "Alle Themes hinzufügen"
@@ -6699,21 +6702,29 @@ de:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
           preference_warning: "Du hast <a href='%{link}'>deine persönlichen Theme-Einstellungen</a> geändert, sodass die Änderungen an der Palette für dich möglicherweise nicht sichtbar sind. Besucher, die ihre Standardeinstellungen nicht geändert haben, sehen trotzdem die Änderungen, die du hier vornimmst."
-          dark_mode_warning: "Du verwendest derzeit den dunklen Modus. Wenn du eine aktive Farbpalette einstellst, werden die Farben auf den hellen Modus des Themes angewendet. Wenn du die Standardfarben für den dunklen Modus ändern möchtest, bearbeite bitte die <a href='%{link}'>Einstellung für den dunklen Modus der Website</a>."
           title: "Farben"
           edit: "Bearbeiten"
-          set_default: "Im Standard-Theme aktivieren (%{theme})"
+          set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
+          set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
           set_default_success: "%{schemeName} als aktive Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben..."
           from_theme: "Vom Theme: %{name}"
           filters:
+            search_placeholder: "Nach Paletten- oder Theme-Namen filtern ..."
             all: "Gesamt"
             user_selectable: "Vom Benutzer wählbar"
             from_theme: "Vom Theme"
             no_results: "Keine Farbpaletten gefunden"
-          active_badge:
-            text: "Aktiv"
-            title: "Aktive Farbpalette"
+          active_light_badge:
+            text: "Aktiv hell"
+            title: "Aktive helle Farbpalette"
+            reset: "Filter zurücksetzen"
+          active_dark_badge:
+            text: "Aktiv dunkel"
+            title: "Aktive dunkle Farbpalette"
+          active_both_badge:
+            text: "Aktiv hell und dunkel"
+            title: "Aktive helle und dunkle Farbpalette"
           system_palette: "Dies ist eine integrierte Farbpalette, sie kann nicht bearbeitet oder gelöscht werden."
           back_to_colors: "Zurück zu Farbpaletten"
           long_title: "Farbpaletten"
@@ -6915,6 +6926,7 @@ de:
           modal_title: "Details"
           no_previous: "Es gibt keinen vorherigen Wert."
           deleted: "Kein neuer Wert. Der Eintrag wurde gelöscht."
+          filter_date_time: "Nach Datum und Uhrzeit filtern"
           actions:
             permanently_delete_post_revisions: "Beitragsrevisionen dauerhaft löschen"
             delete_user: "Benutzer löschen"
@@ -7602,6 +7614,7 @@ de:
           disabled: "Nicht in Suche einschließen"
         field_types:
           text: "Text"
+          textarea: "Textbereich"
           confirm: "Bestätigung"
           dropdown: "Drop-down-Liste"
           multiselect: "Mehrfachauswahl"

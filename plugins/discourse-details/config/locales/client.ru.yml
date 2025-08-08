@@ -6,8 +6,6 @@
 
 ru:
   js:
-    details:
-      title: Скрыть под спойлер
     composer:
       details_title: Спойлер
       details_text: "Этот текст будет скрыт"

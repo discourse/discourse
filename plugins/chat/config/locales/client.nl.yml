@@ -300,7 +300,6 @@ nl:
         one: "%{count} bestand"
         other: "%{count} bestanden"
       you_flagged: "Je hebt dit bericht gemarkeerd"
-      exit: "vorige"
       channel_status:
         read_only_header: "Kanaal is alleen-lezen"
         read_only: "Alleen-lezen"
@@ -698,7 +697,6 @@ nl:
           switch_channel_arrows: "%{shortcut} Kanaal wisselen"
           switch__unread_channel_arrows: "%{shortcut} Ongelezen kanaal wisselen"
           open_quick_channel_selector: "%{shortcut} Snelle kanaalkiezer openen"
-          open_insert_link_modal: "%{shortcut} Hyperlink invoegen (alleen opstellen)"
           composer_bold: "%{shortcut} Vet (alleen opstellen)"
           composer_italic: "%{shortcut} Cursief (alleen opstellen)"
           composer_code: "%{shortcut} Code (alleen opstellen)"

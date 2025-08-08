@@ -2016,7 +2016,6 @@ fr:
     desktop_category_page_style: "Ce paramètre détermine la disposition visuelle de la page /categories sur le bureau. Il inclut des options telles que l'affichage des sous-catégories avec les sujets en vedette, l'affichage des sujets les plus récents ou la présentation des principaux sujets. Le style choisi influencera la façon dont les utilisateurs interagiront et navigueront dans les catégories du site."
     mobile_category_page_style: "Ce paramètre détermine la disposition visuelle de la page /categories sur les appareils mobiles."
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
-    default_dark_mode_color_scheme_id: "La palette de couleurs utilisée en mode sombre."
     dark_mode_none: "Aucune"
     max_image_size_kb: "La taille maximale de téléversement d'image. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy. Les images plus grandes et plus petites que client_max_body_size seront redimensionnées pour s'adapter au téléversement."
     max_attachment_size_kb: "Taille maximale de téléversement de pièces jointes. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy."

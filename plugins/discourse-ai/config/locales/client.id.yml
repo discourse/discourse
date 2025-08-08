@@ -77,9 +77,6 @@ id:
               label: "Model"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Perintah Sistem"
-              description: "Perintah yang akan digunakan untuk melakukan triase, pastikan untuk membalas dengan satu kata yang dapat Anda gunakan untuk memicu tindakan"
             search_for_text:
               label: "Cari teks"
             category:
@@ -89,10 +86,6 @@ id:
               label: "Label"
             canned_reply:
               label: "Balas"
-            model:
-              label: "Model"
-            temperature:
-              label: "Temperatur"
     discourse_ai:
       title: "AI"
       features:

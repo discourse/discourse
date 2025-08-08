@@ -12,7 +12,6 @@ pt_BR:
           spoiler_alert: "Alerta de spoiler Discourse"
   js:
     spoiler:
-      title: Desfocar spoiler
       label:
         show: "Exibir conteúdo oculto"
     composer:

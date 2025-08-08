@@ -82,8 +82,8 @@ it:
           title: "Mappa Argomento"
         site_header:
           title: "Intestazione del Sito"
-        suggested_topics:
-          title: "Argomenti suggeriti"
+        more_topics:
+          title: "Altri Argomenti"
         post_menu:
           title: "Menu Messaggio"
         modal:

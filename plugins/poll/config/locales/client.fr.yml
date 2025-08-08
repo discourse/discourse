@@ -110,7 +110,6 @@ fr:
       error_while_fetching_voters: "Nous sommes désolés, une erreur s'est produite lors de l'affichage des votants."
       error_while_exporting_results: "Nous sommes désolés, une erreur s'est produite lors de l'exportation des résultats du sondage."
       ui_builder:
-        title: Créer un sondage
         insert: Insérer le sondage
         help:
           options_min_count: Saisissez au moins 1 réponse possible.

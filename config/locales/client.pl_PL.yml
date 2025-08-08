@@ -1621,12 +1621,10 @@ pl_PL:
       color_scheme: "Paleta Kolorów"
       color_schemes:
         default_description: "Motyw domyślny"
-        disable_dark_scheme: "Taki sam jak zwykły"
         dark_instructions: "Możesz wyświetlić paletę kolorów ciemnych poprzez przełączenie trybu ciemnego urządzenia."
         undo: "Przywróć"
-        regular: "Normalny"
+        regular: "Tryb jasny"
         dark: "Tryb ciemny"
-        default_dark_scheme: "(domyślny na stronie)"
         interface_mode: "Tryb"
         interface_mode_instructions: "Opcja „Automatyczny” wykorzystuje preferencje systemu dotyczące trybu jasnego lub ciemnego."
         interface_modes:
@@ -1641,6 +1639,7 @@ pl_PL:
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
+      enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -1718,7 +1717,7 @@ pl_PL:
       api_last_used_at: "Ostatnio użyto:"
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
-      home: "Domyślna strona domowa"
+      home: "Domyślna strona główna"
       staged: "Wystawiany na scenie"
       staff_counters:
         flags_given:
@@ -2844,10 +2843,16 @@ pl_PL:
     welcome_banner_location:
       above_topic_content: "Powyżej treści tematu"
       below_site_header: "Poniżej nagłówka witryny"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Strony menu głównego"
+      homepage: "Strona główna"
+      discovery: "Odkrycie"
+      all_pages: "Wszystkie strony"
     composition_mode:
       markdown: "Markdown"
       rich: "Tekst sformatowany"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -3080,7 +3085,7 @@ pl_PL:
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
-      toggle_direction: "Zmień kierunek"
+      toggle_direction: "Przełącz kierunek"
       help: "Pomoc formatowania Markdown"
       collapse: "zminimalizuj panel kompozytora"
       open: "otwórz panel kompozytora"
@@ -4978,6 +4983,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} lub %{shortcut2}"
@@ -5026,6 +5032,8 @@ pl_PL:
       composing:
         title: "Komponowanie"
         return: "%{shortcut} Powróć do kompozytora"
+        minimize: "%{shortcut} Minimalizuj kompozytor"
+        create_or_reply: "%{shortcut} Utwórz temat lub napisz odpowiedź"
         fullscreen: "%{shortcut} Pełnoekranowy kompozytor"
         insert_current_time: "%{shortcut} Wstaw aktualny czas"
         bold: "%{shortcut} Pogrubienie"
@@ -5597,7 +5605,7 @@ pl_PL:
       title: "Konstruktor tabeli"
       modal:
         title: "Konstruktor tabeli"
-        create: "Zbuduj tabelę"
+        create: "Skonstruuj tabelę"
         help:
           title: "Za pomocą edytora arkusza kalkulacyjnego"
           enter_key: "Enter"
@@ -7060,9 +7068,12 @@ pl_PL:
           color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
+          dark_color_scheme: "Ciemna paleta kolorów"
           edit_color_scheme: "Edytuj paletę kolorów"
+          edit_dark_color_scheme: "Edytuj paletę DarkWColor"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
+          dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym"
           custom_sections: "Spersonalizowane sekcje:"
           theme_components: "Komponenty motywu"
           add_all_themes: "Dodaj wszystkie motywy"
@@ -7275,10 +7286,10 @@ pl_PL:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
           preference_warning: "Zmieniłeś <a href='%{link}'>ustawienia swojego motywu osobistego</a>, więc zmiany palety barw mogą być dla Ciebie niewidoczne. Osoby odwiedzające, które nie zmieniły swoich ustawień domyślnych, nadal zobaczą wprowadzone przez Ciebie zmiany."
-          dark_mode_warning: "Obecnie używasz trybu ciemnego. Podczas ustawiania aktywnej palety kolorów kolory zostaną zastosowane do jasnego trybu motywu. Jeśli chcesz zmienić domyślne kolory trybu ciemnego, edytuj <a href='%{link}'>ustawienia witryny trybu ciemnego</a>."
           title: "Kolory"
           edit: "Edytuj"
-          set_default: "Aktywuj na domyślnym motywie (%{theme})"
+          set_default_light: "Ustaw jako jasną paletę w domyślnym motywie (%{theme})"
+          set_default_dark: "Ustaw jako ciemną paletę w domyślnym motywie (%{theme})"
           set_default_success: "%{schemeName} ustawiono jako aktywną paletę dla %{themeName}"
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"
@@ -7288,9 +7299,16 @@ pl_PL:
             user_selectable: "Możliwe do wyboru przez użytkownika"
             from_theme: "Z motywu"
             no_results: "Nie znaleziono palet kolorów"
-          active_badge:
-            text: "Aktywni"
-            title: "Aktywna paleta kolorów"
+          active_light_badge:
+            text: "Aktywny jasny"
+            title: "Aktywna paleta jasnych kolorów"
+            reset: "Zresetuj filtry"
+          active_dark_badge:
+            text: "Aktywny ciemny"
+            title: "Aktywna paleta jasnych kolorów"
+          active_both_badge:
+            text: "Aktywny jasny i ciemny"
+            title: "Aktywna paleta jasnych i ciemnych kolorów"
           system_palette: "Jest to wbudowana paleta kolorów, której nie można edytować ani usunąć."
           back_to_colors: "Powrót do palet kolorów"
           long_title: "Palety kolorów"
@@ -7492,6 +7510,7 @@ pl_PL:
           modal_title: "Szczegóły"
           no_previous: "Nie ma wcześniejszej wartości."
           deleted: "Nie ma nowej wartości. Zapis został usunięty."
+          filter_date_time: "Filtruj datę i godzinę"
           actions:
             permanently_delete_post_revisions: "trwale usuń wersje posta"
             delete_user: "usunięcie użytkownika"
@@ -8201,6 +8220,7 @@ pl_PL:
           disabled: "Niewyszukiwalny"
         field_types:
           text: "Tekst"
+          textarea: "Obszar tekstowy"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"

@@ -7,7 +7,6 @@
 ru:
   js:
     spoiler:
-      title: Размыть спойлер
       label:
         show: "Показать скрытый контент"
     composer:

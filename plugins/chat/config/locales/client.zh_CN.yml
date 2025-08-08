@@ -284,7 +284,6 @@ zh_CN:
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
-      exit: "返回"
       channel_status:
         read_only_header: "频道为只读"
         read_only: "只读"
@@ -664,7 +663,6 @@ zh_CN:
           switch_channel_arrows: "%{shortcut} 切换频道"
           switch__unread_channel_arrows: "%{shortcut} 切换未读频道"
           open_quick_channel_selector: "%{shortcut} 打开快速频道选择器"
-          open_insert_link_modal: "%{shortcut} 插入超链接（仅输入框）"
           composer_bold: "%{shortcut} 粗体（仅输入框）"
           composer_italic: "%{shortcut} 斜体（仅输入框）"
           composer_code: "%{shortcut} 代码（仅输入框）"

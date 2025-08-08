@@ -340,7 +340,6 @@ ar:
         many: "%{count} ملفًا"
         other: "%{count} ملفًا"
       you_flagged: "لقد أبلغت عن هذه الرسالة"
-      exit: "عودة"
       channel_status:
         read_only_header: "القناة للقراءة فقط"
         read_only: "للقراءة فقط"
@@ -802,7 +801,6 @@ ar:
           switch_channel_arrows: "%{shortcut} تبديل القناة"
           switch__unread_channel_arrows: "%{shortcut} تبديل القناة غير المقروءة"
           open_quick_channel_selector: "%{shortcut} فتح محدِّد قناة سريع"
-          open_insert_link_modal: "%{shortcut} إدراج رابط تشعبي (أداة الإنشاء فقط)"
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"

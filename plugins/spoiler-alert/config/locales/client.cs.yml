@@ -12,7 +12,6 @@ cs:
           spoiler_alert: "Discourse Spoiler Alert"
   js:
     spoiler:
-      title: Rozostření spoileru
       label:
         show: "Zobrazit skrytý obsah"
     composer:

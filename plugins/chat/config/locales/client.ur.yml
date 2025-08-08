@@ -95,7 +95,6 @@ ur:
       save: "محفوظ کریں"
       sounds:
         none: "کوئی نہیں"
-      exit: "واپس"
       channel_status:
         closed: "بند"
         open: "کھولیں"

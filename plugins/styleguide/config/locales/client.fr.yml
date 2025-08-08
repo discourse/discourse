@@ -82,8 +82,8 @@ fr:
           title: "Carte des sujets"
         site_header:
           title: "En-tête du site"
-        suggested_topics:
-          title: "Sujets suggérés"
+        more_topics:
+          title: "Plus de sujets"
         post_menu:
           title: "Menu du message"
         modal:

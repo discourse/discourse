@@ -967,7 +967,6 @@ bs_BA:
       color_scheme: "Paleta boja"
       color_schemes:
         undo: "Resetovati"
-        regular: "Redovne"
       dark_mode: "Tamni način"
       text_size_default_on_all_devices: "Učinite ovo standardnom veličinom teksta na svim mojim uređajima"
       allow_private_messages: "Dozvoli drugim korisnicima da mi šalju privatne poruke"
@@ -1679,7 +1678,7 @@ bs_BA:
       whisper: "šapat"
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
-      toggle_whisper: " Prekidač za Šapat"
+      toggle_whisper: "Uključi Šapat"
       posting_not_on_topic: "Na koju temu želite da odgovorite?"
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "skicirano lokalno"
@@ -1730,10 +1729,7 @@ bs_BA:
       paste_code_text: "ukucaj ili zalijepi kod ovdje"
       upload_title: "Učitavanje"
       upload_description: "unesi opis učitanog"
-      olist_title: "Numerisana lista"
-      ulist_title: "Obična lista"
       list_item: "Listaj predmet"
-      toggle_direction: "Prekidač smijera"
       help: "Pomoć za Markdown"
       collapse: "smanji panel za sastavljanje teksta"
       open: "otvorite panel za kompozitor"
@@ -3845,8 +3841,6 @@ bs_BA:
           edit: "Izmijeni"
           filters:
             all: "Sve"
-          active_badge:
-            text: "Active"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
           copy_name_prefix: "Copy of"
           undo: "Vrati nazad"

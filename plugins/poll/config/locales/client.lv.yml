@@ -58,7 +58,6 @@ lv:
       error_while_fetching_voters: "Atvainojiet, parādot vēlētājus, radās kļūda."
       error_while_exporting_results: "Atvainojiet, radās kļūda eksportējot aptaujas rezultātus."
       ui_builder:
-        title: Veidot aptauju
         insert: Ievietot aptauju
         help:
           options_min_count: Ievadiet vismaz 1 opciju.

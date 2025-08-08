@@ -95,9 +95,6 @@ nl:
               label: "Model"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Systeemprompt"
-              description: "De prompt die wordt gebruikt voor triage. Antwoord met een enkel woord dat kan worden gebruikt om de actie te activeren"
             max_post_tokens:
               label: "Maximaal aantal plaatsingstokens"
               description: "Het maximale aantal tokens om te scannen met LLM-triage"
@@ -131,11 +128,6 @@ nl:
             include_personal_messages:
               label: "Persoonlijke berichten opnemen"
               description: "Scan en triageer ook persoonlijke berichten"
-            model:
-              label: "Model"
-              description: "Taalmodel gebruikt voor triage"
-            temperature:
-              label: "Temperatuur"
     discourse_ai:
       title: "AI"
       features:
@@ -412,7 +404,7 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-0: "Het intelligentste model van Antropic"
+          anthropic-claude-opus-4-1: "Het intelligentste model van Antropic"
           anthropic-claude-3-5-haiku-latest: "Snel en kosteneffectief"
           google-gemini-2-5-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficiënt lichtgewicht meertalig model"

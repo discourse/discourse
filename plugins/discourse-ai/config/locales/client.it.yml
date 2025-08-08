@@ -95,9 +95,8 @@ it:
               label: "Modello"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Comando di sistema"
-              description: "Il comando che verrà utilizzato per il triage, assicurati che risponda con una sola parola che puoi usare per attivare l'azione"
+            triage_persona:
+              label: "Personaggio"
             max_post_tokens:
               label: "Numero massimo di token di messaggio"
               description: "Numero massimo di token per scansionare utilizzando il triage LLM"
@@ -131,11 +130,6 @@ it:
             include_personal_messages:
               label: "Includi messaggi personali"
               description: "Esegui anche la scansione e la selezione dei messaggi personali"
-            model:
-              label: "Modello"
-              description: "Modello linguistico utilizzato per il triage"
-            temperature:
-              label: "Temperatura"
     discourse_ai:
       title: "IA"
       features:
@@ -412,9 +406,12 @@ it:
           other: "Questo modello è attualmente utilizzato da quanto segue: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-0: "Il modello più intelligente di Anthropic"
+          anthropic-claude-opus-4-1: "Il modello più intelligente di Anthropic"
           anthropic-claude-3-5-haiku-latest: "Veloce e conveniente"
           google-gemini-2-5-flash: "Leggero, veloce ed economico con ragionamento multimodale"
+          open_ai-gpt-5: "Il modello di punta di Open AI. Particolarmente adatto alla risoluzione di problemi trasversali"
+          open_ai-gpt-5-mini: "Grazie all'equilibrio tra intelligenza, velocità e costo, è un modello che si presta a numerosi casi d'uso."
+          open_ai-gpt-5-nano: "Il modello di GPT-5 più veloce ed economicamente efficiente."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modello multilingue leggero ed efficiente"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modello multifunzionale"
           mistral-mistral-large-latest: "Il modello più potente di Mistral"

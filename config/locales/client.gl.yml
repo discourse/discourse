@@ -996,11 +996,8 @@ gl:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
-        disable_dark_scheme: "O mesmo que o normal"
         undo: "Restabelecer"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(predeterminado do sitio)"
         interface_modes:
           light: "Claro"
           dark: "Escuro"
@@ -1725,6 +1722,8 @@ gl:
     full_name_requirement:
       required_at_signup: "Obrigatorio"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Páxina de inicio"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1857,10 +1856,7 @@ gl:
       paste_code_text: "escriba un título ou pégueo aquí"
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
-      olist_title: "Listaxe numerada"
-      ulist_title: "Listaxe con símbolos"
       list_item: "Elemento da listaxe"
-      toggle_direction: "Trocar dirección"
       help: "Axuda para a edición con Markdown"
       collapse: "minimizar o panel de composición"
       open: "abrir o panel de composición"
@@ -4190,8 +4186,6 @@ gl:
           edit: "Editar"
           filters:
             all: "Todas"
-          active_badge:
-            text: "Activo"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"

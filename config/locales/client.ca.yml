@@ -989,11 +989,8 @@ ca:
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_scheme: "Paleta de colors"
       color_schemes:
-        disable_dark_scheme: "Igual que habitualment"
         undo: "Restableix"
-        regular: "Habitual"
         dark: "Mode fosc"
-        default_dark_scheme: "(lloc predeterminat)"
         interface_modes:
           light: "Clar"
           dark: "Fosc"
@@ -1623,6 +1620,8 @@ ca:
     full_name_requirement:
       required_at_signup: "Necessari"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Pàgina principal"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1676,7 +1675,7 @@ ca:
       whisper: "xiuxiueig"
       unlist: "invisible"
       add_warning: "Aquest és un avís oficial."
-      toggle_whisper: "Commuta el xiuxiueig"
+      toggle_whisper: "Commuta xiuxiueig"
       posting_not_on_topic: "A quin tema voleu respondre?"
       saved_local_draft_tip: "desat localment"
       drafts_offline: "esborranys fora de línia"
@@ -1726,10 +1725,7 @@ ca:
       paste_code_text: "escriviu o enganxeu el codi aquí"
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
-      olist_title: "Llista numerada"
-      ulist_title: "Llista de pics"
       list_item: "Element de llista"
-      toggle_direction: "Commuta la direcció"
       help: "Ajuda d'edició Markdown"
       collapse: "minimitza el tauler de redacció"
       open: "obre el tauler de redacció"
@@ -3754,8 +3750,6 @@ ca:
           edit: "Edita"
           filters:
             all: "Tots"
-          active_badge:
-            text: "Actiu"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
           copy_name_prefix: "Còpia de"
           undo: "Desfés"

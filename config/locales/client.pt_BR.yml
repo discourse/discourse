@@ -1350,12 +1350,9 @@ pt_BR:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Tema padrão"
-        disable_dark_scheme: "O mesmo que o normal"
         dark_instructions: "É possível pré-visualizar a paleta de cores do modo escuro ao ativar/desativar o modo escuro do seu dispositivo."
         undo: "Redefinir"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(padrão do site)"
         interface_modes:
           auto: "Automático"
           light: "Claro"
@@ -2472,6 +2469,8 @@ pt_BR:
       disabled: "Não exibir"
       sidebar_footer: "Exibir no rodapé da barra lateral"
       header: "Exibir no cabeçalho"
+    welcome_banner_page_visibility:
+      homepage: "Página Inicial"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2554,8 +2553,7 @@ pt_BR:
       whisper: "sussuro"
       unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
-      toggle_whisper: "Alternar sussuro"
-      insert_table: "Inserir tabela"
+      toggle_whisper: "Alternar sussurro"
       posting_not_on_topic: "Qual tópico você gostaria de responder?"
       saved_local_draft_tip: "salvo em modo local"
       similar_topics: "Seu tópico é parecido com…"
@@ -2667,10 +2665,7 @@ pt_BR:
       paste_code_text: "digite ou cole o código aqui"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
-      olist_title: "Lista numerada"
-      ulist_title: "Lista com marcadores"
       list_item: "Item da lista"
-      toggle_direction: "Alternar direção"
       help: "Ajuda de edição de redução"
       collapse: "minimizar o painel do compositor"
       open: "abrir o painel do compositor"
@@ -6351,8 +6346,6 @@ pt_BR:
           filters:
             all: "Tudo"
             user_selectable: "Selecionável por usuário(a)"
-          active_badge:
-            text: "Ativo(a)"
           long_title: "Paletas de cores"
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"

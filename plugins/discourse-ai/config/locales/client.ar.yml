@@ -95,9 +95,6 @@ ar:
               label: "النموذج"
         llm_triage:
           fields:
-            system_prompt:
-              label: "رسالة مطالبة النظام"
-              description: "رسالة المطالبة التي سيتم استخدامها للفرز، تأكَّد من رده بكلمة واحدة يمكنك استخدامها لبدء الإجراء"
             max_post_tokens:
               label: "الحد الأقصى لعدد رموز المنشور"
               description: "الحد الأقصى لعدد الرموز التي سيتم فحصها باستخدام نظام فرز نموذج اللغة الكبير (LLM)"
@@ -131,11 +128,6 @@ ar:
             include_personal_messages:
               label: "تضمين الرسائل الشخصية"
               description: "افحص الرسائل الشخصية وافرزها أيضًا"
-            model:
-              label: "النموذج"
-              description: "نموذج اللغة المُستخدَم في الفرز"
-            temperature:
-              label: "درجة الحرارة"
     discourse_ai:
       title: "الذكاء الاصطناعي"
       features:
@@ -424,7 +416,7 @@ ar:
           other: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
         model_description:
           none: "الإعدادات العامة التي تعمل مع معظم نماذج اللغة"
-          anthropic-claude-opus-4-0: "النموذج الأكثر ذكاءً لدى Anthropic"
+          anthropic-claude-opus-4-1: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-3-5-haiku-latest: "سريع وفعَّال من حيث التكلفة"
           google-gemini-2-5-flash: "خفيف وسريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "نموذج متعدد اللغات خفيف وفعَّال"

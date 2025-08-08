@@ -300,7 +300,6 @@ pt_BR:
         one: "%{count} arquivo"
         other: "%{count} arquivos"
       you_flagged: "Você sinalizou esta mensagem"
-      exit: "voltar"
       channel_status:
         read_only_header: "O canal é somente para leitura"
         read_only: "Somente leitura"
@@ -698,7 +697,6 @@ pt_BR:
           switch_channel_arrows: "%{shortcut} Mudar de canal"
           switch__unread_channel_arrows: "%{shortcut} Trocar para canal não lido"
           open_quick_channel_selector: "%{shortcut} Abrir o seletor rápido de canais"
-          open_insert_link_modal: "%{shortcut} Inserir hiperlink (somente compositor)"
           composer_bold: "%{shortcut} Negrito (somente compositor)"
           composer_italic: "%{shortcut} Itálico (somente compositor)"
           composer_code: "%{shortcut} Código (somente compositor)"

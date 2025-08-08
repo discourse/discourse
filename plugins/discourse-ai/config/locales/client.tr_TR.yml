@@ -95,9 +95,6 @@ tr_TR:
               label: "Model"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Sistem İstemi"
-              description: "Triyaj için kullanılacak istem, eylemi tetiklemek için kullanabileceğiniz tek bir kelime ile yanıt verdiğinden emin olun"
             max_post_tokens:
               label: "Maksimum Gönderi Token'ı Sayısı"
               description: "LLM triyajı kullanılarak taranacak maksimum token sayısı"
@@ -131,11 +128,6 @@ tr_TR:
             include_personal_messages:
               label: "Kişisel mesaj dâhil edin"
               description: "Ayrıca kişisel mesajları tarayın ve önceliklendirin"
-            model:
-              label: "Model"
-              description: "Triyaj için kullanılan dil modeli"
-            temperature:
-              label: "Sıcaklık"
     discourse_ai:
       title: "YZ"
       features:
@@ -412,7 +404,7 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-0: "Antropic'in en akıllı modeli"
+          anthropic-claude-opus-4-1: "Antropic'in en akıllı modeli"
           anthropic-claude-3-5-haiku-latest: "Hızlı ve uygun maliyetli"
           google-gemini-2-5-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Verimli hafif çok dilli model"

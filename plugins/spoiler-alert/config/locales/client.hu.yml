@@ -12,7 +12,6 @@ hu:
           spoiler_alert: "Discourse Spoiler Figyelmeztető"
   js:
     spoiler:
-      title: Spoiler elhomályosítása
       label:
         show: "Rejtett tartalom megjelenítése"
     composer:

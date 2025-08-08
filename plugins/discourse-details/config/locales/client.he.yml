@@ -11,8 +11,6 @@ he:
         categories:
           discourse_details: "פרטי Discourse"
   js:
-    details:
-      title: הסתרת פרטים
     composer:
       details_title: תקציר
       details_text: "טקסט זה יוסתר"

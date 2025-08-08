@@ -95,9 +95,6 @@ fi:
               label: "Malli"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Järjestelmäkehote"
-              description: "Kehote, jota käytetään luokitteluun; varmista, että se vastaa yhdellä sanalla, jota voit käyttää toiminnon käynnistämiseen"
             max_post_tokens:
               label: "Viestin saneiden enimmäismäärä"
               description: "Skannattavien saneiden enimmäismäärä LLM-luokittelulla"
@@ -131,11 +128,6 @@ fi:
             include_personal_messages:
               label: "Sisällytä yksityisviestit"
               description: "Skannaa ja luokittele myös yksityisviestit"
-            model:
-              label: "Malli"
-              description: "Luokitteluun käytettävä kielimalli"
-            temperature:
-              label: "Lämpötila"
     discourse_ai:
       title: "Tekoäly"
       features:
@@ -412,7 +404,7 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-0: "Anthropicin älykkäin malli"
+          anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
           anthropic-claude-3-5-haiku-latest: "Nopea ja kustannustehokas"
           google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"

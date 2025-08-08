@@ -12,7 +12,6 @@ uk:
           spoiler_alert: "Cпойлер cповіщення Discourse"
   js:
     spoiler:
-      title: Розмитий спойлер
       label:
         show: "Показати прихований вміст"
     composer:

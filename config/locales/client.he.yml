@@ -1618,12 +1618,9 @@ he:
       color_scheme: "לוח צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
-        disable_dark_scheme: "כמו הרגילה"
         dark_instructions: "ניתן להדגים את ערכת צבעי הערכה הכהה על ידי החלפת מצב התצוגה הכהה במכשיר שלך."
         undo: "איפוס"
-        regular: "רגילה"
         dark: "מצב כהה"
-        default_dark_scheme: "(ברירת המחדל של האתר)"
         interface_mode: "מצב"
         interface_mode_instructions: "‚אוט’ משתמש בהעדפות המערכת שלך בנוגע למצב בהיר או כהה."
         interface_modes:
@@ -2843,6 +2840,8 @@ he:
     welcome_banner_location:
       above_topic_content: "מעל תוכן הנושא"
       below_site_header: "מתחת לכותרת האתר"
+    welcome_banner_page_visibility:
+      homepage: "דף הבית"
     composition_mode:
       markdown: "Markdown"
       rich: "טקסט עשיר"
@@ -2938,8 +2937,7 @@ he:
       whisper: "לחישה"
       unlist: "לא-רשום"
       add_warning: "זוהי אזהרה רשמית."
-      toggle_whisper: "הפעלת לחישה"
-      insert_table: "הוספת טבלה"
+      toggle_whisper: "החלפת מצב לחישה"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saved_local_draft_tip: "נשמר מקומית"
       similar_topics: "הנושא שלך דומה ל…"
@@ -3076,10 +3074,7 @@ he:
       paste_code_text: "הקלידו או הדביקו קוד כאן"
       upload_title: "העלאה"
       upload_description: "הזן תיאור העלאה כאן"
-      olist_title: "רשימה ממוספרת"
-      ulist_title: "רשימת נקודות"
       list_item: "פריט ברשימה"
-      toggle_direction: "הפיכת כיוון"
       help: "עזרה בכתיבת Markdown"
       collapse: "מזער את לוח העריכה"
       open: "פתח את לוח העריכה"
@@ -6814,6 +6809,7 @@ he:
             filter_by_used: "בשימוש"
             filter_by_unused: "לא בשימוש"
             filter_by_updates_available: "עדכונים זמינים"
+            search_components: "סינון לפי שם רכיב או תיאור…"
             new_update_for_component: "עדכון חדש זמין עבור %{name}!"
             component_up_to_date: '„%{name}” עדכני.'
             updated_successfully: '„%{name}” עודכן בהצלחה.'
@@ -7003,8 +6999,10 @@ he:
           theme: "ערכת עיצוב"
           component: "רכיב"
           components: "רכיבים"
+          search_placeholder: "סינון לפי שם ערכת עיצוב או תיאור…"
           filter_all: "הכול"
           filter_user_selectable: "לבחירת המשתמש"
+          no_themes_found: "אין ערכות עיצוב שעונות למסננים שלך"
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
@@ -7046,9 +7044,11 @@ he:
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           auto_update: "לעדכן אוטומטית כש־Discourse מעודכן"
           color_scheme: "לוח צבעים"
+          dark_color_scheme: "לוח צבעים כהה"
           edit_color_scheme: "עריכת לוח צבעים"
           default_light_scheme: "בהירה (ברירת מחדל)"
           color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב"
+          dark_color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב במצב כהה"
           custom_sections: "אזורים מותאמים אישית:"
           theme_components: "רכיבי ערכת העיצוב"
           add_all_themes: "הוספת כל ערכות העיצוב"
@@ -7259,10 +7259,8 @@ he:
           select_base:
             title: "בחירת לוח צבעים בסיסי"
             description: "לוח בסיסי:"
-          dark_mode_warning: "בחרת בעיצוב כהה. כשמגדירים ערכת צבעים פעילה הצבעים יחולו על ההגוון הבהיר של ערכת העיצוב. כדי לשנות את צבעי ברירת המחדל של המצב הכהה, נא לערוך את <a href='%{link}'>הגדרות האתר במצב כהה</a>."
           title: "צבעים"
           edit: "עריכה"
-          set_default: "הפעלה על ערכת הנושא שהיא ברירת המחדל (%{theme})"
           set_default_success: "%{schemeName} הוגדרה כערכה פעילה עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
@@ -7271,9 +7269,16 @@ he:
             user_selectable: "לבחירת המשתמש"
             from_theme: "מערכת עיצוב"
             no_results: "לא נמצאו ערכות צבעים"
-          active_badge:
-            text: "פעיל"
-            title: "ערכת צבעים פעילה"
+          active_light_badge:
+            text: "אור פעיל"
+            title: "ערכת צבעים בהירה פעילה"
+            reset: "איפוס מסננים"
+          active_dark_badge:
+            text: "כהה פעיל"
+            title: "ערכת צבעים בהירה פעילה"
+          active_both_badge:
+            text: "אור וחושך פעילים"
+            title: "ערכת צבעים בהירה וכהה פעילה"
           system_palette: "זאת ערכת צבעים מובנית, אי אפשר לערוך או למחוק אותה."
           back_to_colors: "חזרה לערכות צבעים"
           long_title: "ערכות צבעים"
@@ -7475,6 +7480,7 @@ he:
           modal_title: "פרטים"
           no_previous: "אין ערך קודם."
           deleted: "אין ערך חדש. הרשומה נמחקה."
+          filter_date_time: "סינון תאריך ושעה"
           actions:
             permanently_delete_post_revisions: "מחיקת המהדורות של הפוסט לצמיתות"
             delete_user: "מחיקת משתמש"
@@ -8184,6 +8190,7 @@ he:
           disabled: "לא זמין לחיפוש"
         field_types:
           text: "טקסט"
+          textarea: "אזור טקסט"
           confirm: "אישור"
           dropdown: "נגלל"
           multiselect: "מגוון בחירות"

@@ -82,8 +82,8 @@ ru:
           title: "Карта темы"
         site_header:
           title: "Заголовок сайта"
-        suggested_topics:
-          title: "Похожие темы"
+        more_topics:
+          title: "Другие темы"
         post_menu:
           title: "Меню сообщения"
         modal:

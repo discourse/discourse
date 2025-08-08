@@ -72,8 +72,6 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
-            model:
-              label: "Μοντέλο"
     discourse_ai:
       features:
         back: "Πίσω"

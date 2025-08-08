@@ -138,6 +138,17 @@ tr_TR:
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
       to_placeholder: "bugüne kadar"
+    languages:
+      ar:
+        name: Arapça
+      be:
+        name: Belarusça
+      bg:
+        name: Bulgarca
+      bs_BA:
+        name: Boşnakça
+      ca:
+        name: Katalanca
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
@@ -1300,12 +1311,9 @@ tr_TR:
       color_scheme: "Renk Paleti"
       color_schemes:
         default_description: "Tema varsayılanı"
-        disable_dark_scheme: "Normal ile aynı"
         dark_instructions: "Cihazınızın koyu modunu değiştirerek karanlık mod renk paletini ön izleyebilirsiniz."
         undo: "Sıfırla"
-        regular: "Normal"
         dark: "Koyu mod"
-        default_dark_scheme: "(site varsayılanı)"
         interface_modes:
           light: "Açık"
           dark: "Koyu"
@@ -2412,6 +2420,8 @@ tr_TR:
       disabled: "Görüntüleme"
       sidebar_footer: "Kenar çubuğu altbilgisinde görüntüle"
       header: "Başlıkta görüntüle"
+    welcome_banner_page_visibility:
+      homepage: "Ana Sayfa"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2493,7 +2503,6 @@ tr_TR:
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıltıyı Aç/Kapat"
-      insert_table: "Tablo ekle"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"
       similar_topics: "Konunuz şuna benziyor…"
@@ -2593,10 +2602,7 @@ tr_TR:
       paste_code_text: "kodu buraya yazın veya yapıştırın"
       upload_title: "Yükle"
       upload_description: "yükleme açıklamasını buraya girin"
-      olist_title: "Numaralandırılmış Liste"
-      ulist_title: "Madde İşaretli Liste"
       list_item: "Liste ögesi"
-      toggle_direction: "Yönü Aç/Kapat"
       help: "Markdown Düzenleme Yardımı"
       collapse: "besteci panelini simge durumuna küçült"
       open: "besteci panelini aç"
@@ -6143,8 +6149,6 @@ tr_TR:
           filters:
             all: "Hepsi"
             user_selectable: "Kullanıcı tarafından seçilebilir"
-          active_badge:
-            text: "Aktif"
           long_title: "Renk paletleri"
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"

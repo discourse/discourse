@@ -87,8 +87,8 @@ pt_BR:
           title: "Mapa do tópico"
         site_header:
           title: "Cabeçalho do site"
-        suggested_topics:
-          title: "Tópicos sugeridos"
+        more_topics:
+          title: "Mais tópicos"
         post_menu:
           title: "Menu de postagem"
         modal:

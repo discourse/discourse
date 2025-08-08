@@ -115,7 +115,6 @@ pt_BR:
       error_while_fetching_voters: "Desculpe, houve um erro ao exibir os votantes."
       error_while_exporting_results: "Desculpe, houve um erro ao exportar os resultados da pesquisa."
       ui_builder:
-        title: Criar enquete
         insert: Inserir enquete
         help:
           options_min_count: Insira pelo menos uma opção.

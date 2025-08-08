@@ -89,8 +89,8 @@ ur:
           title: "موضوع کا نقشہ"
         site_header:
           title: "سائٹ ہیڈر"
-        suggested_topics:
-          title: "تجویز کردہ موضوعات"
+        more_topics:
+          title: "مزید ٹاپک"
         post_menu:
           title: "پوسٹ فہرست"
         modal:

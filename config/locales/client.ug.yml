@@ -1457,12 +1457,9 @@ ug:
       color_scheme: "رەڭ تاختا"
       color_schemes:
         default_description: "كۆڭۈلدىكى ئۆرنەك"
-        disable_dark_scheme: "ئادەتتىكىگە ئوخشاش"
         dark_instructions: "ئۈسكۈنىڭىزنىڭ قاراڭغۇ ھالىتىنى ئۆزگەرتىش ئارقىلىق قاراڭغۇ ھالەتتىكى رەڭ تاختىسىنى ئالدىن كۆزىتەلەيسىز."
         undo: "ئەسلىگە قايتۇر"
-        regular: "ئادەتتىكى"
         dark: "قاراڭغۇ ھالەت"
-        default_dark_scheme: "(بېكەت كۆڭۈلدىكى)"
         interface_modes:
           auto: "ئاپتوماتىك"
           light: "يورۇق"
@@ -2676,7 +2673,6 @@ ug:
       unlist: "تىزىلمىدى"
       add_warning: "بۇ رەسمىي ئاگاھلاندۇرۇش."
       toggle_whisper: "پىچىر ئالماشتۇر"
-      insert_table: "جەدۋەل قىستۇر"
       posting_not_on_topic: "سىز قايسى تېمىغا جاۋاب بەرمەكچى؟"
       saved_local_draft_tip: "يەرلىككە ساقلاندى"
       similar_topics: "تېمىڭىزغا ئوخشايدىغىنى…"
@@ -2795,10 +2791,7 @@ ug:
       paste_code_text: "بۇ جايغا كود كىرگۈزۈلىدۇ ياكى چاپلىنىدۇ"
       upload_title: "يۈكلە"
       upload_description: "بۇ جايغا يۈكلەش چۈشەندۈرۈشى كىرگۈزۈلىدۇ"
-      olist_title: "نومۇرلۇق تىزىم"
-      ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
-      toggle_direction: "يۆنىلىش ئالماشتۇر"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
@@ -6702,9 +6695,8 @@ ug:
             user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
             from_theme: "ئۆرنەكتىن"
             no_results: "ھېچقانداق رەڭ تاختىسى تېپىلمىدى"
-          active_badge:
-            text: "ئاكتىپ"
-            title: "رەڭ تاختىسىنى ئاكتىپلايدۇ"
+          active_light_badge:
+            reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
           system_palette: "بۇ ئىچىدىكى رەڭ تاختىسى، ئۇنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ."
           back_to_colors: "رەڭ تاختىسىغا قايتىدۇ"
           long_title: "رەڭ تاختا"

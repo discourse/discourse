@@ -1305,12 +1305,9 @@ fi:
       color_scheme: "Väripaletti"
       color_schemes:
         default_description: "Teeman oletus"
-        disable_dark_scheme: "Sama kuin oletus"
         dark_instructions: "Voit esikatsella tumman tilan väripalettia aktivoimalla laitteesi tumman tilan asetuksen."
         undo: "Nollaa"
-        regular: "Tavallinen"
         dark: "Tumma tila"
-        default_dark_scheme: "(sivuston oletus)"
         interface_modes:
           auto: "Auto"
           light: "Vaalea"
@@ -2419,6 +2416,8 @@ fi:
       disabled: "Älä näytä"
       sidebar_footer: "Näyttö sivupalkin alatunnisteessa"
       header: "Näytä ylätunnisteessa"
+    welcome_banner_page_visibility:
+      homepage: "Aloitussivu"
     shortcut_modifier_key:
       shift: "Vaihto"
       ctrl: "Ctrl"
@@ -2502,7 +2501,6 @@ fi:
       unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Kuiskaus päälle/pois"
-      insert_table: "Lisää taulukko"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saved_local_draft_tip: "tallennettu paikallisesti"
       similar_topics: "Ketjusi on samankaltainen kuin…"
@@ -2608,10 +2606,7 @@ fi:
       paste_code_text: "kirjoita tai liitä koodia tähän"
       upload_title: "Lataa"
       upload_description: "kirjoita ladatun tiedoston kuvaus tähän"
-      olist_title: "Numeroitu luettelo"
-      ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
-      toggle_direction: "Vaihda suuntaa"
       help: "Markdown-muokkausohje"
       collapse: "pienennä kirjoituspaneeli"
       open: "avaa kirjoituspaneeli"
@@ -6440,8 +6435,6 @@ fi:
           filters:
             all: "Kaikki"
             user_selectable: "Käyttäjän valittavissa"
-          active_badge:
-            text: "Aktiivinen"
           long_title: "Väripaletit"
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"

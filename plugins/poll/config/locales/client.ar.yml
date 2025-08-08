@@ -142,7 +142,6 @@ ar:
       error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
       error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."
       ui_builder:
-        title: إنشاء استطلاع رأي
         insert: إدراج استطلاع رأي
         help:
           options_min_count: يُرجى إدخال {1} خيار على الأقل.

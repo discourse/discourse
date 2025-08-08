@@ -110,7 +110,6 @@ it:
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
       error_while_exporting_results: "Spiacenti, si è verificato un errore durante l'esportazione dei risultati del sondaggio."
       ui_builder:
-        title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
           options_min_count: Inserisci almeno un'opzione.

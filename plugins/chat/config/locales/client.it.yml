@@ -300,7 +300,6 @@ it:
         one: "%{count} file"
         other: "%{count} file"
       you_flagged: "Hai segnalato questo messaggio"
-      exit: "indietro"
       channel_status:
         read_only_header: "Il canale è di sola lettura"
         read_only: "Sola lettura"
@@ -698,7 +697,6 @@ it:
           switch_channel_arrows: "%{shortcut} Cambia canale"
           switch__unread_channel_arrows: "%{shortcut} Cambia canale non letto"
           open_quick_channel_selector: "%{shortcut} Apri il selettore rapido dei canali"
-          open_insert_link_modal: "%{shortcut} Inserisci collegamento ipertestuale (solo compositore)"
           composer_bold: "%{shortcut} Grassetto (solo compositore)"
           composer_italic: "%{shortcut} Corsivo (solo compositore)"
           composer_code: "%{shortcut} Codice (solo compositore)"

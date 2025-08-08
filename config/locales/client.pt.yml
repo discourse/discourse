@@ -1298,12 +1298,9 @@ pt:
       color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
-        disable_dark_scheme: "Igual ao normal"
         dark_instructions: "Pode pré-visualizar a paleta de cores do modo escuro, alternando o modo escuro do seu dispositivo."
         undo: "Repor"
-        regular: "Habitual"
         dark: "Modo escuro"
-        default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo Escuro"
       dark_mode_enable: "Ativar a paleta de cores do modo escuro automaticamente"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
@@ -2375,6 +2372,8 @@ pt:
       disabled: "Não mostrar"
       sidebar_footer: "Mostra no rodapé da barra lateral"
       header: "Mostra no cabeçalho"
+    welcome_banner_page_visibility:
+      homepage: "Página de início"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2457,8 +2456,7 @@ pt:
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
-      toggle_whisper: "Alternar Sussuro"
-      insert_table: "Inserir tabela"
+      toggle_whisper: "Alternar sussurro"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "O teu tópico é semelhante a…"
@@ -2530,10 +2528,7 @@ pt:
       paste_code_text: "digite ou cole aqui o código"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do ficheiro a enviar"
-      olist_title: "Lista numerada"
-      ulist_title: "Lista de items"
       list_item: "Item da Lista"
-      toggle_direction: "Alternar Direção"
       help: "Ajuda de Edição Markdown"
       collapse: "minimizar o painel de composição"
       open: "abrir o painel compositor"
@@ -4830,8 +4825,6 @@ pt:
           edit: "Editar"
           filters:
             all: "Todos"
-          active_badge:
-            text: "Ativo"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
           copy_name_prefix: "Cópia de"
           undo: "Desfazer"

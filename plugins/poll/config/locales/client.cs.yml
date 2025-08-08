@@ -131,7 +131,6 @@ cs:
       error_while_fetching_voters: "Došlo k chybě při zobrazování hlasujících."
       error_while_exporting_results: "Omlouváme se, při exportu výsledků hlasování došlo k chybě."
       ui_builder:
-        title: Vytvořit hlasování
         insert: Vložit hlasování
         help:
           options_min_count: Zadejte alespoň 1 možnost.

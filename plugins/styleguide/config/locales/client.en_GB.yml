@@ -69,8 +69,6 @@ en_GB:
           title: "Topic Map"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Suggested Topics"
         post_menu:
           title: "Post Menu"
         modal:

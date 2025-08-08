@@ -113,9 +113,8 @@ zh_CN:
               label: "以 Whisper 模式回复"
         llm_triage:
           fields:
-            system_prompt:
-              label: "系统提示"
-              description: "将用于分类的提示，请确保它回复一个您可用于触发操作的字词"
+            triage_persona:
+              label: "角色模型"
             max_post_tokens:
               label: "帖子最大词元数"
               description: "使用 LLM 分类扫描的最大词元数"
@@ -151,12 +150,6 @@ zh_CN:
               description: "同时扫描私信并对其进行分类"
             whisper:
               label: "以 Whisper 模式回复"
-            model:
-              label: "模型"
-              description: "用于分类的语言模型"
-            temperature:
-              label: "温度"
-              description: "用于 LLM 的温度值，增加该值会提高生成内容的随机性（留空则使用模型默认值）"
     discourse_ai:
       title: "AI"
       default_llm:
@@ -441,7 +434,7 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
-          anthropic-claude-opus-4-0: "Anthropic 最聪明的模型"
+          anthropic-claude-opus-4-1: "Anthropic 最聪明的模型"
           anthropic-claude-3-5-haiku-latest: "快速、经济实惠"
           google-gemini-2-5-flash: "轻量、快速、经济高效，具有多模态推理能力"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "高效的轻量级多语言模型"

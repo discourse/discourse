@@ -1524,12 +1524,9 @@ sk:
       color_scheme: "Paleta farieb"
       color_schemes:
         default_description: "Predvolená téma"
-        disable_dark_scheme: "Rovnaké ako bežné"
         dark_instructions: "Môžete si prezrieť paletu farieb tmavého režimu prepnutím tmavého režimu zariadenia."
         undo: "Resetovať"
-        regular: "Bežné"
         dark: "Tmavý režim"
-        default_dark_scheme: "(predvolené nastavenie stránky)"
         interface_modes:
           auto: "Auto"
           light: "Svetlá"
@@ -2850,7 +2847,6 @@ sk:
       unlist: "nezaradený"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
-      insert_table: "Vložiť tabuľku"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
       saved_local_draft_tip: "uložené lokálne"
       similar_topics: "Vaša téma je podobná s…"
@@ -2987,10 +2983,7 @@ sk:
       paste_code_text: "sem zadajte alebo vložte kód"
       upload_title: "Upload"
       upload_description: "tu zadajte popis uploadu"
-      olist_title: "Číslované odrážky"
-      ulist_title: "Odrážky"
       list_item: "Položka zoznamu"
-      toggle_direction: "Prepnúť smer"
       help: "Nápoveda úprav pre Markdown"
       collapse: "minimalizovať panel kompozície"
       open: "otvoriť panel kompozície"
@@ -7192,9 +7185,8 @@ sk:
             user_selectable: "Voliteľné používateľom"
             from_theme: "Z témy"
             no_results: "Neboli nájdené žiadne farebné palety"
-          active_badge:
-            text: "Aktívny"
-            title: "Aktívna paleta farieb"
+          active_light_badge:
+            reset: "Obnovenie filtrov"
           system_palette: "Ide o vstavanú paletu farieb, nie je možné ju upraviť ani odstrániť."
           back_to_colors: "Späť na palety farieb"
           long_title: "Palety farieb"

@@ -1284,12 +1284,9 @@ fr:
       color_scheme: "Palette de couleurs"
       color_schemes:
         default_description: "Couleur du thème"
-        disable_dark_scheme: "Désactivé"
         dark_instructions: "Vous pouvez prévisualiser la palette de couleurs du mode sombre en activant le mode sombre de votre appareil."
         undo: "Réinitialiser"
-        regular: "Normal"
         dark: "Mode sombre"
-        default_dark_scheme: "(par défaut)"
         interface_modes:
           light: "Clair"
           dark: "Sombre"
@@ -2370,6 +2367,8 @@ fr:
       required_at_signup: "Requis"
       optional_at_signup: "Facultatif"
       hidden_at_signup: "Facultatif, masqué lors de l'inscription"
+    welcome_banner_page_visibility:
+      homepage: "Page d'accueil"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -2451,7 +2450,6 @@ fr:
       unlist: "invisible"
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Activer/désactiver le murmure"
-      insert_table: "Insérer un tableau"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saved_local_draft_tip: "enregistré sur votre appareil"
       similar_topics: "Votre sujet est similaire à…"
@@ -2549,10 +2547,7 @@ fr:
       paste_code_text: "saisissez ou collez du code ici"
       upload_title: "Envoi de fichiers"
       upload_description: "saisir ici la description de votre fichier"
-      olist_title: "Liste numérotée"
-      ulist_title: "Liste à puces"
       list_item: "Élément"
-      toggle_direction: "Basculer le sens"
       help: "Aide à l'édition Markdown"
       collapse: "réduire le panneau d'édition"
       open: "ouvrir l'éditeur"
@@ -6045,8 +6040,6 @@ fr:
           filters:
             all: "Tout"
             user_selectable: "Sélectionnable par l'utilisateur"
-          active_badge:
-            text: "Actif"
           long_title: "Palettes de couleurs"
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"

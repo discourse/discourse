@@ -115,7 +115,6 @@ ug:
       error_while_fetching_voters: "كەچۈرۈڭ، سايلىغۇچىلارنى كۆرسىتىۋاتقاندا خاتالىق كۆرۈلدى."
       error_while_exporting_results: "كەچۈرۈڭ، راي سىناش نەتىجىسىنى چىقىرىۋاتقاندا خاتالىق كۆرۈلدى."
       ui_builder:
-        title: راي سىناش قۇر
         insert: راي سىناش قىستۇر
         help:
           options_min_count: كەم دېگەندە 1 تاللانما كىرگۈزۈلىدۇ.

@@ -12,7 +12,6 @@ de:
           spoiler_alert: "Discourse Spoiler-Alarm"
   js:
     spoiler:
-      title: Spoiler unkenntlich machen
       label:
         show: "Zeige ausgeblendeten Inhalt"
     composer:

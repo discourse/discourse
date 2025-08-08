@@ -6,8 +6,6 @@
 
 it:
   js:
-    details:
-      title: Nascondi Dettagli
     composer:
       details_title: Riepilogo
       details_text: "Questo testo verrà nascosto"

@@ -2212,7 +2212,6 @@ sk:
     desktop_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na ploche. Zahŕňa možnosti, ako je zobrazenie podkategórií s odporúčanými témami, zobrazenie najnovších tém alebo prezentácia top tém. Zvolený štýl ovplyvní spôsob interakcie používateľov a navigácie v kategóriách na stránke."
     mobile_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na mobilných zariadeniach."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
-    default_dark_mode_color_scheme_id: "Paleta farieb používaná v tmavom režime."
     dark_mode_none: "Žiadny"
     max_image_size_kb: "Maximálna veľkosť nahraného obrázka. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy. Obrázky väčšie ako táto veľkosť a menšie ako client_max_body_size sa pri odosielaní zmenšia tak, aby sa zmestili."
     max_attachment_size_kb: "Maximálna veľkosť nahraných súborov prílohy. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy."

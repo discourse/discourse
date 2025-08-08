@@ -2029,7 +2029,6 @@ pt_BR:
     desktop_category_page_style: "Esta configuração determina o layout do visual da página /categories no desktop. Inclui várias opções, como exibição de subcategorias com tópicos em destaque, exibição dos tópicos mais recentes ou apresentação dos melhores tópicos. O estilo escolhido influencia na maneira como os(as) usuários(as) interagem e acessam as categorias no site."
     mobile_category_page_style: "Esta configuração determina o layout do visual na página /categories, no dispositivo móvel."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
-    default_dark_mode_color_scheme_id: "A peleta de cores usada no modo escuro."
     dark_mode_none: "Nenhum"
     max_image_size_kb: "O tamanho de envio de imagem máximo. Deve ser configurado em nginx (client_max_body_size)/apache ou proxy também. Imagens maiores do que esta e menores do que client_max_body_size serão redimensionadas para o tamanho do envio."
     max_attachment_size_kb: "O tamanho máximo de envio de arquivos anexos. Precisa ser configurado no nginx (client_max_body_size)/apache ou proxy também."

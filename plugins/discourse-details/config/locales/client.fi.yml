@@ -11,8 +11,6 @@ fi:
         categories:
           discourse_details: "Discoursen yksityiskohdat"
   js:
-    details:
-      title: Piilota tiedot
     composer:
       details_title: Yhteenveto
       details_text: "Tämä teksti piilotetaan"

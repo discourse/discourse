@@ -11,8 +11,6 @@ de:
         categories:
           discourse_details: "Discourse Details"
   js:
-    details:
-      title: Details ausblenden
     composer:
       details_title: Zusammenfassung
       details_text: "Dieser Text wird ausgeblendet"

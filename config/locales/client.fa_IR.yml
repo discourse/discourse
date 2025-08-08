@@ -1290,12 +1290,9 @@ fa_IR:
       color_scheme: "پالت رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
-        disable_dark_scheme: "مثل معمولی"
         dark_instructions: "می‌توانید با تغییر پوسته دستگاهتان به حالت تاریک، پالت رنگ حالت تاریک را پیش‌نمایش کنید."
         undo: "بازنشانی"
-        regular: "عادی"
         dark: "حالت تاریک"
-        default_dark_scheme: "(پیش‌فرض سایت)"
         interface_modes:
           auto: "خودکار"
           light: "روشن"
@@ -2389,6 +2386,8 @@ fa_IR:
       disabled: "نمایش داده نشود"
       sidebar_footer: "نمایش در پاورقی نوار کناری"
       header: "نمایش در سر صفحه"
+    welcome_banner_page_visibility:
+      homepage: "صفحه اصلی"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2469,8 +2468,7 @@ fa_IR:
       whisper: "زمزمه"
       unlist: "از فهرست پاک شده"
       add_warning: "این یک هشدار رسمی است."
-      toggle_whisper: "تغییر وضعیت زمزمه"
-      insert_table: "درج جدول"
+      toggle_whisper: "فعالسازی زمزمه"
       posting_not_on_topic: "به کدام موضوع می‌خواهید پاسخ دهید؟"
       saved_local_draft_tip: "به صورت محلی ذخیره شد"
       similar_topics: "موضوعات مشابه…"
@@ -2567,10 +2565,7 @@ fa_IR:
       paste_code_text: "کد را در اینجا بنویسید یا بچسبانید"
       upload_title: "بارگذاری"
       upload_description: "توضیح بارگذاری را در اینجا بنویسید"
-      olist_title: "فهرست شماره گذاری شده"
-      ulist_title: "فهرست نقطه‌ای"
       list_item: "فهرست موارد"
-      toggle_direction: "تغییر جهت"
       help: "راهنمای ویرایش با Markdown"
       collapse: "کوچک سازی پنل نوشتن"
       open: "پنل کامپوزر را باز کنید"
@@ -6064,8 +6059,6 @@ fa_IR:
           filters:
             all: "همه"
             user_selectable: "قابل انتخاب توسط کاربر"
-          active_badge:
-            text: "فعال"
           long_title: "پالت‌های رنگ"
           about: "رنگ های استفاده شده توسط پوسته‌های خود را تغییر دهید. برای شروع یک پالت رنگ جدید ایجاد کنید."
           new_name: "پالت رنگی جدید"

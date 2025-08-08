@@ -11,8 +11,6 @@ uk:
         categories:
           discourse_details: "Деталі Discourse"
   js:
-    details:
-      title: Приховати подробиці
     composer:
       details_title: Підсумок
       details_text: "Цей текст буде приховано"

@@ -1215,11 +1215,8 @@ da:
       color_scheme: "Farvepalet"
       color_schemes:
         default_description: "Tema standard"
-        disable_dark_scheme: "Samme som almindelig"
         undo: "Nulstil"
-        regular: "Almindelig"
         dark: "Mørk tilstand"
-        default_dark_scheme: "(standard for websted)"
         interface_modes:
           auto: "Auto"
           light: "Lys"
@@ -2085,6 +2082,8 @@ da:
       optional_at_signup: "Valgfri"
     interface_color_selector:
       disabled: "Vis ikke"
+    welcome_banner_page_visibility:
+      homepage: "Hjemmeside"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2162,7 +2161,6 @@ da:
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
       toggle_whisper: "Slå hvisken til/fra"
-      insert_table: "Indsæt tabel"
       posting_not_on_topic: "Hvilket emne vil du svare på?"
       saved_local_draft_tip: "gemt lokalt"
       similar_topics: "Dit emne minder om…"
@@ -2240,10 +2238,7 @@ da:
       paste_code_text: "skriv eller indsæt kode her"
       upload_title: "Overfør"
       upload_description: "skriv overførsels beskrivelse her"
-      olist_title: "Nummereret liste"
-      ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
-      toggle_direction: "Vis/skjul retning "
       help: "Hjælp til Markdown-redigering"
       collapse: "minimer forfatter panelet"
       open: "åbn forfatter panelet"
@@ -5068,8 +5063,6 @@ da:
           filters:
             all: "Alle"
             user_selectable: "Kan vælges af brugeren"
-          active_badge:
-            text: "Aktiv"
           long_title: "Farvepaletter"
           about: "Rediger de farver, der bruges af dine temaer. Opret en ny farvepalet for at starte."
           new_name: "Ny farvepalet"

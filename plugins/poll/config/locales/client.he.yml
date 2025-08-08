@@ -131,7 +131,6 @@ he:
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
       error_while_exporting_results: "אירעה שגיאה בייצוא תוצאות הסקר."
       ui_builder:
-        title: בניית סקר
         insert: הכנסת סקר
         help:
           options_min_count: יש למלא אפשרות אחת לפחות.

@@ -6,8 +6,6 @@
 
 nl:
   js:
-    details:
-      title: Details verbergen
     composer:
       details_title: Samenvatting
       details_text: "Deze tekst wordt verborgen"

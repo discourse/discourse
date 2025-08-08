@@ -6,8 +6,6 @@
 
 fr:
   js:
-    details:
-      title: Masquer le texte
     composer:
       details_title: Résumé
       details_text: "Ce texte sera masqué"

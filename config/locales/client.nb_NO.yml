@@ -1237,11 +1237,8 @@ nb_NO:
       color_scheme: "Farge Palett"
       color_schemes:
         default_description: "Tema standard"
-        disable_dark_scheme: "Samme som vanlig"
         undo: "Tilbakestill"
-        regular: "Aktivt medlem"
         dark: "Mørk modus"
-        default_dark_scheme: "(nettstedsstandard)"
         interface_modes:
           light: "Lys"
           dark: "Mørk"
@@ -2275,6 +2272,8 @@ nb_NO:
     full_name_requirement:
       required_at_signup: "Påkrevd"
       optional_at_signup: "Valgfritt"
+    welcome_banner_page_visibility:
+      homepage: "Hjemmeside"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2355,8 +2354,7 @@ nb_NO:
       whisper: "hvisk"
       unlist: "skjult"
       add_warning: "Dette er en offisiell advarsel."
-      toggle_whisper: "Slå på/av hvisking"
-      insert_table: "Sett inn tabell"
+      toggle_whisper: "Veksle hvisking"
       posting_not_on_topic: "Hvilket emne ønsker du å svare på?"
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt ligner på…"
@@ -2453,10 +2451,7 @@ nb_NO:
       paste_code_text: "skriv inn eller kopier kode her"
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
-      olist_title: "Nummerert liste"
-      ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
-      toggle_direction: "Skift retning"
       help: "Hjelp for redigering i Markdown"
       collapse: "minimer redigeringspanelet"
       open: "minimer redigeringspanelet"
@@ -5061,8 +5056,6 @@ nb_NO:
           edit: "Rediger"
           filters:
             all: "Alle"
-          active_badge:
-            text: "Aktiv"
           copy_name_prefix: "Kopi av"
           undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."

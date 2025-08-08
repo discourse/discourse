@@ -322,7 +322,6 @@ he:
         many: "%{count} קבצים"
         other: "%{count} קבצים"
       you_flagged: "סימנת את ההודעה הזאת"
-      exit: "חזרה"
       channel_status:
         read_only_header: "הערוץ הוא לקריאה בלבד"
         read_only: "לקריאה בלבד"
@@ -758,7 +757,6 @@ he:
           switch_channel_arrows: "%{shortcut} החלפת ערוץ"
           switch__unread_channel_arrows: "%{shortcut} החלפת ערוץ לא נקרא"
           open_quick_channel_selector: "%{shortcut} פתיחת בורר הערוצים המהיר"
-          open_insert_link_modal: "%{shortcut} הוספת קישור (עורך בלבד)"
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"
           composer_italic: "%{shortcut} נטוי (עורך בלבד)"
           composer_code: "%{shortcut} קוד (עורך בלבד)"

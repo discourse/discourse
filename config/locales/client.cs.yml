@@ -194,6 +194,105 @@ cs:
       placeholder: datum
       from_placeholder: "od data"
       to_placeholder: "do data"
+    languages:
+      ar:
+        name: Arabština
+      be:
+        name: Běloruština
+      bg:
+        name: Bulharština
+      bs_BA:
+        name: Bosenština
+      ca:
+        name: Katalánština
+      cs:
+        name: Čeština
+      da:
+        name: Dánština
+      de:
+        name: Němčina
+      el:
+        name: Řečtina
+      en:
+        name: Angličtina (USA)
+      en_GB:
+        name: Angličtina (Velká Británie)
+      es:
+        name: Španělština
+      et:
+        name: Estonština
+      fa_IR:
+        name: Perština
+      fi:
+        name: Finština
+      fr:
+        name: Francouzština
+      gl:
+        name: Galicijština
+      he:
+        name: Hebrejština
+      hr:
+        name: Chorvatština
+      hu:
+        name: Maďarština
+      hy:
+        name: Arménština
+      id:
+        name: Indonéština
+      it:
+        name: Italština
+      ja:
+        name: Japonština
+      ko:
+        name: Korejština
+      lt:
+        name: Litevština
+      lv:
+        name: Lotyšština
+      nb_NO:
+        name: Norský Bokmål
+      nl:
+        name: Holandština
+      pl_PL:
+        name: Polština
+      pt:
+        name: Portugalština
+      pt_BR:
+        name: Portugalština
+      ro:
+        name: Rumunština
+      ru:
+        name: Ruština
+      sk:
+        name: Slovenština
+      sl:
+        name: Slovinština
+      sq:
+        name: Albánština
+      sr:
+        name: Srbština
+      sv:
+        name: Švédština
+      sw:
+        name: Svahilština
+      te:
+        name: Telugu
+      th:
+        name: Thajština
+      tr_TR:
+        name: Turečtina
+      ug:
+        name: Ujgurština
+      uk:
+        name: Ukrajinština
+      ur:
+        name: Urdština
+      vi:
+        name: Vietnamština
+      zh_TW:
+        name: Čínština
+      zh_CN:
+        name: Čínština zjednodušená
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek č.%{postNumber} od @%{username}"
@@ -257,6 +356,7 @@ cs:
       search: "Vyhledat"
     themes:
       default_description: "Výchozí"
+      broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby. Další informace naleznete v konzoli prohlížeče."
       error_caused_by: "Příčinou je '%{name}'. <a target='blank' href='%{path}'>Klikněte zde</a> pro aktualizaci, překonfigurování nebo zakázání."
       only_admins: "(tato zpráva se zobrazuje pouze správcům webu)"
     broken_decorator_alert: "Příspěvky se nemusí zobrazit správně, protože jeden z dekorátorů obsahu příspěvku na vašem webu vyvolal chybu."
@@ -1521,15 +1621,15 @@ cs:
         description: "Přeskočit tipy po registraci nového uživatele"
       reset_seen_user_tips: "Znovu zobrazit tipy uživatele"
       theme_default_on_all_devices: "Nastavit výchozí motiv na všech mých zařízeních"
+      color_scheme_default_on_all_devices: "Nastavit výchozí paletu barev a režim na všech mých zařízeních"
       color_scheme: "Paleta barev"
       color_schemes:
         default_description: "Výchozí z motivu"
-        disable_dark_scheme: "Stejné jako běžné"
         dark_instructions: "Barevnou paletu tmavého režimu si můžete prohlédnout přepnutím tmavého režimu zařízení."
         undo: "obnovit výchozí"
-        regular: "Běžný"
         dark: "Tmavý režim"
-        default_dark_scheme: "(výchozí nastavení webu)"
+        interface_mode: "Režim"
+        interface_mode_instructions: "Možnost „Automaticky“ používá pro volbu světlého a tmavého řežimu předvolby vašeho systému ."
         interface_modes:
           auto: "Automaticky"
           light: "Světlý režim"
@@ -2752,6 +2852,11 @@ cs:
     welcome_banner_location:
       above_topic_content: "Nad obsahem tématu"
       below_site_header: "Pod záhlavím webu"
+    welcome_banner_page_visibility:
+      homepage: "Domovská stránka"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Formátovaný text"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2845,7 +2950,6 @@ cs:
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
-      insert_table: "Vložit tabulku"
       posting_not_on_topic: "Na jaké téma chcete odpovědět?"
       saved_local_draft_tip: "uloženo lokálně"
       similar_topics: "Vaše téma je podobné…"
@@ -2982,10 +3086,7 @@ cs:
       paste_code_text: "zde napište nebo vložte kód"
       upload_title: "Nahrát soubory"
       upload_description: "sem vložte popis nahraného souboru"
-      olist_title: "Číslovaný seznam"
-      ulist_title: "Seznam s odrážkami"
       list_item: "Položka seznamu"
-      toggle_direction: "Přepnout směr"
       help: "Nápověda pro Markdown"
       collapse: "minimalizovat panel editoru"
       open: "otevřít panel editoru"
@@ -6742,6 +6843,7 @@ cs:
             filter_by_used: "Použitý"
             filter_by_unused: "Nepoužitý"
             filter_by_updates_available: "Dostupné aktualizace"
+            search_components: "Filtrovat podle názvu nebo popisu komponenty..."
             new_update_for_component: "K dispozici je nová aktualizace pro %{name}!"
             component_up_to_date: '„%{name}“ je aktuální.'
             updated_successfully: '"%{name}" byla úspěšně aktualizována.'
@@ -6931,8 +7033,10 @@ cs:
           theme: "Motiv"
           component: "Komponenta"
           components: "Komponenty"
+          search_placeholder: "Filtrovat podle názvu nebo popisu motivu..."
           filter_all: "Vše"
           filter_user_selectable: "Volitelný uživatelem"
+          no_themes_found: "Vašemu filtru neodpovídají žádná témata"
           theme_name: "Název motivu"
           component_name: "Název komponenty"
           themes_intro: "Začněte výběrem existujícího motivu nebo nainstalujte nový"
@@ -7076,7 +7180,7 @@ cs:
           up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
           has_overwritten_history: "Aktuální verze motivu již neexistuje, protože historie Git byla přepsána pomocí force push."
           add: "Přidat"
-          theme_settings: "Nastavení vlastního motivu"
+          theme_settings: "Vlastní nastavení motivu"
           theme_site_settings: "Nastavení, která může motiv přepsat"
           edit_objects_theme_setting: "Editor nastavení objektů"
           overriden_settings_explanation: "Změny oproti výchozímu nastavení jsou označeny tečkou a zvýrazněním. Kliknutím na Resetovat obnovíte výchozí nastavení."
@@ -7195,13 +7299,13 @@ cs:
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
           filters:
+            search_placeholder: "Filtrovat podle palety nebo názvu motivu..."
             all: "Vše"
             user_selectable: "Volitelný uživatelem"
             from_theme: "Z motivu"
             no_results: "Nebyly nalezeny žádné palety barev"
-          active_badge:
-            text: "Aktivní"
-            title: "Aktivní paleta barev"
+          active_light_badge:
+            reset: "Odstranit filtry"
           system_palette: "Toto je vestavěná paleta barev, nelze ji upravovat ani mazat."
           back_to_colors: "Zpět na palety barev"
           long_title: "Palety barev"

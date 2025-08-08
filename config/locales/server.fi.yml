@@ -2051,7 +2051,6 @@ fi:
     desktop_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun työpöytälaitteilla. Se sisältää vaihtoehtoja, kuten alaluokkien näyttämisen esiteltyjen ketjujen kanssa, uusimpien ketjujen näyttämisen tai suosituimpien ketjujen esittämisen. Valittu tyyli vaikuttaa siihen, miten käyttäjät ovat vuorovaikutuksessa ja siirtyvät sivuston alueiden välillä."
     mobile_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun mobiililaitteilla."
     category_colors: "Luettelo alueiden sallituista väriarvoista heksadesimaaleina."
-    default_dark_mode_color_scheme_id: "Väripaletti, jota käytetään tummassa tilassa."
     dark_mode_none: "Ei valittu"
     max_image_size_kb: "Suurin palvelimeen ladattavan kuvan koko. Tämä on määritettävä myös nginxissä, (client_max_body_size), apachessa tai välityspalvelimessa. Tätä suurempien ja client_max_body_sizea pienempien kuvien kokoa muutetaan latauksen yhteydessä."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko. Tämä täytyy asettaa myös nginxin (client_max_body_size) / apachen tai välityspalvelimen asetuksissa."

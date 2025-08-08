@@ -134,9 +134,8 @@ sk:
               description: "V tichom režime bude persona dostávať obsah, ale nebude nič zverejňovať na fóre – užitočné pri vykonávaní triedenia pomocou nástrojov."
         llm_triage:
           fields:
-            system_prompt:
-              label: "Systémový výzva"
-              description: "Výzva, ktorá sa použije na triedenie, uistite sa, že odpovedá jedným slovom, ktoré môžete použiť na spustenie akcie."
+            triage_persona:
+              label: "Persona"
             max_post_tokens:
               label: "Maximálny počet tokenov príspevkov"
               description: "Maximálny počet tokenov na skenovanie pomocou LLM triage"
@@ -176,12 +175,6 @@ sk:
             reply_persona:
               label: "Odpovedať Persona"
               description: "Persona AI, ktorá sa použije pre odpovede (musí mať predvolený LLM), bude mať prednosť pred pripravenou odpoveďou."
-            model:
-              label: "Model"
-              description: "Jazykový model používaný na triedenie"
-            temperature:
-              label: "Teplota"
-              description: "Teplota, ktorá sa má použiť pre LLM. Zvýšením zvýšite náhodnosť (nechajte prázdne, ak chcete použiť predvolenú hodnotu modelu)."
             max_output_tokens:
               label: "Maximálny počet výstupných tokenov"
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
@@ -575,7 +568,7 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-0: "Najinteligentnejší model spoločnosti Anthropic"
+          anthropic-claude-opus-4-1: "Najinteligentnejší model spoločnosti Anthropic"
           anthropic-claude-sonnet-4-0: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-3-7-sonnet-latest: "Optimálna rovnováha medzi rýchlosťou a cenou (predchádzajúca generácia)"
           anthropic-claude-3-5-haiku-latest: "Rýchle a cenovo výhodné"
@@ -585,9 +578,9 @@ sk:
           google-gemini-2-0-flash-lite: "Nákladovo efektívny model s nízkou latenciou"
           open_ai-o3: "Najschopnejší model uvažovania Open AI"
           open_ai-o4-mini: "Pokročilý model nákladovo efektívneho uvažovania"
-          open_ai-gpt-4-1: "Vlajkový model Open AI. Je vhodný na riešenie problémov v rôznych oblastiach"
-          open_ai-gpt-4-1-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
-          open_ai-gpt-4-1-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-4.1."
+          open_ai-gpt-5: "Vlajkový model Open AI. Je vhodný na riešenie problémov v rôznych oblastiach"
+          open_ai-gpt-5-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
+          open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efektívny ľahký viacjazyčný model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Výkonný viacúčelový model"
           mistral-mistral-large-latest: "Najvýkonnejší model spoločnosti Mistral"

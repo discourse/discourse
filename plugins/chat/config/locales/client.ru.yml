@@ -332,7 +332,6 @@ ru:
         many: "%{count} файла"
         other: "%{count} файла"
       you_flagged: "Вы пожаловались на это сообщение"
-      exit: "Назад"
       channel_status:
         read_only_header: "Канал только для чтения"
         read_only: "Только для чтения"
@@ -782,7 +781,6 @@ ru:
           switch_channel_arrows: "%{shortcut} Переключить канал"
           switch__unread_channel_arrows: "%{shortcut} Переключить непрочитанный канал"
           open_quick_channel_selector: "%{shortcut} Открыть переключатель каналов"
-          open_insert_link_modal: "%{shortcut} Вставить гиперссылку (только в редакторе)"
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"

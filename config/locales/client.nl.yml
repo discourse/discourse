@@ -1282,12 +1282,9 @@ nl:
       color_scheme: "Kleurenpalet"
       color_schemes:
         default_description: "Standaard voor thema"
-        disable_dark_scheme: "Hetzelfde als normaal"
         dark_instructions: "Je kunt een voorbeeld van het kleurenpalet van de donkere modus bekijken door de donkere modus van je apparaat in te schakelen."
         undo: "Resetten"
-        regular: "Normaal"
         dark: "Donkere modus"
-        default_dark_scheme: "(standaard voor website)"
         interface_modes:
           light: "Licht"
           dark: "Donker"
@@ -2368,6 +2365,8 @@ nl:
       required_at_signup: "Vereist"
       optional_at_signup: "Optioneel"
       hidden_at_signup: "Optioneel, verborgen bij registratie"
+    welcome_banner_page_visibility:
+      homepage: "Startpagina"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2449,7 +2448,6 @@ nl:
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluisteren in-/uitschakelen"
-      insert_table: "Tabel invoegen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Je topic lijkt op…"
@@ -2547,10 +2545,7 @@ nl:
       paste_code_text: "typ of plak hier code"
       upload_title: "Uploaden"
       upload_description: "voer hier een uploadbeschrijving in"
-      olist_title: "Genummerde lijst"
-      ulist_title: "Opsommingslijst"
       list_item: "Lijstitem"
-      toggle_direction: "Richting omschakelen"
       help: "Hulp voor Markdown"
       collapse: "editorpaneel minimaliseren"
       open: "editorpaneel openen"
@@ -6041,8 +6036,6 @@ nl:
           filters:
             all: "Alle"
             user_selectable: "Door gebruiker te selecteren"
-          active_badge:
-            text: "Actief"
           long_title: "Kleurenpaletten"
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"

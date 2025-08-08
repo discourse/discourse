@@ -2055,7 +2055,6 @@ hu:
     desktop_category_page_style: "Ez a beállítás határozza meg a /categories oldal vizuális elrendezését az asztalon. Olyan lehetőségeket tartalmaz, mint az alkategóriák megjelenítése kiemelt témákkal, a legújabb témák megjelenítése vagy a legnépszerűbb témák bemutatása. A választott stílus befolyásolja a felhasználók interakcióját és a kategóriák közötti navigálást a webhelyen."
     mobile_category_page_style: "Ez a beállítás határozza meg a /categories oldal vizuális elrendezését mobilon."
     category_colors: "A kategóriákhoz engedélyezett hexadecimális színértékek listája."
-    default_dark_mode_color_scheme_id: "A sötét módban használt színpaletta."
     dark_mode_none: "Egyik sem"
     max_image_size_kb: "A maximális kép feltöltési méret. Ezt konfigurálni kell az nginx-ben (client_max_body_size) / apache-ban vagy proxy-ban is. Az ennél nagyobb, de a client_max_body_size-nál kisebb képek átméretezésre kerülnek, hogy megfeleljenek feltöltéskor."
     max_attachment_size_kb: "A csatolt fájlok maximális feltöltési mérete. Ezt az nginxben (client_max_body_size) / apache-ban vagy proxyban is be kell állítani."
