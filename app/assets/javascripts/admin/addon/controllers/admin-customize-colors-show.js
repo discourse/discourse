@@ -70,8 +70,9 @@ export default class AdminCustomizeColorsShowController extends Controller {
   }
 
   @action
-  applyUserSelectable() {
-    this.model.updateUserSelectable(this.get("model.user_selectable"));
+  applyUserSelectable(value) {
+    this.model.set("user_selectable", value);
+    this.model.updateUserSelectable(value);
   }
 
   @action
