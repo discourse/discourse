@@ -421,6 +421,7 @@ export default class Post extends Component {
             topicPageQueryParams=@topicPageQueryParams
             prevPost=@prevPost
             nextPost=@nextPost
+            replyToPost=@replyToPost
           )
           as |postOutletArgs|
         }}
