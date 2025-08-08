@@ -309,7 +309,10 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer
       composer.type_content("[quote=\"johndoe, post:1, topic:123\"]")
 
-      expect(rich).to have_css("aside.quote[data-username='johndoe'][data-post='1'][data-topic='123'] .title", text: "johndoe:")
+      expect(rich).to have_css(
+        "aside.quote[data-username='johndoe'][data-post='1'][data-topic='123'] .title",
+        text: "johndoe:",
+      )
       expect(rich).to have_css("aside.quote blockquote")
 
       composer.toggle_rich_editor
