@@ -11,13 +11,20 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-calendar/dis
  * @implements {@ember/service}
  */
 export default class DiscoursePostEventApi extends Service {
+  eventsPromise = null;
+
   async event(id) {
     const result = await this.#getRequest(`/events/${id}`);
     return DiscoursePostEventEvent.create(result.event);
   }
 
   async events(data = {}) {
-    const result = await this.#getRequest("/events", data);
+    if (this.eventsPromise) {
+      this.eventsPromise.abort();
+    }
+    this.eventsPromise = this.#getRequest("/events", data);
+    const result = await this.eventsPromise;
+    this.eventsPromise = null;
     return result.events.map((e) => DiscoursePostEventEvent.create(e));
   }
 

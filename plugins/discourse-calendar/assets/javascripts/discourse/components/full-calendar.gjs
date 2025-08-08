@@ -44,6 +44,7 @@ export default class FullCalendar extends Component {
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
         calendarModule.List,
+        calendarModule.RRULE,
       ],
       views: {
         dayGridMonth: {
@@ -57,6 +58,11 @@ export default class FullCalendar extends Component {
       eventWillUnmount: (info) => {
         if (info.event.extendedProps?.tooltip) {
           info.event.extendedProps?.tooltip.destroy();
+        }
+      },
+      datesSet: (info) => {
+        if (this.args.onDatesChange) {
+          this.args.onDatesChange(info);
         }
       },
       eventDidMount: (info) => {

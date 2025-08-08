@@ -25,6 +25,7 @@ describe DiscoursePostEvent::EventSummarySerializer do
 
   context "when recurrent event" do
     before { freeze_time Time.utc(2023, 1, 1, 1, 1) } # Sunday
+
     fab!(:post_2) { Fabricate(:post, topic: topic) }
     let(:every_day_event) do
       Fabricate(
@@ -35,115 +36,11 @@ describe DiscoursePostEvent::EventSummarySerializer do
         original_ends_at: "2023-01-01 16:00",
       )
     end
-    let(:every_week_event) do
-      Fabricate(
-        :event,
-        post: post_2,
-        recurrence: "every_week",
-        original_starts_at: "2023-01-01 15:00",
-        original_ends_at: "2023-01-01 16:00",
-      )
-    end
-    let(:every_two_weeks_event) do
-      Fabricate(
-        :event,
-        post: post_2,
-        recurrence: "every_two_weeks",
-        original_starts_at: "2023-01-01 15:00",
-        original_ends_at: "2023-01-01 16:00",
-      )
-    end
-    let(:every_four_weeks_event) do
-      Fabricate(
-        :event,
-        post: post_2,
-        recurrence: "every_four_weeks",
-        original_starts_at: "2023-01-01 15:00",
-        original_ends_at: "2023-01-01 16:00",
-      )
-    end
-    let(:every_month_event) do
-      Fabricate(
-        :event,
-        post: post_2,
-        recurrence: "every_month",
-        original_starts_at: "2023-01-01 15:00",
-        original_ends_at: "2023-01-01 16:00",
-      )
-    end
-    let(:every_weekday_event) do
-      Fabricate(
-        :event,
-        post: post_2,
-        recurrence: "every_weekday",
-        original_starts_at: "2023-01-01 15:00",
-        original_ends_at: "2023-01-01 16:00",
-      )
-    end
 
-    it "returns next dates for the every day event" do
+    it "returns the rrule" do
       json = described_class.new(every_day_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(31)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-01-31 15:00:00.000000000 +0000",
-          ends_at: "2023-01-31 16:00:00.000000000 +0000",
-        },
-      )
-    end
-
-    it "returns next dates for the every week event" do
-      json = described_class.new(every_week_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(31)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-07-30 15:00:00.000000000 +0000", # Sunday
-          ends_at: "2023-07-30 16:00:00.000000000 +0000",
-        },
-      )
-    end
-
-    it "returns next dates for the every two weeks event" do
-      json = described_class.new(every_two_weeks_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(26)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-12-17 15:00:00.000000000 +0000", # Sunday
-          ends_at: "2023-12-17 16:00:00.000000000 +0000",
-        },
-      )
-    end
-
-    it "returns next dates for the every four weeks event" do
-      json = described_class.new(every_four_weeks_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(13)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-12-03 15:00:00.000000000 +0000", # Sunday
-          ends_at: "2023-12-03 16:00:00.000000000 +0000",
-        },
-      )
-    end
-
-    it "returns next dates for the every weekday event" do
-      json = described_class.new(every_weekday_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(31)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-02-13 15:00:00.000000000 +0000", # Friday
-          ends_at: "2023-02-13 16:00:00.000000000 +0000",
-        },
-      )
-    end
-
-    it "returns next dates for the every month event" do
-      json = described_class.new(every_month_event, scope: Guardian.new).as_json
-      expect(json[:event_summary][:upcoming_dates].length).to eq(12)
-      expect(json[:event_summary][:upcoming_dates].last).to eq(
-        {
-          starts_at: "2023-12-03 15:00:00.000000000 +0000", # Sunday
-          ends_at: "2023-12-03 16:00:00.000000000 +0000",
-        },
+      expect(json[:event_summary][:rrule]).to eq(
+        "FREQ=DAILY;BYHOUR=15;BYMINUTE=00;INTERVAL=1;WKST=MO",
       )
     end
   end
