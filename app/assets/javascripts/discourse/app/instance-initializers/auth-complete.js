@@ -54,7 +54,7 @@ export default {
               };
 
               router.transitionTo("login").then(({ controller }) => {
-                controller.setProperties(...props);
+                controller.setProperties(props);
               });
 
               next(() => callback?.());
