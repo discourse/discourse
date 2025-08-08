@@ -52,20 +52,20 @@ export default RouteTemplate(
       >
         <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
         <div class="controls">
-          <div class="control-subgroup light-color-scheme">
-            {{#if @controller.showDarkColorSchemeSelector}}
+          {{#if @controller.showLightColorSchemeSelector}}
+            <div class="control-subgroup light-color-scheme">
               <div class="instructions">{{i18n
                   "user.color_schemes.regular"
                 }}</div>
-            {{/if}}
-            <div class="controls">
-              <ColorPalettePicker
-                @content={{@controller.userSelectableColorSchemes}}
-                @value={{@controller.selectedColorSchemeId}}
-                @onChange={{@controller.loadColorScheme}}
-              />
+              <div class="controls">
+                <ColorPalettePicker
+                  @content={{@controller.userSelectableColorSchemes}}
+                  @value={{@controller.selectedColorSchemeId}}
+                  @onChange={{@controller.loadColorScheme}}
+                />
+              </div>
             </div>
-          </div>
+          {{/if}}
           {{#if @controller.showDarkColorSchemeSelector}}
             <div class="control-subgroup dark-color-scheme">
               <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
@@ -77,6 +77,8 @@ export default RouteTemplate(
                 />
               </div>
             </div>
+          {{/if}}
+          {{#if @controller.showInterfaceColorModeSelector}}
             <div class="control-subgroup interface-color-mode">
               <div class="instructions">{{i18n
                   "user.color_schemes.interface_mode"
@@ -113,18 +115,6 @@ export default RouteTemplate(
           </div>
         {{/if}}
       </fieldset>
-    {{/if}}
-
-    {{#if @controller.showDarkModeToggle}}
-      <div class="control-group dark-mode" data-setting-name="user-dark-mode">
-        <label class="control-label">{{i18n "user.dark_mode"}}</label>
-        <div class="controls">
-          <PreferenceCheckbox
-            @labelKey="user.dark_mode_enable"
-            @checked={{@controller.enableDarkMode}}
-          />
-        </div>
-      </div>
     {{/if}}
 
     <div class="control-group text-size" data-setting-name="user-text-size">
