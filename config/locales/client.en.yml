@@ -2955,6 +2955,9 @@ en:
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
+      save_and_close: "Save and close"
+      discard: "Discard"
+      draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
