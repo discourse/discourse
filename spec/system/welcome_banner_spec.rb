@@ -169,7 +169,7 @@ describe "Welcome banner", type: :system do
         visit "/"
         expect(banner).to be_visible
         sign_in(current_user)
-        %W[/ /u/#{current_user.username}/preferences/emails my/messages].each do |path|
+        %W[/ /u/#{current_user.username}/preferences/emails /my/messages].each do |path|
           visit path
           expect(banner).to be_visible
         end
