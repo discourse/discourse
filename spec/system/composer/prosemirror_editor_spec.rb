@@ -760,7 +760,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
-    it "should correctly merge text with link marks created from parsing" do
+    it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
 
@@ -772,6 +772,21 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
+    end
+
+    it "parses html inline tags from pasted HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>", html: true)
+
+      expect(rich).to have_css("mark", text: "mark")
+      expect(rich).to have_css("ins", text: "words")
+      expect(rich).to have_css("kbd", text: "ctrl")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>")
     end
   end
 

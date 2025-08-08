@@ -32,7 +32,10 @@ const extension = {
       isolating: true,
       content: "inline*",
       attrs: { tag: {} },
-      parseDOM: ALLOWED_INLINE.map((tag) => ({ tag })),
+      parseDOM: ALLOWED_INLINE.map((tag) => ({
+        tag,
+        getAttrs: () => ({ tag }),
+      })),
       toDOM: (node) => [node.attrs.tag, 0],
     },
   },
