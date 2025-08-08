@@ -23,6 +23,66 @@ module GroupGuardian
       )
   end
 
+  def can_see_group?(group)
+    group.present? && can_see_groups?([group])
+  end
+
+  def can_see_group_members?(group)
+    return false if group.blank?
+    return true if is_admin? || group.members_visibility_level == Group.visibility_levels[:public]
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:members]
+    if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
+      return true
+    end
+    return false if user.blank?
+
+    return false unless membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
+    return true if membership.owner
+
+    return false if group.members_visibility_level == Group.visibility_levels[:owners]
+    return false if group.members_visibility_level == Group.visibility_levels[:staff]
+
+    true
+  end
+
+  def can_see_groups?(groups)
+    return false if groups.blank?
+    if is_admin? || groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
+      return true
+    end
+    if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+      return true
+    end
+    if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:members] }
+      return true
+    end
+    if authenticated? &&
+         groups.all? { |g| g.visibility_level == Group.visibility_levels[:logged_on_users] }
+      return true
+    end
+    return false if user.blank?
+
+    memberships = GroupUser.where(group: groups, user_id: user.id).pluck(:owner)
+    return false if memberships.size < groups.size
+    return true if memberships.all? # owner of all groups
+
+    return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:owners] }
+    return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+
+    true
+  end
+
+  def can_see_groups_members?(groups)
+    return false if groups.blank?
+
+    requested_group_ids = groups.map(&:id) # Can't use pluck, groups could be a regular array
+    matching_group_ids =
+      Group.where(id: requested_group_ids).members_visible_groups(user).pluck(:id)
+
+    matching_group_ids.sort == requested_group_ids.sort
+  end
+
   def can_see_group_messages?(group)
     return true if is_admin?
     return true if is_moderator? && group.id == Group::AUTO_GROUPS[:moderators]
