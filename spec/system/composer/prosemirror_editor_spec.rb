@@ -666,6 +666,21 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "pasting content" do
+    it "creates a mention when pasting an HTML anchor with class mention" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = %(<a href="/u/#{current_user.username}" class="mention">@#{current_user.username}</a>)
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_css("a.mention", text: current_user.username)
+      expect(rich).to have_css("a.mention[data-name='#{current_user.username}']")
+      expect(rich).to have_no_css("a.mention[href]")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("@#{current_user.username}")
+    end
+
     it "does not freeze the editor when pasting markdown code blocks without a language" do
       with_logs do |logger|
         open_composer
