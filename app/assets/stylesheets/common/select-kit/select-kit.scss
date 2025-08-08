@@ -92,6 +92,7 @@
     display: flex;
     align-items: stretch;
     height: 100%;
+    box-shadow: var(--d-box-shadow);
 
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
