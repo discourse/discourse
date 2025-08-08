@@ -33,7 +33,7 @@ class InviteSerializer < ApplicationSerializer
   end
 
   def can_delete_invite
-    scope.is_admin? || object.invited_by_id == scope.current_user.id
+    scope.can_destroy_invite?(object)
   end
 
   def include_custom_message?

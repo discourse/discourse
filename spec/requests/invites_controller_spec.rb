@@ -913,7 +913,22 @@ RSpec.describe InvitesController do
         another_invite = Fabricate(:invite, email: "test2@example.com")
 
         delete "/invites.json", params: { id: another_invite.id }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(403)
+        expect(invite.reload.trashed?).to be_falsey
+        expect(another_invite.reload.trashed?).to be_falsey
+      end
+
+      it "allows an admin to delete any invite" do
+        user.update!(admin: true)
+        another_invite = Fabricate(:invite, email: "test2@example.com")
+
+        delete "/invites.json", params: { id: another_invite.id }
+        expect(response.status).to eq(200)
+        expect(another_invite.reload.trashed?).to be_truthy
+
+        delete "/invites.json", params: { id: invite.id }
+        expect(response.status).to eq(200)
+        expect(invite.reload.trashed?).to be_truthy
       end
 
       it "destroys the invite" do

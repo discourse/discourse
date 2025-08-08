@@ -319,8 +319,10 @@ class InvitesController < ApplicationController
   def destroy
     params.require(:id)
 
-    invite = Invite.find_by(invited_by_id: current_user.id, id: params[:id])
+    invite = Invite.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
+
+    guardian.ensure_can_destroy_invite!(invite)
 
     invite.trash!(current_user)
 
