@@ -85,16 +85,6 @@ export default class FilterNavigationMenu extends Component {
 
   @tracked _selectedIndex = -1;
 
-  constructor() {
-    super(...arguments);
-    window.addEventListener("resize", this.resizeDMenu);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    window.removeEventListener("resize", this.resizeDMenu);
-  }
-
   get selectedIndex() {
     return this._selectedIndex;
   }
@@ -386,12 +376,6 @@ export default class FilterNavigationMenu extends Component {
   async openFilterMenu() {
     if (this.dMenuInstance) {
       this.dMenuInstance.show();
-
-      // HACK: We don't have a nice way for DMenu to be the same width as
-      // the input element, so we set it manually.
-      schedule("afterRender", () => {
-        this.resizeDMenu();
-      });
       return;
     }
 
@@ -400,25 +384,8 @@ export default class FilterNavigationMenu extends Component {
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
       maxWidth: 2000,
+      matchTriggerWidth: true,
     });
-
-    // HACK: We don't have a nice way for DMenu to be the same width as
-    // the input element, so we set it manually.
-    schedule("afterRender", () => {
-      this.resizeDMenu();
-    });
-  }
-
-  @bind
-  resizeDMenu() {
-    if (!this.inputElement || !this.dMenuInstance) {
-      return;
-    }
-
-    if (this.dMenuInstance.content) {
-      this.dMenuInstance.content.style.width =
-        this.inputElement.offsetWidth + "px";
-    }
   }
 
   @action
