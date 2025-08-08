@@ -16,7 +16,7 @@ describe "Details button", type: :system do
       visit("/new-topic")
       composer.fill_content("test :+1:").toggle_rich_editor.select_all
       find(".toolbar-menu__options-trigger").click
-      find("button[title='Hide Details']").click
+      find("button[title='Hide details']").click
       rich.click(x: 22, y: 30) # hack for pseudo element
 
       expect(rich).to have_css(
