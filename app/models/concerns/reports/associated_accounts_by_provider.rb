@@ -31,7 +31,6 @@ module Reports::AssociatedAccountsByProvider
           count = query[provider_name] || 0
 
           report.data << {
-            icon: "plug",
             key: provider_name,
             x: I18n.t("js.login.#{provider_name}.name"),
             y: count,
