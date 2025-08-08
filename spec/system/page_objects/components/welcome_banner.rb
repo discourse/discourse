@@ -49,11 +49,11 @@ module PageObjects
       end
 
       def above_topic_content?
-        has_css?("#main-outlet > .--above-topic-content", visible: :visible)
+        has_css?("#main-outlet > .--location-above-topic-content", visible: :visible)
       end
 
       def below_site_header?
-        has_css?(".discourse-root > .--below-site-header", visible: :visible)
+        has_css?(".discourse-root > .--location-below-site-header", visible: :visible)
       end
     end
   end

@@ -70,7 +70,7 @@ module DiscourseAi
           case llm_model.name
           when "claude-2"
             "anthropic.claude-v2:1"
-          when "claude-3-haiku"
+          when "claude-3-haiku", "claude-3-haiku-20240307"
             "anthropic.claude-3-haiku-20240307-v1:0"
           when "claude-3-sonnet"
             "anthropic.claude-3-sonnet-20240229-v1:0"
@@ -78,12 +78,20 @@ module DiscourseAi
             "anthropic.claude-instant-v1"
           when "claude-3-opus"
             "anthropic.claude-3-opus-20240229-v1:0"
-          when "claude-3-5-sonnet"
+          when "claude-3-5-sonnet", "claude-3-5-sonnet-20241022", "claude-3-5-sonnet-latest"
             "anthropic.claude-3-5-sonnet-20241022-v2:0"
-          when "claude-3-5-haiku"
+          when "claude-3-5-sonnet-20240620"
+            "anthropic.claude-3-5-sonnet-20240620-v1:0"
+          when "claude-3-5-haiku", "claude-3-5-haiku-20241022", "claude-3-5-haiku-latest"
             "anthropic.claude-3-5-haiku-20241022-v1:0"
-          when "claude-3-7-sonnet"
+          when "claude-3-7-sonnet", "claude-3-7-sonnet-20250219", "claude-3-7-sonnet-latest"
             "anthropic.claude-3-7-sonnet-20250219-v1:0"
+          when "claude-opus-4-1", "claude-opus-4-1-20250805"
+            "anthropic.claude-opus-4-1-20250805-v1:0"
+          when "claude-opus-4", "claude-opus-4-20250514"
+            "anthropic.claude-opus-4-20250514-v1:0"
+          when "claude-sonnet-4", "claude-sonnet-4-20250514"
+            "anthropic.claude-sonnet-4-20250514-v1:0"
           else
             llm_model.name
           end
