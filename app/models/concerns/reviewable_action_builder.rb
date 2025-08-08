@@ -6,18 +6,17 @@ module ReviewableActionBuilder
   # Build a single reviewable action and add it to the provided actions list.
   # This is the canonical API used by both the legacy and refreshed UI code paths.
   #
-  # Parameters
-  # - actions: Reviewable::Actions instance to add to
-  # - id: Symbol for the action, used to derive I18n keys
-  # - icon: Ignored in the refreshed UI; accepted for compatibility
-  # - button_class: Optional CSS class for buttons in clients that render it
-  # - bundle: Optional bundle object returned by add_bundle to group actions
-  # - client_action: Optional client-side action identifier (e.g. "edit")
-  # - confirm: When true, uses "reviewables.actions.<id>.confirm" for confirm_message
-  # - confirm_message: Optional explicit confirm message key to override the default
-  # - label: Optional explicit label key to override the default
-  # - description: Optional explicit description key to override the default
-  # - require_reject_reason: When true, requires a rejection reason for the action
+  # @param {Reviewable::Actions} actions - actions instance to add to.
+  # @param {Symbol} id - Symbol for the action, used to derive I18n keys.
+  # @param {String} icon - Name of the icon to display with the action. Ignored in the refreshed UI.
+  # @param {String} button_class - Optional CSS class for buttons in clients that render it.
+  # @param {Reviewable::Actions::Bundle} bundle - Optional bundle object returned by add_bundle to group actions.
+  # @param {String} client_action - Optional client-side action identifier (e.g. "edit").
+  # @param {Boolean} confirm - When true, uses "reviewables.actions.<id>.confirm" for confirm_message.
+  # @param {String} confirm_message - Optional explicit confirm message key to override the default.
+  # @param {String} label - Optional explicit label key to override the default.
+  # @param {String} description - Optional explicit description key to override the default.
+  # @param {Boolean} require_reject_reason - When true, requires a rejection reason for the action.
   def build_action(
     actions,
     id,
