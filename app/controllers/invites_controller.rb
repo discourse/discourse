@@ -495,7 +495,7 @@ class InvitesController < ApplicationController
 
         if invites.present?
           custom_error =
-            DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
+            DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, "", invites)
 
           if custom_error.present?
             return(

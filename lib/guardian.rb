@@ -453,7 +453,8 @@ class Guardian
     can_send_private_message =
       DiscoursePluginRegistry.apply_modifier(
         :guardian_can_send_private_message,
-        target: target,
+        true,
+        target:,
         user: @user,
       )
     return false if !can_send_private_message

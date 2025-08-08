@@ -25,7 +25,7 @@ module Jobs
             modifier_applied, demoted_user_id =
               DiscoursePluginRegistry.apply_modifier(
                 :tl3_custom_demotions,
-                false,
+                [false, nil],
                 u,
                 demoted_user_ids,
               )
