@@ -53,7 +53,9 @@ export default {
                 ...properties,
               };
 
-              router.trigger("showLogin", props);
+              router.transitionTo("login").then(({ controller }) => {
+                controller.setProperties(props);
+              });
 
               next(() => callback?.());
             };
