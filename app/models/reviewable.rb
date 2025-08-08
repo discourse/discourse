@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Reviewable < ActiveRecord::Base
-  include ReviewableActionBuilder
-
   TYPE_TO_BASIC_SERIALIZER = {
     ReviewableFlaggedPost: BasicReviewableFlaggedPostSerializer,
     ReviewableQueuedPost: BasicReviewableQueuedPostSerializer,
@@ -750,24 +748,18 @@ class Reviewable < ActiveRecord::Base
         label: "reviewables.actions.reject_user.title",
       )
 
-    build_action(
-      actions,
-      :delete_user,
-      icon: "user-xmark",
-      bundle: bundle,
-      label: "reviewables.actions.reject_user.delete.title",
-      require_reject_reason: require_reject_reason,
-    )
+    actions.add(:delete_user, bundle: bundle) do |a|
+      a.icon = "user-xmark"
+      a.label = "reviewables.actions.reject_user.delete.title"
+      a.require_reject_reason = require_reject_reason
+    end
 
-    build_action(
-      actions,
-      :delete_user_block,
-      icon: "ban",
-      bundle: bundle,
-      label: "reviewables.actions.reject_user.block.title",
-      description: "reviewables.actions.reject_user.block.description",
-      require_reject_reason: require_reject_reason,
-    )
+    actions.add(:delete_user_block, bundle: bundle) do |a|
+      a.icon = "ban"
+      a.label = "reviewables.actions.reject_user.block.title"
+      a.description = "reviewables.actions.reject_user.block.description"
+      a.require_reject_reason = require_reject_reason
+    end
   end
 
   protected
