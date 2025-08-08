@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function buildTips() {
   return [
@@ -196,5 +197,50 @@ module("Unit | Utility | filter-suggestions", function (hooks) {
       buildContext()
     );
     assert.strictEqual(suggestions.length, 20, "limits results to 20");
+  });
+
+  test("username_group_list suggests users and filters out already-used values", async function (assert) {
+    pretender.get("/u/search/users.json", () =>
+      response({
+        users: [
+          { username: "sam", name: "Sam" },
+          { username: "cam", name: "Cam" },
+        ],
+      })
+    );
+    pretender.get("/groups/search.json", () => response([]));
+
+    const tips = [
+      {
+        name: "assigned:",
+        description: "Assigned",
+        type: "username_group_list",
+        priority: 1,
+        delimiters: [{ name: ",", description: "add" }],
+      },
+    ];
+
+    const first = await FilterSuggestions.getSuggestions(
+      "assigned:am",
+      tips,
+      buildContext()
+    );
+    const firstTerms = first.suggestions.map((s) => s.term);
+
+    assert.true(firstTerms.includes("sam"), "finds user sam");
+    assert.true(firstTerms.includes("cam"), "finds user cam");
+
+    const second = await FilterSuggestions.getSuggestions(
+      "assigned:cam,",
+      tips,
+      buildContext()
+    );
+    const secondTerms = second.suggestions.map((s) => s.term);
+
+    assert.true(secondTerms.includes("sam"), "sam remains available");
+    assert.false(
+      secondTerms.includes("cam"),
+      "cam is excluded after being used"
+    );
   });
 });
