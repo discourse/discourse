@@ -16,7 +16,7 @@ export default class MessagesDropdown extends Component {
   }
 
   get showUnreadIcon() {
-    return !this.currentUser?.sidebarShowCountOfNewItems;
+    return !this.currentUser.sidebarShowCountOfNewItems;
   }
 
   @action

@@ -66,7 +66,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get showCount() {
-    return this.currentUser?.sidebarShowCountOfNewItems;
+    return this.currentUser.sidebarShowCountOfNewItems;
   }
 
   get badgeText() {
