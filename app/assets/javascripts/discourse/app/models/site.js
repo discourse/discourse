@@ -92,6 +92,7 @@ export default class Site extends RestModel {
   @sort("categories", "topicCountDesc") categoriesByCount;
 
   #glimmerPostStreamEnabled;
+  #siteInitialized = false;
 
   init() {
     super.init(...arguments);
@@ -107,6 +108,31 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get mobileView() {
+    this.#siteInitialized ||= getOwnerWithFallback(this).lookup(
+      "-application-instance:main"
+    )?._booted;
+
+    if (!this.#siteInitialized) {
+      if (isTesting() || isRailsTesting()) {
+        throw new Error(
+          "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase. " +
+            "Move these checks to a component, transformer, or API callback that executes during page rendering."
+        );
+      }
+
+      deprecated(
+        "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is deprecated. " +
+          "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
+          "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+          "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
+          " rendering.",
+        {
+          since: "v3.5.0.beta9-dev",
+          id: "discourse.static-mobile-mode-initializing",
+        }
+      );
+    }
+
     if (this.siteSettings.viewport_based_mobile_mode) {
       return !this.capabilities.viewport.sm;
     } else {

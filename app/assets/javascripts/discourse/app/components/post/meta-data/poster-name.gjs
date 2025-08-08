@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import UserBadge from "discourse/components/user-badge";
 import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
@@ -19,6 +20,7 @@ import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {
+  @service site;
   @service siteSettings;
   @service userStatus;
 
@@ -92,6 +94,14 @@ export default class PostMetaDataPosterName extends Component {
     return this.userStatus.isEnabled && this.user.status;
   }
 
+  get shouldDisplayIconsBefore() {
+    return this.site.mobileView;
+  }
+
+  get shouldDisplayIconsAfter() {
+    return !this.shouldDisplayIconsBefore;
+  }
+
   @bind
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
@@ -133,6 +143,9 @@ export default class PostMetaDataPosterName extends Component {
           @name="post-meta-data-poster-name"
           @outletArgs={{lazyHash post=@post user=this.user}}
         >
+          {{#if this.shouldDisplayIconsBefore}}
+            <PostMetaDataPosterNameIcons @post={{@post}} />
+          {{/if}}
           <span
             class={{concatClass
               "first"
@@ -237,8 +250,33 @@ export default class PostMetaDataPosterName extends Component {
               </span>
             {{/if}}
           {{/if}}
+          {{#if this.shouldDisplayIconsAfter}}
+            <PostMetaDataPosterNameIcons @post={{@post}} />
+          {{/if}}
         </PluginOutlet>
       </div>
     {{/if}}
+  </template>
+}
+
+class PostMetaDataPosterNameIcons extends Component {
+  get definitions() {
+    return applyValueTransformer("poster-name-icons", [], {
+      post: this.args.post,
+    });
+  }
+
+  <template>
+    {{#each this.definitions as |definition|}}
+      <PostMetaDataPosterNameIcon
+        @className={{definition.className}}
+        @emoji={{definition.emoji}}
+        @emojiTitle={{definition.emojiTitle}}
+        @icon={{definition.icon}}
+        @text={{definition.text}}
+        @title={{definition.title}}
+        @url={{definition.url}}
+      />
+    {{/each}}
   </template>
 }
