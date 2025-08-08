@@ -58,7 +58,6 @@ export default class extends DiscourseRoute {
     // When inside a webview, it handles the login flow itself
     if (isAppWebview) {
       postRNWebviewMessage("showLogin", true);
-      return;
     }
 
     // When Discourse Connect is enabled, redirect to the SSO endpoint
