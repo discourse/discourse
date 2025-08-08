@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPost < Reviewable
+  include ReviewableActionBuilder
+
+  def self.action_aliases
+    { discard_post: :reject_post }
+  end
+
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
@@ -35,20 +41,9 @@ class ReviewableQueuedPost < Reviewable
   def build_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
-        actions.add(:approve_post_closed) do |a|
-          a.icon = "check"
-          a.label = "reviewables.actions.approve_post.title"
-          a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
-          a.completed_message = "reviewables.actions.approve_post.complete"
-        end
+        build_action(actions, :approve_post_closed, icon: "check", confirm: true)
       else
-        if target_created_by.present?
-          actions.add(:approve_post) do |a|
-            a.icon = "check"
-            a.label = "reviewables.actions.approve_post.title"
-            a.completed_message = "reviewables.actions.approve_post.complete"
-          end
-        end
+        build_action(actions, :approve_post, icon: "check") if target_created_by.present?
       end
     end
 
@@ -57,27 +52,22 @@ class ReviewableQueuedPost < Reviewable
         reject_bundle =
           actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
 
-        actions.add(:reject_post, bundle: reject_bundle) do |a|
-          a.icon = "xmark"
-          a.label = "reviewables.actions.discard_post.title"
-          a.button_class = "reject-post"
-        end
+        build_action(
+          actions,
+          :discard_post,
+          bundle: reject_bundle,
+          icon: "xmark",
+          button_class: "reject-post",
+        )
         delete_user_actions(actions, reject_bundle)
       else
-        actions.add(:reject_post) do |a|
-          a.icon = "xmark"
-          a.label = "reviewables.actions.reject_post.title"
-        end
+        build_action(actions, :reject_post, icon: "xmark")
       end
 
-      actions.add(:revise_and_reject_post) do |a|
-        a.label = "reviewables.actions.revise_and_reject_post.title"
-      end
+      build_action(actions, :revise_and_reject_post)
     end
 
-    actions.add(:delete) do |a|
-      a.label = "reviewables.actions.delete_single.title"
-    end if guardian.can_delete?(self)
+    build_action(actions, :delete) if guardian.can_delete_post_or_topic?(post)
   end
 
   def build_editable_fields(fields, guardian, args)
