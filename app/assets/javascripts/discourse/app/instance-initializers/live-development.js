@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
+import { isProduction } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 
 // Use the message bus for live reloading of components for faster development.
@@ -88,10 +89,14 @@ class LiveDevelopmentInit {
   }
 
   refreshCSS(node, newHref) {
-    const reloaded = node.cloneNode(true);
-    reloaded.href = newHref;
-    node.insertAdjacentElement("afterend", reloaded);
-    discourseLater(() => node?.parentNode?.removeChild(node), 500);
+    if (isProduction()) {
+      this.session.requiresRefresh = true;
+    } else {
+      const reloaded = node.cloneNode(true);
+      reloaded.href = newHref;
+      node.insertAdjacentElement("afterend", reloaded);
+      discourseLater(() => node?.parentNode?.removeChild(node), 500);
+    }
   }
 }
 

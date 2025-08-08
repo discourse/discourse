@@ -128,7 +128,7 @@ en:
       error_while_exporting_results: "Sorry, there was an error exporting poll results."
 
       ui_builder:
-        title: Build Poll
+        title: Build poll
         insert: Insert Poll
         help:
           options_min_count: Enter at least 1 option.

@@ -19,6 +19,7 @@ import { bind } from "discourse/lib/decorators";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
+import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 
 const MAX_RESULTS = 20;
 
@@ -385,6 +386,7 @@ export default class FilterNavigationMenu extends Component {
       data: this.trackedMenuListData,
       maxWidth: 2000,
       matchTriggerWidth: true,
+      visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
     });
   }
 

@@ -43,7 +43,7 @@ export default class ChatHeaderIcon extends Component {
       !this.chatSeparateSidebarMode.never &&
       this.site.desktopView
     ) {
-      return i18n("sidebar.panels.forum.label");
+      return i18n("chat.exit");
     }
 
     return i18n("chat.title_capitalized");

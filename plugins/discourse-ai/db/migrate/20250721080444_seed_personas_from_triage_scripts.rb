@@ -76,6 +76,8 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
         end
         .compact
 
+    return if new_fields.empty?
+
     DB.exec <<~SQL
       INSERT INTO discourse_automation_fields (automation_id, name, metadata, component, target, created_at, updated_at)
       VALUES #{new_fields.join(",")}

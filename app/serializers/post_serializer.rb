@@ -656,11 +656,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def has_post_localizations
-    object.post_localizations.any?
+    object.localizations.any?
   end
 
   def post_localizations_count
-    object.post_localizations.size
+    object.localizations.size
   end
 
   def include_has_post_localizations?

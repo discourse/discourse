@@ -605,7 +605,9 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    next(() => document.querySelector("textarea.d-editor-input")?.focus());
+    next(() =>
+      document.querySelector(".d-editor-container .d-editor-input")?.focus()
+    );
 
     if (insertText) {
       this.model.appendText(insertText, null, { new_line: true });
