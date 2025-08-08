@@ -2097,6 +2097,9 @@ files:
   s3_secret_access_key:
     default: ""
     secret: true
+  s3_role_arn:
+    default: ""
+    secret: true
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
