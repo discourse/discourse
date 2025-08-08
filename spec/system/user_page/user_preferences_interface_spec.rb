@@ -71,19 +71,12 @@ describe "User preferences | Interface", type: :system do
         user.user_option.update!(dark_scheme_id: dark.id, theme_ids: [SiteSetting.default_theme_id])
       end
 
-      it "displays a checkbox for activating/deactivating the dark palette" do
+      it "always display a mode selector when schemes selectors are available" do
         user_preferences_interface_page.visit(user)
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(true)
-
-        user_preferences_interface_page.dark_mode_checkbox.click
-        user_preferences_interface_page.save_changes
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
-
-        page.refresh
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::AUTO_MODE,
+        ),
+        "the default value should be auto mode"
       end
     end
   end

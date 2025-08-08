@@ -773,18 +773,6 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .light-color-scheme {
-      @include inactiveMode;
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .dark-color-scheme {
-      @include inactiveMode;
-    }
-  }
-
   .undo-preview {
     margin: 1em 0;
   }
