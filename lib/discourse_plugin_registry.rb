@@ -306,7 +306,7 @@ class DiscoursePluginRegistry
       index += 1
     end
 
-    if !result.is_a?(arg.class)
+    if !valid_return_value?(result, arg)
       raise TypeMismatchError if Rails.env.local?
       Rails.logger.warn(
         "Type mismatch error in modifier #{name}: expected #{arg.class}, got #{result.class}",
@@ -324,5 +324,14 @@ class DiscoursePluginRegistry
     found_register = @@register_names.detect { |name| name == register_name }
 
     instance_variable_set(:"@#{found_register}", nil) if found_register
+  end
+
+  def self.valid_return_value?(result, initial_value)
+    case initial_value
+    when TrueClass, FalseClass
+      result.is_a?(TrueClass) || result.is_a?(FalseClass)
+    else
+      result.is_a?(initial_value.class)
+    end
   end
 end
