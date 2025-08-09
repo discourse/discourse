@@ -1,34 +1,44 @@
+import Component from "@glimmer/component";
+import { array } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { apiInitializer } from "discourse/lib/api";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
+import DTooltip from "float-kit/components/d-tooltip";
 
-const TooltipContentComponent = <template>
-  {{htmlSafe @data.contentHtml}}
-</template>;
-
-export default apiInitializer((api) => {
-  function onFootnoteClick(event) {
+class InlineFootnote extends Component {
+  @action
+  preventDefault(event) {
     event.preventDefault();
-
-    const tooltipService = api.container.lookup("service:tooltip");
-
-    const instance = new DTooltipInstance(api.container, {
-      identifier: "inline-footnote",
-      interactive: true,
-      closeOnScroll: false,
-      closeOnClickOutside: true,
-      component: TooltipContentComponent,
-      data: {
-        contentHtml: event.target.dataset.footnoteContent,
-      },
-    });
-    instance.trigger = event.target;
-    instance.detachedTrigger = true;
-
-    tooltipService.show(instance);
   }
 
-  api.decorateCookedElement((elem) => {
+  <template>
+    <DTooltip
+      @identifier="inline-footnote"
+      @interactive={{true}}
+      @closeOnScroll={{false}}
+      @closeOnClickOutside={{true}}
+      @triggers={{array "click"}}
+    >
+      <:trigger>
+        <a
+          class="expand-footnote"
+          href
+          role="button"
+          data-footnote-id={{@data.footnoteId}}
+          data-footnote-content={{@data.footnoteContent}}
+          {{on "click" this.preventDefault}}
+        ></a>
+      </:trigger>
+      <:content>
+        {{htmlSafe @data.footnoteContent}}
+      </:content>
+    </DTooltip>
+  </template>
+}
+
+export default apiInitializer((api) => {
+  api.decorateCookedElement((elem, helper) => {
     if (
       !api.container.lookup("service:site-settings").display_footnotes_inline
     ) {
@@ -46,15 +56,13 @@ export default apiInitializer((api) => {
       const footnoteId = refLink.getAttribute("href");
       const footnoteContent = elem.querySelector(footnoteId)?.innerHTML;
 
-      const expandableFootnote = document.createElement("a");
-      expandableFootnote.classList.add("expand-footnote");
-      expandableFootnote.href = "";
-      expandableFootnote.role = "button";
-      expandableFootnote.dataset.footnoteId = footnoteId;
-      expandableFootnote.dataset.footnoteContent = footnoteContent;
-      expandableFootnote.addEventListener("click", onFootnoteClick);
+      const expandableFootnote = document.createElement("span");
+      footnoteRef.replaceWith(expandableFootnote);
 
-      footnoteRef.after(expandableFootnote);
+      helper.renderGlimmer(expandableFootnote, InlineFootnote, {
+        footnoteId,
+        footnoteContent,
+      });
     });
 
     if (footnoteRefs.length) {
