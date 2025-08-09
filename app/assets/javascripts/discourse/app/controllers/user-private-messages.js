@@ -67,12 +67,8 @@ export default class extends Controller {
     return value;
   }
 
-  get showUnread() {
-    return this.currentUser?.use_experimental_sidebar_messages_count;
-  }
-
   get showCount() {
-    return this.showUnread && this.currentUser?.sidebarShowCountOfNewItems;
+    return this.currentUser.sidebarShowCountOfNewItems;
   }
 
   @cached
@@ -80,18 +76,16 @@ export default class extends Controller {
     const usernameLower = this.model.username_lower;
     let inboxName = i18n("user.messages.inbox");
     let userMsgsCount = 0;
-    if (this.showUnread) {
-      userMsgsCount = ["new", "unread"].reduce((count, type) => {
-        return (
-          count +
-          this.pmTopicTrackingState.lookupCount(type, {
-            inboxFilter: "user",
-          })
-        );
-      }, userMsgsCount);
-      if (userMsgsCount && this.showCount) {
-        inboxName = htmlSafe(`${inboxName}&nbsp;(${userMsgsCount})`);
-      }
+    userMsgsCount = ["new", "unread"].reduce((count, type) => {
+      return (
+        count +
+        this.pmTopicTrackingState.lookupCount(type, {
+          inboxFilter: "user",
+        })
+      );
+    }, userMsgsCount);
+    if (userMsgsCount && this.showCount) {
+      inboxName = htmlSafe(`${inboxName}&nbsp;(${userMsgsCount})`);
     }
     const content = [
       {
@@ -104,19 +98,17 @@ export default class extends Controller {
     this.model.groupsWithMessages.forEach(({ name }) => {
       let groupName = name;
       let groupMsgsCount = 0;
-      if (this.showUnread) {
-        groupMsgsCount = ["new", "unread"].reduce((count, type) => {
-          return (
-            count +
-            this.pmTopicTrackingState.lookupCount(type, {
-              inboxFilter: "group",
-              groupName: name,
-            })
-          );
-        }, groupMsgsCount);
-        if (groupMsgsCount && this.showCount) {
-          groupName = htmlSafe(`${name}&nbsp;(${groupMsgsCount})`);
-        }
+      groupMsgsCount = ["new", "unread"].reduce((count, type) => {
+        return (
+          count +
+          this.pmTopicTrackingState.lookupCount(type, {
+            inboxFilter: "group",
+            groupName: name,
+          })
+        );
+      }, groupMsgsCount);
+      if (groupMsgsCount && this.showCount) {
+        groupName = htmlSafe(`${name}&nbsp;(${groupMsgsCount})`);
       }
       content.push({
         id: this.router.urlFor(
