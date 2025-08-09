@@ -75,7 +75,7 @@ export function buildKeymap(
       return false;
     }
 
-    if ($from.nodeBefore?.text.endsWith("  ")) {
+    if ($from.nodeBefore?.isText && $from.nodeBefore.text.endsWith("  ")) {
       if (dispatch) {
         const tr = state.tr.replaceRangeWith(
           $from.pos - 2,
