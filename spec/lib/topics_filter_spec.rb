@@ -878,6 +878,101 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id, topic_with_tag_and_tag2_and_tag3.id)
       end
 
+      describe "when query string is `tags:front-end,back-end tags:pri-high,pri-low`" do
+        fab!(:front_end) { Fabricate(:tag, name: "front-end") }
+        fab!(:back_end) { Fabricate(:tag, name: "back-end") }
+        fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
+        fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
+
+        it "should only return topics that are tagged with front-end+pri-high, front-end+pri-low, back-end+pri-high, back-end+pri-low" do
+          topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
+          topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
+          topic_with_back_end_pri_high = Fabricate(:topic, tags: [back_end, pri_high])
+          topic_with_back_end_pri_low = Fabricate(:topic, tags: [back_end, pri_low])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [front_end, back_end])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "tags:#{front_end.name},#{back_end.name} tags:#{pri_high.name},#{pri_low.name}",
+              )
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_back_end_pri_high.id,
+            topic_with_back_end_pri_low.id,
+          )
+        end
+
+        it "should return topics that are tagged with front-end+back-end+pri-low or front-end+back-end+pri-high" do
+          topic_with_front_end_back_end_pri_low =
+            Fabricate(:topic, tags: [front_end, back_end, pri_low])
+          topic_with_front_end_back_end_pri_high =
+            Fabricate(:topic, tags: [front_end, back_end, pri_high])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [front_end, back_end])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "tags:#{front_end.name},#{back_end.name} tags:#{pri_low.name},#{pri_high.name}",
+              )
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_front_end_back_end_pri_low.id,
+            topic_with_front_end_back_end_pri_high.id,
+          )
+        end
+      end
+
+      describe "when query string is `tags:front-end tags:pri-high,pri-low`" do
+        fab!(:front_end) { Fabricate(:tag, name: "front-end") }
+        fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
+        fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
+
+        it "should only return topics tagged with front-end and or pri-high or pri-low" do
+          topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
+          topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
+          topic_with_front_end_pri_high_pri_low =
+            Fabricate(:topic, tags: [front_end, pri_high, pri_low])
+
+          Fabricate(:topic, tags: [pri_low, pri_high])
+          Fabricate(:topic, tags: [pri_high, pri_low])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "tags:#{front_end.name} tags:#{pri_high.name},#{pri_low.name}",
+              )
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_front_end_pri_high_pri_low.id,
+          )
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "tags:#{pri_high.name},#{pri_low.name} tags:#{front_end.name}",
+              )
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_front_end_pri_high.id,
+            topic_with_front_end_pri_low.id,
+            topic_with_front_end_pri_high_pri_low.id,
+          )
+        end
+      end
+
       describe "when query string is `tags:tag1,tag2,tag3`" do
         it "should only return topics that are tagged with either tag1, tag2 or tag3" do
           topic_with_tag3 = Fabricate(:topic, tags: [tag3])
