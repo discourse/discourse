@@ -663,6 +663,16 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(nil)
       expect(rich).to have_css("blockquote", text: "This is a test")
     end
+
+    it "adds a new paragraph when ENTER is pressed after an image" do
+      open_composer
+      composer.type_content("![image](https://example.com/image.png)")
+      composer.send_keys(:right, :enter)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("\n![image](https://example.com/image.png)\n\nThis is a test")
+    end
   end
 
   describe "pasting content" do
