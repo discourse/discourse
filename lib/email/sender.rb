@@ -443,7 +443,7 @@ module Email
     # Due to mail gem magic, @message.text_part and @message.html_part still
     # refer to the same objects.
     #
-    # Most imporantly, we need to specify the boundary for the multipart/mixed
+    # Most importantly, we need to specify the boundary for the multipart/mixed
     # part of the email, otherwise we can end up with an email that appears to
     # be empty with the entire body attached as a single attachment, and some
     # mail parsers consider the entire email as a preamble/epilogue.
