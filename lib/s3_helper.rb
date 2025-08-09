@@ -268,6 +268,19 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
+  def assume_s3_role(access_key_id:, secret_access_key:, role_arn:)
+    sts_client =
+      Aws::STS::Client.new(access_key_id: access_key_id, secret_access_key: secret_access_key)
+
+    response =
+      sts_client.assume_role(
+        role_arn: role_arn,
+        role_session_name: "discourse-s3-#{SecureRandom.hex(8)}",
+      )
+
+    response.credentials
+  end
+
   def self.s3_options(obj)
     opts = { region: obj.s3_region }
 
@@ -275,7 +288,19 @@ class S3Helper
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    unless obj.s3_use_iam_profile
+    if obj.s3_role_arn.present? && obj.s3_access_key_id.present? &&
+         obj.s3_secret_access_key.present?
+      temp_credentials =
+        assume_s3_role(
+          access_key_id: obj.s3_access_key_id,
+          secret_access_key: obj.s3_secret_access_key,
+          role_arn: obj.s3_role_arn,
+        )
+
+      opts[:access_key_id] = temp_credentials.access_key_id
+      opts[:secret_access_key] = temp_credentials.secret_access_key
+      opts[:session_token] = temp_credentials.session_token
+    elsif !obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
       opts[:secret_access_key] = obj.s3_secret_access_key
     end
