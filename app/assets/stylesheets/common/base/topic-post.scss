@@ -449,14 +449,6 @@ nav.post-controls {
     }
 
     button {
-      flex: 0 1 auto;
-      font-size: var(--font-up-1);
-      padding: 8px 10px;
-      vertical-align: top;
-      background: transparent;
-      border: none;
-      border-radius: var(--d-post-control-border-radius);
-
       .discourse-no-touch & {
         &:hover,
         &:focus-visible,
@@ -491,7 +483,6 @@ nav.post-controls {
       }
 
       &.create {
-        margin-right: 0;
         color: var(--d-post-control-create-text-color);
 
         .d-icon {
