@@ -19,8 +19,8 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings).to have_no_css(".submit-light-edit")
       expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
 
-      color_scheme_settings.find(".color-palettes").click
-      color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
+      color_scheme_settings.find(".color-palette-picker").click
+      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-light-edit").click
 
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
@@ -36,8 +36,8 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
 
-      color_scheme_settings.find(".color-palettes").click
-      color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
+      color_scheme_settings.find(".color-palette-picker").click
+      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-dark-edit").click
 
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)

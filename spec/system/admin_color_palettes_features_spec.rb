@@ -137,7 +137,7 @@ describe "Admin Color Palettes Features", type: :system do
     it "generates CSS variables for color schemes" do
       visit("/admin/customize/colors")
 
-      palette_item = find("[data-palette-id='#{regular_palette.id}']")
+      palette_item = find("[data-palette-id='#{regular_palette.id}'] .color-palette__preview")
 
       expect(palette_item[:style]).to include("--primary--preview:")
       expect(palette_item[:style]).to include("--secondary--preview:")

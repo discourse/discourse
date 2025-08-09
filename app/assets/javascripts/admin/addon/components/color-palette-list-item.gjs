@@ -3,15 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
 import { not, or } from "truth-helpers";
+import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import SvgSingleColorPalettePlaceholder from "admin/components/svg/single-color-palette-placeholder";
-import { getColorSchemeStyles } from "admin/lib/color-transformations";
 import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
@@ -61,36 +59,6 @@ export default class ColorPaletteListItem extends Component {
     );
   }
 
-  get styles() {
-    if (this.isBuiltInDefault) {
-      return htmlSafe(
-        "--primary-low--preview: #e9e9e9; --tertiary-low--preview: #d1f0ff;"
-      );
-    }
-
-    // generate primary-low and tertiary-low
-    const existingStyles = getColorSchemeStyles(this.args.scheme);
-
-    // create variables from scheme.colors
-    const colorVariables =
-      this.args.scheme?.colors
-        ?.map((color) => {
-          let hex = color.hex || color.default_hex;
-
-          if (hex && !hex.startsWith("#")) {
-            hex = `#${hex}`;
-          }
-          return `--${color.name}--preview: ${hex}`;
-        })
-        .join("; ") || "";
-
-    const allStyles = colorVariables
-      ? `${existingStyles} ${colorVariables};`
-      : existingStyles;
-
-    return htmlSafe(allStyles);
-  }
-
   get activeBadgeTitle() {
     if (this.isDefaultLight && this.isDefaultDark) {
       return i18n("admin.customize.colors.active_both_badge.title");
@@ -138,14 +106,14 @@ export default class ColorPaletteListItem extends Component {
 
   <template>
     <li
-      style={{this.styles}}
       class="admin-config-area-card color-palette"
       data-palette-id={{@scheme.id}}
     >
       <div class="color-palette__container">
-        <div class="color-palette__preview">
-          <SvgSingleColorPalettePlaceholder />
-        </div>
+        <ColorPalettePreview
+          class="color-palette__preview"
+          @scheme={{@scheme}}
+        />
 
         <div class="color-palette__details">
           <h3>{{@scheme.description}}</h3>
