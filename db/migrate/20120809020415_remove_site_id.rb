@@ -19,6 +19,6 @@ class RemoveSiteId < ActiveRecord::Migration[4.2]
   end
 
   def down
-    raise "not reversable"
+    raise "not reversible"
   end
 end
