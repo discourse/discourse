@@ -14,6 +14,10 @@ Discourse is large with long history. Understand context before changes.
 - Make display strings translatable (use placeholders, not split strings)
 - Create subagent to review changes against this file after completing tasks
 
+### Toolset
+- Use `pnpm` for JavaScript, `bundle` for Ruby
+- Use helpers in bin over bundle exec (bin/rspec, bin/rake)
+
 ### JavaScript
 - No empty backing classes for template-only components unless requested
 - Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
@@ -41,13 +45,15 @@ bin/rake qunit:test
 pnpm ember exam --filter 'Module | Filter | goes-here'
 
 # Linting
-bundle exec rubocop path/to/file
-bundle exec stree write Gemfile path/to/file
+bin/rubocop path/to/file
+bin/stree write Gemfile path/to/file
 pnpm lint:js|hbs|prettier|css path/to/file
 ```
 
+ALWAYS lint any changes you make
+
 ## Site Settings
-- Configured in `config/site_settings.yml` or `config/settings.yml`
+- Configured in `config/site_settings.yml` or `config/settings.yml` for plugins
 - Functionality in `lib/site_setting_extension.rb`
 - Access: `SiteSetting.setting_name` (Ruby), `siteSettings.setting_name` (JS with `@service siteSettings`)
 
@@ -69,7 +75,6 @@ pnpm lint:js|hbs|prettier|css path/to/file
 
 ## Knowledge Sharing
 - ALWAYS persist information for ALL developers (no conversational-only memory)
-- Document in appropriate files (comments, docs, README, AI-AGENTS.md)
 - Follow project conventions, prevent knowledge silos
 - Recommend storage locations by info type
 - Inform when this file changes and reloads
