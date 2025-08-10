@@ -30,8 +30,9 @@ acceptance("Lightbox", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
+    // PhotoSwipe caption is inside .pswp__caption__center
     assert
-      .dom(".mfp-title")
+      .dom(".pswp__caption__center")
       .hasText(
         "<script>image</script> · 1500×842 234 KB · download · original image"
       );
@@ -47,13 +48,15 @@ acceptance("Lightbox", function (needs) {
       .dom(".image-source-link:nth-child(2)")
       .hasAttribute("href", `/images/d-logo-sketch.png`);
 
-    await click(".mfp-close");
+    await click(".pswp__button--close");
   });
 
   test("Correctly escapes image caption", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
-    assert.dom(".mfp-title").hasHtml(/^&lt;script&gt;image&lt;\/script&gt; · /);
+    assert
+      .dom(".pswp__caption__center")
+      .hasHtml(/^&lt;script&gt;image&lt;\/script&gt; · /);
   });
 });

@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
-import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
@@ -57,7 +56,12 @@ export default class UppyImageUploader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    $.magnificPopup?.instance.close();
+    const pswpEl = document.querySelector(".pswp");
+    if (pswpEl && pswpEl.pswp) {
+      try {
+        pswpEl.pswp.close();
+      } catch {}
+    }
   }
 
   get disabled() {
@@ -123,13 +127,12 @@ export default class UppyImageUploader extends Component {
 
   @action
   toggleLightbox() {
-    const lightboxElement = document.querySelector(
-      `#${this.args.id} a.lightbox`
-    );
-
-    if (lightboxElement) {
-      $(lightboxElement).magnificPopup("open");
+    const anchor = document.querySelector(`#${this.args.id} a.lightbox`);
+    if (!anchor) {
+      return;
     }
+    // Ensure PhotoSwipe is initialized for this anchor; the lightbox modifier attaches it
+    anchor.dispatchEvent(new Event("click", { bubbles: true }));
   }
 
   @action
