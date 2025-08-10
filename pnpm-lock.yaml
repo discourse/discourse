@@ -267,8 +267,8 @@ importers:
         specifier: ^6.1.18
         version: 6.1.18
       '@fullcalendar/daygrid':
-        specifier: ^6.1.18
-        version: 6.1.18(@fullcalendar/core@6.1.18)
+        specifier: ^6.1.19
+        version: 6.1.19(@fullcalendar/core@6.1.18)
       '@fullcalendar/list':
         specifier: ^6.1.18
         version: 6.1.18(@fullcalendar/core@6.1.18)
@@ -2156,10 +2156,10 @@ packages:
   '@fullcalendar/core@6.1.18':
     resolution: {integrity: sha512-cD7XtZIZZ87Cg2+itnpsONCsZ89VIfLLDZ22pQX4IQVWlpYUB3bcCf878DhWkqyEen6dhi5ePtBoqYgm5K+0fQ==}
 
-  '@fullcalendar/daygrid@6.1.18':
-    resolution: {integrity: sha512-s452Zle1SdMEzZDw+pDczm8m3JLIZzS9ANMThXTnqeqJewW1gqNFYas18aHypJSgF9Fh9rDJjTSUw04BpXB/Mg==}
+  '@fullcalendar/daygrid@6.1.19':
+    resolution: {integrity: sha512-IAAfnMICnVWPjpT4zi87i3FEw0xxSza0avqY/HedKEz+l5MTBYvCDPOWDATpzXoLut3aACsjktIyw9thvIcRYQ==}
     peerDependencies:
-      '@fullcalendar/core': ~6.1.18
+      '@fullcalendar/core': ~6.1.19
 
   '@fullcalendar/list@6.1.18':
     resolution: {integrity: sha512-XPZI50mq3HXyDQ5sT3jmqQUuwG8zQb5H14dQIUAmOHAIFRA3WpkxlzrXO0U1SrosvGySMPyyNNxvMKI1Q/jL7A==}
@@ -10602,7 +10602,7 @@ snapshots:
     dependencies:
       preact: 10.12.1
 
-  '@fullcalendar/daygrid@6.1.18(@fullcalendar/core@6.1.18)':
+  '@fullcalendar/daygrid@6.1.19(@fullcalendar/core@6.1.18)':
     dependencies:
       '@fullcalendar/core': 6.1.18
 
@@ -10613,7 +10613,7 @@ snapshots:
   '@fullcalendar/timegrid@6.1.18(@fullcalendar/core@6.1.18)':
     dependencies:
       '@fullcalendar/core': 6.1.18
-      '@fullcalendar/daygrid': 6.1.18(@fullcalendar/core@6.1.18)
+      '@fullcalendar/daygrid': 6.1.19(@fullcalendar/core@6.1.18)
 
   '@glimmer/compiler@0.92.4':
     dependencies:
