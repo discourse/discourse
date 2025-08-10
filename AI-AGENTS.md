@@ -45,9 +45,9 @@ bin/rake qunit:test
 pnpm ember exam --filter 'Module | Filter | goes-here'
 
 # Linting
-bin/rubocop path/to/file
-bin/stree write Gemfile path/to/file
-pnpm lint:js|hbs|prettier|css path/to/file
+bin/lint path/to/file path/to/another/file
+bin/lint --fix path/to/file path/to/another/file
+bin/lint --fix --recent # Lint all recently changed files
 ```
 
 ALWAYS lint any changes you make
