@@ -1,11 +1,8 @@
-import $ from "jquery";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
-import loadScript from "discourse/lib/load-script";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -37,98 +34,94 @@ export default function lightbox(elem, siteSettings) {
   const caps = helperContext().capabilities;
   const imageClickNavigation = caps.touch;
 
-  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    $(lightboxes).magnificPopup({
-      type: "image",
-      closeOnContentClick: false,
-      removalDelay: isTesting() ? 0 : 300,
-      mainClass: "mfp-zoom-in",
-      tClose: i18n("lightbox.close"),
-      tLoading: spinnerHTML,
-      prependTo: isTesting() && document.getElementById("ember-testing"),
+  (async () => {
+    const [{ default: PhotoSwipeLightbox }, { default: PhotoSwipe }] =
+      await Promise.all([import("photoswipe/lightbox"), import("photoswipe")]);
 
-      gallery: {
-        enabled: true,
-        tPrev: i18n("lightbox.previous"),
-        tNext: i18n("lightbox.next"),
-        tCounter: i18n("lightbox.counter"),
-        navigateByImgClick: imageClickNavigation,
-      },
+    const pswpLightbox = new PhotoSwipeLightbox({
+      gallery: elem,
+      children: SELECTORS.DEFAULT_ITEM_SELECTOR,
+      pswpModule: PhotoSwipe,
+      paddingFn: () => 0,
+      wheelToZoom: !imageClickNavigation,
+      initialZoomLevel: "fit",
+      zoom: true,
+      bgOpacity: isTesting() ? 1 : 0.7,
+    });
 
-      ajax: {
-        tError: i18n("lightbox.content_load_error"),
-      },
+    pswpLightbox.addFilter("itemData", (itemData) => {
+      const anchor = itemData.element;
+      const downloadHref = anchor?.dataset?.downloadHref;
+      const infoText = anchor?.querySelector("span.informations")?.textContent;
+      const title = anchor?.getAttribute("title") || "";
 
-      callbacks: {
-        open() {
-          if (!imageClickNavigation) {
-            const wrap = this.wrap,
-              img = this.currItem.img,
-              maxHeight = img.css("max-height");
+      // use the image dimensions if available on <img>
+      const img = anchor?.querySelector("img");
+      if (img) {
+        const width = parseInt(img.getAttribute("width"), 10);
+        const height = parseInt(img.getAttribute("height"), 10);
+        if (width && height) {
+          itemData.w = width;
+          itemData.h = height;
+        }
+      }
 
-            wrap.on("click.pinhandler", "img", function () {
-              wrap.toggleClass("mfp-force-scrollbars");
-              img.css(
-                "max-height",
-                wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
-              );
-            });
-          }
-
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".mfp-bg").css("background-color")
-            );
-          }
-        },
-        change() {
-          this.wrap.removeClass("mfp-force-scrollbars");
-        },
-        beforeClose() {
-          this.wrap.off("click.pinhandler");
-          this.wrap.removeClass("mfp-force-scrollbars");
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".d-header").css("background-color")
-            );
-          }
-        },
-      },
-
-      image: {
-        tError: i18n("lightbox.image_load_error"),
-        titleSrc(item) {
-          const href = item.el.data("download-href") || item.src;
-          let src = [
-            escapeExpression(item.el.attr("title")),
-            $("span.informations", item.el).text(),
-          ];
-          if (
-            !siteSettings.prevent_anons_from_downloading_files ||
-            User.current()
-          ) {
-            src.push(
-              '<a class="image-source-link" href="' +
-                href +
-                '">' +
-                renderIcon("string", "download") +
-                i18n("lightbox.download") +
-                "</a>"
-            );
-          }
-          src.push(
+      // Build caption HTML similar to previous implementation
+      const parts = [escapeExpression(title)];
+      if (infoText) {
+        parts.push(infoText);
+      }
+      if (
+        !siteSettings.prevent_anons_from_downloading_files ||
+        User.current()
+      ) {
+        if (downloadHref) {
+          parts.push(
             '<a class="image-source-link" href="' +
-              item.src +
+              downloadHref +
               '">' +
-              renderIcon("string", "image") +
-              i18n("lightbox.open") +
+              renderIcon("string", "download") +
+              i18n("lightbox.download") +
               "</a>"
           );
-          return src.join(" &middot; ");
-        },
-      },
+        }
+      }
+      parts.push(
+        '<a class="image-source-link" href="' +
+          itemData.src +
+          '">' +
+          renderIcon("string", "image") +
+          i18n("lightbox.open") +
+          "</a>"
+      );
+
+      itemData.caption = parts.join(" &middot; ");
+      return itemData;
     });
-  });
+
+    pswpLightbox.on("open", () => {
+      if (caps.isAppWebview) {
+        // PhotoSwipe uses a single root element with background via CSS
+        postRNWebviewMessage(
+          "headerBg",
+          getComputedStyle(document.body).backgroundColor
+        );
+      }
+      // keep reference for cleanup
+      // store reference for route change cleanup
+      window.__discoursePswpLightbox = pswpLightbox;
+    });
+
+    pswpLightbox.on("close", () => {
+      if (caps.isAppWebview) {
+        postRNWebviewMessage(
+          "headerBg",
+          getComputedStyle(document.querySelector(".d-header")).backgroundColor
+        );
+      }
+      window.__discoursePswpLightbox = null;
+    });
+
+    pswpLightbox.init();
+  })();
 }

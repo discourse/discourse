@@ -29,7 +29,7 @@
     "lint-to-the-future": "^2.6.3",
     "lint-to-the-future-ember-template": "^3.1.0",
     "lint-to-the-future-eslint": "^3.2.0",
-    "magnific-popup": "1.1.0",
+    "photoswipe": "^5.4.4",
     "pikaday": "1.8.2",
     "playwright": "1.54.2",
     "prettier": "3.5.3",

@@ -105,7 +105,9 @@
   }
 }
 
-.mfp-preloader .spinner {
+/* PhotoSwipe overrides */
+.pswp__preloader .spinner,
+.pswp__dynamic-caption .spinner {
   margin: auto;
 }
 

@@ -27,7 +27,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
     await click(".image-uploader-lightbox-btn");
 
-    assert.dom(".mfp-container").exists("displays the image lightbox");
+    assert.dom(".pswp").exists("displays the image lightbox");
   });
 
   test("without image", async function (assert) {

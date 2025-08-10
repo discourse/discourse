@@ -1,5 +1,4 @@
 import { scheduleOnce } from "@ember/runloop";
-import $ from "jquery";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {
@@ -15,10 +14,14 @@ function _clean(transition) {
     element.parentElement.classList.remove("open");
   });
 
-  // Close the lightbox
-  if ($.magnificPopup?.instance) {
-    $.magnificPopup.instance.close();
-    document.body.classList.remove("mfp-zoom-out-cur");
+  // Close any PhotoSwipe lightbox (if open)
+  const pswpEl = document.querySelector(".pswp");
+  if (pswpEl && pswpEl?.pswp) {
+    try {
+      pswpEl.pswp.close();
+    } catch {
+      // ignore
+    }
   }
 
   // Remove any link focus

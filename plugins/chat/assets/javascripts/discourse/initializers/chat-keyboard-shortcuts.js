@@ -101,9 +101,8 @@ export default {
     };
 
     const closeChat = (event) => {
-      // TODO (joffrey): removes this when we move from magnific popup
-      // there's no proper way to prevent propagation in mfp
-      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
+      // If PhotoSwipe overlay is open, let it handle ESC
+      if (document.querySelector(".pswp")?.classList.contains("pswp--open")) {
         return;
       }
 
