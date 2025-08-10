@@ -410,8 +410,6 @@ RSpec.describe "S3Helper" do
       end
 
       it "assumes role when all credentials present" do
-        s3_helper = S3Helper.new("some-bucket", "", client: client)
-
         mock_credentials =
           instance_double(
             Aws::STS::Types::Credentials,
@@ -420,11 +418,11 @@ RSpec.describe "S3Helper" do
             session_token: "TEMP_TOKEN",
           )
 
-        allow(s3_helper).to receive(:assume_s3_role).and_return(mock_credentials)
+        allow(S3Helper).to receive(:assume_s3_role).and_return(mock_credentials)
 
-        opts = s3_helper.s3_options(Upload.new)
+        opts = S3Helper.s3_options(SiteSetting)
 
-        expect(s3_helper).to have_received(:assume_s3_role)
+        expect(S3Helper).to have_received(:assume_s3_role)
         expect(opts[:access_key_id]).to eq("TEMP_KEY")
       end
     end
@@ -433,9 +431,7 @@ RSpec.describe "S3Helper" do
       before { SiteSetting.s3_role_arn = "" }
 
       it "uses regular credentials" do
-        s3_helper = S3Helper.new("some-bucket", "", client: client)
-
-        opts = s3_helper.s3_options(Upload.new)
+        opts = S3Helper.s3_options(SiteSetting)
 
         expect(opts[:access_key_id]).to eq(SiteSetting.s3_access_key_id)
       end
