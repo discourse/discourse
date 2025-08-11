@@ -1,19 +1,6 @@
 .discourse-calendar-wrap {
   border: 0;
 
-  .fc-view-container {
-    .fc-day-header.fc-widget-header {
-      text-align: center;
-      padding: 0.25em;
-
-      span {
-        font-size: var(--font-down-1);
-        text-align: center;
-        padding: 0;
-      }
-    }
-  }
-
   .calendar {
     padding: 0;
 

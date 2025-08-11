@@ -78,7 +78,7 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
       .dom("#upcoming-events-calendar")
       .exists("Upcoming Events calendar is shown");
 
-    assert.dom(".fc-view-container").exists("FullCalendar is loaded");
+    assert.dom(".fc").exists("FullCalendar is loaded");
   });
 
   test("upcoming events category colors", async function (assert) {
