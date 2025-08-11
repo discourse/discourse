@@ -54,6 +54,7 @@ export default {
               };
 
               router.transitionTo("login").then(({ controller }) => {
+                controller ??= owner.lookup("controller:login");
                 controller.setProperties(props);
               });
 
