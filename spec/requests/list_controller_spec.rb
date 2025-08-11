@@ -1811,7 +1811,7 @@ RSpec.describe ListController do
       topic.update!(category:)
     end
 
-    describe "when lang param is absent" do
+    describe "when tl param is absent" do
       fab!(:pt_topic) do
         Fabricate(
           :topic_localization,
@@ -1852,7 +1852,7 @@ RSpec.describe ListController do
       end
     end
 
-    describe "when lang param is present ?lang=ja" do
+    describe "when tl param is present ?tl=ja" do
       fab!(:ja_topic) do
         Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
       end
@@ -1866,7 +1866,7 @@ RSpec.describe ListController do
       end
 
       it "localizes topic fancy_title for crawler" do
-        get "/#{Discourse.anonymous_filters[0]}", params: { lang: "ja" }
+        get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
 
         expect(response.body).to include(ja_topic.fancy_title)
         expect(response.body).to include(ja_category.name)
@@ -1879,7 +1879,7 @@ RSpec.describe ListController do
 
       initial_sql_queries =
         track_sql_queries do
-          get "/#{Discourse.anonymous_filters[0]}", params: { lang: "ja" }
+          get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
           expect(response.status).to eq(200)
         end.select { |q| q.include?("_localizations") }.count
 
@@ -1890,7 +1890,7 @@ RSpec.describe ListController do
 
       new_sql_queries =
         track_sql_queries do
-          get "/#{Discourse.anonymous_filters[0]}", params: { lang: "ja" }
+          get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
           expect(response.status).to eq(200)
         end.select { |q| q.include?("_localizations") }.count
 
