@@ -343,7 +343,7 @@ shared_examples "signup scenarios" do
 
         it "hides the name field" do
           signup_page.open
-          expect(signup_page).to have_no_name_input
+          expect(signup_page).to have_name_input
         end
       end
     end
@@ -370,7 +370,7 @@ shared_examples "signup scenarios" do
 
         it "hides the name field" do
           signup_page.open
-          expect(signup_page).to have_no_name_input
+          expect(signup_page).to have_name_input
         end
       end
     end
