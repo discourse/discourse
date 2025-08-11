@@ -6,14 +6,16 @@ module ReviewableActionBuilder
   # Build a single reviewable action and add it to the provided actions list.
   # This is the canonical API used by both the legacy and refreshed UI code paths.
   #
-  # @param {Reviewable::Actions} actions - actions instance to add to.
-  # @param {Symbol} id - Symbol for the action, used to derive I18n keys.
-  # @param {String} icon - Optional name of the icon to display with the action. Ignored in the refreshed UI.
-  # @param {String} button_class - Optional CSS class for buttons in clients that render it.
-  # @param {Reviewable::Actions::Bundle} bundle - Optional bundle object returned by add_bundle to group actions.
-  # @param {String} client_action - Optional client-side action identifier (e.g. "edit").
-  # @param {Boolean} confirm - When true, uses "reviewables.actions.<id>.confirm" for confirm_message.
-  # @param {Boolean} require_reject_reason - When true, requires a rejection reason for the action.
+  # @param actions [Reviewable::Actions] Actions instance to add to.
+  # @param id [Symbol] Symbol for the action, used to derive I18n keys.
+  # @param icon [String] Optional name of the icon to display with the action. Ignored in the refreshed UI.
+  # @param button_class [String] Optional CSS class for buttons in clients that render it.
+  # @param bundle [Reviewable::Actions::Bundle] Optional bundle object returned by add_bundle to group actions.
+  # @param client_action [String] Optional client-side action identifier (e.g. "edit").
+  # @param confirm [Boolean] When true, uses "reviewables.actions.<id>.confirm" for confirm_message.
+  # @param require_reject_reason [Boolean] When true, requires a rejection reason for the action.
+  #
+  # @return [Reviewable::Actions] The updated actions instance.
   def build_action(
     actions,
     id,
