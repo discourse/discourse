@@ -87,6 +87,7 @@ export default class FullCalendar extends Component {
             identifier: "post-event-menu",
             component: PostEventMenu,
             modalForMobile: true,
+            maxWidth: 500,
             data: {
               event: info.event.extendedProps.postEvent,
             },
