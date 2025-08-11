@@ -482,7 +482,7 @@ export default class ChatComposer extends Component {
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
         if (obj.isUser) {
-          this.#addMentionedUser(obj);
+          this.#addMentionedUser(cloneJSON(obj));
         }
 
         return obj.username || obj.name;

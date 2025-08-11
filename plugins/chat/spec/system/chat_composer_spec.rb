@@ -321,6 +321,31 @@ RSpec.describe "Chat composer", type: :system do
     end
   end
 
+  context "when using user autocomplete" do
+    fab!(:autocomplete_user) do
+      Fabricate(:user, username: "ac_test_user", name: "Autocomplete Test User")
+    end
+
+    before do
+      SiteSetting.enable_mentions = true
+      channel_1.add(autocomplete_user)
+    end
+
+    it "fails on subsequent autocomplete selection due to cache pollution" do
+      chat_page.visit_channel(channel_1)
+
+      find(".chat-composer__input").send_keys("@#{autocomplete_user.username}")
+      find(".autocomplete.ac-user", text: "ac_test_user").click
+      expect(channel_page.composer).to have_value("@#{autocomplete_user.username} ")
+      find(".chat-composer__input").set("")
+
+      # 2nd autocomplete attempt to ensure user object is not mutated by existing store record behaviour
+      find(".chat-composer__input").send_keys("@#{autocomplete_user.username}")
+      find(".autocomplete.ac-user", text: "ac_test_user").click
+      expect(channel_page.composer).to have_value("@#{autocomplete_user.username} ")
+    end
+  end
+
   context "with floatkit autocomplete disabled" do
     before { SiteSetting.floatkit_autocomplete_composer = false }
 
