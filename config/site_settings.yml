@@ -3670,6 +3670,12 @@ uncategorized:
     themeable: true
     area: "interface"
 
+  welcome_banner_bg_img:
+    client: true
+    default: ""
+    type: upload
+    area: "interface"
+
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
