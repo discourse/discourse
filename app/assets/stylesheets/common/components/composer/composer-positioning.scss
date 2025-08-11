@@ -1,0 +1,153 @@
+@use "lib/viewport";
+
+.grippie {
+  @include viewport.until(sm) {
+    display: none;
+  }
+
+  .keyboard-visible & {
+    @media all and (orientation: landscape) {
+      padding: 0.2rem;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+#reply-control {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin-inline: auto;
+  max-width: $reply-area-max-width;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  z-index: z("composer", "content");
+  transition:
+    height 0.2s,
+    max-width 0.2s,
+    padding-bottom 0.2s,
+    top 0.2s,
+    transform 0.2s,
+    min-height 0.2s;
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-composer);
+  border-top-left-radius: var(--d-border-radius-large);
+  border-top-right-radius: var(--d-border-radius-large);
+
+  @media screen and (width <= 1200px) {
+    min-width: 0;
+  }
+
+  &.hide-preview {
+    @include viewport.from(lg) {
+      @media all and (height >= 1000px) {
+        max-width: var(--composer-max-width--hide-preview);
+      }
+    }
+  }
+
+  &.open {
+    --min-height: 255px;
+    box-sizing: border-box;
+    height: var(--composer-height);
+    min-height: var(--min-height);
+    max-height: calc(100dvh - var(--header-offset, 4em));
+    padding-bottom: var(--composer-ipad-padding);
+
+    // mobile devices: forced fullscreen, overlapping header
+    @include viewport.until(sm) {
+      z-index: z("mobile-composer");
+      top: 0;
+      height: 100dvh;
+      max-height: unset;
+    }
+
+    @include viewport.between(lg, xl) {
+      // essentially tablet landscape, best estimate I can do with the breakpoints we have
+      // using the extra MQ to avoid applying this to regular small screens that might be narrow enough to trigger but taller; don't want tablet design applying there
+      @media all and (orientation: landscape) {
+        &.hide-preview {
+          width: calc(100vw - var(--d-sidebar-width)) !important;
+          max-width: unset !important;
+          margin-left: var(--d-sidebar-width) !important;
+        }
+
+        .keyboard-visible & {
+          max-height: calc(
+            (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
+          );
+        }
+      }
+    }
+
+    // tablet default portrait: does not overlap header, adjustable composer height
+    .keyboard-visible & {
+      @media all and (orientation: portrait) {
+        max-height: calc(
+          (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
+        );
+      }
+
+      // tablet landscape: partially same behaviour as mobile: overlapping header and forced fullscreen, but adjustable composer height if keyboard is not visible
+      @media all and (orientation: landscape) {
+        z-index: z("mobile-composer");
+        height: calc((var(--composer-vh, 1vh) * 100));
+        max-height: unset;
+      }
+
+      .reply-area {
+        padding-bottom: 0.375em;
+      }
+    }
+  }
+}
+
+// body:not(.has-sidebar-page) {
+//   #reply-control:not(.fullscreen).hide-preview {
+//     margin-left: 0.67em;
+
+//     // 1100px is equivalent to --d-max-width
+//     @media screen and (width >= 1110px) {
+//       margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+//     }
+
+//     // 790px is equivalent to --topic-width
+//     @media screen and (width < 790px) {
+//       max-width: calc(100% - calc(0.67em * 2));
+//       margin-left: 0.67em;
+//     }
+
+//     @include viewport.until(sm) {
+//       max-width: unset;
+//       margin-inline: unset;
+//     }
+//   }
+// }
+
+// body.has-sidebar-page {
+//   #reply-control:not(.fullscreen).hide-preview {
+//     @include viewport.from(lg) {
+//       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+
+//       // 1390px is equivalent to --d-max-width + --d-sidebar-width
+//       @media screen and (width >= 1390px) {
+//         left: calc(
+//           (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+//         ); // 50% of the whitespace
+//         margin-left: var(--layout-gap);
+//       }
+
+//       // This is when the topic width starts to shrink
+//       @media screen and (width <= 1180px) {
+//         width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+//       }
+//     }
+//   }
+// }
