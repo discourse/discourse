@@ -11,6 +11,8 @@ module DiscoursePostEvent
     attributes :name
     attributes :category_id
     attributes :rrule
+    attributes :status
+    attributes :creator
 
     # lightweight post object containing
     # only needed info for client
@@ -51,6 +53,14 @@ module DiscoursePostEvent
         starts_at: object.starts_at.in_time_zone(object.timezone),
         recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
       )
+    end
+
+    def creator
+      BasicUserSerializer.new(object.post.user, embed: :objects, root: false)
+    end
+
+    def status
+      Event.statuses[object.status]
     end
   end
 end
