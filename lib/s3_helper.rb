@@ -299,6 +299,7 @@ class S3Helper
           access_key_id: obj.s3_access_key_id,
           secret_access_key: obj.s3_secret_access_key,
           role_arn: obj.s3_role_arn,
+          region: opts[:region],
         )
 
       opts[:access_key_id] = temp_credentials.access_key_id
