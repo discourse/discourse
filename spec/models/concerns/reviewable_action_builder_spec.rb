@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ReviewableActionBuilder do
   fab!(:admin)
   fab!(:guardian) { Guardian.new(admin) }
