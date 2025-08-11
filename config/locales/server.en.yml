@@ -1667,11 +1667,11 @@ en:
         total_views: Total
       description: "The top 100 most viewed topics in a date range, combining logged in and anonymous views. Can be filtered by category."
     associated_accounts_by_provider:
-      title: "Associated Accounts by Login Method"
+      title: "Associated accounts by login method"
       labels:
-        provider: Login Provider
-        no_accounts: "No Associated Accounts"
-        total_users: "Total Users"
+        provider: Login provider
+        no_accounts: "No associated accounts"
+        total_users: "Total users"
       description: "Show number of associated accounts grouped by the login provider. Applicable only if you have enabled social login methods."
 
   dashboard:
