@@ -232,12 +232,12 @@ module("Integration | Component | SiteSetting", function (hooks) {
       <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
-    await publishToMessageBus("default_categories_test", {
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
       status: "enqueued",
     });
     assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
 
-    await publishToMessageBus("default_categories_test", {
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
       status: "enqueued",
       progress: "10/100",
     });
@@ -245,7 +245,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
     assert.dom(".desc.site-setting").hasTextContaining("10/100");
 
-    await publishToMessageBus("default_categories_test", {
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
       status: "completed",
     });
     assert.dom(".desc.site-setting").hasTextContaining("Update completed");
@@ -267,10 +267,10 @@ module("Integration | Component | SiteSetting", function (hooks) {
       <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
-    await publishToMessageBus("default_tags_test", { status: "enqueued" });
+    await publishToMessageBus("/site_setting/default_tags_test/process", { status: "enqueued" });
     assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
 
-    await publishToMessageBus("default_tags_test", {
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
       status: "enqueued",
       progress: "10/100",
     });
@@ -278,7 +278,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
     assert.dom(".desc.site-setting").hasTextContaining("10/100");
 
-    await publishToMessageBus("default_tags_test", { status: "completed" });
+    await publishToMessageBus("/site_setting/default_tags_test/process", { status: "completed" });
     assert.dom(".desc.site-setting").hasTextContaining("Update completed");
   });
 
@@ -298,10 +298,10 @@ module("Integration | Component | SiteSetting", function (hooks) {
       <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
-    await publishToMessageBus("default_tags_test", { status: "enqueued" });
+    await publishToMessageBus("/site_setting/default_tags_test/process", { status: "enqueued" });
     assert.dom(".desc.site-setting").doesNotExist();
 
-    await publishToMessageBus("default_tags_test", { status: "completed" });
+    await publishToMessageBus("/site_setting/default_tags_test/process", { status: "completed" });
     assert.dom(".desc.site-setting").doesNotExist();
   });
 });

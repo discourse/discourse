@@ -67,11 +67,7 @@ export default class SiteSettingComponent extends Component {
 
     const settingName = this.setting.setting;
 
-    if (
-      !!settingName &&
-      (settingName.includes("default_categories") ||
-        settingName.includes("default_tags"))
-    ) {
+    if (this.canSubscribeToSettingsJobs) {
       this.messageBus.subscribe(`${settingName}`, this.onMessage);
     }
   }
@@ -80,16 +76,21 @@ export default class SiteSettingComponent extends Component {
     super.willDestroy(...arguments);
     const settingName = this.setting.setting;
 
-    if (
-      !!settingName &&
-      (settingName.includes("default_categories") ||
-        settingName.includes("default_tags"))
-    ) {
-      this.messageBus.subscribe(
+    if (this.canSubscribeToSettingsJobs) {
+      this.messageBus.unsubscribe(
         `/site_setting/${settingName}/process`,
         this.onMessage
       );
     }
+  }
+
+  canSubscribeToSettingsJobs() {
+    const settingName = this.setting.setting;
+    return (
+      !!settingName &&
+      (settingName.includes("default_categories") ||
+        settingName.includes("default_tags"))
+    );
   }
 
   @bind

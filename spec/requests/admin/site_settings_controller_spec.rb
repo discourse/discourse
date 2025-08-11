@@ -731,7 +731,66 @@ RSpec.describe Admin::SiteSettingsController do
     end
 
     context "when logged in as a non-staff user" do
+      fab!(:user1, :user)
+      fab!(:user2, :user)
+
+      let(:tracking) { NotificationLevels.all[:tracking] }
+      let(:watching) { NotificationLevels.all[:watching] }
+
       before { sign_in(user) }
+
+      context "with default categories" do
+        let(:category_ids) { 3.times.collect { Fabricate(:category).id } }
+
+        before do
+          SiteSetting.default_categories_watching = category_ids.first(2).join("|")
+
+          CategoryUser.create!(
+            category_id: category_ids.last,
+            notification_level: tracking,
+            user: user2,
+          )
+
+          Jobs.run_immediately!
+        end
+
+        it "doesn't update default categories" do
+          put "/admin/site_settings/default_categories_watching.json",
+              params: {
+                default_categories_watching: category_ids.last(2).join("|"),
+                update_existing_user: true,
+              }
+
+          expect(response.status).to eq(404)
+
+          expect(
+            CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
+          ).to eq(0)
+        end
+      end
+
+      context "with default tags" do
+        let(:tags) { 3.times.collect { Fabricate(:tag) } }
+
+        before do
+          SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
+          TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
+
+          Jobs.run_immediately!
+        end
+
+        it "doesn't update default categories" do
+          put "/admin/site_settings/default_tags_watching.json",
+              params: {
+                default_tags_watching: tags.last(2).pluck(:name).join("|"),
+                update_existing_user: true,
+              }
+
+          expect(response.status).to eq(404)
+
+          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
+        end
+      end
 
       include_examples "site setting update not allowed"
     end

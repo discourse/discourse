@@ -22,13 +22,21 @@ class SiteSettingUpdateExistingUsers
         :site_setting_update_default_categories,
         { id: id, value: value, previous_value: previous_value },
       )
-      MessageBus.publish("/site_setting/#{id}/process", { status: "enqueued" })
+      MessageBus.publish(
+        "/site_setting/#{id}/process",
+        { status: "enqueued" },
+        group_ids: [Group::AUTO_GROUPS[:admin]],
+      )
     elsif id.start_with?("default_tags_")
       Jobs.enqueue(
         :site_setting_update_default_tags,
         { id: id, value: value, previous_value: previous_value },
       )
-      MessageBus.publish("/site_setting/#{id}/process", { status: "enqueued" })
+      MessageBus.publish(
+        "/site_setting/#{id}/process",
+        { status: "enqueued" },
+        group_ids: [Group::AUTO_GROUPS[:admin]],
+      )
     elsif self.is_sidebar_default_setting?(id)
       Jobs.enqueue(
         :backfill_sidebar_site_settings,
