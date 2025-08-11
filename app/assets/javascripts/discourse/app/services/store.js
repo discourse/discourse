@@ -6,6 +6,7 @@ import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
+import { cloneJSON } from "discourse/lib/object";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -210,6 +211,7 @@ export default class StoreService extends Service {
   }
 
   update(type, id, attrs) {
+    attrs = cloneJSON(attrs);
     const adapter = this.adapterFor(type);
     return adapter.update(this, type, id, attrs, function (result) {
       if (result && result[type] && result[type][adapter.primaryKey]) {
@@ -221,7 +223,7 @@ export default class StoreService extends Service {
   }
 
   createRecord(type, attrs) {
-    attrs = attrs || {};
+    attrs = cloneJSON(attrs) || {};
     const adapter = this.adapterFor(type);
     return attrs[adapter.primaryKey]
       ? this._hydrate(type, attrs)
