@@ -2795,6 +2795,9 @@ en:
     composition_mode:
       markdown: "Markdown"
       rich: "Rich text"
+    topic_list_design:
+      topic_table: "Topic table"
+      topic_cards: "Topic cards"
 
     shortcut_modifier_key:
       esc: "Esc"

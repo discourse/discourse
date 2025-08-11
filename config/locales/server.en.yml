@@ -2661,11 +2661,11 @@ en:
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
-    tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility."
+    tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility. Only applies when `topic list design` is set to 'table view'."
     pm_tags_allowed_for_groups: "Allow members of included groups to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     tag_topic_allowed_groups: "Groups that are allowed to tag topics. Admins and moderators can always tag topics."
-    suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
+    suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don’t show the tag. Only applies when `topic list design` is set to 'table view'."
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a whisper post when a topic's category or tags change, requires whisper posts to be enabled."
@@ -2752,6 +2752,7 @@ en:
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_anon_language_switcher: "Enable language switcher which allows site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content. Depends on the list of languages defined in 'content localization supported locales'"
+    topic_list_design: "How topics are displayed in topic lists, such as on the Latest page."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
