@@ -97,6 +97,17 @@ class ImportScripts::FluxBB < ImportScripts::Base
           location: user["location"],
           moderator: user["group_id"] == 2,
           admin: user["group_id"] == 1,
+          # Uncomment the following and fill in site_url to import avatars
+          # post_create_action:
+          #   proc do |u|
+          #     begin
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.png", u)
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.jpg", u)
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.gif", u)
+          #     rescue StandardError => e
+          #       nil
+          #     end
+          #   end,
         }
       end
 
