@@ -29,53 +29,9 @@ html.composer-open:not(.has-full-page-chat) {
     margin: auto;
     border-top: 3px double var(--tertiary-medium);
   }
-
-  @include viewport.until(sm) {
-    display: none;
-  }
-
-  // @include viewport.between(sm, lg) {
-  //   .keyboard-visible & {
-  //     &::before {
-  //       display: none;
-  //     }
-  //   }
-  // }
 }
 
 #reply-control {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  margin-inline: auto;
-  max-width: $reply-area-max-width;
-  width: 100%;
-  height: 0;
-  min-height: 0;
-  z-index: z("composer", "content");
-  transition:
-    height 0.2s,
-    max-width 0.2s,
-    padding-bottom 0.2s,
-    top 0.2s,
-    transform 0.2s,
-    min-height 0.2s;
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-composer);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
-
-  @media screen and (width <= 1200px) {
-    min-width: 0;
-  }
-
-  &.hide-preview {
-    max-width: var(--composer-max-width--hide-preview);
-  }
-
   .reply-area {
     box-sizing: border-box;
     display: flex;
@@ -117,33 +73,6 @@ html.composer-open:not(.has-full-page-chat) {
 
     .d-icon {
       color: var(--secondary);
-    }
-  }
-
-  &.open {
-    --min-height: 255px;
-    box-sizing: border-box;
-    height: var(--composer-height);
-    min-height: var(--min-height);
-    max-height: calc(100dvh - var(--header-offset, 4em));
-    padding-bottom: var(--composer-ipad-padding);
-
-    @include viewport.until(sm) {
-      z-index: z("mobile-composer");
-      top: 0;
-      transform: none;
-      height: 100dvh;
-      max-height: unset;
-    }
-
-    .keyboard-visible & {
-      max-height: calc(
-        (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
-      );
-
-      .reply-area {
-        padding-bottom: 0.375em;
-      }
     }
   }
 
@@ -762,7 +691,9 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .toggle-fullscreen {
-        display: none;
+        @include viewport.until(sm) {
+          display: none;
+        }
       }
 
       .submit-panel,
@@ -823,8 +754,18 @@ html.composer-open:not(.has-full-page-chat) {
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
 .ios-device {
+  // we want this behaviour (allowing fullscreen, overlapping header) for mobile devices…
   @include viewport.between(sm, lg) {
     // the two properties below are equivalent to bottom: 0
+    #reply-control {
+      top: calc(var(--composer-vh, 1vh) * 100);
+      transform: translateY(-100%);
+      bottom: unset;
+    }
+  }
+
+  // and for tablet in landscape orientation due to the screen height limit
+  @media all and (orientation: landscape) {
     #reply-control {
       top: calc(var(--composer-vh, 1vh) * 100);
       transform: translateY(-100%);
@@ -1109,58 +1050,17 @@ html.composer-open:not(.has-full-page-chat) {
 
 // align the previewless composer with the topic content
 #reply-control:not(.fullscreen).hide-preview {
-  --composer-internal-padding: 1em;
-  --layout-gap: 2em;
-  --topic-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
-  );
-  width: 100%;
-  max-width: calc(var(--topic-width) + var(--topic-avatar-width));
-}
-
-body:not(.has-sidebar-page) {
-  #reply-control:not(.fullscreen).hide-preview {
-    margin-left: 0.67em;
-
-    // 1100px is equivalent to --d-max-width
-    @media screen and (width >= 1110px) {
-      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
-    }
-
-    // 790px is equivalent to --topic-width
-    @media screen and (width < 790px) {
-      max-width: calc(100% - calc(0.67em * 2));
-      margin-left: 0.67em;
-    }
-
-    @include viewport.until(sm) {
-      max-width: unset;
-      margin-inline: unset;
-    }
+  @include viewport.from(sm) {
+    box-shadow: var(--shadow-composer);
   }
-}
 
-body.has-sidebar-page {
-  #reply-control:not(.fullscreen).hide-preview {
-    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
-
-    // 1390px is equivalent to --d-max-width + --d-sidebar-width
-    @media screen and (width >= 1390px) {
-      left: calc(
-        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
-      ); // 50% of the whitespace
-      margin-left: var(--layout-gap);
-    }
-
-    // This is when the topic width starts to shrink
-    @media screen and (width <= 1180px) {
-      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
-    }
-
-    // sidebar shrinks
-    @media screen and (width <= 1000px) {
-      --layout-gap: 1em;
-      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
-    }
+  @include viewport.from(lg) {
+    --composer-internal-padding: 1em;
+    --layout-gap: 2em;
+    --topic-width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
+    width: 100%;
+    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
   }
 }
