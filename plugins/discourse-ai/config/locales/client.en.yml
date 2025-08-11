@@ -275,6 +275,10 @@ en:
         table: "Table"
         card: "Card"
 
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+
       spam:
         short_title: "Spam"
         title: "Configure spam handling"
