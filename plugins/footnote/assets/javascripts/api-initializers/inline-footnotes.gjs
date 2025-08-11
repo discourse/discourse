@@ -21,6 +21,7 @@ class InlineFootnote extends Component {
       @triggers={{array "click"}}
     >
       <:trigger>
+        {{! template-lint-disable no-invalid-link-text }}
         <a
           class="expand-footnote"
           href
