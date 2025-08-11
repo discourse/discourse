@@ -59,7 +59,7 @@
           <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
             <meta itemprop='position' content='<%= i + 1 %>'>
             <span class="link-top-line">
-              <a itemprop='url' href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.fancy_title %></a>
+              <a itemprop='url' href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
             </span>
             <div class="link-bottom-line">
               <% if (!@category || @category.has_children?) && t.category && !t.category.uncategorized? %>

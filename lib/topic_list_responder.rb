@@ -31,7 +31,9 @@ module TopicListResponder
   def replace_topic_attributes(crawl_locale, topic)
     if topic.locale.present? && !LocaleNormalizer.is_same?(topic.locale, crawl_locale) &&
          (loc = topic.get_localization(crawl_locale))
-      topic.fancy_title = loc.fancy_title if loc.fancy_title.present?
+      # assigning directly to title would commit the change to the database
+      # due to the setter method defined in the Topic model
+      topic.send(:write_attribute, :title, loc.title) if loc.title.present?
       topic.excerpt = loc.excerpt if loc.excerpt.present?
 
       category = topic.category
