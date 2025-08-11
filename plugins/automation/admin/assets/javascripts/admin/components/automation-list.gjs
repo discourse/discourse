@@ -19,7 +19,6 @@ const RUN_THRESHOLD = 10;
 
 export default class AutomationList extends Component {
   @service dialog;
-  @service router;
 
   @action
   async destroyAutomation(automation) {

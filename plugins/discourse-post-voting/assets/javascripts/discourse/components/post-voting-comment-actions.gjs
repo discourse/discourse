@@ -12,7 +12,6 @@ export default class PostVotingCommentActions extends Component {
   @service dialog;
   @service modal;
   @service currentUser;
-  @service siteSettings;
   @service site;
 
   comment = this.args.comment;
