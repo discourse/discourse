@@ -163,6 +163,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
     puts "", "creating topics and posts"
 
     total_count = mysql_query("SELECT count(*) count from #{FLUXBB_PREFIX}posts").first["count"]
+    sticky_first_posts = mysql_query("select first_post_id pid from #{FLUXBB_PREFIX}topics where sticky = 1 and first_post_id > 0").map { |r| r["pid"] }.to_set
 
     batches(BATCH_SIZE) do |offset|
       results =
@@ -200,6 +201,9 @@ class ImportScripts::FluxBB < ImportScripts::Base
         if m["id"] == m["first_post_id"]
           mapped[:category] = category_id_from_imported_category_id("child##{m["category_id"]}")
           mapped[:title] = CGI.unescapeHTML(m["title"])
+          if sticky_first_posts.include? m["id"]
+            mapped[:pinned_at] = Time.zone.at(m["created_at"])
+          end
         else
           parent = topic_lookup_from_imported_post_id(m["first_post_id"])
           if parent
