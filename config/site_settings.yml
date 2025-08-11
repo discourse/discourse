@@ -3670,7 +3670,7 @@ uncategorized:
     themeable: true
     area: "interface"
 
-  welcome_banner_bg_img:
+  welcome_banner_image:
     client: true
     default: ""
     type: upload

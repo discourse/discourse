@@ -110,15 +110,15 @@ export default class WelcomeBanner extends Component {
   }
 
   get bgImgClass() {
-    if (this.siteSettings.welcome_banner_bg_img) {
+    if (this.siteSettings.welcome_banner_image) {
       return `--with-bg-img`;
     }
   }
 
   get bgImgStyle() {
-    if (this.siteSettings.welcome_banner_bg_img) {
+    if (this.siteSettings.welcome_banner_image) {
       return htmlSafe(
-        `background-image: url(${escapeExpression(this.siteSettings.welcome_banner_bg_img)})`
+        `background-image: url(${escapeExpression(this.siteSettings.welcome_banner_image)})`
       );
     }
   }
