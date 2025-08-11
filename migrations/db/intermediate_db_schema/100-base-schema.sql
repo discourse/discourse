@@ -141,11 +141,10 @@ CREATE TABLE muted_users
 
 CREATE TABLE tags
 (
-    original_id   NUMERIC  NOT NULL PRIMARY KEY,
-    created_at    DATETIME,
-    description   TEXT,
-    name          TEXT     NOT NULL,
-    target_tag_id NUMERIC
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    description TEXT,
+    name        TEXT     NOT NULL
 );
 
 CREATE TABLE user_emails

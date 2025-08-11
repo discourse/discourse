@@ -11,22 +11,20 @@ module Migrations::Database::IntermediateDB
         original_id,
         created_at,
         description,
-        name,
-        target_tag_id
+        name
       )
       VALUES (
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?
       )
     SQL
 
-    def self.create(original_id:, created_at: nil, description: nil, name:, target_tag_id: nil)
+    def self.create(original_id:, created_at: nil, description: nil, name:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
         ::Migrations::Database.format_datetime(created_at),
         description,
         name,
-        target_tag_id,
       )
     end
   end

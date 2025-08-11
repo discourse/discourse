@@ -22,8 +22,14 @@ module Migrations::Converters::Discourse
         created_at: item[:created_at],
         description: item[:description],
         name: item[:name],
-        target_tag_id: item[:target_tag_id],
       )
+
+      if item[:target_tag_id]
+        IntermediateDB::TagSynonym.create(
+          synonym_tag_id: item[:id],
+          target_tag_id: item[:target_tag_id],
+        )
+      end
     end
   end
 end

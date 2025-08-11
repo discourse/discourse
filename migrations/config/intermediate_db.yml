@@ -95,6 +95,7 @@ schema:
           - "pm_topic_count"
           - "public_topic_count"
           - "staff_topic_count"
+          - "target_tag_id"
     user_emails:
       columns:
         include:
