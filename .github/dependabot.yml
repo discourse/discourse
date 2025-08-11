@@ -97,6 +97,9 @@ updates:
       uppy:
         patterns:
           - "@uppy*"
+      fullcalendar:
+        patterns:
+          - "@fullcalendar/*"
       lint:
         patterns:
           - "@discourse/lint-configs"
