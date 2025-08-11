@@ -13,7 +13,14 @@ class Admin::ImpersonateController < Admin::AdminController
     StaffActionLogger.new(current_user).log_impersonate(user)
 
     # Log on as the user
-    log_on_user(user, impersonate: true)
+    #log_on_user(user, impersonate: true)
+    start_impersonating_user(user)
+
+    render body: nil
+  end
+
+  def destroy
+    stop_impersonating_user
 
     render body: nil
   end

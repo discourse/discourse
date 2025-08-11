@@ -281,6 +281,17 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = user
   end
 
+  def start_impersonating_user(user)
+    @user_token.update!(
+      impersonated_user_id: user.id,
+      impersonation_expires_at: 15.minutes.from_now,
+    )
+  end
+
+  def stop_impersonating_user
+    @user_token.update!(impersonated_user_id: nil, impersonation_expires_at: nil)
+  end
+
   def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
     data = {
       token: unhashed_auth_token,

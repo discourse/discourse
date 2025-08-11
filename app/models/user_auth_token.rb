@@ -26,6 +26,17 @@ class UserAuthToken < ActiveRecord::Base
     )
   end
 
+  def user
+    impersonated_user || super
+  end
+
+  def impersonated_user
+    return if impersonated_user_id.blank?
+    return if impersonation_expires_at.blank? || impersonation_expires_at.past?
+
+    User.find_by(id: impersonated_user_id)
+  end
+
   def self.log(info)
     UserAuthTokenLog.create!(info)
   end
