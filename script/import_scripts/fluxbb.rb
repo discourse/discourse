@@ -71,7 +71,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         mysql_query(
           "SELECT id, username, realname name, url website, email email, registered created_at,
                 registration_ip registration_ip_address, last_visit last_visit_time,
-                last_email_sent last_emailed_at, location, group_id
+                last_email_sent last_emailed_at, location, group_id, signature bio
          FROM #{FLUXBB_PREFIX}users
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};",
@@ -89,6 +89,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
           name: user["name"],
           created_at: Time.zone.at(user["created_at"]),
           website: user["website"],
+          bio_raw: user["bio"],
           registration_ip_address: user["registration_ip_address"],
           last_seen_at: Time.zone.at(user["last_visit_time"]),
           last_emailed_at:
