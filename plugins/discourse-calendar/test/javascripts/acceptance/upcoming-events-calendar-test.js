@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { tomorrow, twoDays } from "discourse/lib/time-utils";
+import { tomorrow } from "discourse/lib/time-utils";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {

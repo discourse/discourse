@@ -5,7 +5,6 @@ import PostCalendar from "../components/post-calendar";
 function initializeDiscourseCalendar(api) {
   const site = api.container.lookup("service:site");
   const postCalendar = api.container.lookup("service:post-calendar");
-  const isMobileView = site && site.mobileView;
 
   api.decorateCookedElement(
     (element, helper) => {
@@ -201,7 +200,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.calendar_enabled) {
-      withPluginApi("0.8.22", initializeDiscourseCalendar);
+      withPluginApi(initializeDiscourseCalendar);
     }
   },
 };
