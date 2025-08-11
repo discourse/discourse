@@ -93,3 +93,15 @@
     }
   }
 }
+
+.sidebar-theme-toggle__wrapper {
+  order: -1;
+
+  .d-icon-paintbrush {
+    display: none;
+  }
+}
+
+.sidebar-theme-toggle-dropdown.select-kit.combo-box .select-kit-header {
+  padding-left: 1em;
+}
