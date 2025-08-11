@@ -458,7 +458,7 @@ export default RouteTemplate(
                           "true"
                           "false"
                         }}
-                        class="btn-default"
+                        class="btn-default user-profile-toggle-btn"
                       />
                     </li>
                   {{/if}}
