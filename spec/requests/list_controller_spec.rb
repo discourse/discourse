@@ -1819,14 +1819,14 @@ RSpec.describe ListController do
           :topic_localization,
           topic:,
           locale: "pt",
-          title: "This is a localized portuguese title",
+          fancy_title: "This is a localized portuguese title",
         )
       end
       fab!(:pt_category) do
         Fabricate(:category_localization, category:, locale: "pt", name: "Localized Category Name")
       end
 
-      it "localizes topic title for crawler to default locale when localization exists" do
+      it "localizes topic fancy_title for crawler to default locale when localization exists" do
         # topic is in english but default locale is portuguese
         topic.update!(locale: "en")
         topic.category.update!(locale: "en")
@@ -1835,11 +1835,11 @@ RSpec.describe ListController do
         filter = Discourse.anonymous_filters[0]
         get "/#{filter}"
 
-        expect(response.body).to include(pt_topic.title)
+        expect(response.body).to include(pt_topic.fancy_title)
         expect(response.body).to include(pt_category.name)
       end
 
-      it "leaves topic title as-is if no localization" do
+      it "leaves topic fancy_title as-is if no localization" do
         # no spanish localizations exist for the default locale spanish
         topic.update!(locale: "en")
         SiteSetting.default_locale = "es"
@@ -1847,15 +1847,17 @@ RSpec.describe ListController do
         filter = Discourse.anonymous_filters[0]
         get "/#{filter}"
 
-        expect(response.body).to include(topic.title)
+        expect(response.body).to include(topic.fancy_title)
         expect(response.body).to include(category.name)
-        expect(response.body).not_to include(pt_topic.title)
+        expect(response.body).not_to include(pt_topic.fancy_title)
         expect(response.body).not_to include(pt_category.name)
       end
     end
 
     describe "when lang param is present ?lang=ja" do
-      fab!(:ja_topic) { Fabricate(:topic_localization, topic:, locale: "ja", title: "こんにちは世界") }
+      fab!(:ja_topic) do
+        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
+      end
       fab!(:ja_category) do
         Fabricate(:category_localization, category:, locale: "ja", name: "カテゴリ名")
       end
@@ -1865,10 +1867,10 @@ RSpec.describe ListController do
         topic.category.update!(locale: "en")
       end
 
-      it "localizes topic title for crawler" do
+      it "localizes topic fancy_title for crawler" do
         get "/#{Discourse.anonymous_filters[0]}", params: { lang: "ja" }
 
-        expect(response.body).to include(ja_topic.title)
+        expect(response.body).to include(ja_topic.fancy_title)
         expect(response.body).to include(ja_category.name)
       end
     end
