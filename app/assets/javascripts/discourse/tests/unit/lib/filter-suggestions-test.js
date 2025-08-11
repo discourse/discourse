@@ -25,16 +25,15 @@ function buildTips() {
         { name: "+", description: "intersect" },
       ],
     },
+    { name: "status:", description: "Pick a status" },
     {
       name: "status:solved",
       description: "Solved topics",
-      type: "text",
       priority: 1,
     },
     {
       name: "status:unsolved",
       description: "Unsolved topics",
-      type: "text",
       priority: 1,
     },
     {
@@ -111,7 +110,21 @@ module("Unit | Utility | filter-suggestions", function (hooks) {
       await FilterSuggestions.getSuggestions("cat", tips, buildContext());
     const names = suggestions.map((s) => s.name);
 
-    assert.strictEqual(names, ["category:", "-category:", "=category:"]);
+    assert.deepEqual(names, ["category:", "-category:", "=category:"]);
+    assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
+  });
+
+  test("does not show suggestions for already matched filters", async function (assert) {
+    const tips = buildTips();
+    const { suggestions, activeFilter } =
+      await FilterSuggestions.getSuggestions("status:", tips, buildContext());
+    const names = suggestions.map((s) => s.name);
+    assert.deepEqual(
+      names,
+      ["status:solved", "status:unsolved"],
+      "shows only status suggestions"
+    );
+
     assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
   });
 

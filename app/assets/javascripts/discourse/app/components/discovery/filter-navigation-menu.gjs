@@ -125,6 +125,14 @@ export default class FilterNavigationMenu extends Component {
       this.trackedMenuListData.selectedIndex = this.selectedIndex;
       this.selectedIndex = -1;
       this.lastSuggestionInput = input;
+
+      if (this.dMenuInstance) {
+        if (!this.suggestions.length) {
+          this.dMenuInstance.close();
+        } else {
+          this.dMenuInstance.show();
+        }
+      }
     } catch {
       // ignore fetch errors (rate limits, etc)
     }
@@ -205,7 +213,6 @@ export default class FilterNavigationMenu extends Component {
       return;
     }
 
-    // Initial suggestions fetch
     await this.fetchSuggestions();
 
     this.dMenuInstance = await this.menu.show(this.inputElement, {

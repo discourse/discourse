@@ -13,7 +13,6 @@ export default class FilterSuggestions {
     const parser = new FilterParser(text);
     const lastSegment = parser.getLastSegment();
 
-    // No input or just whitespace - show top-level filters
     if (!lastSegment.word) {
       return {
         suggestions: this.getTopLevelTips(tips),
@@ -21,7 +20,6 @@ export default class FilterSuggestions {
       };
     }
 
-    // Check if we're in a filter value context (e.g., "category:val")
     if (lastSegment.filterName && lastSegment.hasColon) {
       const tip = this.findTipForFilter(lastSegment.filterName, tips);
 
@@ -65,7 +63,8 @@ export default class FilterSuggestions {
     return tips.find((tip) => {
       const normalize = (str) => (str ? str.replace(/:$/, "") : str);
       return (
-        normalize(tip.name) === filterName || normalize(tip.alias) === filterName
+        normalize(tip.name) === filterName ||
+        normalize(tip.alias) === filterName
       );
     });
   }
@@ -80,9 +79,13 @@ export default class FilterSuggestions {
       }
 
       const tipName = tip.name.toLowerCase();
-      const matches =
+      let matches =
         tipName.includes(searchLower) ||
         (tip.alias && tip.alias.toLowerCase().includes(searchLower));
+
+      if (tipName === searchLower) {
+        matches = false;
+      }
 
       if (!matches) {
         continue;
@@ -101,8 +104,7 @@ export default class FilterSuggestions {
       } else if (!prefix) {
         filtered.push(tip);
 
-        // Add all prefix variations if searching from empty
-        if (tip.prefixes && searchTerm === "") {
+        if (tip.prefixes) {
           tip.prefixes.forEach((pfx) => {
             filtered.push({
               ...tip,
