@@ -5,6 +5,7 @@ import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import { cloneJSON } from "discourse/lib/object";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
@@ -41,7 +42,7 @@ function performSearch(
 ) {
   let cached = cache[term];
   if (cached) {
-    resultsFn(cached);
+    resultsFn(cloneJSON(cached));
     return;
   }
 
@@ -105,7 +106,7 @@ function performSearch(
     })
     .finally(function () {
       oldSearch = null;
-      resultsFn(returnVal);
+      resultsFn(cloneJSON(returnVal));
     });
 }
 
