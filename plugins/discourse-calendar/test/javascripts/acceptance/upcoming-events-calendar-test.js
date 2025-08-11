@@ -48,6 +48,7 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
             },
             name: "Awesome Event",
             category_id: 1,
+            rrule: `DTSTART:${tomorrow().add(1, "hour").format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${tomorrow().add(2, "days").format("YYYYMMDD")}`,
           },
           {
             id: 67502,
@@ -103,9 +104,11 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
   test("upcoming events calendar shows recurrent events", async function (assert) {
     await visit("/upcoming-events");
 
-    const [, second, third] = [...document.querySelectorAll(".fc-event")];
-    assert.dom(".fc-title", second).hasText("Awesome Event");
-    assert.dom(".fc-title", third).hasText("Awesome Event");
+    const [, second, third] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
+    assert.dom(".fc-event-title", third).hasText("Awesome Event");
 
     const secondCell = second.closest("td");
     const thirdCell = third.closest("td");

@@ -50,6 +50,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
+            rrule: `DTSTART:${moment().format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${moment().add(2, "days").format("YYYYMMDD")}`,
           },
           {
             id: 67502,
@@ -144,10 +145,10 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     await visit("/c/bug/1");
 
     assert.deepEqual(
-      [...document.querySelectorAll(".fc-day-header span")].map(
+      [...document.querySelectorAll(".fc-col-header-cell-cushion")].map(
         (el) => el.innerText
       ),
-      ["seg.", "ter.", "qua.", "qui.", "sex.", "sáb.", "dom."],
+      ["SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB.", "DOM."],
       "Week days are translated in the calendar header"
     );
 
@@ -157,10 +158,12 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
   test("event calendar shows recurrent events", async function (assert) {
     await visit("/c/bug/1");
 
-    const [first, second] = [...document.querySelectorAll(".fc-event")];
+    const [first, second] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
 
-    assert.dom(".fc-title", first).hasText("Awesome Event");
-    assert.dom(".fc-title", second).hasText("Awesome Event");
+    assert.dom(".fc-event-title", first).hasText("Awesome Event");
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
 
     const firstCell = first.closest("td");
     const secondCell = second.closest("td");
