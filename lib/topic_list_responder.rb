@@ -23,7 +23,7 @@ module TopicListResponder
 
   def localize_topic_list_content(list)
     return if list.topics.blank? || !SiteSetting.content_localization_enabled
-    crawl_locale = params[:lang].presence || SiteSetting.default_locale
+    crawl_locale = params[Discourse::LOCALE_PARAM].presence || SiteSetting.default_locale
 
     list.topics.each { |topic| replace_topic_attributes(crawl_locale, topic) }
   end
