@@ -55,15 +55,15 @@ module DiscoursePostEvent
     end
 
     def self.filter_by_post_id(events, params)
-      return events unless params[:post_id].present?
+      return events if params[:post_id].blank?
       events.where(id: params[:post_id])
     end
 
     def self.filter_by_attending_user(events, params, guardian, user)
-      return events unless params[:attending_user].present?
+      return events if params[:attending_user].blank?
 
       attending_user = User.find_by(username_lower: params[:attending_user].downcase)
-      return events unless attending_user
+      return events if !attending_user
 
       events =
         events.joins(:invitees).where(
@@ -97,7 +97,7 @@ module DiscoursePostEvent
     end
 
     def self.apply_before_date_filter(events, params)
-      return events unless params[:before].present?
+      return events if params[:before].blank?
 
       before_date = params[:before].to_datetime
       events.where(
@@ -113,7 +113,7 @@ module DiscoursePostEvent
     end
 
     def self.apply_start_date_filter(events, params)
-      return events unless params[:start_date].present?
+      return events if params[:start_date].blank?
 
       start_date = params[:start_date].to_datetime
       events.where(
@@ -127,7 +127,7 @@ module DiscoursePostEvent
     end
 
     def self.apply_end_date_filter(events, params)
-      return events unless params[:end_date].present?
+      return events if params[:end_date].blank?
 
       end_date = params[:end_date].to_datetime
       events.where(
@@ -140,7 +140,7 @@ module DiscoursePostEvent
     end
 
     def self.apply_category_filters(events, params)
-      return events unless params[:category_id].present?
+      return events if params[:category_id].blank?
 
       category_id = params[:category_id].to_i
       category_ids =
@@ -156,7 +156,7 @@ module DiscoursePostEvent
     end
 
     def self.apply_limit(events, params)
-      return events unless params[:limit].present?
+      return events if params[:limit].blank?
       events.limit(params[:limit].to_i)
     end
 
