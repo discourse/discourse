@@ -53,7 +53,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       total_data = report.data.find { |d| d[:key] == "total_users" }
       expect(total_data).to be_present
-      expect(total_data[:x]).to eq("Total Users")
+      expect(total_data[:x]).to eq("Total users")
       expect(total_data[:y]).to be >= 4 # At least our test users
     end
 
@@ -62,7 +62,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
       expect(no_accounts_data).to be_present
-      expect(no_accounts_data[:x]).to eq("No Associated Accounts")
+      expect(no_accounts_data[:x]).to eq("No associated accounts")
       # user4 has no accounts, user5 has twitter (disabled), so both should be counted
       expect(no_accounts_data[:y]).to be >= 2
     end
