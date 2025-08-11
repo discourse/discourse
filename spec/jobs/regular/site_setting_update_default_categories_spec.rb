@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 describe Jobs::SiteSettingUpdateDefaultCategories do
-  fab!(:admin)
-  fab!(:moderator)
-  fab!(:user)
-
   subject(:job) { described_class.new }
 
   context "when logged in as an admin" do

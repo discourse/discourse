@@ -3,10 +3,7 @@
 describe Jobs::SiteSettingUpdateDefaultTags do
   subject(:job) { described_class.new }
 
-  fab!(:admin)
   context "when logged in as an admin" do
-    before { sign_in(admin) }
-
     context "with default tags" do
       fab!(:user1, :user)
       fab!(:user2, :user)
@@ -26,8 +23,6 @@ describe Jobs::SiteSettingUpdateDefaultTags do
           value: tags.last(2).pluck(:name).join("|"),
           previous_value: tags.first(2).pluck(:name).join("|"),
         )
-
-        SiteSetting.default_tags_watching = tags.last(2).pluck(:name).join("|")
 
         expect(TagUser.where(tag_id: tags.first.id, notification_level: watching).count).to eq(0)
         expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(
