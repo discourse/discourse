@@ -24,6 +24,8 @@ export default class Flag extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
+  // eslint-disable-next-line ember/no-unused-services
+  @service site; // FIXME: used by flag-target objects
 
   @tracked userDetails;
   @tracked selected;
