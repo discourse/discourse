@@ -11,8 +11,6 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class AdminUserFieldItem extends Component {
   @service adminUserFields;
-  @service adminCustomUserFields;
-  @service dialog;
   @service router;
 
   get fieldName() {

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -10,8 +9,6 @@ import { i18n } from "discourse-i18n";
 import Notifications from "./user-dropdown/notifications";
 
 export default class UserDropdown extends Component {
-  @service currentUser;
-
   @action
   click(e) {
     if (wantsNewWindow(e)) {

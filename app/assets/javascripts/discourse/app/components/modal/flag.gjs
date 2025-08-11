@@ -23,7 +23,6 @@ export default class Flag extends Component {
   @service adminTools;
   @service currentUser;
   @service siteSettings;
-  @service site;
   @service appEvents;
 
   @tracked userDetails;

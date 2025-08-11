@@ -20,7 +20,6 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // and technical debt, so anything copied from there to here is subject
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
-  @service siteSettings;
   @service toasts;
 
   @tracked isUpdating = false;

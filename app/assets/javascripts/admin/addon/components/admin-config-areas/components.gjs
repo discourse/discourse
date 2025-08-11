@@ -55,7 +55,6 @@ const STATUS_FILTER_OPTIONS = [
 
 export default class AdminConfigAreasComponents extends Component {
   @service modal;
-  @service router;
   @service toasts;
 
   @tracked loading = true;

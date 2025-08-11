@@ -15,8 +15,6 @@ import SectionLink from "../section-link";
 export default class SidebarUserTagsSection extends Component {
   @service currentUser;
   @service modal;
-  @service pmTopicTrackingState;
-  @service router;
   @service site;
   @service siteSettings;
   @service topicTrackingState;

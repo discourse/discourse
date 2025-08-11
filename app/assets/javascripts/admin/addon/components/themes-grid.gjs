@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
@@ -15,9 +14,6 @@ import ThemesGridCard from "./themes-grid-card";
 const FILTER_MINIMUM = 8;
 
 export default class ThemesGrid extends Component {
-  @service modal;
-  @service router;
-
   sortedThemes;
 
   constructor() {

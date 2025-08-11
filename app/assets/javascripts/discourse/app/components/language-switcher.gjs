@@ -8,9 +8,7 @@ import cookie from "discourse/lib/cookie";
 import DMenu from "float-kit/components/d-menu";
 
 export default class LanguageSwitcher extends Component {
-  @service site;
   @service siteSettings;
-  @service router;
   @service languageNameLookup;
 
   @action
