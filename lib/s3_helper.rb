@@ -268,9 +268,13 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
-  def self.assume_s3_role(access_key_id:, secret_access_key:, role_arn:)
+  def self.assume_s3_role(access_key_id:, secret_access_key:, role_arn:, region:)
     sts_client =
-      Aws::STS::Client.new(access_key_id: access_key_id, secret_access_key: secret_access_key)
+      Aws::STS::Client.new(
+        access_key_id: access_key_id,
+        secret_access_key: secret_access_key,
+        region: region,
+      )
 
     response =
       sts_client.assume_role(
