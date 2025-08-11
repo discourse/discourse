@@ -3,17 +3,19 @@
 require "rails_helper"
 
 RSpec.describe ReviewableActionBuilder do
-  let(:admin) { Fabricate(:admin) }
-  let(:guardian) { Guardian.new(admin) }
-  let(:user) { Fabricate(:user) }
-  let(:reviewable) { ReviewableUser.create_for(user) }
-  let(:actions) { Reviewable::Actions.new(reviewable, guardian) }
+  fab!(:admin)
+  fab!(:guardian) { Guardian.new(admin) }
+  fab!(:user)
 
   describe "#build_action" do
-    it "adds an action with i18n-derived defaults" do
-      reviewable.build_action(actions, :approve_user)
+    fab!(:reviewable_user) { ReviewableUser.create_for(user) }
 
-      action = actions.to_a.first
+    it "adds an action with i18n-derived defaults" do
+      user_actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(user_actions, :approve_user)
+
+      action = user_actions.to_a.first
       expect(action).to be_present
       expect(action.label).to eq("reviewables.actions.approve_user.title")
       expect(action.description).to eq("reviewables.actions.approve_user.description")
@@ -25,13 +27,15 @@ RSpec.describe ReviewableActionBuilder do
       expect(action.require_reject_reason).to be(false)
 
       # It should attach to a bundle automatically matching the full action id
-      bundle_ids = actions.bundles.map(&:id)
+      bundle_ids = user_actions.bundles.map(&:id)
       expect(bundle_ids).to include(action.id)
     end
 
     it "sets optional fields when provided" do
-      reviewable.build_action(
-        actions,
+      user_actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(
+        user_actions,
         :approve_user,
         icon: "user-plus",
         button_class: "btn-primary",
@@ -40,7 +44,7 @@ RSpec.describe ReviewableActionBuilder do
         require_reject_reason: true,
       )
 
-      action = actions.to_a.first
+      action = user_actions.to_a.first
       expect(action.icon).to eq("user-plus")
       expect(action.button_class).to eq("btn-primary")
       expect(action.client_action).to eq("go")
@@ -49,11 +53,13 @@ RSpec.describe ReviewableActionBuilder do
     end
 
     it "adds the action to the provided bundle" do
-      bundle = actions.add_bundle("custom-bundle", icon: "x", label: "Custom")
-      reviewable.build_action(actions, :approve_user, bundle: bundle)
+      user_actions = Reviewable::Actions.new(reviewable_user, guardian)
 
-      action = actions.to_a.first
-      expect(actions.bundles).to include(bundle)
+      bundle = user_actions.add_bundle("custom-bundle", icon: "x", label: "Custom")
+      reviewable_user.build_action(user_actions, :approve_user, bundle: bundle)
+
+      action = user_actions.to_a.first
+      expect(user_actions.bundles).to include(bundle)
       expect(bundle.actions).to include(action)
     end
   end
