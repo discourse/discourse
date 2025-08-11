@@ -67,6 +67,10 @@
       top: 0;
       height: 100dvh;
       max-height: unset;
+
+      .keyboard-visible & {
+        height: calc((var(--composer-vh, 1vh) * 100));
+      }
     }
 
     @include viewport.between(lg, xl) {
@@ -88,22 +92,24 @@
     }
 
     // tablet default portrait: does not overlap header, adjustable composer height
-    .keyboard-visible & {
-      @media all and (orientation: portrait) {
-        max-height: calc(
-          (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
-        );
-      }
+    @include viewport.between(md, xl) {
+      .keyboard-visible & {
+        @media all and (orientation: portrait) {
+          max-height: calc(
+            (var(--composer-vh, 1vh) * 100) - var(--header-offset, 4em)
+          );
+        }
 
-      // tablet landscape: partially same behaviour as mobile: overlapping header and forced fullscreen, but adjustable composer height if keyboard is not visible
-      @media all and (orientation: landscape) {
-        z-index: z("mobile-composer");
-        height: calc((var(--composer-vh, 1vh) * 100));
-        max-height: unset;
-      }
+        // tablet landscape: partially same behaviour as mobile: overlapping header and forced fullscreen, but adjustable composer height if keyboard is not visible
+        @media all and (orientation: landscape) {
+          z-index: z("mobile-composer");
+          height: calc((var(--composer-vh, 1vh) * 100));
+          max-height: unset;
+        }
 
-      .reply-area {
-        padding-bottom: 0.375em;
+        .reply-area {
+          padding-bottom: 0.375em;
+        }
       }
     }
   }
