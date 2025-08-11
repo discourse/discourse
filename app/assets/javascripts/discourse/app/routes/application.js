@@ -176,14 +176,16 @@ export default class ApplicationRoute extends DiscourseRoute {
   showLogin(props = {}) {
     const t = this.router.transitionTo("login");
     t.wantsTo = true;
-    return t.then(({ controller }) => controller.setProperties({ ...props }));
+    const controller = getOwnerWithFallback(this).lookup("controller:login");
+    return t.then(() => controller.setProperties({ ...props }));
   }
 
   @action
   showCreateAccount(props = {}) {
     const t = this.router.transitionTo("signup");
     t.wantsTo = true;
-    return t.then(({ controller }) => controller.setProperties({ ...props }));
+    const controller = getOwnerWithFallback(this).lookup("controller:signup");
+    return t.then(() => controller.setProperties({ ...props }));
   }
 
   @action
