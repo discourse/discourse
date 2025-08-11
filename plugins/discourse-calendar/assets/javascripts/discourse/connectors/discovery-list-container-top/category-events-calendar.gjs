@@ -9,5 +9,7 @@ export default class CategoryEventsCalendar extends Component {
     );
   }
 
-  <template><CategoryCalendar /></template>
+  <template>
+    <div id="category-events-calendar"><CategoryCalendar /></div>
+  </template>
 }

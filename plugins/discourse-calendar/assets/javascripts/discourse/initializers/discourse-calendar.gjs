@@ -120,6 +120,9 @@ function initializeDiscourseCalendar(api) {
             ) {
               return i18n(this.notification.data.message, {
                 username: this.username,
+                eventName:
+                  this.notification.data.event_name ||
+                  i18n("discourse_post_event.notifications.an_event"),
               });
             }
             return super.label;

@@ -106,7 +106,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     await visit("/c/bug/1");
 
     assert
-      .dom(".fc-event[href='/t/-/18451/1'] .fc-title")
+      .dom(".fc-daygrid-event-harness a[href='/t/-/18451/1'] .fc-event-title")
       .hasText(
         "Awesome Event 3<script>alert('my awesome event');</script>",
         "Elements should be escaped and appear as text rather than be the actual element."
@@ -135,7 +135,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     assert
       .dom("#category-events-calendar")
       .exists("Events calendar div exists.");
-    assert.dom(".fc-view-container").exists("FullCalendar is loaded.");
+    assert.dom(".fc").exists("FullCalendar is loaded.");
   });
 
   test("uses current locale to display calendar weekday names", async function (assert) {
