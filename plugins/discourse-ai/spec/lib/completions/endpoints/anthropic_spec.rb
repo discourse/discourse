@@ -906,7 +906,16 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!\\n"}}
 
       event: content_block_delta
-      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " there"}}
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " there\\nis a text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " and\\n\\nmore text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\n \\n and\\n\\n more much more"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " text"}}
 
       event: content_block_delta
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\"}"}}
@@ -944,7 +953,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         response_format: schema,
       ) { |partial, cancel| structured_output = partial }
 
-      expect(structured_output.read_buffered_property(:key)).to eq("Hello!\n there")
+      expect(structured_output.read_buffered_property(:key)).to eq(
+        "Hello!\n there\nis a text and\n\nmore text\n \n and\n\n more much more text",
+      )
 
       expected_body = {
         model: "claude-3-opus-20240229",
