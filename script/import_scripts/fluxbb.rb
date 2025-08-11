@@ -275,6 +275,26 @@ class ImportScripts::FluxBB < ImportScripts::Base
     # Work around it for now:
     s.gsub!(%r{\[http(s)?://(www\.)?}, "[")
 
+    # some tags only work well when on its own line
+    s.gsub!(/(?<=[^\n])\[\/?(quote|code)/m, "\n\\0")
+    s.gsub!(/\[\/?(quote|code)[^\]]*\](?=[^\n])/m, "\\0\n")
+
+    # [del] & [ins] are not supported
+    s.gsub!('[del]', '[s]')
+    s.gsub!('[/del]', '[/s]')
+    s.gsub!(/\[ins\]([^\]]+)\[\/ins\]/, '<mark>\1</mark>')
+
+    # [img] with alt text with spaces doesn't work
+    s.gsub!(/\[img=([^\]]+)\]([^\]]+)\[\/img\]/, '![\1](\2)')
+
+    s.gsub!(/\[list=[^\]]+\]/, '')
+    s.gsub!('[/list]', '')
+    s.gsub!('[*]', '* ')
+    s.gsub!('[/*]', '')
+
+    s.gsub!('[em]', '[b]')
+    s.gsub!('[/em]', '[/b]')
+
     s
   end
 
