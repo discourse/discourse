@@ -65,20 +65,20 @@ export default class SiteSettingComponent extends Component {
     super(...arguments);
     this.isSecret = this.setting?.secret;
 
-    const settingName = this.setting.setting;
-
     if (this.canSubscribeToSettingsJobs) {
-      this.messageBus.subscribe(`${settingName}`, this.onMessage);
+      this.messageBus.subscribe(
+        `/site_setting/${this.setting.setting}/process`,
+        this.onMessage
+      );
     }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    const settingName = this.setting.setting;
 
     if (this.canSubscribeToSettingsJobs) {
       this.messageBus.unsubscribe(
-        `/site_setting/${settingName}/process`,
+        `/site_setting/${this.setting.setting}/process`,
         this.onMessage
       );
     }
@@ -87,9 +87,8 @@ export default class SiteSettingComponent extends Component {
   canSubscribeToSettingsJobs() {
     const settingName = this.setting.setting;
     return (
-      !!settingName &&
-      (settingName.includes("default_categories") ||
-        settingName.includes("default_tags"))
+      settingName.includes("default_categories") ||
+      settingName.includes("default_tags")
     );
   }
 
