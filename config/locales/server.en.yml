@@ -5730,11 +5730,9 @@ en:
         title: "Agree and Edit Post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
-      delete_single:
+      delete:
         title: "Delete"
         complete: "Post deleted."
-      delete:
-        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5778,7 +5776,10 @@ en:
         complete: "Post approved."
       approve_post:
         title: "Approve Post"
-        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        complete: "Post approved."
+      approve_post_closed:
+        title: "Approve Post"
+        confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
       reject_post:
         title: "Reject Post"
