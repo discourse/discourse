@@ -223,6 +223,10 @@ export default class FilterNavigationMenu extends Component {
       matchTriggerWidth: true,
       visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
     });
+
+    if (!this.suggestions.length) {
+      this.dMenuInstance.close();
+    }
   }
 
   @action
