@@ -20,7 +20,6 @@ module DiscoursePostEvent
     attributes :post
     attributes :raw_invitees
     attributes :recurrence
-    attributes :recurrence_rule
     attributes :recurrence_until
     attributes :reminders
     attributes :sample_invitees
@@ -141,11 +140,11 @@ module DiscoursePostEvent
       object.url.present?
     end
 
-    def include_recurrence_rule?
+    def include_rrule?
       object.recurring?
     end
 
-    def recurrence_rule
+    def rrule
       RRuleConfigurator.rule(
         recurrence: object.recurrence,
         starts_at: object.starts_at.in_time_zone(object.timezone),

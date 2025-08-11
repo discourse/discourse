@@ -33,7 +33,7 @@ module("Unit | Utility | download-calendar", function (hooks) {
         },
       ],
       {
-        recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
         location: "Paris",
         details: "Good soup",
       }
@@ -74,7 +74,7 @@ END:VCALENDAR`
           endsAt: "2021-10-12T16:00:00.000Z",
         },
       ],
-      { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+      { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
     );
     assert.strictEqual(
       data,
@@ -121,7 +121,7 @@ END:VCALENDAR`
           endsAt: "2021-10-12T16:00:00.000Z",
         },
       ],
-      { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+      { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
     );
     assert.true(
       window.open.calledWith(

@@ -95,10 +95,8 @@ export default class PostCalendar extends Component {
             const eventDetail = { ...detail };
             let from = moment.tz(detail.from, detail.timezone);
             let to = moment.tz(detail.to, detail.timezone);
-
             eventDetail.from = from.format("YYYY-MM-DD");
             eventDetail.to = to.format("YYYY-MM-DD");
-
             events.push(this._buildStandaloneEvent(eventDetail));
           } else {
             events.push(this._buildStandaloneEvent(detail));
@@ -143,7 +141,9 @@ export default class PostCalendar extends Component {
 
     Object.keys(formattedGroupedEvents).forEach((key) => {
       const formattedGroupedEvent = formattedGroupedEvents[key];
-      events.push(this._buildGroupedEvent(formattedGroupedEvent));
+      this._buildGroupedEvents(formattedGroupedEvent).forEach((event) => {
+        events.push(event);
+      });
     });
 
     return events;
@@ -221,7 +221,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  _buildGroupedEvent(detail) {
+  _buildGroupedEvents(detail) {
     const events = [];
     const groupedEventData = [detail];
 

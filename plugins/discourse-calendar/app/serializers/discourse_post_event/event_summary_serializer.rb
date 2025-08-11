@@ -41,15 +41,15 @@ module DiscoursePostEvent
       object.post.topic.category_id
     end
 
+    def include_rrule?
+      object.recurring?
+    end
+
     def rrule
-      dtstart = options.dig(:options, :dtstart)
-      RRuleGenerator.generate_string(
-        starts_at: object.original_starts_at.in_time_zone(object.timezone),
-        timezone: object.timezone,
-        max_years: 1,
+      RRuleConfigurator.rule(
         recurrence: object.recurrence,
-        recurrence_until: object.recurrence_until,
-        dtstart: dtstart ? Time.parse(dtstart) : nil,
+        starts_at: object.starts_at.in_time_zone(object.timezone),
+        recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
       )
     end
   end
