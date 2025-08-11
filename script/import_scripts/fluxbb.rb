@@ -93,7 +93,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
           registration_ip_address: user["registration_ip_address"],
           last_seen_at: Time.zone.at(user["last_visit_time"]),
           last_emailed_at:
-            user["last_emailed_at"] == nil ? 0 : Time.zone.at(user["last_emailed_at"]),
+            user["last_emailed_at"] == nil ? nil : Time.zone.at(user["last_emailed_at"]),
           location: user["location"],
           moderator: user["group_id"] == 2,
           admin: user["group_id"] == 1,
