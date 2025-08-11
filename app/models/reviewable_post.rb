@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewablePost < Reviewable
+  include ReviewableActionBuilder
+
   def self.action_aliases
     { reject_and_silence: :reject_and_suspend }
   end
@@ -106,27 +108,6 @@ class ReviewablePost < Reviewable
 
   def post
     @post ||= (target || Post.with_deleted.find_by(id: target_id))
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "#{prefix}.title"
-      action.description = "#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
-      action.completed_message = "#{prefix}.complete"
-    end
   end
 
   def successful_transition(to_state, recalculate_score: true)
