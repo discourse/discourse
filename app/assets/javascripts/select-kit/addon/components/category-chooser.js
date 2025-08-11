@@ -59,10 +59,9 @@ export default class CategoryChooser extends ComboBoxComponent {
     } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
     } else {
-      const defaultCategoryId = parseInt(
-        this.siteSettings.default_composer_category,
-        10
-      );
+      const defaultCategoryId = !this.selectKit.options.readOnlyCategoryId
+        ? parseInt(this.siteSettings.default_composer_category, 10)
+        : null;
       if (!defaultCategoryId || defaultCategoryId < 0) {
         return this.defaultItem(null, htmlSafe(i18n("category.choose")));
       }

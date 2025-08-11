@@ -50,8 +50,6 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
 
               expect(select_kit).to have_selected_name("category&hellip;")
-              # expect(select_kit).to be_blank
-              # or alternatively like
             end
           end
         end
