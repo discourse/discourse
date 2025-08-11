@@ -33,6 +33,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         username: FLUXBB_USER,
         password: FLUXBB_PW,
         database: FLUXBB_DB,
+        encoding: 'utf8mb4',
       )
   end
 
