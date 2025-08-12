@@ -37,7 +37,7 @@ html:not(.keyboard-visible.mobile-view) {
   z-index: z("modal", "content");
   overflow: auto;
 
-  @include viewport.to(sm) {
+  @include viewport.until(sm) {
     align-items: flex-end;
   }
 
@@ -62,7 +62,7 @@ html:not(.keyboard-visible.mobile-view) {
     box-shadow: var(--shadow-modal);
     max-height: var(--modal-max-height, 80vh); // unset, optional theme utility
 
-    @include viewport.to(sm) {
+    @include viewport.until(sm) {
       // this is a hack to prevent issues on safari with transforms
       position: fixed;
       width: 100%;
@@ -185,7 +185,7 @@ html:not(.keyboard-visible.mobile-view) {
     border-top: 1px solid var(--content-border-color);
     gap: 0.5rem;
 
-    @include viewport.to(sm) {
+    @include viewport.until(sm) {
       &__footer {
         margin-top: auto;
 
