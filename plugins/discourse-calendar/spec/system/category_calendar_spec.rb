@@ -16,16 +16,16 @@ describe "Category calendar", type: :system do
   it "shows the calendar on the category page" do
     category_page.visit(category)
 
-    expect(category_page).to have_selector("#category-events-calendar.fc")
+    expect(category_page).to have_selector("#category-events-calendar .fc")
 
     find(".nav-item_hot").click
 
     expect(page).to have_current_path("#{category.relative_url}/l/hot")
-    expect(category_page).to have_selector("#category-events-calendar.fc")
+    expect(category_page).to have_selector("#category-events-calendar .fc")
 
     find(".nav-item_latest").click
 
     expect(page).to have_current_path("#{category.relative_url}/l/latest")
-    expect(category_page).to have_selector("#category-events-calendar.fc")
+    expect(category_page).to have_selector("#category-events-calendar .fc")
   end
 end
