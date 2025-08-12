@@ -11,8 +11,11 @@ module Reports::AssociatedAccountsByProvider
       report.dates_filtering = false
 
       report.labels = [
-        { property: :x, title: I18n.t("reports.associated_accounts_by_provider.labels.provider") },
-        { property: :y, type: :number, title: I18n.t("reports.default.labels.count") },
+        {
+          property: :provider,
+          title: I18n.t("reports.associated_accounts_by_provider.labels.provider"),
+        },
+        { property: :count, type: :number, title: I18n.t("reports.default.labels.count") },
       ]
 
       enabled_authenticators = Discourse.enabled_authenticators.map(&:name)
@@ -32,18 +35,18 @@ module Reports::AssociatedAccountsByProvider
 
           report.data << {
             key: provider_name,
-            x: I18n.t("js.login.#{provider_name}.name"),
-            y: count,
+            provider: I18n.t("js.login.#{provider_name}.name"),
+            count: count,
           }
         end
       end
 
       # Add total users count
-      total_users = User.real.activated.count
+      total_users = Statistics.users[:count]
       report.data << {
         key: "total_users",
-        x: I18n.t("reports.associated_accounts_by_provider.labels.total_users"),
-        y: total_users,
+        provider: I18n.t("reports.associated_accounts_by_provider.labels.total_users"),
+        count: total_users,
       }
 
       # Add users with no associated accounts count (only considering enabled providers)
@@ -61,11 +64,11 @@ module Reports::AssociatedAccountsByProvider
       users_without_accounts = total_users - users_with_accounts
       report.data << {
         key: "no_accounts",
-        x: I18n.t("reports.associated_accounts_by_provider.labels.no_accounts"),
-        y: users_without_accounts,
+        provider: I18n.t("reports.associated_accounts_by_provider.labels.no_accounts"),
+        count: users_without_accounts,
       }
 
-      report.data.sort_by! { |row| -row[:y] }
+      report.data.sort_by! { |row| -row[:count] }
     end
   end
 end

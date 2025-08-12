@@ -1671,8 +1671,8 @@ en:
       labels:
         provider: Login provider
         no_accounts: "No associated accounts"
-        total_users: "Total users"
-      description: "Show number of associated accounts grouped by the login provider. Applicable only if you have enabled social login methods."
+        total_users: "Total number of members"
+      description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
     problem:
