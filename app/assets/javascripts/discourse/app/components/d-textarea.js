@@ -1,4 +1,4 @@
-import TextArea from "@ember/legacy-built-in-components/components/textarea";
+import TextArea from "discourse/components/textarea";
 import { attributeBindings } from "@ember-decorators/component";
 
 @attributeBindings("aria-label")
