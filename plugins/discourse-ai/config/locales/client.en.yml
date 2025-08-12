@@ -278,6 +278,11 @@ en:
       translations:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
+        progress_chart:
+          title: "Translation progress"
+          completed: "Completed"
+          remaining: "Remaining"
+
 
       spam:
         short_title: "Spam"
