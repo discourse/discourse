@@ -146,6 +146,25 @@ describe "Welcome banner", type: :system do
       end
     end
 
+    context "with background image setting" do
+      fab!(:image_upload)
+
+      before do
+        current_user.update!(admin: true)
+        SiteSetting.welcome_banner_page_visibility = "all_pages"
+      end
+
+      it "sets a background image with uploaded image" do
+        sign_in(current_user)
+        visit "/admin/config/interface"
+        expect(banner).to be_visible
+        expect(banner).to have_no_bg_img
+
+        SiteSetting.welcome_banner_image = image_upload.url
+        expect(banner).to have_bg_img(image_upload.url)
+      end
+    end
+
     context "with interface location setting" do
       it "shows above topic content" do
         SiteSetting.welcome_banner_location = "above_topic_content"
