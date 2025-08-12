@@ -24,7 +24,6 @@ import Chart from "admin/components/chart";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class AiUsage extends Component {
-  @service store;
   @service currentUser;
 
   @tracked startDate = moment().subtract(30, "days").toDate();
