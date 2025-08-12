@@ -205,11 +205,9 @@ export default class DiscourseReactionsCounter extends Component {
         {{#if (and @post.yours this.onlyOneMainReaction)}}
           <div class="discourse-reactions-reaction-button my-likes">
             <DButton
-              type="button"
               class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-            >
-              {{icon this.siteSettings.discourse_reactions_like_icon}}
-            </DButton>
+              @icon={{this.siteSettings.discourse_reactions_like_icon}}
+            />
           </div>
         {{/if}}
       {{/if}}

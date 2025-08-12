@@ -117,17 +117,14 @@ export default class ReactionsReactionButton extends Component {
     >
       {{#if @post.current_user_used_main_reaction}}
         <DButton
-          type="button"
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon this.siteSettings.discourse_reactions_like_icon}}
-        </DButton>
+          @title={{this.title}}
+          @icon={{this.siteSettings.discourse_reactions_like_icon}}
+        />
       {{else if @post.current_user_reaction}}
         <DButton
-          type="button"
           class="btn-icon no-text btn-flat reaction-button"
-          title={{this.title}}
+          @title={{this.title}}
         >
           <img
             class="btn-toggle-reaction-emoji reaction-button"
@@ -137,14 +134,13 @@ export default class ReactionsReactionButton extends Component {
         </DButton>
       {{else}}
         <DButton
-          type="button"
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon
-            (concat "far-" this.siteSettings.discourse_reactions_like_icon)
+          @title={{this.title}}
+          @icon={{concat
+            "far-"
+            this.siteSettings.discourse_reactions_like_icon
           }}
-        </DButton>
+        />
       {{/if}}
     </div>
   </template>
