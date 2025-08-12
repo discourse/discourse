@@ -9,7 +9,6 @@ export default class DiscoursePostEventService extends Service {
       params.include_expired = true;
     }
 
-    // params.include_details = true;
     const events = await this.discoursePostEventApi.events(params);
     return await events;
   }

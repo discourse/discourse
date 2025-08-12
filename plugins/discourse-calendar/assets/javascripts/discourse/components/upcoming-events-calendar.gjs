@@ -156,9 +156,9 @@ export default class UpcomingEventsCalendar extends Component {
   async fetchEvents(info) {
     this.resolvedEvents = null;
 
-    const params = { include_details: "false" };
-    params.start_date = info.startStr;
-    params.end_date = info.endStr;
+    const params = {};
+    params.after = info.startStr;
+    params.before = info.endStr;
 
     this.resolvedEvents =
       await this.discoursePostEventService.fetchEvents(params);
