@@ -3,7 +3,8 @@
 class TopicsFilter
   attr_reader :topic_notification_levels
 
-  def initialize(guardian:, scope: Topic.all)
+  def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
+    @loaded_topic_users_reference = loaded_topic_users_reference
     @guardian = guardian || Guardian.new
     @scope = scope
     @topic_notification_levels = Set.new
