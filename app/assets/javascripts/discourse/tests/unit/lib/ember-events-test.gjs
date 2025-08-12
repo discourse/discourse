@@ -72,10 +72,12 @@ module("Unit | Lib | ember-events", function (hooks) {
         twoClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="buttonOne" @onClick={{this.onOneClick}} />
-        <ExampleClassicButton id="buttonTwo" @click={{this.onTwoClick}} />
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton id="buttonOne" @onClick={{this.onOneClick}} />
+          <ExampleClassicButton id="buttonTwo" @click={{this.onTwoClick}} />
+        </template>
+      );
 
       await click("#buttonOne");
       await click("#buttonTwo");
@@ -94,10 +96,12 @@ module("Unit | Lib | ember-events", function (hooks) {
         twoClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="buttonOne" @click={{this.onOneClick}} />
-        <ExampleClassicButton id="buttonTwo" @onClick={{this.onTwoClick}} />
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton id="buttonOne" @click={{this.onOneClick}} />
+          <ExampleClassicButton id="buttonTwo" @onClick={{this.onTwoClick}} />
+        </template>
+      );
 
       await click("#buttonOne");
       await click("#buttonTwo");
@@ -118,11 +122,19 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <ExampleGlimmerButton id="childButton" @onClick={{this.onChildClick}} />
-        </ExampleClassicButton>
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <ExampleGlimmerButton
+              id="childButton"
+              @onClick={{this.onChildClick}}
+            />
+          </ExampleClassicButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -140,11 +152,20 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <ExampleGlimmerButton id="childButton" @preventEventPropagation={{true}} @onClick={{this.onChildClick}} />
-        </ExampleClassicButton>
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <ExampleGlimmerButton
+              id="childButton"
+              @preventEventPropagation={{true}}
+              @onClick={{this.onChildClick}}
+            />
+          </ExampleClassicButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -164,11 +185,19 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <ExampleClassicButton id="childButton" @onClick={{this.onChildClick}} />
-        </ExampleGlimmerButton>
-      `);
+      await render(
+        <template>
+          <ExampleGlimmerButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <ExampleClassicButton
+              id="childButton"
+              @onClick={{this.onChildClick}}
+            />
+          </ExampleGlimmerButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -186,11 +215,20 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <ExampleClassicButton id="childButton" @preventEventPropagation={{true}} @onClick={{this.onChildClick}} />
-        </ExampleGlimmerButton>
-      `);
+      await render(
+        <template>
+          <ExampleGlimmerButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <ExampleClassicButton
+              id="childButton"
+              @preventEventPropagation={{true}}
+              @onClick={{this.onChildClick}}
+            />
+          </ExampleGlimmerButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -210,11 +248,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick}} />
-        </ExampleClassicButton>
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <button id="childButton" {{action this.onChildClick}} />
+          </ExampleClassicButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -232,11 +275,19 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick bubbles=false}} />
-        </ExampleClassicButton>
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <button
+              id="childButton"
+              {{action this.onChildClick bubbles=false}}
+            />
+          </ExampleClassicButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -256,11 +307,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick}} />
-        </ExampleGlimmerButton>
-      `);
+      await render(
+        <template>
+          <ExampleGlimmerButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <button id="childButton" {{action this.onChildClick}} />
+          </ExampleGlimmerButton>
+        </template>
+      );
 
       await click("#childButton");
 
@@ -278,11 +334,19 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick bubbles=false}} />
-        </ExampleGlimmerButton>
-      `);
+      await render(
+        <template>
+          <ExampleGlimmerButton
+            id="parentButton"
+            @onClick={{this.onParentClick}}
+          >
+            <button
+              id="childButton"
+              {{action this.onChildClick bubbles=false}}
+            />
+          </ExampleGlimmerButton>
+        </template>
+      );
 
       await click("#childButton");
 

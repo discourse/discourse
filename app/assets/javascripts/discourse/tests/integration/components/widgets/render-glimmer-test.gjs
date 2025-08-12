@@ -11,6 +11,10 @@ import RenderGlimmer, {
   registerWidgetShim,
 } from "discourse/widgets/render-glimmer";
 import Widget, { deleteFromRegistry } from "discourse/widgets/widget";
+import MountWidget from "discourse/components/mount-widget";
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { eq } from "truth-helpers";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;
@@ -165,9 +169,17 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
   test("argument handling", async function (assert) {
     await render(
-      hbs`
-        <Input class='dynamic-value-input' @type="text" @value={{this.dynamicValue}} />
-        <MountWidget @widget="demo-widget" @args={{hash arg1="val1" dynamicArg=this.dynamicValue}} />`
+      <template>
+        <Input
+          class="dynamic-value-input"
+          @type="text"
+          @value={{this.dynamicValue}}
+        />
+        <MountWidget
+          @widget="demo-widget"
+          @args={{hash arg1="val1" dynamicArg=this.dynamicValue}}
+        />
+      </template>
     );
 
     assert.dom("div.my-widget").exists("widget is rendered");
@@ -194,11 +206,19 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     );
 
     await render(
-      hbs`
-        <Input class='dynamic-value-input' @type="text" @value={{this.dynamicValue}} />
-        {{#unless (eq this.dynamicValue 'hidden')}}
-          <MountWidget @widget="demo-widget" @args={{hash arg1="val1" dynamicArg=this.dynamicValue}} />
-        {{/unless}}`
+      <template>
+        <Input
+          class="dynamic-value-input"
+          @type="text"
+          @value={{this.dynamicValue}}
+        />
+        {{#unless (eq this.dynamicValue "hidden")}}
+          <MountWidget
+            @widget="demo-widget"
+            @args={{hash arg1="val1" dynamicArg=this.dynamicValue}}
+          />
+        {{/unless}}
+      </template>
     );
 
     assert.dom("div.my-widget").exists("widget is rendered");
@@ -241,9 +261,11 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
   });
 
   test("rendering component directly", async function (assert) {
-    await render(hbs`
-      <MountWidget @widget="render-glimmer-test-component-shim" />
-    `);
+    await render(
+      <template>
+        <MountWidget @widget="render-glimmer-test-component-shim" />
+      </template>
+    );
 
     assert.dom("div.component-shim").exists();
   });
@@ -255,11 +277,19 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     );
 
     await render(
-      hbs`
-        <Input class='dynamic-value-input' @type="text" @value={{this.dynamicValue}} />
-        {{#unless (eq this.dynamicValue 'hidden')}}
-          <MountWidget @widget="demo-widget" @args={{hash arg1="val1" dynamicArg=this.dynamicValue}} />
-        {{/unless}}`
+      <template>
+        <Input
+          class="dynamic-value-input"
+          @type="text"
+          @value={{this.dynamicValue}}
+        />
+        {{#unless (eq this.dynamicValue "hidden")}}
+          <MountWidget
+            @widget="demo-widget"
+            @args={{hash arg1="val1" dynamicArg=this.dynamicValue}}
+          />
+        {{/unless}}
+      </template>
     );
 
     assert
@@ -272,7 +302,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
   test("modify widget state with component action", async function (assert) {
     await render(
-      hbs`<MountWidget @widget="demo-widget" @args={{hash arg1="val1"}} />`
+      <template>
+        <MountWidget @widget="demo-widget" @args={{hash arg1="val1"}} />
+      </template>
     );
 
     assert.false(
@@ -321,7 +353,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
   });
 
   test("multiple adjacent components", async function (assert) {
-    await render(hbs`<MountWidget @widget="toggle-demo-widget" />`);
+    await render(
+      <template><MountWidget @widget="toggle-demo-widget" /></template>
+    );
     assert.dom("div.glimmer-wrapper").hasText("One");
     await click(".toggleButton");
     assert.dom("div.glimmer-wrapper").hasText("Two");
@@ -331,7 +365,12 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
   test("registerWidgetShim can register a fake widget", async function (assert) {
     await render(
-      hbs`<MountWidget @widget="render-glimmer-test-shim" @args={{hash attr1="val1"}} />`
+      <template>
+        <MountWidget
+          @widget="render-glimmer-test-shim"
+          @args={{hash attr1="val1"}}
+        />
+      </template>
     );
 
     assert.dom("div.my-wrapper span.shim-content").exists();
@@ -340,7 +379,15 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
   test("setWrapperElementAttrs API", async function (assert) {
     await render(
-      hbs`<MountWidget @widget="render-glimmer-test-wrapper-attrs" @args={{hash extraClass=this.extraClass dataAttrValue=this.dataAttrValue}} />`
+      <template>
+        <MountWidget
+          @widget="render-glimmer-test-wrapper-attrs"
+          @args={{hash
+            extraClass=this.extraClass
+            dataAttrValue=this.dataAttrValue
+          }}
+        />
+      </template>
     );
 
     assert.dom("div.initial-wrapper-class").exists();

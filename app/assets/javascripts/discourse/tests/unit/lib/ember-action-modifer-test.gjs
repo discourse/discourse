@@ -17,9 +17,11 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action this.onChildClick}} />
-    `);
+    await render(
+      <template>
+        <button id="childButton" {{action this.onChildClick}} />
+      </template>
+    );
 
     await click("#childButton");
 
@@ -34,9 +36,9 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action 'onChildClick'}} />
-    `);
+    await render(
+      <template><button id="childButton" {{action "onChildClick"}} /></template>
+    );
 
     await click("#childButton");
 
@@ -51,9 +53,9 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action 'onChildClick'}} />
-    `);
+    await render(
+      <template><button id="childButton" {{action "onChildClick"}} /></template>
+    );
 
     await click("#childButton", { ctrlKey: true });
 
@@ -68,9 +70,11 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       dblClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action this.onDblClick on='dblclick'}} />
-    `);
+    await render(
+      <template>
+        <button id="childButton" {{action this.onDblClick on="dblclick"}} />
+      </template>
+    );
 
     await doubleClick("#childButton");
 
@@ -146,9 +150,11 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
-      `);
+      await render(
+        <template>
+          <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
+        </template>
+      );
 
       assert.strictEqual(this.oneClicked, undefined);
 
@@ -172,9 +178,11 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
-      `);
+      await render(
+        <template>
+          <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
+        </template>
+      );
 
       assert.strictEqual(this.oneClicked, undefined);
 
