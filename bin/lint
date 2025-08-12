@@ -101,6 +101,8 @@ class LefthookLinter
       return false
     end
 
+    return true if file == "Gemfile"
+
     ext = File.extname(file)[1..]
 
     # Check for Ruby files in /bin/ directory without extensions
@@ -117,9 +119,8 @@ class LefthookLinter
     end
 
     # Check if file extension is lintable
-    lintable_extensions = %w[rb rake js gjs hbs scss css yml yaml]
-    lintable_extensions.include?(ext) ||
-      (file.include?("/assets/") && %w[js scss css hbs gjs].include?(ext))
+    lintable_extensions = %w[rb rake js gjs hbs scss css yml yaml thor]
+    lintable_extensions.include?(ext)
   end
 
   def run_fix_mode(files)
