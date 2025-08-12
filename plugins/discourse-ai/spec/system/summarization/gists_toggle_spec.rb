@@ -93,4 +93,50 @@ describe "Gists Toggle Functionality", type: :system do
       expect(page).not_to have_css(".topic-list-layout-trigger")
     end
   end
+
+  context "when viewing gists on desktop" do
+    it "renders gist component in desktop outlet" do
+      visit("/latest")
+
+      find(".topic-list-layout-trigger").click
+      find(
+        ".dropdown-menu__item .d-button-label",
+        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
+      ).click
+
+      expect(page).to have_css(".link-bottom-line .excerpt__contents")
+    end
+  end
+end
+
+describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
+  fab!(:admin)
+  fab!(:group)
+  fab!(:topic_with_gist, :topic)
+  fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, target: topic_with_gist) }
+
+  before do
+    enable_current_plugin
+    assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+
+    group.add(admin)
+    assign_persona_to(:ai_summary_gists_persona, [group.id])
+    sign_in(admin)
+  end
+
+  context "when viewing gists on mobile" do
+    it "renders gist component in mobile outlet" do
+      visit("/latest")
+
+      find(".topic-list-layout-trigger").click
+      find(
+        ".dropdown-menu__item .d-button-label",
+        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
+      ).click
+
+      expect(page).to have_css(".topic-item-stats__category-tags .excerpt__contents")
+    end
+  end
 end
