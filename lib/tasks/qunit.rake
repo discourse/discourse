@@ -111,8 +111,10 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       if !reuse_build
         system(
           "pnpm",
-          "ember",
+          "vite",
           "build",
+          "--mode",
+          "development",
           chdir: "#{Rails.root}/app/assets/javascripts/discourse",
           exception: true,
         )
@@ -131,10 +133,20 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       cmd += %w[pnpm testem ci -f testem.js]
       cmd += ["--parallel", parallel] if parallel
     else
+      system(
+        "pnpm",
+        "vite",
+        "build",
+        "--mode",
+        "development",
+        chdir: "#{Rails.root}/app/assets/javascripts/discourse",
+        exception: true,
+      )
+
       cmd += ["pnpm", "ember", "exam", "--query", query]
       cmd += ["--load-balance", "--parallel", parallel] if parallel && !ENV["PLUGIN_TARGETS"]
       cmd += ["--filter", filter] if filter
-      cmd += %w[--path dist] if reuse_build
+      cmd += %w[--path dist]
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
