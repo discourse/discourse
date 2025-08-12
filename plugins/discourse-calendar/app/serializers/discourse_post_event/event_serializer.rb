@@ -35,6 +35,7 @@ module DiscoursePostEvent
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :channel
+    attributes :rrule
 
     def channel
       ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
@@ -150,6 +151,10 @@ module DiscoursePostEvent
         starts_at: object.starts_at.in_time_zone(object.timezone),
         recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
       )
+    end
+
+    def ends_at
+      object.ends_at || object.starts_at + 1.hour
     end
   end
 end
