@@ -61,6 +61,18 @@ RSpec.describe "Channel notice", type: :system do
       )
     end
 
+    it "does not show group notice if unreachable member is not part of member visibility restricted group" do
+      secret_group.add(user_2)
+
+      chat_page.visit_channel(private_channel)
+      channel_page.send_message("hello @#{group_2.name} and @#{group_3.name}")
+
+      expect(page).to have_no_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see_group", group_name: group_3.name),
+      )
+    end
+
     context "when navigating away and back to the channel" do
       it "dismisses the notice" do
         chat_page.visit_channel(private_channel)

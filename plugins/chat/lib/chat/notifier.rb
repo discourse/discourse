@@ -237,11 +237,7 @@ module Chat
 
       # Notify when mentioned users are not able to access the channel
       # When user does not have permission to see group members, use the group name instead
-      visible_member_groups =
-        Group.where(id: @parsed_mentions.groups_to_mention.ids).members_visible_groups(@user)
-      hidden_member_groups = @parsed_mentions.groups_to_mention - visible_member_groups
-
-      if hidden_member_groups.any?
+      if show_group_warning(inaccessible[:unreachable])
         publish_unreachable_group_warning(hidden_member_groups.first.name)
       elsif inaccessible[:unreachable].any?
         publish_unreachable_mentions(inaccessible[:unreachable])
@@ -257,6 +253,16 @@ module Chat
       # Notify when large groups are mentioned, exceeding `max_users_notified_per_group_mention`
       too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
       publish_too_many_members_in_group_mention(too_many_members) if too_many_members.any?
+    end
+
+    def hidden_member_groups
+      @hidden_member_groups ||=
+        @parsed_mentions.groups_to_mention -
+          Group.where(id: @parsed_mentions.groups_to_mention.ids).members_visible_groups(@user)
+    end
+
+    def show_group_warning(users)
+      users.any? { |user| GroupUser.exists?(group: hidden_member_groups, user: user) }
     end
 
     def publish_inaccessible_mentions(users)
