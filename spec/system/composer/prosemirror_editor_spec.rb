@@ -1615,7 +1615,8 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(markdown + "\n\nThis is a test")
     end
 
-    it "lifts the first paragraph out of the quote with Backspace" do
+    # TODO: Failing often https://github.com/discourse/discourse/actions/runs/16891573420/job/47852388890
+    xit "lifts the first paragraph out of the quote with Backspace" do
       open_composer
 
       composer.type_content("[quote]Text")
