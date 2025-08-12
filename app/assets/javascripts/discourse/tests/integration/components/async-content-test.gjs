@@ -7,7 +7,7 @@ import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
 import AsyncContent from "discourse/components/async-content";
-import DialogHolder from "discourse/components/dialog-holder";
+import DialogHolder from "dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AsyncContent", function (hooks) {
