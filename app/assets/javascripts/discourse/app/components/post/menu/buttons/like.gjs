@@ -2,12 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -18,8 +21,12 @@ export default class PostMenuLikeButton extends Component {
   }
 
   @service currentUser;
+  @service store;
 
   @tracked isAnimated = false;
+  @tracked likedUsers = null;
+  @tracked totalLikedUsers = 0;
+  @tracked loadingLikedUsers = false;
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
@@ -54,15 +61,70 @@ export default class PostMenuLikeButton extends Component {
     });
   }
 
+  @action
+  async fetchLikedUsers() {
+    if (this.likedUsers || this.loadingLikedUsers) {
+      return;
+    }
+
+    this.loadingLikedUsers = true;
+
+    try {
+      const users = await this.store.find("post-action-user", {
+        id: this.args.post.id,
+        post_action_type_id: 2, // LIKE_ACTION
+      });
+
+      this.likedUsers = users.map((user) => ({
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        avatar_template: user.avatar_template,
+      }));
+      console.log(this.likedUsers);
+
+      this.totalLikedUsers = users.totalRows;
+    } catch {
+      // Silently handle error - could add user notification here if needed
+    } finally {
+      this.loadingLikedUsers = false;
+    }
+  }
+
   <template>
     {{#if @post.showLike}}
       <div class="double-button">
-        <LikeCount
-          ...attributes
-          @action={{@buttonActions.toggleWhoLiked}}
-          @state={{@state}}
-          @post={{@post}}
-        />
+        {{#if @post.likeCount}}
+          <DMenu
+            @modalForMobile={{true}}
+            @identifier="post-like-users"
+            @triggers="click"
+            @onShow={{this.fetchLikedUsers}}
+          >
+            <:trigger>
+              {{@post.likeCount}}
+            </:trigger>
+            <:content>
+              <ConditionalLoadingSpinner @condition={{this.loadingLikedUsers}}>
+                <ul class="liked-users-list">
+                  {{#each this.likedUsers as |user|}}
+                    <li class="liked-user">
+                      {{!-- {{avatar user imageSize="small"}} --}}
+                      <span class="username">{{user.username}}</span>
+                    </li>
+                  {{/each}}
+                </ul>
+              </ConditionalLoadingSpinner>
+            </:content>
+          </DMenu>
+        {{else}}
+          <LikeCount
+            ...attributes
+            @action={{@buttonActions.toggleWhoLiked}}
+            @state={{@state}}
+            @post={{@post}}
+          />
+        {{/if}}
         <DButton
           class={{concatClass
             "post-action-menu__like"
@@ -82,12 +144,40 @@ export default class PostMenuLikeButton extends Component {
       </div>
     {{else}}
       <div class="double-button">
-        <LikeCount
-          ...attributes
-          @action={{@buttonActions.toggleWhoLiked}}
-          @state={{@state}}
-          @post={{@post}}
-        />
+        {{#if @post.likeCount}}
+          <DMenu
+            @modalForMobile={{true}}
+            @identifier="post-like-users"
+            @triggers="click"
+          >
+            <:trigger>
+              <LikeCount
+                ...attributes
+                @post={{@post}}
+                @fetchLikedUsers={{this.fetchLikedUsers}}
+              />
+            </:trigger>
+            <:content>
+              <ConditionalLoadingSpinner @condition={{this.loadingLikedUsers}}>
+                <ul class="liked-users-list">
+                  {{#each this.likedUsers as |user|}}
+                    <li class="liked-user">
+                      {{avatar user imageSize="small"}}
+                      <span class="username">{{user.username}}</span>
+                    </li>
+                  {{/each}}
+                </ul>
+              </ConditionalLoadingSpinner>
+            </:content>
+          </DMenu>
+        {{else}}
+          <LikeCount
+            ...attributes
+            @action={{@buttonActions.toggleWhoLiked}}
+            @state={{@state}}
+            @post={{@post}}
+          />
+        {{/if}}
       </div>
     {{/if}}
   </template>
@@ -123,6 +213,16 @@ class LikeCount extends Component {
     });
   }
 
+  @action
+  handleLikeCountClick() {
+    if (this.args.fetchLikedUsers) {
+      this.args.fetchLikedUsers();
+    }
+    if (this.args.action) {
+      this.args.action();
+    }
+  }
+
   <template>
     {{#if @post.likeCount}}
       <DButton
@@ -134,13 +234,12 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@state.isWhoLikedVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount
         }}
         @translatedTitle={{this.translatedTitle}}
-        @action={{@action}}
+        @action={{this.handleLikeCountClick}}
       >
         {{@post.likeCount}}
         {{!--
