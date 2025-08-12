@@ -112,6 +112,10 @@ export default class DModal extends Component {
     return this.args.autofocus ?? true;
   }
 
+  get mobileDismissable() {
+    return this.site.mobileView && this.dismissable;
+  }
+
   shouldTriggerClickOnEnter(event) {
     if (this.args.submitOnEnter === false) {
       return false;
@@ -340,7 +344,14 @@ export default class DModal extends Component {
             )
           }}
             <div
-              class={{concatClass "d-modal__header" @headerClass}}
+              class={{concatClass
+                "d-modal__header"
+                (if
+                  (and this.mobileDismissable (has-block "headerPrimaryAction"))
+                  "--has-primary-action"
+                )
+                @headerClass
+              }}
               {{swipe
                 onDidSwipe=this.handleSwipe
                 onDidEndSwipe=this.handleSwipeEnded
@@ -350,11 +361,7 @@ export default class DModal extends Component {
               {{yield to="headerAboveTitle"}}
 
               {{#if
-                (and
-                  this.site.mobileView
-                  this.dismissable
-                  (has-block "headerPrimaryAction")
-                )
+                (and this.mobileDismissable (has-block "headerPrimaryAction"))
               }}
                 <div class="d-modal__dismiss-action">
                   <DButton
