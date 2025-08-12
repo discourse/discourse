@@ -168,7 +168,7 @@ RSpec.describe TopicsFilter do
         it "in:new-posts returns only unread (non-new) topics" do
           ids =
             TopicsFilter
-              .new(guardian: Guardian.new(user_for_new_filters))
+              .new(guardian: user_for_new_filters.guardian)
               .filter_from_query_string("in:new-posts")
               .where(id: [new_topic.id, unread_topic.id])
               .pluck(:id)
