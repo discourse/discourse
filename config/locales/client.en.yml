@@ -6901,7 +6901,7 @@ en:
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
           user_selectable_button_label: "Allow users to select"
-          user_selectable_unavailable_button_label: "Make unavailable to users"
+          user_selectable_unavailable_button_label: "Do not allow users to select"
           broken_badge_label: "Broken theme"
           color_scheme_user_selectable: "Color palette can be selected by users"
           auto_update: "Auto update when Discourse is updated"
