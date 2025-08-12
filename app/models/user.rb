@@ -264,6 +264,9 @@ class User < ActiveRecord::Base
   # Information if user was authenticated with OAuth
   attr_accessor :authenticated_with_oauth
 
+  # Flag used when admin is impersonating a user
+  attr_accessor :is_impersonating
+
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 

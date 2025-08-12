@@ -4,6 +4,53 @@ require "discourse_ip_info"
 
 RSpec.describe UserAuthToken do
   fab!(:user)
+  fab!(:admin)
+
+  describe "#user" do
+    context "when no impersonation is happening" do
+      it "returns the user associated with the session" do
+        token =
+          UserAuthToken.generate!(
+            user_id: user.id,
+            user_agent: "some user agent 2",
+            client_ip: "1.1.2.3",
+          )
+
+        expect(token.user).to eq(user)
+        expect(token.user.is_impersonating).to be_falsey
+      end
+    end
+
+    context "when impersonating another user" do
+      it "returns the user being impersonated if not expired" do
+        token =
+          UserAuthToken.generate!(
+            user_id: admin.id,
+            user_agent: "some user agent 2",
+            client_ip: "1.1.2.3",
+          )
+
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+
+        expect(token.user).to eq(user)
+        expect(token.user.is_impersonating).to eq(true)
+      end
+
+      it "returns the user associated with the session if expired" do
+        token =
+          UserAuthToken.generate!(
+            user_id: admin.id,
+            user_agent: "some user agent 2",
+            client_ip: "1.1.2.3",
+          )
+
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.ago)
+
+        expect(token.user).to eq(admin)
+        expect(token.user.is_impersonating).to be_falsey
+      end
+    end
+  end
 
   it "can remove old expired tokens" do
     SiteSetting.verbose_auth_token_logging = true
