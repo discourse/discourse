@@ -32,6 +32,10 @@ export default class CategoryRow extends Component {
   }
 
   get isReadOnly() {
+    if (!this.readOnlyCategoryId) {
+      return false;
+    }
+
     return this.rowValue === this.readOnlyCategoryId;
   }
 
