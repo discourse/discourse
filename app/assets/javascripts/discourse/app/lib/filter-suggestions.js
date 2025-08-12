@@ -403,6 +403,7 @@ class FilterValueSuggester {
       // Continue without user suggestions
     }
 
+    // Add group suggestions
     try {
       const groupData = { limit: 5 };
       if (this.searchTerm) {
