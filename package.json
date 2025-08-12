@@ -87,7 +87,8 @@
       ]
     },
     "overrides": {
-      "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers"
+      "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers",
+      "broccoli-babel-transpiler@8.0.0": "^8.0.2"
     }
   }
 }
