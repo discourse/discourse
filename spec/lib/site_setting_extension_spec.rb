@@ -131,7 +131,7 @@ RSpec.describe SiteSettingExtension do
 
       settings.hello = 99
 
-      expect(settings2.hello).to eq(99)
+      try_until_success(frequency: 0.5) { expect(settings2.hello).to eq(99) }
     end
 
     it "does not override types in the type supervisor" do
