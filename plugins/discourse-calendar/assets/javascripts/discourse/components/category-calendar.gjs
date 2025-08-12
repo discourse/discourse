@@ -74,6 +74,10 @@ export default class CategoryCalendar extends Component {
       return false;
     }
 
+    if (!this.categorySettings) {
+      return false;
+    }
+
     return true;
   }
 
