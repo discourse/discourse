@@ -204,6 +204,8 @@ module DiscourseAi
         end
 
         def ai_automation_report_scripts
+          return [] if !SiteSetting.discourse_automation_enabled
+
           feature_cache[:automation_reports] ||= begin
             all_script_fields = DB.query(<<~SQL)
               SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
@@ -240,6 +242,8 @@ module DiscourseAi
         end
 
         def ai_automation_triage_scripts
+          return [] if !SiteSetting.discourse_automation_enabled
+
           feature_cache[:automation_triage] ||= begin
             all_script_fields = DB.query(<<~SQL)
             SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name

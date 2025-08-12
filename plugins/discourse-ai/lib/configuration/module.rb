@@ -43,7 +43,7 @@ module DiscourseAi
 
       class << self
         def all
-          [
+          base_modules = [
             new(
               SUMMARIZATION_ID,
               SUMMARIZATION,
@@ -100,21 +100,26 @@ module DiscourseAi
               features: DiscourseAi::Configuration::Feature.embeddings_features,
               extra_check: -> { SiteSetting.ai_embeddings_semantic_search_enabled },
             ),
-            new(
+          ]
+
+          if SiteSetting.discourse_automation_enabled
+            base_modules << new(
               AUTOMATION_REPORTS_ID,
               AUTOMATION_REPORTS,
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_report_scripts,
               extra_check: -> { has_scripts?("llm_report") },
-            ),
-            new(
+            )
+            base_modules << new(
               AUTOMATION_TRIAGE_ID,
               AUTOMATION_TRIAGE,
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
               extra_check: -> { has_scripts?("llm_triage") },
-            ),
-          ]
+            )
+          end
+
+          base_modules
         end
 
         # Private
