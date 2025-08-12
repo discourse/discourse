@@ -14,7 +14,6 @@ export default class AiBotHeaderIcon extends Component {
   @service composer;
   @service currentUser;
   @service navigationMenu;
-  @service router;
   @service sidebarState;
   @service siteSettings;
   @service aiConversationsSidebarManager;

@@ -27,10 +27,8 @@ const HORIZON_PALETTES = [
 
 export default class UserColorPaletteSelector extends Component {
   @service currentUser;
-  @service keyValueStore;
   @service site;
   @service session;
-  @service interfaceColor;
 
   @tracked anonColorPaletteId = this.#loadAnonColorPalette();
   @tracked userColorPaletteId = this.session.userColorSchemeId;
