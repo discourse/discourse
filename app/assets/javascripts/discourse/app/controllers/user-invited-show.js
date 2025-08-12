@@ -77,9 +77,13 @@ export default class UserInvitedShowController extends Controller {
   }
 
   @action
-  destroyInvite(invite) {
-    invite.destroy();
-    this.model.invites.removeObject(invite);
+  async destroyInvite(invite) {
+    try {
+      await invite.destroy();
+      this.model.invites.removeObject(invite);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action

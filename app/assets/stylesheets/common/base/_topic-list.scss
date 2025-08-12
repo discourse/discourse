@@ -122,6 +122,7 @@
 
 // Topic list body
 .topic-list-item.visited,
+.latest-topic-list-item.visited,
 .category-topic-link.visited {
   background-color: var(--topic-list-item-background-color--visited);
 
