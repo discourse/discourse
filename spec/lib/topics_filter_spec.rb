@@ -159,7 +159,7 @@ RSpec.describe TopicsFilter do
         it "in:new-topics returns only new topics" do
           ids =
             TopicsFilter
-              .new(guardian: Guardian.new(user_for_new_filters))
+              .new(guardian: user_for_new_filters.guardian)
               .filter_from_query_string("in:new-topics")
               .pluck(:id)
           expect(ids).to contain_exactly(new_topic.id)
