@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
@@ -327,6 +328,13 @@ export default class FilterNavigationMenu extends Component {
     this.args.onChange(this.currentInputValue, true);
   }
 
+  @action
+  syncFromInitialValue() {
+    if (this.currentInputValue !== this.args.initialInputValue) {
+      this.currentInputValue = this.args.initialInputValue || "";
+    }
+  }
+
   <template>
     <div class="topic-query-filter__input">
       {{icon "filter" class="topic-query-filter__icon btn-flat"}}
@@ -342,6 +350,7 @@ export default class FilterNavigationMenu extends Component {
         id="topic-query-filter-input"
         autocomplete="off"
         placeholder={{i18n "filter.placeholder"}}
+        {{didUpdate this.syncFromInitialValue @initialInputValue}}
       />
 
       {{#if this.currentInputValue}}
