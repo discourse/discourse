@@ -755,13 +755,12 @@ html.composer-open:not(.has-full-page-chat) {
 // and shift it using transform
 .ios-device {
   // we want this behaviour (allowing fullscreen, overlapping header) for mobile devices…
-  @include viewport.between(sm, lg) {
-    // the two properties below are equivalent to bottom: 0
-    #reply-control {
-      top: calc(var(--composer-vh, 1vh) * 100);
-      transform: translateY(-100%);
-      bottom: unset;
-    }
+
+  // the two properties below are equivalent to bottom: 0
+  #reply-control.open {
+    top: calc(var(--composer-vh, 1vh) * 100);
+    transform: translateY(-100%);
+    bottom: unset;
   }
 
   // and for tablet in landscape orientation due to the screen height limit
@@ -1045,22 +1044,5 @@ html.composer-open:not(.has-full-page-chat) {
 
   kbd {
     background: none;
-  }
-}
-
-// align the previewless composer with the topic content
-#reply-control:not(.fullscreen).hide-preview {
-  @include viewport.from(sm) {
-    box-shadow: var(--shadow-composer);
-  }
-
-  @include viewport.from(lg) {
-    --composer-internal-padding: 1em;
-    --layout-gap: 2em;
-    --topic-width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
-    );
-    width: 100%;
-    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
   }
 }
