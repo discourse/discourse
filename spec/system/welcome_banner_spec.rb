@@ -147,21 +147,26 @@ describe "Welcome banner", type: :system do
     end
 
     context "with background image setting" do
-      fab!(:image_upload)
+      fab!(:bg_img) { Fabricate(:image_upload, color: "cyan") }
 
       before do
         current_user.update!(admin: true)
         SiteSetting.welcome_banner_page_visibility = "all_pages"
       end
 
-      it "sets a background image with uploaded image" do
+      it "shows banner without background image" do
         sign_in(current_user)
         visit "/admin/config/interface"
         expect(banner).to be_visible
         expect(banner).to have_no_bg_img
+      end
 
-        SiteSetting.welcome_banner_image = image_upload.url
-        expect(banner).to have_bg_img(image_upload.url)
+      it "sets a background image with uploaded image" do
+        SiteSetting.welcome_banner_image = bg_img
+
+        sign_in(current_user)
+        visit "/admin/config/interface"
+        expect(banner).to have_bg_img(bg_img.url)
       end
     end
 
