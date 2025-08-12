@@ -3126,7 +3126,7 @@ backups:
     client: true
     default: ""
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:
