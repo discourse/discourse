@@ -45,6 +45,7 @@ export default class FullCalendar extends Component {
         calendarModule.TimeGrid,
         calendarModule.List,
         calendarModule.RRULE,
+        calendarModule.MomentTimezone,
       ],
       views: {
         dayGridMonth: {

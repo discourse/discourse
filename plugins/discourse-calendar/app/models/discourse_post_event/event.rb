@@ -410,6 +410,7 @@ module DiscoursePostEvent
           timezone:,
           recurrence:,
           recurrence_until:,
+          dtstart: original_starts_at.in_time_zone(timezone),
         ).first
       return unless next_starts_at
 

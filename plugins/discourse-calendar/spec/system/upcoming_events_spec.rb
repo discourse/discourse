@@ -23,10 +23,7 @@ describe "Upcoming Events", type: :system do
     it "shows the upcoming events" do
       upcoming_events.visit
 
-      expect(page).to have_css(
-        "#upcoming-events-calendar .fc-event-container",
-        text: event.post.topic.title,
-      )
+      expect(page).to have_css("#upcoming-events-calendar .fc", text: event.post.topic.title)
     end
   end
 
@@ -63,19 +60,19 @@ describe "Upcoming Events", type: :system do
       upcoming_events.visit
       upcoming_events.open_year_list
 
-      first_item = find(".fc-list-item:nth-child(2)")
-      expect(first_item.find(".fc-list-item-time")).to have_text("2:05am")
-      expect(first_item.find(".fc-list-item-title")).to have_text(
+      first_item = find(".fc-event:nth-child(2)")
+      expect(first_item.find(".fc-list-event-time")).to have_text("2:05am")
+      expect(first_item.find(".fc-list-event-title")).to have_text(
         "Event with local time (Local time: 8:05am)",
       )
 
-      second_item = find(".fc-list-item:nth-child(3)")
-      expect(second_item.find(".fc-list-item-time")).to have_text("1:00pm")
-      expect(second_item.find(".fc-list-item-title")).to have_text("Event without local time")
+      second_item = find(".fc-event:nth-child(3)")
+      expect(second_item.find(".fc-list-event-time")).to have_text("1:00pm")
+      expect(second_item.find(".fc-list-event-title")).to have_text("Event without local time")
 
-      third_item = find(".fc-list-item:nth-child(5)")
-      expect(third_item.find(".fc-list-item-time")).to have_text("8:05am")
-      expect(third_item.find(".fc-list-item-title")).to have_text(
+      third_item = find(".fc-event:nth-child(5)")
+      expect(third_item.find(".fc-list-event-time")).to have_text("8:05am")
+      expect(third_item.find(".fc-list-event-title")).to have_text(
         "Event with local time and same timezone than user",
       )
     end
@@ -101,17 +98,17 @@ describe "Upcoming Events", type: :system do
       page.driver.with_playwright_page { |pw_page| pw_page.clock.set_fixed_time(fixed_time) }
       upcoming_events.visit
 
-      expect(page).to have_css(".fc-day-grid-event", count: 3)
+      expect(page).to have_css(".fc-daygrid-event-harness", count: 3)
       expect(page).to have_css(
-        ".fc-week:nth-child(2) .fc-content-skeleton:nth-child(2)",
+        ".fc tr:nth-child(2) td:nth-child(2) .fc-event-title",
         text: event.post.topic.title,
       )
       expect(page).to have_css(
-        ".fc-week:nth-child(3) .fc-content-skeleton:nth-child(2)",
+        ".fc tr:nth-child(3) td:nth-child(2) .fc-event-title",
         text: event.post.topic.title,
       )
       expect(page).to have_css(
-        ".fc-week:nth-child(4) .fc-content-skeleton:nth-child(2)",
+        ".fc tr:nth-child(4) td:nth-child(2) .fc-event-title",
         text: event.post.topic.title,
       )
     end

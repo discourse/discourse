@@ -9,7 +9,7 @@ module PageObjects
         end
 
         def open_year_list
-          find(".fc-listNextYear-button").click
+          find(".fc-listYear-button").click
         end
       end
     end
