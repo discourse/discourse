@@ -5,11 +5,13 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import UserLink from "discourse/components/user-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { avatarImg } from "discourse/lib/avatar-utils";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -22,25 +24,11 @@ export default class PostMenuLikeButton extends Component {
   }
 
   @service currentUser;
-  @service store;
 
   @tracked isAnimated = false;
-  @tracked likedUsers = null;
-  @tracked totalLikedUsers = 0;
-  @tracked loadingLikedUsers = false;
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
-  }
-
-  avatarImage(user) {
-    return htmlSafe(
-      avatarImg({
-        avatarTemplate: user.avatar_template,
-        size: "small",
-        title: user.name,
-      })
-    );
   }
 
   get title() {
@@ -72,56 +60,11 @@ export default class PostMenuLikeButton extends Component {
     });
   }
 
-  @action
-  async fetchLikedUsers() {
-    if (this.likedUsers || this.loadingLikedUsers) {
-      return;
-    }
-
-    this.loadingLikedUsers = true;
-
-    try {
-      const users = await this.store
-        .find("post-action-user", {
-          id: this.args.post.id,
-          post_action_type_id: 2, // LIKE_ACTION
-        })
-        .then((result) => result.toArray());
-
-      this.likedUsers = users;
-    } catch {
-      // Silently handle error - could add user notification here if needed
-    } finally {
-      this.loadingLikedUsers = false;
-    }
-  }
-
   <template>
     {{#if @post.showLike}}
       <div class="double-button">
         {{#if @post.likeCount}}
-          <DMenu
-            @modalForMobile={{true}}
-            @identifier="post-like-users"
-            @triggers="click"
-            @onShow={{this.fetchLikedUsers}}
-            @triggerClass="button-count"
-          >
-            <:trigger>
-              {{@post.likeCount}}
-            </:trigger>
-            <:content>
-              <ConditionalLoadingSpinner @condition={{this.loadingLikedUsers}}>
-                <ul class="liked-users-list">
-                  {{#each this.likedUsers as |user|}}
-                    <li class="liked-user">
-                      {{this.avatarImage user}}
-                    </li>
-                  {{/each}}
-                </ul>
-              </ConditionalLoadingSpinner>
-            </:content>
-          </DMenu>
+          <LikedUsersList ...attributes @post={{@post}} />
         {{else}}
           <LikeCount
             ...attributes
@@ -150,30 +93,7 @@ export default class PostMenuLikeButton extends Component {
     {{else}}
       <div class="double-button">
         {{#if @post.likeCount}}
-          <DMenu
-            @modalForMobile={{true}}
-            @identifier="post-like-users"
-            @triggers="click"
-          >
-            <:trigger>
-              <LikeCount
-                ...attributes
-                @post={{@post}}
-                @fetchLikedUsers={{this.fetchLikedUsers}}
-              />
-            </:trigger>
-            <:content>
-              <ConditionalLoadingSpinner @condition={{this.loadingLikedUsers}}>
-                <ul class="liked-users-list">
-                  {{#each this.likedUsers as |user|}}
-                    <li class="liked-user">
-                      {{this.avatarImage user}}
-                    </li>
-                  {{/each}}
-                </ul>
-              </ConditionalLoadingSpinner>
-            </:content>
-          </DMenu>
+          <LikedUsersList ...attributes @post={{@post}} />
         {{else}}
           <LikeCount
             ...attributes
@@ -184,6 +104,97 @@ export default class PostMenuLikeButton extends Component {
         {{/if}}
       </div>
     {{/if}}
+  </template>
+}
+
+class LikedUsersList extends Component {
+  @service store;
+
+  @tracked likedUsers = null;
+  @tracked loadingLikedUsers = false;
+
+  @action
+  async fetchLikedUsers() {
+    if (this.likedUsers || this.loadingLikedUsers) {
+      return;
+    }
+
+    this.loadingLikedUsers = true;
+
+    try {
+      const users = await this.store
+        .find("post-action-user", {
+          id: this.args.post.id,
+          post_action_type_id: 2, // LIKE_ACTION
+        })
+        .then((result) => result.toArray());
+
+      this.likedUsers = users;
+    } catch {
+    } finally {
+      this.loadingLikedUsers = false;
+    }
+  }
+
+  <template>
+    <DMenu
+      @modalForMobile={{true}}
+      @identifier="post-like-users"
+      @triggers="click"
+      @onShow={{this.fetchLikedUsers}}
+      @triggerClass="button-count"
+      @placement="top"
+    >
+      <:trigger>
+        {{@post.likeCount}}
+      </:trigger>
+      <:content>
+        <ConditionalLoadingSpinner
+          @condition={{this.loadingLikedUsers}}
+          class="liked-users-list__container"
+        >
+          <span class="liked-users-list__count">
+            {{icon "d-liked" class="liked-users-list__count-icon"}}
+            {{@post.likeCount}}
+          </span>
+          <ul class="liked-users-list">
+            {{#each this.likedUsers as |user|}}
+              <li class="liked-users-list__item">
+                <LikedUserItem @user={{user}} />
+              </li>
+            {{/each}}
+          </ul>
+        </ConditionalLoadingSpinner>
+      </:content>
+    </DMenu>
+  </template>
+}
+
+class LikedUserItem extends Component {
+  get avatarImage() {
+    return htmlSafe(
+      avatarImg({
+        avatarTemplate: this.args.user.avatar_template,
+        size: "small",
+        title: this.args.user.name,
+      })
+    );
+  }
+
+  get userUrl() {
+    return userPath(this.args.user.username);
+  }
+
+  <template>
+    <UserLink
+      @username={{@user.username}}
+      @href={{this.userUrl}}
+      title={{@user.username}}
+      class="poster trigger-user-card"
+      data-user-card={{@user.username}}
+    >
+      {{this.avatarImage}}
+    </UserLink>
   </template>
 }
 

@@ -1732,3 +1732,31 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
       opacity ease-out 1s;
   }
 }
+
+.liked-users-list {
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: var(--space-1);
+
+  &__container {
+    padding: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__count {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--primary-medium);
+    font-weight: 300;
+  }
+
+  &__count-icon {
+    height: 22px;
+    width: 22px;
+    color: var(--love);
+  }
+}
