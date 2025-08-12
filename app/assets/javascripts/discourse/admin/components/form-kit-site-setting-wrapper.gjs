@@ -7,7 +7,6 @@ import { htmlSafe } from "@ember/template";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import FontList from "admin/components/site-settings/font-list";
 import GroupList from "admin/components/site-settings/group-list";
 import HostList from "admin/components/site-settings/host-list";
@@ -86,11 +85,6 @@ class PrimaryActions extends Component {
 }
 
 export default class FormKitSiteSettingWrapper extends Component {
-  @action
-  settingTitle(setting) {
-    return humanizedSettingName(setting.setting, setting.label);
-  }
-
   @cached
   get formData() {
     const data = {};
@@ -146,10 +140,9 @@ export default class FormKitSiteSettingWrapper extends Component {
       as |form|
     >
       {{#each @settings as |setting|}}
-        {{setting.type}}
         <form.Field
           @name={{setting.setting}}
-          @title={{this.settingTitle setting}}
+          @title={{setting.humanized_name}}
           @description={{htmlSafe setting.description}}
           @emphasis={{setting.overridden}}
           @format={{this.fieldFormat setting.type}}
