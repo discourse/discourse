@@ -104,6 +104,7 @@ export default class FKControlWrapper extends Component {
           @before={{@before}}
           @after={{@after}}
           @height={{@height}}
+          @label={{@label}}
           @preview={{@preview}}
           @includeTime={{@includeTime}}
           @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}

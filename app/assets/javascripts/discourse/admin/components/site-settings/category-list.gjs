@@ -16,7 +16,7 @@ export default class CategoryList extends Component {
   }
 
   get categoryIds() {
-    return this.args.value.split("|").filter(Boolean);
+    return this.args.value?.split("|")?.filter(Boolean);
   }
 
   async updateSelectedCategories(previousRequest) {

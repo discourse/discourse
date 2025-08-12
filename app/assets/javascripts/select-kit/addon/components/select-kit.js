@@ -649,7 +649,6 @@ export default class SelectKit extends Component {
     }
 
     if (this.actions) {
-      console.log(this.actions, privateAction);
       const componentAction = get(this.actions, actionName);
       if (boundaryAction && componentAction) {
         boundaryAction = componentAction.call(this, ...params);

@@ -25,11 +25,19 @@ export default class FKControlCheckbox extends Component {
         {{on "change" this.handleInput}}
       />
       <span class="form-kit__control-checkbox-content">
-        <span class="form-kit__control-checkbox-title">
-          <span>{{@field.title}}</span>
+        <span class="form-kit__control-checkbox-title-container">
+          <span class="form-kit__control-checkbox-title">
+            {{#if @label}}
+              {{@label}}
+            {{else}}
+              {{@field.title}}
+            {{/if}}
+          </span>
+
           <FKRequired @field={{@field}} />
           <FKTooltip @field={{@field}} />
         </span>
+
         {{#if (has-block)}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
         {{/if}}

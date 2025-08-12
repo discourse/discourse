@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
-import { has } from "truth-helpers";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
