@@ -433,15 +433,8 @@ RSpec.describe SiteSerializer do
       described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     end
 
-    it "is false when enable_names setting is false" do
-      SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_required_for_signup]).to eq(false)
-    end
-
     it "is false when full_name_requirement setting is optional_at_signup" do
       SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_required_for_signup]).to eq(false)
     end
 
@@ -463,39 +456,23 @@ RSpec.describe SiteSerializer do
       described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     end
 
-    it "is false when enable_names setting is false and full_name_requirement is hidden_at_signup" do
+    it "is false when full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_visible_in_signup]).to eq(false)
-    end
-
-    it "is false when enable_names setting is false and full_name_requirement is required_at_signup" do
-      SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_visible_in_signup]).to eq(false)
-    end
-
-    it "is false when enable_names setting is false and full_name_requirement is optional_at_signup" do
-      SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = false
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
 
     it "is true when enable_names setting is true and full_name_requirement is optional_at_signup" do
       SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(true)
     end
 
     it "is true when enable_names setting is true and full_name_requirement is required_at_signup" do
       SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(true)
     end
 
     it "is false when enable_names setting is true and full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end
