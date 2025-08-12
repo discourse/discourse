@@ -1,1 +1,1 @@
-AI-AGENTS.md
+../../AI-AGENTS.md
