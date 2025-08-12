@@ -79,8 +79,24 @@
       @media all and (orientation: landscape) {
         &.hide-preview {
           width: calc(100vw - var(--d-sidebar-width)) !important;
-          max-width: unset !important;
-          margin-left: var(--d-sidebar-width) !important;
+
+          // max-width: unset !important;
+          margin-right: 0.67em;
+
+          //  1100px is equivalent to --d-max-width
+          @media screen and (width >= 1110px) {
+            margin-right: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+          }
+
+          // 790px is equivalent to --topic-width
+          @media screen and (width < 790px) {
+            max-width: calc(100% - calc(0.67em * 2));
+            margin-right: 0.67em;
+          }
+
+          .has-sidebar-page & {
+            margin-left: var(--d-sidebar-width) !important;
+          }
         }
 
         .keyboard-visible & {
@@ -115,27 +131,27 @@
   }
 }
 
-// body:not(.has-sidebar-page) {
-//   #reply-control:not(.fullscreen).hide-preview {
-//     margin-left: 0.67em;
+body:not(.has-sidebar-page) {
+  #reply-control:not(.fullscreen).hide-preview {
+    // margin-left: 0.67em;
 
-//     // 1100px is equivalent to --d-max-width
-//     @media screen and (width >= 1110px) {
-//       margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
-//     }
+    //     // 1100px is equivalent to --d-max-width
+    //     @media screen and (width >= 1110px) {
+    //       margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    //     }
 
-//     // 790px is equivalent to --topic-width
-//     @media screen and (width < 790px) {
-//       max-width: calc(100% - calc(0.67em * 2));
-//       margin-left: 0.67em;
-//     }
+    //     // 790px is equivalent to --topic-width
+    //     @media screen and (width < 790px) {
+    //       max-width: calc(100% - calc(0.67em * 2));
+    //       margin-left: 0.67em;
+    //     }
 
-//     @include viewport.until(sm) {
-//       max-width: unset;
-//       margin-inline: unset;
-//     }
-//   }
-// }
+    //     @include viewport.until(sm) {
+    //       max-width: unset;
+    //       margin-inline: unset;
+    //     }
+  }
+}
 
 // body.has-sidebar-page {
 //   #reply-control:not(.fullscreen).hide-preview {
