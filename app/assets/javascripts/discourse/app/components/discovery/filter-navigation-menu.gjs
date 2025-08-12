@@ -66,7 +66,6 @@ export default class FilterNavigationMenu extends Component {
   @tracked currentInputValue = this.args.initialInputValue || "";
   @tracked suggestions = [];
   @tracked activeFilter = null;
-  @tracked selectedIndex = -1;
 
   lastSuggestionInput = "";
   suggestionRequestId = 0;
@@ -80,6 +79,20 @@ export default class FilterNavigationMenu extends Component {
   searchTimer = null;
   inputElement = null;
   dMenuInstance = null;
+  _selectedIndex = -1;
+
+  get selectedIndex() {
+    return this._selectedIndex;
+  }
+
+  set selectedIndex(value) {
+    this._selectedIndex = value;
+    this.trackedMenuListData.selectedIndex = value;
+  }
+
+  clearSelection() {
+    this.selectedIndex = -1;
+  }
 
   get nothingSelected() {
     return this.selectedIndex === -1;
@@ -92,9 +105,7 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   async updateSuggestions() {
-    if (this.searchTimer) {
-      cancel(this.searchTimer);
-    }
+    cancel(this.searchTimer);
     this.searchTimer = discourseDebounce(this, this.fetchSuggestions, 300);
   }
 
@@ -123,7 +134,7 @@ export default class FilterNavigationMenu extends Component {
       this.activeFilter = result.activeFilter;
       this.trackedMenuListData.suggestions = this.suggestions;
       this.trackedMenuListData.selectedIndex = this.selectedIndex;
-      this.selectedIndex = -1;
+      this.clearSelection();
       this.lastSuggestionInput = input;
 
       if (this.dMenuInstance) {
@@ -186,13 +197,11 @@ export default class FilterNavigationMenu extends Component {
   async updateInput(value, submitQuery = false) {
     value = value || "";
     this.currentInputValue = value;
-    this.selectedIndex = -1;
+    this.clearSelection();
 
     if (submitQuery) {
       // Cancel pending searches before submitting
-      if (this.searchTimer) {
-        cancel(this.searchTimer);
-      }
+      cancel(this.searchTimer);
       this.args.onChange(value, true);
     } else {
       this.args.onChange(value, false);
