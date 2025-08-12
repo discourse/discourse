@@ -17,8 +17,12 @@ export default class PostMenuLikeButton extends Component {
   }
 
   @service currentUser;
+  @service store;
 
   @tracked isAnimated = false;
+  @tracked likedUsers = null;
+  @tracked totalLikedUsers = 0;
+  @tracked loadingLikedUsers = false;
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
@@ -51,6 +55,36 @@ export default class PostMenuLikeButton extends Component {
         resolve();
       }, 400);
     });
+  }
+
+  @action
+  async fetchLikedUsers() {
+    if (this.likedUsers || this.loadingLikedUsers) {
+      return;
+    }
+
+    this.loadingLikedUsers = true;
+
+    try {
+      const users = await this.store.find("post-action-user", {
+        id: this.args.post.id,
+        post_action_type_id: 2, // LIKE_ACTION
+      });
+
+      this.likedUsers = users.map((user) => ({
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        avatar_template: user.avatar_template,
+      }));
+      console.log(this.likedUsers);
+
+      this.totalLikedUsers = users.totalRows;
+    } catch {
+      // Silently handle error - could add user notification here if needed
+    } finally {
+      this.loadingLikedUsers = false;
+    }
   }
 
   <template>
