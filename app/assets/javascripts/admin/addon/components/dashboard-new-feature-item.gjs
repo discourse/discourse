@@ -27,9 +27,7 @@ export default class DiscourseNewFeatureItem extends Component {
       this.toasts.error({
         duration: "short",
         data: {
-          message: i18n(
-            "admin.dashboard.new_features.toggled_too_fast"
-          ),
+          message: i18n("admin.dashboard.new_features.toggled_too_fast"),
         },
       });
       return;
@@ -48,19 +46,17 @@ export default class DiscourseNewFeatureItem extends Component {
         },
       });
 
-      const enabledMsg = this.isExperiment ?
-        "admin.dashboard.new_features.experiment_enabled" :
-        "admin.dashboard.new_features.feature_enabled";
-      const disabledMsg = this.isExperiment ?
-        "admin.dashboard.new_features.experiment_disabled" :
-        "admin.dashboard.new_features.feature_disabled";
+      const enabledMsg = this.isExperiment
+        ? "admin.dashboard.new_features.experiment_enabled"
+        : "admin.dashboard.new_features.feature_enabled";
+      const disabledMsg = this.isExperiment
+        ? "admin.dashboard.new_features.experiment_disabled"
+        : "admin.dashboard.new_features.feature_disabled";
 
       this.toasts.success({
         duration: "short",
         data: {
-          message: this.settingEnabled
-            ? i18n(enabledMsg)
-            : i18n(disabledMsg),
+          message: this.settingEnabled ? i18n(enabledMsg) : i18n(disabledMsg),
         },
       });
     } catch (error) {
