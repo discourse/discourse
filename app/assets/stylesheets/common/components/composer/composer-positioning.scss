@@ -78,7 +78,7 @@
       // using the extra MQ to avoid applying this to regular small screens that might be narrow enough to trigger but taller; don't want tablet design applying there
       @media all and (orientation: landscape) {
         &.hide-preview {
-          width: calc(100vw - var(--d-sidebar-width)) !important;
+          // width: calc(100vw - var(--d-sidebar-width)) !important;
 
           // max-width: unset !important;
           margin-right: 0.67em;
@@ -95,7 +95,9 @@
           }
 
           .has-sidebar-page & {
-            margin-left: var(--d-sidebar-width) !important;
+            margin-right: calc(
+              ((100vw - var(--d-sidebar-width) - 760px) / 2) + 0.67em
+            );
           }
         }
 
@@ -187,6 +189,6 @@ body:not(.has-sidebar-page) {
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
     );
     width: 100%;
-    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+    max-width: 760px; // 760px is equivalent to --topic-width + avatar calc on desktop
   }
 }
