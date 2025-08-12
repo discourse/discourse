@@ -2,6 +2,7 @@ import escape from "discourse/lib/escape";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { deepMerge } from "discourse/lib/object";
+import { log } from "qunit";
 
 let allowedSizes = null;
 
