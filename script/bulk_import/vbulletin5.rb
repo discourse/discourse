@@ -58,7 +58,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
 
   def execute
     # enable as per requirement:
-    #SiteSetting.backup_frequency = nil
+    #SiteSetting.backup_frequency = 0
     #SiteSetting.disable_emails = "non-staff"
     #SiteSetting.authorized_extensions = '*'
     #SiteSetting.max_image_size_kb = 102400
