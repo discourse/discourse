@@ -19,8 +19,8 @@ import customInvokableResolver from "./lib/custom-invokable-resolver";
 import discourseTestSiteSettings from "./lib/site-settings-plugin";
 
 const extensions = [
-  ".mjs",
   ".gjs",
+  ".mjs",
   ".js",
   ".mts",
   ".gts",
