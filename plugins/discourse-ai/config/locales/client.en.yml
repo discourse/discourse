@@ -217,6 +217,9 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -267,6 +270,14 @@ en:
           name: "Spam"
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
+
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+        
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
 
       modals:
         select_option: "Select an option..."

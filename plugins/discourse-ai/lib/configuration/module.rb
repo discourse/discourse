@@ -12,6 +12,8 @@ module DiscourseAi
       BOT = "bot"
       SPAM = "spam"
       EMBEDDINGS = "embeddings"
+      AUTOMATION_REPORTS = "automation_reports"
+      AUTOMATION_TRIAGE = "automation_triage"
 
       NAMES = [
         SUMMARIZATION,
@@ -23,6 +25,8 @@ module DiscourseAi
         BOT,
         SPAM,
         EMBEDDINGS,
+        AUTOMATION_REPORTS,
+        AUTOMATION_TRIAGE,
       ].freeze
 
       SUMMARIZATION_ID = 1
@@ -34,6 +38,8 @@ module DiscourseAi
       BOT_ID = 7
       SPAM_ID = 8
       EMBEDDINGS_ID = 9
+      AUTOMATION_REPORTS_ID = 10
+      AUTOMATION_TRIAGE_ID = 11
 
       class << self
         def all
@@ -94,7 +100,32 @@ module DiscourseAi
               features: DiscourseAi::Configuration::Feature.embeddings_features,
               extra_check: -> { SiteSetting.ai_embeddings_semantic_search_enabled },
             ),
+            new(
+              AUTOMATION_REPORTS_ID,
+              AUTOMATION_REPORTS,
+              enabled_by_setting: "discourse_automation_enabled",
+              features: DiscourseAi::Configuration::Feature.ai_automation_report_scripts,
+              extra_check: -> { has_scripts?("llm_report") },
+            ),
+            new(
+              AUTOMATION_TRIAGE_ID,
+              AUTOMATION_TRIAGE,
+              enabled_by_setting: "discourse_automation_enabled",
+              features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
+              extra_check: -> { has_scripts?("llm_triage") },
+            ),
           ]
+        end
+
+        # Private
+        def has_scripts?(script_name)
+          DB
+            .query_single(
+              "SELECT COUNT(*) FROM discourse_automation_automations WHERE script = :name and enabled",
+              name: script_name,
+            )
+            .first
+            .to_i > 0
         end
 
         def find_by(id:)
