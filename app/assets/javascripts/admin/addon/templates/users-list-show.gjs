@@ -267,6 +267,7 @@ export default RouteTemplate(
                     href={{user.path}}
                     data-user-card={{user.username}}
                   >
+                    {{log user}}
                     {{avatar user imageSize="small"}}
                   </a>
                   <LinkTo @route="adminUser" @model={{user}}>
