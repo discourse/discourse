@@ -178,7 +178,7 @@ RSpec.describe TopicsFilter do
         it "in:new returns union of new and unread topics" do
           ids =
             TopicsFilter
-              .new(guardian: Guardian.new(user_for_new_filters))
+              .new(guardian: user_for_new_filters.guardian)
               .filter_from_query_string("in:new")
               .where(id: [new_topic.id, unread_topic.id])
               .pluck(:id)
