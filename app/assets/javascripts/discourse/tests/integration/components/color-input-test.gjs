@@ -6,32 +6,23 @@ import ColorInput from "admin/components/color-input";
 module("Integration | Component | ColorInput", function (hooks) {
   setupRenderingTest(hooks);
 
-  const testCases = {
-    "black text": ["000", "000000"],
-    "white text": ["fff", "ffffff"],
-    "2 digit sequence": ["f2f", "f2f2f2"],
-    "3 digit sequence": ["DDD", "DDDDDD"],
-    "with no sequence": ["0f8", "0f8"],
-  };
-
-  async function testHexCode(assert, short, expanded) {
-    let result = null;
-
-    const autocompleteHex = (color) => {
-      result = color.replace("#", "");
-    };
+  test("autocompletes hex codes", async function (assert) {
+    let result;
+    const autocompleteHex = (color) => (result = color.replace("#", ""));
 
     await render(
       <template><ColorInput @onChangeColor={{autocompleteHex}} /></template>
     );
 
-    await fillIn(".hex-input", short);
-    assert.strictEqual(result, expanded, "autocompleted hex code");
-  }
-
-  Object.entries(testCases).forEach(([name, [short, expanded]]) => {
-    test(name, async function (assert) {
-      await testHexCode(assert, short, expanded);
-    });
+    await fillIn(".hex-input", "000");
+    assert.strictEqual(result, "000000", "black text");
+    await fillIn(".hex-input", "fff");
+    assert.strictEqual(result, "ffffff", "white text");
+    await fillIn(".hex-input", "f2f");
+    assert.strictEqual(result, "f2f2f2", "2 digit sequence");
+    await fillIn(".hex-input", "DDD");
+    assert.strictEqual(result, "DDDDDD", "3 digit sequence");
+    await fillIn(".hex-input", "0f8");
+    assert.strictEqual(result, "0f8", "with no sequence");
   });
 });
