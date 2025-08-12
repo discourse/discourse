@@ -5639,6 +5639,27 @@ RSpec.describe TopicsController do
         get "#{topic.relative_url}/2"
       end
 
+      it "adds breadcrumbs to the correct subcategory and category url in subfolder" do
+        set_subfolder "/subpath"
+
+        subcategory = Fabricate(:category, parent_category_id: category.id)
+        topic.update!(category: subcategory)
+
+        get "/t/#{topic.slug}/#{topic.id}",
+            env: {
+              "HTTP_USER_AGENT" => "Mozilla/5.0 ...",
+              "HTTP_VIA" => "HTTP/1.0 web.archive.org",
+            }
+        expect(response.body).to have_tag(
+          "a",
+          with: {
+            href: subcategory.url,
+          },
+          text: subcategory.name,
+        )
+        expect(response.body).to have_tag("a", with: { href: category.url }, text: category.name)
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
         let!(:user_agent) do
