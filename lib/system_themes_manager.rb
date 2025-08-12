@@ -11,8 +11,9 @@ class SystemThemesManager
 
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
+    is_initial_install = Theme.exists?(id: theme_id)
     remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    if remote_theme.has_just_been_created
+    if is_initial_install
       if remote_theme.color_scheme
         remote_theme.color_scheme.update!(user_selectable: true)
         alternative_scheme_name =
