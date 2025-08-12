@@ -227,9 +227,7 @@ export default class GlimmerHeader extends Component {
         >
           <span class="header-buttons">
             {{#if
-              (not
-                (and this.siteSettings.login_required (not this.currentUser))
-              )
+              (or this.currentUser (not this.siteSettings.login_required))
             }}
               <Icons
                 @sidebarEnabled={{@sidebarEnabled}}
