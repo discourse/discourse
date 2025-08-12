@@ -1,4 +1,3 @@
-import { fn } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -23,7 +22,7 @@ module("Integration | Component | ColorInput", function (hooks) {
     };
 
     await render(
-      <template><ColorInput @onChangeColor={{fn autocompleteHex}} /></template>
+      <template><ColorInput @onChangeColor={{autocompleteHex}} /></template>
     );
 
     await fillIn(".hex-input", short);
