@@ -56,12 +56,15 @@ export default class CategoryChooser extends ComboBoxComponent {
         null,
         htmlSafe(i18n(isString ? this.selectKit.options.none : "category.none"))
       );
+    } else if (this.selectKit.options.readOnlyCategoryId) {
+      return this.defaultItem(null, htmlSafe(i18n("category.choose")));
     } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
     } else {
-      const defaultCategoryId = !this.selectKit.options.readOnlyCategoryId
-        ? parseInt(this.siteSettings.default_composer_category, 10)
-        : null;
+      const defaultCategoryId = parseInt(
+        this.siteSettings.default_composer_category,
+        10
+      );
       if (!defaultCategoryId || defaultCategoryId < 0) {
         return this.defaultItem(null, htmlSafe(i18n("category.choose")));
       }
