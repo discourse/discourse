@@ -219,9 +219,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def persist_auth_token(auth)
     secret = SecureRandom.hex
-    secure_session.set "#{Users::AssociateAccountsController.key(secret)}",
-                       auth.to_json,
-                       expires: 10.minutes
+    key = Users::AssociateAccountsController.key(secret)
+    secure_session.set key, auth.to_json, expires: 10.minutes
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

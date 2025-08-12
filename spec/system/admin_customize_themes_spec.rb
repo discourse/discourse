@@ -19,8 +19,8 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings).to have_no_css(".submit-light-edit")
       expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
 
-      color_scheme_settings.find(".color-palettes").click
-      color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
+      color_scheme_settings.find(".color-palette-picker").click
+      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-light-edit").click
 
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
@@ -36,8 +36,8 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
 
-      color_scheme_settings.find(".color-palettes").click
-      color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
+      color_scheme_settings.find(".color-palette-picker").click
+      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-dark-edit").click
 
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
@@ -83,7 +83,9 @@ describe "Admin Customize Themes", type: :system do
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).to have_no_css(".title button")
+    expect(page).to have_css(".system-theme-info")
+    expect(page).to have_css(".title button")
+    expect(page).to have_no_css(".title button svg")
     expect(page).to have_no_css(".edit-code")
     expect(page).to have_no_css("button.upload")
     expect(page).to have_no_css(".delete")
@@ -108,13 +110,19 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_css(".export")
     expect(page).to have_css(".extra-files")
     expect(page).to have_css(".theme-settings")
+    expect(page).to have_no_css(".system-theme-info")
 
-    theme.stubs(:system?).returns(true)
+    # Since we're only testing the one theme, we can stub the system? method
+    # for every theme to return true.
+    # This avoids needing to update the theme field data to point to a different theme id.
+    allow_any_instance_of(Theme).to receive(:system?).and_return(true)
+
     visit("/admin/customize/themes/#{theme.id}")
+    expect(page).to have_css(".system-theme-info")
     expect(page).to have_no_css(".created-by")
     expect(page).to have_no_css(".export")
     expect(page).to have_no_css(".extra-files")
-    expect(page).to have_no_css(".theme-settings")
+    expect(page).to have_css(".theme-settings")
   end
 
   describe "when editing theme translations" do
@@ -245,7 +253,6 @@ describe "Admin Customize Themes", type: :system do
 
       expect(theme_page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
 
-      original_hex = theme_page.color_palette_editor.get_color_value("primary")
       theme_page.color_palette_editor.change_color("primary", "#ff000e")
 
       expect(theme_page.changes_banner).to be_visible
@@ -280,7 +287,6 @@ describe "Admin Customize Themes", type: :system do
 
       theme_page.color_palette_editor.switch_to_dark_tab
 
-      original_dark_hex = theme_page.color_palette_editor.get_color_value("primary")
       theme_page.color_palette_editor.change_color("primary", "#000fff")
 
       theme_page.changes_banner.click_save

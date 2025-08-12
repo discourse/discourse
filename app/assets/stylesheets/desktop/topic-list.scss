@@ -120,7 +120,7 @@
     }
   }
 
-  .topic-list-data.posters {
+  td.topic-list-data.posters {
     height: $td-posters-height;
   }
 
@@ -245,11 +245,6 @@
     align-self: stretch;
     height: 100%;
   }
-}
-
-.category-logo.aspect-image {
-  float: left;
-  margin: var(--space-1) var(--space-8) var(--space-8) 0;
 }
 
 /* Tablet (portrait) ----------- */

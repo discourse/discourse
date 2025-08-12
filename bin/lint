@@ -1,0 +1,374 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+require "json"
+require "open3"
+require "digest"
+
+class Linter
+  BATCH_SIZE = 5000
+
+  LINTERS = {
+    rb: {
+      rubocop: {
+        check: "bundle exec rubocop --force-exclusion {files}",
+        fix: "bundle exec rubocop --force-exclusion -A {files}",
+      },
+      syntax_tree: {
+        check: "bundle exec stree check Gemfile {files}",
+        fix: "bundle exec stree write Gemfile {files}",
+      },
+    },
+    rake: {
+      syntax_tree: {
+        check: "bundle exec stree check {files}",
+        fix: "bundle exec stree write {files}",
+      },
+    },
+    js: {
+      eslint: {
+        check: "pnpm eslint --quiet {files}",
+        fix: "pnpm eslint --fix {files}",
+      },
+      prettier: {
+        check: "pnpm pprettier --list-different {files}",
+        fix: "pnpm pprettier --write {files}",
+      },
+    },
+    gjs: {
+      eslint: {
+        check: "pnpm eslint --quiet {files}",
+        fix: "pnpm eslint --fix {files}",
+      },
+      prettier: {
+        check: "pnpm pprettier --list-different {files}",
+        fix: "pnpm pprettier --write {files}",
+      },
+      ember_template_lint: {
+        check: "pnpm ember-template-lint {files}",
+        fix: "pnpm ember-template-lint --fix {files}",
+      },
+    },
+    hbs: {
+      ember_template_lint: {
+        check: "pnpm ember-template-lint {files}",
+        fix: "pnpm ember-template-lint --fix {files}",
+      },
+      prettier: {
+        check: "pnpm pprettier --list-different {files}",
+        fix: "pnpm pprettier --write {files}",
+      },
+    },
+    scss: {
+      stylelint: {
+        check: "pnpm stylelint {files}",
+        fix: "pnpm stylelint --fix {files}",
+      },
+      prettier: {
+        check: "pnpm pprettier --list-different {files}",
+        fix: "pnpm pprettier --write {files}",
+      },
+    },
+    css: {
+      prettier: {
+        check: "pnpm pprettier --list-different {files}",
+        fix: "pnpm pprettier --write {files}",
+      },
+    },
+    yml: {
+      yaml_syntax: {
+        check: "bundle exec yaml-lint {files}",
+      },
+      i18n_lint: {
+        check: "bundle exec ruby script/i18n_lint.rb {files}",
+      },
+    },
+    yaml: {
+      yaml_syntax: {
+        check: "bundle exec yaml-lint {files}",
+      },
+    },
+  }.freeze
+
+  def initialize(options = {})
+    @fix = options[:fix]
+    @recent = options[:recent]
+    @files = options[:files] || []
+    @verbose = options[:verbose]
+    @errors = []
+    @fixed = []
+  end
+
+  def run
+    files_to_lint = determine_files
+    return success_message if files_to_lint.empty?
+
+    # Phase 1: Group files by linter type and filter appropriately
+    linter_files = group_files_by_linter(files_to_lint)
+
+    # Phase 2: Process each linter's files in batches
+    linter_files.each do |linter_name, files|
+      next if files.empty?
+
+      files.each_slice(BATCH_SIZE) { |file_batch| run_linter_batch(linter_name, file_batch) }
+    end
+
+    print_summary
+  end
+
+  private
+
+  def determine_files
+    return recent_files if @recent
+    return @files unless @files.empty?
+
+    all_lintable_files
+  end
+
+  def recent_files
+    log_output, status = Open3.capture2("git", "log", "-50", "--name-only", "--pretty=format:")
+    return [] unless status.success?
+    log_files = log_output.lines.map(&:strip).reject(&:empty?)
+
+    tracked_out, tracked_status = Open3.capture2("git", "ls-files")
+    untracked_out, untracked_status =
+      Open3.capture2("git", "ls-files", "--others", "--exclude-standard")
+    return [] unless tracked_status.success? && untracked_status.success?
+
+    tracked = Set.new(tracked_out.lines.map(&:strip))
+    untracked = Set.new(untracked_out.lines.map(&:strip))
+
+    # Only keep log files that are still tracked, then add all untracked
+    candidates = Set.new
+    log_files.each { |f| candidates << f if tracked.include?(f) }
+    untracked.each { |f| candidates << f }
+
+    candidates.select { |f| lintable_file?(f) }
+  end
+
+  def all_lintable_files
+    tracked_out, tracked_status = Open3.capture2("git", "ls-files")
+    untracked_out, untracked_status =
+      Open3.capture2("git", "ls-files", "--others", "--exclude-standard")
+    return [] unless tracked_status.success? && untracked_status.success?
+
+    tracked = tracked_out.lines.map(&:strip)
+    untracked = untracked_out.lines.map(&:strip)
+
+    (tracked + untracked).select { |f| File.file?(f) && lintable_file?(f) }
+  end
+
+  def lintable_file?(file)
+    if file.include?("node_modules") || file.include?("vendor") || file.include?("tmp") ||
+         file.include?(".git") || file == "database.yml"
+      return false
+    end
+
+    ext = File.extname(file)[1..]
+
+    # Check for Ruby files in /bin/ directory without extensions
+    if ext.nil? || ext.empty?
+      if file.start_with?("bin/") && File.file?(file)
+        begin
+          first_line = File.open(file, &:readline)
+          return true if first_line.strip == "#!/usr/bin/env ruby"
+        rescue StandardError
+          # If we can't read the file, skip it
+          return false
+        end
+      end
+      return false
+    end
+
+    LINTERS.key?(ext.to_sym) || (file.include?("/assets/") && %w[js scss css hbs gjs].include?(ext))
+  end
+
+  def group_files_by_extension(files)
+    files
+      .group_by do |f|
+        ext = File.extname(f)[1..]
+        # Treat Ruby files in /bin/ without extensions as Ruby files
+        if (ext.nil? || ext.empty?) && f.start_with?("bin/") && File.file?(f)
+          begin
+            first_line = File.open(f, &:readline)
+            ext = "rb" if first_line.strip == "#!/usr/bin/env ruby"
+          rescue StandardError
+            # If we can't read the file, keep original extension
+          end
+        end
+        ext
+      end
+      .reject { |ext, _| ext.nil? || ext.empty? }
+  end
+
+  def group_files_by_linter(files)
+    linter_files = {}
+    grouped_files = group_files_by_extension(files)
+
+    grouped_files.each do |ext, ext_files|
+      linters = LINTERS[ext.to_sym]
+      next unless linters
+
+      linters.each do |linter_name, _commands|
+        filtered_files = filter_files_for_linter(linter_name, ext_files)
+        next if filtered_files.empty?
+
+        linter_files[linter_name] ||= []
+        linter_files[linter_name].concat(filtered_files)
+      end
+    end
+
+    # Remove duplicates that might occur if a file matches multiple linters
+    linter_files.each { |linter_name, file_list| linter_files[linter_name] = file_list.uniq }
+    linter_files
+  end
+
+  def run_linter_batch(linter_name, files)
+    # Find the command for this linter by looking through all file types
+    command = find_command_for_linter(linter_name)
+    return unless command
+
+    # Split command into parts and replace {files} placeholder
+    base_command = command.gsub("{files}", "").strip.split
+    cmd_args = base_command + files
+
+    puts "Running #{linter_name} on #{files.size} files..." if @verbose
+
+    if @fix
+      changed_files = detect_changed_files(files, cmd_args)
+      @fixed.concat(changed_files)
+    else
+      output, status = Open3.capture2e(*cmd_args)
+
+      unless status.success?
+        failed_files = parse_failed_files(linter_name, output, files)
+        @errors << { linter: linter_name, files: failed_files, output: output }
+        puts "#{linter_name} failed on: #{failed_files.join(", ")}" if @verbose
+        puts output unless output.strip.empty?
+      end
+    end
+  end
+
+  def find_command_for_linter(linter_name)
+    LINTERS.each do |_ext, linters|
+      linters.each do |name, commands|
+        return @fix ? commands[:fix] : commands[:check] if name == linter_name
+      end
+    end
+    nil
+  end
+
+  def detect_changed_files(files, cmd_args)
+    file_checksums = {}
+    files.each { |file| file_checksums[file] = file_checksum(file) }
+
+    Open3.capture2e(*cmd_args)
+
+    changed_files = []
+    files.each { |file| changed_files << file if file_checksum(file) != file_checksums[file] }
+
+    changed_files
+  end
+
+  def file_checksum(file)
+    return nil unless File.exist?(file)
+    Digest::MD5.file(file).hexdigest
+  end
+
+  def parse_failed_files(linter_name, output, all_files)
+    case linter_name
+    when :eslint
+      output.scan(%r{^(/[^\s:]+):\d+:\d+}).flatten.uniq
+    when :prettier
+      lines = output.lines.map(&:strip)
+      lines.select { |line| all_files.any? { |f| line.end_with?(File.basename(f)) } }
+    when :rubocop
+      output.scan(/^([^:]+):\d+:\d+/).flatten.uniq
+    when :ember_template_lint
+      output.scan(/^([^\s:]+):\d+:\d+/).flatten.uniq
+    when :stylelint
+      output.scan(/^([^\s:]+)\s+\d+:\d+/).flatten.uniq
+    when :syntax_tree
+      output.scan(/\[\d+m([^\[\]]+)\[0m/).flatten.uniq.select { |f| all_files.include?(f) }
+    when :yaml_syntax, :i18n_lint
+      all_files.select { |f| output.include?(f) }
+    else
+      all_files
+    end
+  end
+
+  def filter_files_for_linter(name, files)
+    case name
+    when :prettier, :ember_template_lint
+      files.select do |file|
+        file.include?("/assets/javascripts/") || file.include?("/plugins/") ||
+          file.include?("/themes/")
+      end
+    when :i18n_lint
+      files.select { |file| file.match?(%r{/(client|server)\..*\.yml$}) }
+    when :yaml_syntax
+      files.select { |file| !file.end_with?("database.yml") }
+    when :syntax_tree
+      # syntax_tree doesn't handle files without extensions well, skip for bin/ files
+      files.select { |file| !file.start_with?("bin/") || File.extname(file) != "" }
+    else
+      files
+    end
+  end
+
+  def print_summary
+    if @errors.empty?
+      if @fix && @fixed.any?
+        puts "✅ Fixed #{@fixed.size} files"
+      else
+        puts "✅ All files passed linting"
+      end
+    else
+      puts "❌ Linting failed on #{@errors.map { |e| e[:files] }.flatten.uniq.size} files"
+      exit 1
+    end
+  end
+
+  def success_message
+    puts "No files to lint"
+  end
+end
+
+def parse_options
+  options = {}
+
+  OptionParser
+    .new do |parser|
+      parser.banner = "Usage: bin/lint [options] [files...]"
+
+      parser.on("-h", "--help", "Show this help message") do
+        puts parser
+        puts
+        puts "Examples:"
+        puts "  bin/lint                    # Lint all files"
+        puts "  bin/lint --recent           # Lint recently changed files"
+        puts "  bin/lint --fix app.rb       # Fix specific file"
+        puts "  bin/lint app/models/*.rb    # Lint multiple files"
+        exit
+      end
+
+      parser.on("-f", "--fix", "Attempt to automatically fix issues") { options[:fix] = true }
+
+      parser.on("-r", "--recent", "Lint recently changed files (last 50 commits)") do
+        options[:recent] = true
+      end
+
+      parser.on("-v", "--verbose", "Show verbose output") { options[:verbose] = true }
+    end
+    .parse!
+
+  options[:files] = ARGV unless ARGV.empty?
+  options
+end
+
+if __FILE__ == $0
+  options = parse_options
+  linter = Linter.new(options)
+  linter.run
+end

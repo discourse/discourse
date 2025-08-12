@@ -159,6 +159,59 @@ describe "Welcome banner", type: :system do
         expect(banner).to be_below_site_header
       end
     end
+
+    context "with interface page visibility setting" do
+      before { current_user.update!(admin: true) }
+
+      it "should show on all pages" do
+        SiteSetting.welcome_banner_page_visibility = "all_pages"
+
+        visit "/"
+        expect(banner).to be_visible
+        sign_in(current_user)
+        %W[/ /u/#{current_user.username}/preferences/emails /my/messages].each do |path|
+          visit path
+          expect(banner).to be_visible
+        end
+      end
+
+      it "should show on discovery routes only" do
+        sign_in(current_user)
+        SiteSetting.welcome_banner_page_visibility = "discovery"
+
+        visit "/filter?q=tag%3Ain-progress"
+        expect(banner).to be_visible
+
+        visit "/upcoming-events?view=month"
+        expect(banner).to be_hidden
+      end
+
+      it "should show on top menu pages only" do
+        sign_in(current_user)
+        SiteSetting.welcome_banner_page_visibility = "top_menu_pages"
+        SiteSetting
+          .top_menu
+          .split("|")
+          .each do |route|
+            visit "/#{route}"
+            expect(banner).to be_visible
+          end
+
+        visit "/my/posts"
+        expect(banner).to be_hidden
+      end
+
+      it "should show on homepage only" do
+        SiteSetting.welcome_banner_page_visibility = "homepage"
+
+        visit "/"
+        expect(banner).to be_visible
+
+        sign_in(current_user)
+        visit "/new"
+        expect(banner).to be_hidden
+      end
+    end
   end
 
   context "when disabled" do

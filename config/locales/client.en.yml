@@ -1557,8 +1557,9 @@ en:
           auto: "Auto"
           light: "Light"
           dark: "Dark"
+        picker:
+          active: "Active"
       dark_mode: "Dark Mode"
-      dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -2785,11 +2786,17 @@ en:
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Top menu pages"
+      homepage: "Homepage"
+      discovery: "Discovery"
+      all_pages: "All pages"
     composition_mode:
       markdown: "Markdown"
       rich: "Rich text"
 
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2880,8 +2887,8 @@ en:
       unlist: "unlisted"
 
       add_warning: "This is an official warning."
-      toggle_whisper: "Toggle Whisper"
-      insert_table: "Insert Table"
+      toggle_whisper: "Toggle whisper"
+      insert_table: "Insert table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to…"
@@ -3006,10 +3013,10 @@ en:
       paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
-      olist_title: "Numbered List"
-      ulist_title: "Bulleted List"
+      olist_title: "Numbered list"
+      ulist_title: "Bulleted list"
       list_item: "List item"
-      toggle_direction: "Toggle Direction"
+      toggle_direction: "Toggle direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       open: "open the composer panel"
@@ -4390,8 +4397,10 @@ en:
         add: "Add new locale"
         remove: "Remove"
         hint: "There are currently no localizations for this category. Click 'Add new locale' below to begin adding localizations."
-      tags_allowed_tags: "Restrict these tags to this category:"
-      tags_allowed_tag_groups: "Restrict these tag groups to this category:"
+      tags_allowed_tags: "Restrict these tags to the '%{categoryName}' category:"
+      tags_allowed_tags_new_category: "Restrict these tags to this category:"
+      tags_allowed_tag_groups: "Restrict these tag groups to the '%{categoryName}' category:"
+      tags_allowed_tag_groups_new_category: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tags_tab_description: "Tags and tag groups specified above will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
@@ -4835,6 +4844,7 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_placeholder: "Search for a shortcut by description or key combination"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} or %{shortcut2}"
@@ -4883,6 +4893,8 @@ en:
       composing:
         title: "Composing"
         return: "%{shortcut} Return to composer"
+        minimize: "%{shortcut} Minimize composer"
+        create_or_reply: "%{shortcut} Create topic or post reply"
         fullscreen: "%{shortcut} Fullscreen composer"
         insert_current_time: "%{shortcut} Insert current time"
         bold: "%{shortcut} Bold"
@@ -6889,7 +6901,7 @@ en:
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
           user_selectable_button_label: "Allow users to select"
-          user_selectable_unavailable_button_label: "Make unavailable to users"
+          user_selectable_unavailable_button_label: "Do not allow users to select"
           broken_badge_label: "Broken theme"
           color_scheme_user_selectable: "Color palette can be selected by users"
           auto_update: "Auto update when Discourse is updated"
@@ -7324,6 +7336,7 @@ en:
           modal_title: "Details"
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
+          filter_date_time: "Filter date and time"
           actions:
             permanently_delete_post_revisions: "permanently delete post revisions"
             delete_user: "delete user"

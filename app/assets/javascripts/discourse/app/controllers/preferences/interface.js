@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { not, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -51,12 +50,6 @@ export default class InterfaceController extends Controller {
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
-
-  @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
-
-  @not("currentSchemeCanBeSelected") showColorSchemeNoneItem;
-
-  selectedColorSchemeNoneLabel = i18n("user.color_schemes.default_description");
 
   init() {
     super.init(...arguments);
@@ -238,9 +231,9 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed
-  showDarkModeToggle() {
-    return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
+  @discourseComputed("selectedDarkColorSchemeId")
+  showInterfaceColorModeSelector(selectedDarkColorSchemeId) {
+    return this.defaultDarkSchemeId > 0 || selectedDarkColorSchemeId > 0;
   }
 
   @discourseComputed
@@ -250,13 +243,26 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @discourseComputed(
+    "userSelectableColorSchemes",
+    "userSelectableDarkColorSchemes"
+  )
+  showColorSchemeSelector() {
+    return (
+      this.showLightColorSchemeSelector ||
+      this.showDarkColorSchemeSelector ||
+      this.showInterfaceColorModeSelector
+    );
+  }
+
+  @discourseComputed("userSelectableColorSchemes")
+  showLightColorSchemeSelector(lightSchemes) {
+    return lightSchemes && lightSchemes.length > 1;
+  }
+
   @discourseComputed("userSelectableDarkColorSchemes")
   showDarkColorSchemeSelector(darkSchemes) {
-    // when a default dark scheme is set
-    // dropdown has two items (disable / use site default)
-    // but we show a checkbox in that case
-    const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
-    return darkSchemes && darkSchemes.length > minToShow;
+    return darkSchemes && darkSchemes.length > 1;
   }
 
   get interfaceColorModes() {
@@ -331,26 +337,19 @@ export default class InterfaceController extends Controller {
 
     if (!this.showColorSchemeSelector) {
       this.set("model.user_option.color_scheme_id", null);
+      this.set("model.user_option.dark_scheme_id", null);
     } else if (this.makeColorSchemeDefault) {
       this.set("model.user_option.color_scheme_id", this.selectedColorSchemeId);
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.selectedDarkColorSchemeId
+      );
       if (this.selectedInterfaceColorModeId) {
         this.set(
           "model.user_option.interface_color_mode",
           this.selectedInterfaceColorModeId
         );
       }
-    }
-
-    if (this.showDarkModeToggle) {
-      this.set(
-        "model.user_option.dark_scheme_id",
-        this.enableDarkMode ? null : -1
-      );
-    } else {
-      this.set(
-        "model.user_option.dark_scheme_id",
-        this.selectedDarkColorSchemeId
-      );
     }
 
     return this.model

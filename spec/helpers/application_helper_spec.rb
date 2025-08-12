@@ -868,7 +868,7 @@ RSpec.describe ApplicationHelper do
 
     context "with dark scheme with user option and/or cookies" do
       before do
-        user.user_option.dark_scheme_id = -1
+        user.user_option.interface_color_mode = UserOption::LIGHT_MODE
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
@@ -884,7 +884,10 @@ RSpec.describe ApplicationHelper do
       end
 
       it "returns user-selected dark color scheme stylesheet" do
-        user.user_option.update!(dark_scheme_id: @new_cs.id)
+        user.user_option.update!(
+          dark_scheme_id: @new_cs.id,
+          interface_color_mode: UserOption::AUTO_MODE,
+        )
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -892,6 +895,7 @@ RSpec.describe ApplicationHelper do
       end
 
       it "respects cookie value over user option for dark color scheme" do
+        user.user_option.update!(interface_color_mode: UserOption::AUTO_MODE)
         helper.request.cookies["dark_scheme_id"] = @new_cs.id
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
