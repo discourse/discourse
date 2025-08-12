@@ -34,14 +34,9 @@ export default class ColorInput extends Component {
       if (!color.startsWith("#")) {
         color = "#" + color;
       }
-      if (color.length === 4) {
-        color =
-          "#" +
-          color
-            .slice(1)
-            .split("")
-            .map((hex) => hex + hex)
-            .join("");
+      // auto fill common hex codes like #F8F -> #F8F8F8 and #DDD -> #DDDDDD
+      if (color.length === 4 && color[1] === color[3]) {
+        color = "#" + color.slice(1).slice(0, 2).repeat(3);
       }
     }
     return color;
