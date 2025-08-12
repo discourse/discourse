@@ -41,7 +41,8 @@ RSpec.describe SiteSettingExtension do
     new_settings(provider_local)
   end
 
-  before do
+  after do
+    settings.provider.model = nil
     settings.listen_for_changes = false
     settings2.listen_for_changes = false
   end
@@ -1095,17 +1096,12 @@ RSpec.describe SiteSettingExtension do
       expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
       expect(settings_tss_instance_2.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
 
-      result =
-        Themes::ThemeSiteSettingManager.call(
-          params: {
-            theme_id: theme_1.id,
-            name: :enable_welcome_banner,
-            value: true,
-          },
-          guardian: Discourse.system_user.guardian,
-        )
-
-      expect(result.success?).to eq(true)
+      tss_1.update!(value: true)
+      settings_tss_instance_1.change_themeable_site_setting(
+        theme_1.id,
+        :enable_welcome_banner,
+        true,
+      )
 
       # Get through the MessageBus queue
       try_until_success(frequency: 0.5) do
