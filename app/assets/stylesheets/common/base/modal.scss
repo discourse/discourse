@@ -89,8 +89,12 @@ html:not(.keyboard-visible.mobile-view) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
+    padding: 0.5rem;
     border-bottom: 1px solid var(--content-border-color);
+
+    &:not(.--has-primary-action) {
+      padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
+    }
 
     .modal-close {
       margin-left: auto;
