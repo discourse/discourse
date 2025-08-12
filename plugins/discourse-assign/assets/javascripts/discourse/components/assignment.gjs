@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-// import { TextArea } from "@ember/legacy-built-in-components";
+import { TextArea } from "@ember/legacy-built-in-components";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -123,12 +123,12 @@ export default class Assignment extends Component {
         >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
 
-      {{!-- <TextArea
+      <TextArea
         id="assign-modal-note"
         @value={{@assignment.note}}
         {{on "keydown" this.handleTextAreaKeydown}}
         {{on "input" this.markAsEdited}}
-      /> --}}
+      />
     </div>
   </template>
 }

@@ -1,4 +1,4 @@
-// import { TextArea } from "@ember/legacy-built-in-components";
+import { TextArea } from "@ember/legacy-built-in-components";
 import { action } from "@ember/object";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
@@ -13,11 +13,11 @@ export default class MessageField extends BaseField {
 
         <div class="controls">
           <div class="field-wrapper">
-            {{!-- <TextArea
+            <TextArea
               @value={{@field.metadata.value}}
               @input={{this.updateValue}}
               @disabled={{@field.isDisabled}}
-            /> --}}
+            />
 
             <DAFieldDescription @description={{@description}} />
 
