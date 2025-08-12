@@ -280,8 +280,6 @@ class TopicsFilter
       )
     end
 
-    DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
-
     if SiteSetting.tagging_enabled?
       results.push(
         {
@@ -307,7 +305,8 @@ class TopicsFilter
       )
     end
 
-    results
+    # this modifier allows custom plugins to add UI tips in the /filter route
+    DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
   end
 
   private
