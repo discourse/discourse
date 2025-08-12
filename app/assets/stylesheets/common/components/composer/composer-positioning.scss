@@ -173,3 +173,20 @@ body:not(.has-sidebar-page) {
 //     }
 //   }
 // }
+
+// align the previewless composer with the topic content
+#reply-control:not(.fullscreen).hide-preview {
+  @include viewport.from(sm) {
+    box-shadow: var(--shadow-composer);
+  }
+
+  @include viewport.from(lg) {
+    --composer-internal-padding: 1em;
+    --layout-gap: 2em;
+    --topic-width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
+    width: 100%;
+    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+  }
+}
