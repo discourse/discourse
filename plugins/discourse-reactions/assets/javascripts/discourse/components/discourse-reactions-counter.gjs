@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
