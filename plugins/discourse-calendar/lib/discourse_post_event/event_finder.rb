@@ -9,6 +9,7 @@ module DiscoursePostEvent
         .then { |query| apply_filters(query, params, guardian, user) }
         .then { |query| apply_date_filters(query, params) }
         .then { |query| apply_category_filters(query, params) }
+        .then { |query| apply_ordering(query) }
         .then { |query| apply_limit(query, params) }
     end
 
@@ -63,7 +64,7 @@ module DiscoursePostEvent
       return events if params[:attending_user].blank?
 
       attending_user = User.find_by(username_lower: params[:attending_user].downcase)
-      return events if !attending_user
+      return events.none if !attending_user
 
       events =
         events.joins(:invitees).where(
@@ -79,20 +80,26 @@ module DiscoursePostEvent
     def self.apply_privacy_restrictions(events, user)
       private_status = DiscoursePostEvent::Event.statuses[:private]
 
-      events
-        .where.not(status: private_status)
-        .or(
-          events
-            .where(status: private_status)
-            .joins(:invitees)
-            .where(discourse_post_event_invitees: { user_id: user&.id }),
-        )
+      # If no user, can only see non-private events
+      return events.where.not(status: private_status) if user.nil?
+
+      events.where(
+        "discourse_post_event_events.status != ? OR " \
+          "(discourse_post_event_events.status = ? AND EXISTS (" \
+          "  SELECT 1 FROM discourse_post_event_invitees dpei " \
+          "  WHERE dpei.post_id = discourse_post_event_events.id " \
+          "  AND dpei.user_id = ?" \
+          "))",
+        private_status,
+        private_status,
+        user.id,
+      )
     end
 
     def self.apply_date_filters(events, params)
       events
         .then { |query| apply_before_date_filter(query, params) }
-        .then { |query| apply_start_date_filter(query, params) }
+        .then { |query| apply_after_date_filter(query, params) }
         .then { |query| apply_end_date_filter(query, params) }
     end
 
@@ -112,17 +119,17 @@ module DiscoursePostEvent
       )
     end
 
-    def self.apply_start_date_filter(events, params)
-      return events if params[:start_date].blank?
+    def self.apply_after_date_filter(events, params)
+      return events if params[:after].blank?
 
-      start_date = params[:start_date].to_datetime
+      after_date = params[:after].to_datetime
       events.where(
         "latest_event_dates.starts_at >= ? OR " \
           "(discourse_post_event_events.recurrence IS NOT NULL AND " \
           "(discourse_post_event_events.recurrence_until IS NULL OR " \
           "discourse_post_event_events.recurrence_until >= ?))",
-        start_date,
-        start_date,
+        after_date,
+        after_date,
       )
     end
 
@@ -152,12 +159,16 @@ module DiscoursePostEvent
           end
         )
 
-      events.joins(post: :topic).where(topics: { category_id: category_ids })
+      events.where(topics: { category_id: category_ids })
+    end
+
+    def self.apply_ordering(events)
+      events.order("latest_event_dates.starts_at ASC, discourse_post_event_events.id ASC")
     end
 
     def self.apply_limit(events, params)
-      return events if params[:limit].blank?
-      events.limit(params[:limit].to_i)
+      limit = params[:limit]&.to_i || 200
+      events.limit(limit.clamp(1, 200))
     end
 
     def self.listable_topics(guardian)
