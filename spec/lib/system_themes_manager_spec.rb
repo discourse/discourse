@@ -20,20 +20,20 @@ RSpec.describe SystemThemesManager do
     expect(Theme.horizon_theme.reload.enabled).to be true
   end
 
-  it "marks Horizon's default color palettes as user selectable only the first time the theme is installed" do
+  it "sets up the default light and dark palettes for Horizon on the initial install" do
     Theme.delete_all
 
     expect { SystemThemesManager.sync! }.to change { Theme.system.count }.by(2)
 
-    expect(Theme.horizon_theme.color_scheme.user_selectable).to eq(true)
-    expect(Theme.horizon_theme.dark_color_scheme.user_selectable).to eq(true)
+    expect(Theme.horizon_theme.color_scheme.name).to eq("Horizon")
+    expect(Theme.horizon_theme.dark_color_scheme.name).to eq("Horizon Dark")
 
-    Theme.horizon_theme.color_scheme.update!(user_selectable: false)
-    Theme.horizon_theme.dark_color_scheme.update!(user_selectable: false)
+    Theme.horizon_theme.update!(color_scheme: nil)
+    Theme.horizon_theme.update!(dark_color_scheme: nil)
 
     expect { SystemThemesManager.sync! }.not_to change { Theme.system.count }
 
-    expect(Theme.horizon_theme.color_scheme.reload.user_selectable).to eq(false)
-    expect(Theme.horizon_theme.dark_color_scheme.reload.user_selectable).to eq(false)
+    expect(Theme.horizon_theme.color_scheme).to eq(nil)
+    expect(Theme.horizon_theme.dark_color_scheme).to eq(nil)
   end
 end
