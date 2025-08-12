@@ -34,7 +34,7 @@ class UserAuthToken < ActiveRecord::Base
     return if impersonated_user_id.blank?
     return if impersonation_expires_at.blank? || impersonation_expires_at.past?
 
-    User.find_by(id: impersonated_user_id)
+    User.find_by(id: impersonated_user_id).tap { |u| u.is_impersonating = true }
   end
 
   def self.log(info)
@@ -292,17 +292,19 @@ end
 # Table name: user_auth_tokens
 #
 #  id                       :integer          not null, primary key
-#  user_id                  :integer          not null
 #  auth_token               :string           not null
-#  prev_auth_token          :string           not null
-#  user_agent               :string
 #  auth_token_seen          :boolean          default(FALSE), not null
+#  authenticated_with_oauth :boolean          default(FALSE)
 #  client_ip                :inet
+#  impersonation_expires_at :datetime
+#  prev_auth_token          :string           not null
 #  rotated_at               :datetime         not null
+#  seen_at                  :datetime
+#  user_agent               :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  seen_at                  :datetime
-#  authenticated_with_oauth :boolean          default(FALSE)
+#  impersonated_user_id     :integer
+#  user_id                  :integer          not null
 #
 # Indexes
 #

@@ -4084,6 +4084,9 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+  experimental_impersonation:
+    default: false
+    hidden: true
   show_preview_for_form_templates:
     client: true
     default: true
