@@ -139,6 +139,59 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "new / unread operators" do
+        fab!(:user_for_new_filters) { Fabricate(:user) }
+        let!(:new_topic) { Fabricate(:topic) }
+        let!(:unread_topic) do
+          Fabricate(:topic, created_at: 2.days.ago).tap do |t|
+            _post1 = Fabricate(:post, topic: t)
+            _post2 = Fabricate(:post, topic: t)
+            TopicUser.update_last_read(user_for_new_filters, t.id, 1, 1, 0)
+            TopicUser.change(
+              user_for_new_filters.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+          end
+        end
+        before { user_for_new_filters.user_option.update!(new_topic_duration_minutes: 1.day.ago) }
+
+        it "in:new-topics returns only new topics" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user_for_new_filters))
+              .filter_from_query_string("in:new-topics")
+              .pluck(:id)
+          expect(ids).to contain_exactly(new_topic.id)
+        end
+
+        it "in:new-posts returns only unread (non-new) topics" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user_for_new_filters))
+              .filter_from_query_string("in:new-posts")
+              .where(id: [new_topic.id, unread_topic.id])
+              .pluck(:id)
+          expect(ids).to contain_exactly(unread_topic.id)
+        end
+
+        it "in:new returns union of new and unread topics" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user_for_new_filters))
+              .filter_from_query_string("in:new")
+              .where(id: [new_topic.id, unread_topic.id])
+              .pluck(:id)
+          expect(ids).to contain_exactly(new_topic.id, unread_topic.id)
+        end
+
+        it "anonymous user with in:new returns none" do
+          ids =
+            TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:new").pluck(:id)
+          expect(ids).to be_empty
+        end
+      end
+
       describe "when query string is `in:bookmarked`" do
         fab!(:bookmark) do
           BookmarkManager.new(user).create_for(
