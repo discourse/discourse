@@ -104,6 +104,7 @@ function initializeDiscourseCalendar(api) {
         };
       }
     );
+
     api.registerNotificationTypeRenderer(
       "event_invitation",
       (NotificationTypeBase) => {
