@@ -226,9 +226,7 @@ export default class GlimmerHeader extends Component {
           @narrowDesktop={{this.site.narrowDesktopView}}
         >
           <span class="header-buttons">
-            {{#if
-              (or this.currentUser (not this.siteSettings.login_required))
-            }}
+            {{#if (or this.currentUser (not this.siteSettings.login_required))}}
               <Icons
                 @sidebarEnabled={{@sidebarEnabled}}
                 @toggleSearchMenu={{this.toggleSearchMenu}}
