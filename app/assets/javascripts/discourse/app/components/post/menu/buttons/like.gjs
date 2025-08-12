@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { avatarImg } from "discourse/lib/avatar-utils";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -30,6 +31,16 @@ export default class PostMenuLikeButton extends Component {
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
+  }
+
+  avatarImage(user) {
+    return htmlSafe(
+      avatarImg({
+        avatarTemplate: user.avatar_template,
+        size: "small",
+        title: user.name,
+      })
+    );
   }
 
   get title() {
@@ -70,20 +81,14 @@ export default class PostMenuLikeButton extends Component {
     this.loadingLikedUsers = true;
 
     try {
-      const users = await this.store.find("post-action-user", {
-        id: this.args.post.id,
-        post_action_type_id: 2, // LIKE_ACTION
-      });
+      const users = await this.store
+        .find("post-action-user", {
+          id: this.args.post.id,
+          post_action_type_id: 2, // LIKE_ACTION
+        })
+        .then((result) => result.toArray());
 
-      this.likedUsers = users.map((user) => ({
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        avatar_template: user.avatar_template,
-      }));
-      console.log(this.likedUsers);
-
-      this.totalLikedUsers = users.totalRows;
+      this.likedUsers = users;
     } catch {
       // Silently handle error - could add user notification here if needed
     } finally {
@@ -100,6 +105,7 @@ export default class PostMenuLikeButton extends Component {
             @identifier="post-like-users"
             @triggers="click"
             @onShow={{this.fetchLikedUsers}}
+            @triggerClass="button-count"
           >
             <:trigger>
               {{@post.likeCount}}
@@ -109,8 +115,7 @@ export default class PostMenuLikeButton extends Component {
                 <ul class="liked-users-list">
                   {{#each this.likedUsers as |user|}}
                     <li class="liked-user">
-                      {{!-- {{avatar user imageSize="small"}} --}}
-                      <span class="username">{{user.username}}</span>
+                      {{this.avatarImage user}}
                     </li>
                   {{/each}}
                 </ul>
@@ -162,8 +167,7 @@ export default class PostMenuLikeButton extends Component {
                 <ul class="liked-users-list">
                   {{#each this.likedUsers as |user|}}
                     <li class="liked-user">
-                      {{avatar user imageSize="small"}}
-                      <span class="username">{{user.username}}</span>
+                      {{this.avatarImage user}}
                     </li>
                   {{/each}}
                 </ul>
