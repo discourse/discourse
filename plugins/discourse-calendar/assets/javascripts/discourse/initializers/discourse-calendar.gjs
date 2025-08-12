@@ -3,7 +3,6 @@ import { i18n } from "discourse-i18n";
 import PostCalendar from "../components/post-calendar";
 
 function initializeDiscourseCalendar(api) {
-  const site = api.container.lookup("service:site");
   const postCalendar = api.container.lookup("service:post-calendar");
 
   api.decorateCookedElement(
@@ -105,6 +104,7 @@ function initializeDiscourseCalendar(api) {
         };
       }
     );
+
     api.registerNotificationTypeRenderer(
       "event_invitation",
       (NotificationTypeBase) => {
