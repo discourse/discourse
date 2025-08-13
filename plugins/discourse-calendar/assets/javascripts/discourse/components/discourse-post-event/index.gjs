@@ -178,7 +178,7 @@ export default class DiscoursePostEvent extends Component {
                 <Invitees @event={{event}} />
                 <Description @description={{event.description}} />
                 {{#if @event.canUpdateAttendance}}
-                  <Status e@vent={{event}} />
+                  <Status @event={{event}} />
                 {{/if}}
               </PluginOutlet>
             {{/if}}
