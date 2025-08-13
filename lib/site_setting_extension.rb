@@ -448,11 +448,13 @@ module SiteSettingExtension
     end
   end
 
+  SITE_SETTINGS_CHANNEL = "/site_settings"
+
   def ensure_listen_for_changes
     return if @listen_for_changes == false
 
     unless @subscribed
-      MessageBus.subscribe("/site_settings") do |message|
+      MessageBus.subscribe(SITE_SETTINGS_CHANNEL) do |message|
         process_message(message) if message.data["process"] != process_id
       end
 
