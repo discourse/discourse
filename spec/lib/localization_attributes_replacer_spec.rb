@@ -57,6 +57,12 @@ describe LocalizationAttributesReplacer do
       expect(topic.title).to eq(topic.title)
       expect(topic.excerpt).to eq(topic.excerpt)
     end
+
+    it "does not error out if topic does not exist" do
+      expect {
+        LocalizationAttributesReplacer.replace_topic_attributes(nil, "ja")
+      }.not_to raise_error
+    end
   end
 
   describe ".replace_post_attributes" do
