@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
 import getURL from "discourse/lib/get-url";
@@ -23,35 +25,30 @@ export default class UpcomingEventsCalendar extends Component {
   _calendar = null;
 
   get customButtons() {
-    if (
-      this.router.currentRouteName ===
-      "discourse-post-event-upcoming-events.index"
-    ) {
-      return {
-        mineEvents: {
-          text: i18n("discourse_post_event.upcoming_events.my_events"),
-          click: () => {
-            this.router.transitionTo(
-              "discourse-post-event-upcoming-events.mine"
-            );
-          },
+    console.log(this.args.mine);
+    // if (
+    //   this.router.currentRouteName ===
+    //   "discourse-post-event-upcoming-events.index"
+    // ) {
+    //   return {
+
+    return {
+      mineEvents: {
+        text: i18n("discourse_post_event.upcoming_events.my_events"),
+        click: () => {
+          this.router.transitionTo("discourse-post-event-upcoming-events.mine");
         },
-      };
-    } else if (
-      this.router.currentRouteName ===
-      "discourse-post-event-upcoming-events.mine"
-    ) {
-      return {
-        allEvents: {
-          text: i18n("discourse_post_event.upcoming_events.all_events"),
-          click: () => {
-            this.router.transitionTo(
-              "discourse-post-event-upcoming-events.index"
-            );
-          },
+      },
+      allEvents: {
+        text: i18n("discourse_post_event.upcoming_events.all_events"),
+        click: () => {
+          this.router.transitionTo(
+            "discourse-post-event-upcoming-events.index"
+          );
         },
-      };
-    }
+      },
+    };
+    // }
   }
 
   get events() {
@@ -110,29 +107,15 @@ export default class UpcomingEventsCalendar extends Component {
     let left = "";
 
     if (!this.capabilities.viewport.sm) {
-      left = `title ${this.customButtonName}`;
+      left = `title allEvents,mineEvents`;
     } else {
-      left += this.customButtonName;
+      left += "allEvents,mineEvents";
     }
 
     if (!this.capabilities.viewport.sm) {
       return left;
     } else {
       return `${left} prev,next,today`;
-    }
-  }
-
-  get customButtonName() {
-    if (
-      this.router.currentRouteName ===
-      "discourse-post-event-upcoming-events.index"
-    ) {
-      return "mineEvents";
-    } else if (
-      this.router.currentRouteName ===
-      "discourse-post-event-upcoming-events.mine"
-    ) {
-      return "allEvents";
     }
   }
 
@@ -153,6 +136,12 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   @action
+  async onDatesChange(info) {
+    this.applyCustomButtonsState();
+    await this.fetchEvents(info);
+  }
+
+  @action
   async fetchEvents(info) {
     this.resolvedEvents = null;
 
@@ -168,10 +157,31 @@ export default class UpcomingEventsCalendar extends Component {
       await this.discoursePostEventService.fetchEvents(params);
   }
 
+  @action
+  applyCustomButtonsState() {
+    schedule("afterRender", () => {
+      if (this.args.mine) {
+        document
+          .querySelector(".fc-mineEvents-button")
+          .classList.add("fc-button-active");
+        document
+          .querySelector(".fc-allEvents-button")
+          .classList.remove("fc-button-active");
+      } else {
+        document
+          .querySelector(".fc-allEvents-button")
+          .classList.add("fc-button-active");
+        document
+          .querySelector(".fc-mineEvents-button")
+          .classList.remove("fc-button-active");
+      }
+    });
+  }
+
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
-        @onDatesChange={{this.fetchEvents}}
+        @onDatesChange={{this.onDatesChange}}
         @events={{this.events}}
         @initialView={{@controller.view}}
         @customButtons={{this.customButtons}}
