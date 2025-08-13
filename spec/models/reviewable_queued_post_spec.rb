@@ -296,8 +296,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     it "creates a topic with staff tag when approved" do
       hidden_tag = Fabricate(:tag)
-      staff_tag_group =
-        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       reviewable.payload["tags"] += [hidden_tag.name]
 
       result = reviewable.perform(moderator, :approve_post)
@@ -322,7 +321,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     it "remaps tags with synonyms when approved" do
-      syn_tag = Fabricate(:tag, name: "syntag", target_tag: Fabricate(:tag, name: "maintag"))
+      Fabricate(:tag, name: "syntag", target_tag: Fabricate(:tag, name: "maintag"))
       reviewable.payload["tags"] += ["syntag"]
 
       result = reviewable.perform(moderator, :approve_post)
@@ -367,6 +366,91 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           user_stats.expects(:update_pending_posts).never
           reviewable.update!(score: 10)
         end
+      end
+    end
+  end
+
+  describe "separated actions UI" do
+    fab!(:admin)
+    fab!(:user)
+    let(:reviewable) { Fabricate(:reviewable_queued_post, target_created_by: user) }
+
+    context "when reviewable_ui_refresh feature is enabled" do
+      before do
+        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+      end
+
+      it "includes user actions in the user bundle" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+
+        expect(actions.has?(:no_action_user)).to eq(true)
+        expect(actions.has?(:silence_user)).to eq(true)
+        expect(actions.has?(:suspend_user)).to eq(true)
+        expect(actions.has?(:delete_user)).to eq(true)
+        expect(actions.has?(:delete_and_block_user)).to eq(true)
+      end
+
+      it "doesn't show user bundle when target_created_by is nil" do
+        reviewable.update!(target_created_by: nil)
+        actions = reviewable.actions_for(Guardian.new(admin))
+        bundle_ids = actions.bundles.map(&:id)
+
+        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
+        expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
+      end
+
+      describe "perform methods" do
+        it "performs no_action_user successfully" do
+          result = reviewable.perform(admin, :no_action_user)
+          expect(result.success?).to eq(true)
+        end
+
+        it "performs silence_user successfully" do
+          expect(user.silenced?).to eq(false)
+          result = reviewable.perform(admin, :silence_user)
+          expect(result.success?).to eq(true)
+        end
+
+        it "performs suspend_user successfully" do
+          expect(user.suspended?).to eq(false)
+          result = reviewable.perform(admin, :suspend_user)
+          expect(result.success?).to eq(true)
+        end
+
+        it "performs delete_and_block_user successfully" do
+          result = reviewable.perform(admin, :delete_and_block_user)
+          expect(result.success?).to eq(true)
+          expect(User.find_by(id: user.id)).to be_nil
+        end
+      end
+    end
+
+    # TODO (reviewable-refresh): Remove the tests below when the legacy combined actions are removed
+    context "when reviewable_ui_refresh feature is disabled" do
+      before do
+        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
+          false,
+        )
+      end
+
+      it "uses legacy bundle structure" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+        bundle_ids = actions.bundles.map(&:id)
+
+        expect(bundle_ids).to include("#{reviewable.id}-reject")
+        expect(bundle_ids).not_to include("#{reviewable.id}-post-actions")
+        expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
+      end
+
+      it "includes legacy actions" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+        action_ids = actions.to_a.map(&:id).map(&:to_s)
+
+        expect(action_ids).to include("approve_post")
+        expect(action_ids).to include("discard_post")
+        expect(action_ids).to include("revise_and_reject_post")
+        expect(action_ids).to include("delete_user")
+        expect(action_ids).to include("delete_user_block")
       end
     end
   end

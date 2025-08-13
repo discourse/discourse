@@ -5,6 +5,105 @@ RSpec.describe ReviewableActionBuilder do
   fab!(:guardian) { Guardian.new(admin) }
   fab!(:user)
 
+  describe "#build_user_actions_bundle" do
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:reviewable_post) do
+      ReviewablePost.needs_review!(target: post, created_by: admin, potential_spam: false)
+    end
+    fab!(:post_actions) { Reviewable::Actions.new(reviewable_post, guardian) }
+
+    it "creates a user bundle with standard actions when allowed" do
+      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+
+      # bundle id and label
+      expect(bundle.id).to eq("#{reviewable_post.id}-user-actions")
+      expect(bundle.label).to eq("reviewables.actions.user_actions.bundle_title")
+
+      # action ids are prefixed with target type (post-...)
+      action_ids = bundle.actions.map(&:id)
+      expect(action_ids).to include("post-no_action_user")
+      expect(action_ids).to include("post-silence_user")
+      expect(action_ids).to include("post-suspend_user")
+      expect(action_ids).to include("post-delete_user")
+      expect(action_ids).to include("post-delete_and_block_user")
+
+      # client_action is set for moderation actions
+      silence = bundle.actions.find { |a| a.id == "post-silence_user" }
+      suspend = bundle.actions.find { |a| a.id == "post-suspend_user" }
+      expect(silence.client_action).to eq("silence")
+      expect(suspend.client_action).to eq("suspend")
+    end
+
+    it "includes only the no-op action when target_created_by is nil" do
+      allow_any_instance_of(ReviewablePost).to receive(:target_created_by).and_return(nil)
+      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+      server_actions = bundle.actions.map(&:server_action)
+      expect(server_actions).to include("no_action_user")
+      expect(server_actions - ["no_action_user"]).to be_empty
+    end
+  end
+
+  describe "permission helpers" do
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:reviewable_post) do
+      ReviewablePost.needs_review!(target: post, created_by: admin, potential_spam: false)
+    end
+    fab!(:post_actions) { Reviewable::Actions.new(reviewable_post, guardian) }
+
+    it "allows admin to suspend and delete" do
+      expect(reviewable_post.allow_user_suspend_actions?(guardian, user)).to be(true)
+      expect(reviewable_post.allow_user_delete_actions?(guardian, user)).to be(true)
+    end
+
+    it "disallows regular user to suspend and delete" do
+      regular_guardian = Guardian.new(Fabricate(:user))
+      expect(reviewable_post.allow_user_suspend_actions?(regular_guardian, user)).to be(false)
+      expect(reviewable_post.allow_user_delete_actions?(regular_guardian, user)).to be(false)
+    end
+
+    describe "overriding" do
+      it "removes suspend/delete actions when overridden to false even for admin" do
+        allow_any_instance_of(ReviewablePost).to receive(:allow_user_suspend_actions?).and_return(
+          false,
+        )
+        allow_any_instance_of(ReviewablePost).to receive(:allow_user_delete_actions?).and_return(
+          false,
+        )
+        bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+
+        server_actions = bundle.actions.map(&:server_action)
+        expect(server_actions).to include("no_action_user")
+        expect(server_actions).not_to include(
+          "silence_user",
+          "suspend_user",
+          "delete_user",
+          "delete_and_block_user",
+        )
+      end
+
+      it "adds suspend/delete actions when overridden to true even for regular user" do
+        regular_guardian = Guardian.new(Fabricate(:user))
+        allow_any_instance_of(ReviewablePost).to receive(:allow_user_suspend_actions?).and_return(
+          true,
+        )
+        allow_any_instance_of(ReviewablePost).to receive(:allow_user_delete_actions?).and_return(
+          true,
+        )
+        actions = Reviewable::Actions.new(reviewable_post, regular_guardian)
+        bundle = reviewable_post.build_user_actions_bundle(actions, regular_guardian)
+
+        server_actions = bundle.actions.map(&:server_action)
+        expect(server_actions).to include(
+          "no_action_user",
+          "silence_user",
+          "suspend_user",
+          "delete_user",
+          "delete_and_block_user",
+        )
+      end
+    end
+  end
+
   describe "#build_action" do
     fab!(:reviewable_user) { ReviewableUser.create_for(user) }
 

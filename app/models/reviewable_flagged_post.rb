@@ -3,6 +3,8 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
+  FLAGGABLE = true
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed
@@ -14,6 +16,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       ignore_and_do_nothing: :ignore,
+      delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
     }
   end
 
@@ -44,9 +47,13 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
-    return unless pending?
     return if post.blank?
+    super
+  end
 
+  # TODO (reviewable-refresh): Remove legacy method once new UI fully deployed
+  def build_legacy_combined_actions(actions, guardian, args)
+    # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
@@ -142,6 +149,11 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
+  # TODO (reviewable-refresh): Merge into build_actions post rollout.
+  def build_new_separated_actions(actions, guardian, args)
+    build_user_actions_bundle(actions, guardian) if target_created_by.present?
+  end
+
   def perform_ignore(performed_by, args)
     perform_ignore_and_do_nothing(performed_by, args)
   end
@@ -183,15 +195,12 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_user(post.user, delete_opts, performed_by)
+    super
     agree(performed_by, args)
   end
 
-  def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    delete_user(post.user, delete_options, performed_by)
+  def perform_delete_and_block_user(performed_by, args)
+    super
     agree(performed_by, args)
   end
 
@@ -340,25 +349,6 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
-
-  def delete_user(user, delete_options, performed_by)
-    email = user.email
-
-    UserDestroyer.new(performed_by).destroy(user, delete_options)
-
-    message = UserNotifications.account_deleted(email, self)
-    Email::Sender.new(message, :account_deleted).send
-  end
-
-  def delete_opts
-    {
-      delete_posts: true,
-      prepare_for_destroy: true,
-      block_urls: true,
-      delete_as_spammer: true,
-      context: "review",
-    }
-  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable: self)
