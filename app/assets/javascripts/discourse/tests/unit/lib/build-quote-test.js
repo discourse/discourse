@@ -84,9 +84,7 @@ module("Unit | Utility | build-quote", function (hooks) {
   test("applying a value transformation", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", {
-      cooked: DiscourseMarkdownIt.minimal().cook(
-        '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
-      ),
+      cooked: "<p><b>lorem</b> ipsum</p>",
       username: "eviltrout",
       post_number: 1,
       topic_id: 2,
@@ -99,13 +97,10 @@ module("Unit | Utility | build-quote", function (hooks) {
       });
     });
 
-    const quote = buildQuote(
-      post,
-      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
-    );
+    const quote = buildQuote(post, "hello");
     assert.strictEqual(
       quote,
-      '[quote="New transformed name, post:1, topic:1"]',
+      '[quote="New transformed name, post:1, topic:2"]\nhello\n[/quote]\n\n',
       "it transforms the quote params name"
     );
   });
