@@ -2,9 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -57,36 +55,6 @@ export default class PostMenuLikeButton extends Component {
         resolve();
       }, 400);
     });
-  }
-
-  @action
-  async fetchLikedUsers() {
-    if (this.likedUsers || this.loadingLikedUsers) {
-      return;
-    }
-
-    this.loadingLikedUsers = true;
-
-    try {
-      const users = await this.store.find("post-action-user", {
-        id: this.args.post.id,
-        post_action_type_id: 2, // LIKE_ACTION
-      });
-
-      this.likedUsers = users.map((user) => ({
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        avatar_template: user.avatar_template,
-      }));
-      console.log(this.likedUsers);
-
-      this.totalLikedUsers = users.totalRows;
-    } catch {
-      // Silently handle error - could add user notification here if needed
-    } finally {
-      this.loadingLikedUsers = false;
-    }
   }
 
   <template>
