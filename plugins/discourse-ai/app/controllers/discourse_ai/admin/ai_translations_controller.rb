@@ -24,7 +24,11 @@ module DiscourseAi
           }
         end
 
-        render json: result
+        render json: {
+                 translation_progress: result,
+                 translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
+                 enabled: DiscourseAi::Translation.backfill_enabled?,
+               }
       end
 
       private

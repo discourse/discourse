@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { service } from "@ember/service";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import Chart from "admin/components/chart";
-import { service } from "@ember/service";
 
 export default class AiTranslations extends Component {
   @service siteSettings;
+  @service store;
 
-  @tracked loadingData = false;
-  @tracked data = this.args.model?.ai_translations;
+  @tracked data = this.args.model?.translation_progress;
 
   getLanguageName(locale) {
     try {
@@ -98,23 +98,46 @@ export default class AiTranslations extends Component {
         @titleLabel={{i18n "discourse_ai.translations.title"}}
         @descriptionLabel={{i18n "discourse_ai.translations.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
-      />
-    </div>
-
-    <ConditionalLoadingSpinner @condition={{this.loadingData}}>
-      <AdminConfigAreaCard
-        class="ai-translation__charts"
-        @heading="discourse_ai.translations.progress_chart.title"
       >
-        <:content>
-          <div class="ai-translation__chart-container">
-            <Chart
-              @chartConfig={{this.chartConfig}}
-              class="ai-translation__chart"
+        <:actions as |actions|>
+          {{#if @model.enabled}}
+            <actions.Default
+              @label="discourse_ai.translations.admin_actions.translation_settings"
+              @route="adminPlugins.show.discourse-ai-features.edit"
+              @routeModels={{@model.translation_id}}
             />
-          </div>
-        </:content>
-      </AdminConfigAreaCard>
-    </ConditionalLoadingSpinner>
+            <actions.Default
+              @label="discourse_ai.translations.admin_actions.localization_settings"
+              @route="adminConfig.localization.settings"
+            />
+          {{/if}}
+        </:actions>
+      </DPageSubheader>
+
+      {{#if @model.enabled}}
+        <AdminConfigAreaCard
+          class="ai-translation__charts"
+          @heading="discourse_ai.translations.progress_chart.title"
+        >
+          <:content>
+            <div class="ai-translation__chart-container">
+              <Chart
+                @chartConfig={{this.chartConfig}}
+                class="ai-translation__chart"
+              />
+            </div>
+          </:content>
+        </AdminConfigAreaCard>
+      {{else}}
+        <AdminConfigAreaEmptyList
+          @ctaLabel="discourse_ai.translations.admin_actions.disabled_state.configure"
+          @ctaRoute="adminPlugins.show.discourse-ai-features.edit"
+          @ctaRouteModels={{@model.translation_id}}
+          @ctaClass="ai-translations__configure-button"
+          @emptyLabel="discourse_ai.translations.admin_actions.disabled_state.empty_label"
+        />
+      {{/if}}
+
+    </div>
   </template>
 }
