@@ -61,9 +61,7 @@ export default class ColorInput extends Component {
 
   @action
   handleBlur() {
-    if (this.onBlur) {
-      this.onBlur(this.normalize(this.hexValue));
-    }
+    this.onBlur?.(this.normalize(this.hexValue));
   }
 
   @observes("hexValue", "brightnessValue", "valid")
