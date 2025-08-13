@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
@@ -127,16 +127,18 @@ export default class DiscoursePostEventDates extends Component {
       this.htmlDates = htmlSafe(result.toString());
 
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+        schedule("afterRender", () => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
 
-        applyLocalDates(
-          element.querySelectorAll(
-            `[data-post-id="${this.args.event.id}"] .discourse-local-date`
-          ),
-          this.siteSettings
-        );
+          applyLocalDates(
+            element.querySelectorAll(
+              `.event-dates[data-event-id="${this.args.event.id}"] .discourse-local-date`
+            ),
+            this.siteSettings
+          );
+        });
       });
     } else {
       let dates = `${this.startsAt.format(this.startsAtFormat)}`;
@@ -148,7 +150,11 @@ export default class DiscoursePostEventDates extends Component {
   }
 
   <template>
-    <section class="event__section event-dates" {{didInsert this.computeDates}}>
+    <section
+      data-event-id={{@event.id}}
+      class="event__section event-dates"
+      {{didInsert this.computeDates}}
+    >
       {{icon "clock"}}{{this.htmlDates}}</section>
   </template>
 }

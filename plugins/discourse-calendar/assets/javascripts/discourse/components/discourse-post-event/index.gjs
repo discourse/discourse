@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -131,6 +132,10 @@ export default class DiscoursePostEvent extends Component {
               @isStandaloneEvent={{this.isStandaloneEvent}}
               @composePrivateMessage={{routeAction "composePrivateMessage"}}
             />
+
+            {{#if @onClose}}
+              <DButton @icon="xmark" @action={{@onClose}} />
+            {{/if}}
           </header>
 
           <PluginOutlet
