@@ -232,7 +232,7 @@ class FilterValueSuggester {
   parseMultiValue() {
     const value = this.segment.value || "";
 
-    if (this.tip.delimiters && this.tip.delimiters.length > 0) {
+    if (this.tip.delimiters) {
       const delimiterPattern = new RegExp(
         `[${this.tip.delimiters.map((d) => this.escapeRegex(d.name)).join("")}]`
       );
