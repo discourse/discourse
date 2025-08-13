@@ -308,7 +308,7 @@ en:
         month: "Month"
         week: "Week"
         day: "Day"
-        list: "List"
+        year: "Year"
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
