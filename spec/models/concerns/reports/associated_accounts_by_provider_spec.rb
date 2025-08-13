@@ -32,10 +32,10 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       github_data = report.data.find { |d| d[:key] == "github" }
       twitter_data = report.data.find { |d| d[:key] == "twitter" }
 
-      expect(google_data[:y]).to eq(2)
-      expect(facebook_data[:y]).to eq(1)
+      expect(google_data[:count]).to eq(2)
+      expect(facebook_data[:count]).to eq(1)
       # GitHub should appear with 0 users since it's enabled
-      expect(github_data[:y]).to eq(0)
+      expect(github_data[:count]).to eq(0)
       # Twitter should not appear since it's not in enabled authenticators
       expect(twitter_data).to be_nil
     end
@@ -45,7 +45,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       github_data = report.data.find { |d| d[:key] == "github" }
       expect(github_data).to be_present
-      expect(github_data[:y]).to eq(0)
+      expect(github_data[:count]).to eq(0)
     end
 
     it "includes total users count" do
@@ -53,8 +53,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       total_data = report.data.find { |d| d[:key] == "total_users" }
       expect(total_data).to be_present
-      expect(total_data[:x]).to eq("Total users")
-      expect(total_data[:y]).to be >= 4 # At least our test users
+      expect(total_data[:provider]).to eq("Total number of members")
+      expect(total_data[:count]).to be >= 4 # At least our test users
     end
 
     it "includes users with no associated accounts from enabled providers" do
@@ -62,15 +62,15 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
       expect(no_accounts_data).to be_present
-      expect(no_accounts_data[:x]).to eq("No associated accounts")
+      expect(no_accounts_data[:provider]).to eq("No associated accounts")
       # user4 has no accounts, user5 has twitter (disabled), so both should be counted
-      expect(no_accounts_data[:y]).to be >= 2
+      expect(no_accounts_data[:count]).to be >= 2
     end
 
     it "sorts data by count descending" do
       report = Report.find("associated_accounts_by_provider")
 
-      expect(report.data.first[:y]).to be >= report.data.last[:y]
+      expect(report.data.first[:count]).to be >= report.data.last[:count]
     end
 
     it "only includes active users" do
@@ -79,7 +79,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       report = Report.find("associated_accounts_by_provider")
 
       google_data = report.data.find { |d| d[:key] == "google_oauth2" }
-      expect(google_data[:y]).to eq(1) # Only user2, not user1
+      expect(google_data[:count]).to eq(1) # Only user2, not user1
     end
 
     it "calculates users without enabled provider accounts correctly" do
@@ -93,8 +93,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       # 3 users with enabled provider accounts (user1, user2, user3)
       # 4+ users without enabled provider accounts (user4, user5 with disabled twitter plus the two new users)
-      expect(total_data[:y]).to be >= 7
-      expect(no_accounts_data[:y]).to be >= 4
+      expect(total_data[:count]).to be >= 7
+      expect(no_accounts_data[:count]).to be >= 4
     end
 
     it "handles case when no authenticators are enabled" do
@@ -109,8 +109,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       total_data = report.data.find { |d| d[:key] == "total_users" }
       no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
 
-      expect(total_data[:y]).to be >= 5
-      expect(no_accounts_data[:y]).to eq(total_data[:y])
+      expect(total_data[:count]).to be >= 5
+      expect(no_accounts_data[:count]).to eq(total_data[:count])
     end
 
     it "includes all enabled providers even with mixed zero and non-zero counts" do
@@ -122,7 +122,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       expect(provider_entries.length).to eq(3)
 
       # Verify we have entries with both zero and non-zero counts
-      counts = provider_entries.map { |entry| entry[:y] }
+      counts = provider_entries.map { |entry| entry[:count] }
       expect(counts).to include(0) # GitHub
       expect(counts).to include(1) # Facebook
       expect(counts).to include(2) # Google
