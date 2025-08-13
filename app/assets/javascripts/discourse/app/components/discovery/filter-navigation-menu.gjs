@@ -154,10 +154,10 @@ export default class FilterNavigationMenu extends Component {
     if (this.lastSuggestionInput === (this.currentInputValue || "")) {
       return;
     }
-    if (this.searchTimer) {
-      cancel(this.searchTimer);
-      this.searchTimer = null;
-    }
+
+    cancel(this.searchTimer);
+    this.searchTimer = null;
+
     await this.fetchSuggestions();
   }
 
@@ -317,9 +317,7 @@ export default class FilterNavigationMenu extends Component {
   }
 
   async submitQuery() {
-    if (this.searchTimer) {
-      cancel(this.searchTimer);
-    }
+    cancel(this.searchTimer);
 
     if (this.dMenuInstance) {
       await this.dMenuInstance.close();
