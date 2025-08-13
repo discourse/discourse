@@ -671,22 +671,6 @@ export default class PostMenu extends Component {
         }}
         @users={{this.readers}}
       />
-      <SmallUserList
-        class="who-liked"
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-        @isVisible={{this.isWhoLikedVisible}}
-        @count={{if
-          this.remainingLikedUsers
-          this.remainingLikedUsers
-          this.totalLikedUsers
-        }}
-        @description={{if
-          this.remainingLikedUsers
-          "post.actions.people.like_capped"
-          "post.actions.people.like"
-        }}
-        @users={{this.likedUsers}}
-      />
       {{#if
         (this.showMoreButton.shouldRender
           (hash post=this.post state=this.state)
