@@ -57,7 +57,7 @@ function buildContext() {
   };
 }
 
-module("Unit | Utility | filter-suggestions", function (hooks) {
+module("Unit | Utility | FilterSuggestions", function (hooks) {
   setupTest(hooks);
 
   test("top-level tips for empty input are priority=1 and sorted by name", async function (assert) {
