@@ -1734,15 +1734,26 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 }
 
 .liked-users-list {
-  margin: 0;
-  list-style: none;
   display: flex;
+  flex-direction: column;
   gap: var(--space-1);
+
+  &__list {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: end;
+    gap: var(--space-1);
+
+    // avatar width + gap * max amount of users per row
+    max-width: calc((24px + var(--space-1)) * 9);
+    flex-wrap: wrap;
+  }
 
   &__container {
     padding: var(--space-2);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-2);
   }
 
@@ -1758,5 +1769,16 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     height: 22px;
     width: 22px;
     color: var(--love);
+  }
+
+  &__more {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__more-button {
+    padding: 0;
+    width: 24px;
+    height: 24px;
   }
 }
