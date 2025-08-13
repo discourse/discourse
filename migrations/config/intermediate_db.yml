@@ -121,6 +121,11 @@ schema:
           - "user_id"
           - "created_at"
       primary_key_column_names: [ "user_id" , "email" ]
+    user_fields:
+      columns:
+        exclude:
+          - "field_type"
+          - "required"
     user_options:
       primary_key_column_names: [ "user_id" ]
     users:
@@ -412,7 +417,6 @@ schema:
         - "user_custom_fields"
         - "user_exports"
         - "user_field_options"
-        - "user_fields"
         - "user_histories"
         - "user_ip_address_histories"
         - "user_notification_schedules"

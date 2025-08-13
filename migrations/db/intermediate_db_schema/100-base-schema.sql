@@ -200,6 +200,23 @@ CREATE TABLE user_emails
     PRIMARY KEY (user_id, email)
 );
 
+CREATE TABLE user_fields
+(
+    original_id       NUMERIC  NOT NULL PRIMARY KEY,
+    created_at        DATETIME,
+    description       TEXT     NOT NULL,
+    editable          BOOLEAN,
+    external_name     TEXT,
+    external_type     TEXT,
+    field_type_enum   INTEGER  NOT NULL,
+    name              TEXT     NOT NULL,
+    position          INTEGER,
+    requirement       INTEGER,
+    searchable        BOOLEAN,
+    show_on_profile   BOOLEAN,
+    show_on_user_card BOOLEAN
+);
+
 CREATE TABLE user_options
 (
     user_id                              NUMERIC  NOT NULL PRIMARY KEY,
