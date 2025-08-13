@@ -147,12 +147,10 @@ describe "Welcome banner", type: :system do
     end
 
     context "with background image setting" do
+      fab!(:current_user, :admin)
       fab!(:bg_img) { Fabricate(:image_upload, color: "cyan") }
 
-      before do
-        current_user.update!(admin: true)
-        SiteSetting.welcome_banner_page_visibility = "all_pages"
-      end
+      before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
 
       it "shows banner without background image" do
         sign_in(current_user)
