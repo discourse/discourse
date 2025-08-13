@@ -11,6 +11,11 @@ class ReviewableUser < Reviewable
     { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
   end
 
+  def build_actions(actions, guardian, args)
+    return unless pending?
+    super
+  end
+
   def build_legacy_combined_actions(actions, guardian, args)
     build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
 

@@ -47,6 +47,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
+    return unless pending?
     return if post.blank?
     super
   end

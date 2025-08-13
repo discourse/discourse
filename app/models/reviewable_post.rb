@@ -34,6 +34,11 @@ class ReviewablePost < Reviewable
     end
   end
 
+  def build_actions(actions, guardian, args)
+    return unless pending?
+    super
+  end
+
   # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
   def build_legacy_combined_actions(actions, guardian, args)
     if post.trashed? && guardian.can_recover_post?(post)

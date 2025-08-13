@@ -74,8 +74,6 @@ module ReviewableActionBuilder
   #
   # @return [void]
   def build_actions(actions, guardian, args)
-    return unless pending?
-
     if guardian.can_see_reviewable_ui_refresh?
       build_new_separated_actions(actions, guardian, args)
     else
