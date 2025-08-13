@@ -159,6 +159,27 @@ export default class UpcomingEventsCalendar extends Component {
     });
   }
 
+  @action
+  applyCustomButtonsState() {
+    schedule("afterRender", () => {
+      if (this.args.mine) {
+        document
+          .querySelector(".fc-mineEvents-button")
+          .classList.add("fc-button-active");
+        document
+          .querySelector(".fc-allEvents-button")
+          .classList.remove("fc-button-active");
+      } else {
+        document
+          .querySelector(".fc-allEvents-button")
+          .classList.add("fc-button-active");
+        document
+          .querySelector(".fc-mineEvents-button")
+          .classList.remove("fc-button-active");
+      }
+    });
+  }
+
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
