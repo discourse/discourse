@@ -43,5 +43,7 @@ export function buildQuote(post, contents, opts = {}) {
     opts,
   });
 
-  return `[quote="${transformedParams.params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
+  return `[quote="${transformedParams.join(
+    ", "
+  )}"]\n${contents.trim()}\n[/quote]\n\n`;
 }
