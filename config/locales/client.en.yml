@@ -6004,12 +6004,12 @@ en:
           experiment_tooltip:
             title_disabled: "Try this experimental feature"
             title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
             content_enabled: "Changing this will disable the feature for all users."
           feature_tooltip:
             title_disabled: "Try this feature"
             title_enabled: "Turn off feature"
-            content_disabled: "Give our newest feature a spin! <br/><br/>Changing this will enable the feature for all users."
+            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
             content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
