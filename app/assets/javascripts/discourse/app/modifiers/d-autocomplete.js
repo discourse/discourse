@@ -5,6 +5,7 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import DAutocompleteResults from "discourse/components/d-autocomplete-results";
+import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
@@ -54,6 +55,7 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   @service menu;
+  @service toasts;
 
   @tracked expanded = false;
   @tracked results = [];
@@ -488,7 +490,17 @@ export default class DAutocompleteModifier extends Modifier {
 
     // Transform if needed
     if (this.options.transformComplete) {
-      term = await this.options.transformComplete(term, event);
+      try {
+        term = await this.options.transformComplete(term, event);
+      } catch (e) {
+        this.toasts.error({
+          duration: "short",
+          data: {
+            message: extractError(e, e.message),
+          },
+        });
+        return;
+      }
     }
 
     if (!term) {

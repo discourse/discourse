@@ -373,3 +373,20 @@ export default function userSearch(options) {
     );
   });
 }
+
+export function validateSearchResult(obj) {
+  const expectedPropertiesMap = {
+    isUser: "username",
+    isEmail: "username",
+    isGroup: "name",
+  };
+
+  for (const [isEntity, nameProperty] of Object.entries(
+    expectedPropertiesMap
+  )) {
+    if (obj[isEntity] && !obj[nameProperty]) {
+      throw new Error(`Invalid autocomplete result: missing ${nameProperty}`);
+    }
+  }
+  return true;
+}
