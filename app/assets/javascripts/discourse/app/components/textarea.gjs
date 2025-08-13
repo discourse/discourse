@@ -1,8 +1,8 @@
-import Component from "@ember/component";
-import { get, set, computed } from "@ember/object";
-import Mixin from "@ember/object/mixin";
 import { MUTABLE_CELL } from "@ember/-internals/views";
+// eslint-disable-next-line ember/no-classic-components
+import Component from "@ember/component";
 import { assert } from "@ember/debug";
+import { computed, get, set } from "@ember/object";
 
 const KEY_EVENTS = {
   Enter: "insertNewline",
@@ -56,6 +56,7 @@ function sendAction(eventName, view, event) {
   }
 }
 
+// eslint-disable-next-line ember/no-classic-classes
 const TextArea = Component.extend({
   classNames: ["ember-text-area"],
 
