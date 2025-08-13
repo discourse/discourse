@@ -1,6 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
+const MAX_RESULTS = 20;
+
 export default class FilterSuggestions {
   /**
    * Main entry point - takes raw input text and available tips, returns suggestions
@@ -56,7 +58,7 @@ export default class FilterSuggestions {
         // Then alphabetically
         return a.name.localeCompare(b.name);
       })
-      .slice(0, 20);
+      .slice(0, MAX_RESULTS);
   }
 
   static findTipForFilter(filterName, tips) {
@@ -442,7 +444,7 @@ class FilterValueSuggester {
 
         return 0;
       })
-      .slice(0, 15);
+      .slice(0, MAX_RESULTS);
   }
 
   getDateSuggestions() {

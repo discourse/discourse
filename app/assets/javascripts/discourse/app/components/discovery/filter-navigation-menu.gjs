@@ -196,7 +196,7 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   async updateInput(value, submitQuery = false) {
-    value ??= ""
+    value ??= "";
     this.currentInputValue = value;
     this.clearSelection();
 
