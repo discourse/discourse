@@ -151,7 +151,7 @@ class ReviewableFlaggedPost < Reviewable
 
   # TODO (reviewable-refresh): Merge into build_actions post rollout.
   def build_new_separated_actions(actions, guardian, args)
-    build_user_actions_bundle(actions, guardian) if target_created_by.present?
+    build_user_actions_bundle(actions, guardian, target_created_by) if target_created_by.present?
   end
 
   def perform_ignore(performed_by, args)

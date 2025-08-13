@@ -78,7 +78,7 @@ class ReviewablePost < Reviewable
   # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
   def build_new_separated_actions(actions, guardian, args)
     # User actions bundle (only if there's a user to act on)
-    build_user_actions_bundle(actions, guardian) if target_created_by.present?
+    build_user_actions_bundle(actions, guardian, target_created_by) if target_created_by.present?
   end
 
   # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI

@@ -13,7 +13,7 @@ RSpec.describe ReviewableActionBuilder do
     fab!(:post_actions) { Reviewable::Actions.new(reviewable_post, guardian) }
 
     it "creates a user bundle with standard actions when allowed" do
-      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian, user)
 
       # bundle id and label
       expect(bundle.id).to eq("#{reviewable_post.id}-user-actions")
@@ -34,9 +34,8 @@ RSpec.describe ReviewableActionBuilder do
       expect(suspend.client_action).to eq("suspend")
     end
 
-    it "includes only the no-op action when target_created_by is nil" do
-      allow_any_instance_of(ReviewablePost).to receive(:target_created_by).and_return(nil)
-      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+    it "includes only the no-op action when user is nil" do
+      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian, nil)
       server_actions = bundle.actions.map(&:server_action)
       expect(server_actions).to include("no_action_user")
       expect(server_actions - ["no_action_user"]).to be_empty
@@ -69,7 +68,7 @@ RSpec.describe ReviewableActionBuilder do
         allow_any_instance_of(ReviewablePost).to receive(:allow_user_delete_actions?).and_return(
           false,
         )
-        bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+        bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian, user)
 
         server_actions = bundle.actions.map(&:server_action)
         expect(server_actions).to include("no_action_user")
@@ -90,7 +89,7 @@ RSpec.describe ReviewableActionBuilder do
           true,
         )
         actions = Reviewable::Actions.new(reviewable_post, regular_guardian)
-        bundle = reviewable_post.build_user_actions_bundle(actions, regular_guardian)
+        bundle = reviewable_post.build_user_actions_bundle(actions, regular_guardian, user)
 
         server_actions = bundle.actions.map(&:server_action)
         expect(server_actions).to include(

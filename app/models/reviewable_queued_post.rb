@@ -73,7 +73,9 @@ class ReviewableQueuedPost < Reviewable
 
   def build_new_separated_actions(actions, guardian, args)
     # User actions bundle (only if there's a user to act on)
-    build_user_actions_bundle(actions, guardian) if target_created_by.present? && pending?
+    if target_created_by.present? && pending?
+      build_user_actions_bundle(actions, guardian, target_created_by)
+    end
   end
 
   def build_editable_fields(fields, guardian, args)

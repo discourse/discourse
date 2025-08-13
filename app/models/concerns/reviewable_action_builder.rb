@@ -14,9 +14,10 @@ module ReviewableActionBuilder
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
+  # @param user [User] User instance to check permissions against.
   #
   # @return [Reviewable::Actions::Bundle] The created user actions bundle.
-  def build_user_actions_bundle(actions, guardian)
+  def build_user_actions_bundle(actions, guardian, user)
     bundle =
       actions.add_bundle(
         "#{id}-user-actions",
@@ -25,8 +26,6 @@ module ReviewableActionBuilder
 
     # Always include the no-op action
     build_action(actions, :no_action_user, bundle: bundle)
-
-    user = try(:target_created_by)
 
     if user && allow_user_suspend_actions?(guardian, user)
       build_action(actions, :silence_user, bundle: bundle, client_action: "silence")
