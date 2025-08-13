@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
@@ -22,6 +21,7 @@ export default class UpcomingEventsCalendar extends Component {
 
   @tracked resolvedEvents;
 
+  _currentStart = null;
   _calendar = null;
 
   get customButtons() {
@@ -131,7 +131,10 @@ export default class UpcomingEventsCalendar extends Component {
   @action
   async onDatesChange(info) {
     this.applyCustomButtonsState();
+
     await this.fetchEvents(info);
+
+    this._currentStart = info.startStr;
 
     if (this.router?.transitionTo) {
       this.router.transitionTo({ queryParams: { view: info.view.type } });
@@ -143,7 +146,7 @@ export default class UpcomingEventsCalendar extends Component {
     this.resolvedEvents = null;
 
     const params = {};
-    params.after = info.startStr;
+    params.after = this._currentStart ?? info.startStr;
     params.before = info.endStr;
 
     if (this.args.mine) {
@@ -178,6 +181,7 @@ export default class UpcomingEventsCalendar extends Component {
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
+        @initialDate={{this.router.currentRoute.queryParams.start}}
         @onDatesChange={{this.onDatesChange}}
         @events={{this.events}}
         @initialView={{@controller.view}}
