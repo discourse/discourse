@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .before-topic-list-body-outlet.category-calendar {
   display: table-caption;
 }
@@ -254,5 +256,11 @@ a.holiday {
       margin: 0;
       padding: 0.25rem;
     }
+  }
+}
+
+.fk-d-menu.discourse-post-event-more-menu-content {
+  .mobile-view & {
+    z-index: z("modal", "dropdown");
   }
 }
