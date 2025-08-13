@@ -35,8 +35,7 @@ RSpec.describe DiscourseAssign do
     end
 
     it "does not add assigned filter option for anonymous users" do
-      guardian = Guardian.new
-      options = TopicsFilter.option_info(guardian)
+      options = TopicsFilter.option_info(Guardian.new)
 
       assigned_option = options.find { |o| o[:name] == "assigned:" }
       expect(assigned_option).to be_nil
