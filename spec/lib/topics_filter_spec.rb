@@ -165,11 +165,11 @@ RSpec.describe TopicsFilter do
           expect(ids).to contain_exactly(new_topic.id)
         end
 
-        it "in:new-posts returns only unread (non-new) topics" do
+        it "in:new-replies returns only unread (non-new) topics" do
           ids =
             TopicsFilter
               .new(guardian: user_for_new_filters.guardian)
-              .filter_from_query_string("in:new-posts")
+              .filter_from_query_string("in:new-replies")
               .where(id: [new_topic.id, unread_topic.id])
               .pluck(:id)
           expect(ids).to contain_exactly(unread_topic.id)

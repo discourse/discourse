@@ -274,7 +274,7 @@ class TopicsFilter
             description: I18n.t("filter.description.in_watching_first_post"),
           },
           { name: "in:new", description: I18n.t("filter.description.in_new") },
-          { name: "in:new-posts", description: I18n.t("filter.description.in_new_posts") },
+          { name: "in:new-replies", description: I18n.t("filter.description.in_new_replies") },
           { name: "in:new-topics", description: I18n.t("filter.description.in_new_topics") },
         ],
       )
@@ -529,7 +529,7 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
       end
-      if values.delete("new-posts")
+      if values.delete("new-replies")
         ensure_topic_users_reference!
         @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
       end
