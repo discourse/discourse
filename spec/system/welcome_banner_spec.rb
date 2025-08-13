@@ -146,6 +146,28 @@ describe "Welcome banner", type: :system do
       end
     end
 
+    context "with background image setting" do
+      fab!(:current_user, :admin)
+      fab!(:bg_img) { Fabricate(:image_upload, color: "cyan") }
+
+      before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
+
+      it "shows banner without background image" do
+        sign_in(current_user)
+        visit "/admin/config/interface"
+        expect(banner).to be_visible
+        expect(banner).to have_no_bg_img
+      end
+
+      it "sets a background image with uploaded image" do
+        SiteSetting.welcome_banner_image = bg_img
+
+        sign_in(current_user)
+        visit "/admin/config/interface"
+        expect(banner).to have_bg_img(bg_img.url)
+      end
+    end
+
     context "with interface location setting" do
       it "shows above topic content" do
         SiteSetting.welcome_banner_location = "above_topic_content"

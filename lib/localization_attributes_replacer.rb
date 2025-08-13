@@ -20,7 +20,7 @@ module LocalizationAttributesReplacer
       topic.excerpt = loc.excerpt if loc.excerpt.present?
     end
 
-    replace_category_attributes(topic.category, crawl_locale)
+    replace_category_attributes(topic.category, crawl_locale) if topic&.category.present?
   end
 
   def self.replace_post_attributes(post, crawl_locale)
@@ -32,7 +32,7 @@ module LocalizationAttributesReplacer
   private
 
   def self.get_localization(model, crawl_locale)
-    model.locale.present? && !LocaleNormalizer.is_same?(model.locale, crawl_locale) &&
-      model.get_localization(crawl_locale)
+    model.present? && model.locale.present? &&
+      !LocaleNormalizer.is_same?(model.locale, crawl_locale) && model.get_localization(crawl_locale)
   end
 end
