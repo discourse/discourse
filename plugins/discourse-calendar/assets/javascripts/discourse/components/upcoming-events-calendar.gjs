@@ -25,13 +25,6 @@ export default class UpcomingEventsCalendar extends Component {
   _calendar = null;
 
   get customButtons() {
-    console.log(this.args.mine);
-    // if (
-    //   this.router.currentRouteName ===
-    //   "discourse-post-event-upcoming-events.index"
-    // ) {
-    //   return {
-
     return {
       mineEvents: {
         text: i18n("discourse_post_event.upcoming_events.my_events"),
@@ -43,12 +36,12 @@ export default class UpcomingEventsCalendar extends Component {
         text: i18n("discourse_post_event.upcoming_events.all_events"),
         click: () => {
           this.router.transitionTo(
-            "discourse-post-event-upcoming-events.index"
+            "discourse-post-event-upcoming-events.index",
+            { queryParams: this.router.currentRoute.queryParams }
           );
         },
       },
     };
-    // }
   }
 
   get events() {
@@ -139,6 +132,10 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
     await this.fetchEvents(info);
+
+    if (this.router?.transitionTo) {
+      this.router.transitionTo({ queryParams: { view: info.view.type } });
+    }
   }
 
   @action
