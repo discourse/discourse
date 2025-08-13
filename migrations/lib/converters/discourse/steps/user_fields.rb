@@ -26,7 +26,7 @@ module Migrations::Converters::Discourse
         editable: item[:editable],
         external_name: item[:external_name],
         external_type: item[:external_type],
-        field_type_enum: item[:field_type],
+        field_type_enum: item[:field_type_enum],
         name: item[:name],
         position: item[:position],
         requirement: item[:requirement],

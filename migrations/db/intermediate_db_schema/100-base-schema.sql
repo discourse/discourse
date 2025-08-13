@@ -200,6 +200,14 @@ CREATE TABLE user_emails
     PRIMARY KEY (user_id, email)
 );
 
+CREATE TABLE user_field_options
+(
+    user_field_id NUMERIC  NOT NULL,
+    value         TEXT     NOT NULL,
+    created_at    DATETIME,
+    PRIMARY KEY (user_field_id, value)
+);
+
 CREATE TABLE user_fields
 (
     original_id       NUMERIC  NOT NULL PRIMARY KEY,

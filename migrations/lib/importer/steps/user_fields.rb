@@ -8,6 +8,7 @@ module Migrations::Importer::Steps
     DEFAULT_POSITION = 0
     REQUIREMENTS = UserField.requirements.values.to_set.freeze
     DEFAULT_REQUIREMENT = UserField.requirements[:optional]
+    REQUIRED_FOR_ALL = UserField.requirements[:for_all_users]
     FIELD_TYPES = UserField.field_type_enums.values.to_set.freeze
     DEFAULT_FIELD_TYPE = UserField.field_type_enums[:text]
 
@@ -51,10 +52,25 @@ module Migrations::Importer::Steps
       ORDER BY user_fields.original_id
     SQL
 
+    def initialize(intermediate_db, discourse_db, shared_data)
+      super
+
+      @needs_required_fields_version_bump = false
+    end
+
+    def after(total_rows:)
+      return unless @needs_required_fields_version_bump && total_rows.positive?
+
+      DB.exec(<<~SQL)
+        INSERT INTO user_required_fields_versions (created_at, updated_at)
+        VALUES (NOW(), NOW())
+      SQL
+    end
+
     private
 
     def transform_row(row)
-      name = row[:name].strip
+      name = row[:name]
       name_lower = name.downcase
 
       if (existing_id = @existing_user_field_by_name[name_lower])
@@ -78,6 +94,7 @@ module Migrations::Importer::Steps
 
       row[:position] ||= DEFAULT_POSITION
       row[:description] = sanitize_field(description, additional_attributes: SANITIZER_ATTRIBUTES)
+
       row[:requirement] = ensure_valid_value(
         value: row[:requirement],
         allowed_set: REQUIREMENTS,
@@ -88,6 +105,10 @@ module Migrations::Importer::Steps
         allowed_set: FIELD_TYPES,
         default_value: DEFAULT_FIELD_TYPE,
       )
+
+      if !@needs_required_fields_version_bump && row[:requirement] == REQUIRED_FOR_ALL
+        @needs_required_fields_version_bump = true
+      end
 
       super
     end
