@@ -7,7 +7,7 @@ RSpec.describe DiscourseAssign do
     let(:user) { Fabricate(:user) }
 
     before do
-      SiteSetting.assign_allowed_on_groups = "#{Group.find(Group::AUTO_GROUPS[:staff]).id}"
+      SiteSetting.assign_allowed_on_groups = Group::AUTO_GROUPS[:staff]
       user.update!(admin: true)
     end
 
