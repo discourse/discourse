@@ -14,6 +14,7 @@ const PostEventMenu = <template>
   <DiscoursePostEvent
     @linkToPost={{true}}
     @event={{@data.event}}
+    @eventId={{@data.eventId}}
     @onClose={{@data.onClose}}
   />
 </template>;
@@ -94,7 +95,7 @@ export default class FullCalendar extends Component {
             modalForMobile: true,
             maxWidth: 500,
             data: {
-              event: info.event.extendedProps.postEvent,
+              eventId: info.event.extendedProps.postEvent.id,
               onClose: () => {
                 this.menu.getByIdentifier("post-event-menu")?.close?.();
               },
