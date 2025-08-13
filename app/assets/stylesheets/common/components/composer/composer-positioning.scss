@@ -123,6 +123,7 @@
           z-index: z("mobile-composer");
           height: calc((var(--composer-vh, 1vh) * 100));
           max-height: unset;
+          max-width: 760px; // 760px is equivalent to --topic-width + avatar calc on desktop
         }
 
         .reply-area {
@@ -135,46 +136,46 @@
 
 body:not(.has-sidebar-page) {
   #reply-control:not(.fullscreen).hide-preview {
-    // margin-left: 0.67em;
+    margin-left: 0.67em;
 
-    //     // 1100px is equivalent to --d-max-width
-    //     @media screen and (width >= 1110px) {
-    //       margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
-    //     }
+    // 1100px is equivalent to --d-max-width
+    @media screen and (width >= 1110px) {
+      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    }
 
-    //     // 790px is equivalent to --topic-width
-    //     @media screen and (width < 790px) {
-    //       max-width: calc(100% - calc(0.67em * 2));
-    //       margin-left: 0.67em;
-    //     }
+    // 790px is equivalent to --topic-width
+    @media screen and (width < 790px) {
+      max-width: calc(100% - calc(0.67em * 2));
+      margin-left: 0.67em;
+    }
 
-    //     @include viewport.until(sm) {
-    //       max-width: unset;
-    //       margin-inline: unset;
-    //     }
+    @include viewport.until(sm) {
+      max-width: unset;
+      margin-inline: unset;
+    }
   }
 }
 
-// body.has-sidebar-page {
-//   #reply-control:not(.fullscreen).hide-preview {
-//     @include viewport.from(lg) {
-//       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+body.has-sidebar-page {
+  #reply-control:not(.fullscreen).hide-preview {
+    @include viewport.from(lg) {
+      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
 
-//       // 1390px is equivalent to --d-max-width + --d-sidebar-width
-//       @media screen and (width >= 1390px) {
-//         left: calc(
-//           (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
-//         ); // 50% of the whitespace
-//         margin-left: var(--layout-gap);
-//       }
+      // 1390px is equivalent to --d-max-width + --d-sidebar-width
+      @media screen and (width >= 1390px) {
+        left: calc(
+          (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+        ); // 50% of the whitespace
+        margin-left: var(--layout-gap);
+      }
 
-//       // This is when the topic width starts to shrink
-//       @media screen and (width <= 1180px) {
-//         width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
-//       }
-//     }
-//   }
-// }
+      // This is when the topic width starts to shrink
+      @media screen and (width <= 1180px) {
+        width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+      }
+    }
+  }
+}
 
 // align the previewless composer with the topic content
 #reply-control:not(.fullscreen).hide-preview {
@@ -189,6 +190,7 @@ body:not(.has-sidebar-page) {
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
     );
     width: 100%;
-    max-width: 760px; // 760px is equivalent to --topic-width + avatar calc on desktop
+    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
   }
 }
