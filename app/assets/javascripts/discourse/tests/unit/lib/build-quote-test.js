@@ -94,7 +94,8 @@ module("Unit | Utility | build-quote", function (hooks) {
 
     withPluginApi((api) => {
       api.registerValueTransformer("quote-params", ({ value }) => {
-        return value.name + "-transformed";
+        value[0] = "New transformed name";
+        return value;
       });
     });
 
@@ -104,7 +105,7 @@ module("Unit | Utility | build-quote", function (hooks) {
     );
     assert.strictEqual(
       quote,
-      '[quote="sam-transformed, post:1, topic:1"]',
+      '[quote="New transformed name, post:1, topic:1"]',
       "it transforms the quote params name"
     );
   });
