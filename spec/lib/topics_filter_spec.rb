@@ -57,7 +57,7 @@ RSpec.describe TopicsFilter do
         plugin_instance,
         :topics_filter_options,
       ) do |results, guardian|
-        if guardian&.authenticated?
+        if guardian.authenticated?
           results << {
             name: "custom-filter:",
             description: "A custom filter option from modifier",
