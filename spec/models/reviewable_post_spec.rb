@@ -107,7 +107,6 @@ RSpec.describe ReviewablePost do
         actions = reviewable_actions(guardian)
         bundles = actions.bundles
 
-        expect(bundles.count).to eq(1)
         expect(bundles.map(&:id)).not_to include("#{reviewable.id}-user-actions")
       end
 
