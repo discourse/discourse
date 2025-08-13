@@ -123,7 +123,6 @@
           z-index: z("mobile-composer");
           height: calc((var(--composer-vh, 1vh) * 100));
           max-height: unset;
-          max-width: 760px; // 760px is equivalent to --topic-width + avatar calc on desktop
         }
 
         .reply-area {
@@ -136,18 +135,28 @@
 
 body:not(.has-sidebar-page) {
   #reply-control:not(.fullscreen).hide-preview {
-    margin-left: 0.67em;
+    @include viewport.from(lg) {
+      margin-left: 0.67em;
+    }
 
     // 1100px is equivalent to --d-max-width
     @media screen and (width >= 1110px) {
       margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+
+      @media all and (orientation: landscape) {
+        .discourse-touch & {
+          margin-right: calc((100% - var(--d-max-width)) / 2 + 0.67em);
+          margin-left: unset;
+          left: unset;
+        }
+      }
     }
 
     // 790px is equivalent to --topic-width
-    @media screen and (width < 790px) {
-      max-width: calc(100% - calc(0.67em * 2));
-      margin-left: 0.67em;
-    }
+    // @media screen and (width < 790px) {
+    //   max-width: calc(100% - calc(0.67em * 2));
+    //   margin-left: 0.67em;
+    // }
 
     @include viewport.until(sm) {
       max-width: unset;
