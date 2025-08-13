@@ -105,10 +105,12 @@ export default class AiTranslations extends Component {
               @label="discourse_ai.translations.admin_actions.translation_settings"
               @route="adminPlugins.show.discourse-ai-features.edit"
               @routeModels={{@model.translation_id}}
+              class="ai-translation-settings-button"
             />
             <actions.Default
               @label="discourse_ai.translations.admin_actions.localization_settings"
               @route="adminConfig.localization.settings"
+              class="ai-localization-settings-button"
             />
           {{/if}}
         </:actions>
