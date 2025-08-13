@@ -37,7 +37,11 @@ const Layout = <template>
   <PluginOutlet
     @name="discovery-above"
     @connectorTagName="div"
-    @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+    @outletArgs={{lazyHash
+      category=@model.category
+      tag=@model.tag
+      model=@model
+    }}
   />
 
   <div class={{concatClass "container list-container" @listClass}}>
