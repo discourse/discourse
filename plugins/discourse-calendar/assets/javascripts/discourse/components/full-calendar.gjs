@@ -45,6 +45,7 @@ export default class FullCalendar extends Component {
       firstDay: 1,
       eventDisplay: "block",
       weekends: this.args.weekends ?? true,
+      initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
       plugins: [
         calendarModule.DayGrid,
