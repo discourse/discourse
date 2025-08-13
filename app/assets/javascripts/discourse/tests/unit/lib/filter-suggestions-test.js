@@ -77,6 +77,16 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
     );
   });
 
+  test("-cat finds -categories", async function (assert) {
+    const tips = buildTips();
+    const { suggestions, activeFilter } =
+      await FilterSuggestions.getSuggestions("-cat", tips, buildContext());
+    const names = suggestions.map((s) => s.name);
+
+    assert.deepEqual(names, ["-category:"], "returns only -category: for -cat");
+    assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
+  });
+
   test("trailing space switches back to top-level tips", async function (assert) {
     const tips = buildTips();
     const baseline = await FilterSuggestions.getSuggestions(

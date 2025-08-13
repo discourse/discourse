@@ -74,6 +74,10 @@ export default class FilterSuggestions {
   static filterTips(tips, searchTerm, prefix = "") {
     const filtered = [];
     searchTerm = searchTerm.toLowerCase();
+    // remove prefix from search term
+    if (prefix) {
+      searchTerm = searchTerm.replace(prefix, "");
+    }
 
     for (const tip of tips) {
       if (filtered.length >= MAX_RESULTS) {
@@ -88,7 +92,6 @@ export default class FilterSuggestions {
       if (tipName === searchTerm) {
         matches = false;
       }
-
       if (!matches) {
         continue;
       }
