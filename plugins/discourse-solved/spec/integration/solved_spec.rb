@@ -7,7 +7,7 @@ RSpec.describe "Managing Posts solved status" do
 
   before { SiteSetting.allow_solved_on_all_topics = true }
 
-  describe "customer filters" do
+  describe "custom filters" do
     before do
       SiteSetting.allow_solved_on_all_topics = false
       SiteSetting.enable_solved_tags = solvable_tag.name
@@ -66,6 +66,42 @@ RSpec.describe "Managing Posts solved status" do
           .filter_from_query_string("status:unsolved")
           .pluck(:id),
       ).to contain_exactly(unsolved_in_category.id, unsolved_in_tag.id)
+    end
+
+    describe "topics_filter_options modifier" do
+      it "adds solved and unsolved filter options when plugin is enabled" do
+        options = TopicsFilter.option_info(Guardian.new)
+
+        solved_option = options.find { |o| o[:name] == "status:solved" }
+        unsolved_option = options.find { |o| o[:name] == "status:unsolved" }
+
+        expect(solved_option).to be_present
+        expect(solved_option).to include(
+          name: "status:solved",
+          description: I18n.t("solved.filter.description.solved"),
+          type: "text",
+        )
+
+        expect(unsolved_option).to be_present
+        expect(unsolved_option).to include(
+          name: "status:unsolved",
+          description: I18n.t("solved.filter.description.unsolved"),
+          type: "text",
+        )
+      end
+
+      it "does not add filter options when plugin is disabled" do
+        SiteSetting.solved_enabled = false
+
+        guardian = Guardian.new
+        options = TopicsFilter.option_info(guardian)
+
+        solved_option = options.find { |o| o[:name] == "status:solved" }
+        unsolved_option = options.find { |o| o[:name] == "status:unsolved" }
+
+        expect(solved_option).to be_nil
+        expect(unsolved_option).to be_nil
+      end
     end
   end
 
