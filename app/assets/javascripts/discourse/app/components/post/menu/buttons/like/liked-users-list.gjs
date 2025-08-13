@@ -72,7 +72,7 @@ export default class LikedUsersList extends Component {
       @identifier={{concat "post-like-users_" @post.id}}
       @triggers="click"
       @onShow={{this.fetchLikedUsers}}
-      @triggerClass="button-count btn-flat"
+      @triggerClass="button-count btn-flat post-action-menu__like-count"
       @placement="top"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id={{concat "post-like-users_" @post.id}}
