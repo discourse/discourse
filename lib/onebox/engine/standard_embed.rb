@@ -180,7 +180,7 @@ module Onebox
 
       def set_oembed_data_on_raw
         oembed = get_oembed
-        skip_dimensions = oembed.data[:type] == "rich"
+        skip_dimensions = oembed.data[:type] == "rich" && !oembed.data[:html]&.include?("<iframe")
         set_from_normalizer_data(oembed, skip_dimensions:)
       end
 
