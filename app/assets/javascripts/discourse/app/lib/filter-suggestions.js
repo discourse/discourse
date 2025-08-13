@@ -165,7 +165,7 @@ class FilterParser {
   }
 
   parse() {
-    const words = this.text.split(/\s+/).filter((w) => w.length > 0);
+    const words = this.text.split(/\s+/).filter(Boolean);
     this.endsWithSpace = this.text.endsWith(" ");
     return words.map((word) => this.parseWord(word));
   }
