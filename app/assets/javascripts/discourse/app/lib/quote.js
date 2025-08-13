@@ -40,10 +40,10 @@ export function buildQuote(post, contents, opts = {}) {
 
   const transformedParams = applyValueTransformer("quote-params", params, {
     post,
+    contents,
     opts,
   });
 
-  return `[quote="${transformedParams.join(
-    ", "
-  )}"]\n${contents.trim()}\n[/quote]\n\n`;
+  const paramsString = transformedParams.join(", ");
+  return `[quote="${paramsString}"]\n${contents.trim()}\n[/quote]\n\n`;
 }
