@@ -5842,8 +5842,6 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
-      delete_user:
-        reason: "Deleted via review queue"
       # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
