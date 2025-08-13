@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
@@ -20,9 +21,6 @@ export default class UpcomingEventsCalendar extends Component {
   @service discoursePostEventService;
 
   @tracked resolvedEvents;
-
-  _currentStart = null;
-  _calendar = null;
 
   get customButtons() {
     return {
@@ -134,10 +132,19 @@ export default class UpcomingEventsCalendar extends Component {
 
     await this.fetchEvents(info);
 
-    this._currentStart = info.startStr;
+    let start = info.startStr;
+
+    if (info.view.type === "dayGridMonth") {
+      start = moment(info.view.currentStart).format("YYYY-MM-DD");
+    }
 
     if (this.router?.transitionTo) {
-      this.router.transitionTo({ queryParams: { view: info.view.type } });
+      this.router.transitionTo({
+        queryParams: {
+          view: info.view.type,
+          start,
+        },
+      });
     }
   }
 
@@ -146,7 +153,7 @@ export default class UpcomingEventsCalendar extends Component {
     this.resolvedEvents = null;
 
     const params = {};
-    params.after = this._currentStart ?? info.startStr;
+    params.after = info.startStr;
     params.before = info.endStr;
 
     if (this.args.mine) {
