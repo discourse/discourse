@@ -194,6 +194,14 @@
       "discourse/plugins/styleguide/*": [
         "./plugins/styleguide/assets/javascripts/*",
         "./plugins/styleguide/test/javascripts/*"
+      ],
+      "discourse/themes/foundation/*": [
+        "./themes/foundation/javascripts/*",
+        "./themes/foundation/test/*"
+      ],
+      "discourse/themes/horizon/*": [
+        "./themes/horizon/javascripts/*",
+        "./themes/horizon/test/*"
       ]
     }
   },
@@ -287,7 +295,11 @@
     "./plugins/spoiler-alert/assets/javascripts",
     "./plugins/spoiler-alert/test/javascripts",
     "./plugins/styleguide/assets/javascripts",
-    "./plugins/styleguide/test/javascripts"
+    "./plugins/styleguide/test/javascripts",
+    "./themes/foundation/javascripts",
+    "./themes/foundation/test",
+    "./themes/horizon/javascripts",
+    "./themes/horizon/test"
   ],
   "exclude": [
     "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
