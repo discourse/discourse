@@ -16,6 +16,7 @@ const PostEventMenu = <template>
     @event={{@data.event}}
     @eventId={{@data.eventId}}
     @onClose={{@data.onClose}}
+    @withDescription={{false}}
   />
 </template>;
 
