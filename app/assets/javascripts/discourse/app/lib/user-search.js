@@ -9,6 +9,7 @@ import { cloneJSON } from "discourse/lib/object";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { i18n } from "discourse-i18n";
 
 let cache = {},
   cacheKey,
@@ -376,16 +377,23 @@ export default function userSearch(options) {
 
 export function validateSearchResult(obj) {
   const expectedPropertiesMap = {
-    isUser: "username",
-    isEmail: "username",
-    isGroup: "name",
+    isUser: {
+      nameProperty: "username",
+      translateKey: "composer.autocomplete.username_missing",
+    },
+    isEmail: {
+      nameProperty: "username",
+      translateKey: "composer.autocomplete.username_missing",
+    },
+    isGroup: {
+      nameProperty: "name",
+      translateKey: "composer.autocomplete.name_missing",
+    },
   };
 
-  for (const [isEntity, nameProperty] of Object.entries(
-    expectedPropertiesMap
-  )) {
-    if (obj[isEntity] && !obj[nameProperty]) {
-      throw new Error(`Invalid autocomplete result: missing ${nameProperty}`);
+  for (const [isEntity, props] of Object.entries(expectedPropertiesMap)) {
+    if (obj[isEntity] && !obj[props.nameProperty]) {
+      throw new Error(i18n(props.translateKey));
     }
   }
   return true;
