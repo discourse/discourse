@@ -99,4 +99,4 @@ jobs:
 
       - name: Glint
         if: ${{ !cancelled() }}
-        run: pnpm glint -p jsconfig.json --noEmit
+        run: pnpm lint:glint
