@@ -18,6 +18,10 @@ module DiscoursePostEvent
       object.post.topic.category_id
     end
 
+    def category_id
+      object.post.topic.category_id
+    end
+
     def post
       {
         id: object.post.id,
