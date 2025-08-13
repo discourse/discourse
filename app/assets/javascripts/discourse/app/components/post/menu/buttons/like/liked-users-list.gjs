@@ -3,14 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import UserAvatar from "discourse/components/user-avatar";
 import icon from "discourse/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
-import LikedUserItem from "./liked-user-item";
+
+const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
 
 export default class LikedUsersList extends Component {
   @service store;
 
-  @tracked likedUsers = null;
+  @tracked likedUsers;
   @tracked loadingLikedUsers = false;
 
   @action
@@ -25,12 +27,11 @@ export default class LikedUsersList extends Component {
       const users = await this.store
         .find("post-action-user", {
           id: this.args.post.id,
-          post_action_type_id: 2, // LIKE_ACTION
+          post_action_type_id: LIKE_ACTION,
         })
-        .then((result) => result.toArray());
+        .then((result) => result);
 
       this.likedUsers = users;
-    } catch {
     } finally {
       this.loadingLikedUsers = false;
     }
@@ -60,7 +61,7 @@ export default class LikedUsersList extends Component {
           <ul class="liked-users-list">
             {{#each this.likedUsers as |user|}}
               <li class="liked-users-list__item">
-                <LikedUserItem @user={{user}} />
+                <UserAvatar @user={{user}} @size="small" />
               </li>
             {{/each}}
           </ul>
