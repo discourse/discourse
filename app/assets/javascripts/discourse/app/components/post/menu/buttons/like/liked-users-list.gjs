@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import UserAvatar from "discourse/components/user-avatar";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -72,7 +73,14 @@ export default class LikedUsersList extends Component {
       @identifier={{concat "post-like-users_" @post.id}}
       @triggers="click"
       @onShow={{this.fetchLikedUsers}}
-      @triggerClass="button-count btn-flat post-action-menu__like-count"
+      @triggerClass={{concatClass
+        "post-action-menu__like-count"
+        "like-count"
+        "btn-flat"
+        "button-count"
+        "highlight-action"
+        (if @post.yours "my-likes" "regular-likes")
+      }}
       @placement="top"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id={{concat "post-like-users_" @post.id}}
