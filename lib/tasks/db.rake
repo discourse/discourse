@@ -266,19 +266,21 @@ task "db:migrate" => %w[
 
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
-    SeedFu.quiet = true
+    if !ENV["DB_MIGRATE_SKIP_SEED_FU"]
+      SeedFu.quiet = true
 
-    begin
-      SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
-    rescue => error
-      error.backtrace.each { |l| puts l }
+      begin
+        SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+      rescue => error
+        error.backtrace.each { |l| puts l }
+      end
+
+      if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
+        SiteIconManager.ensure_optimized!
+      end
     end
 
     Rake::Task["db:schema:cache:dump"].invoke if Rails.env.development? && !ENV["RAILS_DB"]
-
-    if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
-      SiteIconManager.ensure_optimized!
-    end
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
