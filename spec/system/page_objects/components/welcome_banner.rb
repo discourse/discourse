@@ -48,6 +48,18 @@ module PageObjects
         )
       end
 
+      def has_no_bg_img?
+        has_no_css?(".welcome-banner.--with-bg-img")
+      end
+
+      def has_bg_img?(url)
+        has_css?(
+          ".welcome-banner.--with-bg-img",
+          style: "background-image: url(#{url})",
+          visible: :visible,
+        )
+      end
+
       def above_topic_content?
         has_css?("#main-outlet > .--location-above-topic-content", visible: :visible)
       end
