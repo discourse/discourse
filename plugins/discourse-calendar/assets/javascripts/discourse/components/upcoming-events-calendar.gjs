@@ -160,6 +160,10 @@ export default class UpcomingEventsCalendar extends Component {
     params.after = info.startStr;
     params.before = info.endStr;
 
+    if (this.args.mine) {
+      params.attending_user = this.currentUser?.username;
+    }
+
     this.resolvedEvents =
       await this.discoursePostEventService.fetchEvents(params);
   }
