@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildQuote } from "discourse/lib/quote";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 
@@ -77,6 +78,34 @@ module("Unit | Utility | build-quote", function (hooks) {
       quote,
       '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
       "allows quoting a quote"
+    );
+  });
+
+  test("applying a value transformation", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      cooked: DiscourseMarkdownIt.minimal().cook(
+        '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
+      ),
+      username: "eviltrout",
+      post_number: 1,
+      topic_id: 2,
+    });
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("quote-params", ({ value }) => {
+        return value.name + "-transformed";
+      });
+    });
+
+    const quote = buildQuote(
+      post,
+      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
+    );
+    assert.strictEqual(
+      quote,
+      '[quote="sam-transformed, post:1, topic:1"]',
+      "it transforms the quote params name"
     );
   });
 });
