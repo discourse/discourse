@@ -276,11 +276,7 @@ class S3Helper
         region: region,
       )
 
-    response =
-      sts_client.assume_role(
-        role_arn: role_arn,
-        role_session_name: "discourse-s3-#{SecureRandom.hex(8)}",
-      )
+    response = sts_client.assume_role(role_arn: role_arn)
 
     response.credentials
   end
