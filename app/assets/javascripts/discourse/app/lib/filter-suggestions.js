@@ -73,7 +73,7 @@ export default class FilterSuggestions {
 
   static filterTips(tips, searchTerm, prefix = "") {
     const filtered = [];
-    const searchLower = searchTerm.toLowerCase();
+    searchTerm = searchTerm.toLowerCase();
 
     for (const tip of tips) {
       if (filtered.length >= MAX_RESULTS) {
@@ -82,10 +82,10 @@ export default class FilterSuggestions {
 
       const tipName = tip.name;
       let matches =
-        tipName.includes(searchLower) ||
-        (tip.alias && tip.alias.includes(searchLower));
+        tipName.includes(searchTerm) ||
+        (tip.alias && tip.alias.includes(searchTerm));
 
-      if (tipName === searchLower) {
+      if (tipName === searchTerm) {
         matches = false;
       }
 
@@ -115,12 +115,18 @@ export default class FilterSuggestions {
             });
           });
         }
+      } else {
+        filtered.push({
+          ...tip,
+          name: `${prefix}${tip.name}`,
+          isSuggestion: true,
+        });
       }
     }
 
     return filtered.sort((a, b) => {
-      const aStarts = a.name.toLowerCase().startsWith(searchLower);
-      const bStarts = b.name.toLowerCase().startsWith(searchLower);
+      const aStarts = a.name.toLowerCase().startsWith(searchTerm);
+      const bStarts = b.name.toLowerCase().startsWith(searchTerm);
 
       if (aStarts && !bStarts) {
         return -1;
