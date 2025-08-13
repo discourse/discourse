@@ -76,14 +76,14 @@ export default class FilterSuggestions {
     const searchLower = searchTerm.toLowerCase();
 
     for (const tip of tips) {
-      if (filtered.length >= 20) {
+      if (filtered.length >= MAX_RESULTS) {
         break;
       }
 
-      const tipName = tip.name.toLowerCase();
+      const tipName = tip.name;
       let matches =
         tipName.includes(searchLower) ||
-        (tip.alias && tip.alias.toLowerCase().includes(searchLower));
+        (tip.alias && tip.alias.includes(searchLower));
 
       if (tipName === searchLower) {
         matches = false;
