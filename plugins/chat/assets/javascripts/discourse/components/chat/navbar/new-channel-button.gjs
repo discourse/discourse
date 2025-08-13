@@ -5,7 +5,6 @@ import DButton from "discourse/components/d-button";
 import CreateChannelModal from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 
 export default class ChatNavbarNewChannelButton extends Component {
-  @service chatStateManager;
   @service currentUser;
   @service modal;
   @service site;

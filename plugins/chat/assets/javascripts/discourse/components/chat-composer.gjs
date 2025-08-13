@@ -66,8 +66,6 @@ export default class ChatComposer extends Component {
   @service appEvents;
   @service emojiStore;
   @service currentUser;
-  @service chatApi;
-  @service chatDraftsManager;
   @service modal;
   @service menu;
 

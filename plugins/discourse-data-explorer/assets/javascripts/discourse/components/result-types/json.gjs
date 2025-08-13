@@ -6,7 +6,6 @@ import DButton from "discourse/components/d-button";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 export default class Json extends Component {
-  @service dialog;
   @service modal;
 
   @cached

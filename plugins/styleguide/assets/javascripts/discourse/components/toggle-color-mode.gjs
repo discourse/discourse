@@ -46,8 +46,6 @@ function colorSchemeOverride(type) {
 }
 
 export default class ToggleColorMode extends Component {
-  @service keyValueStore;
-  @service siteSettings;
   @service site;
 
   @tracked colorSchemeOverride = this.default;
