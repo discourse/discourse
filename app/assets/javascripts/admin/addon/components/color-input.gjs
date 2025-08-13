@@ -34,9 +34,14 @@ export default class ColorInput extends Component {
       if (!color.startsWith("#")) {
         color = "#" + color;
       }
-      // auto fill common hex codes like #F8F -> #F8F8F8 and #DDD -> #DDDDDD
-      if (color.length === 4 && color[1] === color[3]) {
-        color = "#" + color.slice(1).slice(0, 2).repeat(3);
+      if (color.length === 4) {
+        color =
+          "#" +
+          color
+            .slice(1)
+            .split("")
+            .map((hex) => hex + hex)
+            .join("");
       }
     }
     return color;
@@ -52,6 +57,11 @@ export default class ColorInput extends Component {
   @action
   onPickerInput(event) {
     this.set("hexValue", event.target.value.replace("#", ""));
+  }
+
+  @action
+  handleBlur() {
+    this.onBlur?.(this.normalize(this.hexValue));
   }
 
   @observes("hexValue", "brightnessValue", "valid")
@@ -78,6 +88,7 @@ export default class ColorInput extends Component {
       @input={{this.onHexInput}}
       class="hex-input"
       aria-labelledby={{this.ariaLabelledby}}
+      {{on "blur" this.handleBlur}}
     />
     <input
       class="picker"
