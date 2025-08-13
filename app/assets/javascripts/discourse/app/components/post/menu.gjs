@@ -31,7 +31,7 @@ import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
 import PostMenuDeleteButton from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
 import PostMenuFlagButton from "./menu/buttons/flag";
-import PostMenuLikeButton from "./menu/buttons/like";
+import PostMenuLikeButton from "./menu/buttons/like/post-menu-like-button";
 import PostMenuReadButton from "./menu/buttons/read";
 import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
