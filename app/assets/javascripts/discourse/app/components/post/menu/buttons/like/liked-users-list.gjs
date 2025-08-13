@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -68,11 +69,13 @@ export default class LikedUsersList extends Component {
   <template>
     <DMenu
       @modalForMobile={{true}}
-      @identifier="post-like-users"
+      @identifier={{concat "post-like-users_" @post.id}}
       @triggers="click"
       @onShow={{this.fetchLikedUsers}}
-      @triggerClass="button-count"
+      @triggerClass="button-count btn-flat"
       @placement="top"
+      label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
+      id={{concat "post-like-users_" @post.id}}
     >
       <:trigger>
         {{@post.likeCount}}
