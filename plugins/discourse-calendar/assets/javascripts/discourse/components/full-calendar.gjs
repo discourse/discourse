@@ -11,7 +11,11 @@ import {
 } from "../lib/calendar-locale";
 
 const PostEventMenu = <template>
-  <DiscoursePostEvent @linkToPost={{true}} @event={{@data.event}} />
+  <DiscoursePostEvent
+    @linkToPost={{true}}
+    @event={{@data.event}}
+    @onClose={{@data.onClose}}
+  />
 </template>;
 
 export default class FullCalendar extends Component {
@@ -91,6 +95,9 @@ export default class FullCalendar extends Component {
             maxWidth: 500,
             data: {
               event: info.event.extendedProps.postEvent,
+              onClose: () => {
+                this.menu.getByIdentifier("post-event-menu")?.close?.();
+              },
             },
           }
         );
