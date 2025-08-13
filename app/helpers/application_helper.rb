@@ -566,14 +566,16 @@ module ApplicationHelper
     @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
   end
 
+  def user_scheme_id
+    return @user_scheme_id if defined?(@user_scheme_id)
+    scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
-      return custom_user_scheme_id
-    end
-
+    return user_scheme_id if user_scheme_id
     return if theme_id.blank?
 
     if SiteSetting.use_overhauled_theme_color_palette
@@ -582,11 +584,17 @@ module ApplicationHelper
     @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
+  def user_dark_scheme_id
+    return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
+    scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def dark_scheme_id
     if SiteSetting.use_overhauled_theme_color_palette
       scheme_id
     else
-      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
+      user_dark_scheme_id ||
         (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
     end
   end
@@ -832,8 +840,8 @@ module ApplicationHelper
       svg_sprite_path: SvgSprite.path(theme_id),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
-      user_color_scheme_id: scheme_id,
-      user_dark_scheme_id: dark_scheme_id,
+      user_color_scheme_id: user_scheme_id || -1,
+      user_dark_scheme_id: user_dark_scheme_id || -1,
     }
 
     if Rails.env.development?

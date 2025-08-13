@@ -1714,7 +1714,7 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "Set interface language for anonymous users from their web browser's language headers"
     set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
-    set_locale_from_param: "Allows setting an anonymous user's locale via the 'lang' URL param, e.g. ?lang=es"
+    set_locale_from_param: "Allows setting an anonymous user's locale via the 'tl' URL param, e.g. ?tl=es"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions"
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
@@ -1990,6 +1990,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, and Twitter are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2026,8 +2027,7 @@ en:
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
     remove_older_backups: "Remove backups older than the specified number of days. Leave blank to disable."
-    automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
-    backup_frequency: "Specifies the interval, in days, at which automatic backups of the site are created. If set to 7, for example, a new backup will be generated every week. The activation of this setting is contingent upon `automatic_backups_enabled`."
+    backup_frequency: "Specifies the interval, in days, at which automatic backups of the site are created. If set to 7, for example, a new backup will be generated every week. Set to 0 to disable."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
@@ -2717,7 +2717,9 @@ en:
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
+    welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
+    welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
@@ -2733,7 +2735,6 @@ en:
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
-    experimental_sidebar_messages_count_enabled_groups: "Show an unread indicator or count next to the 'My messages' sidebar link, depending on the user's Navigation preferences"
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2902,6 +2903,9 @@ en:
       in_muted: "Show muted topics"
       in_normal: "Show topics with normal notification level"
       in_watching_first_post: "Show topics you're watching for first post"
+      in_new: "Show topics that are new or have new replies"
+      in_new_replies: "Show topics with new replies"
+      in_new_topics: "Show new topics"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -5730,11 +5734,9 @@ en:
         title: "Agree and Edit Post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
-      delete_single:
+      delete:
         title: "Delete"
         complete: "Post deleted."
-      delete:
-        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5778,7 +5780,10 @@ en:
         complete: "Post approved."
       approve_post:
         title: "Approve Post"
-        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        complete: "Post approved."
+      approve_post_closed:
+        title: "Approve Post"
+        confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
       reject_post:
         title: "Reject Post"

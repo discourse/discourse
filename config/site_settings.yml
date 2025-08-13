@@ -3125,10 +3125,8 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:
@@ -3672,10 +3670,22 @@ uncategorized:
     themeable: true
     area: "interface"
 
+  welcome_banner_image:
+    client: true
+    default: ""
+    type: upload
+    area: "interface"
+
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
     default: "above_topic_content"
+    area: "interface"
+
+  welcome_banner_page_visibility:
+    client: true
+    enum: "WelcomeBannerPageVisibility"
+    default: "top_menu_pages"
     area: "interface"
 
 user_preferences:
@@ -4128,10 +4138,3 @@ experimental:
     client: true
     type: group_list
     default: ""
-  experimental_sidebar_messages_count_enabled_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true

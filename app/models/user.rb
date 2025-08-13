@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  self.ignored_columns = [
-    :salt, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_hash, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_algorithm, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   include Searchable
   include Roleable
   include HasCustomFields

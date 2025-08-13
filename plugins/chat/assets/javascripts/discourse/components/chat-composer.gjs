@@ -66,8 +66,6 @@ export default class ChatComposer extends Component {
   @service appEvents;
   @service emojiStore;
   @service currentUser;
-  @service chatApi;
-  @service chatDraftsManager;
   @service modal;
   @service menu;
 
@@ -482,7 +480,7 @@ export default class ChatComposer extends Component {
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
         if (obj.isUser) {
-          this.#addMentionedUser(obj);
+          this.#addMentionedUser(cloneJSON(obj));
         }
 
         return obj.username || obj.name;

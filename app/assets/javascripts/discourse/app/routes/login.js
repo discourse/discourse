@@ -45,16 +45,6 @@ export default class extends DiscourseRoute {
     // When inside a webview, it handles the login flow itself
     if (isAppWebview) {
       postRNWebviewMessage("showLogin", true);
-      return;
-    }
-
-    // When Discourse Connect is enabled, redirect to the SSO endpoint
-    if (auth_immediately && enable_discourse_connect) {
-      const returnPath = cookie("destination_url")
-        ? getURL("/")
-        : encodeURIComponent(url);
-      window.location = getURL(`/session/sso?return_path=${returnPath}`);
-      return;
     }
 
     // Automatically store the current URL (aka. the one **before** the transition)
@@ -64,6 +54,15 @@ export default class extends DiscourseRoute {
       } else if (DiscourseURL.isInternalTopic(referrer)) {
         cookie("destination_url", referrer);
       }
+    }
+
+    // When Discourse Connect is enabled, redirect to the SSO endpoint
+    if (auth_immediately && enable_discourse_connect) {
+      const returnPath = cookie("destination_url")
+        ? getURL("/")
+        : encodeURIComponent(url);
+      window.location = getURL(`/session/sso?return_path=${returnPath}`);
+      return;
     }
 
     // Automatically kick off the external login if it's the only one available

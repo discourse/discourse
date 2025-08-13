@@ -17,7 +17,7 @@ import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
 import ThemeTranslation from "admin/components/theme-translation";
-import ColorPalettes from "select-kit/components/color-palettes";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
@@ -129,11 +129,16 @@ export default RouteTemplate(
 
             <div class="setting-value">
               <div class="color-palette-input-group">
-                <ColorPalettes
+                <ColorPalettePicker
                   @content={{@controller.colorSchemes}}
                   @value={{@controller.colorSchemeId}}
                   @icon="paintbrush"
-                  @options={{hash filterable=true}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
                 />
                 {{#if @controller.colorSchemeId}}
                   <DButton
@@ -175,11 +180,16 @@ export default RouteTemplate(
 
             <div class="setting-value">
               <div class="color-palette-input-group">
-                <ColorPalettes
+                <ColorPalettePicker
                   @content={{@controller.colorSchemes}}
                   @value={{@controller.darkColorSchemeId}}
                   @icon="paintbrush"
-                  @options={{hash filterable=true}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
                 />
                 {{#if @controller.darkColorSchemeId}}
                   <DButton

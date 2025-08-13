@@ -177,7 +177,7 @@ module SiteSettingExtension
   end
 
   def setting_metadata_hash(setting)
-    setting_hash = {
+    {
       setting:,
       default: SiteSetting.defaults[setting],
       description: SiteSetting.description(setting),
@@ -433,6 +433,7 @@ module SiteSettingExtension
 
         theme_site_setting_changes, theme_site_setting_deletions =
           diff_hash(new_theme_site_settings, theme_site_settings)
+
         theme_site_setting_changes.each do |theme_id, settings|
           theme_site_settings[theme_id] ||= {}
           theme_site_settings[theme_id].merge!(settings)
@@ -447,11 +448,13 @@ module SiteSettingExtension
     end
   end
 
+  SITE_SETTINGS_CHANNEL = "/site_settings"
+
   def ensure_listen_for_changes
     return if @listen_for_changes == false
 
     unless @subscribed
-      MessageBus.subscribe("/site_settings") do |message|
+      MessageBus.subscribe(SITE_SETTINGS_CHANNEL) do |message|
         process_message(message) if message.data["process"] != process_id
       end
 
@@ -599,6 +602,7 @@ module SiteSettingExtension
     theme_site_settings[theme_id][name] = val
 
     notify_clients!(name, theme_id: theme_id) if client_settings.include?(name)
+    notify_changed!
 
     clear_cache!(expire_theme_site_setting_cache: true)
 

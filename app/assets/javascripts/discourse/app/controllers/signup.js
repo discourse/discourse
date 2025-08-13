@@ -479,10 +479,10 @@ export default class SignupPageController extends Controller {
             set("username", this.accountUsername);
             set("password", this.accountPassword);
 
-            const destinationUrl = cookie("destination_url");
-            if (destinationUrl) {
-              removeCookie("destination_url");
-              set("redirect", destinationUrl);
+            let { destination_url } = this.authOptions || {};
+
+            if (destination_url && destination_url !== "/signup") {
+              set("redirect", destination_url);
             } else {
               set("redirect", userPath("account-created"));
             }

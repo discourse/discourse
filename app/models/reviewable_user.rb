@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableUser < Reviewable
+  include ReviewableActionBuilder
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -12,12 +14,7 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    if guardian.can_approve?(target)
-      actions.add(:approve_user) do |a|
-        a.icon = "user-plus"
-        a.label = "reviewables.actions.approve_user.title"
-      end
-    end
+    build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
 
     delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
   end
