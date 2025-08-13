@@ -241,7 +241,7 @@ class FilterValueSuggester {
       this.previousValues = parts
         .slice(0, -1)
         .map((p) => p.trim())
-        .filter((p) => p);
+        .filter(Boolean);
       this.searchTerm = parts[parts.length - 1].trim();
       this.valuePrefix = value.substring(
         0,
