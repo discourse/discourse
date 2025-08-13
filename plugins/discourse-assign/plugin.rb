@@ -940,7 +940,7 @@ after_initialize do
   end
 
   register_modifier(:topics_filter_options) do |results, guardian|
-    if guardian&.can_assign?
+    if guardian.can_assign?
       results << {
         name: "assigned:",
         description: I18n.t("discourse_assign.filter.description.assigned"),
