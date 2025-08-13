@@ -41,12 +41,6 @@ RSpec.describe SiteSettingExtension do
     new_settings(provider_local)
   end
 
-  after do
-    settings.provider.model = nil
-    settings.listen_for_changes = false
-    settings2.listen_for_changes = false
-  end
-
   it "does not leak state cause changes are not linked" do
     t1 =
       Thread.new do
@@ -72,7 +66,12 @@ RSpec.describe SiteSettingExtension do
     t2.join
   end
 
-  describe "refresh!" do
+  describe ".refresh!" do
+    it "ensures that the right MessageBus subscription has been set up" do
+      settings.expects(:ensure_listen_for_changes).once
+      settings.refresh!
+    end
+
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -108,30 +107,6 @@ RSpec.describe SiteSettingExtension do
 
       settings2.refresh!
       expect(settings2.hello).to eq(99)
-    end
-
-    it "publishes changes across processes" do
-      MessageBus.on
-
-      # Only need to do this once, since both settings will use the same provider. Doing it twice leads to confusion with MessageBus
-      settings.provider.model = settings
-
-      settings.listen_for_changes = true
-      settings2.listen_for_changes = true
-
-      settings.refresh!
-      settings2.refresh!
-
-      settings.setting(:hello, 1)
-      settings2.setting(:hello, 1)
-
-      settings.hello = 100
-
-      expect(settings2.hello).to eq(100)
-
-      settings.hello = 99
-
-      try_until_success(frequency: 0.5) { expect(settings2.hello).to eq(99) }
     end
 
     it "does not override types in the type supervisor" do
@@ -1078,36 +1053,29 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
     end
 
-    it "publishes changes across processes" do
-      MessageBus.on
-
+    it "publishes the right MessageBus message when a theme site setting is updated" do
       settings_tss_instance_1 = new_settings(provider_local)
-      settings_tss_instance_2 = new_settings(provider_local)
-
-      settings_tss_instance_1.listen_for_changes = true
-      settings_tss_instance_2.listen_for_changes = true
-
       settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
-      settings_tss_instance_2.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
-
       settings_tss_instance_1.refresh!
-      settings_tss_instance_2.refresh!
 
       expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
-      expect(settings_tss_instance_2.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
 
       tss_1.update!(value: true)
-      settings_tss_instance_1.change_themeable_site_setting(
-        theme_1.id,
-        :enable_welcome_banner,
-        true,
-      )
 
-      # Get through the MessageBus queue
-      try_until_success(frequency: 0.5) do
-        expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(true)
-        expect(settings_tss_instance_2.enable_welcome_banner(theme_id: theme_1.id)).to eq(true)
-      end
+      messages =
+        MessageBus.track_publish(described_class::SITE_SETTINGS_CHANNEL) do
+          settings_tss_instance_1.change_themeable_site_setting(
+            theme_1.id,
+            :enable_welcome_banner,
+            true,
+          )
+        end
+
+      expect(messages.length).to eq(1)
+
+      message = messages.first
+
+      expect(message.data[:process]).to eq(settings_tss_instance_1.process_id)
     end
 
     describe ".theme_site_settings_json_uncached" do
