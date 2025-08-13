@@ -33,7 +33,7 @@ RSpec.describe UserAuthToken do
       expect(UserAuthToken.where(id: token.id).count).to eq(0)
     end
 
-    it "deletes old logs excluding certain types" do
+    it "deletes old logs excluding the `suspicious` and `generate` types" do
       SiteSetting.maximum_session_age = 1
       UserAuthTokenLog.delete_all
 
