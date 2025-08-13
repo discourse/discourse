@@ -134,7 +134,7 @@ export default class FilterSuggestions {
   }
 
   static async getFilterSuggestionsByType(tip, segment, context) {
-    const suggester = new FilterValueSuggester(tip, segment, context);
+    const suggester = new FilterTypeValueSuggester(tip, segment, context);
 
     switch (tip.type) {
       case "category":
@@ -218,7 +218,7 @@ class FilterParser {
   }
 }
 
-class FilterValueSuggester {
+class FilterTypeValueSuggester {
   constructor(tip, segment, context) {
     this.tip = tip;
     this.segment = segment;
@@ -242,7 +242,7 @@ class FilterValueSuggester {
         .slice(0, -1)
         .map((p) => p.trim())
         .filter(Boolean);
-      this.searchTerm = parts[parts.length - 1].trim();
+      this.searchTerm = parts.at(-1).trim();
       this.valuePrefix = value.substring(
         0,
         value.length - this.searchTerm.length
