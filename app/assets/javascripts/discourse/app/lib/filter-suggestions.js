@@ -24,7 +24,7 @@ export default class FilterSuggestions {
       const tip = this.findTipForFilter(lastSegment.filterName, tips);
 
       if (tip?.type) {
-        const suggestions = await this.getFilterValueSuggestions(
+        const suggestions = await this.getFilterSuggestionsByType(
           tip,
           lastSegment,
           context
@@ -103,15 +103,15 @@ export default class FilterSuggestions {
             });
           }
         } else {
-           filtered.push(tip);
-           tip.prefixes.forEach((pfx) => {
-              filtered.push({
-                ...tip,
-                name: `${pfx.name}${tip.name}`,
-                description: pfx.description || tip.description,
-                isSuggestion: true,
-              });
+          filtered.push(tip);
+          tip.prefixes.forEach((pfx) => {
+            filtered.push({
+              ...tip,
+              name: `${pfx.name}${tip.name}`,
+              description: pfx.description || tip.description,
+              isSuggestion: true,
             });
+          });
         }
       }
     }
@@ -131,7 +131,7 @@ export default class FilterSuggestions {
     });
   }
 
-  static async getFilterValueSuggestions(tip, segment, context) {
+  static async getFilterSuggestionsByType(tip, segment, context) {
     const suggester = new FilterValueSuggester(tip, segment, context);
 
     switch (tip.type) {
