@@ -3,6 +3,7 @@
 module DiscoursePostEvent
   class BasicEventSerializer < ApplicationSerializer
     attributes :id
+    attributes :category_id
     attributes :name
     attributes :recurrence
     attributes :recurrence_until
@@ -10,6 +11,10 @@ module DiscoursePostEvent
     attributes :ends_at
     attributes :rrule
     attributes :post
+
+    def category_id
+      object.post.topic.category_id
+    end
 
     def post
       {

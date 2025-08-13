@@ -5,7 +5,6 @@ import { modifier } from "ember-modifier";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -176,7 +175,11 @@ export default class DiscoursePostEvent extends Component {
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
-                <Description @description={{event.description}} />
+
+                {{#if @withDescription}}
+                  <Description @description={{event.description}} />
+                {{/if}}
+
                 {{#if @event.canUpdateAttendance}}
                   <Status @event={{event}} />
                 {{/if}}
