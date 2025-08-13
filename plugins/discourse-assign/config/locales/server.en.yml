@@ -27,6 +27,11 @@ en:
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
+    filter:
+      description:
+        assigned: "Filter topics assigned to a specific user or group"
+        nobody: "Filter topics that are not assigned to anyone"
+        anyone: "Filter topics assigned to anyone"
     already_claimed: "That topic has already been claimed."
     already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
