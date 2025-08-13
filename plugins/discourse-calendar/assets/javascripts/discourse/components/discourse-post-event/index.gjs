@@ -188,6 +188,8 @@ export default class DiscoursePostEvent extends Component {
           </div>
         </div>
       </:content>
+      <:loading>
+      </:loading>
     </AsyncContent>
   </template>
 }
