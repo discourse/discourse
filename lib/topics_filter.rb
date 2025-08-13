@@ -757,7 +757,7 @@ class TopicsFilter
     "read" => {
       column: "tu.last_visited_at",
       scope: -> do
-        if @guardian&.authenticated?
+        if @guardian.authenticated?
           ensure_topic_users_reference!
           @scope.where("tu.last_visited_at IS NOT NULL")
         else
