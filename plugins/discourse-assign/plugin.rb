@@ -87,7 +87,7 @@ after_initialize do
   add_to_class(:user, :can_assign?) do
     return @can_assign if defined?(@can_assign)
 
-    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
+    allowed_groups = SiteSetting.assign_allowed_on_groups_map
     @can_assign = admin? || (allowed_groups.present? && groups.where(id: allowed_groups).exists?)
   end
 

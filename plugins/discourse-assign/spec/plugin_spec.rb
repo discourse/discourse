@@ -12,7 +12,7 @@ RSpec.describe DiscourseAssign do
     end
 
     it "adds assigned filter option for users who can assign" do
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       options = TopicsFilter.option_info(guardian)
 
       assigned_option = options.find { |o| o[:name] == "assigned:" }
@@ -27,7 +27,7 @@ RSpec.describe DiscourseAssign do
 
     it "does not add assigned filter option for users who cannot assign" do
       regular_user = Fabricate(:user)
-      guardian = Guardian.new(regular_user)
+      guardian = regular_user.guardian
       options = TopicsFilter.option_info(guardian)
 
       assigned_option = options.find { |o| o[:name] == "assigned:" }
