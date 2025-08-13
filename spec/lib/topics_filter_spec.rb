@@ -31,7 +31,7 @@ RSpec.describe TopicsFilter do
 
     it "should not include user-specific options for anonymous users" do
       anon_options = TopicsFilter.option_info(Guardian.new)
-      logged_in_options = TopicsFilter.option_info(Guardian.new(user))
+      logged_in_options = TopicsFilter.option_info(user.guardian)
 
       anon_option_names = anon_options.map { |o| o[:name] }.to_set
       logged_in_option_names = logged_in_options.map { |o| o[:name] }.to_set
@@ -144,8 +144,9 @@ RSpec.describe TopicsFilter do
         let!(:new_topic) { Fabricate(:topic) }
         let!(:unread_topic) do
           Fabricate(:topic, created_at: 2.days.ago).tap do |t|
-            _post1 = Fabricate(:post, topic: t)
-            _post2 = Fabricate(:post, topic: t)
+            Fabricate(:post, topic: t)
+            Fabricate(:post, topic: t)
+
             TopicUser.update_last_read(user_for_new_filters, t.id, 1, 1, 0)
             TopicUser.change(
               user_for_new_filters.id,
