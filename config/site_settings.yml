@@ -3131,10 +3131,8 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:

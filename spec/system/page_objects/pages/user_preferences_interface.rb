@@ -20,10 +20,6 @@ module PageObjects
         self
       end
 
-      def dark_mode_checkbox
-        page.find('.dark-mode input[type="checkbox"]')
-      end
-
       def light_scheme_dropdown
         PageObjects::Components::SelectKit.new(".light-color-scheme .select-kit")
       end

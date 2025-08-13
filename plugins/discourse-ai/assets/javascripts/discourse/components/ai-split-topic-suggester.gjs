@@ -13,7 +13,6 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;
-  @service menu;
 
   @tracked suggestions = [];
   @tracked loading = false;

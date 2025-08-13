@@ -53,7 +53,8 @@ export default {
                 ...properties,
               };
 
-              router.transitionTo("login").then(({ controller }) => {
+              router.transitionTo("login").then(() => {
+                const controller = owner.lookup("controller:login");
                 controller.setProperties(props);
               });
 
@@ -103,8 +104,8 @@ export default {
                 skipConfirmation: siteSettings.auth_skip_create_confirm,
               };
 
-              router.transitionTo("signup").then(({ controller }) => {
-                controller ??= owner.lookup("controller:signup");
+              router.transitionTo("signup").then(() => {
+                const controller = owner.lookup("controller:signup");
                 controller.setProperties(props);
                 controller.handleSkipConfirmation();
               });

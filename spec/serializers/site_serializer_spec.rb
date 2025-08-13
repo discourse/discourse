@@ -90,7 +90,7 @@ RSpec.describe SiteSerializer do
   it "includes user-selectable color schemes" do
     # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(8)
+    expect(serialized[:user_color_schemes].count).to eq(6)
 
     scheme_names = serialized[:user_color_schemes].map { |x| x[:name] }
     expect(scheme_names).to include(I18n.t("color_schemes.dark"))
@@ -99,15 +99,13 @@ RSpec.describe SiteSerializer do
     expect(scheme_names).to include(I18n.t("color_schemes.solarized_light"))
     expect(scheme_names).to include(I18n.t("color_schemes.solarized_dark"))
     expect(scheme_names).to include(I18n.t("color_schemes.dracula"))
-    expect(scheme_names).to include("Horizon")
-    expect(scheme_names).to include("Horizon Dark")
 
     dark_scheme = ColorScheme.create_from_base(name: "AnotherDarkScheme", base_scheme_id: "Dark")
     dark_scheme.user_selectable = true
     dark_scheme.save!
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(9)
+    expect(serialized[:user_color_schemes].count).to eq(7)
     expect(serialized[:user_color_schemes][0][:is_dark]).to eq(true)
   end
 
@@ -433,15 +431,8 @@ RSpec.describe SiteSerializer do
       described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     end
 
-    it "is false when enable_names setting is false" do
-      SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_required_for_signup]).to eq(false)
-    end
-
     it "is false when full_name_requirement setting is optional_at_signup" do
       SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_required_for_signup]).to eq(false)
     end
 
@@ -463,39 +454,23 @@ RSpec.describe SiteSerializer do
       described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     end
 
-    it "is false when enable_names setting is false and full_name_requirement is hidden_at_signup" do
+    it "is false when full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_visible_in_signup]).to eq(false)
-    end
-
-    it "is false when enable_names setting is false and full_name_requirement is required_at_signup" do
-      SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = false
-      expect(site_json[:full_name_visible_in_signup]).to eq(false)
-    end
-
-    it "is false when enable_names setting is false and full_name_requirement is optional_at_signup" do
-      SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = false
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
 
     it "is true when enable_names setting is true and full_name_requirement is optional_at_signup" do
       SiteSetting.full_name_requirement = "optional_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(true)
     end
 
     it "is true when enable_names setting is true and full_name_requirement is required_at_signup" do
       SiteSetting.full_name_requirement = "required_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(true)
     end
 
     it "is false when enable_names setting is true and full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
-      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end

@@ -31,7 +31,6 @@ import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/compo
 
 export default class AiBotConversations extends Component {
   @service aiBotConversationsHiddenSubmit;
-  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
