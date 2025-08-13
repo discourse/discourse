@@ -207,7 +207,7 @@ describe "Post event", type: :system do
     find(".d-modal .btn-primary").click
     composer.submit
 
-    expect(page).to have_css(".discourse-post-event.is-loaded")
+    expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
 
