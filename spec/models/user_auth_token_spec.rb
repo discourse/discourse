@@ -5,33 +5,54 @@ require "discourse_ip_info"
 RSpec.describe UserAuthToken do
   fab!(:user)
 
-  it "can remove old expired tokens" do
-    SiteSetting.verbose_auth_token_logging = true
+  describe ".cleanup!" do
+    it "can remove old expired tokens" do
+      freeze_time Time.zone.now
+      SiteSetting.maximum_session_age = 1
 
-    freeze_time Time.zone.now
-    SiteSetting.maximum_session_age = 1
+      token =
+        UserAuthToken.generate!(
+          user_id: user.id,
+          user_agent: "some user agent 2",
+          client_ip: "1.1.2.3",
+        )
 
-    token =
-      UserAuthToken.generate!(
-        user_id: user.id,
-        user_agent: "some user agent 2",
-        client_ip: "1.1.2.3",
-      )
+      freeze_time 1.hour.from_now
+      UserAuthToken.cleanup!
 
-    freeze_time 1.hour.from_now
-    UserAuthToken.cleanup!
+      expect(UserAuthToken.where(id: token.id).count).to eq(1)
 
-    expect(UserAuthToken.where(id: token.id).count).to eq(1)
+      freeze_time 1.second.from_now
+      UserAuthToken.cleanup!
 
-    freeze_time 1.second.from_now
-    UserAuthToken.cleanup!
+      expect(UserAuthToken.where(id: token.id).count).to eq(1)
 
-    expect(UserAuthToken.where(id: token.id).count).to eq(1)
+      freeze_time UserAuthToken::ROTATE_TIME.from_now
+      UserAuthToken.cleanup!
 
-    freeze_time UserAuthToken::ROTATE_TIME.from_now
-    UserAuthToken.cleanup!
+      expect(UserAuthToken.where(id: token.id).count).to eq(0)
+    end
 
-    expect(UserAuthToken.where(id: token.id).count).to eq(0)
+    it "deletes old logs excluding the `suspicious` and `generate` types" do
+      SiteSetting.maximum_session_age = 1
+      UserAuthTokenLog.delete_all
+
+      preserved = []
+
+      preserved << UserAuthTokenLog.create!(action: "suspicious").id
+      preserved << UserAuthTokenLog.create!(action: "suspicious", created_at: 10.days.ago).id
+
+      preserved << UserAuthTokenLog.create!(action: "generate").id
+      preserved << UserAuthTokenLog.create!(action: "generate", created_at: 10.years.ago).id
+
+      preserved << UserAuthTokenLog.create!(action: "random but fresh").id
+
+      UserAuthTokenLog.create!(action: "random but not very fresh", created_at: 2.hours.ago)
+
+      expect do UserAuthToken.cleanup! end.to change { UserAuthTokenLog.count }.by(-1)
+
+      expect(UserAuthTokenLog.pluck(:id)).to contain_exactly(*preserved)
+    end
   end
 
   it "can lookup hashed" do
