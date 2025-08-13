@@ -6,7 +6,6 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import LikeCount from "./like-count";
 import LikedUsersList from "./liked-users-list";
 
 export default class PostMenuLikeButton extends Component {
@@ -59,13 +58,6 @@ export default class PostMenuLikeButton extends Component {
       <div class="double-button">
         {{#if @post.likeCount}}
           <LikedUsersList ...attributes @post={{@post}} />
-        {{else}}
-          <LikeCount
-            ...attributes
-            @action={{@buttonActions.toggleWhoLiked}}
-            @state={{@state}}
-            @post={{@post}}
-          />
         {{/if}}
         <DButton
           class={{concatClass
@@ -86,16 +78,7 @@ export default class PostMenuLikeButton extends Component {
       </div>
     {{else}}
       <div class="double-button">
-        {{#if @post.likeCount}}
-          <LikedUsersList ...attributes @post={{@post}} />
-        {{else}}
-          <LikeCount
-            ...attributes
-            @action={{@buttonActions.toggleWhoLiked}}
-            @state={{@state}}
-            @post={{@post}}
-          />
-        {{/if}}
+        <LikedUsersList ...attributes @post={{@post}} />
       </div>
     {{/if}}
   </template>
