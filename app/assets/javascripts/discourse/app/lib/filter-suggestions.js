@@ -91,28 +91,27 @@ export default class FilterSuggestions {
         continue;
       }
 
-      if (tip.prefixes && prefix) {
-        const matchingPrefix = tip.prefixes.find((p) => p.name === prefix);
-        if (matchingPrefix) {
-          filtered.push({
-            ...tip,
-            name: `${prefix}${tip.name}`,
-            description: matchingPrefix.description || tip.description,
-            isSuggestion: true,
-          });
-        }
-      } else if (!prefix) {
-        filtered.push(tip);
-
-        if (tip.prefixes) {
-          tip.prefixes.forEach((pfx) => {
+      if (tip.prefixes) {
+        if (prefix) {
+          const matchingPrefix = tip.prefixes.find((p) => p.name === prefix);
+          if (matchingPrefix) {
             filtered.push({
               ...tip,
-              name: `${pfx.name}${tip.name}`,
-              description: pfx.description || tip.description,
+              name: `${prefix}${tip.name}`,
+              description: matchingPrefix.description || tip.description,
               isSuggestion: true,
             });
-          });
+          }
+        } else {
+           filtered.push(tip);
+           tip.prefixes.forEach((pfx) => {
+              filtered.push({
+                ...tip,
+                name: `${pfx.name}${tip.name}`,
+                description: pfx.description || tip.description,
+                isSuggestion: true,
+              });
+            });
         }
       }
     }
