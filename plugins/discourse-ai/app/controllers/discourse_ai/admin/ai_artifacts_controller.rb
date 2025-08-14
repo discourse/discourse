@@ -69,9 +69,16 @@ module DiscourseAi
       end
 
       def artifact_params
-        params
-          .require(:ai_artifact)
-          .permit(:user_id, :post_id, :name, :html, :css, :js, metadata: {})
+        params.require(:ai_artifact).permit(
+          :user_id,
+          :post_id,
+          :name,
+          :html,
+          :css,
+          :js,
+          metadata: {
+          },
+        )
       end
     end
   end

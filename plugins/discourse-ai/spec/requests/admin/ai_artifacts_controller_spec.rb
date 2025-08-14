@@ -58,7 +58,9 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
           html: "<div>hello</div>",
           css: ".x { color: red; }",
           js: "console.log('x')",
-          metadata: { public: false },
+          metadata: {
+            public: false,
+          },
         },
       }
 
@@ -96,9 +98,10 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
     fab!(:artifact) { Fabricate(:ai_artifact) }
 
     it "removes the artifact" do
-      expect {
-        delete "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json"
-      }.to change(AiArtifact, :count).by(-1)
+      expect { delete "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json" }.to change(
+        AiArtifact,
+        :count,
+      ).by(-1)
 
       expect(response).to have_http_status(:no_content)
     end
