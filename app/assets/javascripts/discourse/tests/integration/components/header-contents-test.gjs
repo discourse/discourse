@@ -57,12 +57,16 @@ module("Integration | Component | Header | Contents", function (hooks) {
       });
     });
 
+    // Header search should show in all routes except for the 4 listed above.
+    // Two below are selected because their URLs contained names of hidden routes.
     ["login-preferences", "badges.show"].forEach((name) => {
       test(`is shown in route "${name}"`, async function (assert) {
         const router = getOwner(this).lookup("service:router");
+        const search = getOwner(this).lookup("service:search");
         const toggleNavigationMenu = () => {};
 
         sinon.stub(router, "currentRouteName").value(name);
+        sinon.stub(search, "searchExperience").value("search_field");
 
         await render(
           <template>
