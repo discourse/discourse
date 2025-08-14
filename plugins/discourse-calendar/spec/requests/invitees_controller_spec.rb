@@ -300,6 +300,43 @@ module DiscoursePostEvent
             expect(invitee.post_id).to eq(post_1.id)
           end
         end
+
+        context "when event has max attendees and is full" do
+          let(:user_a) { Fabricate(:user) }
+          let(:user_b) { Fabricate(:user) }
+          let(:post_event_full) do
+            pe = Fabricate(:event, post: post_1, max_attendees: 1)
+            pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
+            pe
+          end
+
+          it "returns 422 when trying to join as going" do
+            sign_in(user_b)
+
+            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                 params: {
+                   invitee: {
+                     status: "going",
+                   },
+                 }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"].join).to include("full")
+          end
+
+          it "allows interested when full" do
+            sign_in(user_b)
+
+            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                 params: {
+                   invitee: {
+                     status: "interested",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
   end

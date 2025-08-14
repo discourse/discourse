@@ -439,4 +439,47 @@ module DiscoursePostEvent
       end
     end
   end
+
+  describe "bulk invite respects capacity" do
+    before do
+      Jobs.run_immediately!
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    let(:user) { Fabricate(:user, admin: true) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let(:post1) { Fabricate(:post, user: user, topic: topic) }
+    let!(:event) { Fabricate(:event, post: post1, max_attendees: 1) }
+
+    it "skips creating going when full" do
+      sign_in(user)
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      expect_enqueued_with(
+        job: :discourse_post_event_bulk_invite,
+        args: {
+          "event_id" => event.id,
+          "invitees" => [
+            { "identifier" => user1.username, "attendance" => "going" },
+            { "identifier" => user2.username, "attendance" => "going" },
+          ],
+          "current_user_id" => user.id,
+        },
+      ) do
+        post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
+             params: {
+               invitees: [
+                 { "identifier" => user1.username, "attendance" => "going" },
+                 { "identifier" => user2.username, "attendance" => "going" },
+               ],
+             }
+      end
+
+      Jobs.run_immediately!
+      event.reload
+      expect(event.invitees.with_status(:going).count).to be <= 1
+    end
+  end
 end
