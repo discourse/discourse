@@ -21,7 +21,7 @@
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.2.0",
     "ember-template-lint": "7.9.2",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "eslint": "9.33.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.12.3",
