@@ -52,6 +52,10 @@ export default class DiscoursePostEvent extends Component {
     return () => this.messageBus.unsubscribe(path);
   });
 
+  get withDescription() {
+    return this.args.withDescription ?? true;
+  }
+
   get localStartsAtTime() {
     let time = moment(this.event.startsAt);
     if (this.event.showLocalTime && this.event.timezone) {
@@ -176,7 +180,7 @@ export default class DiscoursePostEvent extends Component {
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
 
-                {{#if @withDescription}}
+                {{#if this.withDescription}}
                   <Description @description={{event.description}} />
                 {{/if}}
 
