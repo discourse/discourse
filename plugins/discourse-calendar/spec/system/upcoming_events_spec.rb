@@ -98,7 +98,7 @@ describe "Upcoming Events", type: :system do
       page.driver.with_playwright_page { |pw_page| pw_page.clock.set_fixed_time(fixed_time) }
       upcoming_events.visit
 
-      expect(page).to have_css(".fc-daygrid-event-harness", count: 3)
+      expect(page).to have_css(".fc-daygrid-event-harness", count: 4)
       expect(page).to have_css(
         ".fc tr:nth-child(2) td:nth-child(2) .fc-event-title",
         text: event.post.topic.title,

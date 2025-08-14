@@ -107,16 +107,7 @@ module DiscoursePostEvent
       return events if params[:before].blank?
 
       before_date = params[:before].to_datetime
-      events.where(
-        "latest_event_dates.starts_at < ? OR " \
-          "(discourse_post_event_events.recurrence IS NOT NULL AND " \
-          "discourse_post_event_events.original_starts_at < ? AND " \
-          "(discourse_post_event_events.recurrence_until IS NULL OR " \
-          "discourse_post_event_events.recurrence_until >= ?))",
-        before_date,
-        before_date,
-        before_date,
-      )
+      events.where("discourse_post_event_events.original_starts_at < ?", before_date)
     end
 
     def self.apply_after_date_filter(events, params)
@@ -124,11 +115,8 @@ module DiscoursePostEvent
 
       after_date = params[:after].to_datetime
       events.where(
-        "latest_event_dates.starts_at >= ? OR " \
-          "(discourse_post_event_events.recurrence IS NOT NULL AND " \
-          "(discourse_post_event_events.recurrence_until IS NULL OR " \
-          "discourse_post_event_events.recurrence_until >= ?))",
-        after_date,
+        "(discourse_post_event_events.recurrence_until IS NULL OR " \
+          "discourse_post_event_events.recurrence_until >= ?)",
         after_date,
       )
     end
@@ -137,13 +125,7 @@ module DiscoursePostEvent
       return events if params[:end_date].blank?
 
       end_date = params[:end_date].to_datetime
-      events.where(
-        "latest_event_dates.starts_at <= ? OR " \
-          "(discourse_post_event_events.recurrence IS NOT NULL AND " \
-          "discourse_post_event_events.original_starts_at <= ?)",
-        end_date,
-        end_date,
-      )
+      events.where("discourse_post_event_events.original_starts_at <= ?", end_date)
     end
 
     def self.apply_category_filters(events, params)

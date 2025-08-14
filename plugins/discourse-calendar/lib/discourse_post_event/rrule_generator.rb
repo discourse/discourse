@@ -31,11 +31,16 @@ class RRuleGenerator
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
     rrule = set_mandatory_options(rrule, starts_at)
 
-    string = stringify(rrule)
+    # Format as multi-line RFC 5545 format for FullCalendar
+    # Use local time format without Z suffix to avoid timezone conversion issues
+    dtstart_line = "DTSTART:#{dtstart.strftime("%Y%m%dT%H%M%S")}" if dtstart
+    rrule_line = "RRULE:#{stringify(rrule)}"
 
-    string += ";DTSTART=#{dtstart.strftime("%Y%m%dT%H%M%SZ")}" if dtstart
-
-    string
+    if dtstart_line
+      "#{dtstart_line}\n#{rrule_line}"
+    else
+      rrule_line
+    end
   end
 
   private
