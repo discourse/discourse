@@ -20,7 +20,6 @@ import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
  *   Site.hashtag_configurations.
  * @param {$Element} $textarea - jQuery element to use for the autocompletion
  *   plugin to attach to, this is what will watch for the # matcher when the user is typing.
- * @param {Hash} siteSettings - The clientside site settings.
  * @param {Function} autocompleteOptions - Options to pass to the jQuery plugin. Must at least include:
  *
  *  - afterComplete - Called with the selected autocomplete option once it is selected.
@@ -33,25 +32,22 @@ import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
   $textarea,
-  siteSettings,
   autocompleteOptions = {}
 ) {
   $textarea.autocomplete(
     hashtagAutocompleteOptions(
       contextualHashtagConfiguration,
-      siteSettings,
       autocompleteOptions
     )
   );
 }
 
-export async function hashtagTriggerRule(textarea, { inCodeBlock }) {
+export async function hashtagTriggerRule({ inCodeBlock }) {
   return !(await inCodeBlock());
 }
 
 export function hashtagAutocompleteOptions(
   contextualHashtagConfiguration,
-  siteSettings,
   autocompleteOptions
 ) {
   return {
@@ -64,10 +60,9 @@ export function hashtagAutocompleteOptions(
       if (term.match(/\s/)) {
         return null;
       }
-      return _searchGeneric(term, siteSettings, contextualHashtagConfiguration);
+      return _searchGeneric(term, contextualHashtagConfiguration);
     },
-    triggerRule: async (textarea, opts) =>
-      await hashtagTriggerRule(textarea, opts),
+    triggerRule: async (_, opts) => await hashtagTriggerRule(opts),
     ...autocompleteOptions,
   };
 }
@@ -85,7 +80,7 @@ function _updateSearchCache(term, results) {
 // Note that the search term is _not_ required here, and we follow special
 // logic similar to @mentions when there is no search term, to show some
 // useful default categories, tags, etc.
-function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
+function _searchGeneric(term, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
     currentSearch = null;

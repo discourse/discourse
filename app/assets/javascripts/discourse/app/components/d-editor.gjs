@@ -268,7 +268,6 @@ export default class DEditor extends Component {
     this.textManipulation.autocomplete(
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["topic-composer"],
-        this.siteSettings,
         {
           afterComplete: () => {
             schedule(
