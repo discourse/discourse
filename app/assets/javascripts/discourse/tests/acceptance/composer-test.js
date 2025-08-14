@@ -1683,6 +1683,61 @@ import { i18n } from "discourse-i18n";
           .dom(`button[title="${expectedName}"]`)
           .exists("custom button is displayed for new topic");
       });
+
+      test("modified name when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "reply-name-fallback",
+            () => {
+              return "NewNameHere";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert
+          .dom(".reply-details .user-link")
+          .hasText("NewNameHere");
+      });
+
+      test("modified avatar when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "reply-user-avatar",
+            () => {
+              return "new-avatar";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert
+          .dom(".reply-details .action-title")
+          .containsText("new-avatar", "Reply avatar can be customized");
+      });
+
+      test("modified avatar in quote", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "quote-avatar",
+            () => {
+              return "custom-quote-avatar";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+        await fillIn(".d-editor-input", '[quote="charlie, post:1, topic:34"]\noriginal post content\n[/quote]');
+
+        assert
+          .dom(".d-editor-preview")
+          .containsText("custom-quote-avatar", "Quote avatar can be customized");
+      });
     }
   );
 });

@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
@@ -462,7 +463,11 @@ export default class Composer extends RestModel {
 
     if (post) {
       options.label = i18n(`post.${action}`);
-      options.userAvatar = tinyAvatar(post.avatar_template);
+      options.userAvatar = applyValueTransformer(
+        "reply-user-avatar",
+        tinyAvatar(post.avatar_template),
+        { post }
+      );
 
       if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
@@ -484,7 +489,12 @@ export default class Composer extends RestModel {
         anchor: i18n("post.post_number", { number: postNumber }),
       };
 
-      const name = prioritizeNameFallback(post.name, post.username);
+      const namePrioritized = prioritizeNameFallback(post.name, post.username);
+      const name = applyValueTransformer(
+        "reply-name-fallback",
+        namePrioritized,
+        { post }
+      );
 
       options.userLink = {
         href: `${topic.url}/${postNumber}`,

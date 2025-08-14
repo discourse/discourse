@@ -188,7 +188,7 @@ export default class ComposerEditor extends Component {
         if (posts && topicId === topic.get("id")) {
           const quotedPost = posts.findBy("post_number", postNumber);
           if (quotedPost) {
-            return tinyAvatar(quotedPost.get("avatar_template"));
+            return applyValueTransformer("quote-avatar", tinyAvatar(quotedPost.get("avatar_template")), { post: quotedPost });
           }
         }
       },
