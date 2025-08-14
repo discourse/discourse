@@ -92,7 +92,7 @@ export default class CategoryCalendar extends Component {
   }
 
   get categorySettings() {
-    const settings = this.siteSettings.calendar_categories
+    const settings = this.siteSettings.events_calendar_categories
       .split("|")
       .filter(Boolean)
       .map((stringSetting) => {
