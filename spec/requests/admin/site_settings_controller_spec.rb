@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe Admin::SiteSettingsController do
   fab!(:admin)
   fab!(:moderator)
@@ -465,46 +464,33 @@ RSpec.describe Admin::SiteSettingsController do
                 default_categories_watching: category_ids.last(2).join("|"),
                 update_existing_user: true,
               }
+          expect_job_enqueued(
+            job: Jobs::SiteSettingUpdateDefaultCategories,
+            args: {
+              id: "default_categories_watching",
+              value: category_ids.last(2).join("|"),
+              previous_value: category_ids.first(2).join("|"),
+            },
+          )
 
           expect(response.status).to eq(200)
-          expect(
-            CategoryUser.where(category_id: category_ids.first, notification_level: watching).count,
-          ).to eq(0)
-          expect(
-            CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
-          ).to eq(User.real.where(staged: false).count - 1)
-
-          topic = Fabricate(:topic, category_id: category_ids.last)
-          topic_user1 =
-            Fabricate(
-              :topic_user,
-              topic: topic,
-              notification_level: TopicUser.notification_levels[:watching],
-              notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-            )
-          topic_user2 =
-            Fabricate(
-              :topic_user,
-              topic: topic,
-              notification_level: TopicUser.notification_levels[:watching],
-              notifications_reason_id: TopicUser.notification_reasons[:user_changed],
-            )
 
           put "/admin/site_settings/default_categories_watching.json",
               params: {
                 default_categories_watching: "",
                 update_existing_user: true,
               }
+
+          expect_job_enqueued(
+            job: Jobs::SiteSettingUpdateDefaultCategories,
+            args: {
+              id: "default_categories_watching",
+              value: "",
+              previous_value: category_ids.last(2).join("|"),
+            },
+          )
+
           expect(response.status).to eq(200)
-          expect(
-            CategoryUser.where(category_id: category_ids, notification_level: watching).count,
-          ).to eq(0)
-          expect(topic_user1.reload.notification_level).to eq(
-            TopicUser.notification_levels[:regular],
-          )
-          expect(topic_user2.reload.notification_level).to eq(
-            TopicUser.notification_levels[:watching],
-          )
         end
 
         it "should not update existing users user preference" do
@@ -517,40 +503,32 @@ RSpec.describe Admin::SiteSettingsController do
             CategoryUser.where(category_id: category_ids.first, notification_level: watching).count
           }
 
-          expect(response.status).to eq(200)
-          expect(
-            CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
-          ).to eq(0)
+          expect_not_enqueued_with(
+            job: Jobs::SiteSettingUpdateDefaultCategories,
+            args: {
+              id: "default_categories_watching",
+              value: category_ids.last(2).join("|"),
+              previous_value: category_ids.first(2).join("|"),
+            },
+          )
 
-          topic = Fabricate(:topic, category_id: category_ids.last)
-          topic_user1 =
-            Fabricate(
-              :topic_user,
-              topic: topic,
-              notification_level: TopicUser.notification_levels[:watching],
-              notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-            )
-          topic_user2 =
-            Fabricate(
-              :topic_user,
-              topic: topic,
-              notification_level: TopicUser.notification_levels[:watching],
-              notifications_reason_id: TopicUser.notification_reasons[:user_changed],
-            )
+          expect(response.status).to eq(200)
+
           put "/admin/site_settings/default_categories_watching.json",
               params: {
                 default_categories_watching: "",
               }
+
+          expect_not_enqueued_with(
+            job: Jobs::SiteSettingUpdateDefaultCategories,
+            args: {
+              id: "default_categories_watching",
+              value: "",
+              previous_value: category_ids.last(2).join("|"),
+            },
+          )
+
           expect(response.status).to eq(200)
-          expect(
-            CategoryUser.where(category_id: category_ids.first, notification_level: watching).count,
-          ).to eq(0)
-          expect(topic_user1.reload.notification_level).to eq(
-            TopicUser.notification_levels[:watching],
-          )
-          expect(topic_user2.reload.notification_level).to eq(
-            TopicUser.notification_levels[:watching],
-          )
         end
       end
 
@@ -575,10 +553,16 @@ RSpec.describe Admin::SiteSettingsController do
                 update_existing_user: true,
               }
 
-          expect(TagUser.where(tag_id: tags.first.id, notification_level: watching).count).to eq(0)
-          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(
-            User.real.where(staged: false).count - 1,
+          expect_job_enqueued(
+            job: Jobs::SiteSettingUpdateDefaultTags,
+            args: {
+              id: "default_tags_watching",
+              value: tags.last(2).pluck(:name).join("|"),
+              previous_value: tags.first(2).pluck(:name).join("|"),
+            },
           )
+
+          expect(response.status).to eq(200)
         end
 
         it "should not update existing users user preference" do
@@ -591,7 +575,16 @@ RSpec.describe Admin::SiteSettingsController do
             TagUser.where(tag_id: tags.first.id, notification_level: watching).count
           }
 
-          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
+          expect_not_enqueued_with(
+            job: Jobs::SiteSettingUpdateDefaultTags,
+            args: {
+              id: "default_tags_watching",
+              value: tags.last(2).pluck(:name).join("|"),
+              previous_value: tags.first(2).pluck(:name).join("|"),
+            },
+          )
+
+          expect(response.status).to eq(200)
         end
       end
 
@@ -727,7 +720,84 @@ RSpec.describe Admin::SiteSettingsController do
     end
 
     context "when logged in as a non-staff user" do
+      fab!(:user1, :user)
+      fab!(:user2, :user)
+
+      let(:tracking) { NotificationLevels.all[:tracking] }
+      let(:watching) { NotificationLevels.all[:watching] }
+
       before { sign_in(user) }
+
+      context "with default categories" do
+        let(:category_ids) { 3.times.collect { Fabricate(:category).id } }
+
+        before do
+          SiteSetting.default_categories_watching = category_ids.first(2).join("|")
+
+          CategoryUser.create!(
+            category_id: category_ids.last,
+            notification_level: tracking,
+            user: user2,
+          )
+
+          Jobs.run_immediately!
+        end
+
+        it "doesn't update default categories" do
+          put "/admin/site_settings/default_categories_watching.json",
+              params: {
+                default_categories_watching: category_ids.last(2).join("|"),
+                update_existing_user: true,
+              }
+
+          expect(response.status).to eq(404)
+
+          expect_not_enqueued_with(
+            job: Jobs::SiteSettingUpdateDefaultCategories,
+            args: {
+              id: "default_categories_watching",
+              value: category_ids.last(2).join("|"),
+              previous_value: category_ids.first(2).join("|"),
+            },
+          )
+
+          expect(
+            CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
+          ).to eq(0)
+        end
+      end
+
+      context "with default tags" do
+        let(:tags) { 3.times.collect { Fabricate(:tag) } }
+
+        before do
+          SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
+          TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
+
+          Jobs.run_immediately!
+        end
+
+        it "doesn't update default categories" do
+          put "/admin/site_settings/default_tags_watching.json",
+              params: {
+                default_tags_watching: tags.last(2).pluck(:name).join("|"),
+                update_existing_user: true,
+              }
+
+          expect(response.status).to eq(404)
+
+          expect_not_enqueued_with(
+            job: Jobs::SiteSettingUpdateDefaultTags,
+            args: {
+              id: "default_tags_watching",
+              value: tags.last(2).pluck(:name).join("|"),
+              previous_value: tags.first(2).pluck(:name).join("|"),
+            },
+          )
+
+          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
+        end
+      end
 
       include_examples "site setting update not allowed"
     end
