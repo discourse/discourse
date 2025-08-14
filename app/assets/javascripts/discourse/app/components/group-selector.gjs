@@ -1,13 +1,18 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import groupAutocomplete from "discourse/lib/autocomplete/group";
 import discourseComputed from "discourse/lib/decorators";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSelector extends Component {
+  @service siteSettings;
+
   @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? i18n(placeholderKey) : "";
@@ -24,8 +29,9 @@ export default class GroupSelector extends Component {
   _initializeAutocomplete(opts) {
     let selectedGroups;
     let groupNames = this.groupNames;
+    const inputElement = this.element.querySelector("input");
 
-    $(this.element.querySelector("input")).autocomplete({
+    const autocompleteOptions = {
       debounced: true,
       allowAny: false,
       items: Array.isArray(groupNames)
@@ -62,7 +68,21 @@ export default class GroupSelector extends Component {
         });
       },
       template: groupAutocomplete,
-    });
+    };
+
+    if (this.siteSettings.floatkit_autocomplete_input_fields) {
+      // Use new d-autocomplete modifier
+      const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
+      DAutocompleteModifier.setupAutocomplete(
+        this.owner,
+        inputElement,
+        autocompleteHandler,
+        autocompleteOptions
+      );
+    } else {
+      // Use legacy jQuery autocomplete
+      $(inputElement).autocomplete(autocompleteOptions);
+    }
   }
 
   <template>
