@@ -519,7 +519,6 @@ export default class ChatComposer extends Component {
       textarea,
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["chat-composer"],
-        this.siteSettings,
         {
           fixedTextareaPosition: true,
           treatAsTextarea: true,
