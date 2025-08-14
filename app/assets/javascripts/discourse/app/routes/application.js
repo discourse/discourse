@@ -1,3 +1,4 @@
+import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
@@ -5,7 +6,6 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import deprecated from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
@@ -31,6 +31,9 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service site;
   @service siteSettings;
   @service restrictedRouting;
+
+  @controller("login") loginController;
+  @controller("signup") signupController;
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
@@ -176,16 +179,14 @@ export default class ApplicationRoute extends DiscourseRoute {
   showLogin(props = {}) {
     const t = this.router.transitionTo("login");
     t.wantsTo = true;
-    const controller = getOwnerWithFallback(this).lookup("controller:login");
-    return t.then(() => controller.setProperties({ ...props }));
+    return t.then(() => this.loginController.setProperties({ ...props }));
   }
 
   @action
   showCreateAccount(props = {}) {
     const t = this.router.transitionTo("signup");
     t.wantsTo = true;
-    const controller = getOwnerWithFallback(this).lookup("controller:signup");
-    return t.then(() => controller.setProperties({ ...props }));
+    return t.then(() => this.signupController.setProperties({ ...props }));
   }
 
   @action
@@ -225,7 +226,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewTopicViaParams" }
     );
-    getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
+    this.composer.openNewTopic({
       title,
       body,
       categoryId,
@@ -244,7 +245,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewMessageViaParams" }
     );
-    getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
+    this.composer.openNewMessage({
       recipients,
       title: topicTitle,
       body: topicBody,
