@@ -155,11 +155,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @discourseComputed("model.component")
-  convertIcon(component) {
-    return component ? "cube" : "";
-  }
-
-  @discourseComputed("model.component")
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
