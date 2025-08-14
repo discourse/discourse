@@ -38,7 +38,7 @@ import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
@@ -463,7 +463,10 @@ export default class DEditor extends Component {
       },
       onRender: (options) => renderUserStatusHtml(options),
       key: "@",
-      transformComplete: (v) => v.username || v.name,
+      transformComplete: (v) => {
+        validateSearchResult(v);
+        return v.username || v.name;
+      },
       afterComplete: () => {
         schedule(
           "afterRender",

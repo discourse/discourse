@@ -2880,6 +2880,10 @@ en:
       publishing: "Publishing Topic…"
 
     composer:
+      autocomplete:
+        username_missing: "Selected autocomplete result is missing username."
+        name_missing: "Selected autocomplete result is missing name."
+
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
