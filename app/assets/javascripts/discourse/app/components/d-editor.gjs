@@ -630,11 +630,15 @@ export default class DEditor extends Component {
   }
 
   async markMarkdownTipSeen() {
-    if (!this.currentUser || this.hasSeenMarkdownTip) {
+    if (!this.currentUser) {
       return;
     }
 
     const seenPopups = this.currentUser.user_option?.seen_popups || [];
+    if (seenPopups.includes(MARKDOWN_TIP_ID)) {
+      return;
+    }
+
     seenPopups.push(MARKDOWN_TIP_ID);
     this.currentUser.set("user_option.seen_popups", seenPopups);
     await this.currentUser.save(["seen_popups"]);
@@ -649,7 +653,7 @@ export default class DEditor extends Component {
       identifier: "markdown-tip",
       interactive: true,
       closeOnScroll: false,
-      closeOnClickOutside: true,
+      closeOnClickOutside: false,
       placement: "bottom",
       trapTab: !this.site.mobileView,
       component: UserTipContainer,
