@@ -170,11 +170,13 @@ export default class AdminFilterControls extends Component {
             {{/each}}
           </DSelect>
         {{/if}}
+
+        {{yield to="actions"}}
       </div>
     {{/if}}
 
     {{#if this.filteredData.length}}
-      {{yield this.filteredData}}
+      {{yield this.filteredData to="content"}}
     {{else if this.showFilters}}
       {{#if (and this.hasActiveFilters (not @loading))}}
         <div class="admin-filter-controls__no-results">
@@ -190,7 +192,7 @@ export default class AdminFilterControls extends Component {
         </div>
       {{/if}}
     {{else}}
-      {{yield this.array}}
+      {{yield this.array to="content"}}
     {{/if}}
   </template>
 }

@@ -62,9 +62,10 @@ export default RouteTemplate(
           @dropdownOptions={{@controller.dropdownOptions}}
           @inputPlaceholder={{i18n "admin.plugins.filters.search_placeholder"}}
           @noResultsMessage={{i18n "admin.plugins.filters.no_results"}}
-          as |filteredPlugins|
         >
-          <AdminPluginsList @plugins={{filteredPlugins}} />
+          <:content as |filteredPlugins|>
+            <AdminPluginsList @plugins={{filteredPlugins}} />
+          </:content>
         </AdminFilterControls>
       {{else}}
         <p>{{i18n "admin.plugins.none_installed"}}</p>
