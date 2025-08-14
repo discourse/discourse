@@ -43,7 +43,7 @@ export default class FullCalendar extends Component {
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
       firstDay: 1,
-      eventDisplay: "block",
+      displayEventTime: true,
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
@@ -54,11 +54,6 @@ export default class FullCalendar extends Component {
         calendarModule.RRULE,
         calendarModule.MomentTimezone,
       ],
-      views: {
-        dayGridMonth: {
-          displayEventTime: false,
-        },
-      },
       initialView: this.initialView,
       events: this.args.events || [],
       headerToolbar: this.headerToolbar,
