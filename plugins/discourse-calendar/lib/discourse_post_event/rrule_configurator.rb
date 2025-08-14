@@ -29,7 +29,7 @@ class RRuleConfigurator
         "FREQ=WEEKLY;BYDAY=#{byday}"
       end
 
-    rule += ";UNTIL=#{recurrence_until.strftime("%Y%m%dT%H%M%SZ")}" if recurrence_until
+    rule += ";UNTIL=#{recurrence_until.strftime("%Y%m%d")}" if recurrence_until
     rule
   end
 
