@@ -451,7 +451,7 @@ export default RouteTemplate(
         <DButton
           @action={{@controller.switchType}}
           @label="admin.customize.theme.convert"
-          @icon={{@controller.convertIcon}}
+          @icon="rotate"
           @title={{@controller.convertTooltip}}
           class="btn-default btn-normal"
         />
