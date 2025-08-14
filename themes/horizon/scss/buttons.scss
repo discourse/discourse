@@ -19,7 +19,10 @@
 
     &:hover,
     &:focus-visible {
-      background: oklch(from var(--accent-color) 40% c h) !important;
+      background: light-dark(
+        oklch(from var(--accent-color) 40% c h),
+        oklch(from var(--accent-color) 50% c h)
+      ) !important;
       box-shadow: none;
     }
 
