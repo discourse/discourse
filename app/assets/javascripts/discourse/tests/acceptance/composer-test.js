@@ -1700,7 +1700,7 @@ import { i18n } from "discourse-i18n";
       test("modified avatar when replying to a post", async function (assert) {
         withPluginApi((api) => {
           api.registerValueTransformer("composer-reply-user-avatar", () => {
-            return "new-avatar";
+            return "/images/avatar.png?size={size}";
           });
         });
 
@@ -1708,14 +1708,14 @@ import { i18n } from "discourse-i18n";
         await click("article#post_3 button.reply");
 
         assert
-          .dom(".reply-details .action-title")
-          .containsText("new-avatar", "Reply avatar can be customized");
+          .dom(".reply-details .action-title img")
+          .hasAttribute("src", "/images/avatar.png?size=48", "Reply avatar can be customized");
       });
 
       test("modified avatar in quote", async function (assert) {
         withPluginApi((api) => {
           api.registerValueTransformer("composer-editor-quote-avatar", () => {
-            return "custom-quote-avatar";
+            return "/images/custom-quote-avatar.png?size={size}";
           });
         });
 
@@ -1727,11 +1727,8 @@ import { i18n } from "discourse-i18n";
         );
 
         assert
-          .dom(".d-editor-preview")
-          .containsText(
-            "custom-quote-avatar",
-            "Quote avatar can be customized"
-          );
+          .dom(".d-editor-preview .quote .title img")
+          .hasAttribute("src", "/images/custom-quote-avatar.png?size=48", "Quote avatar can be customized");
       });
     }
   );
