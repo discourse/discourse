@@ -123,6 +123,32 @@ schema:
         modify:
           - name: "last_used"
             nullable: true
+    user_custom_fields:
+      columns:
+        exclude:
+          - "id"
+        add:
+          - name: "field_id"
+            datatype: numeric
+          - name: "is_multiselect_field"
+            datatype: boolean
+      indexes:
+        - name: "ucf_multiselect_by_field_id_index"
+          columns: [ "user_id", "field_id", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE AND field_id IS NOT NULL"
+        - name: "ucf_not_multiselect_by_field_id_index"
+          columns: [ "user_id", "field_id" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE AND field_id IS NOT NULL"
+        - name: "ucf_multiselect_by_name_index"
+          columns: [ "user_id", "name", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "ucf_not_multiselect_by_name_index"
+          columns: [ "user_id", "name" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
     user_emails:
       columns:
         include:
@@ -428,7 +454,6 @@ schema:
         - "user_badges"
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
-        - "user_custom_fields"
         - "user_exports"
         - "user_histories"
         - "user_ip_address_histories"
