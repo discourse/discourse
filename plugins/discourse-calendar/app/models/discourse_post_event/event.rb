@@ -30,6 +30,7 @@ module DiscoursePostEvent
               },
               unless: ->(event) { event.name.blank? }
     validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
+    validates :max_attendees, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
 
     validate :raw_invitees_length
     validate :ends_before_start
@@ -246,6 +247,15 @@ module DiscoursePostEvent
       (self.starts_at..finishes_at).cover?(Time.now)
     end
 
+    def going_count
+      invitees.where(status: Invitee.statuses[:going]).count
+    end
+
+    def at_capacity?
+      return false if max_attendees.blank?
+      going_count >= max_attendees
+    end
+
     def self.statuses
       @statuses ||= Enum.new(standalone: 0, public: 1, private: 2)
     end
@@ -335,6 +345,7 @@ module DiscoursePostEvent
           minimal: event_params[:minimal],
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
+          max_attendees: event_params[:"max-attendees"]&.to_i,
         }
 
         params[:custom_fields] = {}
@@ -449,4 +460,5 @@ end
 #  chat_channel_id    :bigint
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
+#  max_attendees      :integer
 #
