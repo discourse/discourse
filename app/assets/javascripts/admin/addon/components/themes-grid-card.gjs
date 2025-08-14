@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
@@ -199,7 +198,6 @@ export default class ThemeCard extends Component {
                 @onRegisterApi={{this.onRegisterApi}}
                 @modalForMobile={{true}}
                 @icon="ellipsis"
-                @triggers={{array "click"}}
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
