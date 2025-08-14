@@ -264,17 +264,17 @@ importers:
         specifier: ^9.9.0
         version: 9.9.0
       '@fullcalendar/core':
-        specifier: ^6.1.18
-        version: 6.1.18
+        specifier: ^6.1.19
+        version: 6.1.19
       '@fullcalendar/daygrid':
-        specifier: ^6.1.18
-        version: 6.1.18(@fullcalendar/core@6.1.18)
+        specifier: ^6.1.19
+        version: 6.1.19(@fullcalendar/core@6.1.19)
       '@fullcalendar/list':
-        specifier: ^6.1.18
-        version: 6.1.18(@fullcalendar/core@6.1.18)
+        specifier: ^6.1.19
+        version: 6.1.19(@fullcalendar/core@6.1.19)
       '@fullcalendar/timegrid':
-        specifier: ^6.1.18
-        version: 6.1.18(@fullcalendar/core@6.1.18)
+        specifier: ^6.1.19
+        version: 6.1.19(@fullcalendar/core@6.1.19)
       '@glimmer/syntax':
         specifier: 0.93.1
         version: 0.93.1
@@ -2153,23 +2153,23 @@ packages:
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
-  '@fullcalendar/core@6.1.18':
-    resolution: {integrity: sha512-cD7XtZIZZ87Cg2+itnpsONCsZ89VIfLLDZ22pQX4IQVWlpYUB3bcCf878DhWkqyEen6dhi5ePtBoqYgm5K+0fQ==}
+  '@fullcalendar/core@6.1.19':
+    resolution: {integrity: sha512-z0aVlO5e4Wah6p6mouM0UEqtRf1MZZPt4mwzEyU6kusaNL+dlWQgAasF2cK23hwT4cmxkEmr4inULXgpyeExdQ==}
 
-  '@fullcalendar/daygrid@6.1.18':
-    resolution: {integrity: sha512-s452Zle1SdMEzZDw+pDczm8m3JLIZzS9ANMThXTnqeqJewW1gqNFYas18aHypJSgF9Fh9rDJjTSUw04BpXB/Mg==}
+  '@fullcalendar/daygrid@6.1.19':
+    resolution: {integrity: sha512-IAAfnMICnVWPjpT4zi87i3FEw0xxSza0avqY/HedKEz+l5MTBYvCDPOWDATpzXoLut3aACsjktIyw9thvIcRYQ==}
     peerDependencies:
-      '@fullcalendar/core': ~6.1.18
+      '@fullcalendar/core': ~6.1.19
 
-  '@fullcalendar/list@6.1.18':
-    resolution: {integrity: sha512-XPZI50mq3HXyDQ5sT3jmqQUuwG8zQb5H14dQIUAmOHAIFRA3WpkxlzrXO0U1SrosvGySMPyyNNxvMKI1Q/jL7A==}
+  '@fullcalendar/list@6.1.19':
+    resolution: {integrity: sha512-knZHpAVF0LbzZpSJSUmLUUzF0XlU/MRGK+Py2s0/mP93bCtno1k2L3XPs/kzh528hSjehwLm89RgKTSfW1P6cA==}
     peerDependencies:
-      '@fullcalendar/core': ~6.1.18
+      '@fullcalendar/core': ~6.1.19
 
-  '@fullcalendar/timegrid@6.1.18':
-    resolution: {integrity: sha512-T/ouhs+T1tM8JcW7Cjx+KiohL/qQWKqvRITwjol8ktJ1e1N/6noC40/obR1tyolqOxMRWHjJkYoj9fUqfoez9A==}
+  '@fullcalendar/timegrid@6.1.19':
+    resolution: {integrity: sha512-OuzpUueyO9wB5OZ8rs7TWIoqvu4v3yEqdDxZ2VcsMldCpYJRiOe7yHWKr4ap5Tb0fs7Rjbserc/b6Nt7ol6BRg==}
     peerDependencies:
-      '@fullcalendar/core': ~6.1.18
+      '@fullcalendar/core': ~6.1.19
 
   '@glimmer/compiler@0.92.4':
     resolution: {integrity: sha512-xoR8F6fsgFqWbPbCfSgJuJ95vaLnXw0SgDCwyl/KMeeaSxpHwJbr8+BfiUl+7ko2A+HzrY5dPXXnGr4ZM+CUXw==}
@@ -10598,22 +10598,22 @@ snapshots:
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
-  '@fullcalendar/core@6.1.18':
+  '@fullcalendar/core@6.1.19':
     dependencies:
       preact: 10.12.1
 
-  '@fullcalendar/daygrid@6.1.18(@fullcalendar/core@6.1.18)':
+  '@fullcalendar/daygrid@6.1.19(@fullcalendar/core@6.1.19)':
     dependencies:
-      '@fullcalendar/core': 6.1.18
+      '@fullcalendar/core': 6.1.19
 
-  '@fullcalendar/list@6.1.18(@fullcalendar/core@6.1.18)':
+  '@fullcalendar/list@6.1.19(@fullcalendar/core@6.1.19)':
     dependencies:
-      '@fullcalendar/core': 6.1.18
+      '@fullcalendar/core': 6.1.19
 
-  '@fullcalendar/timegrid@6.1.18(@fullcalendar/core@6.1.18)':
+  '@fullcalendar/timegrid@6.1.19(@fullcalendar/core@6.1.19)':
     dependencies:
-      '@fullcalendar/core': 6.1.18
-      '@fullcalendar/daygrid': 6.1.18(@fullcalendar/core@6.1.18)
+      '@fullcalendar/core': 6.1.19
+      '@fullcalendar/daygrid': 6.1.19(@fullcalendar/core@6.1.19)
 
   '@glimmer/compiler@0.92.4':
     dependencies:
