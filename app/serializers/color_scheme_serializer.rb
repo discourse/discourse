@@ -9,7 +9,7 @@ class ColorSchemeSerializer < ApplicationSerializer
   end
 
   def colors
-    db_colors = object.colors.index_by(&:name)
+    db_colors = object.colors.sort_by(&:name).index_by(&:name)
     resolved = ColorScheme.sort_colors(object.resolved_colors)
     resolved.map do |name, default|
       db_colors[name] || ColorSchemeColor.new(name: name, hex: default, color_scheme: object)
