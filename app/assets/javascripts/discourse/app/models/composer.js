@@ -492,7 +492,7 @@ export default class Composer extends RestModel {
 
       const namePrioritized = prioritizeNameFallback(post.name, post.username);
       const name = applyValueTransformer(
-        "reply-name-fallback",
+        "composer-reply-name-fallback",
         namePrioritized,
         { post }
       );
