@@ -147,11 +147,11 @@ module DiscoursePostEvent
 
     def rrule
       RRuleGenerator.generate_string(
-        starts_at: object.starts_at.in_time_zone(object.timezone),
+        starts_at: object.original_starts_at.in_time_zone(object.timezone),
         timezone: object.timezone,
         recurrence: object.recurrence,
         recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
-        dtstart: object.starts_at.in_time_zone(object.timezone),
+        dtstart: object.original_starts_at.in_time_zone(object.timezone),
       )
     end
 
