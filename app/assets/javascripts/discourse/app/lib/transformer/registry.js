@@ -67,7 +67,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "quote-params",
   "reply-name-fallback",
   "reply-user-avatar",
-  "reply-user-name",
   "small-user-attrs",
   "tag-separator",
   "topic-list-class",
