@@ -21,7 +21,6 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   excludeCategoryId: null,
   scopedCategoryId: null,
   prioritizedCategoryId: null,
-  readOnlyCategoryId: null,
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {
@@ -56,8 +55,6 @@ export default class CategoryChooser extends ComboBoxComponent {
         null,
         htmlSafe(i18n(isString ? this.selectKit.options.none : "category.none"))
       );
-    } else if (this.selectKit.options.readOnlyCategoryId) {
-      return this.defaultItem(null, htmlSafe(i18n("category.choose")));
     } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
     } else {
@@ -99,7 +96,6 @@ export default class CategoryChooser extends ComboBoxComponent {
         rejectCategoryIds: [this.selectKit.options.excludeCategoryId],
         scopedCategoryId: this.selectKit.options.scopedCategoryId,
         prioritizedCategoryId: this.selectKit.options.prioritizedCategoryId,
-        readOnlyCategoryId: this.selectKit.options.readOnlyCategoryId,
       });
     }
 
@@ -127,13 +123,11 @@ export default class CategoryChooser extends ComboBoxComponent {
   @computed(
     "selectKit.filter",
     "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId",
-    "selectKit.options.readOnlyCategoryId"
+    "selectKit.options.prioritizedCategoryId"
   )
   get content() {
     if (!this.selectKit.filter) {
-      let { scopedCategoryId, prioritizedCategoryId, readOnlyCategoryId } =
-        this.selectKit.options;
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
 
       if (scopedCategoryId) {
         return this.categoriesByScope({ scopedCategoryId });
@@ -141,10 +135,6 @@ export default class CategoryChooser extends ComboBoxComponent {
 
       if (prioritizedCategoryId) {
         return this.categoriesByScope({ prioritizedCategoryId });
-      }
-
-      if (readOnlyCategoryId) {
-        return this.categoriesByScope({ readOnlyCategoryId });
       }
     }
 
@@ -154,7 +144,6 @@ export default class CategoryChooser extends ComboBoxComponent {
   categoriesByScope({
     scopedCategoryId = null,
     prioritizedCategoryId = null,
-    readOnlyCategoryId = null,
   } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
       ? Category.list()
@@ -174,10 +163,6 @@ export default class CategoryChooser extends ComboBoxComponent {
 
     let scopedCategories = categories.filter((category) => {
       const categoryId = this.getValue(category);
-
-      if (readOnlyCategoryId === categoryId) {
-        return true;
-      }
 
       if (
         scopedCategoryId &&

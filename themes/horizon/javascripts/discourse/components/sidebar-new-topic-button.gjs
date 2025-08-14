@@ -5,7 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
+import { gt, not } from "truth-helpers";
 import CreateTopicButton from "discourse/components/create-topic-button";
 
 export default class SidebarNewTopicButton extends Component {
@@ -39,6 +39,30 @@ export default class SidebarNewTopicButton extends Component {
     if (this.siteSettings.default_subcategory_on_read_only_category) {
       return this.category?.subcategoryWithCreateTopicPermission;
     }
+  }
+
+  get tagRestricted() {
+    return this.tag?.staff;
+  }
+
+  get createTopicDisabled() {
+    return (
+      (this.category && !this.createTopicTargetCategory) ||
+      (this.tagRestricted && !this.currentUser.staff)
+    );
+  }
+
+  get categoryReadOnlyBanner() {
+    if (this.category && this.currentUser && this.createTopicDisabled) {
+      return this.category.read_only_banner;
+    }
+  }
+
+  get createTopicClass() {
+    const baseClasses = "btn-default sidebar-new-topic-button";
+    return this.categoryReadOnlyBanner
+      ? `${baseClasses} disabled`
+      : baseClasses;
   }
 
   @action
@@ -80,8 +104,10 @@ export default class SidebarNewTopicButton extends Component {
         <CreateTopicButton
           @canCreateTopic={{this.canCreateTopic}}
           @action={{this.createNewTopic}}
+          @disabled={{this.createTopicDisabled}}
           @label="topic.create"
-          @btnClass="btn-default sidebar-new-topic-button"
+          @btnClass={{this.createTopicClass}}
+          @canCreateTopicOnTag={{not this.tagRestricted}}
           @showDrafts={{gt this.draftCount 0}}
         />
       </div>
