@@ -71,7 +71,15 @@ module Jobs
       end
 
       users.each do |user_id|
-        create_attendance(user_id, @event.post.id, invitee["attendance"] || "going")
+        # Respect capacity: skip creating new going when full
+        attendance = invitee["attendance"] || "going"
+        if attendance == "going" && @event.at_capacity?
+          save_log "Skipping '#{invitee["identifier"]}' due to max attendees reached"
+          @failed += 1
+          next
+        end
+
+        create_attendance(user_id, @event.post.id, attendance)
       end
 
       @processed += 1
