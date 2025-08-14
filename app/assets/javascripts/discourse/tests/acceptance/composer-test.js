@@ -1686,7 +1686,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified name when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("reply-name-fallback", () => {
+          api.registerValueTransformer("composer-reply-name-fallback", () => {
             return "NewNameHere";
           });
         });
@@ -1699,7 +1699,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("reply-user-avatar", () => {
+          api.registerValueTransformer("composer-reply-user-avatar", () => {
             return "new-avatar";
           });
         });
@@ -1714,7 +1714,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar in quote", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("quote-avatar", () => {
+          api.registerValueTransformer("composer-editor-quote-avatar", () => {
             return "custom-quote-avatar";
           });
         });
