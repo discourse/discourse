@@ -34,16 +34,12 @@ export default class AutomationEdit extends Controller {
   @action
   async toggleEnabled() {
     const automation = this.model.automation;
-    // automation.set("enabled", !automation.enabled);
     automation.enabled = !automation.enabled;
-    this.set("isUpdatingAutomation", true);
     try {
       await automation.save({ enabled: automation.enabled });
     } catch (e) {
       popupAjaxError(e);
       automation.enabled = !automation.enabled;
-    } finally {
-      this.set("isUpdatingAutomation", false);
     }
   }
 

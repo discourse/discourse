@@ -1,16 +1,14 @@
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
-import { and } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import TextField from "discourse/components/text-field";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
-import DTooltip from "float-kit/components/d-tooltip";
+import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import FormError from "discourse/plugins/automation/admin/components/form-error";
 
@@ -34,26 +32,11 @@ export default RouteTemplate(
                 }}</label>
 
               <span class="enabled-toggle-with-tooltip">
-                {{#if @controller.disableEnabledToggle}}
-                  <DTooltip @identifier="automation-enabled-toggle">
-                    <:trigger>
-                      <DToggleSwitch
-                        disabled={{true}}
-                        @state={{@controller.model.automation.enabled}}
-                      />
-                    </:trigger>
-                    <:content>
-                      {{i18n
-                        "discourse_automation.models.automation.enable_toggle_disabled"
-                      }}
-                    </:content>
-                  </DTooltip>
-                {{else}}
-                  <DToggleSwitch
-                    @state={{@controller.model.automation.enabled}}
-                    {{on "click" @controller.toggleEnabled}}
-                  />
-                {{/if}}
+                <AutomationEnabledToggle
+                  @automation={{@controller.model.automation}}
+                  @canBeEnabled={{not @controller.disableEnabledToggle}}
+                  @onToggle={{@controller.toggleEnabled}}
+                />
               </span>
             </div>
           </:content>

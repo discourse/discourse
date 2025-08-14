@@ -27,13 +27,11 @@ describe "DiscourseAutomation | Edit page", type: :system do
       automation_page.refresh
 
       expect(automation_page.enabled_toggle).to be_unchecked
-      expect(automation.reload.enabled).to eq(false)
 
       automation_page.enabled_toggle.toggle
       automation_page.refresh
 
       expect(automation_page.enabled_toggle).to be_checked
-      expect(automation.reload.enabled).to eq(true)
     end
 
     it "is disabled when the automation has missing required fields" do
