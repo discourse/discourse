@@ -13,6 +13,11 @@ import element from "discourse/helpers/element";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {
+  wrapperElement = (hasButtons) => {
+    const makeClickable = this.args.titleRoute && !hasButtons;
+    return makeClickable ? LinkTo : element("div");
+  };
+
   get title() {
     if (this.args.titleLabelTranslated) {
       return this.args.titleLabelTranslated;
@@ -35,11 +40,6 @@ export default class AdminSectionLandingItem extends Component {
     } else if (this.args.taglineLabel) {
       return i18n(this.args.taglineLabel);
     }
-  }
-
-  wrapperElement(hasButtons) {
-    const makeClickable = this.args.titleRoute && !hasButtons;
-    return makeClickable ? LinkTo : element("div");
   }
 
   <template>
