@@ -404,6 +404,9 @@ discourse_ai:
     default: ""
     secret: true
     area: "ai-features/bot"
+  ai_bot_max_completions:
+    default: 50
+    area: "ai-features/bot"
   ai_bot_allowed_seeded_models:
     default: ""
     hidden: true

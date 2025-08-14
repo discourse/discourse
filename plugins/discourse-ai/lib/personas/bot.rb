@@ -5,9 +5,6 @@ module DiscourseAi
     class Bot
       BOT_NOT_FOUND = Class.new(StandardError)
 
-      # the future is agentic, allow for more turns
-      MAX_COMPLETIONS = 8
-
       # limit is arbitrary, but 5 which was used in the past was too low
       MAX_TOOLS = 20
 
@@ -75,7 +72,7 @@ module DiscourseAi
         needs_newlines = false
         tools_ran = 0
 
-        while total_completions < MAX_COMPLETIONS && ongoing_chain
+        while total_completions < SiteSetting.ai_bot_max_completions && ongoing_chain
           tool_found = false
           force_tool_if_needed(prompt, context)
 
@@ -176,8 +173,8 @@ module DiscourseAi
 
           total_completions += 1
 
-          # do not allow tools when we are at the end of a chain (total_completions == MAX_COMPLETIONS - 1)
-          prompt.tool_choice = :none if total_completions == MAX_COMPLETIONS - 1
+          # do not allow tools when we are at the end of a chain (total_completions == SiteSetting.ai_bot_max_completions - 1)
+          prompt.tool_choice = :none if total_completions == SiteSetting.ai_bot_max_completions - 1
         end
 
         embed_thinking(raw_context)
