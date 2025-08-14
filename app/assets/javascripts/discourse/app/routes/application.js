@@ -1,5 +1,5 @@
-import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import NotActivatedModal from "discourse/components/modal/not-activated";
@@ -31,9 +31,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service site;
   @service siteSettings;
   @service restrictedRouting;
-
-  @controller("login") loginController;
-  @controller("signup") signupController;
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
@@ -179,14 +176,22 @@ export default class ApplicationRoute extends DiscourseRoute {
   showLogin(props = {}) {
     const t = this.router.transitionTo("login");
     t.wantsTo = true;
-    return t.then(() => this.loginController.setProperties({ ...props }));
+    return t.then(() =>
+      getOwner(this)
+        .lookup("controller:login")
+        .setProperties({ ...props })
+    );
   }
 
   @action
   showCreateAccount(props = {}) {
     const t = this.router.transitionTo("signup");
     t.wantsTo = true;
-    return t.then(() => this.signupController.setProperties({ ...props }));
+    return t.then(() =>
+      getOwner(this)
+        .lookup("controller:signup")
+        .setProperties({ ...props })
+    );
   }
 
   @action
