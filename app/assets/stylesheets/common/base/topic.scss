@@ -276,6 +276,10 @@
 
     .select-kit.combo-box.category-chooser {
       width: 100%;
+
+      .badge-category__wrapper {
+        font-size: var(--font-0);
+      }
     }
   }
 
