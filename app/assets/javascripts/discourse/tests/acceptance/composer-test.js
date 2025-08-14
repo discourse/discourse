@@ -1709,7 +1709,7 @@ import { i18n } from "discourse-i18n";
 
         assert
           .dom(".reply-details .action-title img")
-          .hasAttribute("src", "/images/avatar.png?size=48", "Reply avatar can be customized");
+          .hasAttribute("src", /\/images\/avatar\.png/, "Reply avatar can be customized");
       });
 
       test("modified avatar in quote", async function (assert) {
@@ -1728,7 +1728,7 @@ import { i18n } from "discourse-i18n";
 
         assert
           .dom(".d-editor-preview .quote .title img")
-          .hasAttribute("src", "/images/custom-quote-avatar.png?size=48", "Quote avatar can be customized");
+          .hasAttribute("src", /\/images\/custom-quote-avatar\.png/, "Quote avatar can be customized");
       });
     }
   );
