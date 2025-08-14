@@ -29,6 +29,9 @@ module DiscoursePostEvent
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :channel
+    attributes :rrule
+    attributes :max_attendees
+    attributes :at_capacity
 
     def channel
       ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
@@ -36,6 +39,10 @@ module DiscoursePostEvent
 
     def include_channel?
       object.chat_enabled && defined?(::Chat::ChannelSerializer) && object.chat_channel.present?
+    end
+
+    def at_capacity
+      object.at_capacity?
     end
 
     def can_act_on_discourse_post_event
