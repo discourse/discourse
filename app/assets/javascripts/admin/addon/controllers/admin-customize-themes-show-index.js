@@ -464,17 +464,4 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
   }
-
-  @action
-  editLightColorScheme() {
-    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
-  }
-
-  @action
-  editDarkColorScheme() {
-    this.router.transitionTo(
-      "adminCustomize.colors.show",
-      this.darkColorSchemeId
-    );
-  }
 }
