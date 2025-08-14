@@ -231,6 +231,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
     )}</span>`;
   }
 
+  if (opts.readOnly) {
+    const desc = i18n("category_row.read_only");
+    html += `<span class="read-only" aria-label="${desc}">${desc}</span>`;
+  }
+
   if (href) {
     href = ` href="${href}" `;
   }

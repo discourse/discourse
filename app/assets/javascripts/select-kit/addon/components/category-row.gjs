@@ -31,6 +31,18 @@ export default class CategoryRow extends Component {
     return this.rowValue === this.args.value;
   }
 
+  get isReadOnly() {
+    if (!this.readOnlyCategoryId) {
+      return false;
+    }
+
+    return this.rowValue === this.readOnlyCategoryId;
+  }
+
+  get readOnlyCategoryId() {
+    return this.args.selectKit.options.readOnlyCategoryId;
+  }
+
   get hideParentCategory() {
     return this.args.selectKit.options.hideParentCategory;
   }
@@ -114,6 +126,7 @@ export default class CategoryRow extends Component {
         subcategoryCount: this.args.item?.category
           ? this.category.subcategory_count
           : 0,
+        readOnly: this.isReadOnly,
       })
     );
   }
@@ -187,6 +200,11 @@ export default class CategoryRow extends Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
+
+    if (this.isReadOnly) {
+      return false;
+    }
+
     this.args.selectKit.select(this.rowValue, this.args.item);
     return false;
   }
@@ -225,11 +243,16 @@ export default class CategoryRow extends Component {
         event.preventDefault();
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
+        event.preventDefault();
+
+        if (this.isReadOnly) {
+          return false;
+        }
+
         this.args.selectKit.select(
           this.args.selectKit.highlighted.id,
           this.args.selectKit.highlighted
         );
-        event.preventDefault();
       } else if (event.key === "Escape") {
         this.args.selectKit.close(event);
         this.args.selectKit.headerElement().focus();
