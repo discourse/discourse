@@ -51,7 +51,7 @@ import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 let _createCallbacks = [];
 
-// Custom tip ID for markdown switch tip (use 100+ range to avoid conflicts)
+// Custom tip ID for markdown switch (100+ range to avoid conflicts)
 const MARKDOWN_TIP_ID = 100;
 
 export function addToolbarCallback(func) {
