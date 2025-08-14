@@ -463,11 +463,12 @@ export default class Composer extends RestModel {
 
     if (post) {
       options.label = i18n(`post.${action}`);
-      options.userAvatar = applyValueTransformer(
-        "reply-user-avatar",
-        tinyAvatar(post.avatar_template),
+      const avatarTemplate = applyValueTransformer(
+        "composer-reply-user-avatar",
+        post.avatar_template,
         { post }
       );
+      options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
