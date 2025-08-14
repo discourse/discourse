@@ -6914,7 +6914,7 @@ en:
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme."
           dark_color_scheme_select: "Select colors to be used by theme in dark mode."
-          edit_colors: "Edit colors."
+          edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
           add_all_themes: "Add all themes"
