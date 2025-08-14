@@ -228,14 +228,14 @@ acceptance("Tags listed by group", function (needs) {
       );
   });
 
-  test("new topic button works when viewing staff-only tags", async function (assert) {
+  test("new topic button is not available for staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
     assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
-    assert.dom("#create-topic").isEnabled();
+    assert.dom("#create-topic").isDisabled();
 
     updateCurrentUser({ moderator: true });
 
