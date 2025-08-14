@@ -386,7 +386,7 @@ export default class FormKitSiteSettingWrapper extends Component {
 
       {{#if form.dirtyCount}}
         <form.Actions
-          class="site-settings-form__floating-actions admin-site-settings__changes-banner"
+          class="site-settings-form__floating-actions admin-changes-banner"
           @floating={{true}}
           @floatContainerClass={{"admin-detail"}}
         >

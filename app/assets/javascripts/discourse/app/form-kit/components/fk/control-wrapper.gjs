@@ -48,6 +48,7 @@ export default class FKControlWrapper extends Component {
         (if this.error "has-error")
         (if @field.disabled "is-disabled")
         (if @field.emphasis "has-emphasis")
+        (if @field.isDirty "is-dirty")
         (if (eq @field.format "full") "--full")
       }}
       data-disabled={{@field.disabled}}
