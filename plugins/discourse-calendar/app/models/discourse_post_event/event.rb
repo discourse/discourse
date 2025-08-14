@@ -59,15 +59,19 @@ module DiscoursePostEvent
 
       return if !starts_at_changed && !ends_at_changed
 
-      event_dates.update_all(finished_at: Time.current)
       set_next_date
     end
 
     def set_next_date
       next_dates = calculate_next_date
-      return if !next_dates
 
-      date_args = { starts_at: next_dates[:starts_at], ends_at: next_dates[:ends_at] }
+      return event_dates.update_all(finished_at: Time.current) if !next_dates
+
+      date_args = {
+        starts_at: next_dates[:starts_at],
+        ends_at: next_dates[:ends_at],
+        finished_at: nil,
+      }
       if next_dates[:ends_at] && next_dates[:ends_at] < Time.current
         date_args[:finished_at] = next_dates[:ends_at]
       end
