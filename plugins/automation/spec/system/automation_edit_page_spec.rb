@@ -24,13 +24,9 @@ describe "DiscourseAutomation | Edit page", type: :system do
       expect(automation_page.enabled_toggle).to be_checked
 
       automation_page.enabled_toggle.toggle
-      automation_page.refresh
-
       expect(automation_page.enabled_toggle).to be_unchecked
 
       automation_page.enabled_toggle.toggle
-      automation_page.refresh
-
       expect(automation_page.enabled_toggle).to be_checked
     end
 
