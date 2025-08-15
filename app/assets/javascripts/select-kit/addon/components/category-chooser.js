@@ -135,16 +135,16 @@ export default class CategoryChooser extends ComboBoxComponent {
       let { scopedCategoryId, prioritizedCategoryId, readOnlyCategoryId } =
         this.selectKit.options;
 
+      if (readOnlyCategoryId) {
+        return this.categoriesByScope({ readOnlyCategoryId });
+      }
+
       if (scopedCategoryId) {
         return this.categoriesByScope({ scopedCategoryId });
       }
 
       if (prioritizedCategoryId) {
         return this.categoriesByScope({ prioritizedCategoryId });
-      }
-
-      if (readOnlyCategoryId) {
-        return this.categoriesByScope({ readOnlyCategoryId });
       }
     }
 
