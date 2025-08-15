@@ -239,10 +239,6 @@ label {
   align-items: flex-start;
   color: var(--primary-high);
 
-  &:not(.checkbox-label) {
-    font-weight: bold;
-  }
-
   > .d-icon {
     align-self: center;
     margin-right: 4px;
