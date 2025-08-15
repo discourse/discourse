@@ -59,24 +59,24 @@ export default class ColorPaletteListItem extends Component {
     );
   }
 
-  get activeBadgeTitle() {
+  get defaultBadgeTitle() {
     if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.active_both_badge.title");
+      return i18n("admin.customize.colors.default_both_badge.title");
     }
     if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.active_light_badge.title");
+      return i18n("admin.customize.colors.default_light_badge.title");
     }
-    return i18n("admin.customize.colors.active_dark_badge.title");
+    return i18n("admin.customize.colors.default_dark_badge.title");
   }
 
-  get activeBadgeText() {
+  get defaultBadgeText() {
     if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.active_both_badge.text");
+      return i18n("admin.customize.colors.default_both_badge.text");
     }
     if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.active_light_badge.text");
+      return i18n("admin.customize.colors.default_light_badge.text");
     }
-    return i18n("admin.customize.colors.active_dark_badge.text");
+    return i18n("admin.customize.colors.default_dark_badge.text");
   }
 
   @bind
@@ -143,10 +143,10 @@ export default class ColorPaletteListItem extends Component {
 
           {{#if (or this.isDefaultLight this.isDefaultDark)}}
             <span
-              title={{this.activeBadgeTitle}}
-              class="theme-card__badge --active"
+              title={{this.defaultBadgeTitle}}
+              class="theme-card__badge --default"
             >
-              {{this.activeBadgeText}}
+              {{this.defaultBadgeText}}
             </span>
           {{/if}}
         </div>
