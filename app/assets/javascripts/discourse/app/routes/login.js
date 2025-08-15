@@ -67,7 +67,7 @@ export default class extends DiscourseRoute {
 
     // Automatically kick off the external login if it's the only one available
     if (isOnlyOneExternalLoginMethod) {
-      if (auth_immediately || login_required || !from || wantsTo) {
+      if (auth_immediately && (login_required || !from || wantsTo)) {
         this.#isRedirecting = true;
         singleExternalLogin();
       } else {
