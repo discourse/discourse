@@ -13,11 +13,15 @@
     min-width: 6rem;
   }
 
-  .email-logs-user {
+  .email-logs-user a {
     display: flex;
     gap: var(--space-2);
-    align-items: baseline;
+    align-items: center;
     min-width: 200px;
+
+    img {
+      align-self: baseline;
+    }
   }
 
   .filters input {
@@ -60,7 +64,7 @@
   }
 
   code {
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 
   .email-details {
