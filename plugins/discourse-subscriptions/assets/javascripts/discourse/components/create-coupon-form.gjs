@@ -1,8 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -45,7 +47,12 @@ export default class CreateCouponForm extends Component {
           <label for="promo_code">
             {{i18n "discourse_subscriptions.admin.coupons.promo_code"}}
           </label>
-          <Input @type="text" name="promo_code" @value={{this.promoCode}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.promoCode)))}}
+            type="text"
+            name="promo_code"
+            value={{this.promoCode}}
+          />
         </p>
 
         <p>
@@ -57,11 +64,12 @@ export default class CreateCouponForm extends Component {
             @value={{this.discountType}}
             @onChange={{fn (mut this.discountType)}}
           />
-          <Input
+          <input
+            {{on "input" (withEventValue (fn (mut this.discount)))}}
             class="discount-amount"
-            @type="text"
+            type="text"
             name="amount"
-            @value={{this.discount}}
+            value={{this.discount}}
           />
         </p>
 
