@@ -16,7 +16,7 @@ export default apiInitializer((api) => {
   async function regenerateGists(topicIds, toasts, onSuccess = null) {
     try {
       await ajax("/discourse-ai/summarization/regen_gist", {
-        type: "POST",
+        type: "PUT",
         data: { topic_ids: topicIds },
       });
 
