@@ -115,6 +115,8 @@ Discourse::Application.routes.draw do
     post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
+    get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+
     resources :ai_llms,
               only: %i[index new create edit update destroy],
               path: "ai-llms",
