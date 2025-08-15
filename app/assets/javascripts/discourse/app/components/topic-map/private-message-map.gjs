@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
@@ -13,11 +11,8 @@ import { i18n } from "discourse-i18n";
 export default class PrivateMessageMap extends Component {
   @service site;
 
-  @tracked isEditing = false;
-
   get participantsClasses() {
-    return !this.isEditing &&
-      this.site.mobileView &&
+    return this.site.mobileView &&
       this.args.topicDetails.allowed_groups.length > 4
       ? "participants hide-names"
       : "participants";
@@ -38,31 +33,11 @@ export default class PrivateMessageMap extends Component {
     return this.canInvite || this.canRemove;
   }
 
-  get actionAllowed() {
-    return this.canRemove ? this.toggleEditing : this.args.showInvite;
-  }
-
-  get actionAllowedLabel() {
-    if (this.canInvite && this.canRemove) {
-      return "private_message_info.edit";
-    }
-    if (!this.canInvite && this.canRemove) {
-      return "private_message_info.remove";
-    }
-    return "private_message_info.add";
-  }
-
-  @action
-  toggleEditing() {
-    this.isEditing = !this.isEditing;
-  }
-
   <template>
     <div class={{this.participantsClasses}}>
       {{#each @topicDetails.allowed_groups as |group|}}
         <PmMapUserGroup
           @model={{group}}
-          @isEditing={{this.isEditing}}
           @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
           @removeAllowedGroup={{@removeAllowedGroup}}
         />
@@ -70,37 +45,26 @@ export default class PrivateMessageMap extends Component {
       {{#each @topicDetails.allowed_users as |user|}}
         <PmMapUser
           @model={{user}}
-          @isEditing={{this.isEditing}}
           @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
           @canRemoveSelfId={{@topicDetails.can_remove_self_id}}
           @removeAllowedUser={{@removeAllowedUser}}
         />
       {{/each}}
-    </div>
 
-    {{#if this.canShowControls}}
-      <div class="controls">
+      {{#if this.canInvite}}
         <DButton
-          @action={{this.actionAllowed}}
-          @label={{this.actionAllowedLabel}}
-          class="btn-default add-remove-participant-btn"
+          @action={{@showInvite}}
+          @icon="plus"
+          class="btn-default add-participant-btn"
         />
-
-        {{#if (and this.canInvite this.isEditing)}}
-          <DButton
-            @action={{@showInvite}}
-            @icon="plus"
-            class="btn-default add-participant-btn"
-          />
-        {{/if}}
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 }
 
 class PmMapUserGroup extends Component {
   get canRemoveLink() {
-    return this.args.isEditing && this.args.canRemoveAllowedUsers;
+    return this.args.canRemoveAllowedUsers;
   }
 
   get groupUrl() {
@@ -156,10 +120,7 @@ class PmMapUser extends Component {
   }
 
   get canRemoveLink() {
-    return (
-      this.args.isEditing &&
-      (this.args.canRemoveAllowedUsers || this.isCurrentUser)
-    );
+    return this.args.canRemoveAllowedUsers || this.isCurrentUser;
   }
 
   <template>
