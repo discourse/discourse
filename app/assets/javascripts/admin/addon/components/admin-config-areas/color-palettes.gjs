@@ -13,15 +13,20 @@ export default class AdminConfigAreasColorPalettes extends Component {
   @service router;
   @service modal;
 
-  get baseColorPalettes() {
-    return this.args.palettes.filter((palette) => palette.is_base);
+  get allColorPalettes() {
+    return this.args.palettes.map((palette) => {
+      if (palette.id === null) {
+        palette.id = palette.base_scheme_id;
+      }
+      return palette;
+    });
   }
 
   @action
   newColorPalette() {
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.baseColorPalettes,
+        colorSchemes: this.allColorPalettes,
         newColorSchemeWithBase: this.newColorPaletteWithBase,
       },
     });
@@ -29,9 +34,14 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   async newColorPaletteWithBase(baseKey) {
-    const base = this.baseColorPalettes.find(
-      (palette) => palette.base_scheme_id === baseKey
-    );
+    let base;
+    if (baseKey && /^\d+$/.test(baseKey)) {
+      base = this.allColorPalettes.findBy("id", baseKey);
+    } else {
+      base = this.allColorPalettes.find(
+        (palette) => palette.base_scheme_id === baseKey
+      );
+    }
     const newPalette = base.copy();
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),

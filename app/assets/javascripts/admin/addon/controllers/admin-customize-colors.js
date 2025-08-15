@@ -179,9 +179,112 @@ export default class AdminCustomizeColorsController extends Controller {
     ];
   }
 
+<<<<<<< HEAD
+=======
+  get allColorPalettes() {
+    return this.model.content.map((scheme) => {
+      if (scheme.id === null) {
+        scheme.id = scheme.base_scheme_id;
+      }
+      return scheme;
+    });
+  }
+
+  _doInitialSort() {
+    let schemes = this.model.filter((scheme) => !scheme.is_base);
+
+    // built-in "Light (default)"
+    const lightBaseScheme = this.allBaseColorSchemes.find(
+      (scheme) => scheme.base_scheme_id === "Light" || scheme.name === "Light"
+    );
+    if (lightBaseScheme) {
+      const builtInDefault = {
+        ...lightBaseScheme,
+        id: null,
+        name: i18n("admin.customize.theme.default_light_scheme"),
+        description: i18n("admin.customize.theme.default_light_scheme"),
+        is_builtin_default: true,
+        user_selectable: false,
+        theme_id: -1,
+      };
+      schemes.unshift(builtInDefault);
+    }
+
+    const defaultThemeId = this.defaultTheme?.id;
+    const defaultLightId = this.defaultTheme?.color_scheme_id;
+    const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
+
+    schemes.sort((a, b) => {
+      // 1. Display active light
+      if (
+        defaultLightId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultLightId === a.id && !a.is_builtin_default) ||
+        (defaultLightId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultLightId === a.id ? -1 : 1;
+      }
+
+      // 2. Display active dark
+      if (
+        defaultDarkId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultDarkId === a.id && !a.is_builtin_default) ||
+        (defaultDarkId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultDarkId === a.id ? -1 : 1;
+      }
+
+      // 3. Sort by user selectable first
+      if (a.user_selectable !== b.user_selectable) {
+        return a.user_selectable ? -1 : 1;
+      }
+
+      // 4. Sort custom schemes (no theme) before themed schemes
+      const aIsCustom = !a.theme_id && !a.is_builtin_default;
+      const bIsCustom = !b.theme_id && !b.is_builtin_default;
+      if (aIsCustom !== bIsCustom) {
+        return aIsCustom ? -1 : 1;
+      }
+
+      // 5. Prioritize schemes from the current default theme
+      const aIsFromDefaultTheme = a.theme_id === defaultThemeId;
+      const bIsFromDefaultTheme = b.theme_id === defaultThemeId;
+      if (aIsFromDefaultTheme !== bIsFromDefaultTheme) {
+        return aIsFromDefaultTheme ? -1 : 1;
+      }
+
+      // 6. Finally, sort alphabetically by name
+      return (a.originals.name || "").localeCompare(b.originals.name || "");
+    });
+
+    this._initialSortedSchemes = schemes;
+    this._sortPerformed = true;
+  }
+
+  _resetSortedSchemes() {
+    this._sortPerformed = false;
+    this._initialSortedSchemes = [];
+  }
+
+>>>>>>> da1fd23bc0 (FIX: Allow creating new color palettes based on custom palettes)
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
+    let base;
+    if (baseKey && /^\d+$/.test(baseKey)) {
+      base = this.model.content.findBy("id", baseKey);
+    } else {
+      base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
+    }
+
     const newColorScheme = base.copy();
     newColorScheme.setProperties({
       name: i18n("admin.customize.colors.new_name"),
@@ -199,7 +302,7 @@ export default class AdminCustomizeColorsController extends Controller {
   newColorScheme() {
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.allBaseColorSchemes,
+        colorSchemes: this.allColorPalettes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
       },
     });
