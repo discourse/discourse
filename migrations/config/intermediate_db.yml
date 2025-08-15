@@ -15,6 +15,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
+    badge_groupings: {}
     categories:
       columns:
         add:
@@ -163,7 +164,6 @@ schema:
         - "backup_draft_posts"
         - "backup_draft_topics"
         - "backup_metadata"
-        - "badge_groupings"
         - "badge_types"
         - "bookmarks"
         - "calendar_events"
