@@ -68,8 +68,12 @@ module Migrations::Database
       @db.query_array(sql, *parameters, &block)
     end
 
-    def count(sql, *parameters)
+    def query_value(sql, *parameters)
       @db.query_single_splat(sql, *parameters)
+    end
+
+    def count(sql, *parameters)
+      query_value(sql, *parameters)
     end
 
     def execute(sql, *parameters)
