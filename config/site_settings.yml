@@ -365,7 +365,7 @@ basic:
     hidden: true
     client: true
   default_theme_id:
-    default: -1
+    default: -2
     hidden: true
   relative_date_duration:
     client: true
