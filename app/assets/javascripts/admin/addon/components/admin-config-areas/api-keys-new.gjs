@@ -17,7 +17,6 @@ import { API_KEY_SCOPE_MODES } from "admin/lib/constants";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
-  @service router;
   @service modal;
   @service store;
 

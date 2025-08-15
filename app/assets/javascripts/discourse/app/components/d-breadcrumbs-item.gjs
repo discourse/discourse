@@ -5,7 +5,6 @@ import getURL from "discourse/lib/get-url";
 
 export default class DBreadcrumbsItem extends Component {
   @service breadcrumbs;
-  @service router;
 
   constructor() {
     super(...arguments);

@@ -27,7 +27,6 @@ export function addBulkDropdownAction(name, customAction) {
 }
 
 export default class BulkTopicActions extends Component {
-  @service router;
   @service toasts;
 
   @tracked activeComponent = null;

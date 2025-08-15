@@ -43,7 +43,6 @@ export default class Post extends Component {
   @service dialog;
   @service keyValueStore;
   @service modal;
-  @service search;
   @service site;
   @service siteSettings;
   @service store;

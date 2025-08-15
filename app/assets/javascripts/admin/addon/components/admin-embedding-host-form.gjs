@@ -15,7 +15,6 @@ import UserChooser from "select-kit/components/user-chooser";
 
 export default class AdminEmbeddingHostForm extends Component {
   @service router;
-  @service site;
   @service store;
   @controller adminEmbedding;
 

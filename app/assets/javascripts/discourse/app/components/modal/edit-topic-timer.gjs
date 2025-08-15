@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -21,8 +20,6 @@ export const BUMP_TYPE = "bump";
 export const DELETE_REPLIES_TYPE = "delete_replies";
 
 export default class EditTopicTimer extends Component {
-  @service currentUser;
-
   @tracked topicTimer;
   @tracked loading = false;
   @tracked flash;

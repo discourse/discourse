@@ -7,7 +7,6 @@ import concatClass from "discourse/helpers/concat-class";
 
 export default class SignupProgressBar extends Component {
   @service siteSettings;
-  @service site;
 
   @tracked steps = [];
 

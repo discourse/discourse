@@ -14,7 +14,6 @@ import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class DiscourseNewFeatureItem extends Component {
-  @service siteSettings;
   @service toasts;
 
   @tracked settingEnabled = this.args.item.setting_enabled;

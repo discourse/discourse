@@ -9,7 +9,6 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
-  @service menu;
 
   @resettableTracked filterQueryString = this.args.queryString;
 

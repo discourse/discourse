@@ -9,7 +9,6 @@ import UserField from "admin/models/user-field";
 
 export default class AdminConfigAreasUserFieldsList extends Component {
   @service dialog;
-  @service store;
   @service toasts;
   @service adminUserFields;
 

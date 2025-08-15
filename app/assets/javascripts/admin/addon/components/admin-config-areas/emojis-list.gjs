@@ -7,7 +7,6 @@ import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-l
 import ComboBox from "select-kit/components/combo-box";
 
 export default class AdminConfigAreasEmojisList extends Component {
-  @service dialog;
   @service adminEmojis;
 
   get emojis() {

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import deprecated from "discourse/lib/deprecated";
@@ -12,8 +11,6 @@ import autoCloseToast from "float-kit/modifiers/auto-close-toast";
 const VELOCITY_THRESHOLD = -1.2;
 
 export default class DToast extends Component {
-  @service site;
-
   @tracked progressBar;
 
   @action

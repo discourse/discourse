@@ -68,8 +68,6 @@ class PinnedOptionsTrigger extends Component {
 }
 
 export default class PinnedOptions extends Component {
-  @service site;
-
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;

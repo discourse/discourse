@@ -16,8 +16,6 @@ const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link:not(.--link-button)";
 
 export default class HamburgerDropdownWrapper extends Component {
-  @service currentUser;
-  @service siteSettings;
   @service navigationMenu;
 
   @action

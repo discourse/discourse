@@ -21,7 +21,6 @@ import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
 
 export default class EditCategoryGeneral extends Component {
-  @service router;
   @service site;
   @service siteSettings;
 
