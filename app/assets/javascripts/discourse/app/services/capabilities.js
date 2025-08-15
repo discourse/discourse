@@ -1,3 +1,4 @@
+import Mobile from "discourse/lib/mobile";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
@@ -65,6 +66,13 @@ class Capabilities {
       return breakpointQueries["2xl"].matches;
     },
   };
+
+  #isMobileDevice =
+    Mobile.mobileForced || (ua.includes("Mobile") && !ua.includes("iPad"));
+
+  get isMobileDevice() {
+    return this.#isMobileDevice;
+  }
 
   get touch() {
     return anyPointerCourseQuery.matches;

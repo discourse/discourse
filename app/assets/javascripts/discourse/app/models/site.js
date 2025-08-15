@@ -127,8 +127,8 @@ export default class Site extends RestModel {
           "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
           " rendering.",
         {
-          since: "v3.5.0.beta9-dev",
-          id: "discourse.static-mobile-mode-initializing",
+          since: "3.5.0.beta9-dev",
+          id: "discourse.static-viewport-initialization",
         }
       );
     }
@@ -142,6 +142,12 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get isMobileDevice() {
+    deprecated(
+      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
+        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
+      { id: "discourse.site.is-mobile-device", since: "3.5.0.beta9-dev" }
+    );
+
     return this.mobileView;
   }
 

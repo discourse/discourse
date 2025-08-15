@@ -232,7 +232,7 @@ export default class BookmarkMenu extends Component {
   }
 
   async _openBookmarkModal() {
-    this.dMenu.close();
+    await this.dMenu.close();
 
     try {
       const closeData = await this.modal.show(BookmarkModal, {
