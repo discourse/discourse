@@ -535,3 +535,22 @@ describe DiscoursePostEvent::Event do
     end
   end
 end
+
+describe DiscoursePostEvent::Event, "#capacity" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  it "detects capacity when max_attendees set" do
+    creator = Fabricate(:user)
+    topic = Fabricate(:topic, user: creator)
+    post = Fabricate(:post, user: creator, topic: topic)
+    event = Fabricate(:event, post: post, max_attendees: 1)
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+    )
+    expect(event.at_capacity?).to eq(true)
+  end
+end
