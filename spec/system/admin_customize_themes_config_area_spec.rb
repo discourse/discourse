@@ -37,13 +37,13 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(page).to have_current_path("/admin/config/customize/themes")
   end
 
-  it "allows to mark theme as active" do
+  it "allows to mark theme as default" do
     config_area.visit
-    expect(config_area).to have_badge(foundation_theme, "--active")
-    expect(config_area).to have_no_badge(theme_2, "--active")
-    config_area.mark_as_active(theme_2)
-    expect(config_area).to have_badge(theme_2, "--active")
-    expect(config_area).to have_no_badge(foundation_theme, "--active")
+    expect(config_area).to have_badge(foundation_theme, "--default")
+    expect(config_area).to have_no_badge(theme_2, "--default")
+    config_area.mark_as_default(theme_2)
+    expect(config_area).to have_badge(theme_2, "--default")
+    expect(config_area).to have_no_badge(foundation_theme, "--default")
   end
 
   it "allows to make theme selectable by users" do

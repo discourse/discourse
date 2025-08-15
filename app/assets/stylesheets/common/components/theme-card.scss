@@ -80,7 +80,7 @@
     flex-grow: 1;
   }
 
-  &.-active {
+  &.--default {
     @include theme-card-border(tertiary);
   }
 
@@ -203,7 +203,7 @@
       color: var(--primary-high);
     }
 
-    &.--active {
+    &.--default {
       background-color: var(--tertiary);
       color: var(--secondary);
       position: absolute;
