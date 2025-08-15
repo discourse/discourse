@@ -71,20 +71,14 @@ export default class ColorSchemeColor extends EmberObject {
 
   @discourseComputed("name")
   translatedName(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.name`);
-    } else {
-      return name;
-    }
+    return i18n(`admin.customize.colors.${name}.name`, { defaultValue: name });
   }
 
   @discourseComputed("name")
   description(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.description`);
-    } else {
-      return "";
-    }
+    return i18n(`admin.customize.colors.${name}.description`, {
+      defaultValue: "",
+    });
   }
 
   /**

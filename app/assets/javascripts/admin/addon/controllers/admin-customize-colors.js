@@ -111,6 +111,15 @@ export default class AdminCustomizeColorsController extends Controller {
     ];
   }
 
+  get allColorPalettes() {
+    return this.model.content.map((scheme) => {
+      if (scheme.id === null) {
+        scheme.id = scheme.base_scheme_id;
+      }
+      return scheme;
+    });
+  }
+
   _doInitialSort() {
     let schemes = this.model.filter((scheme) => !scheme.is_base);
 
@@ -168,7 +177,13 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
+    let base;
+    if (baseKey && /^\d+$/.test(baseKey)) {
+      base = this.model.content.findBy("id", baseKey);
+    } else {
+      base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
+    }
+
     const newColorScheme = base.copy();
     newColorScheme.setProperties({
       name: i18n("admin.customize.colors.new_name"),
@@ -188,7 +203,7 @@ export default class AdminCustomizeColorsController extends Controller {
   newColorScheme() {
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.allBaseColorSchemes,
+        colorSchemes: this.allColorPalettes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
       },
     });

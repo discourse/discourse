@@ -65,6 +65,7 @@ describe "Admin Color Palettes Features", type: :system do
   let(:selectable_custom_scheme_b) do
     Fabricate(:color_scheme, name: "Selectable custom scheme b", user_selectable: true)
   end
+  let(:create_color_palette_modal) { PageObjects::Modals::CreateColorPalette.new }
 
   before { sign_in(admin) }
 
@@ -255,5 +256,18 @@ describe "Admin Color Palettes Features", type: :system do
         ],
       )
     end
+  end
+
+  it "can create new color palette from custom palette" do
+    visit("/admin/customize/colors")
+
+    max_id = ColorScheme.maximum(:id) + 1
+    page.find(".d-page-action-button").click
+
+    create_color_palette_modal.base_dropdown.select_row_by_name("Theme Palette")
+
+    create_color_palette_modal.create_button.click
+
+    expect(page).to have_current_path("/admin/customize/colors/#{max_id}")
   end
 end
