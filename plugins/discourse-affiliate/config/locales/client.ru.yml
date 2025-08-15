@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Партнерская программа Discourse"

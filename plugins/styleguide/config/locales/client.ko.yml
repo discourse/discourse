@@ -69,8 +69,8 @@ ko:
           title: "글 맵"
         site_header:
           title: "사이트 헤더"
-        suggested_topics:
-          title: "주요 글"
+        more_topics:
+          title: "더 많은 글"
         post_menu:
           title: "글쓰기 메뉴"
         modal:

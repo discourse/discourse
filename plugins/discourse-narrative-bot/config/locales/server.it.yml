@@ -169,8 +169,22 @@ it:
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
+        instructions: |-
+          Puoi condividere con me uno di questi link? Rispondi con **un solo link per riga** e si espanderà automaticamente includendo un comodo riepilogo.
+
+          Per copiare un link, tienilo premuto su mobile oppure fai clic con il tasto destro del mouse:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Fantastico! Funziona per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga da solo senza niente che segua o preceda
+        not_found: |-
+          Mi dispiace, non sono riuscito a trovare il link nella tua risposta! :cry:
+
+          Puoi provare ad aggiungere il seguente link, su una riga a parte, nella tua prossima risposta?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Ecco l'immagine di un unicorno:
@@ -385,6 +399,19 @@ it:
 
           Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Sapevi che puoi aggiungere un sondaggio a qualsiasi messaggio? Prova a usare l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor per **creare un sondaggio**.
+        not_found: |-
+          Ooops! Non c'è nessun sondaggio nella tua risposta.
+
+          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Ehi, bel sondaggio! Sono o non sono un buon insegnante?
 
@@ -393,6 +420,20 @@ it:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Qualche volta potresti voler **nascondere dei dettagli** nelle tue risposte:
+
+          - Quando si stanno discutendo punti della trama di un film o di uno show televisivo che potrebbero essere considerati degli spoiler.
+
+          - Quando il tuo messaggio necessita di molti dettagli opzionali che potrebbero intralciare la lettura se letti tutti in una volta.
+
+          [details=Seleziona qui per vedere come funziona!]
+          1. Seleziona l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor.
+          2. Seleziona "Nascondi Dettagli".
+          3. Inserisci un riassunto dei dettagli.
+          [/details]
+
+          Riesci ad usare l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 

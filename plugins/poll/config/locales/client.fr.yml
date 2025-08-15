@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Sondage Discourse"
   js:
     poll:
       voters:

@@ -6,6 +6,7 @@
 
 pt_BR:
   site_settings:
+    openid_connect_enabled: Ative autenticação com o OpenID Connect. Personalize o texto da interface do(a) usuário(a) <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>aqui</a>
     openid_connect_discovery_document: "URL do documento de descoberta do OpenID Connect. Geralmente localizada em \"https://your.domain/.well-known/openid-configuration\""
     openid_connect_client_id: "ID de Cliente do OpenID Connect"
     openid_connect_client_secret: "Segredo de cliente do OpenID Connect"

@@ -781,7 +781,8 @@ th:
       dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
       theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       color_schemes:
-        regular: "ทั่วไป"
+        picker:
+          active: "ใช้งานอยู่"
       text_size_default_on_all_devices: "ทำให้ขนาดฟอนต์นี้เป็นค่าเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       allow_private_messages: "อนุญาตให้ผู้ใช้อื่นส่งข้อความส่วนตัวหาฉัน"
       external_links_in_new_tab: "เปิดลิงก์ภายนอกทั้งหมดในแท็บใหม่"
@@ -1366,7 +1367,6 @@ th:
       options: "ตัวเลือก"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
-      toggle_whisper: "เปิดกระซิบ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
       saved_local_draft_tip: "บันทึกบนอุปกรณ์"
       drafts_offline: "แบบร่างออฟไลน์"
@@ -1420,8 +1420,6 @@ th:
       paste_code_text: "พิมพ์หรือวางโค้ดที่นี่"
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
-      olist_title: "รายการลำดับ"
-      ulist_title: "รายการดอกจันทร์"
       list_item: "รายการ"
       help: "ช่วยเหลือการจัดรูปแบบ"
       collapse: "ย่อหน้าเขียนกระทู้"
@@ -2927,7 +2925,7 @@ th:
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           preview: "แสดงตัวอย่าง"
-          default: "ใช้งานอยู่"
+          default: "ค่าเริ่มต้น"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"
@@ -2970,8 +2968,6 @@ th:
           edit: "แก้ไข"
           filters:
             all: "ทั้งหมด"
-          active_badge:
-            text: "ใช้งานอยู่"
           undo: "เลิกทำ"
           revert: "ย้อนกลับ"
           primary:

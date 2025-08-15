@@ -152,6 +152,7 @@ zh_CN:
     mention_warning:
       dismiss: "忽略"
       cannot_see: "%{first_identifier} 无法访问此频道且没有收到通知。"
+      cannot_see_group: "%{group_name} 的某些成员无法访问此频道且未收到通知。"
       cannot_see_multiple:
         other: "%{first_identifier} 和 %{count} 位其他用户无法访问此频道且没有收到通知。"
       invitations_sent:

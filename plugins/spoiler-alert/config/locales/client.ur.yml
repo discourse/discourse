@@ -12,7 +12,6 @@ ur:
           spoiler_alert: "ڈسکورس سپوئلر الرٹ"
   js:
     spoiler:
-      title: بلر سپوئلر
       label:
         show: "چھپا ہوا مواد دکھائیں"
     composer:

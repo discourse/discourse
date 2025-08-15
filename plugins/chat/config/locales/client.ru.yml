@@ -262,7 +262,9 @@ ru:
         header: "Заголовок чата"
         composer: "Редактор чата"
         channels_list: "Список каналов чата"
+      no_direct_message_channels: "Вы еще не присоединились ни к одной личной переписке!"
       no_direct_message_channels_cta: "Начать разговор"
+      no_public_channels: "Вы еще не присоединились ни к одному каналу!"
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       only_chat_push_notifications:
@@ -332,7 +334,7 @@ ru:
         many: "%{count} файла"
         other: "%{count} файла"
       you_flagged: "Вы пожаловались на это сообщение"
-      exit: "Назад"
+      exit: "выйти из чата"
       channel_status:
         read_only_header: "Канал только для чтения"
         read_only: "Только для чтения"
@@ -595,6 +597,7 @@ ru:
         select_emoji: "Выберите эмодзи"
         system: "Системный"
         title: "Входящие вебхуки"
+        header_description: "Входящие вебхуки могут использоваться внешними системами для публикации сообщений в назначенном канале чата в качестве пользователя-бота."
         url: "URL"
         url_instructions: "Этот URL содержит секретное значение — берегите его."
         username: "Имя пользователя"
@@ -723,6 +726,11 @@ ru:
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"
+      quick_reaction_type:
+        title: "Реакции в чате одним щелчком мыши"
+        options:
+          frequent: "Наиболее часто используемые реакции чата"
+          custom: "Пользовательские реакции"
     notifications:
       chat_invitation: "пригласил вас присоединиться к каналу чата"
       chat_invitation_html: "<span>Пользователь %{username}</span> <span> пригласил вас присоединиться к каналу</span>"
@@ -782,7 +790,7 @@ ru:
           switch_channel_arrows: "%{shortcut} Переключить канал"
           switch__unread_channel_arrows: "%{shortcut} Переключить непрочитанный канал"
           open_quick_channel_selector: "%{shortcut} Открыть переключатель каналов"
-          open_insert_link_modal: "%{shortcut} Вставить гиперссылку (только в редакторе)"
+          open_insert_link_modal: "%{shortcut} Вставить ссылку (только редактор)"
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"

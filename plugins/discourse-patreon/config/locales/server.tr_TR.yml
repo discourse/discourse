@@ -23,6 +23,9 @@ tr_TR:
     patreon_donation_prompt_campaign_url: "Bağış istemi kampanyasının URL'si"
     errors:
       patreon_creator_username_not_set: "Patreon Girişini etkinleştirmeden önce Patreon Üreticisi Discourse Kullanıcı Adı ayarını yapmanız gerekir."
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon Oluşturucusunun erişim ve yenileme token değerleri hatalı. Yeni token'ları <a href='https://www.patreon.com/platform/documentation/clients'>Patreon web sitesinden</a> <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site ayarlarına</a> kopyalayıp yapıştırmanız gerekiyor."
   patreon:
     error:
       invalid_response: "Patreon API'den geçersiz yanıt"

@@ -69,8 +69,8 @@ nb_NO:
           title: "Emne Kart"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Anbefalte emner"
+        more_topics:
+          title: "Flere emner"
         post_menu:
           title: "Innlegg meny"
         modal:

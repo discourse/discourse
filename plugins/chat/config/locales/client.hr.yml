@@ -151,7 +151,6 @@ hr:
       title_capitalized: "Čet"
       upload_to_channel: "Prenesi na %{title}"
       upload_to_thread: "Prenesi u nit"
-      exit: "natrag"
       channel_status:
         archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"

@@ -31,6 +31,7 @@ ru:
         few: "вопроса решены"
         many: "вопросов решены"
         other: "вопросов решены"
+      accepted_html: "%{icon} Решено <span class='by'> <a href data-user-card='%{username_lower}'>%{username}</a> в</span> <a href='%{post_path}' class='back'>посте #%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "показать всё"
@@ -39,6 +40,7 @@ ru:
       no_solved_topics_title: "У вас пока нет решённых тем"
       no_solved_topics_title_others: "У пользователя %{username} ещё нет тем, содержащих решённые вопросы"
       no_solved_topics_body: "Когда вы даете в теме полезный ответ, он может быть отмечен в качестве решения владельцем темы или сотрудниками."
+      marked_solved_by: "Отмечено как решенное <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Вопрос был решён?
         description: "Выделите ответ и помогите другим пользователям, нажав на кнопку 'Вопрос решён' под правильным ответом."

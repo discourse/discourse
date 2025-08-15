@@ -41,3 +41,20 @@ fr:
           help_text:
             email_available: "Vous trouverez l'historique des promesses de don de ce Patreon en bas à droite de cette page."
             email_not_available: "Sélectionnez le membre Patreon et accédez à l'historique des promesses de dons en bas à droite de la page."
+      donation_prompt:
+        body: |
+          <h1>Bonjour,</h1>
+
+          <p>Vous appréciez notre site et vous souhaitez contribuer à une bonne cause ?</p>
+
+          <p>
+            Si vous trouvez notre site utile et appréciez la communauté que nous avons créée, nous serions ravis que vous fassiez un don.
+            Les dons permettent à nos services de fonctionner sans interruption et garantissent que notre communauté restera active pendant de nombreuses années.
+            Chaque euro compte et sera utilisé à bon escient.
+          </p>
+
+          <p>Merci pour votre soutien !</p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Devenir mécène</a>
+          </p>

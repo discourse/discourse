@@ -9,7 +9,9 @@ tr_TR:
     user_notes:
       title: "Kullanıcı Notları"
       attach: "Kullanıcı Notu Ekle"
+      attach_note_description: "Bu kullanıcı hakkında bir not ekleyin. Bu not yalnızca personel tarafından görülebilir."
       remove: "Kullanıcı Notunu Kaldır"
       show: "Kullanıcı Notları (%{count})"
       delete_confirm: "Bu kullanıcı notunu silmek istediğinizden emin misiniz?"
       show_post: "Gönderiyi Göster"
+      copy_reviewable_note: "Not, kullanıcı profiline kopyalansın mı?"

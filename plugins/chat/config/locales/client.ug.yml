@@ -302,7 +302,6 @@ ug:
         one: "%{count} ھۆججەت"
         other: "%{count} ھۆججەت"
       you_flagged: "بۇ ئۇچۇرنى پاش قىلدىڭىز"
-      exit: "كەينى"
       channel_status:
         read_only_header: "قانال پەقەت ئوقۇلىدۇ"
         read_only: "پەقەت ئوقۇلىدۇ"
@@ -706,7 +705,6 @@ ug:
           switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
           switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
           open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
-          open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (كىرگۈزۈش كۆزنىكىلا)"
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
           composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
           composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"

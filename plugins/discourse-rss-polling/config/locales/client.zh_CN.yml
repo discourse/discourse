@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS 轮询"
   js:
+    rss_polling:
+      title: RSS 轮询
     admin:
       rss_polling:
+        feed: Feed 设置
+        discourse: Discourse 设置
         author: 作者
         feed_url: URL
         discourse_category: 类别
         discourse_tags: 标签
+        feed_category_filter: 类别筛选器
+        documentation: RSS 轮询配置文档
+        destroy_feed:
+          confirm: "确定要删除此 Feed 吗？"

@@ -6,8 +6,6 @@
 
 vi:
   js:
-    details:
-      title: Ẩn thông tin
     composer:
       details_title: Tóm tắt
       details_text: "Văn bản này sẽ bị ẩn"

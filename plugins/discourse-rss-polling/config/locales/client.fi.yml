@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discoursen RSS-pollaus"
   js:
+    rss_polling:
+      title: RSS-pollaus
     admin:
       rss_polling:
+        feed: Syöteasetukset
+        discourse: Discoursen asetukset
         author: Käyttäjä
         feed_url: URL
         discourse_category: Luokka
         discourse_tags: Tunnisteet
+        feed_category_filter: Luokkasuodatin
+        documentation: RSS-pollauksen määritysohjeet
+        destroy_feed:
+          confirm: "Haluatko varmasti poistaa tämän syötteen?"

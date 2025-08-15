@@ -6,8 +6,6 @@
 
 ja:
   js:
-    details:
-      title: 詳細を隠す
     composer:
       details_title: 要約
       details_text: "このテキストは表示されません"

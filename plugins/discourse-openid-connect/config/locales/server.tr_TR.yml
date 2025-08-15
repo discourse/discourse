@@ -6,6 +6,7 @@
 
 tr_TR:
   site_settings:
+    openid_connect_enabled: OpenID Connect kimlik doğrulamasını etkinleştirin. Kullanıcı arayüzü metnini <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>buradan</a> özelleştirin
     openid_connect_discovery_document: "OpenID Connect keşif belgesi URL'si. Normalde \"https://your.domain/.well-known/openid-configuration\" adresinde bulunur"
     openid_connect_client_id: "OpenID Connect istemci kimliği"
     openid_connect_client_secret: "OpenID Connect istemci sırrı"

@@ -33,6 +33,11 @@ fr:
   discourse_assign:
     assigned_to: "Sujet attribué à @%{username}"
     unassigned: "L'attribution du sujet a été annulée"
+    filter:
+      description:
+        assigned: "Filtrer les sujets attribués à un utilisateur ou à un groupe spécifique"
+        nobody: "Filtrer les sujets qui ne sont attribués à personne"
+        anyone: "Filtrer les sujets attribués à n'importe qui"
     already_claimed: "Le sujet a déjà été réservé."
     already_assigned: "Le sujet est déjà attribué à @%{username}"
     too_many_assigns: "@%{username} a atteint le nombre maximal de sujets attribués (%{max})."

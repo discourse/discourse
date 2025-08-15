@@ -68,7 +68,6 @@ sl:
         none: "Brez"
       title: "klepet"
       title_capitalized: "Klepet"
-      exit: "nazaj"
       channel_status:
         closed: "Zaprto"
         open: "Odpri"

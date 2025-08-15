@@ -322,7 +322,7 @@ pl_PL:
         many: "%{count} plików"
         other: "%{count} plików"
       you_flagged: "Oflagowałeś tę wiadomość"
-      exit: "poprzednia"
+      exit: "opuść czat"
       channel_status:
         read_only_header: "Kanał jest tylko do odczytu"
         read_only: "Tylko do odczytu"
@@ -762,7 +762,7 @@ pl_PL:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           switch__unread_channel_arrows: "%{shortcut} Przełącz nieprzeczytany kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
-          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          open_insert_link_modal: "%{shortcut} Wstaw link (tylko kompozytor)"
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"

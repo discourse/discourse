@@ -234,7 +234,9 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
+      no_direct_message_channels: "Você ainda não entrou em nenhum canal de mensagem direta!"
       no_direct_message_channels_cta: "Iniciar uma conversa"
+      no_public_channels: "Você ainda não entrou em nenhum canal!"
       no_public_channels_cta: "Explorar canais"
       kicked_from_channel: "Você não pode mais acessar este canal."
       only_chat_push_notifications:
@@ -300,7 +302,7 @@ pt_BR:
         one: "%{count} arquivo"
         other: "%{count} arquivos"
       you_flagged: "Você sinalizou esta mensagem"
-      exit: "voltar"
+      exit: "sair do bate-papo"
       channel_status:
         read_only_header: "O canal é somente para leitura"
         read_only: "Somente leitura"
@@ -529,6 +531,7 @@ pt_BR:
         select_emoji: "Escolher emoji"
         system: "sistema"
         title: "Webhooks recebidos"
+        header_description: "Os webhooks recebidos podem ser usados por sistemas externos para postar mensagens em um canal de bate-papo designado como um usuário(a) bot"
         url: "URL"
         url_instructions: "Esta URL contém um valor secreto - mantenha-o seguro."
         username: "Nome de usuário(a)"
@@ -641,6 +644,11 @@ pt_BR:
       draft_channel_screen:
         header: "Novas mensagens"
         cancel: "Cancelar"
+      quick_reaction_type:
+        title: "Reações de um clique no bate-papo"
+        options:
+          frequent: "Reações usadas com mais frequência no bate-papo"
+          custom: "Reações personalizadas"
     notifications:
       chat_invitation: "convidou você para participar de um canal de chat"
       chat_invitation_html: "<span>%{username}</span> <span> convidou você para entrar em um canal de chat</span>"
@@ -698,7 +706,7 @@ pt_BR:
           switch_channel_arrows: "%{shortcut} Mudar de canal"
           switch__unread_channel_arrows: "%{shortcut} Trocar para canal não lido"
           open_quick_channel_selector: "%{shortcut} Abrir o seletor rápido de canais"
-          open_insert_link_modal: "%{shortcut} Inserir hiperlink (somente compositor)"
+          open_insert_link_modal: "%{shortcut} Inserir link (apenas compositor)"
           composer_bold: "%{shortcut} Negrito (somente compositor)"
           composer_italic: "%{shortcut} Itálico (somente compositor)"
           composer_code: "%{shortcut} Código (somente compositor)"

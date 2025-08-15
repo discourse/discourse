@@ -41,3 +41,20 @@ zh_CN:
           help_text:
             email_available: "在页面右下角查看 Patreon 的承诺历史。"
             email_not_available: "选择 Patreon 成员并在页面右下角查看承诺历史。"
+      donation_prompt:
+        body: |
+          <h1>读者您好！</h1>
+
+          <p>您喜欢我们的网站吗？您是否愿意为公益事业做出贡献？</p>
+
+          <p>
+            如果您认为我们的网站有所帮助并且喜欢我们创建的社区，我们将十分感激您能捐助我们的网站。
+            捐助可以帮助我们的服务保持稳定运行，并确保我们的社区在未来几年内仍可正常运营。
+            每一元的捐助都十分重要并会被妥当利用。
+          </p>
+
+          <p>感谢您的支持！<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">成为赞助人</a>
+          </p>

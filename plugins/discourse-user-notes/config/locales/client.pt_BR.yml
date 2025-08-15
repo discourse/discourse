@@ -9,7 +9,9 @@ pt_BR:
     user_notes:
       title: "Anotações de usuário(a)"
       attach: "Adicionar anotação de usuário(a)"
+      attach_note_description: "Adicione uma observação sobre este(a) usuário(a). A observação estará visível apenas para a equipe."
       remove: "Remover anotação de usuário(a)"
       show: "Anotações de usuário(a) (%{count})"
       delete_confirm: "Tem certeza de que deseja excluir esta anotação de usuário(a)?"
       show_post: "Mostrar Postagem"
+      copy_reviewable_note: "Copiar observação para o perfil do(a) usuário(a)?"

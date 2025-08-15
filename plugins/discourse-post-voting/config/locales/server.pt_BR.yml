@@ -32,6 +32,7 @@ pt_BR:
     post_voting_comment_limit_per_post: "Quantidade de comentários permitidos em cada publicação"
     min_trust_to_flag_posts_voting_comments: "Nível mínimo de confiança para sinalizar comentário de votação em postagem"
     flag_posts_voting_comments_allowed_groups: "Grupos com permissão para sinalizar comentário de votação em postagem"
+    post_voting_comment_enabled: "Ativar comentários na postagem, nos tópicos de votação eme postagem"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ pt_BR:
         limit_exceeded: "O limite de %{limit} comentários por postagem foi atingido."
         perform: "Comentário de votação em postagem sinalizado com pontuação alta o suficiente para silenciar o(a) usuário(a)."
         auto_silence_from_flags: "Silenciado(a) automaticamente devido à sinalização."
+        disabled: "Não é permitido comentar na postagem."
       reviewables:
         comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
         actions:

@@ -89,8 +89,8 @@ tr_TR:
           title: "Konu Haritası"
         site_header:
           title: "Site Başlığı"
-        suggested_topics:
-          title: "Önerilen Konular"
+        more_topics:
+          title: "Daha fazla konu"
         post_menu:
           title: "Gönderi Menüsü"
         modal:

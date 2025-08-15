@@ -32,6 +32,7 @@ fr:
     post_voting_comment_limit_per_post: "Nombre de commentaires autorisés sur chaque publication"
     min_trust_to_flag_posts_voting_comments: "Niveau de confiance minimal pour signaler un commentaire après le vote"
     flag_posts_voting_comments_allowed_groups: "Groupes autorisés à signaler un commentaire après le vote"
+    post_voting_comment_enabled: "Activer les commentaires sur les publications dans les sujets à vote de publication"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ fr:
         limit_exceeded: "La limite de %{limit} commentaires par message a été atteinte."
         perform: "Commentaire de vote signalé avec un score suffisamment élevé pour désactiver l'utilisateur."
         auto_silence_from_flags: "Automatiquement mis en sourdine en raison d'un signalement."
+        disabled: "Il n'est pas permis de commenter une publication."
       reviewables:
         comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
         actions:

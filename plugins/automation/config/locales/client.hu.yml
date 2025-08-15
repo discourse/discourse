@@ -446,8 +446,6 @@ hu:
             label: Verzió
           status:
             label: Állapot
-          enabled:
-            label: Engedélyezve
           disabled:
             label: Letiltva
           placeholders:

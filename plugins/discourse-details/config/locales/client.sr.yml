@@ -6,8 +6,6 @@
 
 sr:
   js:
-    details:
-      title: Sakrij detalje
     composer:
       details_title: Rezime
       details_text: "Ovaj tekst će biti sakriven"

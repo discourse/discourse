@@ -104,7 +104,6 @@ pt:
       sounds:
         none: "Nenhuma"
         bell: "Sino"
-      exit: "retroceder"
       channel_status:
         archive_failed_no_topic: "O canal de arquivo falhou. %{completed}/%{total} mensagens foram arquivadas, o tópico de destino não foi criado. Clica Tentar de novo para tentar completar o arquivo."
         closed: "Fechado"

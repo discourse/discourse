@@ -9,9 +9,16 @@ fi:
     ai:
       flag_types:
         review: "Lisää viesti tarkastusjonoon"
+        review_hide: "Lisää viesti tarkastusjonoon ja piilota viesti"
         spam: "Liputa roskapostiksi ja piilota viesti"
         spam_silence: "Liputa roskapostiksi, piilota viesti ja hiljennä käyttäjä"
     scriptables:
+      llm_tool_triage:
+        title: Luokittele viestit tekoälytyökalulla
+        description: "Luokittele viestit käyttämällä mukautettua logiikkaa tekoälytyökalussa"
+      llm_persona_triage:
+        title: Luokittele viestit tekoäypersoonalla
+        description: "Vastaa viesteihin käyttämällä tiettyä tekoälypersoonaa"
       llm_triage:
         title: Luokittele viestit tekoälyllä
         description: "Luokittele viestit suurella kielimallilla"
@@ -24,6 +31,8 @@ fi:
         description: "Säännöllinen raportti laajan kielimallin perusteella"
   site_settings:
     discourse_ai_enabled: "Ota Discoursen tekoälylisäosa käyttöön."
+    ai_default_llm_model: "Oletusarvoinen LLM-malli, jota käytetään kaikkiin tekoälyominaisuuksiin"
+    ai_artifact_security: "Tekoälyartefaktijärjestelmä luo iframe-kehyksiä suoritettavalla koodilla. Tiukka tila pakottaa ylimääräisen napsautuksen koodin suorittamiseksi. Löyhä tila suorittaa koodin välittömästi. Hybriditila antaa käyttäjälle mahdollisuuden syöttää data-ai-artifact-autorun-parametrin näytettäväksi heti. Pois käytöstä -tila poistaa artefaktijärjestelmän käytöstä."
     ai_toxicity_enabled: "Ota toksisuusmoduuli käyttöön."
     ai_toxicity_inference_service_api_endpoint: "URL-osoite, jossa toksisuusmoduulin API on käynnissä"
     ai_toxicity_inference_service_api_key: "Toksisuus-APIn API-avain"
@@ -51,6 +60,10 @@ fi:
     ai_nsfw_flag_threshold_porn: "Raja, jolloin pornoksi luokiteltua kuvaa pidetään NSFW:nä."
     ai_nsfw_flag_threshold_sexy: "Raja, jolloin seksikkääksi luokiteltua kuvaa pidetään NSFW:nä."
     ai_nsfw_models: "NSFW-päätelmiin käytettävät mallit."
+    ai_spam_detection_enabled: "Ota tekoälyroskapostitunnistusmoduuli käyttöön"
+    ai_openai_api_key: "OpenAI APIn API-avain. Käytetään VAIN kuvien luontiin ja muokkauksiin. Käytä LLM-määritysvälilehteä GPT:lle."
+    ai_openai_image_generation_url: "OpenAI:n kuvanluonti-API:n URL-osoite"
+    ai_openai_image_edit_url: "OpenAI:n kuvanmuokkaus-API:n URL-osoite"
     ai_helper_enabled: "Ota tekoälyapuri käyttöön."
     composer_ai_helper_allowed_groups: "Näiden ryhmien käyttäjät näkevät tekoälyavustajan painikkeen kirjoitustoiminnossa."
     ai_helper_allowed_in_pm: "Ota kirjoitustoiminnon tekoälyavustaja käyttöön yksityisviesteissä."
@@ -68,11 +81,14 @@ fi:
     ai_embeddings_semantic_related_topics: "Aiheeseen liittyvien ketjujen osiossa näytettävien ketjujen enimmäismäärä."
     ai_embeddings_backfill_batch_size: "15 minuutin välein täydennettävien upotusten määrä."
     ai_embeddings_semantic_search_enabled: "Ota koko sivun semanttinen haku käyttöön."
+    ai_embeddings_semantic_search_use_hyde: "Käytä HyDE:tä semanttiseen koko sivun hakuun. Käyttää LLM:ää hypoteettisen viestin luomiseen käyttäjän hakusanasta osumien löytämiseksi."
     ai_embeddings_semantic_quick_search_enabled: "Ota semanttinen haku käyttöön hakuvalikon ponnahdusikkunassa."
     ai_embeddings_semantic_related_include_closed_topics: "Sisällytä suljetut ketjut semanttisiin hakutuloksiin"
     ai_embeddings_semantic_search_hyde_model: "Malli, jota käytetään avainsanojen laajentamiseen parempien tulosten saamiseksi semanttisen haun aikana"
     ai_embeddings_per_post_enabled: Luo upotukset jokaiselle viestille
+    ai_summarization_enabled: "Ota yhteenveto-ominaisuus käyttöön"
     ai_summarization_model: "Yhteenvetoon käytettävä malli"
+    ai_summarization_persona: "Yhteenveto-ominaisuudessa käytettävä persoona"
     ai_custom_summarization_allowed_groups: "Ryhmät, jotka voivat luoda uusia yhteenvetoja."
     ai_pm_summarization_allowed_groups: "Ryhmät voivat luoda ja tarkastella yhteenvetoja yksityisviesteissä."
     ai_summary_gists_enabled: "Luo lyhyitä yhteenvetoja ketjujen uusimmista vastauksista automaattisesti"
@@ -90,11 +106,26 @@ fi:
     ai_stability_api_url: "stability.ai-APIn URL"
     ai_google_custom_search_api_key: "Google Custom Search APIn API-avain, katso: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google Custom Search APIn CX"
+    ai_discord_search_enabled: "Ottaa käyttöön Discord-hakuominaisuuden"
+    ai_discord_app_id: "Sen Discord-sovelluksen tunnus, johon haluat yhdistää Discord-haun"
+    ai_discord_app_public_key: "Sen Discord-sovelluksen julkinen avain, johon haluat yhdistää Discord-haun"
+    ai_discord_search_mode: "Valitse Discord-haussa käytettävä hakutila"
+    ai_discord_search_persona: "Discord-haussa käytettävä persoona."
+    ai_discord_allowed_guilds: "Discord-killat (palvelimet), joilla botti saa hakea"
+    ai_bot_enable_dedicated_ux: "Salli koko näytön bottikäyttöliittymä yksityisviestin sijaan"
+    ai_translation_enabled: "Ottaa käyttöön tekoälykäännösominaisuuden"
+    ai_translation_model: "Käännöksessä käytettävä malli. Tämän mallin täytyy tukea käännöstä. Persoonat voivat korvata tämän asetuksen."
+    ai_translation_backfill_limit_to_public_content: "Kun tämä on käytössä, vain julkisten luokkien sisältö käännetään. Kun tämä ei ole käytössä, myös ryhmäyksityisviestien ja yksityisten luokkien sisältö lähetetään käännettäväksi."
+    ai_translation_max_post_length: "Käännettävän viestin enimmäispituus. Tätä pidempiä viestejä ei käännetä."
+    ai_translation_backfill_max_age_days: "Käännettävien viestien ja ketjujen enimmäisikä. Tätä vanhempia viestejä ja ketjuja ei käännetä. 0 poistaa aiempien viestien kääntämisen käytöstä, mutta ei poista käytöstä uusien viestien kääntämistä."
   reviewables:
     reasons:
       flagged_by_toxicity: Tekoälylisäosa liputti tämän luokiteltuaan sen toksiseksi.
       flagged_by_nsfw: Tekoälylisäosa liputti tämän luokiteltuaan ainakin yhden liitetyistä kuvista NSFW:ksi.
   reports:
+    sentiment_analysis:
+      title: "Tunneanalyysi"
+      description: "Tämä raportti tarjoaa tunneanalyysin viesteistä ryhmiteltynä luokittain, ja jokaiselle viestille ja luokalle annetaan positiiviset, negatiiviset ja neutraalit pisteet."
     overall_sentiment:
       title: "Yleinen tunne"
       description: 'Kaaviossa verrataan positiivisiksi tai negatiivisiksi luokiteltujen viestien määrää. Nämä lasketaan, kun positiiviset tai negatiiviset pisteet ylittävät asetetun kynnysarvon. Tämä tarkoittaa, että neutraaleja viestejä ei näytetä. Myöskään yksityisviestejä ei lasketa. Luokiteltu "cardiffnlp/twitter-roberta-base-sentiment-latest"-mallilla.'
@@ -186,8 +217,16 @@ fi:
       description: "Viestit, jotka on luokiteltu yllätyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Artefaktissa voi olla vain %{count} avain."
+          other: "Artefaktissa voi olla vain %{count} avainta."
+      link: "Näytä uudessa välilehdessä"
+      copy_embed: "Kopioi upotus"
       view_source: "Näytä lähde"
       view_changes: "Näytä muutokset"
+      change_description: "Muuta kuvausta"
+      copied: "Kopioitiin leikepöydälle"
     unknown_model: "Tuntematon tekoälymalli"
     tools:
       custom_name: "%{name} (mukautettu)"
@@ -202,6 +241,8 @@ fi:
           name: "Flux-kuvageneraattori (Together.ai)"
         empty_tool:
           name: "Aloita tyhjästä..."
+      name:
+        characters: "voi sisältää vain numeroita, kirjaimia ja alaviivoja"
     ai_helper:
       errors:
         completion_request_failed: "Jokin meni vikaan yritettäessä antaa ehdotuksia. Yritä uudelleen."
@@ -237,13 +278,17 @@ fi:
       invalid_error_type: "Virheellinen virhetyyppi annettu"
       unexpected: "Tapahtui odottamaton virhe"
       bot_user_update_failed: "Roskapostin skannausbottikäyttäjän päivittäminen epäonnistui"
+      configuration_missing: "Tekoälyroskapostihavaitsemisen määritys puuttuu. Lisää määritys kohdassa Ylläpito > Lisäosat > Discourse AI > Roskaposti ennen käyttöönottoa."
+      logging_subject: "Roskapostin havaitseminen"
     ai_bot:
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
+      thinking: "Ajattelu käynnissä..."
       personas:
         default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_delete_system_persona: "Järjestelmäpersoonia ei voi poistaa, poista se sen sijaan käytöstä"
         cannot_edit_system_persona: "Järjestelmäpersoonia voi vain nimetä uudelleen, et saa muokata työkaluja tai järjestelmäkehotetta, sen sijaan voit poistaa ne käytöstä ja tehdä kopion"
+        cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
           name: "GitHub-apulainen"
           description: "Tekoälybotti, joka on erikoistunut avustamaan GitHubiin liittyvissä tehtävissä ja kysymyksissä"
@@ -253,12 +298,21 @@ fi:
         artist:
           name: Taiteilija
           description: "Kuvien luomiseen erikoistunut tekoälybotti"
+        designer:
+          name: Suunnittelija
+          description: "Kuvien luomiseen ja muokkaamiseen erikoistunut tekoälybotti"
+        forum_researcher:
+          name: Foorumitutkija
+          description: "Foorumin syvälliseen tutkimukseen erikoistunut tekoälybotti"
         sql_helper:
           name: SQL-apuohjelma
           description: "Tekoälybotti, joka on erikoistunut SQL-kyselyiden laatimiseen tässä Discourse-esiintymässä"
         settings_explorer:
           name: Asetusapuri
           description: "Tekoälybotti, joka on erikoistunut auttamaan Discoursen sivustoasetuksiin tutustumisessa"
+        researcher:
+          name: Verkkotutkija
+          description: "Tekoälybotti, joka voi käyttää Googlea ja sekä hakea että lukea verkkosivuja"
         creative:
           name: Luova
           description: "Tekoälybotti ilman ulkoisia integraatioita, joka on erikoistuneet luoviin tehtäviin"
@@ -271,17 +325,103 @@ fi:
         web_artifact_creator:
           name: "Verkkoartefaktien luontityökalu"
           description: "Interaktiivisten verkkoartefaktien luomiseen erikoistunut tekoälybotti"
+        summarizer:
+          name: "Yhteenvetojen laatija"
+          description: "Tekoälyyhteenvetoihin käytetty oletuspersoona"
+        short_summarizer:
+          name: "Yhteenvetojen laatija (lyhyt muoto)"
+          description: "Oletuspersoona, jota käytetään lyhyiden yhteenvetojen laatimiseen tekoälyllä ketjuluetteloiden kohteista"
+        concept_finder:
+          name: "Käsite-etsijä"
+          description: "Sisällön käsitteiden ja teemojen tunnistamiseen erikoistunut tekoälybotti"
+        concept_matcher:
+          name: "Käsitteiden yhteensovittaja"
+          description: "Tekoälybotti, joka on erikoistunut sovittamaan sisältöä olemassa oleviin käsitteisiin"
+        concept_deduplicator:
+          name: "Käsitteiden deduplikoija"
+          description: "Käsitteiden deduplikointiin erikoistunut tekoälybotti"
         custom_prompt:
           name: "Mukautettu kehote"
+          description: "Oletuspersoona, jota käytetään Apurin mukautetun kehotteen ominaisuuteen"
         smart_dates:
           name: "Älykkäät päivämäärät"
+          description: "Oletuspersoona, jota käytetään Apurin älykkäiden päivämäärien ominaisuuteen"
+        markdown_table_generator:
+          name: "Markdown-taulukkogeneraattori"
+          description: "Oletuspersoona, jota käytetään Apurin markdown-taulukkogeneraattoriominaisuuteen"
+        post_illustrator:
+          name: "Viestin havainnollistaja"
+          description: "Luo StableDiffusion-kehotteita Apurin viestien havainnollistamisominaisuudelle"
+        proofreader:
+          name: "Oikolukija"
+          description: "Oletuspersoona, jota käytetään Apurin tekstin oikolukuominaisuuteen"
+        titles_generator:
+          name: "Otsikkogeneraattori"
+          description: "Oletuspersoona, jota käytetään Apurin ketjujen otsikkoehdotusominaisuuteen"
+        tutor:
+          name: "Tuutori"
+          description: "Oletuspersoona, jota käytetään Apurin selitysominaisuuteen"
+        translator:
+          name: "Kääntäjä"
+          description: "Oletuspersoona, jota käytetään Apurin kääntäjäominaisuuteen"
+        image_captioner:
+          name: "Kuvatekstit"
+          description: "Oletuspersoona, jota käytetään Apurin kuvatekstiominaisuuteen"
+        locale_detector:
+          name: "Kielialueen tunnistin"
+          description: "Tukee käännösominaisuutta tunnistamalla tietyn tekstin (viestit, otsikot jne.) kielialueen."
+        post_raw_translator:
+          name: "Viestien kääntäjä"
+          description: "Tukee käännöstoimintoa kääntämällä Discoursen markdownia sisältävät viestit"
+        topic_title_translator:
+          name: "Ketjun otsikon kääntäjä"
+          description: "Tukee käännösominaisuutta kääntämällä ketjujen otsikot"
+        short_text_translator:
+          name: "Lyhyen tekstin kääntäjä"
+          description: "Tukee käännösominaisuutta yleisenä tekstin kääntäjänä, jota käytetään lyhyissä teksteissä, kuten luokkien nimissä tai tunnisteissa"
+        spam_detector:
+          name: "Roskapostin havaitseminen"
+          description: "Oletuspersoona, jota käytetään roskapostin havaitsemisominaisuuteen"
+        content_creator:
+          name: "Sisällöntuottaja"
+          description: "HyDE-haussa käytettävä oletuspersoona"
+        report_runner:
+          name: "Raportinsuorittaja"
+          description: "Raporttien automaatioskriptissä käytetty oletuspersoona"
       topic_not_found: "Yhteenveto ei ole saatavilla, ketjua ei löydy!"
       summarizing: "Laaditaan yhteenvetoa ketjusta"
       searching: "Haetaan: \"%{query}\""
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Tutkimuksessa käytettävä kielimalli (oletuksena nykyisen persoonan LLM)"
+          max_tokens_per_batch:
+            name: "Enimmäismäärä saneita erää kohden"
+            description: "Enimmäismäärä saneita, joka käytetään kuhunkin erään tutkimuksessa"
+          max_tokens_per_post:
+            name: "Enimmäismäärä saneita viestiä kohden"
+            description: "Enimmäismäärä saneita, joka käytetään kuhunkin viestiin tutkimuksessa"
           max_results:
             name: "Tulosten enimmäismäärä"
+            description: "Suodattimeen sisällytettävien tulosten enimmäismäärä"
+          include_private:
+            name: "Sisällytä yksityiset"
+            description: "Sisällytä yksityiset ketjut suodattimiin"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Artefaktien luonnissa käytettävä kielimalli"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Artefaktien muokkauksissa käytettävä kielimalli"
+          update_algorithm:
+            name: "Päivitysalgoritmi"
+            description: "Pyydä LLM:ää korvaamaan kokonaan tai käytä erotusta päivitykseen"
+          do_not_echo_artifact:
+            name: "Älä toista artefaktia"
+            description: "Rajoittaa kustannuksia, mutta heikentää artefaktipäivitysten tehokkuutta"
         google:
           base_query:
             name: "Perushakukysely"
@@ -301,6 +441,7 @@ fi:
             name: "Perushakukysely"
             description: "Peruskysely, jota käytetään haussa. Esimerkki: \"#kiireellinen\" lisää hakukyselyn alkuun \"#kiireellinen\" ja sisältää vain ketjut, joissa on kiireellinen alue tai tunniste."
       tool_summary:
+        read_artifact: "Lue verkkoartefakti"
         update_artifact: "Päivitä verkkoartefakti"
         create_artifact: "Luo verkkoartefakti"
         web_browser: "Selaa verkkoa"
@@ -323,7 +464,12 @@ fi:
         dall_e: "Luo kuva"
         search_meta_discourse: "Haku Metasta Discoursessa"
         javascript_evaluator: "Arvioi JavaScript"
+        create_image: "Kuvan luominen"
+        edit_image: "Kuvan muokkaaminen"
+        researcher: "Tutkimus"
+        researcher_dry_run: "Tutkimuksen valmistelu"
       tool_help:
+        read_artifact: "Lue verkkoartefakti tekoälybotilla"
         update_artifact: "Päivitä verkkoartefakti tekoälybotilla"
         create_artifact: "Luo verkkoartefakti tekoälybotilla"
         web_browser: "Selaa verkkosivua tekoälybotilla"
@@ -338,6 +484,8 @@ fi:
         time: "Etsi aika eri aikavyöhykkeillä"
         summary: "Laadi yhteenveto ketjusta"
         image: "Luo kuva Stable Diffusionilla"
+        create_image: "Luo kuva käyttämällä OpenAI:n GPT-kuvamallia"
+        edit_image: "Muokkaa kuvaa käyttämällä OpenAI:n GPT-kuvamallia"
         google: "Hae Googlesta kyselyä"
         read: "Lue julkinen ketju foorumilla"
         setting_context: "Etsi sivustoasetuksen konteksti"
@@ -346,8 +494,11 @@ fi:
         dall_e: "Luo kuva DALL-E 3:lla"
         search_meta_discourse: "Haku Metasta Discoursessa"
         javascript_evaluator: "Arvioi JavaScript"
+        researcher: "Tutki foorumin tietoja tekoälybotilla"
       tool_description:
+        read_artifact: "Lue verkkoartefakti tekoälybotilla"
         update_artifact: "Verkkoartefakti päivitettiin tekoälybotilla"
+        create_artifact: "Loi verkkoartefaktin: %{name} – %{specification}"
         web_browser: "Luetaan: <a href='%{url}'>%{url}</a>"
         github_search_files: "Haettiin avainsanoilla \"%{keywords}\" tietovarastosta %{repo}/%{branch}"
         github_search_code: "Haettiin ehdolla \"%{query}\" tietovarastosta %{repo}"
@@ -378,9 +529,19 @@ fi:
           other: "Ehdolla \"%{query}\" löytyi %{count} <a href='%{url}'>tulosta</a>"
         setting_context: "Luetaan konteksti asetukselle: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Ehdotetut tavoitteet: %{goals}\n\nLöytyi %{count} viesti, joka vastaa suodatinta \"%{filter}\""
+          other: "Ehdotetut tavoitteet: %{goals}\n\nLöytyi %{count} viestiä, jotka vastaavat suodatinta \"%{filter}\""
+        researcher:
+          one: "Tutkimus: %{goals}\n\nLöytyi %{count} viesti, joka vastaa suodatinta \"%{filter}\""
+          other: "Tutkimus: %{goals}\n\nLöytyi %{count} viestiä, jotka vastaavat suodatinta \"%{filter}\""
         search_settings:
           one: "Ehdolla \"%{query}\" löytyi %{count} tulos"
           other: "Ehdolla \"%{query}\" löytyi %{count} tulosta"
+      discoveries:
+        continue_conversation:
+          title: "Löytökeskustelu: hae hakuehdolla %{query}"
+          raw: "Haussani hakuehdolla %{query} näytit minulle seuraavat tiedot:\n\n%{context}\n\nJatketaan keskustelua."
     summarization:
       configuration_hint:
         one: "Määritä ensin %{setting}-asetus."
@@ -404,9 +565,12 @@ fi:
           neutral: "Neutraali"
     llm:
       configuration:
+        create_llm: "Sinun täytyy määritää LLM ennen tämän ominaisuuden käyttöönottoa."
+        disable_modules_first: "Sinun täytyy ensin poistaa nämä moduulit käytöstä: %{settings}"
         set_llm_first: "Aseta %{setting} ensin"
         model_unreachable: "Emme saaneet vastausta tästä mallista. Tarkista ensin asetuksesi."
         invalid_seeded_model: "Et voi käyttää tätä mallia tämän ominaisuuden kanssa"
+        invalid_persona_response_format: "Valitulla persoonalla täytyy olla vastausmuoto, jossa on totuusarvoiset kentän nimet \"spam\"."
         must_select_model: "Sinun täytyy valita suuri kielimalli ensin"
       endpoints:
         not_configured: "%{display_name} (ei määritetty)"
@@ -417,17 +581,21 @@ fi:
         one: "Tätä mallia ei voitu poistaa, koska %{settings} käyttää sitä. Päivitä asetus ja yritä uudelleen."
         other: "Tätä mallia ei voitu poistaa, koska %{settings} käyttävät sitä. Päivitä asetus ja yritä uudelleen."
       cannot_edit_builtin: "Et voi muokata sisäänrakennettua mallia."
+    personas:
+      malformed_examples: "Annetuilla esimerkeillä on väärä muoto."
     embeddings:
       delete_failed: "Tämä malli on tällä hetkellä käytössä. Päivitä \"ai embeddings selected model\" ensin."
       cannot_edit_builtin: "Et voi muokata sisäänrakennettua mallia."
       configuration:
         disable_embeddings: "Sinun täytyy ensin poistaa \"ai embeddings enabled\" käytöstä."
+        invalid_config: "Valitsit virheellisen vaihtoehdon."
         choose_model: "Aseta \"ai embeddings selected model\" ensin."
     llm_models:
       missing_provider_param: "%{param} ei voi olla tyhjä"
       bedrock_invalid_url: "Täytä kaikki kentät, jotta voit käyttää tätä mallia."
     ai_staff_action_logger:
       updated: "päivitetty"
+      set: "aseta"
       removed: "poistettu"
     errors:
       quota_exceeded: "Olet ylittänyt tämän mallin kiintiön. Odota %{relative_time} ja yritä sitten uudelleen."
@@ -441,3 +609,10 @@ fi:
       no_default_llm: Persoonalla täytyy olla default_llm määritelty.
       user_not_allowed: Käyttäjä ei saa osallistua ketjuun.
       prompt_message_length: Viesti %{idx} ylittää 1 000 merkin rajan.
+      persona_already_exists: Persoona nimeltä %{name} on jo olemassa.
+      custom_tool_exists:
+        one: "Mukautettu työkalu nimeltä %{names} on jo olemassa."
+        other: "Mukautetut työkalut nimillä %{names} on jo olemassa."
+  dashboard:
+    problem:
+      ai_llm_status: "LLM-mallissa %{model_name} on ongelmia. Tarkista <a href='%{url}'>-mallin määrityssivu</a>."

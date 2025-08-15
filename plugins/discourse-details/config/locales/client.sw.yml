@@ -6,8 +6,6 @@
 
 sw:
   js:
-    details:
-      title: Ficha Maelezo
     composer:
       details_title: Muhtasari
       details_text: "Haya maandiko yatafichwa"

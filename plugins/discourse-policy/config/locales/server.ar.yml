@@ -15,6 +15,8 @@ ar:
       group_not_found: "لم يتم العثور على المجموعة للسياسة"
       no_policy: "لا توجد سياسة للمنشور"
       staff_only: "قد تنطبق السياسات على فريق العمل فقط"
+    error:
+      no_permission: "غير مصرح به"
   reports:
     unaccepted-policies:
       title: سياسات غير مقبولة

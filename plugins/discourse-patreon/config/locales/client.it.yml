@@ -41,3 +41,20 @@ it:
           help_text:
             email_available: "Raggiungi la parte in basso a destra della pagina per vedere la cronologia delle donazioni di Patreon."
             email_not_available: "Seleziona il membro Patreon e raggiungi la parte in basso a destra della pagina per vedere la cronologia delle donazioni."
+      donation_prompt:
+        body: |
+          <h1>Ti diamo il benvenuto!</h1>
+
+          <p>Ti piace il nostro sito web? Vuoi contribuire a una buona causa?</p>
+
+          <p>
+            Se trovi utile il nostro sito web e ti piace la community che abbiamo creato, ti saremmo molto grati se tu volessi fare una donazione al nostro sito web.
+            Le donazioni garantiscono il buon funzionamento dei nostri servizi e assicurano l'operatività della nostra community negli anni a venire.
+            Anche la più piccola somma è importante e sarà messa a frutto.
+          </p>
+
+          <p>Grazie per il tuo sostegno!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Diventa un nostro sostenitore</a>
+          </p>

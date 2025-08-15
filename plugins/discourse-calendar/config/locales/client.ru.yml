@@ -39,6 +39,7 @@ ru:
       date: "Дата"
       add_to_calendar: "Добавить в Календарь Google"
       toggle_timezone_offset_title: "Переключить смещение часового пояса"
+      local_time: "Местное время"
       region:
         title: "Регион"
         none: "Отсутствует"
@@ -323,10 +324,8 @@ ru:
         after_event_reminder: "Мероприятие закончилось"
         ongoing_event_reminder: "Мероприятие идет"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{description}»"
-        before_event_reminder_html: "Мероприятие скоро начнется: %{description}"
-        after_event_reminder_html: "Мероприятие закончилось: %{description}"
-        ongoing_event_reminder_html: "Мероприятие идет: %{description}"
+        invite_user_predefined_attendance_notification: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{eventName}»"
+        an_event: "событие"
       edit_reason: "Мероприятие обновлено"
       edit_reason_closed: "Мероприятие закрыто"
       edit_reason_opened: "Мероприятие открыто"
@@ -377,6 +376,8 @@ ru:
         creator: "Автор"
         status: "Статус"
         starts_at: "Начинается в"
+        all_events: "Все события"
+        my_events: "Мои события"
       upcoming_events_list:
         title: "Предстоящие мероприятия"
         empty: "Нет предстоящих мероприятий"
@@ -446,6 +447,9 @@ ru:
         update: "Сохранить"
         attach: "Создать мероприятие"
         add_reminder: "Добавить напоминание"
+        show_local_time:
+          label: "Показывать местное время"
+          description: "Даты и время будут отображаться с помощью: %{timezone}. Используйте этот метод для мероприятий, проводимых в определённом месте, чтобы время соответствовало часовому поясу, в котором происходит событие."
         timezone:
           label: Часовой пояс
           remove_timezone: Без часового пояса (UTC)
@@ -462,6 +466,8 @@ ru:
           periods:
             before: "до"
             after: "после"
+        recurrence_until:
+          label: "До (включительно)"
         recurrence:
           label: "Повторение"
           none: "Без повторения"
@@ -474,13 +480,18 @@ ru:
         minimal:
           label: "Минимальное мероприятие"
           checkbox_label: "Скрыть кнопки «Участвую», «Не участвую» и статус приглашенных"
+        allow_chat:
+          label: "Интеграция чата"
+          checkbox_label: "Создавайте и управляйте чат-каналом, посвященным конкретному событию"
         url:
           label: "URL-адрес"
           placeholder: "Опционально"
         location:
           label: "Расположение"
+          placeholder: "Добавьте местоположение, ссылку или что-то еще."
         description:
           label: "Описание"
+          placeholder: "Расскажите людям немного больше о вашем мероприятии. Поддерживаются новые линии и ссылки."
         name:
           label: "Название мероприятия"
           placeholder: "Необязательно, по умолчанию используется заголовок темы"

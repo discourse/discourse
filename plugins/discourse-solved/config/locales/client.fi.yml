@@ -29,6 +29,7 @@ fi:
       solution_summary:
         one: "ratkaisu"
         other: "ratkaisua"
+      accepted_html: "%{icon} <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a></span> ratkaisi viestissä <a href='%{post_path}' class='back'>%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "kaikki"
@@ -37,6 +38,7 @@ fi:
       no_solved_topics_title: "Et ole vielä ratkaissut ketjuja"
       no_solved_topics_title_others: "%{username} ei ole vielä ratkaissut ketjuja"
       no_solved_topics_body: "Kun annat hyödyllisen vastauksen ketjuun, aiheen omistaja tai henkilökunta saattaa valita vastauksesi ratkaisuksi."
+      marked_solved_by: "<a href data-user-card='%{username_lower}'>%{username}</a></span> merkitsi ratkaistuksi"
       no_answer:
         title: Onko kysymykseesi vastattu?
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."

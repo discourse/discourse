@@ -1634,7 +1634,6 @@ sv:
     allow_restore: "Tillåt återställning, som kan ersätta ALL data på webbplatsen! Lämna detta inaktiverat om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara. Äldre säkerhetskopior raderas automatiskt"
     remove_older_backups: "Ta bort säkerhetskopior som är äldre än det angivna antalet dagar. Lämna tomt för att inaktivera."
-    automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det är en privat behållare."
     s3_endpoint: "Ändpunkten kan ändras för att säkerhetskopiera till en S3-kompatibel tjänst som DigitalOcean Spaces eller Minio. VARNING: Lämna tomt om du använder AWS S3."
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
@@ -4322,11 +4321,9 @@ sv:
       agree_and_hide:
         title: "Dölj inlägg"
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
-      delete_single:
+      delete:
         title: "Radera"
         complete: "Inlägg raderat."
-      delete:
-        title: "Radera…"
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
@@ -4365,7 +4362,10 @@ sv:
         complete: "Inlägget godkändes."
       approve_post:
         title: "Godkänn inlägg"
-        confirm_closed: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
+        complete: "Inlägget godkändes."
+      approve_post_closed:
+        title: "Godkänn inlägg"
+        confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
         complete: "Inlägget godkändes."
       reject_post:
         title: "Avvisa inlägg"

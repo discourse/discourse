@@ -284,7 +284,6 @@ ja:
       uploaded_files:
         other: "%{count} 個のファイル"
       you_flagged: "このメッセージを通報しました"
-      exit: "戻る"
       channel_status:
         read_only_header: "チャンネルは読み取り専用です"
         read_only: "読み取り専用"
@@ -659,7 +658,6 @@ ja:
           switch_channel_arrows: "%{shortcut} チャンネルを切り替える"
           switch__unread_channel_arrows: "%{shortcut} 未読チャンネルを切り替える"
           open_quick_channel_selector: "%{shortcut} クイックチャンネルセレクターを開く"
-          open_insert_link_modal: "%{shortcut} ハイパーリンクを挿入する (作成ツールのみ)"
           composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
           composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
           composer_code: "%{shortcut} コード (作成ツールのみ)"

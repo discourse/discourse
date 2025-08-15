@@ -24,6 +24,7 @@ ru:
     solved_add_schema_markup: "Добавить разметку схемы QAPage в HTML."
     enable_solved_tags: "Теги, которые позволят пользователям использовать функцию 'Вопрос решён'."
     prioritize_solved_topics_in_search: "В результатах поиска отдавать приоритет решенным темам."
+    show_who_marked_solved: "Показывать, кто отметил тему как решённую. Это указано в первом сообщении темы и в сообщении с ответом во всплывающей подсказке."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:

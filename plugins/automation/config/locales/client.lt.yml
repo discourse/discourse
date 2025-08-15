@@ -145,7 +145,5 @@ lt:
             label: Versija
           status:
             label: Statusas
-          enabled:
-            label: Galimas
           disabled:
             label: Uždrausta

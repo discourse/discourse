@@ -56,8 +56,6 @@ fa_IR:
               label: "پاسخ"
             canned_reply_user:
               label: "پاسخ کاربر"
-            model:
-              label: "مدل"
     discourse_ai:
       title: "هوش مصنوعی"
       features:

@@ -13,6 +13,8 @@ it:
     reviewables:
       comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
   js:
+    discourse_post_voting:
+      title: "Votazioni dei messaggi"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ it:
         answer_count:
           one: "%{count} risposta"
           other: "%{count} risposte"
+        voters_count_diff:
+          one: "e %{count} altro utente..."
+          other: "e altri %{count} utenti..."
     review:
       transcript:
         view: "Visualizza la trascrizione dei messaggi precedenti"

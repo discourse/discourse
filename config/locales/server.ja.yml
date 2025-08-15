@@ -60,6 +60,8 @@ ja:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
+    too_many_urls: "1 つのリクエストで 10 個以上の URL をワンボックスにインライン化できません。"
+    concurrency_not_allowed: "インラインワンボックスリクエストを同時に送信できません。リクエストを 1 つずつ送信してください。"
   components:
     enabled_filter: "有効"
     disabled_filter: "無効"
@@ -1503,7 +1505,6 @@ ja:
     default_locale: "この Discourse インスタンスのデフォルトの言語。システム生成カテゴリとトピックのテキストは、<a href='%{base_path}/admin/customize/site_texts' target='_blank'>カスタマイズ/テキスト</a>で置き換えることができます。"
     allow_user_locale: "ユーザーが独自の言語インターフェース設定を選択することを許可する"
     set_locale_from_cookie: "ブラウザの「locale」Cookieを通じて匿名ユーザーのロケールを設定できるようにします"
-    set_locale_from_param: "「lang」URL パラメーターを通じて匿名ユーザーのロケールを設定できるようにします (例: ?lang=es)"
     min_post_length: "投稿の最低許容文字数 (個人メッセージを除く)"
     min_first_post_length: "最初の投稿 (トピック本文) の最低許容長さ (個人メッセージを除く)"
     min_personal_message_post_length: "メッセージの投稿に許可される最低文字数 (最初の投稿と返信の両方)"
@@ -1776,8 +1777,6 @@ ja:
     allow_restore: "復元を許可。サイトの全データが置き換えられます！バックアップを復元する予定がない場合は無効のままにしてください"
     maximum_backups: "保存するバックアップの最大量。古いバックアップは自動的に削除されます"
     remove_older_backups: "指定された日数より古いバックアップを削除します。無効にするには空白のままにします。"
-    automatic_backups_enabled: "バックアップ頻度の定義に従って自動バックアップを実行する"
-    backup_frequency: "サイトの自動バックアップが作成される間隔を日数で指定します。例えば 7 に設定すると、新しいバックアップは毎週生成されます。この設定の有効化は `automatic_backups_enabled` に依存します。"
     s3_backup_bucket: "バックアップを保持するリモートバケット。警告: 必ずプライベートバケットになっていることを確認してください"
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
@@ -1937,7 +1936,6 @@ ja:
     desktop_category_page_style: "この設定により、デスクトップ上の /categories ページの視覚的なレイアウトが決定します。注目のトピックを含むサブカテゴリの表示、最新のトピックの表示、トップトピックの紹介などのオプションが含まれます。スタイルの選択は、ユーザーがサイトのカテゴリをどのように操作して移動するかに影響します。"
     mobile_category_page_style: "この設定によって、モバイル上の /categories ページの視覚的なレイアウトが決まります。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
-    default_dark_mode_color_scheme_id: "ダークモードで使用される色パレット。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
     max_attachment_size_kb: "添付ファイルの最大アップロードサイズ。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"
@@ -4896,11 +4894,9 @@ ja:
       agree_and_edit:
         title: "同意して投稿を編集"
         description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
-      delete_single:
+      delete:
         title: "削除"
         complete: "削除された投稿."
-      delete:
-        title: "削除…"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
@@ -4939,7 +4935,10 @@ ja:
         complete: "投稿が承認されました."
       approve_post:
         title: "投稿の承認"
-        confirm_closed: "このトピックはクローズされました。それでも投稿を作成しますか？"
+        complete: "投稿が承認されました."
+      approve_post_closed:
+        title: "投稿の承認"
+        confirm: "このトピックはクローズされました。それでも投稿を作成しますか？"
         complete: "投稿が承認されました."
       reject_post:
         title: "投稿の拒否"

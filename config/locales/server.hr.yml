@@ -2388,8 +2388,8 @@ hr:
     actions:
       agree:
         title: "Da"
-      delete_single:
-        title: "Pobriši"
+      delete:
+        title: "Izbriši"
         complete: "Post izbrisan."
       delete_and_ignore:
         complete: "Post izbrisan."
@@ -2408,6 +2408,8 @@ hr:
         title: "Odobri"
         complete: "Objava odobrena."
       approve_post:
+        complete: "Objava odobrena."
+      approve_post_closed:
         complete: "Objava odobrena."
       reject_post:
         complete: "Objava je odbijena."

@@ -61,6 +61,9 @@ fi:
     chat_integration_webex_excerpt_length: "Webex Team -viestin otteen pituus"
     chat_integration_google_enabled: "Ota Google Chatin chat-integraatiopalveluntarjoaja käyttöön"
     chat_integration_google_excerpt_length: "Google Chat -viestin otteen pituus"
+  dashboard:
+    problem:
+      channel_errors: "Joissakin chat-integraatokanavissa on virheitä. Lisätietoja saat <a href='%{base_path}/admin/plugins/chat-integration'>chatin integrointiosiossa</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
