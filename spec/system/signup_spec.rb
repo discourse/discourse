@@ -101,6 +101,33 @@ shared_examples "signup scenarios" do
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
     end
 
+    it "redirects to a new-topic after signin and keeps the query" do
+      category = Fabricate(:category)
+      SiteSetting.default_trust_level = 4
+
+      visit "/new-topic?category_id=#{category.id}"
+      signup_page
+        .open
+        .fill_email("johndoe@awesomeemail.com")
+        .fill_username("john11122")
+        .fill_password("supersecurepassword")
+
+      expect(signup_page).to have_valid_fields
+
+      signup_page.click_create_account
+
+      expect(page).to have_current_path("/u/account-created")
+
+      mail = ActionMailer::Base.deliveries.first
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+      visit activation_link
+
+      activate_account.click_activate_account
+
+      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+    end
+
     it "cannot signup with a common password" do
       signup_page.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
       expect(signup_page).to have_valid_fields
