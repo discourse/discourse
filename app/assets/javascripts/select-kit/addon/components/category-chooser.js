@@ -132,12 +132,7 @@ export default class CategoryChooser extends ComboBoxComponent {
   )
   get content() {
     if (!this.selectKit.filter) {
-      let { scopedCategoryId, prioritizedCategoryId, readOnlyCategoryId } =
-        this.selectKit.options;
-
-      if (readOnlyCategoryId) {
-        return this.categoriesByScope({ readOnlyCategoryId });
-      }
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
 
       if (scopedCategoryId) {
         return this.categoriesByScope({ scopedCategoryId });
@@ -154,11 +149,12 @@ export default class CategoryChooser extends ComboBoxComponent {
   categoriesByScope({
     scopedCategoryId = null,
     prioritizedCategoryId = null,
-    readOnlyCategoryId = null,
   } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
       ? Category.list()
       : Category.listByActivity();
+
+    let { readOnlyCategoryId } = this.selectKit.options;
 
     if (scopedCategoryId) {
       const scopedCat = Category.findById(scopedCategoryId);
