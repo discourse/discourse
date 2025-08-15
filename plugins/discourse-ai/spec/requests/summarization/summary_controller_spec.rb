@@ -132,4 +132,52 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       end
     end
   end
+
+  describe "#regen_gist" do
+    fab!(:topic)
+    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+
+    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:post_3) { Fabricate(:post, topic: topic_1, post_number: 1) }
+    fab!(:post_4) { Fabricate(:post, topic: topic_1, post_number: 2) }
+
+    before do
+      enable_current_plugin
+      assign_fake_provider_to(:ai_default_llm_model)
+      SiteSetting.ai_summarization_enabled = true
+      SiteSetting.ai_summary_gists_enabled = true
+      Jobs.run_immediately!
+    end
+
+    context "when a single topic id is provided" do
+      fab!(:user) { Fabricate(:leader) }
+
+      before do
+        sign_in(user)
+        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
+      end
+
+      it "regenerates the gist" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.gist.where(target: topic).count).to eq(1)
+      end
+    end
+
+    context "when multiple topic ids are provided" do
+      fab!(:admin)
+
+      before { sign_in(admin) }
+
+      it "regenerates the gists" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_ids: [topic.id, topic_1.id] }
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.gist.where(target: topic).count).to eq(1)
+        expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
+      end
+    end
+  end
 end
