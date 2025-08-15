@@ -61,6 +61,9 @@ it:
     chat_integration_webex_excerpt_length: "Lunghezza dell'estratto del messaggio Webex Team"
     chat_integration_google_enabled: "Abilita il fornitore per l'integrazione della chat 'Google Chat'"
     chat_integration_google_excerpt_length: "Lunghezza dell'estratto del messaggio Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "Alcuni canali di integrazione della chat presentano errori. Visita <a href='%{base_path}/admin/plugins/chat-integration'>la sezione di integrazione della chat</a> per saperne di più."
   discourse_automation:
     scriptables:
       send_slack_message:

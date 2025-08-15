@@ -7,7 +7,6 @@
 ja:
   js:
     spoiler:
-      title: ネタバレをぼかす
       label:
         show: "非表示のコンテンツを表示する"
     composer:

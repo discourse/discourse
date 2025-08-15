@@ -81,6 +81,7 @@ de:
     ai_embeddings_semantic_related_topics: "Maximale Anzahl der Themen, die im Abschnitt für verwandte Themen angezeigt werden sollen."
     ai_embeddings_backfill_batch_size: "Anzahl der Einbettungen, die alle 15 Minuten aufgefüllt werden."
     ai_embeddings_semantic_search_enabled: "Aktiviere die semantische Ganzseitensuche."
+    ai_embeddings_semantic_search_use_hyde: "Verwende HyDE für die semantische Ganzseitensuche. Verwendet ein LLM, um einen hypothetischen Beitrag aus dem Suchbegriff des Benutzers zu erstellen, der bei der Suche nach Treffern hilft."
     ai_embeddings_semantic_quick_search_enabled: "Aktiviere die semantische Suchoption im Such-Menü-Pop-up."
     ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
     ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"

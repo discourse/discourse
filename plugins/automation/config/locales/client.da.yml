@@ -260,8 +260,6 @@ da:
             label: Version
           status:
             label: Status
-          enabled:
-            label: Aktiveret
           disabled:
             label: Deaktiveret
           placeholders:

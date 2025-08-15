@@ -16,6 +16,8 @@ ur:
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
+      tool_description:
+        time: "%{timezone} میں وقت %{time} ہے"
     sentiment:
       reports:
         post_emotion:

@@ -135,7 +135,5 @@ lv:
             label: Versij
           status:
             label: Statuss
-          enabled:
-            label: Ieslēgts
           disabled:
             label: Atslēgt

@@ -1169,7 +1169,6 @@ zh_TW:
     enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
     enable_backups: "允許管理員建立備份"
-    automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
@@ -2895,7 +2894,7 @@ zh_TW:
         description: "同意檢舉並禁止使用者發文"
       agree_and_restore:
         description: "將話題變更為對所有人顯示。"
-      delete_single:
+      delete:
         title: "刪除"
       delete_and_ignore_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
@@ -2916,6 +2915,9 @@ zh_TW:
         title: "批准"
         complete: "帖文已批准."
       approve_post:
+        title: "批准貼文"
+        complete: "帖文已批准."
+      approve_post_closed:
         title: "批准貼文"
         complete: "帖文已批准."
       reject_post:

@@ -41,3 +41,20 @@ pt_BR:
           help_text:
             email_available: "Vá para o canto inferior direito da página para ver este histórico de compromissos do Patreon."
             email_not_available: "Selecione o membro Patreon e vá para o canto inferior direito da página para ver o histórico de compromissos."
+      donation_prompt:
+        body: |
+          <h1>Olá, leitor!</h1>
+
+          <p>Você gosta do nosso site? Gostaria de contribuir para uma boa causa?</p>
+
+          <p>
+            Se achar nosso site útil e gosta da comunidade que criamos, nós adoraríamos que fizesse uma doação para nosso site.
+            Doações mantêm nossos serviços funcionando sem problemas e garantem que nossa comunidade estará operacional por muitos anos.
+            Cada dólar conta e será bem utilizado.
+          </p>
+
+          <p>Obrigado pelo seu apoio!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Torne-se um(a) Patrono(a)</a>
+          </p>

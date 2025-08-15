@@ -446,8 +446,6 @@ fi:
             label: Versio
           status:
             label: Tila
-          enabled:
-            label: Käytössä
           disabled:
             label: Pois käytöstä
           placeholders:

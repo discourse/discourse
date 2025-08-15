@@ -95,9 +95,6 @@ ja:
               label: "モデル"
         llm_triage:
           fields:
-            system_prompt:
-              label: "システムプロンプト"
-              description: "トリアージに使用されるプロンプト。ユーザーがアクションのトリガーに使用できる 1 つの単語でプロンプトが応答できるようにしてください"
             max_post_tokens:
               label: "最大投稿トークン"
               description: "LLM トリアージを使用してスキャンするトークンの最大数"
@@ -131,11 +128,6 @@ ja:
             include_personal_messages:
               label: "個人メッセージを含める"
               description: "個人メッセージのスキャンとトリアージも行う"
-            model:
-              label: "モデル"
-              description: "トリアージに使用される言語モデル"
-            temperature:
-              label: "Temperature"
     discourse_ai:
       title: "AI"
       features:
@@ -412,7 +404,7 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。"
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-0: "Anthropic の最もインテリジェントなモデル"
+          anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-3-5-haiku-latest: "高速でコスト効率に優れています"
           google-gemini-2-5-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "効率的な軽量多言語モデル"

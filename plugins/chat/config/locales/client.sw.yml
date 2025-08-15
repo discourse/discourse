@@ -41,7 +41,6 @@ sw:
       save: "Hifadhi"
       sounds:
         none: "Hakuna"
-      exit: "iliyopita"
       channel_status:
         closed: "Imefungwa"
         open: "Fungua"

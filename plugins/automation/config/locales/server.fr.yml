@@ -9,8 +9,15 @@ fr:
     discourse_automation_enabled: "Activer l'extension discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Le script ne peut pas être vide"
+          trigger_blank: "Le déclencheur ne peut pas être vide"
+          script_missing_required_fields: "Ces champs obligatoires sont manquants dans le script : %{fields}"
+          trigger_missing_required_fields: "Ces champs obligatoires sont manquants dans le déclencheur : %{fields}"
       fields:
         required_field: Le champ « %{name} » doit être rempli sur « %{target}:%{target_name} ».
+        invalid_field: Le composant du champ « %{component} » n'est pas utilisable sur « %{target}:%{target_name} ».
         invalid_metadata: Les données pour « %{field} » ne sont pas valides ou le composant « %{component} » est inconnu.
     triggerables:
       errors:

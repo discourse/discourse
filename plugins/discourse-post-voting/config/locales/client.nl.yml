@@ -13,6 +13,8 @@ nl:
     reviewables:
       comment_already_handled: "Bedankt, maar we hebben deze reactie al beoordeeld en vastgesteld dat deze niet opnieuw hoeft te worden gemarkeerd."
   js:
+    discourse_post_voting:
+      title: "Stemmen op berichten"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ nl:
         answer_count:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
+        voters_count_diff:
+          one: "en nog %{count} gebruiker..."
+          other: "en nog %{count} gebruikers..."
     review:
       transcript:
         view: "Transcript van eerdere berichten weergeven"

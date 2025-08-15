@@ -21,6 +21,11 @@ ru:
       voted_title: "Проголосовало"
       voting_closed_title: "Закрытое"
       voting_limit: "Лимит"
+      votes_left:
+        one: "У вас осталось %{count} голос, смотрите <a href='%{path}'>ваш голос</a>."
+        few: "У вас осталось %{count} голосов, смотрите <a href='%{path}'>ваши голоса</a>."
+        many: "У вас осталось %{count} голосов, смотрите <a href='%{path}'>ваши голоса</a>."
+        other: "У вас осталось %{count} голосов, смотрите <a href='%{path}'>ваши голоса</a>."
       votes_left_button_title:
         one: "У вас остался %{count} голос."
         few: "У вас осталось %{count} голосов."

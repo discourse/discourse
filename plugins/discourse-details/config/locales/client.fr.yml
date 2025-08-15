@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Détails de Discourse"
   js:
     details:
-      title: Masquer le texte
+      title: Masquer les détails
     composer:
       details_title: Résumé
       details_text: "Ce texte sera masqué"

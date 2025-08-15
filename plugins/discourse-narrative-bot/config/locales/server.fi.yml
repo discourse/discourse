@@ -399,6 +399,19 @@ fi:
 
           Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Tiesitkö, että voit lisätä kyselyn mihin tahansa viestiin? Kokeile **laatia kysely** editorin kuvakkeella <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+        not_found: |-
+          Vastauksessasi ei ollut kyselyä.
+
+          Käytä editorin kuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> tai kopioi tämä kysely ja liitä se seuraavaan vastaukseesi:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hauska kysely! Miten onnistuin opetuksessa?
 
@@ -407,6 +420,20 @@ fi:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Joskus voit haluta **piilottaa tietoja** vastauksessasi:
+
+          – Kirjoitat elokuvasta tai TV-ohjelmasta jotakin, minkä voi kokea juonipaljastukseksi.
+
+          – Joudut sisällyttämään viestiisi suuria määriä yksityiskohtaista tietoa, joka voisi uuvuttaa lukijaa.
+
+          [details=Napauta niin näet kuinka se toimii!]
+          1. Valitse editorin kuvake <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+          2. Valitse "Piilota tiedot".
+          3. Muokkaa yhteenvetotekstiä ja lisää sisältö.
+          [/details]
+
+          Piilottaisitko tietoja editorin kuvakkeen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> avulla seuraavasta vastauksestasi?
         not_found: |-
           Onko sinulla ongelmia tietotoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
 

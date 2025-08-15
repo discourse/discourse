@@ -141,7 +141,5 @@ pt:
             label: Versão
           status:
             label: Estado
-          enabled:
-            label: Ativado
           disabled:
             label: Desativado

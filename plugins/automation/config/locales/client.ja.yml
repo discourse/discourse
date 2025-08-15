@@ -415,8 +415,6 @@ ja:
             label: バージョン
           status:
             label: ステータス
-          enabled:
-            label: 有効
           disabled:
             label: 無効
           placeholders:

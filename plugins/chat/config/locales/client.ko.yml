@@ -136,7 +136,6 @@ ko:
       upload_to_thread: "스레드에 업로드"
       uploaded_files:
         other: "%{count}개의 파일"
-      exit: "뒤로"
       channel_status:
         read_only_header: "읽기전용 채널입니다."
         read_only: "읽기 전용"

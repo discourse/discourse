@@ -9,6 +9,12 @@ he:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "הסקריפט לא יכול להיות ריק"
+          trigger_blank: "ההזנקה לא יכולה להיות ריקה"
+          script_missing_required_fields: "בסקריפט חסרים שדות חובה: %{fields}"
+          trigger_missing_required_fields: "בהזנקה חסרים שדות חובה: %{fields}"
       fields:
         required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
         invalid_field: רכיב השדה `%{component}` אינו זמין לשימוש ב־`%{target}:%{target_name}`.

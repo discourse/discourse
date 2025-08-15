@@ -6,6 +6,7 @@
 
 fi:
   site_settings:
+    openid_connect_enabled: Ota OpenID Connect -todennus käyttöön. Mukauta käyttöliittymän tekstiä <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>täällä</a>
     openid_connect_discovery_document: "OpenID Connectin discovery-asiakirjan URL-osoite. Sijaitsee yleensä osoitteessa https://verkkotunnus/.well-known/openid-configuration"
     openid_connect_client_id: "OpenID Connectin asiakastunnus"
     openid_connect_client_secret: "OpenID Connectin asiakkaan salatunnus"

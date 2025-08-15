@@ -36,6 +36,10 @@ cs:
     no_solutions:
       self: "Nemáte zatím žádná akceptovaná řešení."
       others: "Žádná akceptovaná řešení."
+    filter:
+      description:
+        solved: "Filtrovat témata, která byla vyřešena"
+        unsolved: "Filtrovat témata, která nebyla vyřešena"
   badges:
     solved_1:
       name: "Vyřešeno!"

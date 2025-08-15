@@ -13,6 +13,7 @@ fi:
             discourse_ai:
               search: "Sallii tekoälyhaun"
               stream_completion: "Sallii tekoälypersoonan valmistumisen suoratoiston"
+              update_personas: "Sallii tekoälypersoonien päivittämisen"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -22,10 +23,28 @@ fi:
           description: "Taulukossa luetellaan määritetyllä tunteella luokiteltujen viestien lukumäärä. Luokiteltu mallilla \"SamLowe/roberta-base-go_emotions\"."
         reports:
           filters:
+            group_by:
+              label: "Ryhmittely"
             sort_by:
               label: "Järjestys"
             tag:
               label: "Tunniste"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Luo LLM-malli"
+            update_ai_llm_model: "Päivitä LLM-malli"
+            delete_ai_llm_model: "Poista LLM-malli"
+            create_ai_persona: "Luo tekoälypersoona"
+            update_ai_persona: "Päivitä tekoälypersoona"
+            delete_ai_persona: "Poista tekoälypersoona"
+            create_ai_tool: "Luo tekoälytyökalu"
+            update_ai_tool: "Päivitä tekoälytyökalu"
+            delete_ai_tool: "Poista tekoälytyökalu"
+            create_ai_embedding: "Luo tekoälyupotus"
+            update_ai_embedding: "Päivitä tekoälyupotus"
+            delete_ai_embedding: "Poista tekoälyupotus"
+            update_ai_spam_settings: "Päivitä tekoälyroskapostiasetukset"
   js:
     discourse_automation:
       scriptables:
@@ -87,17 +106,37 @@ fi:
               description: "Priorisoi tämän ryhmän sisältö raportissa"
             temperature:
               label: "Lämpötila"
+              description: "LLM:lle käytettävä lämpötila. Lisää satunnaisuutta kasvattamalla arvoa (käytä mallin oletusta jättämällä tyhjäksi)"
             top_p:
               label: "Top-p"
+              description: "LLM:lle käytettävä top-p, lisää satunnaisuutta kasvattamalla arvoa (käytä mallin oletusta jättämällä tyhjäksi)"
+            persona_id:
+              label: "Persoona"
+              description: "Raporttien luomiseen käytettävä tekoälypersoona"
         llm_tool_triage:
           fields:
             model:
               label: "Malli"
+              description: "Luokitteluun käytetty oletuskielimalli"
+            tool:
+              label: "Työkalu"
+              description: "Luokitteluun käytettävä työkalu (työkalulla ei saa olla määriteltyjä parametreja)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Persoona"
+              description: "Luokitteluun käytettävä tekoälypersoona (oletus-LLM ja käyttäjä täytyy olla asetettu)"
+            whisper:
+              label: "Vastaa kuiskaten"
+              description: "Pitäisikö persoonan vastauksen olla kuiskaus"
+            silent_mode:
+              label: "Hiljainen tila"
+              description: "Hiljaisessa tilassa persoona vastaanottaa sisällön, mutta ei julkaise mitään foorumilla – hyödyllinen luokittelussa työkaluilla"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Järjestelmäkehote"
-              description: "Kehote, jota käytetään luokitteluun; varmista, että se vastaa yhdellä sanalla, jota voit käyttää toiminnon käynnistämiseen"
+            triage_persona:
+              label: "Persoona"
+              description: "Luokitteluun käytettävä persoona; varmista, että se vastaa yhdellä sanalla, jota voit käyttää toiminnon käynnistämiseen"
             max_post_tokens:
               label: "Viestin saneiden enimmäismäärä"
               description: "Skannattavien saneiden enimmäismäärä LLM-luokittelulla"
@@ -131,17 +170,33 @@ fi:
             include_personal_messages:
               label: "Sisällytä yksityisviestit"
               description: "Skannaa ja luokittele myös yksityisviestit"
-            model:
-              label: "Malli"
-              description: "Luokitteluun käytettävä kielimalli"
-            temperature:
-              label: "Lämpötila"
+            whisper:
+              label: "Vastaa kuiskaten"
+              description: "Pitäisikö tekoälyn vastauksen olla kuiskaus"
+            reply_persona:
+              label: "Vastauspersoona"
+              description: "Vastauksissa käytettävä tekoälypersoona (täytyy olla LLM), priorisoidaan valmiisiin vastauksiin nähden"
+            max_output_tokens:
+              label: "Tuotossaneiden enimmäismäärä"
+              description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      default_llm:
+        title: "Oletusarvoinen LLM-malli"
+        description: "Oletusarvoinen LLM-malli, jota käytetään kaikissa tekoälyominaisuuksissa. Tätä käytetään, jos LLM:ää ei ole määritetty ominaisuuden määrityksissä tai persoonassa. Jos oletusarvoista LLM:ää ei ole määritetty, viimeksi luotua LLM:ää käytetääb."
       features:
+        short_title: "Ominaisuudet"
+        description: "Nämä ovat sivustosi kävijöiden käytettävissä olevat tekoälyominaisuudet. Ne voidaan määrittää käyttämään tiettyjä persoonia ja LLM:iä, ja niiden käyttöoikeuksia voi hallita ryhmäkohtaisesti."
         back: "Takaisin"
         disabled: "(pois käytöstä)"
+        persona:
+          one: "Persoona:"
+          other: "Persoonat:"
         groups: "Ryhmät:"
+        llm:
+          one: "LLM:"
+          other: "LLM:t:"
+        no_llm: "LLM:ää ei ole valittu"
         no_persona: "Ei asetettu"
         no_groups: "Ei valittu"
         edit: "Muokkaa"
@@ -149,31 +204,82 @@ fi:
           one: "(%{count} muuta)"
           other: "(%{count} muuta)"
         collapse_list: "(näytä vähemmän)"
+        bot:
+          bot: "Chatbotti"
+          name: "Botti"
+          description: "Chatbotti, joka voi vastata kysymyksiin ja auttaa käyttäjiä yksityisviesteissä, foorumilla ja chatissa"
+        nav:
+          configured: "Määritetty"
+          unconfigured: "Määrittämätön"
         filters:
           all: "Kaikki"
+          text: "Hae ominaisuuksia, persoonia, LLM:iä tai ryhmiä..."
+          no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
+        no_automations: "Automaatioita ei ole vielä"
+        summarization:
+          name: "Yhteenvedot"
+          description: "Tarjoaa yhteenvetopainikkeen, jonka avulla kävijät voivat tehdä yhteenvetoja aiheita"
+          topic_summaries: "Ketjujen yhteenvedot"
+          gists: "Ketjuluettelon lyhyet yhteenvedot"
         search:
           name: "Hae"
+          description: "Parantaa hakukokemusta tarjoamalla tekoälyn luomia vastauksia kyselyihin"
+          discoveries: "Löydöt"
         embeddings:
           name: "Upotukset"
+          description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
+          hyde: "HyDE"
+        discord:
+          name: "Discord-integraatio"
+          description: "Lisää mahdollisuuden hakea Discord-kanavia"
+          search: "Discord-haku"
+        inference:
+          name: "Päätellyt käsitteet"
+          description: "Luokittelee ketjuja ja viestejä kiinnostuksen kohteisiin ja tunnisteisiin."
+          generate_concepts: "Käsitteiden päättely"
+          match_concepts: "Käsitteiden sovittaminen"
+          deduplicate_concepts: "Käsitteiden deduplikaatio"
         ai_helper:
           name: "Apuri"
+          description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
           proofread: Oikolue teksti
+          title_suggestions: "Ehdota otsikoita"
           explain: "Selitä"
+          illustrate_post: "Havainnollista viestiä"
           smart_dates: "Älykkäät päivämäärät"
+          translate: "Käännä"
           markdown_tables: "Luo markdown-taulukko"
           custom_prompt: "Mukautettu kehote"
+          image_caption: "Lisää kuvateksti"
+          translator: "Kääntäjä"
+        translation:
+          name: "Käännös"
+          description: "Kääntää sisällön tuetuille kielille"
+          locale_detector: "Kielialueen tunnistin"
+          post_raw_translator: "Viestin raakakääntäjä"
+          topic_title_translator: "Ketjun otsikon kääntäjä"
+          short_text_translator: "Lyhyen tekstin kääntäjä"
         spam:
           name: "Roskaposti"
           description: "Tunnistaa mahdollisen roskapostin valitun suuren kielimallin avulla ja liputtaa sen sivuston valvojien tarkastettavaksi tarkastusjonoon"
+          inspect_posts: "Tarkasta viestejä"
+        automation_reports:
+          name: "Automatisoidut raportit"
+          description: "Luo automaattisesti ytimekkäitä yleiskatsauksia toiminnasta, korostaen trendejä, keskeisiä ketjuja ja aktiivisuutta"
+        automation_triage:
+          name: "Viestien luokittelu"
+          description: "Automatisoi viestien valvonnan ja hallinnan käyttämällä määritettäviä automaatiosääntöjä"
       modals:
         select_option: "Valitse vaihtoehto..."
       layout:
         table: "Taulukko"
+        card: "Kortti"
       spam:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"
         select_llm: "Valitse LLM"
+        select_persona: "Valitse persoona"
         custom_instructions: "Mukautetut ohjeet"
         custom_instructions_help: "Sivustoasi koskevat mukautetut ohjeet, jotka auttavat tekoälyä tunnistamaan roskapostia, esim. \"ole aggressiivisempi skannattaessa viestejä, jotka eivät ole englanninkielisiä\"."
         last_seven_days: "Viimeiset 7 päivää"
@@ -226,6 +332,7 @@ fi:
         net_request_tokens: "Nettopyyntösaneet"
         cached_tokens: "Välimuistissa olevat saneet"
         cached_request_tokens: "Välimuistiin tallennetut pyyntösaneet"
+        total_spending: "Arvioidut kustannukset"
         no_users: "Käyttäjien käyttötietoja ei löytynyt"
         no_models: "Mallin käyttötietoja ei löytynyt"
         no_features: "Ominaisuuden käyttötietoja ei löytynyt"
@@ -236,6 +343,7 @@ fi:
           request_tokens: "Käytetyt saneet, kun suuri kielimalli yrittää ymmärtää, mitä sanot"
           response_tokens: "Käytetyt saneet, kun suuri kielimalli vastaa kehotteeseesi"
           cached_tokens: "Aiemmin käsitellyt pyyntösaneet, joita suuri kielimalli käyttää uudelleen suorituskyvyn ja kustannusten optimoimiseksi"
+          total_spending: "Kaikkien LLM:ien käyttämien saneiden kumulatiivinen kustannusperustuen LLM:n määritysasetuksiin lisättyihin kustannusmittareihin"
         periods:
           last_day: "Viimeiset 24 tuntia"
           last_week: "Viime viikko"
@@ -253,8 +361,11 @@ fi:
         edit: "Muokkaa"
         export: "Vie"
         import: "Tuo"
+        import_error_conflict: "Ristiriita havaittu tuotaessa persoonaa %{name}, haluatko päivittää olemassa olevan persoonan?"
+        overwrite: "Korvaa"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
+        use_parent_llm: "Käytä persoonan kielimallia"
         max_context_posts: "Kontekstiviestien enimmäismäärä"
         max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
         vision_enabled: Näkö käytössä
@@ -309,21 +420,49 @@ fi:
         rag_conversation_chunks_help: "RAG-mallin hauissa käytettävien lohkojen määrä. Lisää kontekstin määrää, jota tekoäly voi käyttää, kasvattamalla arvoa."
         persona_description: "Personat ovat tehokas ominaisuus, jonka avulla voit mukauttaa tekoälymoduulin toimintaa Discourse-foorumillasi. Ne toimivat \"järjestelmäviestinä\", joka ohjaa tekoälyn vastauksia ja vuorovaikutusta ja auttaa luomaan personoidumman ja kiinnostavamman käyttökokemuksen."
         response_format:
+          title: "JSON-vastausmuoto"
+          no_format: "JSON-muotoa ei ole määritetty"
           open_modal: "Muokkaa"
           modal:
+            root_title: "Vastauksen rakenne"
             key_title: "Avain"
+        examples:
+          title: Esimerkkejä
+          examples_help: Simuloi aiempia vuorovaikutuksia LLM:n kanssa ja maadoita se paremman tuloksen tuottamiseksi.
+          new: Uusi esimerkki
+          remove: Poista esimerkki
+          collapsable_title: "Esimerkki %{number}"
+          user: "Käyttäjän viesti"
+          model: "Mallin vastaus"
+        list:
+          enabled: "Tekoälybotti?"
+        ai_bot:
+          title: "Tekoälybotin asetukset"
+          save_first: "Lisää tekoälybottien asetuksia tulee saataville, kun olet tallentanut persoonan."
         filters:
+          text: "Etsi persoona"
           reset: "Palauta"
+          no_results: "Suodattimiasi vastaavia persoonia ei löydy."
+          all_features: "Mikä tahansa ominaisuus"
+        features_list:
+          one: "Ominaisuus:"
+          other: "Ominaisuudet:"
+        llms_list: "LLM:"
       rag:
+        title: "RAG"
         options:
           rag_chunk_tokens: "Latauslohkotokenit"
           rag_chunk_tokens_help: "Kullekin lohkolle käytettävien tokenien määrä RAG-mallissa. Lisää kontekstin määrää, jota tekoäly voi käyttää, kasvattamalla arvoa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen)."
           rag_chunk_overlap_tokens: "Latauslohkon päällekkäiset tokenit"
           rag_chunk_overlap_tokens_help: "Päällekkäisten tokenien määrä lohkojen välillä RAG-mallissa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen). "
+          rag_llm_model: "Indeksointikielimalli"
+          rag_llm_model_help: "Tekstintunnistukseen käytettävä kielimalli PDF-tiedostojen ja kuvien indeksoinnissa"
           show_indexing_options: "Näytä latausasetukset"
           hide_indexing_options: "Piilota latausasetukset"
         uploads:
           title: "Lataukset"
+          description: "PDF (.pdf), pelkkä teksti (.txt) tai markdown (.md)"
+          description_with_images: "Pelkkä teksti (.txt), markdown (.md), PDF (.pdf) tai kuva (.png, .jpeg)"
           button: "Lisää tiedostoja"
           filter: "Suodata latauksia"
           indexed: "Indeksoitu"
@@ -336,9 +475,14 @@ fi:
         short_title: "Työkalut"
         export: "Vie"
         import: "Tuo"
+        import_error_conflict: "Työkalu on jo olemassa, haluatko päivittää sen?"
+        overwrite: "Korvaa"
         no_tools: "Et ole vielä luonut työkaluja"
         name: "Nimi"
+        name_help: "Nimi näkyy Discoursen käyttöliittymässä ja on lyhyt tunniste, jota käytät työkalun löytämiseen eri tilanteissa. Sen täytyy olla yksilöllinen."
         new: "Uusi työkalu"
+        tool_name: "Työkalun nimi"
+        tool_name_help: "Työkalun nimi esitetään suurelle kielimallille. Se ei ole yksilöllinen, mutta se on persoonakohtainen. (Persoona validoidaan tallennettaessa)"
         description: "Kuvaus"
         description_help: "Selkeä kuvaus työkalun tarkoituksesta kielimallissa"
         subheader_description: "Työkalut laajentavat tekoälybottien ominaisuuksia käyttäjän määrittämillä JavaScript-toiminnoilla."
@@ -347,6 +491,8 @@ fi:
         script: "Skripti"
         parameters: "Parametrit"
         save: "Tallenna"
+        parameter_type: "Parametrin tyyppi"
+        add_parameter: "Lisää parametri"
         remove_parameter: "Poista"
         parameter_required: "Pakollinen"
         parameter_enum: "Enum"
@@ -371,11 +517,16 @@ fi:
         name: "Mallin tunnus"
         provider: "Palveluntarjoaja"
         tokenizer: "Tokenisoija"
+        max_prompt_tokens: "Konteksti-ikkuna"
+        max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
         enabled_chat_bot: "Salli tekoälybotin valitsin"
         vision_enabled: "Näkö käytössä"
         ai_bot_user: "Tekoälybottikäyttäjä"
+        cost_input: "Syötekustannukset"
+        cost_cached_input: "Välimuistissa olevan syötteen hinta"
+        cost_output: "Tuotoskustannus"
         save: "Tallenna"
         edit: "Muokkaa"
         saved: "LLM-malli tallennettu"
@@ -400,25 +551,43 @@ fi:
             custom: "Mukautettu..."
           hours: "tuntia"
           max_tokens_help: "Saneiden (sanojen ja merkkien) enimmäismäärä, jonka kukin tämän ryhmän käyttäjä voi käyttää määritetyn keston aikana. Saneet ovat yksiköitä, joita tekoälymallit käyttävät tekstin käsittelyyn – noin 1 merkki = 4 merkkiä tai 3/4 sanasta."
+          max_tokens_required: "Täytyy asettaa, jos enimmäiskäyttöä ei ole asetettu"
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
+          max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
           ai_bot: "Tekoälyrobotti"
+          ai_helper: "Apuri (%{persona})"
+          ai_helper_image_caption: "Kuvateksti"
           ai_persona: "Persoona (%{persona})"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"
           ai_spam: "Roskaposti"
+          automation: "Automaatio (%{persona})"
         in_use_warning:
           one: "Tätä mallia käyttää tällä hetkellä %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla."
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-0: "Anthropicin älykkäin malli"
+          anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
+          anthropic-claude-sonnet-4-0: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
+          anthropic-claude-3-7-sonnet-latest: "Optimaalinen tasapaino nopeuden ja kustannusten välillä (edellinen sukupolvi)"
           anthropic-claude-3-5-haiku-latest: "Nopea ja kustannustehokas"
+          google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
+          google-gemini-2-0-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä (edellinen sukupolvi)"
           google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
+          google-gemini-2-0-flash-lite: "Kustannustehokas ja matalan latenssin malli"
+          open_ai-o3: "OpenAI:n kyvykkäin päättelymalli"
+          open_ai-o4-mini: "Kehittynyt kustannustehokas päättelymalli"
+          open_ai-gpt-5: "OpenAI:n lippulaivamalli. Sopii hyvin ongelmanratkaisuun eri aloilla."
+          open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
+          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Tehokas monikäyttöinen malli"
           mistral-mistral-large-latest: "Mistralin tehokkain malli"
           mistral-pixtral-large-latest: "Mistralin tehokkain näkökykyinen malli"
+          open_router-x-ai-grok-3-beta: "xAI:n uusin malli"
+          open_router-deepseek-deepseek-r1-0528-free: "DeepSeekin uusin päättelymalli"
+          open_router-meta-llama-3-3-70b-instruct: "Erittäin kyvykäs monikielinen malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -437,9 +606,16 @@ fi:
           success: "Onnistui!"
           failure: "Yritys ottaa yhteyttä malliin palautti tämän virheen: %{error}"
         hints:
+          max_prompt_tokens: "Enimmäismäää saneita, jonka malli voi käsitellä yhdessä pyynnössä"
+          max_output_tokens: "Enimmäismäää saneita, jonka malli voi luoda yhdessä pyynnössä"
+          display_name: "Nimi, jota käytetään viittaamaan tähän malliin sivustosi käyttöliittymässä."
           name: "Sisällytämme tämän API-kutsuun määrittääksemme, mitä mallia käytämme"
           vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
           enabled_chat_bot: "Jos tämä on käytössä, käyttäjät voivat valita tämän mallin luodessaan yksityisviestejä tekoälybotin kanssa"
+          cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
+          cost_cached_input: "Tämän mallin välimuistisyöttökustannukset miljoonaa sanetta kohden"
+          cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
+          cost_measure: "$/1 milj. sanetta"
         providers:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
@@ -465,6 +641,14 @@ fi:
           provider_order: "Palveluntarjoajien järjestys (pilkuilla eroteltu luettelo)"
           provider_quantizations: "Palveluntarjoajien kvantisointien järjestys (pilkuilla eroteltu luettelo esim.: fp16,fp8)"
           disable_streaming: "Poista suoratoistovalmistumiset käytöstä (muunna suoratoistopyynnöt ei-suoratoistopyynnöiksi)"
+          reasoning_effort: "Päättelytoiminta (koskee vain päättelymalleja)"
+          enable_reasoning: "Ota päättely käyttöön (koskee vain päättelymalleja)"
+          enable_thinking: "Ota ajattelu käyttöön (vain sovellettavissa malleissa, esim.: flash 2.5)"
+          thinking_tokens: "Ajatteluun käytettyjen saneiden määrä"
+          reasoning_tokens: "Päättelyyn käytettyjen saneiden määrä"
+          disable_temperature: "Poista lämpötila käytöstä (jotkin ajattelumallit eivät tue lämpötilaa)"
+          disable_top_p: "Poista top-p käytöstä (jotkin ajattelumallit eivät tue top-p:tä)"
+          enable_responses_api: "Ota vastaus-API käyttöön (vaaditaan tietyissä OpenAI:n malleissa)"
       related_topics:
         title: "Liittyvät ketjut"
         pill: "Liittyy aiheeseen"
@@ -520,6 +704,7 @@ fi:
         accuracy: "Tarkkuus:"
       embeddings:
         short_title: "Upotukset"
+        description: "Upotukset ovat datan numeerisia esityksiä, jotka tallentavat merkityksen ja suhteet. Niiden avulla Discoursen tekoälyominaisuudet, kuten aiheeseen liittyvät ketjut ja tekoälyhaku, voivat ymmärtää ja yhdistää sisältöä."
         new: "Uusi upotus"
         back: "Takaisin"
         save: "Tallenna"
@@ -539,6 +724,8 @@ fi:
         hints:
           dimensions_warning: "Tallentamisen jälkeen tätä arvoa ei voi enää muuttaa."
           matryoshka_dimensions: "Määrittää sellaisten sisäkkäisten upotusten koon, joita käytetään tietojen hierarkkiseen tai monikerroksiseen esittämiseen samalla tavalla kuin maatuskanuket sopivat toisiinsa."
+          embed_prompt: "Tehtäväohjeen etuliite foorumisisällön upotuksia luotaessa. VAIN upotusmalleille, jotka vaativat etuliitteitä, kuten nomic-embed tai stella. Ei tarvita useimmissa malleissa."
+          search_prompt: "Tehtäväohjeen etuliite hakukyselyiden upotuksia luotaessa. VAIN upotusmalleille, jotka vaativat etuliitteitä, kuten nomic-embed tai stella. Ei tarvita useimmissa malleissa."
           sequence_length: "Enimmäismäärä saneita, joka voidaan käsitellä kerralla luotaessa upotuksia tai käsiteltäessä kyselyä."
           distance_function: "Määrittää, kuinka upotusten välinen samankaltaisuus lasketaan, käyttämällä joko kosinietäisyyttä (mittaamalla vektorien välisen kulman) tai negatiivista sisätuloa (mittaamalla vektorin arvojen päällekkäisyyttä)."
         display_name: "Nimi"
@@ -584,14 +771,18 @@ fi:
         collapse_view_label: "Poistu koko näytön tilasta (Esc- tai Takaisin-painike)"
         click_to_run_label: "Suorita artefakti"
       ai_bot:
+        persona: "Persoona"
         llm: "Malli"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
         default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
         shortcut_title: "Aloita yksityiskeskustelu tekoälybotin kanssa"
+        exit: "poistu tekoälybotista"
         share: "Kopioi tekoälykeskustelu"
         conversation_shared: "Keskustelu kopioitu"
+        embed_copied: "Upotus kopioitiin leikepöydälle"
         debug_ai: "Katso raaka tekoälypyyntö ja vastaus"
+        sidebar_empty: "Botin keskusteluhistoria näkyy täällä."
         debug_ai_modal:
           title: "Näytä tekoälyvuorovaikutus"
           copy_request: "Kopioi pyyntö"
@@ -612,6 +803,7 @@ fi:
           title: "Jaa tämä tekoälykeskustelu julkisesti"
         invite_ai_conversation:
           button: "Kutsu"
+          title: "Kutsu tekoälykeskusteluun"
         ai_label: "Tekoäly"
         ai_title: "Keskustelu tekoälyn kanssa"
         share_modal:
@@ -636,13 +828,28 @@ fi:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          header: "Miten voin auttaa?"
+          submit: "Lähetä kysymys"
+          disclaimer: "Generatiivinen tekoäly voi tehdä virheitä. Tarkista tärkeät tiedot."
+          placeholder: "Kysy kysymys..."
+          new: "Uusi kysymys"
+          min_input_length_message:
+            one: "Viestin täytyy olla ainakin %{count} merkin pituinen"
+            other: "Viestin täytyy olla ainakin %{count} merkin pituinen"
+          messages_sidebar_title: "Keskustelut"
           today: "Tänään"
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"
+          upload_files: "Lataa tiedostoja"
+          uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
       sentiments:
         dashboard:
           title: "Tunne"
+        sidebar:
+          overview: "Tunteen yleiskatsaus"
+          analysis: "Tunneanalyysi"
         sentiment_analysis:
+          share_chart: "Kopioi linkki kaavioon"
           filter_types:
             all: "Kaikki"
             positive: "Positiivinen"
@@ -671,11 +878,22 @@ fi:
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
       discobot_discoveries:
+        main_title: "Discobot-löydöt"
         regular_results: "Aiheet"
+        tell_me_more: "Kerro lisää..."
+        continue_convo: "Jatka keskustelua..."
+        loading_convo: "Ladataan keskustelua"
         collapse: "Supista"
+        timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
+        user_setting: "Ota hakulöydöt käyttöön"
         tooltip:
+          header: "Tekoälyhaku"
+          content: "Luonnollisen kielen haun tarjoaa %{model}"
           actions:
+            info: "Miten se toimii?"
             disable: "Poista käytöstä"
+      user_preferences:
+        empty: "Olennaisia asetuksia ei ole käytettävissä tällä hetkellä"
     review:
       types:
         reviewable_ai_post:

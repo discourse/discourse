@@ -39,6 +39,7 @@ fi:
       date: "Päivämäärä"
       add_to_calendar: "Lisää Google-kalenteriin"
       toggle_timezone_offset_title: "Vaihda aikavyöhykesiirtymä"
+      local_time: "Paikallinen aika"
       region:
         title: "Alue"
         none: "Ei valittu"
@@ -323,10 +324,8 @@ fi:
         after_event_reminder: "Tapahtuma on päättynyt"
         ongoing_event_reminder: "Tapahtuma on käynnissä"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} on asettanut osallistumisesi automaattisesti ja kutsunut sinut tapahtumaan %{description}"
-        before_event_reminder_html: "Tapahtuma on alkamassa %{description}"
-        after_event_reminder_html: "Tapahtuma on päättynyt %{description}"
-        ongoing_event_reminder_html: "Tapahtuma on käynnissä  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} on asettanut osallistumisesi automaattisesti ja kutsunut sinut tapahtumaan %{eventName}"
+        an_event: "tapahtuma"
       edit_reason: "Tapahtuma päivitetty"
       edit_reason_closed: "Tapahtuma suljettu"
       edit_reason_opened: "Tapahtuma avattu"
@@ -375,6 +374,8 @@ fi:
         creator: "Luoja"
         status: "Tila"
         starts_at: "Alkaa"
+        all_events: "Kaikki tapahtumat"
+        my_events: "Omat tapahtumat"
       upcoming_events_list:
         title: "Tulevat tapahtumat"
         empty: "Ei tulevia tapahtumia"
@@ -436,6 +437,9 @@ fi:
         update: "Tallenna"
         attach: "Luo tapahtuma"
         add_reminder: "Lisää muistutus"
+        show_local_time:
+          label: "Näytä paikallinen aika"
+          description: "Päivämäärät ja kellonajat näytetään aikavyöhykkeessä: %{timezone}. Käytä tätä tietyssä paikassa järjestettäville tapahtumille, jotta ajat heijastavat aikavyöhykettä, jossa tapahtuma järjestetään."
         timezone:
           label: Aikavyöhyke
           remove_timezone: Ei aikavyöhykettä (UTC)
@@ -452,6 +456,8 @@ fi:
           periods:
             before: "ennen"
             after: "jälkeen"
+        recurrence_until:
+          label: "Asti (mukaan lukien)"
         recurrence:
           label: "Toistuvuus"
           none: "Ei toistu"
@@ -464,13 +470,18 @@ fi:
         minimal:
           label: "Minimaalinen tapahtuma"
           checkbox_label: "Piilota Menossa- ja Ei menossa -painikeet sekä kutsuttujen tila"
+        allow_chat:
+          label: "Chat-integraatio"
+          checkbox_label: "Luo ja hallinnoi tapahtumakohtaista chat-kanavaa"
         url:
           label: "URL"
           placeholder: "Valinnainen"
         location:
           label: "Paikka"
+          placeholder: "Lisää sijainti, linkki tai jotain."
         description:
           label: "Kuvaus"
+          placeholder: "Kerro ihmisille hieman lisää tapahtumastasi. Uusia rivejä ja linkkejä tuetaan."
         name:
           label: "Tapahtuman nimi"
           placeholder: "Valinnainen, oletuksena ketjun otsikko"

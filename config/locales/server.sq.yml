@@ -1410,7 +1410,7 @@ sq:
     actions:
       agree:
         title: "Po"
-      delete_single:
+      delete:
         title: "Fshij"
         complete: "Postimi u fshi."
       delete_and_ignore:
@@ -1428,6 +1428,8 @@ sq:
         title: "Aprovo"
         complete: "Postimi u miratua."
       approve_post:
+        complete: "Postimi u miratua."
+      approve_post_closed:
         complete: "Postimi u miratua."
       reject_post:
         complete: "Postimi u refuzua."

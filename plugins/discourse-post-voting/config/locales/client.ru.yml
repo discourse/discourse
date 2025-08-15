@@ -13,6 +13,8 @@ ru:
     reviewables:
       comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
   js:
+    discourse_post_voting:
+      title: "Опубликовать голосование"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -123,6 +125,11 @@ ru:
           few: "%{count} ответа"
           many: "%{count} ответов"
           other: "%{count} ответов"
+        voters_count_diff:
+          one: "и еще %{count} пользователь..."
+          few: "и еще %{count} пользователей..."
+          many: "и еще %{count} пользователей..."
+          other: "и еще %{count} пользователи..."
     review:
       transcript:
         view: "Просмотр содержимого предыдущих сообщений"

@@ -6,4 +6,7 @@
 
 it:
   site_settings:
+    rss_polling_enabled: "[Polling RSS] Abilita l'importazione di messaggi incorporati da più feed RSS"
     rss_polling_frequency: "[RSS Polling] Frequenza del feed polling (in minuti)"
+    rss_polling_use_pubdate: "[Polling RSS] Imposta la data di creazione dell'argomento sul pubDate trovato nel feed RSS"
+    rss_polling_update_tags: "[Polling RSS] Aggiorna le etichette degli argomenti quando un argomento viene aggiornato. Disattivando questa opzione, vengono estratte le etichette iniziali, ma vengono disabilitate ulteriori modifiche alle etichette."

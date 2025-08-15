@@ -24,4 +24,5 @@ ur:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
+          comment_pm_title: "پوسٹ ووٹنگ کا تبصرہ عملے کی توجہ کا متقاضی ہے۔"
           comment_pm_body: "%{link}\n\n%{comment}"

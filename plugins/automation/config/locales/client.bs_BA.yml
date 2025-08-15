@@ -128,7 +128,5 @@ bs_BA:
             label: Verzija
           status:
             label: Status
-          enabled:
-            label: Omogućen
           disabled:
             label: Neomogućen

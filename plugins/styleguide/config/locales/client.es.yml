@@ -82,8 +82,8 @@ es:
           title: "Mapa del tema"
         site_header:
           title: "Encabezado del sitio"
-        suggested_topics:
-          title: "Temas sugeridos"
+        more_topics:
+          title: "Más temas"
         post_menu:
           title: "Menú de la publicación"
         modal:

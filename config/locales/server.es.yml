@@ -1578,7 +1578,6 @@ es:
     default_locale: "El idioma por defecto de esta instancia de Discourse. Puedes reemplazar el texto de las categorías y temas generados por el sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_cookie: "Permite configurar la configuración regional de un usuario anónimo a través de la cookie de navegador «locale»."
-    set_locale_from_param: "Permite configurar la configuración regional de un usuario anónimo a través del parámetro de URL 'lang', por ejemplo, ?lang=es"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda"
     min_post_length: "Longitud mínima permitida de la publicación en caracteres (excluyendo mensajes personales)"
     min_first_post_length: "Longitud mínima permitida de la primera publicación (cuerpo del tema) (excluidos los mensajes personales)"
@@ -1855,8 +1854,6 @@ es:
     allow_restore: "Activar la restauración. ¡Esto puede sobrescribir TODOS los datos! Déjalo desactivado en todo momento, y actívalo solo para restaurar una copia de seguridad."
     maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán. Las copias de seguridad más antiguas se eliminan automáticamente"
     remove_older_backups: "Eliminar las copias de seguridad anteriores al número de días especificado. Dejar en blanco para desactivar."
-    automatic_backups_enabled: "Ejecutar respaldos automáticos definidos por la opción de frecuencia de respaldos"
-    backup_frequency: "Especifica el intervalo, en días, con el que se crean las copias de seguridad automáticas del sitio. Si se establece en 7, por ejemplo, se generará una nueva copia de seguridad cada semana. La activación de este ajuste depende de «automatic_backups_enabled»."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
@@ -2016,7 +2013,6 @@ es:
     desktop_category_page_style: "Este ajuste determina la disposición visual de la página /categorías en el escritorio. Incluye opciones como mostrar subcategorías con temas destacados, mostrar los temas más recientes o presentar los temas principales. El estilo elegido influirá en la forma en que los usuarios interactúan y navegan por las categorías del sitio."
     mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categories en móviles."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
-    default_dark_mode_color_scheme_id: "La paleta de colores utilizada en modo oscuro."
     dark_mode_none: "Ninguno"
     max_image_size_kb: "El tamaño máximo de subida de imágenes. Esto debe configurarse también en nginx (client_max_body_size) / apache o proxy. Las imágenes mayores que este tamaño y menores que client_max_body_size se redimensionarán al subirlas."
     max_attachment_size_kb: "El tamaño máximo de subida de archivos adjuntos. Esto debe configurarse también en nginx (client_max_body_size) / apache o proxy."
@@ -5032,11 +5028,9 @@ es:
       agree_and_edit:
         title: "Aceptar y editar la publicación"
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
-      delete_single:
+      delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
-      delete:
-        title: "Eliminar…"
       delete_and_ignore:
         title: "Ignorar la denuncia y eliminar la publicación"
         description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
@@ -5075,7 +5069,10 @@ es:
         complete: "Publicación aprobada."
       approve_post:
         title: "Aprobar publicación"
-        confirm_closed: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
+        complete: "Publicación aprobada."
+      approve_post_closed:
+        title: "Aprobar publicación"
+        confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
         complete: "Publicación aprobada."
       reject_post:
         title: "Rechazar publicación"

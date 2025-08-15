@@ -19,9 +19,9 @@ ur:
           insert: شامل
           advanced_mode: اَیڈوانس مَوڈ
           simple_mode: سادہ مَوڈ
-          format_description: "صارف کو تاریخ دکھانے کے لیے استعمال ہونے والا فارمیٹ۔ آف سیٹ دکھانے کے لیے Z اور ٹائم زون کے نام کے لیے zz استعمال کریں۔"
-          timezones_title: ظاہر کیے جانے والے ٹائم زَونز
-          timezones_description: پیشگی اور فالبَیک میں تاریخیں ظاہر کرنے کیلئے ٹائم زَونز استعمال کیے جائیں گے۔
+          format_description: "صارف کو تاریخ دکھانے کے لیے استعمال ہونے والا فارمیٹ۔ آف سیٹ دکھانے کے لیے Z اور خطہ کے وقت کے نام کے لیے zz استعمال کریں۔"
+          timezones_title: ظاہر کیے جانے والے خطہ کے اوقات
+          timezones_description: خطہ کے وقت کا استعمال تاریخوں کو پیش نظارہ اور متبادل نظام میں ظاہر کرنے کے لیے کیا جائے گا۔
           recurring_title: تَقْلِید
           recurring_description: "ایک واقعہ کی تکرار کی وضاحت کریں۔ فارم کی طرف سے پیدا ہونے والے تکرار کے اختیار کو آپ دستی طور پر ترمیم بھی کرسکتے ہیں اور مندرجہ ذیل کِیز میں سے ایک کا استعمال کر سکتے ہیں: سال، چوتھائی، مہینے، ہفتے، دن، گھنٹے، منٹ، سیکنڈ، ملی سکنڈ۔"
           recurring_none: تَقْلِید نہیں
@@ -29,14 +29,14 @@ ur:
           date_title: تاریخ
           time_title: وقت
           format_title: تاریخ فارمَیٹ
-          timezone: ٹائم زون
+          timezone: خطہ کا وقت
           until: جب تک...
-          current_timezone: "موجودہ ٹائم زون:"
+          current_timezone: "موجودہ خطہ کا وقت:"
           recurring:
             every_day: "ہر دن"
             every_week: "ہر ہفتے"
             every_two_weeks: "ہر دو ہفتے"
-            every_month: "ہر مہینے"
+            every_month: "ہر ماہ"
             every_two_months: "ہر دو ماہ"
             every_three_months: "ہر تین ماہ"
             every_six_months: "ہر چھ ماہ"

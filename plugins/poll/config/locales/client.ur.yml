@@ -67,7 +67,6 @@ ur:
       error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
       error_while_exporting_results: "معذرت، پول کے نتائج برآمد کرنے میں ایک خامی تھی۔"
       ui_builder:
-        title: پول شروع کریے
         insert: پول شامل کریے
         help:
           options_min_count: کم از کم 1 آپشن درج کریں۔

@@ -33,6 +33,11 @@ tr_TR:
   discourse_assign:
     assigned_to: "@%{username} olarak atanan konu"
     unassigned: "Konu atanmadı"
+    filter:
+      description:
+        assigned: "Belirli bir kullanıcıya veya gruba atanan konuları filtreleyin"
+        nobody: "Kimseye atanmayan konuları filtreleyin"
+        anyone: "Herhangi birine atanan konuları filtreleyin"
     already_claimed: "Bu konu zaten alındı."
     already_assigned: "Konu zaten @%{username} adlı kullanıcıya atanmış"
     too_many_assigns: "@%{username} zaten maksimum atanmış konu sayısına ulaşmış (%{max})."

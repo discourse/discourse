@@ -134,9 +134,9 @@ pl_PL:
               description: "W trybie cichym persona otrzyma zawartość, ale nie opublikuje niczego na forum - przydatne podczas przeprowadzania selekcji przy użyciu narzędzi."
         llm_triage:
           fields:
-            system_prompt:
-              label: "Monit systemowy"
-              description: "Wskazówka, która zostanie użyta do trializacji, upewnij się, że odpowiedziałaś jednym słowem, którego możesz użyć do uruchomienia akcji"
+            triage_persona:
+              label: "Osobowość"
+              description: "Osobowość używana do triażu powinna odpowiadać jednym słowem, którego możesz użyć do wywołania akcji"
             max_post_tokens:
               label: "Maksymalna ilość tokenów postu"
               description: "Maksymalna liczba tokenów do skanowania przy użyciu selekcji LLM"
@@ -176,12 +176,6 @@ pl_PL:
             reply_persona:
               label: "Persona odpowiedzi"
               description: "AI Persona użyta do odpowiedzi (musi mieć domyślną wartość LLM), będzie traktowana priorytetowo nad gotową odpowiedzią"
-            model:
-              label: "Model"
-              description: "Model językowy używany do selekcji"
-            temperature:
-              label: "Temperatura"
-              description: "Temperatura używana dla LLM. Zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu)."
             max_output_tokens:
               label: "Maksymalna liczba tokenów wyjściowych"
               description: "Po określeniu, ustawia górną granicę maksymalnej liczby tokenów, jaką model może wygenerować. Szanuje limit maksymalnej liczby tokenów wyjściowych LLM."
@@ -228,6 +222,7 @@ pl_PL:
           text: "Wyszukaj funkcje, osobowości, LLM-y lub grupy..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
+        no_automations: "Nie ma jeszcze żadnych automatyzacji"
         summarization:
           name: "Podsumowania"
           description: "Udostępnia przycisk podsumowania, który umożliwia odwiedzającym podsumowanie tematów"
@@ -275,6 +270,12 @@ pl_PL:
           name: "Spam"
           description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
           inspect_posts: "Sprawdź posty"
+        automation_reports:
+          name: "Zautomatyzowane raporty"
+          description: "Automatycznie tworzy zwięzłe podsumowania aktywności, podkreślając trendy, kluczowe tematy i zaangażowanie"
+        automation_triage:
+          name: "Triaż postów"
+          description: "Automatyzuje moderację i zarządzanie postami, korzystając z konfigurowalnych reguł automatyzacji"
       modals:
         select_option: "Wybierz opcję..."
       layout:
@@ -579,7 +580,7 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-0: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-opus-4-1: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-0: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-3-7-sonnet-latest: "Optymalna równowaga między szybkością a kosztami (poprzednia generacja)"
           anthropic-claude-3-5-haiku-latest: "Szybko i ekonomicznie"
@@ -589,9 +590,9 @@ pl_PL:
           google-gemini-2-0-flash-lite: "Model ekonomiczny i o niskim opóźnieniu"
           open_ai-o3: "Najbardziej wydajny model rozumowania Open AI"
           open_ai-o4-mini: "Zaawansowany, efektywny kosztowo model rozumowania"
-          open_ai-gpt-4-1: "Flagowy model Open AI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
-          open_ai-gpt-4-1-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
-          open_ai-gpt-4-1-nano: "Najszybszy i najbardziej ekonomiczny model GPT-4.1."
+          open_ai-gpt-5: "Flagowy model Open AI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
+          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
+          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Wydajny, lekki model wielojęzyczny"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Wydajny model wielofunkcyjny"
           mistral-mistral-large-latest: "Najpotężniejszy model Mistral"
@@ -790,6 +791,7 @@ pl_PL:
         cancel_streaming: "Zatrzymaj odpowiedź"
         default_pm_prefix: "[PW bota AI bez tytułu]"
         shortcut_title: "Rozpocznij PW z botem AI"
+        exit: "opuść bota AI"
         share: "Skopiuj rozmowę AI"
         conversation_shared: "Rozmowa skopiowana"
         embed_copied: "Osadź skopiowane do schowka"

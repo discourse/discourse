@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "RSS-опрос Discourse"
   js:
+    rss_polling:
+      title: RSS-опрос
     admin:
       rss_polling:
+        feed: Настройки ленты
+        discourse: Настройки Discourse
         author: Автор
         feed_url: URL-адрес
         discourse_category: Категория
         discourse_tags: Теги
+        feed_category_filter: Фильтр категорий
+        documentation: Документация по настройке RSS
+        destroy_feed:
+          confirm: "Вы действительно хотите удалить эту ленту?"

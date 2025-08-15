@@ -9,8 +9,15 @@ zh_CN:
     discourse_automation_enabled: "启用 discourse-automation 插件"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "脚本不能为空"
+          trigger_blank: "触发器不能为空"
+          script_missing_required_fields: "脚本缺少必填字段：%{fields}"
+          trigger_missing_required_fields: "触发器缺少必填字段：%{fields}"
       fields:
         required_field: 必须在 `%{target}:%{target_name}` 上填写字段 `%{name}`。
+        invalid_field: 字段的组件 `%{component}` 在 `%{target}:%{target_name}` 上不可用。
         invalid_metadata: '`%{field}` 的数据无效或组件 `%{component}` 未知。'
     triggerables:
       errors:

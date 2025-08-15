@@ -12,7 +12,7 @@ cs:
           discourse_details: "Discourse Details"
   js:
     details:
-      title: Skrýt detaily
+      title: Skrýt podrobnosti
     composer:
       details_title: Souhrn
       details_text: "Tento text bude skrytý"

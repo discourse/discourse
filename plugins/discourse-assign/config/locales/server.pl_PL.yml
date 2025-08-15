@@ -33,6 +33,11 @@ pl_PL:
   discourse_assign:
     assigned_to: "Temat przypisany do @%{username}"
     unassigned: "Cofnięto przypisanie tematu"
+    filter:
+      description:
+        assigned: "Filtruj tematy przypisane do określonego użytkownika lub grupy"
+        nobody: "Filtruj tematy, które nie są nikomu przypisane"
+        anyone: "Filtruj tematy przypisane do dowolnej osoby"
     already_claimed: "Ten temat został już przejęty."
     already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."

@@ -548,7 +548,7 @@ sr:
     actions:
       agree:
         title: "Da"
-      delete_single:
+      delete:
         title: "Obriši"
         complete: "Post izbrisan."
       delete_and_ignore:
@@ -566,6 +566,8 @@ sr:
         title: "Odobri"
         complete: "Post odobren."
       approve_post:
+        complete: "Post odobren."
+      approve_post_closed:
         complete: "Post odobren."
       reject_post:
         complete: "Post odbijen."

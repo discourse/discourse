@@ -89,8 +89,8 @@ de:
           title: "Themenübersicht"
         site_header:
           title: "Seitenkopf"
-        suggested_topics:
-          title: "Vorgeschlagene Themen"
+        more_topics:
+          title: "Weitere Themen"
         post_menu:
           title: "Beitrag-Aktionen"
         modal:

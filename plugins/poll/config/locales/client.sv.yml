@@ -81,7 +81,6 @@ sv:
       error_while_fetching_voters: "Tyvärr uppstod det ett fel vid visningen av röster."
       error_while_exporting_results: "Tyvärr uppstod det ett fel vid export av omröstningsresultatet."
       ui_builder:
-        title: Skapa omröstning
         insert: Lägg till omröstning
         help:
           options_min_count: Ange minst ett alternativ.

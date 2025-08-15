@@ -446,7 +446,7 @@ zh_CN:
           status:
             label: 状态
           enabled:
-            label: 已启用
+            label: "启用自动化"
           disabled:
             label: 已禁用
           placeholders:
@@ -457,3 +457,4 @@ zh_CN:
             label: 最后一次运行
           last_updated_by:
             label: 更新者
+          enable_toggle_disabled: "填写完所有必填字段后，即可启用此自动化。"

@@ -302,7 +302,7 @@ de:
         one: "%{count} Datei"
         other: "%{count} Dateien"
       you_flagged: "Du hast diese Nachricht markiert"
-      exit: "zurück"
+      exit: "Chat verlassen"
       channel_status:
         read_only_header: "Kanal ist schreibgeschützt"
         read_only: "Schreibgeschützt"
@@ -706,7 +706,7 @@ de:
           switch_channel_arrows: "%{shortcut} Kanal wechseln"
           switch__unread_channel_arrows: "%{shortcut} Ungelesenen Kanal wechseln"
           open_quick_channel_selector: "%{shortcut} Schnellauswahl für Kanäle öffnen"
-          open_insert_link_modal: "%{shortcut} Hyperlink einfügen (nur Composer)"
+          open_insert_link_modal: "%{shortcut} Link einfügen (nur Editor)"
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"

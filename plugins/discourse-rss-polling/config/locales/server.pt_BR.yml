@@ -6,4 +6,7 @@
 
 pt_BR:
   site_settings:
+    rss_polling_enabled: "[Sondagem de RSS] Ativar importação de postagens incorporadas de vários feeds de RSS"
     rss_polling_frequency: "[RSS Polling] Frequência de pesquisa de feeds (em minutos)"
+    rss_polling_use_pubdate: "[Sondagem de RSS] Definir dada de criação de tópico para a pubDate encontrada no feed de RSS"
+    rss_polling_update_tags: "[Sondagem de RSS] Atualize etiquetas de tópicos ao atualizar um tópico. Desativar esta opção recupera etiquetas iniciais, mais impossibilita futuras alterações de etiquetas."

@@ -38,6 +38,7 @@ tr_TR:
         reminder:
           label: Hatırlatma
           description: Politikayı kabul etmek için hatırlatma bildiriminin ne sıklıkla gönderilmesi gerektiği
+          no_reminder: (Anımsatıcı yok)
         accept:
           label: Kabul et
           description: Kabul et düğmesinde kullanılan metin
@@ -50,6 +51,9 @@ tr_TR:
         send-email:
           label: E-posta gönderilsin mi?
           description: Kullanıcıları yeni politikadan e-posta ile haberdar edin
+        add-users-to-group:
+          label: Kullanıcıları gruba ekle
+          description: Bu politikayı kabul ettiklerinde kullanıcıları aşağıdaki gruba ekleyin
       preferences:
         title: Politikalar
         policy_emails:

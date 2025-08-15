@@ -42,7 +42,6 @@ bs_BA:
       save: "Save"
       sounds:
         none: "Ništa"
-      exit: "prethodno"
       channel_status:
         closed: "Zatvoreno"
         open: "Otvori"

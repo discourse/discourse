@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 fr:
+  theme_metadata:
+    description: "Un thème simple et élégant qui améliore l'expérience prête à l'emploi pour les sites Discourse."

@@ -13,6 +13,8 @@ pt_BR:
     reviewables:
       comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
   js:
+    discourse_post_voting:
+      title: "Votação em postagem"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ pt_BR:
         answer_count:
           one: "%{count} resposta"
           other: "%{count} respostas"
+        voters_count_diff:
+          one: "e mais %{count} usuário(a)..."
+          other: "e mais %{count} usuários(as)..."
     review:
       transcript:
         view: "Ver transcrição de mensagens anteriores"

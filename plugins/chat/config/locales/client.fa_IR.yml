@@ -195,7 +195,6 @@ fa_IR:
         one: "%{count} پرونده"
         other: "%{count} پرونده"
       you_flagged: "شما این پیام را پرچم گذاری کردید"
-      exit: "بازگشت"
       channel_status:
         read_only: "فقط خواندنی"
         archived: "بایگانی شد"

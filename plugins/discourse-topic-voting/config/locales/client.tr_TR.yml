@@ -21,6 +21,9 @@ tr_TR:
       voted_title: "Oylandı"
       voting_closed_title: "Kapalı"
       voting_limit: "Sınır"
+      votes_left:
+        one: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
+        other: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
       votes_left_button_title:
         one: "%{count} oyunuz kaldı."
         other: "%{count} oyunuz kaldı."

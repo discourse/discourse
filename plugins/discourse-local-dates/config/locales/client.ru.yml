@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Местные даты Discourse"
   js:
     discourse_local_dates:
       relative_dates:

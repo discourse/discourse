@@ -7,13 +7,37 @@
 ur:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "اے آئی تلاش کی اجازت دیتا ہے"
+      site_settings:
+        categories:
+          discourse_ai: "ڈسکورس اے آئی"
       dashboard:
+        emotion:
+          title: "جذبات"
         reports:
           filters:
+            group_by:
+              label: "گروہ بذریعہ"
             sort_by:
               label: "ترتیب بہ"
             tag:
               label: "ٹیگ"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "ایل ایل ایم ماڈل بنائیں"
+            update_ai_llm_model: "ایل ایل ایم ماڈل کو اپ ڈیٹ کریں"
+            delete_ai_llm_model: "ایل ایل ایم ماڈل حذف کریں"
+            create_ai_persona: "اے آئی پرسونا تخلیق کریں"
+            update_ai_persona: "اے آئی پرسونا اپڈیٹ کریں"
+            delete_ai_persona: "اے آئی پرسونا حذف کریں"
+            create_ai_tool: "اے آئی ٹول بنائیں"
+            update_ai_tool: "اے آئی ٹول اپ ڈیٹ کریں"
+            delete_ai_tool: "اے آئی ٹول حذف کریں"
   js:
     discourse_automation:
       scriptables:
@@ -52,20 +76,29 @@ ur:
           name: "تلاش کریں"
         spam:
           name: "سپَیم"
+          description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
       modals:
         select_option: "ایک آپشن منتخب کریں..."
       spam:
         short_title: "سپَیم"
         last_seven_days: "پچھلے 7 دن"
         enable: "فعال کریں"
+        spam_tip: "AI سپیم کا پتہ لگانے سے عوامی موضوعات پر تمام نئے صارفین کی پہلی 3 لڑیوں کو اسکین کیا جائے گا۔ یہ ان پر نظرثانی کے لیے جھنڈا لگائے گا اور اگر صارفین ممکنہ طور پر سپیم ہیں تو انہیں بلاک کر دے گا۔"
+        spam_description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
         test_modal:
           spam: "سپَیم"
+        stat_tooltips:
+          incorrectly_flagged: "وہ اشیاء جن پر AI بوٹ نے اسپام کے بطور نشاندہ کیا ہے جہاں نگران متفق نہیں ہیں۔"
+          missed_spam: "کمیونٹی کی طرف سے اسپام کے طور پر نشاندہ کی گئیں اشیاء جن کا پتہ AI بوٹ نے نہیں لگایا، جن سے نگرانوں نے اتفاق کیا"
       usage:
         summary: "Summary"
         username: "صارف نام"
         total_requests: "کُل درخواستیں"
+        subheader_description: "ٹوکن بنیادی اکائیاں ہیں جنہیں LLMs متن کو سمجھنے اور بنانے کے لیے استعمال کرتے ہیں، استعمال کا ڈیٹا لاگت کو متاثر کر سکتا ہے"
         periods:
           last_day: "پچھلے 24 گھنٹے"
+          last_week: "گزشتہ ہفتے"
+          last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
       ai_persona:
         back: "واپس"
@@ -115,6 +148,7 @@ ur:
             hour: "1 گھنٹہ"
             six_hours: "6 گھنٹے"
             day: "24 گھنٹے"
+            week: "7 دن"
             custom: "ترمیم..."
           hours: "گھنٹے"
         usage:
@@ -152,6 +186,7 @@ ur:
           google: "گُوگَل"
           fake: "اپنی مرضی کا"
       ai_bot:
+        pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
           request: "ریکویسٹ"
           response: "جواب"
@@ -182,5 +217,7 @@ ur:
         regular_results: "ٹاپک"
         collapse: "بند کریں"
         tooltip:
+          header: "AI سے چلنے والی تلاش"
+          content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
           actions:
             disable: "غیر فعال کریں"

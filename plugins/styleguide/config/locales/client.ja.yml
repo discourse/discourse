@@ -82,8 +82,8 @@ ja:
           title: "トピックマップ"
         site_header:
           title: "サイトヘッダー"
-        suggested_topics:
-          title: "推奨トピック"
+        more_topics:
+          title: "その他のトピック"
         post_menu:
           title: "投稿メニュー"
         modal:

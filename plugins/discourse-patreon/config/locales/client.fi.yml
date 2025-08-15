@@ -41,3 +41,20 @@ fi:
           help_text:
             email_available: "Selaa oikeaan alareunaan nähdäksesi tämän Patreonin lahjoituslupaushistoria."
             email_not_available: "Valitse Patreon-jäsen ja selaa oikeaan alakulmaan nähdäksesi lahjoituslupaushistorian."
+      donation_prompt:
+        body: |
+          <h1>Hei lukija!</h1>
+
+          <p>Pidätkö verkkosivustostamme? Haluaisitko osallistua hyvään tarkoitukseen?</p>
+
+          <p>
+            Jos verkkosivustomme on mielestäsi hyödyllinen ja pidät luomastamme yhteisöstä, olisimme iloisia, jos antaisit lahjoituksen verkkosivustollemme.
+            Lahjoitukset pitävät palvelumme käynnissä ja varmistavat, että yhteisömme jatkaa toimintaansa tulevina vuosina.
+            Jokainen dollari on tärkeä ja laitetaan hyvään käyttöön.
+          </p>
+
+          <p>Kiitos tuestasi!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Ryhdy tukijaksi</a>
+          </p>

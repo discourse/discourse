@@ -126,9 +126,8 @@ lt:
               label: "Persona"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Sistemos pranešimas"
-              description: "Pranešimas, kuris bus naudojamas nustatant, įsitikinkite, kad jis turi atsakyti vienu žodžiu, kurį galite naudoti veiksmui suaktyvinti"
+            triage_persona:
+              label: "Persona"
             search_for_text:
               label: "Ieškokite teksto"
             category:
@@ -144,11 +143,6 @@ lt:
               description: "Vartotojo vardas, norintis paskelbti paruoštą atsakymą"
             hide_topic:
               label: "Slėpti temą"
-            model:
-              label: "Modelis"
-            temperature:
-              label: "Temperatūra"
-              description: "Temperatūra, kurią naudosite LLM. Padidinkite, kad padidintumėte atsitiktinumą (palikite tuščią, kad naudotumėte numatytuosius modelio parametrus)."
     discourse_ai:
       title: "AI"
       features:

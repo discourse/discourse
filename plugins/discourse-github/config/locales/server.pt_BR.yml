@@ -36,5 +36,27 @@ pt_BR:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Ação necessária para o plugin discourse-github"
+      repository_identifier_invalid_pm: |
+        Um repositório especificado no plugin discourse-github não é válido:
+        %{repo_name}
+
+        Deve ser especificado como "user/repo".
+
+        Emblemas não serão concedidos até que o nome seja corrigido
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Configurações do site do discourse-github</a>
+        e "github_badges_enabled" seja reativado.
       repository_not_found_pm_title: "Ação necessária para o plugin discourse-github"
+      repository_not_found_pm: |
+        Um repositório especificado no plugin discourse-github retornou um "Não encontrado"
+        %{repo_name}
+
+        Emblemas não serão concedidos até que o nome seja corrigido
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Configurações do site do discourse-github</a>
+        e "github_badges_enabled" seja reativado.
       invalid_octokit_credentials_pm_title: "Ação necessária para o plugin discourse-github"
+      invalid_octokit_credentials_pm: |
+        As credenciais do GitHub informadas ao plugin discourse-github não são válidas. A configuração "github badges enabled\site"
+        foi desativada, e as confirmações não serão mais preenchidas até que o problema seja solucionado.
+
+        Confira a configuração do site "github linkback access token" para garantir que o token está correto e tem permissão para todos os respositórios via
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>.

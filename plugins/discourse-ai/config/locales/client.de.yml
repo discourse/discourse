@@ -134,9 +134,9 @@ de:
               description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum - nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
-            system_prompt:
-              label: "System-Eingabeaufforderung"
-              description: "Die Eingabeaufforderung, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
+            triage_persona:
+              label: "Persona"
+              description: "Persona, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -176,12 +176,6 @@ de:
             reply_persona:
               label: "Antwort Persona"
               description: "KI-Persona, die für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
-            model:
-              label: "Modell"
-              description: "Für die Triage verwendetes Sprachmodell"
-            temperature:
-              label: "Temperatur"
-              description: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -567,7 +561,7 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-0: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-0: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-3-7-sonnet-latest: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten (vorherige Generation)"
           anthropic-claude-3-5-haiku-latest: "Schnell und kosteneffizient"
@@ -577,9 +571,9 @@ de:
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
           open_ai-o3: "Das leistungsfähigste Argumentationsmodell von Open AI"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
-          open_ai-gpt-4-1: "Das Vorzeigemodell von Open AI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-4-1-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
-          open_ai-gpt-4-1-nano: "Das schnellste und kostengünstigste GPT-4.1-Modell."
+          open_ai-gpt-5: "Das Vorzeigemodell von Open AI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
+          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
           mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
@@ -776,6 +770,7 @@ de:
         cancel_streaming: "Antwort abbrechen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
+        exit: "KI-Bot verlassen"
         share: "KI-Unterhaltung kopieren"
         conversation_shared: "Unterhaltung kopiert"
         embed_copied: "Einbettung in die Zwischenablage kopiert"

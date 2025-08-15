@@ -1047,7 +1047,6 @@ pt:
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
-    automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
     backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
@@ -2100,7 +2099,7 @@ pt:
         title: "Sim"
       agree_and_silence:
         title: "Silenciar utilizador"
-      delete_single:
+      delete:
         title: "Eliminar"
         complete: "Publicação eliminada."
       delete_and_ignore:
@@ -2117,6 +2116,8 @@ pt:
         complete: "Sinalização ignorada."
       approve:
         title: "Aprovar"
+      approve_post_closed:
+        complete: "Mensagem aprovada."
       reject_post:
         complete: "Publicação rejeitada."
       reject_user:

@@ -9,7 +9,9 @@ it:
     user_notes:
       title: "Note Utente"
       attach: "Aggiungi nota utente"
+      attach_note_description: "Aggiungi una nota su questo utente. Questa nota sarà visibile solo allo staff."
       remove: "Rimuovi Nota Utente"
       show: "Note utente (%{count})"
       delete_confirm: "Sei sicuro di voler cancellare questa nota utente?"
       show_post: "Mostra messaggio"
+      copy_reviewable_note: "Copiare la nota nel profilo utente?"

@@ -266,7 +266,9 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
+      no_direct_message_channels: "لم تنضم إلى أي رسائل مباشرة بعد‎!"
       no_direct_message_channels_cta: "بدء محادثة"
+      no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"
       no_public_channels_cta: "تصفح القنوات"
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       only_chat_push_notifications:
@@ -340,7 +342,7 @@ ar:
         many: "%{count} ملفًا"
         other: "%{count} ملفًا"
       you_flagged: "لقد أبلغت عن هذه الرسالة"
-      exit: "عودة"
+      exit: "اخرج من الدردشة"
       channel_status:
         read_only_header: "القناة للقراءة فقط"
         read_only: "للقراءة فقط"
@@ -597,6 +599,7 @@ ar:
         select_emoji: "اختيار الرمز التعبيري"
         system: "النظام"
         title: "خطافات الويب الواردة"
+        header_description: "تُتيح خطافات الويب الواردة للأنظمة الخارجية إرسال رسائل إلى قناة دردشة مخصَّصة، بحيث يتم نشرها بواسطة مستخدم آلي (روبوت برمجي)"
         url: "عنوان URL"
         url_instructions: "يحتوي عنوان URL هذا على قيمة سرية - احتفظ بها في مكانٍ آمن."
         username: "اسم المستخدم"
@@ -741,6 +744,11 @@ ar:
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"
+      quick_reaction_type:
+        title: "ردود الفعل على الدردشة بنقرة واحدة"
+        options:
+          frequent: "ردود الفعل الأكثر استخدامًا في الدردشة"
+          custom: "ردود الفعل مخصّصة"
     notifications:
       chat_invitation: "دعاك للانضمام إلى قناة دردشة"
       chat_invitation_html: "دعاك <span>%{username}</span> <span>للانضمام إلى قناة دردشة</span>"
@@ -802,7 +810,7 @@ ar:
           switch_channel_arrows: "%{shortcut} تبديل القناة"
           switch__unread_channel_arrows: "%{shortcut} تبديل القناة غير المقروءة"
           open_quick_channel_selector: "%{shortcut} فتح محدِّد قناة سريع"
-          open_insert_link_modal: "%{shortcut} إدراج رابط تشعبي (أداة الإنشاء فقط)"
+          open_insert_link_modal: "%{shortcut} لإدراج رابط (في أداة الإنشاء فقط)"
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"

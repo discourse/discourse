@@ -21,6 +21,9 @@ fi:
       voted_title: "Äänestetty"
       voting_closed_title: "Suljettu"
       voting_limit: "Raja"
+      votes_left:
+        one: "Sinulla on %{count} ääni jäljellä, katso <a href='%{path}'>äänesi</a>."
+        other: "Sinulla on %{count} ääntä jäljellä, katso <a href='%{path}'>äänesi</a>."
       votes_left_button_title:
         one: "Sinulla on %{count} ääni jäljellä."
         other: "Sinulla on %{count} ääntä jäljellä."

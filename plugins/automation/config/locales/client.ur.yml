@@ -33,7 +33,9 @@ ur:
               label: بَیج
         stalled_topic:
           durations:
+            P1W: "ایک ہفتہ"
             P2W: "دو ہفتے"
+            P1M: "ایک ماہ"
             P3M: "تین مہینے"
             P6M: "چھ مہینے"
             P1Y: "ایک سال"
@@ -42,6 +44,7 @@ ur:
             minute: منٹ
             hour: گھنٹہ
             day: دن
+            weekday: ہفتے کے دن
             week: ہفتہ
             month: مہینہ
             year: سال
@@ -50,9 +53,11 @@ ur:
               label: تَقْلِید
         stalled_wiki:
           durations:
+            P1W: "ایک ہفتہ"
             P2W: "دو ہفتے"
-            P3M: "تین مہینے"
-            P6M: "چھ مہینے"
+            P1M: "ایک ماہ"
+            P3M: "تین ماہ"
+            P6M: "چھ ماہ"
             P1Y: "ایک سال"
         topic:
           fields:
@@ -108,6 +113,8 @@ ur:
             error: خرابی
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: تمغہ کا نام
             group:
               label: گروپ
             badge:
@@ -137,6 +144,9 @@ ur:
           name:
             label: محرکات
         automation:
+          runs_today: "%{count} آج"
+          runs_this_week: "%{count} اس ہفتے"
+          runs_this_month: "%{count} اس ماہ"
           name:
             label: نام
           trigger:
@@ -147,3 +157,7 @@ ur:
             label: سٹیٹس
           disabled:
             label: غیر فعال
+          last_updated_at:
+            label: آخری دفعہ اپ ڈیٹ
+          last_updated_by:
+            label: نے اپ ڈیٹ کیا

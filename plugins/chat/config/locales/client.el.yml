@@ -91,7 +91,6 @@ el:
       select: "Επιλογή"
       sounds:
         none: "Κανένα"
-      exit: "πίσω"
       channel_status:
         closed: "Κλειστό"
         open: "Ξεκίνημα"
