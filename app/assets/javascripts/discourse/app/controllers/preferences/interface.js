@@ -185,10 +185,6 @@ export default class InterfaceController extends Controller {
     return userOptionTextSize !== selectedTextSize;
   }
 
-  /**
-   * Check if the user is currently in light mode
-   * @returns {boolean} Whether the user is in light mode
-   */
   _isInLightMode() {
     return (
       this.interfaceColor.colorModeIsLight ||
@@ -197,10 +193,6 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  /**
-   * Check if the user is currently in dark mode
-   * @returns {boolean} Whether the user is in dark mode
-   */
   _isInDarkMode() {
     return (
       this.interfaceColor.colorModeIsDark ||
@@ -209,11 +201,6 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  /**
-   * Check if previews should be enabled for the current user and mode
-   * @param {boolean} isDarkMode - Whether checking for dark mode preview
-   * @returns {boolean} Whether previews should be enabled
-   */
   _shouldEnablePreview(isDarkMode) {
     return (
       this.isViewingOwnProfile &&
@@ -221,12 +208,6 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  /**
-   * Resolve theme default color scheme ID
-   * @param {number} colorSchemeId - The selected color scheme ID
-   * @param {boolean} isDark - Whether this is for dark mode
-   * @returns {number} The resolved color scheme ID
-   */
   _resolveThemeDefaultColorScheme(colorSchemeId, isDark = false) {
     if (!isDark && colorSchemeId >= 0) {
       return colorSchemeId;
