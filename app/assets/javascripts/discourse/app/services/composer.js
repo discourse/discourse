@@ -642,6 +642,12 @@ export default class ComposerService extends Service {
   }
 
   @action
+  async saveAndClose(event) {
+    event?.preventDefault();
+    await this.saveAndCloseComposer();
+  }
+
+  @action
   async cancel(event) {
     event?.preventDefault();
     await this.cancelComposer();
@@ -1645,6 +1651,22 @@ export default class ComposerService extends Service {
     });
   }
 
+  saveAndCloseComposer() {
+    // Always save the draft if the user had typed something
+    // or had started setting up a title/tags/category
+    if (this.model.anyDirty) {
+      this.skipAutoSave = true;
+      this._saveDraft(true);
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      this.skipAutoSave = false;
+      return true;
+    }
+
+    return false;
+  }
+
   unshrink() {
     this.model.set("composeState", Composer.OPEN);
     document.documentElement.style.setProperty(
@@ -1657,7 +1679,9 @@ export default class ComposerService extends Service {
     this.collapse();
   }
 
-  _saveDraft() {
+  _saveDraft(showToast = false) {
+    cancel(this._saveDraftDebounce);
+
     if (!this.model) {
       return;
     }
@@ -1675,6 +1699,14 @@ export default class ComposerService extends Service {
       }
 
       this._saveDraftPromise = this.model.saveDraft().finally(() => {
+        if (showToast) {
+          this.toasts.success({
+            duration: "short",
+            data: {
+              message: i18n("composer.draft_saved"),
+            },
+          });
+        }
         this._lastDraftSaved = Date.now();
         this._saveDraftPromise = null;
       });
