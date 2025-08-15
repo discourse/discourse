@@ -11,10 +11,7 @@ RSpec.describe "Admin AI translations", type: :system do
     allow(DiscourseAi::Translation).to receive(:has_llm_model?).and_return(true)
     allow(DiscourseAi::Translation::PostCandidates).to receive(
       :get_completion_per_locale,
-    ).and_return(0.5)
-    allow(DiscourseAi::Translation::PostCandidates).to receive(
-      :calculate_completion_per_locale,
-    ).and_return([50, 100])
+    ).and_return({ total: 100, done: 50 })
 
     sign_in(admin)
   end
