@@ -6,6 +6,7 @@ describe "Admin Customize Themes", type: :system do
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
@@ -53,6 +54,17 @@ describe "Admin Customize Themes", type: :system do
         I18n.t("admin_js.admin.customize.theme.edit_colors"),
         href: "/admin/customize/colors/#{color_scheme.id}",
       )
+    end
+
+    it "allows a theme to be deleted" do
+      theme_page.visit(theme).click_delete_button_and_confirm
+
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("admin_js.admin.customize.theme.delete_success", theme: theme.name),
+      )
+
+      expect(page).to have_current_path("/admin/config/customize/themes")
+      expect(themes_page).to have_no_theme(theme.name)
     end
   end
 
