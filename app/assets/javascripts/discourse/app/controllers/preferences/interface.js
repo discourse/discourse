@@ -185,6 +185,67 @@ export default class InterfaceController extends Controller {
     return userOptionTextSize !== selectedTextSize;
   }
 
+  /**
+   * Check if the user is currently in light mode
+   * @returns {boolean} Whether the user is in light mode
+   */
+  _isInLightMode() {
+    return (
+      this.interfaceColor.colorModeIsLight ||
+      (this.interfaceColor.colorModeIsAuto &&
+        !window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+  }
+
+  /**
+   * Check if the user is currently in dark mode
+   * @returns {boolean} Whether the user is in dark mode
+   */
+  _isInDarkMode() {
+    return (
+      this.interfaceColor.colorModeIsDark ||
+      (this.interfaceColor.colorModeIsAuto &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+  }
+
+  /**
+   * Check if previews should be enabled for the current user and mode
+   * @param {boolean} isDarkMode - Whether checking for dark mode preview
+   * @returns {boolean} Whether previews should be enabled
+   */
+  _shouldEnablePreview(isDarkMode) {
+    return (
+      this.isViewingOwnProfile &&
+      (isDarkMode ? this._isInDarkMode() : this._isInLightMode())
+    );
+  }
+
+  /**
+   * Resolve theme default color scheme ID
+   * @param {number} colorSchemeId - The selected color scheme ID
+   * @param {boolean} isDark - Whether this is for dark mode
+   * @returns {number} The resolved color scheme ID
+   */
+  _resolveThemeDefaultColorScheme(colorSchemeId, isDark = false) {
+    if (!isDark && colorSchemeId >= 0) {
+      return colorSchemeId;
+    }
+    if (isDark && colorSchemeId !== -1) {
+      return colorSchemeId;
+    }
+
+    const defaultTheme = this.userSelectableThemes.findBy("id", this.themeId);
+    if (!defaultTheme) {
+      return colorSchemeId;
+    }
+
+    if (isDark) {
+      return defaultTheme.dark_color_scheme_id || this.selectedColorSchemeId;
+    }
+    return defaultTheme.color_scheme_id || colorSchemeId;
+  }
+
   homeChanged() {
     const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
 
@@ -434,52 +495,110 @@ export default class InterfaceController extends Controller {
   loadColorScheme(colorSchemeId) {
     this.setProperties({
       selectedColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.isViewingOwnProfile,
+      previewingColorScheme: this._shouldEnablePreview(false),
     });
 
     if (!this.isViewingOwnProfile) {
       return;
     }
 
-    if (colorSchemeId < 0) {
-      const defaultTheme = this.userSelectableThemes.findBy("id", this.themeId);
+    // only preview light schemes when in light mode
+    if (!this._isInLightMode()) {
+      return;
+    }
 
-      if (defaultTheme && defaultTheme.color_scheme_id) {
-        colorSchemeId = defaultTheme.color_scheme_id;
-      }
-    }
-    loadColorSchemeStylesheet(colorSchemeId, this.themeId);
-    if (this.selectedDarkColorSchemeId === -1) {
-      // set this same scheme for dark mode preview when dark scheme is disabled
-      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-    }
+    this._previewColorScheme(false);
   }
 
   @action
   loadDarkColorScheme(colorSchemeId) {
     this.setProperties({
       selectedDarkColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.isViewingOwnProfile,
+      previewingColorScheme: this._shouldEnablePreview(true),
     });
 
     if (!this.isViewingOwnProfile) {
       return;
     }
 
-    if (colorSchemeId === -1) {
-      // load preview of regular scheme when dark scheme is disabled
-      loadColorSchemeStylesheet(this.selectedColorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", false);
-    } else {
-      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", true);
+    // only preview dark schemes when in dark mode
+    if (!this._isInDarkMode()) {
+      return;
     }
+
+    this._previewColorScheme(true);
+    this.session.set("darkModeAvailable", colorSchemeId !== -1);
   }
 
   @action
   selectColorMode(modeId) {
     this.selectedInterfaceColorModeId = modeId;
     this.set("previewingColorScheme", this.isViewingOwnProfile);
+
+    if (!this.isViewingOwnProfile) {
+      return;
+    }
+
+    this._applyInterfaceModePreview(modeId);
+    this._previewColorSchemeForMode(modeId);
+  }
+
+  _applyInterfaceModePreview(modeId) {
+    const modeActions = {
+      [INTERFACE_COLOR_MODES.AUTO]: () => this.interfaceColor.useAutoMode(),
+      [INTERFACE_COLOR_MODES.LIGHT]: () => this.interfaceColor.forceLightMode(),
+      [INTERFACE_COLOR_MODES.DARK]: () => this.interfaceColor.forceDarkMode(),
+    };
+
+    modeActions[modeId]?.();
+  }
+
+  _previewColorSchemeForMode(modeId) {
+    if (this._shouldShowPreviewForMode(modeId, false)) {
+      this._removePreviewStylesheet("dark");
+      this._previewColorScheme(false);
+    } else if (this._shouldShowPreviewForMode(modeId, true)) {
+      this._removePreviewStylesheet("light");
+      this._previewColorScheme(true);
+    }
+  }
+
+  _shouldShowPreviewForMode(modeId, isDark) {
+    const targetMode = isDark
+      ? INTERFACE_COLOR_MODES.DARK
+      : INTERFACE_COLOR_MODES.LIGHT;
+    const autoCondition = isDark
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : !window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    return (
+      modeId === targetMode ||
+      (modeId === INTERFACE_COLOR_MODES.AUTO && autoCondition)
+    );
+  }
+
+  _removePreviewStylesheet(type) {
+    const selector =
+      type === "dark" ? "link#cs-preview-dark" : "link#cs-preview-light";
+    const stylesheet = document.querySelector(selector);
+    if (stylesheet) {
+      stylesheet.remove();
+    }
+  }
+
+  _previewColorScheme(isDark) {
+    const selectedId = isDark
+      ? this.selectedDarkColorSchemeId
+      : this.selectedColorSchemeId;
+    const colorSchemeId = this._resolveThemeDefaultColorScheme(
+      selectedId,
+      isDark
+    );
+    loadColorSchemeStylesheet(colorSchemeId, this.themeId, isDark);
+
+    if (!isDark) {
+      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
+    }
   }
 
   @action
@@ -490,6 +609,18 @@ export default class InterfaceController extends Controller {
       selectedInterfaceColorModeId: null,
       previewingColorScheme: false,
     });
+
+    if (this.isViewingOwnProfile) {
+      const originalMode = this.model.user_option.interface_color_mode;
+      if (originalMode === INTERFACE_COLOR_MODES.AUTO) {
+        this.interfaceColor.useAutoMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.LIGHT) {
+        this.interfaceColor.forceLightMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.DARK) {
+        this.interfaceColor.forceDarkMode();
+      }
+    }
+
     const darkStylesheet = document.querySelector("link#cs-preview-dark"),
       lightStylesheet = document.querySelector("link#cs-preview-light");
     if (darkStylesheet) {
