@@ -175,17 +175,17 @@ export class SettingLinkFormatter {
     let url;
     if (this.setting.plugin) {
       const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
-      if (plugin) {
-        url = plugin.admin_route.use_new_show_route
-          ? this.router.urlFor(
-              `adminPlugins.show.settings`,
-              plugin.admin_route.location,
-              { queryParams: { filter: this.setting.setting } }
-            )
-          : this.router.urlFor(`adminPlugins.${plugin.admin_route.location}`);
+      const settingPluginCategoryName = this.setting.plugin.replace(/-/g, "_");
+
+      if (plugin && plugin.admin_route.use_new_show_route) {
+        url = this.router.urlFor(
+          `adminPlugins.show.settings`,
+          plugin.admin_route.location,
+          { queryParams: { filter: this.setting.setting } }
+        );
       } else {
         url = getURL(
-          `/admin/site_settings/category/all_results?filter=${this.setting.setting}`
+          `/admin/site_settings/category/${settingPluginCategoryName}?filter=${this.setting.setting}`
         );
       }
     } else if (this.settingPageMap.areas[this.setting.primary_area]) {
@@ -237,6 +237,18 @@ export default class AdminSearchDataSource extends Service {
       });
     });
 
+    this.plugins = this.buildPluginsMap();
+
+    const allItems = await ajax("/admin/search/all.json");
+    this.#processSettings(allItems.settings);
+    this.#processThemesAndComponents(allItems.themes_and_components);
+    this.#processReports(allItems.reports);
+    this._mapCached = true;
+  }
+
+  buildPluginsMap() {
+    const pluginsMap = {};
+
     // TODO (martin) Handle plugin enabling/disabling via MessageBus for this
     // and the setting list?
     (PreloadStore.get("visiblePlugins") || []).forEach((plugin) => {
@@ -245,15 +257,11 @@ export default class AdminSearchDataSource extends Service {
         plugin.enabled &&
         adminRouteValid(this.router, plugin.admin_route)
       ) {
-        this.plugins[plugin.name] = plugin;
+        pluginsMap[plugin.name] = plugin;
       }
     });
 
-    const allItems = await ajax("/admin/search/all.json");
-    this.#processSettings(allItems.settings);
-    this.#processThemesAndComponents(allItems.themes_and_components);
-    this.#processReports(allItems.reports);
-    this._mapCached = true;
+    return pluginsMap;
   }
 
   search(filter) {
