@@ -8,10 +8,20 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Header | Contents", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.router = getOwner(this).lookup("service:router");
+    const search = getOwner(this).lookup("service:search");
+    sinon.stub(search, "searchExperience").value("search_field");
+  });
+
+  hooks.afterEach(function () {
+    sinon.restore(); // clean up all stubs
+  });
+
   module("header search", function () {
     test("is hidden in mobile view", async function (assert) {
       const site = getOwner(this).lookup("service:site");
-      sinon.stub(site, "mobileView").value(false);
+      sinon.stub(site, "mobileView").value(true);
 
       await render(<template><Contents /></template>);
 
@@ -20,17 +30,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
         .doesNotExist("it does not display when the site is in mobile view");
     });
 
-    module("routes handling", function (innerHooks) {
-      innerHooks.beforeEach(function () {
-        this.router = getOwner(this).lookup("service:router");
-        const search = getOwner(this).lookup("service:search");
-        sinon.stub(search, "searchExperience").value("search_field");
-      });
-
-      innerHooks.afterEach(function () {
-        sinon.restore(); // clean up all stubs
-      });
-
+    module("routes handling", function () {
       test('is hidden in route "signup"', async function (assert) {
         sinon.stub(this.router, "currentRouteName").value("signup");
 
