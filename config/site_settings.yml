@@ -572,6 +572,12 @@ basic:
     client: true
     default: true
     area: "interface"
+  topic_list_design:
+    client: true
+    enum: "TopicListDesignSetting"
+    default: "topic_table"
+    area: "posts_and_topics"
+    themeable: true
 
 login:
   invite_only:

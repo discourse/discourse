@@ -134,6 +134,7 @@
   "screenshots": ["screenshots/light.png", "screenshots/dark.png"],
   "theme_site_settings": {
     "enable_welcome_banner": true,
-    "search_experience": "search_field"
+    "search_experience": "search_field",
+    "topic_list_design": "topic_cards"
   }
 }
