@@ -400,4 +400,41 @@ RSpec.describe "S3Helper" do
       )
     end
   end
+
+  describe "#s3_options" do
+    context "when s3_role_arn is configured" do
+      before do
+        SiteSetting.s3_role_arn = "arn:aws:iam::123456789:role/TestRole"
+        SiteSetting.s3_access_key_id = "ACCESS_KEY"
+        SiteSetting.s3_secret_access_key = "SECRET_KEY"
+      end
+
+      it "assumes role when all credentials present" do
+        mock_credentials =
+          instance_double(
+            Aws::STS::Types::Credentials,
+            access_key_id: "TEMP_KEY",
+            secret_access_key: "TEMP_SECRET",
+            session_token: "TEMP_TOKEN",
+          )
+
+        allow(S3Helper).to receive(:assume_s3_role).and_return(mock_credentials)
+
+        opts = S3Helper.s3_options(SiteSetting)
+
+        expect(S3Helper).to have_received(:assume_s3_role)
+        expect(opts[:access_key_id]).to eq("TEMP_KEY")
+      end
+    end
+
+    context "when s3_role_arn is not configured" do
+      before { SiteSetting.s3_role_arn = "" }
+
+      it "uses regular credentials" do
+        opts = S3Helper.s3_options(SiteSetting)
+
+        expect(opts[:access_key_id]).to eq(SiteSetting.s3_access_key_id)
+      end
+    end
+  end
 end
