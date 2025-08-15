@@ -35,17 +35,20 @@ export default class AdminConfigAreasColorPalettes extends Component {
   @action
   async newColorPaletteWithBase(baseKey) {
     let base;
+    let base_scheme_id;
     if (baseKey && /^\d+$/.test(baseKey)) {
       base = this.allColorPalettes.findBy("id", baseKey);
+      base_scheme_id = -1;
     } else {
       base = this.allColorPalettes.find(
         (palette) => palette.base_scheme_id === baseKey
       );
+      base_scheme_id = base.get("base_scheme_id");
     }
     const newPalette = base.copy();
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id: base.get("base_scheme_id"),
+      base_scheme_id,
     });
     await newPalette.save();
     await this.router.refresh();

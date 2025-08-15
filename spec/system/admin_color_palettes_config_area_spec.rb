@@ -46,5 +46,6 @@ describe "Admin Color Palettes Config Area Page", type: :system do
 
     expect(page).to have_current_path("/admin/config/colors/#{max_id}")
     expect(edit_config_area.palette_id).to eq(max_id)
+    expect(page).to have_no_css(".revert")
   end
 end
