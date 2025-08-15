@@ -53,7 +53,7 @@ module Jobs
 
     def process_invitee(invitee)
       if @event.public?
-        users = User.where(username: invitee["identifier"]).pluck(:id)
+        users = User.where(username_lower: invitee["identifier"].downcase).pluck(:id)
       else
         group = Group.find_by(name: invitee["identifier"])
         if group

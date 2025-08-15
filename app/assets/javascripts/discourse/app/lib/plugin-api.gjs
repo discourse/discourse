@@ -2474,7 +2474,7 @@ class PluginApi {
    *       endsAt: "2021-10-12T16:00:00.000Z",
    *     },
    *   ],
-   *   { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
+   *   { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
    * );
    * ```
    */

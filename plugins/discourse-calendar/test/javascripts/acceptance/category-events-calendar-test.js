@@ -50,28 +50,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
-            upcoming_dates: [
-              {
-                starts_at: moment()
-                  .tz("Asia/Calcutta")
-                  .add(1, "days")
-                  .format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: moment()
-                  .tz("Asia/Calcutta")
-                  .add(1, "days")
-                  .format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-              {
-                starts_at: moment()
-                  .tz("Asia/Calcutta")
-                  .add(2, "days")
-                  .format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: moment()
-                  .tz("Asia/Calcutta")
-                  .add(2, "days")
-                  .format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-            ],
+            rrule: `DTSTART:${moment().format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${moment().add(2, "days").format("YYYYMMDD")}`,
           },
           {
             id: 67502,
@@ -128,7 +107,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     await visit("/c/bug/1");
 
     assert
-      .dom(".fc-event[href='/t/-/18451/1'] .fc-title")
+      .dom(".fc-daygrid-event-harness a[href='/t/-/18451/1'] .fc-event-title")
       .hasText(
         "Awesome Event 3<script>alert('my awesome event');</script>",
         "Elements should be escaped and appear as text rather than be the actual element."
@@ -157,7 +136,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     assert
       .dom("#category-events-calendar")
       .exists("Events calendar div exists.");
-    assert.dom(".fc-view-container").exists("FullCalendar is loaded.");
+    assert.dom(".fc").exists("FullCalendar is loaded.");
   });
 
   test("uses current locale to display calendar weekday names", async function (assert) {
@@ -166,10 +145,10 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     await visit("/c/bug/1");
 
     assert.deepEqual(
-      [...document.querySelectorAll(".fc-day-header span")].map(
+      [...document.querySelectorAll(".fc-col-header-cell-cushion")].map(
         (el) => el.innerText
       ),
-      ["seg.", "ter.", "qua.", "qui.", "sex.", "sáb.", "dom."],
+      ["SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB.", "DOM."],
       "Week days are translated in the calendar header"
     );
 
@@ -179,10 +158,12 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
   test("event calendar shows recurrent events", async function (assert) {
     await visit("/c/bug/1");
 
-    const [first, second] = [...document.querySelectorAll(".fc-event")];
+    const [first, second] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
 
-    assert.dom(".fc-title", first).hasText("Awesome Event");
-    assert.dom(".fc-title", second).hasText("Awesome Event");
+    assert.dom(".fc-event-title", first).hasText("Awesome Event");
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
 
     const firstCell = first.closest("td");
     const secondCell = second.closest("td");

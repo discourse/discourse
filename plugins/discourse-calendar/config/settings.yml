@@ -47,16 +47,8 @@ discourse_calendar:
     default: 2
     client: true
   calendar_automatic_holidays_enabled: true
-  enable_timezone_offset_for_calendar_events:
-    default: false
-    client: true
-    hidden: true
   split_grouped_events_by_timezone_threshold:
     default: 0
-    client: true
-    hidden: true
-  default_timezone_offset_user_option:
-    default: false
     client: true
     hidden: true
   event_participation_buttons:
@@ -112,9 +104,6 @@ discourse_calendar:
     client: true
   sidebar_show_upcoming_events:
     default: true
-    client: true
-  events_max_rows:
-    default: 2
     client: true
   map_events_to_color:
     client: true
