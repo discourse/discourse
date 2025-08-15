@@ -33,7 +33,7 @@ import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
@@ -482,7 +482,7 @@ export default class ChatComposer extends Component {
         if (obj.isUser) {
           this.#addMentionedUser(cloneJSON(obj));
         }
-
+        validateSearchResult(obj);
         return obj.username || obj.name;
       },
       dataSource: (term) => {
@@ -519,7 +519,6 @@ export default class ChatComposer extends Component {
       textarea,
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["chat-composer"],
-        this.siteSettings,
         {
           fixedTextareaPosition: true,
           treatAsTextarea: true,

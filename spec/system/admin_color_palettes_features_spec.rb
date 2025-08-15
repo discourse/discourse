@@ -13,11 +13,60 @@ describe "Admin Color Palettes Features", type: :system do
 
   let(:toasts) { PageObjects::Components::Toasts.new }
 
-  before do
-    sign_in(admin)
-    # filter requires 8 palettes to show
-    6.times { |i| Fabricate(:color_scheme, name: "Extra Palette #{i}") }
+  let(:foundation_scheme_a) do
+    Fabricate(:color_scheme, name: "Foundation scheme a", theme: Theme.foundation_theme)
   end
+  let(:foundation_scheme_b) do
+    Fabricate(:color_scheme, name: "Foundation scheme b", theme: Theme.foundation_theme)
+  end
+  let(:horizon_scheme_a) do
+    Fabricate(:color_scheme, name: "Horizon scheme a", theme: Theme.horizon_theme)
+  end
+  let(:horizon_scheme_b) do
+    Fabricate(:color_scheme, name: "Horizon scheme b", theme: Theme.horizon_theme)
+  end
+  let(:custom_scheme_a) { Fabricate(:color_scheme, name: "Custom scheme a") }
+  let(:custom_scheme_b) { Fabricate(:color_scheme, name: "Custom scheme b") }
+  let(:selectable_foundation_scheme_a) do
+    Fabricate(
+      :color_scheme,
+      name: "Selectable foundation scheme a",
+      theme: Theme.foundation_theme,
+      user_selectable: true,
+    )
+  end
+  let(:selectable_foundation_scheme_b) do
+    Fabricate(
+      :color_scheme,
+      name: "Selectable foundation scheme b",
+      theme: Theme.foundation_theme,
+      user_selectable: true,
+    )
+  end
+  let(:selectable_horizon_theme_scheme_a) do
+    Fabricate(
+      :color_scheme,
+      name: "Selectable horizon scheme a",
+      theme: Theme.horizon_theme,
+      user_selectable: true,
+    )
+  end
+  let(:selectable_horizon_theme_scheme_b) do
+    Fabricate(
+      :color_scheme,
+      name: "Selectable horizon scheme b",
+      theme: Theme.horizon_theme,
+      user_selectable: true,
+    )
+  end
+  let(:selectable_custom_scheme_a) do
+    Fabricate(:color_scheme, name: "Selectable custom scheme a", user_selectable: true)
+  end
+  let(:selectable_custom_scheme_b) do
+    Fabricate(:color_scheme, name: "Selectable custom scheme b", user_selectable: true)
+  end
+
+  before { sign_in(admin) }
 
   describe "filtering" do
     it "shows filters when there are more than 8 color schemes" do
@@ -142,6 +191,69 @@ describe "Admin Color Palettes Features", type: :system do
       expect(palette_item[:style]).to include("--primary--preview:")
       expect(palette_item[:style]).to include("--secondary--preview:")
       expect(palette_item[:style]).to include("--tertiary--preview:")
+    end
+  end
+
+  describe "sort" do
+    before do
+      ColorScheme.delete_all
+      foundation_scheme_a
+      foundation_scheme_b
+      horizon_scheme_a
+      horizon_scheme_b
+      custom_scheme_a
+      custom_scheme_b
+      selectable_foundation_scheme_a
+      selectable_foundation_scheme_b
+      selectable_horizon_theme_scheme_a
+      selectable_horizon_theme_scheme_b
+      selectable_custom_scheme_a
+      selectable_custom_scheme_b
+    end
+    it "sorts schemes in order: selectable, custom, current default theme, alphabetical for horizon theme" do
+      SiteSetting.default_theme_id = Theme.horizon_theme.id
+      visit("/admin/customize/colors")
+      color_schemes = page.all(".color-palette__details h3").map(&:text)
+      expect(color_schemes).to eq(
+        [
+          "Selectable custom scheme a",
+          "Selectable custom scheme b",
+          "Selectable horizon scheme a",
+          "Selectable horizon scheme b",
+          "Selectable foundation scheme a",
+          "Selectable foundation scheme b",
+          "Custom scheme a",
+          "Custom scheme b",
+          "Horizon scheme a",
+          "Horizon scheme b",
+          "Foundation scheme a",
+          "Foundation scheme b",
+          "Light (default)",
+        ],
+      )
+    end
+
+    it "sorts schemes in order: selectable, custom, current default theme, alphabetical for foundation theme" do
+      SiteSetting.default_theme_id = Theme.foundation_theme.id
+      visit("/admin/customize/colors")
+      color_schemes = page.all(".color-palette__details h3").map(&:text)
+      expect(color_schemes).to eq(
+        [
+          "Selectable custom scheme a",
+          "Selectable custom scheme b",
+          "Selectable foundation scheme a",
+          "Selectable foundation scheme b",
+          "Selectable horizon scheme a",
+          "Selectable horizon scheme b",
+          "Custom scheme a",
+          "Custom scheme b",
+          "Foundation scheme a",
+          "Foundation scheme b",
+          "Light (default)",
+          "Horizon scheme a",
+          "Horizon scheme b",
+        ],
+      )
     end
   end
 end

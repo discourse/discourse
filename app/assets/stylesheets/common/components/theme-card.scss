@@ -246,10 +246,6 @@
   display: flex;
   flex-direction: column;
 
-  &:hover {
-    border-color: var(--tertiary-medium);
-  }
-
   .admin-config-area-card__content {
     margin: 0;
     padding-right: 0;

@@ -2880,6 +2880,10 @@ en:
       publishing: "Publishing Topic…"
 
     composer:
+      autocomplete:
+        username_missing: "Selected autocomplete result is missing username."
+        name_missing: "Selected autocomplete result is missing name."
+
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
@@ -5998,11 +6002,18 @@ en:
           only_experiments: "Only show experimental features"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
-          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          feature_enabled: "You have enabled the feature."
+          feature_disabled: "You have disabled the feature."
+          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
           experiment_tooltip:
-            title_disabled: "Try our experimental feature"
+            title_disabled: "Try this experimental feature"
             title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_enabled: "Changing this will disable the feature for all users."
+          feature_tooltip:
+            title_disabled: "Try this feature"
+            title_enabled: "Turn off feature"
+            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
             content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
@@ -6907,11 +6918,10 @@ en:
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           dark_color_scheme: "Dark Color Palette"
-          edit_color_scheme: "Edit Color Palette"
-          edit_dark_color_scheme: "Edit DarkWColor Palette"
           default_light_scheme: "Light (default)"
-          color_scheme_select: "Select colors to be used by theme"
-          dark_color_scheme_select: "Select colors to be used by theme in dark mode"
+          color_scheme_select: "Select colors to be used by theme."
+          dark_color_scheme_select: "Select colors to be used by theme in dark mode."
+          edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
           add_all_themes: "Add all themes"

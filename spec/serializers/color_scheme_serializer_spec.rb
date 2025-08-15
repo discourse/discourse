@@ -26,9 +26,7 @@ RSpec.describe ColorSchemeSerializer do
           highlight-high
           highlight-medium
           highlight-low
-          color_0
-          color_1
-        ],
+        ] + color_scheme.colors.map(&:name).sort,
       )
     end
   end
