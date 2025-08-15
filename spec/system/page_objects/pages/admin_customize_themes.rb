@@ -7,6 +7,7 @@ module PageObjects
         page.visit(
           "/admin/customize/themes/#{theme_or_theme_id.is_a?(Theme) ? theme_or_theme_id.id : theme_or_theme_id}",
         )
+        self
       end
 
       def has_colors_tab?
