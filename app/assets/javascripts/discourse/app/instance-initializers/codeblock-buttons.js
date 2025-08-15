@@ -6,6 +6,7 @@ let _codeblockButtons = [];
 
 export default {
   initialize(owner) {
+    const site = owner.lookup("service:site");
     const siteSettings = owner.lookup("service:site-settings");
 
     withPluginApi((api) => {
@@ -25,6 +26,7 @@ export default {
 
         const post = helper.getModel();
         const cb = new CodeblockButtons({
+          site,
           showFullscreen: true,
           showCopy: true,
         });

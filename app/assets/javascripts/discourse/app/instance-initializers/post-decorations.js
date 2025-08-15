@@ -203,11 +203,7 @@ export default {
 
           table.parentNode.insertBefore(buttonWrapper, table);
 
-          if (!isOverflown(table.parentNode)) {
-            return;
-          }
-
-          if (site.isMobileDevice) {
+          if (site.mobileView || !isOverflown(table.parentNode)) {
             return;
           }
 

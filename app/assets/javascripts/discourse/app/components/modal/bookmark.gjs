@@ -39,7 +39,7 @@ const BOOKMARK_BINDINGS = {
 export default class BookmarkModal extends Component {
   @service dialog;
   @service currentUser;
-  @service site;
+  @service capabilities;
   @service bookmarkApi;
 
   @tracked postDetectedLocalDate = null;
@@ -149,7 +149,7 @@ export default class BookmarkModal extends Component {
   @action
   didInsert() {
     discourseLater(() => {
-      if (this.site.isMobileDevice) {
+      if (this.capabilities.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
       }
     });
