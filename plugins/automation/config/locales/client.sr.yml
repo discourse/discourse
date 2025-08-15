@@ -108,3 +108,5 @@ sr:
             label: Verzija
           status:
             label: Status
+          enabled:
+            label: Omogućeno

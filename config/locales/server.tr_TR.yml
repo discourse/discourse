@@ -60,6 +60,8 @@ tr_TR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
+    too_many_urls: "Tek bir istekte 10’dan fazla URL’yi satır içinde tek kutu olarak ekleyemezsiniz"
+    concurrency_not_allowed: "Eş zamanlı satır içi tek kutulama isteklerine izin verilmez. Lütfen her seferinde bir istek gönderin."
   components:
     enabled_filter: "Etkin"
     disabled_filter: "Devre Dışı"
@@ -1624,6 +1626,7 @@ tr_TR:
     delete_old_hidden_posts: "Gizli kalan gönderileri 30 günden fazla süreyle otomatik olarak silin."
     default_locale: "Bu Discourse örneğinin varsayılan dili. Sistem tarafından oluşturulan kategorilerin ve konuların metnini <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Özelleştir / Metin'den</a> değiştirebilirsiniz."
     allow_user_locale: "Kullanıcıların kendi dil arayüzü tercihlerini seçmelerine izin verin"
+    set_locale_from_accept_language_header: "Anonim kullanıcılar için arayüz dilini web tarayıcılarının dil başlıklarından ayarlayın"
     set_locale_from_cookie: "\"Yerel ayar\" tarayıcı çerezi aracılığıyla anonim bir kullanıcının yerel ayarının ayarlanmasına izin verir"
     set_locale_from_param: "Anonim bir kullanıcının yerel ayarını \"lang\" URL parametresi aracılığıyla ayarlamaya izin verir, ör. ?lang=es"
     support_mixed_text_direction: "Soldan sağa ve sağdan sola karışık metin yönlerini destekler"
@@ -1786,6 +1789,7 @@ tr_TR:
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
+    allowed_iframes: "Discourse'un gönderilerde güvenli bir şekilde izin verebileceği iframe src URL öneklerinin bir listesi. * herhangi bir sayıda / olmayan karakterle eşleştirmek için kullanılabilir."
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken web veri gezginlerinin kullanıcı aracıları. UYARI! BUNU AYARLAMAK BURADA LİSTELENMEYEN HİÇBİR VERİ GEZGİNİNE İZİN VERMEZ!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web veri gezginlerini tanımlayan kullanıcı aracısı dizesinde büyük/küçük harfe duyarlı olmayan benzersiz kelime. İzin verilenler listesi tanımlanmışsa geçerli değildir."
     slow_down_crawler_user_agents: '"Tarayıcı hızını yavaşlat" ayarında yapılandırıldığı gibi hız sınırlandırılması gereken web veri gezginlerinin kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır.'

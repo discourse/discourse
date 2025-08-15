@@ -60,6 +60,8 @@ ja:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
+    too_many_urls: "1 つのリクエストで 10 個以上の URL をワンボックスにインライン化できません。"
+    concurrency_not_allowed: "インラインワンボックスリクエストを同時に送信できません。リクエストを 1 つずつ送信してください。"
   components:
     enabled_filter: "有効"
     disabled_filter: "無効"

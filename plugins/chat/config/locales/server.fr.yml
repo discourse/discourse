@@ -90,6 +90,7 @@ fr:
       actor_muting_target_user: "Vous mettez %{username} en sourdine, vous ne pouvez donc pas lui envoyer de messages."
       actor_disallowed_dms: "Vous avez choisi d'empêcher les utilisateurs de vous envoyer des messages privés et des messages directs. Vous ne pouvez donc pas créer de nouveaux messages directs."
       actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages directs. Vous ne pouvez donc pas créer de nouveaux messages directs à son intention."
+      not_reachable: "Nous sommes désolés, %{username} n'utilise pas la messagerie instantanée."
       user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages directs."
       over_chat_max_direct_message_users_allow_self: "Vous ne pouvez créer un message direct qu'avec vous-même."
       over_chat_max_direct_message_users:

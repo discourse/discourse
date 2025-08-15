@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    chat_allowed_groups: "ان گروپس کے صارفین گپ شپ کر سکتے ہیں۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپ شپ تک رسائی حاصل کر سکتے ہیں۔"
+    chat_message_flag_allowed_groups: "ان گروپس کے صارفین کو گپ شپ کے پیغامات کو نشاندہ کرنے کی اجازت ہے۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپشپ کے پیغامات کو نشاندہ کر سکتے ہیں۔"
   chat:
     deleted_chat_username: حذف کردہ
     errors:
@@ -35,6 +38,7 @@ ur:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: '"%{channel_name}" میں ایک گپ شپ کے پیغام کو عملے کی توجہ کی ضرورت ہے۔'
       chat_pm_body: "%{link}\n\n%{message}"
   unsubscribe:
     chat_summary:
