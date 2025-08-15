@@ -276,8 +276,8 @@ importers:
         specifier: ^6.1.18
         version: 6.1.18(@fullcalendar/core@6.1.18)
       '@glimmer/syntax':
-        specifier: 0.93.1
-        version: 0.93.1
+        specifier: 0.95.0
+        version: 0.95.0
       '@highlightjs/cdn-assets':
         specifier: 11.11.1
         version: 11.11.1
@@ -732,8 +732,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.0)
       '@glimmer/syntax':
-        specifier: 0.93.1
-        version: 0.93.1
+        specifier: 0.95.0
+        version: 0.95.0
       broccoli-asset-rev:
         specifier: ^3.0.0
         version: 3.0.0
@@ -13836,7 +13836,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.33.0)
-      '@glimmer/syntax': 0.93.1
+      '@glimmer/syntax': 0.95.0
       '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
       content-tag: 2.0.3
       eslint-scope: 7.2.2
