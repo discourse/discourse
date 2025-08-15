@@ -88,12 +88,12 @@ module Migrations::Database::Schema
     def output_indexes(table)
       return unless table.indexes
 
+      @output.puts ""
       table.indexes.each do |index|
         index_name = escape_identifier(index.name)
         table_name = escape_identifier(table.name)
         column_names = index.column_names.map { |name| escape_identifier(name) }
 
-        @output.puts ""
         @output.print "CREATE "
         @output.print "UNIQUE " if index.unique
         @output.print "INDEX #{index_name} ON #{table_name} (#{column_names.join(", ")})"
