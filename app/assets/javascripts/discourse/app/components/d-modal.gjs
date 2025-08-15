@@ -44,7 +44,7 @@ export default class DModal extends Component {
   });
 
   setupModalBody = modifierFn((el) => {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 

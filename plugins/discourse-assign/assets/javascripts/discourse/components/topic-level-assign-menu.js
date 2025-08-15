@@ -105,7 +105,7 @@ export default {
   displayed() {
     return (
       this.currentUser?.can_assign &&
-      !this.site.mobileView &&
+      this.site.desktopView &&
       (this.topic.isAssigned() || this.topic.hasAssignedPosts())
     );
   },
