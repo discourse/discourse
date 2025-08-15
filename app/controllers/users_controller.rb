@@ -1323,7 +1323,9 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    return render json: failed_json, status: 422 if SiteSetting.discourse_connect_overrides_avatar
+    if SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar
+      return render json: failed_json, status: 422
+    end
 
     type = params[:type]
 

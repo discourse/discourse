@@ -140,7 +140,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def retrieve_avatar(user, url)
     return unless user && url.present?
-    return if user.user_avatar.try(:custom_upload_id).present?
+    return if user.user_avatar.try(:custom_upload_id).present? && !SiteSetting.auth_overrides_avatar
     Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
   end
 
