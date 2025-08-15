@@ -223,7 +223,7 @@ export default class AiBotConversations extends Component {
     // You can change this to "chat-composer" if that's more appropriate
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
-    setupHashtagAutocomplete(hashtagConfig, $textarea, this.siteSettings, {
+    setupHashtagAutocomplete(hashtagConfig, $textarea, {
       treatAsTextarea: true,
       afterComplete: (text) => {
         this.textarea.value = text;

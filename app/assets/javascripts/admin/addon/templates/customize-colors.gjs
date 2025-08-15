@@ -65,21 +65,22 @@ export default RouteTemplate(
         "admin.customize.colors.filters.search_placeholder"
       }}
       @noResultsMessage={{i18n "admin.customize.colors.filters.no_results"}}
-      as |schemes|
     >
-      <ul class="color-palette__list">
-        {{#each schemes as |scheme|}}
-          <ColorPaletteListItem
-            @scheme={{scheme}}
-            @defaultTheme={{@controller.defaultTheme}}
-            @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
-            @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
-            @toggleUserSelectable={{@controller.toggleUserSelectable}}
-            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
-            @deleteColorScheme={{@controller.deleteColorScheme}}
-          />
-        {{/each}}
-      </ul>
+      <:content as |schemes|>
+        <ul class="color-palette__list">
+          {{#each schemes as |scheme|}}
+            <ColorPaletteListItem
+              @scheme={{scheme}}
+              @defaultTheme={{@controller.defaultTheme}}
+              @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
+              @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
+              @toggleUserSelectable={{@controller.toggleUserSelectable}}
+              @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+              @deleteColorScheme={{@controller.deleteColorScheme}}
+            />
+          {{/each}}
+        </ul>
+      </:content>
     </AdminFilterControls>
   </template>
 );

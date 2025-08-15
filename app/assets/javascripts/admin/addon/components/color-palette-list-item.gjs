@@ -177,7 +177,6 @@ export default class ColorPaletteListItem extends Component {
               @triggerClass="btn-flat"
               @modalForMobile={{true}}
               @icon="ellipsis"
-              @triggers={{array "click"}}
               @onRegisterApi={{this.onRegisterApi}}
               @isLoading={{this.isLoading}}
             >

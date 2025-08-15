@@ -92,19 +92,20 @@ export default class ThemesGrid extends Component {
       @dropdownOptions={{this.dropdownOptions}}
       @inputPlaceholder={{this.inputPlaceholder}}
       @noResultsMessage={{i18n "admin.customize.theme.no_themes_found"}}
-      as |themes|
     >
-      <div class="themes-cards-container">
-        {{#each themes as |theme|}}
-          <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
-        {{/each}}
-        <PluginOutlet
-          @name="admin-themes-grid-additional-cards"
-          @outletArgs={{lazyHash
-            AdminConfigAreaCardComponent=AdminConfigAreaCard
-          }}
-        />
-      </div>
+      <:content as |themes|>
+        <div class="themes-cards-container">
+          {{#each themes as |theme|}}
+            <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
+          {{/each}}
+          <PluginOutlet
+            @name="admin-themes-grid-additional-cards"
+            @outletArgs={{lazyHash
+              AdminConfigAreaCardComponent=AdminConfigAreaCard
+            }}
+          />
+        </div>
+      </:content>
     </AdminFilterControls>
   </template>
 }
