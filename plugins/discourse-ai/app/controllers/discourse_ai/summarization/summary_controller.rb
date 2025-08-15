@@ -41,6 +41,38 @@ module DiscourseAi
           end
         end
       end
+
+      def regen_gist
+        topics = []
+
+        if params[:topic_ids].present?
+          topic_ids =
+            params[:topic_ids].is_a?(String) ? params[:topic_ids].split(",") : params[:topic_ids]
+          topics = Topic.where(id: topic_ids)
+        elsif params[:topic_id].present?
+          topics = [Topic.find(params[:topic_id])]
+        else
+          raise Discourse::InvalidParameters.new(:topic_id)
+        end
+
+        topics.each do |topic|
+          guardian.ensure_can_see!(topic)
+          raise Discourse::NotFound if !guardian.can_see_summary?(topic)
+
+          summarizer = DiscourseAi::Summarization.topic_gist(topic)
+          if summarizer.present?
+            summarizer.delete_cached_summaries!
+            summarizer.summarize(Discourse.system_user)
+          end
+        end
+
+        # Only rate limit on single topic requests
+        if current_user && topics.size == 1
+          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+        end
+
+        render json: success_json
+      end
     end
   end
 end

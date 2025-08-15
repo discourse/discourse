@@ -274,7 +274,7 @@ en:
         automation_reports:
           name: "Automated reports"
           description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
-        
+
         automation_triage:
           name: "Posts triage"
           description: "Automates moderation and management of posts by using configurable automation rules"
@@ -914,6 +914,14 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
+          regenerate: "Regenerate short summary"
+          regenerate_bulk: "Regenerate short summaries"
+          regenerate_success:
+            one: "Short summary regenerated successfully"
+            other: "%{count} short summaries regenerated successfully"
+          regenerate_error:
+            one: "Failed to regenerate short summary"
+            other: "Failed to regenerate %{count} short summaries"
         topic_list_layout:
           button:
             compact: "Compact"
