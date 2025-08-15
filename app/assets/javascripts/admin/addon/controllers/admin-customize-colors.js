@@ -132,28 +132,58 @@ export default class AdminCustomizeColorsController extends Controller {
     }
 
     const defaultThemeId = this.defaultTheme?.id;
+    const defaultLightId = this.defaultTheme?.color_scheme_id;
+    const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
 
     schemes.sort((a, b) => {
-      // 1. Sort by user selectable first
+      // 1. Display active light
+      if (
+        defaultLightId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultLightId === a.id && !a.is_builtin_default) ||
+        (defaultLightId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultLightId === a.id ? -1 : 1;
+      }
+
+      // 2. Display active dark
+      if (
+        defaultDarkId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultDarkId === a.id && !a.is_builtin_default) ||
+        (defaultDarkId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultDarkId === a.id ? -1 : 1;
+      }
+
+      // 3. Sort by user selectable first
       if (a.user_selectable !== b.user_selectable) {
         return a.user_selectable ? -1 : 1;
       }
 
-      // 2. Sort custom schemes (no theme) before themed schemes
+      // 4. Sort custom schemes (no theme) before themed schemes
       const aIsCustom = !a.theme_id && !a.is_builtin_default;
       const bIsCustom = !b.theme_id && !b.is_builtin_default;
       if (aIsCustom !== bIsCustom) {
         return aIsCustom ? -1 : 1;
       }
 
-      // 3. Prioritize schemes from the current default theme
+      // 5. Prioritize schemes from the current default theme
       const aIsFromDefaultTheme = a.theme_id === defaultThemeId;
       const bIsFromDefaultTheme = b.theme_id === defaultThemeId;
       if (aIsFromDefaultTheme !== bIsFromDefaultTheme) {
         return aIsFromDefaultTheme ? -1 : 1;
       }
 
-      // 4. Finally, sort alphabetically by name
+      // 6. Finally, sort alphabetically by name
       return (a.originals.name || "").localeCompare(b.originals.name || "");
     });
 
