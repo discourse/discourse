@@ -6905,7 +6905,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
-          default: "Active"
+          default: "Default"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
@@ -6933,8 +6933,8 @@ en:
           convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
-          set_default_theme: "Set as active"
-          default_theme: "Active theme"
+          set_default_theme: "Set as default"
+          default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
           setting_was_saved: "Theme setting was saved"
           install_success: "%{theme} installed successfully!"
@@ -7123,7 +7123,7 @@ en:
           edit: "Edit"
           set_default_light: "Set as light palette on default theme (%{theme})"
           set_default_dark: "Set as dark palette on default theme (%{theme})"
-          set_default_success: "%{schemeName} set as active palette for %{themeName}"
+          set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
@@ -7132,16 +7132,16 @@ en:
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
-          active_light_badge:
-            text: "Active light"
-            title: "Active light color palette"
+          default_light_badge:
+            text: "Default light"
+            title: "Default light color palette"
             reset: "Reset filters"
-          active_dark_badge:
-            text: "Active dark"
-            title: "Active light color palette"
-          active_both_badge:
-            text: "Active light and dark"
-            title: "Active light and dark color palette"
+          default_dark_badge:
+            text: "Default dark"
+            title: "Default light color palette"
+          default_both_badge:
+            text: "Default light and dark"
+            title: "Default light and dark color palette"
           system_palette: "This is a built-in color palette, it cannot be edited or deleted."
           back_to_colors: "Back to color palettes"
           long_title: "Color palettes"

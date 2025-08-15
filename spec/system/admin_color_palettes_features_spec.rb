@@ -157,8 +157,8 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
-          ".theme-card__badge.--active",
-          text: I18n.t("admin_js.admin.customize.colors.active_light_badge.text").upcase,
+          ".theme-card__badge.--default",
+          text: I18n.t("admin_js.admin.customize.colors.default_light_badge.text").upcase,
         )
       end
 
@@ -175,8 +175,8 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
-          ".theme-card__badge.--active",
-          text: I18n.t("admin_js.admin.customize.colors.active_both_badge.text").upcase,
+          ".theme-card__badge.--default",
+          text: I18n.t("admin_js.admin.customize.colors.default_both_badge.text").upcase,
         )
       end
     end
