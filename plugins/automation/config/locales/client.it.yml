@@ -186,7 +186,7 @@ it:
             skip_via_email:
               label: "Salta tramite e-mail"
               description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
-          created: Creato
+          created: Creazione
           edited: Modificato
         user_updated:
           fields:

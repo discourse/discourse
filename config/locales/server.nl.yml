@@ -60,6 +60,8 @@ nl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{post_number} van %{username}"
+    too_many_urls: "Er kunnen niet meer dan 10 URL's inlijn worden ge-oneboxt in één verzoek."
+    concurrency_not_allowed: "Gelijktijdige inline oneboxverzoeken zijn niet toegestaan. Stuur één verzoek tegelijk."
   components:
     enabled_filter: "Ingeschakeld"
     disabled_filter: "Uitgeschakeld"
@@ -1631,6 +1633,7 @@ nl:
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"
     default_locale: "De standaardtaal van deze Discourse-instantie. Je kunt de tekst van door het systeem gegenereerde categorieën en topics vervangen onder <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Aanpassen / Tekst</a>."
     allow_user_locale: "Gebruikers mogen een eigen voorkeur voor de interfacetaal kiezen"
+    set_locale_from_accept_language_header: "Interfacetaal voor anonieme gebruikers instellen vanuit de taalheaders van hun browser"
     set_locale_from_cookie: "Maakt het mogelijk om de taalinstelling van een anonieme gebruiker in te stellen via de browsercookie 'locale'"
     set_locale_from_param: "Maakt het mogelijk om de taalinstelling van een anonieme gebruiker in te stellen via de URL-parameter 'lang', bijvoorbeeld ?lang=es"
     support_mixed_text_direction: "Gemengde links-naar-rechts- en rechts-naar-links-tekstrichtingen ondersteunen"
@@ -1793,6 +1796,7 @@ nl:
     blocked_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_onebox_iframes: "Een lijst van iframe-src-domeinen die zijn toegestaan via Onebox-insluitingen. `*` staat alle standaard Onebox-engines toe."
+    allowed_iframes: "Een lijst met iframe src URL-voorvoegsels die Discourse veilig kan toestaan in berichten. * kan worden gebruikt om een willekeurig aantal niet-/tekens te matchen."
     allowed_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
     blocked_crawler_user_agents: "Uniek hoofdletterongevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als toelatingslijst is opgegeven."
     slow_down_crawler_user_agents: 'Useragents van webcrawlers waarvan de snelheid moet worden beperkt, zoals geconfigureerd in de instelling ''crawlersnelheid vertragen''. Elke waarde moet minimaal 3 tekens lang zijn.'
@@ -2452,6 +2456,7 @@ nl:
     share_quote_visibility: "Bepaal wanneer de knoppen voor het delen van citaten moeten worden weergegeven: nooit, alleen voor anonieme gebruikers of voor alle gebruikers. "
     create_revision_on_bulk_topic_moves: "Maak een revisie voor eerste berichten wanneer topics in bulk naar een nieuwe categorie worden verplaatst."
     allow_changing_staged_user_tracking: "Sta toe dat de meldingsvoorkeuren voor categorieën en tags van een gefaseerde gebruiker worden gewijzigd door een beheerder."
+    use_email_for_username_and_name_suggestions: "Gebruik het eerste deel van e-mailadressen als suggestie voor namen en gebruikersnamen. Waarschuwing: dit kan het makkelijker maken voor kwaadwillenden om het e-mailadres van je leden te achterhalen (omdat veel mensen gebruik maken van veelgebruikte aanbieders als 'gmail.com')."
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     show_bottom_topic_map: "Geeft de topickaart onderaan het topic weer wanneer er 10 of meer antwoorden zijn."

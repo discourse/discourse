@@ -5386,7 +5386,7 @@ cs:
           header_description: "Zde jsou spravována všechna skupinová oprávnění, která řídí přístup skupin k různým funkcím v rámci Discourse"
       new_features:
         title: "Co je nového?"
-        check_for_updates: "Zkontrolovat aktualizace"
+        check_for_updates: "Aktualizovat"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"

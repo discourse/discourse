@@ -4383,6 +4383,7 @@ ro:
           preview: "Previzualizează"
         quick_insert_fields:
           add_new_field: "Adaugă"
+          textarea: "Răspuns lung"
           dropdown: "Meniu derulant"
         validations_modal:
           table_headers:

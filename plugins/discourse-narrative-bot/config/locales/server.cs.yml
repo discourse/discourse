@@ -7,12 +7,12 @@
 cs:
   site_settings:
     discourse_narrative_bot_enabled: "Povolit Discourse Narrative Bot (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Zakázat uvítací příspěvek od Discourse Narrative Bot"
-    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse Narrative Bot ignorovat"
-    discourse_narrative_bot_disable_public_replies: "Zakázat veřejné odpovědi od Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse Narrative Bot odesílat"
-    discourse_narrative_bot_welcome_post_delay: "Před odesláním uvítacího příspěvku Discourse Narrative Bot počkat (n) sekund."
-    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot kurzy k přeskočení"
+    disable_discourse_narrative_bot_welcome_post: "Zakázat uvítací příspěvek od Discourse vítacího bota"
+    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse vítací bot ignorovat"
+    discourse_narrative_bot_disable_public_replies: "Zakázat veřejné odpovědi od Discourse vítacího bota"
+    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse vítací bot odesílat"
+    discourse_narrative_bot_welcome_post_delay: "Před odesláním uvítacího příspěvku Discourse vítací bot počkat (n) sekund."
+    discourse_narrative_bot_skip_tutorials: "Kurzy Discourse vítacího bota k přeskočení"
   badges:
     certified:
       name: Certifikován/a

@@ -20,6 +20,7 @@ ur:
       logs:
         staff_actions:
           actions:
+            chat_channel_status_change: "چیٹ چینل کی حیثیت بدل گئی"
             chat_channel_delete: "چیٹ چینل حذف کر دیا گیا۔"
             chat_auto_remove_membership: "چینلز سے رکنیتیں خود بخود ہٹا دی گئیں"
       api:
@@ -36,8 +37,8 @@ ur:
           chat_message_restored: "پیغام بحال ہوا"
     about:
       chat_messages_count: "چیٹ پیغامات"
-      chat_channels_count: "چیٹ چینلز"
-      chat_users_count: "چیٹ صارفین"
+      chat_channels_count: "گپ شپ کے چینلز"
+      chat_users_count: "گپ شپ صارفین"
       activities:
         chat_messages:
           one: "%{formatted_number} چیٹ پیغام"
@@ -61,6 +62,9 @@ ur:
       see_in: "میں دیکھیں"
       move_to_channel:
         title: "پیغامات کو چینل پر منتقل کریں"
+        instructions:
+          one: "آپ <strong>%{count}</strong> پیغام منتقل کر رہے ہیں۔ ایک منزل کا چینل منتخب کریں۔ ایک پلیس ہولڈر پیغام <strong>%{channelTitle}</strong> چینل میں اس بات کی نشاندہی کرنے کے لیے بنایا جائے گا کہ اس پیغام کو منتقل کر دیا گیا ہے۔ نوٹ کریں کہ نئے چینل میں جوابی زنجیروں کو محفوظ نہیں رکھا جائے گا، اور پرانے چینل میں پیغامات اب کسی منتقل شدہ پیغامات کے جواب کے طور پر نہیں دکھائی دیں گے۔"
+          other: "آپ <strong>%{count}</strong> پیغامات منتقل کر رہے ہیں۔ ایک منزل کا چینل منتخب کریں۔ ایک پلیس ہولڈر پیغام <strong>%{channelTitle}</strong> چینل میں اس بات کی نشاندہی کرنے کے لیے بنایا جائے گا کہ ان پیغامات کو منتقل کر دیا گیا ہے۔ نوٹ کریں کہ نئے چینل میں جوابی زنجیروں کو محفوظ نہیں رکھا جائے گا، اور پرانے چینل میں پیغامات اب کسی منتقل شدہ پیغامات کے جواب کے طور پر نہیں دکھائی دیں گے۔"
         confirm_move: "پیغامات کو منتقل کریں"
       delete_messages:
         confirm:
@@ -72,55 +76,188 @@ ur:
         add: "اضافہ کریں"
         close_channel: "چینل بند"
         open_channel: "چینل کھولیں"
+        archive_channel: "آرکائیو چینل"
+        delete_channel: "چینل کو حذف کریں"
+        join_channel: "چینل جوائن کریں"
+        leave_channel: "چینل چھوڑیں"
+        leave_groupchat_info: "اس گروپ چیٹ کو چھوڑنے سے، آپ کو اس تک مزید رسائی حاصل نہیں ہوگی اور آپ کو اس سے متعلق اطلاعات موصول نہیں ہوں گی۔ دوبارہ شامل ہونے کے لیے، آپ کو گروپ چیٹ کے کسی رکن کے ذریعے دوبارہ مدعو کرنے کی ضرورت ہوگی۔"
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
+        save_label:
+          mute_channel: "خاموش چینل کی ترجیح محفوظ ہو گئی"
+          desktop_notification: "ڈیسک ٹاپ اطلاع کی ترجیح محفوظ ہو گئی"
+          mobile_notification: "موبائل پش نوٹیفکیشن کی ترجیح محفوظ ہو گئی"
+      channel_archive:
+        title: "آرکائیو چینل"
+        instructions: "<p>کسی چینل کو آرکائیو کرنا اسے صرف پڑھنے کے موڈ میں رکھتا ہے اور چینل کے تمام پیغامات کو نئے یا موجودہ عنوان میں منتقل کر دیتا ہے۔ کوئی نیا پیغام نہیں بھیجا جا سکتا ہے، اور کوئی موجودہ پیغامات میں ترمیم یا حذف نہیں کیا جا سکتا ہے۔</p><p>کیا آپ واقعی <strong>%{channelTitle}</strong> چینل کو محفوظ کرنا چاہتے ہیں؟</p>"
+        process_started: "آرکائیو کرنے کا عمل شروع ہو گیا ہے۔ یہ ماڈل جلد ہی بند ہو جائے گا، اور آرکائیو کا عمل مکمل ہونے پر آپ کو ایک ذاتی پیغام موصول ہوگا۔"
+        retry: "دوبارہ کوشش"
+      channel_open:
+        title: "چینل کھولیں"
+        instructions: "چینل دوبارہ کھولتا ہے، تمام صارفین پیغامات بھیج سکیں گے اور اپنے موجودہ پیغامات میں ترمیم کر سکیں گے۔"
+      channel_close:
+        title: "چینل بند کریں"
+        instructions: "چینل کو بند کرنا نان عملہ صارفین کو نئے پیغامات بھیجنے یا موجودہ پیغامات میں ترمیم کرنے سے روکتا ہے۔ کیا آپ واقعی اس چینل کو بند کرنا چاہتے ہیں؟"
+      channel_delete:
+        title: "چینل کو حذف کریں"
+        instructions: "<p> <strong>%{name}</strong> چینل اور چیٹ کی سرگزشت کو حذف کرتا ہے۔ تمام پیغامات اور متعلقہ ڈیٹا، جیسے کہ ردعمل اور اپ لوڈز، مستقل طور پر حذف کر دیے جائیں گے۔ اگر آپ چینل کی سرگزشت کو محفوظ کرنا چاہتے ہیں اور اسے ختم کرنا چاہتے ہیں، تو آپ اس کے بجائے چینل کو آرکائیو کرنا چاہیں گے۔</p> <p>کیا آپ واقعی <strong>مستقل طور پر</strong> چینل کو حذف کرنا چاہتے ہیں؟ تصدیق کرنے کے لیے نیچے دیے گئے باکس میں چینل کا نام ٹائپ کریں۔</p>"
+        confirm: "میں اس کے نتائج کو سمجھتا ہوں، چینل کو ڈیلیٹ کریں"
+        confirm_channel_name: "چینل کا نام درج کریں"
+        process_started: "چینل کو حذف کرنے کا عمل شروع ہو چکا ہے۔ یہ ماڈل جلد ہی بند ہو جائے گا، اب آپ کو حذف شدہ چینل کہیں نظر نہیں آئے گا۔"
+      channels_list_popup:
+        browse: "چینلز کو براؤز کریں"
+        create: "نیا چینل"
       close: "بند کریں"
       remove: "خارج کریں"
+      collapse: "چیٹ دراز کو ختم کریں"
+      expand: "چیٹ دراز کو پھیلائیں"
+      confirm_flag: "کیا آپ واقعی %{username}کے پیغام کو نشان زد کرنا چاہتے ہیں؟"
+      deleted:
+        one: "ایک پیغام حذف کر دیا گیا۔ [دیکھیں]"
+        other: "%{count} پیغامات کو حذف کر دیا گیا۔ [سب دیکھیں]"
+      hidden: "ایک پیغام چھپا ہوا۔ [دیکھیں]"
       delete: "مٹائیں"
       edited: "ترمیم کردہ"
       muted: "خاموش کِیا ہوا"
       joined: "شمولیت اختیار کی"
+      empty_state:
+        direct_message_cta: "ذاتی چیٹ شروع کریں"
+        direct_message: "آپ ایک یا زیادہ صارفین کے ساتھ ذاتی بات چیت بھی شروع کر سکتے ہیں۔"
+        title: "کوئی چینل نہیں ملا"
+        my_threads: "آپ کے پاس ابھی تک کوئی تھریڈ نہیں ہے۔ جن تھریڈز میں آپ حصہ لیتے ہیں وہ یہاں دکھائے جائیں گے۔"
       email_frequency:
+        description: "ہم صرف آپ کو ای میل کریں گے اگر ہم نے آپ کو پچھلے 15 منٹ میں نہیں دیکھا۔"
         never: "کبھی نہیں"
+        title: "ای میل اطلاعات"
+        when_away: "صرف دور ہونے پر"
       header_indicator_preference:
+        title: "ہیڈر میں سرگرمی کا اشارہ دکھائیں"
+        all_new: "تمام نئے پیغامات"
+        dm_and_mentions: "براہ راست پیغامات، تذکرے اور دیکھے گئے دھاگے"
+        only_mentions: "صرف تذکرے"
         never: "کبھی نہیں"
+      separate_sidebar_mode:
+        title: "فورم اور چیٹ کے لیے علیحدہ سائڈبار موڈز دکھائیں"
+      send_shortcut:
+        enter:
+          label: "Enter کے ذریعے بھیجیں"
+          description: "Shift + Enter کے ذریعے نئی لائن"
+        meta_enter:
+          label: "%{meta_key} + Enter کے ذریعے بھیجیں"
+          description: "Enter کے ذریعے نئی لائن"
+      enable: "چیٹ کو فعال کریں"
       flag: "فلَیگ"
+      emoji: "ایموجی داخل کریں"
+      flagged: "اس پیغام کو نظرثانی کے لیے نشان زد کیا گیا"
+      invalid_access: "آپ کو اس چیٹ چینل کو دیکھنے کی رسائی نہیں"
+      invitation_notification: "<span>%{username}</span> <span>نے آپ کو ایک چیٹ چینل میں شامل ہونے کی دعوت دی</span>"
+      in_reply_to: "کے جواب میں"
+      heading: "گفتگو"
       join: "شمولیت اختیار کریں"
       last_visit: "آخری وزٹ"
+      mention_warning:
+        invitations_sent:
+          one: "دعوت نامہ بھیج دیا گیا"
+          other: "دعوت نامے بھیج دیے گئے۔"
+        invite: "چینل پر مدعو کریں۔"
+        channel_wide_mentions_disallowed: "اس چینل میں @here اور @all تذکرے غیر فعال ہیں۔"
+        groups:
+          header:
+            some: "کچھ صارفین کو مطلع نہیں کیا جائے گا"
+            all: "کسی کو مطلع نہیں کیا جائے گا"
+          unreachable_1: "@%{group} ذکر کی اجازت نہیں دیتا۔"
+          unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
       no_direct_message_channels: "آپ ابھی تک کسی بھی براہ راست پیغامات میں شامل نہیں ہوئے ہیں!"
       no_public_channels: "آپ ابھی تک کسی چینل میں شامل نہیں ہوئے ہیں!"
+      ignore_channel_wide_mention:
+        description: "چینل بھر میں تذکروں کے لئے اطلاعات نہ بھیجیں (@here اور @all)"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
       bookmark_message: "بُک مارک"
       bookmark_message_edit: "بک مارک میں ترمیم کریں"
       save: "محفوظ کریں"
+      select: "منتخب"
+      return_to_list: "چینلز کی فہرست پر واپس جائیں"
+      return_to_channel: "چینل پر واپس جائیں"
+      return_to_threads_list: "دھاگوں کی فہرست پر واپس جائیں"
+      unread_threads_count:
+        one: "آپ کے پاس %{count} بغیر پڑھی ہوئی بحث ہے"
+        other: "آپ کے پاس %{count} بغیر پڑھے ہوئے مباحثے ہیں"
+      scroll_to_bottom: "نیچے تک سکرول کریں"
+      scroll_to_new_messages: "نئے پیغامات دیکھیں"
+      sound:
+        title: "ڈیسک ٹاپ چیٹ کی اطلاع کی آواز"
       sounds:
         none: "کوئی نہیں"
+        bell: "گھنٹی"
+        ding: "ٹرنگ"
+      title: "چیٹ"
+      title_capitalized: "چیٹ"
+      upload: "ایک فائل منسلک کریں"
+      upload_to_channel: "%{title}پر اپ لوڈ کریں"
+      upload_to_thread: "دھاگے پر اپ لوڈ کریں"
+      uploaded_files:
+        one: "%{count} فائل"
+        other: "%{count} فائلیں"
+      you_flagged: "آپ نے اس پیغام کو نشان زد کیا"
       exit: "واپس"
       channel_status:
+        read_only_header: "چینل صرف پڑھا جا سکتا ہے"
+        read_only: "صرف پڑھیں"
+        archived_header: "چینل محفوظ شدہ ہے"
+        archived: "محفوظ شدہ"
+        archive_failed: "آرکائیو چینل ناکام ہو گیا۔ %{completed}/%{total} پیغامات کو محفوظ کر لیا گیا ہے۔ <a target=\"_blank\" href=\"%{topic_url}\">منزل کا موضوع</a> بنایا گیا تھا۔ آرکائیو کو مکمل کرنے کی کوشش کرنے کے لیے دوبارہ کوشش کو دبائیں۔"
+        archive_failed_no_topic: "آرکائیو چینل ناکام ہو گیا۔ %{completed}/%{total} پیغامات کو محفوظ کر لیا گیا ہے، منزل کا موضوع نہیں بنایا گیا تھا۔ آرکائیو کو مکمل کرنے کی کوشش کرنے کے لیے دوبارہ کوشش کو دبائیں۔"
+        archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">آرکائیو کا موضوع</a>دیکھیں"
+        closed_header: "چینل بند ہے"
         closed: "بند"
+        open_header: "چینل کھلا ہے"
         open: "کھولیں"
       browse:
         back: "واپس"
+        title: چینلوں
         filter_all: تمام
         filter_open: کھولیں
         filter_closed: بند
+        filter_archived: محفوظ شدہ
+        filter_input_placeholder: نام سے چینل تلاش کریں
       chat_message_separator:
         today: آج
         yesterday: کَل
+      members_view:
+        filter_placeholder: اراکین تلاش کریں
+        add_member: رکن شامل کریں
+        back_to_settings: "ترتیبات پر واپس"
       about_view:
+        associated_topic: منسلک موضوع
+        associated_category: منسلک زمرہ
         title: عنوان
         name: نام
         description: تفصیل
       channel_info:
+        back_to_all_channels: "تمام چینلوں"
         back_to_channel: "واپس"
         tabs:
           members: ممبران
           settings: ترتیبات
       new_message_modal:
+        title: پیغام بھیجیں
+        add_user_long: <kbd>shift +</kbd> پر کلک کریں یا <kbd>shift + enter</kbd><span>@%{username}</span>شامل کریں
+        add_user_short: <span>صارف شامل کریں</span>
+        open_channel: <span>کھولیں چینل</span>
+        default_search_placeholder: "#چینل، @کوئی بندہ یا کچھ بھی"
+        default_channel_search_placeholder: "#ایک چینل"
+        default_user_search_placeholder: "@کوئی بندہ"
+        user_search_placeholder: "...مزید اراکین شامل کریں"
+        disabled_user: "نے چیٹ کو غیر فعال کر دیا"
         no_items: "کوئی اشیاء نہیں"
+        create_group_placeholder: "گروپ چیٹ کا نام (اختیاری)"
+        participants_counter: "%{selection_count}/%{max} شرکاء"
+        new_group_chat: "نئی گروپ چیٹ"
         filter: "فِلٹر"
+        cant_add_more_members: "ممبران کی زیادہ سے زیادہ تعداد پہنچ گئی"
+        create_new_group_chat: "گروپ چیٹ بنائیں"
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
@@ -136,6 +273,11 @@ ur:
       notification_levels:
         never: "کبھی نہیں"
       settings:
+        channel_threading_label: "تھریڈنگ"
+        channel_threading_description: "جب تھریڈنگ فعال ہوتی ہے، تو چیٹ میسج کے جوابات ایک الگ گفتگو تخلیق کریں گے، جو مرکزی چینل کے ساتھ موجود ہوگی۔"
+        auto_join_users_label: "خودکار طور پر صارفین کو شامل کریں"
+        auto_join_users_info: "پچھلے 3 مہینوں میں کون سے صارفین متحرک رہے ہیں فی گھنٹہ چیک کریں۔ اگر انہیں %{category} زمرہ تک رسائی حاصل ہے تو انہیں اس چینل میں شامل کریں۔"
+        auto_join_users_info_no_category: "پچھلے 3 مہینوں میں کون سے صارفین متحرک رہے ہیں فی گھنٹہ چیک کریں۔ اگر انہیں منتخب زمرہ تک رسائی حاصل ہے تو انہیں اس چینل میں شامل کریں۔"
         follow: "شمولیت اختیار کریں"
         followed: "شمولیت اختیار کی"
         threading_disabled: "غیر فعال"
@@ -173,6 +315,8 @@ ur:
         short:
           one: "%{count} دن"
           other: "%{count} دن"
+      flags:
+        notify_moderators: "اس پیغام پر عملے کی توجہ کی ضرورت ہے کسی اور وجہ سے جو اوپر درج نہیں۔"
       emoji_picker:
         objects: "اشیاء"
         activities: "سرگرمیاں"
@@ -206,3 +350,7 @@ ur:
           fields:
             message:
               label: پیغام
+    keyboard_shortcuts_help:
+      chat:
+        keyboard_shortcuts:
+          open_insert_link_modal: "%{shortcut} ہائپر لنک داخل کریں (صرف کمپوزر)"

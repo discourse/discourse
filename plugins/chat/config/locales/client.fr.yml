@@ -232,7 +232,7 @@ fr:
           other: 'Ce message dépasse la <a href="%{siteSettingUrl}" target="_blank">limite de notification</a> de %{count} mentions.'
       aria_roles:
         header: "En-tête de discussion"
-        composer: "Compositeur de discussion"
+        composer: "Éditeur de discussion"
         channels_list: "Liste des canaux de discussion"
       no_direct_message_channels: "Vous n'avez encore rejoint aucun message direct !"
       no_direct_message_channels_cta: "Commencer une conversation"
@@ -699,10 +699,10 @@ fr:
           switch_channel_arrows: "%{shortcut} Changer de canal"
           switch__unread_channel_arrows: "%{shortcut} Changer de canal non lu"
           open_quick_channel_selector: "%{shortcut} Ouvrir le sélecteur de canal rapide"
-          open_insert_link_modal: "%{shortcut} Insérer un lien hypertexte (compositeur uniquement)"
-          composer_bold: "%{shortcut} Gras (compositeur uniquement)"
-          composer_italic: "%{shortcut} Italique (compositeur uniquement)"
-          composer_code: "%{shortcut} Code (compositeur uniquement)"
+          open_insert_link_modal: "%{shortcut} Insérer un lien hypertexte (éditeur uniquement)"
+          composer_bold: "%{shortcut} Gras (éditeur uniquement)"
+          composer_italic: "%{shortcut} Italique (éditeur uniquement)"
+          composer_code: "%{shortcut} Code (éditeur uniquement)"
           drawer_open: "%{shortcut} Ouvrir le tiroir de discussion"
           drawer_close: "%{shortcut} Fermer le tiroir de discussion"
           mark_all_channels_read: "%{shortcut} Marquer tous les canaux comme lus"
