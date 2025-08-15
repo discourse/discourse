@@ -11,78 +11,84 @@ module("Integration | Component | Header | Contents", function (hooks) {
   module("header search", function () {
     test("is hidden in mobile view", async function (assert) {
       const site = getOwner(this).lookup("service:site");
-      const toggleNavigationMenu = () => {};
-
       sinon.stub(site, "mobileView").value(false);
 
-      await render(
-        <template>
-          <Contents
-            @sidebarEnabled={{true}}
-            @toggleNavigationMenu={{toggleNavigationMenu}}
-            @showSidebar={{true}}
-          >
-            test
-          </Contents>
-        </template>
-      );
+      await render(<template><Contents /></template>);
 
       assert
         .dom(".floating-search-input-wrapper")
         .doesNotExist("it does not display when the site is in mobile view");
     });
 
-    ["signup", "login", "invites.show", "activate-account"].forEach((name) => {
-      test(`is hidden in route "${name}"`, async function (assert) {
-        const router = getOwner(this).lookup("service:router");
-        const toggleNavigationMenu = () => {};
-
-        sinon.stub(router, "currentRouteName").value(name);
-
-        await render(
-          <template>
-            <Contents
-              @sidebarEnabled={{true}}
-              @toggleNavigationMenu={{toggleNavigationMenu}}
-              @showSidebar={{true}}
-            >
-              {{router.currentRouteName}}
-            </Contents>
-          </template>
-        );
-
-        assert
-          .dom(".floating-search-input-wrapper")
-          .doesNotExist(`it does not display on "${name}" route`);
-      });
-    });
-
-    // Header search should show in all routes except for the 4 listed above.
-    // Two below are selected because their URLs contained names of hidden routes.
-    ["login-preferences", "badges.show"].forEach((name) => {
-      test(`is shown in route "${name}"`, async function (assert) {
-        const router = getOwner(this).lookup("service:router");
+    module("routes handling", function (innerHooks) {
+      innerHooks.beforeEach(function () {
+        this.router = getOwner(this).lookup("service:router");
         const search = getOwner(this).lookup("service:search");
-        const toggleNavigationMenu = () => {};
-
-        sinon.stub(router, "currentRouteName").value(name);
         sinon.stub(search, "searchExperience").value("search_field");
+      });
 
-        await render(
-          <template>
-            <Contents
-              @sidebarEnabled={{true}}
-              @toggleNavigationMenu={{toggleNavigationMenu}}
-              @showSidebar={{true}}
-            >
-              {{router.currentRouteName}}
-            </Contents>
-          </template>
-        );
+      innerHooks.afterEach(function () {
+        sinon.restore(); // clean up all stubs
+      });
+
+      test('is hidden in route "signup"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("signup");
+
+        await render(<template><Contents /></template>);
 
         assert
           .dom(".floating-search-input-wrapper")
-          .exists(`it is shown on "${name}" route`);
+          .doesNotExist('it does not display on route: "signup"');
+      });
+
+      test('is hidden in route "login"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("login");
+
+        await render(<template><Contents /></template>);
+
+        assert
+          .dom(".floating-search-input-wrapper")
+          .doesNotExist('it does not display on route: "login"');
+      });
+
+      test('is hidden in route "invites.show"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("invites.show");
+
+        await render(<template><Contents /></template>);
+
+        assert
+          .dom(".floating-search-input-wrapper")
+          .doesNotExist('it does not display on route: "invites.show"');
+      });
+
+      test('is hidden in route "activate-account"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("activate-account");
+
+        await render(<template><Contents /></template>);
+
+        assert
+          .dom(".floating-search-input-wrapper")
+          .doesNotExist('it does not display on route: "activate-account"');
+      });
+
+      test('is shown in route "login-preferences"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("login-preferences");
+
+        await render(<template><Contents /></template>);
+
+        assert
+          .dom(".floating-search-input-wrapper")
+          .exists('it is shown on route: "login-preferences"');
+      });
+
+      test('is shown in route "badges.show"', async function (assert) {
+        sinon.stub(this.router, "currentRouteName").value("badges.show");
+
+        await render(<template><Contents /></template>);
+
+        assert
+          .dom(".floating-search-input-wrapper")
+          .exists('it is shown on route: "badges.show"');
       });
     });
   });
