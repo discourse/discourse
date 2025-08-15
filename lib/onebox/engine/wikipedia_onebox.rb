@@ -20,7 +20,7 @@ module Onebox
         paras = []
         text = ""
 
-        # Detect section Hash in the url and retrive the related paragraphs. if no hash provided the first few paragraphs will be used
+        # Detect section Hash in the url and retrieve the related paragraphs. if no hash provided the first few paragraphs will be used
         # Author Lidlanca
         # Date 9/8/2014
         if (m_url_hash = @url.match(%r{#([^/?]+)})) # extract url hash
@@ -44,8 +44,8 @@ module Onebox
             cur_element = section_header_title[0].parent
 
             # p|text|div covers the general case. We assume presence of at least 1 P node. if section has no P node we may end up with a P node from the next section.
-            # div tag is commonly used as an assets wraper in an article section. often as the first element holding an image.
-            # ul support will imporve the output generated for a section with a list as the main content (for example: an Author Bibliography, A musician Discography, etc)
+            # div tag is commonly used as an assets wrapper in an article section. often as the first element holding an image.
+            # ul support will improve the output generated for a section with a list as the main content (for example: an Author Bibliography, A musician Discography, etc)
             first_p_found = nil
             while (
                     ((next_sibling = cur_element.next_sibling).name =~ /p|text|div|ul/) ||
