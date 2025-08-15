@@ -118,6 +118,10 @@ html.composer-open:not(.has-full-page-chat) {
 
     @include viewport.until(sm) {
       z-index: z("mobile-composer");
+      top: 0;
+      transform: none;
+      height: 100dvh;
+      max-height: unset;
     }
   }
 
