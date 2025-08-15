@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
@@ -115,13 +115,13 @@ export default class Site extends RestModel {
     if (!this.#siteInitialized) {
       if (isTesting() || isRailsTesting()) {
         throw new Error(
-          "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase. " +
+          "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase. " +
             "Move these checks to a component, transformer, or API callback that executes during page rendering."
         );
       }
 
       deprecated(
-        "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization phase is deprecated. " +
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase is deprecated. " +
           "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
           "these values during initialization can lead to errors and inconsistencies when the browser window is " +
           "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
@@ -134,7 +134,10 @@ export default class Site extends RestModel {
     }
 
     if (this.siteSettings.viewport_based_mobile_mode) {
-      return !this.capabilities.viewport.sm;
+      return withSilencedDeprecations(
+        "discourse.static-viewport-initialization",
+        () => !this.capabilities.viewport.sm
+      );
     } else {
       return Mobile.mobileView;
     }
