@@ -38,11 +38,10 @@ export default class AiTranslations extends Component {
     };
 
     const processedData = this.data.map((item) => {
-      const total = item.completion_percentage + item.todo_count;
       return {
         locale: this.getLanguageName(item.locale),
-        completionPercentage: (item.completion_percentage / total) * 100,
-        remainingPercentage: (item.todo_count / total) * 100,
+        completionPercentage: item.completion_percentage,
+        remainingPercentage: item.remaining_percentage,
       };
     });
 

@@ -22,10 +22,7 @@ RSpec.describe DiscourseAi::Admin::AiTranslationsController do
         # Mock the translation candidate methods
         allow(DiscourseAi::Translation::PostCandidates).to receive(
           :get_completion_per_locale,
-        ).and_return(0.5)
-        allow(DiscourseAi::Translation::PostCandidates).to receive(
-          :calculate_completion_per_locale,
-        ).and_return([50, 100])
+        ).and_return({ total: 100, done: 50 })
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -41,7 +38,7 @@ RSpec.describe DiscourseAi::Admin::AiTranslationsController do
         locale_data = json["translation_progress"].first
         expect(locale_data["locale"]).to be_present
         expect(locale_data["completion_percentage"]).to be_present
-        expect(locale_data["todo_count"]).to be_present
+        expect(locale_data["remaining_percentage"]).to be_present
       end
 
       it "returns empty array when no locales are supported" do

@@ -8,21 +8,25 @@ module DiscourseAi
       def show
         supported_locales =
           SiteSetting.content_localization_supported_locales.presence&.split("|") || []
-        result = []
 
-        supported_locales.each do |locale|
-          completion_percentage =
-            DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-          done, total =
-            DiscourseAi::Translation::PostCandidates.send(:calculate_completion_per_locale, locale)
-          todo_count = total - done
+        result =
+          supported_locales.map do |locale|
+            completion_data =
+              DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
 
-          result << {
-            locale: locale,
-            completion_percentage: completion_percentage,
-            todo_count: todo_count,
-          }
-        end
+            total = completion_data[:total].to_f
+            done = completion_data[:done].to_f
+            remaining = total - done
+
+            completion_percentage = safe_percentage(done, total)
+            remaining_percentage = safe_percentage(remaining, total)
+
+            {
+              locale: locale,
+              completion_percentage: completion_percentage,
+              remaining_percentage: remaining_percentage,
+            }
+          end
 
         render json: {
                  translation_progress: result,
@@ -32,6 +36,11 @@ module DiscourseAi
       end
 
       private
+
+      def safe_percentage(part, total)
+        return 0.0 if total <= 0
+        (part / total) * 100
+      end
     end
   end
 end
