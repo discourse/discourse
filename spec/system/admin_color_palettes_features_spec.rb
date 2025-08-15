@@ -65,6 +65,8 @@ describe "Admin Color Palettes Features", type: :system do
   let(:selectable_custom_scheme_b) do
     Fabricate(:color_scheme, name: "Selectable custom scheme b", user_selectable: true)
   end
+  let(:default_light_scheme) { Fabricate(:color_scheme, name: "Default light") }
+  let(:default_dark_scheme) { Fabricate(:color_scheme, name: "Default dark") }
 
   before { sign_in(admin) }
 
@@ -209,6 +211,12 @@ describe "Admin Color Palettes Features", type: :system do
       selectable_horizon_theme_scheme_b
       selectable_custom_scheme_a
       selectable_custom_scheme_b
+      default_light_scheme
+      default_dark_scheme
+      Theme.horizon_theme.update!(
+        color_scheme: default_light_scheme,
+        dark_color_scheme: default_dark_scheme,
+      )
     end
     it "sorts schemes in order: selectable, custom, current default theme, alphabetical for horizon theme" do
       SiteSetting.default_theme_id = Theme.horizon_theme.id
@@ -216,6 +224,8 @@ describe "Admin Color Palettes Features", type: :system do
       color_schemes = page.all(".color-palette__details h3").map(&:text)
       expect(color_schemes).to eq(
         [
+          "Default light",
+          "Default dark",
           "Selectable custom scheme a",
           "Selectable custom scheme b",
           "Selectable horizon scheme a",
@@ -239,6 +249,7 @@ describe "Admin Color Palettes Features", type: :system do
       color_schemes = page.all(".color-palette__details h3").map(&:text)
       expect(color_schemes).to eq(
         [
+          "Light (default)",
           "Selectable custom scheme a",
           "Selectable custom scheme b",
           "Selectable foundation scheme a",
@@ -247,9 +258,10 @@ describe "Admin Color Palettes Features", type: :system do
           "Selectable horizon scheme b",
           "Custom scheme a",
           "Custom scheme b",
+          "Default dark",
+          "Default light",
           "Foundation scheme a",
           "Foundation scheme b",
-          "Light (default)",
           "Horizon scheme a",
           "Horizon scheme b",
         ],
