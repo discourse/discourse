@@ -62,7 +62,10 @@ class Emoji
   end
 
   def self.exists?(name)
-    Emoji[name].present? || Emoji.aliases_values.include?(name)
+    return true if Emoji[name].present?
+    normalized_name = name.delete_prefix(":").delete_suffix(":").gsub(/\A(.+):t[1-6]\z/, '\1')
+    original_name = Emoji.resolve_alias(normalized_name)
+    Emoji[name.gsub(normalized_name, original_name)].present?
   end
 
   def self.[](name)
@@ -176,6 +179,16 @@ class Emoji
 
   def self.aliases_db
     @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
+  end
+
+  def self.resolve_alias(alias_name)
+    @alias_to_original_map ||=
+      begin
+        map = {}
+        Emoji.aliases_db.each { |original, aliases| aliases.each { |a| map[a] = original } }
+        map
+      end
+    @alias_to_original_map[alias_name] || alias_name
   end
 
   def self.aliases_values
