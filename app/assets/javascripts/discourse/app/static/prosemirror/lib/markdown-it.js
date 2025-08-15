@@ -1,16 +1,9 @@
 import { buildEngine } from "discourse/static/markdown-it";
-import loadPluginFeatures from "discourse/static/markdown-it/features";
-import defaultFeatures from "discourse-markdown-it/features/index";
 
 let engine;
 
 function getEngine() {
-  engine ??= buildEngine({
-    featuresOverride: [...defaultFeatures, ...loadPluginFeatures()]
-      .map(({ id }) => id)
-      // Avoid oneboxing when parsing, we'll handle that separately
-      .filter((id) => id !== "onebox"),
-  });
+  engine ??= buildEngine();
 
   return engine;
 }
