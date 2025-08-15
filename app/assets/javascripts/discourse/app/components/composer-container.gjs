@@ -254,6 +254,7 @@ export default class ComposerContainer extends Component {
                               disabled=this.composer.disableCategoryChooser
                               scopedCategoryId=this.composer.scopedCategoryId
                               prioritizedCategoryId=this.composer.prioritizedCategoryId
+                              readOnlyCategoryId=this.composer.readOnlyCategoryId
                             }}
                           />
                           <PluginOutlet

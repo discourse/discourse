@@ -164,8 +164,13 @@ export default class DiscoveryListController extends Controller {
 
   @action
   createTopic() {
+    const readOnlyCategoryId = this.createTopicDisabled
+      ? this.model.category.id
+      : null;
+
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
+      readOnlyCategoryId,
       tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))

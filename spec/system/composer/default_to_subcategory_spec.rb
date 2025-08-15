@@ -41,9 +41,15 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
             end
           end
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button disabled" do
+            it "should have the 'New Topic' button enabled and no category set in the composer" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: true)
+              expect(category_page).to have_button("New Topic", disabled: false)
+
+              category_page.new_topic_button.click
+              select_kit =
+                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+
+              expect(select_kit).to have_selected_name("category&hellip;")
             end
           end
         end
@@ -66,9 +72,14 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
         end
         describe "Can't post on parent category" do
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button disabled" do
+            it "opens composer with no category selected" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: true)
+              expect(category_page).to have_button("New Topic", disabled: false)
+
+              category_page.new_topic_button.click
+              select_kit =
+                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+              expect(select_kit).to have_selected_name("category&hellip;")
             end
           end
         end
@@ -87,10 +98,18 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
     end
 
     describe "Setting disabled and can't post on parent category" do
-      before { SiteSetting.default_subcategory_on_read_only_category = false }
-      it "should have 'New Topic' button disabled" do
+      before do
+        SiteSetting.default_subcategory_on_read_only_category = false
+        SiteSetting.default_composer_category = default_latest_category.id
+      end
+
+      it "opens composer with no category selected" do
         category_page.visit(category)
-        expect(category_page).to have_button("New Topic", disabled: true)
+        expect(category_page).to have_button("New Topic", disabled: false)
+
+        page.find("#create-topic").click
+        select_kit = PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+        expect(select_kit).to have_selected_name("category&hellip;")
       end
     end
   end
