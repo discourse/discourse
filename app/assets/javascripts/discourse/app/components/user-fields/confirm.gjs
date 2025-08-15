@@ -16,6 +16,16 @@ export default class UserFieldConfirm extends UserFieldBase {
     return !!(this.value ?? false);
   }
 
+  /**
+   * Sets the checked state of the checkbox. Having this allows Ember to sync the
+   * checkbox state with the underlying model.
+   *
+   * @param {boolean} value - True to check the checkbox, false to uncheck it.
+   */
+  set checked(value) {
+    this.value = !!value;
+  }
+
   <template>
     {{#if this.field.name}}
       <label class="control-label">
