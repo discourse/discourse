@@ -65,7 +65,6 @@ export default class AiTranslations extends Component {
       options: {
         indexAxis: "y",
         responsive: true,
-        barThickness: 40,
         scales: {
           x: {
             stacked: true,
