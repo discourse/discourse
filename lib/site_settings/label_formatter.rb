@@ -10,6 +10,7 @@ module SiteSettings
       cdn
       cors
       cta
+      cx
       dm
       eu
       faq
@@ -27,6 +28,7 @@ module SiteSettings
       jpg
       json
       kb
+      llm
       mb
       oidc
       pm
@@ -35,6 +37,7 @@ module SiteSettings
       s3
       smtp
       svg
+      tei
       tl
       tl0
       tl1
@@ -66,6 +69,7 @@ module SiteSettings
       %w[japanese Japanese],
       %w[linkedin LinkedIn],
       %w[oauth2 OAuth2],
+      %w[openai OpenAI],
       %w[opengraph OpenGraph],
       ["powered by discourse", "Powered by Discourse"],
       %w[tiktok TikTok],

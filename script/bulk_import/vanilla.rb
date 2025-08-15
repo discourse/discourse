@@ -63,7 +63,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
     # SiteSetting.port = 3000
     # SiteSetting.permalink_normalizations = "/discussion\/(\d+)\/.*/discussion/\1"
-    # SiteSetting.backup_frequency = nil
+    # SiteSetting.backup_frequency = 0
     # SiteSetting.disable_emails = "non-staff"
     # SiteSetting.authorized_extensions = '*'
     # SiteSetting.max_image_size_kb = 102400

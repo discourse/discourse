@@ -148,4 +148,8 @@ after_initialize do
     face-angry
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
+
+  add_model_callback(DiscourseAutomation::Automation, :after_save) do
+    DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
 end

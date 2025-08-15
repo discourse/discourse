@@ -7,7 +7,7 @@ import getURL from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
@@ -26,6 +26,7 @@ const logSearchLinkClickedCallbacks = [];
 export function addLogSearchLinkClickedCallbacks(fn) {
   logSearchLinkClickedCallbacks.push(fn);
 }
+
 export function resetLogSearchLinkClickedCallbacks() {
   logSearchLinkClickedCallbacks.clear();
 }
@@ -244,7 +245,10 @@ export function applySearchAutocomplete($input, siteSettings) {
         width: "100%",
         treatAsTextarea: true,
         autoSelectFirstSuggestion: false,
-        transformComplete: (v) => v.username || v.name,
+        transformComplete: (v) => {
+          validateSearchResult(v);
+          return v.username || v.name;
+        },
         dataSource: (term) => userSearch({ term, includeGroups: true }),
       })
     );

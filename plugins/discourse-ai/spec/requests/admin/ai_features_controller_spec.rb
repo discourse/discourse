@@ -22,6 +22,15 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["ai_features"].count).to eq(9)
     end
+
+    it "includes automation-related features" do
+      SiteSetting.discourse_automation_enabled = true
+
+      get "/admin/plugins/discourse-ai/ai-features.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["ai_features"].count).to eq(11)
+    end
   end
 
   describe "#edit" do

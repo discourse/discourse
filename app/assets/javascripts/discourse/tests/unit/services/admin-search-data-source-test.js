@@ -48,7 +48,16 @@ function fabricateVisiblePlugins() {
     {
       name: "discourse-calendar",
       humanized_name: "Calendar",
-      enabled: false,
+      enabled: true,
+      admin_route: {
+        auto_generated: false,
+        // Dummy value so the router works, usually this is `adminPlugins.calendar`
+        full_location: "adminPlugins.show",
+        label: "admin.calendar",
+        // Dummy value so the router works, usually this is `calendar`
+        location: "index",
+        use_new_show_route: false,
+      },
       description:
         "Adds the ability to create a dynamic calendar with events in a topic.",
     },
@@ -321,7 +330,14 @@ module(
 
     hooks.beforeEach(function () {
       this.router = getOwner(this).lookup("service:router");
-      this.plugins = { chat: fabricateVisiblePlugins()[0] };
+
+      const visiblePlugins = fabricateVisiblePlugins();
+
+      this.plugins = {
+        chat: visiblePlugins[0],
+        "discourse-new-features-feeds": visiblePlugins[1],
+        "discourse-calendar": visiblePlugins[2],
+      };
     });
 
     test("label is correct for a setting that comes from a plugin", async function (assert) {
@@ -403,6 +419,24 @@ module(
         formatter.format().url,
         "/admin/plugins/chat/settings?filter=enable_chat",
         "url uses the plugin admin route location and setting"
+      );
+    });
+
+    test("url is correct for a setting that belongs to a plugin not using the new show page", async function (assert) {
+      let setting = {
+        plugin: "discourse-calendar",
+        setting: "calendar_enabled",
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        {}
+      );
+      assert.deepEqual(
+        formatter.format().url,
+        "/admin/site_settings/category/discourse_calendar?filter=calendar_enabled",
+        "url uses the admin site settings category and setting"
       );
     });
 

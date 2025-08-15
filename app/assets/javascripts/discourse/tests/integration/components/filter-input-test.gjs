@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import FilterInput from "discourse/components/filter-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | filter-input", function (hooks) {
+module("Integration | Component | FilterInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Left icon", async function (assert) {

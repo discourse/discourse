@@ -23,12 +23,14 @@ module DiscourseAutomation
 
     validates :script, presence: true
     validate :validate_trigger_fields
+    validate :required_fields_complete, if: :perform_required_fields_validation?
 
     after_destroy do |automation|
       UserCustomField.where(name: automation.new_user_custom_field_name).destroy_all
     end
 
     attr_accessor :running_in_background
+    attr_accessor :perform_required_fields_validation
 
     def trigger=(new_trigger)
       @triggerable = nil
@@ -200,6 +202,49 @@ module DiscourseAutomation
         "automation_custom_field_#{key}_#{target.class.table_name}_#{target.id}",
         validity: 5.seconds,
       ) { yield }
+    end
+
+    def perform_required_fields_validation?
+      !!@perform_required_fields_validation && enabled?
+    end
+
+    def required_fields_complete
+      if scriptable.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_automation.models.automations.validations.script_blank"),
+        )
+        return
+      end
+
+      if triggerable.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_automation.models.automations.validations.trigger_blank"),
+        )
+        return
+      end
+
+      if missing_fields = scriptable.missing_required_fields.presence
+        errors.add(
+          :base,
+          I18n.t(
+            "discourse_automation.models.automations.validations.script_missing_required_fields",
+            fields: missing_fields.join(", "),
+          ),
+        )
+        return
+      end
+
+      if missing_fields = triggerable.missing_required_fields.presence
+        errors.add(
+          :base,
+          I18n.t(
+            "discourse_automation.models.automations.validations.trigger_missing_required_fields",
+            fields: missing_fields.join(", "),
+          ),
+        )
+      end
     end
   end
 end

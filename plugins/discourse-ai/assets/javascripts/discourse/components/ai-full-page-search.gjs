@@ -19,9 +19,7 @@ const AI_RESULTS_TOGGLED = "full-page-search:ai-results-toggled";
 
 export default class AiFullPageSearch extends Component {
   @service appEvents;
-  @service router;
   @service siteSettings;
-  @service searchPreferencesManager;
 
   @tracked searching;
   @tracked AiResults = [];

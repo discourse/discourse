@@ -3,8 +3,9 @@
 class TopicsFilter
   attr_reader :topic_notification_levels
 
-  def initialize(guardian:, scope: Topic.all)
-    @guardian = guardian
+  def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
+    @loaded_topic_users_reference = loaded_topic_users_reference
+    @guardian = guardian || Guardian.new
     @scope = scope
     @topic_notification_levels = Set.new
   end
@@ -272,6 +273,9 @@ class TopicsFilter
             name: "in:watching_first_post",
             description: I18n.t("filter.description.in_watching_first_post"),
           },
+          { name: "in:new", description: I18n.t("filter.description.in_new") },
+          { name: "in:new-replies", description: I18n.t("filter.description.in_new_replies") },
+          { name: "in:new-topics", description: I18n.t("filter.description.in_new_topics") },
         ],
       )
     end
@@ -301,7 +305,8 @@ class TopicsFilter
       )
     end
 
-    results
+    # this modifier allows custom plugins to add UI tips in the /filter route
+    DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
   end
 
   private
@@ -474,8 +479,36 @@ class TopicsFilter
       )
   end
 
+  def apply_custom_filter!(scope:, filter_name:, values:)
+    values.dup.each do |value|
+      custom_key = "#{filter_name}:#{value}"
+      if custom_match =
+           DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(custom_key) }
+        scope = custom_match[custom_key].call(scope, custom_key, @guardian) || scope
+        values.delete(value)
+      end
+    end
+    scope
+  end
+
+  def ensure_topic_users_reference!
+    if @guardian.authenticated?
+      if !@loaded_topic_users_reference
+        @scope =
+          @scope.joins(
+            "LEFT JOIN topic_users tu ON tu.topic_id = topics.id
+            AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+        @loaded_topic_users_reference = true
+      end
+    end
+  end
+
   def filter_in(values:)
     values.uniq!
+
+    # handle edge case of comma-separated values
+    values.map! { |value| value.split(",") }.flatten!
 
     if values.delete("pinned")
       @scope =
@@ -485,13 +518,38 @@ class TopicsFilter
         )
     end
 
-    if @guardian.user
-      if values.delete("bookmarked")
+    @scope = apply_custom_filter!(scope: @scope, filter_name: "in", values:)
+
+    if @guardian.authenticated?
+      if values.delete("new-topics")
+        ensure_topic_users_reference!
         @scope =
-          @scope.joins(:topic_users).where(
-            "topic_users.bookmarked AND topic_users.user_id = ?",
-            @guardian.user.id,
+          TopicQuery.new_filter(
+            @scope,
+            treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
+      end
+      if values.delete("new-replies")
+        ensure_topic_users_reference!
+        @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
+      end
+      if values.delete("new")
+        ensure_topic_users_reference!
+        new_topics =
+          TopicQuery.new_filter(
+            @scope,
+            treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
+          )
+        unread_topics = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
+        base = @scope
+        base.joins_values.dup.concat(new_topics.joins_values, unread_topics.joins_values)
+        base.joins_values.uniq!
+        @scope = base.merge(new_topics.or(unread_topics))
+      end
+
+      if values.delete("bookmarked")
+        ensure_topic_users_reference!
+        @scope = @scope.where("tu.bookmarked")
       end
 
       if values.present?
@@ -505,12 +563,14 @@ class TopicsFilter
             end
         end
 
-        @scope =
-          @scope.joins(:topic_users).where(
-            "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
-            topic_notification_levels: @topic_notification_levels.to_a,
-            user_id: @guardian.user.id,
-          )
+        if @topic_notification_levels.present?
+          ensure_topic_users_reference!
+          @scope =
+            @scope.where(
+              "tu.notification_level IN (:topic_notification_levels)",
+              topic_notification_levels: @topic_notification_levels.to_a,
+            )
+        end
       end
     elsif values.present?
       @scope = @scope.none
@@ -695,15 +755,14 @@ class TopicsFilter
       column: "topics.views",
     },
     "read" => {
-      column: "tu1.last_visited_at",
+      column: "tu.last_visited_at",
       scope: -> do
-        if @guardian.user
-          @scope.joins(
-            "JOIN topic_users tu1 ON tu1.topic_id = topics.id AND tu1.user_id = #{@guardian.user.id.to_i}",
-          ).where("tu1.last_visited_at IS NOT NULL")
+        if @guardian.authenticated?
+          ensure_topic_users_reference!
+          @scope.where("tu.last_visited_at IS NOT NULL")
         else
-          # make sure this works for anon
-          @scope.joins("LEFT JOIN topic_users tu1 ON 1 = 0")
+          # make sure this works for anon (particularly selection)
+          @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
         end
       end,
     },

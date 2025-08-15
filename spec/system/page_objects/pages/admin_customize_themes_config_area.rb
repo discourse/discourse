@@ -19,9 +19,9 @@ module PageObjects
         find_theme_card(theme).find(".theme-card__footer-menu-trigger").click
       end
 
-      def mark_as_active(theme)
+      def mark_as_default(theme)
         open_theme_menu(theme)
-        find(".set-active").click
+        find(".set-default").click
       end
 
       def has_badge?(theme, badge)

@@ -70,6 +70,14 @@ Discourse::Application.routes.draw do
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    resources :ai_artifacts,
+              only: %i[index show create update destroy],
+              path: "ai-artifacts",
+              controller: "discourse_ai/admin/ai_artifacts",
+              defaults: {
+                format: :json,
+              }
+
     resources :ai_personas,
               only: %i[index new create edit update destroy],
               path: "ai-personas",

@@ -19,7 +19,7 @@ import userAutocomplete from "discourse/lib/autocomplete/user";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
@@ -31,7 +31,6 @@ import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/compo
 
 export default class AiBotConversations extends Component {
   @service aiBotConversationsHiddenSubmit;
-  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -205,7 +204,10 @@ export default class AiBotConversations extends Component {
       width: "100%",
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (obj) => obj.username || obj.name,
+      transformComplete: (obj) => {
+        validateSearchResult(obj);
+        return obj.username || obj.name;
+      },
       afterComplete: (text) => {
         this.textarea.value = text;
         this.focusTextarea();
@@ -221,7 +223,7 @@ export default class AiBotConversations extends Component {
     // You can change this to "chat-composer" if that's more appropriate
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
-    setupHashtagAutocomplete(hashtagConfig, $textarea, this.siteSettings, {
+    setupHashtagAutocomplete(hashtagConfig, $textarea, {
       treatAsTextarea: true,
       afterComplete: (text) => {
         this.textarea.value = text;

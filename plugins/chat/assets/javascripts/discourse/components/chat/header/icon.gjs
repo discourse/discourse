@@ -12,7 +12,6 @@ export default class ChatHeaderIcon extends Component {
   @service currentUser;
   @service site;
   @service chatStateManager;
-  @service router;
 
   get showUnreadIndicator() {
     if (this.chatStateManager.isFullPageActive && this.site.desktopView) {

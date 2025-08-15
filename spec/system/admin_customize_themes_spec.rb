@@ -12,7 +12,7 @@ describe "Admin Customize Themes", type: :system do
 
   describe "when visiting the page to customize a single theme" do
     it "should allow admin to update the light color scheme of the theme" do
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__light-color-scheme")
 
@@ -26,10 +26,15 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).to have_no_css(".submit-light-edit")
       expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+
+      expect(page).to have_link(
+        I18n.t("admin_js.admin.customize.theme.edit_colors"),
+        href: "/admin/customize/colors/#{color_scheme.id}",
+      )
     end
 
     it "should allow admin to update the dark color scheme of the theme" do
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__dark-color-scheme")
 
@@ -43,6 +48,11 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+
+      expect(page).to have_link(
+        I18n.t("admin_js.admin.customize.theme.edit_colors"),
+        href: "/admin/customize/colors/#{color_scheme.id}",
+      )
     end
   end
 
@@ -82,7 +92,7 @@ describe "Admin Customize Themes", type: :system do
 
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".system-theme-info")
     expect(page).to have_css(".title button")
     expect(page).to have_no_css(".title button svg")
@@ -105,7 +115,7 @@ describe "Admin Customize Themes", type: :system do
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
 
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".created-by")
     expect(page).to have_css(".export")
     expect(page).to have_css(".extra-files")
@@ -117,7 +127,7 @@ describe "Admin Customize Themes", type: :system do
     # This avoids needing to update the theme field data to point to a different theme id.
     allow_any_instance_of(Theme).to receive(:system?).and_return(true)
 
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".system-theme-info")
     expect(page).to have_no_css(".created-by")
     expect(page).to have_no_css(".export")
@@ -135,7 +145,7 @@ describe "Admin Customize Themes", type: :system do
 
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
@@ -143,7 +153,7 @@ describe "Admin Customize Themes", type: :system do
       theme_translations_settings_editor.fill_in("Hello World")
       theme_translations_settings_editor.save
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
     end
@@ -161,7 +171,7 @@ describe "Admin Customize Themes", type: :system do
       )
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
@@ -195,7 +205,7 @@ describe "Admin Customize Themes", type: :system do
       )
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
