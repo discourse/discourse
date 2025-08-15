@@ -32,7 +32,7 @@ export default class AdminCustomizeColorsController extends Controller {
   _initialUserDarkColorSchemeId = undefined;
   _initialDefaultThemeLightColorSchemeId = null;
   _initialDefaultThemeDarkColorSchemeId = null;
-  _sortedOnce = false;
+  _sortPerformed = false;
 
   canPreviewColorScheme(mode) {
     const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
@@ -80,7 +80,7 @@ export default class AdminCustomizeColorsController extends Controller {
 
   get sortedColorSchemes() {
     // only sort initially, this avoids position jumps when state changes on interaction
-    if (!this._sortedOnce && this.model?.length > 0) {
+    if (!this._sortPerformed && this.model?.length > 0) {
       this._doInitialSort();
     }
 
@@ -158,11 +158,11 @@ export default class AdminCustomizeColorsController extends Controller {
     });
 
     this._initialSortedSchemes = schemes;
-    this._sortedOnce = true;
+    this._sortPerformed = true;
   }
 
   _resetSortedSchemes() {
-    this._sortedOnce = false;
+    this._sortPerformed = false;
     this._initialSortedSchemes = [];
   }
 
