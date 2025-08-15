@@ -55,20 +55,18 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:topic_id)
         end
 
+        if current_user && topics.size == 1
+          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+        end
+
         topics.each do |topic|
           guardian.ensure_can_see!(topic)
           raise Discourse::NotFound if !guardian.can_see_summary?(topic)
 
           summarizer = DiscourseAi::Summarization.topic_gist(topic)
-          if summarizer.present?
-            summarizer.delete_cached_summaries!
-            summarizer.summarize(Discourse.system_user)
-          end
-        end
+          summarizer.delete_cached_summaries! if summarizer.present?
 
-        # Only rate limit on single topic requests
-        if current_user && topics.size == 1
-          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+          Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
         end
 
         render json: success_json
