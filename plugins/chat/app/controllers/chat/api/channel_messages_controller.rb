@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelMessagesController < Chat::ApiController
+  MAX_PAGE_SIZE = 50 # Previous limit to avoid abuses
+
   def index
-    ::Chat::ListChannelMessages.call(service_params) do |result|
+    ::Chat::ListChannelMessages.call(
+      options: {
+        max_page_size: MAX_PAGE_SIZE,
+      },
+      **service_params,
+    ) do |result|
       on_success { render_serialized(result, ::Chat::MessagesSerializer, root: false) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
