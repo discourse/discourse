@@ -631,6 +631,7 @@ class Reviewable < ActiveRecord::Base
     @@serializers[type] ||= lookup_serializer_for(type)
   end
 
+  # @TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated, it now lives in ReviewableActionBuilder.
   def create_result(status, transition_to = nil)
     result = PerformResult.new(self, status)
     result.transition_to = transition_to
@@ -740,6 +741,7 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
+  # TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated.
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
