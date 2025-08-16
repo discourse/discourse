@@ -76,6 +76,23 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
+  &.open {
+    --min-height: 255px;
+    box-sizing: border-box;
+    height: var(--composer-height);
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    padding-bottom: var(--composer-ipad-padding);
+
+    @include viewport.until(sm) {
+      z-index: z("mobile-composer");
+      top: 0;
+      transform: none;
+      height: 100dvh;
+      max-height: unset;
+    }
+  }
+
   &.draft,
   &.saving {
     height: 45px !important;
