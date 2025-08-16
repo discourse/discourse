@@ -81,7 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_localize_content?,
              :effective_locale,
              :use_reviewable_ui_refresh,
-             :can_see_ip
+             :can_see_ip,
+             :is_impersonating
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -99,6 +100,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def login_method
     @options[:login_method]
+  end
+
+  def is_impersonating
+    !!object.is_impersonating
   end
 
   def groups

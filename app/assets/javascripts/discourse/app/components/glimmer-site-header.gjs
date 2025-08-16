@@ -19,6 +19,7 @@ import {
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import swipe from "discourse/modifiers/swipe";
 import Header from "./header";
+import ImpersonationNotice from "./impersonation-notice";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -45,6 +46,10 @@ export default class GlimmerSiteHeader extends Component {
 
     if (this.currentUser?.staff) {
       document.body.classList.add("staff");
+    }
+
+    if (this.currentUser?.is_impersonating) {
+      document.body.classList.add("impersonating");
     }
 
     schedule("afterRender", () => this.animateMenu());
@@ -84,6 +89,10 @@ export default class GlimmerSiteHeader extends Component {
     } else {
       return "hamburger-panel";
     }
+  }
+
+  get showImpersonationNotice() {
+    return this.currentUser?.is_impersonating;
   }
 
   @bind
@@ -438,6 +447,9 @@ export default class GlimmerSiteHeader extends Component {
         lockBody=false
       }}
     >
+      {{#if this.showImpersonationNotice}}
+        <ImpersonationNotice />
+      {{/if}}
       <Header
         @canSignUp={{@canSignUp}}
         @showSidebar={{@showSidebar}}

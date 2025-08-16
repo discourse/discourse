@@ -99,6 +99,9 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    delete "admin/impersonate" => "admin/impersonate#destroy",
+           :constraints => ImpersonatorConstraint.new
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
