@@ -23,3 +23,6 @@ discourse_reactions:
     validator: "ReactionsExcludedFromLikeSiteSettingValidator"
   discourse_reactions_like_sync_enabled:
     default: true
+  discourse_reactions_allow_choose_more:
+    default: true
+    client: true
