@@ -1580,7 +1580,18 @@ class User < ActiveRecord::Base
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
 
-    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
+    field_ids
+      .map do |fid|
+        value =
+          if UserField.find_by(id: fid).field_type == "confirm"
+            !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          else
+            custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+          end
+
+        [fid.to_s, value]
+      end
+      .to_h
   end
 
   def validatable_user_fields_values

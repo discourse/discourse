@@ -6,6 +6,26 @@ import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
 export default class UserFieldConfirm extends UserFieldBase {
+  /**
+   * Determines whether the checkbox is checked.
+   *
+   * @returns {boolean} - True if the checkbox should be checked, false otherwise.
+   */
+  get checked() {
+    // If the value is undefined, we default to not checked
+    return !!(this.value ?? false);
+  }
+
+  /**
+   * Sets the checked state of the checkbox. Having this allows Ember to sync the
+   * checkbox state with the underlying model.
+   *
+   * @param {boolean} value - True to check the checkbox, false to uncheck it.
+   */
+  set checked(value) {
+    this.value = !!value;
+  }
+
   <template>
     {{#if this.field.name}}
       <label class="control-label">
@@ -19,7 +39,7 @@ export default class UserFieldConfirm extends UserFieldBase {
       <label class="control-label checkbox-label">
         <Input
           id={{concat "user-" this.elementId}}
-          @checked={{this.value}}
+          @checked={{this.checked}}
           @type="checkbox"
         />
         <span>
