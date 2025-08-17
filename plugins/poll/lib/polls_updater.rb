@@ -10,6 +10,20 @@ module DiscoursePoll
         edit_window = SiteSetting.poll_edit_window_mins
 
         old_poll_names = ::Poll.where(post: post).pluck(:name)
+        raw_dynamic_map = post.custom_fields[DiscoursePoll::DYNAMIC_POLLS]
+        dynamic_polls_map =
+          case raw_dynamic_map
+          when Hash
+            raw_dynamic_map
+          when String
+            begin
+              JSON.parse(raw_dynamic_map)
+            rescue StandardError
+              {}
+            end
+          else
+            {}
+          end
         new_poll_names = polls.keys
 
         deleted_poll_names = old_poll_names - new_poll_names
@@ -23,7 +37,14 @@ module DiscoursePoll
         # create polls
         if created_poll_names.present?
           has_changed = true
-          polls.slice(*created_poll_names).values.each { |poll| Poll.create!(post.id, poll) }
+          polls
+            .slice(*created_poll_names)
+            .each do |name, poll|
+              Poll.create!(post.id, poll)
+              # record dynamic status for newly created polls
+              is_dynamic = (poll["dynamic"].to_s == "true") || (poll["dynamic-poll"].to_s == "true")
+              dynamic_polls_map[name] = true if is_dynamic
+            end
         end
 
         # update polls
@@ -46,6 +67,12 @@ module DiscoursePoll
             # dynamic flag can be provided as dynamic or dynamic-poll
             dynamic_flag =
               (new_poll["dynamic"].to_s == "true") || (new_poll["dynamic-poll"].to_s == "true")
+            # prevent converting a non-dynamic poll to dynamic after creation
+            was_dynamic_before = dynamic_polls_map[old_poll.name] == true
+            if !was_dynamic_before && dynamic_flag && old_poll.persisted?
+              # disallow conversion; ignore requested dynamic flag
+              dynamic_flag = false
+            end
             poll = ::Poll.new(attributes)
 
             if is_different?(old_poll, poll, new_poll_options)
@@ -125,6 +152,9 @@ module DiscoursePoll
               end
 
               has_changed = true
+
+              # persist dynamic status map per poll name for future edits
+              dynamic_polls_map[old_poll.name] = dynamic_flag || was_dynamic_before
             end
           end
 
@@ -132,6 +162,13 @@ module DiscoursePoll
           post.custom_fields[HAS_POLLS] = true
         else
           post.custom_fields.delete(HAS_POLLS)
+        end
+
+        # save dynamic map only if any polls exist
+        if post.custom_fields[HAS_POLLS]
+          post.custom_fields[DiscoursePoll::DYNAMIC_POLLS] = dynamic_polls_map
+        else
+          post.custom_fields.delete(DiscoursePoll::DYNAMIC_POLLS)
         end
 
         post.save_custom_fields(true)

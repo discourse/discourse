@@ -6,6 +6,8 @@ en:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "This poll is dynamic; options can be edited after posting."
       voters:
         one: "voter"
         other: "voters"

@@ -56,5 +56,11 @@ describe "Dynamic polls", type: :system do
 
     # Voter count should remain 1
     expect(page).to have_css("#post_#{post.post_number} .poll .info-number", text: "1")
+
+    # Visual indicator appears in the results pane
+    within "#post_#{post.post_number} .poll .poll-info" do
+      expect(page).to have_css(".poll-info_instructions li.is-dynamic")
+      expect(page).to have_text("dynamic")
+    end
   end
 end
