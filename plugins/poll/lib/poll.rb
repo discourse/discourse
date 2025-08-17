@@ -223,7 +223,7 @@ class DiscoursePoll::Poll
     offset = (page - 1) * limit
 
     params = {
-      offset: offset,
+      offset: offset + 1,
       offset_plus_limit: offset + limit,
       option_digest: opts[:option_id].presence,
     }
