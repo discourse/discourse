@@ -3,6 +3,7 @@
 RSpec.describe DiscoursePoll::Poll do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2, :user)
+  fab!(:user_3, :user)
 
   fab!(:post_with_regular_poll) { Fabricate(:post, raw: <<~RAW) }
       [poll]
@@ -335,6 +336,229 @@ RSpec.describe DiscoursePoll::Poll do
           "type" => "regular",
         },
       )
+    end
+  end
+
+  describe ".serialized_voters" do
+    shared_examples "serialized_voters tests" do
+      before do
+        votes.each_pair { |user, options| DiscoursePoll::Poll.vote(user, post.id, "poll", options) }
+      end
+
+      it "returns all serialized voters" do
+        voters = DiscoursePoll::Poll.serialized_voters(poll)
+        if poll.ranked_choice?
+          voters&.transform_values! do |users|
+            users.sort_by { |ranked_u| ranked_u[:user][:username] }
+          end
+        end
+
+        expect(voters).to eq(expected_voters)
+      end
+
+      it "correctly paginates voters" do
+        page = 1
+        loop do
+          expected = expected_paginated_voters[page - 1]
+          opts = { page:, limit: 2 }.with_indifferent_access
+
+          voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
+          if poll.ranked_choice?
+            voters&.transform_values! do |users|
+              users.sort_by { |ranked_u| ranked_u[:user][:username] }
+            end
+          end
+
+          expect(voters).to eq(expected)
+
+          break unless voters
+          page += 1
+        end
+      end
+    end
+
+    context "with a regular poll" do
+      let(:post) { post_with_regular_poll }
+      let(:poll) { post.polls.first }
+      let(:poll_options) { poll.poll_options }
+
+      let(:votes) do
+        {
+          user => [poll_options.first.digest],
+          user_2 => [poll_options.second.digest],
+          user_3 => [poll_options.first.digest],
+        }
+      end
+
+      let(:expected_voters) do
+        {
+          poll_options.first.digest => [
+            UserNameSerializer.new(user).serializable_hash,
+            UserNameSerializer.new(user_3).serializable_hash,
+          ],
+          poll_options.second.digest => [UserNameSerializer.new(user_2).serializable_hash],
+        }
+      end
+      let(:expected_paginated_voters) { [expected_voters] }
+
+      include_examples "serialized_voters tests"
+    end
+
+    context "with a multi-choice poll" do
+      let(:post) { post_with_multiple_poll }
+      let(:poll) { post.polls.first }
+      let(:poll_options) { poll.poll_options }
+
+      let(:votes) do
+        {
+          user => [poll_options.first.digest, poll_options.second.digest],
+          user_2 => [poll_options.second.digest, poll_options.third.digest],
+          user_3 => [
+            poll_options.second.digest,
+            poll_options.third.digest,
+            poll_options.fourth.digest,
+          ],
+        }
+      end
+
+      let(:expected_voters) do
+        {
+          poll_options.first.digest => [UserNameSerializer.new(user).serializable_hash],
+          poll_options.second.digest => [
+            UserNameSerializer.new(user).serializable_hash,
+            UserNameSerializer.new(user_2).serializable_hash,
+            UserNameSerializer.new(user_3).serializable_hash,
+          ],
+          poll_options.third.digest => [
+            UserNameSerializer.new(user_2).serializable_hash,
+            UserNameSerializer.new(user_3).serializable_hash,
+          ],
+          poll_options.fourth.digest => [UserNameSerializer.new(user_3).serializable_hash],
+        }
+      end
+      let(:expected_paginated_voters) do
+        [
+          {
+            poll_options.first.digest => [UserNameSerializer.new(user).serializable_hash],
+            poll_options.second.digest => [
+              UserNameSerializer.new(user).serializable_hash,
+              UserNameSerializer.new(user_2).serializable_hash,
+            ],
+            poll_options.third.digest => [
+              UserNameSerializer.new(user_2).serializable_hash,
+              UserNameSerializer.new(user_3).serializable_hash,
+            ],
+            poll_options.fourth.digest => [UserNameSerializer.new(user_3).serializable_hash],
+          },
+          { poll_options.second.digest => [UserNameSerializer.new(user_3).serializable_hash] },
+        ]
+      end
+
+      include_examples "serialized_voters tests"
+    end
+
+    context "with a ranked choice poll" do
+      let(:post) { post_with_ranked_choice_poll }
+      let(:poll) { post.polls.first }
+      let(:poll_options) { poll.poll_options }
+
+      let(:votes) do
+        {
+          user => {
+            "0": {
+              digest: poll_options.first.digest,
+              rank: "0",
+            },
+            "1": {
+              digest: poll_options.second.digest,
+              rank: "1",
+            },
+            "2": {
+              digest: poll_options.third.digest,
+              rank: "2",
+            },
+          },
+          user_2 => {
+            "0": {
+              digest: poll_options.second.digest,
+              rank: "0",
+            },
+            "1": {
+              digest: poll_options.third.digest,
+              rank: "1",
+            },
+            "2": {
+              digest: poll_options.first.digest,
+              rank: "2",
+            },
+          },
+          user_3 => {
+            "0": {
+              digest: poll_options.third.digest,
+              rank: "0",
+            },
+            "1": {
+              digest: poll_options.first.digest,
+              rank: "1",
+            },
+            "2": {
+              digest: poll_options.second.digest,
+              rank: "2",
+            },
+          },
+        }
+      end
+
+      let(:expected_voters) do
+        {
+          poll_options.first.digest => [
+            { user: UserNameSerializer.new(user).serializable_hash, rank: "Abstain" },
+            { user: UserNameSerializer.new(user_2).serializable_hash, rank: "2" },
+            { user: UserNameSerializer.new(user_3).serializable_hash, rank: "1" },
+          ],
+          poll_options.second.digest => [
+            { user: UserNameSerializer.new(user).serializable_hash, rank: "1" },
+            { user: UserNameSerializer.new(user_2).serializable_hash, rank: "Abstain" },
+            { user: UserNameSerializer.new(user_3).serializable_hash, rank: "2" },
+          ],
+          poll_options.third.digest => [
+            { user: UserNameSerializer.new(user).serializable_hash, rank: "2" },
+            { user: UserNameSerializer.new(user_2).serializable_hash, rank: "1" },
+            { user: UserNameSerializer.new(user_3).serializable_hash, rank: "Abstain" },
+          ],
+        }
+      end
+      let(:expected_paginated_voters) do
+        [
+          {
+            poll_options.first.digest => [
+              { user: UserNameSerializer.new(user).serializable_hash, rank: "Abstain" },
+              { user: UserNameSerializer.new(user_2).serializable_hash, rank: "2" },
+            ],
+            poll_options.second.digest => [
+              { user: UserNameSerializer.new(user).serializable_hash, rank: "1" },
+              { user: UserNameSerializer.new(user_2).serializable_hash, rank: "Abstain" },
+            ],
+            poll_options.third.digest => [
+              { user: UserNameSerializer.new(user).serializable_hash, rank: "2" },
+              { user: UserNameSerializer.new(user_2).serializable_hash, rank: "1" },
+            ],
+          },
+          {
+            poll_options.first.digest => [
+              { user: UserNameSerializer.new(user_3).serializable_hash, rank: "1" },
+            ],
+            poll_options.second.digest => [
+              { user: UserNameSerializer.new(user_3).serializable_hash, rank: "2" },
+            ],
+            poll_options.third.digest => [
+              { user: UserNameSerializer.new(user_3).serializable_hash, rank: "Abstain" },
+            ],
+          },
+        ]
+      end
+
+      include_examples "serialized_voters tests"
     end
   end
 end
