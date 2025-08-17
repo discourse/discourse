@@ -103,6 +103,42 @@ RSpec.describe DiscoursePoll::PollsUpdater do
     end
 
     describe "updates polls" do
+      it "allows updating options after window when dynamic" do
+        post = Fabricate(:post, raw: <<~RAW)
+        [poll dynamic-poll=true]
+        * A
+        * B
+        [/poll]
+      RAW
+
+        polls = DiscoursePoll::PollsValidator.new(post).validate_polls
+        DiscoursePoll::PollsUpdater.update(post, polls)
+
+        poll_record = Poll.find_by(post: post)
+        # dynamic is not persisted in DB; behavior is allowed via flag in updater
+
+        # cast a vote
+        user = Fabricate(:user)
+        DiscoursePoll::Poll.vote(user, post.id, "poll", [polls["poll"]["options"][0]["id"]])
+
+        edit_window = SiteSetting.poll_edit_window_mins
+        freeze_time (edit_window + 10).minutes.from_now
+
+        new_post = Fabricate(:post, raw: <<~RAW)
+        [poll dynamic-poll=true]
+        * A
+        * C
+        [/poll]
+      RAW
+
+        new_polls = DiscoursePoll::PollsValidator.new(new_post).validate_polls
+        DiscoursePoll::PollsUpdater.update(post, new_polls)
+
+        poll_record.reload
+        digests = poll_record.poll_options.pluck(:digest)
+        expect(digests.size).to eq(2)
+        expect(poll_record.poll_votes.count).to eq(1)
+      end
       describe "when there are no votes" do
         it "at any time" do
           post # create the post

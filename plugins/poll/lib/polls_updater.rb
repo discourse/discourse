@@ -43,11 +43,14 @@ module DiscoursePoll
             end
             attributes["status"] = old_poll["status"]
             attributes["groups"] = new_poll["groups"]
+            # dynamic flag can be provided as dynamic or dynamic-poll
+            dynamic_flag =
+              (new_poll["dynamic"].to_s == "true") || (new_poll["dynamic-poll"].to_s == "true")
             poll = ::Poll.new(attributes)
 
             if is_different?(old_poll, poll, new_poll_options)
               # only prevent changes when there's at least 1 vote
-              if old_poll.poll_votes.size > 0
+              if old_poll.poll_votes.size > 0 && !dynamic_flag
                 # can't change after edit window (when enabled)
                 if edit_window > 0 && old_poll.created_at < edit_window.minutes.ago
                   error =
@@ -80,21 +83,45 @@ module DiscoursePoll
 
               old_poll.save!
 
-              # keep track of anonymous votes
-              anonymous_votes =
-                old_poll.poll_options.map { |pv| [pv.digest, pv.anonymous_votes] }.to_h
+              # If dynamic, preserve existing options and their votes where possible
+              if dynamic_flag
+                old_options_by_digest = old_poll.poll_options.index_by(&:digest)
+                new_option_digests = new_poll_options.map { |o| o["id"] }.to_set
 
-              # destroy existing options & votes
-              ::PollOption.where(poll: old_poll).destroy_all
+                # delete removed options (votes will be deleted due to dependent: :delete_all)
+                to_delete = old_options_by_digest.keys - new_option_digests.to_a
+                if to_delete.present?
+                  ::PollOption.where(poll: old_poll, digest: to_delete).destroy_all
+                end
 
-              # create new options
-              new_poll_options.each do |option|
-                ::PollOption.create!(
-                  poll: old_poll,
-                  digest: option["id"],
-                  html: option["html"].strip,
-                  anonymous_votes: anonymous_votes[option["id"]],
-                )
+                # create new options
+                new_poll_options.each do |option|
+                  next if old_options_by_digest.key?(option["id"])
+
+                  ::PollOption.create!(
+                    poll: old_poll,
+                    digest: option["id"],
+                    html: option["html"].strip,
+                  )
+                end
+              else
+                # Non-dynamic: recreate all options and drop votes (inside window)
+                # keep track of anonymous votes
+                anonymous_votes =
+                  old_poll.poll_options.map { |pv| [pv.digest, pv.anonymous_votes] }.to_h
+
+                # destroy existing options & votes
+                ::PollOption.where(poll: old_poll).destroy_all
+
+                # create new options
+                new_poll_options.each do |option|
+                  ::PollOption.create!(
+                    poll: old_poll,
+                    digest: option["id"],
+                    html: option["html"].strip,
+                    anonymous_votes: anonymous_votes[option["id"]],
+                  )
+                end
               end
 
               has_changed = true
