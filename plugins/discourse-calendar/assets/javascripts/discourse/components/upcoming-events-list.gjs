@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
@@ -48,6 +47,11 @@ export default class UpcomingEventsList extends Component {
     this.appEvents.on("page:changed", this, this.updateEventsList);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("page:changed", this, this.updateEventsList);
+  }
+
   get categoryId() {
     return this.router.currentRoute.attributes?.category?.id;
   }
@@ -81,11 +85,6 @@ export default class UpcomingEventsList extends Component {
     } else {
       return i18n("discourse_post_event.upcoming_events_list.title");
     }
-  }
-
-  @action
-  teardownPageChangedSubscription() {
-    this.appEvents.off("page:changed", this, this.updateEventsList);
   }
 
   @action
@@ -156,10 +155,7 @@ export default class UpcomingEventsList extends Component {
   }
 
   <template>
-    <div
-      class="upcoming-events-list"
-      {{willDestroy this.teardownPageChangedSubscription}}
-    >
+    <div class="upcoming-events-list">
       <h3 class="upcoming-events-list__heading">
         {{this.title}}
       </h3>
