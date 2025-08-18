@@ -43,7 +43,7 @@ module DiscourseAi
         return false
       end
 
-      true if is_staff?
+  is_staff?
     end
 
     def can_request_summary?
