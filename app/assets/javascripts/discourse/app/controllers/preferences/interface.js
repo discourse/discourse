@@ -201,14 +201,14 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  _shouldEnablePreview(isDarkMode) {
+  #shouldEnablePreview(isDarkMode) {
     return (
       this.isViewingOwnProfile &&
       (isDarkMode ? this.isInDarkMode : this.isInLightMode)
     );
   }
 
-  _resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
+  #resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
     // non-default color schemes
     if (!isDark && colorSchemeId >= 0) {
       return colorSchemeId;
@@ -480,7 +480,7 @@ export default class InterfaceController extends Controller {
   loadColorScheme(colorSchemeId) {
     this.setProperties({
       selectedColorSchemeId: colorSchemeId,
-      previewingColorScheme: this._shouldEnablePreview(false),
+      previewingColorScheme: this.#shouldEnablePreview(false),
     });
 
     if (!this.isViewingOwnProfile) {
@@ -492,14 +492,14 @@ export default class InterfaceController extends Controller {
       return;
     }
 
-    this._previewColorScheme(false);
+    this.#previewColorScheme(false);
   }
 
   @action
   loadDarkColorScheme(colorSchemeId) {
     this.setProperties({
       selectedDarkColorSchemeId: colorSchemeId,
-      previewingColorScheme: this._shouldEnablePreview(true),
+      previewingColorScheme: this.#shouldEnablePreview(true),
     });
 
     if (!this.isViewingOwnProfile) {
@@ -511,7 +511,7 @@ export default class InterfaceController extends Controller {
       return;
     }
 
-    this._previewColorScheme(true);
+    this.#previewColorScheme(true);
     this.session.set("darkModeAvailable", colorSchemeId !== -1);
   }
 
@@ -524,11 +524,11 @@ export default class InterfaceController extends Controller {
       return;
     }
 
-    this._applyInterfaceModePreview(modeId);
-    this._previewColorSchemeForMode(modeId);
+    this.#applyInterfaceModePreview(modeId);
+    this.#previewColorSchemeForMode(modeId);
   }
 
-  _applyInterfaceModePreview(modeId) {
+  #applyInterfaceModePreview(modeId) {
     if (modeId === INTERFACE_COLOR_MODES.AUTO) {
       this.interfaceColor.useAutoMode();
     } else if (modeId === INTERFACE_COLOR_MODES.LIGHT) {
@@ -538,17 +538,17 @@ export default class InterfaceController extends Controller {
     }
   }
 
-  _previewColorSchemeForMode(modeId) {
-    if (this._shouldShowPreviewForMode(modeId, false)) {
-      this._removePreviewStylesheet("dark");
-      this._previewColorScheme(false);
-    } else if (this._shouldShowPreviewForMode(modeId, true)) {
-      this._removePreviewStylesheet("light");
-      this._previewColorScheme(true);
+  #previewColorSchemeForMode(modeId) {
+    if (this.#shouldShowPreviewForMode(modeId, false)) {
+      this.#removePreviewStylesheet("dark");
+      this.#previewColorScheme(false);
+    } else if (this.#shouldShowPreviewForMode(modeId, true)) {
+      this.#removePreviewStylesheet("light");
+      this.#previewColorScheme(true);
     }
   }
 
-  _shouldShowPreviewForMode(modeId, isDark) {
+  #shouldShowPreviewForMode(modeId, isDark) {
     const targetMode = isDark
       ? INTERFACE_COLOR_MODES.DARK
       : INTERFACE_COLOR_MODES.LIGHT;
@@ -562,7 +562,7 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  _removePreviewStylesheet(type) {
+  #removePreviewStylesheet(type) {
     const selector =
       type === "dark" ? "link#cs-preview-dark" : "link#cs-preview-light";
     const stylesheet = document.querySelector(selector);
@@ -571,11 +571,11 @@ export default class InterfaceController extends Controller {
     }
   }
 
-  _previewColorScheme(isDark) {
+  #previewColorScheme(isDark) {
     const selectedId = isDark
       ? this.selectedDarkColorSchemeId
       : this.selectedColorSchemeId;
-    const colorSchemeId = this._resolveThemeDefaultColorScheme(
+    const colorSchemeId = this.#resolveThemeDefaultColorScheme(
       selectedId,
       isDark
     );
