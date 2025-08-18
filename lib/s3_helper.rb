@@ -424,7 +424,7 @@ class S3Helper
       check_missing_site_options
       options
     elsif GlobalSetting.use_s3?
-      self.class.s3_options(GlobalSetting)
+      self.class.s3_options(GlobalSetting, profile: "file-uploads")
     else
       {}
     end
