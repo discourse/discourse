@@ -150,7 +150,6 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "can be set to private"
     );
 
-    // enable dynamic mode
     await click(".poll-toggle-dynamic");
     await click(".insert-poll");
     assert.strictEqual(
@@ -159,6 +158,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "includes dynamic=true when enabled"
     );
 
+    await click(".poll-toggle-dynamic");
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
     await groupChooser.selectRowByName("custom_group");
