@@ -50,7 +50,6 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
-  @service dialog;
   @service siteSettingChangeTracker;
 
   @tracked isSecret = null;
@@ -339,6 +338,7 @@ export default class SiteSettingComponent extends Component {
             <LinkTo
               @route="adminLogs.staffActionLogs"
               @query={{hash filters=this.staffLogFilter force_refresh=true}}
+              class="staff-action-log-link"
               title={{i18n "admin.settings.history"}}
             >
               <span class="history-icon">

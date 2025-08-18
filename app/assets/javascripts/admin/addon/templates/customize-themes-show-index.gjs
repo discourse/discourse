@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, not, or } from "truth-helpers";
@@ -17,7 +18,7 @@ import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
 import ThemeTranslation from "admin/components/theme-translation";
-import ColorPalettes from "select-kit/components/color-palettes";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
@@ -129,24 +130,32 @@ export default RouteTemplate(
 
             <div class="setting-value">
               <div class="color-palette-input-group">
-                <ColorPalettes
+                <ColorPalettePicker
                   @content={{@controller.colorSchemes}}
                   @value={{@controller.colorSchemeId}}
                   @icon="paintbrush"
-                  @options={{hash filterable=true}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
                 />
-                {{#if @controller.colorSchemeId}}
-                  <DButton
-                    @icon="pencil"
-                    @action={{@controller.editLightColorScheme}}
-                    @title="admin.customize.theme.edit_color_scheme"
-                  />
-                {{/if}}
               </div>
 
               <div class="desc">{{i18n
                   "admin.customize.theme.color_scheme_select"
-                }}</div>
+                }}
+
+                {{#if @controller.colorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.colorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
             </div>
 
             <div class="setting-controls">
@@ -175,24 +184,31 @@ export default RouteTemplate(
 
             <div class="setting-value">
               <div class="color-palette-input-group">
-                <ColorPalettes
+                <ColorPalettePicker
                   @content={{@controller.colorSchemes}}
                   @value={{@controller.darkColorSchemeId}}
                   @icon="paintbrush"
-                  @options={{hash filterable=true}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
                 />
-                {{#if @controller.darkColorSchemeId}}
-                  <DButton
-                    @icon="pencil"
-                    @action={{@controller.editDarkColorScheme}}
-                    @title="admin.customize.theme.edit_dark_color_scheme"
-                  />
-                {{/if}}
               </div>
 
-              <div class="desc">{{i18n
-                  "admin.customize.theme.dark_color_scheme_select"
-                }}</div>
+              <div class="desc">
+                {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+
+                {{#if @controller.darkColorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.darkColorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
             </div>
             <div class="setting-controls">
               {{#if @controller.darkColorSchemeChanged}}
@@ -441,7 +457,7 @@ export default RouteTemplate(
         <DButton
           @action={{@controller.switchType}}
           @label="admin.customize.theme.convert"
-          @icon={{@controller.convertIcon}}
+          @icon="rotate"
           @title={{@controller.convertTooltip}}
           class="btn-default btn-normal"
         />

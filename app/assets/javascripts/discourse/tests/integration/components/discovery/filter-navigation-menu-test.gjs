@@ -23,6 +23,7 @@ module(
           priority: 1,
           type: "category",
         },
+        { name: "status:", description: "Filter status", priority: 1 },
         {
           name: "tag:",
           description: "Filter tag",
@@ -33,7 +34,6 @@ module(
             { name: ",", description: "add" },
           ],
         },
-        { name: "status:", description: "Filter status", priority: 1 },
         { name: "status:open", description: "Open topics" },
       ];
 
@@ -91,7 +91,7 @@ module(
         .dom(
           ".filter-navigation__tip-item.--selected .filter-navigation__tip-name"
         )
-        .hasText("tag:");
+        .hasText("status:");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "ArrowUp");
       assert

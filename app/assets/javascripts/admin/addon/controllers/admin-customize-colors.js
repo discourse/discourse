@@ -16,6 +16,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @service session;
   @service site;
   @service siteSettings;
+  @service interfaceColor;
 
   @tracked defaultTheme = null;
 
@@ -32,16 +33,20 @@ export default class AdminCustomizeColorsController extends Controller {
   _initialUserDarkColorSchemeId = undefined;
   _initialDefaultThemeLightColorSchemeId = null;
   _initialDefaultThemeDarkColorSchemeId = null;
-  _sortedOnce = false;
+  _sortPerformed = false;
 
   canPreviewColorScheme(mode) {
     const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
+
+    // -1 means they're using the theme default scheme
     const usingDefaultLightScheme =
+      this._initialUserLightColorSchemeId === -1 ||
       this._initialUserLightColorSchemeId ===
-      this._initialDefaultThemeLightColorSchemeId;
+        this._initialDefaultThemeLightColorSchemeId;
     const usingDefaultDarkScheme =
+      this._initialUserDarkColorSchemeId === -1 ||
       this._initialUserDarkColorSchemeId ===
-      this._initialDefaultThemeDarkColorSchemeId;
+        this._initialDefaultThemeDarkColorSchemeId;
 
     return (
       usingDefaultTheme &&
@@ -63,35 +68,92 @@ export default class AdminCustomizeColorsController extends Controller {
       this.defaultTheme?.dark_color_scheme_id;
   }
 
-  get changedThemePreferences() {
-    // can't check against null, because the default scheme ID is null
-    if (
-      this._initialUserLightColorSchemeId === undefined &&
-      this.defaultTheme
-    ) {
-      this._captureInitialState();
+  get userColorSchemeDifferences() {
+    const userLightDiffersFromDefault =
+      this._initialUserLightColorSchemeId !== -1 &&
+      this._initialUserLightColorSchemeId !==
+        this._initialDefaultThemeLightColorSchemeId;
+
+    const userDarkDiffersFromDefault =
+      this._initialUserDarkColorSchemeId !== -1 &&
+      this._initialUserDarkColorSchemeId !==
+        this._initialDefaultThemeDarkColorSchemeId;
+
+    return { userLightDiffersFromDefault, userDarkDiffersFromDefault };
+  }
+
+  get userPreferencesDifferFromDefaults() {
+    if (!this.defaultTheme) {
+      return false;
     }
 
-    const changedColors =
-      this._initialUserColorSchemeId !==
-      this._initialDefaultThemeLightColorSchemeId;
-    const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
+    const usingDefaultTheme = currentThemeId() === this.defaultTheme.id;
+    if (!usingDefaultTheme) {
+      return true;
+    }
 
-    return changedColors || changedTheme;
+    // only check color scheme preferences if using the default theme
+    // because if they're not using the default theme, that's the higher priority warning
+    const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
+      this.userColorSchemeDifferences;
+
+    return userLightDiffersFromDefault || userDarkDiffersFromDefault;
+  }
+
+  get preferencesWarningMessage() {
+    if (!this.userPreferencesDifferFromDefaults) {
+      return null;
+    }
+
+    const themeName = this.defaultTheme?.name || "default theme";
+    const usingNonDefaultTheme = currentThemeId() !== this.defaultTheme?.id;
+
+    if (usingNonDefaultTheme) {
+      return {
+        themeName,
+        usingNonDefaultTheme: true,
+      };
+    }
+
+    const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
+      this.userColorSchemeDifferences;
+
+    const affectedModes = [];
+    if (userLightDiffersFromDefault) {
+      affectedModes.push("light");
+    }
+    if (userDarkDiffersFromDefault) {
+      affectedModes.push("dark");
+    }
+
+    let colorModesText;
+    if (affectedModes.length === 2) {
+      colorModesText = ""; // intentionally left empty
+    } else if (affectedModes[0] === "light") {
+      colorModesText = i18n("admin.customize.colors.light");
+    } else {
+      colorModesText = i18n("admin.customize.colors.dark");
+    }
+
+    return {
+      themeName,
+      colorModes: colorModesText,
+      usingNonDefaultTheme: false,
+    };
   }
 
   get isUsingDarkMode() {
-    // check if user has dark mode available and is using it
     return (
-      this.session.darkModeAvailable &&
-      this.session.userDarkSchemeId !== -1 &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
+      this.interfaceColor.darkModeForced ||
+      (this.interfaceColor.colorModeIsAuto &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+      this.session.defaultColorSchemeIsDark
     );
   }
 
   get sortedColorSchemes() {
     // only sort initially, this avoids position jumps when state changes on interaction
-    if (!this._sortedOnce && this.model?.length > 0) {
+    if (!this._sortPerformed && this.model?.length > 0) {
       this._doInitialSort();
     }
 
@@ -136,39 +198,74 @@ export default class AdminCustomizeColorsController extends Controller {
         name: i18n("admin.customize.theme.default_light_scheme"),
         description: i18n("admin.customize.theme.default_light_scheme"),
         is_builtin_default: true,
+        user_selectable: false,
+        theme_id: -1,
       };
       schemes.unshift(builtInDefault);
     }
 
+    const defaultThemeId = this.defaultTheme?.id;
+    const defaultLightId = this.defaultTheme?.color_scheme_id;
+    const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
+
     schemes.sort((a, b) => {
-      const defaultLightId = this.defaultTheme?.color_scheme_id;
-      const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
-
-      const isDefaultA = a.is_builtin_default
-        ? defaultLightId === null || defaultDarkId === null
-        : a.id === defaultLightId || a.id === defaultDarkId;
-
-      const isDefaultB = b.is_builtin_default
-        ? defaultLightId === null || defaultDarkId === null
-        : b.id === defaultLightId || b.id === defaultDarkId;
-
-      if (isDefaultA !== isDefaultB) {
-        return isDefaultA ? -1 : 1;
+      // 1. Display active light
+      if (
+        defaultLightId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultLightId === a.id && !a.is_builtin_default) ||
+        (defaultLightId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultLightId === a.id ? -1 : 1;
       }
 
+      // 2. Display active dark
+      if (
+        defaultDarkId === null &&
+        (a.is_builtin_default || b.is_builtin_default)
+      ) {
+        return a.is_builtin_default ? -1 : 1;
+      }
+      if (
+        (defaultDarkId === a.id && !a.is_builtin_default) ||
+        (defaultDarkId === b.id && !b.is_builtin_default)
+      ) {
+        return defaultDarkId === a.id ? -1 : 1;
+      }
+
+      // 3. Sort by user selectable first
       if (a.user_selectable !== b.user_selectable) {
         return a.user_selectable ? -1 : 1;
       }
 
-      return (a.name || "").localeCompare(b.name || "");
+      // 4. Sort custom schemes (no theme) before themed schemes
+      const aIsCustom = !a.theme_id && !a.is_builtin_default;
+      const bIsCustom = !b.theme_id && !b.is_builtin_default;
+      if (aIsCustom !== bIsCustom) {
+        return aIsCustom ? -1 : 1;
+      }
+
+      // 5. Prioritize schemes from the current default theme
+      const aIsFromDefaultTheme = a.theme_id === defaultThemeId;
+      const bIsFromDefaultTheme = b.theme_id === defaultThemeId;
+      if (aIsFromDefaultTheme !== bIsFromDefaultTheme) {
+        return aIsFromDefaultTheme ? -1 : 1;
+      }
+
+      // 6. Finally, sort alphabetically by name
+      return (a.originals.name || "").localeCompare(b.originals.name || "");
     });
 
     this._initialSortedSchemes = schemes;
-    this._sortedOnce = true;
+    this._sortPerformed = true;
   }
 
   _resetSortedSchemes() {
-    this._sortedOnce = false;
+    this._sortPerformed = false;
     this._initialSortedSchemes = [];
   }
 

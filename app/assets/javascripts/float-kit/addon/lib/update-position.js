@@ -8,6 +8,7 @@ import {
   limitShift,
   offset,
   shift,
+  size,
 } from "@floating-ui/dom";
 import domFromString from "discourse/lib/dom-from-string";
 import { isTesting } from "discourse/lib/environment";
@@ -93,6 +94,28 @@ export async function updatePosition(trigger, content, options) {
 
   if (options.hide) {
     middleware.push(hide({ padding: detectOverflowOptions.padding }));
+  }
+
+  if (options.matchTriggerWidth) {
+    middleware.push(
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            width: `${rects.reference.width}px`,
+          });
+        },
+      })
+    );
+  } else if (options.matchTriggerMinWidth) {
+    middleware.push(
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            minWidth: `${rects.reference.width}px`,
+          });
+        },
+      })
+    );
   }
 
   content.dataset.strategy = options.strategy || "absolute";

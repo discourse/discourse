@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryLocalization < ActiveRecord::Base
+  include LocaleMatchable
+
   belongs_to :category
 
   validates :locale, presence: true, length: { maximum: 20 }

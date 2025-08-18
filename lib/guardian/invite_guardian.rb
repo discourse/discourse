@@ -57,4 +57,8 @@ module InviteGuardian
   def can_destroy_all_invites?
     is_staff?
   end
+
+  def can_destroy_invite?(invite)
+    invite && (is_admin? || is_me?(invite.invited_by))
+  end
 end

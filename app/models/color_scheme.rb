@@ -278,6 +278,20 @@ class ColorScheme < ActiveRecord::Base
   }
 
   LIGHT_THEME_ID = "Light"
+  COLORS_ORDER = %w[
+    primary
+    secondary
+    tertiary
+    quaternary
+    header_background
+    header_primary
+    selected
+    hover
+    highlight
+    danger
+    success
+    love
+  ].freeze
 
   def self.base_color_scheme_colors
     base_with_hash = []
@@ -388,7 +402,6 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
-    new_color_scheme.user_selectable = true
 
     colors =
       BUILT_IN_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
@@ -506,6 +519,12 @@ class ColorScheme < ActiveRecord::Base
         all_themes: true,
       )
     end
+  end
+
+  def self.sort_colors(hash)
+    sorted = hash.slice(*COLORS_ORDER)
+    sorted.merge!(hash.except(*COLORS_ORDER)) if sorted.size < hash.size
+    sorted
   end
 
   def dump_caches

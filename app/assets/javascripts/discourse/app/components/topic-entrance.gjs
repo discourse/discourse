@@ -38,8 +38,6 @@ function entranceDate(dt, showTime) {
 
 @classNameBindings("visible::hidden")
 export default class TopicEntrance extends Component {
-  @service router;
-  @service session;
   @service historyStore;
 
   elementId = "topic-entrance";

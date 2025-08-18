@@ -153,6 +153,7 @@ en:
     mention_warning:
       dismiss: "dismiss"
       cannot_see: "%{first_identifier} can't access this channel and was not notified."
+      cannot_see_group: "Some members of %{group_name} can't access this channel and were not notified."
       cannot_see_multiple:
         one: "%{first_identifier} and %{count} other user cannot access this channel and were not notified."
         other: "%{first_identifier} and %{count} other users cannot access this channel and were not notified."

@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 97
+  BASE_COMPILER_VERSION = 98
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -163,7 +163,8 @@ class Theme < ActiveRecord::Base
 
     theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!) if saved_change_to_name?
 
-    if saved_change_to_color_scheme_id? || saved_change_to_user_selectable? || saved_change_to_name?
+    if saved_change_to_color_scheme_id? || saved_change_to_dark_color_scheme_id? ||
+         saved_change_to_user_selectable? || saved_change_to_name?
       Theme.expire_site_cache!
     end
     notify_with_scheme = saved_change_to_color_scheme_id?
@@ -496,7 +497,7 @@ class Theme < ActiveRecord::Base
     targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
-      targets.prepend(:desktop, :mobile, :admin)
+      targets.prepend(:common, :desktop, :mobile, :admin)
       targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end

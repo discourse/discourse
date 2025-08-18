@@ -21,10 +21,8 @@ import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 
 export default class ChatRouteChannelInfoMembers extends Component {
-  @service appEvents;
   @service chatApi;
   @service currentUser;
-  @service modal;
   @service loadingSlider;
   @service site;
 

@@ -49,7 +49,6 @@ import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
@@ -61,9 +60,6 @@ export default class ChatChannel extends Component {
   @service("chat-channel-pane") pane;
   @service currentUser;
   @service dialog;
-  @service messageBus;
-  @service router;
-  @service site;
   @service siteSettings;
 
   @tracked sending = false;

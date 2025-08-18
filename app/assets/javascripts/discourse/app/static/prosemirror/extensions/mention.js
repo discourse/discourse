@@ -24,11 +24,12 @@ const extension = {
       selectable: false,
       parseDOM: [
         {
+          priority: 60,
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
             return {
-              name: dom.getAttribute("data-name"),
+              name: dom.getAttribute("data-name") ?? dom.textContent.slice(1),
             };
           },
         },

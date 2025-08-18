@@ -1,25 +1,35 @@
 .color-picker {
   display: flex;
   align-items: stretch;
+  position: relative;
+  width: 12em;
 
   .add-on {
     @include form-item-sizing;
-    background-color: var(--primary-low);
-    border-color: var(--primary-low-mid);
-    border-right-color: transparent;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    position: absolute;
+    pointer-events: none;
   }
 
   .hex-input {
+    border-radius: 0;
+    border-bottom-left-radius: var(--d-input-border-radius);
+    border-top-left-radius: var(--d-input-border-radius);
     margin: 0;
+    width: 50%;
+  }
+
+  .add-on + .hex-input {
+    padding-left: 1.33em;
   }
 
   .picker {
     padding: 0;
     border-left: none;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
     cursor: pointer;
     margin-bottom: 0;
     height: unset;
+    width: 50%;
   }
 }
