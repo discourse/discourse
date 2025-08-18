@@ -4,6 +4,10 @@ require "digest/sha1"
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
+  # Store a reference to the raw association reader, since we're
+  # overriding `#user`` later in the class definition.
+  alias_method :acting_user, :user
+
   ROTATE_TIME_MINS = 10
   ROTATE_TIME = ROTATE_TIME_MINS.minutes
   # used when token did not arrive at client
@@ -32,9 +36,19 @@ class UserAuthToken < ActiveRecord::Base
 
   def impersonated_user
     return if impersonated_user_id.blank?
-    return if impersonation_expires_at.blank? || impersonation_expires_at.past?
+    return if impersonation_expires_at.blank?
 
-    User.find_by(id: impersonated_user_id).tap { |u| u.is_impersonating = true }
+    if impersonation_expires_at.past?
+      update!(impersonated_user_id: nil, impersonation_expires_at: nil)
+      return
+    end
+
+    guardian = Guardian.new(acting_user)
+    puppet = User.find_by(id: impersonated_user_id)
+
+    return if !guardian.can_impersonate?(puppet)
+
+    puppet.tap { |u| u.is_impersonating = true }
   end
 
   def self.log(info)

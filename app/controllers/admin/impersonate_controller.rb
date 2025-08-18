@@ -30,7 +30,11 @@ class Admin::ImpersonateController < Admin::AdminController
     raise Discourse::NotFound if !SiteSetting.experimental_impersonation
     raise Discourse::InvalidAccess if !current_user.is_impersonating
 
+    puppet = current_user
+
     stop_impersonating_user
+
+    StaffActionLogger.new(current_user).log_stop_impersonation(puppet)
 
     render body: nil
   end

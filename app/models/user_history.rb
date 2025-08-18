@@ -157,6 +157,7 @@ class UserHistory < ActiveRecord::Base
         tag_group_change: 118,
         delete_associated_accounts: 119,
         change_theme_site_setting: 120,
+        stop_impersonating: 121,
       )
   end
 
@@ -280,6 +281,7 @@ class UserHistory < ActiveRecord::Base
       update_flag
       create_flag
       change_theme_site_setting
+      stop_impersonating
     ]
   end
 

@@ -44,7 +44,26 @@ RSpec.describe UserAuthToken do
             client_ip: "1.1.2.3",
           )
 
-        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.ago)
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.ago)
+
+        expect { token.user }.to change {
+          [token.impersonated_user_id, token.impersonation_expires_at]
+        }.to([nil, nil])
+
+        expect(token.user).to eq(admin)
+        expect(token.user.is_impersonating).to be_falsey
+      end
+
+      it "returns the user associated with the session if can no longer impersonate" do
+        token =
+          UserAuthToken.generate!(
+            user_id: admin.id,
+            user_agent: "some user agent 2",
+            client_ip: "1.1.2.3",
+          )
+
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+        Guardian.any_instance.stubs(:can_impersonate?).returns(false)
 
         expect(token.user).to eq(admin)
         expect(token.user.is_impersonating).to be_falsey

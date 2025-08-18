@@ -48,10 +48,6 @@ export default class GlimmerSiteHeader extends Component {
       document.body.classList.add("staff");
     }
 
-    if (this.currentUser?.is_impersonating) {
-      document.body.classList.add("impersonating");
-    }
-
     schedule("afterRender", () => this.animateMenu());
   }
 
