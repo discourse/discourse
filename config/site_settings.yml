@@ -489,7 +489,7 @@ basic:
     area: "analytics"
   enable_user_tips:
     client: true
-    default: true
+    default: false
     refresh: true
     area: "users"
   page_loading_indicator:
@@ -565,6 +565,10 @@ basic:
     default: "disabled"
     area: "interface"
   floatkit_autocomplete_composer:
+    client: true
+    default: true
+    area: "interface"
+  floatkit_autocomplete_input_fields:
     client: true
     default: true
     area: "interface"
