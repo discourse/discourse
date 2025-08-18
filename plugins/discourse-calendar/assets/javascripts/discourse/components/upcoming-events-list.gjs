@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
@@ -83,6 +84,11 @@ export default class UpcomingEventsList extends Component {
   }
 
   @action
+  teardownPageChangedSubscription() {
+    this.appEvents.off("page:changed", this, this.updateEventsList);
+  }
+
+  @action
   async updateEventsList() {
     this.isLoading = true;
     this.hasError = false;
@@ -150,7 +156,10 @@ export default class UpcomingEventsList extends Component {
   }
 
   <template>
-    <div class="upcoming-events-list">
+    <div
+      class="upcoming-events-list"
+      {{willDestroy this.teardownPageChangedSubscription}}
+    >
       <h3 class="upcoming-events-list__heading">
         {{this.title}}
       </h3>
