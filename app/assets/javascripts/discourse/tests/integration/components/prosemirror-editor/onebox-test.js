@@ -18,10 +18,10 @@ module(
       setLocalCache(testUrl, cachedElement);
 
       const markdownIt = buildEngine(null, ["onebox"]);
-      const tokens = markdownIt.cook(testUrl);
+      const cookedHtml = markdownIt.cook(testUrl);
 
       assert.true(
-        tokens.includes(`<a href="${testUrl}"`),
+        cookedHtml.includes(`<a href="${testUrl}">${testUrl}</a>`),
         "URL should render as plain link when onebox is omitted"
       );
 
