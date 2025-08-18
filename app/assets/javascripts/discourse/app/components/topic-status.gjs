@@ -11,7 +11,6 @@ import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
   @service currentUser;
-  @service site;
 
   get wrapperElement() {
     return element(this.args.tagName ?? "span");
