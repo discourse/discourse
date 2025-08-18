@@ -73,8 +73,7 @@ export default class CategoryCalendar extends Component {
       this.siteSettings.events_calendar_categories
         .split("|")
         .filter(Boolean)
-        .includes(this.category.id)
-        .toString()
+        .includes(this.category.id.toString())
     );
   }
 
