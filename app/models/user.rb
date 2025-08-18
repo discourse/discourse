@@ -1578,12 +1578,17 @@ class User < ActiveRecord::Base
   USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
-    field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
+    fields =
+      if field_ids.nil?
+        @all_user_field_types ||= UserField.pluck(:id, :field_type)
+      else
+        UserField.where(id: field_ids).pluck(:id, :field_type)
+      end
 
-    field_ids
-      .map do |fid|
+    fields
+      .map do |fid, ftype|
         value =
-          if UserField.find_by(id: fid).field_type == "confirm"
+          if ftype == "confirm"
             !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
           else
             custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
