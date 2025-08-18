@@ -264,7 +264,7 @@ module Jobs
     private
 
     def escape_comma(string)
-      string&.include?(",") ? %Q|"#{string}"| : string
+      string&.to_s&.include?(",") ? %Q|"#{string}"| : string
     end
 
     def get_base_user_array(user)
