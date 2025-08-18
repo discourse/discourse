@@ -196,6 +196,60 @@ describe "Admin Color Palettes Features", type: :system do
     end
   end
 
+  describe "live preview functionality" do
+    it "does not show toast when live preview is available" do
+      admin.user_option.update!(
+        theme_ids: [Theme.find_default.id],
+        color_scheme_id: -1,
+        dark_scheme_id: -1,
+      )
+
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      expect(page).to have_no_css(".fk-d-default-toast.-success")
+    end
+
+    it "shows toast when admin cannot see live preview" do
+      custom_scheme = Fabricate(:color_scheme, name: "Custom Scheme")
+      admin.user_option.update!(
+        theme_ids: [Theme.find_default.id],
+        color_scheme_id: custom_scheme.id,
+      )
+
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      expected_message =
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_success",
+          schemeName: regular_palette.name,
+          themeName: Theme.find_default.name,
+        )
+      expect(toasts).to have_success(expected_message)
+    end
+  end
+
   describe "sort" do
     before do
       ColorScheme.delete_all

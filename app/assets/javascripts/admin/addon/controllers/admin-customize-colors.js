@@ -16,6 +16,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @service session;
   @service site;
   @service siteSettings;
+  @service interfaceColor;
 
   @tracked defaultTheme = null;
 
@@ -36,12 +37,16 @@ export default class AdminCustomizeColorsController extends Controller {
 
   canPreviewColorScheme(mode) {
     const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
+
+    // -1 means they're using the theme default scheme
     const usingDefaultLightScheme =
+      this._initialUserLightColorSchemeId === -1 ||
       this._initialUserLightColorSchemeId ===
-      this._initialDefaultThemeLightColorSchemeId;
+        this._initialDefaultThemeLightColorSchemeId;
     const usingDefaultDarkScheme =
+      this._initialUserDarkColorSchemeId === -1 ||
       this._initialUserDarkColorSchemeId ===
-      this._initialDefaultThemeDarkColorSchemeId;
+        this._initialDefaultThemeDarkColorSchemeId;
 
     return (
       usingDefaultTheme &&
@@ -63,18 +68,86 @@ export default class AdminCustomizeColorsController extends Controller {
       this.defaultTheme?.dark_color_scheme_id;
   }
 
-  get changedThemePreferences() {
-    const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
+  get userColorSchemeDifferences() {
+    const userLightDiffersFromDefault =
+      this._initialUserLightColorSchemeId !== -1 &&
+      this._initialUserLightColorSchemeId !==
+        this._initialDefaultThemeLightColorSchemeId;
 
-    return changedTheme;
+    const userDarkDiffersFromDefault =
+      this._initialUserDarkColorSchemeId !== -1 &&
+      this._initialUserDarkColorSchemeId !==
+        this._initialDefaultThemeDarkColorSchemeId;
+
+    return { userLightDiffersFromDefault, userDarkDiffersFromDefault };
+  }
+
+  get userPreferencesDifferFromDefaults() {
+    if (!this.defaultTheme) {
+      return false;
+    }
+
+    const usingDefaultTheme = currentThemeId() === this.defaultTheme.id;
+    if (!usingDefaultTheme) {
+      return true;
+    }
+
+    // only check color scheme preferences if using the default theme
+    // because if they're not using the default theme, that's the higher priority warning
+    const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
+      this.userColorSchemeDifferences;
+
+    return userLightDiffersFromDefault || userDarkDiffersFromDefault;
+  }
+
+  get preferencesWarningMessage() {
+    if (!this.userPreferencesDifferFromDefaults) {
+      return null;
+    }
+
+    const themeName = this.defaultTheme?.name || "default theme";
+    const usingNonDefaultTheme = currentThemeId() !== this.defaultTheme?.id;
+
+    if (usingNonDefaultTheme) {
+      return {
+        themeName,
+        usingNonDefaultTheme: true,
+      };
+    }
+
+    const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
+      this.userColorSchemeDifferences;
+
+    const affectedModes = [];
+    if (userLightDiffersFromDefault) {
+      affectedModes.push("light");
+    }
+    if (userDarkDiffersFromDefault) {
+      affectedModes.push("dark");
+    }
+
+    let colorModesText;
+    if (affectedModes.length === 2) {
+      colorModesText = ""; // intentionally left empty
+    } else if (affectedModes[0] === "light") {
+      colorModesText = i18n("admin.customize.colors.light");
+    } else {
+      colorModesText = i18n("admin.customize.colors.dark");
+    }
+
+    return {
+      themeName,
+      colorModes: colorModesText,
+      usingNonDefaultTheme: false,
+    };
   }
 
   get isUsingDarkMode() {
-    // check if user has dark mode available and is using it
     return (
-      this.session.darkModeAvailable &&
-      this.session.userDarkSchemeId !== -1 &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
+      this.interfaceColor.darkModeForced ||
+      (this.interfaceColor.colorModeIsAuto &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+      this.session.defaultColorSchemeIsDark
     );
   }
 
