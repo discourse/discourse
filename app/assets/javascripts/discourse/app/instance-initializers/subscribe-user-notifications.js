@@ -18,14 +18,15 @@ import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
 
 class SubscribeUserNotificationsInit {
+  @service appEvents;
+  @service capabilities;
   @service currentUser;
   @service messageBus;
   @service pmTopicTrackingState;
-  @service store;
-  @service appEvents;
-  @service siteSettings;
-  @service site;
   @service router;
+  @service site;
+  @service siteSettings;
+  @service store;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -272,7 +273,7 @@ class SubscribeUserNotificationsInit {
 
   @bind
   onAlert(data) {
-    if (this.site.desktopView) {
+    if (!this.capabilities.isMobileDevice) {
       return onDesktopNotification(
         data,
         this.siteSettings,

@@ -277,7 +277,7 @@ export default class PostTextSelection extends Component {
   get shouldRenderUnder() {
     const { isIOS, isAndroid, isOpera, isFirefox, touch } = this.capabilities;
     return (
-      this.site.isMobileDevice ||
+      this.capabilities.isMobileDevice ||
       isIOS ||
       isAndroid ||
       isOpera ||

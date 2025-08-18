@@ -105,11 +105,6 @@ export default class ComposerService extends Service {
   @service store;
   @service toasts;
 
-  @tracked
-  showPreview = this.site.mobileView
-    ? false
-    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
-
   @tracked allowPreview = false;
   @tracked selectedTranslationLocale = null;
   checkedMessages = false;
@@ -135,6 +130,21 @@ export default class ComposerService extends Service {
   @reads("currentUser.whisperer") whisperer;
   @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
   @or("replyingToWhisper", "model.whisper") isWhispering;
+
+  @tracked _showPreview;
+
+  get showPreview() {
+    return (
+      this._showPreview ??
+      (this.site.mobileView
+        ? false
+        : (this.keyValueStore.get("composer.showPreview") || "true") === "true")
+    );
+  }
+
+  set showPreview(value) {
+    this._showPreview = value;
+  }
 
   get topicController() {
     return getOwner(this).lookup("controller:topic");

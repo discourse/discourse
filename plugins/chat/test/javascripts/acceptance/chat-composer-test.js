@@ -19,7 +19,11 @@ const GROUP_NAME = "group1";
 
 acceptance("Discourse Chat - Composer", function (needs) {
   needs.user({ has_chat_enabled: true });
-  needs.settings({ chat_enabled: true, enable_rich_text_paste: true });
+  needs.settings({
+    chat_enabled: true,
+    enable_rich_text_paste: true,
+    enable_emoji: true,
+  });
   needs.pretender((server, helper) => {
     baseChatPretenders(server, helper);
     chatChannelPretender(server, helper);
@@ -70,7 +74,10 @@ acceptance("Discourse Chat - Composer", function (needs) {
 let sendAttempt = 0;
 acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   needs.user({ id: 1, has_chat_enabled: true });
-  needs.settings({ chat_enabled: true });
+  needs.settings({
+    chat_enabled: true,
+    enable_emoji: true,
+  });
   needs.pretender((server, helper) => {
     chatChannelPretender(server, helper);
     server.get("/chat/:id/messages.json", () =>

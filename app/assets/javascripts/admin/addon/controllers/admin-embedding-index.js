@@ -12,7 +12,7 @@ export default class AdminEmbeddingIndexController extends Controller {
   @alias("adminEmbedding.embedding") embedding;
 
   get showEmbeddingCode() {
-    return !this.site.isMobileDevice;
+    return this.site.desktopView;
   }
 
   @discourseComputed("embedding.base_url")

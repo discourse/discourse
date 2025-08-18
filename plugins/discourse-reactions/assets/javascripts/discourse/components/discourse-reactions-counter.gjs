@@ -64,7 +64,7 @@ export default class DiscourseReactionsCounter extends Component {
 
     this.args.cancelCollapse();
 
-    if (!this.capabilities.touch || !this.site.mobileView) {
+    if (!this.capabilities.touch || this.site.desktopView) {
       event.stopPropagation();
       event.preventDefault();
 

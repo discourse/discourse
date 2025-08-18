@@ -8,6 +8,7 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import { i18n } from "discourse-i18n";
 
 export default class FullscreenCode extends Component {
+  @service site;
   @service siteSettings;
   @service session;
 
@@ -23,6 +24,7 @@ export default class FullscreenCode extends Component {
     highlightSyntax(modalElement, this.siteSettings, this.session);
 
     this.codeBlockButtons = new CodeblockButtons({
+      site: this.site,
       showFullscreen: false,
       showCopy: true,
     });

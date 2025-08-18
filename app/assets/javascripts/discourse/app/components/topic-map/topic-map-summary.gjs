@@ -48,7 +48,7 @@ export default class TopicMapSummary extends Component {
       this.args.topic.posts_count >= MIN_POSTS_COUNT &&
       this.args.topicDetails.participants?.length >=
         MIN_USERS_COUNT_FOR_AVATARS &&
-      !this.site.mobileView
+      this.site.desktopView
     );
   }
 
