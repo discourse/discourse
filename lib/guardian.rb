@@ -105,6 +105,7 @@ class Guardian
   def initialize(user = nil, request = nil)
     @user = user.presence || Guardian::AnonymousUser.new
     @request = request
+    @explanation = nil
   end
 
   def user
@@ -621,7 +622,31 @@ class Guardian
     other && authenticated? && other.is_a?(User) && @user == other
   end
 
+  def explain(&block)
+    self.explanation = Hash.new { |h, k| h[k] = [] }
+
+    yield self
+
+    self.explanation
+  end
+
+  def fail(reason)
+    if self.explanation
+      guard = caller_locations(1, 1).first.base_label
+
+      self.explanation[guard] << reason
+    end
+
+    false
+  end
+
+  def pass
+    true
+  end
+
   private
+
+  attr_accessor :explanation
 
   def is_my_own?(obj)
     return false if anonymous?
