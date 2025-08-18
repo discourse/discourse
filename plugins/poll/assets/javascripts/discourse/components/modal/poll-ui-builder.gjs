@@ -50,6 +50,7 @@ export default class PollUiBuilderModal extends Component {
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
   publicPoll = this.siteSettings.poll_default_public;
+  dynamic = false;
 
   @or("showAdvanced", "isNumber") showNumber;
   @or("showAdvanced", "isRankedChoice") showRankedChoice;
@@ -148,6 +149,7 @@ export default class PollUiBuilderModal extends Component {
     "pollType",
     "pollResult",
     "publicPoll",
+    "dynamic",
     "pollTitle",
     "pollOptions.@each.value",
     "pollMin",
@@ -161,6 +163,7 @@ export default class PollUiBuilderModal extends Component {
     pollType,
     pollResult,
     publicPoll,
+    dynamic,
     pollTitle,
     pollOptions,
     pollMin,
@@ -204,6 +207,9 @@ export default class PollUiBuilderModal extends Component {
     pollHeader += ` public=${publicPoll ? "true" : "false"}`;
     if (chartType && pollType !== NUMBER_POLL_TYPE) {
       pollHeader += ` chartType=${chartType}`;
+    }
+    if (dynamic) {
+      pollHeader += ` dynamic=true`;
     }
     if (pollGroups && pollGroups.length > 0) {
       pollHeader += ` groups=${pollGroups}`;
@@ -590,6 +596,14 @@ export default class PollUiBuilderModal extends Component {
         </div>
 
         {{#if this.showAdvanced}}
+          <div class="input-group poll-dynamic">
+            <DToggleSwitch
+              @state={{this.dynamic}}
+              @label="poll.ui_builder.poll_dynamic.label"
+              class="poll-toggle-dynamic"
+              {{on "click" (fn (mut this.dynamic) (not this.dynamic))}}
+            />
+          </div>
           <div class="input-group poll-allowed-groups">
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_groups.label"

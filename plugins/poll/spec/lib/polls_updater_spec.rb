@@ -105,7 +105,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
     describe "updates polls" do
       it "allows updating options after window when dynamic" do
         post = Fabricate(:post, raw: <<~RAW)
-        [poll dynamic-poll=true]
+        [poll dynamic=true]
         * A
         * B
         [/poll]
@@ -125,7 +125,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         freeze_time (edit_window + 10).minutes.from_now
 
         new_post = Fabricate(:post, raw: <<~RAW)
-        [poll dynamic-poll=true]
+        [poll dynamic=true]
         * A
         * C
         [/poll]
@@ -242,7 +242,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
           freeze_time (edit_window + 10).minutes.from_now
 
           new_post = Fabricate(:post, raw: <<~RAW)
-          [poll dynamic-poll=true]
+          [poll dynamic=true]
           * A
           * C
           [/poll]

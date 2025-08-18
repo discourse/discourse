@@ -18,7 +18,7 @@ describe "Dynamic polls", type: :system do
 
   it "allows editing poll options after window while preserving votes on existing options" do
     post = cook_poll(<<~MD)
-      [poll dynamic-poll=true]
+      [poll dynamic=true]
       * A
       * B
       [/poll]
@@ -36,7 +36,7 @@ describe "Dynamic polls", type: :system do
 
     # Edit the poll: add C, remove B, keep A (vote should stay)
     new_raw = <<~MD
-      [poll dynamic-poll=true]
+      [poll dynamic=true]
       * A
       * C
       [/poll]
