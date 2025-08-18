@@ -127,7 +127,6 @@ export default class WelcomeBanner extends Component {
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        style={{if this.bgImgStyle this.bgImgStyle}}
         class={{concatClass
           "welcome-banner"
           this.locationClass
@@ -136,31 +135,32 @@ export default class WelcomeBanner extends Component {
         {{this.checkViewport}}
         {{this.handleKeyboardShortcut}}
       >
-        <div class="custom-search-banner welcome-banner__inner-wrapper">
-          <div class="custom-search-banner-wrap welcome-banner__wrap">
-            <div class="welcome-banner__title">
-              {{htmlSafe this.headerText}}
-              {{#if this.subheaderText}}
-                <p class="welcome-banner__subheader">
-                  {{htmlSafe this.subheaderText}}
-                </p>
-              {{/if}}
-            </div>
-            <PluginOutlet @name="welcome-banner-below-headline" />
-            <div class="search-menu welcome-banner__search-menu">
-              <DButton
-                @icon="magnifying-glass"
-                @title="search.open_advanced"
-                @href="/search?expanded=true"
-                class="search-icon"
-              />
-              <SearchMenu
-                @location="welcome-banner"
-                @searchInputId="welcome-banner-search-input"
-              />
-            </div>
-            <PluginOutlet @name="welcome-banner-below-input" />
+        <div
+          class="custom-search-banner-wrap welcome-banner__wrap"
+          style={{if this.bgImgStyle this.bgImgStyle}}
+        >
+          <div class="welcome-banner__title">
+            {{htmlSafe this.headerText}}
+            {{#if this.subheaderText}}
+              <p class="welcome-banner__subheader">
+                {{htmlSafe this.subheaderText}}
+              </p>
+            {{/if}}
           </div>
+          <PluginOutlet @name="welcome-banner-below-headline" />
+          <div class="search-menu welcome-banner__search-menu">
+            <DButton
+              @icon="magnifying-glass"
+              @title="search.open_advanced"
+              @href="/search?expanded=true"
+              class="search-icon"
+            />
+            <SearchMenu
+              @location="welcome-banner"
+              @searchInputId="welcome-banner-search-input"
+            />
+          </div>
+          <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>
     {{/if}}
