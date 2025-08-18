@@ -18,8 +18,7 @@ export default class AdminCustomizeColorsRoute extends Route {
     controller.set("model", model.colorSchemes);
 
     const themes = model.themes || [];
-    const defaultTheme = themes.findBy ? themes.findBy("default", true) : null;
-
+    const defaultTheme = themes.find((theme) => theme.default === true);
     controller.set("defaultTheme", defaultTheme);
 
     if (defaultTheme) {

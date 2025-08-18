@@ -68,7 +68,7 @@ export default class AdminCustomizeColorsController extends Controller {
       this.defaultTheme?.dark_color_scheme_id;
   }
 
-  _getUserColorSchemeDifferences() {
+  get userColorSchemeDifferences() {
     const userLightDiffersFromDefault =
       this._initialUserLightColorSchemeId !== -1 &&
       this._initialUserLightColorSchemeId !==
@@ -95,7 +95,7 @@ export default class AdminCustomizeColorsController extends Controller {
     // only check color scheme preferences if using the default theme
     // because if they're not using the default theme, that's the higher priority warning
     const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
-      this._getUserColorSchemeDifferences();
+      this.userColorSchemeDifferences;
 
     return userLightDiffersFromDefault || userDarkDiffersFromDefault;
   }
@@ -116,7 +116,7 @@ export default class AdminCustomizeColorsController extends Controller {
     }
 
     const { userLightDiffersFromDefault, userDarkDiffersFromDefault } =
-      this._getUserColorSchemeDifferences();
+      this.userColorSchemeDifferences;
 
     const affectedModes = [];
     if (userLightDiffersFromDefault) {

@@ -7118,7 +7118,7 @@ en:
           select_base:
             title: "Select base color palette"
             description: "Base palette:"
-          non_default_theme_warning: "Your <a href='%{link}'>personal preferences</a> for theme are different than the defaults. Changes you make here may not apply to you, but will apply to everyone using the default (%{themeName})."
+          non_default_theme_warning: "Your <a href='%{link}'>personal preferences</a> for theme are different than the default. Changes you make here may not apply to you, but will apply to everyone using the default (%{themeName})."
           custom_schemes_warning: "Your <a href='%{link}'>personal preferences</a> for %{colorModes} color palette are different than the default. Changes to the %{colorModes} palette may not apply to you, but will apply to everyone using the default."
           light: "light"
           dark: "dark"
