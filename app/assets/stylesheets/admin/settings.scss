@@ -73,6 +73,12 @@
         background-repeat: no-repeat;
         background-color: var(--primary-medium);
       }
+
+      #site-setting-image-uploader-welcome_banner_image {
+        .uploaded-image-preview {
+          background-size: cover;
+        }
+      }
     }
 
     .setting-controls {
