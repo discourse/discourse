@@ -185,7 +185,7 @@ export default class InterfaceController extends Controller {
     return userOptionTextSize !== selectedTextSize;
   }
 
-  _isInLightMode() {
+  get isInLightMode() {
     return (
       this.interfaceColor.colorModeIsLight ||
       (this.interfaceColor.colorModeIsAuto &&
@@ -193,7 +193,7 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  _isInDarkMode() {
+  get isInDarkMode() {
     return (
       this.interfaceColor.colorModeIsDark ||
       (this.interfaceColor.colorModeIsAuto &&
@@ -204,19 +204,23 @@ export default class InterfaceController extends Controller {
   _shouldEnablePreview(isDarkMode) {
     return (
       this.isViewingOwnProfile &&
-      (isDarkMode ? this._isInDarkMode() : this._isInLightMode())
+      (isDarkMode ? this.isInDarkMode : this.isInLightMode)
     );
   }
 
-  _resolveThemeDefaultColorScheme(colorSchemeId, isDark = false) {
+  _resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
+    // non-default color schemes
     if (!isDark && colorSchemeId >= 0) {
       return colorSchemeId;
     }
+    // -1 is the default color scheme
     if (isDark && colorSchemeId !== -1) {
       return colorSchemeId;
     }
 
-    const defaultTheme = this.userSelectableThemes.findBy("id", this.themeId);
+    const defaultTheme = this.userSelectableThemes.find(
+      (theme) => theme.id === this.themeId
+    );
     if (!defaultTheme) {
       return colorSchemeId;
     }
@@ -484,7 +488,7 @@ export default class InterfaceController extends Controller {
     }
 
     // only preview light schemes when in light mode
-    if (!this._isInLightMode()) {
+    if (!this.isInLightMode) {
       return;
     }
 
@@ -503,7 +507,7 @@ export default class InterfaceController extends Controller {
     }
 
     // only preview dark schemes when in dark mode
-    if (!this._isInDarkMode()) {
+    if (!this.isInDarkMode) {
       return;
     }
 
@@ -525,13 +529,13 @@ export default class InterfaceController extends Controller {
   }
 
   _applyInterfaceModePreview(modeId) {
-    const modeActions = {
-      [INTERFACE_COLOR_MODES.AUTO]: () => this.interfaceColor.useAutoMode(),
-      [INTERFACE_COLOR_MODES.LIGHT]: () => this.interfaceColor.forceLightMode(),
-      [INTERFACE_COLOR_MODES.DARK]: () => this.interfaceColor.forceDarkMode(),
-    };
-
-    modeActions[modeId]?.();
+    if (modeId === INTERFACE_COLOR_MODES.AUTO) {
+      this.interfaceColor.useAutoMode();
+    } else if (modeId === INTERFACE_COLOR_MODES.LIGHT) {
+      this.interfaceColor.forceLightMode();
+    } else if (modeId === INTERFACE_COLOR_MODES.DARK) {
+      this.interfaceColor.forceDarkMode();
+    }
   }
 
   _previewColorSchemeForMode(modeId) {
@@ -575,9 +579,11 @@ export default class InterfaceController extends Controller {
       selectedId,
       isDark
     );
-    loadColorSchemeStylesheet(colorSchemeId, this.themeId, isDark);
 
-    if (!isDark) {
+    if (isDark) {
+      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
+    } else {
+      loadColorSchemeStylesheet(colorSchemeId, this.themeId, false);
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
     }
   }
