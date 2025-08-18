@@ -125,7 +125,7 @@ export default class Dropdown extends Component {
       content=@field.choices
       nameProperty=this.nameProperty
       tabindex="9"
-      onChange=this.onChangeValug
+      onChange=this.onChangeValue
       options=(hash translatedNone=false)
     }}
   </template>
