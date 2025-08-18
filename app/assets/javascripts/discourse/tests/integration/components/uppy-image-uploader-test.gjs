@@ -113,11 +113,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   test("accepts only images when allowVideo is unset", async function (assert) {
     await render(
       <template>
-        <UppyImageUploader
-          @type="composer"
-          @id="uploader-without-video"
-          @allowVideo={{false}}
-        />
+        <UppyImageUploader @type="composer" @id="uploader-without-video" />
       </template>
     );
 
