@@ -72,7 +72,7 @@ class StylesheetsController < ApplicationController
     handle_missing_cache(location, target, digest) if !stylesheet_time
 
     if cache_time.present? && stylesheet_time && stylesheet_time <= cache_time
-      return render body: nil, status: 304
+      return render status: 304
     end
 
     unless File.exist?(location)

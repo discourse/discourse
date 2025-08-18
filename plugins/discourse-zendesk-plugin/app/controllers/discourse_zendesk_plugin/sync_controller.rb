@@ -40,7 +40,7 @@ module DiscourseZendeskPlugin
         end
       end
 
-      render json: {}, status: 204
+      render status: 204
     end
 
     private
