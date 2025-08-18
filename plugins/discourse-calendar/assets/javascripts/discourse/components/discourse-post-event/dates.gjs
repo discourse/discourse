@@ -134,7 +134,7 @@ export default class DiscoursePostEventDates extends Component {
 
           applyLocalDates(
             element.querySelectorAll(
-              `.event-dates[data-event-id="${this.args.event.id}"] .discourse-local-date`
+              `[data-post-id="${this.args.event.id}"] .discourse-local-date`
             ),
             this.siteSettings
           );
