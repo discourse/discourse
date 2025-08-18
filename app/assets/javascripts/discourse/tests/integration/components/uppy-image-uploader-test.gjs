@@ -141,7 +141,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       .dom("#uploader-with-video__input")
       .hasAttribute(
         "accept",
-        "image/*,video/*,.gif",
+        "image/*,video/*",
         "accepts videos when allowVideo is true"
       );
   });

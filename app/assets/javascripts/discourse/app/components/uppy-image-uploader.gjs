@@ -30,7 +30,6 @@ export default class UppyImageUploader extends Component {
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
-    type: this.args.type,
     additionalParams: this.args.additionalParams,
     validateUploadedFilesOptions: this.args.allowVideo
       ? {}
@@ -128,7 +127,7 @@ export default class UppyImageUploader extends Component {
   }
 
   get acceptedFormats() {
-    return this.args.allowVideo ? "image/*,video/*,.gif" : "image/*";
+    return this.args.allowVideo ? "image/*,video/*" : "image/*";
   }
 
   get isVideoFile() {
