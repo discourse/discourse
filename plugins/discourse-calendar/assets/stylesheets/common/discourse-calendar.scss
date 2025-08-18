@@ -12,6 +12,12 @@ a.holiday {
   min-width: 15em;
 }
 
+.grouped-event {
+  background-color: var(--primary-low);
+  border: 1px solid var(--primary-low-mid);
+  color: var(--primary);
+}
+
 .group-timezones {
   display: grid;
   width: 100%;

@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
 import {
@@ -70,8 +71,12 @@ export default class FullCalendar extends Component {
       },
       eventDidMount: (info) => {
         if (info.event.extendedProps?.htmlContent) {
-          const tooltip = this.tooltip.register(info.el, {
-            content: info.event.extendedProps.htmlContent,
+          const tooltip = this.menu.register(info.el, {
+            triggers: ["hover"],
+            content: htmlSafe(
+              // this is a workaround to allow linebreaks in the tooltip
+              "<div>" + info.event.extendedProps.htmlContent + "</div>"
+            ),
           });
 
           info.event.setExtendedProp("tooltip", tooltip);
@@ -80,27 +85,31 @@ export default class FullCalendar extends Component {
       eventClick: async (info) => {
         info.jsEvent.preventDefault();
 
-        const menu = await this.menu.show(
-          {
-            getBoundingClientRect() {
-              return info.el.getBoundingClientRect();
-            },
-          },
-          {
-            identifier: "post-event-menu",
-            component: PostEventMenu,
-            modalForMobile: true,
-            maxWidth: 500,
-            data: {
-              eventId: info.event.extendedProps.postEvent.id,
-              onClose: () => {
-                this.menu.getByIdentifier("post-event-menu")?.close?.();
+        if (this.args.onEventClick) {
+          this.args.onEventClick(info);
+        } else {
+          const menu = await this.menu.show(
+            {
+              getBoundingClientRect() {
+                return info.el.getBoundingClientRect();
               },
             },
-          }
-        );
+            {
+              identifier: "post-event-menu",
+              component: PostEventMenu,
+              modalForMobile: true,
+              maxWidth: 500,
+              data: {
+                eventId: info.event.extendedProps.postEvent.id,
+                onClose: () => {
+                  this.menu.getByIdentifier("post-event-menu")?.close?.();
+                },
+              },
+            }
+          );
 
-        info.event.setExtendedProp("menu", menu);
+          info.event.setExtendedProp("menu", menu);
+        }
       },
     });
 
