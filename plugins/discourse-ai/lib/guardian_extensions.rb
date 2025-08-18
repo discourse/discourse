@@ -39,7 +39,7 @@ module DiscourseAi
       return false if !SiteSetting.ai_summarization_enabled
       return false if !SiteSetting.ai_summary_gists_enabled
 
-      if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summary_gists_persona)).blank?
+      if AiPersona.exists?(id: SiteSetting.ai_summary_gists_persona)
         return false
       end
 
