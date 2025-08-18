@@ -85,18 +85,22 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
   test("upcoming events category colors", async function (assert) {
     await visit("/upcoming-events");
 
-    const [first, second] = [...document.querySelectorAll(".fc-event")];
+    const [first, second] = [
+      ...document.querySelectorAll(
+        ".fc-daygrid-event-harness .fc-daygrid-event-dot"
+      ),
+    ];
     assert
       .dom(first)
       .hasStyle(
-        { backgroundColor: "rgb(190, 10, 10)" },
+        { borderColor: "rgb(190, 10, 10)" },
         "Event item uses the proper color from category 1"
       );
 
     assert
       .dom(second)
       .hasStyle(
-        { backgroundColor: "rgb(15, 120, 190)" },
+        { borderColor: "rgb(15, 120, 190)" },
         "Event item uses the proper color from category 2"
       );
   });

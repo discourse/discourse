@@ -6,7 +6,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
-import Topic from "discourse/models/topic";
 import { formatEventName } from "../helpers/format-event-name";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 import FullCalendar from "./full-calendar";
@@ -21,37 +20,17 @@ export default class CategoryCalendar extends Component {
   @bind
   async loadEvents() {
     try {
-      if (this.categorySettings?.postId) {
-        const post = await this.store.find(
-          "post",
-          this.categorySettings.postId
-        );
-        const topic_json = await Topic.find(post.topic_id, {});
-        const topic = Topic.create(topic_json);
-        post.set("topic", topic);
+      const params = {
+        post_id: this.categorySetting?.postId,
+        category_id: this.category.id,
+        include_subcategories: true,
+      };
 
-        return (post?.calendar_details || []).map((detail) => {
-          return {
-            post,
-            name: detail.message,
-            startsAt: detail.from,
-            endsAt: detail.to,
-            categoryId: this.category.id,
-          };
-        });
-      } else {
-        const params = {
-          post_id: this.categorySettings?.postId,
-          category_id: this.category.id,
-          include_subcategories: true,
-        };
-
-        if (this.siteSettings.include_expired_events_on_calendar) {
-          params.include_expired = true;
-        }
-
-        return await this.discoursePostEventApi.events(params);
+      if (this.siteSettings.include_expired_events_on_calendar) {
+        params.include_expired = true;
       }
+
+      return await this.discoursePostEventApi.events(params);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -74,11 +53,29 @@ export default class CategoryCalendar extends Component {
       return false;
     }
 
-    if (!this.categorySettings) {
+    if (!this.validCategory) {
       return false;
     }
 
     return true;
+  }
+
+  get validCategory() {
+    if (
+      !this.categorySetting &&
+      !this.siteSettings.events_calendar_categories
+    ) {
+      return false;
+    }
+
+    return (
+      this.categorySetting?.categoryId === this.category.id.toString() ||
+      this.siteSettings.events_calendar_categories
+        .split("|")
+        .filter(Boolean)
+        .includes(this.category.id)
+        .toString()
+    );
   }
 
   get category() {
@@ -88,11 +85,11 @@ export default class CategoryCalendar extends Component {
   }
 
   get renderWeekends() {
-    return this.categorySettings?.weekends !== "false";
+    return this.categorySetting?.weekends !== "false";
   }
 
-  get categorySettings() {
-    const settings = this.siteSettings.events_calendar_categories
+  get categorySetting() {
+    const settings = this.siteSettings.calendar_categories
       .split("|")
       .filter(Boolean)
       .map((stringSetting) => {
@@ -159,7 +156,7 @@ export default class CategoryCalendar extends Component {
           <FullCalendar
             @events={{this.formatedEvents events}}
             @height="650px"
-            @initialView={{this.categorySettings?.defaultView}}
+            @initialView={{this.categorySetting?.defaultView}}
             @weekends={{this.renderWeekends}}
           />
         </:content>
