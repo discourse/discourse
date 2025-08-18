@@ -153,7 +153,7 @@ export default class PostSmallAction extends Component {
           {{icon this.icon}}
         </div>
         <div class="small-action-desc">
-          <div class="small-action-contents">
+          <div class="small-action-contents" role="heading" aria-level="2">
             <UserAvatar
               @ariaHidden={{false}}
               @size="small"
