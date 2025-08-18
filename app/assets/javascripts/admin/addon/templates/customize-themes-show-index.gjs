@@ -360,7 +360,7 @@ export default RouteTemplate(
               (i18n
                 "admin.customize.theme.overriden_site_settings_explanation"
                 themeSiteSettingsConfigUrl=(getURL
-                  "/admin/config/theme-site-settings"
+                  "/admin/config/customize/theme-site-settings"
                 )
               )
             }}</i></p>

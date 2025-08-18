@@ -26,7 +26,7 @@ RSpec.describe Admin::Config::ThemeSiteSettingsController do
 
   describe "#index" do
     it "gets all theme site settings and the themes which have overridden values for these settings" do
-      get "/admin/config/theme-site-settings.json"
+      get "/admin/config/customize/theme-site-settings.json"
 
       expect(response.status).to eq(200)
       json = response.parsed_body
@@ -68,7 +68,7 @@ RSpec.describe Admin::Config::ThemeSiteSettingsController do
         value: SiteSetting.type_supervisor.to_db_value(:enable_welcome_banner, true).first,
       )
 
-      get "/admin/config/theme-site-settings.json"
+      get "/admin/config/customize/theme-site-settings.json"
 
       expect(response.status).to eq(200)
       json = response.parsed_body
