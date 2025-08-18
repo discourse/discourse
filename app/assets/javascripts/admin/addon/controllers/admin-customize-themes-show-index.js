@@ -27,6 +27,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service router;
   @service siteSettings;
   @service modal;
+  @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
 
@@ -408,6 +409,16 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
+
+          this.toasts.success({
+            data: {
+              message: i18n("admin.customize.theme.delete_success", {
+                theme: model.name,
+              }),
+            },
+            duration: "short",
+          });
+
           this.router.transitionTo("adminConfig.customize.themes");
         });
       },
