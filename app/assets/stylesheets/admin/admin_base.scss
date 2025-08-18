@@ -124,10 +124,6 @@ $mobile-breakpoint: 700px;
     padding: 8px;
   }
 
-  tr:hover {
-    background-color: var(--primary-very-low);
-  }
-
   tr.selected {
     background-color: var(--primary-low);
   }

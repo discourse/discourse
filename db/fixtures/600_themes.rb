@@ -24,7 +24,6 @@ if !theme_exists
         name: cs[:name],
         via_wizard: true,
         base_scheme_id: cs[:base_scheme_id],
-        user_selectable: true,
       )
   end
 

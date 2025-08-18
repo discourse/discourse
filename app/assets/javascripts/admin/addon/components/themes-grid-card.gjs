@@ -27,7 +27,7 @@ export default class ThemeCard extends Component {
   get themeCardClasses() {
     return [
       "theme-card",
-      this.args.theme.get("default") ? "-active" : "",
+      this.args.theme.get("default") ? "--default" : "",
       this.isUpdating ? "--updating" : "",
       dasherize(this.args.theme.name),
     ].join(" ");
@@ -137,7 +137,7 @@ export default class ThemeCard extends Component {
       <:content>
         {{#if @theme.default}}
           <span
-            class="theme-card__badge --active"
+            class="theme-card__badge --default"
             title={{i18n "admin.customize.theme.default_theme"}}
           >
             {{i18n "admin.customize.theme.default"}}
@@ -208,7 +208,7 @@ export default class ThemeCard extends Component {
                         @action={{this.setDefault}}
                         @preventFocus={{true}}
                         @icon={{if @theme.default "star" "far-star"}}
-                        class="theme-card__button set-active"
+                        class="theme-card__button set-default"
                         @translatedLabel={{i18n
                           (if
                             @theme.default

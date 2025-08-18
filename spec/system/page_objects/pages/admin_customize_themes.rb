@@ -3,8 +3,10 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemes < PageObjects::Pages::AdminBase
-      def visit(id)
-        page.visit("/admin/customize/themes/#{id}")
+      def visit(theme_or_theme_id)
+        page.visit(
+          "/admin/customize/themes/#{theme_or_theme_id.is_a?(Theme) ? theme_or_theme_id.id : theme_or_theme_id}",
+        )
       end
 
       def has_colors_tab?

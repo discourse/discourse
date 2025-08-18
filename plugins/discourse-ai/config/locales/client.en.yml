@@ -286,6 +286,21 @@ en:
         table: "Table"
         card: "Card"
 
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          disabled_state:
+            configure: "Configure translations"
+            empty_label: "Automatic translations are disabled, click below to configure"
+        progress_chart:
+          title: "Translation progress"
+          completed: "Completed"
+          remaining: "Remaining"
+
+
       spam:
         short_title: "Spam"
         title: "Configure spam handling"

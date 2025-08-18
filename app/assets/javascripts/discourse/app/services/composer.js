@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -24,7 +25,6 @@ import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -118,7 +118,6 @@ export default class ComposerService extends Service {
   editReason = null;
   scopedCategoryId = null;
   prioritizedCategoryId = null;
-  readOnlyCategoryId = null;
   lastValidatedAt = null;
   isUploading = false;
   isProcessingUpload = false;
@@ -138,7 +137,7 @@ export default class ComposerService extends Service {
   @or("replyingToWhisper", "model.whisper") isWhispering;
 
   get topicController() {
-    return getOwnerWithFallback(this).lookup("controller:topic");
+    return getOwner(this).lookup("controller:topic");
   }
 
   get isPreviewVisible() {
@@ -276,10 +275,7 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
-    const storedVal = keyValueStore.get("toolbar-enabled");
+    const storedVal = this.keyValueStore.get("toolbar-enabled");
     if (this._toolbarEnabled === undefined && storedVal === undefined) {
       // iPhone 6 is 375, anything narrower and toolbar should
       // be default disabled.
@@ -291,11 +287,8 @@ export default class ComposerService extends Service {
   }
 
   set showToolbar(val) {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
     this._toolbarEnabled = val;
-    keyValueStore.set({
+    this.keyValueStore.set({
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });
@@ -1336,7 +1329,6 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.disableScopedCategory]
    @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
    @param {Number} [opts.prioritizedCategoryId]
-   @param {Number} [opts.readOnlyCategoryId] Shows category as read-only in category chooser, with a read-only badge
    @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
@@ -1364,7 +1356,6 @@ export default class ComposerService extends Service {
       editReason: null,
       scopedCategoryId: null,
       prioritizedCategoryId: null,
-      readOnlyCategoryId: null,
       skipAutoSave: true,
     });
 
@@ -1394,10 +1385,6 @@ export default class ComposerService extends Service {
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
-    }
-
-    if (opts.readOnlyCategoryId) {
-      this.set("readOnlyCategoryId", opts.readOnlyCategoryId);
     }
 
     // If we want a different draft than the current composer, close it and clear our model.
@@ -1458,14 +1445,7 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewTopic({
-    title,
-    body,
-    category,
-    readOnlyCategoryId,
-    tags,
-    formTemplate,
-  } = {}) {
+  async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
     return this.open({
       prioritizedCategoryId: category?.id,
       topicCategoryId: category?.id,
@@ -1477,7 +1457,6 @@ export default class ComposerService extends Service {
       draftKey: this.topicDraftKey,
       draftSequence: 0,
       locale: null,
-      readOnlyCategoryId,
     });
   }
 
