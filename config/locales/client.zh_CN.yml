@@ -1208,7 +1208,7 @@ zh_CN:
       text_size_default_on_all_devices: "将其设为我所有设备上的默认文本大小"
       allow_private_messages: "允许其他用户向我发送个人消息"
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
-      enable_quoting: "为突出显示的文字启用引用回复"
+      enable_quoting: "为高亮显示的文字启用引用回复"
       enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       experimental_sidebar:
@@ -5063,6 +5063,7 @@ zh_CN:
           groups: "群组"
           localization:
             title: "本地化"
+            keywords: "语言环境|语言|时区|unicode|ltr"
           user_fields: "用户字段"
           watched_words: "关注词"
           legal: "法律信息"
@@ -5527,7 +5528,7 @@ zh_CN:
           add: "添加"
           theme_settings: "主题设置"
           edit_objects_theme_setting: "对象设置编辑器"
-          overriden_settings_explanation: "被覆盖的设置标有一个点并具有突出显示的颜色。要将这些设置重置为默认值，请按它们旁边的重置按钮。"
+          overriden_settings_explanation: "被覆盖的设置标有一个圆点并具有高亮显示的颜色。要将这些设置重置为默认值，请按它们旁边的重置按钮。"
           no_settings: "此主题没有设置。"
           theme_translations: "主题翻译"
           empty: "无条目"
@@ -5641,17 +5642,17 @@ zh_CN:
             name: "页眉主要"
             description: "网站标头的文本和图标。"
           highlight:
-            name: "突出显示"
-            description: "页面上突出显示元素的背景色，例如帖子和话题。"
+            name: "高亮显示"
+            description: "页面上高亮显示元素的背景色，例如帖子和话题。"
           highlight-high:
-            name: "突出显示-高"
+            name: "高亮显示-高"
           highlight-medium:
-            name: "突出显示-中"
+            name: "高亮显示-中"
           highlight-low:
-            name: "突出显示-低"
+            name: "高亮显示-低"
           danger:
             name: "危险"
-            description: "突出显示删除帖子和话题等操作的颜色。"
+            description: "高亮显示删除帖子和话题等操作的颜色。"
           success:
             name: "成功"
             description: "用于指示操作成功。"

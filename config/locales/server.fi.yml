@@ -1796,6 +1796,7 @@ fi:
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"
     allowed_internal_hosts: "Luettelo sisäisistä isännistä, joita Discourse voi turvallisesti indeksoida onebox-esikatselua ja muita tarkoituksia varten"
     allowed_onebox_iframes: "Luettelo iframe src -verkkotunnuksista, jotka sallitaan Onebox-upotusten kautta. `*` sallii kaikki Onebox-oletusmoduulit."
+    allowed_iframes: "Luettelo iframe src -URL-etuliitteistä, jotka Discourse voi turvallisesti sallia viesteissä. * vastaa mitä tahansa määrää muita merkkejä kuin vinoviivaa."
     allowed_crawler_user_agents: "Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle. VAROITUS! TÄMÄ ASETUS ESTÄÄ KAIKKI HAKUROBOTIT, JOITA EI LISTATA TÄSSÄ!"
     blocked_crawler_user_agents: "Käyttäjäagentin nimessä oleva kirjainkoosta riippumaton yksilöllinen merkkijono, jolla tunnistetaan estettävät hakurobotit. Ei sovelleta, jos sallittujen hakurobottien luettelo on määriteltynä."
     slow_down_crawler_user_agents: 'Hakurobottien käyttäjäagentit, joiden nopeutta tulisi rajoittaa "slow down crawler rate" -asetuksessa määritetyn mukaisesti. Jokaisen arvon täytyy olla ainakin kolmen merkin pituinen.'
@@ -2074,7 +2075,7 @@ fi:
     enable_filtered_replies_view: '"(n) vastausta" -painike kutistaa kaikki muut viestit ja näyttää vain nykyisen viestin ja sen vastaukset.'
     title_fancy_entities: "Muunna tavalliset ASCII-merkit hienommiksi HTML-merkinnöiksi ketjujen otsikoissa SmartyPantsin avulla <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
-    desktop_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun työpöytälaitteilla. Se sisältää vaihtoehtoja, kuten alaluokkien näyttämisen esiteltyjen ketjujen kanssa, uusimpien ketjujen näyttämisen tai suosituimpien ketjujen esittämisen. Valittu tyyli vaikuttaa siihen, miten käyttäjät ovat vuorovaikutuksessa ja siirtyvät sivuston alueiden välillä."
+    desktop_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun työpöytälaitteilla. Se sisältää vaihtoehtoja, kuten ala-alueiden näyttämisen esiteltyjen ketjujen kanssa, uusimpien ketjujen näyttämisen tai suosituimpien ketjujen esittämisen. Valittu tyyli vaikuttaa siihen, miten käyttäjät ovat vuorovaikutuksessa ja siirtyvät sivuston alueiden välillä."
     mobile_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun mobiililaitteilla."
     category_colors: "Luettelo alueiden sallituista väriarvoista heksadesimaaleina."
     default_dark_mode_color_scheme_id: "Väripaletti, jota käytetään tummassa tilassa."
@@ -4870,9 +4871,9 @@ fi:
                 description: "Tuo esiin trendikkäitä ketjuja yhdistämällä viimeaikaisen ja yleisen suosion, esittelee, mistä jäsenet puhuvat yhteisössäsi juuri nyt"
               categories_and_latest_topics:
                 label: "Alueet ja tuoreimmat ketjut"
-                description: "Yhdistää hiljattain aktiiviset ketjut kaikista luokista sekä luokkien luettelon, niiden kuvauksen ja ketjujen kokonaismäärän"
+                description: "Yhdistää hiljattain aktiiviset ketjut kaikista alueista sekä alueiden luettelon, niiden kuvauksen ja ketjujen kokonaismäärän"
               categories_boxes:
-                label: "Luokkaruudut"
+                label: "Alueruudut"
                 description: "Näyttää luokat ja niiden kuvauksen ruudukossa, mikä auttaa jäseniä näkemään yleiskatsauksen sivustosi alayhteisöistä"
       branding:
         title: "Sivuston logo"

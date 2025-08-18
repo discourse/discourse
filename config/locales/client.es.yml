@@ -4183,6 +4183,7 @@ es:
       content_load_error: '<a href="%url%">El contenido</a> no se pudo cargar.'
       image_load_error: '<a href="%url%">La imagen</a> no se pudo cargar.'
     cannot_render_video: Este vídeo no se puede mostrar porque tu navegador no es compatible con el códec.
+    invalid_video_url: Este vídeo no se puede reproducir porque la URL no es válida o no está disponible.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4809,6 +4810,9 @@ es:
         legal:
           title: "Legal"
           header_description: "Configura los ajustes legales, como las condiciones del servicio, la política de privacidad, los datos de contacto y las consideraciones específicas de la UE."
+        localization:
+          title: "Localización"
+          header_description: "Configura el idioma de la interfaz de tu comunidad y otras opciones de localización para tus miembros"
         login_and_authentication:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
@@ -5338,6 +5342,9 @@ es:
           group_permissions: "Permisos de grupo"
           users: "Usuarios"
           groups: "Grupos"
+          localization:
+            title: "Localización"
+            keywords: "idioma local|idioma|zona horaria|unicode|ltr"
           user_fields: "Campos de usuario"
           watched_words: "Palabras vigiladas"
           legal: "Legal"

@@ -1521,7 +1521,7 @@ pl_PL:
       api_last_used_at: "Ostatnio użyto:"
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
-      home: "Domyślna strona domowa"
+      home: "Domyślna strona główna"
       staged: "Wystawiany na scenie"
       staff_counters:
         flags_given:
@@ -5230,7 +5230,7 @@ pl_PL:
       title: "Konstruktor tabeli"
       modal:
         title: "Konstruktor tabeli"
-        create: "Zbuduj tabelę"
+        create: "Skonstruuj tabelę"
         help:
           title: "Za pomocą edytora arkusza kalkulacyjnego"
           enter_key: "Enter"

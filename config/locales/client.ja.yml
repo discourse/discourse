@@ -3951,6 +3951,7 @@ ja:
       content_load_error: '<a href="%url%">コンテンツ</a>を読み込めませんでした。'
       image_load_error: '<a href="%url%">画像</a>を読み込めませんでした。'
     cannot_render_video: ブラウザがコーデックをサポートしていないため、この動画をレンダリングできません。
+    invalid_video_url: URL が無効であるか利用できないため、この動画を再生できません。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "、"
       shortcut_key_delimiter_plus: "+"
@@ -4551,6 +4552,9 @@ ja:
         legal:
           title: "法関連"
           header_description: "利用規約、プライバシーポリシー、連絡先の詳細、EU 固有の考慮事項など、法的な設定を構成します"
+        localization:
+          title: "ローカリゼーション"
+          header_description: "コミュニティーのインターフェース言語とメンバー向けのその他のローカリゼーションオプションを構成します"
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
@@ -5071,6 +5075,9 @@ ja:
           group_permissions: "グループ権限"
           users: "ユーザー"
           groups: "グループ"
+          localization:
+            title: "ローカリゼーション"
+            keywords: "ロケール|言語|タイムゾーン|Unicode|ltr"
           user_fields: "ユーザーフィールド"
           watched_words: "ウォッチ中の語"
           legal: "法関連"

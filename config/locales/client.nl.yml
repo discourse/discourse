@@ -1103,7 +1103,7 @@ nl:
         position: "Positie"
       posts: "Berichten"
       topics: "Topics"
-      latest: "Nieuwste"
+      latest: "Recent"
       subcategories: "Subcategorieën"
       muted: "Gedempte categorieën"
       topic_sentence:
@@ -3004,7 +3004,7 @@ nl:
         bookmarks: "Je hebt nog geen bladwijzers voor topics gemaakt."
         category: "Er zijn geen topics in %{category}."
         top: "Er zijn geen toptopics."
-        hot: "Er zijn geen veelgelezen topics."
+        hot: "Er zijn geen populaire topics."
         filter: "Er zijn geen topics."
         educate:
           new: '<p>Hier worden je nieuwe topics weergegeven. Standaard worden topics als nieuw beschouwd en wordt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> weergegeven als ze de afgelopen 2 dagen zijn gemaakt.</p><p>Ga naar je <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
@@ -3020,7 +3020,7 @@ nl:
         category: "Er zijn verder geen topics in %{category}."
         tag: "Er zijn verder geen topics over %{tag}."
         top: "Er zijn verder geen toptopics."
-        hot: "Er zijn geen veelgelezen topics meer."
+        hot: "Er zijn geen populaire topics meer."
         bookmarks: "Er zijn verder geen topics met bladwijzers."
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
@@ -4113,9 +4113,9 @@ nl:
         lower_title: "ongezien"
         help: "nieuwe topics en topics die je momenteel observeert of volgt met ongelezen berichten"
       hot:
-        title: "Veelgelezen"
-        lower_title: "veelgelezen"
-        help: "recente veelgelezen topics"
+        title: "Populair"
+        lower_title: "populair"
+        help: "recente populaire topics"
       new:
         lower_title_with_count:
           one: "%{count} nieuw"
@@ -4183,6 +4183,7 @@ nl:
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
     cannot_render_video: Deze video kan niet worden weergegeven omdat je browser de codec niet ondersteunt.
+    invalid_video_url: Deze video kan niet worden afgespeeld omdat de URL ongeldig of niet beschikbaar is.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4809,6 +4810,9 @@ nl:
         legal:
           title: "Juridisch"
           header_description: "Configureer juridische instellingen, zoals gebruiksvoorwaarden, privacybeleid, contactgegevens en EU-specifieke overwegingen"
+        localization:
+          title: "Lokalisatie"
+          header_description: "Configureer de interfacetaal van je community en andere lokalisatieopties voor je leden"
         login_and_authentication:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
@@ -5339,6 +5343,9 @@ nl:
           group_permissions: "Groepsmachtigingen"
           users: "Gebruikers"
           groups: "Groepen"
+          localization:
+            title: "Lokalisatie"
+            keywords: "landinstellingen|taal|tijdzone|unicode|ltr"
           user_fields: "Gebruikersvelden"
           watched_words: "Geobserveerde woorden"
           legal: "Juridisch"
@@ -7134,7 +7141,7 @@ nl:
         unread: "Ongelezen"
         top: "Top"
         latest: "Nieuwste"
-        hot: "Veelgelezen"
+        hot: "Populair"
         categories: "Categorieën"
         unseen: "Ongezien"
         read: "Gelezen"

@@ -4183,6 +4183,7 @@ it:
       content_load_error: 'Caricamento <a href="%url%">del contenuto</a> non riuscito.'
       image_load_error: 'Caricamento <a href="%url%">dell''immagine</a> non riuscito.'
     cannot_render_video: Questo video non può essere visualizzato perché il tuo browser non supporta il codec.
+    invalid_video_url: Questo video non può essere riprodotto perché l'URL non è valido o non è disponibile.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4810,6 +4811,7 @@ it:
           title: "Informazioni legali"
           header_description: "Configura le impostazioni legali, come i termini di servizio, l'informativa sulla privacy, i dettagli di contatto e le considerazioni specifiche dell'UE"
         localization:
+          title: "Localizzazione"
           header_description: "Configura la lingua dell'interfaccia della tua community e altre opzioni di localizzazione per i tuoi membri"
         login_and_authentication:
           title: "Accesso e autenticazione"
@@ -5341,6 +5343,9 @@ it:
           group_permissions: "Autorizzazioni di gruppo"
           users: "Utenti"
           groups: "Gruppi"
+          localization:
+            title: "Localizzazione"
+            keywords: "localizzazione|lingua|fusoorario|unicode|ltr"
           user_fields: "Campi utente"
           watched_words: "Parole osservate"
           legal: "Informazioni legali"

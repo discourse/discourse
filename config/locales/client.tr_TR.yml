@@ -1175,7 +1175,7 @@ tr_TR:
           all: "Tümü"
           read: "Okundu"
           unread: "Okunmadı"
-          unseen: "Görülmedi"
+          unseen: "Görülmemiş"
         ignore_duration_title: "Kullanıcıyı Yok Say"
         ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_when: "Süre:"
@@ -4183,6 +4183,7 @@ tr_TR:
       content_load_error: '<a href="%url%">İçerik</a> yüklenemedi.'
       image_load_error: '<a href="%url%">Görüntü</a> yüklenemedi.'
     cannot_render_video: Tarayıcınız codec'i desteklemediği için bu video işlenemiyor.
+    invalid_video_url: URL geçersiz veya kullanılamadığı için bu video oynatılamıyor.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4809,6 +4810,9 @@ tr_TR:
         legal:
           title: "Yasal"
           header_description: "Hizmet koşulları, gizlilik politikası, iletişim bilgileri ve AB'ye özgü hususlar gibi yasal ayarları yapılandırın"
+        localization:
+          title: "Yerelleştirme"
+          header_description: "Topluluğunuzun arayüz dilini ve üyeleriniz için diğer yerelleştirme seçeneklerini yapılandırın"
         login_and_authentication:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
@@ -5339,6 +5343,9 @@ tr_TR:
           group_permissions: "Grup izinleri"
           users: "Kullanıcılar"
           groups: "Gruplar"
+          localization:
+            title: "Yerelleştirme"
+            keywords: "yerel ayar|dil|saat dilimi|unicode|ltr"
           user_fields: "Kullanıcı alanları"
           watched_words: "İzlenen kelimeler"
           legal: "Yasal"
