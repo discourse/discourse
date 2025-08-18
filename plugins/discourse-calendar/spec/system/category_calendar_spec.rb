@@ -9,7 +9,7 @@ describe "Category calendar", type: :system do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.events_calendar_categories = category.id
+    SiteSetting.events_calendar_categories = category.id.to_s
 
     PostCreator.create!(
       admin,
