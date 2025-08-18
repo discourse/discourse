@@ -13,7 +13,8 @@ export function configureRaiseOnDeprecation() {
   registerDeprecationHandler((message, options, next) => {
     if (
       disabled ||
-      DEPRECATION_WORKFLOW.find((w) => w.matchId === options.id)
+      DEPRECATION_WORKFLOW.find(options.id) ||
+      options.id.startsWith("ember-metal.")
     ) {
       return next(message, options);
     }
@@ -21,10 +22,7 @@ export function configureRaiseOnDeprecation() {
   });
 
   registerDiscourseDeprecationHandler((message, options) => {
-    if (
-      disabled ||
-      DEPRECATION_WORKFLOW.find((w) => w.matchId === options?.id)
-    ) {
+    if (disabled || DEPRECATION_WORKFLOW.find(options?.id)) {
       return;
     }
     raiseDeprecationError(message, options);

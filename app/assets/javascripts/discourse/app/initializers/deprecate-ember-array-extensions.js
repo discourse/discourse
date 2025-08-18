@@ -23,7 +23,7 @@ export default {
               k +
               " is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.",
             {
-              id: "discourse.ember.native-array-extensions",
+              id: `discourse.ember.native-array-extensions.${k}`,
               since: "3.6.0.beta1-dev",
             }
           );

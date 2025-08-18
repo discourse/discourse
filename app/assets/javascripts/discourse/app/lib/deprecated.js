@@ -48,7 +48,7 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  const matchedWorkflow = DEPRECATION_WORKFLOW.find((w) => w.matchId === id);
+  const matchedWorkflow = DEPRECATION_WORKFLOW.find(id);
 
   if (
     raiseError ||

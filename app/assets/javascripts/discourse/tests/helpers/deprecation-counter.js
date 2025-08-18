@@ -80,7 +80,7 @@ function reportToTestem(id) {
 }
 
 export function setupDeprecationCounter(qunit) {
-  const deprecationCounter = new DeprecationCounter(DEPRECATION_WORKFLOW);
+  const deprecationCounter = new DeprecationCounter(DEPRECATION_WORKFLOW.list);
 
   qunit.begin(() => deprecationCounter.start());
 
