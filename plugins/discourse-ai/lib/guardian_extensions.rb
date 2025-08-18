@@ -35,6 +35,17 @@ module DiscourseAi
       persona_groups.any? { |group_id| user.group_ids.include?(group_id) }
     end
 
+    def can_request_gists?
+      return false if !SiteSetting.ai_summarization_enabled
+      return false if !SiteSetting.ai_summary_gists_enabled
+
+      if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summary_gists_persona)).blank?
+        return false
+      end
+
+      true if is_staff?
+    end
+
     def can_request_summary?
       return false if anonymous?
 

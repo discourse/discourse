@@ -6,6 +6,7 @@ import AiTopicGist from "../components/ai-topic-gist";
 export default apiInitializer((api) => {
   const site = api.container.lookup("service:site");
   const settings = api.container.lookup("service:site-settings");
+  const MAX_ALLOWED_GISTS_REGENERATE = 30;
 
   /**
    * Shared function to regenerate gists for one or more topics
@@ -55,7 +56,10 @@ export default apiInitializer((api) => {
     label: "discourse_ai.summarization.topic.regenerate_bulk",
     icon: "arrows-rotate",
     class: "btn-default",
-    visible: ({ siteSettings, currentUser }) => {
+    visible: ({ topics, siteSettings, currentUser }) => {
+      if (topics?.length > MAX_ALLOWED_GISTS_REGENERATE) {
+        return false;
+      }
       return (
         siteSettings.discourse_ai_enabled &&
         siteSettings.ai_summarization_enabled &&

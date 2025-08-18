@@ -151,12 +151,9 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     end
 
     context "when a single topic id is provided" do
-      fab!(:user) { Fabricate(:leader) }
+      fab!(:admin)
 
-      before do
-        sign_in(user)
-        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
-      end
+      before { sign_in(admin) }
 
       it "regenerates the gist" do
         put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
@@ -177,6 +174,33 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response.status).to eq(200)
         expect(AiSummary.gist.where(target: topic).count).to eq(1)
         expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
+      end
+    end
+
+    context "when more than 30 topics are provided" do
+      fab!(:admin)
+
+      before { sign_in(admin) }
+
+      it "raises an error" do
+        topics = 31.times.map { Fabricate(:topic) }
+        topic_ids = topics.map(&:id)
+
+        put "/discourse-ai/summarization/regen_gist", params: { topic_ids: topic_ids }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "when user is not allowed to regenerate gists" do
+      fab!(:user)
+
+      before { sign_in(user) }
+
+      it "returns a 403" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(403)
       end
     end
   end

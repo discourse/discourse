@@ -43,6 +43,8 @@ module DiscourseAi
       end
 
       def regen_gist
+        raise Discourse::InvalidAccess if !guardian.can_request_gists?
+
         topics = []
 
         if params[:topic_ids].present?
@@ -55,13 +57,16 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:topic_id)
         end
 
-        if current_user && topics.size == 1
+        if current_user && topics.size >= 1
           RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+        end
+
+        if topics.size > TopicQuery::DEFAULT_PER_PAGE_COUNT
+          raise Discourse::InvalidParameters.new(:topic_ids)
         end
 
         topics.each do |topic|
           guardian.ensure_can_see!(topic)
-          raise Discourse::NotFound if !guardian.can_see_summary?(topic)
 
           summarizer = DiscourseAi::Summarization.topic_gist(topic)
           summarizer.delete_cached_summaries! if summarizer.present?
