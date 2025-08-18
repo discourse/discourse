@@ -11,7 +11,7 @@ module BackupRestore
              to: :s3_helper
 
     def initialize(opts = {})
-      @s3_options = S3Helper.s3_options(SiteSetting)
+      @s3_options = S3Helper.s3_options(SiteSetting, profile: "file-uploads")
       @s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
     end
 

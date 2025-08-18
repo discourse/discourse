@@ -420,7 +420,7 @@ class S3Helper
 
   def default_s3_options
     if SiteSetting.enable_s3_uploads?
-      options = self.class.s3_options(SiteSetting)
+      options = self.class.s3_options(SiteSetting, profile: "file-uploads")
       check_missing_site_options
       options
     elsif GlobalSetting.use_s3?
