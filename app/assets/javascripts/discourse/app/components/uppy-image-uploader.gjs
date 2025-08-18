@@ -187,12 +187,8 @@ export default class UppyImageUploader extends Component {
               style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
             >
               <source src={{this.imageCdnUrl}} />
-              Your browser does not support the video tag.
             </video>
-            <div
-              class="meta"
-              style="position: absolute; bottom: 8px; left: 8px; background: rgba(0, 0, 0, 0.7); color: white; padding: 4px 8px; border-radius: 3px; font-size: 0.85em;"
-            >
+            <div class="meta">
               <span class="informations">
                 {{this.imageFilename}}
                 {{#if this.imageFilesize}}
