@@ -10,10 +10,6 @@
     }
   }
 
-  &__inner-wrapper {
-    container-type: inline-size;
-  }
-
   &__wrap {
     display: flex;
     align-items: center;
@@ -21,6 +17,10 @@
     border-bottom: 1px solid var(--primary-300);
     margin-block: 0;
     padding-block: var(--space-4) var(--space-8);
+
+    .--with-bg-img & {
+      padding-block: clamp(var(--space-4), 10vh, var(--space-11));
+    }
 
     @include viewport.from(xl) {
       justify-content: center;
