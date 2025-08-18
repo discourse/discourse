@@ -1,15 +1,16 @@
-import { assert } from "@ember/debug";
-
 class DeprecationWorkflowList {
   #workflows;
 
   constructor(workflows) {
     workflows.forEach((workflow) => {
-      assert(
-        `Deprecation Workflow: \`matchId\` ${workflow.matchId} must be a string or a regex`,
-        typeof workflow.matchId === "string" ||
-          workflow.matchId instanceof RegExp
-      );
+      if (
+        typeof workflow.matchId !== "string" &&
+        !(workflow.matchId instanceof RegExp)
+      ) {
+        throw new Error(
+          `Deprecation Workflow: \`matchId\` ${workflow.matchId} must be a string or a regex`
+        );
+      }
     });
 
     this.#workflows = workflows;
