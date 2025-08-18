@@ -217,6 +217,9 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -268,12 +271,35 @@ en:
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
 
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+        
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
+
       modals:
         select_option: "Select an option..."
 
       layout:
         table: "Table"
         card: "Card"
+
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          disabled_state:
+            configure: "Configure translations"
+            empty_label: "Automatic translations are disabled, click below to configure"
+        progress_chart:
+          title: "Translation progress"
+          completed: "Completed"
+          remaining: "Remaining"
+
 
       spam:
         short_title: "Spam"

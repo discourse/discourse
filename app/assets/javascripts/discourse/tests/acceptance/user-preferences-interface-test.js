@@ -241,9 +241,6 @@ acceptance(
           session.userDarkSchemeId.toString(),
           "sets site default as selected dark scheme"
         );
-      assert
-        .dom(".control-group.dark-mode")
-        .doesNotExist("does not show disable dark mode checkbox");
 
       removeCookie("color_scheme_id");
       removeCookie("dark_scheme_id");

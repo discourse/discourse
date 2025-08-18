@@ -19,8 +19,8 @@ module DiscourseAi
           .cache
           .fetch(get_completion_cache_key(locale), expires_in: COMPLETION_CACHE_TTL) do
             done, total = calculate_completion_per_locale(locale)
-            return 1.0 if total.zero?
-            done / total.to_f
+            return { done: 0, total: 0 } if total.zero?
+            { done:, total: }
           end
       end
 

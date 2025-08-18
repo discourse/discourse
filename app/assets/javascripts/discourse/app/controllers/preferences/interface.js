@@ -231,9 +231,9 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed
-  showDarkModeToggle() {
-    return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
+  @discourseComputed("selectedDarkColorSchemeId")
+  showInterfaceColorModeSelector(selectedDarkColorSchemeId) {
+    return this.defaultDarkSchemeId > 0 || selectedDarkColorSchemeId > 0;
   }
 
   @discourseComputed
@@ -243,8 +243,20 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @discourseComputed(
+    "userSelectableColorSchemes",
+    "userSelectableDarkColorSchemes"
+  )
+  showColorSchemeSelector() {
+    return (
+      this.showLightColorSchemeSelector ||
+      this.showDarkColorSchemeSelector ||
+      this.showInterfaceColorModeSelector
+    );
+  }
+
   @discourseComputed("userSelectableColorSchemes")
-  showColorSchemeSelector(lightSchemes) {
+  showLightColorSchemeSelector(lightSchemes) {
     return lightSchemes && lightSchemes.length > 1;
   }
 
@@ -325,26 +337,19 @@ export default class InterfaceController extends Controller {
 
     if (!this.showColorSchemeSelector) {
       this.set("model.user_option.color_scheme_id", null);
+      this.set("model.user_option.dark_scheme_id", null);
     } else if (this.makeColorSchemeDefault) {
       this.set("model.user_option.color_scheme_id", this.selectedColorSchemeId);
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.selectedDarkColorSchemeId
+      );
       if (this.selectedInterfaceColorModeId) {
         this.set(
           "model.user_option.interface_color_mode",
           this.selectedInterfaceColorModeId
         );
       }
-    }
-
-    if (this.showDarkModeToggle) {
-      this.set(
-        "model.user_option.dark_scheme_id",
-        this.enableDarkMode ? null : -1
-      );
-    } else {
-      this.set(
-        "model.user_option.dark_scheme_id",
-        this.selectedDarkColorSchemeId
-      );
     }
 
     return this.model

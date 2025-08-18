@@ -1261,7 +1261,7 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
-            get "/latest?lang=es"
+            get "/latest?tl=es"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
@@ -1270,7 +1270,7 @@ RSpec.describe ApplicationController do
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/latest?lang=zh-CN"
+            get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end

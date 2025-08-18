@@ -204,12 +204,11 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def self.cleanup!
-    if SiteSetting.verbose_auth_token_logging
-      UserAuthTokenLog.where(
-        "created_at < :time",
-        time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
-      ).delete_all
-    end
+    UserAuthTokenLog.where(
+      "created_at < :time AND action NOT IN (:preserved_actions)",
+      time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
+      preserved_actions: %w[suspicious generate],
+    ).delete_all
 
     where(
       "rotated_at < :time",

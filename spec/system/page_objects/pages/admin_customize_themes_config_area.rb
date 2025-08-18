@@ -19,9 +19,9 @@ module PageObjects
         find_theme_card(theme).find(".theme-card__footer-menu-trigger").click
       end
 
-      def mark_as_active(theme)
+      def mark_as_default(theme)
         open_theme_menu(theme)
-        find(".set-active").click
+        find(".set-default").click
       end
 
       def has_badge?(theme, badge)
@@ -34,6 +34,10 @@ module PageObjects
 
       def has_themes?(names)
         expect(all(".theme-card__title").map(&:text)).to eq(names)
+      end
+
+      def has_no_theme?(name)
+        has_no_css?(".theme-card.#{name.parameterize}")
       end
 
       def toggle_selectable(theme)

@@ -351,7 +351,7 @@ export default class EditCategoryGeneral extends Component {
                 <ColorInput
                   @hexValue={{readonly field.value}}
                   @ariaLabelledby="foreground-color-label"
-                  @onChangeColor={{fn this.updateColor field}}
+                  @onBlur={{fn this.updateColor field}}
                 />
                 <ColorPicker
                   @colors={{CATEGORY_TEXT_COLORS}}

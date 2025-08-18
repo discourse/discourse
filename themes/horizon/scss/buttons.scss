@@ -6,17 +6,29 @@
   transition: none;
 }
 
-.sidebar-new-topic-button__wrapper .topic-drafts-menu-trigger.btn.no-text {
-  background: var(--accent-color);
-
-  &:hover,
-  &:focus-visible {
-    background: oklch(from var(--accent-color) 40% c h) !important;
-    box-shadow: none;
+.sidebar-new-topic-button__wrapper {
+  &:has(.fk-d-tooltip__trigger) {
+    #create-topic.btn {
+      border-radius: var(--d-button-border-radius) 0 0
+        var(--d-button-border-radius);
+    }
   }
 
-  .d-icon {
-    color: var(--accent-text-color);
+  .topic-drafts-menu-trigger.btn.no-text {
+    background: var(--accent-color);
+
+    &:hover,
+    &:focus-visible {
+      background: light-dark(
+        oklch(from var(--accent-color) 40% c h),
+        oklch(from var(--accent-color) 50% c h)
+      ) !important;
+      box-shadow: none;
+    }
+
+    .d-icon {
+      color: var(--accent-text-color);
+    }
   }
 }
 

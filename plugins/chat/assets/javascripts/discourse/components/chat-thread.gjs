@@ -43,11 +43,9 @@ import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
   @service chatThreadPane;

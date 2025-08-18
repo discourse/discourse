@@ -63,10 +63,6 @@ export default class DMenu extends Component {
     }
   }
 
-  get menuId() {
-    return `d-menu-${this.menuInstance.id}`;
-  }
-
   get options() {
     return this.menuInstance?.options ?? {};
   }

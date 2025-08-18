@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
@@ -18,7 +17,6 @@ class InlineFootnote extends Component {
       @interactive={{true}}
       @closeOnScroll={{false}}
       @closeOnClickOutside={{true}}
-      @triggers={{array "click"}}
     >
       <:trigger>
         {{! template-lint-disable no-invalid-link-text }}
