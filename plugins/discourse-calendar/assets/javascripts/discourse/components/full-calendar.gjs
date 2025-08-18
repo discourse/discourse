@@ -72,6 +72,7 @@ export default class FullCalendar extends Component {
       eventDidMount: (info) => {
         if (info.event.extendedProps?.htmlContent) {
           const tooltip = this.menu.register(info.el, {
+            groupIdentifier: "post-event-tooltip",
             triggers: ["hover"],
             content: htmlSafe(
               // this is a workaround to allow linebreaks in the tooltip
