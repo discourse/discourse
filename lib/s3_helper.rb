@@ -46,7 +46,7 @@ class S3Helper
 
   def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
-    options = S3Helper.s3_options(setting_klass, "file-uploads")
+    options = S3Helper.s3_options(setting_klass, profile: "file-uploads")
     options[:client] = s3_client if s3_client.present?
     options[:use_accelerate_endpoint] = !for_backup &&
       SiteSetting.Upload.enable_s3_transfer_acceleration
