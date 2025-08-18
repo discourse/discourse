@@ -2412,14 +2412,20 @@ RSpec.describe PostsController do
       )
     end
     let(:tag_only_revision) do
-      Fabricate(:post_revision, post: post, modifications: { "tags" => %w[tag1,tag2 tag2,tag3] })
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[tag1 tag2], %w[tag2 tag3]],
+        },
+      )
     end
     let(:unordered_tag_revision) do
       Fabricate(
         :post_revision,
         post: post,
         modifications: {
-          "tags" => %w[gamma,alpha,beta alpha,beta,gamma],
+          "tags" => [%w[gamma alpha beta], %w[alpha beta gamma]],
         },
       )
     end
@@ -2428,7 +2434,7 @@ RSpec.describe PostsController do
         :post_revision,
         post: post,
         modifications: {
-          "tags" => %w[123,tag1,tag2 tag2,123,tag1],
+          "tags" => [%w[123 tag1 tag2], %w[tag2 123 tag1]],
         },
       )
     end
