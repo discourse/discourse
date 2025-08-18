@@ -46,7 +46,7 @@ class S3Helper
 
   def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
-    options = S3Helper.s3_options(setting_klass)
+    options = S3Helper.s3_options(setting_klass, "file-uploads")
     options[:client] = s3_client if s3_client.present?
     options[:use_accelerate_endpoint] = !for_backup &&
       SiteSetting.Upload.enable_s3_transfer_acceleration
@@ -268,14 +268,18 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
-  def self.s3_options(obj)
+  def self.s3_options(obj, profile: nil)
     opts = { region: obj.s3_region }
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    unless obj.s3_use_iam_profile
+    if obj.s3_use_iam_profile
+      raise ArgumentError, "Profile required when using IAM profiles" if profile.blank?
+      opts[:profile] = profile
+    else
+      # Legacy behavior for self-hosters
       opts[:access_key_id] = obj.s3_access_key_id
       opts[:secret_access_key] = obj.s3_secret_access_key
     end
