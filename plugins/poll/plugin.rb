@@ -20,7 +20,6 @@ after_initialize do
     PLUGIN_NAME = "poll"
     DATA_PREFIX = "data-poll-"
     HAS_POLLS = "has_polls"
-    DYNAMIC_POLLS = "dynamic_polls"
     DEFAULT_POLL_NAME = "poll"
 
     class Engine < ::Rails::Engine

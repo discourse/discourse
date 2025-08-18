@@ -173,7 +173,7 @@ export default class PollInfoComponent extends Component {
       </div>
       {{#if this.showInstructionsSection}}
         <ul class="poll-info_instructions">
-          {{#if @isDynamic}}
+          {{#if (if @isDynamic true this.poll.dynamic)}}
             <li class="is-dynamic">
               {{icon "shuffle"}}
               <span>{{i18n "poll.dynamic.enabled_hint"}}</span>
