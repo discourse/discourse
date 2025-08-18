@@ -42,38 +42,6 @@ export default class Tooltips extends Component {
     this._content = htmlSafe(value);
   }
 
-  get templateCode() {
-    return `<DTooltip
-  @label="${this.label}"
-  @content="${this.content}"
-/>`;
-  }
-
-  get templateCodeContent() {
-    return `<DTooltip @maxWidth={{100}}>
-  <:trigger>
-     ${this.label}
-  </:trigger>
-  <:content>
-    ${this.content}
-  </:content>
-</DTooltip>`;
-  }
-
-  get serviceCode() {
-    return `this.tooltip.register(
-  document.queryselector(".my-element"),
-  { content: "${this.content}" }
-);`;
-  }
-
-  get serviceCodeComponent() {
-    return `this.tooltip.register(
-  document.queryselector(".my-element"),
-  { component: MyComponent, data: { foo: 1 } }
-);`;
-  }
-
   @action
   toggleArrow() {
     this.arrow = !this.arrow;
