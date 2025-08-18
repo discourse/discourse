@@ -265,7 +265,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--topic-timeline-border-color);
+      background-color: var(--topic-timeline-handle-color);
       height: 100%;
       float: left;
       z-index: z("base") + 1;

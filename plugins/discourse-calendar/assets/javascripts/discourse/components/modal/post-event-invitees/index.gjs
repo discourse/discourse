@@ -15,7 +15,6 @@ import ToggleInvitees from "../../toggle-invitees";
 import User from "./user";
 
 export default class PostEventInviteesModal extends Component {
-  @service store;
   @service discoursePostEventApi;
 
   @tracked filter;

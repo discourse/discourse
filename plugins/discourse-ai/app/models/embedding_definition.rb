@@ -216,7 +216,9 @@ class EmbeddingDefinition < ActiveRecord::Base
   end
 
   def gemini_client
-    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key)
+    client_dimensions = matryoshka_dimensions ? dimensions : nil
+
+    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key, client_dimensions)
   end
 end
 

@@ -50,11 +50,11 @@ updates:
           - "actionmailer"
           - "actionpack"
           - "actionview"
-          - "actionmodel"
+          - "activemodel"
           - "activerecord"
+          - "activejob"
           - "activesupport"
           - "railties"
-          - "sprockets-rails"
       sass:
         patterns:
           - "sass*"
@@ -97,6 +97,9 @@ updates:
       uppy:
         patterns:
           - "@uppy*"
+      fullcalendar:
+        patterns:
+          - "@fullcalendar/*"
       lint:
         patterns:
           - "@discourse/lint-configs"

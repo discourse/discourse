@@ -6,6 +6,6 @@ export default class AdminSearchIndexController extends Controller {
   queryParams = ["filter"];
 
   get shortcutHTML() {
-    return `<kbd>${translateModKey(PLATFORM_KEY_MODIFIER)}</kbd> + <kbd>/</kbd>`;
+    return `<kbd>${translateModKey(PLATFORM_KEY_MODIFIER)}</kbd> <kbd>/</kbd>`;
   }
 }

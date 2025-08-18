@@ -12,11 +12,12 @@ acceptance(
     needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
     needs.pretender((server, helper) => {
       const messagesPath = "/topics/messages-assigned/eviltrout.json";
-      const assigns = AssignedTopics[messagesPath];
-      server.get(messagesPath, () => helper.response(assigns));
+      server.get(messagesPath, () =>
+        helper.response(cloneJSON(AssignedTopics[messagesPath]))
+      );
     });
 
-    test("Unassign/reassign options are visible", async function (assert) {
+    test("unassign/reassign options are visible", async function (assert) {
       const options = selectKit(".assign-actions-dropdown");
 
       await visit("/u/eviltrout/activity/assigned");
@@ -43,12 +44,12 @@ acceptance(
       );
     });
 
-    test("It renders the empty state panel", async function (assert) {
+    test("renders the empty state panel", async function (assert) {
       await visit("/u/eviltrout/activity/assigned");
       assert.dom("div.empty-state").exists();
     });
 
-    test("It does not render the search form", async function (assert) {
+    test("does not render the search form", async function (assert) {
       await visit("/u/eviltrout/activity/assigned");
       assert.dom("div.topic-search-div").doesNotExist();
     });

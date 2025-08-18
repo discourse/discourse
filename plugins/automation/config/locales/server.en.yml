@@ -3,6 +3,12 @@ en:
     discourse_automation_enabled: "Enable discourse-automation plugin"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Script cannot be blank"
+          trigger_blank: "Trigger cannot be blank"
+          script_missing_required_fields: "Script is missing required fields: %{fields}"
+          trigger_missing_required_fields: "Trigger is missing required fields: %{fields}"
       fields:
         required_field: Field `%{name}` must be filled on `%{target}:%{target_name}`.
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`.

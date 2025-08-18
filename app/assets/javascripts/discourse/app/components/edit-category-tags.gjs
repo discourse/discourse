@@ -48,7 +48,13 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
       />
     </section>
     <section class="field allowed-tags">
-      <label>{{i18n "category.tags_allowed_tags"}}</label>
+      <label>
+        {{#if this.category.id}}
+          {{i18n "category.tags_allowed_tags" categoryName=this.category.name}}
+        {{else}}
+          {{i18n "category.tags_allowed_tags_new_category"}}
+        {{/if}}
+      </label>
       <TagChooser
         @id="category-allowed-tags"
         @tags={{this.category.allowed_tags}}
@@ -61,7 +67,16 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
     </section>
 
     <section class="field allowed-tag-groups">
-      <label>{{i18n "category.tags_allowed_tag_groups"}}</label>
+      <label>
+        {{#if this.category.id}}
+          {{i18n
+            "category.tags_allowed_tag_groups"
+            categoryName=this.category.name
+          }}
+        {{else}}
+          {{i18n "category.tags_allowed_tag_groups_new_category"}}
+        {{/if}}
+      </label>
       <TagGroupChooser
         @id="category-allowed-tag-groups"
         @tagGroups={{this.category.allowed_tag_groups}}

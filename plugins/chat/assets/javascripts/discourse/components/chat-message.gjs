@@ -50,17 +50,11 @@ export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
-  @service dialog;
   @service currentUser;
-  @service appEvents;
-  @service capabilities;
   @service chat;
   @service chatApi;
   @service chatChannelPane;
   @service chatThreadPane;
-  @service chatChannelsManager;
-  @service router;
-  @service toasts;
   @service modal;
   @service interactedChatMessage;
 

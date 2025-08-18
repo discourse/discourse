@@ -236,7 +236,12 @@ module Chat
       end
 
       # Notify when mentioned users are not able to access the channel
-      publish_unreachable_mentions(inaccessible[:unreachable]) if inaccessible[:unreachable].any?
+      # When user does not have permission to see group members, use the group name instead
+      if show_group_warning(inaccessible[:unreachable])
+        publish_unreachable_group_warning(hidden_member_groups.first.name)
+      elsif inaccessible[:unreachable].any?
+        publish_unreachable_mentions(inaccessible[:unreachable])
+      end
 
       # Notify when `@all` or `@here` is used when channel has global mentions disabled
       publish_global_mentions_disabled if global_mentions_disabled
@@ -248,6 +253,16 @@ module Chat
       # Notify when large groups are mentioned, exceeding `max_users_notified_per_group_mention`
       too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
       publish_too_many_members_in_group_mention(too_many_members) if too_many_members.any?
+    end
+
+    def hidden_member_groups
+      @hidden_member_groups ||=
+        @parsed_mentions.groups_to_mention -
+          Group.where(id: @parsed_mentions.groups_to_mention.ids).members_visible_groups(@user)
+    end
+
+    def show_group_warning(users)
+      users.any? { |user| GroupUser.exists?(group: hidden_member_groups, user: user) }
     end
 
     def publish_inaccessible_mentions(users)
@@ -302,6 +317,19 @@ module Chat
             multiple: "chat.mention_warning.cannot_see_multiple",
             first_identifier: users.first.username,
             count: users.count,
+          ),
+      )
+    end
+
+    def publish_unreachable_group_warning(group_name)
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        text_content:
+          I18n.t(
+            "chat.mention_warning.cannot_see_group",
+            group_name: group_name,
+            locale: @user.effective_locale,
           ),
       )
     end
