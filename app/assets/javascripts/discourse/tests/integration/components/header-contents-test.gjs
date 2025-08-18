@@ -25,9 +25,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
       await render(<template><Contents /></template>);
 
-      assert
-        .dom(".floating-search-input-wrapper")
-        .doesNotExist("it does not display when the site is in mobile view");
+      assert.dom(".floating-search-input-wrapper").doesNotExist();
     });
 
     module("routes handling", function () {
@@ -36,9 +34,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .doesNotExist('it does not display on route: "signup"');
+        assert.dom(".floating-search-input-wrapper").doesNotExist();
       });
 
       test('is hidden in route "login"', async function (assert) {
@@ -46,9 +42,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .doesNotExist('it does not display on route: "login"');
+        assert.dom(".floating-search-input-wrapper").doesNotExist();
       });
 
       test('is hidden in route "invites.show"', async function (assert) {
@@ -56,9 +50,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .doesNotExist('it does not display on route: "invites.show"');
+        assert.dom(".floating-search-input-wrapper").doesNotExist();
       });
 
       test('is hidden in route "activate-account"', async function (assert) {
@@ -66,9 +58,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .doesNotExist('it does not display on route: "activate-account"');
+        assert.dom(".floating-search-input-wrapper").doesNotExist();
       });
 
       test('is shown in route "login-preferences"', async function (assert) {
@@ -76,9 +66,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .exists('it is shown on route: "login-preferences"');
+        assert.dom(".floating-search-input-wrapper").exists();
       });
 
       test('is shown in route "badges.show"', async function (assert) {
@@ -86,9 +74,7 @@ module("Integration | Component | Header | Contents", function (hooks) {
 
         await render(<template><Contents /></template>);
 
-        assert
-          .dom(".floating-search-input-wrapper")
-          .exists('it is shown on route: "badges.show"');
+        assert.dom(".floating-search-input-wrapper").exists();
       });
     });
   });
