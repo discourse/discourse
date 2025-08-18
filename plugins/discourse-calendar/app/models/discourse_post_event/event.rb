@@ -424,7 +424,9 @@ module DiscoursePostEvent
     end
 
     def notify_if_new_event
-      if recurrence.blank? || !dates_changed?
+      is_generating_future_recurrence = recurrence.present? && original_starts_at <= Time.current
+
+      unless is_generating_future_recurrence
         notify_invitees!
         notify_missing_invitees!
       end
