@@ -6,6 +6,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Topic from "discourse/models/topic";
 import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
@@ -16,6 +17,7 @@ export default class PostCalendar extends Component {
   @service siteSettings;
   @service capabilities;
   @service postCalendar;
+  @service router;
   @service store;
 
   @tracked post = this.args.post;
@@ -28,6 +30,13 @@ export default class PostCalendar extends Component {
   @action
   teardownPostCalendar() {
     this.postCalendar.teardownComponent();
+  }
+
+  @action
+  onEventClick(info) {
+    if (info.event.extendedProps.postUrl) {
+      this.router.transitionTo(info.event.extendedProps.postUrl);
+    }
   }
 
   @action
@@ -167,7 +176,7 @@ export default class PostCalendar extends Component {
 
     event.extendedProps = {};
     if (detail.post_url) {
-      event.extendedProps.postUrl = detail.post_url;
+      event.extendedProps.postUrl = getURL(detail.post_url);
     } else if (detail.post_number) {
       event.extendedProps.postNumber = detail.post_number;
     } else {
@@ -301,6 +310,11 @@ export default class PostCalendar extends Component {
     event.extendedProps.htmlContent = htmlSafe(escapeExpression(popupText));
     event.title = event.title.replace(/<img[^>]*>/g, "");
     event.participantCount = 1;
+
+    if (detail.post_url) {
+      event.extendedProps.postUrl = getURL(detail.post_url);
+    }
+
     return event;
   }
 
@@ -356,6 +370,7 @@ export default class PostCalendar extends Component {
         @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
         @events={{this.events}}
         @height={{@height}}
+        @onEventClick={{this.onEventClick}}
       />
     </div>
   </template>
