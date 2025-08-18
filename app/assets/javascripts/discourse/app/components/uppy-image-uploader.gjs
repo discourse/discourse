@@ -30,6 +30,7 @@ export default class UppyImageUploader extends Component {
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
+    type: this.args.type,
     additionalParams: this.args.additionalParams,
     validateUploadedFilesOptions: this.args.allowVideo
       ? {}
