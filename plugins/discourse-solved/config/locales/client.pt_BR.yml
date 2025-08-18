@@ -29,6 +29,7 @@ pt_BR:
       solution_summary:
         one: "solução"
         other: "soluções"
+      accepted_html: "%{icon} solucionado <span class='by'>por <a href data-user-card='%{username_lower}'>%{username}</a></span> na <a href='%{post_path}' class='back'>postagem #%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tudo"
@@ -37,6 +38,7 @@ pt_BR:
       no_solved_topics_title: "Você ainda não solucionou nenhum tópico"
       no_solved_topics_title_others: "%{username} ainda não respondeu a nenhum tópico"
       no_solved_topics_body: "Quando você fornecer uma resposta útil a um tópico, ela poderá ser selecionada como uma solução pelo(a) proprietário(a) ou equipe do tópico."
+      marked_solved_by: "Marcado como solucionado por <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Sua pergunta foi respondida?
         description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."

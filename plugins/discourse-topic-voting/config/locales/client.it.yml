@@ -21,6 +21,9 @@ it:
       voted_title: "Votato"
       voting_closed_title: "Chiuso"
       voting_limit: "Limite"
+      votes_left:
+        one: "Hai ancora %{count} voto, vedi i <a href='%{path}'>tuoi voti</a>."
+        other: "Hai ancora %{count} voti, vedi i <a href='%{path}'>tuoi voti</a>."
       votes_left_button_title:
         one: "Hai ancora %{count} voto."
         other: "Hai ancora %{count} voti."

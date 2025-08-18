@@ -16,6 +16,7 @@ ur:
       disable_holiday: "غیر فعال کریں"
       enable_holiday: "فعال کریں"
       date: "تاریخ"
+      toggle_timezone_offset_title: "خطہ کا وقت کا فرق کو ٹوگل کریں۔"
       region:
         none: "کوئی نہیں"
       toolbar_button:
@@ -25,6 +26,7 @@ ur:
         day: "دن"
     group_timezones:
       search: "تلاش کریں..."
+      group_availability: "%{group} دستیابی"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -54,13 +56,17 @@ ur:
           placeholder: "اختیاری"
         create: "بنائیں"
         update: "محفوظ کریں"
+        show_local_time:
+          description: "تاریخ اور اوقات %{timezone} کے مطابق دکھائے جائیں گے۔ اسے مقام پر ہونے والے ایونٹس کے لیے استعمال کریں تاکہ وقت اس خطہ کے وقت کے مطابق نظر آئے۔"
         timezone:
-          label: ٹائم زون
+          label: خطہ کا وقت
+          remove_timezone: کوئی خطہ کا وقت نہیں (UTC)
         reminders:
           units:
             minutes: "منٹ"
             hours: "گھنٹے"
             days: "دن"
+            weeks: "ہفتے"
           periods:
             before: "سے پہلے"
             after: "کے بعد"
@@ -68,6 +74,11 @@ ur:
           label: "تَقْلِید"
           none: "تَقْلِید نہیں"
           every_day: "ہر دن"
+          every_month: "ہر ماہ اس ہفتے کے دن"
+          every_weekday: "ہر ہفتے کے دن"
+          every_week: "ہر ہفتے اس ہفتے کے دن"
+          every_two_weeks: "ہر دو ہفتے بعد اس ہفتے کے دن"
+          every_four_weeks: "ہر چار ہفتے بعد اس ہفتے کے دن"
         url:
           label: "URL"
           placeholder: "اختیاری"

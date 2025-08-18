@@ -32,6 +32,7 @@ fi:
     post_voting_comment_limit_per_post: "Kussakin viestissä sallittavien kommenttien määrä"
     min_trust_to_flag_posts_voting_comments: "Vähimmäisluottamustaso viestin äänestyskommentin liputtamiseen"
     flag_posts_voting_comments_allowed_groups: "Ryhmät, jotka voivat liputtaa viestin äänestyskommentin"
+    post_voting_comment_enabled: "Ota viestin kommentit käyttöön viestiäänestysketjuissa"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ fi:
         limit_exceeded: "%{limit} kommentin viestikohtainen raja on saavutettu."
         perform: "Viestin äänestyskommentti liputettiin riittävän korkealla pistemäärällä käyttäjän hiljentämiseksi."
         auto_silence_from_flags: "Hiljennetty automaattisesti liputuksen vuoksi."
+        disabled: "Viestin kommentointi ei ole sallittua."
       reviewables:
         comment_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän kommentin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
         actions:

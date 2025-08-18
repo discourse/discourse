@@ -6,8 +6,6 @@
 
 bs_BA:
   js:
-    details:
-      title: Sakrij detalje
     composer:
       details_title: Sažetak
       details_text: "Ovaj tekst će biti sakriven"

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 es:
+  site_settings:
+    sign_in_with_apple_enabled: '¿Habilitar inicio de sesión con Apple?'

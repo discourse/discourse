@@ -1841,7 +1841,7 @@ id:
       agree_and_edit:
         title: "Setuju dan Edit Post"
         description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
-      delete_single:
+      delete:
         title: "Hapus"
         complete: "Pos dihapus."
       delete_and_ignore:
@@ -1876,6 +1876,8 @@ id:
         title: "Terima"
         complete: "Post disetujui."
       approve_post:
+        complete: "Post disetujui."
+      approve_post_closed:
         complete: "Post disetujui."
       reject_post:
         complete: "Post ditolak."

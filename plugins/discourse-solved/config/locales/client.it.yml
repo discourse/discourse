@@ -29,6 +29,7 @@ it:
       solution_summary:
         one: "soluzione"
         other: "soluzioni"
+      accepted_html: "%{icon} Risolto <span class='by'>da <a href data-user-card='%{username_lower}'>%{username}</a></span> in <a href='%{post_path}' class='back'>messaggio n.%{post_number}</a>"
       accepted_notification: "<p> <span>%{username}</span> %{description} </p>"
       topic_status_filter:
         all: "tutti"
@@ -37,6 +38,7 @@ it:
       no_solved_topics_title: "Non hai ancora risolto nessun argomento"
       no_solved_topics_title_others: "%{username} non ha ancora risolto nessun argomento"
       no_solved_topics_body: "Quando fornisci una risposta utile a un argomento, la tua risposta potrà essere selezionata come soluzione dal proprietario dell'argomento o dallo staff."
+      marked_solved_by: "Contrassegnato come risolto da <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: La tua domanda ha avuto risposta?
         description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."

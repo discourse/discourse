@@ -6,8 +6,6 @@
 
 hy:
   js:
-    details:
-      title: Թաքցնել Մանրամասները
     composer:
       details_title: Ամփոփումը
       details_text: "Այս տեքստը կթաքցվի"

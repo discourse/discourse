@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 it:
+  site_settings:
+    sign_in_with_apple_enabled: 'Abilitare l''accesso con Apple?'
+    apple_client_id: "(Accedi con Apple) Il 'Service Identifier' di Apple dalla console sviluppatore. Normalmente è una stringa in stile nome di dominio inverso (es. com.example.auth) (Accedi con Apple)"
+    apple_team_id: '(Accedi con Apple) ID team Apple (10 caratteri)'
+    apple_key_id: '(Accedi con Apple) ID chiave Apple (10 caratteri)'
+    apple_pem: '(Accedi con Apple) Contenuto del file PEM di Apple. Includi le righe BEGIN e END'

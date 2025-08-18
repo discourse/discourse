@@ -55,7 +55,7 @@ zh_CN:
     working_days: "设置工作日。您可以在帖子中使用 `timezones` 标签显示群组可用性，例如：`[timezones group=admins][timezones]`"
     working_day_start_hour: "工作日的开始时间。"
     working_day_end_hour: "工作日的结束时间。"
-    close_to_working_day_hours_extension: "以工作日小时为单位设置延长时间，突出显示时区。"
+    close_to_working_day_hours_extension: "以工作日小时为单位设置延长时间，高亮显示时区。"
     events_calendar_categories: "在类别顶部显示活动日历。"
     sort_categories_by_event_start_date_enabled: "启用按活动开始日期对类别话题进行排序。"
     disable_resorting_on_categories_enabled: "允许类别禁用用户对活动类别进行排序的功能。"

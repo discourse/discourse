@@ -110,7 +110,6 @@ es:
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
       error_while_exporting_results: "Lo sentimos, ha habido un error al exportar los resultados de la encuesta."
       ui_builder:
-        title: Crear encuesta
         insert: Insertar encuesta
         help:
           options_min_count: Introduce al menos 1 opción.

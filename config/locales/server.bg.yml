@@ -1665,7 +1665,7 @@ bg:
       agree_and_hide:
         title: "Скриване на публикацията"
         description: "Съгласете се със сигнала и скрийте тази публикация + автоматично изпратете на потребителя съобщение, призовавайки го да го редактира."
-      delete_single:
+      delete:
         title: "Изтрий"
         complete: "Публикацията е изтрита."
       delete_and_ignore:
@@ -1699,6 +1699,8 @@ bg:
         title: "Одобри"
         complete: "Публикацията е одобрена."
       approve_post:
+        complete: "Публикацията е одобрена."
+      approve_post_closed:
         complete: "Публикацията е одобрена."
       reject_post:
         complete: "Публикацията е отхвърлена."
