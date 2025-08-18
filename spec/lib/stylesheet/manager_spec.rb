@@ -617,19 +617,19 @@ RSpec.describe Stylesheet::Manager do
   describe "color_scheme_stylesheets" do
     it "returns something by default" do
       href = manager.color_scheme_stylesheet_link_tag_href
-      expect(href).to include("color_definitions_base")
+      expect(href).to include("color_definitions_light-default")
     end
 
     it "does not crash when no default theme is set" do
       SiteSetting.default_theme_id = -1
       href = manager.color_scheme_stylesheet_link_tag_href
 
-      expect(href).to include("color_definitions_base")
+      expect(href).to include("color_definitions_light-default")
     end
 
     it "loads base scheme when defined scheme id is missing" do
       href = manager.color_scheme_stylesheet_link_tag_href(125)
-      expect(href).to include("color_definitions_base")
+      expect(href).to include("color_definitions_light-default")
     end
 
     it "loads nothing when fallback_to_base is false" do
@@ -656,7 +656,7 @@ RSpec.describe Stylesheet::Manager do
 
       href =
         manager(user_theme.id).color_scheme_stylesheet_link_tag_href(nil, fallback_to_base: true)
-      expect(href).to include("/stylesheets/color_definitions_base_")
+      expect(href).to include("/stylesheets/color_definitions_light-default_")
 
       stylesheet =
         Stylesheet::Manager::Builder.new(
