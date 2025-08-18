@@ -134,6 +134,8 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
   end
 
   describe "#regen_gist" do
+    fab!(:admin)
+    fab!(:group)
     fab!(:topic)
     fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
@@ -147,12 +149,13 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       assign_fake_provider_to(:ai_default_llm_model)
       SiteSetting.ai_summarization_enabled = true
       SiteSetting.ai_summary_gists_enabled = true
+
+      group.add(admin)
+      assign_persona_to(:ai_summary_gists_persona, [group.id])
       Jobs.run_immediately!
     end
 
     context "when a single topic id is provided" do
-      fab!(:admin)
-
       before { sign_in(admin) }
 
       it "regenerates the gist" do
@@ -164,8 +167,6 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     end
 
     context "when multiple topic ids are provided" do
-      fab!(:admin)
-
       before { sign_in(admin) }
 
       it "regenerates the gists" do
@@ -178,8 +179,6 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     end
 
     context "when more than 30 topics are provided" do
-      fab!(:admin)
-
       before { sign_in(admin) }
 
       it "raises an error" do

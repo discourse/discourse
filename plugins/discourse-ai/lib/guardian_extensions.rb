@@ -38,12 +38,9 @@ module DiscourseAi
     def can_request_gists?
       return false if !SiteSetting.ai_summarization_enabled
       return false if !SiteSetting.ai_summary_gists_enabled
+      return false if !AiPersona.exists?(id: SiteSetting.ai_summary_gists_persona)
 
-      if AiPersona.exists?(id: SiteSetting.ai_summary_gists_persona)
-        return false
-      end
-
-  is_staff?
+      is_staff?
     end
 
     def can_request_summary?
