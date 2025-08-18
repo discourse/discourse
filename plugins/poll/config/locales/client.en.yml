@@ -7,7 +7,7 @@ en:
   js:
     poll:
       dynamic:
-        enabled_hint: "This poll is dynamic; options can be edited after posting."
+        enabled_hint: "This poll is dynamic. Options can be edited after posting."
       voters:
         one: "voter"
         other: "voters"
