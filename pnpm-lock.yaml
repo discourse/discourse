@@ -27,6 +27,9 @@ patchedDependencies:
   licensee@11.1.1:
     hash: 55h346kvblvnigtrwrsh4hpona
     path: patches/licensee@11.1.1.patch
+  message-bus-client:
+    hash: jol6zsjk4pbuuzonyjmti63r5q
+    path: patches/message-bus-client.patch
   virtual-dom@2.1.1:
     hash: sn2pgza4h5efktaq6vqurbpqga
     path: patches/virtual-dom@2.1.1.patch
@@ -681,7 +684,7 @@ importers:
         version: 7.4.0
       message-bus-client:
         specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.4.1(patch_hash=jol6zsjk4pbuuzonyjmti63r5q)
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
@@ -17062,7 +17065,7 @@ snapshots:
 
   mersenne-twister@1.1.0: {}
 
-  message-bus-client@4.4.1: {}
+  message-bus-client@4.4.1(patch_hash=jol6zsjk4pbuuzonyjmti63r5q): {}
 
   methods@1.1.2: {}
 
