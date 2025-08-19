@@ -102,7 +102,6 @@ export default class DiscoursePostEventDates extends Component {
       time: date.format("HH:mm"),
       format,
       timezone: this.timezone,
-      hideTimezone: this.args.event.showLocalTime,
       postId: this.args.event.id,
     };
 
