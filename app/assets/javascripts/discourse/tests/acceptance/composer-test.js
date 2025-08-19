@@ -1686,7 +1686,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified name when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-reply-name-fallback", () => {
+          api.registerValueTransformer("composer-reply-options-user-link-name", () => {
             return "NewNameHere";
           });
         });
@@ -1699,7 +1699,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-reply-user-avatar", () => {
+          api.registerValueTransformer("composer-reply-options-user-avatar-template", () => {
             return "/images/avatar.png?size={size}";
           });
         });
@@ -1718,7 +1718,7 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar in quote", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-editor-quote-avatar", () => {
+          api.registerValueTransformer("composer-editor-quoted-post-avatar-template", () => {
             return "/images/custom-quote-avatar.png?size={size}";
           });
         });

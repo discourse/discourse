@@ -189,7 +189,7 @@ export default class ComposerEditor extends Component {
           const quotedPost = posts.findBy("post_number", postNumber);
           if (quotedPost) {
             const avatarTemplate = applyValueTransformer(
-              "composer-editor-quote-avatar",
+              "composer-editor-quoted-post-avatar-template",
               quotedPost.get("avatar_template"),
               { post: quotedPost }
             );

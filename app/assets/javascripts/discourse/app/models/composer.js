@@ -464,7 +464,7 @@ export default class Composer extends RestModel {
     if (post) {
       options.label = i18n(`post.${action}`);
       const avatarTemplate = applyValueTransformer(
-        "composer-reply-user-avatar",
+        "composer-reply-options-user-avatar-template",
         post.avatar_template,
         { post }
       );
@@ -492,7 +492,7 @@ export default class Composer extends RestModel {
 
       const namePrioritized = prioritizeNameFallback(post.name, post.username);
       const name = applyValueTransformer(
-        "composer-reply-name-fallback",
+        "composer-reply-options-user-link-name",
         namePrioritized,
         { post }
       );
