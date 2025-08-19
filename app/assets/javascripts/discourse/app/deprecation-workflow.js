@@ -1,5 +1,3 @@
-import { makeArray } from "discourse/lib/helpers";
-
 class DiscourseDeprecationWorkflow {
   #filtered = false;
   #workflows;
@@ -14,26 +12,6 @@ class DiscourseDeprecationWorkflow {
           `Deprecation Workflow: \`matchId\` ${workflow.matchId} must be a string or a regex`
         );
       }
-
-      const validEnvs = [
-        "development",
-        "qunit-test",
-        "rails-test",
-        "test",
-        "production",
-      ];
-      workflow.envs = makeArray(workflow.env);
-      // throw an error if envs contains an item that is not in the list: development, qunit-test, rails-test, test, production
-      if (workflow.envs.length > 0) {
-        const envs = workflow.envs;
-        envs.forEach((env) => {
-          if (!validEnvs.includes(env)) {
-            throw new Error(
-              `Deprecation Workflow: \`env\` ${env} must be one of ${validEnvs.join(", ")}`
-            );
-          }
-        });
-      }
     });
 
     this.#workflows = workflows;
@@ -47,11 +25,13 @@ class DiscourseDeprecationWorkflow {
     this.#workflows = this.#workflows.filter((workflow) => {
       try {
         const environment = require("discourse/lib/environment");
-        const targetEnvs = workflow.envs;
+        let targetEnvs = workflow.env;
 
-        if (targetEnvs.length === 0) {
+        if (!targetEnvs || targetEnvs.length === 0) {
           return true;
         }
+
+        targetEnvs = Array.isArray(targetEnvs) ? targetEnvs : [targetEnvs];
 
         if (environment.isProduction()) {
           return targetEnvs.includes("production");
