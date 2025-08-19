@@ -1,8 +1,3 @@
-import {
-  isProduction,
-  isRailsTesting,
-  isTesting,
-} from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 
 class DiscourseDeprecationWorkflow {
@@ -50,25 +45,34 @@ class DiscourseDeprecationWorkflow {
     }
 
     this.#workflows = this.#workflows.filter((workflow) => {
-      const envs = workflow.envs;
+      try {
+        const environment = require("discourse/lib/environment");
+        const targetEnvs = workflow.envs;
 
-      if (envs.length === 0) {
-        return true;
+        if (targetEnvs.length === 0) {
+          return true;
+        }
+
+        if (environment.isProduction()) {
+          return targetEnvs.includes("production");
+        }
+
+        if (environment.isTesting()) {
+          return (
+            targetEnvs.includes("qunit-test") || targetEnvs.includes("test")
+          );
+        }
+
+        if (environment.isRailsTesting()) {
+          return (
+            targetEnvs.includes("rails-test") || targetEnvs.includes("test")
+          );
+        }
+
+        return targetEnvs.includes("development");
+      } catch {
+        return false;
       }
-
-      if (isProduction()) {
-        return envs.includes("production");
-      }
-
-      if (isTesting()) {
-        return envs.includes("qunit-test") || envs.includes("test");
-      }
-
-      if (isRailsTesting()) {
-        return envs.includes("rails-test") || envs.includes("test");
-      }
-
-      return envs.includes("development");
     });
     this.#filtered = true;
 
