@@ -59,13 +59,13 @@ function initializeDiscourseCalendar(api) {
       );
       const title = html[0] ? html[0].textContent.trim() : "";
 
-      const from = _convertHtmlToDate(dates[0]);
+      const from = convertHtmlToDate(dates[0]);
 
       let to;
       if (dates[1]) {
-        to = _convertHtmlToDate(dates[1]);
+        to = convertHtmlToDate(dates[1]);
       }
-      let event = _buildEventObject(from, to);
+      let event = buildEventObject(from, to);
       event.title = title;
       events.push(event);
     });
@@ -136,7 +136,7 @@ function initializeDiscourseCalendar(api) {
     );
   }
 
-  function #convertHtmlToDate(html) {
+  function convertHtmlToDate(html) {
     const date = html.dataset.date;
 
     if (!date) {
@@ -156,7 +156,7 @@ function initializeDiscourseCalendar(api) {
     };
   }
 
-  function #buildEventObject(from, to) {
+  function buildEventObject(from, to) {
     const hasTimeSpecified = (d) => {
       if (!d) {
         return false;
