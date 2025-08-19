@@ -68,7 +68,7 @@ export default RouteTemplate(
     {{/if}}
 
     <AdminFilterControls
-      @array={{@controller.sortedColorSchemes}}
+      @array={{@controller.displayedPalettes}}
       @minItemsForFilter={{FILTER_MINIMUM}}
       @searchableProps={{@controller.searchableProps}}
       @dropdownOptions={{@controller.dropdownOptions}}
