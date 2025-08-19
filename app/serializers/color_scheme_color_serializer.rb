@@ -12,9 +12,8 @@ class ColorSchemeColorSerializer < ApplicationSerializer
   end
 
   def default_hex
-    # return the hex value of the color when based on custom scheme
-    # or it is already a base color
-    if !object.color_scheme || object.color_scheme.base_scheme_id == "-1"
+    # return the hex value of the color when it is already a base color or no base_scheme is set
+    if !object.color_scheme || object.color_scheme.base_scheme_id == 0
       object.hex
     else
       object.color_scheme.base_colors[object.name]

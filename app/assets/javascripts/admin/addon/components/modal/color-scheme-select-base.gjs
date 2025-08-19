@@ -8,8 +8,7 @@ import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class ColorSchemeSelectBase extends Component {
-  @tracked
-  selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.base_scheme_id;
+  @tracked selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.id;
 
   @action
   selectBase() {

@@ -13,20 +13,11 @@ export default class AdminConfigAreasColorPalettes extends Component {
   @service router;
   @service modal;
 
-  get allColorPalettes() {
-    return this.args.palettes.map((palette) => {
-      if (palette.id === null) {
-        palette.id = palette.base_scheme_id;
-      }
-      return palette;
-    });
-  }
-
   @action
   newColorPalette() {
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        colorSchemes: this.allColorPalettes,
+        colorSchemes: this.args.palettes,
         newColorSchemeWithBase: this.newColorPaletteWithBase,
       },
     });
@@ -34,23 +25,16 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   async newColorPaletteWithBase(baseKey) {
-    let base;
-    let base_scheme_id;
-    if (baseKey && /^\d+$/.test(baseKey)) {
-      base = this.allColorPalettes.findBy("id", baseKey);
-      base_scheme_id = -1;
-    } else {
-      base = this.allColorPalettes.find(
-        (palette) => palette.base_scheme_id === baseKey
-      );
-      base_scheme_id = base.get("base_scheme_id");
-    }
+    const base = this.args.palettes.findBy("id", baseKey);
     const newPalette = base.copy();
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id,
+      base_scheme_id: base.get("id"),
     });
     await newPalette.save();
+    newPalette.colors.forEach((color) => {
+      color.default_hex = color.originals.hex;
+    });
     await this.router.refresh();
     this.router.replaceWith("adminConfig.colorPalettes.show", newPalette);
   }

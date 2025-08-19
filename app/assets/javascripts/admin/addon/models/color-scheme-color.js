@@ -56,9 +56,6 @@ export default class ColorSchemeColor extends EmberObject {
   // Whether the saved value is different than Discourse's default color scheme.
   @discourseComputed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
-    if (!defaultHex) {
-      return false;
-    }
     return this.originals.hex !== defaultHex;
   }
 
