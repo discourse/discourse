@@ -230,7 +230,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  _buildGroupedEvents(detail) {
+  #buildGroupedEvents(detail) {
     const events = [];
     const groupedEventData = [detail];
 
