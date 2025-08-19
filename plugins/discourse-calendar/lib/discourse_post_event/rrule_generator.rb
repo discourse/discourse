@@ -32,8 +32,14 @@ class RRuleGenerator
     rrule = set_mandatory_options(rrule, starts_at)
 
     # Format as multi-line RFC 5545 format for FullCalendar
-    # Use local time format without Z suffix to avoid timezone conversion issues
-    dtstart_line = "DTSTART:#{dtstart.strftime("%Y%m%dT%H%M%S")}" if dtstart
+    # Include timezone information in DTSTART to ensure proper interpretation
+    if dtstart
+      if timezone == "UTC"
+        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
+      else
+        dtstart_line = "DTSTART;TZID=#{timezone}:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
+      end
+    end
     rrule_line = "RRULE:#{stringify(rrule)}"
 
     if dtstart_line
