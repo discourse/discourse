@@ -12,6 +12,7 @@ const extension = {
         groups: { default: null },
         max: { default: null },
         min: { default: null },
+        dynamic: { default: null },
       },
       content: "heading? bullet_list poll_info?",
       group: "block",
