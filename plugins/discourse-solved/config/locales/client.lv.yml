@@ -11,6 +11,7 @@ lv:
         solved:
           accepted_notification: "apstiprināts"
     solved:
+      accepted_answer_post_number: "ieraksts %{post_number}"
       topic_status_filter:
         all: "Viss"
     discourse_automation:

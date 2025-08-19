@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ru:
+  site_settings:
+    sign_in_with_apple_enabled: 'Включить вход в систему с помощью Apple?'
+    apple_client_id: "(Войти с Apple) «Идентификатор сервиса» Apple из консоли разработчика. Обычно представляет собой строку в стиле обратного доменного имени (например, com.example.auth). (Войти с Apple)"
+    apple_team_id: '(Войти через Apple) Идентификатор команды Apple (10 символов)'
+    apple_key_id: '(Войти через Apple) Apple Key ID (10 символов)'
+    apple_pem: '(Войти через Apple) Содержимое PEM-файла Apple. Включая строки BEGIN и END.'

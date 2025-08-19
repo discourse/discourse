@@ -11,6 +11,7 @@ ug:
         solved:
           accepted_notification: "قوشۇلدى"
     solved:
+      accepted_answer_post_number: "%{post_number} يازما"
       topic_status_filter:
         all: "ھەممىسى"
     topic_statuses:

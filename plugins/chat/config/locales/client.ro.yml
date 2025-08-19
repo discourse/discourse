@@ -82,7 +82,7 @@ ro:
       return_to_threads_list: "Revino la lista de fire"
       sounds:
         none: "Nimeni"
-      exit: "înapoi"
+      exit: "ieși din discuție"
       channel_status:
         closed: "Închis"
         open: "Deschis"
@@ -247,3 +247,4 @@ ro:
       chat:
         keyboard_shortcuts:
           switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"
+          open_insert_link_modal: "%{shortcut} Inserează legătură (doar pentru compozitor)"

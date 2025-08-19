@@ -29,6 +29,7 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
+      accepted_answer_post_number: "%{post_number}. gönderi"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tümü"

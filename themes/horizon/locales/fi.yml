@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 fi:
+  theme_metadata:
+    description: "Yksinkertainen ja upea teema, joka parantaa Discourse-sivustojen alustavaa käyttökokemusta."

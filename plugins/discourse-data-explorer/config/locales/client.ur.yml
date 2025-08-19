@@ -22,6 +22,7 @@ ur:
         modal: "ڈیٹا کمانڈ درآمد کریں"
       help:
         label: "مدد"
+        data_types: "<h3>ڈیٹا کی اقسام</h3><p>یہاں عام ڈیٹا کی اقسام دی گئی ہیں جو آپ استعمال کر سکتے ہیں:</p><ul><li><b>integer</b> - چار بائٹس کا دستخط شدہ عدد</li><li><b>text</b> - متغیر لمبائی کا حرفی سلسلہ</li><li><b>boolean</b> – درست/غلط</li><li><b>date</b> - کیلنڈر کی تاریخ (سال، مہینہ، دن)</li></ul><p>ڈیٹا کی اقسام کے بارے میں مزید معلومات کے لیے، <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'> اس ویب سائٹ</a>پر جائیں۔</p>"
       schema:
         title: "ڈیٹا بیس سکیمہ"
         filter: "تلاش کریں..."

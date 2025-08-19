@@ -69,7 +69,6 @@ hr:
       error_while_fetching_voters: "Žao nam je, došlo je do pogreške prilikom prikaza glasača."
       error_while_exporting_results: "Žao nam je, došlo je do pogreške prilikom izvoza rezultata ankete."
       ui_builder:
-        title: Kreiraj anketu
         insert: Umetni anketu
         help:
           options_min_count: Unesite barem 1 opciju.
