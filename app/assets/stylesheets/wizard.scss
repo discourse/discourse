@@ -300,16 +300,6 @@ body.wizard {
     background-color: var(--primary-medium);
   }
 
-  &__button.primary {
-    background-color: var(--tertiary);
-    color: var(--secondary);
-
-    @include viewport.until(sm) {
-      order: 1;
-      margin-left: 0;
-    }
-  }
-
   &__button.finish {
     @include viewport.until(sm) {
       order: 2;
@@ -607,15 +597,14 @@ body.wizard {
     .help-text {
       margin: 2em 0;
     }
-
-    .primary {
-      display: inline-block;
-    }
   }
 }
 
-// Register admin page... /finish-installation/register
+// Register admin pages
+// /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
+  font-family: var(--font-family);
+
   .wizard-container__combobox {
     background: var(--secondary);
     color: var(--primary);
@@ -632,5 +621,40 @@ body.wizard {
 
   .wizard-container__text-input {
     color: var(--primary);
+  }
+
+  .wizard-container__button {
+    border-radius: 2px;
+    border: 0;
+    padding: 0.5em;
+    transition: var(--d-button-transition);
+    text-decoration: none;
+    background-color: var(--secondary);
+    color: var(--primary-very-high);
+    cursor: pointer;
+
+    &.btn-primary {
+      background-color: var(--tertiary);
+      color: var(--secondary);
+      display: inline-block;
+
+      @include viewport.until(sm) {
+        order: 1;
+        margin-left: 0;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--tertiary-hover);
+    }
+
+    &primary:active {
+      background-color: var(--tertiary-high);
+    }
+
+    &:disabled {
+      background-color: var(--tertiary-low);
+    }
   }
 }
