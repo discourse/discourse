@@ -158,7 +158,7 @@ export default class PostCalendar extends Component {
     return events;
   }
 
-  _buildEvent(detail) {
+  #buildEvent(detail) {
     const event = this._buildEventObject(
       detail.from
         ? {
