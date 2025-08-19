@@ -5,12 +5,10 @@ import { registerDeprecationHandler as registerDiscourseDeprecationHandler } fro
 
 export default class DeprecationCounter {
   counts = new Map();
-  #configById = new Map();
+  #config;
 
   constructor(config) {
-    for (const c of config) {
-      this.#configById.set(c.matchId, c.handler);
-    }
+    this.#config = config;
   }
 
   start() {
@@ -19,9 +17,20 @@ export default class DeprecationCounter {
   }
 
   @bind
+  findConfig(id) {
+    return this.#config.find((config) => {
+      if (config.matchId instanceof RegExp) {
+        return config.matchId.test(id);
+      }
+
+      return config.matchId === id;
+    });
+  }
+
+  @bind
   handleEmberDeprecation(message, options, next) {
     const { id } = options;
-    const matchingConfigs = this.#configById.get(id)?.split("|");
+    const matchingConfigs = this.findConfig(id)?.handler?.split("|");
 
     if (
       !matchingConfigs ||
@@ -39,7 +48,7 @@ export default class DeprecationCounter {
     let { id } = options;
     id ||= "discourse.(unknown)";
 
-    const matchingConfigs = this.#configById.get(id)?.split("|");
+    const matchingConfigs = this.findConfig(id)?.handler?.split("|");
 
     if (
       !matchingConfigs ||
