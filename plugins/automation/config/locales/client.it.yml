@@ -13,12 +13,16 @@ it:
             delete_automation: elimina automazione
     discourse_automation:
       title: Automazione
+      table_title: Automazioni
+      create: Aggiungi automazione
+      update: Aggiorna automazione
       back: Indietro
       edit: Modifica
       select_script: Seleziona uno script
       select_trigger: Seleziona evento di attivazione
       confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione e il nuovo stato verrà salvato. Vuoi procedere?
       confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
+      no_automation_yet: Al momento non sono configurate automazioni.
       filter_placeholder: Filtra per nome o descrizione...
       edit_automation:
         trigger_section:
@@ -163,8 +167,22 @@ it:
               description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
             restricted_categories:
               label: Categorie
+              description: Facoltativo, verrà attivato solo se l'argomento del messaggio rientra in queste categorie
+            exclude_subcategories:
+              label: Escludi sottocategorie
+              description: Facoltativo, verrà attivato solo se l'argomento del messaggio rientra esattamente nelle categorie specificate sopra
+            restricted_archetype:
+              label: Tipo di argomento
+              description: Facoltativo, consente di attivare solo argomenti o messaggi personali
+            restricted_groups:
+              label: Gruppi ristretti
+              description: Facoltativo, verrà attivato solo se l'utente del messaggio è in uno di questi gruppi
             restricted_inbox_groups:
+              label: Gruppi di posta in arrivo con restrizioni
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
+            excluded_groups:
+              label: Gruppi esclusi
+              description: Facoltativo, salta l'attivazione se l'utente del messaggio appartiene a uno di questi gruppi
             ignore_automated:
               label: Ignora automatizzati
               description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai messaggi creati via e-mail
@@ -177,8 +195,14 @@ it:
             skip_via_email:
               label: "Salta tramite e-mail"
               description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
-          created: Creato
+            post_features:
+              label: Caratteristiche del messaggio
+              description: "Facoltativo, limita l'attivazione solo ai messaggi con queste caratteristiche"
+          created: Creazione
           edited: Modificato
+          topics: Tutti gli argomenti
+          personal_messages: Messaggi personali
+          public_topics: Argomenti pubblici (escludi tutte le categorie sicure)
           with_images: Immagini
           with_links: Collegamenti
           with_code: Codice
@@ -383,6 +407,7 @@ it:
               label: MP
             sender:
               label: Mittente MP
+              description: "Assicurati che il mittente abbia le autorizzazioni corrette per inviare messaggi privati al destinatario"
         close_topic:
           fields:
             topic:
@@ -406,6 +431,11 @@ it:
           name:
             label: Attivazione
         automation:
+          runs_today: "%{count} giorno"
+          runs_this_week: "%{count} questa settimana"
+          runs_this_month: "%{count} questo mese"
+          runs:
+            label: Esecuzioni
           name:
             label: Nome
           trigger:
@@ -416,13 +446,13 @@ it:
             label: Versione
           status:
             label: Stato
-          enabled:
-            label: Abilitati
           disabled:
             label: Disabilitati
           placeholders:
             label: Segnaposto
           last_updated_at:
             label: Ultimo aggiornamento
+          last_run:
+            label: Ultima esecuzione
           last_updated_by:
             label: Aggiornato da

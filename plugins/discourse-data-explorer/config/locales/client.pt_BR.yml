@@ -29,6 +29,7 @@ pt_BR:
         auto_resolution: "<h2>Resolução de entidade automática</h2> <p>Quando a sua consulta retorna uma id de entidade, o Explorador de Dados pode substituí-la automaticamente pelo nome da entidade e outras informações úteis nos resultados da consulta. A resolução automática está disponível para <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> e <i><b>badge_id</b></i>. Para tentar isso, execute esta consulta:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Criação de parâmetros personalizados/h2> <p>Para criar parâmetros personalizados para suas consultas, insira isto no topo da sua consulta e siga o formato:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Observação: a primeira linha com [params] é necessária, junto com dois traços antes dela e de cada parâmetro personalizado que você deseja criar.</i></p>"
         default_values: "<h3>Valores padrão</h3> <p>Você pode declarar parâmetros com ou sem valores padrão. Valores padrão serão exibidos em um campo de texto abaixo do editor de consultas, que pode ser editado conforme necessário. Parâmetros declarados sem valores padrão ainda irão gerar um campo de texto, mas estarão vazios e destacados em vermelho.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Tipos de dados</h3> <p>Estes são os tipos de dados comuns que você pode usar:</p> <ul> <li><b>integer</b> - Integer assinado de quatro bytes</li> <li><b>text</b> - cadeia de caracteres de tamanho variado</li> <li><b>boolean</b> – verdadeiro/falso</li> <li><b>data</b> - data do calendário (ano, mês, dia)</li> </ul> <p>Para mais informações sobre tipos de dados, acesse <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>este site</a>.</p>"
       schema:
         title: "Esquema de Banco de Dados"
         filter: "Pesquisar..."
@@ -101,6 +102,8 @@ pt_BR:
               label: Pular envio de PM se não houver resultados
             attach_csv:
               label: Anexe um arquivo CSV à MP
+            users_from_group:
+              label: Enviar PM individual para cada membro do grupo
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

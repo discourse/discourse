@@ -169,8 +169,22 @@ nl:
 
           - Wij geloven te allen tijde in [beschaafd communitygedrag](%{base_uri}/guidelines).
       onebox:
+        instructions: |-
+          Kun je nu een van deze links met me delen? Antwoord met **een link op een aparte regel**, dan wordt deze automatisch uitgebreid met een handige samenvatting.
+
+          Om een link te kopiëren, tik je op je mobiel en houd je deze ingedrukt, of klik je met de rechtermuisknop:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Cool! Dit werkt voor de meeste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Vergeet niet dat de link op een _afzonderlijke regel_ moet staan, met niets anders ervoor of erachter.
+        not_found: |-
+          Ik kon de link niet vinden in je antwoord. :cry:
+
+          Kun je proberen de volgende link toe te voegen in je volgende antwoord, op een aparte regel?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Hier is een foto van een eenhoorn:
@@ -385,6 +399,19 @@ nl:
 
           Houd er rekening mee dat wanneer je op een topic reageert of een topic langer dan een paar minuten leest, het automatisch wordt ingesteld op het meldingsniveau 'volgen'. Je kunt dit wijzigen in [je gebruikersvoorkeuren](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Wist je dat je aan elk bericht een poll kunt toevoegen? Probeer het pictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> in de editor om een **poll te maken**.
+        not_found: |-
+          Oeps! Er was geen poll in je antwoord.
+
+          Gebruik het pictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> in de editor, of kopieer en plak deze poll in je volgende antwoord:
+
+          ```tekst
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hé, leuke poll! Heb ik het je goed geleerd?
 
@@ -393,6 +420,20 @@ nl:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Soms wil je misschien **details verbergen** in je antwoorden:
+
+          - Wanneer je plotpunten van een film of tv-programma bespreekt, wordt dat als een spoiler beschouwd.
+
+          - Wanneer je bericht veel optionele details nodig heeft die overweldigend kunnen zijn als je ze allemaal tegelijk leest.
+
+          [details=Selecteer dit om te zien hoe het werkt!]
+          1. Selecteer het pictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> in de editor.
+          2. Selecteer "Details verbergen".
+          3. Bewerk het detailoverzicht en voeg je inhoud toe.
+          [/details]
+
+          Kun je het pictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> in de editor gebruiken om een detailsectie toe te voegen aan je volgende antwoord?
         not_found: |-
           Heb je moeite met het maken van een detailwidget? Probeer het volgende in je volgende antwoord op te nemen:
 

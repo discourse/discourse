@@ -29,6 +29,7 @@ nl:
       solution_summary:
         one: "oplossing"
         other: "oplossingen"
+      accepted_html: "%{icon} Opgelost <span class='by'>door <a href data-user-card='%{username_lower}'>%{username}</a></span> in <a href='%{post_path}' class='back'>bericht %{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "alle"
@@ -37,6 +38,7 @@ nl:
       no_solved_topics_title: "Je hebt nog geen topics opgelost"
       no_solved_topics_title_others: "%{username} heeft nog geen topics opgelost"
       no_solved_topics_body: "Als je een nuttig antwoord geeft op een topic, kan je antwoord door de eigenaar van het topic of door een medewerker als oplossing worden gekozen."
+      marked_solved_by: "Gemarkeerd als opgelost door <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Is je vraag beantwoord?
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."

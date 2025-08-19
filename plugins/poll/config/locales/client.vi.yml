@@ -52,7 +52,6 @@ vi:
       error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
       error_while_exporting_results: "Xin lỗi, đã xảy ra lỗi khi xuất kết quả thăm dò ý kiến."
       ui_builder:
-        title: Tạo thăm dò
         insert: Chèn thăm dò
         help:
           options_min_count: Nhập ít nhất 1 tùy chọn.

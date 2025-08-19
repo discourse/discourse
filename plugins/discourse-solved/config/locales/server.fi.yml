@@ -24,6 +24,7 @@ fi:
     solved_add_schema_markup: "Lisää QAPage-skeemamerkintä HTML:ään."
     enable_solved_tags: "Tunnisteet, joilla käyttäjät voivat valita ratkaisuja."
     prioritize_solved_topics_in_search: "Priorisoi ratkaistut ketjut hakutuloksissa."
+    show_who_marked_solved: "Näytä, kuka merkitsi ketjun ratkaistuksi. Tämä näkyy ketjun ensimmäisessä viestissä ja vastausviestissä työkaluvihjeessä."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ fi:
     no_solutions:
       self: "Viestejäsi ei ole vielä hyväksytty ratkaisuiksi."
       others: "Ei hyväksyttyjä ratkaisuja."
+    filter:
+      description:
+        solved: "Suodata ratkaistut ketjut"
+        unsolved: "Suodata ratkaisemattomat ketjut"
   badges:
     solved_1:
       name: "Ratkaistu!"

@@ -33,6 +33,11 @@ pt_BR:
   discourse_assign:
     assigned_to: "Tópico atribuído a @%{username}"
     unassigned: "A atribuição do tópico foi removida"
+    filter:
+      description:
+        assigned: "Filtrar tópicos atribuídos a um grupo ou usuário(a) específico"
+        nobody: "Filtrar tópicos que não foram atribuídos a ninguém"
+        anyone: "Filtrar tópicos atribuídos a qualquer pessoa"
     already_claimed: "Esse tópico já foi reivindicado."
     already_assigned: "O tópico já foi atribuído a @%{username}"
     too_many_assigns: "@%{username} já atingiu o número máximo de tópicos atribuídos (%{max})."

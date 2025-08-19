@@ -9,6 +9,12 @@ pl_PL:
     discourse_automation_enabled: "Włącz wtyczkę discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Skrypt nie może być pusty"
+          trigger_blank: "Wyzwalacz nie może być pusty"
+          script_missing_required_fields: "W skrypcie brakuje wymaganych pól: %{fields}"
+          trigger_missing_required_fields: "W wyzwalaczu brakuje wymaganych pól: %{fields}"
       fields:
         required_field: Pole `%{name}` musi być wypełnione na `%{target}:%{target_name}`.
         invalid_field: Składnik pola `%{component}` nie może być użyty na `%{target}:%{target_name}`.

@@ -32,7 +32,7 @@ de:
         title: "Test-Nachricht senden"
         topic: "Thema"
         send: "Test-Nachricht senden"
-        close: "Beenden"
+        close: "Schließen"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:

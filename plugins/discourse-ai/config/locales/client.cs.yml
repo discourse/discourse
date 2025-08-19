@@ -66,6 +66,8 @@ cs:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
+      translations:
+        title: "Překlady"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"

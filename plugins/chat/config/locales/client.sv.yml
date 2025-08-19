@@ -278,7 +278,6 @@ sv:
         one: "%{count} fil"
         other: "%{count} filer"
       you_flagged: "Du flaggade detta meddelande"
-      exit: "tillbaka"
       channel_status:
         read_only_header: "Kanalen är skrivskyddad"
         read_only: "Endast läsning"
@@ -647,7 +646,6 @@ sv:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Byt kanal"
           open_quick_channel_selector: "%{shortcut} Öppna snabbval av kanal"
-          open_insert_link_modal: "%{shortcut} Infoga hyperlänk (endast kompositör)"
           composer_bold: "%{shortcut} Fet (endast kompositör)"
           composer_italic: "%{shortcut} Kursiv (endast kompositör)"
           composer_code: "%{shortcut} Kod (endast kompositör)"

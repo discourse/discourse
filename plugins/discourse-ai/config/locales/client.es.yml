@@ -22,10 +22,28 @@ es:
           description: "La tabla muestra un recuento de los mensajes clasificados con una emoción determinada. Clasificados con el modelo 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
+            group_by:
+              label: "Agrupar por"
             sort_by:
               label: "Ordenar por"
             tag:
               label: "Etiquetar"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Crear modelo LLM"
+            update_ai_llm_model: "Actualizar modelo LLM"
+            delete_ai_llm_model: "Eliminar modelo LLM"
+            create_ai_persona: "Crear persona de IA"
+            update_ai_persona: "Actualizar persona de IA"
+            delete_ai_persona: "Eliminar persona de IA"
+            create_ai_tool: "Crear herramienta de IA"
+            update_ai_tool: "Actualizar herramienta de IA"
+            delete_ai_tool: "Eliminar herramienta de IA"
+            create_ai_embedding: "Crear incrustación de IA"
+            update_ai_embedding: "Actualizar incrustación de IA"
+            delete_ai_embedding: "Eliminar incrustación de IA"
+            update_ai_spam_settings: "Actualizar ajustes de detección de correo no deseado de IA"
   js:
     discourse_automation:
       scriptables:
@@ -89,15 +107,14 @@ es:
               label: "Temperatura"
             top_p:
               label: "Top P"
+            persona_id:
+              label: "Persona"
         llm_tool_triage:
           fields:
             model:
               label: "Modelo"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Aviso del sistema"
-              description: "El aviso que se utilizará para el triaje, asegúrate de que responda con una sola palabra que puedas utilizar para desencadenar la acción"
             max_post_tokens:
               label: "Máximo de tokens de publicación"
               description: "El número máximo de tokens a escanear utilizando el triaje LLM"
@@ -131,17 +148,17 @@ es:
             include_personal_messages:
               label: "Incluir mensajes personales"
               description: "También escanea y clasifica los mensajes personales"
-            model:
-              label: "Modelo"
-              description: "Modelo lingüístico utilizado para el triaje"
-            temperature:
-              label: "Temperatura"
     discourse_ai:
       title: "IA"
       features:
+        short_title: "Características"
         back: "Atrás"
         disabled: "(desactivado)"
         groups: "Grupos:"
+        llm:
+          one: "LLM:"
+          other: "LLM:"
+        no_llm: "No hay LLM seleccionados"
         no_persona: "No establecido"
         no_groups: "Ninguna"
         edit: "Editar"
@@ -149,9 +166,19 @@ es:
           one: "(%{count} más)"
           other: "(%{count} más)"
         collapse_list: "(mostrar menos)"
+        bot:
+          bot: "Chatbot"
+          name: "Bot"
+          description: "Un bot de chat que puede responder preguntas y ayudar a los usuarios en mensajes personales, fotos y chats"
+        nav:
+          configured: "Configurado"
+          unconfigured: "Sin configurar"
         filters:
           all: "Todo"
+          text: "Características de búsqueda, personas, LLM o grupos..."
+          no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
+        no_automations: "Aún no hay automatizaciones"
         search:
           name: "Buscar"
         embeddings:
@@ -170,6 +197,15 @@ es:
         select_option: "Selecciona una opción..."
       layout:
         table: "Tabla"
+      translations:
+        title: "Traducciones"
+        admin_actions:
+          translation_settings: "Ajustes de traducción"
+          localization_settings: "Ajustes de localización"
+          disabled_state:
+            configure: "Configurar traducciones"
+        progress_chart:
+          title: "Progreso de la traducción"
       spam:
         short_title: "Spam"
         title: "Configurar el manejo de correo no deseado"
@@ -312,8 +348,19 @@ es:
           open_modal: "Editar"
           modal:
             key_title: "Clave"
+        examples:
+          title: Ejemplos
+          examples_help: Simular interacciones previas con el LLM y usarlo como base para producir mejores resultados.
+          new: Ejemplo nuevo
+          remove: Eliminar ejemplo
+        ai_bot:
+          title: "Opciones de bot de IA"
         filters:
           reset: "Restablecer"
+        features_list:
+          one: "Característica:"
+          other: "Características:"
+        llms_list: "LLM:"
       rag:
         options:
           rag_chunk_tokens: "Cargar tokens de fragmentos"
@@ -338,6 +385,7 @@ es:
         import: "Importar"
         no_tools: "Aún no has creado ninguna herramienta"
         name: "Nombre"
+        name_help: "El nombre aparecerá en la interfaz de usuario de Discourse y es el identificador corto que utilizarás para encontrar la herramienta en varios ajustes; debe ser distinto (es obligatorio)."
         new: "Nueva herramienta"
         description: "Descripción"
         description_help: "Una descripción clara de la finalidad de la herramienta para el modelo lingüístico"
@@ -412,7 +460,7 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-0: "El modelo antrópico más inteligente"
+          anthropic-claude-opus-4-1: "El modelo antrópico más inteligente"
           anthropic-claude-3-5-haiku-latest: "Rápido y rentable"
           google-gemini-2-5-flash: "Ligero, rápido y rentable con razonamiento multimodal"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multilingüe, ligero y eficaz"

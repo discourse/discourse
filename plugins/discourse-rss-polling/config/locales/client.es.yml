@@ -12,3 +12,4 @@ es:
         feed_url: URL
         discourse_category: Categoría
         discourse_tags: Etiquetas
+        feed_category_filter: Filtro de categoría

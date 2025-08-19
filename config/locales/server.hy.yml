@@ -1166,7 +1166,6 @@ hy:
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
-    automatic_backups_enabled: "Գործարկել ավտոմատ պահուստները որոշված հաճախականությամբ"
     s3_backup_bucket: "Պահուստների պահպանման համար հեռակա արկղ: ԶԳՈՒՇԱՑՈՒՄ՝ Համոզվեք, որ այն գաղտնի արկղ է:"
     s3_endpoint: "Վերջնակետը կարող է փոփոխվել S3 -ի հետ համատեղելի ծառայության պահուստի, նիչպես օրինակ՝ DigitalOcean Spaces կամ Minio: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ թաղեք դատարկ, եթե օգտագործում եք AWS S3:"
     s3_configure_tombstone_policy: "Միացնել ավտոմատ ջնջման քաղաքականությունը tombstone վերբեռնումների համար: ԿԱՐԵՎՈՐ՝ անջատված լինելու դեպքում վերբեռնումները ջնջելուց հետո տարածք չի վերադարձվի: "
@@ -2843,7 +2842,7 @@ hy:
         description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
       agree_and_restore:
         description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
-      delete_single:
+      delete:
         title: "Ջնջել"
         complete: "Գրառումը ջնջված է."
       delete_and_ignore:
@@ -2865,6 +2864,8 @@ hy:
         title: "Հաստատել"
         complete: "Գրառումը հաստատվել է."
       approve_post:
+        complete: "Գրառումը հաստատվել է."
+      approve_post_closed:
         complete: "Գրառումը հաստատվել է."
       reject_post:
         complete: "Գրառումը մերժվել է."

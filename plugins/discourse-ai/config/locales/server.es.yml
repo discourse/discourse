@@ -186,6 +186,7 @@ es:
       description: "Publicaciones clasificadas con la emoción Sorpresa mediante IA, utilizando el modelo 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
+      link: "Mostrar en una pestaña nueva"
       view_source: "Ver fuente"
       view_changes: "Ver cambios"
     unknown_model: "Modelo de IA desconocido"
@@ -275,13 +276,26 @@ es:
           name: "Instruccón personalizada"
         smart_dates:
           name: "Fechas inteligentes"
+        image_captioner:
+          name: "Pies de foto"
       topic_not_found: "¡Resumen no disponible, tema no encontrado!"
       summarizing: "Resumiendo tema"
       searching: "Buscando: '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Modelo de lenguaje que se usa para investigación (por defecto para LLM de la persona actual)"
           max_results:
             name: "Número máximo de resultados"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Modelo de lenguaje que se usa para la creación de artefactos"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Modelo de lenguaje que se usa para la edición de artefactos"
         google:
           base_query:
             name: "Consulta de búsqueda básica"

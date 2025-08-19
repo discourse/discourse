@@ -53,6 +53,8 @@ hy:
           name: "Սպամ"
       modals:
         select_option: "Ընտրել..."
+      translations:
+        title: "Թարգմանություններ"
       spam:
         short_title: "Սպամ"
         enable: "Միացնել"

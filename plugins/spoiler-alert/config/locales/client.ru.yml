@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Предупреждение о спойлере Discourse"
   js:
     spoiler:
-      title: Размыть спойлер
+      title: Размытый спойлер
       label:
         show: "Показать скрытый контент"
     composer:

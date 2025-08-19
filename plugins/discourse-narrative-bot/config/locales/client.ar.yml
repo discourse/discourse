@@ -10,3 +10,8 @@ ar:
       welcome_post_type:
         new_user_track: "بدء الدرس التعليمي لجميع المستخدمين الجُدد"
         welcome_message: "إرسال رسالة ترحيبية لجميع المستخدمين الجُدد مع دليل البدء السريع"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

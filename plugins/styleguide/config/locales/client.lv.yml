@@ -69,8 +69,8 @@ lv:
           title: "Tēmas karte"
         site_header:
           title: "Vietnes galvene"
-        suggested_topics:
-          title: "Ieteiktās tēmas"
+        more_topics:
+          title: "Vairāk tēmu"
         post_menu:
           title: "Ziņas izvēlne"
         modal:
