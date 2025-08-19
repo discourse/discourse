@@ -103,6 +103,7 @@ export default class DiscoursePostEventDates extends Component {
       format,
       timezone: this.timezone,
       hideTimezone: this.args.event.showLocalTime,
+      postId: this.args.event.id,
     };
 
     if (this.args.event.showLocalTime) {
@@ -134,7 +135,7 @@ export default class DiscoursePostEventDates extends Component {
 
           applyLocalDates(
             element.querySelectorAll(
-              `[data-post-id="${this.args.event.id}"] .discourse-local-date`
+              `[data-post-id="${this.args.event.id}"].discourse-local-date`
             ),
             this.siteSettings
           );
