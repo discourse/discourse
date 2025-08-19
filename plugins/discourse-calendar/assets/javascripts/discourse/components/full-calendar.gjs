@@ -119,7 +119,6 @@ export default class FullCalendar extends Component {
   @action
   updateCalendar() {
     if (this.calendar) {
-      console.log(this.args.events);
       this.calendar.setOption("events", this.args.events || []);
       this.calendar.setOption("headerToolbar", this.headerToolbar);
     }
