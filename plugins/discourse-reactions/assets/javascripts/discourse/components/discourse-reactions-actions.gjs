@@ -301,8 +301,8 @@ export default class DiscourseReactionsActions extends Component {
 
           CustomReaction.toggle(post, params.reaction)
             .then(resolve)
-            .catch((e) => {
-              this.dialog.alert(this._extractErrors(e));
+            .catch((err) => {
+              this.dialog.alert(this._extractErrors(err));
               this._rollbackState(post);
             });
         } else {
@@ -326,8 +326,8 @@ export default class DiscourseReactionsActions extends Component {
                       params.reaction
                     )
                       .then(resolve)
-                      .catch((e) => {
-                        this.dialog.alert(this._extractErrors(e));
+                      .catch((err) => {
+                        this.dialog.alert(this._extractErrors(err));
                         this._rollbackState(post);
                       });
                   });
@@ -338,8 +338,8 @@ export default class DiscourseReactionsActions extends Component {
 
                   CustomReaction.toggle(this.args.post, params.reaction)
                     .then(resolve)
-                    .catch((e) => {
-                      this.dialog.alert(this._extractErrors(e));
+                    .catch((err) => {
+                      this.dialog.alert(this._extractErrors(err));
                       this._rollbackState(post);
                     });
                 });
@@ -540,8 +540,8 @@ export default class DiscourseReactionsActions extends Component {
 
           CustomReaction.toggle(this.args.post, toggleReaction)
             .then(resolve)
-            .catch((e) => {
-              this.dialog.alert(this._extractErrors(e));
+            .catch((err) => {
+              this.dialog.alert(this._extractErrors(err));
               this._rollbackState(post);
             });
         });
