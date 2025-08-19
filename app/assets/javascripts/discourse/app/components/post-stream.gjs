@@ -288,10 +288,7 @@ export default class PostStream extends Component {
       {{/if}}
 
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
-        <LoadMore
-          @action={{fn this.loadMoreAbove this.firstAvailablePost}}
-          @ariaLabel={{i18n "load_more_posts_above"}}
-        />
+        <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -413,10 +410,7 @@ export default class PostStream extends Component {
 
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
-          <LoadMore
-            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
-            @ariaLabel={{i18n "load_more_posts_below"}}
-          />
+          <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
         {{else}}
           <div
             class="post-stream__bottom-boundary"
