@@ -18,14 +18,10 @@ export default RouteTemplate(
         </label>
 
         <input
-          {{on
-            "input"
-            (withEventValue (fn (mut @controller.model.product.name)))
-          }}
           type="text"
           name="product_name"
           value={{@controller.model.product.name}}
-          disabled={{true}}
+          disabled
         />
       </p>
 
@@ -74,7 +70,7 @@ export default RouteTemplate(
         {{#if @controller.planFieldDisabled}}
           <input
             class="plan-amount plan-currency"
-            disabled={{true}}
+            disabled
             type="text"
             value={{@controller.model.plan.currency}}
           />
@@ -110,7 +106,7 @@ export default RouteTemplate(
             @type="checkbox"
             name="recurring"
             @checked={{@controller.model.plan.isRecurring}}
-            disabled={{true}}
+            disabled
           />
         {{else}}
           <Input
@@ -130,7 +126,7 @@ export default RouteTemplate(
 
           {{#if @controller.planFieldDisabled}}
             <input
-              disabled={{true}}
+              disabled
               type="text"
               value={{@controller.selectedInterval}}
             />
