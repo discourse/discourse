@@ -102,8 +102,8 @@ export default class PostCalendar extends Component {
         case "standalone":
           if (this.isFullDay && detail.timezone) {
             const eventDetail = { ...detail };
-            let from = moment.tz(detail.from, detail.timezone);
-            let to = moment.tz(detail.to, detail.timezone);
+            const from = moment.tz(detail.from, detail.timezone);
+            const to = moment.tz(detail.to, detail.timezone);
             eventDetail.from = from.format("YYYY-MM-DD");
             eventDetail.to = to.format("YYYY-MM-DD");
             events.push(this._buildStandaloneEvent(eventDetail));
