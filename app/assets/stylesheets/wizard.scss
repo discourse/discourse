@@ -603,7 +603,7 @@ body.wizard {
 // Register admin pages
 // /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
-  font-family: system-ui, Arial, sans-serif;
+  font-family: var(--font-family);
 
   .wizard-container__combobox {
     background: var(--secondary);
