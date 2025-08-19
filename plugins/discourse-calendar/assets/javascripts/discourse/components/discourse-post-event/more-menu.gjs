@@ -253,6 +253,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       @identifier="discourse-post-event-more-menu"
       @triggerClass={{concatClass
         "more-dropdown"
+        "btn-small"
         (if this.isSavingEvent "--saving")
       }}
       @icon="ellipsis"
