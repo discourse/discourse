@@ -10,7 +10,7 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
+  FILTER_ALIASES = { "categories" => "category", "tags" => "tag", "groups" => "group" }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -64,6 +64,10 @@ class TopicsFilter
         filter_by_number_of_likes_in_first_post(max: filter_values)
       when "order"
         order_by(values: filter_values)
+      when "users"
+        filter_users(values: filter_values)
+      when "group"
+        filter_groups(values: filter_values)
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -190,6 +194,16 @@ class TopicsFilter
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
+        name: "users:",
+        description: I18n.t("filter.description.users"),
+        type: "username",
+        priority: 1,
+        delimiters: [
+          { name: ",", description: I18n.t("filter.description.users_any") },
+          { name: "+", description: I18n.t("filter.description.users_all") },
+        ],
+      },
+      {
         name: "latest-post-before:",
         description: I18n.t("filter.description.latest_post_before"),
         type: "date",
@@ -255,6 +269,8 @@ class TopicsFilter
       { name: "order:title-asc", description: I18n.t("filter.description.order_title_asc") },
       { name: "order:views", description: I18n.t("filter.description.order_views") },
       { name: "order:views-asc", description: I18n.t("filter.description.order_views_asc") },
+      { name: "order:hot", description: I18n.t("filter.description.order_hot") },
+      { name: "order:hot-asc", description: I18n.t("filter.description.order_hot_asc") },
       { name: "order:read", description: I18n.t("filter.description.order_read") },
       { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
     ]
@@ -304,6 +320,21 @@ class TopicsFilter
         },
       )
     end
+
+    # Group participation filter (any/all)
+    results.push(
+      {
+        name: "group:",
+        alias: "groups:",
+        description: I18n.t("filter.description.group"),
+        type: "group",
+        priority: 1,
+        delimiters: [
+          { name: ",", description: I18n.t("filter.description.groups_any") },
+          { name: "+", description: I18n.t("filter.description.groups_all") },
+        ],
+      },
+    )
 
     # this modifier allows custom plugins to add UI tips in the /filter route
     DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
@@ -386,6 +417,102 @@ class TopicsFilter
 
   def filter_by_number_of_views(min: nil, max: nil)
     filter_by_topic_range(column_name: "topics.views", min:, max:)
+  end
+
+  # users:a,b => any of a or b participated in the topic
+  # users:a+b => both a and b participated in the topic
+  def filter_users(values:)
+    values.each do |value|
+      value
+        .scan(
+          /\A(?<usernames>([\p{L}\p{M}0-9_\-.@]+)(?<delimiter>[,+])?([\p{L}\p{M}0-9_\-.@]+)?(\k<delimiter>[\p{L}\p{M}0-9_\-.@]+)*)\z/,
+        )
+        .each do |usernames_str, delimiter|
+          usernames = usernames_str.split(delimiter).map { |u| u.delete_prefix("@").downcase }
+          user_ids = User.where(staged: false).where("username_lower IN (?)", usernames).pluck(:id)
+
+          # If any username is invalid and we require ALL (+), return no results
+          if delimiter == "+" && user_ids.length < usernames.length
+            @scope = @scope.none
+            next
+          end
+
+          if delimiter == ","
+            # any of the users participated (posted) or are allowed users on a PM
+            if user_ids.present?
+              @scope = @scope.where(<<~SQL, user_ids: user_ids)
+                    topics.id IN (
+                      SELECT DISTINCT p.topic_id FROM posts p WHERE p.user_id IN (:user_ids)
+                      UNION
+                      SELECT DISTINCT tau.topic_id FROM topic_allowed_users tau WHERE tau.user_id IN (:user_ids)
+                    )
+                  SQL
+            else
+              @scope = @scope.none
+            end
+          else
+            # require all users
+            user_ids.each_with_index do |uid, idx|
+              # each user must either have posted in the topic or be allowed in the PM
+              @scope = @scope.where(<<~SQL)
+                    (EXISTS (SELECT 1 FROM posts p#{idx} WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid})
+                     OR EXISTS (SELECT 1 FROM topic_allowed_users tau#{idx} WHERE tau#{idx}.topic_id = topics.id AND tau#{idx}.user_id = #{uid}))
+                  SQL
+            end
+          end
+        end
+    end
+  end
+
+  # group:staff,moderators => any of the groups have participation
+  # group:staff+moderators => both groups have participation
+  def filter_groups(values:)
+    values.each do |value|
+      value
+        .scan(
+          /\A(?<groups>([\p{L}\p{M}0-9_\-.]+)(?<delimiter>[,+])?([\p{L}\p{M}0-9_\-.]+)?(\k<delimiter>[\p{L}\p{M}0-9_\-.]+)*)\z/,
+        )
+        .each do |groups_str, delimiter|
+          group_names = groups_str.split(delimiter).map(&:downcase)
+          group_ids =
+            Group
+              .visible_groups(@guardian.user)
+              .members_visible_groups(@guardian.user)
+              .where("lower(name) IN (?)", group_names)
+              .pluck(:id)
+
+          if delimiter == "+" && group_ids.length < group_names.length
+            @scope = @scope.none
+            next
+          end
+
+          if delimiter == ","
+            if group_ids.present?
+              @scope = @scope.where(<<~SQL, group_ids: group_ids)
+                    topics.id IN (
+                      SELECT DISTINCT tg.topic_id FROM topic_allowed_groups tg WHERE tg.group_id IN (:group_ids)
+                      UNION
+                      SELECT DISTINCT p.topic_id
+                      FROM posts p
+                      JOIN group_users gu ON gu.user_id = p.user_id
+                      WHERE gu.group_id IN (:group_ids)
+                    )
+                  SQL
+            else
+              @scope = @scope.none
+            end
+          else
+            group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
+                    (EXISTS (SELECT 1 FROM topic_allowed_groups tg#{idx} WHERE tg#{idx}.topic_id = topics.id AND tg#{idx}.group_id = #{gid})
+                     OR EXISTS (
+                       SELECT 1 FROM posts p#{idx}
+                       JOIN group_users gu#{idx} ON gu#{idx}.user_id = p#{idx}.user_id
+                       WHERE p#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
+                     ))
+                  SQL
+          end
+        end
+    end
   end
 
   def filter_categories(values:)
@@ -754,6 +881,12 @@ class TopicsFilter
     "views" => {
       column: "topics.views",
     },
+    "hot" => {
+      column: "COALESCE(topic_hot_scores.score, 0)",
+      scope: -> do
+        @scope.joins("LEFT JOIN topic_hot_scores ON topic_hot_scores.topic_id = topics.id")
+      end,
+    },
     "read" => {
       column: "tu.last_visited_at",
       scope: -> do
@@ -780,7 +913,6 @@ class TopicsFilter
         if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
           @scope = instance_exec(&scope)
         end
-
         @scope = @scope.order("#{column_name} #{match_data[:asc] ? "ASC" : "DESC"}")
       else
         match_data = value.match(/^(?<column>.*?)(?:-(?<asc>asc))?$/)

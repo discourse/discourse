@@ -152,6 +152,8 @@ export default class FilterSuggestions {
         return await suggester.getTagSuggestions();
       case "username":
         return await suggester.getUserSuggestions();
+      case "group":
+        return await suggester.getGroupSuggestions();
       case "username_group_list":
         return await suggester.getUsernameGroupListSuggestions();
       case "date":
@@ -352,12 +354,40 @@ class FilterTypeValueSuggester {
 
       const response = await ajax("/u/search/users.json", { data });
 
-      return response.users.map((user) => ({
+      let results = response.users.map((user) => ({
         name: this.buildSuggestionName(user.username),
         description: user.name || "",
         term: user.username,
         isSuggestion: true,
       }));
+
+      results = this.prepareDelimiterSuggestions(results);
+      return results;
+    } catch {
+      return [];
+    }
+  }
+
+  async getGroupSuggestions() {
+    try {
+      const groupData = { limit: 10 };
+      if (this.searchTerm) {
+        groupData.term = this.searchTerm;
+      }
+
+      const groupResponse = await ajax("/groups/search.json", {
+        data: groupData,
+      });
+
+      let results = groupResponse.map((group) => ({
+        name: this.buildSuggestionName(group.name),
+        description: group.full_name || group.name,
+        term: group.name,
+        isSuggestion: true,
+      }));
+
+      results = this.prepareDelimiterSuggestions(results);
+      return results;
     } catch {
       return [];
     }
