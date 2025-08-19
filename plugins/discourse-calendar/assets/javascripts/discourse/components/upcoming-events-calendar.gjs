@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
-import AsyncContent from "discourse/components/async-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
