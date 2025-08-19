@@ -85,6 +85,11 @@ module SiteSettingExtension
     @theme_site_settings[provider.current_site] ||= {}
   end
 
+  def humanized_names(name)
+    @humanized_names ||= {}
+    @humanized_names[name] ||= humanized_name(name)
+  end
+
   def defaults
     @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
@@ -197,7 +202,7 @@ module SiteSettingExtension
       setting:,
       default: SiteSetting.defaults[setting],
       description: SiteSetting.description(setting),
-      humanized_name: SiteSetting.humanized_name(setting),
+      humanized_name: humanized_names(setting),
     }.merge(type_supervisor.type_hash(setting))
   end
 
@@ -285,7 +290,7 @@ module SiteSettingExtension
   )
     locale_setting_hash = {
       setting: "default_locale",
-      humanized_name: humanized_name("default_locale"),
+      humanized_name: humanized_names("default_locale"),
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       description: description("default_locale"),
@@ -351,7 +356,7 @@ module SiteSettingExtension
 
         opts = {
           setting: s,
-          humanized_name: humanized_name(s),
+          humanized_name: humanized_names(s),
           description: description(s),
           keywords: keywords(s),
           category: categories[s],

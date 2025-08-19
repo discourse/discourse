@@ -80,33 +80,41 @@ module SiteSettings
       %w[youtube YouTube],
     ].freeze
 
+    HUMANIZED_ACRONYMS_HASH = HUMANIZED_ACRONYMS.map { |a| [a, true] }.to_h.freeze
+
+    HUMANIZED_MIXED_CASE_REGEX =
+      HUMANIZED_MIXED_CASE.map { |key, value| [/\b#{Regexp.escape(key)}\b/i, value] }.freeze
+
     class << self
       def description(setting)
         I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
       end
 
       def humanized_name(setting)
-        name = setting.to_s.gsub("_", " ")
+        name = setting.to_s.tr("_", " ")
+        words = name.split(" ")
 
-        formatted_name =
-          (name[0].upcase + name[1..-1])
-            .split(" ")
-            .map { |word| HUMANIZED_ACRONYMS.include?(word.downcase) ? word.upcase : word }
-            .map do |word|
-              if word.end_with?("s")
-                singular = word[0...-1].downcase
-                HUMANIZED_ACRONYMS.include?(singular) ? singular.upcase + "s" : word
-              else
-                word
-              end
-            end
-            .join(" ")
+        words[0] = words[0].capitalize
 
-        HUMANIZED_MIXED_CASE.each do |key, value|
-          formatted_name = formatted_name.gsub(/\b#{key}\b/i, value)
+        words.map! do |word|
+          word_downcase = word.downcase
+
+          if HUMANIZED_ACRONYMS_HASH[word_downcase]
+            word.upcase
+          elsif word.end_with?("s") && HUMANIZED_ACRONYMS_HASH[word_downcase[0...-1]]
+            word_downcase[0...-1].upcase + "s"
+          else
+            word
+          end
         end
 
-        formatted_name
+        result = words.join(" ")
+
+        HUMANIZED_MIXED_CASE_REGEX.each do |regex, replacement|
+          result = result.gsub(regex, replacement)
+        end
+
+        result
       end
 
       def keywords(setting)
