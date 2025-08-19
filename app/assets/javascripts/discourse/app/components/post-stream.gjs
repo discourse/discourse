@@ -117,7 +117,7 @@ export default class PostStream extends Component {
   }
 
   get remainingPostsCount() {
-    return this.args.topic.posts_count - this.posts.length;
+    return Math.max(this.args.topic.posts_count - this.posts.length, 0);
   }
 
   get postsAboveCount() {
@@ -125,7 +125,7 @@ export default class PostStream extends Component {
       return 0;
     }
     const firstLoadedPostNumber = this.posts[0].post_number;
-    return firstLoadedPostNumber - 1;
+    return Math.max(firstLoadedPostNumber - 1, 0);
   }
 
   get postsBelowCount() {
@@ -134,7 +134,7 @@ export default class PostStream extends Component {
     }
     const lastLoadedPostNumber = this.posts.at(-1).post_number;
     const totalPosts = this.args.topic.posts_count;
-    return totalPosts - lastLoadedPostNumber;
+    return Math.max(totalPosts - lastLoadedPostNumber, 0);
   }
 
   isPlaceholder(post) {
