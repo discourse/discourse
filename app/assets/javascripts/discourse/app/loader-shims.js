@@ -85,7 +85,6 @@ loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
-loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
 loaderShim("truth-helpers", () => importSync("truth-helpers"));

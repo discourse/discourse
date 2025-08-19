@@ -1,4 +1,4 @@
-import MessageBus from "message-bus-client";
+import "message-bus-client";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
