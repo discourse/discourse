@@ -168,7 +168,7 @@ export default class PostSmallAction extends Component {
                 @username={{this.username}}
               />
             {{else}}
-              <p>{{htmlSafe this.description}}</p>
+              <p role="note">{{htmlSafe this.description}}</p>
             {{/if}}
           </div>
           <div class="small-action-buttons">
