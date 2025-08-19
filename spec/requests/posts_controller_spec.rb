@@ -2438,6 +2438,9 @@ RSpec.describe PostsController do
         },
       )
     end
+    let(:legacy_string_tag_revision) do
+      Fabricate(:post_revision, post: post, modifications: { "tags" => ["tag1 tag2", "tag2 tag3"] })
+    end
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
@@ -2505,6 +2508,10 @@ RSpec.describe PostsController do
 
       it "supports reverting text and number tags" do
         put "/posts/#{post_id}/revisions/#{text_number_tags.number}/revert.json"
+        expect(response.status).to eq(200)
+      end
+      it "supports reverting legacy string-format tags" do
+        put "/posts/#{post_id}/revisions/#{legacy_string_tag_revision.number}/revert.json"
         expect(response.status).to eq(200)
       end
     end
