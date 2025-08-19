@@ -5580,6 +5580,10 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
+    content_localization:
+      toggle_localized:
+        translated: "Page is machine-translated. Click to view original."
+        not_translated: "Page is not translated. Click to translate."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
