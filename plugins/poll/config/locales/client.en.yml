@@ -164,7 +164,7 @@ en:
         poll_public:
           label: Show who voted
         poll_dynamic:
-          label: Enable dynamic mode (allow editing options after posting)
+          label: Allow editing options after posting (dynamic poll)
         poll_title:
           label: Title (optional)
         poll_options:
