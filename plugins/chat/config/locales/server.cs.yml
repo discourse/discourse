@@ -170,6 +170,7 @@ cs:
     mention_warning:
       dismiss: "označit jako přečtené"
       cannot_see: "%{first_identifier} nemá přístup k tomuto kanálu a nebyl/a upozorněn/a."
+      cannot_see_group: "Někteří členové %{group_name} nemají přístup k tomuto kanálu a nebyli upozorněni."
       cannot_see_multiple:
         one: "%{first_identifier} a %{count} další uživatel/ka nemá přístup k tomuto kanálu a nebyli upozorněni."
         few: "%{first_identifier} a %{count} další uživatelé nemají přístup k tomuto kanálu a nebyli upozorněni."

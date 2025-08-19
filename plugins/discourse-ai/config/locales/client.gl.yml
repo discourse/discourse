@@ -54,6 +54,8 @@ gl:
           name: "Lixo"
       modals:
         select_option: "Seleccione unha opción..."
+      translations:
+        title: "Traducións"
       spam:
         short_title: "Lixo"
         enable: "Activar"

@@ -131,7 +131,7 @@ pl_PL:
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
-        title: Zbuduj ankietę
+        title: Skonstruuj ankietę
         insert: Wstaw ankietę
         help:
           options_min_count: Wprowadź co najmniej 1 opcję.

@@ -29,6 +29,9 @@ ro:
               label: "Etichete"
         llm_triage:
           fields:
+            triage_persona:
+              label: "Personaj"
+              description: "Personajul este folosit pentru triaj, asigură-te că răspunde cu un singur cuvânt pe care îl poți folosi pentru a declanșa acțiunea."
             category:
               label: "Categorie"
             tags:
@@ -36,6 +39,9 @@ ro:
             canned_reply:
               label: "Răspunde"
     discourse_ai:
+      default_llm:
+        title: "Model LLM implicit"
+        description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
       features:
         back: "Înapoi"
         disabled: "(dezactivat)"
@@ -123,8 +129,13 @@ ro:
             custom: "Personalizat..."
           hours: "de ore"
         usage:
+          ai_helper: "Ajutor (%{persona})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
+        model_description:
+          google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
+          google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
         next:
           title: "Următorul"
         tests:
@@ -159,6 +170,7 @@ ro:
           google: "Google"
           fake: "Personalizat"
       ai_bot:
+        exit: "ieșire bot IA"
         debug_ai_modal:
           request: "Cere"
           response: "Răspuns"

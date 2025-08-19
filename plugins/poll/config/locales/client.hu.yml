@@ -115,7 +115,6 @@ hu:
       error_while_fetching_voters: "Sajnáljuk, hiba történt a szavazók megjelenítésekor."
       error_while_exporting_results: "Sajnáljuk, hiba történt az szavazás eredményének exportálásakor."
       ui_builder:
-        title: Szavazás összeállítása
         insert: Szavazás beillesztése
         help:
           options_min_count: Adjon meg legalább 1 lehetőséget.

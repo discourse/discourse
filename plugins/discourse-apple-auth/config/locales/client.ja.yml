@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ja:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Apple でサインイン"
+        sr_title: "Apple でサインイン"
+        message: "Apple で認証しています"
