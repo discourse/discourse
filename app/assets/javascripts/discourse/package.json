@@ -24,7 +24,7 @@
     "@fullcalendar/daygrid": "^6.1.18",
     "@fullcalendar/list": "^6.1.18",
     "@fullcalendar/timegrid": "^6.1.18",
-    "@glimmer/syntax": "0.93.1",
+    "@glimmer/syntax": "0.95.0",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
     "@messageformat/core": "^3.4.0",
