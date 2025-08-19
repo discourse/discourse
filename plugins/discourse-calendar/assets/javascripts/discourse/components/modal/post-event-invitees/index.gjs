@@ -24,7 +24,7 @@ export default class PostEventInviteesModal extends Component {
 
   constructor() {
     super(...arguments);
-    this._fetchInvitees();
+    this.fetchInvitees();
   }
 
   get hasSuggestedUsers() {
@@ -46,13 +46,13 @@ export default class PostEventInviteesModal extends Component {
   @action
   toggleType(type) {
     this.type = type;
-    this._fetchInvitees(this.filter);
+    this.fetchInvitees(this.filter);
   }
 
   @debounce(250)
   onFilterChanged(event) {
     this.filter = event.target.value;
-    this._fetchInvitees(this.filter);
+    this.fetchInvitees(this.filter);
   }
 
   @action
@@ -75,7 +75,7 @@ export default class PostEventInviteesModal extends Component {
     this.inviteesList.add(invitee);
   }
 
-  async _fetchInvitees(filter) {
+  async fetchInvitees(filter) {
     try {
       this.isLoading = true;
 

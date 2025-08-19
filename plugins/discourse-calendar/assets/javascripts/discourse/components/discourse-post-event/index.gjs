@@ -9,6 +9,7 @@ import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
@@ -99,12 +100,13 @@ export default class DiscoursePostEvent extends Component {
     }
 
     if (this.args.eventId) {
-      const eventData = await this.discoursePostEventApi.event(
-        this.args.eventId
-      );
-
-      this.event = eventData;
-      return eventData;
+      try {
+        return (this.event = await this.discoursePostEventApi.event(
+          this.args.eventId
+        ));
+      } catch (error) {
+        popupAjaxError(error);
+      }
     }
   }
 
@@ -154,7 +156,11 @@ export default class DiscoursePostEvent extends Component {
                 />
 
                 {{#if @onClose}}
-                  <DButton @icon="xmark" @action={{@onClose}} />
+                  <DButton
+                    class="btn-small"
+                    @icon="xmark"
+                    @action={{@onClose}}
+                  />
                 {{/if}}
               </header>
 
@@ -193,6 +199,9 @@ export default class DiscoursePostEvent extends Component {
         </div>
       </:content>
       <:loading>
+        <div class="discourse-post-event-loader">
+          <div class="spinner"></div>
+        </div>
       </:loading>
     </AsyncContent>
   </template>

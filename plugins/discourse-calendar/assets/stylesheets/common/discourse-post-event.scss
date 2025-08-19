@@ -34,7 +34,7 @@ $show-interested: inherit;
     background: var(--secondary);
     flex-direction: column;
     flex: 1 0 auto;
-    max-width: calc(100% - 2px - 6px);
+    max-width: 100%;
     box-sizing: border-box;
 
     .cooked & {
@@ -174,6 +174,8 @@ $show-interested: inherit;
       .username {
         margin-left: 0.25em;
         color: var(--primary);
+
+        @include ellipsis;
       }
 
       .creators {
@@ -181,9 +183,13 @@ $show-interested: inherit;
         align-items: center;
 
         .event-creator {
+          @include ellipsis;
+
           .topic-invitee-avatar {
             display: flex;
             align-items: center;
+
+            @include ellipsis;
           }
         }
       }
@@ -371,6 +377,10 @@ $show-interested: inherit;
       color: var(--primary-high);
       margin: 0 auto;
       padding: 0;
+    }
+
+    .chat-channel-link {
+      @include ellipsis;
     }
   }
 

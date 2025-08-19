@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
+import AsyncContent from "discourse/components/async-content";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -18,6 +20,7 @@ export default class UpcomingEventsCalendar extends Component {
   @service capabilities;
   @service siteSettings;
   @service discoursePostEventService;
+  @service loadingSlider;
 
   @tracked resolvedEvents;
 
@@ -157,8 +160,16 @@ export default class UpcomingEventsCalendar extends Component {
       params.attending_user = this.currentUser?.username;
     }
 
-    this.resolvedEvents =
-      await this.discoursePostEventService.fetchEvents(params);
+    try {
+      this.loadingSlider.transitionStarted();
+
+      this.resolvedEvents =
+        await this.discoursePostEventService.fetchEvents(params);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loadingSlider.transitionEnded();
+    }
   }
 
   @action
