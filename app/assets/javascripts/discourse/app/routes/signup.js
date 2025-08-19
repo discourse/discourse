@@ -1,7 +1,6 @@
 import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
-import getURLPath from "discourse/lib/get-url-path";
 import DiscourseURL from "discourse/lib/url";
 import {
   defaultHomepage,
@@ -32,7 +31,7 @@ export default class extends DiscourseRoute {
       invite_only,
       login_required,
     } = this.siteSettings;
-    const url = getURLPath(window.location.pathname);
+    const { pathname: url } = window.location;
     const { search: query } = window.location;
     const { referrer } = document;
     const { canSignUp } = this.controllerFor("application");
