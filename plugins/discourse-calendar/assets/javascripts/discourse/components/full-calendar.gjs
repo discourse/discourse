@@ -68,9 +68,7 @@ export default class FullCalendar extends Component {
         this.menu.getByIdentifier("post-event-tooltip")?.close?.();
       },
       datesSet: (info) => {
-        if (this.args.onDatesChange) {
-          this.args.onDatesChange(info);
-        }
+    this.args.onDatesChange?.(info);
       },
       eventClick: async ({ el, event, jsEvent }) => {
         const { htmlContent, postNumber, postUrl, postEvent } =
