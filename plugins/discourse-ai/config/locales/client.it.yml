@@ -55,7 +55,7 @@ it:
               description: "L'utente che invierà il report"
             receivers:
               label: "Destinatari"
-              description: "Gli utenti che riceveranno il report (le e-mail verranno inviate direttamente, i nomi utente verranno inviati un MP)"
+              description: "Gli utenti che riceveranno il report (le email saranno inviate direttamente, i nomi utente riceveranno un messaggio privato)"
             topic_id:
               label: "ID dell'argomento"
               description: "L'ID dell'argomento in cui pubblicare il report"
@@ -87,8 +87,8 @@ it:
               label: "Etichette"
               description: "Filtra gli argomenti solo in base a queste etichette"
             exclude_tags:
-              label: "Escludi tag"
-              description: "Escludi argomenti con questi tag"
+              label: "Escludi etichette"
+              description: "Escludi argomenti con queste etichette"
             exclude_categories:
               label: "Escludi categorie"
               description: "Escludi argomenti con queste categorie"
@@ -166,7 +166,7 @@ it:
               description: "Tipo di segnalazione da applicare al messaggio (spam o semplicemente passa in revisione)"
             flag_post:
               label: "Segnala messaggio"
-              description: "Segnala il post (come spam o per la revisione)"
+              description: "Segnala il messaggio (come spam o per la revisione)"
             include_personal_messages:
               label: "Includi messaggi personali"
               description: "Esegui anche la scansione e la selezione dei messaggi personali"
@@ -201,8 +201,8 @@ it:
         no_groups: "Nessuna"
         edit: "Modifica"
         expand_list:
-          one: "(%{count} altri)"
-          other: "(%{count} altri)"
+          one: "(%{count} altro)"
+          other: "(altri %{count})"
         collapse_list: "(mostra meno)"
         bot:
           bot: "Chatbot"
@@ -286,7 +286,7 @@ it:
         custom_instructions_help: "Istruzioni personalizzate specifiche per il tuo sito per aiutare l'intelligenza artificiale a identificare lo spam, ad esempio \"Sii più aggressivo nell'analizzare i post in una lingua diversa dall'italiano\"."
         last_seven_days: "Ultimi 7 giorni"
         scanned_count: "Messaggi scansionati"
-        false_positives: "Segnalato in modo errato"
+        false_positives: "Segnalato erroneamente"
         false_negatives: "Spam mancato"
         spam_detected: "Spam rilevato"
         custom_instructions_placeholder: "Istruzioni specifiche del sito per l'IA per aiutare a identificare lo spam in modo più accurato"
@@ -393,11 +393,11 @@ it:
         allow_chat_direct_messages: "Consenti messaggi diretti in chat"
         allow_chat_direct_messages_help: "Se l'opzione è abilitata, gli utenti nei gruppi consentiti possono inviare messaggi diretti a questa persona."
         allow_chat_channel_mentions: "Consenti menzioni nei canali di chat"
-        allow_chat_channel_mentions_help: "Se abilitato, gli utenti nei gruppi consentiti possono menzionare questo personaggio nei canali di chat."
+        allow_chat_channel_mentions_help: "Se l'opzione è abilitata, gli utenti nei gruppi consentiti possono menzionare questo personaggio nei canali di chat."
         allow_personal_messages: "Consenti messaggi personali"
         allow_personal_messages_help: "Se l'opzione è abilitata, gli utenti nei gruppi consentiti possono inviare messaggi personali a questo personaggio."
         allow_topic_mentions: "Consenti menzioni nell'argomento"
-        allow_topic_mentions_help: "Se abilitato, gli utenti nei gruppi consentiti possono menzionare questa persona negli argomenti."
+        allow_topic_mentions_help: "Se l'opzione è abilitata, gli utenti nei gruppi consentiti possono menzionare questa persona negli argomenti."
         force_default_llm: "Usa sempre il modello linguistico predefinito"
         save: "Salva"
         saved: "Persona salvata"
@@ -567,7 +567,7 @@ it:
           automation: "Automazione (%{persona})"
         in_use_warning:
           one: "Questo modello è attualmente utilizzato da %{settings}. Se configurato in modo errato, la funzionalità non funzionerà come previsto."
-          other: "Questo modello è attualmente utilizzato da quanto segue: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
+          other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
           anthropic-claude-opus-4-1: "Il modello più intelligente di Anthropic"
@@ -582,11 +582,11 @@ it:
           open_ai-o4-mini: "Modello di ragionamento economicamente efficiente avanzato"
           open_ai-gpt-5: "Il modello di punta di Open AI. Particolarmente adatto alla risoluzione di problemi trasversali"
           open_ai-gpt-5-mini: "Grazie all'equilibrio tra intelligenza, velocità e costo, è un modello che si presta a numerosi casi d'uso."
-          open_ai-gpt-5-nano: "Il modello di GPT-5 più veloce ed economicamente efficiente."
+          open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modello multilingue leggero ed efficiente"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modello multifunzionale"
-          mistral-mistral-large-latest: "Il modello più potente di Mistral"
-          mistral-pixtral-large-latest: "Il modello con capacità di visione più potente di Mistral"
+          mistral-mistral-large-latest: "Il modello Mistral più potente"
+          mistral-pixtral-large-latest: "Il modello Mistral con capacità di visione più potente"
           open_router-x-ai-grok-3-beta: "L'ultimo modello di xAI"
           open_router-deepseek-deepseek-r1-0528-free: "L'ultimo modello di ragionamento di DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Modello multilingue di eccellenti capacità"
@@ -613,7 +613,7 @@ it:
           display_name: "Il nome utilizzato per fare riferimento a questo modello nell'interfaccia del sito."
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
           vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
-          enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano MP con il bot IA"
+          enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano messaggi privati con il bot IA"
           cost_input: "Il costo di input di 1 milione di token per questo modello"
           cost_cached_input: "Il costo di input di 1 milione di token in cache per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
@@ -777,7 +777,7 @@ it:
         llm: "Modello"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
-        default_pm_prefix: "[Bot IA senza titolo MP]"
+        default_pm_prefix: "[MP di bot IA senza titolo]"
         shortcut_title: "Avvia un MP con un bot IA"
         exit: "esci dal bot AI"
         share: "Copia la conversazione IA"
@@ -853,16 +853,16 @@ it:
         sentiment_analysis:
           share_chart: "Copia il link al grafico"
           filter_types:
-            all: "Tutte"
-            positive: "Positiva"
+            all: "Tutti"
+            positive: "Positivo"
             neutral: "Neutro"
-            negative: "Negativa"
+            negative: "Negativo"
           group_types:
             category: "Categoria"
             tag: "Etichetta"
           table:
             sentiment: "Sentimento"
-            total_count: "Totali"
+            total_count: "Totale"
       summarization:
         chat:
           title: "Riassumi i messaggi"

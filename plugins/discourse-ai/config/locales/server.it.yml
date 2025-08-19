@@ -79,7 +79,7 @@ it:
     ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
     ai_embeddings_semantic_related_topics_enabled: "Usa la ricerca semantica per argomenti correlati."
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
-    ai_embeddings_backfill_batch_size: "Numero di incorporamenti da riempire ogni 15 minuti."
+    ai_embeddings_backfill_batch_size: "Numero di embedding da riempire ogni 15 minuti."
     ai_embeddings_semantic_search_enabled: "Abilita la ricerca semantica a pagina intera."
     ai_embeddings_semantic_search_use_hyde: "Utilizza HyDE per la ricerca semantica a pagina intera. Utilizza un LLM per creare un post ipotetico a partire dal termine di ricerca dell'utente, per facilitare le corrispondenze."
     ai_embeddings_semantic_quick_search_enabled: "Abilita l'opzione di ricerca semantica nel popup del menu di ricerca."
@@ -129,7 +129,7 @@ it:
     overall_sentiment:
       title: "Sentimento generale"
       description: 'Il grafico confronta il numero di messaggi classificati come positivi o negativi. Questi vengono calcolati quando i punteggi positivi o negativi > il punteggio soglia impostato. Ciò significa che i messaggi neutri non vengono mostrati. Sono esclusi anche i messaggi personali (MP). Classificazione effettuata con "cardiffnlp/twitter-roberta-base-sentiment-latest"'
-      xaxis: "Positiva(%)"
+      xaxis: "Positività(%)"
       yaxis: "Data"
     emotion_admiration:
       title: "\U0001F929 Ammirazione"
@@ -147,7 +147,7 @@ it:
       title: "\U0001F44D Approvazione"
       description: "Messaggi classificati con l'emozione approvazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Premuroso"
+      title: "\U0001F917 Premura"
       description: "Messaggi classificati con l'emozione premuroso tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "\U0001F615 Confusione"
@@ -192,7 +192,7 @@ it:
       title: "\U0001F630 Nervosismo"
       description: "Messaggi classificati con l'emozione nervosismo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Neutrale"
+      title: "\U0001F610 Neutralità"
       description: "Messaggi classificati con l'emozione neutrale tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "\U0001F31F Ottimismo"
@@ -554,15 +554,15 @@ it:
         post_emotion:
           sadness: "Tristezza \U0001F622"
           surprise: "Sorpresa \U0001F631"
-          neutral: "Neutro \U0001F610"
+          neutral: "Neutralità \U0001F610"
           fear: "Paura \U0001F628"
           anger: "Rabbia \U0001F621"
           joy: "Gioia \U0001F600"
           disgust: "Disgusto \U0001F922"
         sentiment_analysis:
-          positive: "Positiva"
-          negative: "Negativa"
-          neutral: "Neutro"
+          positive: "Positivo"
+          negative: "Negativo"
+          neutral: "Neutrale"
     llm:
       configuration:
         create_llm: "Per abilitare questa funzionalità, devi prima impostare un LLM"

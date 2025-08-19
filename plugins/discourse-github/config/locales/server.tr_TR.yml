@@ -44,7 +44,7 @@ tr_TR:
 
         İsim
         <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
-        adresinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmeyecek.
+        adresinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
       repository_not_found_pm_title: "discourse-github eklentisi için eylem gerekli"
       repository_not_found_pm: |
         discourse-github eklentisinde belirtilen bir depo "Bulunamadı"
@@ -52,11 +52,11 @@ tr_TR:
 
         İsim
         <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
-        içinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmeyecek.
+        içinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
       invalid_octokit_credentials_pm_title: "discourse-github eklentisi için eylem gerekli"
       invalid_octokit_credentials_pm: |
         discourse-github eklentisine eklenen GitHub kimlik bilgileri geçersiz. "github rozetleri etkin\ site
-        ayarı devre dışı ve sorun çözülene kadar taahhütler doldurulmayacak.
+        ayarı devre dışı ve sorun çözülene kadar taahhütler doldurulmaz.
 
         Belirtecin doğru olduğundan ve
         <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a> aracılığıyla tüm

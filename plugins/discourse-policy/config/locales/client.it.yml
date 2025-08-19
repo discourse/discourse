@@ -62,5 +62,5 @@ it:
           label: Inviami un'e-mail quando un'informativa necessita della mia revisione
           email_frequency_options:
             never: Mai
-            when_away: Solo quando non sono collegato
+            when_away: Solo quando si è lontani
             always: Sempre

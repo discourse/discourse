@@ -35,7 +35,7 @@ pt_BR:
     unassigned: "A atribuição do tópico foi removida"
     filter:
       description:
-        assigned: "Filtrar tópicos atribuídos a um grupo ou usuário(a) específico"
+        assigned: "Filtrar tópicos atribuídos a um grupo ou usuário(a) específico(a)"
         nobody: "Filtrar tópicos que não foram atribuídos a ninguém"
         anyone: "Filtrar tópicos atribuídos a qualquer pessoa"
     already_claimed: "Esse tópico já foi reivindicado."

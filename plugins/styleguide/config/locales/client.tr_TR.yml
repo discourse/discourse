@@ -9,7 +9,7 @@ tr_TR:
     admin:
       site_settings:
         categories:
-          styleguide: "Söylem Biçim Kılavuzu"
+          styleguide: "Discourse Biçim Kılavuzu"
   js:
     styleguide:
       title: "Stil rehberi"
@@ -90,7 +90,7 @@ tr_TR:
         site_header:
           title: "Site Başlığı"
         more_topics:
-          title: "Daha fazla konu"
+          title: "Daha Fazla Konu"
         post_menu:
           title: "Gönderi Menüsü"
         modal:

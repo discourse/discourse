@@ -32,7 +32,7 @@ pt_BR:
     post_voting_comment_limit_per_post: "Quantidade de comentários permitidos em cada publicação"
     min_trust_to_flag_posts_voting_comments: "Nível mínimo de confiança para sinalizar comentário de votação em postagem"
     flag_posts_voting_comments_allowed_groups: "Grupos com permissão para sinalizar comentário de votação em postagem"
-    post_voting_comment_enabled: "Ativar comentários na postagem, nos tópicos de votação eme postagem"
+    post_voting_comment_enabled: "Ativar comentários na postagem, nos tópicos de votação em postagem"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -74,7 +74,7 @@ pt_BR:
             description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
           agree_and_silence:
             title: "Silenciar usuário(a)"
-            description: "Concorde com a sinalização e silencie o usuário(a)."
+            description: "Concorde com a sinalização e silencie o(a) usuário(a)."
           agree_and_restore:
             title: "Restaurar comentário"
             description: "Restaure o comentário para que os(as) usuários(as) possam ver."

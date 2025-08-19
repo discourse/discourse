@@ -28,7 +28,7 @@ ja:
       solution: "解決策"
       solution_summary:
         other: "解決策"
-      accepted_html: "%{icon} <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a> により</span>解決済み (<a href='%{post_path}' class='back'>投稿 #%{post_number}</a>"
+      accepted_answer_post_number: "投稿 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "すべて"
@@ -37,7 +37,6 @@ ja:
       no_solved_topics_title: "まだトピックを解決していません。"
       no_solved_topics_title_others: "%{username} はまだトピックを解決していません"
       no_solved_topics_body: "トピックに有益な返信を提供すると、その返信がトピックオーナーまたはスタッフによって解決策として選択される場合があります。"
-      marked_solved_by: "<a href data-user-card='%{username_lower}'>%{username}</a> が解決済みにマークしました</span>"
       no_answer:
         title: 質問の回答は得られましたか？
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"

@@ -166,11 +166,11 @@ tr_TR:
           tag: "<b>%{name}</b> etiketi bulunamadı."
           category: "<b>%{name}</b> kategorisi bulunamadı. Mevcut kategoriler: <b>%{list}</b>"
         help: |
-          <b>Yeni kural:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          <b>Yeni kural:</b> <code>/[izle|takip et|sessize al] [kategori] [etiket:ad]</code>
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
-          - <b>watch</b> - yeni konular ve yeni yanıtlar için bu kanalı bilgilendir
-          - <b>follow</b> - yeni konular için bu kanalı bilgilendir
-          - <b>mute</b> - bu kanala bildirimleri engelle
+          - <b>izle</b> - yeni konular ve yeni yanıtlar için bu kanalı bilgilendir
+          - <b>takip et</b> - yeni konular için bu kanalı bilgilendir
+          - <b>sessize al</b> - bu kanala bildirimleri engelle
 
           <b>Kural kaldırma:</b> <code>/remove [kural numarası]</code>
           (<code>[kural numarası]</code> <code>/status</code>çalıştırılarak bulunabilir)
@@ -200,13 +200,13 @@ tr_TR:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
         help: |
-          *Yeni kural:* "/discourse [watch|follow|mute] [category] [tag:name]"
+          *Yeni kural:* "/discourse [izle|takip et|sessize al] [kategori] [etiket:ad]"
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
           - *izle* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
           - *takip et* - yeni konular için bu kanalı bilgilendirin
           - *sessize al* - bu kanala gelen bildirimleri engelleyin
 
-          *Kuralı kaldırın:* "/discourse remove [rule number]"
+          *Kuralı kaldırın:* "/discourse remove [kural numarası]"
           ("[rule number]", "/discourse status" çalıştırılarak bulunabilir)
 
           *Kuralları listele:* "/discourse status"
@@ -215,13 +215,13 @@ tr_TR:
       matrix:
         text_message: "%{user} %{title} - %{post_url} adresinde gönderi yaptı"
         formatted_message: |
-          <b>%{user}</b> <b><a href='%{post_url}'>%{title}</a></b> adresinde gönderi yaptı
+          <b>%{user}</b> <b><a href='%{post_url}'>%{title}</a></b> adresinde gönderi paylaştı
           <blockquote>
           %{excerpt}
           </blockquote>
       zulip:
         message: |
-          **%{user}** **[%{title}](%{post_url})** adresinde gönderi yaptı
+          **%{user}** **[%{title}](%{post_url})** adresinde gönderi paylaştı
           ~~~quote
           %{excerpt}
           ~~~

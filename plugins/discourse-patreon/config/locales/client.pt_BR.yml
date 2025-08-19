@@ -43,7 +43,7 @@ pt_BR:
             email_not_available: "Selecione o membro Patreon e vá para o canto inferior direito da página para ver o histórico de compromissos."
       donation_prompt:
         body: |
-          <h1>Olá, leitor!</h1>
+          <h1>Olá, leitor(a)!</h1>
 
           <p>Você gosta do nosso site? Gostaria de contribuir para uma boa causa?</p>
 
@@ -53,7 +53,7 @@ pt_BR:
             Cada dólar conta e será bem utilizado.
           </p>
 
-          <p>Obrigado pelo seu apoio!</p>
+          <p>Agradecemos seu apoio!</p>
 
           <p>
             <a class="btn btn-large btn-danger" href="%{campaignUrl}">Torne-se um(a) Patrono(a)</a>

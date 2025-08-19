@@ -19,7 +19,7 @@ fi:
         discourse: Discoursen asetukset
         author: Käyttäjä
         feed_url: URL
-        discourse_category: Luokka
+        discourse_category: Alue
         discourse_tags: Tunnisteet
         feed_category_filter: Aluesuodatin
         documentation: RSS-pollauksen määritysohjeet

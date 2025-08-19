@@ -5739,6 +5739,10 @@ pl_PL:
             bookmarks: "Tematy w %{category} bez tagów, które dodałeś do zakładek"
             default: "Tematów %{filter} w %{category} bez tagów"
         categories: "Wszystkie kategorie"
+    content_localization:
+      toggle_localized:
+        translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
+        not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
@@ -7298,9 +7302,13 @@ pl_PL:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
-          preference_warning: "Zmieniłeś <a href='%{link}'>ustawienia swojego motywu osobistego</a>, więc zmiany palety barw mogą być dla Ciebie niewidoczne. Osoby odwiedzające, które nie zmieniły swoich ustawień domyślnych, nadal zobaczą wprowadzone przez Ciebie zmiany."
+          non_default_theme_warning: "Twoje osobiste preferencje <a href='%{link}'>dotyczące motywu</a> różnią się od domyślnych. Wprowadzone tu zmiany mogą nie dotyczyć Ciebie, ale będą miały zastosowanie do wszystkich użytkowników motywu domyślnego (%{themeName})."
+          custom_schemes_warning: "Twoje osobiste preferencje <a href='%{link}'>dotyczące palety kolorów</a> dla palety %{colorModes} różnią się od domyślnych. Zmiany w palecie %{colorModes} mogą nie dotyczyć Ciebie, ale będą miały zastosowanie do wszystkich użytkowników korzystających z palety domyślnej."
+          light: "jasny"
+          dark: "ciemny"
           title: "Kolory"
           edit: "Edytuj"
+          view: "Widok"
           set_default_light: "Ustaw jako jasną paletę w domyślnym motywie (%{theme})"
           set_default_dark: "Ustaw jako ciemną paletę w domyślnym motywie (%{theme})"
           set_default_success: "%{schemeName} ustaw jako domyślną paletę dla %{themeName}"

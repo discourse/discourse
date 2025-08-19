@@ -9,7 +9,7 @@ fi:
     admin:
       site_settings:
         categories:
-          poll: "Discourse Kysely"
+          poll: "Discourse-kysely"
   js:
     poll:
       voters:

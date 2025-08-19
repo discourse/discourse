@@ -5,8 +5,14 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Alerta de spoiler de Discourse"
   js:
     spoiler:
+      title: Borrón de spoiler
       label:
         show: "Mostrar contenido oculto"
     composer:

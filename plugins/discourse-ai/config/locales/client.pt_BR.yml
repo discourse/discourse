@@ -58,7 +58,7 @@ pt_BR:
               description: "Os(as) usuários(as) que receberão o relatório (os e-mails serão enviados diretamente por e-mail, e os nomes de usuário(a) por MP)"
             topic_id:
               label: "ID do tópico"
-              description: "O ID do tópico no qual postar o relatório"
+              description: "A ID do tópico no qual postar o relatório"
             title:
               label: "Título"
               description: "O título do relatório"
@@ -67,7 +67,7 @@ pt_BR:
               description: "O tempo de duração do relatório"
             offset:
               label: "Deslocamento"
-              description: "Durante o teste, você pode querer executar o relatório com base no histórico, use o deslocamento para iniciar o relatório numa data anterior"
+              description: "Durante o teste, você pode querer executar o relatório com base no histórico. Use o deslocamento para iniciar o relatório numa data anterior"
             instructions:
               label: "Instruções"
               description: "As instruções fornecidas ao modelo de linguagem grande"
@@ -139,7 +139,7 @@ pt_BR:
               description: "A persona usada para triagem, verifique se responderá com uma única palavra que pode ser usada para acionar a ação"
             max_post_tokens:
               label: "Máximo de Tokens de Postagem"
-              description: "A quantidade máxima de tokens para ler usando triagem LLM"
+              description: "A quantidade máxima de tokens para ler usando triagem por LLM"
             stop_sequences:
               label: "Parar sequências"
               description: "Ordene ao modelo que interrompa a geração de tokens ao atingir um destes valores"
@@ -207,7 +207,7 @@ pt_BR:
         bot:
           bot: "Chatbot"
           name: "Bot"
-          description: "Um chatbot que responde a perguntas e auxilia os(as) usuários(as) em mensagens pessoais, fóruns e bate-papo."
+          description: "Um chatbot que responde a perguntas e auxilia os(as) usuários(as) em mensagens pessoais, fóruns e chat."
         nav:
           configured: "Configurado"
           unconfigured: "Não configurado"
@@ -283,7 +283,7 @@ pt_BR:
         select_llm: "Selecionar LLM"
         select_persona: "Selecionar persona"
         custom_instructions: "Instruções personalizadas"
-        custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais agressividade postagens que não estão em inglês\"."
+        custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
         scanned_count: "Postagens verificadas"
         false_positives: "Sinalização incorreta"
@@ -328,23 +328,23 @@ pt_BR:
         all_features: "Todos os recursos"
         all_models: "Todos os modelos"
         username: "Nome de usuário(a)"
-        total_requests: "Pedidos totais"
-        request_tokens: "Tokens de pedido"
+        total_requests: "Solicitações totais"
+        request_tokens: "Tokens de solicitação"
         response_tokens: "Tokens de resposta"
-        net_request_tokens: "Tokens de pedido de rede"
+        net_request_tokens: "Tokens de solicitação de rede"
         cached_tokens: "Tokens em cache"
-        cached_request_tokens: "Tokens de pedido em cache"
+        cached_request_tokens: "Tokens de solicitação em cache"
         total_spending: "Custo estimado"
         no_users: "Sem dados de uso do(a) usuário(a) encontrados"
         no_models: "Sem dados de uso de modelo encontrados"
         no_features: "Sem dados de uso de recurso encontrados"
         subheader_description: "Tokens são unidades básicas usadas por LLMs para compreender e gerar texto. Os dados de uso podem afetar o custo"
         stat_tooltips:
-          total_requests: "Todos os pedidos feitos para LLMs através do Discourse"
+          total_requests: "Todas as solicitações feitas para LLMs por meio do Discourse"
           total_tokens: "Todos os tokens usados ao enviar comandos para um LLM"
           request_tokens: "Tokens usados quando o LLM tentar compreender o que você está dizendo"
           response_tokens: "Tokens usados quando o LLM responder ao seu comando"
-          cached_tokens: "Tokens de pedido processados anteriormente reutilizados pelo LLM para otimizar o desempenho e reduzir custo"
+          cached_tokens: "Tokens de solicitação processados anteriormente reutilizados pelo LLM para otimizar o desempenho e reduzir custo"
           total_spending: "Custo cumulativo de todos os tokens usados por LLMs com base em métricas de custo específicas adicionadas às configurações do LLM"
         periods:
           last_day: "Últimas 24 horas"
@@ -375,7 +375,7 @@ pt_BR:
         vision_max_pixels: Tamanho de imagem compatível
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
-          medium: Média qualidade (512x512)
+          medium: Qualidade média (512x512)
           high: Alta qualidade - mais lento (1024x1024)
         tool_details: Exibir detalhes da ferramenta
         tool_details_help: Serão exibidos aos(às) usuários(as) finais as ferramentas nas quais o modelo de linguagem foi acionado.
@@ -383,17 +383,17 @@ pt_BR:
         mentionable_help: Ative para que os(as) usuários(as) nos grupos permitidos possam mencionar este(a) usuário(a) nas postagens. A IA responderá como esta persona.
         user: Usuário(a)
         create_user: Criar usuário(a)
-        create_user_help: Como alternativa, você poderá anexar um(a) usuário(a) a esta persona. Se fizer isso, a IA usará este(a) usuário(a) para responder aos pedidos.
+        create_user_help: Como alternativa, você poderá anexar um(a) usuário(a) a esta persona. Se fizer isso, a IA usará este(a) usuário(a) para responder às solicitações.
         default_llm: Modelo de linguagem padrão
         default_llm_help: O modelo de linguagem padrão a ser usado para esta persona. É obrigatório se você quiser mencionar a persona em postagens públicas.
         question_consolidator_llm: Modelo de linguagem para consolidador de pergunta
         question_consolidator_llm_help: O modelo de linguagem a ser usado para o consolidador de pergunta. Para economizar, você pode escolher um modelo menos robusto.
         system_prompt: Prompt do sistema
         forced_tool_strategy: Estratégia de ferramenta forçada
-        allow_chat_direct_messages: "Permitir mensagens diretas do bate-papo"
+        allow_chat_direct_messages: "Permitir mensagens diretas do chat"
         allow_chat_direct_messages_help: "Ative para que os(às) usuários(as) nos grupos permitidos possam enviar mensagens diretas a esta persona."
-        allow_chat_channel_mentions: "Permitir menções no canal de bate-papo"
-        allow_chat_channel_mentions_help: "Ative para os(as) usuários(as) nos grupos permitidos poderem mencionar esta persona nos canais de bate-papo"
+        allow_chat_channel_mentions: "Permitir menções no canal de chat"
+        allow_chat_channel_mentions_help: "Ative para os(as) usuários(as) nos grupos permitidos poderem mencionar esta persona nos canais de chat"
         allow_personal_messages: "Permitir mensagens pessoais"
         allow_personal_messages_help: "Ative para que os(as) usuários(as) nos grupos permitidos possam enviar mensagens pessoais a esta persona."
         allow_topic_mentions: "Permitir menções de tópicos"
@@ -423,7 +423,7 @@ pt_BR:
         persona_description: "Personas são um recurso poderoso que permite personalizar o comportamento da engine de IA no seu fórum do Discourse. Atuam como uma \"mensagem de sistema\" que orienta as respostas e as interações da IA, ajudando a criar uma experiência mais personalizada e envolvente para o(a) usuário(a)."
         response_format:
           title: "Formato de resposta JSON"
-          no_format: "Nenhum formado JSON especificado"
+          no_format: "Nenhum formato JSON especificado"
           open_modal: "Editar"
           modal:
             root_title: "Estrutura de resposta"
@@ -444,7 +444,7 @@ pt_BR:
         filters:
           text: "Encontrar persona"
           reset: "Redefinir"
-          no_results: "Não foi encontrado nenhuma persona correspondente aos seus filtros."
+          no_results: "Não foi encontrada nenhuma persona correspondente aos seus filtros."
           all_features: "Qualquer recurso"
         features_list:
           one: "Recurso:"
@@ -553,8 +553,8 @@ pt_BR:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Quantidade máxima de tokens (palavras e caracteres) que podem ser usados por cada usuário(a) neste grupo durante o período especificado. Tokens são unidades usadas para modelos de IA processarem texto: 1 token equivale a aproximadamente 4 caracteres ou 3/4 de uma palavra."
-          max_tokens_required: "Deve ser definido se o máximo de usos não estiver definido"
-          max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada por cada usuário(a) individual e não é compartilhada no grupo."
+          max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
+          max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
           max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
         usage:
           ai_bot: "Bot de IA"
@@ -566,8 +566,8 @@ pt_BR:
           ai_spam: "Spam"
           automation: "Automatização (%{persona})"
         in_use_warning:
-          one: "Este modelo é usado atualmente por %{settings}. Se configurado incorretamente, o recurso não funcionará como esperado."
-          other: "Este modelo é usado atualmente por %{settings}. Se configurado incorretamente, os recursos não funcionarão como esperado. "
+          one: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, o recurso não funcionará como esperado."
+          other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
           anthropic-claude-opus-4-1: "Modelo mais inteligente da Anthropic"
@@ -592,11 +592,11 @@ pt_BR:
           open_router-meta-llama-3-3-70b-instruct: "Modelo mulilíngue de alta capacidade"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
-          title: "LLMs configuradas"
-        preconfigured_llms: "Selecione sua LLM"
+          title: "LLMs configurados"
+        preconfigured_llms: "Selecione seu LLM"
         preconfigured:
           title_no_llms: "Selecione um modelo para começar"
-          title: "Modelos LLM não configurados"
+          title: "Modelos de LLM não configurados"
           description: "LLMs (Large Language Models) são ferramentas de AI otimizadas para tarefas como resumo de conteúdo, geração de relatórios, automatização de interações com cliente, além de ideias e moderação facilitada de fóruns"
           fake: "Configuração manual"
           button: "Configurar"
@@ -649,14 +649,14 @@ pt_BR:
           thinking_tokens: "Quantidade de tokens usados para pensamento"
           reasoning_tokens: "Quantidade de tokens usados para raciocínio"
           disable_temperature: "Desativar temperatura (alguns modelos de pensamento não são compatíveis com temperatura)"
-          disable_top_p: "Desativar top P (alguns modelos são incompatíveis com top P)"
+          disable_top_p: "Desativar P máximo (alguns modelos são incompatíveis com P máximo)"
           enable_responses_api: "Ativar API de respostas (obrigatório em certos modelos da OpenAI)"
       related_topics:
         title: "Tópicos relacionados"
         pill: "Relacionado(a)"
       ai_helper:
         title: "Sugerir alterações com IA"
-        description: "Escolha uma das opções abaixo, e a IA irá sugerir uma nova versão do texto."
+        description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
         suggest: "Sugestão com IA"
         suggest_errors:
@@ -706,7 +706,7 @@ pt_BR:
         accuracy: "Precisão:"
       embeddings:
         short_title: "Incorporações"
-        description: "Incorporações são representações numéricas de dados que captam o significado e os relacionamentos, permitindo que os recursos da IA do Discourse, como os Tópicos Relacionados e Pesquisa com IA, compreendam e relacionem conteúdo."
+        description: "Incorporações são representações numéricas de dados que captam o significado e os relacionamentos, permitindo que os recursos de IA do Discourse, como Tópicos Relacionados e Pesquisa com IA, compreendam e relacionem conteúdo."
         new: "Nova incorporação"
         back: "Voltar"
         save: "Salvar"
@@ -715,12 +715,12 @@ pt_BR:
         confirm_delete: Deseja mesmo remover esta configuração de incorporação?
         empty: "Você ainda não definiu nenhuma incorporação"
         presets: "Selecione uma predefinição..."
-        configure_manually: "Configure manualmente"
+        configure_manually: "Configurar manualmente"
         edit: "Editar"
         seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         tests:
           title: "Executar teste"
-          running: "Rodando teste..."
+          running: "Executando teste..."
           success: "Sucesso!"
           failure: "Tentando gerar resultado incorporado em %{error}"
         hints:
@@ -732,8 +732,8 @@ pt_BR:
           distance_function: "Determina como a semelhança entre incorporações é calculada, usando distância do cosseno (medida do ângulo entre vetores) ou o produto interno negativo (medida da sobreposição de valores de vetores)"
         display_name: "Nome"
         provider: "Provedor"
-        url: "URL de serviço de incorporações"
-        api_key: "Chave de serviço de incorporações"
+        url: "URL de serviço de incorporação"
+        api_key: "Chave de serviço de incorporação"
         tokenizer: "Tokenizador"
         dimensions: "Dimensões de incorporação"
         max_sequence_length: "Tamanho da sequência"
@@ -781,17 +781,17 @@ pt_BR:
         shortcut_title: "Iniciar uma MP com bot de IA"
         exit: "sair do bot de IA"
         share: "Copiar conversa com IA"
-        conversation_shared: "Conversação copiada"
+        conversation_shared: "Conversa copiada"
         embed_copied: "Incorporação copiada para área de transferência"
-        debug_ai: "Visualizar resposta e pedido de IA não processado"
+        debug_ai: "Visualizar resposta e solicitação de IA não processada"
         sidebar_empty: "O histórico de conversas do bot será exibido aqui."
         debug_ai_modal:
           title: "Visualizar interação com IA"
           copy_request: "Copiar solicitação"
           copy_response: "Copiar resposta"
-          request_tokens: "Tokens de pedido:"
+          request_tokens: "Tokens de solicitação:"
           response_tokens: "Tokens de resposta:"
-          request: "Pedir"
+          request: "Solicitação"
           response: "Resposta"
           next_log: "Próximo"
           previous_log: "Anterior"
@@ -801,13 +801,13 @@ pt_BR:
           update: "Enviar e copiar link"
           delete: "Excluir compartilhamento"
         share_ai_conversation:
-          name: "Compartilhar conversação com IA"
+          name: "Compartilhar conversa com IA"
           title: "Compartilhar esta conversa com IA publicamente"
         invite_ai_conversation:
           button: "Convite"
           title: "Convidar para conversa com a IA"
         ai_label: "IA"
-        ai_title: "Conversação com IA"
+        ai_title: "Conversa com IA"
         share_modal:
           title: "Copiar conversa com IA"
           copy: "Copiar"
@@ -832,7 +832,7 @@ pt_BR:
         conversations:
           header: "Como posso ajudar?"
           submit: "Enviar pergunta"
-          disclaimer: "A IA generativa pode cometer erros. Confira as informações importantes."
+          disclaimer: "A IA generativa pode cometer erros. Confira as informações principais."
           placeholder: "Faça uma pergunta..."
           new: "Nova pergunta"
           min_input_length_message:
@@ -901,4 +901,4 @@ pt_BR:
         reviewable_ai_post:
           title: "Postagem sinalizada com IA"
         reviewable_ai_chat_message:
-          title: "Mensagem de bate-papo sinalizada com IA"
+          title: "Mensagem de chat sinalizada com IA"

@@ -4764,7 +4764,8 @@ ro:
               too_small: "trebuie să fie mai mare sau egal cu %{count}"
               too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
-          preference_warning: "Ai modificat <a href='%{link}'>setările personale ale temei</a>, așadar modificările paletei de culori ar putea să nu fie vizibile pentru tine. Vizitatorii care nu și-au modificat setările implicite vor vedea în continuare modificările pe care le faci aici."
+          light: "luminos"
+          dark: "întunecat"
           title: "Culori"
           edit: "Editează"
           set_default_light: "Setează ca paletă luminoasă pe tema implicită (%{theme})"

@@ -11,3 +11,4 @@ es:
         name: "Apple"
         title: "Iniciar sesión con Apple"
         sr_title: "Iniciar sesión con Apple"
+        message: "Autenticando con Apple"

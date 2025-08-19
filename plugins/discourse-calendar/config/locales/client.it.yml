@@ -399,13 +399,13 @@ it:
             not_going: "Non parteciperò"
             interested: "Interessato"
             going_count:
-              one: "%{count} partecipano"
+              one: "%{count} partecipa"
               other: "%{count} partecipano"
             not_going_count:
-              one: "%{count} non partecipano"
+              one: "%{count} non partecipa"
               other: "%{count} non partecipano"
             interested_count:
-              one: "%{count} interessati"
+              one: "%{count} interessato"
               other: "%{count} interessati"
             invited_count:
               one: "%{count} utente invitato"

@@ -12,7 +12,7 @@ nl:
           descriptions:
             discourse_ai:
               search: "Staat AI zoeken toe"
-              stream_completion: "Maakt streamen van voltooiingen van AI persona's mogelijk"
+              stream_completion: "Maakt streamen van voltooiingen van AI-persona's mogelijk"
               update_personas: "Staat bijwerken van AI-persona's toe"
       site_settings:
         categories:
@@ -28,7 +28,7 @@ nl:
             sort_by:
               label: "Sorteren op"
             tag:
-              label: "Taggen"
+              label: "Tag"
       logs:
         staff_actions:
           actions:
@@ -153,8 +153,8 @@ nl:
               label: "Tags"
               description: "Toe te passen tags op het topic"
             canned_reply:
-              label: "Antwoorden"
-              description: "Ruwe tekst van standaard antwoord te plaatsen in het topic"
+              label: "Antwoord"
+              description: "Ruwe tekst van standaardantwoord te plaatsen in het topic"
             canned_reply_user:
               label: "Antwoordgebruiker"
               description: "Gebruikersnaam van de gebruiker die het standaardantwoord plaatst"
@@ -853,13 +853,13 @@ nl:
         sentiment_analysis:
           share_chart: "Link naar grafiek kopiëren"
           filter_types:
-            all: "Alle"
+            all: "Alles"
             positive: "Positief"
             neutral: "Neutraal"
             negative: "Negatief"
           group_types:
             category: "Categorie"
-            tag: "Taggen"
+            tag: "Tag"
           table:
             sentiment: "Sentiment"
             total_count: "Totaal"

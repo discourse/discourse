@@ -4547,6 +4547,8 @@ hy:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
             description: "Հիմնական գունապնակ՝"
+          light: "բաց"
+          dark: "մութ"
           title: "Գույներ"
           edit: "Խմբագրել"
           filters:

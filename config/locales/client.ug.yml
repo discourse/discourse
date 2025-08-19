@@ -6686,6 +6686,8 @@ ug:
           select_base:
             title: "ئاساسى رەڭ تاختىسى تاللىنىدۇ"
             description: "ئاساسىي رەڭ تاختا:"
+          light: "يورۇق"
+          dark: "قاراڭغۇ"
           title: "رەڭ"
           edit: "تەھرىر"
           saved_refreshing: "ساقلاندى! رەڭنى يېڭىلاۋاتىدۇ…"

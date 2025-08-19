@@ -411,7 +411,7 @@ de:
         priority: "Priorität"
         priority_help: "Personas mit Priorität werden den Benutzern am Anfang der Persona-Liste angezeigt. Wenn mehrere Personas Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
-        rag_conversation_chunks: "Unterhaltungs-Chunks durchsuchen"
+        rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
         persona_description: "Personas sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
@@ -448,7 +448,7 @@ de:
         options:
           rag_chunk_tokens: "Chunk-Token hochladen"
           rag_chunk_tokens_help: "Die Anzahl der Token, die für jeden Chunk im RAG-Modell verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
-          rag_chunk_overlap_tokens: "Chunk-Überlappungs-Token hochladen"
+          rag_chunk_overlap_tokens: "Upload-Chunk-Überlappungs-Token"
           rag_chunk_overlap_tokens_help: "Die Anzahl der Token, die sich zwischen den Chunks im RAG-Modell überlappen sollen. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
           rag_llm_model: "Indizierungssprachmodell"
           rag_llm_model_help: "Das für die OCR bei der Indizierung von PDFs und Bildern verwendete Sprachmodell"
@@ -571,9 +571,9 @@ de:
           google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
-          open_ai-o3: "Das leistungsfähigste Argumentationsmodell von Open AI"
+          open_ai-o3: "Das leistungsfähigste Argumentationsmodell von OpenAI"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
-          open_ai-gpt-5: "Das Vorzeigemodell von Open AI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
@@ -826,7 +826,7 @@ de:
           header: "Wie kann ich helfen?"
           submit: "Frage abschicken"
           disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
-          placeholder: "Stell eine Frage ..."
+          placeholder: "Stell eine Frage …"
           new: "Neue Frage"
           min_input_length_message:
             one: "Nachricht muss mindestens %{count} Zeichen lang sein"
@@ -867,6 +867,9 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
+          regenerate_error:
+            one: "Die Kurzzusammenfassung konnte nicht neu generiert werden"
+            other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
           button:
             compact: "Kompakt"

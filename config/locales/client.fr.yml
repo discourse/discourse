@@ -3989,7 +3989,7 @@ fr:
             other: "et %{count} autres ont lu ceci"
         by_you:
           off_topic: "Vous avez signalé ceci comme étant hors-sujet"
-          spam: "Vous avez signalé ceci comme étant du spam"
+          spam: "Vous avez signalé ceci comme étant du contenu indésirable"
           inappropriate: "Vous avez signalé ceci comme étant inapproprié"
           illegal: "Vous avez signalé cela comme étant illégal"
           notify_moderators: "Vous avez signalé ceci pour modération"
@@ -4287,7 +4287,7 @@ fr:
       formatted_name:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
-        spam: "C'est du spam"
+        spam: "C'est du contenu indésirable"
         illegal: "C'est illégal"
       custom_placeholder_notify_user: "Soyez précis(e), constructif(ve) et faites toujours preuve de respect."
       notify_user_textarea_label: "Message pour l'utilisateur"
@@ -5024,7 +5024,7 @@ fr:
               title: "Inviter de nouveaux membres"
             my_messages:
               content: "Mes messages"
-              title: "Mes messages personnels"
+              title: "Mes messages privés"
         global_section: "Section globale, visible par tous"
       panels:
         forum:
@@ -5394,8 +5394,8 @@ fr:
           title: "Sécurité"
           header_description: "Configurez les paramètres de sécurité, notamment l'authentification à deux facteurs, les privilèges de modérateur et les politiques de sécurité du contenu"
         spam:
-          title: "Spam"
-          header_description: "Configurez la manière dont le comportement d'enregistrement et de publication des utilisateurs est analysé par le système pour identifier et bloquer rapidement les spams"
+          title: "Contenu indésirable"
+          header_description: "Configurez la manière dont le comportement d'enregistrement et de publication des utilisateurs est analysé par le système pour identifier et bloquer rapidement les contenus indésirables"
         trust_levels:
           title: "Niveaux de confiance"
           header_description: "Les paramètres de niveau de confiance vous permettent d'affiner les exigences et les notifications du système de progression de votre communauté, qui promeut automatiquement les utilisateurs vers des niveaux de confiance plus élevés lorsqu'ils démontrent un engagement constant et positif avec votre forum."
@@ -6122,7 +6122,7 @@ fr:
         title: "Sécurité"
         sidebar_link:
           security: "Paramètres de sécurité"
-          spam: "Paramètres anti-spam"
+          spam: "Paramètres de lutte contre les contenus indésirables"
           staff_action_logs:
             title: "Journaux et filtrage"
             keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
@@ -6714,7 +6714,8 @@ fr:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
-          preference_warning: "Vous avez modifié <a href='%{link}'>vos paramètres de thème personnels</a>. Il est donc possible que les modifications de palette ne soient pas visibles pour vous. Les visiteurs qui n'ont pas modifié leurs paramètres par défaut pourront toujours voir les modifications que vous avez apportées ici."
+          light: "clair"
+          dark: "sombre"
           title: "Couleurs"
           edit: "Modifier"
           set_default_light: "Définir comme palette claire sur le thème par défaut (%{theme})"
@@ -7385,7 +7386,7 @@ fr:
         activity: Activité
         like_count: '« J''aime » donnés/reçus'
         last_100_days: "au cours des 100 derniers jours"
-        private_topics_count: Messages personnels
+        private_topics_count: Messages privés
         posts_read_count: Messages lus
         post_count: Messages créés
         second_factor_enabled: Validation en deux étapes activée
@@ -7703,7 +7704,7 @@ fr:
           security: "Sécurité"
           onebox: "Onebox"
           seo: "Référencement"
-          spam: "Spam"
+          spam: "Contenu indésirable"
           rate_limits: "Limites d'utilisation"
           developer: "Développeur"
           embedding: "Externe"

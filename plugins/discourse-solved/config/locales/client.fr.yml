@@ -29,7 +29,7 @@ fr:
       solution_summary:
         one: "solution"
         other: "solutions"
-      accepted_html: "%{icon} Résolu <span class='by'>par <a href data-user-card='%{username_lower}'>%{username}</a></span> dans <a href='%{post_path}' class='back'>la publication #%{post_number}</a>"
+      accepted_answer_post_number: "message %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tous"
@@ -38,7 +38,6 @@ fr:
       no_solved_topics_title: "Vous n'avez encore résolu aucun sujet"
       no_solved_topics_title_others: "%{username} n'a encore résolu aucun sujet."
       no_solved_topics_body: "Lorsque vous fournissez une réponse utile à un sujet, votre réponse peut être sélectionnée comme solution par le ou la propriétaire ou responsable du sujet."
-      marked_solved_by: "Marqué comme résolu par <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."

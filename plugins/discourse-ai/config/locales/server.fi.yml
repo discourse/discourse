@@ -46,10 +46,10 @@ fi:
     ai_toxicity_flag_threshold_threat: "Uhkaus"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksuaalinen"
     ai_toxicity_groups_bypass: "Toksisuusmoduuli ei luokittele näiden ryhmien käyttäjien viestejä."
-    ai_sentiment_enabled: "Ota tunnemoduuli käyttöön."
-    ai_sentiment_inference_service_api_endpoint: "URL-osoite, jossa tunnemoduulin API on käynnissä"
-    ai_sentiment_inference_service_api_key: "Tunne-APIn API-avain"
-    ai_sentiment_models: "Päätelmien tekemiseen käytettävät mallit. Tunne luokittelee viestin positiivinen/neutraali/negatiivinen-skaalalla. Tunne luokittelee viha/inho/pelko/ilo/neutraali/suru/yllätys-skaalalla."
+    ai_sentiment_enabled: "Ota sävymoduuli käyttöön."
+    ai_sentiment_inference_service_api_endpoint: "URL-osoite, jossa sävymoduulin API on käynnissä"
+    ai_sentiment_inference_service_api_key: "Sävy-APIn API-avain"
+    ai_sentiment_models: "Päätelmien tekemiseen käytettävät mallit. Sävy luokittelee viestin positiivinen/neutraali/negatiivinen-skaalalla. Tunne luokittelee viha/inho/pelko/ilo/neutraali/suru/yllätys-skaalalla."
     ai_nsfw_detection_enabled: "Ota NSFW-moduuli käyttöön."
     ai_nsfw_inference_service_api_endpoint: "URL-osoite, jossa NSFW-moduulin API on käynnissä"
     ai_nsfw_inference_service_api_key: "NSFW-APIn API-avain"
@@ -124,10 +124,10 @@ fi:
       flagged_by_nsfw: Tekoälylisäosa liputti tämän luokiteltuaan ainakin yhden liitetyistä kuvista NSFW:ksi.
   reports:
     sentiment_analysis:
-      title: "Tunneanalyysi"
-      description: "Tämä raportti tarjoaa tunneanalyysin viesteistä ryhmiteltynä luokittain, ja jokaiselle viestille ja luokalle annetaan positiiviset, negatiiviset ja neutraalit pisteet."
+      title: "Sävyanalyysi"
+      description: "Tämä raportti tarjoaa sävyanalyysin viesteistä ryhmiteltynä luokittain, ja jokaiselle viestille ja luokalle annetaan positiiviset, negatiiviset ja neutraalit pisteet."
     overall_sentiment:
-      title: "Yleinen tunne"
+      title: "Yleinen sävy"
       description: 'Kaaviossa verrataan positiivisiksi tai negatiivisiksi luokiteltujen viestien määrää. Nämä lasketaan, kun positiiviset tai negatiiviset pisteet ylittävät asetetun kynnysarvon. Tämä tarkoittaa, että neutraaleja viestejä ei näytetä. Myöskään yksityisviestejä ei lasketa. Luokiteltu "cardiffnlp/twitter-roberta-base-sentiment-latest"-mallilla.'
       xaxis: "Positiivinen (%)"
       yaxis: "Päivämäärä"
@@ -287,7 +287,7 @@ fi:
       personas:
         default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_delete_system_persona: "Järjestelmäpersoonia ei voi poistaa, poista se sen sijaan käytöstä"
-        cannot_edit_system_persona: "Järjestelmäpersoonia voi vain nimetä uudelleen, et saa muokata työkaluja tai järjestelmäkehotetta, sen sijaan voit poistaa ne käytöstä ja tehdä kopion"
+        cannot_edit_system_persona: "Järjestelmäpersoonia voi vain nimetä uudelleen, et voi muokata työkaluja tai järjestelmäkehotetta, sen sijaan voit poistaa ne käytöstä ja tehdä kopion"
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
           name: "GitHub-apulainen"
@@ -428,11 +428,11 @@ fi:
             description: "Haussa käytettävä peruskysely. Esimerkkejä: \"site:example.com\" sisältää vain tulokset osoitteesta example.com, before:2022-01-01 sisältää vain tulokset vuodelta 2021 ja sitä ennen. Tämä teksti lisätään hakukyselyn alkuun."
         read:
           read_private:
-            name: "Lue yksityisesti"
+            name: "Lue yksityisiä"
             description: "Salli pääsy kaikkiin ketjuihin, joihin käyttäjällä on pääsy (sisältää oletuksena vain julkiset ketjut)"
         search:
           search_private:
-            name: "Hae yksityisesti"
+            name: "Hae yksityisiä"
             description: "Sisällytä hakutuloksiin kaikki ketjut, joihin käyttäjällä on pääsy (vain julkiset ketjut sisällytetään oletuksena)"
           max_results:
             name: "Tulosten enimmäismäärä"
@@ -550,7 +550,7 @@ fi:
         no_targets: "Valitun ajanjakson aikana ei ollut viestejä."
     sentiment:
       reports:
-        overall_sentiment: "Yleinen tunne (positiivinen–negatiivinen)"
+        overall_sentiment: "Yleinen sävy (positiivinen–negatiivinen)"
         post_emotion:
           sadness: "Suru \U0001F622"
           surprise: "Yllätys \U0001F631"
@@ -601,7 +601,7 @@ fi:
       quota_exceeded: "Olet ylittänyt tämän mallin kiintiön. Odota %{relative_time} ja yritä sitten uudelleen."
       quota_required: "Sinun on määritettävä tälle mallille saneiden tai käyttökertojen enimmäismäärä"
       no_query_specified: Kyselyparametri on pakollinen, määritä se.
-      no_user_for_persona: Määritetyllä persoonalle ei ole siihen liitettyä käyttäjää.
+      no_user_for_persona: Määritetyllä persoonalla ei ole siihen liitettyä käyttäjää.
       persona_not_found: Määritettyä persoonaa ei ole olemassa. Tarkista parametrit persona_name tai persona_id.
       no_user_specified: Parametri username tai user_unique_id vaaditaan, määritä se.
       user_not_found: Määritettyä käyttäjää ei ole olemassa. Tarkista username-parametri.

@@ -12,7 +12,7 @@ ar:
           spoiler_alert: "تنبيه حرق أحداث Discourse"
   js:
     spoiler:
-      title: طمس الحرق
+      title: تمويه المحتوى المخفي
       label:
         show: "إظهار المحتوى المخفي"
     composer:

@@ -20,7 +20,7 @@ ja:
       dashboard:
         emotion:
           title: "感情"
-          description: "表には、特定の感情で分類された投稿のかっずがリストされます。'SamLowe/roberta-base-go_emotions' モデルで分類されます。"
+          description: "この表には、特定の感情で分類された投稿の数がリストされます。'SamLowe/roberta-base-go_emotions' モデルで分類されます。"
         reports:
           filters:
             group_by:
@@ -97,7 +97,7 @@ ja:
               description: "安全なカテゴリに含まれるトピックに対しレポートの生成を許可します"
             suppress_notifications:
               label: "通知を非表示"
-              description: "コンテンツに変換することでレポートが生成する可能性のある通知を非表示にします。これにより、メンションと内部リンクが再マッピングされます。"
+              description: "コンテンツに変換することでレポートが生成する可能性のある通知を非表示にします。これにより、メンションと内部リンクのマッピングが再作成されます。"
             debug_mode:
               label: "デバッグモード"
               description: "デバッグモードを有効にして、LLM の生の入力と出力を確認します"
@@ -145,7 +145,7 @@ ja:
               description: "これらの値のいずれかに到達したらトークンの生成を停止するようにモデルに指示します"
             search_for_text:
               label: "テキストを検索する"
-              description: "LLM の返信に後続のテキストが表示される場合は、これらのアクションを適用します"
+              description: "LLM の返信に次のテキストが表示される場合は、これらの操作を適用します"
             category:
               label: "カテゴリ"
               description: "トピックに適用するカテゴリ"
@@ -156,7 +156,7 @@ ja:
               label: "返信"
               description: "トピックに投稿する定型返信の生のテキスト"
             canned_reply_user:
-              label: "ユーザーに返信"
+              label: "返信ユーザー"
               description: "定型返信を投稿するユーザーのユーザー名"
             hide_topic:
               label: "トピックを非表示"
@@ -240,13 +240,13 @@ ja:
         ai_helper:
           name: "ヘルパー"
           description: "トピックの作成、投稿の作成、コンテンツの閲覧など、ユーザーのコミュニティー操作を支援します"
-          proofread: テキストを構成
+          proofread: テキストの校正
           title_suggestions: "タイトルの提案"
           explain: "説明"
           illustrate_post: "投稿のイラスト作成"
           smart_dates: "スマート日付"
           translate: "翻訳"
-          markdown_tables: "Markdown テーブルを生成"
+          markdown_tables: "Markdown テーブルの生成"
           custom_prompt: "カスタムプロンプト"
           image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
@@ -259,7 +259,7 @@ ja:
           short_text_translator: "短いテキストの翻訳ツール"
         spam:
           name: "迷惑"
-          description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで検査できるように通報します"
+          description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
           inspect_posts: "投稿の検査"
         automation_reports:
           name: "自動レポート"
@@ -290,14 +290,14 @@ ja:
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
         select_persona: "ペルソナを選択"
-        custom_instructions: "カスタム命令"
-        custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくするサイトに固有のカスタム命令。例: 「英語以外の投稿をより積極的にスキャンする」。"
+        custom_instructions: "カスタム指示"
+        custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
         scanned_count: "スキャンされた投稿数"
         false_positives: "誤った通報"
-        false_negatives: "取り逃した迷惑行為"
-        spam_detected: "迷惑行為が検出されました"
-        custom_instructions_placeholder: "AI が迷惑行為をより正確に識別できるようにするためのサイト固有の命令"
+        false_negatives: "取り逃した迷惑"
+        spam_detected: "検出された迷惑"
+        custom_instructions_placeholder: "AI が迷惑行為をより正確に識別できるようにするためのサイト固有の指示"
         enable: "有効化"
         spam_tip: "AI 迷惑検出機能は、公開トピックのすべての新規ユーザーによる最初の 3 件の投稿をスキャンします。レビューを行うために通報し、迷惑の可能性がある場合はユーザーをブロックします。"
         settings_saved: "設定が保存されました"

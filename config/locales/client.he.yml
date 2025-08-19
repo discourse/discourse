@@ -7278,6 +7278,8 @@ he:
           select_base:
             title: "בחירת לוח צבעים בסיסי"
             description: "לוח בסיסי:"
+          light: "בהיר"
+          dark: "כהה"
           title: "צבעים"
           edit: "עריכה"
           set_default_light: "הגדרה כערכת צבעים בהירה בערכת העיצוב של ברירת המחדל (%{theme})"

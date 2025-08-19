@@ -6679,7 +6679,8 @@ hu:
           select_base:
             title: "Válassza ki az alapszín palettát"
             description: "Alap paletta:"
-          preference_warning: "Megváltoztattad <a href='%{link}'>a személyes témabeállításaidat</a>, így a paletta módosításai esetleg nem láthatók számodra. Azok a látogatók, akik nem módosították az alapértelmezett beállításokat, továbbra is látni fogják az itt végrehajtott módosításokat."
+          light: "világos"
+          dark: "sötét"
           title: "Színek"
           edit: "Szerkesztés"
           saved_refreshing: "Mentve! Frissítő színek..."

@@ -340,7 +340,7 @@ fr:
         other: "%{count} utilisateurs ont participé."
       invite: "Notifier l'utilisateur"
       add_to_calendar: "Ajouter au calendrier"
-      send_pm_to_creator: "Envoyer un MD à %{username}"
+      send_pm_to_creator: "Envoyer un MP à %{username}"
       leave: "Quitter l'événement"
       edit_event: "Modifier l'événement"
       export_event: "Exporter l'événement"
@@ -399,13 +399,13 @@ fr:
             not_going: "Ne participera pas"
             interested: "Intéressé(e)"
             going_count:
-              one: "%{count} utilisateurs participeront"
+              one: "%{count} utilisateur participera"
               other: "%{count} utilisateurs participeront"
             not_going_count:
-              one: "%{count} utilisateurs ne participeront pas"
+              one: "%{count} utilisateur ne participera pas"
               other: "%{count} utilisateurs ne participeront pas"
             interested_count:
-              one: "%{count} utilisateurs sont intéressés"
+              one: "%{count} utilisateur est intéressé"
               other: "%{count} utilisateurs sont intéressés"
             invited_count:
               one: "%{count} utilisateur est invité"

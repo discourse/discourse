@@ -433,7 +433,7 @@ it:
           3. Inserisci un riassunto dei dettagli.
           [/details]
 
-          Riesci ad usare l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
+          Riesci a usare l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 

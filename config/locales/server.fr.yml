@@ -991,10 +991,10 @@ fr:
       description: "Étant donné le titre et le premier message de cette discussion, ce message n'est pas pertinent dans ce contexte et devrait probablement être déplacé ailleurs."
       short_description: "N'est pas pertinent par rapport à la discussion"
     spam:
-      title: "Spam"
+      title: "Contenu indésirable"
       description: "Ce message est une publicité ou du vandalisme. Il n'est pas utile ni pertinent dans le sujet actuel."
       short_description: "C'est de la publicité ou du vandalisme"
-      email_title: '« %{title} » a été signalé comme spam'
+      email_title: '« %{title} » a été signalé comme contenu indésirable'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapproprié"
@@ -1068,9 +1068,9 @@ fr:
       malformed_public_key_credential_error: "La clé publique fournie n'est pas valide."
   topic_flag_types:
     spam:
-      title: "Spam"
+      title: "Contenu indésirable"
       description: "Ce sujet est une publicité. Il n'est pas utile ni pertinent pour le forum, et de nature promotionnelle."
-      long_form: "signalé comme spam"
+      long_form: "signalé comme contenu indésirable"
       short_description: "Ceci est une publicité"
     inappropriate:
       title: "Inapproprié"
@@ -1733,7 +1733,7 @@ fr:
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils envoyer une requête au serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients doivent-ils envoyer une requête au serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
     hide_post_sensitivity: "La probabilité qu'un message marqué soit masqué"
-    silence_new_user_sensitivity: "La probabilité qu'un nouvel utilisateur soit mis en sourdine en fonction des signalements de spam"
+    silence_new_user_sensitivity: "La probabilité qu'un nouvel utilisateur soit mis en sourdine en fonction des signalements de contenu indésirable"
     auto_close_topic_sensitivity: "La probabilité qu'un sujet signalé soit automatiquement fermé"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximal de sujets qu'un utilisateur est autorisé à créer dans la période de 24 h après avoir créé son premier message"
@@ -1747,11 +1747,11 @@ fr:
     tl2_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 2 (membres) en la multipliant par ce nombre."
     tl3_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 3 (habitués) en la multipliant par ce nombre."
     tl4_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 4 (meneurs) en la multipliant par ce nombre."
-    num_users_to_silence_new_user: "Si les publications d'un nouvel utilisateur dépassent le paramètre hide_post_sensitivity et comportent des signalements de spam provenant d'autant d'utilisateurs différents, masquez toutes ses publications et empêchez toute publication future. 0 pour désactiver."
+    num_users_to_silence_new_user: "Si les publications d'un nouvel utilisateur dépassent le paramètre hide_post_sensitivity et comportent des signalements de contenu indésirable provenant d'autant d'utilisateurs différents, masquez toutes ses publications et empêchez toute publication future. 0 pour désactiver."
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis en sourdine, envoyer un message à tous les modérateurs."
-    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que l'utilisateur qui a commencé le sujet, leurs messages seront automatiquement marqués comme spam."
+    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que l'utilisateur qui a commencé le sujet, leurs messages seront automatiquement marqués comme contenu indésirable."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     enable_markdown_typographer: "Utilisez les règles de typographie pour améliorer la lisibilité du texte : remplacez les guillemets droits « par des chevrons », (tm) par un symbole, -- par un emdash —, etc."
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
@@ -1985,7 +1985,7 @@ fr:
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Saisissez le résultat de la largeur/hauteur."
     simultaneous_uploads: "Nombre maximal de fichiers qui peuvent être glissés et déposés dans l'éditeur"
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
-    default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! La modification de ce paramètre peut vous exposer à des spams."
+    default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! La modification de ce paramètre peut vous exposer à des contenus indésirables."
     tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
     tl1_requires_read_posts: "Combien de messages un nouvel utilisateur doit avoir lus pour être promu au niveau de confiance 1."
     tl1_requires_time_spent_mins: "Combien de minutes un nouvel utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 1."
@@ -2095,8 +2095,8 @@ fr:
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Indique s'il faut conserver les informations d'un utilisateur dans le journal après son anonymisation."
     display_eu_visitor_stats: "Affichez le nombre de visiteurs internationaux et européens sur la page /about. L'affichage des statistiques peut prendre quelques minutes après l'activation de ce paramètre."
-    newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du spam."
-    allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
+    newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du contenu indésirable."
+    allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour contenu indésirable. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
     staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
@@ -2117,7 +2117,7 @@ fr:
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
-    high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement masqués après avoir été signalés comme spam par un utilisateur d'un niveau de confiance 3 et plus"
+    high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement masqués après avoir été signalés comme contenu indésirable par un utilisateur d'un niveau de confiance 3 et plus"
     allow_all_users_to_flag_illegal_content: "Les utilisateurs anonymes verront une information indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler un contenu illégal. Ce paramètre prévaut sur « groupes autorisés à signaler une publication »."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
@@ -2875,7 +2875,7 @@ fr:
       reviewable_reject_auto: "Traiter automatiquement les éléments à examiner en file d'attente"
       reviewable_reject: "L'inscription de cet utilisateur a été refusée"
       reviewable_details_scrubbed: "Données de l'utilisateur effacées par %{staff}\n\nMotif : %{reason}\n\nHorodatage : %{timestamp}"
-    email_in_spam_header: "Le premier e-mail de l'utilisateur a été signalé comme spam"
+    email_in_spam_header: "Le premier e-mail de l'utilisateur a été signalé comme contenu indésirable"
     already_silenced: "L'utilisateur a déjà été mis en sourdine par %{staff} il y a %{time_ago}."
     already_suspended: "L'utilisateur a déjà été suspendu par %{staff} il y a %{time_ago}."
     cannot_delete_has_posts:
@@ -3053,7 +3053,7 @@ fr:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
     illegal: "Votre publication a été signalée comme **illégale** : la communauté pense qu'elle enfreint peut-être la loi."
-    spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
+    spam: "Votre message a été signalé comme étant du **contenu indésirable** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
     responder:
       off_topic: "Ce message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question tel que défini par son titre et son premier message."
@@ -3614,7 +3614,7 @@ fr:
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
       text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).\n"
     too_many_spam_flags:
-      title: "Trop de signalements de spam"
+      title: "Trop de signalements de contenu indésirable"
       subject_template: "Nouveau compte bloqué"
       text_body_template: |
         Bonjour,
@@ -3658,7 +3658,7 @@ fr:
 
         Le seuil de signalements déclenchant l'envoi de ce message peut être modifié avec le paramètre « silence_new_user ».
     spam_post_blocked:
-      title: "Message spam bloqué"
+      title: "Publication de contenu indésirable bloquée"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
       text_body_template: |
         Ce message vous est envoyé de manière automatisée.
@@ -3717,7 +3717,7 @@ fr:
 
     Pour vous désabonner de ces e-mails, [cliquez ici](%{unsubscribe_url}).
   subject_re: "Re : "
-  subject_pm: "[MD] "
+  subject_pm: "[MP] "
   email_from: "%{user_name} via %{site_name}"
   email_from_without_site: "%{group_name}"
   user_notifications:
@@ -3786,7 +3786,7 @@ fr:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Groupe invité au MD par un utilisateur"
+      title: "Groupe invité au MP par un utilisateur"
       subject_template: "[%{email_prefix}] %{username} a invité @%{group_name} dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -3795,7 +3795,7 @@ fr:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "Utilisateur invité au MD"
+      title: "Utilisateur invité au MP"
       subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -3804,7 +3804,7 @@ fr:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "Utilisateur distant invité au MD"
+      title: "Utilisateur distant invité au MP"
       subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -3833,8 +3833,8 @@ fr:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Utilisateur a répondu au MD"
-      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      title: "Utilisateur a répondu au MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3877,8 +3877,8 @@ fr:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "Utilisateur a mentionné un MD"
-      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      title: "Utilisateur a mentionné un MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3899,8 +3899,8 @@ fr:
 
         %{respond_instructions}
     user_group_mentioned_pm:
-      title: "Groupe d'utilisateurs a mentionné un MD"
-      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      title: "Groupe d'utilisateurs a mentionné un MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3910,8 +3910,8 @@ fr:
 
         %{respond_instructions}
     user_group_mentioned_pm_group:
-      title: "Groupe d'utilisateurs a mentionné un MD"
-      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      title: "Groupe d'utilisateurs a mentionné un MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3954,8 +3954,8 @@ fr:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Utilisateur a publié un MD"
-      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      title: "Utilisateur a publié un MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3965,7 +3965,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Utilisateur distant a publié un MD"
+      title: "Utilisateur distant a publié un MP"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -4730,7 +4730,7 @@ fr:
       name: Habitué
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la recatégorisation, au renommage, au suivi de liens, au wiki et à plus de « J'aime »
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites désormais partie de nos lecteurs et lectrices les plus actifs et vos contributions contribuent à l'excellence de notre communauté. Vous pouvez désormais recatégoriser et renommer les sujets, profiter de signalements de spams plus efficaces et vous obtiendrez également davantage de mentions « J'aime » chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites désormais partie de nos lecteurs et lectrices les plus actifs et vos contributions contribuent à l'excellence de notre communauté. Vous pouvez désormais recatégoriser et renommer les sujets, profiter de signalements de contenus indésirables plus efficaces et vous obtiendrez également davantage de mentions « J'aime » chaque jour.
     leader:
       name: Meneur
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de « J'aime »
@@ -5209,7 +5209,7 @@ fr:
       trust_level: "Les réponses des utilisateurs dont le niveau de confiance est faible doivent être approuvées par un responsable. Voir %{link}."
       group: "Les réponses des utilisateurs ne faisant pas partie des groupes spécifiés doivent être approuvées par un responsable. Voir %{link}."
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
-      fast_typer: "Un nouvel utilisateur a écrit son premier message avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
+      fast_typer: "Un nouvel utilisateur a écrit sa première publication avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
       watched_word:
         one: "Ce message contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."

@@ -81,7 +81,7 @@ fi:
               label: "Malli"
               description: "Raportin luomiseen käytettävä LLM"
             categories:
-              label: "Luokat"
+              label: "Alueet"
               description: "Suodata ketjut vain näihin alueisiin"
             tags:
               label: "Tunnisteet"
@@ -147,7 +147,7 @@ fi:
               label: "Hae tekstiä"
               description: "Jos suuren kielimallin vastauksessa näkyy seuraava teksti, tee nämä toimet"
             category:
-              label: "Kategoria"
+              label: "Alue"
               description: "Ketjuun sovellettava alue"
             tags:
               label: "Tunnisteet"
@@ -308,7 +308,7 @@ fi:
           not_spam: "Ei roskapostia"
         stat_tooltips:
           incorrectly_flagged: "Kohteet, jotka tekoälybotti liputti roskapostiksi, mutta joista valvojat olivat eri mieltä"
-          missed_spam: "Yhteisön roskapostiksi liputtamaton kohteet, joita tekoälybotti ei havainnut ja joista valvojat olivat samaa mieltä"
+          missed_spam: "Yhteisön roskapostiksi liputtamat kohteet, joita tekoälybotti ei havainnut ja joista valvojat olivat samaa mieltä"
         errors:
           scan_not_admin:
             message: "Varoitus: roskapostin skannaus ei toimi oikein, koska roskapostin skannaustili ei ole ylläpitäjä"
@@ -329,8 +329,8 @@ fi:
         all_models: "Kaikki mallit"
         username: "Käyttäjätunnus"
         total_requests: "Pyyntöjä yhteensä"
-        request_tokens: "Pyynnön tokenit"
-        response_tokens: "Vastauksen tokenit"
+        request_tokens: "Pyynnön saneet"
+        response_tokens: "Vastauksen saneet"
         net_request_tokens: "Nettopyyntösaneet"
         cached_tokens: "Välimuistissa olevat saneet"
         cached_request_tokens: "Välimuistiin tallennetut pyyntösaneet"
@@ -453,10 +453,10 @@ fi:
       rag:
         title: "RAG"
         options:
-          rag_chunk_tokens: "Latauslohkotokenit"
-          rag_chunk_tokens_help: "Kullekin lohkolle käytettävien tokenien määrä RAG-mallissa. Lisää kontekstin määrää, jota tekoäly voi käyttää, kasvattamalla arvoa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen)."
-          rag_chunk_overlap_tokens: "Latauslohkon päällekkäiset tokenit"
-          rag_chunk_overlap_tokens_help: "Päällekkäisten tokenien määrä lohkojen välillä RAG-mallissa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen). "
+          rag_chunk_tokens: "Latauslohkosaneet"
+          rag_chunk_tokens_help: "Kullekin lohkolle käytettävien saneiden määrä RAG-mallissa. Lisää kontekstin määrää, jota tekoäly voi käyttää, kasvattamalla arvoa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen)."
+          rag_chunk_overlap_tokens: "Latauslohkon päällekkäiset saneet"
+          rag_chunk_overlap_tokens_help: "Päällekkäisten saneiden määrä lohkojen välillä RAG-mallissa (muuttaminen indeksoi kaikki lataukset palvelimeen uudelleen)."
           rag_llm_model: "Indeksointikielimalli"
           rag_llm_model_help: "Tekstintunnistukseen käytettävä kielimalli PDF-tiedostojen ja kuvien indeksoinnissa"
           show_indexing_options: "Näytä latausasetukset"
@@ -557,7 +557,7 @@ fi:
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
           max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
-          ai_bot: "Tekoälyrobotti"
+          ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{persona})"
           ai_helper_image_caption: "Kuvateksti"
           ai_persona: "Persoona (%{persona})"
@@ -789,8 +789,8 @@ fi:
           title: "Näytä tekoälyvuorovaikutus"
           copy_request: "Kopioi pyyntö"
           copy_response: "Kopioi vastaus"
-          request_tokens: "Pyynnön tokenit:"
-          response_tokens: "Vastauksen tokenit:"
+          request_tokens: "Pyynnön saneet:"
+          response_tokens: "Vastauksen saneet:"
           request: "Pyyntö"
           response: "Vastaus"
           next_log: "Seuraava"
@@ -846,10 +846,10 @@ fi:
           uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
       sentiments:
         dashboard:
-          title: "Tunne"
+          title: "Sävy"
         sidebar:
-          overview: "Tunteen yleiskatsaus"
-          analysis: "Tunneanalyysi"
+          overview: "Sävyn yleiskatsaus"
+          analysis: "Sävyanalyysi"
         sentiment_analysis:
           share_chart: "Kopioi linkki kaavioon"
           filter_types:
@@ -861,7 +861,7 @@ fi:
             category: "Kategoria"
             tag: "Tunniste"
           table:
-            sentiment: "Tunne"
+            sentiment: "Sävy"
             total_count: "Yhteensä"
       summarization:
         chat:

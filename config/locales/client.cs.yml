@@ -4815,7 +4815,7 @@ cs:
       locked_and_archived:
         help: "Toto téma je uzavřeno a archivováno; již nepřijímá nové odpovědi a nelze jej změnit"
       unpinned:
-        title: "Nepřipnuté"
+        title: "Nepřipnuto"
         help: "Pro vás toto téma není připnuté; bude se zobrazovat v běžném pořadí"
       pinned_globally:
         title: "Připnuto globálně"
@@ -7310,7 +7310,8 @@ cs:
           select_base:
             title: "Vyberte základní paletu barev"
             description: "Základní paleta:"
-          preference_warning: "Změnili jste <a href='%{link}'>nastavení svého osobního motivu</a>, takže změny palety pro vás nemusí být viditelné. Návštěvníci, kteří nezměnili svá výchozí nastavení, tak stále uvidí změny, které zde provedete."
+          light: "světlý režim"
+          dark: "tmavý režim"
           title: "Barvy"
           edit: "Upravit"
           set_default_light: "Nastavit jako světlou paletu ve výchozím motivu (%{theme})"
