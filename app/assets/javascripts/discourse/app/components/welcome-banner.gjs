@@ -160,6 +160,7 @@ export default class WelcomeBanner extends Component {
             <SearchMenu
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
+              @searchInputPlaceholder="welcome_banner.search_placeholder"
             />
           </div>
           <PluginOutlet @name="welcome-banner-below-input" />
