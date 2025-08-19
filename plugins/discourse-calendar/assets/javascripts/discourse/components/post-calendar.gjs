@@ -333,7 +333,7 @@ export default class PostCalendar extends Component {
     }
   }
 
-  _findAverageTimezone(eventTimezones) {
+  #findAverageTimezone(eventTimezones) {
     const totalOffsets = eventTimezones.reduce(
       (sum, timezone) => sum + timezone.timezoneOffset,
       0
