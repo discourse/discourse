@@ -70,7 +70,7 @@ export default class extends DiscourseRoute {
     }
 
     // When Discourse Connect is enabled, redirect to the SSO endpoint
-    if (auth_immediately && enable_discourse_connect) {
+    if (enable_discourse_connect) {
       const returnPath = cookie("destination_url")
         ? getURL("/")
         : encodeURIComponent(url);

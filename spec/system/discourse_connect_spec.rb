@@ -32,9 +32,37 @@ describe "Discourse Connect", type: :system do
 
       expect(page).to have_current_path(private_topic.relative_url)
     end
+
+    it "redirects to the IDP and logs user in" do
+      visit "/"
+
+      find(".login-button").click
+      expect(page).to have_css("#current-user")
+    end
   end
 
-  private
+  context "when auth_immediately is disabled" do
+    before { SiteSetting.auth_immediately = false }
+
+    it "redirects to the IDP and logs user in" do
+      visit "/"
+
+      find(".login-button").click
+      expect(page).to have_css("#current-user")
+    end
+
+    context "when login required" do
+      before { SiteSetting.login_required = true }
+
+      it "redirects to the IDP and logs user in" do
+        visit "/"
+
+        expect(page).to have_css(".login-welcome") # shows splash screen
+        find(".login-button").click
+        expect(page).to have_css("#current-user")
+      end
+    end
+  end
 
   def setup_test_sso_server
     @server =
