@@ -318,7 +318,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  _modifyDatesForTimezoneOffset(from, to, timezoneOffset) {
+  #modifyDatesForTimezoneOffset(from, to, timezoneOffset) {
     if (timezoneOffset > 0) {
       if (to.isValid()) {
         to.add(1, "day");
