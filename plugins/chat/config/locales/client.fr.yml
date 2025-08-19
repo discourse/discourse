@@ -234,9 +234,7 @@ fr:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
-      no_direct_message_channels: "Vous n'avez encore rejoint aucun message direct !"
       no_direct_message_channels_cta: "Commencer une conversation"
-      no_public_channels: "Vous n'avez encore rejoint aucune chaîne !"
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:
@@ -342,6 +340,7 @@ fr:
         tabs:
           members: Membres
           settings: Paramètres
+        remove_member: "Supprimer"
       new_message_modal:
         title: Envoyer un message
         add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
@@ -642,6 +641,11 @@ fr:
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
+      quick_reaction_type:
+        title: "Réactions de discussion en un clic"
+        options:
+          frequent: "Réactions de discussion les plus fréquemment utilisées"
+          custom: "Réactions personnalisées"
     notifications:
       chat_invitation: "vous a invité(e) à rejoindre un canal de discussion"
       chat_invitation_html: "<span>%{username}</span> <span>vous a invité(e) à rejoindre un canal de discussion</span>"

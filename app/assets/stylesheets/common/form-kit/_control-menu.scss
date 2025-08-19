@@ -1,6 +1,7 @@
 .form-kit__control-menu-trigger {
-  @include default-input;
   justify-content: space-between;
+
+  @include default-input;
 }
 
 .form-kit__control-menu-content {

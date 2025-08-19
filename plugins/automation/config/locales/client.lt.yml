@@ -7,9 +7,8 @@
 lt:
   js:
     discourse_automation:
-      create: Sukurti
-      update: Atnaujinti
-      no_automation_yet: Dar nesukūrėte jokių automatizavimų. Norėdami pradėti, pasirinkite vieną iš toliau pateiktų parinktių.
+      back: Atgal
+      edit: Redaguoti
       fields:
         user:
           label: Narys
@@ -63,19 +62,13 @@ lt:
           fields:
             restricted_tags:
               label: Žymos
-            restricted_category:
-              label: Kategorija
-              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra šioje kategorijoje
-            restricted_group:
-              label: Grupė
-              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra asmeninė žinutė šios grupės gautuosiuose
-            restricted_groups:
-              label: Grupės
-              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra asmeninė žinutė vienoje iš grupės gautųjų dėžučių
-            ignore_group_members:
-              label: Ignoruoti grupės narius
-              description: Praleisti aktyviklį, jei siuntėjas yra aukščiau nurodytos grupės narys
+            restricted_categories:
+              label: Kategorijos
           created: Sukurta
+          with_images: Paveiksliukai
+          with_links: Nuorodos
+          with_code: Kodas
+          with_uploads: Įkėlimai
         category_created_edited:
           fields:
             restricted_category:

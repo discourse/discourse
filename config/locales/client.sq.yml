@@ -193,20 +193,18 @@ sq:
       dismiss: "Hiqe"
     bootstrap_mode: "Material Hyrës"
     back_button: "Kthehu mbrapa"
+    welcome_banner:
+      header:
+        anonymous_members: "Mirë se vini tek %{site_name}!"
+      search: "Kërko"
     themes:
       default_description: "Paracaktuar"
-      broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
       error_caused_by: "Shkaktuar nga '%{name}'. <a target='blank' href='%{path}'>Klikoni këtu</a> për të përditësuar, rikonfiguruar ose çaktivizuar."
       only_admins: "(ky mesazh u shfaqet vetëm administratorëve të faqes)"
     broken_decorator_alert: "Postimet mund të mos shfaqen saktë sepse një nga dekoruesit e përmbajtjes së postimit në faqen tuaj ngriti një gabim."
     broken_page_change_alert: "Një trajtues/menaxhues i OnPageChange ngriti një gabim. Kontrolloni mjetet e zhvilluesit të shfletuesit për më shumë informacion."
     broken_plugin_alert: "Shkaktuar nga shtojca '%{name}'"
     broken_transformer_alert: "Ka pasur një gabim. Faqja juaj mund të mos funksionojë siç duhet."
-    critical_deprecation:
-      notice: "<b>[Njoftim Admin]</b> Një nga temat apo shtojcat tuaja ka nevojë për përditësim që të jetë në përputhshmëri me ndryshimet kryesore të Diskursit (Discourse) të ardhshëm."
-      id: "(id:<em>%{id}</em>)"
-      theme_source: "Tema e identifikuar: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Shtojca e identifikuar: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -454,13 +452,8 @@ sq:
       remove_confirmation: "Je të sigurt që dëshironi ta fshini këtë draft?"
       new_topic: "Draft i ri për temën"
       new_private_message: "Draft i ri i mesazhit personal"
-      abandon:
-        confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
-        yes_value: "Harroni"
-        no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
-        view_all: "shikoni të gjitha"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -480,7 +473,7 @@ sq:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
     preview: "shiko"
-    cancel: "anulo"
+    cancel: "Anulo"
     deleting: "Po fshihet…"
     save: "Ruaj ndryshimet"
     saving: "Po ruhet..."
@@ -590,6 +583,9 @@ sq:
         name: "Emri"
         fields: "Fushat"
         reject_reason: "Arsye"
+        scrubbed_reason: "Arsye"
+        scrub_record:
+          cancel_button: "Anulo"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (i flamurit të fundit)"
@@ -702,6 +698,15 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      notes:
+        delete: "Fshij"
+      review_user: "User"
+      copy_link: "Kopjoni lidhjen"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postim"
+            other: "%{count} postime"
       approval:
         title: "Postimi ka nevojë për aprovim"
         description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
@@ -1148,7 +1153,6 @@ sq:
       said: "%{username}:"
       profile: "Profili"
       profile_possessive: "Profili i %{username}"
-      account_possessive: "Llogaria e %{name}"
       mute: "Hesht"
       edit: "Ndryshoni preferencat"
       download_archive:
@@ -1265,7 +1269,6 @@ sq:
         description: "Kapërceni këshillat dhe distinktivët për hyrjen e përdoruesve të rinj"
       reset_seen_user_tips: "Shfaq përsëri këshillat për përdoruesit"
       theme_default_on_all_devices: "Bëje këtë temë të paracaktuar në të gjitha pajisjet e mia"
-      color_scheme_default_on_all_devices: "Cakto paletën e parazgjedhur të ngjyrave në të gjitha pajisjet e mia"
       color_scheme: "Paleta e ngjyrave"
       color_schemes:
         default_description: "Tema e paracaktuar"
@@ -1300,6 +1303,8 @@ sq:
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"
+      silenced_permanently: "Ky përdorues është heshtur."
+      silenced_reason: "Arsyeja:"
       github_profile: "GitHub"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
@@ -1815,7 +1820,8 @@ sq:
         removed: "U hoq"
         search: "shtypni për të kërkuar ftesat…"
         user: "Anëtari i ftuar"
-        none: "Asnjë ftesë për të shfaqur."
+        none:
+          title: "Asnjë ftesë për të shfaqur."
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen %{count} ftesat e para."
@@ -1866,6 +1872,7 @@ sq:
           edit_link_options: "Redaktoni opsionet e lidhjes ose dërgoni me email."
           show_advanced: "Shfaqni opsionet e avancuara"
           hide_advanced: "Fshihni opsionet e avancuara"
+          description: "Përshkrimi"
           restrict: "Kufizoni në"
           restrict_email: "Kufizoni në email"
           restrict_domain: "Kufizoni në domein"
@@ -1977,7 +1984,6 @@ sq:
         title: "Adresa IP e regjistrimit"
       avatar:
         title: "Foto e profilit"
-        header_title: "profili, mesazhet, të preferuarat dhe preferencat"
         name_and_description: "%{name} - %{description}"
         edit: "Redaktoni foton e profilit"
       title:
@@ -2054,6 +2060,8 @@ sq:
     modal:
       close: "mbylle"
       dismiss_error: "Hiqni gabimin"
+    multi_select:
+      search: "Kërkoni…"
     form_kit:
       reset: Rivendosni
       optional: opsionale
@@ -2294,10 +2302,6 @@ sq:
         name: "Google"
         title: "Identifikohu me Google"
         sr_title: "Identifikohu me Google"
-      twitter:
-        name: "Twitter"
-        title: "Identifikohu me Twitter"
-        sr_title: "Identifikohu me Twitter"
       instagram:
         name: "Instagram"
         title: "Identifikohu me Instagram"
@@ -2339,13 +2343,6 @@ sq:
       password_label: "Fjalëkalimi"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vetëm kategoritë"
       categories_with_featured_topics: "Kategoritë dhe temat e zgjedhura"
@@ -2439,7 +2436,6 @@ sq:
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
       toggle_whisper: "Pëshpëritje?"
-      toggle_unlisted: "Toggle Unlisted"
       insert_table: "Futni tabelën"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"
@@ -2526,11 +2522,9 @@ sq:
       italic_label: "I"
       italic_title: "Theksuar"
       italic_text: "tekst i theksuar"
-      link_title: "Lidhje"
       link_description: "shkruaj përshkrimin e lidhjes këtu"
-      link_dialog_title: "Vendosni një lidhje"
-      link_optional_text: "titull fakultativ"
-      link_url_placeholder: "Ngjitni një URL ose shkruani për të kërkuar tema"
+      link_edit_action: "Përditëso"
+      link_optional_text: "Tekst"
       blockquote_title: "Citim"
       blockquote_text: "Citim"
       code_title: "Tekst i paraformatuar"
@@ -2597,9 +2591,14 @@ sq:
       image_alt_text:
         aria_label: Teksti alternativ për imazhin
         title: "Shtoni përshkrimin e imazhit"
+      image_toolbar:
+        alt_text: "Shtoni përshkrimin e imazhit"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
+      link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
     notifications:
       tooltip:
         regular:
@@ -2728,9 +2727,8 @@ sq:
         new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
+      delete: "Fshij"
       uploading: "Duke ngarkuar"
-      processing: "Ngarkimi po përpunohet"
-      select_file: "Zgjdhni një Skedar"
       default_image_alt_text: imazh
     search:
       sort_by: "Rendit sipas"
@@ -2773,8 +2771,6 @@ sq:
       in_topics_posts: "në të gjitha temat dhe postimet"
       enter_hint: "ose shtypni Enter"
       in_posts_by: "në postimet nga %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "përsëri për të përdorur kërkimin e shfletuesit"
       recent: "Kërkimet e fundit"
       clear_recent: "Pastro kërkimet e fundit"
       type:
@@ -2859,7 +2855,6 @@ sq:
           aria_label: Filtro sipas shikimeve maksimale
         additional_options:
           label: "Filtro sipas numrit të postimeve dhe shikimeve të temës"
-    hamburger_menu: "menu"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -2999,10 +2994,6 @@ sq:
         top: "Nuk ka tema popullore."
         hot: "Nuk ka tema të nxehta."
         filter: "Nuk ka tema."
-        educate:
-          new: '<p>Temat tuaja të reja do të shfaqen këtu. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nëse janë krijuar në 2 ditët e fundit.</p><p>Vizitoni preferencat tuaja <a href="%{userPrefsUrl}"></a> për ta ndryshuar këtë.</p>'
-          unread: "<p>Këtu shfaqen temat tuaja të palexuara.</p><p>Si parazgjedhje, temat konsiderohen të palexuara dhe do të tregojnë numrat e palexuara <span class=\"badge unread-posts badge-notification\">1</span> nëse:</p><ul><li>Krijuar temën</li><li>Përgjigje temës</li><li>Lexoni temën për më shumë se 5 minuta</li></ul><p>Ose nëse e keni vendosur në mënyrë eksplicite temën në gjurmuar ose shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
-          new_new: "<p>Temat tuaja të reja do të shfaqen këtu dhe temat tuaja të palexuara gjithashtu do të shfaqen. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> nëse janë krijuar në 2 ditët e fundit. Temat e palexuara do të shfaqin numërimin e palexuar <span class=\"badge unread-posts badge-notification\">1</span> nëse ju: keni krijuar temën, i jeni përgjigjur temës, e lexoni temën për më shumë se 5 minuta ose nëse e keni vendosur në mënyrë eksplicite temën në Gjurmuar ose Shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
       bottom:
         latest: "Nuk ka më tema të reja."
         posted: "Nuk ka më tema të publikuara."
@@ -3430,6 +3421,16 @@ sq:
       has_likes_title_you:
         one: "ju dhe %{count} person tjetër pëlqyet këtë postim"
         other: "ju dhe %{count} të tjerë pëlqyen këtë postim"
+      sr_post_like_count_button:
+        one: "%{count} person pëlqeu këtë postim."
+        other: "%{count} vetë pëlqyen këtë postim."
+      localizations:
+        table:
+          actions: "Veprimet"
+          edit: "Redaktoni"
+          delete: "Fshij"
+        post_language_selector:
+          none: "Asnjë"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3516,6 +3517,10 @@ sq:
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
       tags: "Etiketat"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
+        remove: "Hiq"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
@@ -3532,9 +3537,13 @@ sq:
       description: "Përshkrimi"
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
-      badge_colors: "Ngjyrat e stemës"
-      background_color: " Ngjyra e sfondit"
-      foreground_color: "Foreground color"
+      background_color: "Ngjyra"
+      styles:
+        icon: "Ikonë"
+        emoji: "Emoji"
+        options:
+          icon: "Ikonë"
+          emoji: "Emoji"
       name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
@@ -3714,7 +3723,6 @@ sq:
         topics: "Topics"
         replies: "Përgjigjet"
       posted:
-        title: "Postimet e mia"
         help: "temat ku keni dërguar pêrgjigje"
       bookmarks:
         title: "Të preferuarat"
@@ -3801,6 +3809,8 @@ sq:
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
+      admin:
+        title: "Admin"
     badges:
       earned_n_times:
         one: "Kjo stemë është fituar %{count} herë"
@@ -3939,6 +3949,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            filter:
+              content: "Filtro"
             topics:
               content: "Topics"
             faq:
@@ -3950,12 +3962,11 @@ sq:
             users:
               content: "Users"
             my_posts:
-              content: "Postimet e mia"
-              content_drafts: "Draftet e mia"
               title: "Aktiviteti im i fundit për temën"
               title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
+      search: "Kërko"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -3973,6 +3984,12 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    filter:
+      description:
+        yesterday: "Dje"
+    discovery:
+      headings:
+        categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
     admin:
@@ -3982,22 +3999,40 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      config_sections:
+        account:
+          title: "Llogaria"
+        community:
+          title: "Komuniteti"
+        email:
+          title: "Email"
+        security:
+          title: "Siguria"
+        plugins:
+          title: "Pluginet"
       config:
         developer:
           title: "Developer"
+        emojis:
+          title: "Emoji"
         files:
           title: "Skedarë"
         legal:
           title: "Legale"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
           title: "Njoftimet"
         onebox:
           title: "Onebox"
-        other:
-          title: "Të tjerë"
-        search:
+        search_everything:
           title: "Kërko"
         security:
           title: "Siguria"
@@ -4005,6 +4040,58 @@ sq:
           title: "Spam"
         user_api:
           title: "API e përdoruesit"
+        dashboard:
+          title: "Paneli i kontrollit"
+        users:
+          title: "Users"
+        groups:
+          title: "Grupet"
+        whats_new:
+          title: "Çfarë ka të re?"
+        backups:
+          title: "Rezervat"
+          sub_pages:
+            logs:
+              title: "Ditari"
+        badges:
+          title: "Stemat"
+        permalinks:
+          title: "Permalinks"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "Shabllonet"
+        email_logs:
+          sub_pages:
+            sent:
+              title: "Dërguar"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Marrë"
+            rejected:
+              title: "Rejected"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Kontroll IP-sh"
+            screened_urls:
+              title: "Kontroll URL-sh"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+        api_keys:
+          title: "Çelësat API"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Embedding"
+      theme_site_settings:
+        default_value: "Paracaktuar"
+      search:
+        title: "Kërko"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -4159,6 +4246,8 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          extra_groups:
+            groups: "Grupet"
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
@@ -4181,9 +4270,29 @@ sq:
           delete: "Fshij"
           more_options:
             title: "Më shumë mundësi"
+        themes_and_components:
+          breadcrumb_title: "Personalizo"
+          components:
+            name: "Emri"
+            enabled: "Aktivizuar?"
+            by_author: "Nga %{name}"
+            learn_more: "Mësoni më shumë"
+            edit: "Redaktoni"
+            preview: "Parashikimi"
+            export: "Eksporto"
+            delete: "Fshij"
+            filter_by_all: "Të Gjithë"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
+        color_palettes:
+          palette_name: "Emri"
+          copy_to_clipboard: "Kopjoni në Clipboard"
+          copied_to_clipboard: "Kopjuar në Clipboard"
+          copy_to_clipboard_error: "Gabim gjatë kopjimit të të dhënave në Clipboard"
+          delete: "Fshij"
+          colors:
+            title: "Ngjyrat"
       plugins:
         title: "Pluginet"
         name: "Emri"
@@ -4196,20 +4305,11 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
-        sidebar_link:
-          installed: "Instaluar"
-      advanced:
-        sidebar_link:
-          api_keys:
-            title: "Çelësat API"
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          user_api: "API e përdoruesit"
-          onebox: "Onebox"
-          files: "Skedarë"
-          other_options: "Të tjerë"
-          search: "Kërko"
+        filters:
+          all: "Të gjitha"
+          enabled: "Aktivizuar"
+          disabled: "E çaktivizuar"
+          reset: "Rivendosni"
       backups:
         title: "Rezervat"
         menu:
@@ -4288,14 +4388,15 @@ sq:
           enabled_filter: "Aktivizuar"
         theme:
           theme: "Tema"
+          filter_all: "Të gjitha"
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"
           save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
-          settings: "Rregullimet"
           preview: "Parashikimi"
+          default: "Aktiv"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
@@ -4305,59 +4406,59 @@ sq:
           enable: "Aktivizo"
           disable: "Çaktivizo"
           add: "Shto"
+          settings: "Rregullimet"
+          colors: "Ngjyrat"
+          discard_colors: "Harroni"
+          colors_title: "Ngjyrat"
           scss:
             text: "CSS"
-          header:
-            text: "Ballina"
           footer:
             text: "Fundi i faqes"
           embedded_scss:
             text: "CSS e ngjitur"
-          body_tag:
-            text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
-          schema:
-            fields:
-              required: "*e nevojshme"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
+        schema:
+          fields:
+            required: "*e nevojshme"
+            string:
+              too_short:
+                one: "duhet të jetë të paktën %{count} karakter"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
+          edit: "Redaktoni"
+          filters:
+            all: "Të gjitha"
+          active_badge:
+            text: "Aktiv"
           copy_name_prefix: "Kopje e"
           undo: "Çbëj"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
           revert: "Rikthe"
           primary:
             name: "parësor"
-            description: "Shumica e tekstit, ikonave dhe bordurave. "
           secondary:
             name: "dytësor"
-            description: "Ngjyra kryesore e sfondit, dhe teksti i ca butonave. "
           tertiary:
             name: "tretësore"
-            description: "Linket, ca butona, njoftimet dhe ngjyrat për theks."
           quaternary:
             name: "katërsore"
           header_background:
             name: "sfondi i ballinës"
-            description: "Ngjyra në sfond të ballinës."
           header_primary:
             name: "primarja e ballinës"
-            description: "Teksti dhe ikonat në ballinë të faqes. "
           highlight:
             name: "theksi"
-            description: "Sfondi i elementëve të zgjedhur në faqe, si postimet dhe temat."
           danger:
             name: "rrezik"
-            description: "Ngjyra e theksit për veprimet si fshirjen e postimeve apo temave."
           success:
             name: "sukses"
-            description: "Përdoret për të treguar një veprim të kryer me sukses."
           love:
             name: "zemra"
-            description: "Ngjyra e butonit të pëlqimeve."
         email_style:
           html: "HTML"
           css: "CSS"
@@ -4593,7 +4694,6 @@ sq:
         activity: Aktiviteti
         like_count: Pëlqime të dhëna / të marra
         last_100_days: "në 100 ditët e fundit"
-        private_topics_count: Diskutime Private
         posts_read_count: Postime të lexuara
         post_count: Postime të krijuara
         topics_entered: Tema të shikuara
@@ -4624,8 +4724,6 @@ sq:
             cancel: "Anulo"
         delete_forbidden_because_staff: "Administratorët dhe moderatorët nuk fshihen dot. "
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
-        delete_and_block: "Fshijeni dhe <b>bllokoni</b> këtë email dhe adresë IP"
-        delete_dont_block: "Vetëm fshijeni"
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Dërgo Emailin e Aktivizimit"

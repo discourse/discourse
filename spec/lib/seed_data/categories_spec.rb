@@ -99,6 +99,22 @@ RSpec.describe SeedData::Categories do
       expect(SiteSetting.default_composer_category).to eq(Category.last.id)
     end
 
+    it "adds emojis to seeded categories" do
+      Category.destroy_all
+
+      create_category("uncategorized_category_id")
+      expect(Category.last.emoji).to eq("card_file_box")
+
+      create_category("meta_category_id")
+      expect(Category.last.emoji).to eq("thought_balloon")
+
+      create_category("staff_category_id")
+      expect(Category.last.emoji).to eq("shield")
+
+      create_category("general_category_id")
+      expect(Category.last.emoji).to eq("blue_book")
+    end
+
     it "does not overwrite permissions on the General category" do
       create_category("general_category_id")
       expect(Category.last.name).to eq("General")

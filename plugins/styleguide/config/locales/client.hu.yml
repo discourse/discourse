@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Stílussegéd"
   js:
     styleguide:
       title: "Stílus útmutató"
@@ -25,6 +30,8 @@ hu:
           title: "Dátum/idő bemenetek"
         menus:
           title: "Menük"
+        multi_select:
+          title: "Több kijelölése"
         toasts:
           title: "Köszöntők"
         font_scale:

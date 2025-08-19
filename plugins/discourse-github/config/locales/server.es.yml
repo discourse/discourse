@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    enable_discourse_github_plugin: "Habilitar el plugin discourse-github"
+    github_linkback_enabled: "Vincular problemas de GitHub a discusiones del foro"
+    github_linkback_projects: "Lista de proyectos desde los que enlazar"
+    github_linkback_access_token: 'Un token de acceso válido para el usuario que publicará el enlace de regreso y para contar commits/contribuciones para conceder insignias. Puedes obtener instrucciones sobre cómo obtener un token <a href="https://meta.discourse.org/t/99895">aquí</a>.'
+    github_linkback_maximum_links: "Número máximo de enlaces a crear a partir de una sola entrada. Cuando una entrada contiene más enlaces, no se crea ninguno."
+    github_permalinks_enabled: "Habilitar sobrescrituras de enlaces permanentes de GitHub"
+    github_permalinks_exclude: "Nombre de archivo o directorio que debe excluirse de las sobrescrituras de enlaces permanentes. Proporciona solo el nombre de archivo o la ruta completa: usuario/repositorio/directorio-opcional/nombre_del_archivo"
+    github_badges_enabled: "Habilitar insignias de GitHub"
+    github_badges_repos: "URL de los repositorios de GitHub para buscar contribuciones y commits"
+    github_silver_badge_min_commits: "Número mínimo de commits para la insignia de plata"
+    github_gold_badge_min_commits: "Número mínimo de commits para la insignia de oro"
+    errors:
+      invalid_badge_repo: "Debes proporcionar una URL de GitHub o el nombre del repositorio en el formato github_user/nombre_del_repositorio"
+      invalid_github_linkback_access_token: "Debes proporcionar un token de acceso de enlace de retorno de GitHub válido que tenga acceso a los repositorios de insignias que has proporcionado."
+  github_linkback:
+    commit_template: |
+      Este commit ha sido mencionado en **%{title}**. Puede que haya detalles relevantes allí:
+
+      %{post_url}
+    pr_template: |
+      Esta solicitud de extracción ha sido mencionada en **%{title}**. Puede que haya detalles relevantes allí:
+
+      %{post_url}
+    issue_template: |
+      Este problema ha sido mencionado en **%{title}**. Puede que haya detalles relevantes allí:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Acción requerida para el plugin discourse-github"
+      repository_not_found_pm_title: "Acción requerida para el plugin discourse-github"
+      invalid_octokit_credentials_pm_title: "Acción requerida para el plugin discourse-github"

@@ -137,6 +137,16 @@ export default class ProfileController extends Controller {
   }
 
   @action
+  profileBackgroundUploadDone(upload) {
+    this.model.set("profile_background_upload_url", upload.url);
+  }
+
+  @action
+  cardBackgroundUploadDone(upload) {
+    this.model.set("card_background_upload_url", upload.url);
+  }
+
+  @action
   save() {
     this.set("saved", false);
 

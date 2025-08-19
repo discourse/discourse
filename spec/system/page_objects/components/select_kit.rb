@@ -26,8 +26,8 @@ module PageObjects
       end
 
       def expanded_component
-        expand_if_needed
-        find(@context + ".is-expanded", wait: 5)
+        return expand if is_collapsed?
+        find(@context + ".is-expanded")
       end
 
       def collapsed_component
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def is_collapsed?
-        has_css?(context + ":not(.is-expanded)", wait: 0)
+        has_css?(context) && has_css?("#{context}:not(.is-expanded)", wait: 0)
       end
 
       def is_not_disabled?
@@ -58,12 +58,20 @@ module PageObjects
         component.find(".select-kit-header[data-name='#{name}']")
       end
 
+      def has_no_selection?
+        component.has_no_css?(".selected-choice")
+      end
+
       def has_selected_choice_name?(name)
         component.find(".selected-choice[data-name='#{name}']")
       end
 
       def has_option_name?(name)
         component.find(".select-kit-collection li[data-name='#{name}']")
+      end
+
+      def has_no_option_name?(name)
+        component.has_no_css?(".select-kit-collection li[data-name='#{name}']")
       end
 
       def has_option_value?(value)
@@ -75,12 +83,12 @@ module PageObjects
       end
 
       def expand
-        collapsed_component.find(":not(.is-expanded) .select-kit-header", visible: :all).click
+        collapsed_component.find(".select-kit-header", visible: :all).click
         expanded_component
       end
 
       def collapse
-        expanded_component.find(".is-expanded .select-kit-header").click
+        expanded_component.find(".select-kit-header").click
         collapsed_component
       end
 
@@ -100,8 +108,8 @@ module PageObjects
         expanded_component.find(".select-kit-row[data-index='#{index}']").click
       end
 
-      def expand_if_needed
-        expand if is_collapsed?
+      def unselect_by_name(name)
+        expanded_component.find(".selected-choice[data-name='#{name}']").click
       end
     end
   end

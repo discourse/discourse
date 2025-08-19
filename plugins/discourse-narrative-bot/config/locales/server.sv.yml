@@ -169,22 +169,8 @@ sv:
 
           - Vi tror på ett [civiliserat beteende i forumet](%{base_uri}/guidelines) i alla hänseenden.
       onebox:
-        instructions: |-
-          Nästa uppgift, kan du dela en av dessa länkar med mig? Svara med **en enda länk på en rad**, och den kommer automatiskt att expanderas till att visa en kort summering.
-
-          För att kopiera en länk, tryck och håll på mobilen, eller högerklicka med musen:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Coolt! Detta fungerar för de flesta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-länkar. Kom ihåg att den måste vara på en egen rad, _för sig själv_, utan något annat före eller efter den.
-        not_found: |-
-          Tyvärr, Jag kunde inte hitta länken i ditt svar! :cry:
-
-          Kan du försöka lägga till följande länk, på en egen rad, i ditt nästa svar?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Här är en bild på en enhörning:
@@ -380,19 +366,6 @@ sv:
 
           Notera att när du besvarar ett ämne, eller läser ett ämne i mer än ett par minuter, ställs aviseringsnivån automatiskt in till 'följer'. Du kan ändra detta i [dina användarinställningar](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Visste du att du kan lägga till omröstningar till valfritt inlägg? Testa att använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren för att **skapa en omröstning**.
-        not_found: |-
-          Hoppsan! Det fanns ingen omröstning i ditt svar.
-
-          Använd <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulsikonen i redigeraren, eller kopiera och klistra in denna omröstning i ditt nästa svar:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Bra, fin omröstning! Hur lyckades jag med att lära dig detta?
 
@@ -401,20 +374,6 @@ sv:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Ibland vill du **gömma detaljer** i dina svar:
-
-          - När din diskussion exempelvis innehåller avslöjande detaljer för en bok eller film som anses vara en spoiler.
-
-          - När ditt inlägg innehåller en stor mängd information som kan upplevas som överväldigande om det ska läsas på en gång.
-
-          [details=Välj detta för att se hur det fungerar!]
-          1. Välj <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren.
-          2. Välj "Göm detaljer"
-          3. Editera detaljsammanfattningen och lägg till ditt innehåll.
-          [/details]
-
-          Kan du använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren för att lägga till en sektion med detaljer i ditt nästa svar?
         not_found: |-
           Har du problem med att skapa en widget för detaljer? Försök med att inkludera följande i ditt nästa svar:
 

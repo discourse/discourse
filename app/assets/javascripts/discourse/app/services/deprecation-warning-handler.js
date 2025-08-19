@@ -17,11 +17,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.bootbox",
   "discourse.add-header-panel",
   "discourse.header-widget-overrides",
-  "discourse.plugin-outlet-tag-name",
-  "discourse.plugin-outlet-parent-view",
-  "discourse.d-button-action-string",
-  "discourse.post-menu-widget-overrides",
-  "discourse.fontawesome-6-upgrade",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
@@ -32,12 +27,18 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.qunit.acceptance-function",
   "discourse.qunit.global-exists",
   "discourse.post-stream.trigger-new-post",
-  "discourse.hbr-topic-list-overrides",
-  "discourse.mobile-templates",
-  "discourse.mobile-view",
-  "discourse.mobile-templates",
-  "discourse.component-template-overrides",
+  "discourse.plugin-outlet-classic-args-clash",
+  "discourse.decorate-plugin-outlet",
+  "component-template-resolving",
+  "discourse.script-tag-hbs",
+  "discourse.script-tag-discourse-plugin",
+  "discourse.post-stream-widget-overrides",
+  "discourse.widgets-end-of-life",
 ];
+
+const REPLACEMENT_URLS = {
+  "component-template-resolving": "https://meta.discourse.org/t/370019",
+};
 
 if (DEBUG) {
   // used in system specs
@@ -115,38 +116,40 @@ export default class DeprecationWarningHandler extends Service {
   }
 
   notifyAdmin({ id, url }, source) {
+    if (REPLACEMENT_URLS[id]) {
+      url = REPLACEMENT_URLS[id];
+    }
+
     this.#adminWarned = true;
 
-    let notice = i18n("critical_deprecation.notice") + " ";
-
-    if (url) {
-      notice += i18n("critical_deprecation.linked_id", {
-        id: escapeExpression(id),
-        url: escapeExpression(url),
+    let sourceString;
+    if (source?.type === "theme") {
+      sourceString = i18n("critical_deprecation.theme_source", {
+        name: escapeExpression(source.name),
+        path: source.path,
+      });
+    } else if (source?.type === "plugin") {
+      sourceString = i18n("critical_deprecation.plugin_source", {
+        name: escapeExpression(source.name),
       });
     } else {
-      notice += i18n("critical_deprecation.id", {
-        id: escapeExpression(id),
+      sourceString = i18n("critical_deprecation.unknown_source");
+    }
+
+    let notice =
+      i18n("critical_deprecation.notice", {
+        source: sourceString,
+        id,
+      }) + " ";
+
+    if (url) {
+      notice += i18n("critical_deprecation.learn_more_link", {
+        url,
       });
     }
 
     if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
-    }
-
-    if (source?.type === "theme") {
-      notice +=
-        " " +
-        i18n("critical_deprecation.theme_source", {
-          name: escapeExpression(source.name),
-          path: source.path,
-        });
-    } else if (source?.type === "plugin") {
-      notice +=
-        " " +
-        i18n("critical_deprecation.plugin_source", {
-          name: escapeExpression(source.name),
-        });
     }
 
     addGlobalNotice(notice, "critical-deprecation", {

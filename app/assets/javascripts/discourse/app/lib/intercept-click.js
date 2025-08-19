@@ -48,6 +48,7 @@ export default function interceptClick(e) {
       target.classList.contains("ember-view")) ||
     target.classList.contains("lightbox") ||
     href.startsWith("mailto:") ||
+    target.closest('[contenteditable="true"]') ||
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))
   ) {

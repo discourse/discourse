@@ -62,6 +62,7 @@ export default class NewListHeaderControls extends Component {
           "topics-replies-toggle --all"
           (if this.allActive "active")
         }}
+        title={{i18n "filters.new.all_tooltip"}}
       >
         {{i18n "filters.new.all"}}
       </button>
@@ -72,6 +73,7 @@ export default class NewListHeaderControls extends Component {
           "topics-replies-toggle --topics"
           (if this.topicsActive "active")
         }}
+        title={{i18n "filters.new.new_topics_tooltip"}}
       >
         {{this.topicsButtonLabel}}
       </button>
@@ -82,6 +84,7 @@ export default class NewListHeaderControls extends Component {
           "topics-replies-toggle --replies"
           (if this.repliesActive "active")
         }}
+        title={{i18n "filters.new.new_replies_tooltip"}}
       >
         {{this.repliesButtonLabel}}
       </button>

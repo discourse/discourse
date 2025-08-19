@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { isBlank } from "@ember/utils";
 import Group from "discourse/models/group";
 import GroupChooser from "select-kit/components/group-chooser";
 import BaseField from "./da-base-field";
@@ -30,6 +31,10 @@ export default class GroupsField extends BaseField {
 
   @action
   setGroupField(groupIds) {
+    if (isBlank(groupIds)) {
+      groupIds = undefined;
+    }
+
     this.mutValue(groupIds);
   }
 
@@ -41,7 +46,7 @@ export default class GroupsField extends BaseField {
         <div class="controls">
           <GroupChooser
             @content={{this.allGroups}}
-            @value={{@field.metadata.value}}
+            @value={{readonly @field.metadata.value}}
             @labelProperty="name"
             @onChange={{this.setGroupField}}
             @options={{hash maximum=this.maximum disabled=@field.isDisabled}}

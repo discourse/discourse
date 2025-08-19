@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableUser < Reviewable
+  include ReviewableActionBuilder
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -12,12 +14,7 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    if guardian.can_approve?(target)
-      actions.add(:approve_user) do |a|
-        a.icon = "user-plus"
-        a.label = "reviewables.actions.approve_user.title"
-      end
-    end
+    build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
 
     delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
   end
@@ -34,6 +31,40 @@ class ReviewableUser < Reviewable
     StaffActionLogger.new(performed_by).log_user_approve(target)
 
     create_result(:success, :approved)
+  end
+
+  def scrub(reason, guardian)
+    self.class.transaction do
+      scrubbed_at = Time.zone.now
+      # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
+      UserHistory
+        .where(action: UserHistory.actions[:delete_user])
+        .where("details LIKE :query", query: "%\nusername: #{payload["username"]}\n%")
+        .where(created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes))
+        .update_all(
+          details:
+            I18n.t(
+              "user.destroy_reasons.reviewable_details_scrubbed",
+              staff: guardian.current_user.username,
+              reason: reason,
+              timestamp: scrubbed_at,
+            ),
+          ip_address: nil,
+        )
+
+      self.payload = {
+        scrubbed_by: guardian.current_user.username,
+        scrubbed_reason: reason,
+        scrubbed_at:,
+      }
+      self.save!
+
+      result = create_result(:success)
+
+      notify_users(result, guardian)
+
+      result
+    end
   end
 
   def perform_delete_user(performed_by, args)
@@ -102,6 +133,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null

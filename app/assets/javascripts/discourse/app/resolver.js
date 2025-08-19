@@ -270,7 +270,6 @@ export function buildResolver(baseName) {
 
     resolveTemplate(parsedName) {
       return (
-        this.findMobileTemplate(parsedName) ||
         this.findTemplate(parsedName) ||
         this.findAdminTemplate(parsedName) ||
         this.findLoadingTemplate(parsedName) ||
@@ -293,21 +292,6 @@ export function buildResolver(baseName) {
             .replace("components/", "")
         );
         return this.findTemplate(connectorParsedName);
-      }
-    }
-
-    findMobileTemplate(parsedName) {
-      const result = this.findTemplate(parsedName, "mobile/");
-      if (result) {
-        deprecated(
-          `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${parsedName}]`,
-          {
-            id: "discourse.mobile-templates",
-          }
-        );
-      }
-      if (_options.mobileView) {
-        return result;
       }
     }
 

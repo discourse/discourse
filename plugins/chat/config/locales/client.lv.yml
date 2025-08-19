@@ -64,6 +64,7 @@ lv:
         tabs:
           members: Dalībnieki
           settings: Iestatījumi
+        remove_member: "Atcelt"
       new_message_modal:
         filter: "Filtrs"
       direct_message_creator:

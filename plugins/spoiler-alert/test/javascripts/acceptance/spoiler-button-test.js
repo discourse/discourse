@@ -9,8 +9,6 @@ acceptance("Spoiler Button", function (needs) {
   needs.settings({ spoiler_enabled: true });
 
   test("spoiler button", async (assert) => {
-    const popUpMenu = selectKit(".toolbar-popup-menu-options");
-
     await visit("/");
 
     assert.dom("#create-topic").exists("the create button is visible");
@@ -19,8 +17,8 @@ acceptance("Spoiler Button", function (needs) {
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    await popUpMenu.expand();
-    await popUpMenu.selectRowByName(i18n("spoiler.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("spoiler.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -50,8 +48,8 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
-    await popUpMenu.expand();
-    await popUpMenu.selectRowByName(i18n("spoiler.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("spoiler.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -80,8 +78,8 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionStart = 7;
     textarea.selectionEnd = 21;
 
-    await popUpMenu.expand();
-    await popUpMenu.selectRowByName(i18n("spoiler.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("spoiler.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -110,8 +108,8 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionStart = 7;
     textarea.selectionEnd = 21;
 
-    await popUpMenu.expand();
-    await popUpMenu.selectRowByName(i18n("spoiler.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("spoiler.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -141,8 +139,8 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionStart = 7;
     textarea.selectionEnd = 22;
 
-    await popUpMenu.expand();
-    await popUpMenu.selectRowByName(i18n("spoiler.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("spoiler.title")}"]`);
 
     assert
       .dom(".d-editor-input")

@@ -97,7 +97,11 @@ class UserDestroyer
         unless opts[:quiet]
           if @actor == user
             deleted_by = Discourse.system_user
-            opts[:context] = I18n.t("staff_action_logs.user_delete_self", url: opts[:context])
+            message =
+              I18n.with_locale(SiteSetting.default_locale) do
+                I18n.t("staff_action_logs.user_delete_self", url: opts[:context])
+              end
+            opts[:context] = message
           else
             deleted_by = @actor
           end
@@ -152,7 +156,11 @@ class UserDestroyer
       if post.is_first_post? && category_topic_ids.include?(post.topic_id)
         post.update!(user: Discourse.system_user)
       else
-        PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+        PostDestroyer.new(
+          @actor.staff? ? @actor : Discourse.system_user,
+          post,
+          context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
+        ).destroy
       end
 
       if post.topic && post.is_first_post?

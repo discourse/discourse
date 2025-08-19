@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse resuelto"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "aceptado"
+    solutions: "Soluciones"
+    solved:
+      title: "Solucionado"
+      allow_accepted_answers: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
+      solved_topics_auto_close_hours: "Cierre automático del tema (n) horas después de la última respuesta una vez que el tema se haya marcado como solucionado."
+      accepted_description: "Esta es la solución aceptada para este tema"
+      has_no_accepted_answer: "Este tema no tiene una solución"
+      unaccept_answer: "Deseleccionar si esta respuesta ya no resuelve el problema"
+      accepted_answer: "Solución"
+      solution: "Solución"
+      solution_summary:
+        one: "solución"
+        other: "soluciones"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "todos"
+        solved: "solucionado"
+        unsolved: "sin solución"
+      no_solved_topics_title: "Todavía no has resuelto ningún tema"
+      no_solved_topics_title_others: "%{username} no ha resuelto ningún tema todavía"
+      no_solved_topics_body: "Cuando proporcionas una respuesta útil a un tema, el propietario del tema o el personal pueden seleccionar tu respuesta como la solución."
+      no_answer:
+        title: '¿Se ha respondido a tu pregunta?'
+        description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."
+      notification:
+        title: "tu publicación se ha marcado como solución"
+    topic_statuses:
+      solved:
+        help: "Este tema tiene una solución"
+    search:
+      advanced:
+        statuses:
+          solved: "están resueltos"
+          unsolved: "están sin resolver"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Evento resuelto"
+          accepted_solution: "Cuando un usuario marca una publicación como la respuesta aceptada"
+          unaccepted_solution: "Cuando un usuario marca una publicación como la respuesta no aceptada"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Aceptar/No aceptar una solución.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < NC1
+            tl2: < NC2
+            tl3: < NC3
+            tl4: < NC4
+            any: Cualquiera
+          fields:
+            maximum_trust_level:
+              label: Nivel de confianza
+              description: Los usuarios bajo este Nivel de confianza activarán esta automatización

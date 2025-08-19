@@ -11,7 +11,6 @@ pt_BR:
     models:
       fields:
         required_field: O campo `%{name}` deve ser preenchido em `%{target}:%{target_name}`.
-        invalid_field: O componente do campo `%{component}` não pode ser usado em `%{target}:%{target_name}.`
         invalid_metadata: Os dados para `%{field}` são inválidos ou o componente `%{component}` é desconhecido.
     triggerables:
       errors:

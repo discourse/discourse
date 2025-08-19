@@ -63,25 +63,6 @@ module BackupRestore
       raise StorageError.new(e.message.presence || e.class.name)
     end
 
-    def signed_url_for_temporary_upload(
-      file_name,
-      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
-      metadata: {}
-    )
-      obj = object_from_path(file_name)
-      raise BackupFileExists.new if obj.exists?
-      key = temporary_upload_path(file_name)
-      s3_helper.presigned_url(
-        key,
-        method: :put_object,
-        expires_in: expires_in,
-        opts: {
-          metadata: metadata,
-          acl: SiteSetting.s3_use_acls ? "private" : nil,
-        },
-      )
-    end
-
     def temporary_upload_path(file_name)
       FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: temporary_folder_prefix)
     end
@@ -100,7 +81,13 @@ module BackupRestore
       obj = object_from_path(file_name)
       raise BackupFileExists.new if obj.exists?
       key = temporary_upload_path(file_name)
-      s3_helper.create_multipart(key, content_type, metadata: metadata)
+
+      s3_helper.create_multipart(
+        key,
+        content_type,
+        metadata: metadata,
+        **FileStore::S3Store.default_s3_options(secure: true),
+      )
     end
 
     def move_existing_stored_upload(
@@ -111,11 +98,11 @@ module BackupRestore
       s3_helper.copy(
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
-        options: {
-          acl: SiteSetting.s3_use_acls ? "private" : nil,
-          apply_metadata_to_destination: true,
-        },
+        options: { apply_metadata_to_destination: true }.merge(
+          FileStore::S3Store.default_s3_options(secure: true),
+        ),
       )
+
       s3_helper.delete_object(existing_external_upload_key)
     end
 

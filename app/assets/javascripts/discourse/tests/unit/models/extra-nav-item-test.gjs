@@ -11,7 +11,11 @@ module("Unit | Model | extra-nav-item", function (hooks) {
       name: "something",
     });
 
-    await render(<template><p>{{extraNavItem.displayName}}</p></template>);
+    await render(
+      <template>
+        <p>{{extraNavItem.displayName}}</p>
+      </template>
+    );
 
     assert.dom("p").hasText("[en.filters.something.title count=0]");
 

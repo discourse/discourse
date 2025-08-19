@@ -56,7 +56,7 @@ export async function parseMentions(markdown, options) {
   return await withEngine("parseMentions", markdown, options);
 }
 
-function emojiOptions() {
+export function emojiOptions() {
   let siteSettings = helperContext().siteSettings;
   let context = helperContext();
   if (!siteSettings.enable_emoji) {
@@ -151,4 +151,22 @@ export function humanizeList(listItems) {
       last,
     ].join(" ");
   }
+}
+
+export function buildBBCodeAttrs(attrs, opts = {}) {
+  opts.skipAttrs = opts.skipAttrs ?? [];
+
+  return Object.keys(attrs)
+    .map((key) => {
+      if (
+        attrs[key] === null ||
+        attrs[key] === undefined ||
+        opts.skipAttrs.includes(key)
+      ) {
+        return null;
+      }
+      return `${key}="${attrs[key]}"`;
+    })
+    .filter(Boolean)
+    .join(" ");
 }

@@ -22,6 +22,14 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
       status: 200,
       body: onebox_response("youtube"),
     )
+    stub_request(:get, "https://www.youtube.com/live/eJemwqO0SDw").to_return(
+      status: 200,
+      body: onebox_response("youtube"),
+    )
+    stub_request(:get, "https://www.youtube.com/embed/eJemwqO0SDw").to_return(
+      status: 200,
+      body: onebox_response("youtube"),
+    )
 
     stub_request(:get, "https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ").to_return(
       status: 200,
@@ -97,6 +105,9 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
 
   it "returns an image as the placeholder" do
     expect(Onebox.preview("https://www.youtube.com/watch?v=21Lk4YiASMo").placeholder_html).to match(
+      /<img/,
+    )
+    expect(Onebox.preview("https://www.youtube.com/live/eJemwqO0SDw").placeholder_html).to match(
       /<img/,
     )
     expect(Onebox.preview("https://youtu.be/21Lk4YiASMo").placeholder_html).to match(/<img/)
@@ -185,5 +196,11 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
     preview = expect(Onebox.preview("https://youtube.com/shorts/VvoFuaLAslw").placeholder_html)
     preview.to match(/POMBO/)
     preview.to match(/hqdefault/)
+  end
+
+  it "can parse youtube live URLs" do
+    preview = expect(Onebox.preview("https://www.youtube.com/live/eJemwqO0SDw").to_s)
+    preview.to match(/iframe/)
+    preview.to include("embed/eJemwqO0SDw")
   end
 end

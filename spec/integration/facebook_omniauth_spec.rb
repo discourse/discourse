@@ -9,7 +9,7 @@ describe "Facebook OAuth2" do
     OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("SHA256"), app_secret, access_token)
   end
 
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   def setup_facebook_email_stub(email:)
     body = {

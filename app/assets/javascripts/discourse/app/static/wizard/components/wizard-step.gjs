@@ -11,7 +11,7 @@ import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
-const READY_STEP_INDEX = 5;
+const READY_STEP_INDEX = 3;
 
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
@@ -67,10 +67,6 @@ export default class WizardStepComponent extends Component {
     const ready = this.wizard.findStep("ready");
     const isReady = ready && this.step.index > ready.index;
     return isReady && !this.isFinalStep;
-  }
-
-  get showConfigureMore() {
-    return this.id === "ready";
   }
 
   get showJumpInButton() {
@@ -267,7 +263,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.backStep}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button back"
+                class="wizard-container__button back btn-transparent"
               >
                 {{i18n "wizard.back"}}
               </button>
@@ -280,18 +276,9 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.finish}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button finish"
+                class="wizard-container__button finish btn-primary"
               >
                 {{i18n "wizard.finish"}}
-              </button>
-            {{else if this.showConfigureMore}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button configure-more"
-              >
-                {{i18n "wizard.configure_more"}}
               </button>
             {{/if}}
 
@@ -300,7 +287,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.jumpIn}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button primary jump-in"
+                class="wizard-container__button jump-in btn-primary"
               >
                 {{i18n "wizard.jump_in"}}
               </button>
@@ -309,7 +296,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.nextStep}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button primary next"
+                class="wizard-container__button next btn-primary"
               >
                 {{i18n "wizard.next"}}
               </button>

@@ -169,6 +169,7 @@ ko:
         tabs:
           members: 회원
           settings: 설정
+        remove_member: "제거"
       new_message_modal:
         title: 전송
         add_user_short: <span>사용자 추가</span>

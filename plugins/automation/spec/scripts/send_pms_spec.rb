@@ -4,6 +4,7 @@ describe "SendPms" do
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scripts::SEND_PMS, trigger: "stalled_wiki")
   end
+  let(:raw) { "This is a message sent to @{{receiver_username}}" }
 
   before do
     SiteSetting.discourse_automation_enabled = true
@@ -12,14 +13,7 @@ describe "SendPms" do
     automation.upsert_field!(
       "sendable_pms",
       "pms",
-      {
-        value: [
-          {
-            title: "A message from {{sender_username}}",
-            raw: "This is a message sent to @{{receiver_username}}",
-          },
-        ],
-      },
+      { value: [{ title: "A message from {{sender_username}}", raw: raw }] },
     )
   end
 
@@ -54,8 +48,8 @@ describe "SendPms" do
   end
 
   context "when run from user_added_to_group trigger" do
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:tracked_group_1) { Fabricate(:group) }
+    fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:tracked_group_1, :group)
 
     before do
       automation.update!(trigger: "user_added_to_group")
@@ -80,10 +74,42 @@ describe "SendPms" do
         )
       }.to change { Post.count }.by(1)
     end
+
+    context "when sent from regular user" do
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
+      let(:raw) { "This is a general message sent" }
+
+      before do
+        SiteSetting.unique_posts_mins = 1
+        automation.upsert_field!("sender", "user", { value: user_1.username })
+      end
+
+      it "creates expected PMs without validating similarity" do
+        expect {
+          tracked_group_1.add(user_2)
+
+          post = Post.last
+          expect(post.topic.title).to eq("A message from #{user_1.username}")
+          expect(post.raw).to eq("This is a general message sent")
+          expect(post.topic.topic_allowed_users.exists?(user_id: user_1.id)).to eq(true)
+          expect(post.topic.topic_allowed_users.exists?(user_id: user_2.id)).to eq(true)
+        }.to change { Post.count }.by(1)
+        expect {
+          tracked_group_1.add(user_3)
+
+          post = Post.last
+          expect(post.topic.title).to eq("A message from #{user_1.username}")
+          expect(post.raw).to eq("This is a general message sent")
+          expect(post.topic.topic_allowed_users.exists?(user_id: user_1.id)).to eq(true)
+          expect(post.topic.topic_allowed_users.exists?(user_id: user_3.id)).to eq(true)
+        }.to change { Post.count }.by(1)
+      end
+    end
   end
 
   context "when delayed" do
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1, :user)
 
     before { automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING) }
 

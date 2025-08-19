@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  reports:
+    currently_away:
+      title: Usuarios actualmente ausentes
+      labels:
+        username: Nombre de usuario
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Evento iniciado
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "La región de vacaciones que has proporcionado no existe."
+    discourse_calendar_enable_holiday_failed: "Este día festivo no se pudo habilitar, ya está habilitado o no está deshabilitado."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Eventos - Invitación masiva realizada con éxito"
+      subject_template: "Invitación masiva procesada con éxito"
+      text_body_template: "Se ha procesado tu archivo de invitación masiva, %{processed} invitado(s) creado(s)."
+    discourse_post_event_bulk_invite_failed:
+      title: "Evento: error en la invitación masiva"
+      subject_template: "Invitación masiva procesada con errores"
+      text_body_template: |
+        Se ha procesado tu archivo de invitación masiva, %{processed} invitado(s) creado(s) con %{failed} error(es).
+
+        Aquí está el registro:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Máximo de filas de texto por evento en el Calendario."
+    map_events_to_color: "Asigna un color a cada etiqueta o categoría."
+    map_events_title: "Reemplaza «Eventos» en el título de la barra lateral «Próximos eventos» por categoría."
+    calendar_enabled: "Habilitar el complemento de calendario de Discourse. Esto añadirá soporte para una etiqueta [calendar][/calendar] en la primera entrada de un tema."
+    discourse_post_event_enabled: "Activa las funciones de Eventos. Nota: también es necesario que esté «activado el calendario» para activarlo."
+    displayed_invitees_limit: "Limita el número de invitados que se muestran en un evento."
+    display_post_event_date_on_topic_title: "Muestra la fecha del evento después del título del tema."
+    use_local_event_date: "Utiliza la fecha local después del título del tema en lugar de la hora relativa."
+    discourse_post_event_allowed_on_groups: "Grupos a los que se les permite crear eventos."
+    discourse_post_event_allowed_custom_fields: "Permite dejar que cada evento establezca el valor de los campos personalizados."
+    discourse_post_event_edit_notifications_time_extension: "Amplía (en minutos) el período después del final de un evento en el que los invitados «asistentes» aún reciben notificaciones de edición en la publicación original."
+    holiday_calendar_topic_id: "ID del tema del calendario de vacaciones / ausencia del personal."
+    holiday_status_emoji: Define el emoji utilizado para el estado de vacaciones.
+    delete_expired_event_posts_after: "Las publicaciones con eventos caducados se eliminarán automáticamente después de (n) horas. Establecer en -1 para deshabilitar la eliminación."
+    all_day_event_start_time: "Los eventos que no tienen una hora de inicio especificada comenzarán a esta hora. El formato es HH:mm. Para las 6:00 am, introduce 06:00"
+    all_day_event_end_time: "Los eventos que no tienen una hora de finalización especificada terminarán a esta hora. El formato es HH:mm. Para las 6:00 pm, introduce 18:00"
+    all_day_event_time_error: "Hora no válida. El formato debe ser HH:mm (por ejemplo: 08:00)."
+    calendar_categories: "Muestra un calendario en la parte superior de una categoría. Las configuraciones obligatorias son categoryId y postId. por ejemplo: categoryId = 6; postId = 453\n Otras configuraciones válidas: tzPicker, fines de semana y defaultView."
+    calendar_categories_outlet: "Permite cambiar qué salida debe mostrar el calendario de categorías."
+    working_days: "Establecer días laborables. Puede mostrar la disponibilidad de un grupo usando la etiqueta `timezones` en una publicación, por ejemplo: `[timezones group = admins][timezones]`"
+    working_day_start_hour: "Hora de inicio de la jornada laboral."
+    working_day_end_hour: "Hora de finalización de la jornada laboral."
+    close_to_working_day_hours_extension: "Establezca el tiempo de extensión en horas del día laborable para resaltar las zonas horarias."
+    events_calendar_categories: "Mostrar un calendario de eventos en la parte superior de una categoría."
+    sort_categories_by_event_start_date_enabled: "Habilitar la clasificación de los temas de las categorías por fecha de inicio del evento."
+    disable_resorting_on_categories_enabled: "Permitir que las categorías deshabiliten la posibilidad de que los usuarios clasifiquen en la categoría del evento."
+    calendar_automatic_holidays_enabled: "Establecer automáticamente el estado de vacaciones en función de la región del usuario (nota: puedes desactivar las vacaciones automáticas específicas en la configuración del plugin)"
+    event_participation_buttons: "Lista de botones de participación en eventos que los usuarios pueden utilizar."
+    sidebar_show_upcoming_events: "Muestra el enlace de los próximos eventos en la barra lateral en «Más»."
+    include_expired_events_on_calendar: "Incluir eventos pasados/vencidos en las vistas Calendario de categorías y Próximos eventos."
+  discourse_calendar:
+    invite_user_notification: "%{username} te invitó a: %{description}"
+    calendar_must_be_in_first_post: "La etiqueta de calendario solo se puede utilizar en la primera publicación de un tema."
+    more_than_one_calendar: "No puedes tener más de un calendario en una publicación."
+    more_than_two_dates: "Una publicación de un tema de calendario no puede contener más de dos fechas."
+    event_expired: "Evento caducado"
+    holiday_status:
+      description: "En día festivo"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} está a punto de comenzar."
+      after_event_reminder: "%{title} ha terminado."
+      ongoing_event_reminder: "%{title} está en curso."
+    errors:
+      bulk_invite:
+        max_invitees: "Las primeras %{max_invittes} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
+        error: "Se produjo un error al subir este archivo. Inténtalo de nuevo más tarde."
+      models:
+        event:
+          only_one_event: "Una publicación solo puede tener un evento."
+          must_be_in_first_post: "Un evento solo puede estar en la primera publicación de un tema."
+          raw_invitees_length: "Un evento está limitado a %{count} usuarios / grupos."
+          raw_invitees:
+            only_group: "Un evento acepta solo nombres de grupos."
+          ends_at_before_starts_at: "Un evento no puede terminar antes de que comience."
+          start_must_be_present_and_a_valid_date: "Un evento requiere una fecha de inicio válida."
+          end_must_be_a_valid_date: "La fecha de finalización debe ser una fecha válida."
+          invalid_recurrence: "La recurrencia debe ser una de las siguientes: cada mes, cada semana, cada dos semanas, cada cuatro semanas, cada día, cada día de la semana."
+          invalid_timezone: "Zona horaria no reconocida."
+          acting_user_not_allowed_to_create_event: "El usuario actual no tiene permiso para crear eventos."
+          acting_user_not_allowed_to_act_on_this_event: "El usuario actual no puede actuar en este evento."
+          invalid_allowed_groups: "Grupos permitidos no válidos."
+          acting_user_not_allowed_to_invite_these_groups: "El usuario actual no puede invitar a estos grupos."
+          custom_field_is_invalid: "El campo personalizado «%{field}» no está permitido."
+          name:
+            length: "La longitud del nombre del evento debe tener entre %{minimum} y %{maximum} caracteres."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Recordatorio de evento"

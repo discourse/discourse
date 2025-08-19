@@ -40,17 +40,24 @@ updates:
         versions:
           - "> 1.2.0"
           - "< 2"
+      - dependency-name: aws-sdk-mediaconvert
+        versions:
+          - "> 1.160.0"
+          - "< 2"
     groups:
       rails:
         patterns:
           - "actionmailer"
           - "actionpack"
           - "actionview"
-          - "actionmodel"
+          - "activemodel"
           - "activerecord"
+          - "activejob"
           - "activesupport"
           - "railties"
-          - "sprockets-rails"
+      sass:
+        patterns:
+          - "sass*"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -68,6 +75,8 @@ updates:
       - dependency-name: "moment-timezone"
       - dependency-name: "@discourse/moment-timezone-names-translations"
       - dependency-name: "squoosh"
+      - dependency-name: "@glint/*" # Using unstable version - don't auto-upgrade to stable
+      - dependency-name: "typescript" # Very sensitive to glint/volar version
     groups:
       babel:
         patterns:
@@ -79,9 +88,22 @@ updates:
         patterns:
           - "@highlightjs/cdn-assets"
           - "highlight.js"
+      prosemirror:
+        patterns:
+          - "prosemirror-*"
       types:
         patterns:
           - "@types/*"
       uppy:
         patterns:
           - "@uppy*"
+      fullcalendar:
+        patterns:
+          - "@fullcalendar/*"
+      lint:
+        patterns:
+          - "@discourse/lint-configs"
+          - "eslint"
+          - "prettier"
+          - "ember-template-lint"
+          - "stylelint"

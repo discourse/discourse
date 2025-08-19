@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin User Page", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
   let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
@@ -39,6 +39,17 @@ describe "Admin User Page", type: :system do
 
     before { admin_user_page.visit(user) }
 
+    it "can list accounts with identical IPs" do
+      find(".ip-lookup-trigger").click
+
+      expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
+
+      table = page.find(".other-accounts table")
+      expect(table).to have_content(similar_user.username)
+      expect(table).to have_content(another_mod.username)
+      expect(table).to have_content(another_admin.username)
+    end
+
     it "displays the suspend and silence buttons" do
       expect(admin_user_page).to have_suspend_button
       expect(admin_user_page).to have_silence_button
@@ -46,7 +57,7 @@ describe "Admin User Page", type: :system do
 
     it "displays username in the title" do
       expect(page).to have_css(".display-row.username")
-      expect(page.title).to eq("#{user.username} - Admin - Discourse")
+      expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
     end
 
     describe "the suspend user modal" do
@@ -58,6 +69,35 @@ describe "Admin User Page", type: :system do
           I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
         )
       end
+
+      it "suspends and unsuspends the user" do
+        admin_user_page.click_suspend_button
+        suspend_user_modal.fill_in_suspend_reason("spamming")
+        suspend_user_modal.set_future_date("tomorrow")
+        suspend_user_modal.perform
+        expect(suspend_user_modal).to be_closed
+
+        expect(page).to have_css(".suspension-info")
+
+        admin_user_page.click_unsuspend_button
+        expect(page).not_to have_css(".suspension-info")
+      end
+
+      it "displays error when used is already suspended" do
+        admin_user_page.click_suspend_button
+        suspend_user_modal.fill_in_suspend_reason("spamming")
+        suspend_user_modal.set_future_date("tomorrow")
+
+        user.update!(suspended_till: 1.day.from_now)
+        StaffActionLogger.new(current_user).log_user_suspend(user, "spamming")
+
+        suspend_user_modal.perform
+
+        expect(suspend_user_modal).to have_error_message(
+          "User was already suspended by #{current_user.username} just now.",
+        )
+        expect(suspend_user_modal).to be_open
+      end
     end
 
     describe "the silence user modal" do
@@ -68,6 +108,20 @@ describe "Admin User Page", type: :system do
         expect(admin_user_page.similar_users_warning).to include(
           I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
         )
+      end
+
+      it "silence and unsilence the user" do
+        admin_user_page.click_silence_button
+
+        silence_user_modal.fill_in_silence_reason("spamming")
+        silence_user_modal.set_future_date("tomorrow")
+        silence_user_modal.perform
+
+        expect(silence_user_modal).to be_closed
+        expect(page).to have_css(".silence-info")
+
+        admin_user_page.click_unsilence_button
+        expect(page).not_to have_css(".silence-info")
       end
     end
   end

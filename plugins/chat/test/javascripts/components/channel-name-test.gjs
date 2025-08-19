@@ -97,16 +97,26 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
     channel.tracking.unreadCount = 1;
 
     let unreadIndicator = true;
-    await render(<template>
-      <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
-    </template>);
+    await render(
+      <template>
+        <ChannelName
+          @channel={{channel}}
+          @unreadIndicator={{unreadIndicator}}
+        />
+      </template>
+    );
 
     assert.dom(".chat-channel-unread-indicator").exists();
 
     unreadIndicator = false;
-    await render(<template>
-      <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
-    </template>);
+    await render(
+      <template>
+        <ChannelName
+          @channel={{channel}}
+          @unreadIndicator={{unreadIndicator}}
+        />
+      </template>
+    );
 
     assert.dom(".chat-channel-unread-indicator").doesNotExist();
   });

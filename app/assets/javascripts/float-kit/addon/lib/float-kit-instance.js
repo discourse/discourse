@@ -53,7 +53,9 @@ export default class FloatKitInstance {
     // this is done to avoid trigger on click outside when you click on your own trigger
     // given trigger and content are not in the same div, we can't just check if target is
     // inside the menu
-    event.stopPropagation();
+    if (this.shouldTrapPointerDown) {
+      event.stopPropagation();
+    }
   }
 
   @action
@@ -117,7 +119,7 @@ export default class FloatKitInstance {
       .forEach((trigger) => {
         switch (trigger) {
           case "hold":
-            this.trigger.addEventListener("touchstart", this.onTouchStart);
+            this.trigger.removeEventListener("touchstart", this.onTouchStart);
             break;
           case "focus":
             this.trigger.removeEventListener("focus", this.onFocus);
@@ -212,8 +214,8 @@ export default class FloatKitInstance {
       !Array.isArray(this.options.triggers)
     ) {
       return this.site.mobileView
-        ? this.options.triggers.mobile ?? ["click"]
-        : this.options.triggers.desktop ?? ["click"];
+        ? (this.options.triggers.mobile ?? ["click"])
+        : (this.options.triggers.desktop ?? ["click"]);
     }
 
     return this.options.triggers ?? ["click"];
@@ -225,10 +227,14 @@ export default class FloatKitInstance {
       !Array.isArray(this.options.untriggers)
     ) {
       return this.site.mobileView
-        ? this.options.untriggers.mobile ?? ["click"]
-        : this.options.untriggers.desktop ?? ["click"];
+        ? (this.options.untriggers.mobile ?? ["click"])
+        : (this.options.untriggers.desktop ?? ["click"]);
     }
 
     return this.options.untriggers ?? ["click"];
+  }
+
+  get shouldTrapPointerDown() {
+    return true;
   }
 }

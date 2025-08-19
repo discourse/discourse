@@ -9,10 +9,8 @@ module PageObjects
 
       delegate(:has_tabs?, :has_active_tab?, to: :header)
 
-      private
-
       def header
-        @header ||= Components::DPageHeader.new
+        Components::DPageHeader.new
       end
     end
   end

@@ -12,6 +12,7 @@ RSpec.describe WatchedWord do
     Fabricate(:watched_word, action: WatchedWord.actions[:require_approval])
   end
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
+  let(:another_flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
   let(:block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
   let(:another_block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
@@ -232,7 +233,43 @@ RSpec.describe WatchedWord do
       ).to eq(true)
       reviewable = ReviewableFlaggedPost.where(target: post)
       expect(reviewable).to be_present
-      expect(ReviewableScore.where(reviewable: reviewable, reason: "watched_word")).to be_present
+      expect(
+        ReviewableScore.where(
+          reviewable: reviewable,
+          reason: "watched_word",
+          context: flag_word.word,
+        ),
+      ).to be_present
+    end
+
+    it "should flag the post if it contains multiple flagged words" do
+      topic = Fabricate(:topic, user: tl2_user)
+      post =
+        Fabricate(
+          :post,
+          raw:
+            "I said.... #{flag_word.word} and #{another_flag_word.word} and #{flag_word.word} again",
+          topic: topic,
+          user: tl2_user,
+        )
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { PostAction.count }.by(
+        1,
+      )
+      expect(
+        PostAction.where(
+          post_id: post.id,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        ).exists?,
+      ).to eq(true)
+      reviewable = ReviewableFlaggedPost.where(target: post)
+      expect(reviewable).to be_present
+      expect(
+        ReviewableScore.where(
+          reviewable: reviewable,
+          reason: "watched_word",
+          context: [flag_word.word, another_flag_word.word].sort.join(","),
+        ),
+      ).to be_present
     end
 
     it "should look at the title too" do

@@ -126,8 +126,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with revise_and_reject_post" do
-        fab!(:contact_group) { Fabricate(:group) }
-        fab!(:contact_user) { Fabricate(:user) }
+        fab!(:contact_group, :group)
+        fab!(:contact_user, :user)
 
         before do
           SiteSetting.site_contact_group_name = contact_group.name

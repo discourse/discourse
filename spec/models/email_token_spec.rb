@@ -66,8 +66,8 @@ RSpec.describe EmailToken do
 
     context "with taken email address" do
       before do
-        @other_user = Fabricate(:coding_horror)
-        email_token.update_attribute :email, @other_user.email
+        other_user = Fabricate(:coding_horror)
+        email_token.update_attribute :email, other_user.email
       end
 
       it "returns nil when the email has been taken since the token has been generated" do

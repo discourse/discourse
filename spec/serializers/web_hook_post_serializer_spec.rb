@@ -65,7 +65,7 @@ RSpec.describe WebHookPostSerializer do
 
   it "should only include deleted topic title for staffs" do
     topic = post.topic
-    PostDestroyer.new(Discourse.system_user, post).destroy
+    PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
     post.reload
 
     [nil, post.user, Fabricate(:user)].each do |user|

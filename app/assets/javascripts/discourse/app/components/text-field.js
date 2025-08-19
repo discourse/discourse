@@ -11,6 +11,7 @@ const DEBOUNCE_MS = 500;
   "autocorrect",
   "autocapitalize",
   "autofocus",
+  "enterkeyhint",
   "maxLength",
   "dir",
   "aria-label",

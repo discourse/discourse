@@ -22,11 +22,17 @@ async function setStatus(status) {
 acceptance("User Profile - Account - User Status", function (needs) {
   const username = "eviltrout";
   const status = {
-    emoji: "grinning",
+    emoji: "grinning_face",
     description: "off to dentist",
   };
 
   needs.user({ username, status });
+
+  needs.pretender((server, helper) => {
+    server.get("/emojis/search-aliases.json", () => {
+      return helper.response([]);
+    });
+  });
 
   test("doesn't render status block if status is disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
@@ -85,7 +91,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit(`/u/${username}/preferences/account`);
-    const newStatus = { emoji: "womans_clothes", description: "shopping" };
+    const newStatus = { emoji: "woman_genie", description: "shopping" };
     await setStatus(newStatus);
 
     assert

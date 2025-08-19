@@ -30,7 +30,7 @@ RSpec.describe Chat::CreateMessage do
     subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
     fab!(:upload) { Fabricate(:upload, user: user) }
@@ -332,7 +332,7 @@ RSpec.describe Chat::CreateMessage do
                   before { params[:in_reply_to_id] = reply_to.id }
 
                   context "when reply is not part of the channel" do
-                    fab!(:reply_to) { Fabricate(:chat_message) }
+                    fab!(:reply_to, :chat_message)
 
                     it { is_expected.to fail_a_policy(:ensure_reply_consistency) }
                   end

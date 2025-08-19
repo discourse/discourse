@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "User activity bookmarks", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:bookmark_1) do
     Fabricate(
       :bookmark,
@@ -57,5 +57,11 @@ describe "User activity bookmarks", type: :system do
 
     expect(user_activity_bookmarks).to have_topic(bookmark_1.bookmarkable.topic)
     expect(user_activity_bookmarks).to have_topic(bookmark_2.bookmarkable.topic)
+  end
+
+  it "can clear the query with backspace" do
+    user_activity_bookmarks.visit(current_user, q: "dog")
+    user_activity_bookmarks.clear_query_with_backspace
+    expect(user_activity_bookmarks).to have_empty_search
   end
 end

@@ -40,15 +40,14 @@
   .bookmark-options-button {
     margin-left: 0.5em;
     margin-bottom: 0.5em;
-    background: transparent;
-    padding: 6px;
   }
 
   .bookmark-options-panel {
+    margin-bottom: 18px;
+
     .select-kit {
       width: 100%;
     }
-    margin-bottom: 18px;
 
     label {
       display: flex;

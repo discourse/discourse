@@ -4,9 +4,11 @@ describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
   fab!(:theme)
-  fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
+  fab!(:long_post, :post_with_very_long_raw_content)
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:moderator) { Fabricate(:moderator) }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }
 
@@ -53,6 +55,7 @@ describe "Reviewables", type: :system do
 
         expect(composer).to be_opened
         expect(composer.composer_input.value).to eq(post.raw)
+        expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
       end
 
       it "should open a modal when suspending a user" do
@@ -69,21 +72,39 @@ describe "Reviewables", type: :system do
           text: I18n.t("js.flagging.take_action_options.suspend.title"),
         )
       end
+
+      it "should show a toast when disagreeing with a flag flag" do
+        visit("/review")
+
+        find(".post-disagree").click
+
+        expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
+      end
     end
   end
 
   describe "when there is a queued post reviewable with a short post" do
-    fab!(:short_queued_reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:short_queued_reviewable, :reviewable_queued_post)
 
     it "should not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
     end
+
+    it "should apply correct button classes to actions" do
+      visit("/review")
+
+      expect(page).to have_css(".approve-post.btn-success")
+      expect(page).to have_css(".reject-post .btn-danger")
+
+      expect(page).to have_no_css(".approve-post.btn-default")
+      expect(page).to have_no_css(".reject-post .btn-default")
+    end
   end
 
   describe "when there is a queued post reviewable with a long post" do
-    fab!(:long_queued_reviewable) { Fabricate(:reviewable_queued_long_post) }
+    fab!(:long_queued_reviewable, :reviewable_queued_long_post)
 
     it "should show a button to expand/collapse the post content" do
       visit("/review")
@@ -99,6 +120,7 @@ describe "Reviewables", type: :system do
   describe "when there is a reviewable user" do
     fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+    let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
 
     before do
       SiteSetting.must_approve_users = true
@@ -127,11 +149,41 @@ describe "Reviewables", type: :system do
       expect(mail.subject).to match(/You've been rejected on Discourse/)
       expect(mail.body.raw_source).to include rejection_reason
     end
+
+    it "Allows scrubbing user data after rejection" do
+      rejection_reason = "user is spamming"
+      scrubbing_reason = "a spammer who knows how to make GDPR requests"
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
+      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
+      rejection_reason_modal.delete_user
+
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
+
+      expect(review_page).to have_scrub_button(reviewable)
+      review_page.click_scrub_button(reviewable)
+
+      expect(scrub_user_modal.scrub_button).to be_disabled
+      scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+      expect(scrub_user_modal.scrub_button).not_to be_disabled
+      scrub_user_modal.scrub_button.click
+
+      expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
+      expect(review_page).to have_reviewable_with_scrubbed_reason(reviewable, scrubbing_reason)
+      expect(review_page).to have_reviewable_with_scrubbed_at(
+        reviewable,
+        reviewable.payload["scrubbed_at"],
+      )
+      expect(review_page).to have_no_scrub_button(reviewable)
+    end
   end
 
   context "when performing a review action from the show route" do
-    fab!(:contact_group) { Fabricate(:group) }
-    fab!(:contact_user) { Fabricate(:user) }
+    fab!(:contact_group, :group)
+    fab!(:contact_user, :user)
 
     before do
       SiteSetting.site_contact_group_name = contact_group.name
@@ -139,7 +191,7 @@ describe "Reviewables", type: :system do
     end
 
     context "with a ReviewableQueuedPost" do
-      fab!(:queued_post_reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:queued_post_reviewable, :reviewable_queued_post)
 
       it "delete_user does not delete reviewable" do
         review_page.visit_reviewable(queued_post_reviewable)
@@ -190,6 +242,26 @@ describe "Reviewables", type: :system do
         )
       end
 
+      it "claims the reviewable while revising, and unclaims it when cancelling" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+
+        expect(revise_modal).to be_open
+
+        expect(page).to have_css(".claimed-actions")
+
+        revise_modal.close
+
+        expect(revise_modal).to be_closed
+        expect(page).to have_no_css(".claimed-actions")
+      end
+
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 
@@ -210,6 +282,53 @@ describe "Reviewables", type: :system do
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
+
+      context "with reviewable claiming enabled" do
+        before { SiteSetting.reviewable_claiming = "required" }
+
+        it "properly claims and unclaims the reviewable" do
+          review_page.visit_reviewable(queued_post_reviewable)
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+
+          review_page.click_claim_reviewable
+
+          expect(review_page).to have_reviewable_action_dropdown
+
+          review_page.click_unclaim_reviewable
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+        end
+      end
+    end
+  end
+
+  describe "when there is an unknown plugin reviewable" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable2, :reviewable)
+
+    before do
+      reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
+      reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
+    end
+
+    it "informs admin and allows to delete them" do
+      visit("/review")
+      expect(review_page).to have_information_about_unknown_reviewables_visible
+      expect(review_page).to have_listing_for_unknown_reviewables_plugin(
+        reviewable.type,
+        reviewable.type_source,
+      )
+      expect(review_page).to have_listing_for_unknown_reviewables_unknown_source(reviewable2.type)
+      review_page.click_ignore_all_unknown_reviewables
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
+    end
+
+    it "does not inform moderator about them" do
+      sign_in(moderator)
+
+      visit("/review")
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
 end

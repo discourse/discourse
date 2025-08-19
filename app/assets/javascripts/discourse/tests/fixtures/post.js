@@ -32,6 +32,7 @@ export default {
     can_wiki: true,
     read: true,
     user_title: null,
+    title: "Private message to you",
     actions_summary: [
       {
         id: 3,
@@ -92,6 +93,7 @@ export default {
     can_delete: false,
     can_recover: true,
     user_title: null,
+    title: "Localization of UI elements",
     raw: "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?",
     actions_summary: [
       { id: 2, count: 0, hidden: false, can_act: true },

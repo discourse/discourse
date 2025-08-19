@@ -44,12 +44,12 @@
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     color: var(--primary);
+    border-radius: var(--d-border-radius);
 
     .discourse-no-touch & {
       &:hover {
-        box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
@@ -89,7 +89,6 @@
           flex: 1 1 auto;
 
           span {
-            width: 100%;
             word-break: break-word;
             line-height: var(--line-height-medium);
           }
@@ -185,7 +184,7 @@
   font-size: var(--font-down-2);
   padding: 0.2em 1em;
   background-color: var(--primary-low);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-border-radius);
 
   .fk-d-tooltip__trigger-container {
     align-items: center;

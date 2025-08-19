@@ -234,9 +234,7 @@ it:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
         channels_list: "Elenco dei canali di chat"
-      no_direct_message_channels: "Non hai ancora aderito a nessun messaggio diretto!"
       no_direct_message_channels_cta: "Iniziare una conversazione"
-      no_public_channels: "Non hai ancora aderito a nessun canale!"
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       only_chat_push_notifications:
@@ -342,6 +340,7 @@ it:
         tabs:
           members: Membri
           settings: Impostazioni
+        remove_member: "Rimuovi"
       new_message_modal:
         title: Invia messaggio
         add_user_long: <kbd>MAIUSC + clic</kbd> o <kbd>MAIUSC + INVIO</kbd><span>Aggiunge @%{username}</span>

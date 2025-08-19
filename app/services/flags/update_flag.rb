@@ -22,7 +22,6 @@ class Flags::UpdateFlag
 
   model :flag
   policy :not_system
-  policy :not_used
   policy :invalid_access
   policy :unique_name
 
@@ -39,10 +38,6 @@ class Flags::UpdateFlag
 
   def not_system(flag:)
     !flag.system?
-  end
-
-  def not_used(flag:)
-    !flag.used?
   end
 
   def invalid_access(guardian:, flag:)

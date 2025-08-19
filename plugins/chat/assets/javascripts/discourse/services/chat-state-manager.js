@@ -62,7 +62,7 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
@@ -88,7 +88,7 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
@@ -148,9 +148,13 @@ export default class ChatStateManager extends Service {
     return !!(
       !this.isFullPagePreferred ||
       (this.site.desktopView &&
-        (!this._store.getObject(PREFERRED_MODE_KEY) ||
+        (this.hasNoPreferredMode ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );
+  }
+
+  get hasNoPreferredMode() {
+    return !this._store.getObject(PREFERRED_MODE_KEY);
   }
 
   get isFullPageActive() {

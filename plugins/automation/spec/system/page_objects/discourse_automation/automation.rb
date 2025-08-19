@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class Automation < PageObjects::Pages::Base
       def visit(automation)
-        super("/admin/plugins/discourse-automation/#{automation.id}")
+        super("/admin/plugins/automation/automation/#{automation.id}")
         self
       end
 
       def set_name(name)
-        form.find('input[name="automation-name"]').set("aaaaa")
+        form.find('input[name="automation-name"]').set(name)
         self
       end
 
@@ -29,12 +29,16 @@ module PageObjects
       end
 
       def update
-        form.find(".update-automation").click
+        form.find(".update-automation:not([disabled])").click
         self
       end
 
+      def enabled_toggle
+        PageObjects::Components::DToggleSwitch.new(".d-toggle-switch .d-toggle-switch__checkbox")
+      end
+
       def form
-        @form ||= find(".discourse-automation-form.edit")
+        @form ||= find(".discourse-automation-edit")
       end
     end
   end

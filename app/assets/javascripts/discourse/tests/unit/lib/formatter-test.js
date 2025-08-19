@@ -92,7 +92,7 @@ module("Unit | Utility | formatter", function (hooks) {
     );
     assert.strictEqual(
       strip(formatDays(4.85, { format: "medium", leaveAgo: true })),
-      "4 days ago"
+      "5 days ago"
     );
 
     assert.strictEqual(strip(formatMins(0, { format: "medium" })), "just now");
@@ -110,7 +110,7 @@ module("Unit | Utility | formatter", function (hooks) {
       "23 hours"
     );
     assert.strictEqual(strip(formatHours(23.5, { format: "medium" })), "1 day");
-    assert.strictEqual(strip(formatDays(4.85, { format: "medium" })), "4 days");
+    assert.strictEqual(strip(formatDays(4.85, { format: "medium" })), "5 days");
 
     assert.strictEqual(
       strip(formatDays(6, { format: "medium" })),
@@ -318,6 +318,32 @@ module("Unit | Utility | formatter", function (hooks) {
       number("12.6"),
       "13",
       "it returns a string float rounded to an integer as a string"
+    );
+
+    assert.strictEqual(
+      number(100, { maxDisplay: 50 }),
+      "50+",
+      "it appends + when value exceeds maxDisplay"
+    );
+    assert.strictEqual(
+      number(50, { maxDisplay: 50 }),
+      "50",
+      "it does not append + when value equals maxDisplay"
+    );
+    assert.strictEqual(
+      number(49, { maxDisplay: 50 }),
+      "49",
+      "it does not append + when value is below maxDisplay"
+    );
+    assert.strictEqual(
+      number(3333, { maxDisplay: 1000 }),
+      "1.0k+",
+      "it abbreviates thousands and appends +"
+    );
+    assert.strictEqual(
+      number(2499999, { maxDisplay: 1000000 }),
+      "1.0M+",
+      "it abbreviates millions and appends +"
     );
   });
 

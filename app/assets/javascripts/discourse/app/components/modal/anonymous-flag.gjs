@@ -32,7 +32,8 @@ export default class AnonymousFlagModal extends Component {
       class="anonymous-flag-modal"
     >
       <:body>
-        {{htmlSafe this.description}}
+        <p>{{htmlSafe (i18n "flagging.review_process_description")}}</p>
+        <p>{{htmlSafe this.description}}</p>
       </:body>
     </DModal>
   </template>

@@ -54,6 +54,7 @@ be:
         tabs:
           members: Удзельнікі
           settings: Налады
+        remove_member: "выдаліць"
       new_message_modal:
         filter: "Filter"
       direct_message_creator:

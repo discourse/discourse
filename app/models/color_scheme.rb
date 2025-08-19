@@ -278,6 +278,20 @@ class ColorScheme < ActiveRecord::Base
   }
 
   LIGHT_THEME_ID = "Light"
+  COLORS_ORDER = %w[
+    primary
+    secondary
+    tertiary
+    quaternary
+    header_background
+    header_primary
+    selected
+    hover
+    highlight
+    danger
+    success
+    love
+  ].freeze
 
   def self.base_color_scheme_colors
     base_with_hash = []
@@ -301,6 +315,7 @@ class ColorScheme < ActiveRecord::Base
 
   attr_accessor :is_base
   attr_accessor :skip_publish
+  attr_accessor :is_builtin_default
 
   has_many :color_scheme_colors, -> { order("id ASC") }, dependent: :destroy
 
@@ -312,12 +327,11 @@ class ColorScheme < ActiveRecord::Base
   after_destroy :dump_caches
   belongs_to :theme
 
-  has_one :theme_color_scheme
+  has_one :theme_color_scheme, dependent: :destroy
   has_one :owning_theme, class_name: "Theme", through: :theme_color_scheme, source: :theme
 
-  default_scope do
-    where("color_schemes.id NOT IN (SELECT color_scheme_id FROM theme_color_schemes)")
-  end
+  scope :without_theme_owned_palettes,
+        -> { where("color_schemes.id NOT IN (SELECT color_scheme_id FROM theme_color_schemes)") }
 
   validates_associated :color_scheme_colors
 
@@ -368,15 +382,17 @@ class ColorScheme < ActiveRecord::Base
         )
       scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
       scheme.is_base = true
+      scheme.is_builtin_default = hash[:id] == LIGHT_THEME_ID
       scheme
     end
   end
 
   def self.base
     return @base_color_scheme if @base_color_scheme
-    @base_color_scheme = new(name: I18n.t("color_schemes.base_theme_name"))
+    @base_color_scheme = new(name: I18n.t("admin_js.admin.customize.theme.default_light_scheme"))
     @base_color_scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
     @base_color_scheme.is_base = true
+    @base_color_scheme.is_builtin_default = true
     @base_color_scheme
   end
 
@@ -389,7 +405,6 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
-    new_color_scheme.user_selectable = true
 
     colors =
       BUILT_IN_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
@@ -507,6 +522,12 @@ class ColorScheme < ActiveRecord::Base
         all_themes: true,
       )
     end
+  end
+
+  def self.sort_colors(hash)
+    sorted = hash.slice(*COLORS_ORDER)
+    sorted.merge!(hash.except(*COLORS_ORDER)) if sorted.size < hash.size
+    sorted
   end
 
   def dump_caches

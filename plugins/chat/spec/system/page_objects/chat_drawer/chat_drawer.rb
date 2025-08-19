@@ -108,6 +108,8 @@ module PageObjects
       end
 
       def has_open_thread?(thread = nil)
+        has_css?("html.has-drawer-chat")
+
         if thread
           has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
         else
@@ -116,30 +118,37 @@ module PageObjects
       end
 
       def has_open_channel?(channel)
-        has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .chat-channel.--loaded[data-id='#{channel.id}']")
       end
 
       def has_channel_settings?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .c-channel-settings")
       end
 
       def has_channel_members?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .c-channel-members")
       end
 
       def has_open_channels?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .public-channels")
       end
 
       def has_open_direct_messages?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
       end
 
       def has_open_user_threads?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .c-user-threads")
       end
 
       def has_open_thread_list?
+        has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .chat-thread-list")
       end
 
@@ -174,7 +183,7 @@ module PageObjects
         # and that the message actions menu is closed.
         # This check is essential because the message actions menu might partially
         # overlap with the header, making certain buttons inaccessible.
-        PageObjects::Components::Logo.hover
+        PageObjects::Components::Logo.new.hover
       end
     end
   end

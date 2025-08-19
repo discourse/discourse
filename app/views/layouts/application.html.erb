@@ -2,8 +2,8 @@
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <title><%= title_content %></title>
+    <meta name="description" content="<%= description_content %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
@@ -36,19 +36,19 @@
       <%= preload_script file %>
     <%- end %>
 
-    <%= preload_script "locales/#{I18n.locale}" %>
-    <%= preload_script_url ExtraLocalesController.url("mf") %>
+    <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+    <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url("overrides") %>
+      <%= preload_script_url ExtraLocalesController.url("overrides"), type_module: true %>
     <%- end %>
 
     <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url("admin") %>
+      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
       <%= preload_script "admin" %>
     <%- end %>
 
     <%- if admin? %>
-      <%= preload_script_url ExtraLocalesController.url("wizard") %>
+      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
     <%- end %>
 
     <%- unless customization_disabled? %>

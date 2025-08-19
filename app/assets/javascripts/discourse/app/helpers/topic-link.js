@@ -1,7 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse/lib/helpers";
 
-registerRawHelper("topic-link", topicLink);
 export default function topicLink(topic, args = {}) {
   const title = topic.get("fancyTitle");
 

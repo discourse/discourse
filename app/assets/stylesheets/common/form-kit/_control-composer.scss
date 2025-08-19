@@ -20,8 +20,9 @@
   }
 
   .d-editor-textarea-wrapper {
-    @include default-input;
-    padding: 0 !important;
+    @include default-input {
+      padding: 0 !important;
+    }
   }
 
   .d-editor-input {

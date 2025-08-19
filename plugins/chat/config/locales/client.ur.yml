@@ -87,8 +87,6 @@ ur:
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
       last_visit: "آخری وزٹ"
-      no_direct_message_channels: "آپ ابھی تک کسی بھی براہ راست پیغامات میں شامل نہیں ہوئے ہیں!"
-      no_public_channels: "آپ ابھی تک کسی چینل میں شامل نہیں ہوئے ہیں!"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -118,6 +116,7 @@ ur:
         tabs:
           members: ممبران
           settings: ترتیبات
+        remove_member: "خارج کریں"
       new_message_modal:
         no_items: "کوئی اشیاء نہیں"
         filter: "فِلٹر"

@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 class CategoryBadgeSerializer < ApplicationSerializer
-  attributes :id, :name, :slug, :color, :text_color, :read_restricted, :parent_category_id
+  attributes :id,
+             :name,
+             :slug,
+             :color,
+             :text_color,
+             :style_type,
+             :icon,
+             :emoji,
+             :read_restricted,
+             :parent_category_id
 
   def include_parent_category_id?
     parent_category_id.present?

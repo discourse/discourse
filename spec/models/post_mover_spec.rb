@@ -6,14 +6,12 @@ RSpec.describe PostMover do
 
   describe "#move_types" do
     context "when verifying enum sequence" do
-      before { @move_types = PostMover.move_types }
-
       it "'new_topic' should be at 1st position" do
-        expect(@move_types[:new_topic]).to eq(1)
+        expect(described_class.move_types[:new_topic]).to eq(1)
       end
 
       it "'existing_topic' should be at 2nd position" do
-        expect(@move_types[:existing_topic]).to eq(2)
+        expect(described_class.move_types[:existing_topic]).to eq(2)
       end
     end
   end
@@ -22,7 +20,7 @@ RSpec.describe PostMover do
     context "with topics" do
       before { freeze_time }
 
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user, created_at: 4.hours.ago) }
@@ -593,11 +591,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
+            fab!(:user1, :user)
             fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
             fab!(:user3) { Fabricate(:user, refresh_auto_groups: true) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "correctly moves topic_user records" do
               create_topic_user(
@@ -927,7 +925,7 @@ RSpec.describe PostMover do
           end
 
           context "with post timings" do
-            fab!(:some_user) { Fabricate(:user) }
+            fab!(:some_user, :user)
 
             it "successfully moves timings" do
               create_post_timing(p1, some_user, 500)
@@ -1039,11 +1037,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:user1, :user)
+            fab!(:user2, :user)
+            fab!(:user3, :user)
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "leaves post numbers unchanged when they were lower then the topic's highest post number" do
               Fabricate(:post, topic: destination_topic)
@@ -1939,7 +1937,7 @@ RSpec.describe PostMover do
           end
 
           context "with post timings" do
-            fab!(:some_user) { Fabricate(:user) }
+            fab!(:some_user, :user)
 
             it "successfully moves timings" do
               create_post_timing(p1, some_user, 500)
@@ -2168,11 +2166,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:user1, :user)
+            fab!(:user2, :user)
+            fab!(:user3, :user)
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "leaves post numbers unchanged when they were lower then the topic's highest post number" do
               Fabricate(:post, topic: destination_topic)
@@ -2353,8 +2351,8 @@ RSpec.describe PostMover do
 
     context "with messages" do
       fab!(:user)
-      fab!(:another_user) { Fabricate(:user) }
-      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:another_user, :user)
+      fab!(:regular_user, :trust_level_4)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
       fab!(:p1) { Fabricate(:post, topic: personal_message, user: user, created_at: 4.hours.ago) }
       fab!(:p2) do
@@ -2688,7 +2686,7 @@ RSpec.describe PostMover do
     end
 
     context "with banner topic" do
-      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:regular_user, :trust_level_4)
       fab!(:topic)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
       fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
@@ -2717,8 +2715,8 @@ RSpec.describe PostMover do
     end
 
     context "with event trigger" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:post_2) { Fabricate(:post, topic: topic_1) }
 
@@ -2782,8 +2780,8 @@ RSpec.describe PostMover do
     end
 
     context "with modifier" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:user)
 
@@ -2840,8 +2838,8 @@ RSpec.describe PostMover do
     end
 
     context "with freeze_original option" do
-      fab!(:original_topic) { Fabricate(:topic) }
-      fab!(:destination_topic) { Fabricate(:topic) }
+      fab!(:original_topic, :topic)
+      fab!(:destination_topic, :topic)
       fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of original topic") }
       fab!(:op_of_destination) do
         Fabricate(:post, topic: destination_topic, raw: "op of destination topic")
@@ -2939,8 +2937,8 @@ RSpec.describe PostMover do
       end
 
       context "with `post_mover_create_moderator_post` modifier" do
-        fab!(:topic_1) { Fabricate(:topic) }
-        fab!(:topic_2) { Fabricate(:topic) }
+        fab!(:topic_1, :topic)
+        fab!(:topic_2, :topic)
         fab!(:post_1) { Fabricate(:post, topic: topic_1) }
         fab!(:user)
 
@@ -3172,13 +3170,13 @@ RSpec.describe PostMover do
 
     describe "#enqueue_jobs" do
       fab!(:admin)
-      fab!(:original_topic) { Fabricate(:topic) }
+      fab!(:original_topic, :topic)
       fab!(:post_1) { Fabricate(:post, topic: original_topic) }
       fab!(:post_2) { Fabricate(:post, topic: original_topic) }
-      fab!(:destination_topic) { Fabricate(:topic) }
+      fab!(:destination_topic, :topic)
 
       it "calls enqueue jobs for PostCreator when @post_creator is present" do
-        post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+        post_mover = PostMover.new(original_topic, admin, [post_1, post_2].map(&:id))
 
         PostCreator.any_instance.expects(:enqueue_jobs).once
 
@@ -3193,7 +3191,7 @@ RSpec.describe PostMover do
           plugin_instance = Plugin::Instance.new
           plugin_instance.register_modifier(:post_mover_enqueue_post_creator_jobs, &modifier_block)
 
-          post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+          post_mover = PostMover.new(original_topic, admin, [post_1, post_2].map(&:id))
 
           PostCreator.any_instance.expects(:enqueue_jobs).never
 

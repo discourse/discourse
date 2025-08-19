@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import getURL from "discourse/lib/get-url";
 import { iconNode } from "discourse/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
@@ -16,6 +17,7 @@ export function disableNameSuppression() {
   sanitizeName = (name) => name;
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("poster-name-title", {
   tagName: "span.user-title",
 
@@ -53,6 +55,7 @@ createWidget("poster-name-title", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("poster-name", {
   tagName: "div.names.trigger-user-card",
 
@@ -103,6 +106,12 @@ export default createWidget("poster-name", {
     );
   },
 
+  additionalClasses(attrs) {
+    return applyValueTransformer("poster-name-class", [], {
+      user: attrs.user,
+    });
+  },
+
   html(attrs) {
     const username = attrs.username;
     const name = attrs.name;
@@ -127,6 +136,7 @@ export default createWidget("poster-name", {
     if (attrs.new_user) {
       classNames.push("new-user");
     }
+    classNames.push(...this.additionalClasses(attrs));
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {

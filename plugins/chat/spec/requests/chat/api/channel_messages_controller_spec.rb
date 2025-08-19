@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelMessagesController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel, :chat_channel)
 
   before do
     SiteSetting.chat_enabled = true
@@ -14,7 +14,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   describe "#index" do
     describe "success" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
-      fab!(:message_2) { Fabricate(:chat_message) }
+      fab!(:message_2, :chat_message)
 
       it "works" do
         get "/chat/api/channels/#{channel.id}/messages"
@@ -64,7 +64,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     context "when user can’t see channel" do
-      fab!(:channel) { Fabricate(:private_category_channel) }
+      fab!(:channel, :private_category_channel)
 
       it "returns a 403" do
         get "/chat/api/channels/#{channel.id}/messages"

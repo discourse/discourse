@@ -6,10 +6,8 @@ import {
 import templateOnly from "@ember/component/template-only";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { buildRawConnectorCache } from "discourse/lib/raw-templates";
 
 let _connectorCache;
-let _rawConnectorCache;
 let _extraConnectorClasses = {};
 let _extraConnectorComponents = {};
 let debugOutletCallback;
@@ -64,7 +62,6 @@ function findOutlets(keys, callback) {
 
 export function clearCache() {
   _connectorCache = null;
-  _rawConnectorCache = null;
 }
 
 /**
@@ -235,19 +232,16 @@ export function renderedConnectorsFor(outletName, args, context, owner) {
   });
 }
 
-export function rawConnectorsFor(outletName) {
-  if (!_rawConnectorCache) {
-    _rawConnectorCache = buildRawConnectorCache();
-  }
-  return _rawConnectorCache[outletName] || [];
-}
-
 export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   const output = {};
 
   if (args) {
     Object.keys(args).forEach((key) => {
-      Object.defineProperty(output, key, { value: args[key] });
+      Object.defineProperty(output, key, {
+        get() {
+          return args[key];
+        },
+      });
     });
   }
 

@@ -1,0 +1,149 @@
+{
+  "has_more": false,
+  "data": [
+    {
+      "id": "sub_10z",
+      "object": "subscription",
+      "created": 1714594277,
+      "current_period_end": 1717272677,
+      "current_period_start": 1714594277,
+      "customer": "cus_Q1n43We0YFjnlc",
+      "items": {
+        "object": "list",
+        "data": [
+          {
+            "id": "si_Q1n45g1Ifcluuu",
+            "object": "subscription_item",
+            "billing_thresholds": null,
+            "created": 1714594277,
+            "discounts": [],
+            "metadata": {},
+            "plan": {
+              "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+              "object": "plan",
+              "active": true,
+              "created": 1709840311,
+              "metadata": {
+                "group_name": "subscribers",
+                "trial_period_days": "0"
+              },
+              "nickname": "EA1",
+              "product": "prod_PhB6IpGhEX14Hi"
+            },
+            "price": {
+              "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+              "object": "price",
+              "metadata": {
+                "group_name": "subscribers",
+                "trial_period_days": "0"
+              },
+              "nickname": "EA1",
+              "product": "prod_PhB6IpGhEX14Hi"
+            },
+            "quantity": 1,
+            "subscription": "sub_1PBjUnEYXaQnncShE7USquGd",
+            "tax_rates": []
+          }
+        ],
+        "has_more": false,
+        "total_count": 1,
+        "url": "/v1/subscription_items?subscription=sub_1PBjUnEYXaQnncShE7USquGd"
+      },
+      "latest_invoice": "in_1PBjUnEYXaQnncSh5c7HZ2jG",
+      "metadata": { "user_id": "108", "username": "f79fc8fde" },
+      "plan": {
+        "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+        "object": "plan",
+        "active": true,
+        "metadata": { "group_name": "subscribers", "trial_period_days": "0" },
+        "meter": null,
+        "nickname": "EA1",
+        "product": {
+          "id": "prod_PhB6IpGhEX14Hi",
+          "object": "product",
+          "metadata": {
+            "description": "Sign up and get access to an exclusive group of enthusiasts just like you!"
+          },
+          "name": "Exclusive Access"
+        }
+      },
+      "quantity": 1,
+      "schedule": null,
+      "start_date": 1714594277,
+      "status": "active"
+    },
+    {
+      "id": "sub_32b",
+      "object": "subscription",
+      "created": 1714594277,
+      "current_period_end": 1717272677,
+      "current_period_start": 1714594277,
+      "customer": "cus_Q1n43We0YFjnlc",
+      "items": {
+        "object": "list",
+        "data": [
+          {
+            "id": "si_Q1n45g1Ifcluuu",
+            "object": "subscription_item",
+            "billing_thresholds": null,
+            "created": 1714594277,
+            "discounts": [],
+            "metadata": {},
+            "plan": {
+              "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+              "object": "plan",
+              "active": true,
+              "created": 1709840311,
+              "metadata": {
+                "group_name": "subscribers",
+                "trial_period_days": "0"
+              },
+              "nickname": "EA1",
+              "product": "prod_PhB6IpGhEX14Hi"
+            },
+            "price": {
+              "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+              "object": "price",
+              "metadata": {
+                "group_name": "subscribers",
+                "trial_period_days": "0"
+              },
+              "nickname": "EA1",
+              "product": "prod_PhB6IpGhEX14Hi"
+            },
+            "quantity": 1,
+            "subscription": "sub_1PBjUnEYXaQnncShE7USquGd",
+            "tax_rates": []
+          }
+        ],
+        "has_more": false,
+        "total_count": 1,
+        "url": "/v1/subscription_items?subscription=sub_1PBjUnEYXaQnncShE7USquGd"
+      },
+      "latest_invoice": "in_1PBjUnEYXaQnncSh5c7HZ2jG",
+      "metadata": { "user_id": "108", "username": "f79fc8fde" },
+      "plan": {
+        "id": "price_1OrmlvEYXaQnncShNahrpKvA",
+        "object": "plan",
+        "active": true,
+        "metadata": { "group_name": "subscribers", "trial_period_days": "0" },
+        "meter": null,
+        "nickname": "EA1",
+        "product": {
+          "id": "prod_PhB6IpGhEX14Hi",
+          "object": "product",
+          "metadata": {
+            "description": "Sign up and get access to an exclusive group of enthusiasts just like you!"
+          },
+          "name": "Exclusive Access"
+        }
+      },
+      "quantity": 1,
+      "schedule": null,
+      "start_date": 1714594277,
+      "status": "canceled"
+    }
+  ],
+  "length": 2,
+  "last_record": "sub_1P9aohEYXaQnncSh4wf1wzuL"
+}

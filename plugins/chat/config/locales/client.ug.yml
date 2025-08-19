@@ -342,6 +342,7 @@ ug:
         tabs:
           members: ئەزا
           settings: تەڭشەك
+        remove_member: "چىقىرىۋەت"
       new_message_modal:
         title: ئۇچۇر يوللا
         add_user_long: <kbd>shift + چېكىش</kbd> ياكى <kbd>shift + enter</kbd><span>قوش @%{username}</span>
@@ -530,6 +531,7 @@ ug:
         select_emoji: "چىراي ئىپادە تاللا"
         system: "سىستېما"
         title: "كەلگەن تور ئىلمىكى"
+        header_description: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ئۇچۇرنى ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە بەلگىلەنگەن سۆھبەت قانىلىغا يوللاشتا قوللىنىدۇ"
         url: "تور ئادرېسى"
         url_instructions: "بۇ تور ئادرېسىنىڭ مەخپىي قىممىتى بار- ئۇنى بىخەتەر ساقلاڭ."
         username: "ئىشلەتكۈچى ئاتى"
@@ -642,6 +644,11 @@ ug:
       draft_channel_screen:
         header: "يېڭى ئۇچۇر"
         cancel: "ۋاز كەچ"
+      quick_reaction_type:
+        title: "بىر چېكىپ پاراڭلىشىش ئىنكاسى"
+        options:
+          frequent: "دائىم ئىشلىتىلىدىغان پاراڭلىشىش ئىنكاسى"
+          custom: "ئىختىيارى ئىنكاس"
     notifications:
       chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىندىڭىز"
       chat_invitation_html: "<span>%{username}</span> <span>سىزنى سۆھبەت قانىلىغا تەكلىپ قىلدى</span>"

@@ -4,8 +4,8 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
   describe "#execute" do
     subject(:execute) { described_class.new.execute(user_id: user_1) }
 
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:user_1, :user)
+    fab!(:channel, :chat_channel)
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: channel, user: user_1) }
 
     it "deletes messages from the user" do

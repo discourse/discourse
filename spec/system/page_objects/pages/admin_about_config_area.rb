@@ -18,6 +18,10 @@ module PageObjects
       def your_organization_section
         PageObjects::Components::AdminAboutConfigAreaYourOrganizationCard.new
       end
+
+      def group_listing_section
+        PageObjects::Components::AdminAboutConfigAreaGroupListingCard.new
+      end
     end
   end
 end

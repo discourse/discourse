@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Söylem Biçim Kılavuzu"
   js:
     styleguide:
       title: "Stil rehberi"
@@ -25,6 +30,8 @@ tr_TR:
           title: "Tarih/Saat girdileri"
         menus:
           title: "Menüler"
+        multi_select:
+          title: "Çoklu seçim"
         toasts:
           title: "Beliren pencereler"
         font_scale:

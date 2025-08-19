@@ -89,12 +89,14 @@ RSpec.describe Chat::CategoryChannel do
   end
 
   describe "#leave" do
-    let(:original_method) { channel.method(:remove) }
-    let(:aliased_method) { channel.method(:leave) }
+    let(:public_category) { Fabricate(:category, read_restricted: false) }
+    let(:channel) { Fabricate(:category_channel, chatable: public_category) }
 
-    it "is an alias to '#remove'" do
-      expect(original_method.original_name).to eq(aliased_method.original_name)
-      expect(original_method.source_location).to eq(aliased_method.source_location)
+    it "calls #remove" do
+      Fabricate(:user_chat_channel_membership, chat_channel: channel)
+      user = channel.user_chat_channel_memberships.first.user
+      channel.expects(:remove).with(user)
+      channel.leave(user)
     end
   end
 

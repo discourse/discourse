@@ -43,9 +43,7 @@ class FieldHelper {
   }
 
   get value() {
-    this.context
-      .dom(this.element)
-      .exists(`Could not find element (name: ${this.name}).`);
+    this.context.dom(this.element).exists(`field '${this.name}' exists`);
 
     switch (this.element.dataset.controlType) {
       case "image": {
@@ -103,6 +101,11 @@ class FieldHelper {
       case "checkbox": {
         return this.element.querySelector(".form-kit__control-checkbox")
           .checked;
+      }
+      case "calendar": {
+        throw new Error(
+          `Calendar is a complex type, value can't be check from UI components`
+        );
       }
     }
   }

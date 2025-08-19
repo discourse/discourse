@@ -5,13 +5,8 @@
 
   &-container {
     display: flex;
-    height: 16px;
-  }
-
-  &::before {
-    // unicode zero width space character
-    // Ensures the span height is consistent even when empty
-    content: "\200b";
+    height: 1em; // Ensures the height is consistent even when empty
+    line-height: normal;
   }
 
   .chat-replying-indicator__text {
@@ -24,6 +19,7 @@
 
     .chat-replying-indicator__dot {
       display: inline-block;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: chat-replying-indicator__wave 1.8s linear infinite;
       }

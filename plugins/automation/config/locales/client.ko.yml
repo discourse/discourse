@@ -7,11 +7,10 @@
 ko:
   js:
     discourse_automation:
-      create: 생성
-      update: 업데이트
+      back: 뒤로
+      edit: 편집
       select_script: 스크립트 선택
       select_trigger: 트리거 선택
-      no_automation_yet: 아직 생성된 자동화가 없습니다. 시작하려면 아래 옵션을 선택하세요.
       edit_automation:
         fields_section:
           title: 스크립트 옵션
@@ -71,13 +70,13 @@ ko:
           fields:
             restricted_tags:
               label: 태그
-            restricted_category:
+            restricted_categories:
               label: 카테고리
-            restricted_group:
-              label: 그룹
-            restricted_groups:
-              label: 그룹
           created: 생성됨
+          with_images: 이미지
+          with_links: 링크
+          with_code: 코드
+          with_uploads: 업로드된 파일
         category_created_edited:
           fields:
             restricted_category:

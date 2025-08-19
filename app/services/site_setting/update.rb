@@ -3,43 +3,67 @@
 class SiteSetting::Update
   include Service::Base
 
-  options { attribute :allow_changing_hidden, :boolean, default: false }
+  Setting = Struct.new(:name, :value, :backfill, :change)
+
+  options do
+    attribute :allow_changing_hidden, :array, default: []
+    attribute :overridden_setting_names, default: {}
+  end
 
   policy :current_user_is_admin
 
   params do
-    attribute :setting_name
-    attribute :new_value
+    attribute :settings
 
     before_validation do
-      self.setting_name = setting_name&.to_sym
-      self.new_value = new_value.to_s.strip
+      self.settings =
+        self.settings.to_a.map do |setting|
+          Setting.new(
+            setting[:setting_name].to_sym,
+            setting[:value].to_s.strip,
+            !!setting[:backfill],
+            nil,
+          )
+        end
     end
 
-    validates :setting_name, presence: true
+    validates :settings, presence: true
 
     after_validation do
-      next if setting_name.blank?
-      self.new_value =
-        case SiteSetting.type_supervisor.get_type(setting_name)
-        when :integer
-          new_value.tr("^-0-9", "").to_i
-        when :file_size_restriction
-          new_value.tr("^0-9", "").to_i
-        when :uploaded_image_list
-          new_value.blank? ? "" : Upload.get_from_urls(new_value.split("|")).to_a
-        when :upload
-          Upload.get_from_url(new_value) || ""
-        else
-          new_value
+      self.settings =
+        self.settings.map do |setting|
+          raw_value = setting.value
+
+          setting.value =
+            case SiteSetting.type_supervisor.get_type(setting.name)
+            when :integer
+              raw_value.tr("^-0-9", "").to_i
+            when :file_size_restriction
+              raw_value.tr("^0-9", "").to_i
+            when :uploaded_image_list
+              raw_value.blank? ? "" : Upload.get_from_urls(raw_value.split("|")).to_a
+            when :upload
+              Upload.get_from_url(raw_value) || ""
+            else
+              raw_value
+            end
+
+          setting
         end
     end
   end
 
-  policy :setting_is_shadowed_globally
-  policy :setting_is_visible
-  policy :setting_is_configurable
-  step :save
+  policy :settings_are_not_deprecated, class_name: SiteSetting::Policy::SettingsAreNotDeprecated
+  policy :settings_are_unshadowed_globally,
+         class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
+  policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
+  policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
+  policy :values_are_valid, class_name: SiteSetting::Policy::ValuesAreValid
+
+  transaction do
+    step :save
+    step :backfill
+  end
 
   private
 
@@ -47,21 +71,30 @@ class SiteSetting::Update
     guardian.is_admin?
   end
 
-  def setting_is_shadowed_globally(params:)
-    !SiteSetting.shadowed_settings.include?(params.setting_name)
+  def save(params:, options:, guardian:)
+    params.settings.each do |setting|
+      setting.change =
+        SiteSetting.set_and_log(
+          options.overridden_setting_names[setting.name] || setting.name,
+          setting.value,
+          guardian.user,
+        )
+    end
   end
 
-  def setting_is_visible(params:, options:)
-    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(params.setting_name)
+  def backfill(params:)
+    params.settings.each do |setting|
+      next if !setting.backfill || !default_user_preference?(setting)
+
+      SiteSettingUpdateExistingUsers.call(
+        setting.name.to_s,
+        setting.change.new_value,
+        setting.change.previous_value,
+      )
+    end
   end
 
-  def setting_is_configurable(params:)
-    return true if !SiteSetting.plugins[params.setting_name]
-
-    Discourse.plugins_by_name[SiteSetting.plugins[params.setting_name]].configurable?
-  end
-
-  def save(params:, guardian:)
-    SiteSetting.set_and_log(params.setting_name, params.new_value, guardian.user)
+  def default_user_preference?(setting)
+    SiteSetting::DEFAULT_USER_PREFERENCES.include?(setting.name.to_s)
   end
 end

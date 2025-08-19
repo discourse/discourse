@@ -170,7 +170,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
   test("Delete only action", async function (assert) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .delete-dont-block");
 
     assert.false(deleteAndBlock, "first button does not block user");
   });
@@ -183,7 +183,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .btn-danger");
+    await click(".dialog-footer .delete-and-block");
     assert.true(deleteAndBlock, "second button also block user");
   });
 });

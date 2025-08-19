@@ -91,7 +91,7 @@ describe Chat::ChannelSerializer do
     end
 
     context "for direct message channels" do
-      fab!(:chat_channel) { Fabricate(:direct_message_channel) }
+      fab!(:chat_channel, :direct_message_channel)
 
       it "has the required message_bus_last_ids keys and calls MessageBus" do
         MessageBus.expects(:last_id).with(Chat::Publisher.root_message_bus_channel(chat_channel.id))
@@ -120,6 +120,6 @@ describe Chat::ChannelSerializer do
   it "has a unicode_title" do
     chat_channel.update!(name: ":cat: Cats")
 
-    expect(serializer.as_json[:unicode_title]).to eq("🐱 Cats")
+    expect(serializer.as_json[:unicode_title]).to eq("🐈 Cats")
   end
 end

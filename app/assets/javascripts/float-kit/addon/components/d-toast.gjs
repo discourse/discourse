@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import autoCloseToast from "float-kit/modifiers/auto-close-toast";
@@ -11,8 +11,6 @@ import autoCloseToast from "float-kit/modifiers/auto-close-toast";
 const VELOCITY_THRESHOLD = -1.2;
 
 export default class DToast extends Component {
-  @service site;
-
   @tracked progressBar;
 
   @action
@@ -61,6 +59,23 @@ export default class DToast extends Component {
     }).finished;
   }
 
+  get duration() {
+    const duration = this.args.toast.options.duration;
+
+    if (duration === "long") {
+      return 5000;
+    } else if (duration === "short") {
+      return 3000;
+    } else {
+      deprecated(
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
+    }
+  }
+
   <template>
     <output
       role={{if @toast.options.autoClose "status" "log"}}
@@ -68,11 +83,12 @@ export default class DToast extends Component {
       class={{concatClass "fk-d-toast" @toast.options.class}}
       {{autoCloseToast
         close=@toast.close
-        duration=@toast.options.duration
+        duration=this.duration
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
       {{swipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
+      data-test-duration={{this.duration}}
     >
       <@toast.options.component
         @data={{@toast.options.data}}

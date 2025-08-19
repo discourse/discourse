@@ -1,4 +1,5 @@
 import { dasherize } from "@ember/string";
+import DiscoveryListController from "discourse/controllers/discovery/list";
 import Site from "discourse/models/site";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
@@ -12,14 +13,17 @@ export default {
       "route:discovery.category",
       buildCategoryRoute({ filter: "default" })
     );
+    app.register("controller:discovery.category", DiscoveryListController);
     app.register(
       "route:discovery.category-none",
       buildCategoryRoute({ filter: "default", no_subcategories: true })
     );
+    app.register("controller:discovery.category-none", DiscoveryListController);
     app.register(
       "route:discovery.category-all",
       buildCategoryRoute({ filter: "default", no_subcategories: false })
     );
+    app.register("controller:discovery.category-all", DiscoveryListController);
 
     const site = Site.current();
     site.get("filters").forEach((filter) => {
@@ -29,30 +33,45 @@ export default {
         `route:discovery.${filterDasherized}`,
         buildTopicRoute(filter)
       );
+      app.register(
+        `controller:discovery.${filterDasherized}`,
+        DiscoveryListController
+      );
 
       app.register(
         `route:discovery.${filterDasherized}-category`,
         buildCategoryRoute({ filter })
       );
       app.register(
+        `controller:discovery.${filterDasherized}-category`,
+        DiscoveryListController
+      );
+      app.register(
         `route:discovery.${filterDasherized}-category-none`,
         buildCategoryRoute({ filter, no_subcategories: true })
+      );
+      app.register(
+        `controller:discovery.${filterDasherized}-category-none`,
+        DiscoveryListController
       );
     });
 
     app.register("route:tags.show-category", buildTagRoute());
+    app.register("controller:tags.show-category", DiscoveryListController);
     app.register(
       "route:tags.show-category-none",
       buildTagRoute({
         noSubcategories: true,
       })
     );
+    app.register("controller:tags.show-category-none", DiscoveryListController);
     app.register(
       "route:tags.show-category-all",
       buildTagRoute({
         noSubcategories: false,
       })
     );
+    app.register("controller:tags.show-category-all", DiscoveryListController);
 
     site.get("filters").forEach(function (filter) {
       const filterDasherized = dasherize(filter);
@@ -64,16 +83,32 @@ export default {
         })
       );
       app.register(
+        `controller:tag.show-${filterDasherized}`,
+        DiscoveryListController
+      );
+      app.register(
         `route:tags.show-category-${filterDasherized}`,
         buildTagRoute({ navMode: filter })
+      );
+      app.register(
+        `controller:tags.show-category-${filterDasherized}`,
+        DiscoveryListController
       );
       app.register(
         `route:tags.show-category-none-${filterDasherized}`,
         buildTagRoute({ navMode: filter, noSubcategories: true })
       );
       app.register(
+        `controller:tags.show-category-none-${filterDasherized}`,
+        DiscoveryListController
+      );
+      app.register(
         `route:tags.show-category-all-${filterDasherized}`,
         buildTagRoute({ navMode: filter, noSubcategories: false })
+      );
+      app.register(
+        `controller:tags.show-category-all-${filterDasherized}`,
+        DiscoveryListController
       );
     });
   },

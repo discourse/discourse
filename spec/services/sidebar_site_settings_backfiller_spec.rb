@@ -2,12 +2,12 @@
 
 RSpec.describe SidebarSiteSettingsBackfiller do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:user3, :user)
   fab!(:staged_user) { Fabricate(:user, staged: true) }
   fab!(:category)
-  fab!(:category2) { Fabricate(:category) }
-  fab!(:category3) { Fabricate(:category) }
+  fab!(:category2, :category)
+  fab!(:category3, :category)
   fab!(:user_category_sidebar_section_link) do
     Fabricate(:category_sidebar_section_link, user: user, linkable: category)
   end
@@ -27,8 +27,8 @@ RSpec.describe SidebarSiteSettingsBackfiller do
   end
 
   fab!(:tag)
-  fab!(:tag2) { Fabricate(:tag) }
-  fab!(:tag3) { Fabricate(:tag) }
+  fab!(:tag2, :tag)
+  fab!(:tag3, :tag)
   fab!(:user_tag_sidebar_section_link) do
     Fabricate(:tag_sidebar_section_link, user: user, linkable: tag)
   end

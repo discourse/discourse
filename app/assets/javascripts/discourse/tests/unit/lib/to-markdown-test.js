@@ -1,4 +1,5 @@
 import { setupTest } from "ember-qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import toMarkdown, {
   addBlockDecorateCallback,
@@ -359,7 +360,7 @@ helloWorld();</code>consectetur.`;
   test("strips user status from mentions", function (assert) {
     const statusHtml = `
         <img class="emoji user-status"
-             src="/images/emoji/twitter/desert_island.png?v=12"
+             src="/images/emoji/twitter/desert_island.png?v=${v}"
              title="vacation">
     `;
     const html = `Mentioning <a class="mention" href="/u/andrei">@andrei${statusHtml}</a>`;

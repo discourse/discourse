@@ -44,7 +44,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n(
             "admin.config_areas.about.toasts.general_settings_saved"
@@ -109,7 +109,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       <form.Field
         @name="aboutBannerImage"
         @title={{i18n "admin.config_areas.about.banner_image"}}
-        @description={{i18n "admin.config_areas.about.banner_image_help"}}
+        @helpText={{i18n "admin.config_areas.about.banner_image_help"}}
         @onSet={{this.setImage}}
         as |field|
       >

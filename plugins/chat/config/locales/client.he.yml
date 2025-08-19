@@ -250,9 +250,9 @@ he:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
-      no_direct_message_channels: "לא הצטרפת להודעות ישירות כלשהן, עדיין!"
+      no_direct_message_channels: "לא הצטרפת להודעות ישירות עדיין!"
       no_direct_message_channels_cta: "לפתוח דיון"
-      no_public_channels: "לא הצטרפת לערוצים כלשהם, עדיין!"
+      no_public_channels: "לא הצטרפת לערוצים כלשהם עדיין!"
       no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
@@ -362,6 +362,7 @@ he:
         tabs:
           members: חברים
           settings: הגדרות
+        remove_member: "הסרה"
       new_message_modal:
         title: שליחת הודעה
         add_user_long: <kbd>shift + לחיצת עכבר</kbd> או <kbd>shift + enter</kbd><span>מוסיפים ‎@%{username}</span>
@@ -564,6 +565,7 @@ he:
         select_emoji: "בחירת אמוג׳י"
         system: "מערכת"
         title: "התליות נכנסות"
+        header_description: "מערכות חיצוניות יכולות להשתמש בהתליות כדי לפרסם הודעות לערוץ צ׳אט ייעודי כמשתמש בוט"
         url: "כתובת"
         url_instructions: "כתובת זו מכילה ערך סודי - כדאי לשמור עליה בצורה מאובטחת."
         username: "שם משתמש"
@@ -692,6 +694,11 @@ he:
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"
+      quick_reaction_type:
+        title: "תגובות רגש בלחיצה אחת לשיחה"
+        options:
+          frequent: "תגובות הרגש הנפוצות ביותר בשיחה"
+          custom: "תגובות רגש מותאמות אישית"
     notifications:
       chat_invitation: "נשלחה אליך הזמנה להצטרף לערוץ צ׳אט"
       chat_invitation_html: "<span>הוזמנת להצטרף לערוץ צ׳אט על ידי</span> <span>%{username}</span>"

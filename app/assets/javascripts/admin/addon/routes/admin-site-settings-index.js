@@ -9,10 +9,6 @@ export default class AdminSiteSettingsIndexRoute extends DiscourseRoute {
   @service router;
 
   beforeModel() {
-    this.router.replaceWith(
-      "adminSiteSettingsCategory",
-      this.controllerFor("adminSiteSettings").get("visibleSiteSettings")[0]
-        .nameKey
-    );
+    this.router.replaceWith("adminSiteSettingsCategory", "required");
   }
 }

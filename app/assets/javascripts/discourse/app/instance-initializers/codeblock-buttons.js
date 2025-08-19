@@ -8,7 +8,7 @@ export default {
   initialize(owner) {
     const siteSettings = owner.lookup("service:site-settings");
 
-    withPluginApi("0.8.7", (api) => {
+    withPluginApi((api) => {
       function _cleanUp() {
         _codeblockButtons.forEach((cb) => cb.cleanup());
         _codeblockButtons.length = 0;

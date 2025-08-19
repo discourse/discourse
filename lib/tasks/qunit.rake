@@ -103,17 +103,20 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
     cmd = []
 
     parallel = ENV["QUNIT_PARALLEL"]
+    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1"
 
     if qunit_path
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
-      system(
-        "pnpm",
-        "ember",
-        "build",
-        chdir: "#{Rails.root}/app/assets/javascripts/discourse",
-        exception: true,
-      )
+      if !reuse_build
+        system(
+          "pnpm",
+          "ember",
+          "build",
+          chdir: "#{Rails.root}/app/assets/javascripts/discourse",
+          exception: true,
+        )
+      end
 
       env["THEME_TEST_PAGES"] = if ENV["THEME_IDS"]
         ENV["THEME_IDS"]
@@ -129,8 +132,9 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       cmd += ["--parallel", parallel] if parallel
     else
       cmd += ["pnpm", "ember", "exam", "--query", query]
-      cmd += ["--load-balance", "--parallel", parallel] if parallel
+      cmd += ["--load-balance", "--parallel", parallel] if parallel && !ENV["PLUGIN_TARGETS"]
       cmd += ["--filter", filter] if filter
+      cmd += %w[--path dist] if reuse_build
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 

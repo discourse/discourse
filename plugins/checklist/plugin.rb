@@ -11,4 +11,3 @@ enabled_site_setting :checklist_enabled
 
 register_asset "stylesheets/checklist.scss"
 register_svg_icon "spinner"
-hide_plugin

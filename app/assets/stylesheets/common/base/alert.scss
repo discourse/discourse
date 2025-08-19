@@ -39,11 +39,12 @@
     &.clickable {
       color: var(--tertiary);
       z-index: z("base");
-    }
-  }
 
-  &.-top-margin {
-    margin-top: 1em;
+      .mobile-view & {
+        margin: 0;
+        padding: 1em;
+      }
+    }
   }
 }
 

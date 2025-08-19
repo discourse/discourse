@@ -28,9 +28,7 @@ acceptance("Create Account - external auth", function (needs) {
   test("when skip is disabled (default)", async function (assert) {
     await visit("/");
 
-    assert
-      .dom(".d-modal.create-account")
-      .exists("it shows the registration modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
 
     assert.dom("#new-account-username").exists("it shows the fields");
 
@@ -43,9 +41,7 @@ acceptance("Create Account - external auth", function (needs) {
     this.siteSettings.auth_skip_create_confirm = true;
     await visit("/");
 
-    assert
-      .dom(".d-modal.create-account")
-      .exists("it shows the registration modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
 
     assert
       .dom("#new-account-username")
@@ -64,9 +60,7 @@ acceptance("Create account - with associate link", function (needs) {
   test("displays associate link when allowed", async function (assert) {
     await visit("/");
 
-    assert
-      .dom(".d-modal.create-account")
-      .exists("it shows the registration modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
     assert.dom("#new-account-username").exists("it shows the fields");
     assert
       .dom(".create-account-associate-link")

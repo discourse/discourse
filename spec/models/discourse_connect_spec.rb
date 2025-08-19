@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseConnect do
-  before do
-    @discourse_connect_url = "http://example.com/discourse_sso"
-    @discourse_connect_secret = "shjkfdhsfkjh"
+  let(:discourse_connect_url) { "http://example.com/discourse_sso" }
+  let(:discourse_connect_secret) { "shjkfdhsfkjh" }
 
-    SiteSetting.discourse_connect_url = @discourse_connect_url
+  before do
+    SiteSetting.discourse_connect_url = discourse_connect_url
     SiteSetting.enable_discourse_connect = true
-    SiteSetting.discourse_connect_secret = @discourse_connect_secret
+    SiteSetting.discourse_connect_secret = discourse_connect_secret
     SiteSetting.reserved_usernames = ""
     Jobs.run_immediately!
   end
@@ -788,7 +788,7 @@ RSpec.describe DiscourseConnect do
 
   it "generates a correct sso url" do
     url, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
-    expect(url).to eq @discourse_connect_url
+    expect(url).to eq discourse_connect_url
 
     sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce).to_not be_nil

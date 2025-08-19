@@ -252,7 +252,7 @@ pl_PL:
         channels_list: "Lista kanałów czatu"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
-      no_public_channels: "Jeszcze nie dołączyłeś(aś) do żadnych kanałów!"
+      no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
@@ -362,6 +362,7 @@ pl_PL:
         tabs:
           members: Członkowie
           settings: Ustawienia
+        remove_member: "Usuń"
       new_message_modal:
         title: Wyślij wiadomość
         add_user_long: <kbd>shift + click</kbd> lub <kbd>shift + enter</kbd><span>Dodaj @%{username}</span>
@@ -568,6 +569,7 @@ pl_PL:
         select_emoji: "Wybierz emoji"
         system: "system"
         title: "Przychodzące webhooki"
+        header_description: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota"
         url: "URL"
         url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"
@@ -696,6 +698,11 @@ pl_PL:
       draft_channel_screen:
         header: "Nowa wiadomość"
         cancel: "Anuluj"
+      quick_reaction_type:
+        title: "Reakcje czatu jednym kliknięciem"
+        options:
+          frequent: "Najczęściej używane reakcje na czacie"
+          custom: "Niestandardowe reakcje"
     notifications:
       chat_invitation: "zaprosił Cię do dołączenia do kanału czatu"
       chat_invitation_html: "<span>%{username}</span> <span>zaprosił Cię do dołączenia do kanału czatu</span>"

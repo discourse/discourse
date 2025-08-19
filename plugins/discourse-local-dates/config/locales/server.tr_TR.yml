@@ -9,4 +9,3 @@ tr_TR:
     discourse_local_dates_enabled: "Discourse-yerel-tarihler özelliğini etkinleştirin. Bu, [date] ögesini kullanan gönderilerdeki yerel saat dilimine duyarlı tarihlere destek ekler"
     discourse_local_dates_default_formats: "Sık kullanılan tarih saat formatları, bkz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs dize biçimi</a>"
     discourse_local_dates_default_timezones: "Varsayılan saat dilimleri listesi, geçerli bir <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>saat dilimi</a>olmalıdır"
-    discourse_local_dates_email_format: "E-postalarda tarih göstermek için kullanılan format"

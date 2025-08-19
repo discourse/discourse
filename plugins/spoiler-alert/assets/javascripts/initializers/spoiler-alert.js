@@ -4,6 +4,7 @@ import {
   addTagDecorateCallback,
 } from "discourse/lib/to-markdown";
 import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 function spoil(element) {
   element.querySelectorAll(".spoiler").forEach((spoiler) => {
@@ -45,6 +46,7 @@ export function initializeSpoiler(api) {
       return text.trim();
     }
   });
+  api.registerRichEditorExtension(richEditorExtension);
 }
 
 export default {
@@ -54,7 +56,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.spoiler_enabled) {
-      withPluginApi("1.15.0", initializeSpoiler);
+      withPluginApi(initializeSpoiler);
     }
   },
 };

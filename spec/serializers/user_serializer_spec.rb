@@ -70,7 +70,7 @@ RSpec.describe UserSerializer do
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload)
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload2, :upload)
 
     context "when the scope user is admin" do
       let(:scope) { Guardian.new(admin_user) }
@@ -309,7 +309,7 @@ RSpec.describe UserSerializer do
     end
 
     describe "ignored and muted" do
-      fab!(:viewing_user) { Fabricate(:user) }
+      fab!(:viewing_user, :user)
       let(:scope) { Guardian.new(viewing_user) }
 
       it "returns false values for muted and ignored" do
@@ -385,7 +385,7 @@ RSpec.describe UserSerializer do
         plugin.allow_public_user_custom_field :public_field
       end
 
-      after { DiscoursePluginRegistry.reset! }
+      after { DiscoursePluginRegistry.reset_register!(:public_user_custom_fields) }
 
       it "serializes the fields listed in public_user_custom_fields" do
         expect(json[:custom_fields]["public_field"]).to eq(user.custom_fields["public_field"])

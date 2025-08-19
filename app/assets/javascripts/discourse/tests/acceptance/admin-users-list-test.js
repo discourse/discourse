@@ -6,6 +6,20 @@ import { i18n } from "discourse-i18n";
 acceptance("Admin - Users List", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/admin/users/list/silenced.json", () =>
+      helper.response([
+        {
+          id: 2,
+          username: "kris",
+          email: "<small>kris@example.com</small>",
+          silenced_at: "2020-01-01T00:00:00.000Z",
+          silence_reason: "<strong>spam</strong>",
+        },
+      ])
+    );
+  });
+
   test("lists users", async function (assert) {
     await visit("/admin/users/list/active");
 
@@ -96,5 +110,11 @@ acceptance("Admin - Users List", function (needs) {
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(activeUser);
+
+    await click('a[href="/admin/users/list/silenced"]');
+    assert.dom(".silence_reason").hasAttribute("title", "spam");
+    assert
+      .dom(".silence_reason .directory-table__value")
+      .hasHtml("<strong>spam</strong>");
   });
 });

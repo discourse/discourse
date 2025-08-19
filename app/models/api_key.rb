@@ -18,6 +18,9 @@ class ApiKey < ActiveRecord::Base
         end
 
   validates :description, length: { maximum: 255 }
+  validate :at_least_one_granular_scope
+
+  enum :scope_mode, %i[global read_only granular].freeze
 
   after_initialize :generate_key
 
@@ -114,6 +117,17 @@ class ApiKey < ActiveRecord::Base
     # using update_column to avoid the AR transaction
     update_column(:last_used_at, now)
   end
+
+  private
+
+  def at_least_one_granular_scope
+    if scope_mode == "granular" && api_key_scopes.empty?
+      errors.add(
+        :api_key_scopes,
+        I18n.t("activerecord.errors.models.api_key.base.at_least_one_granular_scope"),
+      )
+    end
+  end
 end
 
 # == Schema Information
@@ -132,6 +146,7 @@ end
 #  description   :text
 #  key_hash      :string           not null
 #  truncated_key :string           not null
+#  scope_mode    :integer
 #
 # Indexes
 #

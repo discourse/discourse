@@ -41,6 +41,8 @@ class TopicPublisher
 
           op.update_columns(version: 1, public_version: 1, last_version_at: published_at)
         end
+
+        DiscourseEvent.trigger(:topic_published, @topic, published_at)
       end
 
     Jobs.enqueue(

@@ -45,6 +45,6 @@ export default class Logo extends PreviewBaseComponent {
       imageHeight
     );
 
-    this.drawPills(colors, font, height / 2);
+    this.drawPills(colors, font, height / 2, { homepageStyle: "hot" });
   }
 }

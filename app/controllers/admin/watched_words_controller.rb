@@ -56,7 +56,9 @@ class Admin::WatchedWordsController < Admin::StaffController
 
     Scheduler::Defer.later("Upload watched words") do
       begin
-        CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
+        content = Encodings.to_utf8(File.read(file.tempfile, mode: "rb"))
+
+        CSV.parse(content) do |row|
           if row[0].present? && (!has_replacement || row[1].present?)
             watched_word =
               WatchedWord.create_or_update_word(

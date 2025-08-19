@@ -20,10 +20,9 @@ class UserAuthenticator
     if authenticated?
       @user.active = true
       @auth_result.apply_user_attributes!
-    elsif @require_password
-      @user.password_required!
     end
 
+    @user.password_required! if !@auth_result && @require_password
     @user.skip_email_validation = true if @auth_result && @auth_result.skip_email_validation
   end
 

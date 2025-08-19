@@ -318,6 +318,7 @@ sv:
         tabs:
           members: Medlemmar
           settings: Inställningar
+        remove_member: "Ta bort"
       new_message_modal:
         title: Skicka meddelande
         add_user_long: <kbd>skift + klicka</kbd> eller <kbd>skift + enter</kbd><span>Lägg till @%{username}</span>

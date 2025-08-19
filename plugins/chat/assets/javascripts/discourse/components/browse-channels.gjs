@@ -7,7 +7,7 @@ import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
+import EmptyState from "discourse/components/empty-state";
 import FilterInput from "discourse/components/filter-input";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -109,17 +109,12 @@ export default class BrowseChannels extends Component {
             </list.Item>
 
             <list.EmptyState>
-              <span class="empty-state-title">
-                {{i18n "chat.empty_state.title"}}
-              </span>
-              <div class="empty-state-body">
-                <p>{{i18n "chat.empty_state.direct_message"}}</p>
-                <DButton
-                  @action={{this.showChatNewMessageModal}}
-                  @label="chat.empty_state.direct_message_cta"
-                  class="btn-default"
-                />
-              </div>
+              <EmptyState
+                @title={{i18n "chat.empty_state.title"}}
+                @body={{i18n "chat.empty_state.direct_message"}}
+                @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}
+                @ctaAction={{this.showChatNewMessageModal}}
+              />
             </list.EmptyState>
           </List>
         </div>

@@ -10,10 +10,14 @@ acceptance("User Drafts", function (needs) {
     await visit("/u/eviltrout/activity/drafts");
     assert.dom(".user-stream-item").exists({ count: 3 }, "has drafts");
 
-    await click(".user-stream-item:first-child .remove-draft");
-    assert.dom(".dialog-body").exists();
+    assert
+      .dom(".user-stream-item .expand-item")
+      .doesNotExist("Draft doesn't show expand button");
 
-    await click(".dialog-footer .btn-primary");
+    await click(".user-stream-item:first-child .remove-draft");
+    assert.dom(".dialog-header").exists();
+
+    await click(".dialog-footer .btn-danger");
     assert
       .dom(".user-stream-item")
       .exists({ count: 2 }, "draft removed, list length diminished by one");
@@ -40,7 +44,7 @@ acceptance("User Drafts", function (needs) {
     assert.dom(".user-stream-item").exists("has drafts");
     assert.dom(".user-stream-item:nth-child(3) .category").hasText("meta");
     assert
-      .dom(".user-stream-item:nth-child(3) .excerpt")
+      .dom(".user-stream-item:nth-child(3) .excerpt .cooked")
       .hasHtml(
         `here goes a reply to a PM <img src="/images/emoji/twitter/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`,
         "shows the excerpt"

@@ -11,7 +11,7 @@ he:
     models:
       fields:
         required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
-        invalid_field: רכיב השדה `%{component}` אינו זמין לשימוש ב־`%{target}:%{target_name}.`
+        invalid_field: רכיב השדה `%{component}` אינו זמין לשימוש ב־`%{target}:%{target_name}`.
         invalid_metadata: הנתונים עבור `%{field}` שגויים או שהרכיב `%{component}` אינו ידוע.
     triggerables:
       errors:

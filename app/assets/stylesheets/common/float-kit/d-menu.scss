@@ -1,13 +1,3 @@
-@keyframes d-menu-opening {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 .fk-d-menu {
   width: max-content;
   position: absolute;
@@ -24,13 +14,14 @@
   }
 
   &.-animated {
-    animation: d-menu-opening 0.15s ease-in;
+    @include float-down;
 
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
 
     &[data-placement^="top"] {
+      @include float-up;
       transform-origin: bottom center;
     }
 
@@ -51,8 +42,8 @@
     display: flex;
     border-radius: var(--d-border-radius);
     background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    box-shadow: var(--shadow-menu-panel);
+    border: 1px solid var(--content-border-color);
+    box-shadow: var(--shadow-dropdown);
     overscroll-behavior: contain;
     overflow: auto;
   }
@@ -90,7 +81,7 @@
   }
 }
 
-//should probably be renamed fk-d-menu__list
+// should probably be renamed fk-d-menu__list
 .dropdown-menu {
   min-width: 200px;
   padding: 0;
@@ -102,7 +93,8 @@
       padding: 0.5em 1rem;
       width: 100%;
       justify-content: flex-start;
-      background: rgba(0, 0, 0, 0);
+      background: rgb(0, 0, 0, 0);
+      border-radius: 0;
 
       &.-selected {
         background: var(--d-hover);
@@ -117,20 +109,23 @@
       }
 
       &:hover,
-      &:focus {
-        background: var(--d-hover);
-        color: var(--primary);
-
-        .d-icon {
-          color: inherit;
-        }
-
-        &.btn-danger {
-          background: var(--danger-low);
-          color: var(--danger);
+      &:focus,
+      &:focus-visible {
+        .discourse-no-touch & {
+          background: var(--d-hover);
+          color: var(--primary);
 
           .d-icon {
-            color: var(--danger-hover);
+            color: inherit;
+          }
+
+          &.btn-danger {
+            background: var(--danger-low);
+            color: var(--danger);
+
+            .d-icon {
+              color: var(--danger-hover);
+            }
           }
         }
       }

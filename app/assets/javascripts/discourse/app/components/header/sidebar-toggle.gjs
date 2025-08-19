@@ -8,11 +8,11 @@ import { i18n } from "discourse-i18n";
 
 export default class SidebarToggle extends Component {
   @service site;
-  @service sidebarState;
+  @service navigationMenu;
 
   @action
   toggleWithBlur(e) {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       this.args.toggleNavigationMenu("sidebar");
     } else {
       this.args.toggleNavigationMenu();

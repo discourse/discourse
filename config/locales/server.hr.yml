@@ -1274,7 +1274,6 @@ hr:
     s3_region: "Naziv regije Amazon S3 koji će se koristiti za učitavanje slika i sigurnosnih kopija."
     s3_cdn_url: "CDN URL koji se koristi za sva s3 sredstva (na primjer: https://cdn.somewhere.com). UPOZORENJE: nakon promjene ove postavke morate ponovno ispeći sve stare objave."
     avatar_sizes: "Popis automatski generiranih veličina avatara."
-    external_system_avatars_url: "URL usluge avatara vanjskog sustava. Dopuštene zamjene su {username} {first_letter} {color} {size}"
     external_emoji_url: "URL vanjske usluge za emoji slike. Ostavite prazno za onemogućavanje."
     use_site_small_logo_as_system_avatar: "Koristite mali logo stranice umjesto avatara korisnika sustava. Zahtijeva da logo bude prisutan."
     restrict_letter_avatar_colors: "Popis 6-znamenkastih heksadecimalnih vrijednosti boja koje će se koristiti za pozadinu avatara slova."
@@ -1309,7 +1308,6 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
     dark_mode_none: "ništa"
-    max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
     title_remove_extraneous_space: "Uklonite početne razmake ispred interpunkcijskih znakova na kraju."
@@ -1417,7 +1415,6 @@ hr:
     auto_close_topics_create_linked_topic: "Stvorite novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     code_formatting_style: "Gumb koda u sastavljaču zadano će koristiti ovaj stil oblikovanja koda"
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
-    enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
     returning_users_days: "Koliko dana treba proći prije nego što se smatra da se korisnik vraća."
@@ -2254,8 +2251,6 @@ hr:
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
-  color_schemes:
-    default_theme_name: "Zadano"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -2395,19 +2390,37 @@ hr:
         title: "Da"
       delete_single:
         title: "Pobriši"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
+        complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
+        complete: "Zastava zanemarena."
       ignore_and_do_nothing:
         title: "Ne radi ništa"
+        complete: "Zastava zanemarena."
       approve:
         title: "Odobri"
+        complete: "Objava odobrena."
+      approve_post:
+        complete: "Objava odobrena."
+      reject_post:
+        complete: "Objava je odbijena."
+      approve_user:
+        complete: "Korisnik odobren."
       reject_user:
         delete:
           title: "Obriši korisnika"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "korisnik"
   activemodel:
     errors:

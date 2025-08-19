@@ -6,7 +6,7 @@ describe "Twitter OAuth 1.0a" do
   let(:consumer_secret) { "adddcccdddd99922" }
   let(:oauth_token_secret) { "twitter_temp_code_544254" }
 
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   def setup_twitter_email_stub(email:)
     body = {

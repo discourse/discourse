@@ -22,7 +22,12 @@ export default class AdminPluginsController extends Controller {
   // while we convert plugins to use_new_show_route
   get allAdminRoutes() {
     return this.model
-      .filter((plugin) => plugin?.enabled && plugin?.adminRoute)
+      .filter(
+        (plugin) =>
+          plugin?.enabled &&
+          plugin?.adminRoute &&
+          !plugin?.adminRoute?.auto_generated
+      )
       .map((plugin) => {
         return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
       });

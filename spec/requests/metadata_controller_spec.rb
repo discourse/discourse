@@ -29,6 +29,16 @@ RSpec.describe MetadataController do
       )
     end
 
+    it "includes share target configuration" do
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest["share_target"]).to be_present
+      expect(manifest["share_target"]["params"]["title"]).to eq("title")
+      expect(manifest["share_target"]["params"]["text"]).to eq("body")
+      expect(manifest["share_target"]["params"]["url"]).to eq("title")
+    end
+
     it "can guess mime types" do
       upload =
         UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
@@ -164,6 +174,9 @@ RSpec.describe MetadataController do
     it "returns 404 by default" do
       get "/apple-app-site-association"
       expect(response.status).to eq(404)
+
+      get "/.well-known/apple-app-site-association"
+      expect(response.status).to eq(404)
     end
 
     it "returns the right output" do
@@ -175,6 +188,13 @@ RSpec.describe MetadataController do
         }
       JSON
       get "/apple-app-site-association"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("applinks")
+      expect(response.media_type).to eq("application/json")
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, private")
+
+      get "/.well-known/apple-app-site-association"
 
       expect(response.status).to eq(200)
       expect(response.body).to include("applinks")

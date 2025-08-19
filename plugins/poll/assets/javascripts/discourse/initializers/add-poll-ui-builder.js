@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import richEditorExtension from "../../lib/rich-editor-extension";
 import PollUiBuilder from "../components/modal/poll-ui-builder";
 
 function initializePollUIBuilder(api) {
@@ -21,12 +22,14 @@ function initializePollUIBuilder(api) {
       );
     },
   });
+
+  api.registerRichEditorExtension(richEditorExtension);
 }
 
 export default {
   name: "add-poll-ui-builder",
 
   initialize() {
-    withPluginApi("1.14.0", initializePollUIBuilder);
+    withPluginApi(initializePollUIBuilder);
   },
 };

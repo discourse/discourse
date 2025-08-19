@@ -53,16 +53,6 @@
       cookedLinks[i].target = "_blank";
     }
 
-    // Adjust all names
-    let names = document.querySelectorAll(".username a");
-    for (i = 0; i < names.length; i++) {
-      let username = names[i].innerHTML;
-      if (username) {
-        /* global BreakString */
-        names[i].innerHTML = new BreakString(username).break();
-      }
-    }
-
     // Use a # for hashtags since we don't have the JS and icons needed here to render the proper icon.
     let hashtags = document.querySelectorAll(".cooked a.hashtag-cooked");
     for (i = 0; i < hashtags.length; i++) {

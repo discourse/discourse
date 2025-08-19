@@ -16,8 +16,10 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include Localizable
 
   SLUG_REF_SEPARATOR = ":"
+  DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -36,6 +38,7 @@ class Category < ActiveRecord::Base
   has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
+  has_many :category_localizations, dependent: :destroy
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
@@ -61,6 +64,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   accepts_nested_attributes_for :category_setting, update_only: true
+  accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
   validates :user_id, presence: true
 
@@ -231,6 +235,8 @@ class Category < ActiveRecord::Base
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
+
+  enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
   def self.preload_user_fields!(guardian, categories)
     category_ids = categories.map(&:id)
@@ -871,7 +877,7 @@ class Category < ActiveRecord::Base
 
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
-    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86_400 / num_auto_bump_daily.to_i)
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
   end
 
   def clear_auto_bump_cache!
@@ -1270,6 +1276,18 @@ class Category < ActiveRecord::Base
     tags.count > 0 || tag_groups.count > 0
   end
 
+  def category_localizations=(localizations_params)
+    return self.category_localizations_attributes = localizations_params unless persisted?
+
+    incoming_ids = localizations_params.map { |loc| loc["id"] }
+    category_localizations
+      .where.not(id: incoming_ids)
+      .select(:id)
+      .each { |record| localizations_params << { "id" => record.id, "_destroy" => true } }
+
+    self.category_localizations_attributes = localizations_params
+  end
+
   private
 
   def ensure_category_setting
@@ -1381,6 +1399,10 @@ end
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
 #  uploaded_background_dark_id               :integer
+#  style_type                                :integer          default("square"), not null
+#  emoji                                     :string
+#  icon                                      :string
+#  locale                                    :string(20)
 #
 # Indexes
 #

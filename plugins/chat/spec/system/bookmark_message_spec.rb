@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Bookmark message", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -9,7 +9,7 @@ RSpec.describe "Bookmark message", type: :system do
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
+  fab!(:category_channel_1, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
   before do
@@ -28,29 +28,30 @@ RSpec.describe "Bookmark message", type: :system do
 
       expect(channel_page).to have_bookmarked_message(message_1)
     end
+    context "when in a long thread" do
+      it "supports linking to a bookmark in a long thread" do
+        category_channel_1.update!(threading_enabled: true)
+        category_channel_1.add(current_user)
 
-    it "supports linking to a bookmark in a long thread" do
-      category_channel_1.update!(threading_enabled: true)
-      category_channel_1.add(current_user)
+        thread =
+          chat_thread_chain_bootstrap(
+            channel: category_channel_1,
+            users: [current_user, Fabricate(:user)],
+            messages_count: 51,
+          )
 
-      thread =
-        chat_thread_chain_bootstrap(
-          channel: category_channel_1,
-          users: [current_user, Fabricate(:user)],
-          messages_count: Chat::MessagesQuery::MAX_PAGE_SIZE + 1,
-        )
+        first_message = thread.replies.first
 
-      first_message = thread.replies.first
+        bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
 
-      bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
+        visit bookmark.bookmarkable.url
 
-      visit bookmark.bookmarkable.url
-
-      expect(thread_page).to have_bookmarked_message(first_message)
+        expect(thread_page).to have_bookmarked_message(first_message)
+      end
     end
 
     context "in drawer mode" do
-      fab!(:category_channel_2) { Fabricate(:category_channel) }
+      fab!(:category_channel_2, :category_channel)
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: category_channel_2) }
 
       fab!(:bookmark_1) { Bookmark.create!(bookmarkable: message_1, user: current_user) }

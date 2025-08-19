@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat message - channel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
 
   let(:cdp) { PageObjects::CDP.new }

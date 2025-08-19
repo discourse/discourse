@@ -18,6 +18,7 @@
   left: 0;
   z-index: z("composer", "dropdown") + 1;
   cursor: pointer;
+
   @media (prefers-reduced-motion: no-preference) {
     animation: 0.15s slidein 3;
   }

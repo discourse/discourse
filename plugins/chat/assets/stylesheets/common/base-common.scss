@@ -24,7 +24,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgb(0, 0, 0, 0.75);
   z-index: z("header");
   pointer-events: none;
 
@@ -75,11 +75,12 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
-    @include chat-unread-indicator;
     border: 2px solid var(--header_background);
     position: absolute;
     top: 0;
     right: 2px;
+
+    @include chat-unread-indicator;
 
     &.-urgent {
       display: flex;
@@ -161,7 +162,9 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
   .is-online & {
     padding: 2px;
-    box-shadow: inset 0 0 0 1px var(--success), inset 0 0 0 2px var(--secondary);
+    box-shadow:
+      inset 0 0 0 1px var(--success),
+      inset 0 0 0 2px var(--secondary);
   }
 }
 
@@ -175,7 +178,7 @@ body.has-full-page-chat {
   .alert-success,
   .alert-warning {
     margin: 0;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
   }
 }
 
@@ -200,8 +203,7 @@ body.has-full-page-chat {
   margin-bottom: 0;
 }
 
-.chat-message-collapser,
-.chat-message-text {
+.chat-cooked {
   > p {
     margin: 0.5em 0 0.5em;
   }
@@ -236,7 +238,7 @@ body.has-full-page-chat {
 .chat-channel-status {
   background: var(--secondary);
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 html.has-full-page-chat {

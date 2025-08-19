@@ -47,14 +47,23 @@ esbuild
   .build({
     logLevel: "warning",
     bundle: true,
-    minify: true,
+    minify: false,
     alias: {
-      util: "./node_modules/@zxing/text-encoding",
+      path: "path-browserify",
+      url: "./url-polyfill",
+      "source-map-js": "source-map-js",
+      assert: "./noop",
+      fs: "./noop",
+      stream: "readable-stream",
+      "abort-controller": "abort-controller/dist/abort-controller",
+    },
+    banner: {
+      js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,
     },
     define: {
-      process: `{ "env": { "EMBER_ENV": "production" } }`,
+      "import.meta.url": "'http://example.com'",
     },
-    external: ["fs", "path"],
+    external: [],
     entryPoints: ["./transpiler.js"],
     plugins: [wasmPlugin],
   })

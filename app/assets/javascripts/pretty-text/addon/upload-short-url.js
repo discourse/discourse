@@ -159,31 +159,15 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
 
         break;
       case "DIV":
-        if (siteSettings.enable_diffhtml_preview === true) {
-          retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
-            const videoHTML = `
-              <video width="100%" height="100%" preload="metadata" controls style="">
-                <source src="${url}">
-              </video>`;
-            upload.insertAdjacentHTML("beforeend", videoHTML);
-            upload.classList.add("video-container");
-          });
-        } else {
-          retrieveCachedUrl(
-            upload,
-            siteSettings,
-            "orig-src-id",
-            opts,
-            (url) => {
-              upload.style.backgroundImage = `url('${url}')`;
+        retrieveCachedUrl(upload, siteSettings, "orig-src-id", opts, (url) => {
+          upload.style.backgroundImage = `url('${url}')`;
 
-              const placeholderIcon = upload.querySelector(
-                ".placeholder-icon.video"
-              );
-              placeholderIcon.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-            }
+          const placeholderIcon = upload.querySelector(
+            ".placeholder-icon.video"
           );
-        }
+          placeholderIcon.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        });
+
         break;
     }
   });

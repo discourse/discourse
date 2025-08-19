@@ -94,4 +94,25 @@ RSpec.describe ::Migrations::Database::IntermediateDB do
       end
     end
   end
+
+  it "checks that manually created entities are tested" do
+    Dir[
+      File.join(::Migrations.root_path, "lib", "database", "intermediate_db", "*.rb")
+    ].each do |path|
+      next if File.read(path).include?("auto-generated")
+
+      spec_path =
+        File.join(
+          ::Migrations.root_path,
+          "spec",
+          "lib",
+          "database",
+          "intermediate_db",
+          "#{File.basename(path, ".rb")}_spec.rb",
+        )
+
+      expect(File.exist?(spec_path)).to eq(true), "#{spec_path} is missing"
+      expect(File.read(spec_path)).to include('it_behaves_like "a database entity"')
+    end
+  end
 end

@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  reports:
+    currently_away:
+      title: Gebruikers die momenteel afwezig zijn
+      labels:
+        username: Gebruikersnaam
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Evenement begonnen
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "De opgegeven feestdagenregio bestaat niet."
+    discourse_calendar_enable_holiday_failed: "Deze feestdag kon niet worden ingeschakeld, is al ingeschakeld of is niet uitgeschakeld."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Evenement - bulkuitnodiging geslaagd"
+      subject_template: "Bulkuitnodiging verwerkt"
+      text_body_template: "Je bulkuitnodigingsbestand is verwerkt, %{processed} genodigde(n) gemaakt."
+    discourse_post_event_bulk_invite_failed:
+      title: "Evenement - bulkuitnodiging mislukt"
+      subject_template: "Bulkuitnodiging verwerkt met fouten"
+      text_body_template: |
+        Je bulkuitnodigingsbestand is verwerkt, %{processed} genodigde(n) gemaakt met %{failed} fout(en).
+
+        Hier is de log:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Maximaal aantal tekstrijen per evenement in de agenda."
+    map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
+    map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
+    calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
+    discourse_post_event_enabled: "Schakelt de evenementfuncties in. Opmerking: hiervoor moet ook 'calendar enabled' ingeschakeld zijn."
+    displayed_invitees_limit: "Beperkt het aantal genodigden van een evenement."
+    display_post_event_date_on_topic_title: "Geeft de datum van het evenement weer na de topictitel."
+    use_local_event_date: "Gebruik lokale datum na topictitel in plaats van relatieve tijd."
+    discourse_post_event_allowed_on_groups: "Groepen die evenementen mogen maken."
+    discourse_post_event_allowed_custom_fields: "Maakt het mogelijk om de waarde van aangepaste velden in te stellen voor elk evenement."
+    discourse_post_event_edit_notifications_time_extension: "Verlengt (in minuten) de periode na afloop van een evenement waarin 'gaande’ nog bericht krijgen van bewerking in het oorspronkelijke bericht."
+    holiday_calendar_topic_id: "Topic-ID van de feestdagen-/verzuimkalender voor medewerkers."
+    holiday_status_emoji: Definieert de emoji die wordt gebruikt voor de feestdagstatus.
+    delete_expired_event_posts_after: "Berichten met verlopen evenementen worden na (n) uur automatisch verwijderd. Stel dit in op -1 om verwijdering uit te schakelen."
+    all_day_event_start_time: "Evenementen waarvoor geen begintijd is opgegeven, beginnen op deze tijd. De notatie is Hh:mm. Voor 6:00 uur voer je 06:00 in"
+    all_day_event_end_time: "Evenementen waarvoor geen eindtijd is opgegeven, eindigen op deze tijd. De notatie is HH:mm. Voor 18:00 uur voer je 18:00 in"
+    all_day_event_time_error: "Ongeldige tijd. Notatie moet HH:mm zijn (bijvoorbeeld 08:00)."
+    calendar_categories: "Geeft een kalender weer bovenaan een categorie. Verplichte instellingen zijn categoryId en postId, bijvoorbeeld: categoryId=6;postId=453\nAndere geldige instellingen: tzPicker, weekends en defaultView."
+    calendar_categories_outlet: "Hiermee kun je veranderen welke outlet de categoriekalender moet weergeven."
+    working_days: "Stel werkdagen in. Je kunt de beschikbaarheid van een groep weergeven met de 'timezones'-tag in een bericht, bijvoorbeeld: '[timezones group=admins][timezones]'"
+    working_day_start_hour: "Begintijd van werkdag."
+    working_day_end_hour: "Eindtijd van werkdag."
+    close_to_working_day_hours_extension: "Stel de verlengingstijd in uren in om de tijdzones te markeren."
+    events_calendar_categories: "Geef een evenementenkalender weer bovenaan een categorie."
+    sort_categories_by_event_start_date_enabled: "Schakel het sorteren van categorietopics op begindatum van evenement in."
+    disable_resorting_on_categories_enabled: "Sta toe dat categorieën de mogelijkheid voor gebruikers om te sorteren op evenementcategorie uitschakelen."
+    calendar_automatic_holidays_enabled: "Stel automatisch de feestdagstatus in op basis van een gebruikersregio (opmerking: je kunt specifieke automatische feestdagen uitschakelen in de plug-in-instellingen)"
+    event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
+    sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
+    include_expired_events_on_calendar: "Neem eerdere/afgelopen evenementen op in de weergaven Categoriekalender en Aankomende evenementen."
+  discourse_calendar:
+    invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
+    calendar_must_be_in_first_post: "Calendar-tag kan alleen worden gebruikt in het eerste bericht van een topic."
+    more_than_one_calendar: "Je kunt niet meer dan één kalender hebben in een topic."
+    more_than_two_dates: "Een bericht van een kalendertopic kan niet meer dan twee datums bevatten."
+    event_expired: "Evenement verlopen"
+    holiday_status:
+      description: "Op feestdag"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} gaat beginnen."
+      after_event_reminder: "%{title} is afgelopen."
+      ongoing_event_reminder: "%{title} is gaande."
+    errors:
+      bulk_invite:
+        max_invitees: "De eerste %{max_invittes} genodigden zijn gemaakt. Probeer het bestand op te splitsen in kleinere delen."
+        error: "Er is een fout opgetreden bij het uploaden van het bestand. Probeer het later opnieuw."
+      models:
+        event:
+          only_one_event: "Een bericht kan slechts één evenement hebben."
+          must_be_in_first_post: "Een evenement kan alleen in het eerste bericht van een topic staan."
+          raw_invitees_length: "Een evenement is beperkt tot %{count} gebruikers/groepen."
+          raw_invitees:
+            only_group: "Een evenement accepteert alleen groepsnamen."
+          ends_at_before_starts_at: "Een evenement kan niet eindigen voordat het begint."
+          start_must_be_present_and_a_valid_date: "Een evenement vereist een geldige begindatum."
+          end_must_be_a_valid_date: "Einddatum moet een geldige datum zijn."
+          invalid_recurrence: "Herhaling moet een van de volgende zijn: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Tijdzone niet herkend."
+          acting_user_not_allowed_to_create_event: "Huidige gebruiker mag geen evenementen maken."
+          acting_user_not_allowed_to_act_on_this_event: "Huidige gebruiker mag niets doen met dit evenement."
+          invalid_allowed_groups: "Ongeldige toegestane groepen."
+          acting_user_not_allowed_to_invite_these_groups: "Huidige gebruiker mag deze groepen niet uitnodigen."
+          custom_field_is_invalid: "Het aangepaste veld '%{field}' is niet toegestaan."
+          name:
+            length: "Evenementnaam moet %{minimum} tot %{maximum} tekens lang zijn."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Evenementherinnering"

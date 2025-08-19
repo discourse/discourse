@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isBlank } from "@ember/utils";
+import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
 import I18n, { i18n } from "discourse-i18n";
@@ -37,6 +39,7 @@ export default class AboutPage extends Component {
       {
         class: "members",
         icon: "users",
+        display: true,
         text: i18n("about.member_count", {
           count: this.args.model.stats.users_count,
           formatted_number: I18n.toNumber(this.args.model.stats.users_count, {
@@ -47,6 +50,7 @@ export default class AboutPage extends Component {
       {
         class: "admins",
         icon: "shield-halved",
+        display: this.adminsCount > 0,
         text: i18n("about.admin_count", {
           count: this.adminsCount,
           formatted_number: I18n.toNumber(this.adminsCount, { precision: 0 }),
@@ -55,6 +59,7 @@ export default class AboutPage extends Component {
       {
         class: "moderators",
         icon: "shield-halved",
+        display: this.moderatorsCount > 0,
         text: i18n("about.moderator_count", {
           count: this.moderatorsCount,
           formatted_number: I18n.toNumber(this.moderatorsCount, {
@@ -65,6 +70,7 @@ export default class AboutPage extends Component {
       {
         class: "site-creation-date",
         icon: "calendar-days",
+        display: true,
         text: this.siteAgeString,
       },
     ];
@@ -226,6 +232,10 @@ export default class AboutPage extends Component {
     return configs;
   }
 
+  get showExtraGroups() {
+    return !isBlank(this.siteSettings.about_page_extra_groups);
+  }
+
   <template>
     {{#if this.currentUser.admin}}
       <p>
@@ -246,17 +256,19 @@ export default class AboutPage extends Component {
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @outletArgs={{hash model=@model}}
+        @outletArgs={{lazyHash model=@model}}
       />
     </section>
     <div class="about__main-content">
       <div class="about__left-side">
         <div class="about__stats">
           {{#each this.stats as |stat|}}
-            <span class="about__stats-item {{stat.class}}">
-              {{icon stat.icon}}
-              <span>{{stat.text}}</span>
-            </span>
+            {{#if stat.display}}
+              <span class="about__stats-item {{stat.class}}">
+                {{icon stat.icon}}
+                <span>{{stat.text}}</span>
+              </span>
+            {{/if}}
           {{/each}}
         </div>
 
@@ -274,7 +286,7 @@ export default class AboutPage extends Component {
         <PluginOutlet
           @name="about-after-admins"
           @connectorTagName="section"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
 
         {{#if @model.moderators.length}}
@@ -286,8 +298,11 @@ export default class AboutPage extends Component {
         <PluginOutlet
           @name="about-after-moderators"
           @connectorTagName="section"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
+        {{#if this.showExtraGroups}}
+          <AboutPageExtraGroups />
+        {{/if}}
       </div>
 
       <div class="about__right-side">

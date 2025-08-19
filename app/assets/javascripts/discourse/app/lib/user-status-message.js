@@ -56,7 +56,7 @@ export class UserStatusMessage {
 
   #tooltipHtml(status) {
     const html = document.createElement("div");
-    html.classList.add("user-status-message-tooltip");
+    html.classList.add("user-status-message-tooltip-content");
     html.innerHTML = this.#emojiHtml(status.emoji);
 
     const description = document.createElement("span");

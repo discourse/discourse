@@ -1,0 +1,24 @@
+.admin-flags__header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .btn-primary {
+    align-self: center;
+  }
+
+  h3 {
+    margin-top: 1em;
+    font-size: var(--font-0);
+    font-weight: normal;
+    flex-basis: 100%;
+  }
+}
+
+.mobile-view .admin-contents table.grid tr.admin-flag-item {
+  grid-template-columns: auto min-content;
+
+  .d-toggle-switch {
+    margin-right: 0;
+  }
+}

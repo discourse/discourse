@@ -1,9 +1,10 @@
 #topic-entrance {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   padding: 5px;
   background: var(--secondary);
   box-shadow: var(--shadow-card);
   width: 133px;
+
   @include unselectable;
 
   &:not(.--glimmer) {

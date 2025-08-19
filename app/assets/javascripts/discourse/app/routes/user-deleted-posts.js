@@ -21,7 +21,7 @@ export default class UserDeletedPosts extends DiscourseRoute {
 
     model.content.forEach((item) => {
       if (item.title) {
-        item.set("title", emojiUnescape(escapeExpression(item.title)));
+        item.set("titleHtml", emojiUnescape(escapeExpression(item.title)));
       }
     });
   }

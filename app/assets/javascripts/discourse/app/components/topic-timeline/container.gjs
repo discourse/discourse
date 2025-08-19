@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,6 +15,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
@@ -56,6 +57,7 @@ export default class TopicTimelineScrollArea extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service composer;
 
   @tracked showButton = false;
   @tracked current;
@@ -89,6 +91,8 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
+      this.appEvents.on("composer:preview-toggled", this.calculatePosition);
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
@@ -127,7 +131,9 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
+      this.appEvents.off("composer:preview-toggled", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
@@ -209,8 +215,9 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get scrollareaHeight() {
-    const composerHeight =
-        document.getElementById("reply-control").offsetHeight || 0,
+    const composerHeight = this.composer.isPreviewVisible
+        ? document.getElementById("reply-control").offsetHeight || 0
+        : 0,
       headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
     // scrollarea takes up about half of the timeline's height
@@ -219,10 +226,14 @@ export default class TopicTimelineScrollArea extends Component {
 
     const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
-      : desktopMinScrollAreaHeight;
+      : this.composer.isPreviewVisible
+        ? desktopMinScrollAreaHeight
+        : DEFAULT_MIN_SCROLLAREA_HEIGHT;
     const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
-      : desktopMaxScrollAreaHeight;
+      : this.composer.isPreviewVisible
+        ? desktopMaxScrollAreaHeight
+        : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
   }
@@ -416,11 +427,13 @@ export default class TopicTimelineScrollArea extends Component {
     const prevDockAt = this.dockAt;
     const positionTop = headerOffset() + window.pageYOffset;
     const currentPosition = positionTop + timelineHeight;
+    const postStream = this.args.model.postStream;
+    const allPostsLoaded = postStream.loadedAllPosts;
 
     this.dockBottom = false;
     if (positionTop < this.topicTop) {
       this.dockAt = parseInt(this.topicTop, 10);
-    } else if (currentPosition > this.topicBottom) {
+    } else if (allPostsLoaded && currentPosition > this.topicBottom) {
       this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) {
@@ -531,8 +544,9 @@ export default class TopicTimelineScrollArea extends Component {
       <div class="timeline-controls">
         <PluginOutlet
           @name="timeline-controls-before"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
+
         <TopicAdminMenu
           @topic={{@model}}
           @toggleMultiSelect={{@toggleMultiSelect}}
@@ -661,12 +675,16 @@ export default class TopicTimelineScrollArea extends Component {
         {{/if}}
 
         {{#if (and this.currentUser this.site.desktopView)}}
-          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
+          <TopicNotificationsButton
+            @contentClass="topic-timeline-notifications-tracking-content"
+            @topic={{@model}}
+            @expanded={{false}}
+          />
         {{/if}}
 
         <PluginOutlet
           @name="timeline-footer-controls-after"
-          @outletArgs={{hash model=@model fullscreen=@fullscreen}}
+          @outletArgs={{lazyHash model=@model fullscreen=@fullscreen}}
         />
       </div>
     {{/if}}

@@ -9,21 +9,25 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Section class="something">Test</form.Section>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Section class="something">Test</form.Section>
+          </Form>
+        </template>
+      );
 
       assert.dom(".form-kit__section.something").hasText("Test");
     });
 
     test("@title", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Section @title="Title">Test</form.Section>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Section @title="Title">Test</form.Section>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__section .form-kit__section-title")
@@ -31,11 +35,13 @@ module(
     });
 
     test("@subtitle", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Section @subtitle="Subtitle">Test</form.Section>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Section @subtitle="Subtitle">Test</form.Section>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__section .form-kit__section-subtitle")

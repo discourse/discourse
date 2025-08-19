@@ -12,7 +12,7 @@ RSpec.describe TopicViewSerializer do
 
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
   fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
@@ -94,7 +94,7 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#suggested_topics" do
-    fab!(:topic2) { Fabricate(:topic) }
+    fab!(:topic2, :topic)
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 
@@ -643,6 +643,59 @@ RSpec.describe TopicViewSerializer do
       json = serialize_topic(topic, user)
 
       expect(json[:topic_timer][:id]).to eq(topic_timer.id)
+    end
+  end
+
+  describe "#fancy_title" do
+    it "returns the fancy title" do
+      topic.update!(title: "Hur dur this is a title")
+      json = serialize_topic(topic, user)
+
+      expect(json[:fancy_title]).to eq("Hur dur this is a title")
+    end
+
+    it "returns the localized fancy_title" do
+      SiteSetting.content_localization_enabled = true
+      Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
+      I18n.locale = "ja"
+      topic.update!(locale: "en")
+
+      json = serialize_topic(topic, user)
+      expect(json[:fancy_title]).to eq("X")
+    end
+  end
+
+  describe "#has_localized_content" do
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "returns true if the topic has localization" do
+      Fabricate(:topic_localization, topic:, locale: "ja")
+      I18n.locale = "ja"
+      topic.update!(locale: "en")
+
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(true)
+    end
+
+    it "returns true if any post has localization" do
+      loc = Fabricate(:post_localization, locale: "ja")
+      I18n.locale = "ja"
+      loc.post.update!(locale: "en")
+
+      json = serialize_topic(loc.post.topic, user)
+      expect(json[:has_localized_content]).to eq(true)
+    end
+
+    it "returns false if the topic does not have localization" do
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(false)
+    end
+
+    it "does not return attribute if setting is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(nil)
     end
   end
 end

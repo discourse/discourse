@@ -4,6 +4,7 @@ import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { forceMobile } from "discourse/lib/mobile";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -242,8 +243,7 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.false(controller.showSelectedPostsAtBottom, "false on desktop");
 
-    const site = getOwner(this).lookup("service:site");
-    site.set("mobileView", true);
+    forceMobile();
 
     assert.false(
       controller.showSelectedPostsAtBottom,

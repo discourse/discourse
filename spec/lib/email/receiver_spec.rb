@@ -7,6 +7,8 @@ RSpec.describe Email::Receiver do
     SiteSetting.email_in = true
     SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
     SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
+    SiteSetting.manual_polling_enabled = true
+    SiteSetting.reply_by_email_enabled = true
   end
 
   def process(email_name, opts = {})
@@ -417,12 +419,12 @@ RSpec.describe Email::Receiver do
       expect { process(:gmail_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq <<~MD.strip
         This is a **GMAIL** reply ;)
-        
+
         <details class='elided'>
         <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
-        
+
         This is the *elided* part!
-        
+
         </details>
       MD
     end
@@ -1785,23 +1787,49 @@ RSpec.describe Email::Receiver do
     end
   end
 
-  describe "check_address" do
-    before { SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com" }
+  describe "#check_address" do
+    context "when e-mail is associated with a reply key" do
+      before { SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com" }
 
-    it "returns nil when the key is invalid" do
-      expect(Email::Receiver.check_address("fake@fake.com")).to be_nil
-      expect(
-        Email::Receiver.check_address("foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com"),
-      ).to be_nil
+      it "returns nil when the key is invalid" do
+        expect(Email::Receiver.check_address("fake@fake.com")).to be_nil
+        expect(
+          Email::Receiver.check_address("foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com"),
+        ).to be_nil
+      end
+
+      context "with a valid reply" do
+        it "returns the destination when the key is valid" do
+          post_reply_key = Fabricate(:post_reply_key, reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8")
+
+          dest = Email::Receiver.check_address("foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com")
+
+          expect(dest).to eq(post_reply_key)
+        end
+      end
     end
 
-    context "with a valid reply" do
-      it "returns the destination when the key is valid" do
-        post_reply_key = Fabricate(:post_reply_key, reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8")
+    context "when address is associated with a category" do
+      fab!(:category) { Fabricate(:category, email_in: "category@bar.com") }
 
-        dest = Email::Receiver.check_address("foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com")
+      context "when replying by email is enabled" do
+        it "returns the destination category" do
+          SiteSetting.reply_by_email_enabled = true
 
-        expect(dest).to eq(post_reply_key)
+          dest = described_class.check_address("category@bar.com")
+
+          expect(dest).to eq(category)
+        end
+      end
+
+      context "when replying by email is disabled" do
+        it "returns nil" do
+          SiteSetting.reply_by_email_enabled = false
+
+          dest = described_class.check_address("category@bar.com")
+
+          expect(dest).to be_nil
+        end
       end
     end
   end
@@ -2040,7 +2068,7 @@ RSpec.describe Email::Receiver do
   end
 
   describe "mailman mirror" do
-    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
+    fab!(:category, :mailinglist_mirror_category)
 
     it "uses 'from' email address" do
       expect { process(:mailman_1) }.to change { Topic.count }
@@ -2072,7 +2100,7 @@ RSpec.describe Email::Receiver do
   end
 
   describe "mailing list mirror" do
-    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
+    fab!(:category, :mailinglist_mirror_category)
 
     before { SiteSetting.block_auto_generated_emails = true }
 

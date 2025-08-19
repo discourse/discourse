@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -7,6 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -42,17 +43,25 @@ class NotificationsTrackingTrigger extends Component {
   }
 
   <template>
-    {{icon @selectedLevel.icon}}
+    <button
+      class={{concatClass
+        "btn btn-default"
+        (if this.showFullTitle "btn-icon-text" "no-text")
+      }}
+      ...attributes
+    >
+      {{icon @selectedLevel.icon}}
 
-    {{#if this.showFullTitle}}
-      <span class="d-button-label">
-        {{this.title}}
-      </span>
-    {{/if}}
+      {{#if this.showFullTitle}}
+        <span class="d-button-label">
+          {{this.title}}
+        </span>
+      {{/if}}
 
-    {{#if this.showCaret}}
-      {{icon "angle-down" class="notifications-tracking-btn__caret"}}
-    {{/if}}
+      {{#if this.showCaret}}
+        {{icon "angle-down" class="notifications-tracking-btn__caret"}}
+      {{/if}}
+    </button>
   </template>
 }
 
@@ -105,22 +114,22 @@ export default class NotificationsTracking extends Component {
         "notifications-tracking-trigger-btn"
         @triggerClass
       }}
+      @contentClass={{@contentClass}}
       @onRegisterApi={{this.registerDmenuApi}}
       @title={{@title}}
       @autofocus={{false}}
+      @triggerComponent={{component
+        NotificationsTrackingTrigger
+        showFullTitle=@showFullTitle
+        showCaret=@showCaret
+        selectedLevel=this.selectedLevel
+        suffix=@suffix
+        prefix=@prefix
+      }}
       data-level-id={{this.selectedLevel.id}}
       data-level-name={{this.selectedLevel.key}}
       ...attributes
     >
-      <:trigger>
-        <NotificationsTrackingTrigger
-          @showFullTitle={{@showFullTitle}}
-          @showCaret={{@showCaret}}
-          @selectedLevel={{this.selectedLevel}}
-          @suffix={{@suffix}}
-          @prefix={{@prefix}}
-        />
-      </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each this.levels as |level|}}
@@ -137,7 +146,7 @@ export default class NotificationsTracking extends Component {
                 <div class="notifications-tracking-btn__icons">
                   <PluginOutlet
                     @name="notifications-tracking-icons"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       selectedLevelId=@levelId
                       level=level
                       topic=@topic

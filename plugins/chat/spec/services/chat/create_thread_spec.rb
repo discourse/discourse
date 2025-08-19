@@ -10,8 +10,8 @@ RSpec.describe Chat::CreateThread do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
+    fab!(:another_user, :user)
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, another_user]) }

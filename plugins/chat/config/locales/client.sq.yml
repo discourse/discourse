@@ -92,6 +92,7 @@ sq:
         tabs:
           members: Anëtarë
           settings: Rregullimet
+        remove_member: "Hiq"
       new_message_modal:
         filter: "Filtro"
       direct_message_creator:

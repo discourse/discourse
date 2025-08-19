@@ -275,7 +275,7 @@ export default class ChatApi extends Service {
    * Creates a message interaction.
    * @param {number} channelId - The ID of the channel.
    * @param {number} messageId - The ID of the message.
-   * @param {object} data - Params of the intereaction.
+   * @param {object} data - Params of the interaction.
    * @param {string} data.action_id - The ID of the action.
    * @returns {Promise}
    */
@@ -605,6 +605,16 @@ export default class ChatApi extends Service {
       usernames: targets.usernames,
       groups: targets.groups,
     });
+  }
+
+  /**
+   * Remove member from a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {string} userId - The ID of the user to remove.
+   */
+  removeMemberFromChannel(channelId, userId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/${userId}`);
   }
 
   get #basePath() {

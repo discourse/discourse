@@ -225,7 +225,11 @@ module Imap
             "Deleting post ID #{incoming.post_id}, topic id #{incoming.topic_id}; email has been deleted on the IMAP server.",
             @group,
           )
-          PostDestroyer.new(Discourse.system_user, incoming.post).destroy
+          PostDestroyer.new(
+            Discourse.system_user,
+            incoming.post,
+            context: I18n.t("staff_action_logs.imap_email_deleted"),
+          ).destroy
         end
 
         # the email has moved mailboxes, we don't want to try trashing again next time
@@ -266,7 +270,11 @@ module Imap
             "Deleting post ID #{incoming.post_id}, topic id #{incoming.topic_id}; email has been moved to spam on the IMAP server.",
             @group,
           )
-          PostDestroyer.new(Discourse.system_user, incoming.post).destroy
+          PostDestroyer.new(
+            Discourse.system_user,
+            incoming.post,
+            context: I18n.t("staff_action_logs.imap_email_marked_as_spam"),
+          ).destroy
         end
 
         # the email has moved mailboxes, we don't want to try marking as spam again next time

@@ -33,6 +33,19 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "includes unobfuscated email when email_token present" do
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(invite.email)
+
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
+        expect(invite_info["email"]).to eq(invite.email)
+      end
+    end
+
     context "when email data is present in authentication data" do
       let(:store) { ActionDispatch::Session::CookieStore.new({}) }
       let(:session_stub) do
@@ -88,6 +101,62 @@ RSpec.describe InvitesController do
       fab!(:group)
 
       before { sign_in(user) }
+
+      it "automatically redirects to the topic if the user can access it" do
+        invite.update!(topics: [Fabricate(:topic)])
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(302)
+        expect(response.location).to eq(invite.topics.first.url)
+      end
+
+      it "doesn't automatically redirect to the topic if the user can't access it" do
+        secret_group = Fabricate(:group)
+        invite.update!(
+          topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))],
+        )
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't automatically redirect to the topic if the invite has expired" do
+        invite.update!(topics: [Fabricate(:topic)])
+        invite.update!(expires_at: 1.day.ago)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+
+        expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
+      end
+
+      it "shows the accept invite page when the user can access the topic, but the invite would also add them to a group" do
+        invite.update!(topics: [Fabricate(:topic)])
+        InvitedGroup.create!(invite: invite, group: group)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).not_to include(
+          I18n.t(
+            "invite.not_found_template",
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url,
+          ),
+        )
+      end
+
+      it "automatically redirects to the topic if the user can access it, and they're already a member of the invite group" do
+        invite.update!(topics: [Fabricate(:topic)])
+
+        group.add(user)
+        InvitedGroup.create!(invite: invite, group: group)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(302)
+        expect(response.location).to eq(invite.topics.first.url)
+      end
 
       it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
@@ -579,14 +648,16 @@ RSpec.describe InvitesController do
       expect(json["successful_invitations"].length).to eq(2)
     end
 
-    it "creates many invite codes with one request" do #change to
+    it "creates many invite codes with one request" do
       sign_in(admin)
-      num_emails = 5 # increase manually for load testing
+
+      num_emails = 5
+
       post "/invites/create-multiple.json",
            params: {
              email: 1.upto(num_emails).map { |i| "test#{i}@example.com" },
-             #email: %w[test+1@example.com test1@example.com]
            }
+
       expect(response.status).to eq(200)
       json = JSON(response.body)
       expect(json["failed_invitations"].length).to eq(0)
@@ -755,9 +826,14 @@ RSpec.describe InvitesController do
       end
 
       it "does not resend invite email when updating other fields" do
-        put "/invites/#{invite.id}", params: { custom_message: "new message" }
+        put "/invites/#{invite.id}",
+            params: {
+              custom_message: "new message",
+              description: "new description",
+            }
         expect(response.status).to eq(200)
         expect(invite.reload.custom_message).to eq("new message")
+        expect(invite.reload.description).to eq("new description")
         expect(Jobs::InviteEmail.jobs.size).to eq(0)
       end
 
@@ -837,7 +913,22 @@ RSpec.describe InvitesController do
         another_invite = Fabricate(:invite, email: "test2@example.com")
 
         delete "/invites.json", params: { id: another_invite.id }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(403)
+        expect(invite.reload.trashed?).to be_falsey
+        expect(another_invite.reload.trashed?).to be_falsey
+      end
+
+      it "allows an admin to delete any invite" do
+        user.update!(admin: true)
+        another_invite = Fabricate(:invite, email: "test2@example.com")
+
+        delete "/invites.json", params: { id: another_invite.id }
+        expect(response.status).to eq(200)
+        expect(another_invite.reload.trashed?).to be_truthy
+
+        delete "/invites.json", params: { id: invite.id }
+        expect(response.status).to eq(200)
+        expect(invite.reload.trashed?).to be_truthy
       end
 
       it "destroys the invite" do
@@ -1543,22 +1634,30 @@ RSpec.describe InvitesController do
   end
 
   describe "#destroy_all_expired" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:invite_1) { Fabricate(:invite, invited_by: user) }
+    fab!(:invite_2) { Fabricate(:invite, invited_by: user) }
+    fab!(:expired_invite) { Fabricate(:invite, invited_by: user, expires_at: 2.days.ago) }
+
+    before { SiteSetting.invite_expiry_days = 1 }
+
     it "removes all expired invites sent by a user" do
-      SiteSetting.invite_expiry_days = 1
-
-      user = Fabricate(:admin)
-      invite_1 = Fabricate(:invite, invited_by: user)
-      invite_2 = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(expires_at: 2.days.ago)
-
-      sign_in(user)
-      post "/invites/destroy-all-expired"
+      sign_in(admin)
+      post "/invites/destroy-all-expired", params: { username: user.username }
 
       expect(response.status).to eq(200)
       expect(invite_1.reload.deleted_at).to eq(nil)
       expect(invite_2.reload.deleted_at).to eq(nil)
       expect(expired_invite.reload.deleted_at).to be_present
+    end
+
+    it "returns 403 for non-staff user" do
+      sign_in(user)
+      post "/invites/destroy-all-expired", params: { username: user.username }
+
+      expect(response.status).to eq(403)
+      expect(expired_invite.reload.deleted_at).to eq(nil)
     end
   end
 
@@ -1729,6 +1828,24 @@ RSpec.describe InvitesController do
 
         user2 = User.where(staged: true).find_by_email("test2@example.com")
         expect(user2.locale).to eq("pl")
+      end
+
+      describe "invite_bulk_csv_custom_error modifier" do
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :invite_bulk_csv_custom_error }
+        let!(:block) { Proc.new { "Custom error message" } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "applies custom errors" do
+          sign_in(admin)
+
+          post "/invites/upload_csv.json", params: { file: file, name: "discourse.csv" }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Custom error message")
+        end
       end
     end
   end

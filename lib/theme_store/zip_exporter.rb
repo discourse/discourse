@@ -35,12 +35,12 @@ class ThemeStore::ZipExporter
 
   private
 
-  def export_to_folder(extra_scss_only: false)
+  def export_to_folder(scss_only: false)
     destination_folder = File.join(@temp_folder, @export_name)
     FileUtils.mkdir_p(destination_folder)
 
     @theme.theme_fields.each do |field|
-      next if extra_scss_only && !field.extra_scss_field?
+      next if scss_only && !(field.extra_scss_field? || field.basic_scss_field?)
       next unless path = field.file_path
 
       # Belt and braces approach here. All the user input should already be
@@ -64,7 +64,7 @@ class ThemeStore::ZipExporter
       File.write(path, content)
     end
 
-    if !extra_scss_only
+    if !scss_only
       File.write(
         File.join(destination_folder, "about.json"),
         JSON.pretty_generate(@theme.generate_metadata_hash),

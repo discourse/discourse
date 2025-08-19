@@ -1,12 +1,15 @@
+@use "lib/viewport";
+
 .filter-input-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid var(--primary-medium);
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
   box-sizing: border-box;
 
   &.is-focused {
-    border: 1px solid var(--tertiary);
+    @include default-focus;
   }
 
   .filter-input,
@@ -16,7 +19,7 @@
     border: none;
     outline: none;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       .chat-browse-view__actions & {
         width: 210px;
       }

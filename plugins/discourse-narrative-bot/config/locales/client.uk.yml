@@ -10,3 +10,8 @@ uk:
       welcome_post_type:
         new_user_track: "Переглянути посібник для нових користувачів"
         welcome_message: "Надіслати всім новим користувачам - вітальне повідомлення з швидким переходом до посібника користувача"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Наративний бот Discourse"

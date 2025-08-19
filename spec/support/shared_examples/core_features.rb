@@ -10,16 +10,16 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
   if skip_examples.exclude?(:login)
     describe "Login" do
-      let(:login_form) { PageObjects::Modals::Login.new }
+      let(:login_form) { PageObjects::Pages::Login.new }
 
       before { EmailToken.confirm(Fabricate(:email_token, user: active_user).token) }
 
       it "logs in" do
         visit("/")
-        login_form
-          .open
-          .fill(username: active_user.username, password: "secure_password")
-          .click_login
+        login_form.open
+        login_form.fill_username(active_user.username)
+        login_form.fill_password("secure_password")
+        login_form.click_login
         expect(page).to have_css(".current-user", visible: true)
       end
 
@@ -81,7 +81,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             click_on(topics.first.title)
             expect(page).to have_content(topics.first.first_post.raw)
             within(".actions") { click_button("Reply") }
-            find(PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR).click
+            composer.focus
             send_keys("This is a long enough reply.")
             expect(page).to have_css(".d-editor-preview p", visible: true)
             within(".save-or-cancel") { click_button("Reply") }
@@ -160,6 +160,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       before do
         SearchIndexer.enable
         topics.each { SearchIndexer.index(_1, force: true) }
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       end
 
       after { SearchIndexer.disable }

@@ -51,6 +51,18 @@ module PageObjects
         has_no_css?("#new-account-name")
       end
 
+      def has_editable_name_input?
+        has_css?("#new-account-name:not([disabled])")
+      end
+
+      def has_disabled_name_input?
+        has_css?("#new-account-name[disabled]")
+      end
+
+      def has_no_right_side_column?
+        has_no_css?(".login-right-side")
+      end
+
       def fill_input(selector, text)
         if page.has_css?("html.mobile-view", wait: 0)
           expect(page).to have_no_css(".d-modal.is-animating")

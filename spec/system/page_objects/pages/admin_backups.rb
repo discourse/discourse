@@ -53,6 +53,18 @@ module PageObjects
       def toggle_read_only
         find(".admin-backups__toggle-read-only").click
       end
+
+      def has_no_read_only_button?
+        page.has_no_css?(".admin-backups__toggle-read-only")
+      end
+
+      def has_no_backup_button?
+        page.has_no_css?(".admin-backups__start")
+      end
+
+      def has_no_backup_item_more_menu?
+        page.has_no_css?(".backup-item-menu-trigger")
+      end
     end
   end
 end

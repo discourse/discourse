@@ -77,6 +77,10 @@ be:
       category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Сардэчна запрашаем да сайта %{site_name}!"
+      search: "Пошук"
     themes:
       default_description: "Default"
     s3:
@@ -185,7 +189,7 @@ be:
       label: "Чарнавікі"
       remove: "выдаліць"
     preview: "папярэдні прагляд"
-    cancel: "адмена"
+    cancel: "адмяніць"
     save: "Захаваць змены"
     saved: "Захавана!"
     upload: "Загрузіць"
@@ -219,6 +223,9 @@ be:
         email: "Электронная пошта"
         name: "Імя"
         reject_reason: "прычына"
+        scrubbed_reason: "прычына"
+        scrub_record:
+          cancel_button: "Адмяніць"
       topics:
         topic: "Тэма"
         reviewable_count: "падлічваць"
@@ -270,6 +277,16 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+      notes:
+        delete: "выдаляць"
+      review_user: "карыстальнік"
+      insights:
+        activities:
+          posts:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
       approval:
         title: "Паведамленне мае патрэбу ў падцверджанні"
         ok: "Добра"
@@ -500,10 +517,14 @@ be:
       color_schemes:
         undo: "скінуць"
         regular: "звычайны"
+        interface_modes:
+          light: "святло"
+          dark: "цёмна"
       experimental_sidebar:
         options: "Налады"
         navigation_section: "рух"
       suspended_reason: "прычына: "
+      silenced_reason: "прычына: "
       tag_settings: "Цэтлікі"
       watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
       tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
@@ -688,6 +709,7 @@ be:
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
         invite:
+          description: "Апісанне"
           cancel: "адмяніць"
       password:
         title: "Пароль"
@@ -830,8 +852,6 @@ be:
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -841,9 +861,6 @@ be:
       password_label: "Пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
-    emoji_set:
-      google: "Google"
-      twitter: "Twitter"
     category_page_style:
       categories_only: "Толькі катэгорыі"
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
@@ -888,11 +905,8 @@ be:
       bold_text: "Моцнае вылучэнне тэксту"
       italic_title: "вылучэнне"
       italic_text: "выдзялення тэксту"
-      link_title: "гіперспасылка"
+      link_title: "Спасылка"
       link_description: "увядзіце апісанне спасылкі"
-      link_dialog_title: "ўставіць гіперспасылку"
-      link_optional_text: "неабавязкова назву"
-      link_url_placeholder: "Устаўце URL адрас альбо тып для пошуку тэмаў"
       blockquote_title: "цытата"
       blockquote_text: "цытата"
       code_title: "Папярэдне фарматаваны тэкст"
@@ -931,8 +945,8 @@ be:
         watching_first_post: "новая тэма"
         admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     upload_selector:
+      delete: "выдаляць"
       uploading: "загрузка"
-      select_file: "выбраць файл"
       default_image_alt_text: малюнак
     search:
       sort_by: "сартаваць па"
@@ -1137,6 +1151,11 @@ be:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
+      localizations:
+        table:
+          actions: "Дзеянні"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
@@ -1183,6 +1202,10 @@ be:
       settings: "Налады"
       topic_template: "Шаблон"
       tags: "Тэгі"
+      localization:
+        name: "імя"
+        description: "Апісанне"
+        remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
@@ -1193,9 +1216,13 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      badge_colors: "колеру значка"
-      background_color: "колер фону"
-      foreground_color: "колер тэксту"
+      background_color: "колер"
+      styles:
+        icon: "Абразка"
+        emoji: "Emoji"
+        options:
+          icon: "Абразка"
+          emoji: "Emoji"
       name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
@@ -1305,7 +1332,6 @@ be:
         topics: "тэмы"
         replies: "Адказы"
       posted:
-        title: "мае паведамленні"
         help: "тэмы, у якія Вы дапісвалі"
       bookmarks:
         title: "закладкі"
@@ -1364,6 +1390,8 @@ be:
         delete: "<B> d <"
         mark_muted: "%{shortcut}Прыглушыць тэму"
         mark_tracking: "%{shortcut}Сачыць за тэмай"
+      admin:
+        title: "адміністратар"
     badges:
       title: значкі
       select_badge_for_title: Выберыце значок, будзе вашым званнем
@@ -1467,6 +1495,8 @@ be:
               content: "адміністратар"
             badges:
               content: "значкі"
+            filter:
+              content: "Filter"
             topics:
               content: "тэмы"
             faq:
@@ -1477,12 +1507,13 @@ be:
               content: "Групы"
             users:
               content: "карыстальнікаў"
-            my_posts:
-              content: "мае паведамленні"
-              content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter..."
+      search: "Пошук"
+      footer:
+        interface_color_selector:
+          light: "святло"
+          dark: "цёмна"
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -1499,6 +1530,12 @@ be:
           reason: "чаму Вы рэдагуеце паведамленне?"
       spreadsheet:
         about: "Аб тэме"
+    filter:
+      description:
+        yesterday: "учора"
+    discovery:
+      headings:
+        categories: "Усе катэгорыі"
   admin_js:
     settings: "Налады"
     admin:
@@ -1509,25 +1546,97 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+      config_sections:
+        account:
+          title: "Аккаўнт"
+        reports:
+          title: "Справаздачы"
+        community:
+          title: "супольнасць"
+        email:
+          title: "Электронная пошта"
+        security:
+          title: "Бяспека"
+        plugins:
+          title: "Плагіны"
       config:
         developer:
           title: "для распрацоўшчыкаў"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Мадэрацыя"
         files:
           title: "файлы"
         legal:
           title: "Legal"
+        logo:
+          form:
+            mobile: "Мабільны"
+            email: "Электронная пошта"
+            opengraph_image:
+              description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
+        fonts:
+          backfill_modal:
+            modal_yes: "ды"
         navigation:
           title: "рух"
         notifications:
           title: "Натыфікацыі"
-        other:
-          title: "іншае"
-        search:
+        search_everything:
           title: "Пошук"
         security:
           title: "Бяспека"
         spam:
           title: "Спам"
+        dashboard:
+          title: "Галоўная панэль"
+        users:
+          title: "карыстальнікаў"
+        groups:
+          title: "групы"
+        backups:
+          title: "Бэкапы"
+          sub_pages:
+            logs:
+              title: "Логі"
+        reports:
+          title: "Справаздачы"
+        badges:
+          title: "значкі"
+        permalinks:
+          title: "Сталыя спасылкі"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "шаблоны"
+        email_logs:
+          sub_pages:
+            sent:
+              title: "Sent"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Атрымана"
+            rejected:
+              title: "адхілена"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў"
+        embedding:
+          title: "узаемадзеянне"
+      theme_site_settings:
+        default_value: "Default"
+      search:
+        title: "Пошук"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1672,6 +1781,8 @@ be:
         sidebar_link:
           emoji: "Emoji"
           navigation: "рух"
+          themes_and_components:
+            keywords: "пашырэнне"
       security:
         title: "Бяспека"
       section_landing_pages:
@@ -1682,9 +1793,10 @@ be:
       config_areas:
         about:
           company_name: "імя"
+          extra_groups:
+            groups: "групы"
           saved: "захавана!"
         flags:
-          header: "Мадэрацыя"
           description: "Апісанне"
           edit: "рэдагаваць"
           delete: "Выдаліць"
@@ -1702,23 +1814,32 @@ be:
         embeddable_host:
           edit: "рэдагаваць"
           delete: "выдаляць"
+        themes_and_components:
+          breadcrumb_title: "Кастамізаваць"
+          components:
+            name: "імя"
+            edit: "рэдагаваць"
+            preview: "Папярэдні прагляд"
+            export: "экспарт"
+            delete: "выдаляць"
+            filter_by_all: "Усё"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
+        color_palettes:
+          palette_name: "імя"
+          delete: "выдаляць"
+          colors:
+            title: "<......"
       plugins:
         title: "Плагіны"
         name: "Назва"
         version: "версія"
         change_settings_short: "Налады"
-        sidebar_link:
-          installed: "устаноўленая"
-      advanced:
-        sidebar_link:
-          developer: "для распрацоўшчыкаў"
-          embedding: "узаемадзеянне"
-          files: "файлы"
-          other_options: "іншае"
-          search: "Пошук"
+        filters:
+          all: "усе"
+          disabled: "Адключана"
+          reset: "скінуць"
       backups:
         title: "Бэкапы"
         menu:
@@ -1782,6 +1903,7 @@ be:
           disabled_filter: "Адключана"
         theme:
           theme: "тэма"
+          filter_all: "усе"
           customize_desc: "Кастамізаваць:"
           create: "стварыць"
           create_type: "тып"
@@ -1789,8 +1911,8 @@ be:
           save: "захаваць"
           edit: "рэдагаваць"
           mobile: "Мабільны"
-          settings: "Налады"
           preview: "папярэдні прагляд"
+          default: "актыўныя"
           cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"
@@ -1801,19 +1923,23 @@ be:
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
-          header:
-            text: "Header"
-          body_tag:
-            text: "цела"
+          settings: "Налады"
+          colors: "<......"
+          colors_title: "<......"
           all_filter: "Усё"
           active_filter: "актыўныя"
-          schema:
-            fields:
-              required: "*абавязковыя"
-              number:
-                too_large: "павінен быць менш або роўны %{count}"
+        schema:
+          fields:
+            required: "*абавязковыя"
+            number:
+              too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
+          edit: "Рэдагаваць"
+          filters:
+            all: "усе"
+          active_badge:
+            text: "актыўны"
           copy_name_prefix: "капіяваць з"
           undo: "Адмяніць"
           undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."
@@ -1826,15 +1952,15 @@ be:
             name: "троесны"
           header_background:
             name: "фон загалоўка"
-          header_primary:
-            description: "Тэкст і абразкі ў загалоўку сайта."
           highlight:
             name: "асвятленне"
           success:
             name: "поспех"
           love:
             name: "каханне"
-            description: "Колер кнопкі \"Падабаецца\"."
+          editor:
+            light: "святло"
+            dark: "цёмна"
       email:
         title: "Емейлы"
         settings: "Налады"
@@ -2057,7 +2183,6 @@ be:
         permissions: дазволу
         activity: Актыўнасць
         last_100_days: "за апошнія 100 дзён"
-        private_topics_count: прыватных тым
         posts_read_count: паведамленняў прачытана
         post_count: паведамленняў створаны
         topics_entered: тым перагледжаны
@@ -2083,7 +2208,6 @@ be:
           confirmation:
             cancel: "адмяніць"
         delete_forbidden_because_staff: "Адмінаў і мадэратараў выдаляць нельга."
-        delete_dont_block: "толькі выдаленне"
         deleted: "Карыстальніка быў выдалены."
         delete_failed: "Пры выдаленні карыстальніка адбылася памылка. Пераканайцеся, што ўсе паведамленні карыстальніка выдалены перад тым, як выдаляць самога карыстальніка."
         send_activation_email: "Адправіць ліст для актывацыі"

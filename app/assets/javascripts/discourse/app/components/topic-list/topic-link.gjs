@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default class TopicLink extends Component {
   get url() {
@@ -12,14 +12,14 @@ export default class TopicLink extends Component {
 
   <template>
     {{~! no whitespace ~}}
-    <PluginOutlet @name="topic-link" @outletArgs={{hash topic=@topic}}>
+    <PluginOutlet @name="topic-link" @outletArgs={{lazyHash topic=@topic}}>
       {{~! no whitespace ~}}
       <a
         href={{this.url}}
         data-topic-id={{@topic.id}}
         class="title"
         ...attributes
-      >{{htmlSafe @topic.fancyTitle}}</a>
+      >{{htmlSafe @topic.fancyTitle}}{{yield}}</a>
       {{~! no whitespace ~}}
     </PluginOutlet>
     {{~! no whitespace ~}}

@@ -76,7 +76,7 @@ export default class ChatMessage {
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
-      this.hidden || this._deletedAt ? false : args.expanded ?? true;
+      this.hidden || this._deletedAt ? false : (args.expanded ?? true);
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId ?? args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus ?? args.user_flag_status;
@@ -85,7 +85,7 @@ export default class ChatMessage {
     this._cooked = args.cooked ?? "";
     this.inReplyTo =
       args.inReplyTo ??
-      (args.in_reply_to ?? args.replyToMsg
+      ((args.in_reply_to ?? args.replyToMsg)
         ? ChatMessage.create(channel, args.in_reply_to ?? args.replyToMsg)
         : null);
     this.reactions = this.#initChatMessageReactionModel(args.reactions);

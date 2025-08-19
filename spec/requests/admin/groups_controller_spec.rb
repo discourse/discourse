@@ -448,6 +448,18 @@ RSpec.describe Admin::GroupsController do
         expect(response.parsed_body["user_count"]).to eq(2)
       end
 
+      it "responds with a 400 for a long list of domains" do
+        put "/admin/groups/automatic_membership_count.json",
+            params: {
+              automatic_membership_email_domains: 1.upto(11).map { |n| "domain#{n}.com" }.join("|"),
+              id: group.id,
+            }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          "You supplied invalid parameters to the request: Maximum 10 email domains can be counted at once",
+        )
+      end
+
       it "doesn't respond with 500 if domain is invalid" do
         group = Fabricate(:group)
 

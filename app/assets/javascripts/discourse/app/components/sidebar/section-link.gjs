@@ -28,6 +28,7 @@ export function isHex(input) {
     return;
   }
 }
+
 export default class SectionLink extends Component {
   @service currentUser;
 

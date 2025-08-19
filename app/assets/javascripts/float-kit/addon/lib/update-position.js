@@ -1,36 +1,55 @@
 import {
   arrow,
+  autoPlacement,
   computePosition,
   flip,
+  hide,
   inline,
+  limitShift,
   offset,
   shift,
+  size,
 } from "@floating-ui/dom";
 import domFromString from "discourse/lib/dom-from-string";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { FLOAT_UI_PLACEMENTS } from "float-kit/lib/constants";
+import {
+  FLOAT_UI_PLACEMENTS,
+  VISIBILITY_OPTIMIZERS,
+} from "float-kit/lib/constants";
 
 const centerOffset = offset(({ rects }) => {
   return -rects.reference.height / 2 - rects.floating.height / 2;
 });
 
 export async function updatePosition(trigger, content, options) {
-  let padding = 0;
-  if (!isTesting()) {
-    padding = options.padding || {
-      top: headerOffset(),
-      left: 10,
-      right: 10,
-      bottom: 10,
-    };
-  }
-
-  const flipOptions = {
-    fallbackPlacements: options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
-    padding,
+  const padding = options.padding ?? {
+    top: headerOffset(),
+    left: 10,
+    right: 10,
+    bottom: 10,
   };
+
+  const detectOverflowOptions = {
+    padding: isTesting() ? 0 : padding,
+    boundary: options.boundary,
+  };
+
+  // Determine which visibility optimizer middleware to use
+  const visibilityOptimizer =
+    options.visibilityOptimizer ?? VISIBILITY_OPTIMIZERS.FLIP;
+
+  const visibilityOptimizerMiddleware =
+    visibilityOptimizer === VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT
+      ? autoPlacement({
+          allowedPlacements: options.allowedPlacements ?? FLOAT_UI_PLACEMENTS,
+          ...detectOverflowOptions,
+        })
+      : flip({
+          fallbackPlacements: options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
+          ...detectOverflowOptions,
+        });
 
   const middleware = [];
   const isCentered = options.placement === "center";
@@ -38,14 +57,25 @@ export async function updatePosition(trigger, content, options) {
   if (isCentered) {
     middleware.push(centerOffset);
   } else {
-    middleware.push(offset(options.offset ? parseInt(options.offset, 10) : 10));
+    middleware.push(offset(options.offset ?? 10));
 
     if (options.inline) {
       middleware.push(inline());
     }
 
-    middleware.push(flip(flipOptions));
-    middleware.push(shift({ padding }));
+    middleware.push(visibilityOptimizerMiddleware);
+
+    let limiter;
+    if (options.limitShift) {
+      limiter = limitShift(options.limitShift);
+    }
+    middleware.push(
+      shift({
+        padding: detectOverflowOptions.padding,
+        limiter,
+        crossAxis: true,
+      })
+    );
   }
 
   let arrowElement;
@@ -60,6 +90,32 @@ export async function updatePosition(trigger, content, options) {
     }
 
     middleware.push(arrow({ element: arrowElement }));
+  }
+
+  if (options.hide) {
+    middleware.push(hide({ padding: detectOverflowOptions.padding }));
+  }
+
+  if (options.matchTriggerWidth) {
+    middleware.push(
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            width: `${rects.reference.width}px`,
+          });
+        },
+      })
+    );
+  } else if (options.matchTriggerMinWidth) {
+    middleware.push(
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            minWidth: `${rects.reference.width}px`,
+          });
+        },
+      })
+    );
   }
 
   content.dataset.strategy = options.strategy || "absolute";
@@ -84,9 +140,11 @@ export async function updatePosition(trigger, content, options) {
     });
   } else {
     content.dataset.placement = placement;
+
     Object.assign(content.style, {
       left: `${x}px`,
       top: `${y}px`,
+      visibility: middlewareData.hide?.referenceHidden ? "hidden" : "visible",
     });
 
     if (middlewareData.arrow && arrowElement) {

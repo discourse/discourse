@@ -191,6 +191,30 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe "missing description" do
+    let(:url) { "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660" }
+    before do
+      stub_request(:get, url).to_return(status: 200, body: onebox_response("title_no_description"))
+      stub_request(
+        :get,
+        "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660/~/discontinuation-of-earning-my-nintendo-gold-points",
+      ).to_return(status: 200, body: onebox_response("title_no_description"))
+      stub_request(
+        :head,
+        "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660/~/discontinuation-of-earning-my-nintendo-gold-points",
+      ).to_return(status: 200, body: "")
+    end
+
+    it "shows a title-only onebox" do
+      onebox = described_class.new(url)
+      expect(onebox.to_html).not_to be_nil
+    end
+
+    it "does not consider this an error" do
+      onebox = described_class.new(url)
+      onebox.data
+      expect(onebox.errors.key?(:description)).to be(false)
+    end
+
     context "when working without description if image is present" do
       before do
         stub_request(

@@ -15,10 +15,6 @@ module Onebox
         path.match?(%r{^/.+?/status(es)?/\d+(/(video|photo)/\d?)?(/?\?.*)?/?$})
       end
 
-      def http_params
-        { "User-Agent" => "DiscourseBot/1.0" }
-      end
-
       def to_html
         raw.present? ? super : ""
       end

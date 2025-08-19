@@ -40,8 +40,8 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
   end
 
   describe "#categories" do
-    fab!(:category_1) { Fabricate(:category) }
-    fab!(:category_2) { Fabricate(:category) }
+    fab!(:category_1, :category)
+    fab!(:category_2, :category)
     fab!(:category_3) { Fabricate(:private_category, group: Fabricate(:group)) }
     fab!(:admin)
 

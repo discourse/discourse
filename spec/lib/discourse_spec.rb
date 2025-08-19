@@ -194,9 +194,17 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "#user_agent" do
+    it "returns a user agent string" do
+      expect(Discourse.user_agent).to eq(
+        "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+      )
+    end
+  end
+
   describe "#site_contact_user" do
     fab!(:admin)
-    fab!(:another_admin) { Fabricate(:admin) }
+    fab!(:another_admin, :admin)
 
     it "returns the user specified by the site setting site_contact_username" do
       SiteSetting.site_contact_username = another_admin.username
@@ -354,7 +362,7 @@ RSpec.describe Discourse do
     class TempSidekiqLogger
       attr_accessor :exception, :context
 
-      def call(ex, ctx)
+      def call(ex, ctx, _config)
         self.exception = ex
         self.context = ctx
       end
@@ -362,9 +370,9 @@ RSpec.describe Discourse do
 
     let!(:logger) { TempSidekiqLogger.new }
 
-    before { Sidekiq.error_handlers << logger }
+    before { Sidekiq.default_configuration.error_handlers << logger }
 
-    after { Sidekiq.error_handlers.delete(logger) }
+    after { Sidekiq.default_configuration.error_handlers.delete(logger) }
 
     describe "#job_exception_stats" do
       class FakeTestError < StandardError
@@ -550,6 +558,12 @@ RSpec.describe Discourse do
         "a b c",
       )
     end
+
+    it "includes the command in the error message" do
+      expect do
+        Discourse::Utils.execute_command("false", "'foo'", failure_message: "oops")
+      end.to raise_error(RuntimeError, "false 'foo'\noops")
+    end
   end
 
   describe ".clear_all_theme_cache!" do
@@ -619,20 +633,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -645,20 +662,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -670,20 +690,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(new_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(new_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first

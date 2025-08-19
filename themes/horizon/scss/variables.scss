@@ -1,0 +1,22 @@
+:root {
+  --d-max-width: 1000px;
+  --d-border-radius-large: 20px;
+  --d-border-radius: 8px;
+  --d-input-border-radius: 6px;
+
+  // the idea is: block spacing can grow with font-size, but inline spacing should not to maintain horizontal (text) alignment
+  --spacing-block-xs: 0.25em;
+  --spacing-block-s: 0.5em;
+  --spacing-block-sm: 0.75em;
+  --spacing-block-m: 1em;
+  --spacing-block-l: 1.5em;
+  --spacing-block-xl: 2em;
+  --spacing-block-xxl: 4em;
+  --spacing-inline-xs: 0.25em;
+  --spacing-inline-s: 0.5rem;
+  --spacing-inline-sm: 0.75rem;
+  --spacing-inline-m: 1rem;
+  --spacing-inline-l: 1.5rem;
+  --spacing-inline-xl: 2rem;
+  --spacing-inline-xxl: 4rem;
+}

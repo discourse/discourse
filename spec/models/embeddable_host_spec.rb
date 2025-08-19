@@ -73,7 +73,7 @@ RSpec.describe EmbeddableHost do
   end
 
   describe "url_allowed?" do
-    fab!(:host) { Fabricate(:embeddable_host) }
+    fab!(:host, :embeddable_host)
 
     it "works as expected" do
       expect(EmbeddableHost.url_allowed?("http://eviltrout.com")).to eq(true)

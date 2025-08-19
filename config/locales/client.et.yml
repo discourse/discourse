@@ -163,6 +163,10 @@ et:
     software_update_prompt:
       dismiss: "Ignoreeri"
     back_button: "Tagasi"
+    welcome_banner:
+      header:
+        anonymous_members: "Tere tulemast lehele %{site_name}!"
+      search: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -329,7 +333,7 @@ et:
       one: "Vaata %{count} uut teemat"
       other: "Vaata %{count} uut teemat"
     preview: "eelvaade"
-    cancel: "tühista"
+    cancel: "Tühista"
     deleting: "Kustutan..."
     save: "Salvesta muudatused"
     saving: "Salvestan..."
@@ -390,6 +394,9 @@ et:
         name: "Nimi"
         fields: "Väljad"
         reject_reason: "Põhjus"
+        scrubbed_reason: "Põhjus"
+        scrub_record:
+          cancel_button: "Tühista"
       topics:
         topic: "Teema"
         reviewable_count: "Arv"
@@ -448,6 +455,15 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      notes:
+        delete: "Kustuta"
+      review_user: "Kasutaja"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
+        visibility: "Nähtavus"
       approval:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
@@ -838,6 +854,9 @@ et:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
         regular: "Tavaline"
+        interface_modes:
+          light: "Hele"
+          dark: "Tume"
       dark_mode: "Tume režiim"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
@@ -855,6 +874,8 @@ et:
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni %{date}."
       suspended_permanently: "Selle kasutaja konto on peatatud."
       suspended_reason: "Põhjus:"
+      silenced_permanently: "See kasutaja on vaigistatud."
+      silenced_reason: "Põhjus:"
       github_profile: "GitHub"
       email_activity_summary: "Tegevuste kokkuvõte"
       mailing_list_mode:
@@ -1135,7 +1156,8 @@ et:
         remove: "Eemalda"
         reinvited: "Kutse uuesti saadetud"
         user: "Kutsutud kasutaja"
-        none: "Pole ühtegi kutset, mida näidata."
+        none:
+          title: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
           other: "Näitan esimest %{count} kutset."
@@ -1154,6 +1176,7 @@ et:
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         invite:
+          description: "Kirjeldus"
           cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
@@ -1215,7 +1238,6 @@ et:
         title: "Registreerumise IP-aadress"
       avatar:
         title: "Profiilipilt"
-        header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
         none: "(pole)"
@@ -1254,6 +1276,8 @@ et:
         fixed: "Laadi lehekülg"
     modal:
       close: "Sulge"
+    multi_select:
+      search: "Otsi..."
     form_kit:
       reset: Lähtesta
       optional: valikuline
@@ -1356,8 +1380,6 @@ et:
       not_approved: "Kontot pole veel kinnitatud. Sind teavitatakse e-posti teel, kui sisselogimine on võimaldatud."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1376,13 +1398,6 @@ et:
       password_label: "Parool"
     password_reset:
       continue: "Edasi saidile %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google klassikaline"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Ainult kategooriad"
       categories_with_featured_topics: "Kategooria esiletõstetud teemadega"
@@ -1430,7 +1445,6 @@ et:
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
       toggle_whisper: "Lülita sosistamine ümber"
-      toggle_unlisted: "Lülita eemaldamine ümber"
       insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"
@@ -1465,10 +1479,8 @@ et:
       italic_label: "I"
       italic_title: "Esiletõstetud"
       italic_text: "esiletõstetud tekst"
-      link_title: "Hüperlink"
       link_description: "sisesta viite kirjeldus siia"
-      link_dialog_title: "Lisa hüperlink"
-      link_optional_text: "valikuline pealkiri"
+      link_optional_text: "Tekst"
       blockquote_title: "Tsitaat"
       blockquote_text: "Tsitaat"
       code_title: "Eelvormindatud tekst"
@@ -1547,8 +1559,8 @@ et:
       titles:
         watching_first_post: "uus teema"
     upload_selector:
+      delete: "Kustuta"
       uploading: "Laadin üles"
-      select_file: "Vali fail"
       default_image_alt_text: pilt
     search:
       sort_by: "Järjesta"
@@ -2055,6 +2067,13 @@ et:
         other: "Vaatad %{count} vastust postitusele"
       in_reply_to: "Laadi algne postitus"
       view_all_posts: "Vaata kõiki postitusi"
+      localizations:
+        table:
+          actions: "Tegevused"
+          edit: "Muuda"
+          delete: "Kustuta"
+        post_language_selector:
+          none: "Pole"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -2169,6 +2188,10 @@ et:
       general: "Üldine"
       settings: "Sätted"
       tags: "Sildid"
+      localization:
+        name: "Nimi"
+        description: "Kirjeldus"
+        remove: "Eemalda"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud sildirühmadest"
       required_tag_group:
@@ -2186,9 +2209,13 @@ et:
       description: "Kirjeldus"
       logo: "Kategooria logo"
       background_image: "Kategooria taustapilt"
-      badge_colors: "Märgise värvid"
-      background_color: "Tausta värv"
-      foreground_color: "Esiplaani värv"
+      background_color: "Värv"
+      styles:
+        icon: "Ikoon"
+        emoji: "Emotikon"
+        options:
+          icon: "Ikoon"
+          emoji: "Emotikon"
       name_placeholder: "Maksimaalselt üks või kaks sõna"
       color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
@@ -2407,7 +2434,6 @@ et:
         topics: "Teemasid"
         replies: "Vastused"
       posted:
-        title: "Minu"
         help: "minu postitustega teemad"
       bookmarks:
         title: "Järjehoidjad"
@@ -2494,6 +2520,8 @@ et:
         mark_tracking: "%{shortcut} Jälgi teemat"
         mark_watching: "%{shortcut} Vaatle teemat"
         print: "%{shortcut} Prindi teema"
+      admin:
+        title: "Adminn"
     badges:
       earned_n_times:
         one: "Teenis selle märgise %{count} kord"
@@ -2642,6 +2670,8 @@ et:
               content: "Adminn"
             badges:
               content: "Märgised"
+            filter:
+              content: "Filter"
             topics:
               content: "Teemad"
             faq:
@@ -2652,8 +2682,6 @@ et:
               content: "Rühmad"
             users:
               content: "Kasutajad"
-            my_posts:
-              content: "Minu"
             review:
               content: "Vaata üle"
             invite:
@@ -2661,7 +2689,11 @@ et:
       panels:
         forum:
           label: Foorum
-      filter: "Filter..."
+      search: "Otsi"
+      footer:
+        interface_color_selector:
+          light: "Hele"
+          dark: "Tume"
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -2679,6 +2711,14 @@ et:
       spreadsheet:
         show: "Näita"
         about: "Teave"
+    filter:
+      description:
+        yesterday: "Eile"
+    discovery:
+      headings:
+        multi_tag:
+          default: "%{tags}-ga sildistatud teemad"
+        categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
     admin:
@@ -2688,25 +2728,42 @@ et:
         remove_muted_tags_from_latest:
           always: "alati"
           never: "mitte kunagi"
-      reports:
-        sidebar_link:
-          all: "Kõik aruanded"
+      config_sections:
+        account:
+          title: "Konto"
+        community:
+          title: "Kogukond"
+        email:
+          title: "Meiliaadress"
+        security:
+          title: "Turve"
+        plugins:
+          title: "Pistikprogrammid"
       config:
         developer:
           title: "Arendaja"
+        emojis:
+          title: "Emotikon"
+        flags:
+          title: "Modereerimine"
         files:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        logo:
+          form:
+            mobile: "Mobiil"
+            email: "Meiliaadress"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jah"
         navigation:
           title: "Navigatsioon"
         notifications:
           title: "Teavitus"
         onebox:
           title: "Onebox"
-        other:
-          title: "Muu"
-        search:
+        search_everything:
           title: "Otsi"
         security:
           title: "Turve"
@@ -2714,6 +2771,69 @@ et:
           title: "Spämm"
         user_api:
           title: "Kasutaja API"
+        dashboard:
+          title: "Armatuurlaud"
+        users:
+          title: "Kasutajad"
+        groups:
+          title: "Rühmad"
+        backups:
+          title: "Varukoopiad"
+          sub_pages:
+            logs:
+              title: "Logid"
+        badges:
+          title: "Märgised"
+        permalinks:
+          title: "Püsiviited"
+        emoji:
+          title: "Emotikon"
+        themes:
+          title: "Kujundused"
+        components:
+          title: "Komponendid"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Passiivsetele kasutajatele meilitud saadetiste sisu eelvaatlus"
+            templates:
+              title: "Mallid"
+        email_logs:
+          sub_pages:
+            sent:
+              title: "Saadetud"
+            skipped:
+              title: "Üle hüpatud"
+            bounced:
+              title: "Välja visatud"
+            received:
+              title: "Saadud"
+            rejected:
+              title: "Tagasi lükatud"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kui keegi üritab uut kontot luua, siis kontrollitakse järgmisi meiliaadresse ja vastavuse korral registreerimine peatatakse või tehakse mõni muu toiming"
+            screened_ips:
+              title: "Varjestatud IP-aadressid"
+            screened_urls:
+              title: "Varjestatud URL-id"
+              header_description: "Siin loetletud URL-id esinesid spämmeriteks kuulutatud kasutajate postitustes"
+        webhooks:
+          title: "Veebihaagid"
+        embedding:
+          title: "Sängitamine"
+      theme_site_settings:
+        default_value: "Vaikimisi"
+      search:
+        title: "Otsi"
+        result_types:
+          theme:
+            one: "Kujundusteema"
+            other: "Kujundused"
+          component:
+            one: "Komponent"
+            other: "Komponendid"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2919,9 +3039,6 @@ et:
         sidebar_link:
           emoji: "Emotikon"
           navigation: "Navigatsioon"
-          themes: "Kujundused"
-          components:
-            title: "Komponendid"
       security:
         title: "Turve"
       section_landing_pages:
@@ -2933,10 +3050,11 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          extra_groups:
+            groups: "Rühmad"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
-          header: "Modereerimine"
           description: "Kirjeldus"
           enabled: "Sisse lülitatud?"
           edit: "Muuda"
@@ -2955,12 +3073,33 @@ et:
         embeddable_host:
           edit: "Muuda"
           delete: "Kustuta"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Kohanda"
           themes:
             title: "Kujundused"
+          components:
+            title: "Komponendid"
+            name: "Nimi"
+            enabled: "Sisse lülitatud?"
+            by_author: "Autor %{name}"
+            learn_more: "Uuri veel"
+            edit: "Muuda"
+            preview: "Eelvaade"
+            export: "Ekspordi"
+            convert: "Konverdi"
+            delete: "Kustuta"
+            filter_by_all: "Kõik"
         user_fields:
           type: "Tüüp"
           delete: "Kustuta"
+        color_palettes:
+          palette_name: "Nimi"
+          copy_to_clipboard: "Kopeeri lõikelauale"
+          copied_to_clipboard: "Kopeeritud lõikelauale"
+          copy_to_clipboard_error: "Tõrge kopeerimisel"
+          delete: "Kustuta"
+          colors:
+            title: "Värvid"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -2973,18 +3112,11 @@ et:
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
         learn_more: "Uuri veel"
-        sidebar_link:
-          installed: "Paigaldatud"
-      advanced:
-        sidebar_link:
-          webhooks: "Veebihaagid"
-          developer: "Arendaja"
-          embedding: "Sängitamine"
-          user_api: "Kasutaja API"
-          onebox: "Onebox"
-          files: "Failid"
-          other_options: "Muu"
-          search: "Otsi"
+        filters:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          reset: "Nulli"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3071,6 +3203,7 @@ et:
           theme: "Teema"
           component: "Komponent"
           components: "Komponendid"
+          filter_all: "Kõik"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
           customize_desc: "Kohanda:"
@@ -3083,8 +3216,8 @@ et:
           common: "Tavaline"
           desktop: "Töölaud"
           mobile: "Mobiil"
-          settings: "Seaded"
           preview: "Eelvaade"
+          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3095,7 +3228,6 @@ et:
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
-          edit_css_html: "Muuda CSS-i/HTML-i"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"
@@ -3104,69 +3236,63 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          theme_settings: "Teema seaded"
+          settings: "Seaded"
+          colors: "Värvid"
+          colors_title: "Värvid"
           scss:
             text: "CSS"
-          header:
-            text: "Päis"
           after_header:
             text: "Pärast päist"
           footer:
             text: "Jalus"
           embedded_scss:
             text: "Sängitatud CSS"
-          body_tag:
-            text: "Sisu"
-          yaml:
-            text: "YAML"
           all_filter: "Kõik"
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"
           updates_available_filter: "Uuendused on saadaval"
-          schema:
-            fields:
-              required: "*nõutud"
-              number:
-                too_small: "peab olema suurem või võrdne kui %{count}"
-                too_large: "peab olema väiksem või võrdne kui %{count}"
+        schema:
+          fields:
+            required: "*nõutud"
+            number:
+              too_small: "peab olema suurem või võrdne kui %{count}"
+              too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
+          edit: "Muuda"
+          filters:
+            all: "Kõik"
+          active_badge:
+            text: "Aktiivne"
           copy_name_prefix: "Koopia sellest"
-          delete_confirm: "Kas kustutada see vävripalett?"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
           revert: "Võta tagasi"
           primary:
             name: "primaarne"
-            description: "Enamik tekste, ikoone ja ääri."
           secondary:
             name: "teise astme"
-            description: "Peamine taustavärv ja teksti värv mõnedel nuppudel."
           tertiary:
             name: "kolmanda astme"
-            description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
           header_background:
             name: "päise taust"
-            description: "Saidi päise taustavärv."
           header_primary:
             name: "päise primaarne"
-            description: "Tekst ja ikoonid saidi päises."
           highlight:
             name: "esiletõst"
-            description: "Taustavärv esiletõstetud elementidel lehel, nagu postitused ja teemad."
           danger:
             name: "oht"
-            description: "Esiletõstetud tegevuste värv nagu postituste ja teemade kustutamine."
           success:
             name: "edu"
-            description: "Näitab, et tegevus oli edukas."
           love:
             name: "armastus"
-            description: "Meeldimise nupu värvus."
           selected:
             name: "valitud"
+          editor:
+            light: "Hele"
+            dark: "Tume"
         email_style:
           html: "HTML"
           css: "CSS"
@@ -3449,7 +3575,6 @@ et:
         activity: Tegevused
         like_count: Meeldimisi antud / saadud
         last_100_days: "viimase 100 päeva jooksul"
-        private_topics_count: Privaatsed teemad
         posts_read_count: Positusi loetud
         post_count: Postitusi loodud
         topics_entered: Vaadatud teemasid
@@ -3486,8 +3611,6 @@ et:
         cant_delete_all_too_many_posts:
           one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem kui %{count} postitus. (delete_all_posts_max)"
           other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem kui %{count} postitust. (delete_all_posts_max)"
-        delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja IP-aadress"
-        delete_dont_block: "Kustuta vaid"
         deleted: "See kasutaja kustutati."
         delete_failed: "Viga selle kasutaja kustutamisel. Veendu, et kõik postitused on kustutatud enne kasutaja kustutamist."
         send_activation_email: "Saada aktiveerimismeil"

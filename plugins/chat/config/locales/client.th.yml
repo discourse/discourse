@@ -63,6 +63,7 @@ th:
         tabs:
           members: สมาชิก
           settings: การตั้งค่า
+        remove_member: "ลบ"
       direct_message_creator:
         title: สร้างข้อความใหม่
         prefix: "ถึง:"

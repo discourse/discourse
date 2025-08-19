@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -163,6 +163,7 @@ export default class TopicList extends RestModel {
     this.set("params", params);
   }
 
+  @action
   loadMore() {
     if (this.loadingMore) {
       return Promise.resolve();

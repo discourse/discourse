@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelThreadMessagesController < Chat::ApiController
+  MAX_PAGE_SIZE = 50 # Previous limit to avoid abuses
+
   def index
-    ::Chat::ListChannelThreadMessages.call(service_params) do |result|
+    ::Chat::ListChannelThreadMessages.call(
+      options: {
+        max_page_size: MAX_PAGE_SIZE,
+      },
+      **service_params,
+    ) do |result|
       on_success do
         render_serialized(
           result,

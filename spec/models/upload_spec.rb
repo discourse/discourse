@@ -111,7 +111,11 @@ RSpec.describe Upload do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     expect(upload.persisted?).to eq(false)
     expect(upload.errors.messages[:base].first).to eq(
-      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 10),
+      I18n.t(
+        "upload.images.larger_than_x_megapixels",
+        max_image_megapixels: 10,
+        original_filename: upload.original_filename,
+      ),
     )
   end
 
@@ -453,7 +457,7 @@ RSpec.describe Upload do
       end
 
       it "marks the upload as not secure if its access control post is a public post" do
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload)
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(upload)
         upload.update!(secure: true, access_control_post: Fabricate(:post))
         upload.update_secure_status
         expect(upload.secure).to eq(false)
@@ -466,18 +470,9 @@ RSpec.describe Upload do
       end
 
       it "does not attempt to change the ACL if the secure status has not changed" do
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(upload).never
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         upload.update_secure_status
-      end
-
-      it "does not attempt to change the ACL if s3_use_acls is disabled" do
-        SiteSetting.secure_uploads = false
-        SiteSetting.s3_use_acls = false
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
-        upload.update!(secure: true, access_control_post: Fabricate(:post))
-        upload.update_secure_status
-        expect(upload.secure).to eq(false)
       end
 
       it "marks an image upload as secure if login_required is enabled" do
@@ -518,7 +513,7 @@ RSpec.describe Upload do
       it "does not throw an error if the object storage provider does not support ACLs" do
         FileStore::S3Store
           .any_instance
-          .stubs(:update_upload_ACL)
+          .stubs(:update_upload_access_control)
           .raises(
             Aws::S3::Errors::NotImplemented.new(
               "A header you provided implies functionality that is not implemented",

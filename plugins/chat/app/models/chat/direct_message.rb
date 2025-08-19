@@ -27,7 +27,7 @@ module Chat
     end
 
     def user_can_access?(user)
-      users.include?(user)
+      users.include?(user) || group? && user.admin?
     end
 
     def chat_channel_title_for_user(chat_channel, acting_user)
@@ -94,7 +94,7 @@ end
 # Table name: direct_message_channels
 #
 #  id         :bigint           not null, primary key
-#  group      :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  group      :boolean          default(FALSE), not null
 #

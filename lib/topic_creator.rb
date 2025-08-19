@@ -134,7 +134,7 @@ class TopicCreator
       visible: @opts[:visible],
     }
 
-    %i[subtype archetype import_mode advance_draft].each do |key|
+    %i[subtype archetype import_mode advance_draft locale].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 

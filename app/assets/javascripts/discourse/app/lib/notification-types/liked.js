@@ -1,17 +1,25 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
-import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get label() {
+    const nameOrUsername = this.siteSettings.prioritize_full_name_in_ux
+      ? this.notification.data.display_name ||
+        this.notification.data.display_username
+      : this.notification.data.display_username;
+
     if (this.count === 2) {
+      const nameOrUsername2 = this.siteSettings.prioritize_full_name_in_ux
+        ? this.notification.data.name2 || this.notification.data.username2
+        : this.notification.data.username2;
+
       return i18n("notifications.liked_by_2_users", {
-        username: this.username,
-        username2: this.#username2,
+        username: nameOrUsername,
+        username2: nameOrUsername2,
       });
     } else if (this.count > 2) {
       return i18n("notifications.liked_by_multiple_users", {
-        username: this.username,
+        username: nameOrUsername,
         count: this.count - 1,
       });
     } else {
@@ -29,9 +37,5 @@ export default class extends NotificationTypeBase {
 
   get count() {
     return this.notification.data.count;
-  }
-
-  get #username2() {
-    return formatUsername(this.notification.data.username2);
   }
 }

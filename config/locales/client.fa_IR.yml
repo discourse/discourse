@@ -194,21 +194,19 @@ fa_IR:
       dismiss: "رد کردن"
     bootstrap_mode: "شروع"
     back_button: "بازگشت"
+    welcome_banner:
+      header:
+        logged_in_members: "خوش آمدید، %{preferred_display_name}!"
+        anonymous_members: "به %{site_name} خوش آمدید!"
+      search: "جستجو"
     themes:
       default_description: "پیش‌فرض"
-      broken_theme_alert: "ممکن است سایت شما به دلیل خطا در پوسته یا کامپوننت کار نکند."
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
       only_admins: "(این پیام فقط به مدیران سایت نمایش داده می‌شود)"
     broken_decorator_alert: "ممکن است پست ها به درستی نمایش داده نشوند زیرا یکی از دکوراتورهای محتوای پست در سایت شما خطایی ایجاد کرده است."
     broken_page_change_alert: "یک کنترل کننده onPageChange خطایی ایجاد کرد. برای اطلاعات بیشتر، ابزارهای توسعه دهنده مرورگر را بررسی کنید."
     broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
     broken_transformer_alert: "خطایی وجود داشت. ممکن است سایت شما به درستی کار نکند."
-    critical_deprecation:
-      notice: "<b>[اطلاعیه مدیر]</b> یکی از پوسته‌ها یا افزونه‌های شما برای سازگاری با تغییرات آتی هسته Discourse، نیازمند به‌روزرسانی است."
-      id: "(شناسه:<em>%{id}</em>)"
-      linked_id: "(شناسه:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "پوسته شناسایی شده: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "افزونه شناسایی شده: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -387,6 +385,7 @@ fa_IR:
       created: "شما این نوشته را نشانک کردید. %{name}"
       created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
       create: "ایجاد نشانک"
+      clear_reminder: "پاک کردن یادآور"
       edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
@@ -449,14 +448,11 @@ fa_IR:
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "پیش‌نویس‌ موضوع جدید"
       new_private_message: "پیش‌نویس پیام شخصی جدید"
-      abandon:
-        confirm: "شما از قبل یک پیش نویس در حال انجام دارید. دوست دارید با آن چه کار کنید؟"
-        yes_value: "حذف"
-        no_value: "ادامه"
+      edit_topic: "ویرایش پیش نویس موضوع"
       dropdown:
         title: "آخرین منوی پیش‌نویس‌ها را باز کن"
         untitled: "پیش نویس بی عنوان"
-        view_all: "مشاهده همه"
+        view_all: "مشاهده تمام پیش‌نویس‌ها"
         other_drafts:
           one: "+%{count} پیش نویس دیگر"
           other: "+%{count} پیش نویس دیگر"
@@ -479,7 +475,7 @@ fa_IR:
       one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
-    cancel: "لغو"
+    cancel: "انصراف"
     deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در‌حال ذخیره‌سازی..."
@@ -521,6 +517,17 @@ fa_IR:
       date_filter: "ارسال شده بین"
       in_reply_to: "در پاسخ به"
       filtered_flagged_by: "پرچم گذاری شده توسط"
+      unknown:
+        title:
+          one: "از طرف افزونه غیرفعال شده، موارد قابل بازبینی معلق دارید:"
+          other: "از طرف افزونه‌های غیرفعال، موارد قابل بازبینی معلق دارید:"
+        instruction: "تا زمانی که پلاگین مربوط را فعال نکنید، نمی توانند به درستی نمایش داده شوند. لطفا افزونه را فعال کنید و صفحه را تازه کنید. البته می توانید آنها را نادیده نیز بگیرید. <a href='%{url}' target='_blank'>بیشتر بدانید...</a>"
+        reviewable_unknown_source: "%{reviewableType} (افزونه ناشناخته)"
+        reviewable_known_source: "%{reviewableType} (از افزونه '%{pluginName}')"
+        ignore_all: "چشم‌پوشی از همه"
+        enable_plugins: "فعال‌سازی افزونه"
+        delete_confirm: "آیا مطمئن هستید که می‌خواهید تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال را حذف کنید؟"
+        ignore_success: "تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال حذف شده‌اند."
       explain:
         why: "توضیح دهید که چرا این مورد در صف پایان یافت"
         title: "امتیازدهی قابل تجدید نظر"
@@ -555,6 +562,7 @@ fa_IR:
         required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
+        automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
       claim:
         title: "درخواست این مبحث"
       unclaim:
@@ -591,6 +599,10 @@ fa_IR:
         name: "نام"
         fields: "فیلدها"
         reject_reason: "دلیل"
+        scrubbed_reason: "دلیل"
+        scrub_record:
+          reason_placeholder: "دلیل..."
+          cancel_button: "انصراف"
       user_percentage:
         summary:
           one: "%{agreed}، %{disagreed}، %{ignored} (از پرچم آخر)"
@@ -703,6 +715,16 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      notes:
+        delete: "حذف"
+      review_user: "کاربر"
+      copy_link: "رونوشت پیوند"
+      insights:
+        activities:
+          posts:
+            one: "%{count} فرسته"
+            other: "%{count} نوشته"
+        visibility: "قابل مشاهده"
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از ناظران است. لطفا صبر داشته باشید."
@@ -1149,7 +1171,6 @@ fa_IR:
       said: "%{username}:"
       profile: "نمایه"
       profile_possessive: "نمایه‌ی %{username}"
-      account_possessive: "حساب کاربری %{name}"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
       download_archive:
@@ -1266,7 +1287,6 @@ fa_IR:
         description: "نکات و نشان‌های ورود کاربر جدید را نادیده بگیرید"
       reset_seen_user_tips: "دوباره نکات کاربر را نشان بده"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
-      color_scheme_default_on_all_devices: "پالت رنگی پیش‌فرض را در همه دستگاه‌های من تنظیم کن"
       color_scheme: "پالت رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
@@ -1276,6 +1296,10 @@ fa_IR:
         regular: "عادی"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
+        interface_modes:
+          auto: "خودکار"
+          light: "روشن"
+          dark: "تیره"
       dark_mode: "حالت تاریک"
       dark_mode_enable: "پالت رنگ حالت تاریک خودکار را فعال کنید"
       text_size_default_on_all_devices: "این سایز قلم حالت پیش فرض در تمام دستگاه های من باشد"
@@ -1301,6 +1325,8 @@ fa_IR:
       suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
+      silenced_permanently: "صدای این کاربر قطع شده است."
+      silenced_reason: "دلیل:"
       github_profile: "گیت‌هاب"
       email_activity_summary: "چکیده‌ی فعالیت"
       mailing_list_mode:
@@ -1819,7 +1845,8 @@ fa_IR:
         removed: "پاک شد"
         search: "دعوت‌ها را برای جستجو تایپ کنید…"
         user: "کاربر دعوت شده"
-        none: "هیچ دعوتنامه ای برای نمایش نیست"
+        none:
+          title: "هیچ دعوتنامه ای برای نمایش نیست"
         truncated:
           one: "نمایش %{count} دعوت اول."
           other: "نمایش %{count} دعوت اول."
@@ -1870,6 +1897,7 @@ fa_IR:
           edit_link_options: "گزینه های پیوند را ویرایش کنید یا از طریق ایمیل ارسال کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          description: "توضیح"
           restrict: "محدود کردن به"
           restrict_email: "محدود کردن ایمیل"
           restrict_domain: "محدود کردن دامنه"
@@ -1981,7 +2009,6 @@ fa_IR:
         title: "نشانی IP ثبت‌نامی"
       avatar:
         title: "عکس نمایه"
-        header_title: "نمایه، پیام‌ها، نشانک‌ها و تنظیمات شخصی"
         name_and_description: "%{name} - %{description}"
         edit: "ویرایش تصویر پروفایل"
       title:
@@ -2058,6 +2085,9 @@ fa_IR:
     modal:
       close: "بسته"
       dismiss_error: "رد کردن خطا"
+    multi_select:
+      no_results: "هیچ نتیجه‌ای وجود ندارد"
+      search: "جستجو…"
     form_kit:
       reset: بازنشانی
       optional: اختیاری
@@ -2299,10 +2329,6 @@ fa_IR:
         name: "گوگل"
         title: "ورود با گوگل"
         sr_title: "ورود با گوگل"
-      twitter:
-        name: "توئیتر"
-        title: "ورود با توییتر"
-        sr_title: "ورود با توییتر"
       instagram:
         name: "اینستاگرام"
         title: "ورود با اینستاگرام"
@@ -2345,12 +2371,7 @@ fa_IR:
     password_reset:
       continue: "برو به %{site_name}"
     emoji_set:
-      apple_international: "اپل/جهانی"
-      google: "گوگل"
-      twitter: "توئیتر"
-      win10: "ویندوز 10"
-      google_classic: "گوگل کلاسیک"
-      facebook_messenger: "پیامرسان فیس بوک"
+      standard: استاندارد
     category_page_style:
       categories_only: "فقط دسته‌بندی‌ها"
       categories_with_featured_topics: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
@@ -2364,6 +2385,10 @@ fa_IR:
       required_at_signup: "مورد نیاز"
       optional_at_signup: "اختیاری"
       hidden_at_signup: "اختیاری، پنهان در هنگام ثبت نام"
+    interface_color_selector:
+      disabled: "نمایش داده نشود"
+      sidebar_footer: "نمایش در پاورقی نوار کناری"
+      header: "نمایش در سر صفحه"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2445,7 +2470,6 @@ fa_IR:
       unlist: "از فهرست پاک شده"
       add_warning: "این یک هشدار رسمی است."
       toggle_whisper: "تغییر وضعیت زمزمه"
-      toggle_unlisted: "تغییر وضعیت از لیست خارج شده"
       insert_table: "درج جدول"
       posting_not_on_topic: "به کدام موضوع می‌خواهید پاسخ دهید؟"
       saved_local_draft_tip: "به صورت محلی ذخیره شد"
@@ -2531,11 +2555,11 @@ fa_IR:
       italic_label: "I"
       italic_title: "تاکید"
       italic_text: "متن تاکید شده"
-      link_title: "فرا‌پیوند"
+      link_title: "پیوند"
       link_description: "توضیحات لینک را اینجا وارد کنید."
-      link_dialog_title: "افزودن پیوند"
-      link_optional_text: "عنوان اختیاری"
-      link_url_placeholder: "یک نشانی وب را جایگذاری کنید یا برای جستجوی موضوعات تایپ کنید"
+      link_dialog_action: "درج کردن"
+      link_edit_action: "به روز رسانی"
+      link_optional_text: "متن"
       blockquote_title: "نقل‌قول"
       blockquote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
@@ -2601,9 +2625,14 @@ fa_IR:
       image_alt_text:
         aria_label: متن Alt برای عکس
         title: "توضیحات تصویر را اضافه کنید"
+      image_toolbar:
+        alt_text: "توضیحات تصویر را اضافه کنید"
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
+      link_toolbar:
+        copy: "رونوشت پیوند"
+        link_copied: "لینک کپی شد!"
     notifications:
       tooltip:
         regular:
@@ -2732,9 +2761,9 @@ fa_IR:
         new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
+      change: "تغییر"
+      delete: "حذف"
       uploading: "در حال بروز‌رسانی "
-      processing: "پردازش بارگذاری"
-      select_file: "انتخاب فایل"
       default_image_alt_text: تصویر
     search:
       sort_by: "مرتب سازی بر اساس"
@@ -2777,8 +2806,6 @@ fa_IR:
       in_topics_posts: "در تمامی موضوعات و پست‌ها"
       enter_hint: "یا Enter را فشار دهید"
       in_posts_by: "در پست‌های %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "دوباره برای استفاده از جستجوی بومی مرورگر"
       recent: "جستجوهای اخیر"
       clear_recent: "جستجوهای اخیر را پاک کن"
       type:
@@ -2863,7 +2890,6 @@ fa_IR:
           aria_label: فیلتر بر اساس حداکثر بازدید
         additional_options:
           label: "بر اساس تعداد پست‌ها و بازدیدهای موضوع فیلتر کنید"
-    hamburger_menu: "منو"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -3003,10 +3029,6 @@ fa_IR:
         top: "موضوع برتری وجود ندارد."
         hot: "هیچ موضوع داغی وجود ندارد."
         filter: "هنوز هیچ موضوعی وجود ندارد."
-        educate:
-          new: '<p>موضوعات جدید شما در اینجا ظاهر می‌شوند. موضوعات به‌طور پیش‌فرض، جدید در نظر گرفته می‌شوند و اگر در ۲ روز گذشته ایجاد شده باشند، نشانگر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> را نشان می‌دهند.</p><p>برای تغییر این مورد، از تنظیمات <a href="%{userPrefsUrl}"></a> دیدن کنید.</p>'
-          unread: "<p>موضوعات خوانده نشده شما در اینجا ظاهر می‌شوند.</p><p>موضوعات به طور پیش فرض، خوانده نشده در نظر گرفته می شوند و تعداد خوانده نشده <span class=\"badge unread-posts badge-notification\">۱</span> را نشان می‌دهد اگر شما:</p><ul><li>موضوع را ایجاد کرده اید</li><li>به موضوع پاسخ داده‌اید</li><li>موضوع را برای بیش از ۵ دقیقه خوانده‌اید</li></ul><p>یا اگر به صراحت موضوع را در هر موضوع به حالت ردیابی یا دنبال شده، از طریق \U0001F514 تنظیم کرده اید.</p><p> به <a href=\"%{userPrefsUrl}\">تنظیمات</a> خود مراجعه کنید تا آن را تغییر دهید.</p>"
-          new_new: "<p>موضوعات جدید شما در اینجا ظاهر می شوند و موضوعات خوانده نشده شما نیز نمایش داده می‌شوند. موضوعات به طور پیش فرض، جدید در نظر گرفته می شوند و اگر در ۲ روز گذشته ایجاد شده باشند، نشانگر <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> را نشان می دهند. موضوعات خوانده نشده شمارش خوانده نشده <span class=\"badge unread-posts badge-notification\">۱</span> را نشان می دهند اگر: موضوع را ایجاد کرده اید، به موضوع پاسخ داده اید، موضوع را بیش از ۵ دقیقه مطالعه کرده اید یا اگر موضوع را صریحاً به حالت پیگیری شده یا دنبال شده از طریق \U0001F514 در هر موضوع تنظیم کرده‌اید.</p><p> به <a href=\"%{userPrefsUrl}\">تنظیمات</a> خود مراجعه کنید تا آن را تغییر دهید.</p>"
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -3559,11 +3581,8 @@ fa_IR:
         one: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
         other: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
       sr_post_like_count_button:
-        one: "%{count} کاربر این پست را پسندیده است. برای مشاهده کلیک کنید"
-        other: "%{count} کاربر این پست را پسندیده‌اند. برای مشاهده کلیک کنید"
-      sr_post_read_count_button:
-        one: "%{count} کاربر این پست را خوانده است. برای مشاهده کلیک کنید"
-        other: "%{count} کاربر این پست را خوانده‌اند. برای مشاهده کلیک کنید"
+        one: "%{count} کاربر این مورد را پسندیده‌اند."
+        other: "%{count} کاربر این مورد را پسندیده‌اند."
       filtered_replies_hint:
         one: "این پست و پاسخ آن را مشاهده کنید"
         other: "این پست و %{count} پاسخ آن را مشاهده کنید"
@@ -3573,6 +3592,16 @@ fa_IR:
       in_reply_to: "پست اصلی را بارگیری کنید"
       view_all_posts: "نمایش همه نوشته‌ها"
       badge_granted_tooltip: "کاربر %{username} به خاطر این پست، نشان \"%{badge_name}\" را کسب کرد!"
+      localizations:
+        table:
+          locale: "زبان"
+          actions: "عملیات"
+          edit: "ویرایش"
+          delete: "حذف"
+        add: "افزودن ترجمه جدید"
+        success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
+        post_language_selector:
+          none: "هیچ کدام"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -3680,8 +3709,6 @@ fa_IR:
           read_capped:
             one: "و %{count} نفر دیگر این را خوانده‌اند"
             other: "و %{count} نفر دیگر این را خوانده‌اند"
-          sr_post_likers_list_description: "کاربرانی که این پست را پسندیده‌اند"
-          sr_post_readers_list_description: "کاربرانی که این پست را خوانده‌اند"
         by_you:
           off_topic: "شما برای این مورد پرچم خارج از بحث زدید"
           spam: "شما برای این مورد پرچم هرزنامه زدید"
@@ -3782,6 +3809,14 @@ fa_IR:
       settings: "تنظیمات"
       topic_template: "قالب"
       tags: "برچسب‌ها"
+      localizations: "محلی‌سازی‌ها"
+      localization:
+        locale: "زبان"
+        name: "نام"
+        description: "توضیح"
+        add: "افزودن زبان جدید"
+        remove: "پاک کردن"
+        hint: "در حال حاضر هیچ محلی‌سازی برای این دسته‌بندی وجود ندارد. برای افزودن محلی‌سازی، روی «افزودن زبان جدید» در زیر کلیک کنید."
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_allowed_tag_groups: "این گروه برچسب را به این دسته محدود کنید:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
@@ -3808,9 +3843,13 @@ fa_IR:
       logo: "تصویر لوگو برای دسته‌بندی"
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
-      badge_colors: "رنگ نشان‌ها"
-      background_color: "رنگ پس‌زمینه"
-      foreground_color: "رنگ پیش‌زمینه"
+      background_color: "رنگ"
+      styles:
+        icon: "آیکن"
+        emoji: "شکلک"
+        options:
+          icon: "آیکن"
+          emoji: "شکلک"
       color_used: "رنگ در حال استفاده"
       predefined_colors: "گزینه‌های رنگ از پیش تعریف شده"
       name_placeholder: "حداکثر یک یا دو کلمه"
@@ -4026,6 +4065,8 @@ fa_IR:
       pinned:
         title: "سنجاق شده"
         help: "این موضوع برای شما سنجاق شده است، و در بالای دسته‌بندی نمایش داده خواهد شد."
+      hot:
+        title: "داغ"
       unlisted:
         help: "این موضوع از فهرست خارج شد و در فهرست موضوعات نمایش داده نخواهد شد؛ و فقط از طریق لینک مستقیم در دسترس خواهد بود. %{unlistedReason}"
       personal_message:
@@ -4168,7 +4209,6 @@ fa_IR:
         today: "امروز"
     custom_homepage:
       admin_message: 'یکی از پوسته‌های شما، اصلاح‌کننده «custom_homepage» را فعال کرده است؛ اما چیزی را در رابط [custom-homepage] خروجی نمی‌دهد. (این پیام فقط برای مدیران سایت نمایش داده می شود.)'
-    browser_update: 'متأسفانه، <a href="https://www.discourse.org/faq/#browser">مرورگر شما پشتیبانی نمی شود</a>. لطفاً برای مشاهده محتوای غنی، وارد شدن به حساب کاربری و پاسخ دادن، <a href="https://browsehappy.com">به مرورگر پشتیبانی شده منتقل شوید</a>.'
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -4276,6 +4316,9 @@ fa_IR:
         prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
         insert_url: "%{shortcut} انتخاب را در ابزار نوشتن باز قرار دهید"
         full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
+      admin:
+        title: "مدیر کل"
+        search_prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -4551,7 +4594,7 @@ fa_IR:
           save: "ذخیره"
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
-          delete_public_confirm: "این بخش <strong>برای همه قابل مشاهده است</strong>، آیا مطمئن هستید که می‌خواهید آن را حذف کنید؟"
+          delete_public_confirm: "این بخش برای همه قابل مشاهده است، آیا مطمئن هستید که می‌خواهید آن را حذف کنید؟"
           update_public_confirm: "تغییرات <strong>برای همه</strong> در این سایت قابل مشاهده خواهد بود. آیا مطمئن هستید؟"
           mark_as_private_confirm: "این بخش <strong>برای همه قابل مشاهده است</strong>. پس از به‌روزرسانی، <strong>فقط برای شما قابل مشاهده خواهد بود</strong>. آیا مطمئن هستید؟"
           reset_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را به حالت پیش فرض بازنشانی کنید؟"
@@ -4630,6 +4673,8 @@ fa_IR:
             badges:
               content: "نشان‌ها"
               title: "تمام نشان‌های موجود برای کسب"
+            filter:
+              content: "فیلتر"
             topics:
               content: "موضوعات"
               title: "همه موضوعات"
@@ -4647,7 +4692,6 @@ fa_IR:
               title: "فهرست همه‌ی کاربران"
             my_posts:
               content: "نوشته‌های من"
-              content_drafts: "پیش‌نویس‌های من"
               title: "فعالیت اخیر موضوع‌های من"
               title_drafts: "پیش‌نویس‌های ارسال‌نشده‌ی من"
               draft_count:
@@ -4667,13 +4711,19 @@ fa_IR:
         forum:
           label: انجمن
       back_to_forum: "بازگشت به انجمن"
-      collapse_all_sections: "جمع‌کردن همه بخش‌ها"
-      expand_all_sections: "گستردن همه بخش‌ها"
-      filter: "فیلتر..."
+      filter_links: "فیلتر کردن پیوندها..."
       clear_filter: "حذف کردن فیلتر"
       no_results:
         title: "هیچ نتیجه‌ای وجود ندارد"
-        description: 'ما نتوانستیم چیزی مطابق با ''%{filter}'' پیدا کنیم.<br><br>آیا می‌خواهید <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">تنظیمات سایت</a> یا <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">لیست کاربران مدیر</a> را جست و جو کنید؟'
+        description_admin_search: "ما نتوانستیم چیزی مطابق با «%{filter}» پیدا کنیم."
+      collapse_all_sections: "جمع‌کردن همه بخش‌ها"
+      expand_all_sections: "گستردن همه بخش‌ها"
+      search: "جستجو"
+      footer:
+        interface_color_selector:
+          light: "روشن"
+          dark: "تیره"
+          auto: "خودکار"
     welcome_topic_banner:
       title: "موضوعی برای خوش‌آمدگویی ایجاد کنید"
       description: "موضوع خوش آمدگویی شما اولین چیزی است که اعضای جدید می‌خوانند. آن را به عنوان یک معرفی کوتاه یا یک خط مشی در نظر بگیرید. به همه اطلاع دهید که این انجمن برای چه کسانی است، چه چیزی می‌توانند در اینجا پیدا کنند و می خواهید ابتدا چه کاری انجام دهند."
@@ -4774,13 +4824,23 @@ fa_IR:
           copy: "رونوشت..."
           paste: "چسباندن..."
           save: "ذخیره به عنوان..."
+    safari_15_warning: "مرورگر شما به زودی دیگر با این انجمن سازگار نخواهد بود. برای ادامه مشارکت در اینجا، لطفا مرورگر خود را ارتقا دهید یا <a href='%{url}'>اطلاعات بیشتری کسب کنید</a>."
+    filter:
+      description:
+        yesterday: "دیروز"
+        last_year: "سال گذشته"
+    discovery:
+      headings:
+        multi_tag:
+          default: "موضوعات برچسب خورده %{tags}"
+        categories: "همه‌ی دسته‌بندی‌ها"
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
-      filter_reports: صافی گزارشات
+      filter_reports: "صافی گزارشات..."
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
@@ -4791,17 +4851,37 @@ fa_IR:
         meta_doc: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
         sidebar_title: "گزارشات"
         back: "بازگشت به همه گزارش‌ها"
-        sidebar_link:
-          all: "تمامی گزارشات"
+      config_sections:
+        account:
+          title: "حساب کاربری"
+        reports:
+          title: "گزارشات"
+        community:
+          title: "انجمن"
+        appearance:
+          title: "ظاهر"
+        email:
+          title: "ایمیل"
+        security:
+          title: "امنیت"
+        plugins:
+          title: "افزونه‌ها"
+        advanced:
+          title: "پیشرفته"
       config:
+        about:
+          title: "درباره سایت شما"
+          header_description: "در اینجا اطلاعاتی در مورد این سایت و تیم خود ارائه دهید تا مردم بدانند که انجمن شما در مورد چیست، چه کسانی پشت آن هستند و در صورت بروز مشکل چگونه با شما تماس بگیرند. در قسمت <a href='%{basePath}/about'>درباره سایت شما</a> نمایش داده می شود."
         developer:
           title: "توسعه دهنده"
         experimental:
           title: "آزمایشی"
           header_description: "ویژگی‌های آزمایشی را برای سایت خود روشن یا خاموش کنید، اکثر این موارد را می‌توان به صورت گروهی کنترل کرد"
-        font_style:
-          title: "سبک قلم"
-          header_description: "سبک‌های قلم مورد استفاده توسط پوسته‌های خود را سفارشی کنید"
+        emojis:
+          title: "شکلک"
+        flags:
+          title: "نظارت"
+          header_description: "سیستم پرچم‌گذاری در Discourse به شما و تیم ناظرتان کمک می‌کند محتوا و رفتار کاربر را مدیریت کنید و جامعه خود را محترم و سالم نگه دارید. پیش‌فرض‌ها برای اکثر جوامع مناسب است و نیازی به تغییر آن‌ها ندارید. با این حال، اگر سایت شما شرایط خاصی دارد، می‌توانید پرچم‌هایی را که نیاز ندارید غیرفعال کنید و پرچم‌های سفارشی خود را اضافه کنید."
         files:
           title: "فایل ها"
           header_description: "تنظیماتی که محدودیت‌های اندازه و نوع فایل، اندازه و منابع آواتار، ذخیره‌سازی فایل، کیفیت و فشرده‌سازی تصویر و موارد دیگر را کنترل می‌کنند."
@@ -4811,12 +4891,19 @@ fa_IR:
         localization:
           title: "محلی‌سازی"
           header_description: "زبان رابط انجمن خود و سایر گزینه‌های محلی سازی را برای اعضای خود پیکربندی کنید"
+          keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
         login_and_authentication:
           title: "ورود و احراز هویت"
           header_description: "نحوه ورود و احراز هویت کاربران، اسرار و کلیدها، ارائه دهندگان OAuth2 و موارد دیگر را پیکربندی کنید"
         logo:
-          title: "لوگوی سایت"
-          header_description: "تغییرات آرم سایت خود را سفارشی کنید"
+          form:
+            logo:
+              title: "لوگوی اصلی"
+            mobile: "موبایل"
+            email: "ایمیل"
+        fonts:
+          backfill_modal:
+            modal_yes: "بله"
         navigation:
           title: "ناوبری"
           header_description: "پیوندهای ناوبری و آیتم‌های منو را برای سایت خود پیکربندی کنید. این شامل مکان و رفتار منوی پیمایش اصلی، پیوندهای سریع در بالای صفحه اصلی، و همچنین نوار کناری مدیریت است."
@@ -4826,15 +4913,13 @@ fa_IR:
         onebox:
           title: "جعبه‌ی پیوند"
           header_description: "نحوه تولید و نمایش پیش نمایش های onebox برای سایتتان را پیکربندی کنید"
-        other:
-          title: "دیگر"
-          header_description: "تنظیماتی که در هیچ دسته دیگری قرار نمی‌گیرند"
         rate_limits:
           title: "میزان محدودیت‌ها"
           header_description: "پیکربندی تعداد دفعاتی که کاربران می‌توانند اقدامات خاصی را انجام دهند، مانند ایجاد موضوعات، ارسال پیام، و ارسال پاسخ"
         search:
-          title: "جستجو"
           header_description: "تنظیمات جستجو از جمله ورود به سیستم و نشانه‌گذاری را برای زبان های چینی و ژاپنی پیکربندی کنید"
+        search_everything:
+          title: "جستجو"
         security:
           title: "امنیت"
           header_description: "پیکربندی تنظیمات امنیتی، از جمله احراز هویت دو مرحله‌ای، امتیازات ناظر، و سیاست‌های امنیتی محتوا"
@@ -4850,6 +4935,126 @@ fa_IR:
         group_permissions:
           title: "مجوزهای گروه"
           header_description: "همه مجوزهای برنامه مبتنی بر گروه در اینجا مدیریت می‌شوند که دسترسی به ویژگی های مختلف در Discourse را کنترل می‌کنند"
+        dashboard:
+          title: "پیشخوان"
+        users:
+          title: "کاربران"
+        groups:
+          title: "گروه‌ها"
+        site_settings:
+          title: "تمام تنظیمات سایت"
+        whats_new:
+          title: "چه چیزی جدید شده؟"
+          keywords: "تغییرات|ویژگی|انتشار"
+        backups:
+          title: "نسخه‌های پشتیبان"
+          header_description: "پشتیبان‌گیری Discourse شامل پایگاه داده کامل سایت است که شامل همه چیز در سایت است: موضوعات، فرسته‌ها، کاربران، گروه‌ها، تنظیمات، پوسته‌ها و غیره. بسته به نحوه ایجاد فایل پشتیبان، ممکن است شامل آپلودها باشد یا نباشد."
+          sub_pages:
+            logs:
+              title: "گزارش‌ها"
+        reports:
+          title: "گزارشات"
+          header_description: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
+        badges:
+          title: "نشان‌ها"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "فرسته‌ها و موضوعات"
+        permalinks:
+          title: " پیوند دائمی"
+        user_fields:
+          title: "فیلدهای کاربر"
+        watched_words:
+          title: "کلمات تماشا شده"
+        color_palettes:
+          title: "پالت‌های رنگ"
+        emoji:
+          title: "شکلک"
+        themes:
+          title: "قالب‌ها"
+          header_description: "پوسته‌ها سفارشی‌سازی‌های گسترده‌ای هستند که چندین عنصر از سبک طراحی تالار گفتمان شما را تغییر می‌دهند و اغلب شامل ویژگی‌های جدید در سمت کاربر نیز می‌شوند"
+        components:
+          title: "کامپوننت‌ها"
+          header_description: "کامپوننت‌ها سفارشی سازی‌های کوچکتری هستند که می‌توانند به پوسته‌ها اضافه شوند تا عناصر خاصی از سبک طراحی انجمن شما را تغییر دهند"
+          keywords: "پوسته|کامپوننت|افزونه"
+        site_texts:
+          title: "متن‌های سایت"
+          header_description: "متن‌هایی را که در Discourse استفاده می شود سفارشی کنید تا با صدا و لحن انجمن شما مطابقت داشته باشد"
+        email:
+          sub_pages:
+            preview_summary:
+              title: "پیش‌نمایش خلاصه"
+              header_description: "پیش نمایش محتوای خلاصه ایمیل های ارسال شده به کاربران غیر فعال"
+            advanced_test:
+              title: "تست پیشرفته"
+              header_description: "ببینید Discourse چگونه ایمیل های دریافتی را پردازش می کند"
+            templates:
+              title: "قالب‌ها"
+              header_description: "قالب های مورد استفاده برای ایجاد ایمیل را سفارشی کنید"
+        email_logs:
+          sub_pages:
+            sent:
+              title: "ارسال شده"
+              header_description: "مشاهده گزارش ایمیل‌های ارسال شده"
+            skipped:
+              title: "رد شده"
+              header_description: "مشاهده گزارش ایمیل‌های نادیده گرفته شده"
+            bounced:
+              title: "برگشته"
+            received:
+              title: "دریافت شده"
+              header_description: "مشاهده گزارش ایمیل‌های دریافتی"
+            rejected:
+              title: "رد شده"
+              header_description: "مشاهده گزارش ایمیل‌های رد شده"
+        email_appearance:
+          title: "ظاهر"
+        staff_action_logs:
+          title: "گزارش‌ها و غربالگری"
+          sub_pages:
+            screened_emails:
+              header_description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود"
+            screened_ips:
+              title: "نمایش IP ها"
+            screened_urls:
+              title: "URL های نمایش داده شده"
+              header_description: "URL های ذکر شده در نوشته‌های کاربرانی مورد استفاده قرار گرفته، که به عنوان هرزنگار شناسایی شده‌اند"
+            search_logs:
+              title: "جستجوی گزارش‌ها"
+              header_description: "مشاهده گزارش جستجوهای انجام شده"
+        plugins:
+          title: "افزونه‌های نصب شده"
+        api_keys:
+          title: "کلیدهای API"
+          header_description: "کلیدهای API به شما این امکان را می دهد که به طور ایمن Discourse را با سیستم‌های خارجی ادغام کنید و اقدامات را خودکار کنید. مدیران می‌توانند کلیدهایی با دامنه‌های خاص برای کنترل دسترسی به منابع و داده‌های حساس ایجاد کنند. دامنه‌ها عملکرد را محدود می‌کنند و امنیت افزایش یافته را تضمین می‌کنند."
+          keywords: "توکن | دامنه"
+        webhooks:
+          title: "webhook ها"
+          header_description: "Webhooks به Discourse اجازه می دهد تا در صورت وقوع رویدادهای خاصی در سایت شما، سرویس های خارجی را مطلع کند. هنگامی که وب هوک راه‌اندازی می شود، یک درخواست POST به URL های ارائه شده ارسال می شود."
+        embedding:
+          title: "جاسازی"
+      theme_site_settings:
+        setting: "تنظیم"
+        default_value: "پیش‌فرض"
+      search:
+        title: "جستجو"
+        result_types:
+          page:
+            one: "صفحه"
+            other: "صفحه"
+          report:
+            one: "گزارش"
+            other: "گزارش"
+          setting:
+            one: "تنظیم"
+            other: "تنظیم"
+          theme:
+            one: "قالب"
+            other: "قالب‌ها"
+          component:
+            one: "کامپوننت "
+            other: "کامپوننت‌ها"
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
@@ -5072,6 +5277,7 @@ fa_IR:
         key: "کلید"
         keys: "کلیدها"
         created: ایجاد شده توسط
+        scope: دامنه
         updated: به روز شده
         last_used: آخرین استفاده
         never_used: هرگز
@@ -5102,6 +5308,7 @@ fa_IR:
             هنگام استفاده از دامنه ها، می توانید یک کلید API را به مجموعه خاصی از نقاط پایانی محدود کنید.
             همچنین می توانید مشخص کنید که کدام پارامترها مجاز خواهند بود. برای جدا کردن مقادیر چندگانه از کاما استفاده کنید.
           title: دامنه‌ها
+          one_or_more: حداقل یک دامنه باید انتخاب شود.
           granular: دانه‌دانه
           read_only: فقط خواندنی
           global: جهانی
@@ -5333,9 +5540,6 @@ fa_IR:
           group_permissions: "مجوزهای گروه"
           users: "کاربران"
           groups: "گروه‌ها"
-          localization:
-            title: "محلی‌سازی"
-            keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
           user_fields: "فیلدهای کاربر"
           watched_words: "کلمات تماشا شده"
           legal: "حقوقی"
@@ -5350,10 +5554,6 @@ fa_IR:
           color_schemes: "پالت‌های رنگ"
           emoji: "شکلک"
           navigation: "ناوبری"
-          themes: "قالب‌ها"
-          components:
-            title: "کامپوننت‌ها"
-            keywords: "پوسته|افزونه"
           site_texts: "متن‌های سایت"
       email_settings:
         title: "تنظیمات ایمیل"
@@ -5379,8 +5579,6 @@ fa_IR:
             description: "نسخه‌های جدید و بهبودهای Discourse را کشف کنید"
       config_areas:
         about:
-          header: "درباره سایت شما"
-          description: "در اینجا اطلاعاتی در مورد این سایت و تیم خود ارائه دهید تا مردم بدانند که انجمن شما در مورد چیست، چه کسانی پشت آن هستند و در صورت بروز مشکل چگونه با شما تماس بگیرند. در قسمت <a href='%{basePath}/about'>درباره سایت شما</a> نمایش داده می شود."
           general_settings: "تنظیمات عمومی"
           community_name: "نام انجمن"
           community_name_placeholder: "انجمن نمونه"
@@ -5390,7 +5588,7 @@ fa_IR:
           community_title_help: "توصیف کوتاه برای صفحات کلیدی مانند دسته‌ها و لیست موضوعات، در برگه مرورگر نشان داده می‌شود."
           banner_image: "تصویر بنر"
           banner_image_help: |
-            در صفحه درباره شما استفاده خواهد شد. اندازه توصیه شده: ۳۰۰*۱۱۰۰ پیکسل. انواع پذیرفته شده: JPG، PNG و SVG تا ۱۰ مگابایت.
+            توصیه شده: ۱۱۰۰x۳۰۰px. فرمت ها: JPG، PNG، SVG (حداکثر ۱۰ مگابایت).
           contact_information: "اطلاعات تماس"
           community_owner: "مالک انجمن"
           community_owner_placeholder: "نام مالک"
@@ -5418,6 +5616,8 @@ fa_IR:
           city_for_disputes_placeholder: "شهر"
           city_for_disputes_help: |
             شهر حل و فصل اختلافات حقوقی مربوط به این انجمن را مشخص کنید.
+          extra_groups:
+            groups: "گروه‌ها"
           optional: "(اختیاری)"
           update: "به روز رسانی"
           toasts:
@@ -5426,9 +5626,7 @@ fa_IR:
             your_organization_saved: "سازمان شما ذخیره شد"
           saved: "ذخیره شد!"
         flags:
-          header: "نظارت"
           edit_header: "ویرایش پرچم"
-          subheader: "سیستم پرچم‌گذاری در Discourse به شما و تیم ناظرتان کمک می‌کند محتوا و رفتار کاربر را مدیریت کنید و جامعه خود را محترم و سالم نگه دارید. پیش‌فرض‌ها برای اکثر جوامع مناسب است و نیازی به تغییر آن‌ها ندارید. با این حال، اگر سایت شما شرایط خاصی دارد، می‌توانید پرچم‌هایی را که نیاز ندارید غیرفعال کنید و پرچم‌های سفارشی خود را اضافه کنید."
           description: "توضیح"
           enabled: "فعال شده؟"
           add: "اضافه کردن پرچم"
@@ -5450,7 +5648,6 @@ fa_IR:
             post: "فرسته‌ها"
             chat_message: "پیام های چت"
             enabled: "این پرچم سفارشی را پس از ذخیره فعال کنید"
-            alert: "پس از استفاده از یک پرچم سفارشی، فقط می توان آن را غیرفعال کرد اما نمی توان آن را ویرایش یا حذف کرد."
             edit_flag: "ویرایش پرچم"
             non_editable: "شما نمی توانید این پرچم را ویرایش کنید زیرا یک پرچم سیستمی است یا قبلاً در سیستم بررسی استفاده شده است، اما همچنان می توانید آن را غیرفعال کنید."
             delete_flag: "حذف پرچم"
@@ -5470,18 +5667,33 @@ fa_IR:
           delete: "حذف"
           more_options:
             title: "گزینه های بیشتر"
-        look_and_feel:
-          title: "شکل و شمایل"
-          description: "سایت Discourse خود را سفارشی کرده و برندسازی کنید و سبکی متمایز به آن بدهید."
+        themes_and_components:
+          breadcrumb_title: "سفارشی‌سازی"
+          install: "نصب"
           themes:
             title: "قالب‌ها"
             themes_intro: "برای شروع یک پوسته جدید نصب کنید یا با استفاده از این منابع، پوسته جدید خود را از ابتدا ایجاد کنید."
-            themes_intro_img_alt: "جایگاه موقت قالب جدید"
-            set_default_theme: "تنظیم به عنوان پیش فرض"
-            default_theme: "پوسته پیش‌فرض"
-            themes_description: "پوسته‌ها سفارشی‌سازی‌های گسترده‌ای هستند که چندین عنصر از سبک طراحی تالار گفتمان شما را تغییر می‌دهند و اغلب شامل ویژگی‌های جدید در سمت کاربر نیز می‌شوند."
             new_theme: "پوسته جدید"
-            user_selectable: "قابل انتخاب توسط کاربر"
+            install: "نصب"
+          components:
+            title: "کامپوننت‌ها"
+            install: "نصب"
+            name: "نام"
+            enabled: "فعال شده؟"
+            by_author: "توسط %{name}"
+            learn_more: "بیشتر بدانید"
+            edit: "ویرایش"
+            preview: "پیش‌نمایش"
+            check_update: "برررسی به‌روز‌رسانی‌ها"
+            export: "خروجی گرفتن"
+            convert: "تبدیل"
+            delete: "حذف"
+            filter_by: "فیلتر بر اساس"
+            filter_by_all: "همه"
+            filter_by_used: "استفاده شده"
+            filter_by_unused: "استفاده نشده"
+            delete_confirm: 'آیا از حذف "%{name}" مطمئن هستید؟ '
+            badge_unused: "استفاده نشده"
         user_fields:
           field: "فیلد"
           type: "نوع"
@@ -5492,10 +5704,20 @@ fa_IR:
           delete: "حذف"
           delete_successful: "فیلد کاربر حذف شد."
           save_successful: "فیلد کاربر ذخیره شد."
+        color_palettes:
+          palette_name: "نام"
+          copy_to_clipboard: "کپی در clipboard"
+          copied_to_clipboard: "کپی شد"
+          copy_to_clipboard_error: "خطا در کپی اطلاعات"
+          duplicate: "تکراری"
+          delete: "حذف"
+          color_options:
+            toggle: "قابل انتخاب توسط کاربر"
+            toggle_description: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
+          colors:
+            title: "رنگ‌ها"
       plugins:
         title: "افزونه‌ها"
-        installed: "افزونه‌های نصب شده"
-        description: "هر افزونه Discourse که نصب کرده اید، یا افزونه هایی که با میزبانی Discourse از قبل نصب شده اند، در این لیست ظاهر می‌شوند."
         name: "نام"
         none_installed: "افزونه‌ای نصب نشده است."
         version: "نسخه"
@@ -5510,25 +5732,11 @@ fa_IR:
         author: "توسط %{author}"
         experimental_badge: "آزمایشی"
         learn_more: "بیشتر بدانید"
-        sidebar_link:
-          installed: "نصب"
-      advanced:
-        title: "پیشرفته"
-        sidebar_link:
-          api_keys:
-            title: "کلیدهای API"
-            keywords: "توکن"
-          webhooks: "webhook ها"
-          developer: "توسعه دهنده"
-          embedding: "جاسازی"
-          rate_limits: "میزان محدودیت‌ها"
-          user_api: "API کاربر"
-          onebox: "جعبه‌ی پیوند"
-          files: "فایل ها"
-          other_options: "دیگر"
-          search: "جستجو"
-          experimental: "آزمایشی"
-          all_site_settings: "تمام تنظیمات سایت"
+        filters:
+          all: "همه"
+          enabled: "فعال شده"
+          disabled: "غیرفعال"
+          reset: "بازنشانی"
       navigation_menu:
         sidebar: "نوار کناری"
         header_dropdown: "فهرست کشویی سربرگ"
@@ -5536,7 +5744,6 @@ fa_IR:
       backups:
         title: "پشتیبان گیری"
         files_title: "فایل‌های پشتیبان"
-        description: "پشتیبان‌گیری Discourse شامل پایگاه داده کامل سایت است که شامل همه چیز در سایت است: موضوعات، فرسته‌ها، کاربران، گروه‌ها، تنظیمات، پوسته‌ها و غیره. بسته به نحوه ایجاد فایل پشتیبان، ممکن است شامل آپلودها باشد یا نباشد."
         menu:
           backups: "نسخه‌های پشتیبانی"
           backup_files: "فایل‌های پشتیبان"
@@ -5654,7 +5861,8 @@ fa_IR:
           theme: "قالب"
           component: "کامپوننت "
           components: "کامپوننت‌ها"
-          search_placeholder: "برای جستجو تایپ کنید…"
+          filter_all: "همه"
+          filter_user_selectable: "قابل انتخاب توسط کاربر"
           theme_name: "نام قالب"
           component_name: "نام کامپوننت"
           themes_intro: "برای شروع یک تم موجود را انتخاب کنید یا یک تم جدید نصب کنید"
@@ -5679,19 +5887,15 @@ fa_IR:
           common: "مشترک"
           desktop: "کامپیوتر"
           mobile: "موبایل"
-          settings: "تنظیمات"
-          translations: "ترجمه‌ها"
-          extra_scss: "SCSS‌های بیشتر"
           extra_files: "فایل‌های اضافی"
           extra_files_upload: "برای مشاهده این فایل‌ها، پوسته را صادر کنید."
           extra_files_remote: "برای مشاهده این فایل‌ها، پوسته را صادر کنید یا مخزن git را بررسی کنید."
           preview: "پیش‌نمایش"
+          default: "فعال"
           settings_editor: "تنظیمات ویرایشگر"
-          show_advanced: "نمایش فیلد‌های پیشرفته"
-          hide_advanced: "مخفی‌کردن فیلد‌های پیشرفته"
-          hide_unused_fields: "مخفی‌کردن فیلد‌های بلااستفاده"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"
+          user_selectable_badge_label: "قابل انتخاب توسط کاربر"
           color_scheme_user_selectable: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
           auto_update: "به‌روزرسانی خودکار هنگام به‌روزرسانی Discourse"
           color_scheme: "پالت رنگ"
@@ -5709,8 +5913,6 @@ fa_IR:
           convert_theme_alert_generic: "آیا مطمئن هستید که می خواهید این پوسته را به کامپوننت تبدیل کنید؟"
           convert_theme_tooltip: "تبدیل این تم به کامپوننت"
           inactive_themes: "تم های غیر فعال:"
-          set_default_theme: "تنظیم به عنوان پیش‌فرض"
-          default_theme: "پوسته پیش‌فرض"
           set_default_success: "پوسته پیش‌فرض روی %{theme} تنظیم شد."
           install_success: "%{theme} با موفقیت نصب شد!"
           inactive_components: "کامپوننت‌های بلااستفاده:"
@@ -5742,9 +5944,7 @@ fa_IR:
           unsaved_changes_alert: "تغییرات‌تان را هنوز ذخیره نکرده‌اید، می‌خواهید آن‌ها را نادیده گرفته و ادامه دهید؟"
           discard: "دور انداختن"
           stay: "ماندن"
-          css_html: "CSS/HTML سفارشی"
-          edit_css_html: "ویرایش CSS/HTML"
-          edit_css_html_help: "شما CSS یا HTML را ویرایش نکرده‌اید"
+          edit_css_html: "ویرایش کد"
           delete_upload_confirm: "حذف فایل بارگذاری شده؟ (شاید قالب CSS با مشکل مواجه شود!)"
           add_all: "افزودن همه"
           import_web_tip: "مخزن شامل قالب است"
@@ -5781,17 +5981,12 @@ fa_IR:
             error: "این پوسته به طور خودکار غیرفعال شده است زیرا با این نسخه از Discourse سازگار نیست."
             minimum: "نیاز به نسخه %{version} دیسکورس یا بالاتر"
             maximum: "نیاز به نسخه %{version} دیسکورس یا پایین‌تر"
-          update_to_latest: "به‌روز‌رسانی به آخرین نسخه"
           check_for_updates: "برررسی به‌روز‌رسانی‌ها"
           updating: "در حال به‌روز‌رسانی..."
           update_success: "%{theme} به روز رسانی کامل شد"
           up_to_date: "قالب به روز است،‌ آخرین بررسی در:"
           add: "افزودن"
-          theme_settings: "تنظیمات تم"
-          edit_objects_theme_setting: "ویرایشگر تنظیمات اشیاء"
-          overriden_settings_explanation: "تنظیمات بازنویسی شده، با یک نقطه مشخص شده و دارای رنگ برجسته هستند. برای بازنشانی این تنظیمات به مقدار پیش فرض، دکمه بازنشانی را در کنار آنها فشار دهید."
           no_settings: "این تم تنظیماتی ندارد."
-          theme_translations: "ترجمه تم"
           empty: "هیچ موردی وجود ندارد"
           commits_behind:
             one: "قالب %{count}تغییر دیگر نیاز دارد."
@@ -5800,21 +5995,18 @@ fa_IR:
           remote_theme_edits: "اگر می‌خواهید این پوسته را ویرایش کنید، باید <a href='%{repoURL}' target='_blank'>تغییری را در مخزن آن ارسال کنید</a>"
           repo_unreachable: "نمی توان با مخزن Git این پوسته ارتباط برقرار کرد. پیام خطا:"
           imported_from_archive: "این پوسته از یک فایل zip. وارد شده است"
+          settings: "تنظیمات"
+          colors: "رنگ‌ها"
+          discard_colors: "حذف"
+          colors_title: "رنگ‌ها"
           scss:
             text: "سی اس اس"
-            title: "کد CSS مد نظرتان را وارد کنید، از تمام کد‌های CSS و SCSS معتبر پشتیبانی می‌شود."
-          header:
-            text: "سربرگ"
-            title: "کد HTML را جهت نمایش بالای سربرگ سایت وارد کنید."
           after_header:
             text: "بعد از سربرگ"
-            title: "کد HTML را جهت نمایش در سربرگ تمامی صفحات سایت وارد کنید"
           footer:
             text: "پاورقی"
-            title: "کد HTML جهت نمایش در پاورقی سایت را وارد کنید"
           embedded_scss:
             text: "کد CSS جاسازی شده"
-            title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
           embedded_header:
             text: "سربرگ جاسازی شده"
           color_definitions:
@@ -5830,83 +6022,76 @@ fa_IR:
 
               برای جلوگیری از تداخل با افزونه‌ها و/یا هسته، پیشوند برای نام ویژگی توصیه می‌شود.
           head_tag:
-            text: "Head"
-            title: "کد HTML که قبل از برچسب head درج خواهد شد"
+            text: "<head>"
           body_tag:
-            text: "Body"
-            title: "کد HTML که قبل از برچسب body درج خواهد شد"
-          yaml:
-            text: "YAML"
-            title: "تنظیمات تم را در قالب YAML تعریف کنید"
+            text: "<body>"
+          js:
+            text: "JS"
           all_filter: "همه"
           active_filter: "فعال"
           inactive_filter: "غیر‌فعال"
           updates_available_filter: "به‌روزرسانی‌های موجود"
-          schema:
-            title: "ویرایش تنظیمات %{name}"
-            back_button: "بازگشت به %{name}"
-            fields:
-              required: "*مورد نیاز"
-              groups:
-                at_least:
-                  one: "حداقل %{count} گروه مورد نیاز است"
-                  other: "حداقل %{count} گروه مورد نیاز است"
-              categories:
-                at_least:
-                  one: "حداقل %{count} دسته مورد نیاز است"
-                  other: "حداقل %{count} دسته مورد نیاز است"
-              tags:
-                at_least:
-                  one: "حداقل %{count} برچسب مورد نیاز است"
-                  other: "حداقل %{count} برچسب مورد نیاز است"
-              string:
-                too_short:
-                  one: "نباید کمتر از %{count} نویسه باشد"
-                  other: "نباید کمتر از %{count} نویسه باشد"
-              number:
-                too_small: "باید بزرگتر یا مساوی %{count} باشد"
-                too_large: "باید کمتر و یا مساوی %{count} باشد"
+        schema:
+          title: "ویرایش تنظیمات %{name}"
+          back_button: "بازگشت به %{name}"
+          fields:
+            required: "*مورد نیاز"
+            groups:
+              at_least:
+                one: "حداقل %{count} گروه مورد نیاز است"
+                other: "حداقل %{count} گروه مورد نیاز است"
+            categories:
+              at_least:
+                one: "حداقل %{count} دسته مورد نیاز است"
+                other: "حداقل %{count} دسته مورد نیاز است"
+            tags:
+              at_least:
+                one: "حداقل %{count} برچسب مورد نیاز است"
+                other: "حداقل %{count} برچسب مورد نیاز است"
+            string:
+              too_short:
+                one: "نباید کمتر از %{count} نویسه باشد"
+                other: "نباید کمتر از %{count} نویسه باشد"
+            number:
+              too_small: "باید بزرگتر یا مساوی %{count} باشد"
+              too_large: "باید کمتر و یا مساوی %{count} باشد"
         colors:
           select_base:
             title: "پالت رنگ پایه را انتخاب کنید"
             description: "پالت پایه:"
           title: "رنگ‌ها"
-          edit: "ویرایش پالت های رنگ"
+          edit: "ویرایش"
+          filters:
+            all: "همه"
+            user_selectable: "قابل انتخاب توسط کاربر"
+          active_badge:
+            text: "فعال"
           long_title: "پالت‌های رنگ"
-          description: "پالت‌های رنگی، رنگ‌های اصلی مورد استفاده در رابط سایت شما را مشخص می‌کنند، در حالی که پوسته‌ها می‌توانند سبک، طرح‌بندی و اجزای بیشتری را ارائه دهند - هر دو می‌توانند با هم کار کنند تا ظاهر و احساس منحصر به فرد سایت شما را ایجاد کنند، و هر دو می‌توانند در دسترس کاربران قرار گیرند تا ترجیحات خود را انتخاب کنند."
           about: "رنگ های استفاده شده توسط پوسته‌های خود را تغییر دهید. برای شروع یک پالت رنگ جدید ایجاد کنید."
           new_name: "پالت رنگی جدید"
           copy_name_prefix: "کپی از"
-          delete_confirm: "این پالت رنگ حذف شود؟"
           undo: "بی‌اثر کردن"
           undo_title: "برگشت دادن رنگ دخیره شده خود به آخرین رنگی که ذخیره شده است"
           revert: "برگشت"
           revert_title: "این رنگ را به پالت رنگ پیش‌فرض Discourse بازنشانی کنید."
           primary:
             name: "اصلی"
-            description: "بیشتر متن، آیکن‌ها، و کادر‌ها."
           primary-medium:
             name: "ابتدایی-متوسط"
           primary-low-mid:
             name: "ابتدایی-کم-متوسط"
           secondary:
             name: "دومی"
-            description: "رنگ پس‌زمینه اصلی، و رنگ متن برخی از دکمه‌ها."
           tertiary:
             name: "سومین"
-            description: "لینک‌ها، برخی از دکمه‌ها، اطلاعیه‌ها، و مد رنگ."
           quaternary:
             name: "چهارمی"
-            description: "برای استفاده اختیاری در پوسته‌ها."
           header_background:
             name: "پس زمینه سربرگ"
-            description: "رنگ پس زمینه سربرگ سایت"
           header_primary:
             name: "سربرگ اصلی"
-            description: "نوشته و آیکن‌های سربرگ سایت"
           highlight:
             name: "برجسته کردن"
-            description: "رنگ پس زمینه عناصر را برجسته کرده بر روی صفحه، مانند نوشته‌ها و موضوعات."
           highlight-high:
             name: "برجستگی-بالا"
           highlight-medium:
@@ -5915,19 +6100,17 @@ fa_IR:
             name: "برجستگی-کم"
           danger:
             name: "خطر"
-            description: "برجسته کردن رنگ عملیاتی مثل حذف نوشته‌ها و موضوعات."
           success:
             name: "موفقیت"
-            description: "استفاده شده برای مشخص کردن اقدام موفقیت‌آمیز بود."
           love:
             name: "دوست داشتن"
-            description: "رنگ دکمه‌ی پسند"
           selected:
             name: "انتخاب شده"
-            description: "رنگ پس‌زمینه عناصری مانند موارد فهرست؛ هنگام انتخاب/فعال بودن."
           hover:
             name: "شناور"
-            description: "رنگ پس‌زمینه عناصری مانند موارد فهرست؛ هنگامی که نشانگر ماوس روی آن‌ها قرار می‌گیرد یا فوکوس صفحه کلید دارند."
+          editor:
+            light: "روشن"
+            dark: "تیره"
         robots:
           title: "فایل robots.txt سایت خود را بازنویسی کنید:"
           warning: " به طور دائم تنظیمات مربوط به سایت را بازنویسی می‌کند."
@@ -6482,7 +6665,6 @@ fa_IR:
         activity: فعالیت
         like_count: پسند‌های اعطایی / دریافتی
         last_100_days: "در 100 روز گذشته"
-        private_topics_count: موضوعات خصوصی
         posts_read_count: نوشته‌های خوانده شده
         post_count: نوشته‌های ایجاد شده
         second_factor_enabled: احراز هویت دو مرحله‌ای فعال شد
@@ -6550,8 +6732,8 @@ fa_IR:
           one: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
           other: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
         delete_confirm_title: "آیا مطمئن هستید که می خواهید این کاربر را حذف کنید؟ این عمل دائمی است!"
-        delete_and_block: "آدرس IP و ایمیل را حذف و <b>مسدود</b>کن."
-        delete_dont_block: "فقط حذف"
+        delete_and_block: "حذف کاربر و مسدود کردن ایمیل و آدرس IP او"
+        delete_dont_block: "حذف کاربر"
         deleting_user: "درحال حذف کاربر…"
         deleted: "کاربر حذف شد."
         delete_failed: "خطایی در پاک کردن آن کاربر روی داد. پیش از تلاش برای پاک کردن کاربر، مطمئن شوید همه‌ی نوشته‌های او پاک شوند."

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -8,6 +8,7 @@ import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
@@ -115,7 +116,7 @@ export default class PostListItemDetails extends Component {
 
           <PluginOutlet
             @name="post-list-additional-member-info"
-            @outletArgs={{hash user=@user post=@post}}
+            @outletArgs={{lazyHash user=@user post=@post}}
           />
 
           {{!
@@ -124,7 +125,7 @@ export default class PostListItemDetails extends Component {
           }}
           <PluginOutlet
             @name="group-post-additional-member-info"
-            @outletArgs={{hash user=@user}}
+            @outletArgs={{lazyHash user=@user}}
           />
         </div>
       {{/if}}

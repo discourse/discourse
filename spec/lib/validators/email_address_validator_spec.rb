@@ -16,6 +16,7 @@ RSpec.describe EmailAddressValidator do
       "frank@invalid_host.com",
       "test@discourse.org; a@discourse.org",
       "random",
+      "te=?utf-8?q?st?=@discourse.org",
       "",
     ].each { |email| expect(EmailAddressValidator.valid_value?(email)).to eq(false) }
   end

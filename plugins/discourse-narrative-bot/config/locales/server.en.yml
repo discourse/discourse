@@ -181,9 +181,9 @@ en:
 
           To copy any link, tap and hold on mobile, or right click your pointing device:
 
-           <https://en.wikipedia.org/wiki/Inherently_funny_word>
-           <https://en.wikipedia.org/wiki/Death_by_coconut>
-           <https://en.wikipedia.org/wiki/Calculator_spelling>
+           [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+           [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+           [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Cool! This will work for most <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
@@ -191,7 +191,7 @@ en:
 
           Can you try adding the following link, on its own line, in your next reply?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
 
       images:
         instructions: |-
@@ -426,11 +426,11 @@ en:
 
       poll:
         instructions: |-
-          Did you know you can add a poll to any post? Try using the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to **build a poll**.
+          Did you know you can add a poll to any post? Try using the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> icon in the editor to **build a poll**.
         not_found: |-
           Whoops! There wasn’t any poll in your reply.
 
-          Use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear icon in the editor, or copy and paste this poll in your next reply:
+          Use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> icon in the editor, or copy and paste this poll in your next reply:
 
           ```text
           [poll]
@@ -454,12 +454,12 @@ en:
           - When your post needs lots of optional details that may be overwhelming when read all at once.
 
           [details=Select this to see how it works!]
-          1. Select the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor.
+          1. Select the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> icon in the editor.
           2. Select "Hide Details".
           3. Edit the details summary and add your content.
           [/details]
 
-          Can you use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to add a details section to your next reply?
+          Can you use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> icon in the editor to add a details section to your next reply?
         not_found: |-
           Having trouble creating a details widget? Try including the following in your next reply:
 

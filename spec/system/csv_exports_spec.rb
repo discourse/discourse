@@ -11,8 +11,8 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with user list" do
-    fab!(:group1) { Fabricate(:group) }
-    fab!(:group2) { Fabricate(:group) }
+    fab!(:group1, :group)
+    fab!(:group2, :group)
     fab!(:user) do
       Fabricate(
         :user,
@@ -199,8 +199,8 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with screened emails" do
-    fab!(:screened_email_1) { Fabricate(:screened_email) }
-    fab!(:screened_email_2) { Fabricate(:screened_email) }
+    fab!(:screened_email_1, :screened_email)
+    fab!(:screened_email_2, :screened_email)
 
     xit "exports data" do
       visit "admin/logs/screened_emails"
@@ -236,8 +236,8 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with screened ips" do
-    fab!(:screened_ip_1) { Fabricate(:screened_ip_address) }
-    fab!(:screened_ip_2) { Fabricate(:screened_ip_address) }
+    fab!(:screened_ip_1, :screened_ip_address)
+    fab!(:screened_ip_2, :screened_ip_address)
 
     xit "exports data" do
       visit "admin/logs/screened_ip_addresses"

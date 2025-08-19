@@ -23,24 +23,19 @@ describe "Custom sidebar sections", type: :system do
       expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
       section_modal.fill_name("My section")
-
       section_modal.fill_link("Sidebar Tags", "/tags")
+
       expect(section_modal).to have_enabled_save
 
       section_modal.save
 
+      expect(section_modal).to be_closed
       expect(sidebar).to have_section("My section")
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
   end
 
   include_examples "creating custom sections"
-
-  context "when subfolder install" do
-    before { set_subfolder "/community" }
-
-    include_examples "creating custom sections", "/community"
-  end
 
   it "allows the user to create custom section with /my link" do
     sign_in user
@@ -168,10 +163,12 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_section_button
     sidebar.click_add_link_button
 
-    is_focused =
-      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+    try_until_success do
+      is_focused =
+        page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
 
-    expect(is_focused).to be true
+      expect(is_focused).to be true
+    end
   end
 
   it "accessibility - when customization modal is closed, trigger is refocused" do
@@ -179,12 +176,15 @@ describe "Custom sidebar sections", type: :system do
     visit("/latest")
 
     sidebar.click_add_section_button
+    section_modal.close
 
-    find(".modal-close").click
+    expect(section_modal).to be_closed
 
-    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+    try_until_success do
+      is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
 
-    expect(is_focused).to be true
+      expect(is_focused).to be true
+    end
   end
 
   it "allows the user to edit custom section" do
@@ -358,6 +358,8 @@ describe "Custom sidebar sections", type: :system do
     section_modal.mark_as_public
     section_modal.save
 
+    expect(section_modal).to be_closed
+
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
     section_modal.mark_as_public
@@ -369,6 +371,7 @@ describe "Custom sidebar sections", type: :system do
 
     section_modal.confirm_update
 
+    expect(section_modal).to be_closed
     expect(sidebar).to have_section("Edited public section")
     expect(page).not_to have_css(
       ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SidekiqLogsterReporter
-  def call(ex, context = {})
+  def call(ex, context = {}, _config = nil)
     return if Jobs::HandledExceptionWrapper === ex
     Discourse.reset_active_record_cache_if_needed(ex)
 

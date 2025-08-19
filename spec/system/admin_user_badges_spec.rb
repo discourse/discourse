@@ -3,9 +3,9 @@
 describe "Admin User Badges Page", type: :system do
   before { SiteSetting.enable_badges = true }
 
-  fab!(:granter) { Fabricate(:admin) }
+  fab!(:granter, :admin)
   fab!(:user)
-  fab!(:badge) { Fabricate(:manually_grantable_badge) }
+  fab!(:badge, :manually_grantable_badge)
   let(:user_badges_page) { PageObjects::Pages::AdminUserBadges.new }
 
   before { sign_in(granter) }

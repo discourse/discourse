@@ -12,7 +12,7 @@ describe "UserGlobalNotice" do
       )
     end
 
-    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:topic_1, :topic)
 
     before do
       automation_1.upsert_field!("stalled_after", "choices", { value: "PT1H" }, target: "trigger")
@@ -93,7 +93,7 @@ describe "UserGlobalNotice" do
   end
 
   describe "on_reset" do
-    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:topic_1, :topic)
 
     fab!(:automation_1) do
       Fabricate(:automation, script: DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE)

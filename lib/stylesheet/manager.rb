@@ -8,7 +8,7 @@ end
 
 class Stylesheet::Manager
   # Bump this number to invalidate all stylesheet caches (e.g. if you change something inside the compiler)
-  BASE_COMPILER_VERSION = 2
+  BASE_COMPILER_VERSION = 5
 
   # Add any dependencies here which should automatically cause a global cache invalidation.
   BASE_CACHE_KEY = "#{BASE_COMPILER_VERSION}::#{DiscourseFonts::VERSION}"
@@ -17,7 +17,7 @@ class Stylesheet::Manager
   private_constant :CACHE_PATH
 
   MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  THEME_REGEX = /_theme\z/
+  THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
   @@lock = Mutex.new
@@ -46,11 +46,12 @@ class Stylesheet::Manager
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
     theme_string = theme_id ? "_theme#{theme_id}" : ""
     dark_string = dark ? "_dark" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}#{dark_string}"
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}_#{dark_string}"
   end
 
   def self.precompile_css
-    targets = %i[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+    targets = %i[common desktop mobile admin wizard]
+    targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
       Discourse.find_plugin_css_assets(
@@ -78,23 +79,24 @@ class Stylesheet::Manager
       Theme.where("user_selectable OR id = ?", SiteSetting.default_theme_id).pluck(
         :id,
         :color_scheme_id,
+        :dark_color_scheme_id,
       )
 
     color_schemes = ColorScheme.where(user_selectable: true).to_a
-    color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
     color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
-    targets = %i[desktop_theme mobile_theme]
+    targets = %i[common_theme desktop_theme mobile_theme]
+    targets += targets.map { |t| :"#{t}_rtl" }
     compiled = Set.new
 
-    themes.each do |theme_id, color_scheme_id|
+    themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
       manager = self.new(theme_id: theme_id)
 
       targets.each do |target|
         next if theme_id == -1
 
-        scss_checker = ScssChecker.new(target, manager.theme_ids)
+        scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), manager.theme_ids)
 
         manager
           .load_themes(manager.theme_ids)
@@ -104,17 +106,17 @@ class Stylesheet::Manager
             builder =
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
-            next if theme.component && !scss_checker.has_scss(theme.id)
+            next if !scss_checker.has_scss(theme.id)
             $stderr.puts "precompile target: #{target} #{theme.name}"
             builder.compile(force: true)
             compiled << "#{target}_#{theme.id}"
           end
       end
 
-      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id)
+      theme_color_scheme = ColorScheme.find_by_id(light_color_scheme_id)
+      theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
-
-      [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
+      [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
         [true, false].each do |dark|
           mode = dark ? "dark" : "light"
           $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (#{mode})"
@@ -285,14 +287,15 @@ class Stylesheet::Manager
   def stylesheet_details(target = :desktop, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
+    relative_url_root = GlobalSetting.relative_url_root
     is_theme_target = !!(target.to_s =~ THEME_REGEX)
 
     array_cache_key =
       (
         if is_theme_target
-          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}"
+          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}_#{relative_url_root}"
         else
-          "array_#{target}_#{current_hostname}"
+          "array_#{target}_#{current_hostname}_#{relative_url_root}"
         end
       )
 
@@ -301,7 +304,7 @@ class Stylesheet::Manager
         stylesheets = []
 
         if is_theme_target
-          scss_checker = ScssChecker.new(target, @theme_ids)
+          scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), @theme_ids)
           themes = load_themes(@theme_ids)
           themes.each do |theme|
             theme_id = theme&.id
@@ -313,7 +316,7 @@ class Stylesheet::Manager
             }
             builder = Builder.new(target: target, theme: theme, manager: self)
 
-            next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            next if !scss_checker.has_scss(theme_id)
             builder.compile unless File.exist?(builder.stylesheet_fullpath)
             href = builder.stylesheet_absolute_url
 
@@ -341,20 +344,20 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_details(color_scheme_id = nil, media, dark: false)
+  def color_scheme_stylesheet_details(
+    color_scheme_id = nil,
+    dark: false,
+    fallback_to_base: true,
+    include_dark_scheme: false
+  )
     theme_id = @theme_id || SiteSetting.default_theme_id
 
-    color_scheme =
-      begin
-        ColorScheme.find(color_scheme_id)
-      rescue StandardError
-        # don't load fallback when requesting dark color scheme
-        return false if media != "all"
+    color_scheme = ColorScheme.find_by(id: color_scheme_id)
 
-        get_theme(theme_id)&.color_scheme || ColorScheme.base
-      end
-
-    return false if !color_scheme
+    if !color_scheme
+      return if !fallback_to_base
+      color_scheme = get_theme(theme_id)&.color_scheme || ColorScheme.base
+    end
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
@@ -378,12 +381,28 @@ class Stylesheet::Manager
 
       href = builder.stylesheet_absolute_url
       stylesheet[:new_href] = href
+
+      if include_dark_scheme
+        dark_href =
+          self.color_scheme_stylesheet_link_tag_href(
+            color_scheme_id,
+            dark: true,
+            fallback_to_base: false,
+          )
+
+        stylesheet[:new_dark_href] = dark_href if dark_href
+      end
+
       stylesheet.freeze
     end
   end
 
-  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = "all", dark: false)
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
+  def color_scheme_stylesheet_preload_tag(
+    color_scheme_id = nil,
+    dark: false,
+    fallback_to_base: true
+  )
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
 
     return "" if !stylesheet
 
@@ -392,21 +411,15 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(
+  def color_scheme_stylesheet_link_tag_href(
     color_scheme_id = nil,
-    media = "all",
-    preload_callback = nil,
-    dark: false
+    dark: false,
+    fallback_to_base: true
   )
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
 
-    return "" if !stylesheet
+    return if !stylesheet
 
-    href = stylesheet[:new_href]
-    preload_callback.call(href, "style") if preload_callback
-
-    css_class = media == "all" ? "light-scheme" : "dark-scheme"
-
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
+    stylesheet[:new_href]
   end
 end

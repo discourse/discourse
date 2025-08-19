@@ -12,12 +12,14 @@ module("Integration | Component | UserTip", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.user_tips = { foo: 1, bar: 2, baz: 3 };
 
-    await render(<template>
-      <UserTip @id="foo" @titleText="first tip" />
-      <UserTip @id="bar" @titleText="second tip" />
-      <UserTip @id="baz" @titleText="third tip" />
-      <DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserTip @id="foo" @titleText="first tip" />
+        <UserTip @id="bar" @titleText="second tip" />
+        <UserTip @id="baz" @titleText="third tip" />
+        <DTooltips />
+      </template>
+    );
 
     assert.dom(".user-tip__title").hasText("third tip");
   });

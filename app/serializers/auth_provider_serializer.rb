@@ -1,28 +1,27 @@
 # frozen_string_literal: true
 
 class AuthProviderSerializer < ApplicationSerializer
-  attributes :name,
-             :custom_url,
-             :pretty_name_override,
-             :title_override,
-             :frame_width,
-             :frame_height,
-             :can_connect,
+  attributes :can_connect,
              :can_revoke,
-             :icon
+             :custom_url,
+             :frame_height,
+             :frame_width,
+             :icon,
+             :name,
+             :pretty_name_override,
+             :provider_url,
+             :title_override
 
-  def title_override
-    return SiteSetting.get(object.title_setting) if object.title_setting
-    object.title
+  # ensures that the "/custom" route doesn't trigger the magic custom_url helper in ActionDispatch
+  def custom_url
+    object.custom_url
   end
 
   def pretty_name_override
-    return SiteSetting.get(object.pretty_name_setting) if object.pretty_name_setting
-    object.pretty_name
+    object.pretty_name_setting ? SiteSetting.get(object.pretty_name_setting) : object.pretty_name
   end
 
-  def custom_url
-    # ensures that the "/custom" route doesn't trigger the magic custom_url helper in ActionDispatch
-    object.custom_url
+  def title_override
+    object.title_setting ? SiteSetting.get(object.title_setting) : object.title
   end
 end

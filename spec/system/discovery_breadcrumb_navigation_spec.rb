@@ -3,10 +3,10 @@
 describe "Navigating with breadcrumbs", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
-  fab!(:category1) { Fabricate(:category) }
+  fab!(:category1, :category)
   fab!(:c1_topic) { Fabricate(:topic, category: category1) }
 
-  fab!(:category2) { Fabricate(:category) }
+  fab!(:category2, :category)
   fab!(:c2_topic) { Fabricate(:topic, category: category2) }
   fab!(:category2_child) { Fabricate(:category, parent_category: category2) }
   fab!(:c2_child_topic) { Fabricate(:topic, category: category2_child) }

@@ -78,7 +78,7 @@ RSpec.describe UserActionsController do
       end
 
       context "when checking other users' activity" do
-        fab!(:another_user) { Fabricate(:user) }
+        fab!(:another_user, :user)
 
         context "when user is anonymous" do
           UserAction.private_types.each do |action_type|

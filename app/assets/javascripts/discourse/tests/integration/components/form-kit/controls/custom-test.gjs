@@ -9,15 +9,17 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @description="Bar" as |field|>
-            <field.Custom>
-              <input class="custom-test" />
-            </field.Custom>
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" @description="Bar" as |field|>
+              <field.Custom>
+                <input class="custom-test" />
+              </field.Custom>
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.dom(".form-kit__container-title").hasText("Foo (optional)");
       assert.dom(".form-kit__container-description").hasText("Bar");

@@ -21,15 +21,17 @@ export default class DPageSubheader extends Component {
   <template>
     <div class="d-page-subheader">
       <div class="d-page-subheader__title-row">
-        <h2 class="d-page-subheader__title">
-          {{#if @titleUrl}}
-            <a href={{@titleUrl}} class="d-page-subheader__title-link">
+        {{#if @titleLabel}}
+          <h2 class="d-page-subheader__title">
+            {{#if @titleUrl}}
+              <a href={{@titleUrl}} class="d-page-subheader__title-link">
+                {{@titleLabel}}
+              </a>
+            {{else}}
               {{@titleLabel}}
-            </a>
-          {{else}}
-            {{@titleLabel}}
-          {{/if}}
-        </h2>
+            {{/if}}
+          </h2>
+        {{/if}}
         {{#if (has-block "actions")}}
           <div class="d-page-subheader__actions">
             {{#if this.site.mobileView}}

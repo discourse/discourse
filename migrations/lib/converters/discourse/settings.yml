@@ -1,0 +1,12 @@
+intermediate_db:
+  path: "/shared/import/intermediate.db"
+
+source_db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "username"
+  password: "password"
+  dbname: "discourse_source_db"
+
+categories:
+  map_seeded_categories: true

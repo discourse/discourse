@@ -6,7 +6,7 @@ module Jobs
     every 12.hours
 
     def execute(args)
-      start_measure
+      @measure_times = []
 
       # we don't want to have a situation where Jobs::Badge or stuff like that is attempted to be run
       # so we always prefix with :: to ensure we are running models
@@ -28,19 +28,24 @@ module Jobs
         ::UserEmail,
         ::Category,
         ::TopicThumbnail,
+        ::UserAction,
+        ::UserStat,
+        ::GroupUser,
       ].each do |klass|
-        klass.ensure_consistency!
-        measure(klass)
+        measure_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        begin
+          if [::UserAction, ::UserStat, ::GroupUser].include?(klass)
+            klass.ensure_consistency!(13.hours.ago)
+          else
+            klass.ensure_consistency!
+          end
+        rescue StandardError => e
+          Rails.logger.error("Error ensuring consistency for #{klass}: #{e.message}")
+        end
+
+        @measure_times << [klass, Process.clock_gettime(Process::CLOCK_MONOTONIC) - measure_start]
       end
-
-      UserAction.ensure_consistency!(13.hours.ago)
-      measure(UserAction)
-
-      UserStat.ensure_consistency!(13.hours.ago)
-      measure(UserStat)
-
-      GroupUser.ensure_consistency!(13.hours.ago)
-      measure(GroupUser)
 
       Rails.logger.debug(format_measure)
       nil
@@ -52,17 +57,6 @@ module Jobs
       result = +"EnsureDbConsistency Times\n"
       result << @measure_times.map { |name, duration| "  #{name}: #{duration}" }.join("\n")
       result
-    end
-
-    def start_measure
-      @measure_times = []
-      @measure_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    end
-
-    def measure(step = nil)
-      @measure_now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      @measure_times << [step, @measure_now - @measure_start] if @measure_start
-      @measure_start = @measure_now
     end
   end
 end

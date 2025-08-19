@@ -2,7 +2,7 @@ import RestAdapter from "discourse/adapters/rest";
 
 export default class Adapter extends RestAdapter {
   basePath() {
-    return "/admin/plugins/discourse-automation/";
+    return "/admin/plugins/automation/";
   }
 
   pathFor() {

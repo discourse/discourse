@@ -19,7 +19,7 @@ describe "Post selection | Fast edit", type: :system do
     )
   end
 
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before { sign_in(current_user) }
 

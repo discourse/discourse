@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    policy_enabled: "Дозволити політики?"
+    policy_restrict_to_staff_posts: "Політики можуть з'являтися лише на статтях персоналу"
+    policy_easy_revoke: "Показувати кнопки \"Приймаю\" і \"відкликати\" одночасно,"
+  discourse_policy:
+    errors:
+      user_missing: "Користувача немає в групі"
+      group_not_found: "Групу для політики не знайдено"
+      no_policy: "Для повідомлення не існує політики"
+      staff_only: "Політика може застосовуватися лише до посад персоналу"
+    error:
+      no_permission: "Не авторизовано"
+  reports:
+    unaccepted-policies:
+      title: Неприйняті правила
+      labels:
+        topic_id: ID теми
+        user_id: ID користувача
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Політика потребує вашого перегляду: %{topic_title}"
+      visit_topic: "Відвідати тему"
+      visit_link_to_respond: "%{visit_topic_link} щоб відповісти."
+      unsubscribe: "Змініть %{email_preferences_link}, або %{unsubscribe_link} , щоб скасувати підписку."
+      your_policy_email_settings: "політика налаштування частоти електронних листів"
+  unsubscribe:
+    policy_emails:
+      select_title: "Налаштуйте частоту сповіщень на:"
+      never: Ніколи
+      when_away: Тільки коли офлайн
+      always: Завжди

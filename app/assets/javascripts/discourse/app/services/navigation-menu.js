@@ -6,10 +6,11 @@ export default class NavigationMenu extends Service {
   @service site;
   @service siteSettings;
 
-  get isDesktopDropdownMode() {
-    const headerDropdownMode =
-      this.siteSettings.navigation_menu === "header dropdown";
+  get isHeaderDropdownMode() {
+    return this.siteSettings.navigation_menu === "header dropdown";
+  }
 
-    return this.site.desktopView && headerDropdownMode;
+  get isDesktopDropdownMode() {
+    return this.site.desktopView && this.isHeaderDropdownMode;
   }
 }

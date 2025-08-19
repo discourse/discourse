@@ -21,7 +21,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     end
 
     it "includes summary" do
-      expect(html).to include("Billy Jack is a 1971 action/drama")
+      expect(html).to include("Billy Jack is a 1971 American action drama independent film")
     end
   end
 
@@ -34,9 +34,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
   end
 
   describe "url with url-encoded section hash" do
-    let(:wp_link) do
-      "https://fr.wikipedia.org/wiki/Th%C3%A9ologie#La_th%C3%A9ologie_selon_Aristote"
-    end
+    let(:wp_link) { "https://fr.wikipedia.org/wiki/Th%C3%A9ologie#L'ontoth%C3%A9ologie" }
 
     before do
       stub_request(:get, "https://fr.wikipedia.org/wiki/Th%C3%A9ologie").to_return(
@@ -46,7 +44,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     end
 
     it "includes summary" do
-      expect(html).to include("Le terme est repris par")
+      expect(html).to include("investigation rationnelle sur les substances divines")
     end
   end
 

@@ -76,11 +76,11 @@ module PageObjects
       end
 
       def row_selector
-        ".d-admin-row__content"
+        ".d-table__row"
       end
 
       def badge_selector
-        ".d-admin-table__badge"
+        ".status-label"
       end
 
       def header_actions_selector

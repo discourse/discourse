@@ -106,4 +106,12 @@ module UserNotificationsHelper
   rescue URI::Error
     href
   end
+
+  def render_digest_header
+    if I18n.t("user_notifications.digest.custom.html.header").present?
+      return render("user_notifications/digest/custom_header")
+    end
+
+    render("user_notifications/digest/header")
+  end
 end

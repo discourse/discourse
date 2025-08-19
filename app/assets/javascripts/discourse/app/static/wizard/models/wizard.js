@@ -26,7 +26,7 @@ export default class Wizard {
   get totalSteps() {
     // We used to use this.steps.length() here, but we don't want to
     // include optional steps after "Ready" here.
-    return 4;
+    return 2;
   }
 
   get title() {

@@ -30,10 +30,12 @@ cs:
     chat_editing_grace_period_max_diff_low_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 2 a vyšší)."
     chat_preferred_index: "Preferovaný panel při načítání /chat"
+    allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
       direct_message_enabled_groups_invalid: "Pro toto nastavení musíte zadat alespoň jednu skupinu. Pokud nechcete, aby nikdo kromě redakce posílal přímé zprávy, vyberte skupinu redakce."
       chat_upload_not_allowed_secure_uploads: "Nahrávání v chatu není povoleno, pokud je povoleno nastavení bezpečného nahrávání."
+      allow_chat_in_anonymous_mode_invalid: "Toto nastavení vyžaduje, aby bylo nejprve povoleno nastavení „allow anonymous mode“."
   system_messages:
     private_channel_title: "Kanál %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ cs:
     deleted_chat_username: smazáno
     errors:
       users_cant_be_added_to_channel: "Do tohoto kanálu nelze přidat uživatele."
+      user_cant_be_removed_from_channel: "Uživatele nelze z tohoto kanálu odebrat"
       channel_exists_for_category: "Kanál pro tuto kategorii a název již existuje"
       channel_new_message_disallowed:
         archived: "Kanál je archivován, nelze odesílat žádné nové zprávy"
@@ -265,6 +268,16 @@ cs:
           few: "[%{site_name}] Nové zprávy"
           many: "[%{site_name}] Nové zprávy"
           other: "[%{site_name}] Nové zprávy"
+        watched_thread:
+          one: "[%{site_name}] Nová zpráva ve vlákně %{channel}"
+          few: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+          many: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+          other: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalším"
+          few: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
+          many: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
+          other: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
         chat_dm_1:
           one: "[%{site_name}] Nová zpráva od %{name}"
           few: "[%{site_name}] Nové zprávy od %{name}"

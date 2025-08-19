@@ -46,7 +46,7 @@ export default class ChatComposerChannel extends ChatComposer {
   }
 
   get lastMessage() {
-    return this.args.channel.lastMessage;
+    return this.args.channel.messagesManager.findLastMessage();
   }
 
   lastUserMessage(user) {

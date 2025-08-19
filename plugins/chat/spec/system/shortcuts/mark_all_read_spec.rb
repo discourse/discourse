@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | mark all read", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
-  fab!(:channel_3) { Fabricate(:chat_channel) }
+  fab!(:user_1, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
+  fab!(:channel_3, :chat_channel)
 
   let(:chat_sidebar) { PageObjects::Pages::Sidebar.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

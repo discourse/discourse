@@ -10,3 +10,8 @@ cs:
       welcome_post_type:
         new_user_track: "Spustit návod pro všechny nové uživatele"
         welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem, jak začít"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Diskuse Narrative Bot"

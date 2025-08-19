@@ -82,9 +82,8 @@ export default class UserPasskeys extends Component {
         name: i18n("user.passkeys.name.default"),
       };
 
-      const registrationResponse = await this.args.model.registerPasskey(
-        credentialParam
-      );
+      const registrationResponse =
+        await this.args.model.registerPasskey(credentialParam);
 
       if (registrationResponse.error) {
         this.dialog.alert(registrationResponse.error);
@@ -116,8 +115,12 @@ export default class UserPasskeys extends Component {
       this.dialog.deleteConfirm({
         title: i18n("user.passkeys.confirm_delete_passkey"),
         didConfirm: () => {
-          this.args.model.deletePasskey(id).then(() => {
-            this.router.refresh();
+          this.args.model.deletePasskey(id).then((response) => {
+            if (response.success) {
+              this.router.refresh();
+            } else {
+              this.dialog.alert(response.message);
+            }
           });
         },
       });

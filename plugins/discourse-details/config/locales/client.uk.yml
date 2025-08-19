@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Деталі Discourse"
   js:
     details:
       title: Приховати подробиці

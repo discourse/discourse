@@ -117,9 +117,11 @@ end
 #  updated_at            :datetime         not null
 #  reason                :string
 #  user_accuracy_bonus   :float            default(0.0), not null
+#  context               :string
 #
 # Indexes
 #
-#  index_reviewable_scores_on_reviewable_id  (reviewable_id)
-#  index_reviewable_scores_on_user_id        (user_id)
+#  index_reviewable_scores_on_reviewable_id          (reviewable_id)
+#  index_reviewable_scores_on_reviewable_score_type  (reviewable_score_type)
+#  index_reviewable_scores_on_user_id                (user_id)
 #

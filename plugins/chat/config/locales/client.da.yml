@@ -158,6 +158,7 @@ da:
         tabs:
           members: Brugere
           settings: Indstillinger
+        remove_member: "Fjern"
       new_message_modal:
         no_items: "Ingen punkter"
         filter: "Filter"

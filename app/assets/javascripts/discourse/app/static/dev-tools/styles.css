@@ -70,7 +70,8 @@
   }
 
   .fw {
-    font-family: "Courier New", "Courier", "Lucida Console", "Monaco", monospace;
+    font-family:
+      "Courier New", "Courier", "Lucida Console", "Monaco", monospace;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -11,7 +11,6 @@ ja:
     models:
       fields:
         required_field: フィールド `%{name}` は `%{target}:%{target_name}` で入力する必要があります。
-        invalid_field: フィールドのコンポーネント `%{component}` は `%{target}:%{target_name}` では使用できません。
         invalid_metadata: '`%{field}` のデータが無効であるか、コンポーネント `%{component}` が不明です。'
     triggerables:
       errors:

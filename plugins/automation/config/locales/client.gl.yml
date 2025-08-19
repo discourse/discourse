@@ -7,8 +7,8 @@
 gl:
   js:
     discourse_automation:
-      create: Crear
-      update: Actualizar
+      back: Volver
+      edit: Editar
       fields:
         user:
           label: Usuario
@@ -62,13 +62,13 @@ gl:
           fields:
             restricted_tags:
               label: Etiquetas
-            restricted_category:
-              label: Categoría
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
+            restricted_categories:
+              label: Categorías
           created: Creado
+          with_images: Imaxes
+          with_links: Ligazóns
+          with_code: Código
+          with_uploads: Cargas
         category_created_edited:
           fields:
             restricted_category:

@@ -91,6 +91,7 @@ sl:
         tabs:
           members: Člani
           settings: Nastavitve
+        remove_member: "Odstrani"
       new_message_modal:
         user_search_placeholder: "...dodaj več članov"
         create_group_placeholder: "Ime skupinskega klepeta (neobvezno)"

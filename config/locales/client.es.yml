@@ -194,21 +194,18 @@ es:
       dismiss: "Descartar"
     bootstrap_mode: "Cómo empezar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
       error_caused_by: "Causado por «%{name}». <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o desctivar."
       only_admins: "(este mensaje solo lo ven los administradores del sitio)"
     broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     broken_transformer_alert: "Hubo un error. Es posible que su sitio no funcione correctamente."
-    critical_deprecation:
-      notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>«%{name}»</a>."
-      plugin_source: "Plugin identificado: «%{name}»"
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -394,6 +391,7 @@ es:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
       create: "Crear marcador"
+      clear_reminder: "Quitar recordatorio"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Eliminar recordatorio y mantener marcador"
@@ -456,14 +454,9 @@ es:
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
-      abandon:
-        confirm: "Ya tienes un borrador en curso. ¿Qué te gustaría hacer con él?"
-        yes_value: "Descartar"
-        no_value: "Reanudar edición"
       dropdown:
         title: "Abre el menú de últimos borradores"
         untitled: "Borrador sin título"
-        view_all: "ver todo"
         other_drafts:
           one: "+%{count} otro borrador"
           other: "+%{count} otros borradores"
@@ -486,7 +479,7 @@ es:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
     preview: "vista previa"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     deleting: "Eliminando…"
     save: "Guardar cambios"
     saving: "Guardando…"
@@ -598,6 +591,10 @@ es:
         name: "Nombre"
         fields: "Campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored}, (de la última denuncia)"
@@ -710,6 +707,16 @@ es:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      notes:
+        delete: "Eliminar"
+      review_user: "Usuario"
+      copy_link: "Copiar enlace"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicación"
+            other: "%{count} publicaciones"
+        visibility: "Visibilidad"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -1156,7 +1163,6 @@ es:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Cuenta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferencias"
       download_archive:
@@ -1273,7 +1279,6 @@ es:
         description: "Omitir consejos y medallas de bienvenida"
       reset_seen_user_tips: "Mostrar consejos de usuario de nuevo"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
-      color_scheme_default_on_all_devices: "Establecer la paleta de colores por defecto en todos mis dispositivos"
       color_scheme: "Paleta de colores"
       color_schemes:
         default_description: "Tema predeterminado"
@@ -1283,6 +1288,9 @@ es:
         regular: "Habitual"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Oscuro"
       dark_mode: "Modo oscuro"
       dark_mode_enable: "Activar la paleta de colores automática del modo oscuro"
       text_size_default_on_all_devices: "Hacer que este sea el tamaño por defecto en todos mis dispositivos"
@@ -1308,6 +1316,8 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Motivo: "
+      silenced_permanently: "Este usuario está silenciado."
+      silenced_reason: "Motivo: "
       github_profile: "GitHub"
       email_activity_summary: "Resumen de actividad"
       mailing_list_mode:
@@ -1826,7 +1836,8 @@ es:
         removed: "Eliminado"
         search: "escribe para buscar invitaciones…"
         user: "Usuario invitado"
-        none: "Sin invitaciones para mostrar."
+        none:
+          title: "Sin invitaciones para mostrar."
         truncated:
           one: "Mostrando la primera invitación."
           other: "Mostrando las primeras %{count} invitaciones."
@@ -1877,6 +1888,7 @@ es:
           edit_link_options: "Edita las opciones del enlace o envíalo por correo electrónico."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          description: "Descripción"
           restrict: "Restringir a"
           restrict_email: "Restringir al correo electrónico"
           restrict_domain: "Restringir a un dominio"
@@ -1988,7 +2000,6 @@ es:
         title: "Dirección IP del registro"
       avatar:
         title: "Imagen de perfil"
-        header_title: "perfil, mensajes, marcadores y preferencias"
         name_and_description: "%{name} - %{description}"
         edit: "Editar foto de perfil"
       title:
@@ -2065,6 +2076,9 @@ es:
     modal:
       close: "cerrar"
       dismiss_error: "Descartar error"
+    multi_select:
+      no_results: "No hay resultados"
+      search: "Buscar…"
     form_kit:
       reset: Restablecer
       optional: opcional
@@ -2300,10 +2314,6 @@ es:
         name: "Google"
         title: "Iniciar sesión con Google"
         sr_title: "Iniciar sesión con Google"
-      twitter:
-        name: "Twitter"
-        title: "Iniciar sesión con Twitter"
-        sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sesión con Instagram"
@@ -2345,13 +2355,6 @@ es:
       password_label: "Contraseña"
     password_reset:
       continue: "Continuar a %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Solo categorías"
       categories_with_featured_topics: "Categorías con temas destacados"
@@ -2446,7 +2449,6 @@ es:
       unlist: "oculto"
       add_warning: "Esta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar susurro"
-      toggle_unlisted: "Visible/Invisible"
       insert_table: "Insertar tabla"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saved_local_draft_tip: "guardado localmente"
@@ -2533,11 +2535,11 @@ es:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      link_title: "Hipervínculo"
+      link_title: "Enlace"
       link_description: "Introduce la descripción del enlace aquí"
-      link_dialog_title: "Insertar hipervínculo"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Copia una URL o escribe para buscar temas"
+      link_dialog_action: "Insertar"
+      link_edit_action: "Actualizar"
+      link_optional_text: "Texto"
       blockquote_title: "Cita"
       blockquote_text: "Cita"
       code_title: "Texto preformateado"
@@ -2604,9 +2606,14 @@ es:
       image_alt_text:
         aria_label: Texto alternativo para imagen
         title: "Añadir descripción de la imagen"
+      image_toolbar:
+        alt_text: "Añadir descripción de la imagen"
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
+      link_toolbar:
+        copy: "Copiar enlace"
+        link_copied: "¡Enlace copiado!"
     notifications:
       tooltip:
         regular:
@@ -2735,9 +2742,8 @@ es:
         new_features: "¡Se han lanzado nuevas características de Discourse!"
         admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
+      delete: "Eliminar"
       uploading: "Subiendo"
-      processing: "Procesando subida"
-      select_file: "Seleccionar archivo"
       default_image_alt_text: imagen
     search:
       sort_by: "Ordenar por"
@@ -2780,8 +2786,6 @@ es:
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "otra vez para usar la búsqueda nativa de tu navegador"
       recent: "Búsquedas recientes"
       clear_recent: "Borrar búsquedas recientes"
       type:
@@ -2866,7 +2870,6 @@ es:
           aria_label: filtrar por número máximo de visitas
         additional_options:
           label: "Filtra por número de respuestas y visitas del tema"
-    hamburger_menu: "menú"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -3006,10 +3009,6 @@ es:
         top: "No hay temas destacados."
         hot: "No hay temas candentes."
         filter: "No hay temas."
-        educate:
-          new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
-          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 5 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
-          new_new: "<p>Tus temas nuevos aparecerán aquí, y también se mostrarán tus temas no leídos. Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> si se han creado en los últimos 2 días. Los temas no leídos tendrán un marcador <pan class=\"badge unread-posts badge-notification\">1</span> si: has creado el tema, has respondido al tema, has leído el tema durante más de 5 minutos, o si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -3562,11 +3561,8 @@ es:
         one: "A ti y a %{count} persona os ha gustado esta publicación"
         other: "A ti y a otras %{count} personas os ha gustado esta publicación"
       sr_post_like_count_button:
-        one: "%{count} persona le ha dado a me gusta en esta publicación. Haz clic para ver"
-        other: "%{count} personas le han dado a me gusta en esta publicación. Haz clic para ver"
-      sr_post_read_count_button:
-        one: "%{count} persona ha leído esta publicación. Haz clic para ver"
-        other: "%{count} personas han leído esta publicación. Haz clic para ver"
+        one: "%{count} persona le ha dado Me gusta a esta publicación."
+        other: "%{count} personas le han dado me gusta a esta publicación."
       filtered_replies_hint:
         one: "Ver esta publicación y su respuesta"
         other: "Ver esta publicación y sus %{count} respuestas"
@@ -3576,6 +3572,13 @@ es:
       in_reply_to: "Cargar publicación principal"
       view_all_posts: "Ver todas las publicaciones"
       badge_granted_tooltip: "¡%{username} ha ganado la medalla '%{badge_name}' por esta publicación!"
+      localizations:
+        table:
+          actions: "Acciones"
+          edit: "Editar"
+          delete: "Eliminar"
+        post_language_selector:
+          none: "Ninguno"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -3683,8 +3686,6 @@ es:
           read_capped:
             one: "y %{count} otro ha leído esto"
             other: "y %{count} otros han leído esto"
-          sr_post_likers_list_description: "usuarios que le han dado a me gusta en esta publicación"
-          sr_post_readers_list_description: "usuarios que han leído esta publicación"
         by_you:
           off_topic: "Denunciaste esto como sin relación con el tema"
           spam: "Denunciaste esto como spam"
@@ -3785,6 +3786,10 @@ es:
       settings: "Ajustes"
       topic_template: "Plantilla"
       tags: "Etiquetas"
+      localization:
+        name: "Nombre"
+        description: "Descripción"
+        remove: "Eliminar"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3812,9 +3817,13 @@ es:
       logo_dark: "Imagen del logotipo de la categoría en modo oscuro"
       background_image: "Imagen de fondo de la categoría"
       background_image_dark: "Imagen de fondo de categoría oscura"
-      badge_colors: "Colores de las medallas"
-      background_color: "Color de fondo"
-      foreground_color: "Colores de primer plano"
+      background_color: "Color"
+      styles:
+        icon: "Icono"
+        emoji: "Emoji"
+        options:
+          icon: "Icono"
+          emoji: "Emoji"
       color_used: "Color en uso"
       predefined_colors: "Opciones de color predefinidas"
       name_placeholder: "Una o dos palabras máximo"
@@ -4025,6 +4034,8 @@ es:
       pinned:
         title: "Anclado"
         help: "Este tema se ha anclado para ti; se mostrará en la parte superior de su categoría"
+      hot:
+        title: "Caliente"
       unlisted:
         help: "Este tema no está incluido en la lista; no se mostrará en las listas de temas y solo se podrá acceder a él mediante un enlace directo. %{unlistedReason}"
       personal_message:
@@ -4167,7 +4178,6 @@ es:
         today: "Hoy"
     custom_homepage:
       admin_message: 'Uno de tus temas ha activado el modificador «custom_homepage», pero no muestra nada en el conector [custom-homepage]. (Este mensaje solo se muestra a los administradores del sitio).'
-    browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -4274,6 +4284,9 @@ es:
         prev_next: "%{shortcut} Mover selección arriba y abajo"
         insert_url: "%{shortcut} Insertar selección dentro del editor abierto"
         full_page_search: "%{shortcut} Lanza la página de búsqueda"
+      admin:
+        title: "Administrador"
+        search_prev_next: "%{shortcut} Mover selección arriba y abajo"
     badges:
       earned_n_times:
         one: "Medalla ganada %{count} vez"
@@ -4550,7 +4563,7 @@ es:
           save: "Guardar"
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
-          delete_public_confirm: "Esta sección es <strong>visible para todos</strong>, ¿seguro que quieres eliminarla?"
+          delete_public_confirm: "Esta sección es visible para todos, ¿seguro que quieres eliminarla?"
           update_public_confirm: "Los cambios serán <strong>visibles para todos</strong> en este sitio. ¿Continuar?"
           mark_as_private_confirm: "Esta sección es <strong>visible para todos</strong>. Después de la actualización, será <strong>visible solo para ti</strong>. ¿Continuar?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
@@ -4629,6 +4642,8 @@ es:
             badges:
               content: "Medallas"
               title: "Todas las medallas disponibles para ganar"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
               title: "Todos los temas"
@@ -4646,7 +4661,6 @@ es:
               title: "Lista de todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
-              content_drafts: "Mis borradores"
               title: "Mi actividad de tema reciente"
               title_drafts: "Mis borradores no publicados"
               draft_count:
@@ -4666,13 +4680,16 @@ es:
         forum:
           label: Foro
       back_to_forum: "Volver al Foro"
-      collapse_all_sections: "Contraer todas las secciones"
-      expand_all_sections: "Expandir todas las secciones"
-      filter: "Filtrar..."
       clear_filter: "Limpiar filtro"
       no_results:
         title: "No hay resultados"
-        description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en los ajustes del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
+      collapse_all_sections: "Contraer todas las secciones"
+      expand_all_sections: "Expandir todas las secciones"
+      search: "Buscar"
+      footer:
+        interface_color_selector:
+          light: "Claro"
+          dark: "Oscuro"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
@@ -4774,13 +4791,24 @@ es:
           paste: "Pegar..."
           save: "Guardar como..."
     powered_by_discourse: "Desarrollado por Discourse"
+    filter:
+      description:
+        yesterday: "Ayer"
+        last_week: "Última semana"
+        last_month: "Último mes"
+        last_year: "El año pasado"
+    discovery:
+      headings:
+        multi_tag:
+          default: "Temas con la etiqueta %{tags}"
+        categories: "Todas las categorías"
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "siempre"
@@ -4791,18 +4819,39 @@ es:
         meta_doc: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
-        sidebar_link:
-          all: "Todos los informes"
+      config_sections:
+        account:
+          title: "Cuenta"
+        reports:
+          title: "Informes"
+        community:
+          title: "Comunidad"
+        appearance:
+          title: "Aspecto"
+        email:
+          title: "Correo electrónico"
+        security:
+          title: "Seguridad"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Avanzado"
       config:
+        about:
+          title: "Acerca de tu sitio"
+          header_description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
         developer:
           title: "Desarrollador"
           header_description: "Ajustes del desarrollador para controlar los límites de velocidad, multiplicadores y cálculos, modo seguro y otras funciones avanzadas"
         experimental:
           title: "Experimental"
           header_description: "Activa o desactiva las características experimentales de tu sitio; la mayoría de ellas se pueden controlar en grupo"
-        font_style:
-          title: "Estilo de letra"
-          header_description: "Personaliza los estilos de fuente utilizados por tus temas"
+        emojis:
+          title: "Emoji"
+          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo"
+        flags:
+          title: "Moderación"
+          header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
         files:
           title: "Archivos"
           header_description: "Ajustes que controlan los límites de tamaño y tipo de archivo, los tamaños y fuentes de los avatares, el almacenamiento de archivos, la calidad y compresión de las imágenes, etc."
@@ -4813,8 +4862,22 @@ es:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
         logo:
-          title: "Logotipo del sitio"
-          header_description: "Personaliza las variaciones del logotipo de tu sitio"
+          form:
+            logo:
+              title: "Logotipo principal"
+            mobile: "Móvil"
+            email: "Correo electrónico"
+            manifest_screenshots:
+              description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
+            opengraph_image:
+              description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+        fonts:
+          title: "Tipos de letra"
+          form:
+            heading_font:
+              title: "Tipo de letra para encabezados"
+          backfill_modal:
+            modal_yes: "Sí"
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -4824,15 +4887,13 @@ es:
         onebox:
           title: "Onebox"
           header_description: "Configura cómo se generan y se muestran las previsualizaciones de onebox para tu sitio"
-        other:
-          title: "Otros"
-          header_description: "Ajustes que no encajan en ninguna otra categoría"
         rate_limits:
           title: "Límites de velocidad"
           header_description: "Configura la frecuencia con la que los usuarios pueden realizar determinadas acciones, como crear temas, enviar mensajes y publicar respuestas"
         search:
-          title: "Buscar"
           header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
+        search_everything:
+          title: "Buscar"
         security:
           title: "Seguridad"
           header_description: "Configura los ajustes de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
@@ -4848,6 +4909,115 @@ es:
         group_permissions:
           title: "Permisos de grupo"
           header_description: "Aquí se gestionan todos los permisos de aplicaciones basados en grupos, que controlan el acceso a diversas funciones dentro de Discourse"
+        dashboard:
+          title: "Panel de control"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        site_settings:
+          title: "Todos los ajustes del sitio"
+        whats_new:
+          title: "Novedades"
+          keywords: "registro de cambios|característica|lanzamiento"
+        backups:
+          title: "Copias de seguridad"
+          header_description: "Las copias de seguridad de Discourse incluyen la base de datos completa del sitio, que contiene todo lo que hay en él: temas, entradas, usuarios, grupos, ajustes, etc. Dependiendo de cómo se cree el archivo de copia de seguridad, puede incluir o no las cargas."
+          sub_pages:
+            logs:
+              title: "Registros"
+        reports:
+          title: "Informes"
+          header_description: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
+        badges:
+          title: "Medallas"
+          header_description: "Las insignias recompensan a los usuarios por sus actividades, contribuciones y logros para reconocer, validar y fomentar el comportamiento positivo y el compromiso dentro de la comunidad"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Publicaciones y temas"
+        permalinks:
+          title: "Enlaces permanentes"
+          header_description: "Redirecciones para URL que no existan ya en el foro"
+        user_fields:
+          title: "Campos de usuario"
+          header_description: "Crea campos de usuario personalizados para recopilar detalles adicionales sobre los miembros de tu comunidad. Puedes elegir qué información se requiere durante el registro, qué se muestra en los perfiles y qué pueden actualizar los usuarios."
+        watched_words:
+          title: "Palabras vigiladas"
+          header_description: "Las palabras vigiladas son herramientas de moderación que pueden realizar varias acciones diferentes, como bloquear, censurar, enlazar o denunciar publicaciones que contengan determinadas palabras"
+        color_palettes:
+          title: "Paletas de colores"
+        emoji:
+          title: "Emoji"
+          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
+        themes:
+          title: "Tema"
+          header_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end"
+        components:
+          title: "Componentes"
+          header_description: "Los componentes son pequeñas personalizaciones que pueden añadirse a los temas para cambiar elementos específicos del estilo del diseño de tu foro"
+        site_texts:
+          title: "Textos del sitio"
+        email:
+          sub_pages:
+            preview_summary:
+              title: "Previsualizar resumen"
+              header_description: "Previsualiza el contenido de los correos electrónicos de resumen enviados a los usuarios inactivos"
+            advanced_test:
+              title: "Prueba avanzada"
+            templates:
+              title: "Plantillas"
+        email_logs:
+          sub_pages:
+            sent:
+              title: "Enviado"
+            skipped:
+              title: "Omitido"
+            bounced:
+              title: "Rebotado"
+            received:
+              title: "Recibido"
+            rejected:
+              title: "Rechazado"
+        email_appearance:
+          title: "Aspecto"
+          header_description: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS"
+        staff_action_logs:
+          title: "Registros y cribado"
+          header_description: "Los registros y la selección te permiten supervisar y gestionar tu comunidad, garantizando que siga siendo segura y respetuosa. Puedes ver los registros de todas las acciones realizadas por los miembros del personal, buscar registros y configurar la selección de usuarios"
+          keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
+          sub_pages:
+            screened_emails:
+              title: "Correos bloqueados"
+              header_description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción"
+            screened_ips:
+              title: "Direcciones IP bloqueadas"
+            screened_urls:
+              title: "URL bloqueadas"
+              header_description: "Las URL listadas aquí fueron utilizadas en publicaciones de usuarios identificados como spammers"
+            search_logs:
+              title: "Registros de búsqueda"
+        plugins:
+          title: "Plugins instalados"
+        api_keys:
+          title: "Claves API"
+          header_description: "La característica de claves API te permite integrar Discourse de forma segura con sistemas externos y automatizar acciones. Los administradores pueden crear claves con ámbitos específicos para controlar el acceso a recursos y datos sensibles. Los ámbitos limitan la funcionalidad, garantizando una mayor seguridad."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incrustado"
+          header_description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
+      theme_site_settings:
+        default_value: "Por defecto"
+      search:
+        title: "Buscar"
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Tema"
+          component:
+            one: "Componente"
+            other: "Componentes"
       new_features:
         title: "Novedades"
         check_for_updates: "Buscar actualizaciones"
@@ -5073,6 +5243,7 @@ es:
         key: "Clave"
         keys: "Claves"
         created: Creado por
+        scope: Ámbito
         updated: Actualizado
         last_used: Usada por última vez
         never_used: Nunca
@@ -5352,10 +5523,8 @@ es:
           color_schemes: "Paletas de colores"
           emoji: "Emoji"
           navigation: "Navegación"
-          themes: "Temas"
-          components:
-            title: "Componentes"
-            keywords: "tema|extensión"
+          themes_and_components:
+            keywords: "extensión"
           site_texts: "Textos del sitio"
       email_settings:
         title: "Ajustes del correo electrónico"
@@ -5383,8 +5552,6 @@ es:
             description: "Descubre nuevas versiones y mejoras de Discourse"
       config_areas:
         about:
-          header: "Acerca de tu sitio"
-          description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
           general_settings: "Ajustes generales"
           community_name: "Nombre de la comunidad"
           community_name_placeholder: "Comunidad de ejemplo"
@@ -5393,8 +5560,6 @@ es:
           community_title: "Título de la comunidad"
           community_title_help: "Descripción breve, que se muestra en la pestaña del navegador, para páginas clave como categorías y listas de temas."
           banner_image: "Imagen del banner"
-          banner_image_help: |
-            Se utilizará en tu página Acerca de. Tamaño recomendado: 1100x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
           community_owner_placeholder: "Pepe Luis"
@@ -5428,6 +5593,8 @@ es:
           city_for_disputes_placeholder: "Ciudad"
           city_for_disputes_help: |
             Especifica la ciudad para resolver las disputas legales relacionadas con este foro.
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Actualizar"
           toasts:
@@ -5436,9 +5603,7 @@ es:
             your_organization_saved: "Tu organización se ha guardado"
           saved: "guardada!"
         flags:
-          header: "Moderación"
           edit_header: "Editar denuncia"
-          subheader: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
           description: "Descripción"
           enabled: "¿Activado?"
           add: "Añadir denuncia"
@@ -5460,7 +5625,6 @@ es:
             post: "publicaciones"
             chat_message: "mensajes de chat"
             enabled: "Activa esta bandera personalizada después de guardar"
-            alert: "Una vez que se ha utilizado una bandera personalizada, solo se puede desactivar, pero no editar ni borrar."
             edit_flag: "Editar bandera"
             non_editable: "No puedes editar esta bandera porque es una bandera del sistema o ya se ha utilizado en el sistema de revisión, sin embargo, puedes desactivarla."
             delete_flag: "Eliminar bandera"
@@ -5480,18 +5644,34 @@ es:
           delete: "Eliminar"
           more_options:
             title: "Más opciones"
-        look_and_feel:
-          title: "Aspecto y estilo"
-          description: "Personaliza y marca tu sitio de Discourse, dándole un estilo distintivo."
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
-            title: "Temas"
+            title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
-            themes_intro_img_alt: "Nuevo marcador de posición del tema"
-            set_default_theme: "Establecer como predeterminado"
-            default_theme: "Tema predeterminado"
-            themes_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end."
             new_theme: "Nuevo tema"
-            user_selectable: "Seleccionable por el usuario"
+            install: "Instalar"
+          components:
+            title: "Componentes"
+            install: "Instalar"
+            name: "Nombre"
+            enabled: "¿Activado?"
+            by_author: "Por %{name}"
+            learn_more: "Más información"
+            edit: "Editar"
+            parent_themes_two: "%{name1} y %{name2}"
+            preview: "Vista previa"
+            check_update: "Buscar actualizaciones"
+            export: "Exportar"
+            convert: "Convertir"
+            delete: "Eliminar"
+            filter_by: "Filtrar por"
+            filter_by_all: "Todo"
+            filter_by_used: "Usado"
+            filter_by_unused: "No usado"
+            delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
+            badge_unused: "No usado"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5502,10 +5682,20 @@ es:
           delete: "Eliminar"
           delete_successful: "Campo de usuario eliminado."
           save_successful: "Campo de usuario guardado."
+        color_palettes:
+          palette_name: "Nombre"
+          copy_to_clipboard: "Copiar al portapapeles"
+          copied_to_clipboard: "Copiado al portapapeles"
+          copy_to_clipboard_error: "Error al copiar datos al portapapeles"
+          duplicate: "Duplicar"
+          delete: "Eliminar"
+          color_options:
+            toggle: "Seleccionable por el usuario"
+            toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
+          colors:
+            title: "Colores"
       plugins:
         title: "Plugins"
-        installed: "Plugins instalados"
-        description: "En esta lista aparecerán todos los plugins de Discourse que tengas instalados o los que vienen preinstalados con el alojamiento de Discourse."
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"
@@ -5520,25 +5710,11 @@ es:
         author: "Por %{author}"
         experimental_badge: "experimental"
         learn_more: "Más información"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        title: "Avanzado"
-        sidebar_link:
-          api_keys:
-            title: "Claves API"
-            keywords: "token"
-          webhooks: "Webhooks"
-          developer: "Desarrollador"
-          embedding: "Incrustado"
-          rate_limits: "Límites de velocidad"
-          user_api: "API de usuario"
-          onebox: "Onebox"
-          files: "Archivos"
-          other_options: "Otros"
-          search: "Buscar"
-          experimental: "Experimental"
-          all_site_settings: "Todos los ajustes del sitio"
+        filters:
+          all: "Todo"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restablecer"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"
@@ -5546,7 +5722,6 @@ es:
       backups:
         title: "Copias de seguridad"
         files_title: "Archivos de copia de seguridad"
-        description: "Las copias de seguridad de Discourse incluyen la base de datos completa del sitio, que contiene todo lo que hay en él: temas, entradas, usuarios, grupos, ajustes, etc. Dependiendo de cómo se cree el archivo de copia de seguridad, puede incluir o no las cargas."
         menu:
           backups: "Copias de seguridad"
           backup_files: "Archivos de copia de seguridad"
@@ -5665,7 +5840,8 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          search_placeholder: "escribe para buscar..."
+          filter_all: "Todo"
+          filter_user_selectable: "Seleccionable por el usuario"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
           themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"
@@ -5690,19 +5866,15 @@ es:
           common: "Común"
           desktop: "Escritorio"
           mobile: "Móvil"
-          settings: "Ajustes"
-          translations: "Traducciones"
-          extra_scss: "Extra SCSS"
           extra_files: "Archivos extra"
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
+          default: "Activo"
           settings_editor: "Editor de ajustes"
-          show_advanced: "Mostrar campos avanzados"
-          hide_advanced: "Ocultar campos avanzados"
-          hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
+          user_selectable_badge_label: "Seleccionable por el usuario"
           color_scheme_user_selectable: "Los usuarios pueden seleccionar la paleta de colores"
           auto_update: "Actualizar automáticamente junto a Discourse"
           color_scheme: "Paleta de color"
@@ -5720,8 +5892,6 @@ es:
           convert_theme_alert_generic: "¿Seguro que quieres convertir este tema en componente?"
           convert_theme_tooltip: "Convertir este tema en componente"
           inactive_themes: "Temas inactivos:"
-          set_default_theme: "Establecer como predeterminado"
-          default_theme: "Tema predeterminado"
           set_default_success: "Tema predeterminado establecido en %{theme}"
           install_success: "¡%{theme} Instalado correctamente!"
           inactive_components: "Componentes sin usar:"
@@ -5754,9 +5924,6 @@ es:
           unsaved_parent_themes: "No has asignado este componente a ningún tema, ¿quieres continuar?"
           discard: "Descartar"
           stay: "Permanecer"
-          css_html: "Personalizar CSS/HTML"
-          edit_css_html: "Editar CSS/HTML"
-          edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           component_on_themes: "Incluir componentes en estos temas"
           included_components: "Componentes incluidos"
@@ -5795,18 +5962,13 @@ es:
             error: "Este tema se desactivó automáticamente porque no es compatible con esta versión de Discourse."
             minimum: "Necesita la versión de Discourse %{version} o superior."
             maximum: "Necesita la versión de Discourse %{version} o inferior."
-          update_to_latest: "Actualizar a lo último"
           check_for_updates: "Buscar actualizaciones"
           updating: "Actualizando…"
           update_success: "Actualización de %{theme} completada"
           up_to_date: "El tema está actualizado. Última comprobación:"
           has_overwritten_history: "La versión actual del tema ya no existe porque el historial de Git ha sido sobrescrito por un force push."
           add: "Añadir"
-          theme_settings: "Ajustes del tema"
-          edit_objects_theme_setting: "Editor de ajustes de objetos"
-          overriden_settings_explanation: "Los ajustes anulados están marcados con un punto y tienen un color resaltado. Para restablecer estos ajustes al valor por defecto, pulsa el botón de reinicio que hay junto a ellos."
           no_settings: "Este tema no tiene ajustes."
-          theme_translations: "Traducciones del tema"
           empty: "No hay elementos"
           commits_behind:
             one: "¡El tema está %{count} commit detrás!"
@@ -5815,24 +5977,20 @@ es:
           remote_theme_edits: "Si quieres editar este tema, deberás <a href='%{repoURL}' target='_blank'>proponer un cambio en su repositorio</a>"
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
           imported_from_archive: "Este tema se importó desde un archivo .zip"
+          settings: "Ajustes"
+          colors: "Colores"
+          discard_colors: "Descartar"
+          colors_title: "Colores"
           scss:
             text: "CSS"
-            title: "Introduce el CSS personalizado, aceptamos todos los estilos válidos de CSS y SCSS"
-          header:
-            text: "Encabezado"
-            title: "Introduce el HTML para mostrar en el encabezado"
           after_header:
             text: "Después del encabezado"
-            title: "Introduce el HTML para mostrar en todas las páginas después del encabezado"
           footer:
             text: "Pie de página"
-            title: "Introduce el HTML para mostrar en el pie de página"
           embedded_scss:
             text: "CSS incrustado"
-            title: "Introduce el CSS personalizado para mostrar en la versión insertada de los comentarios"
           embedded_header:
             text: "Encabezado incrustado"
-            title: "Introduce el HTML que se mostrará encima de la versión incrustada de los comentarios"
           color_definitions:
             text: "Definiciones de color"
             title: "Introducir definiciones de colores personalizadas (para usuarios avanzados)"
@@ -5845,86 +6003,73 @@ es:
               %{example}
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
-          head_tag:
-            text: "Cabecera"
-            title: "HTML que se insertará después de la etiqueta head"
-          body_tag:
-            text: "Cuerpo"
-            title: "HTML que se insertará antes de la etiqueta body"
-          yaml:
-            text: "YAML"
-            title: "Definir ajustes al tema en formato YAML"
           scss_color_variables_warning: 'El uso de las variables de color SCSS de núcleo en los temas está obsoleto. Utiliza propiedades CSS personalizadas en su lugar. Consulta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">esta guía</a> para más detalles.'
           scss_warning_inline: "El uso de variables de color SCSS del sistema en los temas está obsoleto."
           all_filter: "Todo"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
           updates_available_filter: "Actualizaciones disponibles"
-          schema:
-            title: "Editar el ajuste de %{name}"
-            back_button: "Volver a %{name}"
-            fields:
-              required: "*obligatorio"
-              groups:
-                at_least:
-                  one: "se requiere al menos %{count} grupo"
-                  other: "se requieren al menos %{count} grupos"
-              categories:
-                at_least:
-                  one: "se requiere al menos %{count} categoría"
-                  other: "se requieren al menos %{count} categorías"
-              tags:
-                at_least:
-                  one: "Se requiere al menos %{count} etiqueta"
-                  other: "se requieren al menos %{count} etiquetas"
-              string:
-                too_short:
-                  one: "debe tener al menos %{count} carácter"
-                  other: "debe tener al menos %{count} caracteres"
-              number:
-                too_small: "debe ser mayor o igual que %{count}"
-                too_large: "debe ser menor o igual que %{count}"
+        schema:
+          title: "Editar el ajuste de %{name}"
+          back_button: "Volver a %{name}"
+          fields:
+            required: "*obligatorio"
+            groups:
+              at_least:
+                one: "se requiere al menos %{count} grupo"
+                other: "se requieren al menos %{count} grupos"
+            categories:
+              at_least:
+                one: "se requiere al menos %{count} categoría"
+                other: "se requieren al menos %{count} categorías"
+            tags:
+              at_least:
+                one: "Se requiere al menos %{count} etiqueta"
+                other: "se requieren al menos %{count} etiquetas"
+            string:
+              too_short:
+                one: "debe tener al menos %{count} carácter"
+                other: "debe tener al menos %{count} caracteres"
+            number:
+              too_small: "debe ser mayor o igual que %{count}"
+              too_large: "debe ser menor o igual que %{count}"
         colors:
           select_base:
             title: "Seleccionar paleta base de color"
             description: "Paleta base:"
           title: "Colores"
-          edit: "Editar paletas de colores"
+          edit: "Editar"
+          filters:
+            all: "Todo"
+            user_selectable: "Seleccionable por el usuario"
+          active_badge:
+            text: "Activo"
           long_title: "Paletas de colores"
-          description: "Las paletas de colores definen los colores básicos utilizados en la interfaz de tu sitio, mientras que los temas pueden proporcionar estilos, diseños y componentes adicionales: ambos pueden trabajar juntos para crear el aspecto único de tu sitio, y ambos pueden estar disponibles para que los usuarios seleccionen sus preferencias."
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"
           copy_name_prefix: "Copia de"
-          delete_confirm: "¿Eliminar esta paleta de color?"
           undo: "Deshacer"
           undo_title: "Deshacer los cambios realizados a este color desde la última vez que se guardó."
           revert: "Revertir"
           revert_title: "Restablecer este color a la paleta de color por defecto de Discourse."
           primary:
             name: "principal"
-            description: "La mayoría del texto, iconos y bordes."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secundario"
-            description: "El color de fondo principal y el color de texto de algunos botones."
           tertiary:
             name: "terciario"
-            description: "Enlaces, algunos botones, notificaciones y color de énfasis."
           quaternary:
             name: "cuaternario"
-            description: "Para uso opcional en temas."
           header_background:
             name: "fondo del encabezado"
-            description: "Color de fondo del encabezado del sitio."
           header_primary:
             name: "encabezado principal"
-            description: "Texto e iconos en el encabezado del sitio."
           highlight:
             name: "resaltado"
-            description: "El color de fondo de los elementos resaltados en la página, como temas o publicaciones."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5933,19 +6078,17 @@ es:
             name: "highlight-low"
           danger:
             name: "peligro"
-            description: "Color del resaltado para acciones como eliminar temas o publicaciones."
           success:
             name: "éxito"
-            description: "Para indicar que una acción se realizó con éxito."
           love:
             name: "me encanta"
-            description: "El color del botón de me gusta"
           selected:
             name: "seleccionado"
-            description: "El color de fondo de elementos como los elementos de lista cuando están seleccionados/activos."
           hover:
             name: "pasar el ratón por encima"
-            description: "El color de fondo de elementos como los elementos de lista cuando se pasa el ratón sobre ellos o tienen el foco del teclado."
+          editor:
+            light: "Claro"
+            dark: "Oscuro"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."
@@ -6532,7 +6675,6 @@ es:
         activity: Actividad
         like_count: Me gusta dados / recibidos
         last_100_days: "en los últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicaciones leídas
         post_count: Publicaciones creadas
         second_factor_enabled: activar autenticación de dos factores
@@ -6624,8 +6766,6 @@ es:
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
         delete_confirm_title: "¿Seguro que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
-        delete_and_block: "Eliminar y <b>bloquear</b> este correo electrónico y esta dirección IP"
-        delete_dont_block: "Solo eliminar"
         deleting_user: "Eliminando usuario…"
         deleted: "El usuario se eliminó"
         delete_failed: "Se produjo un error al eliminar este usuario. Asegúrate de que todas sus publicaciones fueron eliminadas antes de intentar de eliminar este usuario."

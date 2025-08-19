@@ -3,7 +3,7 @@
 RSpec.describe Jobs::BulkUserTitleUpdate do
   fab!(:badge) { Fabricate(:badge, name: "Protector of the Realm", allow_title: true) }
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   describe "update action" do
     before do

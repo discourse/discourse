@@ -13,6 +13,11 @@ export const FLOAT_UI_PLACEMENTS = [
   "left-end",
 ];
 
+export const VISIBILITY_OPTIMIZERS = {
+  FLIP: "flip",
+  AUTO_PLACEMENT: "autoPlacement",
+};
+
 export const TOOLTIP = {
   options: {
     animated: true,
@@ -32,12 +37,14 @@ export const TOOLTIP = {
     triggers: { mobile: ["click"], desktop: ["hover", "click"] },
     untriggers: { mobile: ["click"], desktop: ["hover", "click"] },
     placement: "top",
+    visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
     onClose: null,
     onShow: null,
     onRegisterApi: null,
+    updateOnScroll: true,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -62,6 +69,7 @@ export const MENU = {
     triggers: ["click"],
     untriggers: ["click"],
     placement: "bottom-start",
+    visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
@@ -75,6 +83,9 @@ export const MENU = {
     triggerClass: null,
     contentClass: null,
     class: null,
+    updateOnScroll: true,
+    matchTriggerMinWidth: false,
+    matchTriggerWidth: false,
   },
   portalOutletId: "d-menu-portal-outlet",
 };
@@ -84,7 +95,7 @@ import DDefaultToast from "float-kit/components/d-default-toast";
 export const TOAST = {
   options: {
     autoClose: true,
-    duration: 3000,
+    duration: "short",
     component: DDefaultToast,
     showProgressBar: false,
     views: ["desktop", "mobile"],

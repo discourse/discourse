@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
   js:
     styleguide:
       title: "Tyyliopas"
@@ -25,6 +30,8 @@ fi:
           title: "Päivämäärä-/kellonaikakentät"
         menus:
           title: "Valikot"
+        multi_select:
+          title: "Monivalinta"
         toasts:
           title: "Ilmoitusruudut"
         font_scale:

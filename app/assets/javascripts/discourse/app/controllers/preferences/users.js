@@ -4,6 +4,7 @@ import { and } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 
 export default class UsersController extends Controller {
   @and(
@@ -11,6 +12,8 @@ export default class UsersController extends Controller {
     "model.user_option.allow_private_messages"
   )
   allowPmUsersEnabled;
+
+  subpageTitle = i18n("user.preferences_nav.users");
 
   init() {
     super.init(...arguments);

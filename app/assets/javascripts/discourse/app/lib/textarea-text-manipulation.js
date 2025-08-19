@@ -1,5 +1,6 @@
-import { setOwner } from "@ember/owner";
-import { schedule } from "@ember/runloop";
+// @ts-check
+import { getOwner, setOwner } from "@ember/owner";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
@@ -17,7 +18,14 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
+ * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ */
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
@@ -33,9 +41,13 @@ const OP = {
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
-export function getHead(head, prev) {
+/**
+ * Our head can be a static string or a function that returns a string
+ * based on input (like for numbered lists).
+ *
+ * @returns {[string, number]}
+ */
+function getHead(head, prev) {
   if (typeof head === "string") {
     return [head, head.length];
   } else {
@@ -43,11 +55,14 @@ export function getHead(head, prev) {
   }
 }
 
+/** @implements {TextManipulation} */
 export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
   @service currentUser;
+
+  allowPreview = true;
 
   eventPrefix;
   textarea;
@@ -79,11 +94,11 @@ export default class TextareaTextManipulation {
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
-    this.textarea?.focus();
+    this.textarea?.focus({ preventScroll: true });
   }
 
   focus() {
-    this.textarea.focus();
+    this.textarea.focus({ preventScroll: true });
   }
 
   insertBlock(text) {
@@ -712,6 +727,8 @@ export default class TextareaTextManipulation {
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
       this.selectText(this.value.indexOf(newValue), newValue.length);
+
+      return true;
     }
   }
 
@@ -760,9 +777,38 @@ export default class TextareaTextManipulation {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
-      const number = sel.value.startsWith(hval)
-        ? sel.value.slice(hlen)
-        : `${hval}${sel.value}`;
+      // Special handling for markdown headings starting with #,
+      // they are "list-like" in that they have a character at
+      // the start and a level, rather than having a surrounding format.
+      let number;
+      if (hval.includes("#")) {
+        const currentHeadingLevel = sel.value.search(/[^#]/);
+
+        // Remove existing heading level if same as the new one,
+        // mirrors list behavior.
+        if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
+          number = sel.value.slice(hlen);
+        } else {
+          // Replace the existing heading level with the new one, or
+          // if there is no heading level, add the new one.
+          if (currentHeadingLevel > 0) {
+            number =
+              hval +
+              sel.value.slice("#".repeat(currentHeadingLevel).length + 1);
+          } else {
+            number = hval + sel.value;
+          }
+        }
+      } else {
+        // Remove existing list item if it's the same as the new
+        // head, e.g. if a line is "* list item", then it converts
+        // it to "list item"
+        if (sel.value.startsWith(hval)) {
+          number = sel.value.slice(hlen);
+        } else {
+          number = `${hval}${sel.value}`;
+        }
+      }
 
       const preNewlines = sel.pre.trim() && "\n\n";
       const postNewlines = sel.post.trim() && "\n\n";
@@ -773,10 +819,39 @@ export default class TextareaTextManipulation {
       const postChars = sel.post.length - sel.post.trimStart().length;
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
-      this.selectText(
-        sel.start + (preNewlines.length - preChars),
-        number.length
-      );
+
+      if (opts?.excludeHeadInSelection) {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars) + hval.length,
+          number.length - hval.length
+        );
+      } else {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars),
+          number.length
+        );
+      }
+    }
+  }
+
+  @bind
+  applyHeading(sel, level) {
+    if (level > 0) {
+      this.applyList(sel, "#".repeat(level) + " ", "heading_text", {
+        excludeHeadInSelection: true,
+      });
+    } else {
+      // Remove heading when the Paragrah level (0) is selected.
+      const currentHeadingLevel = sel.lineVal.search(/[^#]/);
+      if (currentHeadingLevel >= 0) {
+        // When you apply the list with the same head chars, then they
+        // are removed, so we can use the same function.
+        this.applyList(
+          sel,
+          "#".repeat(currentHeadingLevel) + " ",
+          "heading_text"
+        );
+      }
     }
   }
 
@@ -816,15 +891,31 @@ export default class TextareaTextManipulation {
   }
 
   putCursorAtEnd() {
-    putCursorAtEnd(this.textarea);
+    if (this.capabilities.isIOS) {
+      putCursorAtEnd(this.textarea);
+    } else {
+      // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
+      // isEditorFoused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      next(() => putCursorAtEnd(this.textarea));
+    }
   }
 
   autocomplete(options) {
-    return this.$textarea.autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.floatkit_autocomplete_composer) {
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwner(this),
+        this.textarea,
+        this.autocompleteHandler,
+        options
+      );
+    } else {
+      // @ts-ignore
+      this.$textarea.autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 }
 
@@ -838,6 +929,7 @@ function insertAtTextarea(textarea, start, end, text) {
   }
 }
 
+/** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
   $textarea;
@@ -847,12 +939,13 @@ export class TextareaAutocompleteHandler {
     this.$textarea = $(textarea);
   }
 
-  get value() {
+  getValue() {
     return this.textarea.value;
   }
 
-  replaceTerm({ start, end, term }) {
-    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+  replaceTerm(start, end, term) {
+    const space =
+      this.getValue().substring(end + 1, end + 2) === " " ? "" : " ";
     insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
@@ -862,6 +955,7 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
+    // @ts-ignore
     return this.$textarea.caretPosition({ pos: start + 1 });
   }
 
@@ -873,9 +967,11 @@ export class TextareaAutocompleteHandler {
   }
 }
 
+/** @implements {PlaceholderHandler} */
 class TextareaPlaceholderHandler {
   @service composer;
 
+  /** @type {TextareaTextManipulation} */
   textManipulation;
 
   #placeholders = {};

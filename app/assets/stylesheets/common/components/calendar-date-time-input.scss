@@ -1,14 +1,15 @@
 .calendar-date-time-input {
-  .fake-input {
-    display: none;
-  }
   padding: 5px;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   z-index: 1;
   background: var(--secondary);
   width: 200px;
   box-sizing: border-box;
   margin-left: 1em;
+
+  .fake-input {
+    display: none;
+  }
 
   .date-picker {
     display: flex;

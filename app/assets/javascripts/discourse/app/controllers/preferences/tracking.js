@@ -9,8 +9,11 @@ import { i18n } from "discourse-i18n";
 export default class extends Controller {
   @service currentUser;
   @service siteSettings;
+
   @tracked saved = false;
   @tracked customAttrNames = [];
+
+  subpageTitle = i18n("user.preferences_nav.tracking");
 
   likeNotificationFrequencies = [
     { name: i18n("user.like_notification_frequency.always"), value: 0 },

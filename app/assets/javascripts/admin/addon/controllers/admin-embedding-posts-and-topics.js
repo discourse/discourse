@@ -34,7 +34,7 @@ export default class AdminEmbeddingPostsAndTopicsController extends Controller {
         embed_by_username: data.embed_by_username[0],
       });
       this.toasts.success({
-        duration: 1500,
+        duration: "short",
         data: {
           message: i18n("admin.embedding.posts_and_topics_settings_saved"),
         },

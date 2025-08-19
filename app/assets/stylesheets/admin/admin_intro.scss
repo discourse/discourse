@@ -1,0 +1,51 @@
+@use "lib/viewport";
+
+// Unified styles for badge and customize pages
+.admin-intro {
+  display: inline-block;
+  width: 51%;
+  vertical-align: top;
+  margin-left: 20%;
+
+  img {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    vertical-align: top;
+    margin-top: 5px;
+  }
+
+  .create-actions {
+    margin-bottom: 1em;
+  }
+
+  .content-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    width: 65%;
+
+    h1 {
+      display: inline-block;
+      line-height: var(--line-height-medium);
+    }
+  }
+
+  .external-link {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  @include viewport.until(sm) {
+    width: 100%;
+    margin: 2em 0;
+
+    .content-wrapper {
+      width: 100%;
+    }
+
+    img {
+      display: none;
+    }
+  }
+}

@@ -69,6 +69,8 @@ ro:
             one: "@%{group} și încă %{count} grup nu permit mențiuni."
             few: "@%{group} și încă %{count} grupuri nu permit mențiuni."
             other: "@%{group} și încă %{count} de grupuri nu permit mențiuni."
+      no_direct_message_channels: "Încă nu te-ai alăturat niciunui mesaj direct!"
+      no_public_channels: "Încă nu te-ai alăturat niciunui canal!"
       placeholder_group: "Discuție în grup"
       reply: "Răspunde"
       edit: "Modifică"
@@ -104,6 +106,7 @@ ro:
         tabs:
           members: Membri
           settings: Setări
+        remove_member: "Elimină"
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
         create_group_placeholder: "Nume grup discuție (opțional)"
@@ -177,6 +180,7 @@ ro:
         save: "Salvează"
         edit: "Editează"
         system: "sistem"
+        header_description: "Cârligele web primite pot fi folosite de sisteme externe pentru a posta mesaje într-un canal de discuții desemnat ca utilizator de tip bot"
         url: "URL"
         username: "Nume de utilizator"
       selection:
@@ -217,6 +221,11 @@ ro:
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulează"
+      quick_reaction_type:
+        title: "Reacții la discuții cu un singur clic"
+        options:
+          frequent: "Cele mai utilizate reacții de discuții"
+          custom: "Reacții personalizate"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       titles:

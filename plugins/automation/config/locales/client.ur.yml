@@ -7,9 +7,8 @@
 ur:
   js:
     discourse_automation:
-      create: بنائیں
-      update: اپ ڈیٹ
-      no_automation_yet: آپ نے ابھی تک کوئی آٹومیشن نہیں بنایا ہے۔ شروع کرنے کے لیے نیچے ایک آپشن منتخب کریں۔
+      back: واپس
+      edit: ترمیم کریں
       fields:
         user:
           label: صارف
@@ -63,19 +62,13 @@ ur:
           fields:
             restricted_tags:
               label: ٹیگز
-            restricted_category:
-              label: زمرہ
-              description: اختیاری، تب ہی متحرک ہو گا جب پوسٹ کا موضوع اس زمرے میں ہو۔
-            restricted_group:
-              label: گروپ
-              description: اختیاری، تب ہی متحرک ہو گا جب پوسٹ کا موضوع اس گروپ کے ان باکس میں ذاتی پیغام ہو۔
-            restricted_groups:
-              label: گروپس
-              description: اختیاری، صرف اس صورت میں متحرک ہو گا جب پوسٹ کا موضوع گروپ ان باکسز میں سےکسی ایک میں ذاتی پیغام ہو۔
-            ignore_group_members:
-              label: گروپ اراکین کو نظر انداز کریں
-              description: اگر بھیجنے والا اوپر بیان کردہ گروپ کا رکن ہے تو ٹرگر کو چھوڑ دیں
+            restricted_categories:
+              label: اقسام
           created: بنایا گیا
+          with_images: تصاویر
+          with_links: لنکس
+          with_code: کَوڈ
+          with_uploads: اَپ لوڈز
         category_created_edited:
           fields:
             restricted_category:

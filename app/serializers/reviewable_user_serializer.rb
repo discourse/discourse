@@ -3,7 +3,16 @@
 class ReviewableUserSerializer < ReviewableSerializer
   attributes :link_admin, :user_fields, :reject_reason
 
-  payload_attributes(:username, :email, :name, :bio, :website)
+  payload_attributes(
+    :username,
+    :email,
+    :name,
+    :bio,
+    :website,
+    :scrubbed_by,
+    :scrubbed_reason,
+    :scrubbed_at,
+  )
 
   def link_admin
     scope.is_staff? && object.target.present?

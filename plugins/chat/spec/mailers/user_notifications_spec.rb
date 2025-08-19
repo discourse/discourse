@@ -2,17 +2,17 @@
 
 describe UserNotifications do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
-  fab!(:other) { Fabricate(:user) }
-  fab!(:another) { Fabricate(:user) }
-  fab!(:someone) { Fabricate(:user) }
+  fab!(:other, :user)
+  fab!(:another, :user)
+  fab!(:someone, :user)
   fab!(:group) { Fabricate(:group, users: [user, other]) }
 
-  fab!(:followed_channel) { Fabricate(:category_channel) }
-  fab!(:followed_channel_2) { Fabricate(:category_channel) }
-  fab!(:followed_channel_3) { Fabricate(:category_channel) }
-  fab!(:non_followed_channel) { Fabricate(:category_channel) }
-  fab!(:muted_channel) { Fabricate(:category_channel) }
-  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:followed_channel, :category_channel)
+  fab!(:followed_channel_2, :category_channel)
+  fab!(:followed_channel_3, :category_channel)
+  fab!(:non_followed_channel, :category_channel)
+  fab!(:muted_channel, :category_channel)
+  fab!(:unseen_channel, :category_channel)
   fab!(:private_channel) { Fabricate(:private_category_channel, group:) }
   fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
   fab!(:direct_message_2) { Fabricate(:direct_message_channel, users: [user, another]) }
@@ -576,6 +576,68 @@ describe UserNotifications do
         it "does not show the group mention in the email subject" do
           chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
         end
+      end
+    end
+  end
+
+  describe "in a direct message channel with threads" do
+    fab!(:message) do
+      Fabricate(:chat_message, chat_channel: direct_message, user: other, created_at: 2.days.ago)
+    end
+    fab!(:thread) { Fabricate(:chat_thread, channel: direct_message, original_message: message) }
+    fab!(:reply) { Fabricate(:chat_message, chat_channel: direct_message, thread:, user: other) }
+    let(:watching) { Chat::NotificationLevels.all[:watching] }
+
+    it "does not send a chat summary email for thread replies" do
+      no_chat_summary_email
+    end
+
+    describe "when the user is watching the thread" do
+      before do
+        Fabricate(:user_chat_thread_membership, user: user, thread:, notification_level: watching)
+      end
+
+      it "sends a chat summary email" do
+        chat_summary_email
+      end
+    end
+
+    describe "when the user has 2 watched threads" do
+      fab!(:message_2) do
+        Fabricate(
+          :chat_message,
+          chat_channel: direct_message_2,
+          user: another,
+          created_at: 2.days.ago,
+        )
+      end
+      fab!(:thread_2) do
+        Fabricate(:chat_thread, channel: direct_message_2, original_message: message_2)
+      end
+      fab!(:thread_2_reply) do
+        Fabricate(:chat_message, chat_channel: direct_message_2, thread: thread_2, user: another)
+      end
+
+      before do
+        Fabricate(:user_chat_thread_membership, user: user, thread:, notification_level: watching)
+        Fabricate(
+          :user_chat_thread_membership,
+          user: user,
+          thread: thread_2,
+          notification_level: watching,
+        )
+      end
+
+      it "sends a chat summary email" do
+        chat_summary_with_subject(:watched_threads, channel: direct_message.title(user), count: 1)
+      end
+    end
+
+    describe "when another user is watching a thread" do
+      before { thread.membership_for(other).update!(notification_level: watching) }
+
+      it "does not send current user a chat summary email" do
+        no_chat_summary_email
       end
     end
   end

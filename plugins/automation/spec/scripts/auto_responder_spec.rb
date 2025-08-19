@@ -85,7 +85,7 @@ describe "AutoResponder" do
       end
 
       context "when post has direct replies from answering user" do
-        fab!(:answering_user) { Fabricate(:user) }
+        fab!(:answering_user, :user)
 
         before do
           automation.upsert_field!(
@@ -105,7 +105,7 @@ describe "AutoResponder" do
       end
 
       context "when user is replying to own post" do
-        fab!(:answering_user) { Fabricate(:user) }
+        fab!(:answering_user, :user)
 
         before do
           automation.upsert_field!(

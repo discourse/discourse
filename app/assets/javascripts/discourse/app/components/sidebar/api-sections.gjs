@@ -43,7 +43,7 @@ export default class SidebarApiSections extends Component {
   <template>
     <PanelHeader @sections={{this.filteredSections}} />
 
-    {{#each this.filteredSections as |section|}}
+    {{#each this.filteredSections key="name" as |section|}}
       <ApiSection
         @section={{section}}
         @collapsable={{@collapsable}}

@@ -7,20 +7,20 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
-hide_plugin
 
 register_asset "stylesheets/presence.scss"
 
 after_initialize do
   register_presence_channel_prefix("discourse-presence") do |channel_name|
+    staff_groups = [::Group::AUTO_GROUPS[:admins], ::Group::AUTO_GROUPS[:moderators]]
+
     if topic_id = channel_name[%r{/discourse-presence/reply/(\d+)}, 1]
       topic = Topic.find(topic_id)
       config = PresenceChannel::Config.new
 
       if topic.private_message?
         config.allowed_user_ids = topic.allowed_users.pluck(:id)
-        config.allowed_group_ids =
-          topic.allowed_groups.pluck(:group_id) + [::Group::AUTO_GROUPS[:staff]]
+        config.allowed_group_ids = topic.allowed_groups.pluck(:group_id) + staff_groups
       elsif secure_group_ids = topic.secure_group_ids
         config.allowed_group_ids = secure_group_ids + [::Group::AUTO_GROUPS[:admins]]
       else
@@ -37,7 +37,7 @@ after_initialize do
       topic = Topic.find(post.topic_id)
 
       config = PresenceChannel::Config.new
-      config.allowed_group_ids = [::Group::AUTO_GROUPS[:staff]]
+      config.allowed_group_ids = staff_groups
 
       # Locked posts are staff only
       next config if post.locked?
@@ -68,6 +68,8 @@ after_initialize do
       if SiteSetting.enable_category_group_moderation? && topic.category
         config.allowed_group_ids.push(*topic.category.moderating_groups.pluck(:id))
       end
+
+      config.allowed_group_ids.uniq!
 
       config
     end

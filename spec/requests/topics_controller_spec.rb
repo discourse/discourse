@@ -3,19 +3,19 @@
 
 RSpec.describe TopicsController do
   fab!(:topic)
-  fab!(:dest_topic) { Fabricate(:topic) }
+  fab!(:dest_topic, :topic)
   fab!(:invisible_topic) { Fabricate(:topic, visible: false) }
 
-  fab!(:pm) { Fabricate(:private_message_topic) }
+  fab!(:pm, :private_message_topic)
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author1) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:post_author2) { Fabricate(:user) }
-  fab!(:post_author3) { Fabricate(:user) }
-  fab!(:post_author4) { Fabricate(:user) }
-  fab!(:post_author5) { Fabricate(:user) }
-  fab!(:post_author6) { Fabricate(:user) }
+  fab!(:post_author2, :user)
+  fab!(:post_author3, :user)
+  fab!(:post_author4, :user)
+  fab!(:post_author5, :user)
+  fab!(:post_author6, :user)
   fab!(:moderator)
   fab!(:admin)
   fab!(:trust_level_0)
@@ -23,8 +23,8 @@ RSpec.describe TopicsController do
   fab!(:trust_level_4)
 
   fab!(:category)
-  fab!(:tracked_category) { Fabricate(:category) }
-  fab!(:shared_drafts_category) { Fabricate(:category) }
+  fab!(:tracked_category, :category)
+  fab!(:shared_drafts_category, :category)
   fab!(:staff_category) do
     Fabricate(:category).tap do |staff_category|
       staff_category.set_permissions(staff: :full)
@@ -44,7 +44,7 @@ RSpec.describe TopicsController do
     fab!(:p2) { Fabricate(:post, topic: p1.topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       get "/t/#{p1.topic.id}/wordpress.json", params: { best: 3 }
 
@@ -182,7 +182,7 @@ RSpec.describe TopicsController do
 
         describe "when topic has been deleted" do
           it "should still be able to move posts" do
-            PostDestroyer.new(admin, topic.first_post).destroy
+            PostDestroyer.new(admin, topic.first_post, context: "Automated testing").destroy
 
             expect(topic.reload.deleted_at).to_not be_nil
 
@@ -944,7 +944,7 @@ RSpec.describe TopicsController do
     end
 
     describe "changing ownership" do
-      fab!(:user_a) { Fabricate(:user) }
+      fab!(:user_a, :user)
       fab!(:p1) { Fabricate(:post, user: post_author1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, topic: topic) }
 
@@ -1562,8 +1562,12 @@ RSpec.describe TopicsController do
 
       it "force destroys all deleted small actions in topic too" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, post).destroy
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1576,8 +1580,12 @@ RSpec.describe TopicsController do
 
       it "creates a log and clean up previously recorded sensitive information" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, post).destroy
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1595,7 +1603,7 @@ RSpec.describe TopicsController do
 
       it "does not allow to destroy topic if not all posts were force destroyed" do
         _other_post = Fabricate(:post, topic: topic, post_number: 2)
-        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1604,7 +1612,11 @@ RSpec.describe TopicsController do
 
       it "does not allow to destroy topic if not all small action posts were deleted" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1694,8 +1706,8 @@ RSpec.describe TopicsController do
       end
 
       context "with permission" do
-        fab!(:post_hook) { Fabricate(:post_web_hook) }
-        fab!(:topic_hook) { Fabricate(:topic_web_hook) }
+        fab!(:post_hook, :post_web_hook)
+        fab!(:topic_hook, :topic_web_hook)
 
         it "succeeds" do
           put "/t/#{topic.slug}/#{topic.id}.json"
@@ -1876,8 +1888,8 @@ RSpec.describe TopicsController do
         end
 
         context "when using SiteSetting.disable_tags_edit_notifications" do
-          fab!(:t1) { Fabricate(:tag) }
-          fab!(:t2) { Fabricate(:tag) }
+          fab!(:t1, :tag)
+          fab!(:t2, :tag)
           let(:tags) { [t1, t2] }
 
           it "doesn't bump the topic if the setting is enabled" do
@@ -2035,12 +2047,12 @@ RSpec.describe TopicsController do
         end
 
         context "when updating to a category with restricted tags" do
-          fab!(:restricted_category) { Fabricate(:category) }
-          fab!(:tag1) { Fabricate(:tag) }
-          fab!(:tag2) { Fabricate(:tag) }
-          fab!(:tag3) { Fabricate(:tag) }
+          fab!(:restricted_category, :category)
+          fab!(:tag1, :tag)
+          fab!(:tag2, :tag)
+          fab!(:tag3, :tag)
           fab!(:tag_group_1) { Fabricate(:tag_group, tag_names: [tag1.name]) }
-          fab!(:tag_group_2) { Fabricate(:tag_group) }
+          fab!(:tag_group_2, :tag_group)
 
           before_all do
             SiteSetting.tagging_enabled = true
@@ -2272,10 +2284,11 @@ RSpec.describe TopicsController do
             filter_top_level_replies: true,
             print: true,
             preview_theme_id: 9999,
+            include_raw: true,
           }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&include_raw=true",
       )
     end
 
@@ -2504,6 +2517,28 @@ RSpec.describe TopicsController do
       expect(user_options_queries.size).to eq(1) # for all mentioned users
     end
 
+    context "when content_localization_enabled true" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      end
+
+      it "does not result in N+1 queries when loading a localized post" do
+        3.times do
+          Fabricate(:post_localization, post: Fabricate(:post, topic:, locale: "ja"), locale: "en")
+        end
+
+        queries =
+          track_sql_queries do
+            sign_in(admin)
+            get "/t/#{topic.slug}/#{topic.id}.json"
+          end
+
+        queries = queries.filter { |q| q =~ /FROM "?post_localizations"?/ }
+        expect(queries.size).to eq(1)
+      end
+    end
+
     context "with serialize_post_user_badges" do
       fab!(:badge)
       before do
@@ -2586,8 +2621,8 @@ RSpec.describe TopicsController do
     end
 
     context "with permission errors" do
-      fab!(:allowed_user) { Fabricate(:user) }
-      fab!(:allowed_group) { Fabricate(:group) }
+      fab!(:allowed_user, :user)
+      fab!(:allowed_group, :group)
       fab!(:accessible_group) { Fabricate(:group, public_admission: true) }
       fab!(:secure_category) do
         c = Fabricate(:category)
@@ -2603,7 +2638,7 @@ RSpec.describe TopicsController do
           c.save!
         end
       end
-      fab!(:normal_topic) { Fabricate(:topic) }
+      fab!(:normal_topic, :topic)
       fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
       fab!(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
@@ -3730,7 +3765,7 @@ RSpec.describe TopicsController do
 
     describe "when logged in" do
       before { sign_in(user) }
-      let!(:operation) { { type: "change_category", category_id: "1" } }
+      let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
 
       it "requires a list of topic_ids or filter" do
@@ -4362,7 +4397,7 @@ RSpec.describe TopicsController do
       end
 
       context "with tag" do
-        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:tag_topic, :topic)
         fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
 
         it "dismisses topics for tag" do
@@ -4375,7 +4410,7 @@ RSpec.describe TopicsController do
           fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
           fab!(:topic_with_restricted_tag) { Fabricate(:topic, tags: [restricted_tag]) }
           fab!(:group)
-          fab!(:topic_without_tag) { Fabricate(:topic) }
+          fab!(:topic_without_tag, :topic)
           fab!(:tag_group) do
             Fabricate(
               :tag_group,
@@ -4421,7 +4456,7 @@ RSpec.describe TopicsController do
       end
 
       context "with tag and category" do
-        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:tag_topic, :topic)
         fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
         fab!(:tag_and_category_topic) { Fabricate(:topic, category: category) }
         fab!(:topic_tag2) { Fabricate(:topic_tag, topic: tag_and_category_topic, tag: tag) }
@@ -4439,8 +4474,8 @@ RSpec.describe TopicsController do
       end
 
       context "with specific topics" do
-        fab!(:topic2) { Fabricate(:topic) }
-        fab!(:topic3) { Fabricate(:topic) }
+        fab!(:topic2, :topic)
+        fab!(:topic3, :topic)
 
         it "updates the `new_since` date" do
           TopicTrackingState
@@ -4514,7 +4549,7 @@ RSpec.describe TopicsController do
 
     describe "new and unread" do
       fab!(:group)
-      fab!(:new_topic) { Fabricate(:topic) }
+      fab!(:new_topic, :topic)
       fab!(:unread_topic) { Fabricate(:topic, highest_post_number: 3) }
       fab!(:topic_user) do
         Fabricate(
@@ -4639,7 +4674,7 @@ RSpec.describe TopicsController do
 
       context "when tag" do
         fab!(:tag)
-        fab!(:new_topic_2) { Fabricate(:topic) }
+        fab!(:new_topic_2, :topic)
         fab!(:unread_topic_2) { Fabricate(:topic, highest_post_number: 3) }
         fab!(:topic_user) do
           Fabricate(
@@ -5408,7 +5443,7 @@ RSpec.describe TopicsController do
     before { SiteSetting.shared_drafts_category = shared_drafts_category.id }
 
     describe "#update_shared_draft" do
-      fab!(:other_cat) { Fabricate(:category) }
+      fab!(:other_cat, :category)
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
 
       context "when anonymous" do
@@ -5531,10 +5566,12 @@ RSpec.describe TopicsController do
         )
       end
 
-      it "renders with the crawler layout, and handles proper pagination" do
-        user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      let!(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
 
-        get topic.relative_url, env: { "HTTP_USER_AGENT" => user_agent }
+      it "renders with the crawler layout, and handles proper pagination" do
+        get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
 
         body = response.body
 
@@ -5547,7 +5584,7 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page1_time.httpdate)
 
-        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page2_time.httpdate)
@@ -5558,7 +5595,7 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
 
-        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
@@ -5604,20 +5641,38 @@ RSpec.describe TopicsController do
         get "#{topic.relative_url}/2"
       end
 
+      it "adds breadcrumbs to the correct subcategory and category url in subfolder" do
+        set_subfolder "/subpath"
+
+        subcategory = Fabricate(:category, parent_category_id: category.id)
+        topic.update!(category: subcategory)
+
+        get "/t/#{topic.slug}/#{topic.id}",
+            env: {
+              "HTTP_USER_AGENT" => "Mozilla/5.0 ...",
+              "HTTP_VIA" => "HTTP/1.0 web.archive.org",
+            }
+        expect(response.body).to have_tag(
+          "a",
+          with: {
+            href: subcategory.url,
+          },
+          text: subcategory.name,
+        )
+        expect(response.body).to have_tag("a", with: { href: category.url }, text: category.name)
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
-        let!(:user_agent) do
-          "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        end
 
         it "set to topic.url when embed_set_canonical_url is false" do
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.topic.url)
         end
 
         it "set to topic_embed.embed_url when embed_set_canonical_url is true" do
           SiteSetting.embed_set_canonical_url = true
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.embed_url)
         end
       end
@@ -5634,6 +5689,119 @@ RSpec.describe TopicsController do
 
           expect(body).to have_tag(:body, with: { class: "crawler" })
           expect(body).to_not have_tag(:meta, with: { name: "fragment" })
+        end
+      end
+
+      context "when content localization is enabled" do
+        fab!(:category) { Fabricate(:category, locale: "en") }
+        fab!(:subcategory) { Fabricate(:category, parent_category: category, locale: "en") }
+        fab!(:tag)
+
+        before do
+          SiteSetting.content_localization_enabled = true
+
+          topic.update!(category: subcategory, tags: [tag], locale: "en")
+          topic.first_post.update(locale: "en")
+          # randomly create localizations for an untested locale
+          topic
+            .posts
+            .sample(3)
+            .each do |post|
+              post.update!(locale: "en")
+              Fabricate(:post_localization, post:, locale: "de")
+            end
+        end
+
+        describe "when tl param is absent" do
+          fab!(:pt_topic) { Fabricate(:topic_localization, topic:, locale: "pt") }
+          fab!(:pt_category) { Fabricate(:category_localization, category:, locale: "pt") }
+          fab!(:pt_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "pt")
+          end
+          fab!(:pt_first_post) do
+            Fabricate(:post_localization, post: topic.first_post, locale: "pt_BR")
+          end
+
+          it "localizes (english) topic for crawler to (portuguese) default locale when localization exists" do
+            SiteSetting.default_locale = "pt"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(pt_topic.title)
+            expect(response.body).to include(pt_category.name)
+            expect(response.body).to include(pt_subcategory.name)
+            expect(response.body).to include(pt_first_post.cooked)
+          end
+
+          it "leaves topic as-is if no localization" do
+            SiteSetting.default_locale = "es"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(topic.title)
+            expect(response.body).to include(category.name)
+            expect(response.body).to include(subcategory.name)
+            expect(response.body).to include(topic.first_post.cooked)
+          end
+        end
+
+        describe "when tl param is present ?tl=ja" do
+          fab!(:ja_topic) { Fabricate(:topic_localization, topic:, locale: "ja") }
+          fab!(:ja_category) { Fabricate(:category_localization, category:, locale: "ja") }
+          fab!(:ja_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "ja")
+          end
+
+          it "localizes topic for crawler" do
+            get topic.relative_url,
+                env: {
+                  "HTTP_USER_AGENT" => bot_user_agent,
+                },
+                params: {
+                  tl: "ja",
+                }
+
+            expect(response.body).to include(ja_topic.title)
+            # breadcrumbs
+            expect(response.body).to include(ja_category.name)
+            expect(response.body).to include(ja_subcategory.name)
+          end
+        end
+
+        it "does not have N+1s when loading localizations" do
+          Fabricate(:topic_localization, topic:, locale: "ja")
+          topic
+            .posts
+            .where("post_number < 4")
+            .each { |post| Fabricate(:post_localization, post:, locale: "ja") }
+
+          initial_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          Fabricate(:post_localization, post: topic.posts.find_by_post_number(4), locale: "ja")
+
+          new_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          expect(new_sql_queries).to eq(initial_sql_queries)
         end
       end
     end

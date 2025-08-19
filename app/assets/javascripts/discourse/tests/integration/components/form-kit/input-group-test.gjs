@@ -13,18 +13,20 @@ module(
       let data = {};
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.InputGroup as |inputGroup|>
-            <inputGroup.Field @title="Foo" @name="foo" as |field|>
-              <field.Input />
-            </inputGroup.Field>
-            <inputGroup.Field @title="Bar" @name="bar" as |field|>
-              <field.Input />
-            </inputGroup.Field>
-          </form.InputGroup>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.InputGroup as |inputGroup|>
+              <inputGroup.Field @title="Foo" @name="foo" as |field|>
+                <field.Input />
+              </inputGroup.Field>
+              <inputGroup.Field @title="Bar" @name="bar" as |field|>
+                <field.Input />
+              </inputGroup.Field>
+            </form.InputGroup>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasValue("");
       assert.form().field("bar").hasValue("");

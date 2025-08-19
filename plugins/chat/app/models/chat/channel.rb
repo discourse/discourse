@@ -105,6 +105,7 @@ module Chat
     %i[
       category_channel?
       direct_message_channel?
+      direct_message_group?
       public_channel?
       chatable_has_custom_fields?
       read_restricted?
@@ -143,7 +144,10 @@ module Chat
     def remove(user)
       Chat::ChannelMembershipManager.new(self).unfollow(user)
     end
-    alias leave remove
+
+    def leave(user)
+      self.remove(user)
+    end
 
     def url
       "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"
@@ -287,7 +291,7 @@ end
 # Table name: chat_channels
 #
 #  id                          :bigint           not null, primary key
-#  chatable_id                 :integer          not null
+#  chatable_id                 :bigint           not null
 #  deleted_at                  :datetime
 #  deleted_by_id               :integer
 #  featured_in_category_id     :integer
@@ -301,8 +305,8 @@ end
 #  user_count                  :integer          default(0), not null
 #  auto_join_users             :boolean          default(FALSE), not null
 #  user_count_stale            :boolean          default(FALSE), not null
-#  type                        :string
 #  slug                        :string
+#  type                        :string
 #  allow_channel_wide_mentions :boolean          default(TRUE), not null
 #  messages_count              :integer          default(0), not null
 #  threading_enabled           :boolean          default(FALSE), not null

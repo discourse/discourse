@@ -59,7 +59,7 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
     end
 
     context "when category channel" do
-      fab!(:channel) { Fabricate(:chat_channel) }
+      fab!(:channel, :chat_channel)
 
       context "when user can't create a message in this channel" do
         before { channel.closed!(Discourse.system_user) }
@@ -81,7 +81,7 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
     subject(:reason) { policy.reason }
 
     context "when channel is a direct message one" do
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
       fab!(:channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
 
       before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }

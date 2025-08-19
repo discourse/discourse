@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 $blob-bg: absolute-image-url("/branded-background.svg");
 $blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 
@@ -15,6 +17,13 @@ $blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
   }
 }
 
+// horizon specific style
+.experimental-screen {
+  .wizard & {
+    display: none;
+  }
+}
+
 body.wizard {
   background-color: var(--secondary);
   background-image: $blob-bg;
@@ -22,13 +31,12 @@ body.wizard {
   background-repeat: no-repeat;
   background-position: bottom;
   color: var(--primary-very-high);
-  font-family: system-ui, Arial, sans-serif;
 
   .wrap {
     max-width: 100%;
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     background: $blob-mobile-bg;
     background-size: cover;
     background-repeat: no-repeat;
@@ -53,10 +61,12 @@ body.wizard {
     position: relative;
     height: 70px;
     width: auto;
-    @include breakpoint("mobile-extra-large") {
+
+    @include viewport.until(sm) {
       height: 50px;
     }
-    @media screen and (max-height: 900px) {
+
+    @media screen and (height <= 900px) {
       .desktop-view & {
         display: none;
       }
@@ -75,14 +85,14 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 19px 6px rgb(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 1em auto;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   border-radius: 8px;
   padding: 2em;
 
-  @include breakpoint("large") {
+  @include viewport.until(lg) {
     padding: 2em 1.5em;
   }
 
@@ -92,23 +102,14 @@ body.wizard {
     min-width: 35%;
     width: 100%;
 
-    @include breakpoint("large") {
+    @include viewport.until(lg) {
       max-width: 95%;
     }
 
     .wizard-container__button:not(.wizard-container__button-upload) {
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         width: 100%;
         margin: 0 0 0.5em;
-      }
-    }
-
-    &.styling {
-      max-width: 100%;
-      width: auto;
-
-      @include breakpoint("mobile-extra-large") {
-        width: 95%;
       }
     }
   }
@@ -127,34 +128,9 @@ body.wizard {
   &__step-description {
     font-size: var(--font-up-2);
     flex: 1 0 40%;
-    @include breakpoint("tablet") {
+
+    @include viewport.until(md) {
       font-size: var(--font-up-2);
-    }
-  }
-
-  &__step.branding .wizard-container__field {
-    @include breakpoint("mobile-extra-large") {
-      max-width: 100%;
-    }
-  }
-
-  &__step.branding .wizard-container__preview {
-    background-color: var(--primary-very-low);
-    border-radius: 0.5em;
-    padding: 1em;
-    margin-bottom: 1em;
-  }
-
-  &__step.branding .wizard-container__preview canvas {
-    @include breakpoint("mobile-extra-large") {
-      max-width: 100%;
-      height: auto !important;
-    }
-  }
-
-  &__step.styling .wizard-container__field.styling-preview-field {
-    label {
-      display: none;
     }
   }
 
@@ -169,6 +145,7 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
+
     @media (prefers-reduced-motion: no-preference) {
       animation: bump 0.25s ease-in-out;
       animation-iteration-count: 2;
@@ -179,21 +156,13 @@ body.wizard {
     display: block;
   }
 
-  &__field.text-governing-law,
-  &__field.text-city-for-disputes {
-    @media only screen and (max-width: 568px) {
-      display: none;
-    }
-  }
-
-  &__field.dropdown-field.dropdown-homepage-style {
-    .wizard-container__dropdown {
-      height: auto;
-    }
-  }
-
   &__step-form {
     display: flex;
+    flex: 1 0 50%;
+
+    @media only screen and (width <= 568px) {
+      width: 100%;
+    }
   }
 
   &__sidebar {
@@ -201,7 +170,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (max-width: 925px) {
+    @media only screen and (width <= 925px) {
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -214,61 +183,9 @@ body.wizard {
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (max-width: 925px) {
+      @media only screen and (width <= 925px) {
         display: none;
       }
-    }
-  }
-
-  .preview-nav {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    padding-right: 10px;
-
-    .preview-nav-button {
-      text-align: center;
-      padding: 10px 15px;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--primary-high);
-
-      &.active {
-        background: var(--secondary);
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        color: var(--tertiary);
-        border-top: none;
-      }
-    }
-  }
-
-  .previews {
-    position: relative;
-    height: 320px;
-    width: 628px;
-    overflow: hidden;
-    background: var(--secondary);
-    border-radius: 10px;
-    cursor: grab;
-    @include user-select(none);
-
-    &.dragging {
-      cursor: grabbing;
-    }
-
-    .topic-preview {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .homepage-preview {
-      position: absolute;
-      left: calc(100% + 25px);
-      top: 0;
     }
   }
 
@@ -288,7 +205,8 @@ body.wizard {
     color: var(--primary);
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
-    @include breakpoint("medium") {
+
+    @include viewport.until(lg) {
       font-size: var(--font-up-5);
     }
   }
@@ -304,20 +222,9 @@ body.wizard {
     min-height: 37em;
     margin-bottom: 2em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       min-height: 30em;
     }
-  }
-
-  &__step-form {
-    flex: 1 0 50%;
-    @media only screen and (max-width: 568px) {
-      width: 100%;
-    }
-  }
-
-  &__step.branding .wizard-container__description {
-    font-size: var(--font-0);
   }
 
   &__buttons-left {
@@ -325,7 +232,8 @@ body.wizard {
     flex-wrap: wrap;
     gap: 1em;
     align-items: center;
-    @include breakpoint("mobile-extra-large") {
+
+    @include viewport.until(sm) {
       order: 2;
     }
   }
@@ -335,7 +243,7 @@ body.wizard {
     align-items: center;
     font-weight: bold;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-right: 0;
       flex-direction: column;
     }
@@ -343,7 +251,8 @@ body.wizard {
 
   &__step-text {
     display: inline;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -369,14 +278,6 @@ body.wizard {
   }
 
   &__button {
-    border-radius: 2px;
-    border: 0;
-    padding: 0.5em;
-    transition: var(--d-button-transition);
-    text-decoration: none;
-    background-color: var(--secondary);
-    color: var(--primary-very-high);
-    cursor: pointer;
     font-size: var(--font-up-1);
   }
 
@@ -402,66 +303,24 @@ body.wizard {
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
-    @include breakpoint("mobile-extra-large") {
+
+    @include viewport.until(sm) {
       order: 1;
       margin-left: 0;
     }
   }
 
-  &__button.primary:hover,
-  &__button.primary:focus {
-    background-color: var(--tertiary-hover);
-  }
-
-  &__button.primary:active {
-    background-color: var(--tertiary-high);
-  }
-
-  &__button.primary:disabled {
-    background-color: var(--tertiary-low);
-  }
-
-  &__button.configure-more {
-    margin-right: 1em;
-    background-color: transparent;
-    color: var(--tertiary);
-    @include breakpoint("mobile-extra-large") {
-      order: 2;
-    }
-  }
-
-  &__button.configure-more:hover {
-    background-color: transparent;
-    color: var(--primary);
-  }
-
-  &__button.jump-in {
-    &:hover {
-      background-color: var(--primary-300);
-    }
-  }
-
   &__button.finish {
-    color: var(--tertiary);
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       order: 2;
     }
-  }
-
-  &__button.finish:hover {
-    color: var(--tertiary-hover);
-    background-color: transparent;
-  }
-
-  &__button.finish:active,
-  &__button.finish:disabled {
-    background-color: transparent;
   }
 
   &__button.next {
     min-width: 70px;
     margin-left: 1em;
-    @include breakpoint("mobile-extra-large") {
+
+    @include viewport.until(sm) {
       order: 1;
       margin-left: 0;
     }
@@ -517,7 +376,8 @@ body.wizard {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    @include breakpoint("mobile-extra-large") {
+
+    @include viewport.until(sm) {
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
@@ -527,10 +387,6 @@ body.wizard {
   &__label {
     font-weight: bold;
     font-size: var(--font-up-1);
-  }
-
-  &__step.styling .wizard-container__label {
-    font-size: var(--font-0);
   }
 
   &__label.required {
@@ -548,7 +404,7 @@ body.wizard {
       margin: 0;
     }
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       font-size: var(--font-0);
     }
   }
@@ -557,7 +413,8 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       margin-left: 2em;
     }
   }
@@ -581,28 +438,6 @@ body.wizard {
     border-radius: 4px;
   }
 
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
-    flex: 0 0 30%;
-  }
-
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
-    flex: 1 1 70%;
-    overflow: hidden;
-  }
-
-  &__dropdown.homepage-style-selector {
-    .select-kit-row {
-      .name {
-        font-weight: bold;
-      }
-
-      .desc {
-        display: block;
-        margin-top: 0.1em;
-      }
-    }
-  }
-
   &__field.checkbox-field .wizard-container__label {
     cursor: pointer;
     display: inline-block;
@@ -618,7 +453,8 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       height: 20px;
       width: 35px;
     }
@@ -636,7 +472,8 @@ body.wizard {
     color: var(--secondary);
     top: 4px;
     left: 9px;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
@@ -651,7 +488,8 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       height: 12px;
       width: 12px;
     }
@@ -661,7 +499,7 @@ body.wizard {
     .wizard-container__label:hover
     .wizard-container__checkbox-slider::before {
     background: var(--secondary);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.15);
   }
 
   &__checkbox:checked + .wizard-container__checkbox-slider {
@@ -670,7 +508,8 @@ body.wizard {
 
   &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       left: 20px;
     }
   }
@@ -694,7 +533,8 @@ body.wizard {
     align-items: stretch;
     display: flex;
     gap: 1em;
-    @include breakpoint(mobile-extra-large) {
+
+    @include viewport.until(sm) {
       flex-direction: column;
     }
   }
@@ -741,15 +581,12 @@ body.wizard {
     top: 2px;
   }
 
-  .wizard-container__image-upload canvas {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-  }
-
   .finish-installation {
     .wizard-congratulations-wrap {
       display: flex;
       gap: 1em;
-      @media screen and (max-width: 750px) {
+
+      @media screen and (width <= 750px) {
         flex-direction: column-reverse;
       }
     }

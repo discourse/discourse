@@ -1,4 +1,5 @@
 import { isBlank } from "@ember/utils";
+import moment from "moment";
 import { i18n } from "discourse-i18n";
 
 export default class Validator {
@@ -26,6 +27,22 @@ export default class Validator {
     }
 
     return errors;
+  }
+
+  dateBeforeOrEqualValidator(value, rule) {
+    if (!moment(value).isSameOrBefore(rule.date, "day")) {
+      return i18n("form_kit.errors.date_before_or_equal", {
+        date: moment(rule.date).format("LL"),
+      });
+    }
+  }
+
+  dateAfterOrEqualValidator(value, rule) {
+    if (!moment(value).isSameOrAfter(rule.date, "day")) {
+      return i18n("form_kit.errors.date_after_or_equal", {
+        date: moment(rule.date).format("LL"),
+      });
+    }
   }
 
   integerValidator(value) {
@@ -126,6 +143,54 @@ export default class Validator {
 
     if (error) {
       return i18n("form_kit.errors.required");
+    }
+  }
+
+  startsWithValidator(value, rule, type) {
+    let error = false;
+
+    if (isBlank(value)) {
+      return;
+    }
+
+    switch (type) {
+      case "input":
+      case "input-text":
+      case "text":
+        if (!value.startsWith(rule.prefix)) {
+          error = true;
+        }
+        break;
+    }
+
+    if (error) {
+      return i18n("form_kit.errors.starts_with", {
+        prefix: rule.prefix,
+      });
+    }
+  }
+
+  endsWithValidator(value, rule, type) {
+    let error = false;
+
+    if (isBlank(value)) {
+      return;
+    }
+
+    switch (type) {
+      case "input":
+      case "input-text":
+      case "text":
+        if (!value.endsWith(rule.suffix)) {
+          error = true;
+        }
+        break;
+    }
+
+    if (error) {
+      return i18n("form_kit.errors.ends_with", {
+        suffix: rule.suffix,
+      });
     }
   }
 }

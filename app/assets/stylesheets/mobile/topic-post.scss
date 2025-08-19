@@ -16,7 +16,7 @@
 }
 
 .topic-post > article {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding: 15px 0 8px 0;
 }
 
@@ -35,7 +35,7 @@ nav.post-controls {
   --control-space-large: calc(var(--control-space) * 1.3);
 
   // on small devices with many buttons this can overflow
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .actions {
     // using an auto margin on first-child instead of justify-content on the parent
@@ -126,7 +126,8 @@ nav.post-controls button.reply .d-icon {
 .post-admin-menu {
   bottom: -50px;
   left: 135px;
-  @media screen and (max-width: 374px) {
+
+  @media screen and (width <= 374px) {
     left: 50px;
   }
 }
@@ -158,7 +159,7 @@ nav.post-controls button.reply .d-icon {
     }
 
     .topic-avatar {
-      @include sticky;
+      position: sticky;
       top: calc(var(--header-offset) + 0.5em);
       margin-right: 15px;
     }
@@ -244,10 +245,6 @@ nav.post-controls button.reply .d-icon {
     transform: translate(-50%, 150%);
     padding: 0.35em 0.5em;
   }
-}
-
-.post-actions {
-  /* overriding display: here was causing hidden element to take up space */
 }
 
 .post-action {
@@ -411,8 +408,8 @@ span.highlighted {
 
 .read-state {
   // contained within the padding to prevent vertical overflow
-  max-width: var(--d-wrap-padding-h);
-  right: calc(var(--d-wrap-padding-h) * -1);
+  max-width: var(--d-wrap-padding-x);
+  right: calc(var(--d-wrap-padding-x) * -1);
   font-size: 6px; // static size to avoid overflow issues
 
   svg {
@@ -432,7 +429,7 @@ span.highlighted {
 
 .posts-filtered-notice {
   padding-right: 8.5em;
-  padding-bottom: unquote("max(1em, env(safe-area-inset-bottom))");
+  padding-bottom: max(1em, env(safe-area-inset-bottom));
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 1em -9px;

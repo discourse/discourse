@@ -3,14 +3,12 @@
 RSpec.describe TopTopic do
   describe "#sorted_periods" do
     context "when verifying enum sequence" do
-      before { @sorted_periods = TopTopic.sorted_periods }
-
       it "'daily' should be at 1st position" do
-        expect(@sorted_periods[:daily]).to eq(1)
+        expect(described_class.sorted_periods[:daily]).to eq(1)
       end
 
       it "'all' should be at 6th position" do
-        expect(@sorted_periods[:all]).to eq(6)
+        expect(described_class.sorted_periods[:all]).to eq(6)
       end
     end
   end
@@ -18,8 +16,8 @@ RSpec.describe TopTopic do
   it { is_expected.to belong_to :topic }
 
   describe ".refresh!" do
-    fab!(:t1) { Fabricate(:topic) }
-    fab!(:t2) { Fabricate(:topic) }
+    fab!(:t1, :topic)
+    fab!(:t2, :topic)
 
     it "begins blank" do
       expect(TopTopic.all).to be_blank

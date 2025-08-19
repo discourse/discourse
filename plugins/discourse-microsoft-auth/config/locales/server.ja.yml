@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    microsoft_auth_enabled: "Microsoft を使ったユーザーの認証を許可しますか？"
+    microsoft_auth_client_id: 'Microsoft アプリ ID/クライアント ID (シークレット ID ではありません) - <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a> でセットアップしてください'
+    microsoft_auth_client_secret: "Microsoft シークレットパスワード (シークレット ID ではなく値を使用します)"
+    microsoft_auth_email_verified: "すべての Microsoft メールをデフォルトで検証済みとして扱います。警告: すべてのユーザーのメールアドレスが検証済みである場合にのみ、これを有効にしてください。"

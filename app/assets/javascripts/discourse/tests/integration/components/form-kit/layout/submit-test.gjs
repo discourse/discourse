@@ -15,11 +15,13 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
       done();
     };
 
-    await render(<template>
-      <Form @onSubmit={{submit}} as |form|>
-        <form.Submit />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @onSubmit={{submit}} as |form|>
+          <form.Submit />
+        </Form>
+      </template>
+    );
 
     await click("button");
 
@@ -28,11 +30,13 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
   });
 
   test("@label", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Submit @label="cancel" />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Submit @label="cancel" />
+        </Form>
+      </template>
+    );
 
     assert
       .dom(".form-kit__button")
@@ -40,12 +44,28 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
   });
 
   test("@isLoading", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Submit @label="cancel" @isLoading={{true}} />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Submit @label="cancel" @isLoading={{true}} />
+        </Form>
+      </template>
+    );
 
     assert.dom(".form-kit__button .d-icon-spinner").exists();
+  });
+
+  test("@disabled", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Submit @label="submit" @disabled={{true}} />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__button")
+      .isDisabled("submit button is disabled when @disabled is true");
   });
 });

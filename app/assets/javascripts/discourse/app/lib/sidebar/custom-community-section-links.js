@@ -49,6 +49,10 @@ export function addSectionLink(args, secondary) {
       get prefixValue() {
         return args.icon || super.prefixValue;
       }
+
+      get models() {
+        return args.models;
+      }
     };
 
     links.push(klass);

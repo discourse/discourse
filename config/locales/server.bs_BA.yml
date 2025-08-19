@@ -707,13 +707,11 @@ bs_BA:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     email_posts_context: "How many prior replies to include as context in notification emails."
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     dark_mode_none: "Ništa"
-    max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -753,7 +751,6 @@ bs_BA:
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     embed_post_limit: "Maximum number of posts to embed."
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:
@@ -941,7 +938,6 @@ bs_BA:
     sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
-    default_theme_name: "Uobičajen"
   edit_this_page: "Edit this page"
   csv_export:
     boolean_yes: "Da"
@@ -1075,6 +1071,11 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
       ignore:
@@ -1086,8 +1087,11 @@ bs_BA:
       reject_user:
         delete:
           title: "Delete User"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "user"
   activemodel:
     errors:

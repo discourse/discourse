@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 
 export default {
   initialize() {
-    withPluginApi("1.37.2", (api) => {
+    withPluginApi((api) => {
       api.registerMoreTopicsTab({
         id: "related-messages",
         name: i18n("related_messages.pill"),

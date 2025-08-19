@@ -11,7 +11,11 @@ export function getFormTemplateObject(form) {
   return formObject;
 }
 
-export default function prepareFormTemplateData(form, formTemplate) {
+export default function prepareFormTemplateData(
+  form,
+  formTemplate,
+  checkFormValidity = true
+) {
   const labelMap = formTemplate.reduce((acc, field) => {
     acc[field.id] = field.attributes.label;
     return acc;
@@ -20,9 +24,11 @@ export default function prepareFormTemplateData(form, formTemplate) {
   const formData = new FormData(form);
 
   // Validate the form template
-  _validateFormTemplateData(form);
-  if (!form.checkValidity()) {
-    return false;
+  if (checkFormValidity) {
+    _validateFormTemplateData(form);
+    if (!form.checkValidity()) {
+      return false;
+    }
   }
 
   // Gather form template data

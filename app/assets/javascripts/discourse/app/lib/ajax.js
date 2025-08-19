@@ -45,10 +45,16 @@ function handleRedirect(xhr) {
   }
 }
 
+let activeCsrfRequest;
+
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then((result) => {
-    Session.currentProp("csrfToken", result.csrf);
-  });
+  if (!activeCsrfRequest) {
+    activeCsrfRequest = ajax("/session/csrf")
+      .then((result) => Session.currentProp("csrfToken", result.csrf))
+      .finally(() => (activeCsrfRequest = null));
+  }
+
+  return activeCsrfRequest;
 }
 
 /**

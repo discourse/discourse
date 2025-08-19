@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "a chat channel model" do
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }

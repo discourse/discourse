@@ -13,10 +13,14 @@ el:
             delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός
-      create: Δημιουργία
-      update: Ενημέρωση
+      table_title: Αυτοματισμοί
+      create: Προσθήκη αυτοματισμού
+      update: Ενημέρωση αυτοματισμού
+      back: Πίσω
+      edit: Επεξεργασία
       select_script: Επιλέξτε μια δέσμη ενεργειών
       select_trigger: Επιλέξτε ένα έναυσμα
+      no_automation_yet: Προς το παρόν δεν έχουν ρυθμιστεί αυτοματισμοί.
       filter_placeholder: Φιλτράρισμα κατά όνομα ή περιγραφή...
       edit_automation:
         trigger_section:
@@ -122,15 +126,13 @@ el:
               description: Θα ενεργοποιηθεί μόνο αν η ανάρτηση είναι η αρχική ανάρτηση στο θέμα
             restricted_tags:
               label: Ετικέτες
-            restricted_category:
-              label: Κατηγορία
-            restricted_group:
-              label: Ομάδα
-            restricted_groups:
-              label: Ομάδες
-            ignore_group_members:
-              label: Αγνόηση μελών ομάδας
+            restricted_categories:
+              label: Κατηγορίες
           created: Δημιουργήθηκε
+          with_images: Εικόνες
+          with_links: Σύνδεσμοι
+          with_code: Κωδικός
+          with_uploads: Μεταφορτώσεις
         user_updated:
           fields:
             user_profile:
@@ -302,6 +304,11 @@ el:
           name:
             label: Έναυσμα
         automation:
+          runs_today: "%{count} σήμερα"
+          runs_this_week: "%{count} αυτή την εβδομάδα"
+          runs_this_month: "%{count} αυτό τον μήνα"
+          runs:
+            label: Εκτελέσεις
           name:
             label: Όνομα
           trigger:
@@ -316,5 +323,7 @@ el:
             label: Απενεργοποιημένο
           last_updated_at:
             label: Τελευταία ενημέρωση
+          last_run:
+            label: Τελευταία εκτέλεση
           last_updated_by:
             label: Ενημερώθηκε από

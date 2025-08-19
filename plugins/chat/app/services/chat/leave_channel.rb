@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 module Chat
-  # Service responsible to flag a message.
+  # Service responsible for completely leaving a channel,
+  # which does something different depending on the channel:
+  #
+  # Category channels - Unfollows the channel similar to
+  # behaviour of Chat::UnfollowChannel
+  # DM channels with 2 users - Same as category channel
+  # DM channels with > 2 users (group DM) - Deletes the user's
+  # membership and removes them from the channel's user list.
   #
   # @example
   #  ::Chat::LeaveChannel.call(

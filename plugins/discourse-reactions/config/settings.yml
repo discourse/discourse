@@ -1,0 +1,25 @@
+discourse_reactions:
+  discourse_reactions_enabled:
+    default: false
+    client: true
+  discourse_reactions_like_icon:
+    client: true
+    default: "heart"
+  discourse_reactions_reaction_for_like:
+    client: true
+    type: enum
+    default: "heart"
+    enum: ReactionForLikeSiteSettingEnum
+  discourse_reactions_enabled_reactions:
+    type: emoji_list
+    default: "+1|laughing|open_mouth|clap|confetti_ball|hugs"
+    client: true
+  discourse_reactions_desaturated_reaction_panel:
+    default: false
+    client: true
+  discourse_reactions_excluded_from_like:
+    type: emoji_list
+    default: "-1"
+    validator: "ReactionsExcludedFromLikeSiteSettingValidator"
+  discourse_reactions_like_sync_enabled:
+    default: true

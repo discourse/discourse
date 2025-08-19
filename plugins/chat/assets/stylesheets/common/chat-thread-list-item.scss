@@ -3,7 +3,7 @@
   flex-direction: row;
   padding: 1rem 0;
   margin-inline: 1rem 0.75rem;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   cursor: pointer;
 }
 
@@ -105,6 +105,7 @@
     flex-shrink: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
+
     @include ellipsis;
     margin-left: auto;
   }
@@ -118,6 +119,7 @@
 
   &__title {
     flex: 1 1 auto;
+
     @include ellipsis;
   }
 

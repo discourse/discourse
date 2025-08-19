@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -15,6 +15,7 @@ import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
+import Badge from "discourse/models/badge";
 import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -149,24 +150,70 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
+  @tracked customShare = null;
+
   // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
   // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
   // the standard tracked method because these properties are added to the class prototype and are not enumarated by
   // object.keys().
   // See https://github.com/emberjs/ember.js/issues/18220
+  @trackedPostProperty action_code;
+  @trackedPostProperty action_code_path;
+  @trackedPostProperty action_code_who;
+  @trackedPostProperty actions_summary;
+  @trackedPostProperty admin;
+  @trackedPostProperty badges_granted;
   @trackedPostProperty bookmarked;
   @trackedPostProperty can_delete;
   @trackedPostProperty can_edit;
   @trackedPostProperty can_permanently_delete;
   @trackedPostProperty can_recover;
+  @trackedPostProperty can_see_hidden_post;
+  @trackedPostProperty can_view_edit_history;
+  @trackedPostProperty cooked;
+  @trackedPostProperty cooked_hidden;
+  @trackedPostProperty created_at;
   @trackedPostProperty deleted_at;
+  @trackedPostProperty deleted_by;
+  @trackedPostProperty excerpt;
+  @trackedPostProperty expandedExcerpt;
+  @trackedPostProperty group_moderator;
+  @trackedPostProperty hidden;
+  @trackedPostProperty id;
+  @trackedPostProperty is_auto_generated;
+  @trackedPostProperty last_wiki_edit;
   @trackedPostProperty likeAction;
+  @trackedPostProperty link_counts;
+  @trackedPostProperty locked;
+  @trackedPostProperty moderator;
+  @trackedPostProperty name;
+  @trackedPostProperty notice;
+  @trackedPostProperty notice_created_by_user;
+  @trackedPostProperty post_number;
   @trackedPostProperty post_type;
+  @trackedPostProperty primary_group_name;
+  @trackedPostProperty quoted;
+  @trackedPostProperty read;
+  @trackedPostProperty reply_count;
+  @trackedPostProperty reply_to_user;
+  @trackedPostProperty staff;
+  @trackedPostProperty staged;
+  @trackedPostProperty title_is_group;
+  @trackedPostProperty topic;
+  @trackedPostProperty topic_id;
+  @trackedPostProperty trust_level;
+  @trackedPostProperty updated_at;
   @trackedPostProperty user_deleted;
   @trackedPostProperty user_id;
+  @trackedPostProperty user_suspended;
+  @trackedPostProperty user_title;
+  @trackedPostProperty username;
+  @trackedPostProperty version;
+  @trackedPostProperty via_email;
+  @trackedPostProperty wiki;
   @trackedPostProperty yours;
-
-  customShare = null;
+  @trackedPostProperty user_custom_fields;
+  @trackedPostProperty post_localizations;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -177,6 +224,8 @@ export default class Post extends RestModel {
   @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
+  @alias("deletedBy") postDeletedBy; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
+  @alias("deletedAt") postDeletedAt; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
 
   constructor() {
     super(...arguments);
@@ -187,9 +236,8 @@ export default class Post extends RestModel {
     });
   }
 
-  @discourseComputed("url", "customShare")
-  shareUrl(url) {
-    return this.customShare || resolveShareUrl(url, this.currentUser);
+  get shareUrl() {
+    return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
   @discourseComputed("name", "username")
@@ -197,14 +245,12 @@ export default class Post extends RestModel {
     return name && name !== username && this.siteSettings.display_name_on_posts;
   }
 
-  @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
-  postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
-    return firstPost ? topicDeletedBy : deletedBy;
+  get deletedBy() {
+    return this.firstPost ? this.topic?.deleted_by : this.deleted_by;
   }
 
-  @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
-  postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
-    return firstPost ? topicDeletedAt : deletedAt;
+  get deletedAt() {
+    return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
   @discourseComputed("post_number", "topic_id", "topic.slug")
@@ -239,13 +285,12 @@ export default class Post extends RestModel {
       .catch(popupAjaxError);
   }
 
-  @discourseComputed("link_counts.@each.internal")
-  internalLinks() {
+  get internalLinks() {
     if (isEmpty(this.link_counts)) {
       return null;
     }
 
-    return this.link_counts.filterBy("internal").filterBy("title");
+    return this.link_counts.filter((link) => link.internal && link.title);
   }
 
   @discourseComputed("actions_summary.@each.can_act")
@@ -332,6 +377,10 @@ export default class Post extends RestModel {
     return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
+  get canSplitMergeTopic() {
+    return !!this.topic?.details?.can_split_merge_topic;
+  }
+
   get canToggleLike() {
     return !!this.likeAction?.get("canToggle");
   }
@@ -340,12 +389,23 @@ export default class Post extends RestModel {
     return this.topic.get("postStream.filterRepliesToPostNumber");
   }
 
+  get hasReplies() {
+    return this.reply_count > 0;
+  }
+
   get isWhisper() {
     return this.post_type === this.site.post_types.whisper;
   }
 
   get isModeratorAction() {
     return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get isSmallAction() {
+    return (
+      this.post_type === this.site.post_types.small_action ||
+      this.action_code === "split_topic"
+    );
   }
 
   get liked() {
@@ -378,6 +438,37 @@ export default class Post extends RestModel {
     }
 
     return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
+  @cached
+  get user() {
+    if (!this.user_id || !this.username) {
+      // If we don't have at least user_id and username, we can't create a User instance.
+      return null;
+    }
+
+    // Using store.createRecord can lead to issues when updating existing models in the cache, potentially causing
+    // rendering errors if the cached model is currently being rendered.
+    // Instead, User.create ensures we get a fresh instance every time without affecting the cache.
+    // The @cached decorator ensures this computation only happens once and is cached until dependencies are updated.
+    return User.create({
+      id: this.user_id,
+      username: this.username,
+      name: this.name,
+      admin: this.admin,
+      avatar_template: this.avatar_template,
+      flair_bg_color: this.flair_bg_color,
+      flair_color: this.flair_color,
+      flair_group_id: this.flair_group_id,
+      flair_name: this.flair_name,
+      flair_url: this.flair_url,
+      moderator: this.moderator,
+      primary_group_name: this.primary_group_name,
+      status: this.user_status,
+      title: this.user_title,
+      trust_level: this.trust_level,
+      custom_fields: this.user_custom_fields,
+    });
   }
 
   afterUpdate(res) {
@@ -413,13 +504,9 @@ export default class Post extends RestModel {
   }
 
   // Expands the first post's content, if embedded and shortened.
-  expand() {
-    return ajax(`/posts/${this.id}/expand-embed`).then((post) => {
-      this.set(
-        "cooked",
-        `<section class="expanded-embed">${post.cooked}</section>`
-      );
-    });
+  async expand() {
+    const post = await ajax(`/posts/${this.id}/expand-embed`);
+    this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
   }
 
   // Recover a deleted post
@@ -550,6 +637,10 @@ export default class Post extends RestModel {
           skip =
             value.username === oldValue.username ||
             get(value, "username") === get(oldValue, "username");
+        } else if (key === "topic" && !value && oldValue) {
+          // if `topic` is already set in the new instance we don't want to overwrite it with null, because the old
+          // instance wasn't fully initialized yet.
+          skip = true;
         }
 
         if (!skip) {
@@ -589,6 +680,7 @@ export default class Post extends RestModel {
       target: "post",
       targetId: this.id,
     });
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   }
 
@@ -671,5 +763,42 @@ export default class Post extends RestModel {
     if (badgeIds) {
       return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
     }
+  }
+
+  @cached
+  get badgesGranted() {
+    return this.badges_granted?.map((json) => {
+      const badges = Badge.createFromJson(json);
+      return Array.isArray(badges) ? badges[0] : badges;
+    });
+  }
+
+  get requestedGroupName() {
+    return this.post_number === 1 ? this.topic?.requested_group_name : null;
+  }
+
+  get expandablePost() {
+    return this.post_number === 1 && !!this.topic?.expandable_first_post;
+  }
+
+  get topicUrl() {
+    return this.topic?.url;
+  }
+
+  @cached
+  get actionsSummary() {
+    return this.actions_summary
+      ?.filter((postAction) => {
+        return postAction.actionType.name_key !== "like" && postAction.acted;
+      })
+      ?.map((postAction) => {
+        return {
+          id: postAction.id,
+          postId: this.id,
+          action: postAction.actionType.name_key,
+          canUndo: postAction.can_undo,
+          description: postAction.actionType.translatedDescription,
+        };
+      });
   }
 }

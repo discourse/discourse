@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -12,6 +13,17 @@ export default class ChatComposerDropdown extends Component {
     await closeFn();
 
     button.action();
+  }
+
+  @action
+  doubleClick(event) {
+    event.preventDefault();
+
+    const uploadButton = this.args.buttons.filter(
+      (button) => button.id === "chat-upload-btn" && !button.disabled
+    )[0];
+
+    uploadButton?.action?.();
   }
 
   <template>
@@ -29,6 +41,7 @@ export default class ChatComposerDropdown extends Component {
         @placements={{array "top" "bottom"}}
         @identifier="chat-composer-dropdown__menu"
         @modalForMobile={{true}}
+        {{on "dblclick" this.doubleClick}}
         ...attributes
         as |menu|
       >

@@ -111,7 +111,13 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def excerpt
-    object.excerpt
+    e = object.excerpt
+
+    if (ContentLocalization.show_translated_topic?(object, scope))
+      object.get_localization&.excerpt.presence || e
+    else
+      e
+    end
   end
 
   alias include_last_read_post_number? has_user_data

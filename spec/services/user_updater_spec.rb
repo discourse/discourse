@@ -2,9 +2,9 @@
 
 RSpec.describe UserUpdater do
   fab!(:user)
-  fab!(:u1) { Fabricate(:user) }
-  fab!(:u2) { Fabricate(:user) }
-  fab!(:u3) { Fabricate(:user) }
+  fab!(:u1, :user)
+  fab!(:u2, :user)
+  fab!(:u3, :user)
 
   let(:acting_user) { Fabricate.build(:user) }
 
@@ -35,7 +35,7 @@ RSpec.describe UserUpdater do
   describe "#update" do
     fab!(:category)
     fab!(:tag)
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag2, :tag)
 
     it "saves user" do
       user = Fabricate(:user, name: "Billy Bob")

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -87,6 +88,7 @@ export default class DDocument extends Component {
       confirmButtonLabel: "refresh",
       didConfirm: () => logout(),
       didCancel: () => logout(),
+      class: "dialog-container__logout-refresh",
     });
   }
 }

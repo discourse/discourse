@@ -11,6 +11,7 @@
   "exports": {
     ".": "./src/index.js",
     "./*": "./src/*.js",
+    "./app/*": "./app/*.js",
     "./addon-main.js": "./addon-main.cjs"
   },
   "files": [

@@ -10,13 +10,13 @@ DiscourseAutomation::Engine.routes.draw do
     put "/append-last-checked-by/:post_id" => "append_last_checked_by#post_checked"
   end
 
-  scope "/admin/plugins/discourse-automation",
+  scope "/admin/plugins/automation",
         as: "admin_discourse_automation",
         constraints: AdminConstraint.new do
     scope format: false do
-      get "/" => "admin#index"
-      get "/new" => "admin#new"
-      get "/:id" => "admin#edit"
+      get "/automation" => "admin#index"
+      get "/automation/new" => "admin#new"
+      get "/automation/:id" => "admin#edit"
     end
 
     scope format: :json do

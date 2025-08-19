@@ -29,7 +29,7 @@ class UploadsController < ApplicationController
       current_user,
       "uploads-per-minute",
       SiteSetting.max_uploads_per_minute,
-      1.minute.to_i,
+      1.minute,
     ).performed!
 
     type =

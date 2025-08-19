@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    assign_enabled: "Toewijsplug-in inschakelen"
+    assigns_public: "Algemeen publiek toestaan topictoewijzingen te zien"
+    assigns_user_url_path: "Pad naar aan gebruikers toegewezen topics (gebruik {username} om gebruikersnaam te vervangen)"
+    assigns_by_staff_mention: "Als een medewerker een andere medewerker noemt, wordt het topic automatisch toegewezen"
+    unassign_creates_tracking_post: "Als je een toewijzing van een topic opheft, wordt een fluisterbericht of kleine actie gemaakt om de wijziging te volgen"
+    assign_self_regex: "Reguliere expressie die geldig moet zijn voor zelftoewijzing. Voorbeeld: 'mijn lijst'"
+    assign_other_regex: "Reguliere expressie die geldig moet zijn voor het toewijzen van topics aan anderen door vermelding. Voorbeeld: 'je lijst'."
+    unassign_on_group_archive: "Wanneer een bericht wordt gearchiveerd door een groep, toewijzing van bericht opheffen (opnieuw toewijzen bij terug plaatsen naar inbox)"
+    unassign_on_close: "Wanneer een topic wordt gesloten, toewijzing van topic opheffen"
+    reassign_on_open: "Wanneer een topic wordt geopend, eerder toegewezen gebruikers/groepen opnieuw toewijzen"
+    invite_on_assign: "Wanneer een persoonlijk bericht is toegewezen aan een gebruiker of groep, nodig deze dan uit voor het PB als deze nog geen deelnemer is."
+    assign_mailer: "Wanneer een e-mailmelding sturen voor toewijzingen"
+    remind_assigns: "Gebruikers aan wachtende toewijzingen herinneren"
+    remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
+    pending_assign_reminder_threshold: "Aantal wachtende toewijzingen dat een herinneringsmelding activeert."
+    max_assigned_topics: "Maximaal aantal topics dat aan een gebruiker kan worden toegewezen."
+    assign_allowed_on_groups: "Gebruikers in deze groepen mogen topics toewijzen en kunnen topics toegewezen krijgen."
+    enable_assign_status: "Voeg een aanpasbaar statusveld toe aan elke toewijzing."
+    assign_statuses: "Lijst van beschikbare statussen voor elke toewijzing. De eerste status is de standaardstatus die wordt toegepast op elke nieuwe toewijzing."
+    errors:
+      assign_statuses:
+        too_few: "Er moeten minimaal twee verschillende statussen beschikbaar zijn."
+        duplicate: "Er zijn dubbele statuswaarden."
+        removed_in_use: "Een status kan niet niet uit de lijst worden verwijderd als er bestaande toewijzingen zijn die deze status gebruiken."
+  discourse_assign:
+    assigned_to: "Topic toegewezen aan @%{username}"
+    unassigned: "Toewijzing van topic is opgeheven"
+    already_claimed: "Dat topic is al geclaimd."
+    already_assigned: "Topic is al toegewezen aan @%{username}"
+    too_many_assigns: "@%{username} heeft het maximale aantal toegewezen topics (%{max}) al bereikt."
+    too_many_assigns_for_topic: "Limiet van %{limit} toewijzingen per topic is bereikt."
+    forbidden_assign_to: "@%{username} kan niet worden toegewezen, omdat deze niet tot voor toewijzen toegestane groepen behoort."
+    forbidden_assignee_not_pm_participant: "@%{username} kan niet worden toegewezen, omdat deze geen toegang heeft tot dit PB. Je kunt @%{username} toegang geven door deze uit te nodigen voor dit PB."
+    forbidden_assignee_cant_see_topic: "@%{username} kan niet worden toegewezen, omdat deze geen toegang heeft tot dit topic."
+    group_already_assigned: "Topic is al toegewezen aan @%{group}"
+    forbidden_group_assign_to: "@%{group} kan niet worden toegewezen, omdat deze niet tot voor toewijzen toegestane groepen behoort."
+    forbidden_group_assignee_not_pm_participant: "@%{group} kan niet worden toegewezen, omdat niet alle leden toegang hebben tot dit PB."
+    forbidden_group_assignee_cant_see_topic: "@%{group} kan niet worden toegewezen, omdat niet alle leden toegang hebben tot dit topic."
+    flag_assigned: "Sorry, het topic van die markering is aan een andere gebruiker toegewezen"
+    flag_unclaimed: "Je moet dat topic claimen voordat je actie onderneemt op de markering"
+    topic_assigned_excerpt: "heeft het topic '%{title}' aan jou toegewezen"
+    topic_group_assigned_excerpt: "Topic '%{title}' toegewezen aan @%{group}"
+    reminders_frequency:
+      never: "nooit"
+      daily: "dagelijks"
+      weekly: "wekelijks"
+      monthly: "maandelijks"
+      quarterly: "driemaandelijks"
+  assign_mailer:
+    title: "Toewijzingsmailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} heeft je toegewezen aan '%{topic_title}'!"
+    text_body_template: |
+      Hallo, %{assignee_name} heeft je **toegewezen** aan een discussie
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Als je interesse hebt, klik dan op de onderstaande link:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Je hebt %{pending_assignments} wachtende toewijzingen"
+    body: |
+      Je hebt momenteel [%{pending_assignments} wachtende toewijzingen](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Deze herinnering wordt %{frequency} gestuurd als je meer dan één toegewezen topic hebt.
+    newest: |
+      ### Nieuwste
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oudste
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Willekeurig toewijzen
+        no_one: "Geprobeerd willekeurig een lid van '@%{group}' toe te wijzen, maar er was niemand beschikbaar."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} heeft je toegewezen"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Geselecteerde status is ongeldig (deze is niet opgenomen in de site-instelling assigned_status)."

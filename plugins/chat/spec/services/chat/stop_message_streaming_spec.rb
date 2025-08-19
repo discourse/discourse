@@ -12,8 +12,8 @@ RSpec.describe Chat::StopMessageStreaming do
     let(:params) { { message_id: message_1.id } }
     let(:dependencies) { { guardian: guardian } }
 
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:current_user, :user)
+    fab!(:channel_1, :chat_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, streaming: true) }
 
     before do
@@ -22,7 +22,7 @@ RSpec.describe Chat::StopMessageStreaming do
     end
 
     context "with valid params" do
-      fab!(:current_user) { Fabricate(:admin) }
+      fab!(:current_user, :admin)
 
       it { is_expected.to run_successfully }
 
@@ -98,7 +98,7 @@ RSpec.describe Chat::StopMessageStreaming do
         end
 
         context "when current user is an admin" do
-          fab!(:current_user) { Fabricate(:admin) }
+          fab!(:current_user, :admin)
 
           it { is_expected.to run_successfully }
         end
@@ -121,7 +121,7 @@ RSpec.describe Chat::StopMessageStreaming do
       end
 
       context "when current user is an admin" do
-        fab!(:current_user) { Fabricate(:admin) }
+        fab!(:current_user, :admin)
 
         it { is_expected.to run_successfully }
       end

@@ -85,6 +85,10 @@ module Service
         return super if args.present?
         store[method_name]
       end
+
+      def respond_to_missing?(name, include_all)
+        store.key?(name) || super
+      end
     end
 
     # Internal module to define available steps as DSL
@@ -129,16 +133,19 @@ module Service
 
     # @!visibility private
     class Step
-      attr_reader :name, :method_name, :class_name, :instance, :context
+      class DefaultValuesNotAllowed < StandardError
+      end
+
+      attr_reader :name, :method_name, :class_name
 
       def initialize(name, method_name = name, class_name: nil)
-        @name = name
-        @method_name = method_name
-        @class_name = class_name
+        @name, @method_name, @class_name = name, method_name, class_name
+        @instance = Concurrent::ThreadLocalVar.new
+        @context = Concurrent::ThreadLocalVar.new
       end
 
       def call(instance, context)
-        @instance, @context = instance, context
+        @instance.value, @context.value = instance, context
         context[result_key] = Context.build
         with_runtime { run_step }
       end
@@ -147,13 +154,18 @@ module Service
         "result.#{type}.#{name}"
       end
 
+      def instance = @instance.value
+
+      def context = @context.value
+
       private
 
       def run_step
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
         if !object && method.parameters.any? { _1[0] != :keyreq }
-          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
+          raise DefaultValuesNotAllowed,
+                "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key][:object] = object if object
@@ -175,6 +187,9 @@ module Service
 
     # @!visibility private
     class ModelStep < Step
+      class NotFound < StandardError
+      end
+
       attr_reader :optional
 
       def initialize(name, method_name = name, class_name: nil, optional: nil)
@@ -184,15 +199,18 @@ module Service
 
       def run_step
         context[name] = super
-        if !optional && (!context[name] || context[name].try(:empty?))
-          raise ArgumentError, "Model not found"
-        end
-        if context[name].try(:invalid?)
+        raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
+        if context[name].try(:has_changes_to_save?) && context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end
-      rescue ArgumentError => exception
-        context[result_key].fail(exception: exception, not_found: true)
+      rescue Failure, DefaultValuesNotAllowed
+        raise
+      rescue => exception
+        context[result_key].fail(
+          not_found: true,
+          exception: (exception unless exception.is_a?(NotFound)),
+        )
         context.fail!
       end
     end
@@ -252,6 +270,7 @@ module Service
       attr_reader :steps
 
       def initialize(&block)
+        super("")
         @steps = []
         instance_exec(&block)
       end
@@ -265,9 +284,10 @@ module Service
     class LockStep < Step
       include StepsHelpers
 
-      attr_reader :steps
+      attr_reader :steps, :keys
 
       def initialize(*keys, &block)
+        super(keys.join(":"))
         @keys = keys
         @steps = []
         instance_exec(&block)
@@ -290,10 +310,12 @@ module Service
         end
       end
 
+      private
+
       def lock_name
         [
           context.__service_class__.to_s.underscore,
-          *@keys.flat_map { |key| [key, context[:params].send(key)] },
+          *keys.flat_map { |key| [key, context[:params].public_send(key)] },
         ].join(":")
       end
     end
@@ -305,7 +327,7 @@ module Service
       attr_reader :steps, :exceptions
 
       def initialize(exceptions, &block)
-        @name = "default"
+        super("default")
         @steps = []
         @exceptions = exceptions.presence || [StandardError]
         instance_exec(&block)

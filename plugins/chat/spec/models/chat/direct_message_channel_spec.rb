@@ -6,7 +6,6 @@ RSpec.describe Chat::DirectMessageChannel do
   it_behaves_like "a chat channel model"
 
   it { is_expected.to delegate_method(:allowed_user_ids).to(:direct_message).as(:user_ids) }
-  it { is_expected.to delegate_method(:group?).to(:direct_message).with_prefix.allow_nil }
   it { is_expected.to validate_length_of(:description).is_at_most(500) }
   it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
@@ -108,6 +107,17 @@ RSpec.describe Chat::DirectMessageChannel do
       channel.name = "Cool Channel"
       channel.validate!
       expect(channel.slug).to eq(nil)
+    end
+  end
+
+  describe "#direct_message_group?" do
+    it "returns false if the DirectMessage chatable is not for a group DM" do
+      channel.chatable.update!(group: false)
+      expect(channel).not_to be_direct_message_group
+    end
+    it "returns true if the DirectMessage chatable is for a group DM" do
+      channel.chatable.update!(group: true)
+      expect(channel).to be_direct_message_group
     end
   end
 end

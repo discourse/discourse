@@ -1,14 +1,17 @@
+import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -16,6 +19,7 @@ import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
+
 export function setLastEditNotificationClick(
   topicId,
   postNumber,
@@ -36,21 +40,22 @@ export default class PostStream extends RestModel {
   @service currentUser;
   @service store;
 
-  posts = null;
-  stream = null;
-  userFilters = null;
-  loaded = null;
-  loadingAbove = null;
-  loadingBelow = null;
-  loadingFilter = null;
-  loadingNearPost = null;
-  stagingPost = null;
-  postsWithPlaceholders = null;
-  timelineLookup = null;
-  filterRepliesToPostNumber = null;
-  filterUpwardsPostID = null;
-  filter = null;
-  lastId = null;
+  @tracked filter;
+  @tracked filterRepliesToPostNumber;
+  @tracked filterUpwardsPostID;
+  @tracked gaps;
+  @tracked lastId;
+  @tracked loaded;
+  @tracked loadingAbove;
+  @tracked loadingBelow;
+  @tracked loadingFilter;
+  @tracked loadingNearPost;
+  @tracked postsWithPlaceholders;
+  @tracked stagingPost;
+  @tracked stream;
+  @tracked timelineLookup;
+  @tracked userFilters;
+  @tracked posts;
 
   @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
   @not("loading") notLoading;
@@ -281,6 +286,7 @@ export default class PostStream extends RestModel {
         ? element.getBoundingClientRect().top
         : null;
 
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       DiscourseURL.jumpToPost(postNumber, {
@@ -301,6 +307,7 @@ export default class PostStream extends RestModel {
       post_id: postID,
     });
     return this.refresh({ refreshInPlace: true }).then(() => {
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       if (this.posts && this.posts.length > 1) {
@@ -435,6 +442,7 @@ export default class PostStream extends RestModel {
   }
 
   gapExpanded() {
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh");
 
     // resets the reply count in posts-filtered-notice
@@ -835,27 +843,42 @@ export default class PostStream extends RestModel {
     return Promise.resolve();
   }
 
-  triggerChangedPost(postId, updatedAt, opts) {
-    opts = opts || {};
+  /**
+   * Updates a post in the stream when it has been changed on the server.
+   *
+   * @param {number} postId - The ID of the post to update
+   * @param {string} updatedAt - The timestamp when the post was last updated
+   * @param {Object} opts - Additional options for updating the post
+   * @param {boolean} [opts.preserveCooked] - Whether to preserve the cooked HTML content
+   * @returns {Promise} A promise that resolves when the post has been updated
+   */
+  async triggerChangedPost(postId, updatedAt, opts = {}) {
+    opts ||= {};
 
-    const resolved = Promise.resolve();
     if (!postId) {
-      return resolved;
+      return;
     }
 
     const existing = this._identityMap[postId];
-    if (existing && existing.updated_at !== updatedAt) {
-      const url = "/posts/" + postId;
-      const store = this.store;
-      return ajax(url).then((p) => {
-        if (opts.preserveCooked) {
-          p.cooked = existing.get("cooked");
-        }
 
-        this.storePost(store.createRecord("post", p));
-      });
+    // Only fetch and update if the post exists and has a different updated timestamp
+    if (existing && existing.updated_at !== updatedAt) {
+      // Fetch the latest post data from the server
+      const updatedData = await ajax(`/posts/${postId}`);
+
+      // Preserve the existing cooked HTML content if requested
+      if (opts.preserveCooked) {
+        updatedData.cooked = existing.cooked;
+      }
+
+      // Create a new post record with updated data and store it in the identity map.
+      // Creating a new record will update the existing one in the map, which will then
+      // trigger re-rendering of UI components that use the tracked data that was updated.
+      const updatedPost = this.store.createRecord("post", updatedData);
+
+      // Update the post in the post stream's identity map
+      this.storePost(updatedPost);
     }
-    return resolved;
   }
 
   triggerLikedPost(postId, likesCount, userID, eventType) {
@@ -1050,6 +1073,11 @@ export default class PostStream extends RestModel {
       delete postStreamData.posts;
 
       // Update our attributes
+      const trackedGaps = {
+        before: new TrackedObject(postStreamData.gaps?.before || {}),
+        after: new TrackedObject(postStreamData.gaps?.after || {}),
+      };
+      postStreamData.gaps = trackedGaps;
       this.setProperties(postStreamData);
     }
   }
@@ -1085,7 +1113,9 @@ export default class PostStream extends RestModel {
         return existing;
       }
 
-      post.set("topic", this.topic);
+      if (post.topic !== this.topic) {
+        post.topic = this.topic;
+      }
       this._identityMap[post.get("id")] = post;
     }
     return post;
@@ -1242,34 +1272,34 @@ export default class PostStream extends RestModel {
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
   errorLoading(error) {
-    const topic = this.topic;
-    this.set("loadingFilter", false);
-    topic.set("errorLoading", true);
+    applyBehaviorTransformer(
+      "post-stream-error-loading",
+      () => {
+        const topic = this.topic;
+        this.set("loadingFilter", false);
+        topic.set("errorLoading", true);
 
-    if (!error.jqXHR) {
-      throw error;
-    }
+        if (!error.jqXHR) {
+          throw error;
+        }
 
-    const json = error.jqXHR.responseJSON;
-    if (json && json.extras && json.extras.html) {
-      topic.set("errorTitle", json.extras.title);
-      topic.set("errorHtml", json.extras.html);
-    } else {
-      topic.set("errorMessage", i18n("topic.server_error.description"));
-      topic.set("noRetry", error.jqXHR.status === 403);
-    }
+        const json = error.jqXHR.responseJSON;
+        if (json && json.extras && json.extras.html) {
+          topic.set("errorTitle", json.extras.title);
+          topic.set("errorHtml", json.extras.html);
+        } else {
+          topic.set("errorMessage", i18n("topic.server_error.description"));
+          topic.set("noRetry", error.jqXHR.status === 403);
+        }
+      },
+      {
+        topic: this.topic,
+        error,
+      }
+    );
   }
 
   _initUserModels(post) {
-    post.user = this.store.createRecord("user", {
-      id: post.user_id,
-      username: post.username,
-    });
-
-    if (post.user_status) {
-      post.user.status = post.user_status;
-    }
-
     if (post.mentioned_users) {
       post.mentioned_users = post.mentioned_users.map((u) =>
         this.store.createRecord("user", u)

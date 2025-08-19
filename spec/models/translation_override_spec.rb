@@ -352,7 +352,7 @@ RSpec.describe TranslationOverride do
     end
   end
 
-  describe "invalid_interpolation_keys" do
+  describe "#invalid_interpolation_keys" do
     fab!(:translation) do
       Fabricate(
         :translation_override,
@@ -364,6 +364,45 @@ RSpec.describe TranslationOverride do
       translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
 
       expect(translation.invalid_interpolation_keys).to contain_exactly("foo")
+    end
+  end
+
+  describe "#refresh_status" do
+    context "when fixing a translation with invalid interpolation keys" do
+      fab!(:translation) do
+        Fabricate(
+          :translation_override,
+          translation_key: "system_messages.welcome_user.subject_template",
+          status: "invalid_interpolation_keys",
+        )
+      end
+
+      before do
+        translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
+      end
+
+      it "refreshes to status to up to date" do
+        expect {
+          translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}.")
+        }.to change { translation.status }.from("invalid_interpolation_keys").to("up_to_date")
+      end
+    end
+
+    context "when updating a translation that has had the original updated" do
+      fab!(:translation) do
+        Fabricate(
+          :translation_override,
+          translation_key: "title",
+          original_translation: "outdated",
+          status: "outdated",
+        )
+      end
+
+      it "refreshes to status to up to date" do
+        expect { translation.update_attribute("value", "Discourse") }.to change {
+          translation.status
+        }.from("outdated").to("up_to_date")
+      end
     end
   end
 

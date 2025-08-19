@@ -6,13 +6,11 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
-    Mobile.init();
-    const site = owner.lookup("service:site");
-
-    site.set("mobileView", Mobile.mobileView);
-    site.set("desktopView", !Mobile.mobileView);
-    site.set("isMobileDevice", Mobile.isMobileDevice);
+    if (owner.lookup("service:site-settings").viewport_based_mobile_mode) {
+      return;
+    }
 
     setResolverOption("mobileView", Mobile.mobileView);
+    Mobile.maybeReload();
   },
 };

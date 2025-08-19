@@ -10,7 +10,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
   describe "#sidebar_category_ids" do
     fab!(:group)
     fab!(:category)
-    fab!(:category_2) { Fabricate(:category) }
+    fab!(:category_2, :category)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
     fab!(:category_sidebar_section_link) do

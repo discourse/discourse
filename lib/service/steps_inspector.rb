@@ -75,7 +75,7 @@ class Service::StepsInspector
   class Model < Step
     def error
       return result[name].errors.inspect if step_result.invalid
-      step_result.exception.full_message
+      step_result.exception&.full_message || "Model not found"
     end
   end
 
@@ -120,6 +120,17 @@ class Service::StepsInspector
 
     def error
       step_result.exception.full_message
+    end
+  end
+
+  # @!visibility private
+  class Lock < Transaction
+    def inspect
+      "#{"  " * nesting_level}[#{inspect_type}] #{name}#{runtime} #{emoji}".rstrip
+    end
+
+    def error
+      "Lock '#{name}' was not acquired."
     end
   end
 

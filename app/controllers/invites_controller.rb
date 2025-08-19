@@ -28,18 +28,28 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    if invite.present? && invite.redeemable?
-      show_invite(invite)
-    else
+    if !invite.present? || !invite.redeemable?
       show_irredeemable_invite(invite)
+      return
     end
+
+    # automatically redirect to the topic if the user is logged in and can see it,
+    # but only if the invite wouldn't also add the user to a group
+    if current_user
+      new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+      if new_group_ids.empty? && topic = invite.topics.first
+        return redirect_to(topic.url) if current_user.guardian.can_see?(topic)
+      end
+    end
+
+    show_invite(invite)
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
   end
 
   def create_multiple
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
     emails = params[:email]
     # validate that topics and groups can accept invites.
     if params[:topic_id].present?
@@ -81,6 +91,7 @@ class InvitesController < ApplicationController
           Invite.generate(
             current_user,
             email: email,
+            description: params[:description],
             domain: params[:domain],
             skip_email: params[:skip_email],
             invited_by: current_user,
@@ -136,6 +147,7 @@ class InvitesController < ApplicationController
         Invite.generate(
           current_user,
           email: params[:email],
+          description: params[:description],
           domain: params[:domain],
           skip_email: params[:skip_email],
           invited_by: current_user,
@@ -276,7 +288,13 @@ class InvitesController < ApplicationController
 
       begin
         invite.update!(
-          params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at),
+          params.permit(
+            :email,
+            :description,
+            :custom_message,
+            :max_redemptions_allowed,
+            :expires_at,
+          ),
         )
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.record.errors.full_messages.first)
@@ -301,8 +319,10 @@ class InvitesController < ApplicationController
   def destroy
     params.require(:id)
 
-    invite = Invite.find_by(invited_by_id: current_user.id, id: params[:id])
+    invite = Invite.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
+
+    guardian.ensure_can_destroy_invite!(invite)
 
     invite.trash!(current_user)
 
@@ -401,10 +421,11 @@ class InvitesController < ApplicationController
   end
 
   def destroy_all_expired
-    guardian.ensure_can_destroy_all_invites!(current_user)
+    guardian.ensure_can_destroy_all_invites!
+    user = fetch_user_from_params
 
     Invite
-      .where(invited_by: current_user)
+      .where(invited_by: user)
       .where("expires_at < ?", Time.zone.now)
       .find_each { |invite| invite.trash!(current_user) }
 
@@ -424,7 +445,7 @@ class InvitesController < ApplicationController
   end
 
   def resend_all_invites
-    guardian.ensure_can_resend_all_invites!(current_user)
+    guardian.ensure_can_resend_all_invites!
 
     begin
       RateLimiter.new(
@@ -447,7 +468,7 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
 
     hijack do
       begin
@@ -473,6 +494,13 @@ class InvitesController < ApplicationController
         end
 
         if invites.present?
+          custom_error =
+            DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
+
+          if custom_error.present?
+            return render json: failed_json.merge(errors: [custom_error]), status: 422
+          end
+
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
 
           if invites.count >= SiteSetting.max_bulk_invites
@@ -519,7 +547,7 @@ class InvitesController < ApplicationController
 
     hidden_email = email != invite.email
 
-    if hidden_email || invite.email.nil?
+    if hidden_email || invite.email.nil? || !SiteSetting.use_email_for_username_and_name_suggestions
       username = ""
     else
       username = UserNameSuggester.suggest(invite.email)

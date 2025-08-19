@@ -264,8 +264,8 @@ function uploadTypeFromFileName(fileName) {
   return isImage(fileName)
     ? "image"
     : isBackup(fileName)
-    ? "backup"
-    : "attachment";
+      ? "backup"
+      : "attachment";
 }
 
 export function allowsImages(staff, siteSettings) {

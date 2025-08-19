@@ -12,8 +12,8 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
+import { SYSTEM_FLAG_IDS } from "admin/lib/constants";
 import DMenu from "float-kit/components/d-menu";
 
 export default class AdminFlagItem extends Component {
@@ -28,10 +28,11 @@ export default class AdminFlagItem extends Component {
   }
 
   get canEdit() {
-    return (
-      !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id) &&
-      !this.args.flag.is_used
-    );
+    return !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id);
+  }
+
+  get canDelete() {
+    return this.canEdit && !this.args.flag.is_used;
   }
 
   get editTitle() {
@@ -41,9 +42,9 @@ export default class AdminFlagItem extends Component {
   }
 
   get deleteTitle() {
-    return this.canEdit
-      ? "admin.config_areas.flags.form.edit_flag"
-      : "admin.config_areas.flags.form.non_editable";
+    return this.canDelete
+      ? "admin.config_areas.flags.form.delete_flag"
+      : "admin.config_areas.flags.form.non_deletable";
   }
 
   @action
@@ -120,21 +121,21 @@ export default class AdminFlagItem extends Component {
   <template>
     <tr
       class={{concatClass
-        "d-admin-row__content admin-flag-item"
+        "d-table__row admin-flag-item"
         @flag.name_key
         (if this.isSaved "saved")
       }}
     >
-      <td class="d-admin-row__overview">
+      <td class="d-table__cell --overview">
         <div
-          class="d-admin-row__overview-name admin-flag-item__name"
+          class="d-table__overview-name admin-flag-item__name"
         >{{@flag.name}}</div>
-        <div class="d-admin-row__overview-about">{{htmlSafe
+        <div class="d-table__overview-about">{{htmlSafe
             @flag.description
           }}</div>
       </td>
-      <td class="d-admin-row__detail">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
           {{i18n "admin.config_areas.flags.enabled"}}
         </div>
         <DToggleSwitch
@@ -143,8 +144,8 @@ export default class AdminFlagItem extends Component {
           {{on "click" (fn this.toggleFlagEnabled @flag)}}
         />
       </td>
-      <td class="d-admin-row__controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
 
           <DButton
             class="btn-default btn-small admin-flag-item__edit"
@@ -191,7 +192,7 @@ export default class AdminFlagItem extends Component {
                       @icon="trash-can"
                       class="btn-transparent btn-danger admin-flag-item__delete"
                       @action={{this.delete}}
-                      @disabled={{not this.canEdit}}
+                      @disabled={{not this.canDelete}}
                       @title={{this.deleteTitle}}
                     />
                   </dropdown.item>

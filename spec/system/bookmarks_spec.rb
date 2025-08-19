@@ -162,6 +162,14 @@ describe "Bookmarking posts and topics", type: :system do
       expect(topic_page).to have_no_post_bookmarked(post_2)
     end
 
+    it "can clear the bookmark reminder" do
+      visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
+      bookmark_menu.click_menu_option("clear-reminder")
+      expect(page).to have_content(I18n.t("js.bookmarks.reminder_clear_success"))
+      expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
+      expect(bookmark.reload.reminder_at).to be_nil
+    end
+
     it "can delete the bookmark from within the menu" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("delete")

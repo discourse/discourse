@@ -10,9 +10,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
   test("typing an email address in the restrictTo field", async function (assert) {
     const model = {};
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
 
     await click(".edit-link-options");
 
@@ -62,9 +62,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
     this.currentUser.admin = true;
     this.siteSettings.must_approve_users = true;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.false(
@@ -73,9 +73,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
     );
 
     this.siteSettings.must_approve_users = false;
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.true(
@@ -85,9 +85,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     this.currentUser.set("admin", false);
     this.currentUser.set("moderator", false);
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.false(
@@ -100,9 +100,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
     const model = {};
     this.siteSettings.invite_link_max_redemptions_limit_users = 11;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.strictEqual(
@@ -113,9 +113,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     this.siteSettings.invite_link_max_redemptions_limit_users = 9;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.strictEqual(
@@ -130,9 +130,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
     this.currentUser.set("moderator", true);
     this.siteSettings.invite_link_max_redemptions_limit = 111;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.strictEqual(
@@ -143,9 +143,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     this.siteSettings.invite_link_max_redemptions_limit = 98;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.strictEqual(
@@ -159,9 +159,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
     const model = {};
     this.siteSettings.invite_expiry_days = 3;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.deepEqual(
@@ -172,9 +172,9 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     this.siteSettings.invite_expiry_days = 90;
 
-    await render(<template>
-      <CreateInvite @inline={{true}} @model={{model}} />
-    </template>);
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
     await click(".edit-link-options");
 
     assert.deepEqual(

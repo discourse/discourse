@@ -12,9 +12,11 @@ module("Discourse Chat | Component | <ThreadSettings />", function (hooks) {
     this.currentUser.admin = true;
     const thread = new ChatFabricators(getOwner(this)).thread();
 
-    await render(<template>
-      <ChatModalThreadSettings @inline={{true}} @model={{thread}} />
-    </template>);
+    await render(
+      <template>
+        <ChatModalThreadSettings @inline={{true}} @model={{thread}} />
+      </template>
+    );
 
     assert.dom(".discourse-ai-cta").exists();
   });
@@ -23,9 +25,11 @@ module("Discourse Chat | Component | <ThreadSettings />", function (hooks) {
     this.currentUser.admin = false;
     const thread = new ChatFabricators(getOwner(this)).thread();
 
-    await render(<template>
-      <ChatModalThreadSettings @inline={{true}} @model={{thread}} />
-    </template>);
+    await render(
+      <template>
+        <ChatModalThreadSettings @inline={{true}} @model={{thread}} />
+      </template>
+    );
 
     assert.dom(".discourse-ai-cta").doesNotExist();
   });

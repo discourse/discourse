@@ -1,5 +1,7 @@
+@use "lib/viewport";
+
 .d-header-wrap {
-  @include sticky;
+  position: sticky;
   top: 0;
   z-index: z("header");
 }
@@ -12,11 +14,17 @@
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
+  height: 3.66em;
+
+  @include viewport.from(sm) {
+    height: 4em;
+  }
 
   > .wrap {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    padding: 0 var(--d-header-padding-x);
 
     .contents {
       display: flex;
@@ -44,19 +52,24 @@
   }
 
   .title {
-    --d-logo-height: 2.667em;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    animation: fadein 0.5s;
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
+    --d-logo-height: 2.4em;
 
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
     min-width: var(--d-logo-height);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    animation: fadein 0.5s;
+
+    @include viewport.from(sm) {
+      --d-logo-height: 2.667em;
+    }
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
 
     a,
     a:visited {
@@ -84,7 +97,14 @@
 
   #site-text-logo {
     margin: 0;
+    font-size: var(--font-up-1);
+    font-weight: bold;
+
     @include ellipsis;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .d-icon-house {
@@ -113,20 +133,15 @@
 
     .auth-buttons {
       display: flex;
+      gap: 0.5em;
+      margin-left: 0.5em;
     }
   }
 
-  .login-button,
-  .sign-up-button {
-    padding: 6px 10px;
-
-    .fa {
-      margin-right: 3px;
+  @include viewport.until(sm) {
+    .sign-up-button {
+      display: none;
     }
-  }
-
-  .login-button {
-    margin-left: 7px;
   }
 }
 
@@ -157,7 +172,6 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    border: 1px solid transparent;
     outline: none;
 
     img.avatar {
@@ -167,49 +181,23 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
-      background-color: var(--primary-low);
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
+      background-color: var(--d-hover);
 
       > .d-icon {
         color: var(--primary-medium);
       }
-    }
-
-    &:active {
-      color: var(--primary);
-      background-color: var(--primary-low);
     }
   }
 
   .drop-down-mode & {
-    .active .icon {
+    .active .icon,
+    .header-color-scheme-toggle .-expanded {
       position: relative;
       background-color: var(--secondary);
       cursor: default;
-      border-top: 1px solid var(--primary-low);
-      border-left: 1px solid var(--primary-low);
-      border-right: 1px solid var(--primary-low);
 
       > .d-icon {
         color: var(--primary-medium);
-      }
-
-      &::after {
-        display: block;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: z("header") + 1; // Higher than .menu-panel
-        width: 100%;
-        height: 0;
-        content: "";
-        border-top: 1px solid var(--secondary);
-      }
-
-      &:hover {
-        border-bottom: none;
       }
     }
   }
@@ -266,6 +254,16 @@
   }
 }
 
+.fk-d-menu.interface-color-selector-content.-expanded {
+  margin-top: -0.75em;
+  z-index: z("header");
+  box-shadow: var(--shadow-dropdown);
+
+  .fk-d-menu__inner-content {
+    border-color: transparent;
+  }
+}
+
 .header-sidebar-toggle {
   button {
     margin-right: 1em;
@@ -295,6 +293,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -309,6 +308,7 @@
     overflow: hidden;
     width: 100%;
     animation: fadein 0.5s;
+
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
@@ -320,7 +320,6 @@
       "title title"
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
-    align-items: baseline;
     gap: 0 0.5em;
 
     .header-title {
@@ -341,8 +340,9 @@
   }
 
   .topic-link {
-    color: var(--header_primary);
+    color: var(--title-color--header);
     display: block;
+
     @include ellipsis;
   }
 
@@ -359,19 +359,25 @@
   .header-title {
     padding: 0;
     margin: 0;
-    font-size: var(--font-up-3);
     width: 100%;
+    font-size: var(--font-0);
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
     gap: 0 0.5em;
+
     @include ellipsis;
   }
 
   .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
+
     @include ellipsis;
 
     .badge-category {
@@ -387,7 +393,7 @@
 
     .discourse-tags {
       display: inline;
-      color: var(--header_primary-high);
+
       @include ellipsis;
 
       .discourse-tag {
@@ -415,6 +421,7 @@ $mobile-avatar-height: 1.532em;
   display: flex;
   align-items: center;
   font-size: var(--font-down-1);
+
   @include ellipsis;
 
   &:not(:first-child) {
@@ -431,11 +438,11 @@ $mobile-avatar-height: 1.532em;
   .trigger-user-card {
     .icon {
       height: $avatar-height;
+      display: inline-block;
 
       .mobile-view & {
         height: $mobile-avatar-height;
       }
-      display: inline-block;
 
       img {
         height: 100%;
@@ -446,20 +453,21 @@ $mobile-avatar-height: 1.532em;
 
   .trigger-group-card {
     padding: 0 5px;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: 0.25em;
     min-width: 3em;
+
     @include ellipsis;
 
     .icon {
       display: flex;
       align-items: center;
       height: $avatar-height;
+      color: var(--primary-high);
 
       .mobile-view & {
         height: $mobile-avatar-height;
       }
-      color: var(--primary-high);
 
       .d-icon {
         margin-right: 5px;
@@ -505,4 +513,15 @@ $mobile-avatar-height: 1.532em;
   max-height: 80vh;
   border-radius: var(--d-border-radius-large);
   overflow: auto;
+}
+
+.mobile-view {
+  // Hide header avatar + icons while topic title is visible in mobile header
+  .extra-info-wrapper ~ .panel {
+    .before-header-panel-outlet,
+    .header-buttons,
+    .d-header-icons {
+      display: none;
+    }
+  }
 }

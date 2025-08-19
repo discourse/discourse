@@ -11,9 +11,23 @@ RSpec.describe BadgeGranter do
     BadgeGranter.clear_queue!
   end
 
-  describe "revoke_titles" do
+  describe ".revoke_ungranted_titles!" do
     let(:user) { Fabricate(:user) }
+    let(:other_user) { Fabricate(:user) }
     let(:badge) { Fabricate(:badge, allow_title: true) }
+
+    it "can revoke title of a single user" do
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.name)
+      BadgeGranter.grant(badge, other_user)
+      other_user.update!(title: badge.name)
+
+      badge.update_column(:enabled, false)
+      BadgeGranter.revoke_ungranted_titles!([user.id])
+
+      expect(user.reload.title).to be_blank
+      expect(other_user.reload.title).to eq(badge.name)
+    end
 
     it "revokes title when badge is not allowed as title" do
       BadgeGranter.grant(badge, user)
@@ -305,6 +319,22 @@ RSpec.describe BadgeGranter do
       expect(user_badge).to be_present
 
       expect(UserBadge.where(user_id: user.id).count).to eq(2)
+    end
+
+    it "updates is_favorite when granting multiple badges" do
+      badge = Fabricate(:badge, multiple_grant: true)
+      user_badge =
+        UserBadge.create(
+          badge: badge,
+          user: user,
+          granted_by: Discourse.system_user,
+          granted_at: Time.now,
+          is_favorite: true,
+        )
+      user_badge2 = BadgeGranter.grant(badge, user)
+
+      expect(user_badge2).to be_present
+      expect(user_badge2.reload.is_favorite).to eq(true)
     end
 
     it "sets granted_at" do

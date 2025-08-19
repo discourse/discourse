@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -23,9 +24,9 @@ module("Integration | Component | TopicTracking", function (hooks) {
   setupRenderingTest(hooks);
 
   test("regular topic notification level descriptions", async function (assert) {
-    await render(<template>
-      <TopicNotificationsTracking @levelId={{1}} />
-    </template>);
+    await render(
+      <template><TopicNotificationsTracking @levelId={{1}} /></template>
+    );
 
     await click(".notifications-tracking-trigger");
 
@@ -50,12 +51,14 @@ module("Integration | Component | TopicTracking", function (hooks) {
   });
 
   test("PM topic notification level descriptions", async function (assert) {
-    await render(<template>
-      <TopicNotificationsTracking
-        @levelId={{1}}
-        @topic={{hash archetype="private_message"}}
-      />
-    </template>);
+    await render(
+      <template>
+        <TopicNotificationsTracking
+          @levelId={{1}}
+          @topic={{hash archetype="private_message"}}
+        />
+      </template>
+    );
 
     await click(".notifications-tracking-trigger");
 
@@ -90,7 +93,7 @@ module("Integration | Component | TopicTracking - Mobile", function (hooks) {
   setupRenderingTest(hooks);
 
   test("no caret", async function (assert) {
-    this.site.desktopView = false;
+    forceMobile();
 
     await render(<template><TopicNotificationsTracking /></template>);
 

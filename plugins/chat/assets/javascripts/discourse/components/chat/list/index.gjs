@@ -48,7 +48,11 @@ export default class List extends Component {
 
   <template>
     <div class="c-list">
-      <div {{this.fill}} ...attributes>
+      <div
+        class={{if @collection.fetchedOnce "--loaded"}}
+        {{this.fill}}
+        ...attributes
+      >
         {{#each @collection.items as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}
         {{else}}

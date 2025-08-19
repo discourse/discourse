@@ -45,9 +45,11 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template>
-      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
-    </template>);
+    await render(
+      <template>
+        <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      </template>
+    );
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
@@ -86,9 +88,11 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template>
-      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
-    </template>);
+    await render(
+      <template>
+        <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      </template>
+    );
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");
@@ -134,9 +138,11 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template>
-      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
-    </template>);
+    await render(
+      <template>
+        <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      </template>
+    );
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");
@@ -182,9 +188,11 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template>
-      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
-    </template>);
+    await render(
+      <template>
+        <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      </template>
+    );
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");

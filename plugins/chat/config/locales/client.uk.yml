@@ -262,7 +262,7 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
-      no_direct_message_channels: "Ви ще не приєдналися до будь-яких особистих повідомлень!"
+      no_direct_message_channels: "Ви ще не приєдналися до жодної особистої переписки!"
       no_direct_message_channels_cta: "Розпочати розмову"
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
@@ -374,6 +374,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+        remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
@@ -596,6 +597,7 @@ uk:
         select_emoji: "Вибрати емодзі"
         system: "системні"
         title: "Вхідні вебхуки"
+        header_description: "Вхідні веб-хуки можуть бути використані зовнішніми системами для надсилання повідомлень у визначений канал чату від імені користувача бота"
         url: "Посилання"
         url_instructions: "Ця URL-адреса містить секретне значення – зберігайте його в безпеці."
         username: "Ім’я користувача"
@@ -724,6 +726,11 @@ uk:
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
+      quick_reaction_type:
+        title: "Реакції чату в один клік"
+        options:
+          frequent: "Найпоширеніші реакції в чаті"
+          custom: "Користувацькі реакції"
     notifications:
       chat_invitation: "запросив вас приєднатися до каналу чату"
       chat_invitation_html: "<span>%{username}</span> <span>запросив вас приєднатися до каналу чату</span>"

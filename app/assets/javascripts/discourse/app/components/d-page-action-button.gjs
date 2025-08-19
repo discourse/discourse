@@ -9,9 +9,11 @@ export const DPageActionButton = <template>
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
     @icon={{@icon}}
     @isLoading={{@isLoading}}
+    @disabled={{@disabled}}
   />
 </template>;
 
@@ -30,12 +32,15 @@ export const PrimaryButton = <template>
   <DPageActionButton
     class="btn-primary"
     ...attributes
+    @icon={{@icon}}
     @action={{@action}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
     @isLoading={{@isLoading}}
+    @disabled={{@disabled}}
   />
 </template>;
 
@@ -44,9 +49,11 @@ export const DangerButton = <template>
     class="btn-danger"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
     @isLoading={{@isLoading}}
   />
@@ -57,9 +64,11 @@ export const DefaultButton = <template>
     class="btn-default"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
     @isLoading={{@isLoading}}
   />
@@ -74,6 +83,7 @@ export const DPageActionListItem = <template>
       @route={{@route}}
       @routeModels={{@routeModels}}
       @label={{@label}}
+      @translatedLabel={{@translatedLabel}}
       @title={{@title}}
       @icon={{@icon}}
       @isLoading={{@isLoading}}
@@ -100,11 +110,12 @@ export const DefaultActionListItem = <template>
     class="btn-default"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
-    @icon={{@icon}}
     @isLoading={{@isLoading}}
   />
 </template>;
@@ -117,6 +128,7 @@ export const DangerActionListItem = <template>
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
+    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
     @icon={{@icon}}
     @isLoading={{@isLoading}}

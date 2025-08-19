@@ -15,6 +15,9 @@ export default class Header extends Service {
   @service scrollDirection;
   @service site;
 
+  @tracked headerOffset = 0;
+  @tracked mainOutletOffset = 0;
+
   /**
    * The topic currently viewed on the page.
    *

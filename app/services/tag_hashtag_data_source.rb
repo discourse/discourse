@@ -16,6 +16,10 @@ class TagHashtagDataSource
     "tag"
   end
 
+  def self.style_type
+    "icon"
+  end
+
   def self.tag_to_hashtag_item(tag, guardian)
     topic_count_column = Tag.topic_count_column(guardian)
 
@@ -31,6 +35,7 @@ class TagHashtagDataSource
       item.slug = tag.name
       item.relative_url = tag.url
       item.icon = icon
+      item.style_type = style_type
       item.id = tag.id
     end
   end

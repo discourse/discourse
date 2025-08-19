@@ -163,8 +163,14 @@ module TurboTests
     end
 
     def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
+      exit_message = {
+        type: "exit",
+        process_id:,
+        start_time: Process.clock_gettime(Process::CLOCK_MONOTONIC),
+      }
+
       if tests.empty?
-        @messages << { type: "exit", process_id: process_id }
+        @messages << exit_message
       else
         tmp_filename = "tmp/test-pipes/subprocess-#{process_id}"
 
@@ -221,7 +227,7 @@ module TurboTests
             end
           end
 
-          @messages << { type: "exit", process_id: process_id }
+          @messages << exit_message
         end
 
         @threads << start_copy_thread(stdout, STDOUT)
@@ -296,7 +302,11 @@ module TurboTests
             exited += 1
 
             if @reporter.formatters.any? { |f| f.is_a?(DocumentationFormatter) }
-              @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+              duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - message[:start_time]
+
+              @reporter.message(
+                "[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1}) #{duration.round(2)}s",
+              )
             end
 
             break if exited == @num_processes + 1

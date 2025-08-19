@@ -40,16 +40,18 @@ module Chat
       validates :groups, presence: true, if: -> { usernames.blank? }
     end
 
-    model :channel
-    policy :can_add_users_to_channel
-    model :target_users, optional: true
-    policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+    lock(:channel_id) do
+      model :channel
+      policy :can_add_users_to_channel
+      model :target_users, optional: true
+      policy :satisfies_dms_max_users_limit,
+             class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
-    transaction do
-      step :upsert_memberships
-      step :recompute_users_count
-      step :notice_channel
+      transaction do
+        step :upsert_memberships
+        step :recompute_users_count
+        step :notice_channel
+      end
     end
 
     private
@@ -59,8 +61,9 @@ module Chat
     end
 
     def can_add_users_to_channel(guardian:, channel:)
-      (guardian.user.admin? || channel.joined_by?(guardian.user)) &&
-        channel.direct_message_channel? && channel.chatable.group?
+      return false if !guardian.user.admin? && !channel.joined_by?(guardian.user)
+
+      channel.direct_message_channel? && (channel.chatable.group? || channel.messages_count == 0)
     end
 
     def fetch_target_users(params:, channel:, guardian:)

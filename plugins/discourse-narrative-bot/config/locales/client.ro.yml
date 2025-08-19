@@ -10,3 +10,8 @@ ro:
       welcome_post_type:
         new_user_track: "Pornește tutorialul pentru toți utilizatorii noi"
         welcome_message: "Trimite tuturor utilizatorilor noi un mesaj de întâmpinare cu un ghid de pornire rapidă"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Bot narativ Discourse"

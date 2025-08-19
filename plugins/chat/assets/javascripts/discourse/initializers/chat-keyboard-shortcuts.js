@@ -23,6 +23,9 @@ export default {
       "service:chat-channels-manager"
     );
     const openQuickChannelSelector = (e) => {
+      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       modal.show(ChatModalNewMessage);
@@ -58,10 +61,10 @@ export default {
       const inputs = ["input", "textarea", "select", "button"];
       const elementTagName = el?.tagName.toLowerCase();
 
-      if (inputs.includes(elementTagName)) {
-        return false;
-      }
-      return true;
+      return (
+        inputs.includes(elementTagName) ||
+        !!el?.closest('[contenteditable="true"]')
+      );
     };
     const modifyComposerSelection = (event, type) => {
       if (!isChatComposer(event.target)) {
@@ -87,7 +90,7 @@ export default {
     };
 
     const openChatDrawer = (event) => {
-      if (!isInputSelection(event.target)) {
+      if (isInputSelection(event.target)) {
         return;
       }
       event.preventDefault();
@@ -135,7 +138,7 @@ export default {
       }
     };
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
         openQuickChannelSelector,

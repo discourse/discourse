@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 
 export default class DirectoryItemUserFieldValueComponent extends Component {
   @service router;
+
   get fieldData() {
     const { item, column } = this.args;
     return item?.user?.user_fields?.[column.user_field_id];

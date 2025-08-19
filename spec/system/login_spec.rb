@@ -2,11 +2,14 @@
 
 require "rotp"
 
-shared_examples "login scenarios" do |login_page_object|
-  let(:login_form) { login_page_object }
+shared_examples "login scenarios" do
+  let(:login_form) { PageObjects::Pages::Login.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, user: user, category: category) }
+  fab!(:topic2) { Fabricate(:topic, user: user) }
   fab!(:admin) { Fabricate(:admin, username: "admin", password: "supersecurepassword") }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
@@ -144,12 +147,29 @@ shared_examples "login scenarios" do |login_page_object|
       Fabricate(:group_private_message_topic, user: user, recipient_group: group)
 
       visit "/t/#{pm.id}"
-      find(".login-welcome .login-button").click
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
       expect(page).to have_css("#topic-title")
       expect(page).to have_css(".private_message")
+    end
+
+    it "does not leak topics" do
+      visit "/"
+
+      expect(page).to have_css(".login-welcome")
+
+      expect(page.body).not_to include(topic.title)
+      expect(page.body).not_to include(topic2.title)
+    end
+
+    it "does not leak category metadata if homepage is /categories" do
+      SiteSetting.top_menu = "categories|latest|new|unread|top"
+      visit "/"
+
+      expect(page).to have_css(".login-welcome")
+
+      expect(page.body).not_to include(category.name)
     end
   end
 
@@ -391,20 +411,10 @@ end
 
 describe "Login", type: :system do
   context "when desktop" do
-    include_examples "login scenarios", PageObjects::Modals::Login.new
+    include_examples "login scenarios"
   end
 
   context "when mobile", mobile: true do
-    include_examples "login scenarios", PageObjects::Modals::Login.new
-  end
-
-  context "when fullpage desktop" do
-    before { SiteSetting.full_page_login = true }
-    include_examples "login scenarios", PageObjects::Pages::Login.new
-  end
-
-  context "when fullpage mobile", mobile: true do
-    before { SiteSetting.full_page_login = true }
-    include_examples "login scenarios", PageObjects::Pages::Login.new
+    include_examples "login scenarios"
   end
 end

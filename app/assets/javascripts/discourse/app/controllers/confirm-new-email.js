@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class ConfirmNewEmailController extends Controller {
+  @service currentUser;
   @service dialog;
   @service router;
 
@@ -41,6 +42,8 @@ export default class ConfirmNewEmailController extends Controller {
       })
     );
 
-    this.router.transitionTo("/my/preferences/account");
+    this.router.transitionTo(
+      `/u/${this.currentUser.username_lower}/preferences/account`
+    );
   }
 }

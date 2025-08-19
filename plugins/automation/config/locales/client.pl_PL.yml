@@ -13,13 +13,16 @@ pl_PL:
             delete_automation: usuń automatyzację
     discourse_automation:
       title: Automatyzacja
-      create: Utwórz
-      update: Aktualizuj
+      table_title: Automatyzacje
+      create: Dodaj automatyzację
+      update: Aktualizuj automatyzację
+      back: Poprzednia
+      edit: Edytuj
       select_script: Wybierz skrypt
       select_trigger: Wybierz wyzwalacz
       confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
       confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
-      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji. Wybierz opcję poniżej, aby rozpocząć.
+      no_automation_yet: Obecnie nie skonfigurowano żadnych automatyzacji.
       filter_placeholder: Filtruj według nazwy lub opisu...
       edit_automation:
         trigger_section:
@@ -164,18 +167,24 @@ pl_PL:
             restricted_tags:
               label: Tagi
               description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
-            restricted_category:
-              label: Kategoria
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
-            restricted_group:
-              label: Grupa
-              description: Opcjonalnie, uruchomi się tylko wtedy, gdy temat postu jest osobistą wiadomością w skrzynce odbiorczej tej grupy
+            restricted_categories:
+              label: Kategorie
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tych kategorii
+            exclude_subcategories:
+              label: Wyklucz podkategorie
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy dokładnie do kategorii określonych powyżej.
+            restricted_archetype:
+              label: Typ tematu
+              description: Opcjonalnie, zezwól na wyzwalanie tylko w tematach lub wiadomościach osobistych.
             restricted_groups:
-              label: Grupy
-              description: Opcjonalnie, uruchomi się tylko wtedy, gdy temat postu jest osobistą wiadomością w jednej ze skrzynek odbiorczych grupy
-            ignore_group_members:
-              label: Ignoruj członków grupy
-              description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
+              label: Ograniczone grupy
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy użytkownik postu należy do jednej z tych grup
+            restricted_inbox_groups:
+              label: Ograniczone grupy skrzynek odbiorczych
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy tematem posta jest wiadomość prywatna w jednej ze skrzynek odbiorczych grupy
+            excluded_groups:
+              label: Wykluczone grupy
+              description: Opcjonalnie, pomiń wyzwalacz, jeśli użytkownik postu należy do którejkolwiek z tych grup
             ignore_automated:
               label: Ignoruj automatyczne
               description: Pomiń wyzwalacz, jeśli nadawca ma adres e-mail typu noreply lub pochodzi z automatycznego źródła. Dotyczy tylko postów utworzonych przez e-mail.
@@ -188,8 +197,18 @@ pl_PL:
             skip_via_email:
               label: "Pomiń przez e-mail"
               description: "Pomiń wyzwalacz, jeśli post został utworzony za pośrednictwem wiadomości e-mail."
+            post_features:
+              label: Funkcje postu
+              description: "Opcjonalnie, ogranicz wyzwalanie tylko do postów z tymi funkcjami"
           created: Utworzono
           edited: Edytowany
+          topics: Wszystkie tematy
+          personal_messages: Wiadomości osobiste
+          public_topics: Tematy publiczne (wyklucz wszystkie bezpieczne kategorie)
+          with_images: Obrazy
+          with_links: Linki
+          with_code: Kod
+          with_uploads: Pliki
         user_updated:
           fields:
             user_profile:
@@ -390,6 +409,7 @@ pl_PL:
               label: Prywatne wiadomości
             sender:
               label: Nadawca wiadomości prywatnych
+              description: "Upewnij się, że nadawca ma odpowiednie uprawnienia do wysyłania wiadomości prywatnych do odbiorcy."
         close_topic:
           fields:
             topic:
@@ -413,6 +433,11 @@ pl_PL:
           name:
             label: Aktywacja
         automation:
+          runs_today: "%{count} dzisiaj"
+          runs_this_week: "%{count} w tym tygodniu"
+          runs_this_month: "%{count} w tym miesiącu"
+          runs:
+            label: Uruchomiona
           name:
             label: Nazwa
           trigger:
@@ -431,5 +456,7 @@ pl_PL:
             label: Symbole zastępcze
           last_updated_at:
             label: Ostatnia aktualizacja
+          last_run:
+            label: Ostatnie uruchomienie
           last_updated_by:
             label: Zaktualizowany przez

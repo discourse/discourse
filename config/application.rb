@@ -1,23 +1,10 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-  STDERR.puts "Discourse requires Ruby 3.2 or above"
-  exit 1
-end
-
 require File.expand_path("../boot", __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
-require "sprockets/railtie"
-
-if !Rails.env.production?
-  recommended = File.read(".ruby-version.sample").strip
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
-    STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
-  end
-end
 
 # Plugin related stuff
 require_relative "../lib/plugin"
@@ -80,6 +67,7 @@ module Discourse
         super
       end
     end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -90,7 +78,7 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.2
+    config.load_defaults 8.0
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
@@ -127,9 +115,6 @@ module Discourse
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
-    # Allows us to skip minification on some files
-    config.assets.skip_minification = []
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -169,6 +154,9 @@ module Discourse
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
 
+    require "middleware/default_headers"
+    config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
+
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
@@ -178,34 +166,6 @@ module Discourse
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
-
-    require "discourse_js_processor"
-    require "discourse_sourcemapping_url_processor"
-
-    Sprockets.register_mime_type "application/javascript",
-                                 extensions: %w[.js .es6 .js.es6],
-                                 charset: :unicode
-    Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
-
-    class SprocketsSassUnsupported
-      def self.call(*args)
-        raise "Discourse does not support compiling scss/sass files via Sprockets"
-      end
-    end
-
-    Sprockets.register_engine(".sass", SprocketsSassUnsupported, silence_deprecation: true)
-    Sprockets.register_engine(".scss", SprocketsSassUnsupported, silence_deprecation: true)
-
-    Discourse::Application.initializer :prepend_ember_assets do |app|
-      # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
-      app
-        .config
-        .assets
-        .paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
-      Sprockets.unregister_postprocessor "application/javascript",
-                                         Sprockets::Rails::SourcemappingUrlProcessor
-      Sprockets.register_postprocessor "application/javascript", DiscourseSourcemappingUrlProcessor
-    end
 
     require "discourse_redis"
     require "logster/redis_store"
@@ -236,7 +196,6 @@ module Discourse
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, "public/fonts")
     if !File.exist?(fonts_path) || File.realpath(fonts_path) != DiscourseFonts.path_for_fonts
-      STDERR.puts "Symlinking fonts from discourse-fonts gem"
       File.delete(fonts_path) if File.exist?(fonts_path)
       Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
     end

@@ -11,13 +11,15 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     let data = { foo: null };
     const mutateData = (x) => (data = x);
 
-    await render(<template>
-      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Code @height={{100}} style="width: 200px" />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Code @height={{100}} style="width: 200px" />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.deepEqual(data, { foo: null });
     assert.form().field("foo").hasValue("");
@@ -30,13 +32,15 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
   });
 
   test("when disabled", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-          <field.Code />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Code />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.dom(".ace_text-input").hasAttribute("readonly");
   });

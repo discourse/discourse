@@ -142,6 +142,20 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
+      parent_tag_name =
+        Tag
+          .where_name(params[:tag_id])
+          .where.not(target_tag_id: nil)
+          .joins(
+            "JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id AND tags.target_tag_id != tags.id",
+          )
+          .pick("parent_tags.name")
+
+      if parent_tag_name
+        params[:tag_id] = parent_tag_name
+        return redirect_to url_for(params.to_unsafe_hash)
+      end
+
       @tag_id = params[:tag_id].force_encoding("UTF-8")
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
@@ -162,8 +176,8 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
-      @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @title = @description_meta
+      @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
+      @description_meta = Tag.where(name: @tag_id).pick(:description) || @title
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
       canonical_method = url_method(canonical_params)
@@ -186,10 +200,10 @@ class TagsController < ::ApplicationController
   end
 
   def update
-    guardian.ensure_can_admin_tags!
-
     tag = Tag.find_by_name(params[:tag_id])
     raise Discourse::NotFound if tag.nil?
+
+    guardian.ensure_can_edit_tag!(tag)
 
     if (params[:tag][:id].present?)
       new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
@@ -388,7 +402,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_admin_tags!
+    guardian.ensure_can_edit_tag!
     value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
     if value.is_a?(Array)
       render json:
@@ -405,9 +419,11 @@ class TagsController < ::ApplicationController
   end
 
   def destroy_synonym
-    guardian.ensure_can_admin_tags!
     synonym = Tag.where_name(params[:synonym_id]).first
     raise Discourse::NotFound unless synonym
+
+    guardian.ensure_can_edit_tag!(synonym)
+
     if synonym.target_tag == @tag
       synonym.update!(target_tag: nil)
       render json: success_json

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
@@ -14,7 +15,6 @@ export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
   @service currentUser;
   @service site;
-  @service siteSettings;
   @service sidebarState;
 
   @action
@@ -33,13 +33,10 @@ export default class SidebarHamburgerDropdown extends Component {
   }
 
   get collapsableSections() {
-    if (
-      this.siteSettings.navigation_menu === "header dropdown" &&
-      !this.args.collapsableSections
-    ) {
-      return this.site.mobileView || this.site.narrowDesktopView;
+    if (this.site.mobileView || this.site.narrowDesktopView) {
+      return true;
     } else {
-      this.args.collapsableSections;
+      return this.args.collapsableSections;
     }
   }
 
@@ -57,7 +54,12 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
-                <PluginOutlet @name="before-sidebar-sections" />
+                <PluginOutlet
+                  @name="before-sidebar-sections"
+                  @outletArgs={{lazyHash
+                    toggleNavigationMenu=@toggleNavigationMenu
+                  }}
+                />
                 {{#if
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}

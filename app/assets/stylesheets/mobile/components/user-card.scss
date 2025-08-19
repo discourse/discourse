@@ -105,11 +105,12 @@
   }
 
   .public-user-fields {
-    @media screen and (max-height: 550px) {
-      max-height: 12vh;
-    }
     max-height: 40vh;
     overflow-y: auto;
+
+    @media screen and (height <= 550px) {
+      max-height: 12vh;
+    }
 
     .public-user-field {
       @include line-clamp(3);
@@ -125,8 +126,9 @@
   z-index: z("mobile-composer") + 1; // 1101
   height: 100vh;
   width: 100vw;
-  background-color: rgba(black, 0.5);
+  background-color: rgb(black, 0.5);
   animation: fadein 0.2s;
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }

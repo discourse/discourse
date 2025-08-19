@@ -10,9 +10,9 @@ module("Integration | Component | flash-message", function (hooks) {
     const flash = "Success message";
     const type = "success";
 
-    await render(<template>
-      <FlashMessage @flash={{flash}} @type={{type}} />
-    </template>);
+    await render(
+      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+    );
 
     assert.dom(".alert.alert-success").hasText(flash);
     assert.dom(".alert").hasClass("alert-success");
@@ -22,9 +22,9 @@ module("Integration | Component | flash-message", function (hooks) {
     const flash = "Error message";
     const type = "error";
 
-    await render(<template>
-      <FlashMessage @flash={{flash}} @type={{type}} />
-    </template>);
+    await render(
+      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+    );
 
     assert.dom(".alert.alert-error").hasText(flash);
     assert.dom(".alert").hasClass("alert-error");
@@ -34,9 +34,9 @@ module("Integration | Component | flash-message", function (hooks) {
     const flash = "Warning message";
     const type = "warning";
 
-    await render(<template>
-      <FlashMessage @flash={{flash}} @type={{type}} />
-    </template>);
+    await render(
+      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+    );
 
     assert.dom(".alert.alert-warning").hasText(flash);
     assert.dom(".alert").hasClass("alert-warning");
@@ -46,9 +46,9 @@ module("Integration | Component | flash-message", function (hooks) {
     const flash = "Info message";
     const type = "info";
 
-    await render(<template>
-      <FlashMessage @flash={{flash}} @type={{type}} />
-    </template>);
+    await render(
+      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+    );
 
     assert.dom(".alert.alert-info").hasText(flash);
     assert.dom(".alert").hasClass("alert-info");

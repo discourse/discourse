@@ -23,6 +23,7 @@
 /public/plugins
 /public/tombstone
 /public/uploads
+/public/images/emoji
 
 # Ignore the default SQLite database and db dumps
 *.sql
@@ -48,11 +49,40 @@
 !/plugins/spoiler-alert
 !/plugins/checklist
 !/plugins/footnote
+!/plugins/discourse-reactions
+!/plugins/discourse-apple-auth
+!/plugins/discourse-login-with-amazon
+!/plugins/discourse-lti
+!/plugins/discourse-microsoft-auth
+!/plugins/discourse-oauth2-basic
+!/plugins/discourse-openid-connect
+!/plugins/discourse-zendesk-plugin
+!/plugins/discourse-patreon
+!/plugins/discourse-graphviz
+!/plugins/discourse-rss-polling
+!/plugins/discourse-math
+!/plugins/discourse-chat-integration
+!/plugins/discourse-data-explorer
+!/plugins/discourse-post-voting
+!/plugins/discourse-user-notes
+!/plugins/discourse-assign
+!/plugins/discourse-subscriptions
+!/plugins/discourse-hcaptcha
+!/plugins/discourse-gamification
+!/plugins/discourse-calendar
+!/plugins/discourse-policy
+!/plugins/discourse-github
+!/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
+!/plugins/discourse-solved
+!/plugins/discourse-topic-voting
+!/plugins/discourse-templates
+!/plugins/discourse-ai
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
-/vendor/bundle/*
+/vendor/bundle
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 
@@ -78,6 +108,7 @@ yarn-error.log
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
+/app/assets/generated
 
 # Generated API documentation files
 openapi/*

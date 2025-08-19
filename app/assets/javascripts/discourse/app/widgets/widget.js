@@ -3,7 +3,9 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import deprecated, { isDeprecationSilenced } from "discourse/lib/deprecated";
 import { isProduction } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -22,11 +24,34 @@ import {
   WidgetMouseOutHook,
   WidgetMouseOverHook,
   WidgetMouseUpHook,
+  WidgetPointerOutHook,
+  WidgetPointerOverHook,
   WidgetTouchEndHook,
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
 import { i18n } from "discourse-i18n";
+
+export const WIDGET_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta8-dev",
+  id: "discourse.widgets-end-of-life",
+  url: "https://meta.discourse.org/t/375332/1",
+};
+
+export const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  url: "https://meta.discourse.org/t/372063/1",
+};
+
+export function warnWidgetsDeprecation(message, dontSkipCore = false) {
+  if (
+    (dontSkipCore || consolePrefix()) &&
+    !isDeprecationSilenced(POST_STREAM_DEPRECATION_OPTIONS.id)
+  ) {
+    deprecated(message, WIDGET_DEPRECATION_OPTIONS);
+  }
+}
 
 const _registry = {};
 
@@ -83,6 +108,7 @@ export function resetDecorators() {
 }
 
 const _customSettings = {};
+
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};
   _customSettings[widgetName][settingName] = newValue;
@@ -111,6 +137,20 @@ export function createWidgetFrom(base, name, opts) {
 }
 
 export function createWidget(name, opts) {
+  if (
+    getOwnerWithFallback(this)?.lookup(`service:site-settings`)
+      ?.deactivate_widgets_rendering
+  ) {
+    warnWidgetsDeprecation(
+      `Widgets are deactivated and can't be created. Your site may not work properly. Affected widget: ${name}.`
+    );
+    return;
+  } else {
+    warnWidgetsDeprecation(
+      `Using \`api.createWidget\` is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
+    );
+  }
+
   return createWidgetFrom(Widget, name, opts);
 }
 
@@ -184,6 +224,7 @@ export default class Widget {
   }
 
   init() {}
+
   transform() {
     return {};
   }
@@ -482,6 +523,14 @@ export default class Widget {
 
     if (this.mouseOver) {
       properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
+    }
+
+    if (this.pointerOver) {
+      properties["widget-pointer-over"] = new WidgetPointerOverHook(this);
+    }
+
+    if (this.pointerOut) {
+      properties["widget-pointer-out"] = new WidgetPointerOutHook(this);
     }
 
     if (this.mouseOut) {

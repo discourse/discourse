@@ -5,8 +5,10 @@
 .chat-channel-row {
   margin: 0;
   border-radius: 0;
-  border-bottom: 1px solid var(--primary-low);
-  transition: height 0.25s ease-in-out, opacity 0.25s ease-out;
+  border-bottom: 1px solid var(--content-border-color);
+  transition:
+    height 0.25s ease-in-out,
+    opacity 0.25s ease-out;
   transform-origin: top center;
   will-change: height, opacity, left;
   position: relative;
@@ -28,7 +30,7 @@
     box-sizing: border-box;
     transition: border-radius 0.25s ease-in-out;
 
-    //for sliding delete animation
+    // for sliding delete animation
     background: var(--primary-very-low);
     height: 100%;
 

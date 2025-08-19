@@ -71,26 +71,7 @@ export class I18n {
     options.needsPluralization = typeof options.count === "number";
     options.ignoreMissing = !this.noFallbacks;
 
-    let translation = this.findTranslation(scope, options);
-
-    if (!this.noFallbacks) {
-      if (!translation && this.fallbackLocale) {
-        options.locale = this.fallbackLocale;
-        translation = this.findTranslation(scope, options);
-      }
-
-      options.ignoreMissing = false;
-
-      if (!translation && this.currentLocale() !== this.defaultLocale) {
-        options.locale = this.defaultLocale;
-        translation = this.findTranslation(scope, options);
-      }
-
-      if (!translation && this.currentLocale() !== "en") {
-        options.locale = "en";
-        translation = this.findTranslation(scope, options);
-      }
-    }
+    const translation = this.findTranslationWithFallback(scope, options);
 
     try {
       return this.interpolate(translation, options, scope);
@@ -227,16 +208,19 @@ export class I18n {
 
   interpolate(message, options, scope) {
     options = this.prepareOptions(options);
-    let matches = message.match(PLACEHOLDER);
-    let placeholder, value, name;
+    let value;
 
-    if (!matches) {
+    if (message === undefined) {
+      // Throw a generic error to be caught in _translate()
+      throw new Error();
+    }
+
+    const placeholders = this.findPlaceholders(message);
+    if (placeholders.size === 0) {
       return message;
     }
 
-    for (let i = 0; (placeholder = matches[i]); i++) {
-      name = placeholder.replace(PLACEHOLDER, "$1");
-
+    for (const [name, placeholderValues] of placeholders) {
       if (typeof options[name] === "string") {
         // The dollar sign (`$`) is a special replace pattern, and `$&` inserts
         // the matched string. Thus dollars signs need to be escaped with the
@@ -247,22 +231,52 @@ export class I18n {
         value = options[name];
       }
 
-      if (!this.isValidNode(options, name)) {
-        value = "[missing " + placeholder + " value]";
+      for (const placeholder of placeholderValues) {
+        if (!this.isValidNode(options, name)) {
+          value = "[missing " + placeholder + " value]";
 
-        if (this.testing) {
-          throw new I18nMissingInterpolationArgument(`${scope}: ${value}`);
+          if (this.testing) {
+            throw new I18nMissingInterpolationArgument(`${scope}: ${value}`);
+          }
         }
+
+        let regex = new RegExp(
+          placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
+        );
+
+        message = message.replace(regex, value);
       }
-
-      let regex = new RegExp(
-        placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
-      );
-
-      message = message.replace(regex, value);
     }
 
     return message;
+  }
+
+  /**
+   * Extract the placeholders from the translated string before interpolation.
+   *
+   * @param {String} message The translated string.
+   *
+   * @returns {Map<String, Array<String>>} A Map keyed by the placeholder name, with the value set to
+   * how the placeholder appears in the string. If it appears multiple times, each instance will be
+   * recorded (eg, "foo" => ["%{foo}", "{{foo}}"]).
+   */
+  findPlaceholders(message) {
+    if (!message) {
+      return new Map();
+    }
+
+    const placeholders = message.match(PLACEHOLDER) || [];
+
+    const placeholderMap = new Map();
+
+    placeholders.forEach((placeholder) => {
+      const name = placeholder.replace(PLACEHOLDER, "$1");
+      const values = placeholderMap.get(name) ?? [];
+      values.push(placeholder);
+      placeholderMap.set(name, values);
+    });
+
+    return placeholderMap;
   }
 
   findTranslation(scope, options) {
@@ -270,6 +284,40 @@ export class I18n {
 
     if (translation && options.needsPluralization) {
       translation = this.pluralize(translation, scope, options);
+    }
+
+    return translation;
+  }
+
+  /**
+   * Given the current options (and if fallback is enabled), find the translation
+   * for the given scope.
+   *
+   * @param {String} scope The reference for the translatable string.
+   * @param {Object} options Custom options for this string.
+   *
+   * @returns {Array<String>|String} The translated string, or array of strings for pluralizable translations.
+   */
+  findTranslationWithFallback(scope, options) {
+    let translation = this.findTranslation(scope, options);
+
+    if (!this.noFallbacks) {
+      if (!translation && this.fallbackLocale) {
+        options.locale = this.fallbackLocale;
+        translation = this.findTranslation(scope, options);
+      }
+
+      options.ignoreMissing = false;
+
+      if (!translation && this.currentLocale() !== this.defaultLocale) {
+        options.locale = this.defaultLocale;
+        translation = this.findTranslation(scope, options);
+      }
+
+      if (!translation && this.currentLocale() !== "en") {
+        options.locale = "en";
+        translation = this.findTranslation(scope, options);
+      }
     }
 
     return translation;

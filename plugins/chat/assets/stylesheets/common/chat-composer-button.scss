@@ -1,12 +1,15 @@
+@use "lib/viewport";
+
 .chat-composer-button {
-  @include breakpoint(mobile-large) {
-    width: 50px;
-  }
   box-sizing: border-box;
   border: 0;
   height: 50px;
   background: none;
   padding-inline: 0.75rem;
+
+  @include viewport.until(sm) {
+    width: 50px;
+  }
 
   .is-disabled & {
     cursor: not-allowed;

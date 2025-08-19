@@ -6,6 +6,9 @@
 
 ro:
   discourse_automation:
+    models:
+      fields:
+        invalid_field: Componenta câmpului `%{component}` nu este utilizabilă pe `%{target}:%{target_name}`.
     triggerables:
       topic:
         title: Subiect

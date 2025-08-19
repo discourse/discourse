@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -9,7 +9,6 @@ module("Unit | Component | post-menu", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_menu_mode = "enabled";
     this.siteSettings.post_menu =
       "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply";
     this.siteSettings.post_menu_hidden_items = "";
@@ -51,6 +50,23 @@ module("Unit | Component | post-menu", function (hooks) {
       .doesNotExist("show more is hidden");
     assert.dom(".post-action-menu__bookmark").exists("bookmark is displayed");
     assert.dom(".post-action-menu__copy-link").exists("copyLink is displayed");
+  });
+
+  test("post-menu-toggle-like-action behavior transformer", async function (assert) {
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer("post-menu-toggle-like-action", () => {
+        assert.step("transformer called");
+      });
+    });
+
+    const post = this.post; // using this inside the template does not correspond to the test `this` context
+    await render(<template><PostMenu @post={{post}} /></template>);
+
+    await click(".post-action-menu__like");
+    assert.verifySteps(
+      ["transformer called"],
+      "behavior transformer was called"
+    );
   });
 
   module("post-menu value transformer", function () {

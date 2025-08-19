@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feed
+	xmlns="http://www.w3.org/2005/Atom">
+	<title>Discourse</title>
+	<link href="https://blog.discourse.org/feed/atom/" rel="self" type="application/atom+xml"/>
+	<updated>2019-08-21T01:42:02Z</updated>
+	<id>https://blog.discourse.org/feed/atom/</id>
+	<entry>
+		<id>https://blog.discourse.org/?p=pollfeedspec</id>
+		<title type="text">Poll Feed Spec Fixture</title>
+		<author>
+			<name>xrav3nz</name>
+		</author>
+		<link href="https://blog.discourse.org/2017/09/poll-feed-spec-fixture/" rel="alternate" type="text/html"/>
+		<published>2019-08-16T21:46:39Z</published>
+		<updated>2019-08-16T21:46:39Z</updated>
+		<summary type="html">Here are some random descriptions...</summary>
+	</entry>
+</feed>

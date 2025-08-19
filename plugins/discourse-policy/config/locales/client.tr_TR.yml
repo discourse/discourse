@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    discourse_policy:
+      title: "Politika"
+      accepted_tooltip: "Bu politikayı kabul eden kullanıcılar"
+      not_accepted_tooltip: "Bu politikayı kabul etmeyen kullanıcılar"
+      accept_policy: "Politikayı Kabul Et"
+      revoke_policy: "İptal Politikası"
+      edit_reason: "Politika ayarları değiştirildi"
+      no_possible_users: "Bu politikanın olası kullanıcısı yok"
+      accept_policy_template: "Bu politikayı kabul ediyorum"
+      builder:
+        title: Politika
+        attach: Politika Oluştur
+        save: Değişiklikleri kaydet
+        insert: Ekle
+        errors:
+          group: Grup gerekli
+          version: Sürüm gerekli
+        groups:
+          label: Gruplar
+          description: Bu politika ile ilişkili gruplar
+        version:
+          label: Sürüm
+          description: Politikanın sürümü, sürümün yükseltilmesi, insanları yeniden kabul etmeye zorlar
+        renew:
+          label: Yenile
+          description: Politikayı her x günde bir yenileyin
+        renew-start:
+          label: Yenileme Başlangıcı
+          description: Politikanın ne zaman yenilenmesi gerektiği
+        reminder:
+          label: Hatırlatma
+          description: Politikayı kabul etmek için hatırlatma bildiriminin ne sıklıkla gönderilmesi gerektiği
+        accept:
+          label: Kabul et
+          description: Kabul et düğmesinde kullanılan metin
+        revoke:
+          label: İptal Et
+          description: İptal düğmesinde kullanılan metin
+        private:
+          label: Özel?
+          description: Politika durumunu yöneticilere gizli tutun
+        send-email:
+          label: E-posta gönderilsin mi?
+          description: Kullanıcıları yeni politikadan e-posta ile haberdar edin
+      preferences:
+        title: Politikalar
+        policy_emails:
+          always_description: Size yalnızca yeni etkinlik e-postalarını da seçtiyseniz e-posta göndereceğiz.
+          away_description: Sadece politika durumu değiştiğinde sizi son 10 dakika içinde görmediysek ve sadece yeni etkinlik e-postalarını da seçtiyseniz size e-posta göndeririz.
+          label: İncelemem gereken bir politika olduğunda bana e-posta gönderin
+          email_frequency_options:
+            never: Asla
+            when_away: Yalnızca uzaktayken
+            always: Her zaman

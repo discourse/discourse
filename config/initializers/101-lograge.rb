@@ -154,7 +154,10 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
           type: :rails,
           customize_event:
             lambda { |event| event["database"] = RailsMultisite::ConnectionManagement.current_db },
+          level: Rails.application.config.log_level,
         )
+
+      config.lograge.log_level = Rails.application.config.log_level
 
       # Stop broadcasting to Rails' default logger
       Rails.logger.stop_broadcasting_to(

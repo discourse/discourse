@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse paikalliset päivämäärät"
   js:
     discourse_local_dates:
       relative_dates:

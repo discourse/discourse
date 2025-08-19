@@ -25,7 +25,7 @@ export default class EmailLog extends EmberObject {
     const status = filter.status || "sent";
     delete filter.status;
 
-    return ajax(`/admin/email/${status}.json?offset=${offset}`, {
+    return ajax(`/admin/email-logs/${status}.json?offset=${offset}`, {
       data: filter,
     }).then((logs) => logs.map((log) => EmailLog.create(log)));
   }

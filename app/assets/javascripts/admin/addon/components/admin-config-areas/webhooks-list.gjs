@@ -30,16 +30,24 @@ export default class AdminConfigAreasWebhooksList extends Component {
   <template>
     <div class="container admin-api_keys">
       {{#if this.webhooks}}
-        <table class="d-admin-table admin-web_hooks__items">
-          <thead>
-            <tr>
-              <th>{{i18n "admin.web_hooks.delivery_status.title"}}</th>
-              <th>{{i18n "admin.web_hooks.payload_url"}}</th>
-              <th>{{i18n "admin.web_hooks.description_label"}}</th>
-              <th>{{i18n "admin.web_hooks.controls"}}</th>
+        <table class="d-table admin-web_hooks__items">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell">{{i18n
+                  "admin.web_hooks.delivery_status.title"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "admin.web_hooks.payload_url"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "admin.web_hooks.description_label"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "admin.web_hooks.controls"
+                }}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="d-table__body">
             {{#each this.webhooks as |webhook|}}
               <WebhookItem
                 @webhook={{webhook}}

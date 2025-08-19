@@ -28,7 +28,7 @@ export default class AdminEmbeddingCrawlersController extends Controller {
         ...data,
       });
       this.toasts.success({
-        duration: 1500,
+        duration: "short",
         data: { message: i18n("admin.embedding.crawler_settings_saved") },
       });
     } catch (error) {

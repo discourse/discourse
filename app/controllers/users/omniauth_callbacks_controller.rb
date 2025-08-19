@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
@@ -13,6 +12,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
+  # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
 
   def confirm_request
@@ -21,17 +21,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def complete
-    auth = request.env["omniauth.auth"]
-    raise Discourse::NotFound unless request.env["omniauth.auth"]
-    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
+    raise Discourse::NotFound unless auth = request.env["omniauth.auth"]
 
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
-      path = persist_auth_token(auth)
-      return redirect_to path
+      return redirect_to persist_auth_token(auth)
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
       @auth_result = authenticator.after_authenticate(auth)
@@ -71,7 +69,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     return render_auth_result_failure if @auth_result.failed?
 
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !@auth_result.user&.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !@auth_result.user&.staff?
 
     complete_response_data
 
@@ -87,6 +85,9 @@ class Users::OmniauthCallbacksController < ApplicationController
     cookies["_bypass_cache"] = true
     cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
 
+    # If the user account doesn't already exist, and this signup is part of a user-api-key request, direct
+    # the user to the homepage first so that signup can be completed. They'll be redirected to the user-api-key
+    # route once signup is complete. Hopefully, this can be simplified once fullscreen login/signup is everywhere.
     if !current_user && @origin.start_with?("/user-api-key/new")
       redirect_to path("/")
     else
@@ -102,14 +103,24 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  def failure
-    error_key = params[:message].to_s.gsub(/[^\w-]/, "")
-    error_key = "generic" if error_key.blank?
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
 
-    flash[:error] = I18n.t(
-      "login.omniauth_error.#{error_key}",
-      default: I18n.t("login.omniauth_error.generic"),
-    ).html_safe
+  def failure
+    error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
+    error = ALLOWED_FAILURE_ERRORS.fetch(error_name, "generic")
+
+    if error == "generic"
+      provider_name = params[:provider].presence || params[:strategy].presence
+      provider = Discourse.enabled_authenticators.find { _1.name == provider_name }&.display_name
+
+      if provider.blank? && Discourse.enabled_authenticators.one?
+        provider = Discourse.enabled_authenticators[0].display_name
+      end
+
+      error = provider.present? ? "generic_with_provider" : "generic_without_provider"
+    end
+
+    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:).html_safe
 
     render "failure"
   end
@@ -208,9 +219,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def persist_auth_token(auth)
     secret = SecureRandom.hex
-    secure_session.set "#{Users::AssociateAccountsController.key(secret)}",
-                       auth.to_json,
-                       expires: 10.minutes
+    key = Users::AssociateAccountsController.key(secret)
+    secure_session.set key, auth.to_json, expires: 10.minutes
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

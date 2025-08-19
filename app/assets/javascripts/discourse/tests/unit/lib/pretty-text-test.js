@@ -1577,7 +1577,7 @@ var bar = 'bar';
     assert.cookedOptions(
       "test.. test... test..... test?..... test!...",
       enabledTypographer,
-      "<p>test… test… test… test?.. test!..</p>"
+      "<p>test.. test… test… test?.. test!..</p>"
     );
     assert.cookedOptions(
       "!!!!!! ???? ,,",

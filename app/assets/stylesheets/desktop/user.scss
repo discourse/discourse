@@ -78,26 +78,6 @@
   margin-right: 0;
 }
 
-table.user-invite-list {
-  width: 100%;
-  margin-top: 15px;
-
-  tr {
-    td {
-      padding: 0.667em;
-
-      &.invite-actions {
-        white-space: nowrap;
-        width: 100px;
-      }
-
-      .label {
-        display: none;
-      }
-    }
-  }
-}
-
 .user-invite-none {
   padding: 15px 0;
 }
@@ -143,6 +123,7 @@ table.user-invite-list {
     }
 
     .controls {
+      align-self: center;
       max-width: 13.5em;
       margin-left: 0.5em;
 
@@ -173,7 +154,7 @@ table.user-invite-list {
         position: relative;
         padding: 0;
         margin-top: 0;
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
   }

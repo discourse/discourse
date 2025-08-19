@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
   js:
     styleguide:
       title: "Styleguide"
@@ -21,6 +26,8 @@ en:
           title: "Date/Time inputs"
         menus:
           title: "Menus"
+        multi_select:
+          title: "Multi select"
         toasts:
           title: "Toasts"
         font_scale:
@@ -78,8 +85,8 @@ en:
           title: "Topic Map"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Suggested Topics"
+        more_topics:
+          title: "More Topics"
         post_menu:
           title: "Post Menu"
         modal:
@@ -102,4 +109,3 @@ en:
         char_counter:
           title: "Character Counter"
           placeholder: "Enter your text here..."
-

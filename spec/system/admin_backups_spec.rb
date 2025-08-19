@@ -1,7 +1,7 @@
 #frozen_string_literal: true
 
 describe "Admin Backups Page", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   let(:backups_page) { PageObjects::Pages::AdminBackups.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
@@ -79,5 +79,14 @@ describe "Admin Backups Page", type: :system do
     backups_page.visit_page
     backups_page.click_tab("settings")
     expect(settings_page).to have_setting("enable_backups")
+  end
+
+  it "shows only settings tab when backups are not enabled" do
+    SiteSetting.enable_backups = false
+    backups_page.visit_page
+
+    expect(backups_page).to have_no_read_only_button
+    expect(backups_page).to have_no_backup_button
+    expect(backups_page).to have_no_backup_item_more_menu
   end
 end

@@ -23,10 +23,10 @@ function addonFmt(str, formats) {
     return typeof s === "string"
       ? s
       : s === null
-      ? "(null)"
-      : s === undefined
-      ? ""
-      : "" + s;
+        ? "(null)"
+        : s === undefined
+          ? ""
+          : "" + s;
   });
 }
 /**

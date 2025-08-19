@@ -160,31 +160,28 @@ export default class ResizableNode extends Modifier {
       Object.assign(this.element.style, newStyle);
     }
 
-    this.didResizeContainer?.(this.element, {
-      width: width >= this._minimumWidth ? width : this._minimumWidth,
-      height: height >= this._minimumHeight ? height : this._minimumHeight,
-    });
+    const containerStyle = {};
+    const containerWidth =
+      width >= this._minimumWidth ? width : this._minimumWidth;
+    if (containerWidth) {
+      containerStyle.width = containerWidth;
+    }
+    const containerHeight =
+      height >= this._minimumHeight ? height : this._minimumHeight;
+    if (containerHeight) {
+      containerStyle.height = containerHeight;
+    }
+
+    this.didResizeContainer?.(this.element, containerStyle);
   }
 
   @bind
-  _resizeWindow() {
+  _resizeWindow(event) {
     if (!this.options.resetOnWindowResize) {
       return;
     }
 
-    this._throttledResizeHandler = throttle(this, this._throttledResize, 100);
-  }
-
-  @bind
-  _throttledResize() {
-    const style = {};
-    if (this.options.vertical) {
-      style.height = "auto";
-    }
-    if (this.options.horizontal) {
-      style.width = "auto";
-    }
-    Object.assign(this.element.style, style);
+    this._throttledResizeHandler = throttle(this, this._resize, event, 100);
   }
 
   @bind

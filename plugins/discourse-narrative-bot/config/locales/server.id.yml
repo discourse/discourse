@@ -168,22 +168,8 @@ id:
 
           - Kami percaya pada [perilaku komunitas yang beradab](%{base_uri}/guidelines) setiap saat.
       onebox:
-        instructions: |-
-          Selanjutnya, dapatkah Anda membagikan salah satu tautan ini kepada saya? Balas dengan **tautan pada satu baris saja**, dan itu akan secara otomatis diperluas untuk menyertakan ringkasan yang bagus.
-
-          Untuk menyalin tautan apa pun, ketuk dan tahan di ponsel, atau klik kanan perangkat penunjuk Anda:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Keren! Ini akan bekerja untuk sebagian besar tautan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> . Ingat, tautan harus berada pada satu baris _sendirian_, tanpa ada yang lain di depan atau di belakangnya.
-        not_found: |-
-          Maaf, saya tidak dapat menemukan tautan dalam balasan Anda! :cry:
-
-          Bisakah Anda mencoba menambahkan tautan berikut, di barisnya sendiri, di balasan Anda berikutnya?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Ini gambar unicorn:
@@ -378,19 +364,6 @@ id:
 
           Perhatikan bahwa ketika Anda membalas suatu topik, atau membaca suatu topik selama lebih dari beberapa menit, itu secara otomatis diatur ke tingkat notifikasi 'tracking'. Anda dapat mengubahnya di [preferensi pengguna Anda](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Tahukah Anda bahwa Anda dapat menambahkan poll ke post mana pun? Coba gunakan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor untuk **membuat poll**.
-        not_found: |-
-          Ups! Tidak ada jajak pendapat dalam balasan Anda.
-
-          Gunakan ikon <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor, atau salin dan tempel poll ini di balasan Anda berikutnya:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hei, survei yang bagus! Apakah saya pandai mengajarkan Anda?
 
@@ -399,20 +372,6 @@ id:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Terkadang Anda mungkin ingin **menyembunyikan detail** dalam balasan Anda:
-
-          - Saat Anda mendiskusikan poin plot dari film atau acara TV yang akan dianggap sebagai spoiler.
-
-          - Ketika posting Anda membutuhkan banyak detail opsional yang mungkin berlebihan saat dibaca sekaligus.
-
-          [details=Pilih ini untuk melihat cara kerjanya!]
-          1. Pilih roda gigi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> di editor.
-          2. Pilih "Sembunyikan Detail".
-          3. Edit ringkasan detail dan tambahkan konten Anda.
-          [/details]
-
-          Dapatkah Anda menggunakan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor untuk menambahkan bagian detail pada balasan berikutnya?
         not_found: |-
           Kesulitan membuat spoiler? Coba masukkan teks di bawah ini untuk balasan selanjutnya:
 

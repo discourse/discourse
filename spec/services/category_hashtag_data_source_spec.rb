@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryHashtagDataSource do
-  fab!(:parent_category) { Fabricate(:category, slug: "fun", topic_count: 2) }
+  fab!(:parent_category) { Fabricate(:category, name: "Silly Land", slug: "fun", topic_count: 2) }
   fab!(:category1) do
-    Fabricate(:category, slug: "random", topic_count: 12, parent_category: parent_category)
+    Fabricate(
+      :category,
+      name: "Random",
+      slug: "random",
+      topic_count: 12,
+      parent_category: parent_category,
+    )
   end
   fab!(:category2) { Fabricate(:category, name: "Book Section", slug: "books", topic_count: 566) }
-  fab!(:category3) { Fabricate(:category, slug: "movies", topic_count: 245) }
+  fab!(:category3) { Fabricate(:category, name: "Kino Korner", slug: "movies", topic_count: 245) }
   fab!(:group)
-  fab!(:category4) { Fabricate(:private_category, slug: "secret", group: group, topic_count: 40) }
-  fab!(:category5) { Fabricate(:category, slug: "casual", topic_count: 99) }
+  fab!(:category4) do
+    Fabricate(:private_category, name: "Nunya", slug: "secret", group: group, topic_count: 40)
+  end
+  fab!(:category5) { Fabricate(:category, name: "Chillzone", slug: "casual", topic_count: 99) }
   fab!(:user)
   let(:guardian) { Guardian.new(user) }
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
@@ -55,6 +63,16 @@ RSpec.describe CategoryHashtagDataSource do
       expect(described_class.lookup(Guardian.new(user), ["secret"]).first).not_to eq(nil)
     end
 
+    it "formats the category text for a category without a parent" do
+      result = described_class.lookup(guardian, ["movies"]).first
+      expect(result.text).to eq("Kino Korner")
+    end
+
+    it "formats the category text for a category with a parent" do
+      result = described_class.lookup(guardian, ["fun:random"]).first
+      expect(result.text).to eq("Silly Land > Random")
+    end
+
     context "with sub-sub-categories" do
       before { SiteSetting.max_category_nesting = 3 }
 
@@ -94,6 +112,15 @@ RSpec.describe CategoryHashtagDataSource do
         result = described_class.lookup(guardian, ["child:grandchild"])
         expect(result.map(&:relative_url)).to eq([parent2_child_grandchild.url])
       end
+
+      it "formats the category text for sub-sub-categories" do
+        parent = Fabricate(:category, slug: "parent", name: "Parent")
+        child = Fabricate(:category, slug: "child", parent_category_id: parent.id, name: "Child")
+        grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: child.id, name: "Grandchild")
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.last.text).to eq("Child > Grandchild")
+      end
     end
   end
 
@@ -102,6 +129,7 @@ RSpec.describe CategoryHashtagDataSource do
       result = described_class.search(guardian, "mov", 5).first
       expect(result.ref).to eq("movies")
       expect(result.slug).to eq("movies")
+      expect(result.text).to eq("Kino Korner")
     end
 
     it "finds categories by partial slug" do
@@ -120,6 +148,11 @@ RSpec.describe CategoryHashtagDataSource do
       result = described_class.search(guardian, "random", 5).first
       expect(result.ref).to eq("fun:random")
       expect(result.slug).to eq("random")
+    end
+
+    it "formats the text correctly for a parent:child category that is found" do
+      result = described_class.search(guardian, "random", 5).first
+      expect(result.text).to eq("Silly Land > Random")
     end
   end
 

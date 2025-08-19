@@ -1,9 +1,11 @@
+@use "lib/viewport";
+
 .form-kit__col {
   flex: 0 0 auto;
   box-sizing: border-box;
 }
 
-@include breakpoint("large") {
+@include viewport.until(lg) {
   .--col-1,
   .--col-2,
   .--col-3,

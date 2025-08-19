@@ -185,7 +185,7 @@ vi:
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
-      twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
+      x_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
@@ -388,26 +388,6 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
-    "new-topic": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã bắt đầu một cuộc trò chuyện mới! **
-
-      - Tiêu đề có nghe thú vị nếu bạn đọc to không? Đó có phải là một bản tóm tắt hay không?
-
-      - Ai sẽ quan tâm đến điều này? Tại sao nó lại quan trọng? Bạn muốn loại phản hồi nào?
-
-      - Bao gồm các từ thường được sử dụng trong chủ đề của bạn để những người khác có thể *tìm thấy* nó. Để nhóm chủ đề của bạn với các chủ đề liên quan, hãy chọn một dang mục (hoặc thẻ).
-
-      Để biết thêm, [xem hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
-    "new-reply": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn bạn đã đóng góp!**
-
-      - Hãy tử tế với các thành viên trong cộng đồng của bạn.
-
-      - Câu trả lời của bạn có cải thiện cuộc trò chuyện không?
-
-      - Phê bình mang tính xây dựng được hoan nghênh, nhưng chỉ trích *ý tưởng*, không phải con người.
-
-      Để biết thêm, [xem nguyên tắc cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
   activerecord:
     attributes:
       category:
@@ -1193,7 +1173,6 @@ vi:
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     personal_email_time_window_seconds: "Chờ (n) giây trước khi gửi bất kỳ email thông báo tin nhắn cá nhân nào để người dùng có cơ hội chỉnh sửa và hoàn thiện tin nhắn của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
-    flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
@@ -1203,7 +1182,6 @@ vi:
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     dark_mode_none: "Không có gì"
-    max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
     automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
     topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
@@ -1276,11 +1254,9 @@ vi:
     clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (mức độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
-    sequential_replies_threshold: "Số bài viết một thành viên có thể gửi liên tiếp trong một chủ đề trước khi được nhắc nhở về hành vi trả lời liên tục quá nhiều."
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
     enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
     dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
-    disable_avatar_education_message: "Tắt thông điệp hướng dẫn khi đổi avatar."
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
     permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"
     disable_system_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
@@ -1292,7 +1268,6 @@ vi:
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
-    warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
@@ -1300,7 +1275,6 @@ vi:
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
-    enable_diffhtml_preview: "Tính năng thử nghiệm sử dụng diffHTML để đồng bộ hóa xem trước thay vì kết xuất lại đầy đủ"
     returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
     review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
@@ -1428,11 +1402,6 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error:
-      generic: "Xin lỗi, đã xảy ra lỗi khi ủy quyền tài khoản của bạn. Vui lòng thử lại."
-      csrf_detected: "Đã hết thời gian ủy quyền hoặc bạn đã chuyển đổi trình duyệt. Vui lòng thử lại."
-      request_error: "Đã xảy ra lỗi khi bắt đầu ủy quyền. Vui lòng thử lại."
-      invalid_iat: "Không thể xác minh mã thông báo ủy quyền do sự khác biệt về đồng hồ máy chủ. Vui lòng thử lại."
     omniauth_error_unknown: "Đã xảy ra lỗi khi xử lý thông tin đăng nhập của bạn, vui lòng thử lại."
     omniauth_confirm_title: "Đăng nhập bằng %{provider}"
     omniauth_confirm_button: "Tiếp tục"
@@ -1891,8 +1860,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
-  login_required:
-    welcome_message: "# [Chào mừng đến với %{title}] (#welcome)"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
@@ -1929,7 +1896,6 @@ vi:
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
     base_theme_name: "Cơ bản"
-    default_theme_name: "Mặc định"
   edit_this_page: "Sửa trang này"
   csv_export:
     boolean_yes: "Đồng ý"
@@ -2099,7 +2065,6 @@ vi:
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
-    success: "Gửi mail lỗi"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:
@@ -2180,8 +2145,13 @@ vi:
         title: "Đồng ý"
       delete_single:
         title: "Xóa"
+        complete: "Bài viết đã bị xóa."
+      delete_and_ignore:
+        complete: "Bài viết đã bị xóa."
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree:
+        complete: "Bài viết đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
@@ -2201,6 +2171,7 @@ vi:
       reject_user:
         delete:
           title: "Xóa tài khoản"
+          complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
           description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
@@ -2212,6 +2183,8 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      delete_user:
+        complete: "Người dùng đã bị xóa."
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

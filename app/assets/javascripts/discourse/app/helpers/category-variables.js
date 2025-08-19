@@ -7,16 +7,16 @@ export default function categoryVariables(category) {
     vars += `--category-badge-color: #${category.color};`;
   }
 
-  if (category.text_color) {
-    vars += `--category-badge-text-color: #${category.text_color};`;
+  if (category.textColor) {
+    vars += `--category-badge-text-color: #${category.textColor};`;
   }
 
   if (category.parentCategory?.color) {
     vars += `--parent-category-badge-color: #${category.parentCategory.color};`;
   }
 
-  if (category.parentCategory?.text_color) {
-    vars += `--parent-category-badge-text-color: #${category.parentCategory.text_color};`;
+  if (category.parentCategory?.textColor) {
+    vars += `--parent-category-badge-text-color: #${category.parentCategory.textColor};`;
   }
 
   return htmlSafe(vars);

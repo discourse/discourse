@@ -1,15 +1,31 @@
+/* eslint-disable ember/no-classic-components */
 import ClassicComponent from "@ember/component";
 
 const empty = <template>
   {{! template-lint-disable no-yield-only}}{{yield}}
 </template>;
 const shortcuts = {
-  div: <template><div ...attributes>{{yield}}</div></template>,
-  span: <template><span ...attributes>{{yield}}</span></template>,
-  form: <template><form ...attributes>{{yield}}</form></template>,
-  a: <template><a ...attributes>{{yield}}</a></template>,
-  button: <template><button ...attributes>{{yield}}</button></template>,
-  td: <template><td ...attributes>{{yield}}</td></template>,
+  div: <template>
+    <div ...attributes>{{yield}}</div>
+  </template>,
+  span: <template>
+    <span ...attributes>{{yield}}</span>
+  </template>,
+  form: <template>
+    <form ...attributes>{{yield}}</form>
+  </template>,
+  a: <template>
+    <a ...attributes>{{yield}}</a>
+  </template>,
+  button: <template>
+    <button ...attributes>{{yield}}</button>
+  </template>,
+  td: <template>
+    <td ...attributes>{{yield}}</td>
+  </template>,
+  aside: <template>
+    <aside ...attributes>{{yield}}</aside>
+  </template>,
 };
 
 /**

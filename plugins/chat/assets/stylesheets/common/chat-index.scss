@@ -6,16 +6,18 @@
   border-radius: 50%;
   font-size: var(--font-up-3);
   padding: 0.5rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   z-index: z("usercard");
-  box-shadow: 0 5px 5px -1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 5px 5px -1px rgb(0, 0, 0, 0.25);
 
   .d-icon {
     color: var(--primary-very-low);
   }
 
   &:active {
-    box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 5px -1px rgb(0, 0, 0, 0.25);
     transform: scale(0.9);
   }
 
@@ -29,13 +31,10 @@
 .channels-list,
 .channels-list-container {
   position: relative;
-  @include chat-scrollbar;
   height: 100%;
   padding-bottom: 1rem;
 
-  @include breakpoint(mobile-large) {
-    @include chat-scrollbar;
-  }
+  @include chat-scrollbar;
 
   .open-browse-page-btn,
   .open-draft-channel-page-btn,
@@ -61,19 +60,6 @@
       .d-icon {
         color: var(--primary);
       }
-    }
-  }
-
-  .channel-list-empty-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    height: 100%;
-
-    .channel-title {
-      margin-bottom: 1rem;
     }
   }
 }

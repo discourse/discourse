@@ -5,6 +5,12 @@ require_relative "sidebar_edit_navigation_modal"
 module PageObjects
   module Modals
     class SidebarEditCategories < SidebarEditNavigationModal
+      def filter(text)
+        super
+        has_css?(".sidebar-categories-form.--filtered")
+        self
+      end
+
       def has_parent_category_color?(category)
         has_css?(
           ".sidebar-categories-form .sidebar-categories-form__row",
@@ -28,15 +34,7 @@ module PageObjects
       end
 
       def has_categories?(categories)
-        category_names = categories.map(&:name)
-
-        categories =
-          all(
-            ".sidebar-categories-form .sidebar-categories-form__category-row",
-            count: category_names.length,
-          )
-
-        expect(categories.map(&:text)).to eq(category_names)
+        has_css?(".sidebar-categories-form", text: categories.map(&:name).join("\n"))
       end
 
       def toggle_category_checkbox(category)

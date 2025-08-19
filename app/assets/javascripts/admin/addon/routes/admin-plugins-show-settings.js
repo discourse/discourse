@@ -20,4 +20,10 @@ export default class AdminPluginsShowSettingsRoute extends DiscourseRoute {
   titleToken() {
     return i18n("admin.plugins.change_settings_short");
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set("filter", "");
+    }
+  }
 }

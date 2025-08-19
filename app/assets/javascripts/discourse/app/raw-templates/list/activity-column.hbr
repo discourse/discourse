@@ -1,7 +1,0 @@
-<{{tagName}} class="{{class}} {{cold-age-class topic.createdAt startDate=topic.bumpedAt class=""}} activity" title="{{html-safe topic.bumpedAtTitle}}">
-  <a class="post-activity" href="{{topic.lastPostUrl}}">
-    {{~raw-plugin-outlet name="topic-list-before-relative-date"~}}
-    {{~plugin-outlet name="topic-list-before-relative-date" outletArgs=(raw-hash topic=topic)~}}
-    {{~format-date topic.bumpedAt format="tiny" noTitle="true"~}}
-  </a>
-</{{tagName}}>

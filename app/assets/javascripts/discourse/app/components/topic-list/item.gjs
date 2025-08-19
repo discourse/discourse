@@ -1,22 +1,24 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { eq } from "truth-helpers";
+import { and, eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
+import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import {
@@ -89,6 +91,9 @@ export default class Item extends Component {
   }
 
   highlightRow(element) {
+    element.dataset.testWasHighlighted = true;
+
+    // Remove any existing highlighted class
     element.addEventListener(
       "animationend",
       () => element.classList.remove("highlighted"),
@@ -242,6 +247,7 @@ export default class Item extends Component {
         (if (eq @topic @lastVisitedTopic) "last-visit")
         (if @topic.visited "visited")
         (if @topic.hasExcerpt "has-excerpt")
+        (if (and this.expandPinned @topic.hasExcerpt) "excerpt-expanded")
         (if @topic.unseen "unseen-topic")
         (if @topic.unread_posts "unread-posts")
         (if @topic.liked "liked")
@@ -256,13 +262,13 @@ export default class Item extends Component {
     >
       <PluginOutlet
         @name="above-topic-list-item"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       />
       {{! Do not include @columns as argument to the wrapper outlet below ~}}
       {{! We don't want it to be able to override core behavior just copy/pasting the code ~}}
       <PluginOutlet
         @name="topic-list-item"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           topic=@topic
           bulkSelectEnabled=@bulkSelectEnabled
           onBulkSelectToggle=this.onBulkSelectToggle
@@ -294,16 +300,19 @@ export default class Item extends Component {
               {{else}}
                 <PluginOutlet
                   @name="topic-list-item-mobile-avatar"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{lazyHash topic=@topic}}
                 >
-                  <a
-                    href={{@topic.lastPostUrl}}
-                    aria-label={{i18n
+                  <UserLink
+                    @ariaLabel={{i18n
                       "latest_poster_link"
                       username=@topic.lastPosterUser.username
                     }}
-                    data-user-card={{@topic.lastPosterUser.username}}
-                  >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+                    @username={{@topic.lastPosterUser.username}}
+                  >
+                    {{avatar
+                      @topic.lastPosterUser
+                      imageSize="large"
+                    }}</UserLink>
                 </PluginOutlet>
               {{/if}}
             </div>
@@ -312,14 +321,14 @@ export default class Item extends Component {
               {{~! no whitespace ~}}
               <PluginOutlet
                 @name="topic-list-before-link"
-                @outletArgs={{hash topic=@topic}}
+                @outletArgs={{lazyHash topic=@topic}}
               />
 
               <div class="main-link">
                 {{~! no whitespace ~}}
                 <PluginOutlet
                   @name="topic-list-before-status"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{lazyHash topic=@topic}}
                 />
                 {{~! no whitespace ~}}
                 <TopicStatus @topic={{@topic}} @context="topic-list" />
@@ -336,25 +345,32 @@ export default class Item extends Component {
                 {{~/if~}}
                 <PluginOutlet
                   @name="topic-list-after-title"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{lazyHash topic=@topic}}
                 />
                 {{~#if @topic.unseen~}}
                   <span class="topic-post-badges">&nbsp;<span
                       class="badge-notification new-topic"
                     ></span></span>
                 {{~/if~}}
+                <PluginOutlet
+                  @name="topic-list-after-badges"
+                  @outletArgs={{lazyHash topic=@topic}}
+                />
                 {{~#if this.expandPinned~}}
                   <TopicExcerpt @topic={{@topic}} />
                 {{~/if~}}
                 <PluginOutlet
                   @name="topic-list-main-link-bottom"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{lazyHash
+                    topic=@topic
+                    expandPinned=this.expandPinned
+                  }}
                 />
               </div>
               {{~! no whitespace ~}}
               <PluginOutlet
                 @name="topic-list-after-main-link"
-                @outletArgs={{hash topic=@topic}}
+                @outletArgs={{lazyHash topic=@topic}}
               />
 
               <div class="pull-right">
@@ -369,26 +385,32 @@ export default class Item extends Component {
                   {{#unless @hideCategory}}
                     <PluginOutlet
                       @name="topic-list-before-category"
-                      @outletArgs={{hash topic=@topic}}
+                      @outletArgs={{lazyHash topic=@topic}}
                     />
                     {{categoryLink @topic.category}}
+                    {{~! no whitespace ~}}
                     <PluginOutlet
                       @name="topic-list-after-category"
-                      @outletArgs={{hash topic=@topic}}
-                    />
+                      @outletArgs={{lazyHash topic=@topic}}
+                    />{{~! no whitespace ~}}
                   {{/unless}}
-
+                  {{~! no whitespace ~}}
                   {{discourseTags @topic mode="list"}}
                 </span>
 
                 <div class="num activity last">
-                  <span title={{@topic.bumpedAtTitle}} class="age activity">
-                    <a href={{@topic.lastPostUrl}}>{{formatDate
-                        @topic.bumpedAt
-                        format="tiny"
-                        noTitle="true"
-                      }}</a>
-                  </span>
+                  <PluginOutlet
+                    @name="topic-list-item-mobile-bumped-at"
+                    @outletArgs={{lazyHash topic=@topic}}
+                  >
+                    <span title={{@topic.bumpedAtTitle}} class="age activity">
+                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                          @topic.bumpedAt
+                          format="tiny"
+                          noTitle="true"
+                        }}</a>
+                    </span>
+                  </PluginOutlet>
                 </div>
               </div>
             </div>

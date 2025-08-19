@@ -65,6 +65,7 @@ nb_NO:
         tabs:
           members: Medlemmer
           settings: Instillinger
+        remove_member: "Fjern"
       new_message_modal:
         filter: "Filtrer"
       direct_message_creator:

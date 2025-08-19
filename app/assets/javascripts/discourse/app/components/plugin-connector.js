@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
 import { afterRender } from "discourse/lib/decorators";
@@ -27,7 +28,7 @@ export default class PluginConnector extends Component {
         defineProperty(
           this,
           key,
-          computed("args", function () {
+          computed(`args.${key}`, function () {
             return this.args[key];
           })
         );

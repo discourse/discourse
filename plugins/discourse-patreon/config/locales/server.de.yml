@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    patreon_enabled: 'Aktiviere das discourse-patreon-Plug-in'
+    patreon_login_enabled: 'Aktiviere das Patreon-Social-Log-in'
+    patreon_client_id: 'Generierte Patreon-Client-ID'
+    patreon_client_secret: 'Generiertes Patreon-Client-Geheimnis'
+    patreon_webhook_secret: 'Generiertes Patreon-Webhook-Geheimnis'
+    patreon_creator_discourse_username: "Benutzername des Discourse-Kontos, das für die Anmeldung über das Patreon-Ersteller-Konto mit „Patreon-Social-Log-in“ verwendet wird"
+    patreon_creator_access_token: "Generiertes Patreon-Ersteller-Zugriffstoken"
+    patreon_creator_refresh_token: "Generiertes Patreon-Ersteller-Aktualisierungstoken"
+    patreon_declined_pledges_grace_period_days: "Frist (in Tagen), bevor eine Spende vollständig abgelehnt wird."
+    max_patreon_api_reqs_per_hr: "Maximale Anzahl an Patreon-API-Anfragen pro Stunde"
+    max_patreon_api_reqs_per_day: "Maximale Anzahl von Patreon-API-Anfragen pro Tag"
+    patreon_verbose_log: 'aktiviert die ausführliche Protokollierung des Patreon-Payload'
+    patreon_donation_prompt_enabled: "Spendenaufforderung aktivieren?"
+    patreon_donation_prompt_show_after_topics: "Zeige Spendenaufforderung nach n Themen an"
+    patreon_donation_prompt_campaign_url: "URL der Spendenaufforderungskampagne"
+    errors:
+      patreon_creator_username_not_set: "Bevor du das Patreon-Log-in aktivieren kannst, musst du den Patreon-Ersteller-Discourse-Benutzernamen einstellen."
+  dashboard:
+    problem:
+      access_token_invalid: "Die Werte für die Zugangs- und Aktualisierungs-Token des Patreon-Erstellers sind falsch. Du musst neue Token von der <a href='https://www.patreon.com/platform/documentation/clients'>Patreon-Website</a> kopieren und in die <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>Website-Einstellungen</a> einfügen."
+  patreon:
+    error:
+      invalid_response: "Ungültige Antwort der Patreon-API"

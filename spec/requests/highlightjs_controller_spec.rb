@@ -5,7 +5,7 @@ RSpec.describe HighlightJsController do
     get HighlightJs.path
     expect(response.status).to eq(200)
     expect(response.body).to include("export default function")
-    expect(response.headers["Access-Control-Allow-Origin"]).to eq(nil)
+    expect(response.headers["Access-Control-Allow-Origin"]).to eq("*")
   end
 
   it "works via a CDN" do

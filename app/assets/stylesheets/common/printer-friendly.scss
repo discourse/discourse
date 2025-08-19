@@ -45,6 +45,7 @@
   a,
   a:visited {
     color: #08c !important;
+    font-weight: bold;
   }
 
   /* bottom border to help separate posts */
@@ -100,12 +101,6 @@
     float: left;
     font-weight: normal;
     font-size: normal;
-  }
-
-  a,
-  a:visited {
-    color: #ddd;
-    font-weight: bold;
   }
 
   /* localhost  - MOOT for production */

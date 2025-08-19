@@ -267,6 +267,11 @@ class ListController < ApplicationController
   def hot_feed
     discourse_expires_in 1.minute
 
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.hot")}"
+    @link = "#{Discourse.base_url}/hot"
+    @atom_link = "#{Discourse.base_url}/hot.rss"
+    @description = I18n.t("rss_description.hot")
+
     @topic_list = TopicQuery.new(nil).list_hot
 
     render "list", formats: [:rss]
@@ -334,10 +339,6 @@ class ListController < ApplicationController
       @rss = "top"
       @params = { period: period }
       @rss_description = "top_#{period}"
-
-      if use_crawler_layout?
-        @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
-      end
 
       respond_with_list(list)
     end
@@ -421,7 +422,10 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      url = CGI.unescape(request.fullpath).gsub(current_slug, real_slug)
+      path = CGI.unescape(request.path)
+      query = request.query_string
+      new_path = path.gsub(current_slug, real_slug)
+      url = query.present? ? "#{new_path}?#{query}" : new_path
       if ActionController::Base.config.relative_url_root
         url = url.sub(ActionController::Base.config.relative_url_root, "")
       end

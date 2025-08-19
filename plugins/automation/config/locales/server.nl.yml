@@ -11,7 +11,6 @@ nl:
     models:
       fields:
         required_field: Veld '%{name}' moet worden ingevuld op '%{target}:%{target_name}'.
-        invalid_field: Veldcomponent '%{component}' is niet bruikbaar op '%{target}:%{target_name}'.
         invalid_metadata: Gegevens voor '%{field}' zijn ongeldig of component '%{component}' is onbekend.
     triggerables:
       errors:

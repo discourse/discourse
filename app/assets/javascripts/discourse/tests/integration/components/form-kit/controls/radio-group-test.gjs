@@ -13,17 +13,19 @@ module(
       let data = { foo: "one" };
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.RadioGroup as |RadioGroup|>
-              <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
-              <RadioGroup.Radio @value="two">Two</RadioGroup.Radio>
-              <RadioGroup.Radio @value="three">Three</RadioGroup.Radio>
-            </field.RadioGroup>
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.RadioGroup as |RadioGroup|>
+                <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
+                <RadioGroup.Radio @value="two">Two</RadioGroup.Radio>
+                <RadioGroup.Radio @value="three">Three</RadioGroup.Radio>
+              </field.RadioGroup>
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasValue("one");
 

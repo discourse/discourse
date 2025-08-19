@@ -362,6 +362,7 @@ sk:
         tabs:
           members: Členovia
           settings: Nastavenia
+        remove_member: "Odstrániť"
       new_message_modal:
         title: Odoslať správu
         add_user_long: <kbd>shift + klik</kbd> alebo <kbd>shift + enter</kbd><span>Pridať @%{username}</span>
@@ -584,6 +585,7 @@ sk:
         select_emoji: "Vyberte Emoji"
         system: "systém"
         title: "Prichádzajúce webhooky"
+        header_description: "Prichádzajúce webhooky môžu externé systémy použiť na odosielanie správ do určeného chatovacieho kanála ako používateľ bota."
         url: "URL"
         url_instructions: "Táto adresa URL obsahuje tajnú hodnotu – uschovajte ju."
         username: "Používateľské meno"
@@ -712,6 +714,11 @@ sk:
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"
+      quick_reaction_type:
+        title: "Reakcie na chat jedným kliknutím"
+        options:
+          frequent: "Najčastejšie používané reakcie v chate"
+          custom: "Vlastné reakcie"
     notifications:
       chat_invitation: "vás pozval do chatového kanála"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozvali, aby ste sa pripojili ku kanálu četu</span>"

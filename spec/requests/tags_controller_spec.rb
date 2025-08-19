@@ -3,7 +3,7 @@
 RSpec.describe TagsController do
   fab!(:user)
   fab!(:admin)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
@@ -406,7 +406,7 @@ RSpec.describe TagsController do
 
   describe "#show" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
@@ -427,7 +427,15 @@ RSpec.describe TagsController do
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tag/#{synonym.name}"
+      get "/tag/#{synonym.name}/l/top.json?period=daily"
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
+    end
+
+    it "is not creating infinite redirect loop when tag is a synonym of itself" do
+      tag.update!(target_tag_id: tag.id)
+
+      get "/tag/#{tag.name}/l/top.json?period=daily"
       expect(response.status).to eq(200)
     end
 
@@ -462,6 +470,27 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
         topic_with_two_tags.id,
+      )
+    end
+
+    it "puts the tag description in the meta description" do
+      described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
+      get "/tag/#{described_tag.name}"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"#{described_tag.description}\"",
+      )
+    end
+
+    it "has a default description for tags without a description" do
+      get "/tag/test"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"Topics tagged #{tag.name}\"",
       )
     end
 
@@ -748,8 +777,8 @@ RSpec.describe TagsController do
 
   describe "#show_latest" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
-    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
@@ -1312,10 +1341,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails if not staff user" do
+    it "fails if user not in allowed group" do
       sign_in(user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
+      expect(response.status).to eq(200)
     end
 
     context "when signed in as admin" do

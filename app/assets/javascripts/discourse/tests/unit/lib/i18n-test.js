@@ -71,6 +71,8 @@ module("Unit | Utility | i18n", function (hooks) {
           },
           dollar_sign: "Hi {{description}}",
           with_multiple_interpolate_arguments: "Hi %{username}, %{username2}",
+          with_repeated_interpolate_arguments:
+            "Hi, %{username}, your username is %{username}",
         },
       },
       ja: {
@@ -327,12 +329,17 @@ module("Unit | Utility | i18n", function (hooks) {
         i18n("with_multiple_interpolate_arguments", {
           username: "username",
         });
-      }, new I18nMissingInterpolationArgument(
-        "with_multiple_interpolate_arguments: [missing %{username2} value]"
-      ));
+      }, new I18nMissingInterpolationArgument("with_multiple_interpolate_arguments: [missing %{username2} value]"));
     } finally {
       I18n.testing = false;
     }
+  });
+
+  test("having an interpolation argument multiple times in a translation works correctly", function (assert) {
+    assert.strictEqual(
+      i18n("with_repeated_interpolate_arguments", { username: "pento" }),
+      "Hi, pento, your username is pento"
+    );
   });
 
   test("pluralizationNormalizedLocale", function (assert) {

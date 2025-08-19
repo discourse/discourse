@@ -12,11 +12,11 @@ import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
+import { INVITE_DESCRIPTION_MAX_LENGTH } from "discourse/lib/constants";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
-import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n, { i18n } from "discourse-i18n";
 import { FORMAT as DATE_INPUT_FORMAT } from "select-kit/components/future-date-input-selector";
@@ -24,7 +24,6 @@ import GroupChooser from "select-kit/components/group-chooser";
 import TopicChooser from "select-kit/components/topic-chooser";
 
 export default class CreateInvite extends Component {
-  @service capabilities;
   @service currentUser;
   @service siteSettings;
   @service site;
@@ -37,20 +36,12 @@ export default class CreateInvite extends Component {
   @tracked flashClass = "info";
 
   @tracked topics = this.invite.topics ?? this.model.topics ?? [];
-  @tracked allGroups;
+  allGroups = this.site.groups.filter((g) => !g.automatic);
 
   model = this.args.model;
   invite = this.model.invite ?? Invite.create();
   sendEmail = false;
   formApi;
-
-  constructor() {
-    super(...arguments);
-
-    Group.findAll().then((groups) => {
-      this.allGroups = groups.filter((group) => !group.automatic);
-    });
-  }
 
   get linkValidityMessageFormat() {
     return I18n.messageFormat("user.invited.invite.link_validity_MF", {
@@ -86,6 +77,7 @@ export default class CreateInvite extends Component {
   @cached
   get data() {
     const data = {
+      description: this.invite.description ?? "",
       restrictTo: this.invite.emailOrDomain ?? "",
       maxRedemptions:
         this.invite.max_redemptions_allowed ?? this.defaultRedemptionsAllowed,
@@ -163,6 +155,10 @@ export default class CreateInvite extends Component {
     }
   }
 
+  get descriptionValidation() {
+    return `length:0,${INVITE_DESCRIPTION_MAX_LENGTH}`;
+  }
+
   get maxRedemptionsAllowedLimit() {
     if (this.currentUser.staff) {
       return this.siteSettings.invite_link_max_redemptions_limit;
@@ -205,6 +201,7 @@ export default class CreateInvite extends Component {
   @action
   async onFormSubmit(data) {
     const submitData = {
+      description: data.description,
       emailOrDomain: data.restrictTo?.trim(),
       group_ids: data.inviteToGroups,
       topic_id: data.inviteToTopic,
@@ -340,6 +337,15 @@ export default class CreateInvite extends Component {
             @onRegisterApi={{this.registerApi}}
             as |form|
           >
+            <form.Field
+              @name="description"
+              @title={{i18n "user.invited.invite.description"}}
+              @format="large"
+              @validation={{this.descriptionValidation}}
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
             <form.Field
               @name="restrictTo"
               @title={{i18n "user.invited.invite.restrict"}}

@@ -10,11 +10,12 @@ export default {
       return;
     }
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminPluginConfigurationNav("chat", [
         {
           label: "chat.incoming_webhooks.title",
           route: "adminPlugins.show.discourse-chat-incoming-webhooks",
+          description: "chat.incoming_webhooks.header_description",
         },
       ]);
 

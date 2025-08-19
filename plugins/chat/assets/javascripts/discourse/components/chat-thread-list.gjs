@@ -11,7 +11,6 @@ import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
 export default class ChatThreadList extends Component {
-  @service chat;
   @service chatApi;
   @service messageBus;
   @service chatTrackingStateManager;

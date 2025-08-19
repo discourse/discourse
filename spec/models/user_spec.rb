@@ -63,7 +63,7 @@ RSpec.describe User do
       end
 
       fab!(:tag)
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       fab!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -490,7 +490,7 @@ RSpec.describe User do
   end
 
   describe "enqueue_staff_welcome_message" do
-    fab!(:first_admin) { Fabricate(:admin) }
+    fab!(:first_admin, :admin)
     fab!(:user)
 
     it "enqueues message for admin" do
@@ -577,7 +577,7 @@ RSpec.describe User do
   end
 
   describe "delete posts in batches" do
-    fab!(:post1) { Fabricate(:post) }
+    fab!(:post1, :post)
     fab!(:user) { post1.user }
     fab!(:post2) { Fabricate(:post, topic: post1.topic, user: user) }
     fab!(:post3) { Fabricate(:post, user: user) }
@@ -793,32 +793,32 @@ RSpec.describe User do
   end
 
   describe "email_hash" do
-    before_all { @user = Fabricate(:user) }
+    fab!(:user)
+    fab!(:user2, :user)
 
     it "should have a sane email hash" do
-      expect(@user.email_hash).to match(/^[0-9a-f]{32}$/)
+      expect(user.email_hash).to match(/^[0-9a-f]{32}$/)
     end
 
     it "should use downcase email" do
-      @user.email = "example@example.com"
-      @user2 = Fabricate(:user)
-      @user2.email = "ExAmPlE@eXaMpLe.com"
+      user.email = "example@example.com"
+      user2.email = "ExAmPlE@eXaMpLe.com"
 
-      expect(@user.email_hash).to eq(@user2.email_hash)
+      expect(user.email_hash).to eq(user2.email_hash)
     end
 
     it "should trim whitespace before hashing" do
-      @user.email = "example@example.com"
-      @user2 = Fabricate(:user)
-      @user2.email = " example@example.com "
+      user.email = "example@example.com"
+      user2.email = " example@example.com "
 
-      expect(@user.email_hash).to eq(@user2.email_hash)
+      expect(user.email_hash).to eq(user2.email_hash)
     end
   end
 
   describe "associated_accounts" do
+    fab!(:user)
+
     it "should correctly find social associations" do
-      user = Fabricate(:user)
       expect(user.associated_accounts).to eq([])
 
       UserAssociatedAccount.create(
@@ -981,20 +981,18 @@ RSpec.describe User do
   end
 
   describe "username uniqueness" do
-    before_all do
-      @user = Fabricate.build(:user)
-      @user.save!
-      @codinghorror = Fabricate.build(:coding_horror)
-    end
+    fab!(:user)
+
+    let!(:codinghorror) { Fabricate.build(:coding_horror) }
 
     it "should not allow saving if username is reused" do
-      @codinghorror.username = @user.username
-      expect(@codinghorror.save).to eq(false)
+      codinghorror.username = user.username
+      expect(codinghorror.save).to eq(false)
     end
 
     it "should not allow saving if username is reused in different casing" do
-      @codinghorror.username = @user.username.upcase
-      expect(@codinghorror.save).to eq(false)
+      codinghorror.username = user.username.upcase
+      expect(codinghorror.save).to eq(false)
     end
   end
 
@@ -1200,23 +1198,24 @@ RSpec.describe User do
   end
 
   describe "passwords" do
+    let(:user) { Fabricate.build(:user, active: false) }
+
     it "should not have an active account with a good password" do
-      @user = Fabricate.build(:user, active: false)
-      @user.password = "ilovepasta"
-      @user.save!
+      user.password = "ilovepasta"
+      user.save!
 
-      expect(@user.active).to eq(false)
-      expect(@user.confirm_password?("ilovepasta")).to eq(true)
+      expect(user.active).to eq(false)
+      expect(user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = Fabricate(:email_token, user: @user, email: "pasta@delicious.com")
+      email_token = Fabricate(:email_token, user:, email: "pasta@delicious.com")
 
-      UserAuthToken.generate!(user_id: @user.id)
+      UserAuthToken.generate!(user_id: user.id)
 
-      @user.password = "passwordT0"
-      @user.save!
+      user.password = "passwordT0"
+      user.save!
 
       # must expire old token on password change
-      expect(@user.user_auth_tokens.count).to eq(0)
+      expect(user.user_auth_tokens.count).to eq(0)
 
       email_token.reload
       expect(email_token.expired).to eq(true)
@@ -1526,36 +1525,41 @@ RSpec.describe User do
   end
 
   describe "#new_user_posting_on_first_day?" do
-    def test_user?(opts = {})
-      Fabricate.build(
-        :user,
-        { created_at: Time.zone.now }.merge(opts),
-      ).new_user_posting_on_first_day?
+    def create_test_user(opts = {})
+      Fabricate(:user, { created_at: Time.zone.now }.merge(opts))
     end
 
-    it "handles when user has never posted" do
-      expect(test_user?).to eq(true)
-      expect(test_user?(moderator: true)).to eq(false)
-      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
-      expect(test_user?(created_at: 2.days.ago)).to eq(true)
+    it "is true for a user who has never posted" do
+      expect(create_test_user.new_user_posting_on_first_day?).to eq(true)
+    end
+
+    it "is false if the user is moderator or admin" do
+      expect(create_test_user(moderator: true).new_user_posting_on_first_day?).to eq(false)
+      expect(create_test_user(admin: true).new_user_posting_on_first_day?).to eq(false)
+    end
+
+    it "is false for a user that is TL2 or above" do
+      expect(create_test_user(trust_level: TrustLevel[2]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[3]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[0]).new_user_posting_on_first_day?).to eq(
+        true,
+      )
     end
 
     it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 1.hour.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 1.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(true)
     end
 
     it "is false if first post was more than 24 hours ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 25.hours.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 25.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
-    end
-
-    it "considers trust level 0 users as new users unconditionally" do
-      u = Fabricate(:user, created_at: 28.hours.ago, trust_level: TrustLevel[0])
-      u.user_stat.first_post_created_at = 25.hours.ago
-      expect(u.new_user_posting_on_first_day?).to eq(true)
     end
   end
 
@@ -1658,12 +1662,13 @@ RSpec.describe User do
     let(:user) { build(:user, username: "Sam") }
 
     it "returns a 45-pixel-wide avatar" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png",
       )
 
-      SiteSetting.external_system_avatars_enabled = true
+      SiteSetting.external_system_avatars_url =
+        "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar_proxy/v4/letter/s/5f9b8f/45.png",
       )
@@ -1765,7 +1770,7 @@ RSpec.describe User do
 
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
@@ -1824,7 +1829,7 @@ RSpec.describe User do
 
   describe "#purge_unactivated" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:admin) { Fabricate(:user) }
+    fab!(:admin, :user)
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -2121,6 +2126,15 @@ RSpec.describe User do
         expect(user.number_of_flagged_posts).to eq(0)
       end
     end
+
+    describe "#number_of_silencings" do
+      it "counts the number of silencings" do
+        3.times do
+          Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        end
+        expect(user.number_of_silencings).to eq(3)
+      end
+    end
   end
 
   describe "new_user?" do
@@ -2145,11 +2159,11 @@ RSpec.describe User do
   end
 
   context "when user preferences are overridden" do
-    fab!(:category0) { Fabricate(:category) }
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
-    fab!(:category3) { Fabricate(:category) }
-    fab!(:category4) { Fabricate(:category) }
+    fab!(:category0, :category)
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+    fab!(:category3, :category)
+    fab!(:category4, :category)
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
@@ -2166,6 +2180,7 @@ RSpec.describe User do
       SiteSetting.default_other_enable_smart_lists = false
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_skip_new_user_tips = true
+      SiteSetting.default_other_enable_markdown_monospace_font = false
 
       SiteSetting.default_hide_profile = true
       SiteSetting.default_hide_presence = true
@@ -2188,6 +2203,7 @@ RSpec.describe User do
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
       expect(options.enable_smart_lists).to eq(false)
+      expect(options.enable_markdown_monospace_font).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.skip_new_user_tips).to eq(true)
       expect(options.hide_profile).to eq(true)
@@ -2246,7 +2262,7 @@ RSpec.describe User do
 
   describe "#read_first_notification?" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    fab!(:notification) { Fabricate(:private_message_notification) }
+    fab!(:notification, :private_message_notification)
 
     describe "when first notification has not been seen" do
       it "should return the right value" do
@@ -2473,6 +2489,22 @@ RSpec.describe User do
           { 1 => 1, 15 => 1, Notification.types[:private_message] => 1 },
         )
         expect(message.data[:new_personal_messages_notifications_count]).to eq(1)
+      end
+    end
+  end
+
+  describe "#silenced_till" do
+    context "when the user is an anonymous shadow" do
+      let(:main) { Fabricate(:user, silenced_till: 1.day.from_now) }
+      let(:anon) { Fabricate(:anonymous) }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        anon.anonymous_user_master.update(master_user_id: main.id)
+      end
+
+      it "delegates the value from the main user record" do
+        expect(anon.silenced_till).to be_within(1.second).of(main.silenced_till)
       end
     end
   end
@@ -2954,7 +2986,10 @@ RSpec.describe User do
 
     describe ".system_avatar_template" do
       context "with external system avatars enabled" do
-        before { SiteSetting.external_system_avatars_enabled = true }
+        before do
+          SiteSetting.external_system_avatars_url =
+            "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
+        end
 
         it "uses the normalized username" do
           expect(User.system_avatar_template("Lo\u0308we")).to match(
@@ -3039,7 +3074,7 @@ RSpec.describe User do
   describe "Granting admin or moderator status" do
     context "when granting admin status" do
       context "when there is a reviewable" do
-        fab!(:user) { Fabricate(:reviewable_user) }
+        fab!(:user, :reviewable_user)
 
         context "when the user isn’t approved yet" do
           it "approves the associated reviewable" do
@@ -3078,7 +3113,7 @@ RSpec.describe User do
 
   describe "#recent_time_read" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before_all do
       UserVisit.create(
@@ -3636,6 +3671,62 @@ RSpec.describe User do
       user.update!(ip_address: nil)
       user2.update!(ip_address: nil)
       expect(user.similar_users).to eq([])
+    end
+  end
+
+  describe "#silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns sanitized silence reason" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.silence_reason).to eq("foo  bar")
+    end
+
+    it "allows links" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: 'foo <a href="https://example.com">link</a> bar',
+      )
+
+      expect(user.silence_reason).to eq(
+        "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
+      )
+    end
+  end
+
+  describe "#suspend_reason" do
+    before { user.update!(suspended_till: 1.day.from_now) }
+
+    it "returns sanitized suspend reason" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.suspend_reason).to eq("foo  bar")
+    end
+
+    it "allows links" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: 'foo <a href="https://example.com">link</a> bar',
+      )
+
+      expect(user.suspend_reason).to eq(
+        "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
+      )
     end
   end
 end

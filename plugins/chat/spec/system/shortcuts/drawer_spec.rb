@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | drawer", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:user_1, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -75,15 +75,15 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_up])
+        page.send_keys(%i[alt up])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
       end

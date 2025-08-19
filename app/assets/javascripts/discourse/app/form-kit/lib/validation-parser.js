@@ -18,11 +18,38 @@ export default class ValidationParser {
     return rules;
   }
 
+  dateBeforeOrEqualRule(input) {
+    return {
+      date: this.parseDateString(input),
+    };
+  }
+
+  dateAfterOrEqualRule(input) {
+    return {
+      date: this.parseDateString(input),
+    };
+  }
+
+  parseDateString(input) {
+    let [year, month, day] = input.split("-").map(Number);
+    month -= 1;
+
+    return new Date(year, month, day);
+  }
+
   requiredRule(args = "") {
     const [option] = args.split(",");
     return {
       trim: option === "trim",
     };
+  }
+
+  startsWithRule(prefix) {
+    return { prefix };
+  }
+
+  endsWithRule(suffix) {
+    return { suffix };
   }
 
   betweenRule(args) {

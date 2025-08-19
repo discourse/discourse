@@ -1,0 +1,75 @@
+.admin-report {
+  .admin-report-counters {
+    display: grid;
+    flex: 1 0 0px;
+    grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(32px, 1fr));
+    align-items: center;
+
+    .cell {
+      padding: 0.25em;
+      text-align: right;
+      white-space: nowrap;
+
+      &.title {
+        text-align: left;
+
+        @include ellipsis;
+
+        .d-icon {
+          color: var(--primary-low-mid);
+          min-width: 14px;
+          text-align: center;
+          margin: 0;
+        }
+      }
+
+      @media screen and (width <= 400px) {
+        &.title .d-icon {
+          display: none;
+        }
+      }
+
+      .d-icon-minus {
+        color: var(--primary-medium);
+        font-size: var(--font-down-3);
+      }
+
+      &.high-trending-up,
+      &.trending-up {
+        .d-icon {
+          color: var(--success);
+        }
+      }
+
+      &.high-trending-down,
+      &.trending-down {
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
+  }
+}
+
+.rtl .counters-list .counters-header .counters-cell {
+  text-align: left;
+}
+
+.rtl .counters-list {
+  .cell {
+    text-align: left;
+
+    &.title {
+      text-align: right;
+    }
+  }
+}
+
+.mobile-view {
+  .counters-list {
+    .counters-header .counters-cell {
+      font-weight: normal;
+    }
+  }
+}

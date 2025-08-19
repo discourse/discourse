@@ -30,8 +30,10 @@ function addLocalDate(attributes, state, buffer, applyDataAttributes) {
 
   const emailFormat =
     state.md.options.discourse.datesEmailFormat || moment.defaultFormat;
+  const emailTimezone =
+    state.md.options.discourse.datesEmailTimezone || "Etc/UTC";
 
-  attributes.emailPreview = `${dateTime.utc().format(emailFormat)} UTC`;
+  attributes.emailPreview = `${dateTime.utc().tz(emailTimezone).format(emailFormat)}`;
 
   let token = new state.Token("span_open", "span", 1);
   token.attrs = [["class", "discourse-local-date"]];
@@ -112,6 +114,7 @@ export function setup(helper) {
 
   helper.registerOptions((opts, siteSettings) => {
     opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
+    opts.datesEmailTimezone = siteSettings.discourse_local_dates_email_timezone;
 
     opts.features["discourse-local-dates"] =
       !!siteSettings.discourse_local_dates_enabled;

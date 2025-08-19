@@ -8,4 +8,3 @@ gl:
   site_settings:
     discourse_local_dates_default_formats: "Formatos de hora e data utilizados con frecuencia, vexa: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_default_timezones: "A lista predeterminada de zonas horarias debe ser válida <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
-    discourse_local_dates_email_format: "Formato usado para presentar unha data nas mensaxes de correo"

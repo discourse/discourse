@@ -64,6 +64,7 @@ ca:
         tabs:
           members: Membres
           settings: Configuració
+        remove_member: "Elimina"
       new_message_modal:
         no_items: "Sense elements"
         filter: "Filtre"

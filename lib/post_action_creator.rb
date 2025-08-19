@@ -14,7 +14,8 @@ class PostActionCreator
       message: nil,
       created_at: nil,
       reason: nil,
-      silent: false
+      silent: false,
+      context: nil
     )
       new(
         created_by,
@@ -24,6 +25,7 @@ class PostActionCreator
         created_at: created_at,
         reason: reason,
         silent: silent,
+        context: context,
       ).perform
     end
 
@@ -50,7 +52,8 @@ class PostActionCreator
     created_at: nil,
     queue_for_review: false,
     reason: nil,
-    silent: false
+    silent: false,
+    context: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -73,6 +76,8 @@ class PostActionCreator
     @reason = "queued_by_staff" if reason.nil? && @queue_for_review
 
     @silent = silent
+
+    @context = context
   end
 
   def post_can_act?
@@ -379,7 +384,17 @@ class PostActionCreator
 
   def create_reviewable(result)
     return unless flagging_post?
-    return if @post.user_id.to_i < 0
+
+    # Return early if the reviewable is being created for a user with a negative user_id.
+    # Plugin apply_modifier can remove this early return for special cases.
+    is_bot_post = @post.user_id.to_i < 0
+    if DiscoursePluginRegistry.apply_modifier(
+         :post_action_creator_block_reviewable_for_bot,
+         is_bot_post,
+         @post,
+       )
+      return
+    end
 
     result.reviewable =
       ReviewableFlaggedPost.needs_review!(
@@ -403,6 +418,7 @@ class PostActionCreator
         meta_topic_id: @meta_post&.topic_id,
         reason: @reason,
         force_review: trusted_spam_flagger?,
+        context: @context,
       )
   end
 

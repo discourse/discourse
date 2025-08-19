@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsDraftsController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
 
   before do
     SiteSetting.chat_enabled = true

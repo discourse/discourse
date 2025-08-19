@@ -194,9 +194,14 @@ hu:
       dismiss: "Elvetés"
     bootstrap_mode: "Első lépések"
     back_button: "Vissza"
+    welcome_banner:
+      header:
+        logged_in_members: "Üdv újra itt, %{preferred_display_name}!"
+        anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
+      search: "Keresés"
     themes:
       default_description: "Alapértelmezett"
-      broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
+      broken_theme_alert: "Lehetséges, hogy az oldalad azért nem működik, mert egy téma/összetevő hibás. További információért ellenőrizd a böngésző konzolját."
       error_caused_by: "A(z) „%{name}” okozta. <a target='blank' href='%{path}'>Kattintson ide</a> a frissítéshez, újrakonfiguráláshoz vagy letiltáshoz."
       only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
     broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
@@ -204,11 +209,11 @@ hu:
     broken_plugin_alert: "A(z) „%{name}” bővítmény okozta."
     broken_transformer_alert: "Hiba történt. Előfordulhat, hogy webhelye nem működik megfelelően."
     critical_deprecation:
-      notice: "<b>[Adminisztrátori megjegyzés]</b> Az egyik témája vagy bővítménye kompatibilitási frissítésre szorul a Discourse magjának közelgő változásai miatt."
-      id: "(azonosító:<em>%{id}</em>)"
-      linked_id: "(azonosító:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Azonosított téma: <a target='_blank' href='%{path}'>„%{name}”</a>."
-      plugin_source: "Azonosított bővítmény: „%{name}”"
+      notice: "<b>[Admin közlemény]</b> %{source} olyan kódot tartalmaz, ami frissítésre szorul. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>tudj meg többet</em></a>)"
+      theme_source: "Téma <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "'%{name}' bővítmény"
+      unknown_source: "Az egyik témád vagy bővítményed"
     s3:
       regions:
         ap_northeast_1: "Csendes-óceáni térség (Tokió)"
@@ -391,9 +396,11 @@ hu:
       bookmarked_success: "Könyvjelzőzve!"
       deleted_bookmark_success: "Könyvjelző törölve!"
       reminder_set_success: "Emlékeztető beállítva!"
+      reminder_clear_success: "Emlékeztető törölve"
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
       create: "Könyvjelző létrehozása"
+      clear_reminder: "Emlékeztető törlése"
       edit: "Könyvjelző szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
@@ -456,14 +463,11 @@ hu:
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
-      abandon:
-        confirm: "Már van egy folyamatban lévő piszkozata. Mit szeretne vele kezdeni?"
-        yes_value: "Elvetés"
-        no_value: "Szerkesztés folytatása"
+      edit_topic: "Témavázlat szerkesztése"
       dropdown:
         title: "Legújabb piszkozatok menü megnyitása"
         untitled: "Névtelen piszkozat"
-        view_all: "mindent megtekint"
+        view_all: "összes piszkozat megtekintése"
         other_drafts:
           one: "+%{count} egyéb piszkozat"
           other: "+%{count} egyéb piszkozat"
@@ -486,7 +490,7 @@ hu:
       one: "%{count} új téma megtekintése"
       other: "%{count} új téma megtekintése"
     preview: "előnézet"
-    cancel: "mégse"
+    cancel: "Mégse"
     deleting: "Törlés…"
     save: "Módosítások mentése"
     saving: "Mentés…"
@@ -528,6 +532,17 @@ hu:
       date_filter: "Ezek közt közzétéve"
       in_reply_to: "válasz erre:"
       filtered_flagged_by: "Megjelölte"
+      unknown:
+        title:
+          one: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményből:"
+          other: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményekből:"
+        instruction: "Nem jeleníthetők meg megfelelően, amíg nem engedélyezi a megfelelő bővítményt. Engedélyezze a bővítményt, és frissítse az oldalt. Alternatív megoldásként figyelmen kívül hagyhatja őket. <a href='%{url}' target='_blank'>További információ…</a>"
+        reviewable_unknown_source: "%{reviewableType} (ismeretlen bővítmény)"
+        reviewable_known_source: "%{reviewableType} (a(z) „%{pluginName}” bővítményből)"
+        ignore_all: "Összes figyelmen kívül hagyása"
+        enable_plugins: "Bővítmények engedélyezése"
+        delete_confirm: "Biztos benne, hogy törölni szeretné a letiltott bővítmények által létrehozott összes értékelést?"
+        ignore_success: "A letiltott bővítmények által létrehozott összes értékelés törölve lett."
       explain:
         why: "magyarázza el, miért került ez a tétel a sorba"
         title: "Ellenőrizhető pontozás"
@@ -562,6 +577,7 @@ hu:
         required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
         claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
         claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
+        automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
       claim:
         title: "téma zárolása"
       unclaim:
@@ -598,6 +614,14 @@ hu:
         name: "Név"
         fields: "Mezők"
         reject_reason: "Ok"
+        scrubbed_by: "Rekordot törölte:"
+        scrubbed_reason: "Ok"
+        scrubbed_reject_reason: "A felhasználó elutasításának oka"
+        scrub_record:
+          confirm_title: Személyes adatok eltávolítása
+          reason_placeholder: "Ok…"
+          confirm_button: "Eltávolítás megerősítése"
+          cancel_button: "Mégse"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (a legutóbbi megjelölés)"
@@ -710,6 +734,57 @@ hu:
         reviewable_post:
           title: "Bejegyzés"
           noun: "bejegyzéssel"
+      flagged_as: "Megjelölt"
+      assigned_to: "Hozzárendelve"
+      moderator_actions: "Moderátori intézkedések"
+      timeline_and_notes: "Idővonal és jegyzetek"
+      timeline:
+        target_created: "Bejegyzés létrehozva"
+        target_created_by: "Bejegyzést készítette: %{username} · %{relativeDate}"
+        flagged: "Megjelölt"
+        flagged_as_by: "%{flagReason} indokkal megjelölve %{username} felhasználó által · %{relativeDate}"
+        reviewed: "Felülvizsgált"
+        reviewed_by: "%{username} által felülvizsgálva · %{relativeDate}"
+        view_conversation: "PÜ megtekintése"
+        note_added: "Moderátori megjegyzés"
+        note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
+        no_events: "Nincsenek megjeleníthető idővonal-események"
+      notes:
+        add_note_description: "Csak a moderátorok láthatják. Ezzel a megjegyzéssel kontextust vagy döntéseket hozhatsz a véleményezéssel kapcsolatban."
+        add_note_button: "Megjegyzés hozzáadása"
+        placeholder: "Írd ide a jegyzetedet..."
+        chars_remaining: "%{count} karakter maradt"
+        delete_note: "Jegyzet törlése"
+        delete: "Törlés"
+      new_topic_label: "Új téma"
+      queued_user: "Várakozó felhasználó"
+      posted_in: "Közzétéve itt:"
+      flagged_user: "Megjelölt felhasználó"
+      review_user: "Felhasználó"
+      need_help: "Segítségre van szüksége?"
+      copy_link: "Hivatkozás másolása"
+      view_source: "Forrás megtekintése"
+      insights:
+        title: "Betekintések"
+        flagged_by_users:
+          one: "%{count} egyedi felhasználó jelölte meg"
+          other: "%{count} egyedi felhasználó jelölte meg"
+        similar_posts: "Hasonló korábbi bejegyzések"
+        user_activity: "Felhasználói aktivitás"
+        activities:
+          new_account: "új fiók"
+          trust_level: "bizalmi szint: %{trustLevelName}"
+          posts:
+            one: "%{count} bejegyzés"
+            other: "%{count} bejegyzés"
+        solution_marked: "Megoldás megjelölve"
+        topic_has_solution: "A témának van megoldása"
+        visibility: "Láthatóság"
+        topic_unlisted: "Ez a téma nem nyilvános. Csak közvetlen linken keresztül érhető el – nem nyilvános."
+      help:
+        moderation_guide: "Discourse moderálási útmutató"
+        flag_priorities: "Felhasználói hírnév kezelése és a prioritások megjelölése"
+        spam_detection: "Spamészlelés"
       approval:
         title: "A bejegyzés jóváhagyásra vár."
         description: "Fogadtuk a bejegyzését, de egy moderátornak jóvá kell hagynia, mielőtt megjelenne. Köszönjük a türelmét."
@@ -1149,6 +1224,7 @@ hu:
     user_fields:
       none: "(válasszon egy lehetőséget)"
       required: 'Adja meg a(z) „%{name}” értékét'
+      required_select: 'Kérjük, válasszon egy értéket a(z) „%{name}” számára'
       required_checkbox: 'A(z) „%{name}” mező kitöltése kötelező'
       same_as_password: "A jelszavát nem szabad megismételnie más mezőkben"
       optional: (nem kötelező)
@@ -1156,7 +1232,6 @@ hu:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} profilja"
-      account_possessive: "%{name} fiókja"
       mute: "Némítás"
       edit: "Beállítások szerkesztése"
       download_archive:
@@ -1273,7 +1348,6 @@ hu:
         description: "Új felhasználói belépési tippek és jelvények kihagyása"
       reset_seen_user_tips: "Felhasználói tippek ismételt megjelenítése"
       theme_default_on_all_devices: "Legyen ez az alapértelmezett téma az összes eszközén"
-      color_scheme_default_on_all_devices: "Alapértelmezett színpaletta beállítása az összes eszközén"
       color_scheme: "Színpaletta"
       color_schemes:
         default_description: "Téma alapértelmezése"
@@ -1283,6 +1357,10 @@ hu:
         regular: "Átlagos"
         dark: "Sötét mód"
         default_dark_scheme: "(webhely alapértelmezése)"
+        interface_modes:
+          auto: "Automatikus"
+          light: "Világos"
+          dark: "Sötét"
       dark_mode: "Sötét mód"
       dark_mode_enable: "Automatikus, sötét módú színpaletta engedélyezése"
       text_size_default_on_all_devices: "Legyen ez az alapértelmezett szövegméret az összes eszközén"
@@ -1308,6 +1386,9 @@ hu:
       suspended_notice: "Ez a felhasználó eddig felfüggesztett: %{date}."
       suspended_permanently: "Ez a felhasználó felfüggesztett."
       suspended_reason: "Ok: "
+      silenced_notice: "Ez a felhasználó el van némítva %{date} időpontig."
+      silenced_permanently: "Ez a felhasználó némítva van."
+      silenced_reason: "Ok: "
       github_profile: "GitHub"
       email_activity_summary: "Tevékenység-összefoglaló"
       mailing_list_mode:
@@ -1379,6 +1460,9 @@ hu:
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> törölt bejegyzés'
           other: '<span class="%{className}">%{count}</span> törölt bejegyzés'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> elnémítva'
+          other: '<span class="%{className}">%{count}</span> elnémítva'
         suspensions:
           one: '<span class="%{className}">%{count}</span> felfüggesztés'
           other: '<span class="%{className}">%{count}</span> felfüggesztés'
@@ -1491,6 +1575,8 @@ hu:
         choose: "Válasszon jelszót"
         verify_identity: "A folytatáshoz igazolja személyazonosságát."
         title: "Jelszó-visszaállítás"
+        remove: "Jelszó eltávolítása"
+        remove_detail: "A fiókja többé nem lesz elérhető jelszóval, hacsak nem állítja vissza azt."
       second_factor_backup:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
@@ -1827,7 +1913,12 @@ hu:
         removed: "Eltávolítva"
         search: "gépeljen a meghívók kereséséhez…"
         user: "Meghívott felhasználó"
-        none: "Nincs megjeleníthető meghívó."
+        none:
+          title: "Nincs megjeleníthető meghívó."
+          cta: "Meghívólink létrehozása"
+          tip:
+            prefix: "Tömeges meghívókat is küldhetsz a következőképpen:"
+            action: "CSV fájl feltöltése"
         truncated:
           one: "Az első meghívó megjelenítése."
           other: "Az első %{count} meghívó megjelenítése."
@@ -1878,6 +1969,7 @@ hu:
           edit_link_options: "Szerkessze a hivatkozásbeállításokat, vagy küldje el e-mailben."
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
+          description: "Leírás"
           restrict: "Korlátozás a következőkre:"
           restrict_email: "E-mail-címre korlátozás"
           restrict_domain: "Domainre korlátozás"
@@ -1989,7 +2081,7 @@ hu:
         title: "Regisztrációkor használt IP-cím"
       avatar:
         title: "Profilkép"
-        header_title: "profil, üzenetek, könyvjelzők és beállítások"
+        header_title: "Értesítések és fiók"
         name_and_description: "%{name} – %{description}"
         edit: "Profilkép szerkesztése"
       title:
@@ -2028,6 +2120,7 @@ hu:
     user_tips:
       button: "Értem!"
       skip: "Tippek kihagyása"
+      dont_show_again: "Ne jelenítse meg újra"
       first_notification:
         title: "Az első értesítése!"
         content: "Az értesítések arra szolgálnak, hogy naprakész legyen a közösségben zajló eseményekről."
@@ -2066,13 +2159,21 @@ hu:
     modal:
       close: "bezárás"
       dismiss_error: "Hiba elvetése"
+    multi_select:
+      no_results: "Nincs találat"
+      search: "Keresés…"
+      label: "Válasszon egy lehetőséget"
     form_kit:
       reset: Alaphelyzetbe állítás
       optional: nem kötelező
       errors_summary_title: "Ez az űrlap hibákat tartalmaz:"
       dirty_form: "A változások nem lettek mentve! Biztos hogy el akarja hagyni a területet?"
       errors:
+        starts_with: "%{prefix} kell kezdődnie"
+        ends_with: "%{suffix} kell végződnie"
         required: "Kötelező"
+        date_before_or_equal: "%{date} előttinek vagy azzal megegyezőnek kell lennie"
+        date_after_or_equal: "%{date} utáninak vagy azzal megegyezőnek kell lennie"
         invalid_url: "Érvényes webcímnek kell lennie"
         not_an_integer: "Egész számnak kell lennie"
         not_accepted: "Elfogadottnak kell lennie"
@@ -2297,14 +2398,17 @@ hu:
       to_continue: "Jelentkezzen be"
       preferences: "Be kell jelentkeznie, hogy megváltoztassa a felhasználói beállításait."
       not_approved: "A fiók még nem lett elfogadva. E-mailben értesítjük, ha bejelentkezhet."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Bejelentkezés a Discourse ID-val"
       google_oauth2:
         name: "Google"
         title: "Bejelentkezés a Google-lel"
         sr_title: "Bejelentkezés a Google-lel"
       twitter:
-        name: "Twitter"
-        title: "Bejelentkezés a Twitterrel"
-        sr_title: "Bejelentkezés a Twitterrel"
+        name: "X"
+        title: "Bejelentkezés X-szel"
+        sr_title: "Bejelentkezés X-szel"
       instagram:
         name: "Instagram"
         title: "Bejelentkezés az Instagrammal"
@@ -2347,12 +2451,17 @@ hu:
     password_reset:
       continue: "Tovább a(z) %{site_name} oldalra"
     emoji_set:
-      apple_international: "Apple/nemzetközi"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
+      apple_international: "Apple/International (elavult Twemoji)"
+      google: "Google (elavult Noto Emoji)"
+      twitter: "Twitter (elavult Twemoji)"
+      win10: "Win10 (elavult Fluent Emojia)"
+      google_classic: "Google klasszikus (elavult Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (elavult Szabványos)"
+      openmoji: OpenMoji
+      standard: Szabványos
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Csak kategóriák szerint"
       categories_with_featured_topics: "Kategóriák funkciók szerint"
@@ -2366,6 +2475,13 @@ hu:
       required_at_signup: "Kötelező"
       optional_at_signup: "Nem kötelező"
       hidden_at_signup: "Nem kötelező, regisztrációkor rejtve"
+    interface_color_selector:
+      disabled: "Ne jelenítse meg"
+      sidebar_footer: "Megjelenítés az oldalsáv láblécében"
+      header: "Megjelenítés a fejlécben"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Részletes szövegszerkesztő"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2380,6 +2496,8 @@ hu:
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
+    timezone_input:
+      ambiguous_ist: "Az IST nem egyértelmű, válasszon egy konkrét időzónát (például Ázsia/Kolkata)"
     select_kit:
       delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
@@ -2447,7 +2565,6 @@ hu:
       unlist: "nem listázott"
       add_warning: "Ez egy hivatalos figyelmeztetés."
       toggle_whisper: "Suttogás be/ki"
-      toggle_unlisted: "Nem listázott állapot be/ki"
       insert_table: "Tábla beszúrása"
       posting_not_on_topic: "Melyik témára szeretne válaszolni?"
       saved_local_draft_tip: "helyben mentett"
@@ -2457,6 +2574,12 @@ hu:
       esc: "Esc"
       esc_label: "üzenet elvetése"
       ok_proceed: "Rendben, tovább"
+      translations:
+        title: "Bejegyzés fordítása"
+        select: "Fordítás kiválasztása"
+        save: "Fordítás mentése"
+        original_content: "Eredeti bejegyzés tartalma"
+        placeholder: "Adja meg a bejegyzés fordítását…"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2519,6 +2642,8 @@ hu:
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot vagy HTML-t. Idehúzhat vagy beilleszthet képeket."
       reply_placeholder_no_images: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot, vagy HTML-t."
+      reply_placeholder_rte: "Gépeljen ide. Formázáshoz használja az eszköztárat vagy a Markdownt. Húzza vagy illessze be a képeket."
+      reply_placeholder_rte_no_images: "Írj ide. Formázáshoz használd az eszköztárat vagy a Markdownt."
       reply_placeholder_choose_category: "Válasszon egy kategóriát, mielőtt elkezd ide írni."
       view_new_post: "Tekintse meg az új bejegyzését."
       saving: "Mentés…"
@@ -2527,6 +2652,8 @@ hu:
       uploading: "Feltöltés…"
       show_preview: "előnézet megjelenítése"
       hide_preview: "előnézet elrejtése"
+      switch_to_markdown: "Váltás a szabványos Markdown szerkesztőre (%{keyboardShortcut})"
+      switch_to_rich_text: "Új szövegszerkesztőre váltás (%{keyboardShortcut})"
       quote_post_title: "Teljes bejegyzés idézése"
       bold_label: "B"
       bold_title: "Félkövér"
@@ -2534,13 +2661,24 @@ hu:
       italic_label: "I"
       italic_title: "Dőlt"
       italic_text: "dőlt szöveg"
-      link_title: "Hiperhivatkozás"
+      heading_title: "Címsorok"
+      heading_level_n: "Címsor %{levelNumber}"
+      heading_level_n_title: "Címsor %{levelNumber}"
+      heading_level_paragraph: "Bekezdés"
+      heading_level_paragraph_title: "Bekezdés"
+      link_title: "Hivatkozás"
       link_description: "itt adja meg a hivatkozás leírását"
-      link_dialog_title: "Hiperhivatkozás beszúrása"
-      link_optional_text: "megadható cím"
-      link_url_placeholder: "Illesszen be egy URL-t, vagy gépeljen a témák kereséséhez"
+      link_dialog_title: "Hivatkozás beszúrása"
+      link_dialog_action: "Beszúrás"
+      link_edit_title: "Hivatkozás szerkesztése"
+      link_edit_action: "Frissítés"
+      link_text_label: "Hivatkozás szövege"
+      link_optional_text: "Szöveg"
+      link_url_label: "Hivatkozás vagy téma"
+      link_url_placeholder: "Hivatkozás beillesztése vagy témák keresése"
       blockquote_title: "Idézetblokk"
       blockquote_text: "Idézetblokk"
+      heading_text: "Cím"
       code_title: "Előformázott szöveg"
       code_text: "előformázott szöveg behúzása 4 szóközzel beljebb"
       paste_code_text: "írja vagy másolja be a kódot ide"
@@ -2600,14 +2738,28 @@ hu:
         toggle_topic_bump:
           label: "Téma előrehozása be/ki"
           desc: "Válasz a legutóbbi válasz dátumának módosítása nélkül"
+        toggle_unlisted:
+          label: Nem listázott állapot be/ki
+          desc: Nem listázott témák, amelyek csak a tagok számára érhetők el közvetlen linken keresztül
       reload: "Újratöltés"
       ignore: "Letiltás"
       image_alt_text:
         aria_label: Alternatív szöveg a képhez
         title: "Képleírás hozzáadása"
+      image_toolbar:
+        alt_text: "Képleírás hozzáadása"
+        zoom_out: "Képméret csökkentése"
+        zoom_in: "Képméret növelése"
+        remove: "Kép eltávolítása"
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki
+      link_toolbar:
+        edit: "Hivatkozás szerkesztése"
+        copy: "Hivatkozás másolása"
+        remove: "Hivatkozás eltávolítása"
+        visit: "Hivatkozás megnyitása külső lapon"
+        link_copied: "Hivatkozás másolva!"
     notifications:
       tooltip:
         regular:
@@ -2736,15 +2888,18 @@ hu:
         new_features: "Új Discourse funkciók jelentek meg!"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
+      change: "Módosítás"
+      delete: "Törlés"
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"
-      select_file: "Válaszon fájlt"
+      select_file: "Kattintson a feltöltéshez vagy húzza és dobja be a fájlt"
       default_image_alt_text: kép
     search:
       sort_by: "Rendezés"
       relevance: "Relevancia"
       latest_post: "Utolsó bejegyzés"
       latest_topic: "Legutóbbi téma"
+      last_read: "Utolsó olvasás"
       most_viewed: "Legtöbbet megtekintett"
       most_liked: "Legtöbbet kedvelt"
       select_all: "Összes kijelölése"
@@ -2780,11 +2935,13 @@ hu:
       in_messages_tooltip: "váltás a szokásos témák keresésére"
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
+      mobile_enter_hint: "vagy koppintson a keresésre"
       in_posts_by: "%{username} bejegyzéseiben"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "újra a böngésző natív keresőjének használata"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
+      experience:
+        search_field: "Keresőmező a webhely fejlécében"
+        search_icon: "Keresés ikon a profilkép közelében"
       type:
         default: "Témák/bejegyzések"
         users: "Felhasználók"
@@ -2867,7 +3024,7 @@ hu:
           aria_label: szűrés a megtekintések legnagyobb száma szerint
         additional_options:
           label: "Szűrés bejegyzésszám és témamegtekintések szerint"
-    hamburger_menu: "menü"
+    hamburger_menu: "Navigációs menü"
     new_item: "új"
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal a jelenlegi tevékenységek és beállítások összesítésével"
@@ -3007,10 +3164,11 @@ hu:
         top: "Nincsenek népszerű témák."
         hot: "Nincsenek népszerű témák."
         filter: "Nincsenek témák."
-        educate:
-          new: '<p>Az új témák fognak itt megjelenni. Alapértelmezésként itt jelennek meg a friss témák, és egy ilyen jelet <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> talál majd azok mellett, amelyek az elmúlt két napban lettek közzétéve.</p><p>A beállításait <a href="%{userPrefsUrl}">ezen az oldalon</a> tudja módosítani.</p>'
-          unread: "<p>Az olvasatlan témák itt fognak megjelenni.</p><p>Alapértelmezés szerint a témák olvasatlannak minősülnek, és az olvasatlanok száma <span class=\"badge unread-posts badge-notification\">1</span> lesz, ha Ön:</p><ul><li>Létrehozta a témát</li><li>Válaszoltál a témára</li><li>Több mint 5 percig olvastad a témát</li></ul><p>Vagy ha a témát kifejezetten Nyomon követett vagy Figyelt témának állítottad be az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogass el a <a href=\"%{userPrefsUrl}\">beállításaidhoz</a>.</p>"
-          new_new: "<p>Itt jelennek meg az új és olvasatlan témáid. Alapértelmezés szerint a témák újnak számítanak, és a <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> jelzést mutatják, ha az elmúlt 2 napban hozták létre őket. Az olvasatlan témáknál az olvasatlanok száma <span class=\"badge unread-posts badge-notification\">1</span> lesz, ha: létrehoztad a témát, válaszoltál a témára, több mint 5 percig olvastad a témát, vagy ha kifejezetten Nyomon követett vagy Figyelt témára állítottad a témát az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogass el a <a href=\"%{userPrefsUrl}\">beállításaidhoz</a>.</p>"
+        education:
+          topic_tracking_preferences: 'Az új témakövetési beállításokat a <a href="%{basePath}/my/preferences/tracking">beállítások</a> között tekintheti meg és módosíthatja.'
+          unread: "Semmi sem maradt olvasatlanul... lenyűgöző!"
+          new_new: "Jelenleg semmi újdonság... nézz vissza később!"
+          new: "Jelenleg semmi újdonság... nézz vissza később!"
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincs több közzétett téma."
@@ -3148,11 +3306,15 @@ hu:
           false { vagy <a href="{basePath}/latest">nézze meg a legújabb témákat</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} válasz, ugrás az első bejegyzésre"
+        other: "%{count} válasz, ugrás az első bejegyzésre"
       created_at: "Létrehozva: %{date}"
       bumped_at: "Legutóbbi: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Böngésszen a kategóriák között</a> vagy <a href='%{basePath}/latest'>nézze meg a legújabb témákat</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Böngésszen a kategóriák között</a>, <a href='%{basePath}/latest'>nézze meg a legújabb témákat</a> vagy a legjobbakat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Böngésszen a címkék között</a>, vagy <a href='%{basePath}/latest'>nézze meg a legújabb témákat</a>."
+      browse_latest_topics: "Legújabb témák böngészése"
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply: "Ugrás a hozzászólás eredeti helyére"
       jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
@@ -3563,11 +3725,11 @@ hu:
         one: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
         other: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
       sr_post_like_count_button:
-        one: "%{count} felhasználónak tetszett ez a bejegyzés. Kattintson a megtekintéshez"
-        other: "%{count} felhasználónak tetszett ez a bejegyzés. Kattintson a megtekintéshez"
+        one: "%{count} embernek tetszett ez a bejegyzés."
+        other: "%{count} embernek tetszett ez a bejegyzés."
       sr_post_read_count_button:
-        one: "%{count} felhasználó elolvasta ezt a bejegyzést. Kattintson a megtekintéshez"
-        other: "%{count} felhasználó elolvasta ezt a bejegyzést. Kattintson a megtekintéshez"
+        one: "%{count} ember olvasta ezt a bejegyzést."
+        other: "%{count} ember olvasta ezt a bejegyzést."
       filtered_replies_hint:
         one: "Felhasználó tekintette meg a bejegyzést és válaszait"
         other: "Felhasználó tekintette meg a bejegyzés és %{count} válaszát"
@@ -3577,6 +3739,26 @@ hu:
       in_reply_to: "Szülőbejegyzés betöltése"
       view_all_posts: "Az összes válasz megtekintése"
       badge_granted_tooltip: "%{username} megkapta a(z) „%{badge_name}” jelvényt ezért a bejegyzésért!"
+      localizations:
+        table:
+          locale: "Nyelv"
+          actions: "Műveletek"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+        add: "Új fordítás hozzáadása"
+        view:
+          one: "%{count} fordítás megtekintése"
+          other: "%{count} fordítás megtekintése"
+        modal:
+          title: "Fordítás a bejegyzéshez"
+          confirm_delete: "Biztos, hogy törölni akarja a(z) „%{languageCode}” fordításokat?"
+        success: "A fordítások sikeresen frissültek"
+        post_language_selector:
+          none: "Egyik sem"
+        edit_warning:
+          message: "Ez egy lefordított bejegyzés.<br><br> Az eredeti hozzászólást szeretnéd szerkeszteni a %{language} oldalon, vagy ezt a konkrét fordítást?"
+          action_original: "Eredeti bejegyzés szerkesztése"
+          action_translation: "A fordítás szerkesztése"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
@@ -3684,8 +3866,6 @@ hu:
           read_capped:
             one: "és %{count} másik ember olvasta"
             other: "és %{count} másik ember olvasta"
-          sr_post_likers_list_description: "felhasználók, akiknek tetszett ez a bejegyzés"
-          sr_post_readers_list_description: "felhasználók, akik elolvasták ezt a bejegyzést"
         by_you:
           off_topic: "Megjelölte nem a témához tartozóként"
           spam: "Megjelölte kéretlenként"
@@ -3703,6 +3883,9 @@ hu:
           one: "Biztos, hogy egyesíti ezeket a bejegyzéseket?"
           other: "Biztos, hogy egyesíti ezt a(z) %{count} bejegyzést?"
       revisions:
+        locale:
+          no_locale_set: "Nincs beállítva nyelv"
+          locale_removed: "Nyelv eltávolítva"
         controls:
           first: "Első felülvizsgálat"
           previous: "Előző felülvizsgálat"
@@ -3773,6 +3956,8 @@ hu:
       share:
         title: "Megosztás: #%{post_number}"
         instructions: "Bejegyzés hivatkozásának megosztása:"
+      original_language: "Ez a bejegyzés eredetileg %{language} nyelvű"
+      original_language_and_outdated: "Ez a bejegyzés eredetileg %{language} nyelvű. A fordítás elavult lehet."
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
@@ -3786,6 +3971,14 @@ hu:
       settings: "Beállítások"
       topic_template: "Sablon"
       tags: "Címkék"
+      localizations: "Lokalizációk"
+      localization:
+        locale: "Nyelv"
+        name: "Név"
+        description: "Leírás"
+        add: "Új nyelv hozzáadása"
+        remove: "Eltávolítás"
+        hint: "Jelenleg nincsenek honosítások ehhez a kategóriához. Kattintson az alábbi „Új nyelv hozzáadása” gombra a lokalizációk hozzáadásának megkezdéséhez."
       tags_allowed_tags: "Címkék erre a kategóriára korlátozása:"
       tags_allowed_tag_groups: "Címkecsoportok erre a kategóriára korlátozása:"
       tags_placeholder: "(Nem kötelező) az engedélyezett címkék listája"
@@ -3808,14 +4001,24 @@ hu:
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
       name: "Kategória neve"
+      untitled: "Névtelen kategória"
       description: "Leírás"
       logo: "Kategória képe"
       logo_dark: "Sötét üzemmód kategórialogó-képe"
+      logo_description: "Ajánlott 1:1 képarány, minimum 200px-es méret. Ha üresen hagyja, nem jelenik meg kép."
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
-      badge_colors: "Jelvény színek"
-      background_color: "Háttér színe"
-      foreground_color: "Előtér színe"
+      style: "Stílusok"
+      background_color: "Szín"
+      foreground_color: "Szöveg színe"
+      styles:
+        type: "Stílus"
+        icon: "Ikon"
+        emoji: "Emodzsi"
+        options:
+          square: "Négyzet"
+          icon: "Ikon"
+          emoji: "Emodzsi"
       color_used: "Használt szín"
       predefined_colors: "Előre definiált színválaszték"
       name_placeholder: "Maximum egy vagy két szó"
@@ -3932,6 +4135,7 @@ hu:
       description: "Az illegális tartalom bejelentéséhez vegye fel a kapcsolatot: <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Köszönjük, hogy megőrizte közösségünket!"
+      review_process_description: "A moderátorok minden megjelölést megkapnak, és a lehető leghamarabb felülvizsgálják."
       action: "Bejegyzés megjelölése"
       take_action: "Cselekedj…"
       take_action_options:
@@ -4032,6 +4236,8 @@ hu:
       pinned:
         title: "Kiemelt"
         help: "Ez egy általad kiemelt témakör ezért a kategóriája elején lesz látható."
+      hot:
+        title: "Felkapott"
       unlisted:
         help: "Ez egy nem listázandó témakör, ezért nem fog megjelenni a témakörök listájában és csak közvetlen hivatkozással érhető el. %{unlistedReason}"
       personal_message:
@@ -4134,11 +4340,16 @@ hu:
           other: "Új (%{count})"
         help: "az elmúlt napokban létrehozott témakörök"
         all: "Összes"
+        all_tooltip: "Minden új téma és az elmúlt napokban megválaszolt téma"
         all_with_count: "Mind (%{count})"
+        new_topics_tooltip: "Új téma"
         topics: "Témák"
         topics_with_count: "Témák (%{count})"
+        new_replies_tooltip: "Új válaszok"
         replies: "Válaszok"
         replies_with_count: "Válaszok (%{count})"
+      new_new:
+        help: "az elmúlt napokban létrehozott vagy megválaszolt témák"
       posted:
         title: "Saját bejegyzéseim"
         help: "témakörök, amikhez már hozzászóltál"
@@ -4174,7 +4385,7 @@ hu:
         today: "Utolsó 24 óra"
     custom_homepage:
       admin_message: 'Az egyik téma engedélyezte a "custom_homepage" módosítót, de nem ad ki semmit a [custom-homepage] csatlakozóban. (Ez az üzenet csak az oldal adminisztrátorainak jelenik meg.)'
-    browser_update: 'Sajnos <a href="https://www.discourse.org/faq/#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a gazdag tartalom megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
+    browser_update: 'Sajnos <a href="https://discourse.org/about#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a tartalmak megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -4200,6 +4411,7 @@ hu:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Billentyűkombinációk"
       short_title: "Rövidítések"
+      search_ctrl_f_tip: "A teljes fórumon való kereséshez nyomja meg a <kbd>/</kbd> gombot"
       jump_to:
         title: "Ugrás oda"
         home: "%{shortcut} Kezdőlap"
@@ -4241,6 +4453,19 @@ hu:
         return: "%{shortcut} Vissza az alkotóhoz"
         fullscreen: "%{shortcut} Alkotó teljes képernyő"
         insert_current_time: "%{shortcut} Aktuális idő beillesztése"
+        bold: "%{shortcut} Félkövér"
+        italic: "%{shortcut} Dőlt"
+        link: "%{shortcut} Link beszúrása"
+        preformatted: "%{shortcut} Előformázott szöveg"
+        paragraph: "%{shortcut} Bekezdés"
+        heading_1: "%{shortcut} 1. címsor"
+        heading_2: "%{shortcut} 2. címsor"
+        heading_3: "%{shortcut} 3. címsor"
+        heading_4: "%{shortcut} 4. címsor"
+        toggle_direction: "%{shortcut} Szövegirány váltása"
+        ordered_list: "%{shortcut} Rendezett lista"
+        unordered_list: "%{shortcut} Rendezetlen lista"
+        blockquote: "%{shortcut} Idézetblokk"
       bookmarks:
         title: "Könyvjelzők"
         enter: "%{shortcut} Mentés és bezárás"
@@ -4282,6 +4507,11 @@ hu:
         prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
         insert_url: "%{shortcut} Kijelölés beillesztése a nyitott alkotóba"
         full_page_search: "%{shortcut} Teljes oldalas keresés indítása"
+      admin:
+        title: "Adminisztrátor"
+        search_prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
+        search_open: "%{shortcut} Nyissa meg a keresést az admin felületre"
+        search_full_page: "%{shortcut} Teljes oldali adminisztrátori keresés megnyitása"
     badges:
       earned_n_times:
         one: "Nyerte ezt a jelvényt %{count} idővel"
@@ -4558,7 +4788,7 @@ hu:
           save: "Mentés"
           delete: "Törlés"
           delete_confirm: "Biztos törlöd ezt a szakaszt?"
-          delete_public_confirm: "Ez a rész <strong>mindenki számára látható</strong>. Biztosan törli?"
+          delete_public_confirm: "Ez a rész mindenki számára látható. Biztosan törli?"
           update_public_confirm: "A változások <strong>mindenki számára</strong> láthatók lesznek ezen az oldalon. biztos vagy ebben?"
           mark_as_private_confirm: "Ez a rész <strong>mindenki számára látható</strong>. A frissítés után <strong>csak az Ön számára lesz látható</strong>. Biztos vagy ebben?"
           reset_confirm: "Biztos visszaállítod ezt a szakaszt alapértelmezettre?"
@@ -4637,6 +4867,9 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
+            filter:
+              content: "Szűr"
+              title: "Témák szűrése kategória, címke vagy egyéb kritériumok szerint"
             topics:
               content: "Témák"
               title: "Minden téma"
@@ -4653,7 +4886,7 @@ hu:
               content: "Felhasználók"
               title: "Az összes felhasználó listája"
             my_posts:
-              content: "Bejegyzéseim"
+              content: "Saját bejegyzéseim"
               content_drafts: "Vázlataim"
               title: "Legutóbbi tématevékenység"
               title_drafts: "Nem közzétett piszkozataim"
@@ -4669,18 +4902,27 @@ hu:
             invite:
               content: "Meghívás"
               title: "Új tagok meghívása"
+            my_messages:
+              content: "Üzeneteim"
+              title: "Személyes üzeneteim"
         global_section: "Globális szekció, mindenki számára látható"
       panels:
         forum:
           label: Fórum
       back_to_forum: "Vissza a fórumra"
-      collapse_all_sections: "Minden szakasz összezárása"
-      expand_all_sections: "Minden szakasz kibontása"
-      filter: "Szűrő..."
+      filter_links: "Linkek szűrése..."
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
-        description: 'Nem találtunk semmit ami ennek megfelelne: ''%{filter}''.<br><br>Szeretné <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}"> felkeresni a webhely beállításaiban</a> vagy <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}"> az adminisztátori listában?</a>'
+        description_admin_search: "Nem találtunk semmi ennek megfelelőt '%{filter}'"
+      collapse_all_sections: "Minden szakasz összezárása"
+      expand_all_sections: "Minden szakasz kibontása"
+      search: "Keresés"
+      footer:
+        interface_color_selector:
+          light: "Világos"
+          dark: "Sötét"
+          auto: "Automatikus"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
@@ -4782,13 +5024,88 @@ hu:
           paste: "Beillesztés..."
           save: "Mentés másként..."
     powered_by_discourse: "Meghajtja a Discourse"
+    safari_15_warning: "Az Ön böngészője hamarosan nem lesz kompatibilis ezzel a közösséggel. Ha továbbra is részt szeretne venni itt, frissítse böngészőjét, vagy <a href='%{url}'>tudjon meg többet</a>."
+    filter:
+      placeholder: "Témák szűrése kategória, címke vagy egyéb kritériumok szerint"
+      description:
+        yesterday: "Tegnap"
+        last_week: "Múlt héten"
+        last_month: "Múlt hónap"
+        last_year: "Tavaly"
+    discovery:
+      headings:
+        all:
+          latest: "Minden legújabb téma"
+          top: "Minden fontos téma"
+          new: "Minden új téma"
+          unread: "Minden olvasatlan téma"
+          unseen: "Összes nem megtekintett téma"
+          hot: "Minden népszerű téma"
+          posted: "Az összes téma, amelyben hozzászóltál"
+          bookmarks: "Minden könyvjelzővel megjelölt téma"
+          default: "Minden %{filter} téma"
+        category:
+          latest: "%{category} kategória legújabb témái"
+          top: "%{category} kategória fontos témái"
+          new: "%{category} kategória új témái"
+          unread: "%{category} kategória olvasatlan témái"
+          unseen: "%{category} kategória nem megtekintett témái"
+          hot: "%{category} kategória népszerű témái"
+          posted: "Témák a %{category} kategóriában, amelyekben eddig posztoltál"
+          bookmarks: "Témák a %{category} kategóriában, amelyeket könyvjelzővel megjelöltél"
+          default: "%{filter} Témák a %{category} kategóriában"
+        single_tag:
+          latest: "Legfrissebb témák a(z) %{tag} címkével"
+          top: "Legnépszerűbb témák a(z) %{tag} címkével"
+          new: "Új témák a(z) %{tag} címkével"
+          unread: "Olvasatlan témák a(z) %{tag} címkével"
+          unseen: "Nem látott témák a(z) %{tag} címkével"
+          hot: "Népszerű témák a(z) %{tag} címkével"
+          posted: "Témák a(z) %{tag} címkével, amelyekhez hozzászóltál"
+          bookmarks: "Témák a(z) %{tag} címkével, amelyeket könyjelzőhöz adtál"
+          default: "%{filter} témák amik %{tag} címkével vannak megjelölve"
+        multi_tag:
+          default: "Témák a(z) %{tags} címkével"
+        category_tag:
+          latest: "Legfrissebb témák a(z) %{category} kategóriában, %{tag} címkével"
+          top: "Legnépszerűbb témák a(z) %{category} kategóriában, %{tag} címkével"
+          new: "Új témák a(z) %{category} kategóriában, %{tag} címkével"
+          unread: "Olvasatlan témák a(z) %{category} kategóriában, %{tag} címkével"
+          unseen: "Nem látott témák a(z) %{category} kategóriában, %{tag} címkével"
+          hot: "Legnépszerűbb témák a(z) %{category} kategóriában, %{tag} címkével"
+          posted: "A(z) %{category} kategóriában található %{tag} címkéjű témák, amelyekhez hozzászóltál"
+          bookmarks: "A(z) %{category} kategóriában található %{tag} címkéjű témák, amelyeket könyjelzőhöz adtál"
+          default: "%{filter} témák a(z) %{category} kategóriában, %{tag} címkével"
+        no_tags:
+          all:
+            latest: "Legújabb témák címkék nélkül"
+            top: "Legnépszerűbb témák címkék nélkül"
+            new: "Új témák címkék nélkül"
+            unread: "Olvasatlan témák címkék nélkül"
+            unseen: "Nem látott témák címkék nélkül"
+            hot: "Népszerű témák címkék nélkül"
+            posted: "Címkék nélküli témák, amelyekben bejegyzést tettél közzé"
+            bookmarks: "Címkék nélküli, könyvjelzővel megjelölt témák"
+            default: "Címkék nélküli témák"
+          category:
+            latest: "%{category} kategória legújabb témái, címkék nélkül"
+            top: "%{category} kategória legnépszerűbb témái, címkék nélkül"
+            new: "%{category} kategória új témái, címkék nélkül"
+            unread: "%{category} kategória olvasatlan témái, címkék nélkül"
+            unseen: "%{category} kategória nem látott témái, címkék nélkül"
+            hot: "%{category} kategória népszerű témái, címkék nélkül"
+            posted: "%{category} kategória legújabb, címke nélküli témái, amelyekben hozzászóltál"
+            bookmarks: "%{category} kategória címke nélküli témái, amelyeket könyvjelzőhöz adtál"
+            default: "%{filter} témák a(z) %{category} kategóriában címkék nélkül"
+        categories: "Minden kategória"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
-      filter_reports: Jelentések szűrése
+      filter_reports: "Jelentések szűrése..."
+      filter_reports_no_results: "Egyetlen jelentés sem felel meg a szűrőnek"
       tags:
         remove_muted_tags_from_latest:
           always: "mindig"
@@ -4799,33 +5116,141 @@ hu:
         meta_doc: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
         sidebar_title: "Jelentések"
         back: "Vissza az összes jelentéshez"
-        sidebar_link:
-          all: "Összes bejelentés"
+      config_sections:
+        account:
+          title: "Fiók"
+        reports:
+          title: "Jelentések"
+        community:
+          title: "Közösség"
+        appearance:
+          title: "Megjelenés"
+        email:
+          title: "E-mail:"
+        security:
+          title: "Biztonság"
+        plugins:
+          title: "Bővítmények"
+        advanced:
+          title: "Speciális"
       config:
+        about:
+          title: "Az Ön webhelyéről"
+          header_description: "Adjon meg itt információkat erről a webhelyről és csapatáról, hogy az emberek megtudják, miről szól a közössége, ki áll a háttérben, és hogyan érhetik el Önt probléma esetén. Megjelenik a webhely <a href='%{basePath}/about'>Névjegy oldalon</a>."
         developer:
           title: "Fejlesztői"
           header_description: "Fejlesztői beállítások a sebességkorlátok, a szorzók és számítások, a biztonságos üzemmód és egyéb speciális funkciók szabályozásához"
         experimental:
           title: "Kísérleti"
           header_description: "Kísérleti funkciók be- vagy kikapcsolása webhelyén, ezek többsége csoportszinten vezérelhető"
-        font_style:
-          title: "Betűstílus"
-          header_description: "Szabja testre a témák által használt betűstílusokat"
+        emojis:
+          title: "Emodzsi"
+          header_description: "Új emodzsi hozzáadása, amely mindenki számára elérhető lesz. Válasszon több fájlt, hogy több emodzsit hozzon létre a fájlnevek alapján. A kiválasztott csoport lesz használva az összes egyidejűleg hozzáadott fájl esetén."
+        flags:
+          title: "Moderálás"
+          header_description: "A Discourse megjelölési rendszere segít Önnek és a moderátori csapatának a tartalom és a felhasználói viselkedés kezelésében, hogy a közösség tisztelettudó és egészséges maradjon. Az alapértelmezett beállítások a legtöbb közösség számára megfelelőek, és nem kell megváltoztatnia őket. Ha azonban webhelyének különleges követelményei vannak, letilthatja a nem szükséges megjelöléseket, és saját megjelöléseket adhat hozzá."
+          keywords: "megjelölés|vélemény|spam|illegális"
         files:
           title: "Fájlok"
           header_description: "Beállítások, amelyek a fájlméret- és típushatárokat, az avatarok méretét és forrásait, a fájltárolást, a képminőséget és tömörítést stb. szabályozzák."
         legal:
           title: "Jogi"
           header_description: "Jogi beállítások konfigurálása, például a szolgáltatási feltételek, adatvédelmi irányelvek, elérhetőségek és EU-specifikus szempontok."
+        theme_site_settings:
+          title: "Téma oldal beállításai"
         localization:
           title: "Lokalizáció"
           header_description: "A közösség kezelőfelületének nyelvének és a tagok egyéb lokalizációs beállításainak megadása"
+          keywords: "\nhely|területi beállítás|nyelv|időzóna|unicode|ltr"
         login_and_authentication:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
         logo:
-          title: "Webhely logó"
-          header_description: "Szabja testre webhelye logójának változatait"
+          title: "Logó"
+          header_description: "A webhelyen használt logók és ikonok testreszabása"
+          form:
+            saved: "A logó beállításai mentve."
+            logo:
+              title: "Elsődleges logó"
+              description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
+              help_text: "Az ajánlott méret 600×80 képpont."
+            logo_dark:
+              required: "Másik logó használata a sötét módhoz?"
+              title: "Elsődleges sötét logó"
+              help_text: "Az ajánlott méret 600×80 képpont."
+            large_icon:
+              title: "Négyzet alakú ikon"
+              description: "A logó képének négyzetes változata az adminisztráció tetején jelenik meg, és egyben a mobil kezdőképernyőjének logója is."
+              help_text: "Az ajánlott méret 512×512 képpont."
+            square_icon_dark:
+              required: "Másik négyzet ikon használata a sötét módhoz?"
+              title: "Sötét négyzet alakú ikon"
+              help_text: "Az ajánlott méret 512×512 képpont."
+            favicon:
+              title: "Favicon"
+              description: "A logó ikonként jelenik meg a böngészőlapon és a böngésző kedvencei/könyvjelzői között."
+            logo_small:
+              title: "Kis logó"
+              description: "A webhelye bal felső sarkában megjelenő kis logó kép, amely görgetéskor látható. Ha üresen hagyja, egy házikó ikon fog megjelenni."
+              help_text: "Az ajánlott méret 120×120 képpont."
+            logo_small_dark:
+              required: "Másik kis logó használata a sötét módhoz?"
+              title: "Kis sötét logó"
+              help_text: "Az ajánlott méret 120 x 120 pixel."
+            mobile: "Mobil"
+            email: "E-mail"
+            social_media: "Közösségi média"
+            mobile_logo:
+              title: "Mobil logó"
+              description: "A webhely mobil verzióján használt logó. Ha üresen hagyja, akkor a „logó” beállításban szereplő képet fogja használni."
+              help_text: "Széles, téglalap alakú, 120 képpont magas és 3:1-nél nagyobb képarányú kép használata."
+            mobile_logo_dark:
+              required: "Másik mobillogót használata a sötét módhoz?"
+              title: "Sötét mobil logó"
+              help_text: "Széles, téglalap alakú, 120 képpont magas és 3:1-nél nagyobb képarányú kép használata."
+            manifest_icon:
+              title: "Leírófájl ikonja"
+              description: "Az Androidon logóként / felugró képként használt kép. Ha üresen hagyja, a large_icon lesz használatban."
+              help_text: "Az ajánlott méret 512×512 képpont."
+            manifest_screenshots:
+              title: "Leírófájl képernyőképei"
+              description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
+            apple_touch_icon:
+              title: "Apple touch ikon"
+              description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
+              help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
+            digest_logo:
+              title: "Összefoglaló logó"
+              description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
+              help_text: "Használjon széles téglalap alakú képet. Ne használjon SVG-képet."
+            opengraph_image:
+              title: "OpenGraph kép"
+              description: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
+            x_summary_large_image:
+              title: "X összefoglaló nagy kép"
+              description: "X kártya 'összefoglaló nagy kép'. Ha üresen hagyja, a kártya metaadatai az OpenGraph_image segítségével generálódnak, feltéve, hogy az nem .svg."
+              help_text: "az ajánlott méret legalább 280 x 150 pixel. Ne használjon SVG-képet."
+        fonts:
+          title: "Betűkészletek"
+          header_description: "A webhelyén használt betűkészletek beállítása, beleértve az alapbetűkészletet, a címsor betűkészletét és az alapértelmezett szövegméretet"
+          form:
+            more_fonts: "Több betűkészlet"
+            fewer_fonts: "Kevesebb betűkészlet"
+            saved: "A betűkészlet-beállítások mentésre kerültek."
+            base_font:
+              title: "Alap betűkészlet"
+            heading_font:
+              title: "Fejléc betűkészlet"
+            default_text_size:
+              title: "Alapértelmezett szövegméret"
+              description: "Ezt a méretet a későbbiekben minden felhasználó saját igényei szerint módosíthatja."
+          backfill_modal:
+            title: "Alkalmazza az új alapértelmezett szövegbeállításokat?"
+            description:
+              one: "Módosította az alapértelmezett szövegméretet. Alkalmazza ezt a módosítást %{count} meglévő felhasználóra?"
+              other: "Módosította az alapértelmezett szövegméretet. Alkalmazza ezt a módosítást %{count} meglévő felhasználóra?"
+            modal_yes: "Igen"
+            modal_no: "Nem, csak a jövőben alkalmazandó"
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -4835,15 +5260,15 @@ hu:
         onebox:
           title: "Onebox"
           header_description: "Állítsa be, hogy a Onebox előnézetek hogyan jönnek létre és jelenjenek meg a webhelyen"
-        other:
-          title: "Egyéb"
-          header_description: "Más kategóriába nem illő beállítások"
         rate_limits:
           title: "Korlátozások"
           header_description: "Állítsa be, hogy a felhasználók milyen gyakran hajthatnak végre bizonyos műveleteket, például témákat hozhatnak létre, üzeneteket küldhetnek és válaszokat küldhetnek"
         search:
-          title: "Keresés"
+          title: "Keresési beállítások"
           header_description: "Konfigurálja a keresési beállításokat, beleértve a naplózást és a tokenizálást kínai és japán nyelvekhez"
+        search_everything:
+          title: "Keresés"
+          header_description: "Itt megtalálhat mindent az adminisztrációs felületen. Az alábbiakban szűrheti az találatokat, és a rendszer emlékezni fog a beállításaira. Hogy bárhol megnyissa ezt a keresést az adminisztrációs felületen, nyomja meg a %{shortcutHTML} gombot."
         security:
           title: "Biztonság"
           header_description: "Konfigurálja a biztonsági beállításokat, beleértve a kétfaktoros hitelesítést, a moderátorjogokat és a tartalombiztonsági házirendeket"
@@ -4859,6 +5284,197 @@ hu:
         group_permissions:
           title: "Csoportengedélyek"
           header_description: "Itt kezelik az összes csoportalapú alkalmazásengedélyt, amelyek szabályozzák a Discourse különféle funkcióihoz való hozzáférést"
+        dashboard:
+          title: "Vezérlőpult"
+          header_description: "Az irányítópult pillanatképet nyújt a közösség állapotáról, beleértve a forgalmat, a felhasználói aktivitást és más kulcsfontosságú mutatókat"
+        users:
+          title: "Felhasználók"
+          header_description: "Felhasználók megtekintése és kezelése, meghívók küldése és felhasználói adatok exportálása"
+        groups:
+          title: "Csoportok"
+          header_description: "Csoportokat hozhat létre és kezelhet, csoportengedélyeket állíthat be, valamint megtekintheti a csoporttevékenységeket és a beérkezett üzeneteket"
+        site_settings:
+          title: "Összes webhelybeállítás"
+          header_description: "Konfigurálja a Discourse webhely összes beállítását a megjelenés, a funkcionalitás és a felhasználói élmény testreszabása érdekében"
+        whats_new:
+          title: "Újdonságok"
+          header_description: "Legyen naprakész a Discourse legújabb funkcióival és fejlesztéseivel"
+          keywords: "változásjegyzék|funkció|kiadás"
+        backups:
+          title: "Biztonsági mentések"
+          header_description: "A Discourse biztonsági mentések tartalmazzák a teljes webhely-adatbázist, amely mindent tartalmaz a webhelyen: témákat, hozzászólásokat, felhasználókat, csoportokat, beállításokat, témákat stb. Attól függően, hogy a mentési fájl hogyan készül, a feltöltéseket is tartalmazhatja, de nem feltétlenül."
+          sub_pages:
+            logs:
+              title: "Naplók"
+              header_description: "Megtekintheti és kezelheti a biztonsági mentések, visszaállítások és feltöltések naplóit"
+        reports:
+          title: "Jelentések"
+          header_description: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
+          sub_pages:
+            settings:
+              title: "Irányítópult beállításai"
+        badges:
+          title: "Jelvények"
+          header_description: "A jelvények jutalmazzák a felhasználókat tevékenységeikért, hozzájárulásaikért és eredményeikért, amelyek célja a közösségen belüli pozitív magatartás és elkötelezettség elismerése, érvényesítése és ösztönzése"
+        analytics:
+          title: "Analitika és SEO"
+          header_description: "Javítsa webhelye láthatóságát a keresőmotorok számára, és konfigurálja a webhely látogatóinak nyomon követését"
+          keywords: "keresés|google|oldaltérkép"
+        interface:
+          title: "Felület és elrendezés"
+          header_description: "Személyre szabhatja webhelye általános elrendezésének és felhasználói felületének részleteit"
+        content:
+          title: "Tartalom"
+          header_description: "Konfigurálja a témakörök és bejegyzések kezelését, és személyre szabja a tartalomkészítési élményt tagjai számára"
+          keywords: "témák|bejegyzések|kategóriák|címkék"
+          sub_pages:
+            categories_and_tags:
+              title: "Kategóriák és címkék"
+            sharing:
+              title: "Megosztás"
+            posts_and_topics:
+              title: "Bejegyzések és témák"
+            stats_and_thresholds:
+              title: "Statisztikák és küszöbértékek"
+        permalinks:
+          title: "Közvetlen hivatkozások"
+          header_description: "A fórum által nem ismert webcímekre történő átirányítás"
+        user_defaults:
+          title: "Felhasználói alapértelmezések"
+          header_description: "Állítson be alapértelmezett értékeket azokhoz a beállításokhoz, amelyek hatással vannak a felhasználókra, és konfigurálhatja a belépési élményüket"
+          keywords: "felhasználók|belépés|új"
+        user_fields:
+          title: "Felhasználói mezők"
+          header_description: "Hozzon létre egyéni felhasználói mezőket, hogy további részleteket gyűjthessen a közösség tagjairól. Kiválaszthatja, hogy milyen adatokra van szükség a regisztráció során, mi jelenjen meg a profilokon, és mit frissíthetnek a felhasználók."
+        watched_words:
+          title: "Figyelt szavak"
+          header_description: "A megfigyelt szavak olyan moderációs eszközök, amelyek többféle műveletet is végrehajthatnak, beleértve bizonyos szavakat tartalmazó bejegyzések blokkolását, cenzúrázását, hivatkozását vagy megjelölését."
+        color_palettes:
+          title: "Színpaletták"
+          header_description: "Ezek a paletták szabályozzák a közösségedben használt színeket. Amikor egy palettát felhasználó által kiválaszthatóvá teszel, a tagok kiválaszthatják a kívánt színeket a beállításaik közül."
+        emoji:
+          title: "Emodzsi"
+          header_description: "Új emodzsi hozzáadása, amely mindenki számára elérhető lesz. Válasszon több fájlt, hogy több emodzsit hozzon létre a fájlnevek alapján. A kiválasztott csoport lesz használva az összes egyidejűleg hozzáadott fájl esetén."
+        themes:
+          title: "Témák"
+          header_description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak"
+        components:
+          title: "Összetevők"
+          header_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát"
+          keywords: "téma|összetevő|bővítmény"
+        themes_and_components:
+          title: "Témák és összetevők"
+          header_description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és összetevőkkel"
+          keywords: "téma|összetevő|kiterjesztés|testreszabás"
+        site_admin:
+          title: "Oldal adminisztrátor"
+          header_description: "Konfiguráljon különféle beállításokat a webhely kezelésével kapcsolatban"
+          keywords: "felfedezés|bootstrap|alkalmazások"
+        site_texts:
+          title: "Oldal szövegei"
+          header_description: "A Discourse-ban használt szövegek testreszabása a közösség hangjának és hangnemének megfelelően"
+        email:
+          title: "E-mail-beállítások"
+          header_description: "Konfigurálja a tagjainak küldött e-mailek beállításait"
+          keywords: "kivonat|leiratkozás|e-mail|smtp|mailgun|sendgrid|előzetes összefoglaló"
+          sub_pages:
+            server_settings:
+              title: "Kiszolgálóbeállítások"
+              header_description: "Konfigurálja a tagjainak küldött e-mailek beállításait"
+            preview_summary:
+              title: "Előnézet összefoglalója"
+              header_description: "Inaktív felhasználóknak küldött összefoglaló e-mailek tartalmának áttekintése"
+            advanced_test:
+              title: "Speciális teszt"
+              header_description: "Tekintse meg, hogyan dolgozza fel a Discourse a kapott e-maileket"
+            templates:
+              title: "Sablonok"
+              header_description: "Az e-mailek létrehozásához használt sablonok testreszabása"
+        email_logs:
+          title: "E-mail-naplók"
+          header_description: "Megtekintheti a webhelyéről küldött e-mailek naplóit"
+          keywords: "elküldött|kihagyott|visszapattan|kapott|elutasított|e-mail naplók"
+          sub_pages:
+            sent:
+              title: "Elküldött"
+              header_description: "Az elküldött e-mailek naplójának megtekintése"
+            skipped:
+              title: "Kihagyva"
+              header_description: "Az átugrott e-mailek naplójának megtekintése"
+            bounced:
+              title: "Visszapattant"
+              header_description: "Tekintse meg a visszapattanó e-mailek naplóját"
+            received:
+              title: "Kapott"
+              header_description: "A beérkezett e-mailek naplójának megtekintése"
+            rejected:
+              title: "Elutasított"
+              header_description: "Az elutasított e-mailek naplójának megtekintése"
+        email_appearance:
+          title: "Megjelenés"
+          header_description: "Testreszabhatja azt a sablont, amelyben az összes html e-mail megjelenik, és stílust adjon a CSS használatával"
+        staff_action_logs:
+          title: "Naplók és szűrés"
+          header_description: "A naplók és a szűrések lehetővé teszik a közösség figyelemmel kísérését és kezelését, biztosítva, hogy az biztonságos és tiszteletteljes maradjon. Megtekintheti a személyzet tagjai által végrehajtott összes művelet naplóit, a keresési naplókat és a felhasználói szűrési konfigurációt"
+          keywords: "hibanaplók|személyzeti műveletek|ellenőrzött e-mailek|ellenőrzött ip-k|ellenőrzött URL-ek|keresési naplók"
+          sub_pages:
+            screened_emails:
+              title: "Szűrt e-mailek"
+              header_description: "Amikor valaki új fiókot próbál létrehozni, a következő e-mail címeket ellenőrzi, és a regisztrációt blokkolja, vagy más műveletet hajt végre"
+            screened_ips:
+              title: "Szkennelt IP-k"
+              header_description: "A megfigyelt IP-címek. Az egyes IP-címek engedélyezhetőek."
+            screened_urls:
+              title: "Ellenőrzött URL-ek"
+              header_description: "Az itt felsorolt URL-címeket olyan felhasználók használták a hozzászólásokban, akiket spammerekként azonosítottak"
+            search_logs:
+              title: "Keresési naplók"
+              header_description: "Az elvégzett keresések naplójának megtekintése"
+        plugins:
+          title: "Telepített bővítmények"
+          header_description: "A bővítmények további funkciókkal bővítik közösségedet. Az alábbiakban mind az előre telepített, mind az egyéni bővítmények listája található."
+        api_keys:
+          title: "API kulcsok"
+          header_description: "Az API-kulcsok funkció lehetővé teszi a Discourse külső rendszerekkel való biztonságos integrálását és a műveletek automatizálását. A rendszergazdák meghatározott hatókörű kulcsokat hozhatnak létre az erőforrásokhoz és az érzékeny adatokhoz való hozzáférés szabályozására. A hatókör korlátozza a funkcionalitást, és fokozott biztonságot biztosít."
+          keywords: "token|hatókör"
+        webhooks:
+          title: "Webhooks"
+          header_description: "A Webhooks lehetővé teszi a Discourse számára, hogy értesítse a külső szolgáltatásokat, ha bizonyos események történnek az Ön webhelyén. Amikor a webhook aktiválódik, a rendszer egy POST-kérést küld a megadott URL-ekre."
+          keywords: "esemnény|payload|url"
+        embedding:
+          title: "Beágyazás"
+          header_description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
+      theme_site_settings:
+        setting: "Beállítás"
+        default_value: "Alapértelmezett"
+        select_setting: "Válasszon ki egy webhelybeállítást az aktuális témaértékek megtekintéséhez"
+        add: "Ugrás a téma webhely beállításaihoz"
+        help: "A jelenleg használt téma a <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. A téma webhelybeállításainak módosításához lépjen a <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>téma konfigurációs oldalára</a> , vagy kattintson egy hivatkozott témára az alábbi táblázatban a beállítások szerkesztéséhez."
+      search:
+        modal_title: "Keresés adminban"
+        title: "Keresés"
+        instructions: "Keresés adminban..."
+        full_page_link: "Váltás teljes oldalas keresésre"
+        no_results: 'Nem találtunk semmit, ami megfelelne a(z) "%{filter}" kifejezésnek.'
+        result_count:
+          one: '%{count} eredmény a(z) „%{filter}” kifejezésre'
+          other: '%{count} találat a(z) „%{filter}” kifejezésre'
+        result_types:
+          page:
+            one: "Oldal"
+            other: "Oldalak"
+          report:
+            one: "Jelentés"
+            other: "Jelentések"
+          setting:
+            one: "Beállítás"
+            other: "Beállítások"
+          theme:
+            one: "Téma"
+            other: "Témák"
+          component:
+            one: "Összetevő"
+            other: "Összetevők"
       new_features:
         title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
@@ -4884,6 +5500,7 @@ hu:
           previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a> oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
+          only_experiments: "Csak kísérleti funkciók megjelenítése"
           experiment_enabled: "Engedélyezte a kísérleti funkciót."
           experiment_disabled: "Letiltotta a kísérleti funkciót."
           experiment_toggled_too_fast: "Túl gyorsan váltotta a kísérleti funkciót. Kérjük, várjon néhány másodpercet, mielőtt újra próbálkozna."
@@ -5028,6 +5645,7 @@ hu:
             automatic_membership_user_count:
               one: "%{count} a felhasználó rendelkezik az új e-mail tartományokkal, és hozzá lesz adva a csoporthoz."
               other: "%{count} a felhasználók rendelkeznek az új e-mail tartományokkal, és hozzá lesznek adva a csoporthoz."
+            automatic_membership_user_unknown_count: "Az új e-mail domainek egyikével rendelkező felhasználók hozzáadódnak a csoporthoz."
             automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
             primary_group: "Automatikusan beállítva elsődleges csoportnak"
           alert:
@@ -5084,6 +5702,7 @@ hu:
         key: "Kulcs"
         keys: "Kulcs"
         created: Létrehozva
+        scope: Hatókör
         updated: Frissítve
         last_used: Utoljára használva
         never_used: Soha
@@ -5114,6 +5733,7 @@ hu:
             Hatókörök használatakor egy API-kulcsot a végpontok egy adott csoportjára korlátozhat.
             Azt is meghatározhatja, hogy mely paraméterek lesznek megengedettek. Több érték elválasztásához használj vesszőt.
           title: Hatókör
+          one_or_more: Legalább egy hatókört ki kell választani.
           granular: Szemcsés
           read_only: Csak olvasható
           global: Globális
@@ -5350,9 +5970,6 @@ hu:
           group_permissions: "Csoportengedélyek"
           users: "Felhasználók"
           groups: "Csoportok"
-          localization:
-            title: "Lokalizáció"
-            keywords: "hely|nyelv|időzóna|unicode|ltr"
           user_fields: "Felhasználói mezők"
           watched_words: "Figyelt szavak"
           legal: "Jogszabály"
@@ -5367,10 +5984,9 @@ hu:
           color_schemes: "Színpaletták"
           emoji: "Emodzsi"
           navigation: "Navigáció"
-          themes: "Témák"
-          components:
-            title: "Összetevő"
-            keywords: "téma|kiterjesztés"
+          themes_and_components:
+            title: "Témák és összetevők"
+            keywords: "kiterjesztés"
           site_texts: "Oldal szövegei"
       email_settings:
         title: "E-mail-beállítások"
@@ -5398,8 +6014,6 @@ hu:
             description: "Fedezze fel a Discourse új kiadásait és fejlesztéseit"
       config_areas:
         about:
-          header: "Az Ön webhelyéről"
-          description: "Adjon meg itt információkat erről a webhelyről és csapatáról, hogy az emberek megtudják, miről szól a közössége, ki áll a háttérben, és hogyan érhetik el Önt probléma esetén. Megjelenik a webhely <a href='%{basePath}/about'>Névjegy oldalon</a>."
           general_settings: "Általános beállítások"
           community_name: "Közösség neve"
           community_name_placeholder: "Példa közösség"
@@ -5409,7 +6023,7 @@ hu:
           community_title_help: "A böngésző lapon látható rövid leírás a kulcsfontosságú oldalakhoz, például kategóriákhoz és témalistákhoz."
           banner_image: "Banner kép"
           banner_image_help: |
-            Ezt a Rólunk oldaladon fogod használni. Ajánlott méret: 1100x300px. Elfogadott típusok: JPG, PNG és SVG, legfeljebb 10MB.
+            Ajánlott: 1100x300px. Formátumok: JPG, PNG, SVG (max. 10MB).
           contact_information: "Elérhetőség"
           community_owner: "Közösség tulajdonosa"
           community_owner_placeholder: "Johnny Smith"
@@ -5443,17 +6057,24 @@ hu:
           city_for_disputes_placeholder: "Város"
           city_for_disputes_help: |
             Adja meg a várost a fórummal kapcsolatos jogi viták rendezésére.
+          extra_groups:
+            heading: "Csoportos felsorolás"
+            description: "További csoportok megjelenítése a Névjegy oldalon."
+            groups: "Csoportok"
+            order: "Rendezési sorrend"
+            initial_members: "Bővített tagok"
+            initial_members_description: "A Továbbiak megtekintése gomb hozzáadása előtt megjelenítendő csoporttagok száma."
+            show_description: "Leírás hozzáadása"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:
             general_settings_saved: "Általános beállítások mentve"
             contact_information_saved: "Elérhetőség mentve"
             your_organization_saved: "Szervezet mentve"
+            extra_groups_saved: "Csoportos listázás mentve"
           saved: "mentve!"
         flags:
-          header: "Moderálás"
           edit_header: "Megjelölés szerkesztése"
-          subheader: "A Discourse megjelölési rendszere segít Önnek és a moderátori csapatának a tartalom és a felhasználói viselkedés kezelésében, hogy a közösség tisztelettudó és egészséges maradjon. Az alapértelmezett beállítások a legtöbb közösség számára megfelelőek, és nem kell megváltoztatnia őket. Ha azonban webhelyének különleges követelményei vannak, letilthatja a nem szükséges megjelöléseket, és saját megjelöléseket adhat hozzá."
           description: "Leírás"
           enabled: "Engedélyezed?"
           add: "Megjelölés hozzáadása"
@@ -5475,7 +6096,8 @@ hu:
             post: "bejegyzések"
             chat_message: "csevegőüzenetek"
             enabled: "Egyéni megjelölés engedélyezése mentés után"
-            alert: "Ha egyszer már használtak egy egyéni megjelölést, azt csak letiltani lehet, de szerkeszteni vagy törölni nem."
+            create_warning: "Egy egyéni megjelölés használata után csak letiltható vagy szerkeszthető, de nem törölhető."
+            edit_warning: "A megjelölés nevének és leírásának szerkesztése esetleges adatellentmondásokat okozhat. Egy egyéni megjelölés használata után csak letiltható vagy szerkeszthető, de nem törölhető."
             edit_flag: "Megjelölés szerkesztése"
             non_editable: "Ezt a megjelölést nem szerkesztheti, mivel ez egy rendszermegjelölés, vagy már használták a felülvizsgálati rendszerben. Ellenben letiltható."
             delete_flag: "Megjelölés törlése"
@@ -5495,18 +6117,55 @@ hu:
           delete: "Törlés"
           more_options:
             title: "További lehetőségek"
-        look_and_feel:
-          title: "Megjelenés és élmény"
-          description: "Szabja testre Discourse webhelyét, egyedi stílust adva neki."
+        themes_and_components:
+          breadcrumb_title: "Személyre szabás"
+          install: "Telepítés"
           themes:
             title: "Témák"
+            description: 'Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát az összes felhasználó számára. Szeretné ellenőrizni, hogy a témák mely webhelybeállításokat írják felül? <a href="%{themeSiteSettingsUrl}">Téma webhelybeállításainak megtekintése</a>'
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
-            themes_intro_img_alt: "Új téma helyőrző"
-            set_default_theme: "Beállítás alapértelmezettként"
-            default_theme: "Alapértelmezett téma"
-            themes_description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
             new_theme: "Új téma"
-            user_selectable: "Felhasználó által választható"
+            back: "Vissza a témákhoz"
+            install: "Telepítés"
+          components:
+            title: "Összetevők"
+            description: "Testreszabások, amelyek megváltoztatják a fórum kialakításának felületi elemeit, vagy további front-end szolgáltatásokat adnak hozzá"
+            components_intro: "A kezdéshez telepítsen egy új összetevőt, vagy készítsen sajátot a semmiből ezen erőforrások segítségével."
+            new_component: "Új öszetevő"
+            back: "Vissza az összetevőkhöz"
+            install: "Telepítés"
+            name: "Név"
+            used_on: "Használt"
+            enabled: "Engedélyezed?"
+            by_author: "Szerző %{name}"
+            learn_more: "Tudjon meg többet"
+            edit: "Szerkesztés"
+            parent_themes_two: "%{name1} és %{name2}"
+            parent_themes_three: "%{name1}, %{name2} és %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} és %{count} további"
+              other: "%{name1}, %{name2}, %{name3} és %{count} további"
+            add_to_theme: "Hozzáadás a témához"
+            preview: "Előnézet"
+            update: "Frissítés a legújabbra"
+            check_update: "Frissítések keresése"
+            update_available: "Frissítés elérhető!"
+            export: "Exportálás"
+            convert: "Konvertálás"
+            delete: "Törlés"
+            filter_by: "Szűrés:"
+            filter_by_all: "Összes"
+            filter_by_used: "Használt"
+            filter_by_unused: "Nem használt"
+            filter_by_updates_available: "Frissítések elérhetők"
+            new_update_for_component: "%{name} Új frissítés érhető el"
+            component_up_to_date: '"%{name}" naprakész.'
+            updated_successfully: '"%{name}" sikeresen frissítve.'
+            delete_confirm: 'Biztosan törli a "%{name}" elemet?'
+            deleted_successfully: '"%{name}" sikeresen törölve.'
+            no_components: "Nincsenek összetevők telepítve."
+            no_components_found: "Egyetlen összetevő sem felel meg a szűrőknek."
+            badge_unused: "Nem használt"
         user_fields:
           field: "Mező"
           type: "Típus"
@@ -5517,10 +6176,29 @@ hu:
           delete: "Törlés"
           delete_successful: "Felhasználói mező törölve."
           save_successful: "Felhasználói mező mentve."
+        color_palettes:
+          palette_name: "Név"
+          copy_to_clipboard: "Vágólapra másolás"
+          copied_to_clipboard: "Vágólapra másolva"
+          copy_to_clipboard_error: "Hiba az adatok vágólapra másolásakor"
+          duplicate: "Megkettőz"
+          delete: "Törlés"
+          color_options:
+            title: "Színbeállítások"
+            toggle: "Felhasználó által választható"
+            toggle_description: "A színpalettát a felhasználók választhatják ki"
+          colors:
+            title: "Színek"
+          save_changes: "Módosítások mentése"
+          unsaved_changes: "Nem mentett módosításai vannak"
+          copy_of: "%{name} másolata"
+          copy_created: '%{name} Új példánya létrehozva'
+          illegal_character_in_color: "A szín csak hexadecimális karakterekből állhat"
+          invalid_color_length: "A színnek #rrggbb vagy #rgb formátumúnak kell lennie."
+          blocked_edit_for_system: "A rendszertémához tartozó színpaletta nem szerkeszthető."
+          delete_confirm: "Biztosan törölni szeretné ezt a színpalettát?"
       plugins:
         title: "Bővítmények"
-        installed: "Telepített bővítmények"
-        description: "Ebben a listában megjelenik minden olyan Discourse bővítmény, amelyet telepített, vagy amely a Discourse tárhelyen előre telepítve van."
         name: "Név"
         none_installed: "Egy bővítmény sincs telepítve."
         version: "Verzió"
@@ -5535,25 +6213,15 @@ hu:
         author: "Szerző %{author}"
         experimental_badge: "kísérleti"
         learn_more: "Tudjon meg többet"
-        sidebar_link:
-          installed: "Telepítve"
-      advanced:
-        title: "Speciális"
-        sidebar_link:
-          api_keys:
-            title: "API kulcsok"
-            keywords: "token"
-          webhooks: "Webhookok"
-          developer: "Fejlesztő"
-          embedding: "Beágyazás"
-          rate_limits: "Korlátozások"
-          user_api: "Felhasználói API"
-          onebox: "Onebox"
-          files: "Fájlok"
-          other_options: "Egyéb"
-          search: "Keresés"
-          experimental: "Kísérleti"
-          all_site_settings: "Minden oldalbeállítás"
+        preinstalled: "Előtelepített"
+        filters:
+          all: "Összes"
+          enabled: "Bekapcsolva"
+          disabled: "Kikapcsolva"
+          preinstalled: "Előtelepített"
+          search_placeholder: "Bővítmények keresése..."
+          reset: "Alaphelyzetbe állítás"
+          no_results: "Nem találhatók a szűrőknek megfelelő bővítmények"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
@@ -5561,7 +6229,6 @@ hu:
       backups:
         title: "Biztonsági mentések"
         files_title: "Biztonsági mentés fájlok"
-        description: "A Discourse biztonsági mentések tartalmazzák a teljes webhely-adatbázist, amely mindent tartalmaz a webhelyen: témákat, hozzászólásokat, felhasználókat, csoportokat, beállításokat, témákat stb. Attól függően, hogy a mentési fájl hogyan készül, a feltöltéseket is tartalmazhatja, de nem feltétlenül."
         menu:
           backups: "Biztonsági mentések"
           backup_files: "Biztonsági mentés fájlok"
@@ -5680,11 +6347,13 @@ hu:
           theme: "Téma"
           component: "Összetevő"
           components: "Összetevők"
-          search_placeholder: "írj be a kereséshez…"
+          filter_all: "Összes"
+          filter_user_selectable: "Felhasználó által választható"
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
           themes_intro: "A kezdéshez válasszon egy meglévő témát, vagy telepítsen újat"
           themes_intro_new: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
+          components_intro_new: "Telepítsen egy új összetevőt a kezdéshez, vagy hozzon létre sajátot a semmiből az alábbi erőforrások segítségével."
           themes_intro_img_alt: "Új téma helyőrző"
           beginners_guide_title: "Útmutató kezdőknek a Discourse Témák használatához"
           developers_guide_title: "Fejlesztői útmutató a Discourse témákhoz"
@@ -5705,19 +6374,19 @@ hu:
           common: "Szokványos"
           desktop: "Asztali"
           mobile: "Mobil"
-          settings: "Beállítások"
-          translations: "Fordítások"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra fájlok"
           extra_files_upload: "Téma exportálása a fájlok megtekintéséhez."
           extra_files_remote: "A fájlok megtekintéséhez exportálja a témát, vagy ellenőrizze a git-tárat."
           preview: "Előnézet"
+          default: "Aktív"
           settings_editor: "Beállítások szerkesztő"
-          show_advanced: "Speciális mezők megjelenítése"
-          hide_advanced: "Speciális mezők elrejtése"
-          hide_unused_fields: "Nem használt mezők elrejtése"
+          show_advanced: "Speciális megjelenítése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
+          user_selectable_badge_label: "Felhasználó által választható"
+          user_selectable_button_label: "Felhasználók kiválaszthatják"
+          user_selectable_unavailable_button_label: "Elérhetetlenné tétel a felhasználók számára"
+          broken_badge_label: "Hibás téma"
           color_scheme_user_selectable: "A színpalettát a felhasználók választhatják ki"
           auto_update: "Automatikus frissítés a Discourse frissítésekor"
           color_scheme: "Színpaletta"
@@ -5735,9 +6404,10 @@ hu:
           convert_theme_alert_generic: "Biztos, hogy ezt a témát összetevővé akarja konvertálni?"
           convert_theme_tooltip: "A téma átalakítása összetevővé"
           inactive_themes: "Inaktív témák:"
-          set_default_theme: "Beállítás alapértelmezettként"
-          default_theme: "Alapértelmezett téma"
+          set_default_theme: "Beállítás aktívként"
+          default_theme: "Aktív téma"
           set_default_success: "Alapértelmezett téma: %{theme}"
+          setting_was_saved: "A témabeállítás mentésre került"
           install_success: "%{theme} sikeresen telepítve!"
           inactive_components: "Nem használt összetevők:"
           selected:
@@ -5749,6 +6419,7 @@ hu:
           disabled_component_tooltip: "Ez az összetevő le van tiltva"
           default_theme_tooltip: "Ez a téma a webhely alapértelmezett témája"
           updates_available_tooltip: "Frissítések érhetők el ehhez a témához"
+          update_available: "Frissítésre szorul"
           and_x_more:
             one: "és még további %{count}."
             other: "és még további %{count}."
@@ -5769,9 +6440,9 @@ hu:
           unsaved_parent_themes: "Nem rendelted hozzá az összetevőket a témákhoz, szeretnél továbblépni?"
           discard: "Elvetés"
           stay: "Marad"
-          css_html: "Egyedi CSS/HTML"
-          edit_css_html: "CSS/HTML szerkesztése"
-          edit_css_html_help: "Nem szerkesztettél semmilyen CSS vagy HTML formátumot"
+          css_html: "Egyéni kód"
+          edit_css_html: "Kód szerkesztése"
+          edit_css_html_help: "Még nem szerkesztett kódot."
           delete_upload_confirm: "Töröljük ezt a feltöltést? (A témához tartozó CSS működésképtelenné válhat!)"
           component_on_themes: "Összetevő társítása ezekhez a témákhoz"
           included_components: "Összetevő társítva"
@@ -5817,9 +6488,11 @@ hu:
           up_to_date: "A téma naprakész, utoljára ellenőrizve:"
           has_overwritten_history: "A téma aktuális verziója már nem létezik, mert a Git-előzményeket egy force push felülírta."
           add: "Hozzáadás"
-          theme_settings: "Téma beállítások"
+          theme_settings: "Egyéni témabeállítások"
+          theme_site_settings: "A téma által felülírható beállítások"
           edit_objects_theme_setting: "Objektumbeállítás szerkesztő"
-          overriden_settings_explanation: "A felülírt beállítások egy ponttal vannak megjelölve, és kiemelt színük van. Ha vissza szeretné állítani ezeket a beállításokat az alapértelmezett értékekre, nyomja meg a mellettük lévő visszaállítás gombot."
+          overriden_settings_explanation: "Az alapértelmezettől való eltéréseket pont és kiemelés jelöli. Az alapértelmezett értékek visszaállításához kattintson a Visszaállítás gombra."
+          overriden_site_settings_explanation: "A téma által testreszabható webhelybeállítások. Kattintson a Visszaállítás gombra a webhelybeállítások alapértelmezett értékének visszaállításához. A témák által felülírt összes webhelybeállítást a <a href='%{themeSiteSettingsConfigUrl}'>címen tekintheti meg a téma webhelybeállításainak konfigurációs oldalán</a>."
           no_settings: "Ez a téma nem rendelkezik beállításokkal."
           theme_translations: "Téma fordítások"
           empty: "Nincsenek elemek"
@@ -5829,25 +6502,35 @@ hu:
           compare_commits: "(Változások megtekintése)"
           remote_theme_edits: "Ha szerkeszteni szeretné ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójába</a>"
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
+          built_in_description: "Ez a téma előre telepítve van, és nem törölhető vagy testreszabható."
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
+          settings: "Beállítások"
+          colors: "Színek"
+          unsaved_colors:
+            one: "%{count} mentetlen szín van"
+            other: "%{count} mentetlen szín van"
+          unsaved_colors_leave_route_confirmation: "Még nem mentette a színpaletta módosításait. Biztosan kilép?"
+          save_colors: "Színek mentése"
+          discard_colors: "Elvetés"
+          colors_title: "Színek"
           scss:
             text: "CSS"
-            title: "Adja meg az egyéni CSS-t, az összes érvényes CSS és SCSS stílus használható"
+            title: "Egyéni CSS-szabályok SCSS-szintaxis támogatásával"
           header:
-            text: "Fejléc"
-            title: "Adja meg a webhely fejléce felett megjelenítendő HTML-t"
+            text: "Fejléc előtt"
+            title: "A Discourse fejléc felett megjelenítendő alapvető HTML kódok"
           after_header:
             text: "Fejléc után"
-            title: "Adja meg a fejléc után az összes oldalon megjelenítendő HTML-t"
+            title: "A Discourse fejléc alatt megjelenítendő alapvető HTML kódok"
           footer:
             text: "Lábléc"
-            title: "Adja meg az oldal láblécében megjelenítendő HTML-t"
+            title: "Az oldal alján megjelenítendő alap HTML kódok"
           embedded_scss:
             text: "Ágyazott CSS"
-            title: "Adja meg a megjegyzések beágyazott változatának átadásához használandó egyéni CSS-t"
+            title: "A CSS-t akkor kell megadni, ha a Discourse megjegyzései egy másik webhelyen vannak beágyazva"
           embedded_header:
             text: "Beágyazott fejléc"
-            title: "Adja meg a megjegyzések beágyazott változata felett megjelenítendő HTML-t"
+            title: "Alapvető HTML, amely a Discourse megjegyzései fölött jelenik meg, ha beágyazzák egy másik webhelyre"
           color_definitions:
             text: "Színmeghatározások"
             title: "Egyéni színdefiníciók megadása (csak haladó felhasználóknak)"
@@ -5861,106 +6544,124 @@ hu:
 
               A tulajdonságnevek előtagozása erősen ajánlott a bővítményekkel és/vagy a maggal való konfliktusok elkerülése érdekében.
           head_tag:
-            text: "Fej"
-            title: "A „head” címke előtt beillesztendő HTML"
+            text: "<head>"
+            title: "HTML a <head> oldal végére beszúrandó, a script tagek támogatásával."
           body_tag:
-            text: "Törzs"
-            title: "A „body” címke előtt beillesztendő HTML"
-          yaml:
-            text: "YAML"
-            title: "Téma beállításainak megadása YAML formátumban"
+            text: "<body>"
+            title: "HTML a <body> oldal végére beszúrandó, a script tagek támogatásával."
+          js:
+            text: "JS"
+            title: "JavaScript inicializáló az Ember 'template tag' szintaxis támogatásával"
           scss_color_variables_warning: 'Az alapvető SCSS színváltozók használata a témákban elavult. Használd helyette a CSS egyéni tulajdonságait. További részletekért lásd <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ezt az útmutatót</a>.'
           scss_warning_inline: "Az alapvető SCSS színváltozók használata a témákban elavult."
           all_filter: "Összes"
           active_filter: "Aktív"
           inactive_filter: "Inaktív"
           updates_available_filter: "Frissítések érhetők el"
-          schema:
-            title: "%{name} beállítások szerkesztése"
-            back_button: "%{name}-hoz vissza"
-            fields:
-              required: "*kötelező"
-              groups:
-                at_least:
-                  one: "legalább a %{count} csoportra van szükség"
-                  other: "legalább %{count} csoportra van szükség"
-              categories:
-                at_least:
-                  one: "legalább %{count} kategóriára van szükség"
-                  other: "legalább %{count} kategóriára van szükség"
-              tags:
-                at_least:
-                  one: "legalább %{count} címke szükséges"
-                  other: "legalább %{count} címke szükséges"
-              string:
-                too_short:
-                  one: "nem lehet rövidebb, mint %{count} karakter"
-                  other: "nem lehet rövidebb, mint %{count} karakter"
-              number:
-                too_small: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
-                too_large: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
+          theme_setting_saved: "Témabeállítás mentve!"
+          theme_site_setting_saved: "A téma webhelybeállítása mentve!"
+        schema:
+          title: "%{name} beállítások szerkesztése"
+          back_button: "%{name}-hoz vissza"
+          fields:
+            required: "*kötelező"
+            groups:
+              at_least:
+                one: "legalább a %{count} csoportra van szükség"
+                other: "legalább %{count} csoportra van szükség"
+            categories:
+              at_least:
+                one: "legalább %{count} kategóriára van szükség"
+                other: "legalább %{count} kategóriára van szükség"
+            tags:
+              at_least:
+                one: "legalább %{count} címke szükséges"
+                other: "legalább %{count} címke szükséges"
+            string:
+              too_short:
+                one: "nem lehet rövidebb, mint %{count} karakter"
+                other: "legalább %{count} karakteresnek kell lennie"
+            number:
+              too_small: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
+              too_large: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"
             description: "Alap paletta:"
+          preference_warning: "Megváltoztattad <a href='%{link}'>a személyes témabeállításaidat</a>, így a paletta módosításai esetleg nem láthatók számodra. Azok a látogatók, akik nem módosították az alapértelmezett beállításokat, továbbra is látni fogják az itt végrehajtott módosításokat."
+          dark_mode_warning: "Jelenleg sötét módot használsz. Aktív színpaletta beállításakor a színek a téma világos módjára lesznek alkalmazva. Ha módosítani szeretnéd az alapértelmezett sötét mód színeit, kérjük, szerkeszd a <a href='%{link}'>sötét mód webhelybeállítását</a>."
           title: "Színek"
-          edit: "Színpaletták szerkesztése"
+          edit: "Szerkesztés"
+          saved_refreshing: "Mentve! Frissítő színek..."
+          from_theme: "Téma forrása: %{name}"
+          filters:
+            all: "Összes"
+            user_selectable: "Felhasználó által választható"
+          active_badge:
+            text: "Aktív"
           long_title: "Színpaletták"
-          description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak – mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettő elérhetővé tehető a felhasználók számára, hogy kiválaszthassák preferenciáikat."
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"
           copy_name_prefix: "másolata"
-          delete_confirm: "Törli ezt a színpalettát?"
+          delete_confirm: "Biztosan törölni szeretné ezt a színpalettát?"
           undo: "Visszavonás"
           undo_title: "A szín legutóbbi mentése óta végrehajtott módosítások visszavonása."
           revert: "Visszaállítás"
           revert_title: "A szín visszaállítása a Discouse alapértelmezett színpalettájának megfelelőre."
           primary:
             name: "Elsődleges"
-            description: "valamenyi szövegek,ikonok és szegélyek"
+            description: "Fő szöveg és ikonok"
           primary-medium:
             name: "elsődleges-közepes"
+            description: "Letiltott vagy némított szöveg"
           primary-low-mid:
             name: "elsődleges-alacsony-közép"
+            description: "Szegélyek és finom díszítések"
           secondary:
             name: "Másodlagos"
-            description: "A fő háttérszín és néhány gomb szövegszíne."
+            description: "Fő háttér és néhány gombszöveg"
           tertiary:
             name: "harmadlagos"
-            description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
+            description: "Kiemelő szín (linkek, gombok, jelvények)"
           quaternary:
             name: "negyedrendű"
-            description: "A témákhoz opcionálisan használható."
+            description: "Opcionális témakiegészítő"
           header_background:
             name: "Fejléc háttere"
-            description: "Az oldal fejlécének háttérszíne."
+            description: "Fejléc háttere"
           header_primary:
             name: "fejléc elsődleges"
-            description: "Az oldal fejlécében lévő szöveg és ikonok."
+            description: "Fejléc szövege és ikonjai"
           highlight:
             name: "kiemelés"
-            description: "Az oldalon kiemelt elemek, például bejegyzések és témák háttérszíne."
+            description: "Kiemelt bejegyzések vagy témák"
           highlight-high:
             name: "kiemelés-magas"
+            description: "Erős kiemelés"
           highlight-medium:
             name: "kiemelés-közepes"
+            description: "Közepes kiemelés"
           highlight-low:
             name: "kiemelés-alacsony"
+            description: "Finom kiemelés"
           danger:
             name: "veszély"
-            description: "Emelje ki a színt az olyan műveletekhez, mint a bejegyzések és témák törlése."
+            description: "Hibák és törlési műveletek"
           success:
             name: "siker"
-            description: "A művelet sikerességének jelzésére szolgál."
+            description: "Sikeres intézkedések"
           love:
             name: "szerelem"
-            description: "A kedvelés gomb színe."
+            description: "Tetszik gomb"
           selected:
             name: "kiválasztott"
-            description: "Az elemek, például a listaelemek háttérszíne, ha ki vannak jelölve/aktívak."
+            description: "Aktív vagy kiválasztott elemek"
           hover:
             name: "hover"
-            description: "Háttérszín elemek, például a listaelemek háttérszíne, ha rájuk viszed az egérmutatót, vagy ha a billentyűzet fókuszában van."
+            description: "Hover vagy focus háttér"
+          editor:
+            light: "Világos"
+            dark: "Sötét"
         robots:
           title: "Felülbírálja a webhely robots.txt fájlját:"
           warning: "Ez véglegesen felülírja a kapcsolódó webhelybeállításokat."
@@ -6349,6 +7050,7 @@ hu:
           dropdown: "Legördülő menü"
           upload: "Fájl feltöltése"
           multiselect: "Több választási lehetőség"
+          tagchooser: "Címkecsoport-választó"
         validations_modal:
           button_title: "Érvényesítések"
           modal_title: "Érvényesítési lehetőségek"
@@ -6394,6 +7096,8 @@ hu:
           toggle_form_template: "űrlap sablon engedélyezve"
           select_template: "Űrlapsablonok kiválasztása"
           select_template_help: "Űrlapsablonok hozzáadása/szerkesztése"
+        errors:
+          multiple_tags_not_allowed: 'Nem választhat több címkét a "%{tag_name}" közül. A problémák elkerülése érdekében használja az űrlapsablont'
       impersonate:
         title: "Megszemélyesít"
         help: "Ezzel az eszközzel egy felhasználói fiókot adhat ki hibakeresési célokra. Ha befejezte, ki kell jelentkeznie."
@@ -6553,7 +7257,7 @@ hu:
         activity: Aktivitás
         like_count: Adott / kapott kedvelések
         last_100_days: "az elmúlt 100 napban"
-        private_topics_count: Privát témák
+        private_topics_count: Személyes üzenetek
         posts_read_count: Elolvasott bejegyzések
         post_count: Létrehozott bejegyzések
         second_factor_enabled: Kéttényezős hitelesítés aktiválva
@@ -6645,8 +7349,8 @@ hu:
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
         delete_confirm_title: "Biztosan törli ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
-        delete_and_block: "Törölje és <b>blokkolja</b> ezt az e-mailt és IP-címet"
-        delete_dont_block: "Csak törlés"
+        delete_and_block: "Törölje a felhasználót, és blokkolja az e-mail- és IP-címét"
+        delete_dont_block: "Felhasználó törlése"
         deleting_user: "Felhasználó törlése"
         deleted: "A felhasználó el lett távolítva"
         delete_failed: "Hiba történt a felhasználó törlésekor. Mielőtt megpróbálná törölni a felhasználót, győződjön meg arról, hogy az összes bejegyzést törölte."
@@ -6824,6 +7528,15 @@ hu:
       site_settings:
         title: "Webhely beállítások"
         description: "Konfigurálja a Discourse webhely beállításait a megjelenés, a funkcionalitás és a felhasználói élmény testreszabása érdekében."
+        discard:
+          one: "Változás elvetése"
+          other: "Változások elvetése"
+        save:
+          one: "Módosítás mentése"
+          other: "Módosítások mentése"
+        dirty_banner:
+          one: "<b>%{count}</b> nem mentett módosítása van"
+          other: "<b>%{count}</b> nem mentett módosítása van"
         emoji_list:
           invalid_input: "Az emodzsik listája csak érvényes emodzsineveket tartalmazhat, például ölelés"
           add_emoji_button:
@@ -6854,6 +7567,7 @@ hu:
           basic: "Alapvető beállítások"
           users: "Felhasználók"
           posting: "Közzététel"
+          content_localization: "Tartalom lokalizáció"
           email: "E-mail"
           files: "Fájlok"
           trust: "Bizalmi szintek"

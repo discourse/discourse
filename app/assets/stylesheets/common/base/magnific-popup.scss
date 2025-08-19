@@ -31,7 +31,7 @@
 
 $overlay-color: #000 !default;
 $overlay-opacity: 0.8 !default;
-$shadow: 0 0 8px rgba(0, 0, 0, 0.6) !default; // shadow on image or iframe
+$shadow: 0 0 8px rgb(0, 0, 0, 0.6) !default; // shadow on image or iframe
 $popup-padding-left: 8px !default; // Padding from left and from right side
 $popup-padding-left-mobile: 6px !default; // Same as above, but is applied when width of window is less than 800px
 
@@ -103,10 +103,8 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   top: 0;
   padding: 0 $popup-padding-left;
   box-sizing: border-box;
-}
 
-// Vertical centerer helper
-.mfp-container {
+  // Vertical centerer helper
   &::before {
     content: "";
     display: inline-block;
@@ -322,7 +320,7 @@ button {
     padding: 0;
     width: 90px;
     height: 110px;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgb(0, 0, 0, 0);
 
     &:active {
       margin-top: -54px;
@@ -532,8 +530,8 @@ button {
   }
 
   @if $include-mobile-layout-for-image {
-    @media all and (max-width: 800px) and (orientation: landscape),
-      screen and (max-height: 300px) {
+    @media all and (width <= 800px) and (orientation: landscape),
+      screen and (height <= 300px) {
       /**
        * Remove all paddings around the image on small screen
        */
@@ -564,7 +562,7 @@ button {
         }
 
         .mfp-bottom-bar {
-          background: rgba(0, 0, 0, 0.6);
+          background: rgb(0, 0, 0, 0.6);
           bottom: 0;
           margin: 0;
           top: auto;
@@ -588,7 +586,7 @@ button {
           width: 35px;
           height: 35px;
           line-height: var(--line-height-large);
-          background: rgba(0, 0, 0, 0.6);
+          background: rgb(0, 0, 0, 0.6);
           position: fixed;
           text-align: center;
           padding: 0;
@@ -599,9 +597,9 @@ button {
 }
 
 // Scale navigation arrows and reduce padding from sides
-@media all and (max-width: 900px) {
+@media all and (width <= 900px) {
   .mfp-arrow {
-    @include transform(scale(0.75));
+    transform: scale(0.75);
   }
 
   .mfp-arrow-left {
@@ -622,10 +620,11 @@ button {
   /* start state */
   .mfp-content {
     opacity: 0;
+    transform: scale(0.8);
+
     @media screen and (prefers-reduced-motion: no-preference) {
       transition: all 0.2s;
     }
-    transform: scale(0.8);
   }
 
   &.mfp-bg {
@@ -637,7 +636,7 @@ button {
   &.mfp-ready {
     .mfp-content {
       opacity: 1;
-      @include transform(scale(1));
+      transform: scale(1);
     }
 
     &.mfp-bg {
@@ -648,7 +647,7 @@ button {
   /* animate out */
   &.mfp-removing {
     .mfp-content {
-      @include transform(scale(0.8));
+      transform: scale(0.8);
       opacity: 0;
     }
 

@@ -174,17 +174,17 @@ de:
 
           Um einen Link zu kopieren, tippe und halte auf mobilen Geräten oder klicke rechts mit deiner Maus:
 
-          <https://de.wikipedia.org/wiki/Antiwitz>
-          <https://de.wikipedia.org/wiki/Tetraphobie>
-          <https://de.wikipedia.org/wiki/Beghilos>
+          [https://de.wikipedia.org/wiki/Antiwitz](https://de.wikipedia.org/wiki/Antiwitz)
+          [https://de.wikipedia.org/wiki/Tetraphobie](https://de.wikipedia.org/wiki/Tetraphobie)
+          [https://de.wikipedia.org/wiki/Buzzword-Bingo](https://de.wikipedia.org/wiki/Buzzword-Bingo)
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-
           Entschuldige bitte, ich konnte den Link in deiner Antwort nicht finden! :cry:
 
-          Kannst du versuchen, den folgenden Link auf einer eigenen Zeile in deine nächste Antwort einzufügen?
+          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deine nächste Antwort einzufügen?
 
-          <https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Hier ist ein Bild von einem Einhorn:
@@ -400,11 +400,9 @@ de:
           Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](%{base_uri}/my/preferences) ändern.
       poll:
         instructions: |-
-          Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Versuche, das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor zu verwenden, um **eine Umfrage zu erstellen**.
+          Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Versuche, das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor zu verwenden, um **eine Umfrage zu erstellen**.
         not_found: |-
-          Oops! Es war keine Umfrage in deiner Antwort.
-
-          Verwende das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad-Icon im Editor oder kopiere und füge die folgende Umfrage in deine nächste Antwort ein:
+          Oops! Es war keine Umfrage in deiner Antwort. Verwende das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor oder kopiere und füge die folgende Umfrage in deine nächste Antwort ein:
 
           ```text
           [poll]
@@ -428,12 +426,12 @@ de:
           - Wenn dein Beitrag viele optionale Details benötigt, die überwältigend sein könnten, wenn man sie alle auf einmal liest.
 
           [details=Wähle dies aus, um zu sehen, wie es funktioniert!]
-          1. Wähle das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor aus.
+          1. Wähle das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor aus.
           2. Wähle „Details ausblenden“ aus.
           3. Bearbeite die Zusammenfassung der Details und füge deinen Inhalt hinzu.
           [/details]
 
-          Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
+          Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
         not_found: |-
           Hast du Schwierigkeiten, ein Details-Widget zu erstellen? Versuche, Folgendes in deine nächste Antwort aufzunehmen:
 

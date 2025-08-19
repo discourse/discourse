@@ -132,8 +132,8 @@ RSpec.describe PostAlerter do
     end
 
     context "with group inboxes" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
       fab!(:group) do
         Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2)
       end
@@ -1164,6 +1164,20 @@ RSpec.describe PostAlerter do
       )
     end
 
+    it "adds display name to notification_data" do
+      Plugin::Instance
+        .new
+        .register_modifier(:notification_data) do |notification_data|
+          notification_data[:display_name] = "Benji McCool"
+          notification_data
+        end
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+      expect(notification.data_hash[:display_name]).to eq("Benji McCool")
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+
     it "applies modifiers to notification_data" do
       Plugin::Instance
         .new
@@ -2123,8 +2137,8 @@ RSpec.describe PostAlerter do
 
     context "with on change" do
       fab!(:user)
-      fab!(:other_tag) { Fabricate(:tag) }
-      fab!(:watched_tag) { Fabricate(:tag) }
+      fab!(:other_tag, :tag)
+      fab!(:watched_tag, :tag)
 
       before do
         SiteSetting.tagging_enabled = true
@@ -2194,10 +2208,10 @@ RSpec.describe PostAlerter do
     end
 
     context "with private message" do
-      fab!(:post) { Fabricate(:private_message_post) }
-      fab!(:other_tag) { Fabricate(:tag) }
-      fab!(:other_tag2) { Fabricate(:tag) }
-      fab!(:other_tag3) { Fabricate(:tag) }
+      fab!(:post, :private_message_post)
+      fab!(:other_tag, :tag)
+      fab!(:other_tag2, :tag)
+      fab!(:other_tag3, :tag)
       fab!(:user)
       fab!(:staged)
 
@@ -2332,7 +2346,7 @@ RSpec.describe PostAlerter do
 
   describe "#extract_linked_users" do
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:post2) { Fabricate(:post) }
+    fab!(:post2, :post)
 
     describe "when linked post has been deleted" do
       let(:topic_link) do
@@ -2356,7 +2370,7 @@ RSpec.describe PostAlerter do
 
   describe "#notify_post_users" do
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:last_editor) { Fabricate(:user) }
+    fab!(:last_editor, :user)
     fab!(:tag)
     fab!(:category)
 

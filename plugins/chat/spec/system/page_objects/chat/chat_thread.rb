@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatThread < PageObjects::Pages::Base
+      def open?
+        has_css?(".chat-thread.--loaded")
+      end
+
       def composer
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-thread")
       end
@@ -138,6 +142,16 @@ module PageObjects
         else
           message.find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
         end
+      end
+
+      def has_reaction?(message, emoji, text = nil)
+        within(message_reactions_list(message)) do
+          has_css?("[data-emoji-name=\"#{emoji}\"]", text: text)
+        end
+      end
+
+      def message_reactions_list(message)
+        within(message_by_id(message.id)) { find(".chat-message-reaction-list") }
       end
 
       def message_by_id(id)

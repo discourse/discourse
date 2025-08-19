@@ -480,6 +480,21 @@ RSpec.describe UserBadgesController do
       put "/user_badges/#{other_user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(204)
       expect(other_user_badge.reload.is_favorite).to eq(true)
+
+      user_badge3 =
+        UserBadge.create(
+          badge: badge,
+          user: user,
+          granted_by: Discourse.system_user,
+          granted_at: Time.now,
+          seq: 2,
+        )
+
+      put "/user_badges/#{user_badge3.id}/toggle_favorite.json"
+      expect(response.status).to eq(204)
+      expect(user_badge.reload.is_favorite).to eq(false)
+      expect(user_badge2.reload.is_favorite).to eq(false)
+      expect(user_badge3.reload.is_favorite).to eq(false)
     end
   end
 end

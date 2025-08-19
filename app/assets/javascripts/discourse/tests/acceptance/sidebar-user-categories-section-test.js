@@ -426,7 +426,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(
-        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
+        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-square[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
       )
       .exists(
         "category1 section link is rendered with solid prefix icon color"
@@ -482,7 +482,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(
-        `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
+        `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-prefix .prefix-badge[class*="d-icon-category.restricted"]`
       )
       .exists(
         "category3 section link is rendered with lock prefix badge icon as it is read restricted"
@@ -490,7 +490,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(
-        `.sidebar-section-link-wrapper[data-category-id="${category4.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
+        `.sidebar-section-link-wrapper[data-category-id="${category4.id}"] .sidebar-section-link-prefix .prefix-square[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
       )
       .exists("sub category section link is rendered with double prefix color");
   });
@@ -630,7 +630,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(
-        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
+        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-square[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
       )
       .exists(
         "category1 section link is rendered with the right solid prefix icon color"

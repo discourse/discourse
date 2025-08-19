@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:channel_1, :chat_channel)
+  fab!(:current_user, :admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap
@@ -45,7 +46,7 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
   end
 
   context "when the thread panel is also open" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
     fab!(:thread) do
       chat_thread_chain_bootstrap(
         channel: channel_1,
@@ -91,13 +92,13 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
     context "when last message is staged" do
       it "does not edit a message" do
         chat.visit_channel(channel_1)
-        page.driver.browser.network_conditions = { offline: true }
-        channel_page.send_message
-        channel_page.composer.edit_last_message_shortcut
 
-        expect(channel_page.composer.message_details).to have_no_message
-      ensure
-        page.driver.browser.network_conditions = { offline: false }
+        cdp.with_network_disconnected do
+          channel_page.send_message
+          channel_page.composer.edit_last_message_shortcut
+
+          expect(channel_page.composer.message_details).to have_no_message
+        end
       end
     end
 

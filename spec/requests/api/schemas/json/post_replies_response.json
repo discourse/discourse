@@ -138,6 +138,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "integer"
+          },
           "username": {
             "type": "string"
           },

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Sprievodca štýlom Discourse"
   js:
     styleguide:
       title: "Sprievodca štýlom"
@@ -25,6 +30,8 @@ sk:
           title: "Pole pre dátum a čas"
         menus:
           title: "Menu"
+        multi_select:
+          title: "Viacnásobný výber"
         toasts:
           title: "Toasty"
         font_scale:

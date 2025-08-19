@@ -1,5 +1,4 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
@@ -137,7 +136,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel: -1,
+  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [
@@ -177,6 +176,23 @@ if (process.env.TESTEM_FIREFOX_PATH) {
 }
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+
+fetch(`${target}/about.json`).catch(() => {
+  // eslint-disable-next-line no-console
+  console.error(
+    colors.red(
+      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/rake qunit:test' or 'plugin:qunit' to start automatically.`
+    )
+  );
+});
+
+const pluginTestPages = process.env.PLUGIN_TARGETS;
+if (pluginTestPages) {
+  module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
+    return `tests/index.html?hidepassed&target=${plugin}`;
+  });
+}
+
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {
@@ -204,7 +220,7 @@ if (themeTestPages) {
       });
     },
   ];
-} else if (shouldLoadPlugins()) {
+} else {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
     "/assets/plugins/*_extra.js": {
@@ -213,10 +229,13 @@ if (themeTestPages) {
     "/plugins/": {
       target,
     },
-    "/bootstrap/plugin-css-for-tests.css": {
+    "/bootstrap/": {
       target,
     },
     "/stylesheets/": {
+      target,
+    },
+    "/extra-locales/": {
       target,
     },
   };

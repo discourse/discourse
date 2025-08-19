@@ -1,11 +1,10 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { htmlSafe } from "@ember/template";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
@@ -47,7 +46,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get href() {
-    return this.adminSidebarNavLink.href;
+    if (this.adminSidebarNavLink.href) {
+      return getURL(this.adminSidebarNavLink.href);
+    }
   }
 
   get query() {
@@ -84,12 +85,14 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     // for the plugin ID has its own nested routes defined in the plugin.
     if (this.router.currentRoute.name === "adminPlugins.show.settings") {
       if (
-        this.adminSidebarNavLink.route?.includes(
-          this.router.currentRoute.parent.params.plugin_id
-        )
+        this.adminSidebarNavLink.route?.split(".").last ===
+        this.router.currentRoute.parent.params.plugin_id
       ) {
         return this.router.currentRoute.name;
       }
+    }
+    if (this.adminSidebarNavLink.currentWhen) {
+      return this.adminSidebarNavLink.currentWhen;
     }
   }
 
@@ -183,68 +186,6 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
-export function useAdminNavConfig(navMap) {
-  const adminNavSections = [
-    {
-      text: "",
-      name: "root",
-      hideSectionHeader: true,
-      links: [
-        {
-          name: "admin_home",
-          route: "admin.dashboard.general",
-          label: "admin.dashboard.title",
-          icon: "house",
-          moderator: true,
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.community.sidebar_link.users",
-          icon: "users",
-          moderator: true,
-        },
-        {
-          name: "admin_groups",
-          route: "groups",
-          label: "admin.community.sidebar_link.groups",
-          icon: "user-group",
-          moderator: true,
-        },
-        {
-          name: "admin_all_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "gear",
-        },
-        {
-          name: "admin_whats_new",
-          route: "admin.whatsNew",
-          label: "admin.account.sidebar_link.whats_new.title",
-          icon: "gift",
-          keywords: "admin.account.sidebar_link.whats_new.keywords",
-          moderator: true,
-        },
-      ],
-    },
-  ];
-
-  navMap = adminNavSections.concat(navMap);
-
-  for (const [sectionName, additionalLinks] of Object.entries(
-    additionalAdminSidebarSectionLinks
-  )) {
-    const section = navMap.find(
-      (navSection) => navSection.name === sectionName
-    );
-    if (section && additionalLinks.length) {
-      section.links.push(...additionalLinks);
-    }
-  }
-
-  return navMap;
-}
-
 // This is used for a plugin API.
 export function addAdminSidebarSectionLink(sectionName, link) {
   if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
@@ -309,23 +250,53 @@ function pluginAdminRouteLinks(router) {
       }
     })
     .map((plugin) => {
+      const pluginAdminRoute = plugin.admin_route.use_new_show_route
+        ? `adminPlugins.show`
+        : `adminPlugins.${plugin.admin_route.location}`;
+      const pluginConfigNav = configNavForPlugin(plugin.name);
+
+      let pluginNavLinks = [];
+      if (pluginConfigNav) {
+        if (Array.isArray(pluginConfigNav.links)) {
+          pluginNavLinks = [...pluginConfigNav.links];
+        }
+
+        if (pluginNavLinks.length) {
+          pluginNavLinks = pluginNavLinks
+            .map((link) => {
+              if (!link.icon) {
+                link.icon = "gear";
+              }
+              if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
+                link.routeModels = [plugin.name];
+                return link;
+              } else {
+                return;
+              }
+            })
+            .compact();
+        }
+      }
+
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
-        route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show`
-          : `adminPlugins.${plugin.admin_route.location}`,
+        route: pluginAdminRoute,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
         icon: "gear",
+        description: plugin.description,
+        links: pluginNavLinks,
       };
     });
 }
 
 function installedPluginsLinkKeywords() {
-  return (PreloadStore.get("visiblePlugins") || []).mapBy("name");
+  return (PreloadStore.get("visiblePlugins") || []).map(
+    (plugin) => plugin.name
+  );
 }
 
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
@@ -346,26 +317,27 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
-    if (!currentUser.use_admin_sidebar) {
-      return [];
-    }
 
     this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-state-manager"
     );
 
-    const savedConfig = this.adminSidebarStateManager.navConfig;
-    const navMap = savedConfig || ADMIN_NAV_MAP;
+    this.adminNavManager = getOwnerWithFallback(this).lookup(
+      "service:admin-nav-manager"
+    );
 
     if (!session.get("safe_mode")) {
-      const pluginLinks = navMap.find(
-        (section) => section.name === "plugins"
-      ).links;
-      pluginAdminRouteLinks(router).forEach((pluginLink) => {
-        if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
-          pluginLinks.push(pluginLink);
-        }
-      });
+      const existingPluginLinkNames = this.adminNavManager
+        .findSection("plugins")
+        .links.map((link) => link.name);
+      const pluginLinksToAdd = pluginAdminRouteLinks(router)
+        .map((pluginLink) => {
+          if (!existingPluginLinkNames.includes(pluginLink.name)) {
+            return pluginLink;
+          }
+        })
+        .compact();
+      this.adminNavManager.amendLinksToSection("plugins", pluginLinksToAdd);
 
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_installed_plugins",
@@ -373,29 +345,54 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
     }
 
-    store.findAll("theme").then((themes) => {
-      this.adminSidebarStateManager.setLinkKeywords(
-        "admin_themes",
-        themes.content.rejectBy("component").mapBy("name")
-      );
-      this.adminSidebarStateManager.setLinkKeywords(
-        "admin_components",
-        themes.content.filterBy("component").mapBy("name")
-      );
-    });
+    // Mods cannot access themes
+    if (currentUser.admin) {
+      store.findAll("theme").then((themes) => {
+        this.adminSidebarStateManager.setLinkKeywords(
+          "admin_themes_and_components",
+          themes.content
+            .reject((theme) => theme.component)
+            .map((theme) => theme.name)
+        );
+        this.adminSidebarStateManager.setLinkKeywords(
+          "admin_themes_and_components",
+          themes.content
+            .filter((theme) => theme.component)
+            .map((theme) => theme.name)
+        );
+      });
+    }
 
     if (siteSettings.experimental_form_templates) {
-      navMap
-        .find((section) => section.name === "appearance")
-        .links.push({
+      this.adminNavManager.amendLinksToSection("appearance", [
+        {
           name: "admin_customize_form_templates",
           route: "adminCustomizeFormTemplates",
           label: "admin.form_templates.nav_title",
           icon: "list",
-        });
+        },
+      ]);
     }
 
-    navMap.forEach((section) =>
+    if (siteSettings.use_overhauled_theme_color_palette) {
+      this.adminNavManager.overrideSectionLink(
+        "appearance",
+        "admin_color_palettes",
+        {
+          route: "adminConfig.colorPalettes",
+        }
+      );
+    }
+
+    for (const [sectionName, additionalLinks] of Object.entries(
+      additionalAdminSidebarSectionLinks
+    )) {
+      if (additionalLinks.length) {
+        this.adminNavManager.amendLinksToSection(sectionName, additionalLinks);
+      }
+    }
+
+    return this.adminNavManager.filteredNavMap.map((section) => {
       section.links.forEach((link) => {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
@@ -403,23 +400,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
             i18n(link.keywords).split("|")
           );
         }
-      })
-    );
-
-    let navConfig = useAdminNavConfig(navMap);
-
-    if (!currentUser.admin && currentUser.moderator) {
-      navConfig.forEach((section) => {
-        section.links = section.links.filter((link) => {
-          return link.moderator;
-        });
       });
-      navConfig = navConfig.filterBy("links.length");
-    }
 
-    return navConfig.map((adminNavSectionData) => {
       return defineAdminSection(
-        adminNavSectionData,
+        section,
         this.adminSidebarStateManager,
         router,
         currentUser
@@ -427,23 +411,31 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     });
   }
 
+  get searchable() {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    return currentUser.admin;
+  }
+
   get filterable() {
-    return true;
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    return !currentUser.admin && currentUser.moderator;
   }
 
   filterNoResultsDescription(filter) {
-    const params = {
-      filter: escapeExpression(filter),
-      settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
-          filter
-        )}`
-      ),
-      user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
-      ),
-    };
+    const escapedFilter = escapeExpression(filter);
 
-    return htmlSafe(i18n("sidebar.no_results.description", params));
+    i18n("sidebar.no_results.description_admin_search", {
+      filter: escapedFilter,
+    });
+  }
+
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

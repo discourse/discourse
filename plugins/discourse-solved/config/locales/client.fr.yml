@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse résolu"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "accepté"
+    solutions: "Solutions"
+    solved:
+      title: "Résolus"
+      allow_accepted_answers: "Autoriser l'auteur du sujet et les responsables à marquer une réponse comme solution"
+      solved_topics_auto_close_hours: "Fermer automatiquement le sujet (n) heures après la dernière réponse, une fois que le sujet a été marqué comme résolu."
+      accept_answer: "Sélectionnez si cette réponse résout le problème"
+      accepted_description: "C'est la solution acceptée à ce sujet"
+      has_no_accepted_answer: "Ce sujet n'a pas de solution"
+      unaccept_answer: "Annulez la sélection si cette réponse ne résout plus le problème"
+      accepted_answer: "Solution"
+      solution: "Solution"
+      solution_summary:
+        one: "solution"
+        other: "solutions"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "tous"
+        solved: "résolu"
+        unsolved: "non résolu"
+      no_solved_topics_title: "Vous n'avez encore résolu aucun sujet"
+      no_solved_topics_title_others: "%{username} n'a encore résolu aucun sujet."
+      no_solved_topics_body: "Lorsque vous fournissez une réponse utile à un sujet, votre réponse peut être sélectionnée comme solution par le ou la propriétaire ou responsable du sujet."
+      no_answer:
+        title: Votre question a-t-elle reçu une réponse ?
+        description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."
+      notification:
+        title: "votre message a été marqué comme solution"
+    topic_statuses:
+      solved:
+        help: "Ce sujet a une solution"
+    search:
+      advanced:
+        statuses:
+          solved: "sont résolus"
+          unsolved: "ne sont pas résolus"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Événement résolu"
+          accepted_solution: "Lorsqu'un utilisateur marque un message comme la réponse acceptée"
+          unaccepted_solution: "Lorsqu'un utilisateur marque un message comme la réponse non acceptée"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Accepter/refuser une solution.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < NC1
+            tl2: < NC2
+            tl3: < NC3
+            tl4: < NC4
+            any: Tous
+          fields:
+            maximum_trust_level:
+              label: Niveau de confiance
+              description: Les utilisateurs dont le niveau de confiance est inférieur à celui-ci déclencheront cette automatisation

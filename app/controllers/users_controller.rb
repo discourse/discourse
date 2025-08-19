@@ -107,7 +107,8 @@ class UsersController < ApplicationController
 
   before_action :add_noindex_header, only: %i[show my_redirect]
 
-  allow_in_staff_writes_only_mode :admin_login, :email_login, :password_reset_update
+  allow_in_readonly_mode :admin_login
+  allow_in_staff_writes_only_mode :email_login, :password_reset_update
 
   MAX_RECENT_SEARCHES = 5
 
@@ -483,7 +484,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{\A[a-z_\-/]+\z}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -756,11 +757,6 @@ class UsersController < ApplicationController
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
 
-    # just assign a password if we have an authenticator and no password
-    # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? &&
-      (authentication.has_authenticator? || associations.present?)
-
     if user.save
       authentication.finish
       activation.finish
@@ -858,18 +854,33 @@ class UsersController < ApplicationController
     end
   end
 
+  def remove_password
+    RateLimiter.new(nil, "remove-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "remove-password-min-#{request.remote_ip}", 3, 1.hour).performed!
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    RateLimiter.new(nil, "remove-password-hr-#{user.username}", 6, 1.hour).performed!
+
+    raise Discourse::NotFound if !user || !user.user_password
+    raise Discourse::InvalidAccess if !session_is_trusted?
+
+    user.remove_password
+
+    render json: success_json
+  end
+
   def password_reset_update
     expires_now
-    token = params[:token]
-    password_reset_find_user(token, committing_change: true)
 
+    token = params[:token]
+
+    password_reset_find_user(token, committing_change: true)
     rate_limit_second_factor!(@user)
 
-    # no point doing anything else if we can't even find
-    # a user from the token
-    if @user
-      raise Discourse::ReadOnly if staff_writes_only_mode? && !@user.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !@user&.staff?
 
+    if @user
       if !secure_session["second-factor-#{token}"]
         second_factor_authentication_result =
           @user.authenticate_second_factor(params, secure_session)
@@ -996,21 +1007,17 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      if user = User.with_email(params[:email]).admins.human_users.first
+      if user = User.real.admins.with_email(params[:email]).first
         email_token =
-          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        token_string = email_token.token
-        token_string += "?safe_mode=no_plugins,no_themes" if params["use_safe_mode"]
-        Jobs.enqueue(
-          :critical_user_email,
-          type: "admin_login",
-          user_id: user.id,
-          email_token: token_string,
-        )
-        @message = I18n.t("admin_login.success")
-      else
-        @message = I18n.t("admin_login.errors.unknown_email_address")
+          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login]).token
+        email_token += "?safe_mode=no_plugins,no_themes" if params["use_safe_mode"]
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token:)
       end
+
+      # NOTE: we don't check for `readonly` mode here because it might leak information about whether
+      # an email address is a registered admin account.
+
+      @message = I18n.t("admin_login.acknowledgement", email: params[:email])
     end
 
     render layout: "no_ember"
@@ -1028,12 +1035,14 @@ class UsersController < ApplicationController
 
     RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
-    user = User.human_users.find_by_username_or_email(params[:login])
+    user = User.real.find_by_username_or_email(params[:login])
     user_presence = user.present? && !user.staged
 
     if user
       RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
+
+      raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
       if user_presence
         DiscourseEvent.trigger(:before_email_login, user)
@@ -1235,6 +1244,7 @@ class UsersController < ApplicationController
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
+    prioritized_user_id = params[:prioritized_user_id].to_i if params[:prioritized_user_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1259,6 +1269,7 @@ class UsersController < ApplicationController
 
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
+    options[:prioritized_user_id] = prioritized_user_id if prioritized_user_id
 
     results =
       if usernames.blank?
@@ -1315,6 +1326,10 @@ class UsersController < ApplicationController
     return render json: failed_json, status: 422 if SiteSetting.discourse_connect_overrides_avatar
 
     type = params[:type]
+
+    if type == "gravatar" && !SiteSetting.gravatar_enabled?
+      return render json: failed_json, status: 422
+    end
 
     invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
     return render json: failed_json, status: 422 if invalid_type
@@ -1508,6 +1523,7 @@ class UsersController < ApplicationController
       number_of_deleted_posts
       number_of_flagged_posts
       number_of_flags_given
+      number_of_silencings
       number_of_suspensions
       warnings_received_count
       number_of_rejected_posts
@@ -1550,7 +1566,7 @@ class UsersController < ApplicationController
   end
 
   def trusted_session
-    render json: secure_session_confirmed? || user_just_created ? success_json : failed_json
+    render json: session_is_trusted? ? success_json : failed_json
   end
 
   def list_second_factors
@@ -1558,7 +1574,7 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if secure_session_confirmed?
+    if session_is_trusted?
       totp_second_factors =
         current_user
           .totps
@@ -1673,7 +1689,15 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
+    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+
+    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
+      if !current_user.has_password? && current_user.associated_accounts.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
+
+    security_key&.destroy!
 
     render json: success_json
   end
@@ -1783,7 +1807,7 @@ class UsersController < ApplicationController
     end
 
     raise Discourse::InvalidAccess.new if !current_user
-    raise Discourse::InvalidAccess.new unless user_just_created || secure_session_confirmed?
+    raise Discourse::InvalidAccess.new unless session_is_trusted?
   end
 
   def revoke_account
@@ -1795,6 +1819,12 @@ class UsersController < ApplicationController
     # revoke permissions even if the admin has temporarily disabled that type of login
     authenticator = Discourse.authenticators.find { |a| a.name == provider_name }
     raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
+
+    if user.associated_accounts&.length == 1
+      if !user.has_password? && user.passkey_credential_ids.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
 
     skip_remote = params.permit(:skip_remote)
 
@@ -2235,8 +2265,12 @@ class UsersController < ApplicationController
     secure_session["confirmed-session-#{current_user.id}"] == "true"
   end
 
+  def session_is_trusted?
+    secure_session_confirmed? || user_just_created
+  end
+
   def summary_cache_key(user)
-    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
+    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}:#{I18n.locale}"
   end
 
   def render_invite_error(message)

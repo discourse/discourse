@@ -7,12 +7,19 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 // TODO: Consolidate these tests into a single acceptance test once the Glimmer
 // header is the default.
 
-acceptance("Header API - anonymous", function () {
+acceptance("Header API - anonymous", function (needs) {
+  needs.settings({
+    enable_welcome_banner: false,
+  });
+
   test("can add buttons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+    withPluginApi((api) => {
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
@@ -20,10 +27,13 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("buttons are positioned to the left of the auth buttons by default", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+    withPluginApi((api) => {
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
@@ -37,10 +47,13 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("can add icons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+    withPluginApi((api) => {
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
@@ -48,10 +61,13 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("icons are positioned to the left of search icon by default", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+    withPluginApi((api) => {
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
@@ -69,10 +85,13 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   needs.user({ groups: AUTO_GROUPS.everyone });
 
   test("can add buttons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+    withPluginApi((api) => {
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
@@ -80,14 +99,19 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("buttons can be repositioned", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test1", <template>
-        <button class="test1-button">Test1</button>
-      </template>);
+    withPluginApi((api) => {
+      api.headerButtons.add(
+        "test1",
+        <template>
+          <button class="test1-button">Test1</button>
+        </template>
+      );
 
       api.headerButtons.add(
         "test2",
-        <template><button class="test2-button">Test2</button></template>,
+        <template>
+          <button class="test2-button">Test2</button>
+        </template>,
         { before: "test1" }
       );
     });
@@ -103,10 +127,13 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("can add icons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+    withPluginApi((api) => {
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
@@ -114,14 +141,19 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("icons can be repositioned", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test1", <template>
-        <span class="test1-icon">Test1</span>
-      </template>);
+    withPluginApi((api) => {
+      api.headerIcons.add(
+        "test1",
+        <template>
+          <span class="test1-icon">Test1</span>
+        </template>
+      );
 
       api.headerIcons.add(
         "test2",
-        <template><span class="test2-icon">Test2</span></template>,
+        <template>
+          <span class="test2-icon">Test2</span>
+        </template>,
         { before: "test1" }
       );
     });

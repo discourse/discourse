@@ -91,6 +91,17 @@ module("Unit | Service | emoji-store", function (hooks) {
     assert.deepEqual(storedDiversity, 2, "it persists the diversity value");
   });
 
+  test("skin tones are added to favourites after diversity is set", function (assert) {
+    this.emojiStore.trackEmojiForContext("-1:t3", "topic");
+    this.emojiStore.trackEmojiForContext("+1", "topic");
+    this.emojiStore.diversity = 2;
+
+    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
+      "+1:t2",
+      "-1:t3",
+    ]);
+  });
+
   test("sort emojis by frequency", function (assert) {
     this.emojiStore.trackEmojiForContext("grinning", "topic");
     this.emojiStore.trackEmojiForContext("cat", "topic");

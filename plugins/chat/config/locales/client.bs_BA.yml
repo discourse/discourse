@@ -63,6 +63,7 @@ bs_BA:
         tabs:
           members: Članovi
           settings: Postavke
+        remove_member: "Ukloni"
       new_message_modal:
         no_items: "Nema stavki"
         filter: "Filter"

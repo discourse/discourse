@@ -50,7 +50,10 @@ export default class GroupController extends Controller {
       count: userCount,
     });
 
-    const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
+    const defaultTabs = [
+      membersTab,
+      Tab.create({ name: "activity", icon: "bars-staggered" }),
+    ];
 
     if (canManageGroup && allowMembershipRequests) {
       defaultTabs.push(
@@ -68,6 +71,7 @@ export default class GroupController extends Controller {
         Tab.create({
           name: "messages",
           i18nKey: "messages",
+          icon: "envelope",
         })
       );
     }
@@ -86,6 +90,7 @@ export default class GroupController extends Controller {
       Tab.create({
         name: "permissions",
         i18nKey: "permissions.title",
+        icon: "id-card",
       })
     );
 

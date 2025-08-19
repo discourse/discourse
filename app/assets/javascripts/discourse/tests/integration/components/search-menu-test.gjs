@@ -1,4 +1,10 @@
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
   DEFAULT_TYPE_FILTER,
@@ -29,7 +35,11 @@ module("Integration | Component | search-menu", function (hooks) {
       return response(searchFixtures["search/query"]);
     });
 
-    await render(<template><SearchMenu /></template>);
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
 
     assert
       .dom(".show-advanced-search")
@@ -37,13 +47,13 @@ module("Integration | Component | search-menu", function (hooks) {
 
     assert.dom(".menu-panel").doesNotExist("Menu panel is not rendered yet");
 
-    await click("#search-term");
+    await click("#icon-search-input");
 
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .exists("Menu panel is rendered with initial options");
 
-    await fillIn("#search-term", "test");
+    await fillIn("#icon-search-input", "test");
 
     assert
       .dom(".label-suffix")
@@ -52,18 +62,18 @@ module("Integration | Component | search-menu", function (hooks) {
         "search label reflects context of search"
       );
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
 
-    await triggerKeyEvent("#search-term", "keydown", "Escape");
+    await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
     assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
 
-    await click("#search-term");
-    await click("#search-term");
+    await click("#icon-search-input");
+    await click("#icon-search-input");
 
     assert
       .dom(".search-result-topic")
@@ -71,11 +81,18 @@ module("Integration | Component | search-menu", function (hooks) {
   });
 
   test("clicking outside results hides and blurs input", async function (assert) {
-    await render(<template><div id="click-me"><SearchMenu /></div></template>);
-    await click("#search-term");
+    await render(
+      <template>
+        <div id="click-me"><SearchMenu
+            @location="test"
+            @searchInputId="icon-search-input"
+          /></div>
+      </template>
+    );
+    await click("#icon-search-input");
 
     assert
-      .dom("#search-term")
+      .dom("#icon-search-input")
       .isFocused("Clicking the search term input focuses it");
 
     await click("#click-me");
@@ -86,5 +103,66 @@ module("Integration | Component | search-menu", function (hooks) {
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");
+  });
+
+  test("rendering without a searchInputId provided", async function (assert) {
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom("#search-term.search-term__input")
+      .exists("input defaults to id of search-term");
+  });
+
+  test("search-context state changes updates the UI", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = null;
+    searchService.inTopicContext = false;
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom(".search-context")
+      .doesNotExist("no search context button when searchContext is null");
+
+    searchService.searchContext = { type: "private_messages" };
+    await settled();
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button appears when searchContext.type changes to private_messages"
+      );
+
+    await click(".search-context");
+
+    assert
+      .dom(".search-context")
+      .doesNotExist("PM context button disappears when clear btn is pressed");
+  });
+
+  test("PM inbox context can be restored after being cleared", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = { type: "private_messages" };
+    searchService.inTopicContext = false;
+
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert.dom(".search-context").exists("PM context button appears initially");
+
+    await click(".search-context");
+    assert
+      .dom(".search-context")
+      .doesNotExist("PM context button disappears when cleared");
+
+    await click("#search-term");
+
+    await click(".search-menu-assistant-item .search-item-slug");
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button reappears after selecting 'in:messages' suggestion"
+      );
   });
 });

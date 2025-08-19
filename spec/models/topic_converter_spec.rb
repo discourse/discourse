@@ -3,7 +3,7 @@
 RSpec.describe TopicConverter do
   describe "convert_to_public_topic" do
     fab!(:admin)
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:category) { Fabricate(:category, topic_count: 1) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
     let(:first_post) do
@@ -132,7 +132,7 @@ RSpec.describe TopicConverter do
 
   describe "convert_to_private_message" do
     fab!(:admin)
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:category)
     fab!(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
@@ -235,16 +235,17 @@ RSpec.describe TopicConverter do
     end
 
     context "when topic has replies" do
+      let(:replied_user) { Fabricate(:coding_horror) }
+
       before do
-        @replied_user = Fabricate(:coding_horror)
-        create_post(topic: topic, user: @replied_user)
+        create_post(topic: topic, user: replied_user)
         topic.reload
       end
 
       it "adds users who replied to topic in Private Message" do
         topic.convert_to_private_message(admin)
 
-        expect(topic.reload.topic_allowed_users.where(user_id: @replied_user.id).count).to eq(1)
+        expect(topic.reload.topic_allowed_users.where(user_id: replied_user.id).count).to eq(1)
         expect(topic.reload.user.user_stat.post_count).to eq(0)
       end
     end

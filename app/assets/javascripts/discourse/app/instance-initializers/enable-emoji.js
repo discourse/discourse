@@ -11,12 +11,12 @@ export default {
       return;
     }
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "face-smile",
+          icon: "far-face-smile",
           sendAction: () => {
             const menu = api.container.lookup("service:menu");
             menu.show(document.querySelector(".insert-composer-emoji"), {

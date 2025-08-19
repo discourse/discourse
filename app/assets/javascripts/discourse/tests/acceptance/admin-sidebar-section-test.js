@@ -1,4 +1,4 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -11,7 +11,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {
@@ -40,9 +39,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".sidebar-section[data-section-name='admin-root']")
       .exists("root section is displayed");
     assert
-      .dom(".sidebar-section[data-section-name='admin-account']")
-      .exists("account section is displayed");
-    assert
       .dom(".sidebar-section[data-section-name='admin-reports']")
       .exists("reports section is displayed");
     assert
@@ -57,25 +53,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     assert
       .dom(".sidebar-section[data-section-name='admin-security']")
       .exists("security settings section is displayed");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-plugins']")
-      .exists("plugins section is displayed");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-advanced']")
-      .exists("advanced section is displayed");
-  });
-
-  test("filter sections and clear filter with ESC", async function (assert) {
-    await visit("/admin");
-    await fillIn(".sidebar-filter__input", "advanced");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-plugins']")
-      .doesNotExist("plugins section is hidden");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-advanced']")
-      .exists("advanced section is displayed");
-
-    await triggerKeyEvent(".sidebar-filter__input", "keydown", "Escape");
     assert
       .dom(".sidebar-section[data-section-name='admin-plugins']")
       .exists("plugins section is displayed");
@@ -104,7 +81,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 });
 
-    await fillIn(".admin-reports-header__filter", "flags");
+    await fillIn(".admin-filter-controls__input", "flags");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -119,7 +96,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
-    await fillIn(".admin-reports-header__filter", "activities");
+    await fillIn(".admin-filter-controls__input", "activities");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -131,11 +108,10 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {
-    withPluginApi("1.24.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link",
         label: "admin.plugins.title",
@@ -254,14 +230,13 @@ acceptance(
     needs.user({
       admin: true,
       groups: [AUTO_GROUPS.admins],
-      use_admin_sidebar: true,
     });
 
     needs.hooks.beforeEach(() => {
       _locale = I18n.locale;
       I18n.locale = "fr_FOO";
 
-      withPluginApi("1.24.0", (api) => {
+      withPluginApi((api) => {
         api.addAdminSidebarSectionLink("root", {
           name: "test_section_link",
           label: "admin.plugins.title",

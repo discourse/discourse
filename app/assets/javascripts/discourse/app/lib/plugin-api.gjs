@@ -3,8 +3,9 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.1";
+export const PLUGIN_API_VERSION = "2.1.1";
 
+import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -26,6 +27,8 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
+import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -55,23 +58,21 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import {
-  PLUGIN_NAV_MODE_SIDEBAR,
-  PLUGIN_NAV_MODE_TOP,
-  registerAdminPluginConfigNav,
-} from "discourse/lib/admin-plugin-config-nav";
+import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
-import deprecated from "discourse/lib/deprecated";
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
+import { makeArray } from "discourse/lib/helpers";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
@@ -120,9 +121,9 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -133,19 +134,13 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
-  addButton,
-  apiExtraButtons,
-  removeButton,
-  replaceButton,
-} from "discourse/widgets/post-menu";
-import {
-  addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
@@ -158,30 +153,52 @@ import {
   changeSetting,
   createWidget,
   decorateWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
   queryRegistry,
   reopenWidget,
+  warnWidgetsDeprecation,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { modifySelectKit } from "select-kit/lib/plugin-api";
 
-const DEPRECATED_POST_MENU_WIDGETS = [
-  "post-menu",
-  "post-user-tip-shim",
-  "small-user-list",
+const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
+
+const DEPRECATED_POST_STREAM_WIDGETS = [
+  "actions-summary",
+  "avatar-flair",
+  "embedded-post",
+  "expand-hidden",
+  "expand-post-button",
+  "filter-jump-to-post",
+  "filter-show-all",
+  "post-article",
+  "post-article",
+  "post-avatar-user-info",
+  "post-avatar",
+  "post-body",
+  "post-contents",
+  "post-date",
+  "post-edits-indicator",
+  "post-email-indicator",
+  "post-gap",
+  "post-group-request",
+  "post-links",
+  "post-locked-indicator",
+  "post-meta-data",
+  "post-notice",
+  "post-placeholder",
+  "post-stream",
+  "post",
+  "poster-name",
+  "poster-name-title",
+  "posts-filtered-notice",
+  "reply-to-tab",
+  "select-post",
+  "topic-post-visited-line",
 ];
 
-const POST_MENU_DEPRECATION_OPTIONS = {
-  since: "v3.4.0.beta3-dev",
-  id: "discourse.post-menu-widget-overrides",
-  url: "https://meta.discourse.org/t/341014",
-};
-
-export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
-  since: "v3.4.0.beta4-dev",
-  id: "discourse.hbr-topic-list-overrides",
-  url: "https://meta.discourse.org/t/343404",
-};
+const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -273,7 +290,11 @@ class PluginApi {
       return;
     }
 
-    const klass = this.container.factoryFor(normalized);
+    let klass;
+    if (!blockedModifications.includes(normalized)) {
+      klass = this.container.factoryFor(normalized);
+    }
+
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
@@ -306,16 +327,7 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
+    this.#deprecateModifyClass(resolverName);
 
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
@@ -354,17 +366,6 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
-
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -486,7 +487,7 @@ class PluginApi {
    *   initialize() {
    *     withPluginApi("1.33.0", (api) => {
    *       api.addValueTransformerName("my-unique-transformer-name");
-   *     }),
+   *     });
    *   },
    * };
    *
@@ -605,9 +606,6 @@ class PluginApi {
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
    *
-   * Decoration normally happens in a detached DOM. Use `options.afterAdopt`
-   * to decorate html content after it is adopted by the main `document`.
-   *
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
@@ -621,8 +619,9 @@ class PluginApi {
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
+    addDecorator(callback);
 
+    this.onAppEvent("decorate-post-cooked-element", callback);
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -633,6 +632,13 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * See KeyboardShortcuts.unbind documentation.
+   **/
+  removeKeyboardShortcut(shortcut, callback) {
+    KeyboardShortcuts.unbind({ [shortcut]: callback });
   }
 
   /**
@@ -697,52 +703,92 @@ class PluginApi {
     const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, (dec) => {
-      const attrs = dec.attrs;
-      let results = cb(attrs.userCustomFields || {}, attrs);
+    const IconsComponent = class extends Component {
+      get definitions() {
+        return makeArray(
+          cb(
+            this.args.outletArgs.post.user_custom_fields || {},
+            this.args.outletArgs.post
+          )
+        );
+      }
 
-      if (results) {
-        if (!Array.isArray(results)) {
-          results = [results];
-        }
+      <template>
+        {{#each this.definitions as |definition|}}
+          <PostMetaDataPosterNameIcon
+            @className={{definition.className}}
+            @emoji={{definition.emoji}}
+            @emojiTitle={{definition.emojiTitle}}
+            @icon={{definition.icon}}
+            @text={{definition.text}}
+            @title={{definition.title}}
+            @url={{definition.url}}
+          />
+        {{/each}}
+      </template>
+    };
 
-        return results.map((result) => {
-          let iconBody;
+    if (loc === "after") {
+      this.renderAfterWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    } else {
+      this.renderBeforeWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    }
 
-          if (result.icon) {
-            iconBody = iconNode(result.icon);
-          } else if (result.emoji) {
-            iconBody = result.emoji.split("|").map((name) => {
-              let widgetAttrs = { name };
-              if (result.emojiTitle) {
-                widgetAttrs.title = true;
-              }
-              return dec.attach("emoji", widgetAttrs);
-            });
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
+    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+      decorateWidget(`poster-name:${loc}`, (dec) => {
+        const attrs = dec.attrs;
+        let results = cb(attrs.userCustomFields || {}, attrs);
+
+        if (results) {
+          if (!Array.isArray(results)) {
+            results = [results];
           }
 
-          if (result.text) {
-            iconBody = [iconBody, result.text];
-          }
+          return results.map((result) => {
+            let iconBody;
 
-          if (result.url) {
-            iconBody = dec.h(
-              "a",
-              { attributes: { href: result.url } },
+            if (result.icon) {
+              iconBody = iconNode(result.icon);
+            } else if (result.emoji) {
+              iconBody = result.emoji.split("|").map((name) => {
+                let widgetAttrs = { name };
+                if (result.emojiTitle) {
+                  widgetAttrs.title = true;
+                }
+                return dec.attach("emoji", widgetAttrs);
+              });
+            }
+
+            if (result.text) {
+              iconBody = [iconBody, result.text];
+            }
+
+            if (result.url) {
+              iconBody = dec.h(
+                "a",
+                { attributes: { href: result.url } },
+                iconBody
+              );
+            }
+
+            return dec.h(
+              "span.poster-icon",
+              {
+                className: result.className,
+                attributes: { title: result.title },
+              },
               iconBody
             );
-          }
-
-          return dec.h(
-            "span.poster-icon",
-            {
-              className: result.className,
-              attributes: { title: result.title },
-            },
-            iconBody
-          );
-        });
-      }
+          });
+        }
+      });
     });
   }
 
@@ -812,6 +858,11 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
+   * This function is now an alias to `api.addTrackedPostProperties`.
+   * Use that function instead.
+   *
    * Add more attributes to the Post's `attrs` object passed through to widgets.
    * You'll need to do this if you've added attributes to the serializer for a
    * Post and want to use them when you're rendering.
@@ -825,7 +876,15 @@ class PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    includeAttributes(...attributes);
+    // TODO (glimmer-post-stream): we can keep this function as an alias to addTrackedPostProperties but it is useful to
+    //   deprecate it for now to get warnings for code that is incompatible with the Glimmer Post Stream because if an
+    //   extension is using it, then it is very likely that there is other code that is incompatible
+    deprecated(
+      "`api.includePostAttributes` has been deprecated. Use `api.addTrackedPostProperties` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
+    this.addTrackedPostProperties(...attributes);
   }
 
   /**
@@ -847,59 +906,13 @@ class PluginApi {
   }
 
   /**
-   * Add a new button below a post with your plugin.
-   *
-   * The `callback` function will be called whenever the post menu is rendered,
-   * and if you return an object with the button details it will be rendered.
-   *
-   * Example:
-   *
-   * ```
-   * api.addPostMenuButton('coffee', () => {
-   *   return {
-   *     action: 'drinkCoffee',
-   *     icon: 'mug-saucer',
-   *     className: 'hot-coffee',
-   *     title: 'coffee.title',
-   *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
-   *   };
-   * });
-   *
-   * ```
-   *
-   * action: may be a string or a function. If it is a string, a widget action
-   * will be triggered. If it is function, the function will be called.
-   *
-   * function will receive a single argument:
-   *  {
-   *    post:
-   *    showFeedback:
-   *  }
-   *
-   *  showFeedback can be called to issue a visual feedback on button press.
-   *  It gets a single argument with a localization key.
-   *
-   *  Example:
-   *
-   *  api.addPostMenuButton('coffee', () => {
-   *    return {
-   *      action: ({ post, showFeedback }) => {
-   *        drinkCoffee(post);
-   *        showFeedback('discourse_plugin.coffee.drink');
-   *      },
-   *      icon: 'mug-saucer',
-   *      className: 'hot-coffee',
-   *    }
-   *  }
+   * Decommissioned API
    **/
-  addPostMenuButton(name, callback) {
-    deprecated(
-      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  addPostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.addPostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    apiExtraButtons[name] = callback;
-    addButton(name, callback);
   }
 
   /**
@@ -951,54 +964,23 @@ class PluginApi {
   }
 
   /**
-   * Remove existing button below a post with your plugin.
-   *
-   * Example:
-   *
-   * ```
-   * api.removePostMenuButton('like');
-   * ```
-   *
-   * ```
-   * api.removePostMenuButton('like', (attrs, state, siteSettings, settings, currentUser) => {
-   *   if (attrs.post_number === 1) {
-   *     return true;
-   *   }
-   * });
-   * ```
+   * Decommissioned API
    **/
-  removePostMenuButton(name, callback) {
-    deprecated(
-      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  removePostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.removePostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    removeButton(name, callback);
   }
 
   /**
-   * Replace an existing button with a widget
-   *
-   * Example:
-   * ```
-   * api.replacePostMenuButton("like", {
-   *   name: "widget-name",
-   *   buildAttrs: (widget) => {
-   *     return { post: widget.findAncestorModel() };
-   *   },
-   *   shouldRender: (widget) => {
-   *     const post = widget.findAncestorModel();
-   *     return post.id === 1
-   *   }
-   * });
+   * Decommissioned API
    **/
-  replacePostMenuButton(name, widget) {
-    deprecated(
-      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  replacePostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.replacePostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    replaceButton(name, widget);
   }
 
   /**
@@ -1138,6 +1120,10 @@ class PluginApi {
    **/
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
+    this.registerValueTransformer(
+      "post-meta-data-poster-name-suppress-similar-name",
+      () => true
+    );
   }
 
   /**
@@ -1189,17 +1175,26 @@ class PluginApi {
   }
 
   /**
-   * Prevents an element in the post stream from being cloaked.
-   * This is useful if you are using a plugin such as youtube
-   * and don't want the video removed once it has begun
-   * playing.
+   * Prevents a specific post from being cloaked during scroll.
    *
+   * This is useful, for example, for posts that apply customizations that hold state which
+   * would be lost if the nodes were removed from the DOM, e.g., a playing video.
+   *
+   * Note that the set of prevented posts is reset whenever the topic being displayed changes.
+   *
+   * @param {number} postId - The ID of the post to prevent from cloaking
+   * @param {boolean} prevent - Whether to prevent (true) or allow (false) cloaking
+   *
+   * @example
    * ```javascript
-   * api.preventCloak(1234);
+   * api.preventCloak(1234); // Prevent post 1234 from being cloaked
+   * api.preventCloak(1234, false); // Allow post 1234 to be cloaked again
    * ```
    **/
-  preventCloak(postId) {
-    preventCloak(postId);
+  preventCloak(postId, prevent = true) {
+    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
+    preventCloak(postId); // widgets
+    preventCloaking(postId, prevent); // glimmer-post-stream
   }
 
   /**
@@ -1288,7 +1283,7 @@ class PluginApi {
    * });
    * ```
    *
-   * This API is deprecated. See renderIntoOutlet instead.
+   * This API is deprecated. See renderInOutlet instead.
    *
    **/
   registerConnectorClass(outletName, connectorName, klass) {
@@ -1441,6 +1436,12 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionIcon(key, icon) {
+    this.registerValueTransformer(
+      "post-small-action-icon",
+      ({ value, context: { code } }) => (key === code ? icon : value)
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostSmallActionIcon(key, icon);
   }
 
@@ -1468,6 +1469,15 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionClassesCallback(callback) {
+    this.registerValueTransformer(
+      "post-small-action-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostSmallActionClassesCallback(callback);
   }
 
@@ -1529,6 +1539,15 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
+    this.registerValueTransformer(
+      "post-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostClassesCallback(callback);
   }
 
@@ -1586,6 +1605,11 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
+    deprecated(
+      "`api.addPostTransformCallback` has been deprecated.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostTransformCallback(callback);
   }
 
@@ -3255,24 +3279,15 @@ class PluginApi {
    *
    * * route
    * * label OR text
-   *
-   * And the mode must be one of "sidebar" or "top", which controls
-   * where in the admin plugin show UI the links will be displayed.
    */
-  addAdminPluginConfigurationNav(pluginId, ...links) {
+  addAdminPluginConfigurationNav(pluginId, links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
-    // TODO (Ted - 2024-01-27): Remove once usage discontinued in plugins.
-    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
-    if (validModes.includes(links[0])) {
-      links.shift();
-    }
-
-    registerAdminPluginConfigNav(pluginId, links.flat());
+    registerAdminPluginConfigNav(pluginId, links);
   }
 
   /**
@@ -3389,6 +3404,26 @@ class PluginApi {
     registerReportModeComponent(mode, componentClass);
   }
 
+  /**
+   * Registers an extension for the rich editor
+   *
+   * EXPERIMENTAL: This API will change without warning
+   *
+   * @param {RichEditorExtension} extension
+   */
+  registerRichEditorExtension(extension) {
+    registerRichEditorExtension(extension);
+  }
+
+  #deprecateModifyClass(className) {
+    if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
+      deprecated(
+        `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    }
+  }
+
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3403,10 +3438,14 @@ class PluginApi {
     //   );
     // }
 
-    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
+    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
       deprecated(
-        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        POST_MENU_DEPRECATION_OPTIONS
+        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    } else {
+      warnWidgetsDeprecation(
+        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
       );
     }
   }

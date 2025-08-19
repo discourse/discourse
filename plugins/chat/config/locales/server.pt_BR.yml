@@ -59,6 +59,7 @@ pt_BR:
     deleted_chat_username: excluído
     errors:
       users_cant_be_added_to_channel: "Não é possível adicionar usuários(as) a este canal."
+      user_cant_be_removed_from_channel: "O usuário não pode ser removido deste canal"
       channel_exists_for_category: "Já existe um canal para este nome e categoria"
       channel_new_message_disallowed:
         archived: "O canal está arquivado, nenhuma mensagem nova pode ser enviada"
@@ -235,6 +236,12 @@ pt_BR:
         private_email:
           one: "[%{site_name}] Nova mensagem"
           other: "[%{site_name}] Novas mensagens"
+        watched_thread:
+          one: "[%{site_name}] Nova mensagem de thread em %{channel}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
         chat_dm_1:
           one: "[%{site_name}] Nova mensagem de %{name}"
           other: "[%{site_name}] Novas mensagens de %{name}"

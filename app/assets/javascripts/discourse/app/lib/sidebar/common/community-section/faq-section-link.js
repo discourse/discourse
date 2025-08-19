@@ -29,7 +29,7 @@ export default class FAQSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    const name = this.renameToGuidelines ? "Guidelines" : this.overridenName;
+    const name = this.renameToGuidelines ? "Guidelines" : this.overriddenName;
 
     return i18n(
       `sidebar.sections.community.links.${name.toLowerCase()}.content`,

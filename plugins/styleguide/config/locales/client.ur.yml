@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "ڈسکورس اسٹائل گائیڈ"
   js:
     styleguide:
       title: "اسٹائل گائڈ"
@@ -25,6 +30,8 @@ ur:
           title: "تاریخ / وقت کی معلومات"
         menus:
           title: "مینوز"
+        multi_select:
+          title: "ملٹی سلیکٹ"
         toasts:
           title: "ٹکیاں"
         font_scale:
