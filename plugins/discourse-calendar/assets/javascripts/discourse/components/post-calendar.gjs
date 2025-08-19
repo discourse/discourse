@@ -43,8 +43,8 @@ export default class PostCalendar extends Component {
   async refresh() {
     try {
       const post = await this.store.find("post", this.post.id);
-      const topic_json = await Topic.find(post.topic_id, {});
-      const topic = Topic.create(topic_json);
+      const topicJSON = await Topic.find(post.topic_id, {});
+      const topic = Topic.create(topicJSON);
       post.set("topic", topic);
       this.post = post;
     } catch (error) {
