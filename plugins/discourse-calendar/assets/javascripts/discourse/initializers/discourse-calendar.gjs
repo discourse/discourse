@@ -156,7 +156,7 @@ function initializeDiscourseCalendar(api) {
     };
   }
 
-  function _buildEventObject(from, to) {
+  function #buildEventObject(from, to) {
     const hasTimeSpecified = (d) => {
       if (!d) {
         return false;
