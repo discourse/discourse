@@ -52,13 +52,13 @@ export default function deprecated(msg, options = {}) {
 
   if (
     raiseError ||
-    matchedWorkflow?.handler === "throw" ||
+    matchedWorkflow?.handler?.split("|").includes("throw") ||
     (!matchedWorkflow && globalThis.EmberENV?.RAISE_ON_DEPRECATION)
   ) {
     throw msg;
   }
 
-  if (matchedWorkflow?.handler !== "silence") {
+  if (!matchedWorkflow?.handler?.split("|").includes("silence")) {
     console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
   }
 }

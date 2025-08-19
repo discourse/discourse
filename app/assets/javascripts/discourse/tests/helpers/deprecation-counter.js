@@ -21,9 +21,13 @@ export default class DeprecationCounter {
   @bind
   handleEmberDeprecation(message, options, next) {
     const { id } = options;
-    const matchingConfig = this.#configById.get(id);
+    const matchingConfigs = this.#configById.get(id)?.split("|");
 
-    if (matchingConfig !== "silence") {
+    if (
+      !matchingConfigs ||
+      !matchingConfigs.includes("silence") ||
+      matchingConfigs.includes("counter")
+    ) {
       this.incrementDeprecation(id);
     }
 
@@ -35,9 +39,13 @@ export default class DeprecationCounter {
     let { id } = options;
     id ||= "discourse.(unknown)";
 
-    const matchingConfig = this.#configById.get(id);
+    const matchingConfigs = this.#configById.get(id)?.split("|");
 
-    if (matchingConfig !== "silence") {
+    if (
+      !matchingConfigs ||
+      !matchingConfigs.includes("silence") ||
+      matchingConfigs.includes("counter")
+    ) {
       this.incrementDeprecation(id);
     }
   }

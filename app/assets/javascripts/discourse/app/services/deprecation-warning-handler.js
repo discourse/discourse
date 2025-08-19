@@ -75,7 +75,7 @@ export default class DeprecationWarningHandler extends Service {
   handle(message, opts) {
     const matchingConfig = DEPRECATION_WORKFLOW.find(opts.id);
 
-    if (matchingConfig?.handler === "silence") {
+    if (matchingConfig?.handler?.split("|").includes("silence")) {
       return;
     }
 
