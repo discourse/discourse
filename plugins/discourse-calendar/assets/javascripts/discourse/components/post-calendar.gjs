@@ -190,7 +190,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  _buildEventObject(from, to) {
+  #buildEventObject(from, to) {
     const hasTimeSpecified = (d) => {
       if (!d) {
         return false;
