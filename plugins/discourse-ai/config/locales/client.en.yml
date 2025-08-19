@@ -626,6 +626,8 @@ en:
           open_router-x-ai-grok-3-beta: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
+          groq-openai-gpt-oss-120b: "State of the art open-weight model by Open AI"
+          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by Open AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -672,6 +674,7 @@ en:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Custom"
 
         provider_fields:
