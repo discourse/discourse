@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
+import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
+import DiscourseURL from "discourse/lib/url";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
 import {
   getCalendarButtonsText,
@@ -26,6 +28,8 @@ export default class FullCalendar extends Component {
   @service capabilities;
   @service tooltip;
   @service menu;
+
+  @controller topic;
 
   calendar = null;
 
@@ -59,40 +63,39 @@ export default class FullCalendar extends Component {
       events: this.args.events || [],
       headerToolbar: this.headerToolbar,
       customButtons: this.args.customButtons || {},
-      eventWillUnmount: (info) => {
-        if (info.event.extendedProps?.tooltip) {
-          info.event.extendedProps?.tooltip.destroy();
-        }
+      eventWillUnmount: () => {
+        this.menu.getByIdentifier("post-event-menu")?.close?.();
+        this.menu.getByIdentifier("post-event-tooltip")?.close?.();
       },
       datesSet: (info) => {
         if (this.args.onDatesChange) {
           this.args.onDatesChange(info);
         }
       },
-      eventDidMount: (info) => {
-        if (info.event.extendedProps?.htmlContent) {
-          const tooltip = this.menu.register(info.el, {
-            groupIdentifier: "post-event-tooltip",
+      eventClick: async ({ el, event, jsEvent }) => {
+        const { htmlContent, postNumber, postUrl, postEvent } =
+          event.extendedProps;
+
+        if (postUrl) {
+          DiscourseURL.routeTo(postUrl);
+        } else if (postNumber) {
+          this.topic.send("jumpToPost", postNumber);
+        } else if (htmlContent) {
+          this.tooltip.show(el, {
+            identifier: "post-event-tooltip",
             triggers: ["hover"],
             content: htmlSafe(
               // this is a workaround to allow linebreaks in the tooltip
-              "<div>" + info.event.extendedProps.htmlContent + "</div>"
+              "<div>" + event.extendedProps.htmlContent + "</div>"
             ),
           });
+        } else if (postEvent.id) {
+          jsEvent.preventDefault();
 
-          info.event.setExtendedProp("tooltip", tooltip);
-        }
-      },
-      eventClick: async (info) => {
-        info.jsEvent.preventDefault();
-
-        if (this.args.onEventClick) {
-          this.args.onEventClick(info);
-        } else {
-          const menu = await this.menu.show(
+          await this.menu.show(
             {
               getBoundingClientRect() {
-                return info.el.getBoundingClientRect();
+                return el.getBoundingClientRect();
               },
             },
             {
@@ -101,15 +104,13 @@ export default class FullCalendar extends Component {
               modalForMobile: true,
               maxWidth: 500,
               data: {
-                eventId: info.event.extendedProps.postEvent.id,
+                eventId: postEvent.id,
                 onClose: () => {
                   this.menu.getByIdentifier("post-event-menu")?.close?.();
                 },
               },
             }
           );
-
-          info.event.setExtendedProp("menu", menu);
         }
       },
     });
