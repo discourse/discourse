@@ -151,7 +151,7 @@ export default class UpcomingEventsCalendar extends Component {
   async fetchEvents(info) {
     this.resolvedEvents = null;
 
-    const params = { after:  info.startStr, before: info.endStr };
+    const params = { after: info.startStr, before: info.endStr };
 
     if (this.args.mine) {
       params.attending_user = this.currentUser?.username;
