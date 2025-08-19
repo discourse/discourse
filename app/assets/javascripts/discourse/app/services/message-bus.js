@@ -1,4 +1,4 @@
-// import MessageBus from "message-bus-client";
+import MessageBus from "message-bus-client";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
@@ -7,9 +7,6 @@ export default class MessageBusService {
 
   static create() {
     // TODO - message-bus-client module not working properly?
-    return {
-      subscribe() {},
-      unsubscribe() {},
-    };
+    return window.MessageBus;
   }
 }

@@ -12,7 +12,7 @@ import {
   setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
-// import "message-bus-client";
+import "message-bus-client";
 const MessageBus = window.MessageBus; // TODO
 import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
