@@ -18,7 +18,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * Preserves exact CSS structure for backward compatibility
  *
  * @class DAutocompleteModifier
- * @param {string} [key] - Trigger character (e.g., "@", "#", ":") - optional for multi-select inputs
+ * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
  * @param {Function} template - Template function that receives {options: results} and returns HTML
  * @param {Function} [transformComplete] - Transform completion before insertion
@@ -30,12 +30,6 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {Function} [onKeyUp] - Function to extract search patterns from text on keyup: (text, caretPosition) => Array<string>
  * @param {boolean} [fixedTextareaPosition=false] - If true, positions autocomplete relative to textarea bounds instead of cursor position
  * @param {number} [offset] - Displaces the content from its reference trigger in pixels
- * @param {Array} [items] - Pre-selected items for multi-select inputs
- * @param {boolean} [single=false] - Single vs multi-select mode for input fields
- * @param {boolean} [allowAny=true] - Allow any input or restrict to valid selections only
- * @param {Function} [onChangeItems] - Callback when selected items change: (items) => void
- * @param {boolean} [updateData=false] - Update existing data instead of replacing
- * @param {boolean} [fullWidthWrap=false] - Use full width wrapper for input styling
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -77,7 +71,6 @@ export default class DAutocompleteModifier extends Modifier {
   previousTerm = null;
   debouncedSearch = null;
   targetElement = null;
-  inputWrapper = null;
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
@@ -153,17 +146,6 @@ export default class DAutocompleteModifier extends Modifier {
       // Handle backspace when closed to potentially reopen,
       // skip if modifier keys are pressed - this prevents autocomplete from opening on full deletion
       if (event.key === "Backspace" && !this.hasModifierKey(event)) {
-        // For multi-select inputs, handle removing the last selected item if input is empty
-        if (
-          this.isMultiSelectInput &&
-          this.targetElement.value === "" &&
-          this.selectedItems.length > 0
-        ) {
-          event.preventDefault();
-          const lastItem = this.selectedItems[this.selectedItems.length - 1];
-          this.removeSelectedItem(lastItem);
-          return;
-        }
         await this.handleBackspace(event);
       }
     }
@@ -224,11 +206,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.targetElement = element;
     this.options = options || {};
 
-    // Initialize multi-select input if needed
-    if (this.isMultiSelectInput) {
-      this.initializeMultiSelectInput();
-    }
-
     // Set up event listeners
     element.addEventListener("keyup", this.handleKeyUp);
     element.addEventListener("keydown", this.handleKeyDown);
@@ -245,14 +222,6 @@ export default class DAutocompleteModifier extends Modifier {
       this.targetElement.removeEventListener("keyup", this.handleKeyUp);
       this.targetElement.removeEventListener("keydown", this.handleKeyDown);
       this.targetElement.removeEventListener("paste", this.handlePaste);
-    }
-
-    // Clean up multi-select wrapper if it was created
-    if (this.inputWrapper && this.isMultiSelectInput) {
-      // Remove item event listeners
-      this.inputWrapper.querySelectorAll(".item .remove").forEach((button) => {
-        button.removeEventListener("click", button._clickHandler);
-      });
     }
 
     document.removeEventListener("click", this.handleGlobalClick);
@@ -275,153 +244,6 @@ export default class DAutocompleteModifier extends Modifier {
   // to insert it.
   get autoSelectFirstSuggestion() {
     return this.options.autoSelectFirstSuggestion ?? true;
-  }
-
-  get isMultiSelectInput() {
-    return (
-      this.targetElement?.tagName === "INPUT" &&
-      this.options.items !== undefined
-    );
-  }
-
-  get isSingleMode() {
-    return this.options.single ?? false;
-  }
-
-  initializeMultiSelectInput() {
-    if (!this.isMultiSelectInput) {
-      return;
-    }
-
-    // Initialize selected items from options
-    if (this.options.items) {
-      this.selectedItems = Array.isArray(this.options.items)
-        ? [...this.options.items]
-        : this.options.items
-          ? [this.options.items]
-          : [];
-    }
-
-    // Set up input wrapper for multi-select styling
-    this.setupInputWrapper();
-
-    // Clear the input value for multi-select mode
-    if (!this.isSingleMode) {
-      this.targetElement.value = "";
-    }
-
-    // Set completeStart for no-key autocomplete
-    if (!this.options.key) {
-      this.completeStart = 0;
-    }
-  }
-
-  setupInputWrapper() {
-    const element = this.targetElement;
-    const parent = element.parentElement;
-
-    // Create wrapper if it doesn't exist
-    if (!parent.classList.contains("ac-wrap")) {
-      const wrapper = document.createElement("div");
-      wrapper.className = `ac-wrap clearfix${this.options.disabled ? " disabled" : ""}`;
-
-      if (!this.options.fullWidthWrap) {
-        const width = Math.max(element.offsetWidth, 200);
-        wrapper.style.width = `${width}px`;
-      }
-
-      parent.insertBefore(wrapper, element);
-      wrapper.appendChild(element);
-      this.inputWrapper = wrapper;
-    }
-
-    // Add selected items to wrapper
-    this.renderSelectedItems();
-  }
-
-  renderSelectedItems() {
-    if (!this.inputWrapper || this.isSingleMode) {
-      return;
-    }
-
-    // Remove existing items
-    this.inputWrapper
-      .querySelectorAll(".item")
-      .forEach((item) => item.remove());
-
-    // Add current selected items
-    this.selectedItems.forEach((item) => {
-      this.addSelectedItemElement(item);
-    });
-
-    // Hide input if single mode and has items
-    if (this.isSingleMode && this.selectedItems.length > 0) {
-      this.targetElement.style.display = "none";
-    } else {
-      this.targetElement.style.display = "";
-    }
-  }
-
-  addSelectedItemElement(item) {
-    const itemElement = document.createElement("div");
-    itemElement.className = "item";
-
-    const displayValue = this.options.transformComplete
-      ? this.options.transformComplete(item)
-      : item;
-    itemElement.innerHTML = `<span>${displayValue}<a class="remove" href="#"><svg class="fa d-icon d-icon-xmark svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#xmark"></use></svg></a></span>`;
-
-    // Add remove handler
-    const removeButton = itemElement.querySelector(".remove");
-    const clickHandler = (e) => {
-      e.preventDefault();
-      this.removeSelectedItem(item);
-    };
-    removeButton._clickHandler = clickHandler;
-    removeButton.addEventListener("click", clickHandler);
-
-    // Insert before input
-    this.inputWrapper.insertBefore(itemElement, this.targetElement);
-  }
-
-  removeSelectedItem(item) {
-    const index = this.selectedItems.indexOf(item);
-    if (index > -1) {
-      this.selectedItems.splice(index, 1);
-      this.renderSelectedItems();
-
-      if (this.options.onChangeItems) {
-        this.options.onChangeItems([...this.selectedItems]);
-      }
-
-      // Show input if single mode and no items
-      if (this.isSingleMode && this.selectedItems.length === 0) {
-        this.targetElement.style.display = "";
-        this.targetElement.focus();
-      }
-    }
-  }
-
-  addSelectedItem(item) {
-    if (this.isSingleMode) {
-      this.selectedItems = [];
-    }
-
-    const transformedItem = this.options.transformComplete
-      ? this.options.transformComplete(item)
-      : item;
-
-    if (!this.selectedItems.includes(transformedItem)) {
-      this.selectedItems.push(transformedItem);
-      this.renderSelectedItems();
-
-      if (this.options.onChangeItems) {
-        this.options.onChangeItems([...this.selectedItems]);
-      }
-    }
-
-    // Clear input after selection
-    this.targetElement.value = "";
   }
 
   async performAutocomplete() {
@@ -464,7 +286,7 @@ export default class DAutocompleteModifier extends Modifier {
         this.completeStart = position.completeStart;
         this.completeEnd = caretPosition - 1;
         await this.performSearch(position.term || "");
-      } else if (this.options.key && key === this.options.key) {
+      } else if (key === this.options.key) {
         // Fallback to original trigger logic for new autocomplete sessions
         const prevChar = value.charAt(caretPosition - 2);
         if (
@@ -474,13 +296,6 @@ export default class DAutocompleteModifier extends Modifier {
           this.completeStart = caretPosition - 1;
           this.completeEnd = caretPosition - 1;
           await this.performSearch("");
-        }
-      } else if (!this.options.key && this.isMultiSelectInput) {
-        // Handle no-key autocomplete for multi-select inputs
-        if (await this.shouldTrigger()) {
-          this.completeStart = 0;
-          this.completeEnd = caretPosition - 1;
-          await this.performSearch(value);
         }
       }
     } else if (this.completeStart !== null) {
@@ -556,8 +371,7 @@ export default class DAutocompleteModifier extends Modifier {
     if (results && results.then && typeof results.then === "function") {
       try {
         const resolvedResults = await results;
-        const filteredResults = this.filterSelectedItems(resolvedResults || []);
-        this.updateResults(filteredResults);
+        this.updateResults(resolvedResults || []);
       } catch (e) {
         if (e.name !== "AbortError") {
           // eslint-disable-next-line no-console
@@ -569,22 +383,7 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     // For handling non-async dataSources
-    const filteredResults = this.filterSelectedItems(results || []);
-    this.updateResults(filteredResults);
-  }
-
-  filterSelectedItems(results) {
-    if (!this.isMultiSelectInput || !this.selectedItems.length) {
-      return results;
-    }
-
-    // Filter out already selected items
-    return results.filter((result) => {
-      const transformedResult = this.options.transformComplete
-        ? this.options.transformComplete(result)
-        : result;
-      return !this.selectedItems.includes(transformedResult);
-    });
+    this.updateResults(results || []);
   }
 
   updateResults(results) {
@@ -709,20 +508,8 @@ export default class DAutocompleteModifier extends Modifier {
   @action
   async selectResult(result, event) {
     try {
-      if (this.isMultiSelectInput) {
-        // Handle multi-select input
-        this.addSelectedItem(result);
-        await this.closeAutocomplete();
-
-        // Focus back to input if not single mode
-        if (!this.isSingleMode) {
-          this.targetElement.focus();
-        }
-      } else {
-        // Handle regular textarea/input
-        await this.completeTextareaTerm(result, event);
-        await this.closeAutocomplete();
-      }
+      await this.completeTextareaTerm(result, event);
+      await this.closeAutocomplete();
 
       // Clear any cached search state to prevent showing stale results
       this.previousTerm = null;
