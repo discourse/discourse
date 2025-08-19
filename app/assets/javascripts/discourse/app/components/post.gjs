@@ -423,9 +423,7 @@ export default class Post extends Component {
         <p class="sr-only">
           {{i18n "post_cloaked_content"}}
         </p>
-      {{/if}}
-
-      {{#unless @cloaked}}
+      {{else}}
         {{#let
           (lazyHash
             post=@post
@@ -687,7 +685,7 @@ export default class Post extends Component {
             </article>
           </PluginOutlet>
         {{/let}}
-      {{/unless}}
+      {{/if}}
     </div>
   </template>
 }

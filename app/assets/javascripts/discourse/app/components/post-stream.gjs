@@ -116,27 +116,6 @@ export default class PostStream extends Component {
     );
   }
 
-  get remainingPostsCount() {
-    return Math.max(this.args.topic.posts_count - this.posts.length, 0);
-  }
-
-  get postsAboveCount() {
-    if (!this.posts.length) {
-      return 0;
-    }
-    const firstLoadedPostNumber = this.posts[0].post_number;
-    return Math.max(firstLoadedPostNumber - 1, 0);
-  }
-
-  get postsBelowCount() {
-    if (!this.posts.length) {
-      return 0;
-    }
-    const lastLoadedPostNumber = this.posts.at(-1).post_number;
-    const totalPosts = this.args.topic.posts_count;
-    return Math.max(totalPosts - lastLoadedPostNumber, 0);
-  }
-
   isPlaceholder(post) {
     return post instanceof Placeholder;
   }
@@ -271,24 +250,16 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
-      {{#if @postStream.canPrependMore}}
-        <div
-          role="region"
-          aria-label={{i18n
-            "load_more_posts_above_count"
-            count=this.postsAboveCount
-          }}
-          class="sr-only"
-        >
-          <p>{{i18n
-              "load_more_posts_above_count"
-              count=this.postsAboveCount
-            }}</p>
-        </div>
-      {{/if}}
 
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
         <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        <div
+          role="region"
+          aria-label={{i18n "load_more_posts_above"}}
+          class="sr-only"
+        >
+          <p>{{i18n "load_more_posts_above"}}</p>
+        </div>
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -393,24 +364,18 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
-      {{#if @postStream.canAppendMore}}
-        <div
-          role="region"
-          aria-label={{i18n
-            "load_more_posts_below_count"
-            count=this.postsBelowCount
-          }}
-          class="sr-only"
-        >
-          <p>
-            {{i18n "load_more_posts_below_count" count=this.postsBelowCount}}
-          </p>
-        </div>
-      {{/if}}
-
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
           <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+          <div
+            role="region"
+            aria-label={{i18n "load_more_posts_below"}}
+            class="sr-only"
+          >
+            <p>
+              {{i18n "load_more_posts_below"}}
+            </p>
+          </div>
         {{else}}
           <div
             class="post-stream__bottom-boundary"
