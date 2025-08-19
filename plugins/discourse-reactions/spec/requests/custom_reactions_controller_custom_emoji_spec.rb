@@ -10,11 +10,11 @@ describe DiscourseReactions::CustomReactionsController do
 
   before do
     SiteSetting.discourse_reactions_enabled = true
-    SiteSetting.discourse_reactions_allow_choose_more = true
+    SiteSetting.discourse_reactions_allow_any_emoji = true
     SiteSetting.discourse_reactions_enabled_reactions = "heart|thumbsup|laughing"
   end
 
-  describe "custom emoji reactions with discourse_reactions_allow_choose_more enabled" do
+  describe "custom emoji reactions with discourse_reactions_allow_any_emoji enabled" do
     context "when user is logged in" do
       before { sign_in(user) }
 
@@ -85,9 +85,9 @@ describe DiscourseReactions::CustomReactionsController do
     end
   end
 
-  describe "custom emoji reactions with discourse_reactions_allow_choose_more disabled" do
+  describe "custom emoji reactions with discourse_reactions_allow_any_emoji disabled" do
     before do
-      SiteSetting.discourse_reactions_allow_choose_more = false
+      SiteSetting.discourse_reactions_allow_any_emoji = false
       sign_in(user)
     end
 
