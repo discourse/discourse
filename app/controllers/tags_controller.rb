@@ -166,7 +166,12 @@ class TagsController < ::ApplicationController
         additional_tags_trimmed = additional_tags_trimmed&.uniq
 
         if additional_tags_trimmed != @additional_tags
-          params[:additional_tag_ids] = additional_tags_trimmed&.join("/")
+          if additional_tags_trimmed.present?
+            params[:additional_tag_ids] = additional_tags_trimmed&.join("/")
+          else
+            params[:additional_tag_ids] = nil
+          end
+
           return redirect_to url_for(params.to_unsafe_hash)
         end
       end
