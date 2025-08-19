@@ -67,14 +67,5 @@ module DiscoursePostEvent
         (base_starts_at + 1.hour)
       end
     end
-
-    def timezone
-      # For events with RRULE, return UTC since we're sending UTC times
-      if include_rrule?
-        "UTC"
-      else
-        object.timezone
-      end
-    end
   end
 end
