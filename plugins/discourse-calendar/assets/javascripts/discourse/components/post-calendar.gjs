@@ -106,9 +106,9 @@ export default class PostCalendar extends Component {
             const to = moment.tz(detail.to, detail.timezone);
             eventDetail.from = from.format("YYYY-MM-DD");
             eventDetail.to = to.format("YYYY-MM-DD");
-            events.push(this._buildStandaloneEvent(eventDetail));
+            events.push(this.buildStandaloneEvent(eventDetail));
           } else {
-            events.push(this._buildStandaloneEvent(detail));
+            events.push(this.buildStandaloneEvent(detail));
           }
           break;
       }
@@ -150,7 +150,7 @@ export default class PostCalendar extends Component {
 
     Object.keys(formattedGroupedEvents).forEach((key) => {
       const formattedGroupedEvent = formattedGroupedEvents[key];
-      this._buildGroupedEvents(formattedGroupedEvent).forEach((event) => {
+      this.buildGroupedEvents(formattedGroupedEvent).forEach((event) => {
         events.push(event);
       });
     });
@@ -158,8 +158,8 @@ export default class PostCalendar extends Component {
     return events;
   }
 
-  #buildEvent(detail) {
-    const event = this._buildEventObject(
+  buildEvent(detail) {
+    const event = this.buildEventObject(
       detail.from
         ? {
             dateTime: moment(detail.from),
@@ -190,7 +190,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  #buildEventObject(from, to) {
+  buildEventObject(from, to) {
     const hasTimeSpecified = (d) => {
       if (!d) {
         return false;
@@ -230,7 +230,7 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  #buildGroupedEvents(detail) {
+  buildGroupedEvents(detail) {
     const events = [];
     const groupedEventData = [detail];
 
@@ -251,7 +251,7 @@ export default class PostCalendar extends Component {
           localEventNames.push(key);
         });
 
-      const event = this._buildEvent(eventData);
+      const event = this.buildEvent(eventData);
       event.classNames = ["grouped-event"];
 
       if (users.length > 2) {
@@ -281,8 +281,8 @@ export default class PostCalendar extends Component {
     return events;
   }
 
-  #buildStandaloneEvent(detail) {
-    const event = this._buildEvent(detail);
+  buildStandaloneEvent(detail) {
+    const event = this.buildEvent(detail);
     const holidayCalendarTopicId = parseInt(
       this.siteSettings.holiday_calendar_topic_id,
       10
@@ -316,36 +316,6 @@ export default class PostCalendar extends Component {
     }
 
     return event;
-  }
-
-  #modifyDatesForTimezoneOffset(from, to, timezoneOffset) {
-    if (timezoneOffset > 0) {
-      if (to.isValid()) {
-        to.add(1, "day");
-      } else {
-        to = from.clone().add(1, "day");
-      }
-    } else if (timezoneOffset < 0) {
-      if (!to.isValid()) {
-        to = from.clone();
-      }
-      from.subtract(1, "day");
-    }
-  }
-
-  #findAverageTimezone(eventTimezones) {
-    const totalOffsets = eventTimezones.reduce(
-      (sum, timezone) => sum + timezone.timezoneOffset,
-      0
-    );
-    const averageOffset = totalOffsets / eventTimezones.length;
-
-    return eventTimezones.reduce((closest, timezone) => {
-      const difference = Math.abs(timezone.timezoneOffset - averageOffset);
-      return difference < Math.abs(closest.timezoneOffset - averageOffset)
-        ? timezone
-        : closest;
-    });
   }
 
   get leftHeaderToolbar() {
