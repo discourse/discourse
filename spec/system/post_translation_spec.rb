@@ -5,7 +5,7 @@ describe "Post translations", type: :system do
 
   fab!(:admin)
   fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic, user: admin) }
+  fab!(:post) { Fabricate(:post, topic:) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:translation_selector) do
@@ -17,13 +17,12 @@ describe "Post translations", type: :system do
   let(:view_translations_modal) { PageObjects::Modals::ViewTranslationsModal.new }
 
   before do
-    sign_in(admin)
     SiteSetting.default_locale = "en"
     SiteSetting.content_localization_supported_locales = "fr|es|pt_BR"
     SiteSetting.content_localization_enabled = true
-    SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.post_menu =
       "read|like|copyLink|flag|edit|bookmark|delete|admin|reply|addTranslation"
+    sign_in(admin)
   end
 
   context "when a post does not have translations" do
@@ -133,7 +132,7 @@ describe "Post translations", type: :system do
       end
     end
 
-    it "allows a user to delete a translation" do
+    it "allows a user in content_localization_allowed_groups to delete a translation" do
       topic_page.visit_topic(topic)
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
 

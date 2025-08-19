@@ -68,13 +68,12 @@ export default class AdminConfigAreasThemes extends Component {
       },
       duration: "short",
     });
+
     this.router.transitionTo(
-      `adminConfig.customize.${theme.component ? "components" : "themes"}`,
-      {
-        queryParams: { repoUrl: null, repoName: null },
-      }
+      "adminCustomizeThemes.show.index",
+      "themes",
+      theme.id
     );
-    this.router.refresh();
   }
 
   @action

@@ -115,7 +115,7 @@ fi:
       error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."
       error_while_exporting_results: "Kyselyn tuloksen vienti epäonnistui."
       ui_builder:
-        title: Luo kysely
+        title: Laadi kysely
         insert: Lisää kysely
         help:
           options_min_count: Syötä vähintään 1 vaihtoehto.

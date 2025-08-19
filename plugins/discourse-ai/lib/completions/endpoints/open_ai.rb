@@ -5,7 +5,7 @@ module DiscourseAi
     module Endpoints
       class OpenAi < Base
         def self.can_contact?(model_provider)
-          %w[open_ai azure].include?(model_provider)
+          %w[open_ai azure groq].include?(model_provider)
         end
 
         def normalize_model_params(model_params)

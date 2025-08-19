@@ -322,7 +322,7 @@ he:
         many: "%{count} קבצים"
         other: "%{count} קבצים"
       you_flagged: "סימנת את ההודעה הזאת"
-      exit: "חזרה"
+      exit: "יציאה מהצ׳אט"
       channel_status:
         read_only_header: "הערוץ הוא לקריאה בלבד"
         read_only: "לקריאה בלבד"

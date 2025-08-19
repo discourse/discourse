@@ -31,6 +31,7 @@ cs:
         few: "řešení"
         many: "řešení"
         other: "řešení"
+      accepted_html: "%{icon} Vyřešil/a <span class='by'> <a href data-user-card='%{username_lower}'>%{username}</a></span> v <a href='%{post_path}' class='back'>příspěvku #%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "vše"

@@ -7,7 +7,6 @@
 es:
   js:
     spoiler:
-      title: Borrón de Spoiler
       label:
         show: "Mostrar contenido oculto"
     composer:

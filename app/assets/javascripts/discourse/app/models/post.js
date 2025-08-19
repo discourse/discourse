@@ -213,7 +213,6 @@ export default class Post extends RestModel {
   @trackedPostProperty wiki;
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
-  @trackedPostProperty has_post_localizations;
   @trackedPostProperty post_localizations;
 
   @alias("can_edit") canEdit; // for compatibility with existing code

@@ -33,6 +33,11 @@ fi:
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
+    filter:
+      description:
+        assigned: "Suodata tietylle käyttäjälle tai ryhmälle osoitetut ketjut"
+        nobody: "Suodata ketjut, joita ei ole osoitettu kenellekään"
+        anyone: "Suodata kenelle tahansa osoitetut ketjut"
     already_claimed: "Ketju on jo omittu."
     already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
     too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen enimmäismäärän (%{max})."

@@ -30,10 +30,12 @@ pt_BR:
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
     chat_preferred_index: "Aba preferencial ao carregar /chat."
+    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o bate-papo. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."
       chat_upload_not_allowed_secure_uploads: "Enviar arquivos no chat não é permitido quando a configuração do site de envios seguros estiver ativada."
+      allow_chat_in_anonymous_mode_invalid: "Para usar esta configuração, ative a definição \"allow anonymous mode\" primeiro."
   system_messages:
     private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
@@ -91,7 +93,7 @@ pt_BR:
       actor_muting_target_user: "Você está silenciando %{username}, então você não pode enviar mensagens para ele(a)."
       actor_disallowed_dms: "Você optou por impedir que os(as) usuários(as) enviem mensagens pessoais e diretas. Portanto, você não pode criar novas mensagens diretas."
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens pessoais e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
-      not_reachable: "Desculpe, %{username} não está usando o chat."
+      not_reachable: "Desculpe, %{username} não está usando o bate-papo."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
       over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
       over_chat_max_direct_message_users:
@@ -156,6 +158,7 @@ pt_BR:
     mention_warning:
       dismiss: "descartar"
       cannot_see: "%{first_identifier} não pode acessar este canal e não foi notificado(a)."
+      cannot_see_group: "Alguns membros de %{group_name} não podem acessar este canal e não receberam notificação."
       cannot_see_multiple:
         one: "%{first_identifier} e mais %{count} usuário(a) não podem acessar este canal nem foram notificados(as)."
         other: "%{first_identifier} e %{count} outros usuários não podem acessar este canal e não foram notificados"

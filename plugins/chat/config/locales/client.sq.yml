@@ -73,7 +73,6 @@ sq:
       save: "Ruaj"
       sounds:
         none: "Asnjë"
-      exit: "kthehu mbrapa"
       channel_status:
         open: "Fillo"
       browse:

@@ -263,7 +263,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.backStep}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button back"
+                class="wizard-container__button back btn-transparent"
               >
                 {{i18n "wizard.back"}}
               </button>
@@ -276,7 +276,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.finish}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button finish"
+                class="wizard-container__button finish btn-primary"
               >
                 {{i18n "wizard.finish"}}
               </button>
@@ -287,7 +287,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.jumpIn}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button primary jump-in"
+                class="wizard-container__button jump-in btn-primary"
               >
                 {{i18n "wizard.jump_in"}}
               </button>
@@ -296,7 +296,7 @@ export default class WizardStepComponent extends Component {
                 {{on "click" this.nextStep}}
                 disabled={{this.saving}}
                 type="button"
-                class="wizard-container__button primary next"
+                class="wizard-container__button next btn-primary"
               >
                 {{i18n "wizard.next"}}
               </button>

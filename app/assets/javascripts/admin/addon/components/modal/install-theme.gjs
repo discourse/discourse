@@ -443,6 +443,7 @@ export default class InstallThemeModal extends Component {
                     "admin.customize.theme.create_name"
                   }}</div>
                 <input
+                  class="install-theme-content__theme-name"
                   type="text"
                   {{on "input" (withEventValue (fn (mut this.name)))}}
                   value={{this.name}}

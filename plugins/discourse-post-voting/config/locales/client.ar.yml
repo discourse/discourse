@@ -13,6 +13,8 @@ ar:
     reviewables:
       comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
   js:
+    discourse_post_voting:
+      title: "التصويت على المنشورات"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -135,6 +137,13 @@ ar:
           few: "%{count} إجابات"
           many: "%{count} إجابات"
           other: "%{count} إجابات"
+        voters_count_diff:
+          zero: "و%{count} من المستخدمين الآخرين..."
+          one: "ومستخدم %{count} آخر..."
+          two: "ومستخدمين %{count} آخرين..."
+          few: "و%{count} مستخدمين آخرين..."
+          many: "و%{count} مستخدمًا آخرين..."
+          other: "و%{count} مستخدم آخرين..."
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"

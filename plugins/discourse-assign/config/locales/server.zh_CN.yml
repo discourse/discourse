@@ -33,6 +33,11 @@ zh_CN:
   discourse_assign:
     assigned_to: "指定给 @%{username} 的话题"
     unassigned: "话题已被取消指定"
+    filter:
+      description:
+        assigned: "筛选指定给特定用户或群组的话题"
+        nobody: "筛选未指定给任何人的话题"
+        anyone: "筛选指定给任何人的话题"
     already_claimed: "该话题已被认领。"
     already_assigned: "主题已被指定给 @%{username}"
     too_many_assigns: "@%{username} 已达到指定话题的最大数量 (%{max})。"

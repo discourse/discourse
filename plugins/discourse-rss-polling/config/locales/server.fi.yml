@@ -6,4 +6,7 @@
 
 fi:
   site_settings:
+    rss_polling_enabled: "[RSS-pollaus] Ota upotettujen viestien tuonti useista RSS-syötteistä käyttöön"
     rss_polling_frequency: "[RSS Polling] Syötteen kyselyn taajuus (minuutteina)"
+    rss_polling_use_pubdate: "[RSS-pollaus] Aseta ketjun luontipäivämäärä RSS-syötteessä olevaan pubDateen"
+    rss_polling_update_tags: "[RSS-pollaus] Päivitä ketjun tunnisteet, kun ketju päivitetään. Tämän poistaminen käytöstä noutaa alkuperäiset tunnisteet, mutta poistaa myöhemmät tunnistemuutokset käytöstä."

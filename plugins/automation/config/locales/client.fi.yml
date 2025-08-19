@@ -447,7 +447,7 @@ fi:
           status:
             label: Tila
           enabled:
-            label: Käytössä
+            label: "Ota automaatio käyttöön"
           disabled:
             label: Pois käytöstä
           placeholders:
@@ -458,3 +458,4 @@ fi:
             label: Viimeinen ajo
           last_updated_by:
             label: Päivittänyt
+          enable_toggle_disabled: "Voit ottaa tämän automaation käyttöön, kun kaikki pakolliset kentät on täytetty."

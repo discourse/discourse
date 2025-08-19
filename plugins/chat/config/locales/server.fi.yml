@@ -158,6 +158,7 @@ fi:
     mention_warning:
       dismiss: "hylkää"
       cannot_see: "%{first_identifier} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+      cannot_see_group: "Jotkin ryhmän %{group_name} jäsenet eivät pääse tälle kanavalle, eivätkä he saaneet ilmoitusta."
       cannot_see_multiple:
         one: "%{first_identifier} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         other: "%{first_identifier} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."

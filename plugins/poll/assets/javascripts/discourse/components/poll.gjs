@@ -730,6 +730,7 @@ export default class PollComponent extends Component {
         @showResults={{this.showResults}}
         @postUserId={{this.poll.post.user_id}}
         @isPublic={{this.poll.public}}
+        @isDynamic={{if @isDynamic true this.poll.dynamic}}
         @hasVoted={{this.hasVoted}}
         @voters={{this.voters}}
       />

@@ -6,6 +6,8 @@ en:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "This poll is dynamic. Options can be edited after posting."
       voters:
         one: "voter"
         other: "voters"
@@ -161,6 +163,8 @@ en:
           step: Step
         poll_public:
           label: Show who voted
+        poll_dynamic:
+          label: Allow editing options after posting (dynamic poll)
         poll_title:
           label: Title (optional)
         poll_options:

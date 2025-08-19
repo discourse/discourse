@@ -21,6 +21,9 @@ nl:
       voted_title: "Gestemd"
       voting_closed_title: "Gesloten"
       voting_limit: "Limiet"
+      votes_left:
+        one: "Je hebt nog %{count} stem, bekijk <a href='%{path}'>je stemmen</a>."
+        other: "Je hebt nog %{count} stemmen, bekijk <a href='%{path}'>je stemmen</a>."
       votes_left_button_title:
         one: "Je hebt nog %{count} stem."
         other: "Je hebt nog %{count} stemmen."

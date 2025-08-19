@@ -18,8 +18,8 @@ th:
           title: "รายชื่อหมวดหมู่"
         post:
           title: "โพสต์"
-        suggested_topics:
-          title: "กระทู้แนะนำ"
+        more_topics:
+          title: "กระทู้อื่น"
         tooltips:
           description: "รายละเอียด"
           header: "Header"

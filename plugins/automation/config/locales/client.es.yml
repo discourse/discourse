@@ -13,6 +13,9 @@ es:
             delete_automation: eliminar automatización
     discourse_automation:
       title: Automatización
+      table_title: Automatizaciones
+      create: Añadir automatización
+      update: Actualizar automatización
       back: Atrás
       edit: Editar
       select_script: Selecciona un script
@@ -406,6 +409,9 @@ es:
           name:
             label: Activador
         automation:
+          runs_today: "%{count} hoy"
+          runs_this_week: "%{count} esta semana"
+          runs_this_month: "%{count} este mes"
           name:
             label: Nombre
           trigger:
@@ -416,8 +422,6 @@ es:
             label: Versión
           status:
             label: Estado
-          enabled:
-            label: Activado
           disabled:
             label: Desactivado
           placeholders:

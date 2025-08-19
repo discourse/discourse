@@ -89,8 +89,8 @@ fi:
           title: "Ketjun kartta"
         site_header:
           title: "Sivuston yläpalkki"
-        suggested_topics:
-          title: "Ehdotettuja ketjuja"
+        more_topics:
+          title: "Lisää ketjuja"
         post_menu:
           title: "Viestin valikko"
         modal:
