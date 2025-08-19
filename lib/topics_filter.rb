@@ -423,44 +423,63 @@ class TopicsFilter
   # users:a+b => both a and b participated in the topic
   def filter_users(values:)
     values.each do |value|
-      value
-        .scan(
-          /\A(?<usernames>([\p{L}\p{M}0-9_\-.@]+)(?<delimiter>[,+])?([\p{L}\p{M}0-9_\-.@]+)?(\k<delimiter>[\p{L}\p{M}0-9_\-.@]+)*)\z/,
-        )
-        .each do |usernames_str, delimiter|
-          usernames = usernames_str.split(delimiter).map { |u| u.delete_prefix("@").downcase }
-          user_ids = User.where(staged: false).where("username_lower IN (?)", usernames).pluck(:id)
-
-          # If any username is invalid and we require ALL (+), return no results
-          if delimiter == "+" && user_ids.length < usernames.length
-            @scope = @scope.none
-            next
-          end
-
-          if delimiter == ","
-            # any of the users participated (posted) or are allowed users on a PM
-            if user_ids.present?
-              @scope = @scope.where(<<~SQL, user_ids: user_ids)
-                    topics.id IN (
-                      SELECT DISTINCT p.topic_id FROM posts p WHERE p.user_id IN (:user_ids)
-                      UNION
-                      SELECT DISTINCT tau.topic_id FROM topic_allowed_users tau WHERE tau.user_id IN (:user_ids)
-                    )
-                  SQL
-            else
-              @scope = @scope.none
-            end
-          else
-            # require all users
-            user_ids.each_with_index do |uid, idx|
-              # each user must either have posted in the topic or be allowed in the PM
-              @scope = @scope.where(<<~SQL)
-                    (EXISTS (SELECT 1 FROM posts p#{idx} WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid})
-                     OR EXISTS (SELECT 1 FROM topic_allowed_users tau#{idx} WHERE tau#{idx}.topic_id = topics.id AND tau#{idx}.user_id = #{uid}))
-                  SQL
-            end
-          end
+      if value.include?("+")
+        usernames = value.split("+")
+        require_all = true
+        if value.include?(",")
+          # no mix and match
+          @scope = @scope.none
+          next
         end
+      else
+        usernames = value.split(",")
+        require_all = false
+        if value.include?("+")
+          # no mix and match
+          @scope = @scope.none
+          next
+        end
+      end
+
+      usernames = usernames.map(&:downcase).reject(&:blank?)
+
+      if usernames.empty?
+        @scope = @scope.none
+        next
+      end
+
+      user_ids = User.where(staged: false).where("username_lower IN (?)", usernames).pluck(:id)
+
+      if user_ids.empty?
+        @scope = @scope.none
+        next
+      end
+
+      if require_all
+        if user_ids.length < usernames.length
+          @scope = @scope.none
+          next
+        end
+
+        # A possible alternative is to select the topics with the users with the least posts
+        # then expand to all of the rest of the users, this can limit the scanning
+        user_ids.each_with_index { |uid, idx| @scope = @scope.where(<<~SQL) }
+            EXISTS (
+              SELECT 1
+              FROM posts p#{idx}
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid}
+              LIMIT 1
+            )
+          SQL
+      else
+        @scope = @scope.where(<<~SQL, user_ids: user_ids)
+              topics.id IN (
+                SELECT DISTINCT p.topic_id
+                FROM posts p
+                WHERE p.user_id IN (:user_ids)
+              )
+            SQL
+      end
     end
   end
 
@@ -468,50 +487,67 @@ class TopicsFilter
   # group:staff+moderators => both groups have participation
   def filter_groups(values:)
     values.each do |value|
-      value
-        .scan(
-          /\A(?<groups>([\p{L}\p{M}0-9_\-.]+)(?<delimiter>[,+])?([\p{L}\p{M}0-9_\-.]+)?(\k<delimiter>[\p{L}\p{M}0-9_\-.]+)*)\z/,
-        )
-        .each do |groups_str, delimiter|
-          group_names = groups_str.split(delimiter).map(&:downcase)
-          group_ids =
-            Group
-              .visible_groups(@guardian.user)
-              .members_visible_groups(@guardian.user)
-              .where("lower(name) IN (?)", group_names)
-              .pluck(:id)
-
-          if delimiter == "+" && group_ids.length < group_names.length
-            @scope = @scope.none
-            next
-          end
-
-          if delimiter == ","
-            if group_ids.present?
-              @scope = @scope.where(<<~SQL, group_ids: group_ids)
-                    topics.id IN (
-                      SELECT DISTINCT tg.topic_id FROM topic_allowed_groups tg WHERE tg.group_id IN (:group_ids)
-                      UNION
-                      SELECT DISTINCT p.topic_id
-                      FROM posts p
-                      JOIN group_users gu ON gu.user_id = p.user_id
-                      WHERE gu.group_id IN (:group_ids)
-                    )
-                  SQL
-            else
-              @scope = @scope.none
-            end
-          else
-            group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
-                    (EXISTS (SELECT 1 FROM topic_allowed_groups tg#{idx} WHERE tg#{idx}.topic_id = topics.id AND tg#{idx}.group_id = #{gid})
-                     OR EXISTS (
-                       SELECT 1 FROM posts p#{idx}
-                       JOIN group_users gu#{idx} ON gu#{idx}.user_id = p#{idx}.user_id
-                       WHERE p#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
-                     ))
-                  SQL
-          end
+      if value.include?("+")
+        group_names = value.split("+")
+        require_all = true
+        if value.include?(",")
+          # no mix and match
+          @scope = @scope.none
+          next
         end
+      else
+        group_names = value.split(",")
+        require_all = false
+        if value.include?("+")
+          # no mix and match
+          @scope = @scope.none
+          next
+        end
+      end
+
+      group_names = group_names.map(&:downcase).reject(&:blank?)
+
+      if group_names.empty?
+        @scope = @scope.none
+        next
+      end
+
+      group_ids =
+        Group
+          .visible_groups(@guardian.user)
+          .members_visible_groups(@guardian.user)
+          .where("lower(name) IN (?)", group_names)
+          .pluck(:id)
+
+      if group_ids.empty?
+        @scope = @scope.none
+        next
+      end
+
+      if require_all
+        if group_ids.length < group_names.length
+          @scope = @scope.none
+          next
+        end
+
+        group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
+            EXISTS (
+              SELECT 1
+              FROM posts pg#{idx}
+              JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
+            )
+          SQL
+      else
+        @scope = @scope.where(<<~SQL, group_ids: group_ids)
+              topics.id IN (
+                SELECT DISTINCT p.topic_id
+                FROM posts p
+                JOIN group_users gu ON gu.user_id = p.user_id
+                WHERE gu.group_id IN (:group_ids)
+              )
+            SQL
+      end
     end
   end
 

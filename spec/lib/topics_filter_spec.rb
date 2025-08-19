@@ -111,20 +111,13 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      fab!(:pm_allowed_u1_u2) do
-        Fabricate(:private_message_topic).tap do |t|
-          t.allowed_users << u1
-          t.allowed_users << u2
-        end
-      end
-
-      it "users:alice returns topics where alice participated or is allowed" do
+      it "users:alice returns topics where alice participated" do
         ids =
           TopicsFilter
             .new(guardian: Guardian.new)
             .filter_from_query_string("users:alice")
             .pluck(:id)
-        expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id, pm_allowed_u1_u2.id)
+        expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
         expect(ids).not_to include(topic_by_u2.id)
       end
 
@@ -134,12 +127,7 @@ RSpec.describe TopicsFilter do
             .new(guardian: Guardian.new)
             .filter_from_query_string("users:alice,bob")
             .pluck(:id)
-        expect(ids).to include(
-          topic_by_u1.id,
-          topic_by_u2.id,
-          topic_by_u1_and_u2.id,
-          pm_allowed_u1_u2.id,
-        )
+        expect(ids).to include(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
       end
 
       it "users:alice+bob returns only topics where both participated/allowed" do
@@ -148,7 +136,7 @@ RSpec.describe TopicsFilter do
             .new(guardian: Guardian.new)
             .filter_from_query_string("users:alice+bob")
             .pluck(:id)
-        expect(ids).to contain_exactly(topic_by_u1_and_u2.id, pm_allowed_u1_u2.id)
+        expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
 
       it "group:group1 returns topics with participants from the group or group-allowed PMs" do
