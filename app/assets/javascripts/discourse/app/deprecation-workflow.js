@@ -78,16 +78,16 @@ const DEPRECATION_WORKFLOW = new DiscourseDeprecationWorkflow([
     handler: "silence",
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
-  // {
-  //   handler: "silence|counter",
-  //   matchId: /^discourse\.ember\.native-array-extensions\..+$/,
-  //   env: ["test"],
-  // },
   {
-    handler: "silence",
-    matchId: /^discourse\.ember\.native-array-extensions\..+$/,
-    // env: ["production"],
+    handler: "silence|counter",
+    matchId: "discourse.ember.native-array-extensions",
+    env: ["test"],
   },
+  // {
+  //   handler: "silence",
+  //   matchId: /^discourse\.ember\.native-array-extensions\..+$/,
+  //   // env: ["production"],
+  // },
 ]);
 
 export default DEPRECATION_WORKFLOW;
