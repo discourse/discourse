@@ -83,17 +83,15 @@ module DiscoursePostEvent
       # If no user, can only see non-private events
       return events.where.not(status: private_status) if user.nil?
 
-      events.where(
-        "discourse_post_event_events.status != ? OR " \
-          "(discourse_post_event_events.status = ? AND EXISTS (" \
-          "  SELECT 1 FROM discourse_post_event_invitees dpei " \
-          "  WHERE dpei.post_id = discourse_post_event_events.id " \
-          "  AND dpei.user_id = ?" \
-          "))",
-        private_status,
-        private_status,
-        user.id,
-      )
+      events.where(<<~SQL, private_status, private_status, user.id)
+  discourse_post_event_events.status != ? OR (
+    discourse_post_event_events.status = ? AND EXISTS (
+      SELECT 1 FROM discourse_post_event_invitees dpei
+      WHERE dpei.post_id = discourse_post_event_events.id
+      AND dpei.user_id = ?
+    )
+  )
+SQL
     end
 
     def self.apply_date_filters(events, params)
