@@ -17,6 +17,7 @@ export default class PostMenuAdminButton extends Component {
       @icon="wrench"
       @label={{if @showLabel "post.controls.admin_action"}}
       @title="post.controls.admin"
+      @ariaLabel="post.controls.admin_action"
     />
   </template>
 }

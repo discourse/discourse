@@ -15,6 +15,7 @@ import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
+import { i18n } from "discourse-i18n";
 import Post from "./post";
 import PostGap from "./post/gap";
 import PostPlaceholder from "./post/placeholder";
@@ -113,6 +114,27 @@ export default class PostStream extends Component {
       (Object.keys(this.gapsBefore).length > 0 ||
         Object.keys(this.gapsAfter).length > 0)
     );
+  }
+
+  get remainingPostsCount() {
+    return this.args.topic.posts_count - this.posts.length;
+  }
+
+  get postsAboveCount() {
+    if (!this.posts.length) {
+      return 0;
+    }
+    const firstLoadedPostNumber = this.posts[0].post_number;
+    return firstLoadedPostNumber - 1;
+  }
+
+  get postsBelowCount() {
+    if (!this.posts.length) {
+      return 0;
+    }
+    const lastLoadedPostNumber = this.posts.at(-1).post_number;
+    const totalPosts = this.args.topic.posts_count;
+    return totalPosts - lastLoadedPostNumber;
   }
 
   isPlaceholder(post) {
@@ -249,8 +271,27 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
+      {{#if @postStream.canPrependMore}}
+        <div
+          role="region"
+          aria-label={{i18n
+            "load_more_posts_above_count"
+            count=this.postsAboveCount
+          }}
+          class="sr-only"
+        >
+          <p>{{i18n
+              "load_more_posts_above_count"
+              count=this.postsAboveCount
+            }}</p>
+        </div>
+      {{/if}}
+
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
-        <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        <LoadMore
+          @action={{fn this.loadMoreAbove this.firstAvailablePost}}
+          @ariaLabel={{i18n "load_more_posts_above"}}
+        />
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -355,9 +396,27 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
+      {{#if @postStream.canAppendMore}}
+        <div
+          role="region"
+          aria-label={{i18n
+            "load_more_posts_below_count"
+            count=this.postsBelowCount
+          }}
+          class="sr-only"
+        >
+          <p>
+            {{i18n "load_more_posts_below_count" count=this.postsBelowCount}}
+          </p>
+        </div>
+      {{/if}}
+
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
-          <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+          <LoadMore
+            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
+            @ariaLabel={{i18n "load_more_posts_below"}}
+          />
         {{else}}
           <div
             class="post-stream__bottom-boundary"

@@ -617,6 +617,7 @@ export default class PostMenu extends Component {
     >
       <nav
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
+        role="toolbar"
         class={{concatClass
           "post-controls"
           (if
@@ -633,6 +634,11 @@ export default class PostMenu extends Component {
             this.siteSettings.enable_filtered_replies_view
             "replies-button-visible"
           )
+        }}
+        aria-label={{i18n
+          "post.actions.menu"
+          post_number=@post.post_number
+          username=@post.username
         }}
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}

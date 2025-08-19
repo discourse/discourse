@@ -408,7 +408,23 @@ export default class Post extends Component {
           This is not ideal, but the post-stream component sets the `id` for the children to ensure
           all cloaked items can be referenced and we need to override it }}
       id={{if @cloaked (concat "post_" @post.post_number)}}
+      role="region"
+      aria-label={{i18n
+        "post_region_aria_label"
+        post_number=@post.post_number
+        username=@post.username
+      }}
+      aria-busy={{if @cloaked "true" "false"}}
     >
+      {{! To be compatible with screenreaders we add some screenreader-only placeholder content
+        this combined with aria-busy indicates two things:
+        1. it's not an empty region 2. content will load when navigated to }}
+      {{#if @cloaked}}
+        <p class="sr-only">
+          {{i18n "post_cloaked_content"}}
+        </p>
+      {{/if}}
+
       {{#unless @cloaked}}
         {{#let
           (lazyHash
@@ -439,11 +455,12 @@ export default class Post extends Component {
                 (if @post.via_email "post--via-email via-email")
                 this.additionalArticleClasses
               }}
-              aria-label={{i18n
-                "share.post"
-                (hash postNumber=@post.post_number username=@post.username)
-              }}
               role="region"
+              aria-label={{i18n
+                "post_region_aria_label"
+                post_number=@post.post_number
+                username=@post.username
+              }}
               data-post-id={{@post.id}}
               data-topic-id={{@post.topicId}}
               data-user-id={{@post.user_id}}

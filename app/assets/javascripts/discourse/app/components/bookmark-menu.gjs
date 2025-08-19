@@ -68,6 +68,14 @@ export default class BookmarkMenu extends Component {
     }
   }
 
+  get ariaLabel() {
+    if (!this.existingBookmark) {
+      return i18n("bookmarks.not_bookmarked");
+    } else {
+      return i18n("bookmarked.edit_bookmark");
+    }
+  }
+
   get buttonClasses() {
     let cssClasses = ["bookmark widget-button bookmark-menu__trigger"];
 
@@ -260,6 +268,7 @@ export default class BookmarkMenu extends Component {
       @title={{this.buttonTitle}}
       @label={{this.buttonLabel}}
       @icon={{this.buttonIcon}}
+      @ariaLabel={{this.ariaLabel}}
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}

@@ -83,6 +83,7 @@ export default class PostMenuAddTranslationButton extends Component {
           class="update-translations-menu"
           @title={{i18n "post.localizations.add"}}
           @icon="discourse-add-translation"
+          @ariaLabel="post.localizations.add"
           @onRegisterApi={{this.onRegisterApi}}
           @arrow={{false}}
         >
@@ -112,6 +113,7 @@ export default class PostMenuAddTranslationButton extends Component {
           class="post-action-menu__add-translation"
           @title="post.localizations.add"
           @icon="discourse-add-translation"
+          @ariaLabel="post.localizations.add"
           @action={{this.addTranslation}}
           ...attributes
         />

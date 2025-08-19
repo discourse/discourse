@@ -50,6 +50,7 @@ export default class SolvedAcceptAnswerButton extends Component {
       @icon="far-square-check"
       @label={{if this.showLabel "solved.solution"}}
       @title="solved.accept_answer"
+      @ariaLabel="solved.accept_answer"
     />
   </template>
 }

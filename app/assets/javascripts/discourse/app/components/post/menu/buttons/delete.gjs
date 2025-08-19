@@ -97,6 +97,27 @@ export default class PostMenuDeleteButton extends Component {
     }
   }
 
+  get ariaLabel() {
+    switch (this.#activeMode) {
+      case BUTTON_ACTION_MODE_DELETE:
+        return "post.controls.delete_action";
+
+      case BUTTON_ACTION_MODE_DELETE_TOPIC:
+        return "topic.actions.delete";
+
+      case BUTTON_ACTION_MODE_SHOW_FLAG_DELETE:
+        return "post.controls.delete_topic_disallowed";
+
+      case BUTTON_ACTION_MODE_RECOVER:
+      case BUTTON_ACTION_MODE_RECOVERING:
+        return "post.controls.undelete_action";
+
+      case BUTTON_ACTION_MODE_RECOVER_TOPIC:
+      case BUTTON_ACTION_MODE_RECOVERING_TOPIC:
+        return "topic.actions.recover";
+    }
+  }
+
   get activeAction() {
     if (this.args.post.canRecoverTopic) {
       return this.args.buttonActions.recoverPost;
@@ -128,6 +149,7 @@ export default class PostMenuDeleteButton extends Component {
       @icon={{this.icon}}
       @label={{if @showLabel this.label}}
       @title={{this.title}}
+      @ariaLabel={{this.ariaLabel}}
     />
   </template>
 }
