@@ -112,6 +112,16 @@ export default class DMenu extends Component {
     return properties;
   }
 
+  get curriedComponent() {
+    if (this.options.component) {
+      return curryComponent(
+        this.options.component,
+        this.options.data,
+        getOwner(this)
+      );
+    }
+  }
+
   <template>
     <this.triggerComponent
       {{this.registerTrigger}}
@@ -157,7 +167,7 @@ export default class DMenu extends Component {
           {{else if (has-block "content")}}
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
-            <this.options.component
+            <this.curriedComponent
               @data={{this.options.data}}
               @close={{this.menuInstance.close}}
             />
@@ -185,7 +195,7 @@ export default class DMenu extends Component {
           {{else if (has-block "content")}}
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
-            <this.options.component
+            <this.curriedComponent
               @data={{this.options.data}}
               @close={{this.menuInstance.close}}
             />
