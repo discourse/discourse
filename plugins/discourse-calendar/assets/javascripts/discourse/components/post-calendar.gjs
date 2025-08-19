@@ -281,7 +281,7 @@ export default class PostCalendar extends Component {
     return events;
   }
 
-  _buildStandaloneEvent(detail) {
+  #buildStandaloneEvent(detail) {
     const event = this._buildEvent(detail);
     const holidayCalendarTopicId = parseInt(
       this.siteSettings.holiday_calendar_topic_id,
