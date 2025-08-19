@@ -1,6 +1,7 @@
 import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
+import getURLPath from "discourse/lib/get-url-path";
 import DiscourseURL from "discourse/lib/url";
 import {
   isValidDestinationUrl,
@@ -26,7 +27,7 @@ export default class extends DiscourseRoute {
     const { isAppWebview } = this.capabilities;
     const { auth_immediately, enable_discourse_connect, login_required } =
       this.siteSettings;
-    const { pathname: url } = window.location;
+    const url = getURLPath(window.location.pathname);
     const { search: query } = window.location;
     const { referrer } = document;
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
