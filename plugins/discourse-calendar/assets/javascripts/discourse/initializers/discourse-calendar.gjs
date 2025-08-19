@@ -136,7 +136,7 @@ function initializeDiscourseCalendar(api) {
     );
   }
 
-  function _convertHtmlToDate(html) {
+  function #convertHtmlToDate(html) {
     const date = html.dataset.date;
 
     if (!date) {
