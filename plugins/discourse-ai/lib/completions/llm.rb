@@ -224,6 +224,30 @@ module DiscourseAi
                   endpoint: "https://openrouter.ai/api/v1/chat/completions",
                   provider: "open_router",
                 },
+                {
+                  id: "groq",
+                  models: [
+                    {
+                      name: "openai/gpt-oss-120b",
+                      tokens: 131_072,
+                      display_name: "GPT-OSS 120B",
+                      input_cost: 0.15,
+                      output_cost: 0.75,
+                      max_output_tokens: 65_536,
+                    },
+                    {
+                      name: "openai/gpt-oss-20b",
+                      display_name: "GPT-OSS 20B",
+                      tokens: 131_072,
+                      input_cost: 0.1,
+                      output_cost: 0.5,
+                      max_output_tokens: 65_536,
+                    },
+                  ],
+                  tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
+                  endpoint: "https://api.groq.com/openai/v1/chat/completions",
+                  provider: "groq",
+                },
               ]
             end
         end
@@ -241,6 +265,7 @@ module DiscourseAi
             samba_nova
             mistral
             open_router
+            groq
           ]
           if !Rails.env.production?
             providers << "fake"
