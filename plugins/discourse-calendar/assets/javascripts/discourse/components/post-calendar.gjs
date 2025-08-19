@@ -287,7 +287,7 @@ export default class PostCalendar extends Component {
       this.siteSettings.holiday_calendar_topic_id,
       10
     );
-    const text = detail.message.split("\n").filter((e) => e);
+    const text = detail.message.split("\n").filter(Boolean);
 
     if (
       text.length &&
