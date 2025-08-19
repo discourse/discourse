@@ -40,7 +40,7 @@ module DiscourseZendeskPlugin
         end
       end
 
-      render status: 204
+      head :no_content
     end
 
     private

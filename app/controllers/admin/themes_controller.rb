@@ -282,7 +282,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def destroy
     Themes::Destroy.call(service_params) do
-      on_success { render status: :no_content }
+      on_success { head :no_content }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
@@ -292,7 +292,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def bulk_destroy
     Themes::BulkDestroy.call(service_params) do
-      on_success { render status: :no_content }
+      on_success { head :no_content }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
