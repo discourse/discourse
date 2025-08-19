@@ -21,5 +21,9 @@ export default class AdminCustomizeColorsRoute extends Route {
       model.palettes.map((palette) => ColorScheme.create(palette))
     );
     controller.set("defaultTheme", defaultTheme);
+
+    if (defaultTheme) {
+      controller._captureInitialState();
+    }
   }
 }
