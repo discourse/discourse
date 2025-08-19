@@ -153,6 +153,22 @@ module SiteSettingExtension
       end
   end
 
+  def settings_hash
+    result = {}
+
+    defaults.all.keys.each do |s|
+      next if themeable[s]
+
+      result[s] = if deprecated_settings.include?(s.to_s)
+        public_send(s, warn: false).to_s
+      else
+        public_send(s).to_s
+      end
+    end
+
+    result
+  end
+
   def deprecated_settings
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end

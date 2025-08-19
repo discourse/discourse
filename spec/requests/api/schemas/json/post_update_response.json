@@ -211,9 +211,6 @@
         "post_url": {
           "type": "string"
         },
-        "has_post_localizations": {
-          "type": "boolean"
-        },
         "post_localizations": {
           "type": "array",
           "items": {}

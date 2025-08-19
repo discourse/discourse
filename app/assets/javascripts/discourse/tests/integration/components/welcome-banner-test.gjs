@@ -48,6 +48,17 @@ module(
         }),
         "banner contains the correct message for logged in users with username"
       );
+
+      this.currentUser.name = "<input type='text'></input>Robin Ward";
+      await render(<template><WelcomeBanner /></template>);
+
+      assert.dom(".welcome-banner").containsText(
+        i18n("welcome_banner.header.logged_in_members", {
+          preferred_display_name: "Robin Ward",
+        }),
+        "banner contains the correct message for logged in users with username"
+      );
+      assert.dom(".welcome-banner .welcome-banner__title input").doesNotExist();
     });
   }
 );

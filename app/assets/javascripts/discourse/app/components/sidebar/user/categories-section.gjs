@@ -19,7 +19,6 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   @service appEvents;
   @service currentUser;
   @service modal;
-  @service router;
 
   constructor() {
     super(...arguments);

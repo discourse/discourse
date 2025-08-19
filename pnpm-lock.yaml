@@ -33,7 +33,7 @@ importers:
         version: 7.28.0(@babel/core@7.28.0)
       '@discourse/lint-configs':
         specifier: ^2.31.0
-        version: 2.31.0(ember-template-lint@7.9.2)(eslint@9.33.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))
+        version: 2.31.0(ember-template-lint@7.9.3)(eslint@9.33.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -74,8 +74,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       ember-template-lint:
-        specifier: 7.9.2
-        version: 7.9.2
+        specifier: 7.9.3
+        version: 7.9.3
       esbuild:
         specifier: ^0.25.9
         version: 0.25.9
@@ -96,7 +96,7 @@ importers:
         version: 2.6.3(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.1.0
-        version: 3.1.0(ember-template-lint@7.9.2)
+        version: 3.1.0(ember-template-lint@7.9.3)
       lint-to-the-future-eslint:
         specifier: ^3.2.0
         version: 3.2.0(eslint@9.33.0)
@@ -4724,8 +4724,8 @@ packages:
     resolution: {integrity: sha512-jZ5D6KLKU8up/AynZltmKh4lkXBPgTGSPgomprI/55XvIVqn42UNUpEz7ra/mO3QiGODDZOUesbggPe49i38sQ==}
     engines: {node: 16.* || >= 18}
 
-  ember-template-lint@7.9.2:
-    resolution: {integrity: sha512-j2vt1laRRn1yipSrVm6+E2UbVrERTDoX/ye66Kc+FtI+W+SJSAuEPvMA+t2sofkqvP0u+TEg8Bc66YbShblAgg==}
+  ember-template-lint@7.9.3:
+    resolution: {integrity: sha512-iqC4rv/oVlXViGuf7hlOA/bC550ZqacZKAc8WvQV0ueeCtIYPkYYK+Tc7FwpM8qGx3jiwu/ZsTuNfPInI5pL7Q==}
     engines: {node: ^18.18.0 || >= 20.9.0}
     hasBin: true
 
@@ -10120,12 +10120,12 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.31.0(ember-template-lint@7.9.2)(eslint@9.33.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))':
+  '@discourse/lint-configs@2.31.0(ember-template-lint@7.9.3)(eslint@9.33.0)(postcss@8.5.6)(prettier@3.5.3)(stylelint@16.23.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.33.0)
       '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.28.0)
-      ember-template-lint: 7.9.2
+      ember-template-lint: 7.9.3
       eslint: 9.33.0
       eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.28.0(@babel/core@7.28.0)(eslint@9.33.0))(eslint@9.33.0)
       eslint-plugin-ember: 12.7.0(@babel/core@7.28.0)(eslint@9.33.0)(typescript@5.9.2)
@@ -13990,7 +13990,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-template-lint@7.9.2:
+  ember-template-lint@7.9.3:
     dependencies:
       '@lint-todo/utils': 13.1.1
       content-tag: 3.1.3
@@ -16038,11 +16038,11 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.9.2):
+  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.9.3):
     dependencies:
       content-tag: 3.1.3
       debug: 4.4.1(supports-color@8.1.1)
-      ember-template-lint: 7.9.2
+      ember-template-lint: 7.9.3
       globby: 14.1.0
     transitivePeerDependencies:
       - supports-color

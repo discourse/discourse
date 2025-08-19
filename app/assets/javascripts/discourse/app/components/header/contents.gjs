@@ -41,12 +41,17 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
+    const hideForRoutes = [
+      "signup",
+      "login",
+      "invites.show",
+      "activate-account",
+    ];
+
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      this.router.currentURL?.match(
-        /\/(signup|login|invites|activate-account)/
-      ) ||
+      hideForRoutes.some((name) => name === this.router.currentRouteName) ||
       this.search.welcomeBannerSearchInViewport
     ) {
       return false;

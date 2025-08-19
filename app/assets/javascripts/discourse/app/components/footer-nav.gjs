@@ -9,7 +9,6 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
 
 export default class FooterNav extends Component {
-  @service appEvents;
   @service capabilities;
   @service scrollDirection;
   @service composer;

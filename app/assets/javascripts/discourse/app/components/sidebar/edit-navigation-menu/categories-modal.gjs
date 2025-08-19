@@ -108,7 +108,6 @@ function findPartialCategories(categories) {
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
-  @service site;
   @service siteSettings;
 
   @tracked initialLoad = true;

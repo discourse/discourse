@@ -16,7 +16,6 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
-  @service keyValueStore;
   @service router;
 
   @tracked filter = this.args.initialFilter ?? "";

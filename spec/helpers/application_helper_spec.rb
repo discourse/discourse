@@ -862,7 +862,7 @@ RSpec.describe ApplicationHelper do
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).not_to include("color_definitions_flamboyant")
-        expect(color_stylesheets).to include("color_definitions_base")
+        expect(color_stylesheets).to include("color_definitions_light-default")
       end
     end
 
