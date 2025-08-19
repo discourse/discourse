@@ -293,7 +293,7 @@ class ColorScheme < ActiveRecord::Base
     },
   }
 
-  LIGHT_THEME_NAME = "Light"
+  LIGHT_PALETTE_NAME = "Light"
   COLORS_ORDER = %w[
     primary
     secondary
@@ -315,7 +315,7 @@ class ColorScheme < ActiveRecord::Base
     base_colors.each { |name, color| base_with_hash << { name: name, hex: "#{color}" } }
 
     list = [
-      { id: NAMES_TO_ID_MAP[LIGHT_THEME_NAME], name: LIGHT_THEME_NAME, colors: base_with_hash },
+      { id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME, colors: base_with_hash },
     ]
 
     BUILT_IN_SCHEMES.each do |k, v|
@@ -402,7 +402,7 @@ class ColorScheme < ActiveRecord::Base
         )
       scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
       scheme.is_base = true
-      scheme.is_builtin_default = hash[:id] == NAMES_TO_ID_MAP[LIGHT_THEME_NAME]
+      scheme.is_builtin_default = hash[:id] == NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
       scheme
     end
   end
@@ -411,7 +411,7 @@ class ColorScheme < ActiveRecord::Base
     return @base_color_scheme if @base_color_scheme
     @base_color_scheme =
       new(
-        id: NAMES_TO_ID_MAP[LIGHT_THEME_NAME],
+        id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME],
         name: I18n.t("admin_js.admin.customize.theme.default_light_scheme"),
       )
     @base_color_scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
@@ -428,7 +428,7 @@ class ColorScheme < ActiveRecord::Base
   def self.create_from_base(params)
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
-    new_color_scheme.base_scheme_id = params[:base_scheme_id] || 0
+    new_color_scheme.base_scheme_id = params[:base_scheme_id]
 
     scheme_name = NAMES_TO_ID_MAP.invert[params[:base_scheme_id]]
 
@@ -490,7 +490,7 @@ class ColorScheme < ActiveRecord::Base
   def base_colors
     colors = nil
     colors = BUILT_IN_SCHEMES[NAMES_TO_ID_MAP.invert[base_scheme_id].to_sym] if base_scheme_id &&
-      base_scheme_id < 0 && base_scheme_id != NAMES_TO_ID_MAP["Light"]
+      base_scheme_id < 0 && base_scheme_id != NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
     colors ||=
       base_scheme
         &.colors
@@ -598,6 +598,6 @@ end
 #  via_wizard      :boolean          default(FALSE), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  base_scheme_id  :integer          default(0), not null
+#  base_scheme_id  :integer
 #  theme_id        :integer
 #

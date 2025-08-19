@@ -181,7 +181,7 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.model.findBy("id", baseKey);
+    const base = this.model.find((palette) => palette.id === baseKey);
 
     const newColorScheme = base.copy();
     newColorScheme.setProperties({

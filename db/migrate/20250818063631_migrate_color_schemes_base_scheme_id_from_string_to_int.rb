@@ -42,15 +42,6 @@ class MigrateColorSchemesBaseSchemeIdFromStringToInt < ActiveRecord::Migration[8
       ALTER COLUMN base_scheme_id TYPE integer
       USING (base_scheme_id::integer);
     SQL
-
-    execute <<-SQL
-      UPDATE color_schemes
-      SET base_scheme_id = 0
-      WHERE base_scheme_id IS NULL
-    SQL
-
-    change_column_default :color_schemes, :base_scheme_id, 0
-    change_column_null :color_schemes, :base_scheme_id, false
   end
 
   def down

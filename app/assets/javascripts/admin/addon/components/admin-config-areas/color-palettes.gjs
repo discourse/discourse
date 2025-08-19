@@ -25,7 +25,7 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   async newColorPaletteWithBase(baseKey) {
-    const base = this.args.palettes.findBy("id", baseKey);
+    const base = this.args.palettes.find((palette) => palette.id === baseKey);
     const newPalette = base.copy();
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),
