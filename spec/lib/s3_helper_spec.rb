@@ -401,24 +401,26 @@ RSpec.describe "S3Helper" do
     end
   end
 
-  describe S3Helper do
-    describe ".s3_options" do
-      it "includes profile when specified" do
-        options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
-        expect(options[:profile]).to eq("test-profile")
-      end
+  describe ".s3_options" do
+    it "includes profile when specified" do
+      GlobalSetting.s3_use_iam_profile = true
 
-      it "does not include access keys when using profile" do
-        options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
-        expect(options).not_to have_key(:access_key_id)
-        expect(options).not_to have_key(:secret_access_key)
-      end
+      options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
+      expect(options[:profile]).to eq("test-profile")
+    end
 
-      it "falls back to access keys when no profile specified" do
-        # Assuming you still support the old way as fallback
-        options = S3Helper.s3_options(GlobalSetting)
-        expect(options).to have_key(:access_key_id) if GlobalSetting.s3_access_key_id.present?
-      end
+    it "does not include access keys when using profile" do
+      GlobalSetting.s3_use_iam_profile = true
+
+      options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
+      expect(options).not_to have_key(:access_key_id)
+      expect(options).not_to have_key(:secret_access_key)
+    end
+
+    it "falls back to access keys when no profile specified" do
+      # Assuming you still support the old way as fallback
+      options = S3Helper.s3_options(GlobalSetting)
+      expect(options).to have_key(:access_key_id) if GlobalSetting.s3_access_key_id.present?
     end
   end
 end
