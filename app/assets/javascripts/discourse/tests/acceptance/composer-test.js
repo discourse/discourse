@@ -1683,6 +1683,70 @@ import { i18n } from "discourse-i18n";
           .dom(`button[title="${expectedName}"]`)
           .exists("custom button is displayed for new topic");
       });
+
+      test("modified name when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-reply-options-user-link-name",
+            () => {
+              return "NewNameHere";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert.dom(".reply-details .user-link").hasText("NewNameHere");
+      });
+
+      test("modified avatar when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-reply-options-user-avatar-template",
+            () => {
+              return "/images/avatar.png?size={size}";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert
+          .dom(".reply-details .action-title img")
+          .hasAttribute(
+            "src",
+            /\/images\/avatar\.png/,
+            "Reply avatar can be customized"
+          );
+      });
+
+      test("modified avatar in quote", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-editor-quoted-post-avatar-template",
+            () => {
+              return "/images/custom-quote-avatar.png?size={size}";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+        await fillIn(
+          ".d-editor-input",
+          '[quote="charlie, post:1, topic:34"]\noriginal post content\n[/quote]'
+        );
+
+        assert
+          .dom(".d-editor-preview .quote .title img")
+          .hasAttribute(
+            "src",
+            /\/images\/custom-quote-avatar\.png/,
+            "Quote avatar can be customized"
+          );
+      });
     }
   );
 });

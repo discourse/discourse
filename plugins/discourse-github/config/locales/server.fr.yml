@@ -26,7 +26,7 @@ fr:
 
       %{post_url}
     pr_template: |
-      Cette requête pull a été mentionnée sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
+      Cette pull request a été mentionnée sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
 
       %{post_url}
     issue_template: |
@@ -36,5 +36,25 @@ fr:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Action requise pour l'extension discourse-github"
+      repository_identifier_invalid_pm: |
+        Un dépôt spécifié dans l'extension discourse-github n'est pas valide :
+        %{repo_name}
+
+        Il doit être indiqué sous la forme utilisateur/dépôt.
+
+        Les badges ne seront pas attribués tant que le nom n'aura pas été corrigé dans
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">les paramètres du site discourse-github</a>
+        et que « github_badges_enabled » n'aura pas été réactivé.**
       repository_not_found_pm_title: "Action requise pour l'extension discourse-github"
+      repository_not_found_pm: |
+        Un dépôt spécifié dans l'extension discourse-github a renvoyé une erreur
+         %{repo_name}
+
+        Les badges ne seront pas attribués tant que le nom n'aura pas été corrigé dans les
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">paramètres du site discourse-github</a>
+        et que « github_badges_enabled » n'aura pas été réactivé.
       invalid_octokit_credentials_pm_title: "Action requise pour l'extension discourse-github"
+      invalid_octokit_credentials_pm: |
+        Les identifiants GitHub fournis à l'extension discourse-github ne sont pas valides. Le paramètre du site « github badges enabled » a été désactivé et les validations ne seront plus récupérées tant que le problème ne sera pas résolu.
+
+        Vérifiez le paramètre du site « github linkback access token » afin de vous assurer que le jeton est correct et qu’il dispose des autorisations pour tous les dépôts via <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">les paramètres du site discourse-github</a>.

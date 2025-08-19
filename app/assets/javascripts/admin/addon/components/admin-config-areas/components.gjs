@@ -55,6 +55,7 @@ const STATUS_FILTER_OPTIONS = [
 
 export default class AdminConfigAreasComponents extends Component {
   @service modal;
+  @service router;
   @service toasts;
 
   @tracked loading = true;
@@ -105,7 +106,12 @@ export default class AdminConfigAreasComponents extends Component {
       },
       duration: "short",
     });
-    this.load();
+
+    this.router.transitionTo(
+      "adminCustomizeThemes.show.index",
+      "components",
+      component.id
+    );
   }
 
   @action

@@ -19,8 +19,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
   it "has an install button in the subheader" do
     config_area.visit
 
-    config_area.subheader.find(".btn-primary").click
-    expect(install_modal).to be_open
+    install_modal = config_area.click_install_button
     expect(install_modal.popular_options.first).to have_text("Air")
   end
 
@@ -53,6 +52,16 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(config_area).to have_badge(theme, "--selectable")
     config_area.toggle_selectable(theme)
     expect(config_area).to have_no_badge(theme, "--selectable")
+  end
+
+  it "allows a theme to be created" do
+    config_area.visit.click_install_button.create_new_theme(name: "some new theme")
+
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new theme"),
+    )
+
+    expect(page).to have_current_path(%r{/admin/customize/themes/\d+})
   end
 
   it "allows to edit and delete theme" do

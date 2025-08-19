@@ -291,10 +291,7 @@ sl:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} vas je povabil na %{description} in vam določil udeležbo"
-        before_event_reminder_html: "Dogodek se bo kmalu pričel %{description}"
-        after_event_reminder_html: "Dogodek je zaključen %{description}"
-        ongoing_event_reminder_html: "Dogodek je v teku  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} vas je povabil na %{eventName} in vam določil udeležbo"
       edit_reason: "Dogodek posodobljen"
       topic_title:
         starts_at: "Dogodek se bo pričel: %{date}"

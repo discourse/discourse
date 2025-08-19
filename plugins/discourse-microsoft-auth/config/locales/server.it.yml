@@ -10,3 +10,4 @@ it:
     microsoft_auth_client_id: 'Microsoft App ID/Client ID (NON il Secret ID): per la configurazione, visita <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
     microsoft_auth_client_secret: "Microsoft Secret Password (usa il valore, NON il Secret ID)"
     microsoft_auth_email_verified: "Tratta tutte le e-mail Microsoft come verificate per impostazione predefinita. ATTENZIONE: abilita solo se hai certezza che tutti i tuoi utenti abbiano e-mail verificate."
+    microsoft_auth_tenant_id: 'ID tenant Microsoft (common è standard ed è OBBLIGATORIO in tutti i casi tranne Single Tenant) - per trovare l''ID visita <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

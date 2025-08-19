@@ -13,6 +13,8 @@ fr:
     reviewables:
       comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
   js:
+    discourse_post_voting:
+      title: "Vote d'une publication"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ fr:
         answer_count:
           one: "%{count} réponse"
           other: "%{count} réponses"
+        voters_count_diff:
+          one: "et %{count} utilisateur supplémentaire..."
+          other: "et %{count} utilisateurs supplémentaires..."
     review:
       transcript:
         view: "Afficher la transcription des messages précédents"

@@ -341,14 +341,25 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     end
   end
 
-  context "when there are no components installed" do
-    it "doesn't display filters when there are no components installed" do
-      config_area.visit
+  it "doesn't display filters when there are no components installed" do
+    config_area.visit
 
-      expect(config_area).to have_no_components_installed_text
-      expect(config_area).to have_no_components
-      expect(config_area).to have_no_status_selector
-      expect(config_area).to have_no_name_filter_input
-    end
+    expect(config_area).to have_no_components_installed_text
+    expect(config_area).to have_no_components
+    expect(config_area).to have_no_status_selector
+    expect(config_area).to have_no_name_filter_input
+  end
+
+  it "allows a user to create a new component" do
+    config_area.visit.click_install_button.create_new_theme(
+      name: "some new component",
+      component: true,
+    )
+
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new component"),
+    )
+
+    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
   end
 end

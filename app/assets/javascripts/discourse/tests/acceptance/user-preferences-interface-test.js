@@ -232,6 +232,11 @@ acceptance(
       };
 
       await visit("/u/eviltrout/preferences/interface");
+
+      // force light mode, otherwise mode is ambiguous
+      const interfaceColor = this.container.lookup("service:interface-color");
+      interfaceColor.forceLightMode();
+
       assert.dom(".light-color-scheme").exists("has regular dropdown");
       assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
       assert

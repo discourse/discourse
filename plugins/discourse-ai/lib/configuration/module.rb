@@ -108,14 +108,14 @@ module DiscourseAi
               AUTOMATION_REPORTS,
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_report_scripts,
-              extra_check: -> { has_scripts?("llm_report") },
+              extra_check: -> { has_scripts?(["llm_report"]) },
             )
             base_modules << new(
               AUTOMATION_TRIAGE_ID,
               AUTOMATION_TRIAGE,
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
-              extra_check: -> { has_scripts?("llm_triage") },
+              extra_check: -> { has_scripts?(%w[llm_triage llm_persona_triage]) },
             )
           end
 
@@ -123,11 +123,11 @@ module DiscourseAi
         end
 
         # Private
-        def has_scripts?(script_name)
+        def has_scripts?(script_names)
           DB
             .query_single(
-              "SELECT COUNT(*) FROM discourse_automation_automations WHERE script = :name and enabled",
-              name: script_name,
+              "SELECT COUNT(*) FROM discourse_automation_automations WHERE script IN (:names) and enabled",
+              names: script_names,
             )
             .first
             .to_i > 0

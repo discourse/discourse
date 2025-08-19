@@ -44,7 +44,6 @@ nb_NO:
       select: "Velg"
       sounds:
         none: "Ingen"
-      exit: "forrige"
       channel_status:
         closed: "Lukket"
         open: "Åpne"

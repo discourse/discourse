@@ -24,8 +24,8 @@ et:
           title: "Teemade taimerid"
         post:
           title: "Postitus"
-        suggested_topics:
-          title: "Soovitatud teemad"
+        more_topics:
+          title: "Veel teemasid"
         tooltips:
           description: "Kirjeldus"
           header: "Päis"

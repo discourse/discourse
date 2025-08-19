@@ -10,6 +10,7 @@ nl:
     discourse_templates_categories: "Categorieën om de sjablonen uit op te halen"
     discourse_templates_enable_private_templates: "Schakelt het gebruik van privésjablonen in"
     discourse_templates_groups_allowed_private_templates: "Groepen mogen privésjablonen gebruiken. Medewerkers zijn altijd toegestaan."
+    discourse_templates_private_templates_tags: "Tags die een persoonlijk bericht identificeren als een privésjabloon"
   default_category_template:
     name: Sjablonen
     description: |

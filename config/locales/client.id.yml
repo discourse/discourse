@@ -1046,11 +1046,10 @@ id:
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_schemes:
         default_description: "Default tema"
-        disable_dark_scheme: "Sama seperti reguler"
         undo: "Reset"
-        regular: "Umum"
         dark: "Mode gelap"
-        default_dark_scheme: "(bawaan situs)"
+        picker:
+          active: "Aktif"
       dark_mode: "Mode Gelap"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
@@ -2579,7 +2578,7 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Aktif"
+          default: "Asal"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2608,8 +2607,6 @@ id:
           edit: "Ubah"
           filters:
             all: "Semua"
-          active_badge:
-            text: "Aktif"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:

@@ -82,7 +82,6 @@ bg:
         none: "Без"
       title: "чат"
       title_capitalized: "Чат"
-      exit: "назад"
       channel_status:
         closed: "Затворена"
         open: "Отвори"

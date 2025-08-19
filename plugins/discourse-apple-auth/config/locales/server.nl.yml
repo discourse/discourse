@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 nl:
+  site_settings:
+    sign_in_with_apple_enabled: 'Aanmelden met Apple inschakelen?'
+    apple_client_id: "(Aanmelden met Apple) De Apple-'service-identificatie' van de ontwikkelaarsconsole. Normaal gesproken een tekenreeks in omgekeerde domeinnaamstijl (bijvoorbeeld com.example.auth) (Aanmelden met Apple)"
+    apple_team_id: '(Aanmelden met Apple) Apple-team-ID (10 tekens)'
+    apple_key_id: '(Aanmelden met Apple) Apple-key-ID (10 tekens)'
+    apple_pem: '(Aanmelden met Apple) Inhoud van het Apple Pem-bestand. Inclusief de regels BEGIN en END.'

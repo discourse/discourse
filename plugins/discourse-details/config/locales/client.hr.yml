@@ -6,8 +6,6 @@
 
 hr:
   js:
-    details:
-      title: Sakrij detalje
     composer:
       details_title: Sažetak
       details_text: "Ovaj će tekst biti skriven"
