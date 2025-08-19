@@ -39,6 +39,7 @@ nl:
       date: "Datum"
       add_to_calendar: "Toevoegen aan Google-agenda"
       toggle_timezone_offset_title: "Tijdzoneoffset schakelen"
+      local_time: "Lokale tijd"
       region:
         title: "Regio"
         none: "Geen"
@@ -316,16 +317,15 @@ nl:
         list: "Lijst"
     group_timezones:
       search: "Zoeken..."
+      group_availability: "Beschikbaarheid %{group}"
     discourse_post_event:
       notifications:
         before_event_reminder: "Een evenement gaat beginnen"
         after_event_reminder: "Een evenement is afgelopen"
         ongoing_event_reminder: "Er is een evenement gaande"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} heeft automatisch je aanwezigheid ingesteld en je uitgenodigd voor %{description}"
-        before_event_reminder_html: "Een evenement gaat beginnen %{description}"
-        after_event_reminder_html: "Een evenement is afgelopen %{description}"
-        ongoing_event_reminder_html: "Er is een evenement gaande %{description}"
+        invite_user_predefined_attendance_notification: "%{username} heeft automatisch je aanwezigheid ingesteld en je uitgenodigd voor %{eventName}"
+        an_event: "een evenement"
       edit_reason: "Evenement bijgewerkt"
       edit_reason_closed: "Evenement gesloten"
       edit_reason_opened: "Evenement geopend"
@@ -374,6 +374,8 @@ nl:
         creator: "Maker"
         status: "Status"
         starts_at: "Begint om"
+        all_events: "Alle evenementen"
+        my_events: "Mijn evenementen"
       upcoming_events_list:
         title: "Aankomende evenementen"
         empty: "Geen aankomende evenementen"
@@ -435,6 +437,9 @@ nl:
         update: "Opslaan"
         attach: "Evenement maken"
         add_reminder: "Herinnering toevoegen"
+        show_local_time:
+          label: "Lokale tijd weergeven"
+          description: "Datums en tijden worden weergegeven in: %{timezone}. Gebruik dit voor evenementen op een locatie, zodat de tijden de tijdzone weerspiegelen waarin het evenement plaatsvindt."
         timezone:
           label: Tijdzone
           remove_timezone: Geen tijdzone (UTC)
@@ -451,6 +456,8 @@ nl:
           periods:
             before: "voor"
             after: "na"
+        recurrence_until:
+          label: "Tot (inbegrepen)"
         recurrence:
           label: "Herhaling"
           none: "Geen herhaling"
@@ -463,13 +470,18 @@ nl:
         minimal:
           label: "Minimaal evenement"
           checkbox_label: "Knoppen Gaan/Niet gaan en genodigdenstatus verbergen"
+        allow_chat:
+          label: "Chatintegratie"
+          checkbox_label: "Evenementspecifiek chatkanaal maken en beheren"
         url:
           label: "URL"
           placeholder: "Optioneel"
         location:
           label: "Locatie"
+          placeholder: "Voeg een locatie, link of iets anders toe."
         description:
           label: "Beschrijving"
+          placeholder: "Vertel mensen wat meer over je evenement. Regeleindes en links worden ondersteund."
         name:
           label: "Evenementnaam"
           placeholder: "Optioneel, standaard ingesteld op topictitel"

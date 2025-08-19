@@ -64,8 +64,8 @@ vi:
           title: "Bản đồ chủ đề"
         site_header:
           title: "Tiêu đề trang web"
-        suggested_topics:
-          title: "Chủ đề tương tự"
+        more_topics:
+          title: "Thêm chủ đề"
         post_menu:
           title: "Menu Bài Đăng"
         modal:

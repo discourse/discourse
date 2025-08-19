@@ -20,4 +20,26 @@ ru:
     report_generator:
       private_message:
         title: "Запланированный отчет по запросу «%{query_name}»"
+        body: |
+          Здравствуйте, %{recipient_name}! Ваш отчет готов.
+
+          Запрос:
+          %{query_name}
+
+          Вот результаты:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Просмотреть запрос в проводнике данных</a>
+
+          Отчет создан: %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Запланированный отчет по запросу «%{query_name}»
+
+          Вот результаты:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Просмотреть запрос в проводнике данных</a>
+
+          Отчет создан: %{created_at} (%{timezone})
       upload_appendix: "Приложение: [%{filename}|вложение](%{short_url})"

@@ -126,9 +126,8 @@ he:
               label: "מצב שקט"
         llm_triage:
           fields:
-            system_prompt:
-              label: "בקשת מערכת"
-              description: "הבקשה שתשמש למיון ראשוני, נא לוודא שהתשובה היא מילה אחת בה ניתן להשתמש כדי להקפיץ את הפקודה"
+            triage_persona:
+              label: "דמות"
             max_post_tokens:
               label: "כמות אסימונים מרבית לפוסט"
               description: "מספר האסימונים המרבי לסריקה בעזרת מיון ראשוני עם LLM"
@@ -168,12 +167,6 @@ he:
             reply_persona:
               label: "דמות לתגובה"
               description: "דמות בינה מלאכותית לשימוש לתגובות (חייב להיות LLM/מש״ג כברירת מחדל), יתועדף על פני תגובה מראש"
-            model:
-              label: "מודל"
-              description: "מודל שפה שמשמש למיון ראשוני"
-            temperature:
-              label: "טמפרטורה"
-              description: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את האקראיות (להשאיר ריק כדי להשתמש בברירת המחדל של הדגם)"
             max_output_tokens:
               label: "כמות אסימוני פלט מרבית"
     discourse_ai:
@@ -214,10 +207,12 @@ he:
           text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
+        no_automations: "אין אוטומציות עדיין"
         summarization:
           name: "סיכומים"
           description: "להנגיש את כפתור הסיכום שמאפשר למבקרים לסכם נושאים"
           topic_summaries: "תקצירי נושאים."
+          gists: "תקצירים מקוצרים של רשימת הנושאים"
         search:
           name: "חיפוש"
           description: "שיפור חוויית החיפוש על ידי אספקת תשובות שנוצרו על ידי בינה מלאכותית לשאילתות"
@@ -230,6 +225,7 @@ he:
           description: "הוספת היכולת לחפש בערוצי Discord"
           search: "חיפוש ב־Discord"
         inference:
+          description: "סיווג נושאים ופוסטים לפי תחומי עניין / תוויות."
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
@@ -255,11 +251,25 @@ he:
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
+        automation_reports:
+          name: "דוחות אוטומטיים"
       modals:
         select_option: "בחירת אפשרות…"
       layout:
         table: "טבלה"
         card: "כרטיס"
+      translations:
+        title: "תרגומים"
+        admin_actions:
+          translation_settings: "הגדרות תרגום"
+          localization_settings: "הגדרות התאמת שפה"
+          disabled_state:
+            configure: "הגדרת תרגומים"
+            empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+        progress_chart:
+          title: "התקדמות התרגום"
+          completed: "הושלם"
+          remaining: "נותרו"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
@@ -551,7 +561,7 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-0: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-opus-4-1: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-0: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-3-7-sonnet-latest: "איזון מיטבי בין מהירות לעלות (הדור הקודם)"
           anthropic-claude-3-5-haiku-latest: "מהיר וחסכוני"
@@ -561,9 +571,9 @@ he:
           google-gemini-2-0-flash-lite: "מודל חסכוני ומהיר"
           open_ai-o3: "מודל ההיגיון החזק ביותר מבית OpenAI"
           open_ai-o4-mini: "מודל הגיון מתקדם וחסכוני"
-          open_ai-gpt-4-1: "מודל הדגל של Open AI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
-          open_ai-gpt-4-1-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
-          open_ai-gpt-4-1-nano: "מודל GPT-4.1 החסכוני והמהיר ביותר."
+          open_ai-gpt-5: "מודל הדגל של Open AI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
+          open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
+          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
           mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
@@ -590,6 +600,7 @@ he:
           failure: "הניסיון ליצור קשר עם המודל החזיר את השגיאה הבאה: %{error}"
         hints:
           max_prompt_tokens: "מספר האסימונים המרבי שהמודל יכול לעבד בבקשה בודדת"
+          max_output_tokens: "מספר האסימונים המרבי שהמודל יכול לייצר בבקשה בודדת"
           display_name: "השם משמש להתייחסות למודל הזה על פני כלל ממשק האתר שלך."
           name: "אנו מצרפים את זה לקריאת ה־API כדי לציין באיזה מודל להשתמש"
           vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
@@ -622,12 +633,14 @@ he:
           disable_native_tools: "השבתת תמיכה בבלי מובנה (להשתמש בכלים מבוססי XML)"
           provider_order: "סדר ספקים (רשימה מופרדת בפסיקים)"
           provider_quantizations: "סדר כימות הספקים (רשימה מופרדת בפסיקים, למשל: fp16,fp8)"
+          disable_streaming: "השבתת השלמות מוזרמות (המרת בקשות מוזרמות לבקשות שאינן מוזרמות)"
           reasoning_effort: "מאמץ נימוק (תקף רק על מודלים של נימוק)"
           enable_reasoning: "הפעלת נימוק (תקף רק על מודלים עם אפשרות נימוק)"
           enable_thinking: "הפעלת חשיבה (רק במודלים תקפים לדוגמה: flash 2.5)"
           thinking_tokens: "כמות אסימונים המשמשים לחשיבה"
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
+          enable_responses_api: "הפעלת API לתגובות (נחוץ במודלים מסוימים של OpenAI)"
       related_topics:
         title: "נושאים קשורים"
         pill: "קשורים"
@@ -637,6 +650,11 @@ he:
         selection_hint: "עצה: אפשר לבחור חלק מהטקסט בטרם פתיחת המסייע כדי לשכתב רק את החלק הזה."
         suggest: "הצעה עם בינה מלאכותית"
         suggest_errors:
+          too_many_tags:
+            one: "יכולה להיות לך עד תגית אחת"
+            two: "יכולות להיות לך עד שתי תגיות"
+            many: "יכולות להיות לך עד %{count} תגיות"
+            other: "יכולות להיות לך עד %{count} תגיות"
           no_suggestions: "אין הצעות זמינות"
         missing_content: "נא למלא קצת תוכן כדי לחולל הצעות."
         context_menu:
@@ -746,6 +764,7 @@ he:
         cancel_streaming: "עצירת התגובה"
         default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
         shortcut_title: "התחלת הודעה פרטית עם בוט בינה מלאכותית"
+        exit: "יציאה מבוט בינה מלאכותית"
         share: "העתקת דיון עם בינה מלאכותית"
         conversation_shared: "הדיון הועתק"
         embed_copied: "ההטמעה הועתקה ללוח הגזירים"

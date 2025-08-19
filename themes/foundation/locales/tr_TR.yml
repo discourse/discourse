@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  theme_metadata:
+    description: "Topluluğunuzun özel ihtiyaçlarına göre özelleştirilmeye uygun klasik Discourse teması."

@@ -29,6 +29,7 @@ nl:
         auto_resolution: "<h2>Automatische omzetting van entiteiten</h2> <p>Wanneer je query een entiteit-ID retourneert, kan Gegevensverkenner deze automatisch vervangen door de entiteitnaam en andere nuttige informatie in queryresultaten. Automatische omzetting is beschikbaar voor <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> en <i><b>badge_id</b></i>. Voer deze query uit om dit te proberen:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Aangepaste parameters maken</h2> <p>Om aangepaste parameters te maken voor je query's, plaats je dit bovenaan je query en volg je de notatie:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Opmerking : de eerste regel met [params] is vereist, samen met twee streepjes ervoor en elke aangepaste parameter die je wilt declareren.</i></p>"
         default_values: "<h3>Standaardwaarden</h3> <p>Je kunt parameters declareren met of zonder standaardwaarde. Standaardwaarden worden weergegeven in een tekstveld onder de query-editor, die je naar wens kunt bewerken. Parameters die zijn gedeclareerd zonder standaardwaarde leveren nog steeds een tekstveld op, maar zijn leeg en rood gemarkeerd.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Gegevenstypen</h3> <p>Hier volgen algemene gegevenstypen die je kunt gebruiken:</p> <ul> <li><b>integer</b> - positief of negatief geheel getal van vier bytes</li> <li><b>text</b> - tekenreeks met variabele lengte</li> <li><b>boolean</b> – true/false</li> <li><b>date</b> - kalenderdatum (jaar, maand, dag)</li> </ul> <p>Ga voor meer informatie over gegevenstypen naar <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>deze website</a>.</p>"
       schema:
         title: "Databaseschema"
         filter: "Zoeken..."
@@ -101,6 +102,8 @@ nl:
               label: PB verzenden overslaan als er geen resultaten zijn
             attach_csv:
               label: Voeg het CSV-bestand bij de PB
+            users_from_group:
+              label: Individueel PB naar elk groepslid sturen
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

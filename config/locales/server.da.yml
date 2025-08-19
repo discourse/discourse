@@ -3231,11 +3231,9 @@ da:
         title: "Ja"
       agree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
-      delete_single:
+      delete:
         title: "Slet"
         complete: "Indlæg slettet."
-      delete:
-        title: "Slet…"
       delete_and_ignore:
         complete: "Indlæg slettet."
       delete_and_ignore_replies:
@@ -3259,6 +3257,9 @@ da:
         title: "Godkend"
         complete: "Indlæg godkendt."
       approve_post:
+        title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
+      approve_post_closed:
         title: "Godkend Indlæg"
         complete: "Indlæg godkendt."
       reject_post:

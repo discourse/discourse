@@ -31,7 +31,7 @@ sk:
         few: "riešení"
         many: "riešení"
         other: "riešenia"
-      accepted_html: "%{icon} Vyriešil <span class='by'> <a href data-user-card='%{username_lower}'>%{username}</a> v</span> <a href='%{post_path}' class='back'>príspevku #%{post_number}</a>"
+      accepted_answer_post_number: "príspevok %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "všetko"
@@ -40,7 +40,6 @@ sk:
       no_solved_topics_title: "Ešte ste nevyriešili žiadnu tému"
       no_solved_topics_title_others: "%{username} zatiaľ nevyriešil žiadne témy"
       no_solved_topics_body: "Keď poskytnete užitočnú odpoveď na tému, môže byť vaša odpoveď vybraná ako riešenie vlastníkom témy alebo zamestnancami."
-      marked_solved_by: "Označené ako vyriešené <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Bola vaša otázka zodpovedaná?
         description: "Zvýraznite odpoveď a pomôžte ostatným pomocou tlačidla riešenia pod správnou odpoveďou."

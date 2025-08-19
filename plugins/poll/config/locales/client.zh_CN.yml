@@ -107,7 +107,7 @@ zh_CN:
       error_while_fetching_voters: "抱歉，显示投票人时出错。"
       error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
-        title: 插入投票
+        title: 构建投票
         insert: 插入投票
         help:
           options_min_count: 至少输入 1 个选项。

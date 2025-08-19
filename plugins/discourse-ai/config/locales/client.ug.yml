@@ -66,6 +66,8 @@ ug:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
+      translations:
+        title: "تەرجىمە"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"
