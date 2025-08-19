@@ -249,8 +249,8 @@ module DiscourseAi
             SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
             FROM discourse_automation_fields fields
             INNER JOIN discourse_automation_automations automations ON automations.id = fields.automation_id
-            WHERE fields.name IN ('model', 'triage_persona')
-            AND automations.script = 'llm_triage'
+            WHERE fields.name IN ('model', 'triage_persona', 'persona')
+            AND automations.script IN ('llm_triage', 'llm_persona_triage')
             AND automations.enabled
             LIMIT 20
           SQL
@@ -259,7 +259,11 @@ module DiscourseAi
               all_script_fields.reduce({}) do |memo, field|
                 memo[field.automation_name] = {} if memo[field.automation_name].nil?
 
-                memo[field.automation_name][field.name] = field.value
+                if field.name == "model"
+                  memo[field.automation_name][field.name] = field.value
+                else
+                  memo[field.automation_name]["persona_id"] = field.value
+                end
 
                 memo
               end
@@ -267,13 +271,20 @@ module DiscourseAi
             all_script_fields
               .take(10)
               .map do |automation_name, field|
+                llm_models_lookup =
+                  if field["model"].present?
+                    -> { [LlmModel.find_by(id: field["model"])].compact }
+                  else
+                    nil # llm_persona_triage uses the persona default_llm_id.
+                  end
+
                 new(
                   automation_name,
                   nil,
                   DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE_ID,
                   DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE,
-                  persona_ids_lookup: -> { [field.dig("triage_persona")].compact.map(&:to_i) },
-                  llm_models_lookup: -> { [LlmModel.find_by(id: field["model"])].compact },
+                  persona_ids_lookup: -> { [field.dig("persona_id")].compact.map(&:to_i) },
+                  llm_models_lookup: llm_models_lookup,
                 )
               end
           end

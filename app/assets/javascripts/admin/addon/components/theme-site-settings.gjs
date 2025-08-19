@@ -16,7 +16,6 @@ import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ThemeSiteSettings extends Component {
   @service site;
-  @service router;
 
   @tracked themesWithSiteSettingOverrides = null;
   @tracked themeableSiteSettings = null;

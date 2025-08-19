@@ -6,7 +6,6 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 
 export default class Blurb extends Component {
   @service siteSettings;
-  @service site;
 
   <template>
     <span class="blurb">

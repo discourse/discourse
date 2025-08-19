@@ -50,7 +50,6 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
-  @service dialog;
   @service siteSettingChangeTracker;
 
   @tracked isSecret = null;

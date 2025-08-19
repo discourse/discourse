@@ -315,6 +315,7 @@ class ColorScheme < ActiveRecord::Base
 
   attr_accessor :is_base
   attr_accessor :skip_publish
+  attr_accessor :is_builtin_default
 
   has_many :color_scheme_colors, -> { order("id ASC") }, dependent: :destroy
 
@@ -381,15 +382,17 @@ class ColorScheme < ActiveRecord::Base
         )
       scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
       scheme.is_base = true
+      scheme.is_builtin_default = hash[:id] == LIGHT_THEME_ID
       scheme
     end
   end
 
   def self.base
     return @base_color_scheme if @base_color_scheme
-    @base_color_scheme = new(name: I18n.t("color_schemes.base_theme_name"))
+    @base_color_scheme = new(name: I18n.t("admin_js.admin.customize.theme.default_light_scheme"))
     @base_color_scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
     @base_color_scheme.is_base = true
+    @base_color_scheme.is_builtin_default = true
     @base_color_scheme
   end
 

@@ -1659,7 +1659,7 @@ RSpec.describe ApplicationController do
       it "includes stylesheet links in the header" do
         get "/"
 
-        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_light-default")
         expect(response.headers["Link"]).to include("color_definitions_dark")
       end
     end
