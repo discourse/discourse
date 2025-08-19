@@ -1686,9 +1686,12 @@ import { i18n } from "discourse-i18n";
 
       test("modified name when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-reply-options-user-link-name", () => {
-            return "NewNameHere";
-          });
+          api.registerValueTransformer(
+            "composer-reply-options-user-link-name",
+            () => {
+              return "NewNameHere";
+            }
+          );
         });
 
         await visit("/t/34");
@@ -1699,9 +1702,12 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar when replying to a post", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-reply-options-user-avatar-template", () => {
-            return "/images/avatar.png?size={size}";
-          });
+          api.registerValueTransformer(
+            "composer-reply-options-user-avatar-template",
+            () => {
+              return "/images/avatar.png?size={size}";
+            }
+          );
         });
 
         await visit("/t/34");
@@ -1718,9 +1724,12 @@ import { i18n } from "discourse-i18n";
 
       test("modified avatar in quote", async function (assert) {
         withPluginApi((api) => {
-          api.registerValueTransformer("composer-editor-quoted-post-avatar-template", () => {
-            return "/images/custom-quote-avatar.png?size={size}";
-          });
+          api.registerValueTransformer(
+            "composer-editor-quoted-post-avatar-template",
+            () => {
+              return "/images/custom-quote-avatar.png?size={size}";
+            }
+          );
         });
 
         await visit("/t/34");
