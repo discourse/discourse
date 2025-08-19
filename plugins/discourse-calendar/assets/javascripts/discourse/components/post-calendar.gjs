@@ -195,7 +195,7 @@ export default class PostCalendar extends Component {
       if (!d) {
         return false;
       }
-      return d.hours() !== 0 || d.minutes() !== 0 || d.seconds() !== 0;
+      return d.hours() || d.minutes() || d.seconds();
     };
 
     const hasTime =
