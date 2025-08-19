@@ -60,15 +60,6 @@ export default class extends DiscourseRoute {
       postRNWebviewMessage("showLogin", true);
     }
 
-    // Automatically store the current URL (aka. the one **before** the transition)
-    if (!currentUser) {
-      if (isValidDestinationUrl(url)) {
-        cookie("destination_url", url);
-      } else if (DiscourseURL.isInternalTopic(referrer)) {
-        cookie("destination_url", referrer);
-      }
-    }
-
     // When Discourse Connect is enabled, redirect to the SSO endpoint
     if (auth_immediately && enable_discourse_connect) {
       const returnPath = cookie("destination_url")
@@ -76,6 +67,15 @@ export default class extends DiscourseRoute {
         : encodeURIComponent(url);
       window.location = getURL(`/session/sso?return_path=${returnPath}`);
       return;
+    }
+
+    // Automatically store the current URL (aka. the one **before** the transition)
+    if (!currentUser) {
+      if (isValidDestinationUrl(url)) {
+        cookie("destination_url", url);
+      } else if (DiscourseURL.isInternalTopic(referrer)) {
+        cookie("destination_url", referrer);
+      }
     }
 
     // Automatically kick off the external login if it's the only one available
