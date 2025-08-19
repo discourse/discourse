@@ -5,6 +5,7 @@ import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { getOwner } from "@ember/owner";
 import { click, find, render, settled } from "@ember/test-helpers";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -29,10 +30,14 @@ import {
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
 
+let state;
+
 module("Integration | Component | plugin-outlet", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    state = new TrackedObject();
+
     registerTemporaryModule(`${CLASS_PREFIX}/test-name/hello`, {
       actions: {
         sayHello() {
@@ -175,18 +180,18 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           }
         );
 
-        this.template = hbs`
+        this.template = <template>
           <PluginOutlet
             @name="outlet-with-default"
             @outletArgs={{lazyHash
-              shouldDisplay=this.shouldDisplay
-              yieldCore=this.yieldCore
-              enableClashingConnector=this.enableClashingConnector
+              shouldDisplay=state.shouldDisplay
+              yieldCore=state.yieldCore
+              enableClashingConnector=state.enableClashingConnector
             }}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
-        `;
+        </template>;
       });
 
       test("Can act as a wrapper around core implementation", async function (assert) {
@@ -194,12 +199,12 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 
         assert.dom(".result").hasText("Core implementation");
 
-        this.set("shouldDisplay", true);
+        state.shouldDisplay = true;
         await settled();
 
         assert.dom(".result").hasText("Plugin implementation");
 
-        this.set("yieldCore", true);
+        state.yieldCore = true;
         await settled();
 
         assert
@@ -216,8 +221,8 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       test("clashing connectors for regular users", async function (assert) {
         await render(this.template);
 
-        this.set("shouldDisplay", true);
-        this.set("enableClashingConnector", true);
+        state.shouldDisplay = true;
+        state.enableClashingConnector = true;
         await settled();
 
         assert.strictEqual(
@@ -242,8 +247,8 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         this.set("currentUser.admin", true);
         await render(this.template);
 
-        this.set("shouldDisplay", true);
-        this.set("enableClashingConnector", true);
+        state.shouldDisplay = true;
+        state.enableClashingConnector = true;
         await settled();
 
         assert.strictEqual(
@@ -272,14 +277,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           `
         );
 
-        await render(hbs`
-          <PluginOutlet
-            @name="outlet-with-default"
-            @outletArgs={{lazyHash shouldDisplay=true}}
-          >
-            <span class="result">Core implementation</span>
-          </PluginOutlet>
-        `);
+        await render(
+          <template>
+            <PluginOutlet
+              @name="outlet-with-default"
+              @outletArgs={{lazyHash shouldDisplay=true}}
+            >
+              <span class="result">Core implementation</span>
+            </PluginOutlet>
+          </template>
+        );
 
         assert.dom(".result").hasText("Plugin implementation");
         assert.dom(".before-result").hasText("Before wrapped content");
@@ -301,14 +308,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           `
         );
 
-        await render(hbs`
-          <PluginOutlet
-            @name="outlet-with-default"
-            @outletArgs={{lazyHash shouldDisplay=true}}
-          >
-            <span class="result">Core implementation</span>
-          </PluginOutlet>
-        `);
+        await render(
+          <template>
+            <PluginOutlet
+              @name="outlet-with-default"
+              @outletArgs={{lazyHash shouldDisplay=true}}
+            >
+              <span class="result">Core implementation</span>
+            </PluginOutlet>
+          </template>
+        );
 
         assert.dom(".result").hasText("Plugin implementation");
         assert
@@ -327,14 +336,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           `
         );
 
-        await render(hbs`
-          <PluginOutlet
-            @name="outlet-with-default"
-            @outletArgs={{lazyHash shouldDisplay=true}}
-          >
-            <span class="result">Core implementation</span>
-          </PluginOutlet>
-        `);
+        await render(
+          <template>
+            <PluginOutlet
+              @name="outlet-with-default"
+              @outletArgs={{lazyHash shouldDisplay=true}}
+            >
+              <span class="result">Core implementation</span>
+            </PluginOutlet>
+          </template>
+        );
 
         assert.dom(".result").hasText("Plugin implementation");
         assert.dom(".after-result").hasText("After wrapped content");
@@ -355,14 +366,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           `
         );
 
-        await render(hbs`
-          <PluginOutlet
-            @name="outlet-with-default"
-            @outletArgs={{lazyHash shouldDisplay=true}}
-          >
-            <span class="result">Core implementation</span>
-          </PluginOutlet>
-        `);
+        await render(
+          <template>
+            <PluginOutlet
+              @name="outlet-with-default"
+              @outletArgs={{lazyHash shouldDisplay=true}}
+            >
+              <span class="result">Core implementation</span>
+            </PluginOutlet>
+          </template>
+        );
 
         assert.dom(".result").hasText("Plugin implementation");
         assert
@@ -389,23 +402,25 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 
   test("Reevaluates shouldRender for argument changes", async function (assert) {
     this.set("shouldDisplay", false);
-    await render(hbs`
-      <PluginOutlet
-        @name="test-name"
-        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
-      />
-    `);
+    await render(
+      <template>
+        <PluginOutlet
+          @name="test-name"
+          @outletArgs={{lazyHash shouldDisplay=state.shouldDisplay}}
+        />
+      </template>
+    );
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
 
-    this.set("shouldDisplay", true);
+    state.shouldDisplay = true;
     await settled();
     assert.dom(".conditional-render").exists("renders conditional outlet");
   });
 
   test("Reevaluates shouldRender for other autotracked changes", async function (assert) {
-    await render(hbs`<PluginOutlet @name="test-name" />`);
+    await render(<template><PluginOutlet @name="test-name" /></template>);
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
@@ -416,7 +431,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   });
 
   test("shouldRender receives an owner argument", async function (assert) {
-    await render(hbs`<PluginOutlet @name="test-name" />`);
+    await render(<template><PluginOutlet @name="test-name" /></template>);
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
@@ -427,17 +442,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   });
 
   test("Other outlets are not re-rendered", async function (assert) {
-    this.set("shouldDisplay", false);
-    await render(hbs`
-      <PluginOutlet
-        @name="test-name"
-        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
-      />
-    `);
+    state.shouldDisplay = false;
+    await render(
+      <template>
+        <PluginOutlet
+          @name="test-name"
+          @outletArgs={{lazyHash shouldDisplay=state.shouldDisplay}}
+        />
+      </template>
+    );
 
     find(".hello-username").someUniqueProperty = true;
 
-    this.set("shouldDisplay", true);
+    state.shouldDisplay = true;
     await settled();
     assert.dom(".conditional-render").exists("renders conditional outlet");
 
@@ -634,7 +651,7 @@ module(
 
     test("uses classic PluginConnector by default", async function (assert) {
       await render(hbs`
-        <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} />
+        <PluginOutlet @name="test-name" @outletArgs={{lazy-hash hello="world"}} />
       `);
 
       assert.dom(".outletArgHelloValue").hasText("world");
@@ -645,7 +662,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{lazyHash hello="world"}}
+          @outletArgs={{lazy-hash hello="world"}}
           @defaultGlimmer={{true}}
         />
       `);
@@ -674,7 +691,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazy-hash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -736,7 +753,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazy-hash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -764,7 +781,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazy-hash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -790,7 +807,7 @@ module(
 
       test("using classic PluginConnector by default", async function (assert) {
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazy-hash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -820,7 +837,7 @@ module(
         await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}}
+          @deprecatedArgs={{lazy-hash hello=(deprecated-outlet-argument value="world")}}
           @defaultGlimmer={{true}}
         />
       `);
@@ -860,7 +877,7 @@ module(
         });
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazy-hash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -897,7 +914,7 @@ module(
         );
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazy-hash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -930,7 +947,7 @@ module(
         );
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazy-hash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -952,7 +969,7 @@ module(
 
       test("unused arguments", async function (assert) {
         await render(hbs`
-          <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} @deprecatedArgs={{lazyHash argNotUsed=(deprecated-outlet-argument value="not used")}} />
+          <PluginOutlet @name="test-name" @outletArgs={{lazy-hash hello="world"}} @deprecatedArgs={{lazy-hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
         `);
 
         // deprecated argument still works

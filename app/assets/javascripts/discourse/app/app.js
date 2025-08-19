@@ -39,8 +39,8 @@ function populatePreloadStore() {
     preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
   }
 
-  const keys = Object.keys(preloaded);
-  if (keys.length === 0) {
+  const keys = preloaded ? Object.keys(preloaded) : [];
+  if (keys.length === 0 && !isTesting()) {
     throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
   }
 

@@ -1,9 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { clearRender, render, settled } from "@ember/test-helpers";
 import { observes as nativeClassObserves } from "@ember-decorators/object";
 import { hbs } from "ember-cli-htmlbars";
+import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
 import discourseComputed, {
   afterRender,
@@ -116,10 +118,9 @@ module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
 
   test("afterRender", async function (assert) {
-    this.registry.register("component:foo-component", fooComponent);
     this.set("baz", 0);
 
-    await render(hbs`<FooComponent @baz={{this.baz}} />`);
+    await render(curryComponent(fooComponent, { baz: this.baz }), getOwner(this));
 
     assert.dom(".foo-component").exists();
     assert.strictEqual(this.baz, 1);
@@ -131,13 +132,8 @@ module("Unit | Utils | decorators", function (hooks) {
   });
 
   test("discourseComputed works in EmberObject classes", async function (assert) {
-    this.registry.register(
-      "component:ember-object-component",
-      EmberObjectComponent
-    );
-
     this.set("name", "Jarek");
-    await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
+    await render(curryComponent(EmberObjectComponent, { name: this.name }, getOwner(this)));
 
     assert.dom(".ember-object-component").hasText("hello, Jarek");
 
@@ -151,10 +147,8 @@ module("Unit | Utils | decorators", function (hooks) {
   });
 
   test("discourseComputed works in native classes", async function (assert) {
-    this.registry.register("component:native-component", NativeComponent);
-
     this.set("name", "Jarek");
-    await render(hbs`<NativeComponent @name={{this.name}} />`);
+    await render(curryComponent(NativeComponent, { name: this.name }, getOwner(this)));
 
     assert.dom(".native-component").hasText("hello, Jarek");
 
