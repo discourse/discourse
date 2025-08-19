@@ -39,6 +39,7 @@ pt_BR:
       date: "Data"
       add_to_calendar: "Adicionar ao Google Calendar"
       toggle_timezone_offset_title: "Alternar deslocamento de fuso horário"
+      local_time: "Hora local"
       region:
         title: "Região"
         none: "Nenhum"
@@ -323,10 +324,8 @@ pt_BR:
         after_event_reminder: "Um evento foi encerrado"
         ongoing_event_reminder: "Um evento está em andamento"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} definiu automaticamente sua presença e convidou para %{description}"
-        before_event_reminder_html: "Um evento está prestes a começar %{description}"
-        after_event_reminder_html: "Um evento terminou %{description}"
-        ongoing_event_reminder_html: "Um evento está em andamento  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} definiu automaticamente sua presença e convidou para %{eventName}"
+        an_event: "um evento"
       edit_reason: "Evento atualizado"
       edit_reason_closed: "Evento fechado"
       edit_reason_opened: "Evento aberto"
@@ -375,6 +374,8 @@ pt_BR:
         creator: "Criador(a)"
         status: "Status"
         starts_at: "Começa"
+        all_events: "Todos os eventos"
+        my_events: "Meus eventos"
       upcoming_events_list:
         title: "Próximos eventos"
         empty: "Nenhum evento próximo"
@@ -436,6 +437,9 @@ pt_BR:
         update: "Salvar"
         attach: "Criar evento"
         add_reminder: "Adicionar lembrete"
+        show_local_time:
+          label: "Exibir hora local"
+          description: "As datas e os horários serão exibidas em %{timezone}. Use esta opção para eventos em um determinado local, de modo que o fuso horário seja o do local onde ocorrerá o evento."
         timezone:
           label: Fuso horário
           remove_timezone: Sem fuso horário (UTC)
@@ -452,6 +456,8 @@ pt_BR:
           periods:
             before: "antes"
             after: "depois"
+        recurrence_until:
+          label: "Até (inclusive)"
         recurrence:
           label: "Recorrência"
           none: "Sem recorrência"
@@ -464,13 +470,18 @@ pt_BR:
         minimal:
           label: "evento mínimo"
           checkbox_label: "Ocultar botões Vou/Não vou e status dos(as) convidados(as)"
+        allow_chat:
+          label: "Integração com bate-papo"
+          checkbox_label: "Criar e gerenciar canal de bate-papo específico de evento"
         url:
           label: "URL"
           placeholder: "Opcional"
         location:
           label: "Localização"
+          placeholder: "Adicione um link, local ou qualquer outra coisa."
         description:
           label: "Descrição"
+          placeholder: "Fale um pouco sobre o seu evento. Linhas e links novos são compatíveis."
         name:
           label: "Nome do evento"
           placeholder: "Opcional, o padrão é o título do tópico"

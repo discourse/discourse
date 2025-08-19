@@ -38,6 +38,7 @@ it:
         reminder:
           label: Promemoria
           description: Frequenza di invio di un promemoria di accettazione dell'informativa
+          no_reminder: (Nessun promemoria)
         accept:
           label: Accetta
           description: Testo utilizzato sul pulsante di accettazione
@@ -50,6 +51,9 @@ it:
         send-email:
           label: Inviare e-mail?
           description: Avvisa gli utenti della nuova informativa via e-mail
+        add-users-to-group:
+          label: Aggiungi utenti al gruppo
+          description: Aggiungi gli utenti al seguente gruppo quando accettano l'informativa.
       preferences:
         title: Informative
         policy_emails:

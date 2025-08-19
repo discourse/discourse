@@ -11,8 +11,6 @@ sk:
         categories:
           discourse_details: "Podrobnosti o Discourse"
   js:
-    details:
-      title: Skryť detaily
     composer:
       details_title: Zhrnutie
       details_text: "Tento text bol skrytý"

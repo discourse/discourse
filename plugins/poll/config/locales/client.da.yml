@@ -78,7 +78,6 @@ da:
       error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."
       error_while_exporting_results: "Beklager, der opstod en fejl under eksport af afstemningsresultater."
       ui_builder:
-        title: Opret afstemning
         insert: Indsæt afstemning
         help:
           options_min_count: Indtast mindst 1 valgmulighed.

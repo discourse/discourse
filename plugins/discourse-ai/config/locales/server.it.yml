@@ -9,9 +9,16 @@ it:
     ai:
       flag_types:
         review: "Aggiungi il messaggio alla coda di revisione"
+        review_hide: "Aggiungi il messaggio alla coda di revisione e nascondilo"
         spam: "Segnala come spam e nascondi il post"
         spam_silence: "Segnala come spam, nascondi il post e silenzia l'utente"
     scriptables:
+      llm_tool_triage:
+        title: Triage dei messaggi con strumento IA
+        description: "Esegui il triage dei messaggi utilizzando la logica personalizzata di uno strumento di IA"
+      llm_persona_triage:
+        title: Triage dei messaggi con personaggio IA
+        description: "Rispondi ai messaggi utilizzando uno specifico personaggio IA"
       llm_triage:
         title: Triage dei messaggi con IA
         description: "Triage dei messaggi con LLM"
@@ -24,6 +31,8 @@ it:
         description: "Report periodico basato su LLM"
   site_settings:
     discourse_ai_enabled: "Abilita il plugin Discourse AI."
+    ai_default_llm_model: "Il modello LLM predefinito da utilizzare per tutte le funzionalità AI"
+    ai_artifact_security: "l sistema di artefatti IA genera IFRAME con codice eseguibile. La modalità Strict impone un clic extra per eseguire il codice. La modalità Lax esegue il codice direttamente. La modalità Hybrid permette all'utente di immettere data-ai-artifact-autorun per vedere subito il risultato. La modalità Disabled disabilita il sistema di artefatti."
     ai_toxicity_enabled: "Abilita il modulo tossicità."
     ai_toxicity_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo tossicità"
     ai_toxicity_inference_service_api_key: "Chiave API per l'API di tossicità"
@@ -51,6 +60,10 @@ it:
     ai_nsfw_flag_threshold_porn: "Soglia per un'immagine classificata come pornografica per essere considerata NSFW."
     ai_nsfw_flag_threshold_sexy: "Soglia per un'immagine classificata come sexy per essere considerata NSFW."
     ai_nsfw_models: "Modelli da utilizzare per l'inferenza NSFW."
+    ai_spam_detection_enabled: "Abilita il modulo di rilevamento spam AI"
+    ai_openai_api_key: "Chiave API per l'API OpenAI. Utilizzato SOLO per creazione e modifica delle immagini. Per GPT, utilizzare la scheda di configurazione LLM"
+    ai_openai_image_generation_url: "URL API di generazione immagini OpenAI"
+    ai_openai_image_edit_url: "URL API di modifica immagini OpenAI"
     ai_helper_enabled: "Abilita l'assistente IA."
     composer_ai_helper_allowed_groups: "Gli utenti di questi gruppi vedranno il pulsante dell'assistente IA nella sezione di scrittura."
     ai_helper_allowed_in_pm: "Abilita l'assistente IA nei MP."
@@ -68,11 +81,14 @@ it:
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
     ai_embeddings_backfill_batch_size: "Numero di incorporamenti da riempire ogni 15 minuti."
     ai_embeddings_semantic_search_enabled: "Abilita la ricerca semantica a pagina intera."
+    ai_embeddings_semantic_search_use_hyde: "Utilizza HyDE per la ricerca semantica a pagina intera. Utilizza un LLM per creare un post ipotetico a partire dal termine di ricerca dell'utente, per facilitare le corrispondenze."
     ai_embeddings_semantic_quick_search_enabled: "Abilita l'opzione di ricerca semantica nel popup del menu di ricerca."
     ai_embeddings_semantic_related_include_closed_topics: "Includi argomenti chiusi nei risultati della ricerca semantica"
     ai_embeddings_semantic_search_hyde_model: "Modello utilizzato per espandere le parole chiave per ottenere risultati migliori durante una ricerca semantica"
     ai_embeddings_per_post_enabled: Genera integrazioni per ogni post
+    ai_summarization_enabled: "Abilita la funzionalità riepilogo"
     ai_summarization_model: "Modello da utilizzare per il riepilogo"
+    ai_summarization_persona: "Personaggio da utilizzare per la funzionalità riepilogo"
     ai_custom_summarization_allowed_groups: "I gruppi autorizzati a utilizzare la creazione di nuovi riepiloghi."
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
@@ -90,11 +106,26 @@ it:
     ai_stability_api_url: "URL per l'API stability.ai"
     ai_google_custom_search_api_key: "Chiave API per l'API della ricerca personalizzata di Google: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX per l'API di ricerca personalizzata di Google"
+    ai_discord_search_enabled: "Abilita la funzionalità di ricerca su Discord"
+    ai_discord_app_id: "L'ID dell'applicazione Discord a cui vuoi collegare la ricerca Discord"
+    ai_discord_app_public_key: "La chiave pubblica dell'applicazione Discord a cui vuoi collegare la ricerca Discord"
+    ai_discord_search_mode: "Seleziona la modalità di ricerca da utilizzare per la ricerca su Discord"
+    ai_discord_search_persona: "Il personaggio da utilizzare per la ricerca su Discord."
+    ai_discord_allowed_guilds: "Gilde (server) Discord in cui il bot è autorizzato a cercare"
+    ai_bot_enable_dedicated_ux: "Consenti l'interfaccia bot a schermo intero, invece di un messaggio personale"
+    ai_translation_enabled: "Abilita la funzionalità di traduzione IA"
+    ai_translation_model: "Il modello da utilizzare per la traduzione. Il modello deve supportare la funzionalità di traduzione. I personaggi possono ignorare questa impostazione."
+    ai_translation_backfill_limit_to_public_content: "Se abilitata, verranno tradotti solo i contenuti nelle categorie pubbliche. Se disabilitata, verranno inviati all'assistente di traduzione anche gli MP di gruppo e le categorie private."
+    ai_translation_max_post_length: "La lunghezza massima di un messaggio da tradurre. I messaggi che superano la lunghezza impostata non verranno tradotti."
+    ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messeggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
   reviewables:
     reasons:
       flagged_by_toxicity: Il plugin IA lo ha segnalato dopo averlo classificato come tossico.
       flagged_by_nsfw: Il plugin IA lo ha segnalato dopo aver classificato almeno una delle immagini allegate come NSFW.
   reports:
+    sentiment_analysis:
+      title: "Analisi del sentimento"
+      description: "Questo rapporto contieni l'analisi del sentimento dei messaggi, raggruppati per categoria, con punteggi positivi, negativi e neutri per ciascun messaggio e ciascuna categoria."
     overall_sentiment:
       title: "Sentimento generale"
       description: 'Il grafico confronta il numero di messaggi classificati come positivi o negativi. Questi vengono calcolati quando i punteggi positivi o negativi > il punteggio soglia impostato. Ciò significa che i messaggi neutri non vengono mostrati. Sono esclusi anche i messaggi personali (MP). Classificazione effettuata con "cardiffnlp/twitter-roberta-base-sentiment-latest"'
@@ -186,8 +217,16 @@ it:
       description: "Messaggi classificati con l'emozione sorpresa tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Puoi avere solo %{count} chiave nell'artefatto."
+          other: "Puoi avere solo %{count} chiavi nell'artefatto."
+      link: "Mostra in nuova scheda"
+      copy_embed: "Copia incorporato"
       view_source: "Visualizza origine"
       view_changes: "Visualizza modifiche"
+      change_description: "Cambia descrizione"
+      copied: "Copiato negli appunti"
     unknown_model: "Modello IA sconosciuto"
     tools:
       custom_name: "%{name} (personalizzato)"
@@ -202,6 +241,8 @@ it:
           name: "Generatore di immagini di flusso (Together.ai)"
         empty_tool:
           name: "Inizia da zero..."
+      name:
+        characters: "deve includere solo numeri, lettere e trattini bassi"
     ai_helper:
       errors:
         completion_request_failed: "Qualcosa è andato storto durante il tentativo di fornire suggerimenti. Riprova."
@@ -237,13 +278,17 @@ it:
       invalid_error_type: "Tipo di errore non valido fornito"
       unexpected: "Si è verificato un errore imprevisto"
       bot_user_update_failed: "Impossibile aggiornare l'utente del bot di scansione antispam"
+      configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
+      logging_subject: "Rilevamento spam"
     ai_bot:
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[Bot IA senza titolo MP]"
+      thinking: "Sto pensando..."
       personas:
         default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_delete_system_persona: "I personaggi di sistema non possono essere eliminati, vanno invece disattivati"
         cannot_edit_system_persona: "I personaggi di sistema possono solo essere rinominati, non è possibile modificare strumenti di sistema, piuttosto disabilitali e crearne una copia"
+        cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:
           name: "Assistente GitHub"
           description: "Bot IA specializzato nell'assistenza con attività e domande relative a GitHub"
@@ -253,12 +298,21 @@ it:
         artist:
           name: Artista
           description: "Bot IA specializzato nella generazione di immagini"
+        designer:
+          name: Assistente per la grafica
+          description: "Bot IA specializzato nella generazione e nella modifica di immagini"
+        forum_researcher:
+          name: Assistente del forum
+          description: "Bot IA specializzato nelle ricerche approfondite sul forum"
         sql_helper:
           name: Assistente SQL
           description: "Bot IA specializzato nell'aiutare a creare query SQL su questa istanza di Discourse"
         settings_explorer:
           name: Esploratore di impostazioni
           description: "Bot IA specializzato nell'aiutare a esplorare le impostazioni del sito Discourse"
+        researcher:
+          name: Assistente del Web
+          description: "Bot IA che ha accesso a Google e pertanto può sia cercare che leggere le pagine web"
         creative:
           name: Creativo
           description: "Bot IA senza integrazioni esterne specializzato in attività creative"
@@ -271,17 +325,103 @@ it:
         web_artifact_creator:
           name: "Creatore di artefatti web"
           description: "Bot IA specializzato nella creazione di artefatti web interattivi"
+        summarizer:
+          name: "Assistente riepiloghi"
+          description: "Personaggio predefinito, scrive i riepiloghi dell'IA"
+        short_summarizer:
+          name: "Assistente riepiloghi (sintetici)"
+          description: "Personaggio predefinito, scrive i riepiloghi dell'IA per le voci dell'Elenco argomenti"
+        concept_finder:
+          name: "Assistente concetti"
+          description: "Bot IA specializzato nell'identificare i concetti e i temi ricorrenti nei contenuti"
+        concept_matcher:
+          name: "Assistente corrispondenza concetti"
+          description: "Bot IA specializzato nel trovare corrispondenze dei concetti con altri concetti preesistenti"
+        concept_deduplicator:
+          name: "Assistente deduplicazione concetti"
+          description: "Bot IA specializzato nella deduplicazione di cpncetti"
         custom_prompt:
           name: "Comando personalizzato"
+          description: "Personaggio predefinito, gestisce la funzionalità di comando personalizzato dell'assistente"
         smart_dates:
           name: "Date smart"
+          description: "Personaggio predefinito, gestisce la funzionalità di date smart dell'assistente"
+        markdown_table_generator:
+          name: "Generatore tabelle in markdown"
+          description: "Personaggio predefinito, gestisce la funzionalità di tabelle in markdown dell'assistente"
+        post_illustrator:
+          name: "Assistente messaggi illustrati"
+          description: "Genera prompt di StableDiffusion per destire la funzionalità di illustrazione messaggi dell'assistente"
+        proofreader:
+          name: "Assistente correzione di bozze"
+          description: "Personaggio predefinito, gestisce la funzionalità di correzione ortografica dell'assistente"
+        titles_generator:
+          name: "Assistente titoli"
+          description: "Personaggio predefinito, gestisce la funzionalità dell'assistente che suggerisce titoli per gli argomenti"
+        tutor:
+          name: "Assistente tutor"
+          description: "Personaggio predefinito, gestisce la funzionalità Spiega dell'assistente"
+        translator:
+          name: "Assistente traduzione"
+          description: "Personaggio predefinito, gestisce la funzionalità di traduzione dell'assistente"
+        image_captioner:
+          name: "Didascalie immagini"
+          description: "Personaggio predefinito, gestisce la funzionalità dell'assistente che genera didascalie delle immagini"
+        locale_detector:
+          name: "Assistente rilevazione locale"
+          description: "Assiste la funzionalità di traduzione rilevando il parametro locale dei vari testi (messaggi, titoli, ecc.)"
+        post_raw_translator:
+          name: "Assistente post traduzione"
+          description: "Assiste la funzionalità di traduzione traducendo messaggi che contengono formattazione markdown di Discourse"
+        topic_title_translator:
+          name: "Assistente traduzione titolo argomenti"
+          description: "Assite la funzionalità di traduzione traducendo gli argomenti dei titoli"
+        short_text_translator:
+          name: "Assistente traduzione testi brevi"
+          description: "Contribuisce alla funzionalità di traduzione come assistente di traduzione testi generici. Si usa per i testi brevi, come i nomi delle categorie o le etichette"
+        spam_detector:
+          name: "Assistente rilevamento spam"
+          description: "Personaggio predefinito, gestisce la nostra funzionalità di rilevamento spam"
+        content_creator:
+          name: "Assistente creazione contenuti"
+          description: "Personaggio predefinito, gestisce le richerche HyDE"
+        report_runner:
+          name: "Assistente esecuzione rapporti"
+          description: "Personaggio predefinito che interviene nello script di automazione rapporti"
       topic_not_found: "Riepilogo non disponibile, argomento non trovato!"
       summarizing: "Riepilogo argomento"
       searching: "Ricerca di: '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Modello linguistico impiegato nelle ricerche (predefinito: LLM del personaggio in uso)"
+          max_tokens_per_batch:
+            name: "Massimo token per batch"
+            description: "Numero massimo di token utilizzabili per ciascun batch della ricerca"
+          max_tokens_per_post:
+            name: "Massimo token per messaggio"
+            description: "Numero massimo di token utilizzabili per ciascun post della ricerca"
           max_results:
             name: "Numero massimo di risultati"
+            description: "Numero massimo di risultati da includere in un filtro"
+          include_private:
+            name: "Includi privati"
+            description: "Includi argomenti privati nei filtri"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Modello linguistico da utilizzare per la creazione di artefatti"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Modello linguistico da utilizzare per la modifica di artefatti"
+          update_algorithm:
+            name: "Aggiorna algoritmo"
+            description: "Chiedi al LLM di sostituire completamente o eseguire il diff per aggiornare"
+          do_not_echo_artifact:
+            name: "Niente eco artefatto"
+            description: "Limita i costi ma riduce l'efficacia degli aggiornamenti dell'artefatto"
         google:
           base_query:
             name: "Query di ricerca di base"
@@ -301,6 +441,7 @@ it:
             name: "Query di ricerca di base"
             description: "Query di base da utilizzare durante la ricerca. Esempio: \"#urgente\" anteporrà \"#urgente\" alla query di ricerca e includerà solo gli argomenti con la categoria o l'etichetta urgente."
       tool_summary:
+        read_artifact: "Leggi un artefatto web"
         update_artifact: "Aggiorna un artefatto web"
         create_artifact: "Crea artefatto web"
         web_browser: "Naviga sul web"
@@ -323,7 +464,12 @@ it:
         dall_e: "Genera immagine"
         search_meta_discourse: "Cerca Meta Discourse"
         javascript_evaluator: "Valuta JavaScript"
+        create_image: "Creazione di un'immagine"
+        edit_image: "Modifica di un'immagine"
+        researcher: "Ricerca"
+        researcher_dry_run: "Preparazione della ricerca"
       tool_help:
+        read_artifact: "Leggi un artefatto web utilizzando il bot IA"
         update_artifact: "Aggiorna un artefatto web utilizzando il bot IA"
         create_artifact: "Crea un artefatto web utilizzando il bot IA"
         web_browser: "Sfoglia la pagina web utilizzando il Bot IA"
@@ -338,6 +484,8 @@ it:
         time: "Trova l'ora in diversi fusi orari"
         summary: "Riassumi un argomento"
         image: "Genera un'immagine utilizzando la diffusione stabile"
+        create_image: "Genera un'immagine utilizzando il modello per immagini GPT Open AI"
+        edit_image: "Modifica un'immagine utilizzando il modello per immagini GPT Open AI"
         google: "Cerca una query su Google"
         read: "Leggi l'argomento pubblico sul forum"
         setting_context: "Cerca il contesto delle impostazioni del sito"
@@ -346,8 +494,11 @@ it:
         dall_e: "Genera immagine utilizzando DALL-E 3"
         search_meta_discourse: "Cerca Meta Discourse"
         javascript_evaluator: "Valuta JavaScript"
+        researcher: "Cerca informazioni sul forum utilizzando il bot IA"
       tool_description:
+        read_artifact: "Leggi un artefatto web utilizzando il bot IA"
         update_artifact: "Aggiornato un artefatto web utilizzando il bot IA"
+        create_artifact: "Creato artefatto web: %{name} - %{specification}"
         web_browser: "Lettura <a href='%{url}'>%{url}</a>"
         github_search_files: "Hai cercato \"%{keywords}\" in %{repo}/%{branch}"
         github_search_code: "Hai cercato \"%{query}\" in %{repo}"
@@ -378,9 +529,19 @@ it:
           other: "Trovati %{count} <a href='%{url}'>risultati</a> per '%{query}'"
         setting_context: "Contesto di lettura per: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Obiettivi proposti: %{goals}\n\nMessaggi con corrispondenza a '%{filter}' trovati: %{count}"
+          other: "Obiettivi proposti: %{goals}\n\nMessaggi con corrispondenza a '%{filter}' trovati: %{count}"
+        researcher:
+          one: "Ricerca: %{goals}\n\nMessaggi con corrispondenza a '%{filter}' trovati: %{count}"
+          other: "Ricerca: %{goals}\n\nMessaggi con corrispondenza a '%{filter}' trovati: %{count}"
         search_settings:
           one: "Trovato %{count} risultato per '%{query}'"
           other: "Trovati %{count} risultati per '%{query}'"
+      discoveries:
+        continue_conversation:
+          title: "Conversazioni scoperte: cerca %{query}"
+          raw: "Nella mia ricerca di %{query} mi hai mostrato le seguenti informazioni:\n\n%{context}\n\nProseguiamo la conversazione."
     summarization:
       configuration_hint:
         one: "Configura prima l'impostazione \"%{setting}\"."
@@ -404,9 +565,12 @@ it:
           neutral: "Neutro"
     llm:
       configuration:
+        create_llm: "Per abilitare questa funzionalità, devi prima impostare un LLM"
+        disable_modules_first: "Devi prima disabilitare questi moduli: %{settings}"
         set_llm_first: "Imposta prima %{setting}"
         model_unreachable: "Non è stato possibile ottenere una risposta da questo modello. Controlla prima le tue impostazioni."
         invalid_seeded_model: "Non è possibile utilizzare questo modello con questa funzionalità"
+        invalid_persona_response_format: "Il personaggio selezionato deve avere un formato di risposta con un campo booleano denominato \"spam\""
         must_select_model: "Devi prima selezionare un LLM"
       endpoints:
         not_configured: "%{display_name} (non configurato)"
@@ -417,17 +581,21 @@ it:
         one: "Non è stato possibile eliminare questo modello perché è utilizzato da %{settings}. Aggiorna l'impostazione e riprova."
         other: "Non è stato possibile eliminare questo modello perché lo stanno utilizzando %{settings}. Aggiorna le impostazioni e riprova."
       cannot_edit_builtin: "Non è possibile modificare un modello incorporato."
+    personas:
+      malformed_examples: "Gli esempi forniti sono nel formato errato."
     embeddings:
       delete_failed: "Questo modello è attualmente in uso. Aggiorna prima `ai embeddings selected model`."
       cannot_edit_builtin: "Non è possibile modificare un modello incorporato."
       configuration:
         disable_embeddings: "Devi prima disabilitare \"integrazioni ia abilitate\"."
+        invalid_config: "Hai selezionato un'opzione non valida."
         choose_model: "Imposta prima \"ai embeddings selected model\"."
     llm_models:
       missing_provider_param: "%{param} non può essere vuoto"
       bedrock_invalid_url: "Compila tutti i campi per utilizzare questo modello."
     ai_staff_action_logger:
       updated: "aggiornamento"
+      set: "imposta"
       removed: "rimosso"
     errors:
       quota_exceeded: "Hai superato la quota per questo modello. Riprova tra %{relative_time}."
@@ -441,3 +609,10 @@ it:
       no_default_llm: Il personaggio deve avere un default_llm definito.
       user_not_allowed: All'utente non è consentito partecipare all'argomento.
       prompt_message_length: Il messaggio %{idx} supera il limite di 1000 caratteri.
+      persona_already_exists: Esiste già un personaggio dal nome %{name}.
+      custom_tool_exists:
+        one: "Esiste già uno strumento personalizzato dal nome %{names}."
+        other: "Esistono già strumenti personalizzati dai nomi %{names}."
+  dashboard:
+    problem:
+      ai_llm_status: "Il modello LLM %{model_name} sta riscontrando problemi. Controlla la <a href='%{url}'>pagina di configurazione del modello </a>."
