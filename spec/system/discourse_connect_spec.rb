@@ -33,10 +33,16 @@ describe "Discourse Connect", type: :system do
       expect(page).to have_current_path(private_topic.relative_url)
     end
 
-    it "redirects to the IDP and logs user in" do
+    it "lets user login using the Login button" do
       visit "/"
 
       find(".login-button").click
+      expect(page).to have_css("#current-user")
+    end
+
+    it "redirects to IDP when hitting /login route" do
+      visit "/login"
+
       expect(page).to have_css("#current-user")
     end
   end
@@ -54,7 +60,7 @@ describe "Discourse Connect", type: :system do
     context "when login required" do
       before { SiteSetting.login_required = true }
 
-      it "redirects to the IDP and logs user in" do
+      it "shows splash screen and authenticates" do
         visit "/"
 
         expect(page).to have_css(".login-welcome") # shows splash screen
