@@ -9,7 +9,7 @@ fi:
     admin:
       site_settings:
         categories:
-          styleguide: "Discourse Styleguide"
+          styleguide: "Discoursen tyyliopas"
   js:
     styleguide:
       title: "Tyyliopas"

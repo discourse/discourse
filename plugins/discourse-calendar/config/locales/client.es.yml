@@ -472,6 +472,7 @@ es:
           checkbox_label: "Ocultar los botones Asistiré/No asistiré y el estado de los invitados"
         allow_chat:
           label: "Integración de chat"
+          checkbox_label: "Crea y gestiona un canal de chat específico para cada evento"
         url:
           label: "URL"
           placeholder: "Opcional"
@@ -480,6 +481,7 @@ es:
           placeholder: "Añade una ubicación, enlace o cualquier cosa."
         description:
           label: "Descripción"
+          placeholder: "Cuéntale a la gente un poco más sobre tu evento. Se admiten nuevas líneas y enlaces."
         name:
           label: "Nombre del evento"
           placeholder: "Opcional, por defecto es el título del tema"

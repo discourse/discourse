@@ -6059,6 +6059,8 @@ fa_IR:
           select_base:
             title: "پالت رنگ پایه را انتخاب کنید"
             description: "پالت پایه:"
+          light: "روشن"
+          dark: "تیره"
           title: "رنگ‌ها"
           edit: "ویرایش"
           filters:

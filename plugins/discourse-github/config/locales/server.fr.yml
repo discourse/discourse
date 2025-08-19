@@ -26,7 +26,7 @@ fr:
 
       %{post_url}
     pr_template: |
-      Cette requête pull a été mentionnée sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
+      Cette pull request a été mentionnée sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
 
       %{post_url}
     issue_template: |

@@ -7,7 +7,7 @@
 fr:
   site_settings:
     discourse_adplugin_enabled: Activez le plugin discourse-adplugin.
-    no_ads_for_personal_messages: "Ne pas afficher les annonces lors de la visualisation des messages personnels"
+    no_ads_for_personal_messages: "Ne pas afficher les annonces lors de la visualisation des messages privés"
     no_ads_for_restricted_categories: "Ne pas afficher les annonces dans les catégories qui ne sont pas visibles pour tout le monde."
     no_ads_for_groups: "Ne pas afficher les annonces aux utilisateurs de ces groupes."
     no_ads_for_categories: "Ne pas afficher les annonces sur la liste des sujets et les pages des sujets appartenant à ces catégories."

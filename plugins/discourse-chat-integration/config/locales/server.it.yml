@@ -102,7 +102,7 @@ it:
           category: "La categoria *%{name}* non è stata trovata. Categorie disponibili: *%{list}*"
         help: |
           *Nuova regola:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
-          (devi specificare un tipo di regola e almeno una categoria o tag)
+          (devi specificare un tipo di regola e almeno una categoria o etichetta)
           - *thread* – notifica questo canale per nuovi argomenti, risposte ai thread se possibile
           - *watch* – notifica questo canale per nuovi argomenti e nuove risposte
           - *follow* – notifica questo canale per nuovi argomenti

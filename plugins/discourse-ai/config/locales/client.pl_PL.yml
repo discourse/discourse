@@ -613,6 +613,8 @@ pl_PL:
           open_router-x-ai-grok-3-beta: "Najnowszy model xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Najnowszy model wnioskowania DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Wysoce wydajny model wielojęzyczny"
+          groq-openai-gpt-oss-120b: "Najnowocześniejszy model open-weight opracowany przez Open AI"
+          groq-openai-gpt-oss-20b: "Lekki, szybki i lekki model firmy Open AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -655,6 +657,7 @@ pl_PL:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Niestandardowe"
         provider_fields:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
@@ -903,6 +906,18 @@ pl_PL:
         topic:
           title: "Podsumowanie tematu"
           close: "Zamknij panel podsumowania"
+          regenerate: "Wygeneruj krótkie podsumowanie"
+          regenerate_bulk: "Wygeneruj krótkie podsumowania"
+          regenerate_success:
+            one: "Krótkie podsumowanie zostało pomyślnie wygenerowane"
+            few: "%{count} krótkie podsumowania zostały pomyślnie wygenerowane"
+            many: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
+            other: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
+          regenerate_error:
+            one: "Nie udało się wygenerować krótkiego podsumowania"
+            few: "Nie udało się wygenerować %{count} krótkich podsumowań"
+            many: "Nie udało się wygenerować %{count} krótkich podsumowań"
+            other: "Nie udało się wygenerować %{count} krótkich podsumowań"
         topic_list_layout:
           button:
             compact: "Kompaktowy"

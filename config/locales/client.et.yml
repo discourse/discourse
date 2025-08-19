@@ -3256,6 +3256,8 @@ et:
               too_small: "peab olema suurem või võrdne kui %{count}"
               too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
+          light: "hele"
+          dark: "tume"
           title: "Värvid"
           edit: "Muuda"
           filters:

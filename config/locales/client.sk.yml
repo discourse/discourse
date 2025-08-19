@@ -7171,7 +7171,8 @@ sk:
           select_base:
             title: "Vyberte základnú paletu farieb"
             description: "Základná paleta:"
-          preference_warning: "Zmenili ste <a href='%{link}'>osobné nastavenia témy</a>, takže zmeny palety nemusia byť viditeľné. Návštevníci, ktorí nezmenili svoje predvolené nastavenia, budú stále vidieť zmeny, ktoré tu vykonáte."
+          light: "svetlá"
+          dark: "tmavá"
           title: "Farby"
           edit: "Upraviť"
           saved_refreshing: "Uložené! Osviežujúce farby..."

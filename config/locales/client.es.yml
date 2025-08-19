@@ -640,7 +640,7 @@ es:
         reviewable_known_source: "%{reviewableType} (del plugin «%{pluginName}»)"
         ignore_all: "Ignorar todo"
         enable_plugins: "Activar plugins"
-        delete_confirm: "¿Seguro que quieres eliminar todas las revisiones creadas por complementos desactivados?"
+        delete_confirm: "¿Seguro que quieres eliminar todas las revisiones creadas por plugins desactivados?"
         ignore_success: "Se han eliminado todas las revisiones creadas por los plugins desactivados."
       explain:
         why: "explica por qué este elemento ha acabado en la cola"
@@ -837,15 +837,15 @@ es:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
-      flagged_as: "Denunciado como"
+      flagged_as: "Marcado como"
       assigned_to: "Asignado a"
       moderator_actions: "Acciones del moderador"
       timeline_and_notes: "Cronología y notas"
       timeline:
         target_created: "Publicación creada"
         target_created_by: "Publicación creada por %{username} · %{relativeDate}"
-        flagged: "Denunciado"
-        flagged_as_by: "Denunciado como %{flagReason} por %{username} · %{relativeDate}"
+        flagged: "Marcado"
+        flagged_as_by: "Marcado como %{flagReason} por %{username} · %{relativeDate}"
         claimed: "Reclamado"
         claimed_by: "Reclamado por %{username} · %{relativeDate}"
         reviewed: "Revisado"
@@ -889,7 +889,7 @@ es:
         visibility: "Visibilidad"
         topic_unlisted: "Este tema no está en la lista. Solo se puede acceder mediante enlace directo (no público)."
       help:
-        moderation_guide: "Guía de moderación del discurso"
+        moderation_guide: "Guía de moderación de Discourse"
         flag_priorities: "Gestión de la reputación del usuario y prioridades"
         spam_detection: "Detección de spam"
       approval:
@@ -1464,7 +1464,7 @@ es:
         regular: "Modo claro"
         dark: "Modo oscuro"
         interface_mode: "Modo"
-        interface_mode_instructions: "La opción «Automático» usa las preferencias del sistema para el modo claro y oscuro."
+        interface_mode_instructions: "La opción «Automático» usa las preferencias del sistema para el modo claro u oscuro."
         interface_modes:
           auto: "Automático"
           light: "Claro"
@@ -1478,7 +1478,7 @@ es:
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
       enable_defer: "Activar marcar temas como no leídos"
-      enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del editor"
+      enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
@@ -2271,7 +2271,7 @@ es:
     multi_select:
       no_results: "No hay resultados"
       search: "Buscar…"
-      label: "Selecciona opciones"
+      label: "Selecciona las opciones"
     form_kit:
       reset: Restablecer
       optional: opcional
@@ -2508,8 +2508,8 @@ es:
       preferences: "Debes iniciar sesión para poder cambiar tus preferencias de usuario."
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
       discourse_id:
-        name: "ID de Discourse"
-        title: "Iniciar sesión con ID de Discourse"
+        name: "Discourse ID"
+        title: "Iniciar sesión con Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Iniciar sesión con Google"
@@ -2699,7 +2699,7 @@ es:
         title: "Traduciendo publicación"
         select: "Seleccionar traducción"
         save: "Guardar traducción"
-        original_content: "Contenido original de la publicación"
+        original_content: "Contenido de la publicación original"
         placeholder: "Introduce la traducción del post aquí..."
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
@@ -3872,7 +3872,7 @@ es:
           other: "Ver %{count} traducciones a idiomas locales"
         modal:
           title: "Traducciones de la publicación"
-          confirm_delete: "¿Seguro que quieres eliminar las traducciones de %{languageCode}?"
+          confirm_delete: "¿Seguro que quieres eliminar las traducciones de «%{languageCode}»?"
         success: "Las traducciones se han actualizado correctamente"
         post_language_selector:
           none: "Ninguno"
@@ -4569,7 +4569,7 @@ es:
       composing:
         title: "Redactando"
         return: "%{shortcut} Regresar al editor"
-        minimize: "%{shortcut} Minimizar editor"
+        minimize: "%{shortcut} Minimizar compositor"
         create_or_reply: "%{shortcut} Crear tema o publicar respuesta"
         fullscreen: "%{shortcut} Edición en pantalla completa"
         insert_current_time: "%{shortcut} Insertar hora actual"
@@ -5165,7 +5165,7 @@ es:
           bookmarks: "Todos los temas que has añadido a marcadores"
           default: "Todos los temas %{filter}"
         category:
-          latest: "Temas recientes en @%{category}"
+          latest: "Temas recientes en %{category}"
           top: "Temas destacados en %{category}"
           new: "Temas nuevos en %{category}"
           unread: "Temas sin leer en %{category}"
@@ -5269,7 +5269,7 @@ es:
         flags:
           title: "Moderación"
           header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
-          keywords: "denunciar|revisar|spam|ilegal"
+          keywords: "marcar|revisar|spam|ilegal"
         files:
           title: "Archivos"
           header_description: "Ajustes que controlan los límites de tamaño y tipo de archivo, los tamaños y fuentes de los avatares, el almacenamiento de archivos, la calidad y compresión de las imágenes, etc."
@@ -5278,7 +5278,7 @@ es:
           header_description: "Configura los ajustes legales, como las condiciones del servicio, la política de privacidad, los datos de contacto y las consideraciones específicas de la UE."
         theme_site_settings:
           title: "Ajustes del tema del sitio"
-          header_description: "Muestra todos los ajustes del tema del sitio y los temas que actualmente las anulan"
+          header_description: "Muestra todos los ajustes del tema del sitio y los temas que actualmente los anulan"
         localization:
           title: "Localización"
           header_description: "Configura el idioma de la interfaz de tu comunidad y otras opciones de localización para tus miembros"
@@ -5427,7 +5427,7 @@ es:
           sub_pages:
             logs:
               title: "Registros"
-              header_description: "Ver y gestionar registros de copias de seguridad, restauraciones y cargas"
+              header_description: "Ver y gestionar registros de copias de seguridad, restauraciones y subidas"
         reports:
           title: "Informes"
           header_description: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
@@ -6226,6 +6226,8 @@ es:
             post: "publicaciones"
             chat_message: "mensajes de chat"
             enabled: "Activa esta bandera personalizada después de guardar"
+            create_warning: "Una vez que se ha utilizado una marca personalizada, solo se puede desactivar o editar, pero no eliminar."
+            edit_warning: "Editar el nombre y la descripción de una marca puede causar incoherencias en los datos. Una vez utilizada una marca personalizada, solo se puede desactivar o editar, pero no eliminar."
             edit_flag: "Editar bandera"
             non_editable: "No puedes editar esta bandera porque es una bandera del sistema o ya se ha utilizado en el sistema de revisión, sin embargo, puedes desactivarla."
             delete_flag: "Eliminar bandera"
@@ -6542,6 +6544,7 @@ es:
           set_default_success: "Tema predeterminado establecido en %{theme}"
           setting_was_saved: "Se han guardado los ajustes del tema"
           install_success: "¡%{theme} Instalado correctamente!"
+          delete_success: "¡%{theme} eliminado correctamente!"
           inactive_components: "Componentes sin usar:"
           selected:
             one: "%{count} seleccionado"
@@ -6721,9 +6724,13 @@ es:
           select_base:
             title: "Seleccionar paleta base de color"
             description: "Paleta base:"
-          preference_warning: "Has cambiado <a href='%{link}'>los ajustes de tu tema personal</a>, por lo que es posible que no puedas ver los cambios de la paleta. Los visitantes que no hayan cambiado sus valores por defecto sí podrán ver los cambios que hagas aquí."
+          non_default_theme_warning: "Tus <a href='%{link}'>preferencias personales</a> para el tema son diferentes a las predeterminadas. Es posible que los cambios que hagas aquí no se apliquen a ti, pero se aplicarán a quienes usen los valores predeterminados (%{themeName})."
+          custom_schemes_warning: "Tus <a href='%{link}'>preferencias personales</a> para la paleta de colores %{colorModes} son diferentes a las predeterminadas. Es posible que los cambios en la paleta %{colorModes} no se apliquen a ti, pero se aplicarán a quienes usen la paleta predeterminada."
+          light: "claro"
+          dark: "oscuro"
           title: "Colores"
           edit: "Editar"
+          view: "Ver"
           set_default_light: "Establecer como paleta clara en el tema predeterminado (%{theme})"
           set_default_dark: "Establecer como paleta oscura en el tema predeterminado (%{theme})"
           set_default_success: "%{schemeName} se ha establecido como paleta por defecto para %{themeName}"

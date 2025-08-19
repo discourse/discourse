@@ -267,7 +267,7 @@ zh_CN:
     back_button: "返回"
     welcome_banner:
       header:
-        logged_in_members: "欢迎回来， %{preferred_display_name}！"
+        logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
       search: "搜索"
     themes:
@@ -280,8 +280,8 @@ zh_CN:
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     critical_deprecation:
-      notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。 (id:%{id})"
-      learn_more_link: "(<a href='%{url}' target='_blank'><em>了解更多</em></a>)"
+      notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。（id：%{id}）"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>了解详情</em></a>)"
       theme_source: "主题 <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "插件 '%{name}'"
       unknown_source: "您的某个主题或插件"
@@ -577,14 +577,14 @@ zh_CN:
       filtered_flagged_by: "举报者"
       unknown:
         title:
-          other: "你有来自已禁用插件的待审核内容："
-        instruction: "除非你启用相关插件，否则它们无法正确显示。请启用插件并刷新页面。或者，你可以忽略它们。 <a href='%{url}' target='_blank'>了解更多…</a>"
-        reviewable_unknown_source: "%{reviewableType} （未知插件）"
-        reviewable_known_source: "%{reviewableType} （来自'%{pluginName}'插件）"
+          other: "您有来自已禁用插件的待审核内容："
+        instruction: "除非您启用相关插件，否则它们无法正确显示。请启用插件并刷新页面。或者，您可以忽略它们。<a href='%{url}' target='_blank'>了解详情…</a>"
+        reviewable_unknown_source: "%{reviewableType}（未知插件）"
+        reviewable_known_source: "%{reviewableType}（来自 '%{pluginName}' 插件）"
         ignore_all: "全部忽略"
         enable_plugins: "启用插件"
-        delete_confirm: "你确定要删除所有由禁用插件创建的评论吗？"
-        ignore_success: "所有由禁用插件创建的评论已被删除。"
+        delete_confirm: "确定要删除所有由禁用插件创建的审核吗？"
+        ignore_success: "所有由禁用插件创建的审核已被删除。"
       explain:
         why: "解释为什么此条目最终进入队列"
         title: "可审核话题的评分"
@@ -619,7 +619,7 @@ zh_CN:
         required: "您必须先认领条目才能进行审核。"
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
-        automatically_claimed_by: "此项目目前正在由 <b>%{username}</b>审核。"
+        automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
       claim:
         title: "认领此话题"
       unclaim:
@@ -655,17 +655,17 @@ zh_CN:
         name: "姓名"
         fields: "字段"
         reject_reason: "原因"
-        scrubbed_by: "记录清除"
+        scrubbed_by: "记录清除者"
         scrubbed_reason: "原因"
-        scrubbed_at: "擦除于"
+        scrubbed_at: "清除时间"
         scrubbed_reject_reason: "用户被拒绝的原因"
         scrub_record:
-          button: 擦除记录
-          confirm_title: 删除个人数据
-          confirm_body: "你确定要删除此审核队列记录吗？所有个人信息（如用户名、电子邮件、IP 地址）都将从该记录中永久删除。"
-          reason_title: "必须提供擦除此记录的原因。"
+          button: 清除记录
+          confirm_title: 移除个人数据
+          confirm_body: "确定要清除此审核队列记录吗？所有个人信息（如用户名、电子邮件地址、IP 地址）都将从此记录中永久移除。"
+          reason_title: "必须提供清除此记录的原因。"
           reason_placeholder: "原因…"
-          confirm_button: "确认删除"
+          confirm_button: "确认移除"
           cancel_button: "取消"
       user_percentage:
         summary:
@@ -773,33 +773,33 @@ zh_CN:
         reviewable_post:
           title: "帖子"
           noun: "帖子"
-      flagged_as: "举报者"
-      assigned_to: "分配给"
-      moderator_actions: "版主活动"
+      flagged_as: "被举报为"
+      assigned_to: "已指定给"
+      moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
       timeline:
         target_created: "帖子已创建"
-        target_created_by: "帖子由 %{username} · %{relativeDate} 创建"
-        flagged: "已举报"
-        flagged_as_by: "被 %{username} · %{relativeDate} 举报 %{flagReason}"
-        claimed: "已认领"
-        claimed_by: "由 %{username} · %{relativeDate} 认领"
+        target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
+        flagged: "被举报"
+        flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
+        claimed: "已申领"
+        claimed_by: "由 %{username} 申领 · %{relativeDate}"
         reviewed: "已审核"
-        reviewed_by: "由 %{username} · %{relativeDate} 审核"
+        reviewed_by: "由 %{username} 审核 · %{relativeDate}"
         view_conversation: "查看私信"
         note_added: "版主注释"
-        note_added_by: "%{username} · %{relativeDate} 的版主注释"
+        note_added_by: "%{username} 的版主注释 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
       notes:
-        add_note_description: "仅版主可见。使用此注释来添加有关此审核的背景信息或决定。"
+        add_note_description: "仅对版主可见。使用此注释来添加有关审核的背景信息或决定。"
         add_note_button: "添加注释"
-        placeholder: "在这里写下你的注释…"
+        placeholder: "在这里写下您的注释…"
         chars_remaining: "剩余 %{count} 个字符"
         delete_note: "删除此注释"
         delete: "删除"
       new_topic_label: "新话题"
       queued_user: "已加入队列的用户"
-      posted_in: "发帖于"
+      posted_in: "发表于"
       flagged_user: "被举报用户"
       review_user: "用户"
       need_help: "需要帮助？"
@@ -809,8 +809,8 @@ zh_CN:
         title: "洞察"
         flag_volume: "举报量"
         flagged_by_users:
-          other: "由 %{count} 位独立用户举报"
-        similar_posts: "过去的相似帖子"
+          other: "由 %{count} 位唯一身份用户举报"
+        similar_posts: "过去的类似帖子"
         flagged_in_timeframe: "之前被举报 %{count} 次"
         user_activity: "用户活动"
         activities:
@@ -1248,7 +1248,7 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
-      required_select: '请为 "%{name}" 选择一个值'
+      required_select: '请为“%{name}”选择一个值'
       required_checkbox: '字段“%{name}”为必选项'
       same_as_password: "您的密码不应重复出现在其他字段中"
       optional: '（可选）'
@@ -1381,10 +1381,10 @@ zh_CN:
         regular: "浅色模式"
         dark: "深色模式"
         interface_mode: "模式"
-        interface_mode_instructions: "'Auto' 使用您的系统偏好设置来设置浅色或深色模式。"
+        interface_mode_instructions: "自动使用您的系统的浅色或深色模式偏好设置。"
         interface_modes:
           auto: "自动"
-          light: "亮"
+          light: "浅色"
           dark: "深色"
         picker:
           active: "有效"
@@ -1413,8 +1413,8 @@ zh_CN:
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
-      silenced_notice: "该用户将被禁言直至 %{date}。"
-      silenced_permanently: "此用户已被禁言."
+      silenced_notice: "此用户将被禁言直至 %{date}。"
+      silenced_permanently: "此用户已被禁言。"
       silenced_reason: "原因："
       github_profile: "GitHub"
       email_activity_summary: "活动总结"
@@ -1484,7 +1484,7 @@ zh_CN:
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇删除的帖子'
         silencings:
-          other: '<span class="%{className}">%{count}</span> 禁言'
+          other: '<span class="%{className}">%{count}</span> 人被禁言'
         suspensions:
           other: '<span class="%{className}">%{count}</span> 个封禁'
         warnings_received:
@@ -1584,7 +1584,7 @@ zh_CN:
         choose: "选择一个密码"
         verify_identity: "要继续，请验证您的身份。"
         title: "密码重置"
-        remove: "删除密码"
+        remove: "移除密码"
         remove_detail: "除非您重置密码，否则您将无法再使用密码访问您的帐户。"
       second_factor_backup:
         title: "双重备份代码"
@@ -2165,8 +2165,8 @@ zh_CN:
         starts_with: "必须以 %{prefix} 开头"
         ends_with: "必须以 %{suffix} 结尾"
         required: "必选"
-        date_before_or_equal: "必须早于或等于 %{date}"
-        date_after_or_equal: "必须晚于或等于 %{date}"
+        date_before_or_equal: "不得晚于 %{date}"
+        date_after_or_equal: "不得早于 %{date}"
         invalid_url: "必须是有效的 URL"
         not_an_integer: "必须是一个整数"
         not_accepted: "必须被接受"
@@ -2417,10 +2417,10 @@ zh_CN:
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
-      apple_international: "苹果/国际（已弃用，转用 Twemoji）"
-      google: "谷歌 (已弃用，改为 Noto Emoji)"
-      twitter: "Twitter（已废弃，改为 Twemoji）"
-      win10: "Win10 (已弃用，改为 Fluent Emoji)"
+      apple_international: "Apple/国际（已弃用，转用 Twemoji）"
+      google: "Google（已弃用，改为 Noto Emoji）"
+      twitter: "Twitter（已弃用，改为 Twemoji）"
+      win10: "Win10（已弃用，改为 Fluent Emoji）"
       google_classic: "Google Classic（已弃用，改为 Noto Emoji）"
       facebook_messenger: "Facebook Messenger（已弃用，改为 Standard）"
       openmoji: OpenMoji
@@ -2443,7 +2443,7 @@ zh_CN:
       hidden_at_signup: "可选，注册时隐藏"
     interface_color_selector:
       disabled: "不显示"
-      sidebar_footer: "在侧边栏页脚中显示"
+      sidebar_footer: "在边栏页脚中显示"
       header: "在页眉中显示"
     welcome_banner_location:
       above_topic_content: "话题内容上方"
@@ -2552,7 +2552,7 @@ zh_CN:
         select: "选择翻译"
         save: "保存翻译"
         original_content: "原始帖子内容"
-        placeholder: "在此输入帖子的翻译…"
+        placeholder: "在此处输入帖子的翻译…"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -2617,7 +2617,7 @@ zh_CN:
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
       switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
-      switch_to_rich_text: "切换到新的富文本编辑器（%{keyboardShortcut}）"
+      switch_to_rich_text: "切换到新的富文本编辑器 (%{keyboardShortcut})"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "粗体"
@@ -2721,8 +2721,8 @@ zh_CN:
       link_toolbar:
         edit: "编辑链接"
         copy: "复制链接"
-        remove: "删除链接"
-        visit: "在新标签页中打开链接"
+        remove: "移除链接"
+        visit: "在外部标签中打开链接"
         link_copied: "链接已复制！"
     notifications:
       tooltip:
@@ -2842,7 +2842,7 @@ zh_CN:
       delete: "删除"
       uploading: "正在上传"
       processing: "正在处理上传"
-      select_file: "点击上传或拖拽文件"
+      select_file: "点击以上传或拖放文件"
       default_image_alt_text: 图片
     search:
       sort_by: "排序依据"
@@ -2884,13 +2884,13 @@ zh_CN:
       in_messages_tooltip: "切换为搜索常规话题"
       in_topics_posts: "在所有话题和帖子中"
       enter_hint: "或按 Enter"
-      mobile_enter_hint: "或点击搜索"
+      mobile_enter_hint: "或点按“搜索”"
       in_posts_by: "在 %{username} 的帖子中"
       recent: "最近的搜索"
       clear_recent: "清除最近的搜索"
       experience:
-        search_field: "站点头部中的搜索字段"
-        search_icon: "个人资料头像附近的搜索图标"
+        search_field: "站点标题中的“搜索”字段"
+        search_icon: "个人资料头像附近的“搜索”图标"
       type:
         default: "话题/帖子"
         users: "用户"
@@ -3096,7 +3096,7 @@ zh_CN:
         hot: "没有热门话题。"
         filter: "没有话题。"
         education:
-          topic_tracking_preferences: '您可以在 <a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的主题跟踪设置。'
+          topic_tracking_preferences: '您可以在<a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的话题跟踪设置。'
           unread: "没有未读内容… 太棒了！"
           new_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
@@ -3625,9 +3625,9 @@ zh_CN:
       has_likes_title_you:
         other: "您和其他 %{count} 人赞了此帖子"
       sr_post_like_count_button:
-        other: "%{count} 人赞了此帖子."
+        other: "%{count} 人赞了此帖子。"
       sr_post_read_count_button:
-        other: "%{count} 人读了这篇文章。"
+        other: "%{count} 人读了此帖子。"
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
@@ -3637,7 +3637,7 @@ zh_CN:
       badge_granted_tooltip: "%{username} 因此帖子赢得了 '%{badge_name}' 徽章！"
       localizations:
         table:
-          locale: "区域设置"
+          locale: "语言"
           actions: "操作"
           edit: "编辑"
           delete: "删除"
@@ -3646,7 +3646,7 @@ zh_CN:
           other: "查看 %{count} 种已翻译的语言"
         modal:
           title: "帖子的翻译"
-          confirm_delete: "您确定要删除“%{languageCode}”的翻译吗？"
+          confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
         success: "翻译已成功更新"
         post_language_selector:
           none: "无"
@@ -3841,8 +3841,8 @@ zh_CN:
       share:
         title: "分享帖子 #%{post_number}"
         instructions: "分享此帖子的链接："
-      original_language: "这篇文章最初是用 %{language} 写的"
-      original_language_and_outdated: "本帖最初以 %{language} 撰写。译文可能已过时"
+      original_language: "此帖子最初使用%{language}编写"
+      original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -3858,16 +3858,16 @@ zh_CN:
       tags: "标签"
       localizations: "本地化"
       localization:
-        locale: "区域设置"
+        locale: "语言"
         name: "名称"
         description: "描述"
-        add: "添加新的区域设置"
+        add: "添加新语言"
         remove: "移除"
-        hint: "此类别目前没有本地化。点击下面的“添加新的本地化”开始添加本地化。"
+        hint: "此类别目前没有本地化。点击下方的“添加新语言”以开始添加本地化。"
       tags_allowed_tags: "将这些标签限制在 '%{categoryName}' 类别："
-      tags_allowed_tags_new_category: "将这些标签限制在此类别："
+      tags_allowed_tags_new_category: "将这些标签限制为此类别："
       tags_allowed_tag_groups: "将这些标签组限制在 '%{categoryName}' 类别："
-      tags_allowed_tag_groups_new_category: "将这些标签组限制在此类别："
+      tags_allowed_tag_groups_new_category: "将这些标签群组限制为此类别："
       tags_placeholder: "（可选）允许的标签列表"
       tags_tab_description: "上面指定的标签和标签组将仅在此类别和也指定它们的其他类别中可用。它们将无法用于其他类别。"
       tag_groups_placeholder: "（可选）允许的标签组列表"
@@ -4206,7 +4206,7 @@ zh_CN:
           other: "新 (%{count})"
         help: "最近几天创建的话题"
         all: "所有"
-        all_tooltip: "所有新主题和过去几天回复的主题"
+        all_tooltip: "所有新话题和过去几天回复的话题"
         all_with_count: "所有 (%{count})"
         new_topics_tooltip: "新话题"
         topics: "话题"
@@ -4215,7 +4215,7 @@ zh_CN:
         replies: "回复"
         replies_with_count: "回复 (%{count})"
       new_new:
-        help: "最近几天创建或回复的主题"
+        help: "最近几天创建或回复的话题"
       posted:
         title: "我的帖子"
         help: "您发过帖子的话题"
@@ -4250,7 +4250,7 @@ zh_CN:
         today: "今天"
     custom_homepage:
       admin_message: '您的一个主题已启用“custom_homepage”修改器，但在 [custom-homepage] 连接器中没有输出任何内容。（此消息只显示给网站管理员。）'
-    browser_update: '很抱歉，<a href="https://discourse.org/about#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
+    browser_update: '很抱歉，<a href="https://discourse.org/about#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>以查看富内容、登录并回复。'
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -4266,7 +4266,7 @@ zh_CN:
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
-    invalid_video_url: 该视频无法播放，因为 URL 无效或不可用。
+    invalid_video_url: 此视频无法播放，因为 URL 无效或不可用。
     keyboard_shortcuts_help:
       search_placeholder: "通过描述或按键组合搜索快捷方式"
       shortcut_key_delimiter_comma: "，"
@@ -4750,7 +4750,7 @@ zh_CN:
               title: "邀请新成员"
             my_messages:
               content: "我的消息"
-              title: "我的个人信息"
+              title: "我的个人消息"
         global_section: "全局版块，对所有人可见"
       panels:
         forum:
@@ -4766,7 +4766,7 @@ zh_CN:
       search: "搜索"
       footer:
         interface_color_selector:
-          light: "亮"
+          light: "浅色"
           dark: "深色"
           auto: "自动"
     welcome_topic_banner:
@@ -4866,7 +4866,7 @@ zh_CN:
           paste: "粘贴…"
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
-    safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
+    safari_15_warning: "您的浏览器很快将与此社区不兼容。要继续参与此社区，请升级您的浏览器或<a href='%{url}'>了解详情</a>。"
     filter:
       placeholder: "按类别、标签或其他条件筛选话题"
       description:
@@ -4881,25 +4881,25 @@ zh_CN:
           top: "所有热门话题"
           new: "所有新话题"
           unread: "所有未读话题"
-          unseen: "所有未见话题"
+          unseen: "所有未查看话题"
           hot: "所有热门话题"
           posted: "您发过帖子的所有话题"
           bookmarks: "您已添加书签的所有话题"
-          default: "所有 %{filter} 话题"
+          default: "所有%{filter}话题"
         category:
           latest: "%{category}中的最新话题"
           top: "%{category}中的置顶话题"
           new: "%{category}中的新话题"
           unread: "%{category}中的未读话题"
-          unseen: "%{category}中的未见话题"
+          unseen: "%{category}中的未查看话题"
           hot: "%{category}中的热门话题"
-          posted: "%{category} 中您发布过帖子的话题"
-          bookmarks: "%{category} 中您已添加书签的话题"
+          posted: "%{category}中您发过帖子的话题"
+          bookmarks: "%{category}中您已添加书签的话题"
           default: "%{category}中的%{filter}话题"
         single_tag:
-          latest: "%{tag} 中的最新话题"
-          top: "带有 %{tag} 标签的置顶话题"
-          new: "%{tag} 中的新话题"
+          latest: "%{tag}中的最新话题"
+          top: "带有“%{tag}”标签的置顶话题"
+          new: "带有“%{tag}”标签的新话题"
           unread: "带有 %{tag} 标签的未读话题"
           unseen: "带有 %{tag} 标签的未显示话题"
           hot: "带有 %{tag} 标签的热门话题"
@@ -4910,7 +4910,7 @@ zh_CN:
           default: "使用%{tags}标记的话题"
         category_tag:
           latest: "%{category}中带有 %{tag} 标签的最新话题"
-          top: "%{category}中带有 %{tag} 标签的置顶话题"
+          top: "%{category}中带有“%{tag}”标签的置顶话题"
           new: "%{category}中带有 %{tag} 标签的新话题"
           unread: "%{category}中带有 %{tag} 标签的未读话题"
           unseen: "%{category}中带有 %{tag} 标签的未显示话题"
@@ -4920,11 +4920,11 @@ zh_CN:
           default: "%{filter} 个话题位于 %{category} 中，标签为 %{tag}"
         no_tags:
           all:
-            latest: "最新的无标签话题"
-            top: "热门的无标签话题"
-            new: "新的无标签话题"
-            unread: "未读的无标签话题"
-            unseen: "未见的无标签话题"
+            latest: "没有标签的最新话题"
+            top: "没有标签的置顶话题"
+            new: "没有标签的新话题"
+            unread: "没有标签的未读话题"
+            unseen: "没有标签的未查看话题"
             hot: "无标签的热门话题"
             posted: "您发过帖子的无标签话题"
             bookmarks: "您已添加书签的无标签话题"
@@ -6421,9 +6421,13 @@ zh_CN:
           select_base:
             title: "选择基础调色板"
             description: "基础调色板："
-          preference_warning: "您已更改 <a href='%{link}'>您的个人主题设置</a>，因此您可能看不到调色板的更改。未更改默认值的访客仍将看到您在此处所做的更改。"
+          non_default_theme_warning: "您的 <a href='%{link}'>个人偏好设置</a> 与默认主题不同。您在此处所做的更改可能不适用于您本人，但适用于所有使用默认主题 (%{themeName}) 的用户。"
+          custom_schemes_warning: "您对 %{colorModes} 调色板的<a href='%{link}'>个人偏好设置</a>与默认值不同。对 %{colorModes} 调色板的更改可能对您不适用，但对使用默认调色板的所有人都适用。"
+          light: "亮"
+          dark: "深色"
           title: "颜色"
           edit: "编辑"
+          view: "查看"
           set_default_light: "在默认主题中设置为浅色调色板 (%{theme})"
           set_default_dark: "在默认主题上设置为深色调色板（%{theme}）"
           set_default_success: "%{schemeName} 设为 %{themeName} 的默认调色板"

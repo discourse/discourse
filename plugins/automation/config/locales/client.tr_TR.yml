@@ -203,8 +203,8 @@ tr_TR:
           topics: Tüm Konular
           personal_messages: Kişisel Mesajlar
           public_topics: Genel Konular (tüm güvenli kategorileri hariç tut)
-          with_images: Resimler
-          with_links: Bağlantı
+          with_images: Görüntüler
+          with_links: Bağlantılar
           with_code: Kod
           with_uploads: Yüklemeler
         user_updated:
@@ -435,7 +435,7 @@ tr_TR:
           runs_this_week: "Bu hafta %{count}"
           runs_this_month: "Bu ay %{count}"
           runs:
-            label: Çalışırma sayısı
+            label: Çalıştırma sayısı
           name:
             label: Ad
           trigger:

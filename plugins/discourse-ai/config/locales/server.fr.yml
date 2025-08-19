@@ -10,8 +10,8 @@ fr:
       flag_types:
         review: "Ajouter une publication à la file d'attente de révision"
         review_hide: "Ajouter une publication à la file d'attente de révision et masquer la publication"
-        spam: "Signaler comme spam et masquer la publication"
-        spam_silence: "Signaler comme spam, masquer la publication et désactiver l'utilisateur"
+        spam: "Signaler comme contenu indésirable et masquer la publication"
+        spam_silence: "Signaler comme contenu indésirable, masquer la publication et désactiver l'utilisateur"
     scriptables:
       llm_tool_triage:
         title: Triez les publications à l'aide de l'outil d'IA
@@ -35,7 +35,7 @@ fr:
     ai_artifact_security: "Le système d'artefacts d'IA génère des iFrames avec du code exécutable. Le mode strict force un clic supplémentaire pour exécuter le code. Le mode Lax exécute le code immédiatement. Le mode hybride permet à l'utilisateur de fournir des data-ai-artifact-autorun à afficher immédiatement. Le mode désactivé désactive le système d'artefacts."
     ai_toxicity_enabled: "Activez le module de toxicité."
     ai_toxicity_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de toxicité"
-    ai_toxicity_inference_service_api_key: "Clé API pour l'API de toxicité"
+    ai_toxicity_inference_service_api_key: "Clé d'API pour l'API de toxicité"
     ai_toxicity_inference_service_api_model: "Modèle à utiliser pour l'inférence. Le modèle multilingue fonctionne avec l'italien, le français, le russe, le portugais, l'espagnol et le turc."
     ai_toxicity_flag_automatically: "Signalez automatiquement les publications et les messages de conversation qui dépassent les seuils configurés."
     ai_toxicity_flag_threshold_toxicity: "Toxicité : commentaire grossier, irrespectueux ou déraisonnable susceptible de vous inciter à quitter une discussion ou à renoncer à partager votre point de vue"
@@ -48,11 +48,11 @@ fr:
     ai_toxicity_groups_bypass: "Les utilisateurs de ces groupes ne verront pas leurs messages classés par le module de toxicité."
     ai_sentiment_enabled: "Activez le module de sentiment."
     ai_sentiment_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de sentiment"
-    ai_sentiment_inference_service_api_key: "Clé API pour l'API de sentiment"
+    ai_sentiment_inference_service_api_key: "Clé d'API pour l'API de sentiment"
     ai_sentiment_models: "Modèles à utiliser pour l'inférence. Le sentiment classe les publications dans la plage positif/neutre/négatif. Les émotions se classent dans la plage colère/dégoût/peur/joie/neutre/tristesse/surprise."
     ai_nsfw_detection_enabled: "Activez le module NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adresse URL où l'API s'exécute pour le module NSFW"
-    ai_nsfw_inference_service_api_key: "Clé API pour l'API NSFW"
+    ai_nsfw_inference_service_api_key: "Clé d'API pour l'API NSFW"
     ai_nsfw_flag_automatically: "Signalez automatiquement les publications NSFW qui dépassent les seuils configurés."
     ai_nsfw_flag_threshold_general: "Seuil général pour qu'une image soit considérée comme NSFW."
     ai_nsfw_flag_threshold_drawings: "Seuil pour qu'un dessin soit considéré comme NSFW."
@@ -65,13 +65,13 @@ fr:
     ai_openai_image_generation_url: "URL pour l'API de génération d'images OpenAI"
     ai_openai_image_edit_url: "URL pour l'API d'édition d'images OpenAI"
     ai_helper_enabled: "Activer l'assistant IA."
-    composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans le compositeur."
-    ai_helper_allowed_in_pm: "Activez l'assistant IA du compositeur dans les messages privés."
+    composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans l'éditeur."
+    ai_helper_allowed_in_pm: "Activez l'assistant IA de l'éditeur dans les messages privés."
     ai_helper_model: "Modèle à utiliser pour l'assistant IA."
     ai_helper_custom_prompts_allowed_groups: "Les utilisateurs de ces groupes verront l'option d'invite personnalisée dans l'assistant IA."
     ai_helper_automatic_chat_thread_title_delay: "Délai en minutes avant que l'assistant IA définisse automatiquement le titre du fil de discussion."
     ai_helper_automatic_chat_thread_title: "Définissez automatiquement les titres des fils de discussion en fonction du contenu du fil."
-    ai_helper_illustrate_post_model: "Modèle à utiliser pour la fonction d'illustration de publication de l'assistant IA du compositeur"
+    ai_helper_illustrate_post_model: "Modèle à utiliser pour la fonction d'illustration de publication de l'assistant IA de l'éditeur"
     ai_helper_enabled_features: "Sélectionnez les fonctionnalités à activer dans l’assistant IA."
     post_ai_helper_allowed_groups: "Les groupes d'utilisateurs autorisés à accéder aux fonctionnalités d'AI Helper dans les publications"
     ai_helper_image_caption_model: "Sélectionnez le modèle à utiliser pour générer des légendes d'images"
@@ -90,7 +90,7 @@ fr:
     ai_summarization_model: "Modèle à utiliser pour les résumés"
     ai_summarization_persona: "Personnage à utiliser pour la fonction de synthèse"
     ai_custom_summarization_allowed_groups: "Les groupes autorisés à utiliser la création de nouveaux résumés."
-    ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MD."
+    ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
     ai_summary_gists_allowed_groups: "Les groupes sont autorisés à voir l'essentiel dans la liste des sujets d'actualité."
     ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
@@ -98,13 +98,13 @@ fr:
     ai_bot_enable_chat_warning: "Afficher un avertissement lorsque le chat MP est lancé. Peut être remplacé en modifiant la chaîne de traduction : discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
-    ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages personnels de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
+    ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
     ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer une conversation avec un robot IA"
     ai_bot_github_access_token: "Jeton d'accès GitHub à utiliser avec les outils GitHub AI (requis pour la prise en charge de la recherche)"
-    ai_stability_api_key: "Clé API pour l'API stable.ai"
+    ai_stability_api_key: "Clé d'API pour l'API stable.ai"
     ai_stability_engine: "Moteur de génération d'images à utiliser pour l'API stability.ai"
     ai_stability_api_url: "Adresse URL de l'API stability.ai"
-    ai_google_custom_search_api_key: "Clé API pour l'API Google Custom Search, voir : https://developers.google.com/custom-search"
+    ai_google_custom_search_api_key: "Clé d'API pour l'API Google Custom Search, voir : https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX pour l'API de recherche personnalisée Google"
     ai_discord_search_enabled: "Active la fonction de recherche Discord"
     ai_discord_app_id: "L'identifiant de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
@@ -128,7 +128,7 @@ fr:
       description: "Ce rapport fournit une analyse du sentiment pour les publications, regroupées par catégorie, avec des scores positifs, négatifs et neutres pour chaque publication et catégorie."
     overall_sentiment:
       title: "Sentiment général"
-      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages directs (MD) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
+      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages privés (MP) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
@@ -249,7 +249,7 @@ fr:
       prompts:
         translate: Traduire en %{language}
         generate_titles: Suggérer des titres de sujets
-        proofread: Relisez le texte
+        proofread: Relire le texte
         markdown_table: Générer un tableau Markdown
         custom_prompt: "Invite personnalisée"
         explain: "Expliquer"
@@ -268,25 +268,25 @@ fr:
       title: "%{title} - Conversation IA - %{site_name}"
       errors:
         not_allowed: "Vous n'avez pas l'autorisation de partager ce sujet"
-        other_people_in_pm: "Les messages personnels avec d'autres humains ne peuvent pas être partagés publiquement"
-        other_content_in_pm: "Les messages personnels contenant des messages d'autres personnes ne peuvent pas être partagés publiquement"
+        other_people_in_pm: "Les messages privés avec d'autres humains ne peuvent pas être partagés publiquement"
+        other_content_in_pm: "Les messages privés contenant des messages d'autres personnes ne peuvent pas être partagés publiquement"
         failed_to_share: "Échec du partage de la conversation"
         conversation_deleted: "Partage de conversation supprimé avec succès"
     spam_detection:
-      flag_reason: "Signalé comme spam par <a href='%{url}'>Discourse AI</a>"
+      flag_reason: "Signalé comme contenu indésirable par <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Utilisateur mis en sourdine automatiquement par <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Le type d'erreur fourni n'est pas valide"
       unexpected: "Une erreur inattendue s'est produite"
-      bot_user_update_failed: "Échec de la mise à jour de l'utilisateur du robot d'analyse anti-spam"
+      bot_user_update_failed: "Échec de la mise à jour de l'utilisateur du robot de détection des contenus indésirables"
       configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
       logging_subject: "Détection des contenus indésirables"
     ai_bot:
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
-      default_pm_prefix: "[MD de robot IA sans titre]"
+      default_pm_prefix: "[MP de robot IA sans titre]"
       thinking: "Réflexion..."
       personas:
-        default_llm_required: "Le modèle LLM par défaut est requis avant d'activer Chat"
-        cannot_delete_system_persona: "Les personnages système ne peuvent pas être supprimés, veuillez plutôt les désactiver"
+        default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
+        cannot_delete_system_persona: "Les personnages du système ne peuvent pas être supprimés. Veuillez plutôt les désactiver"
         cannot_edit_system_persona: "Les personnages du système peuvent uniquement être renommés, vous ne pouvez pas modifier les outils ou l'invite du système, mais seulement les désactiver et en faire une copie"
         cannot_have_duplicate_tools: "Impossible d'avoir des outils en double"
         github_helper:
@@ -294,10 +294,10 @@ fr:
           description: "Robot IA spécialisé dans l'assistance aux tâches et questions liées à GitHub"
         general:
           name: Assistant du forum
-          description: "Bot IA à usage général capable d'effectuer diverses tâches"
+          description: "Robot IA à usage général capable d'effectuer diverses tâches"
         artist:
           name: Artiste
-          description: "Bot IA spécialisé dans la génération d'images"
+          description: "Robot IA spécialisé dans la génération d'images"
         designer:
           name: Concepteur
           description: "Robot IA spécialisé dans la génération et l'édition d'images"
@@ -306,19 +306,19 @@ fr:
           description: "Robot IA spécialisé dans la recherche approfondie dans le forum"
         sql_helper:
           name: Assistant SQL
-          description: "Bot IA spécialisé dans l'aide à la création de requêtes SQL sur cette instance Discourse"
+          description: "Robot IA spécialisé dans l'aide à la création de requêtes SQL sur cette instance Discourse"
         settings_explorer:
           name: Explorateur de paramètres
-          description: "Bot IA spécialisé dans l'aide à l'exploration des paramètres du site Discourse"
+          description: "Robot IA spécialisé dans l'aide à l'exploration des paramètres du site Discourse"
         researcher:
           name: Chercheur Web
           description: "Robot IA avec accès à Google qui peut à la fois rechercher et lire des pages Web"
         creative:
           name: Créatif
-          description: "Bot IA sans intégration externe spécialisé dans les tâches créatives"
+          description: "Robot IA sans intégration externe spécialisé dans les tâches créatives"
         dall_e3:
           name: "DALL-E 3"
-          description: "Bot IA spécialisé dans la génération d'images utilisant DALL-E 3"
+          description: "Robot IA spécialisé dans la génération d'images utilisant DALL-E 3"
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
@@ -462,7 +462,7 @@ fr:
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Recherche des paramètres du site"
         dall_e: "Générer une image"
-        search_meta_discourse: "Méta-recherche Discourse"
+        search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
         create_image: "Création d'image"
         edit_image: "Édition d'image"
@@ -492,7 +492,7 @@ fr:
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Paramètres du site de recherche"
         dall_e: "Générer une image à l'aide de DALL-E 3"
-        search_meta_discourse: "Méta-recherche Discourse"
+        search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
         researcher: "Rechercher des informations sur le forum à l'aide du robot IA"
       tool_description:
@@ -594,7 +594,7 @@ fr:
       missing_provider_param: "%{param} ne peut pas être vide"
       bedrock_invalid_url: "Veuillez remplir tous les champs pour utiliser ce modèle."
     ai_staff_action_logger:
-      updated: "modification"
+      updated: "mis à jour"
       set: "défini"
       removed: "supprimé"
     errors:

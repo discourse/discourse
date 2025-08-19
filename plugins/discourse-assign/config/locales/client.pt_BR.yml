@@ -138,7 +138,7 @@ pt_BR:
           assigned: "foram atribuídos"
           unassigned: "tiveram atribuição removida"
         assigned:
-          label: "Atribuído a"
+          label: "Atribuído(a) a"
     topics:
       bulk:
         unassign: "Remover atribuição de tópicos"

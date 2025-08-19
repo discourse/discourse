@@ -4529,6 +4529,8 @@ ko:
           select_base:
             title: "베이스 색상 팔레트 선택"
             description: "베이스 팔레트:"
+          light: "라이트"
+          dark: "다크"
           title: "색상"
           edit: "편집"
           filters:

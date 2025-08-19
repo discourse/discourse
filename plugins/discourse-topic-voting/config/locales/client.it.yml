@@ -31,7 +31,7 @@ it:
         one: "%{count} voto"
         other: "%{count} voti"
       anonymous_button:
-        one: "Vota"
+        one: "Voto"
         other: "Voti"
       remove_vote: "Rimuovi voto"
       no_votes_title_self: "Non hai ancora votato per nessun argomento"

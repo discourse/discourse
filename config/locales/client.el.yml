@@ -5173,6 +5173,8 @@ el:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"
             description: "Βασική παλέτα:"
+          light: "ανοιχτό"
+          dark: "σκούρο"
           title: "Χρώματα"
           edit: "Επεξεργασία"
           filters:

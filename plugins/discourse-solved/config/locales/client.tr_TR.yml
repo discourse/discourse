@@ -29,7 +29,7 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
-      accepted_html: "%{icon} <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a></span> tarafından <a href='%{post_path}' class='back'>#%{post_number}. gönderide</a> çözüldü"
+      accepted_answer_post_number: "%{post_number}. gönderi"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tümü"
@@ -38,7 +38,6 @@ tr_TR:
       no_solved_topics_title: "Henüz hiçbir konuyu çözmediniz"
       no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
       no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
-      marked_solved_by: "<a href data-user-card='%{username_lower}'>%{username}</a></span> tarafından çözülmüş olarak işaretlendi"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."

@@ -4821,6 +4821,8 @@ lt:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"
             description: "Pagrindinė paletė:"
+          light: "šviesi"
+          dark: "tamsi"
           title: "Spalvos"
           edit: "Redaguoti"
           filters:

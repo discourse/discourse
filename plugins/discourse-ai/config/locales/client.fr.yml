@@ -207,7 +207,7 @@ fr:
         bot:
           bot: "Chatbot"
           name: "Robot"
-          description: "Un chatbot qui peut répondre aux questions et aider les utilisateurs dans les messages personnels, le forum et les discussions"
+          description: "Un chatbot qui peut répondre aux questions et aider les utilisateurs dans les messages privés, le forum et les discussions"
         nav:
           configured: "Configuré"
           unconfigured: "Non configuré"
@@ -386,16 +386,16 @@ fr:
         create_user_help: Vous pouvez éventuellement associer un utilisateur à ce personnage. Si vous le faites, l'IA utilisera cet utilisateur pour répondre aux demandes.
         default_llm: Modèle linguistique par défaut
         default_llm_help: Le modèle linguistique par défaut à utiliser pour ce personnage. Obligatoire si vous souhaitez mentionner un personnage sur des publications publiques.
-        question_consolidator_llm: Modèle linguistique pour le consolidateur de questions
-        question_consolidator_llm_help: Le modèle linguistique à utiliser pour le consolidateur de questions, vous pouvez choisir un modèle moins puissant pour réduire les coûts.
+        question_consolidator_llm: Modèle linguistique pour l'outil de consolidation des questions
+        question_consolidator_llm_help: Le modèle linguistique à utiliser pour l'outil de consolidation des questions, vous pouvez choisir un modèle moins puissant pour réduire les coûts.
         system_prompt: Invite du système
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
         allow_chat_direct_messages_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent envoyer des messages directs à ce personnage."
         allow_chat_channel_mentions: "Autoriser les mentions du canal de discussion"
         allow_chat_channel_mentions_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner ce personnage dans les canaux de discussion."
-        allow_personal_messages: "Autoriser les messages personnels"
-        allow_personal_messages_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent envoyer des messages personnels à ce personnage."
+        allow_personal_messages: "Autoriser les messages privés"
+        allow_personal_messages_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent envoyer des messages privés à ce personnage."
         allow_topic_mentions: "Autoriser les mentions de sujets"
         allow_topic_mentions_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner ce personnage dans les sujets."
         force_default_llm: "Toujours utiliser le modèle linguistique par défaut"
@@ -522,7 +522,7 @@ fr:
         max_prompt_tokens: "Fenêtre contextuelle"
         max_output_tokens: "Nombre maximum de jetons de sortie"
         url: "URL du service hébergeant le modèle"
-        api_key: "Clé API du service hébergeant le modèle"
+        api_key: "Clé d'API du service hébergeant le modèle"
         enabled_chat_bot: "Autoriser le sélecteur de robot IA"
         vision_enabled: "Vision activée"
         ai_bot_user: "Utilisateur robot IA"
@@ -563,7 +563,7 @@ fr:
           ai_persona: "Personnage (%{persona})"
           ai_summarization: "Résumer"
           ai_embeddings_semantic_search: "Recherche IA"
-          ai_spam: "Spam"
+          ai_spam: "Contenu indésirable"
           automation: "Automatisation (%{persona})"
         in_use_warning:
           one: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, la fonctionnalité ne fonctionnera pas comme prévu."
@@ -613,7 +613,7 @@ fr:
           display_name: "Le nom utilisé pour faire référence à ce modèle dans l'interface de votre site."
           name: "Nous l'incluons dans l'appel d'API pour spécifier le modèle que nous allons utiliser"
           vision_enabled: "Si cette option est activée, l'IA tentera de comprendre les images. Cela dépend du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI."
-          enabled_chat_bot: "Si cette option est activée, les utilisateurs peuvent sélectionner ce modèle lors de la création de MD avec le robot IA"
+          enabled_chat_bot: "Si cette option est activée, les utilisateurs peuvent sélectionner ce modèle lors de la création de MP avec le robot IA"
           cost_input: "Le coût d'entrée par million de jetons pour ce modèle"
           cost_cached_input: "Le coût d'entrée mis en cache par million de jetons pour ce modèle"
           cost_output: "Le coût de sortie par million de jetons pour ce modèle"
@@ -770,14 +770,14 @@ fr:
           suffix: "dans tous les sujets et publications avec IA"
       ai_artifact:
         expand_view_label: "Agrandir la vue"
-        collapse_view_label: "Quitter le mode plein écran (bouton ESC ou Retour)"
+        collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
         persona: "Personnage"
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
-        default_pm_prefix: "[MD de robot IA sans titre]"
+        default_pm_prefix: "[MP de robot IA sans titre]"
         shortcut_title: "Démarrer une conversation avec un robot IA"
         exit: "quitter le robot IA"
         share: "Copier la conversation avec l'IA"
@@ -859,7 +859,7 @@ fr:
             negative: "Négatif"
           group_types:
             category: "Catégorie"
-            tag: "Étiqueter"
+            tag: "Étiquette"
           table:
             sentiment: "Sentiment"
             total_count: "Total"

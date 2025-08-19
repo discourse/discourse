@@ -86,7 +86,7 @@ it:
             categories:
               label: Limitato alle categorie
             tags:
-              label: Limitato ai tag
+              label: Limitato alle etichette
             stalled_after:
               label: Bloccato dopo
         recurring:

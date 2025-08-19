@@ -169,6 +169,14 @@ es:
 
           - Creemos en [el comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
+        instructions: |-
+          ¿Podrías compartir uno de estos enlaces conmigo? Responde con **un enlace en una línea aparte** y se expandirá automáticamente para incluir un resumen ingenioso.
+
+          Para copiar cualquier enlace, toca y mantén pulsado el dispositivo móvil o haz clic derecho con el ratón:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           ¡Genial! Esto funcionará para la mayoría de los <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda, debe estar en una línea _todo por sí mismo_, con nada más delante o detrás.
         not_found: |-
@@ -390,6 +398,19 @@ es:
 
           Ten en cuenta que cuando respondes a un tema o lees un tema durante más de unos minutos, el nivel de notificación se establece automáticamente en «siguiendo». Puedes cambiar esto en [tus preferencias de usuario](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          ¿Sabías que puedes añadir una encuesta a cualquier publicación? Prueba a usar el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> en el editor para **crear una encuesta**.
+        not_found: |-
+          ¡Vaya! No había ninguna encuesta en tu respuesta.
+
+          Usa el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> en el editor, o copia y pega esta encuesta en la siguiente respuesta:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, ¡buena encuesta! ¿Qué tal estuvo mi proceso de enseñanza?
 

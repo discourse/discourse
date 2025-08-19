@@ -13,6 +13,8 @@ es:
     reviewables:
       comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
   js:
+    discourse_post_voting:
+      title: "Votación de publicación"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ es:
         answer_count:
           one: "%{count} respuesta"
           other: "%{count} respuestas"
+        voters_count_diff:
+          one: "y %{count} usuario más..."
+          other: "y %{count} usuarios más..."
     review:
       transcript:
         view: "Ver la transcripción de los mensajes anteriores"

@@ -5061,6 +5061,8 @@ da:
           select_base:
             title: "Vælg basisfarvepalet"
             description: "Basispalet:"
+          light: "lys"
+          dark: "mørk"
           title: "Farver"
           edit: "Rediger"
           filters:

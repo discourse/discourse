@@ -71,7 +71,7 @@ fi:
       send_chat_integration_message:
         title: Lähetä chat-integraatioviesti
   chat_integration:
-    all_categories: "(kaikki luokat)"
+    all_categories: "(kaikki alueet)"
     deleted_category: "(poistettu alue)"
     deleted_group: "(poistettu ryhmä)"
     group_mention_template: "@%{name} mainittu"

@@ -15,6 +15,7 @@ es:
     house_ads_after_nth_topic: 'Si se definen anuncios internos «Entre temas», mostrar un anuncio después de cada N temas, donde N es este valor.'
     house_ads_after_nth_post: 'Si se definen anuncios internos «Entre publicaciones», mostrar un anuncio después de cada N publicaciones, donde N es este valor.'
     house_ads_frequency: "Si otras redes publicitarias están configuradas para mostrarse en un espacio publicitario, con qué frecuencia deben mostrarse los anuncios internos, en forma de porcentaje."
+    ads_txt: "Contenido del archivo ads.txt. Más información disponible en <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>esta página de ayuda de Google AdSense</a>."
     dfp_publisher_id: "Introduce el código de red de Google Ad Manager (anteriormente llamado DFP), que se encuentra en la configuración de red. NOTA: Deberás actualizar la configuración «src del script de la política de seguridad de contenido». Consulta <a href='https://meta.discourse.org/t/33734' target='_blank'>este tema</a> para obtener las instrucciones más recientes."
     dfp_publisher_id_mobile: "(Opcional) Si quieres utilizar un ID de editor de Ad Manager diferente para la versión móvil del sitio, introdúcelo aquí. Déjalo en blanco para utilizar dfp_publisher_id en el móvil."
     dfp_through_trust_level: "Mostrar tus anuncios a los usuarios en función de los niveles de confianza. Los usuarios con un nivel de confianza superior a este valor no verán los anuncios."
@@ -44,6 +45,7 @@ es:
     dfp_mobile_post_bottom_ad_sizes: "Elige el tamaño de tu anuncio para el bloque de anuncios que se muestra entre publicaciones en la vista para móviles."
     dfp_target_post_bottom_key_code: "Introduce claves de segmentación personalizadas - nivel de inventario"
     dfp_target_post_bottom_value_code: "Introduce valores de segmentación personalizados - nivel de inventario"
+    adsense_publisher_code: "Tu ID de publicador. Introduce solo el número, excluyendo «pub». NOTA: Deberás actualizar el ajuste «content security policy script src». Consulta <a href='https://meta.discourse.org/t/33734' target='_blank'>este tema</a> para obtener las instrucciones más recientes."
     adsense_through_trust_level: "Mostrar tus anuncios a los usuarios en función de los niveles de confianza. Los usuarios con un nivel de confianza superior a este valor no verán los anuncios."
     adsense_exclude_groups: "Los anuncios no se mostrarán a los miembros de estos grupos."
     adsense_topic_list_top_code: "Introduce el código del bloque de anuncios que se mostrará en la parte superior de la lista de temas. Este es el número asignado al bloque de anuncios, no el código JavaScript."
@@ -96,6 +98,7 @@ es:
     carbonads_exclude_groups: "Los anuncios no se mostrarán a los miembros de estos grupos."
     carbonads_topic_list_top_enabled: "Mostrar un anuncio encima de la lista de temas"
     carbonads_above_post_stream_enabled: "Mostrar un anuncio encima del flujo de publicaciones"
+    adbutler_publisher_id: "ID de publicador de AdButler. NOTA: Es posible que debas actualizar el ajuste «content security policy script src». Consulta <a href='https://meta.discourse.org/t/33734' target='_blank'>este tema</a> para obtener las instrucciones más recientes."
     adbutler_mobile_topic_list_top_zone_id: "ID de zona para la ubicación encima de la lista de temas móviles"
     adbutler_mobile_topic_above_post_stream_zone_id: "ID de zona para el tema móvil encima de la ubicación del flujo de publicaciones"
     adbutler_mobile_post_bottom_zone_id: "ID de zona para la ubicación inferior de la publicación móvil"

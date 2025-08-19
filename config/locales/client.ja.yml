@@ -1414,7 +1414,7 @@ ja:
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
       silenced_notice: "このユーザーは %{date} まで投稿禁止にされています。"
-      silenced_permanently: "このユーザーは投稿を禁止されています."
+      silenced_permanently: "このユーザーは投稿を禁止されています。"
       silenced_reason: "理由: "
       github_profile: "GitHub"
       email_activity_summary: "アクティビティの概要"
@@ -4730,7 +4730,7 @@ ja:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
             filter:
-              content: "フィルター"
+              content: "フィルタ"
               title: "カテゴリ、タグ、その他の基準でトピックを絞り込む"
             topics:
               content: "トピック"
@@ -5082,7 +5082,7 @@ ja:
               help_text: "幅広の長方形画像を使用します。SVG 画像は使用しないでください。"
             opengraph_image:
               title: "OpenGraph 画像"
-              description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+              description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空白の場合、large_icon が使用されます."
             x_summary_large_image:
               title: "X 要約の大きい画像"
               description: "X カードの「要約の大きい画像」。空白の場合、.svg でない OpenGraph_image を使って通常のカードのメタデータが生成されます。"
@@ -5165,7 +5165,7 @@ ja:
               header_description: "バックアップ、復元、およびアップロードのログを表示および管理します"
         reports:
           title: "レポート"
-          header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
+          header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の検出、データに基づく決定に役立ちます。"
           sub_pages:
             settings:
               title: "ダッシュボードの設定"
@@ -5836,7 +5836,7 @@ ja:
           navigation: "ナビゲーション"
           themes_and_components:
             title: "テーマとコンポーネント"
-            keywords: "拡張子"
+            keywords: "拡張機能"
           site_texts: "サイトのテキスト"
       email_settings:
         title: "メールの設定"
@@ -5986,9 +5986,9 @@ ja:
             install: "インストール"
             name: "名前"
             used_on: "使用場所"
-            enabled: "有効化？"
+            enabled: "有効ですか？"
             by_author: "作成者: %{name}"
-            learn_more: "もっと読む"
+            learn_more: "もっと詳しく"
             edit: "編集"
             parent_themes_two: "%{name1}、%{name2}"
             parent_themes_three: "%{name1}、%{name2}、%{name3}"
@@ -5997,7 +5997,7 @@ ja:
             add_to_theme: "テーマに追加"
             preview: "プレビュー"
             update: "最新に更新"
-            check_update: "アップデートを確認"
+            check_update: "更新を確認"
             update_available: "更新があります！"
             export: "エクスポート"
             convert: "変換"
@@ -6011,7 +6011,7 @@ ja:
             new_update_for_component: "%{name} の新しい更新があります！"
             component_up_to_date: '「%{name}」は最新状態です。'
             updated_successfully: '「%{name}」は正しく更新されました。'
-            delete_confirm: '"%{name}" を削除してもよろしいですか？'
+            delete_confirm: '「%{name}」を削除してもよろしいですか？'
             deleted_successfully: '「%{name}」は正しく削除されました。'
             no_components: "コンポーネントはインストールされていません。"
             no_components_found: "フィルタに一致するコンポーネントはありません。"
@@ -6036,7 +6036,7 @@ ja:
           color_options:
             title: "色オプション"
             toggle: "ユーザー選択可能"
-            toggle_description: "ユーザーが色パレットを選択できる"
+            toggle_description: "ユーザーが色パレットを選択できます"
           colors:
             title: "色"
           save_changes: "変更を保存"
@@ -6334,7 +6334,7 @@ ja:
             minimum: "Discourse バージョン %{version} 以上が必要です。"
             maximum: "Discourse バージョン %{version} 以下が必要です。"
           update_to_latest: "最新に更新"
-          check_for_updates: "アップデートを確認"
+          check_for_updates: "更新を確認"
           updating: "更新中…"
           update_success: "%{theme} の更新が完了しました"
           up_to_date: "テーマは最新です。最終確認日:"
@@ -6434,7 +6434,8 @@ ja:
           select_base:
             title: "基本色パレットを選択してください"
             description: "基本パレット:"
-          preference_warning: "<a href='%{link}'>個人のテーマ設定</a>を変更したため、パレットの変更は表示されない可能性があります。デフォルトを変更していない訪問者には、ここで行った変更が表示されます。"
+          light: "ライト"
+          dark: "ダーク"
           title: "色"
           edit: "編集"
           set_default_light: "デフォルトのテーマのライトパレットとして設定する (%{theme})"

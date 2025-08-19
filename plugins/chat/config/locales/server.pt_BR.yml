@@ -30,7 +30,7 @@ pt_BR:
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
     chat_preferred_index: "Aba preferencial ao carregar /chat."
-    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o bate-papo. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
+    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o chat. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."
@@ -93,7 +93,7 @@ pt_BR:
       actor_muting_target_user: "Você está silenciando %{username}, então você não pode enviar mensagens para ele(a)."
       actor_disallowed_dms: "Você optou por impedir que os(as) usuários(as) enviem mensagens pessoais e diretas. Portanto, você não pode criar novas mensagens diretas."
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens pessoais e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
-      not_reachable: "Desculpe, %{username} não está usando o bate-papo."
+      not_reachable: "Desculpe, %{username} não está usando o chat."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
       over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
       over_chat_max_direct_message_users:
@@ -139,7 +139,7 @@ pt_BR:
           description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
-        transcript_body: "Para dar mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
+        transcript_body: "Para fornecer mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
     channel:
       users_invited_to_channel:
         one: "%{invited_users} foi convidado(a) por %{inviting_user}."

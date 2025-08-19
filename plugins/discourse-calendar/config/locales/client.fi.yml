@@ -433,7 +433,7 @@ fi:
         confirm_delete: "Haluatko varmasti poistaa tämän tapahtuman?"
         confirm_close: "Haluatko varmasti sulkea tämän tapahtuman?"
         confirm_open: "Haluatko varmasti avata tämän tapahtuman?"
-        create: "Aloitus"
+        create: "Luo"
         update: "Tallenna"
         attach: "Luo tapahtuma"
         add_reminder: "Lisää muistutus"

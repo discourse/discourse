@@ -20,14 +20,14 @@ tr_TR:
         title: YZ Kişiliğini kullanarak gönderileri sınıflandırın
         description: "Gönderilere belirli bir YZ kişiliği kullanarak yanıt verin"
       llm_triage:
-        title: AI kullanarak gönderileri sınıflandırın
+        title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         flagged_post: |
           <div>Modelden gelen yanıt:</div>
           <p>%%LLM_RESPONSE%%</p>
           <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> kuralı ile tetiklenir.</b>
       llm_report:
-        title: AI kullanarak periyodik raporla
+        title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
   site_settings:
     discourse_ai_enabled: "Discourse YZ eklentisini etkinleştirin."
@@ -68,16 +68,16 @@ tr_TR:
     composer_ai_helper_allowed_groups: "Bu gruplardaki kullanıcılar, bestecide YZ yardımcı düğmesini görür."
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_model: "YZ yardımcı için kullanılacak model."
-    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar AI yardımcısında özel istem seçeneğini görürler."
-    ai_helper_automatic_chat_thread_title_delay: "AI yardımcısının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
+    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar YZ yardımcıda özel istem seçeneğini görürler."
+    ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
-    ai_helper_illustrate_post_model: "Besteci AI yardımcısının gönderiyi çizme özelliği için kullanılacak model"
-    ai_helper_enabled_features: "YZ yardımcısında etkinleştirilecek özellikleri seçin."
-    post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcısı özelliklerine erişmesine izin verilen kullanıcı grupları"
+    ai_helper_illustrate_post_model: "Besteci YZ yardımcının gönderiyi çizme özelliği için kullanılacak model"
+    ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
+    post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
     ai_helper_image_caption_model: "Görüntü alt yazıları oluşturmak için kullanılacak modeli seçin"
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
-    ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Arama'yı kullanın."
+    ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
     ai_embeddings_semantic_related_topics: "İlgili konu bölümünde gösterilecek maksimum konu sayısı."
     ai_embeddings_backfill_batch_size: "Her 15 dakikada bir geri doldurulacak gömme sayısı."
     ai_embeddings_semantic_search_enabled: "Tam sayfa semantik aramayı etkinleştirin."
@@ -94,12 +94,12 @@ tr_TR:
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
     ai_summary_gists_allowed_groups: "Popüler konular listesindeki özetleri görme yetkisine sahip gruplar."
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
-    ai_bot_enabled: "YZ Botu modülünü etkinleştirin."
+    ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
     ai_bot_enable_chat_warning: "Kişisel mesaj sohbeti başlatıldığında bir uyarı görüntüleyin. Çeviri dizesi düzenlenerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "GPT Botunun Kişisel Mesaja erişimi olduğunda, bu grupların üyelerine yanıt verir."
     ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ isteğini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
     ai_bot_public_sharing_allowed_groups: "Bu grupların, herkese açık benzersiz bir bağlantı aracılığıyla YZ kişisel mesajlarını herkese açık şekilde paylaşmasına izin verin. Not: Siteniz giriş yapılmasını gerektiriyorsa paylaşımlar da giriş yapılmasını gerektirir."
-    ai_bot_add_to_header: "Bir YZ Botu ile bir kişisel mesaj başlatmak için başlıkta bir düğme gösterin"
+    ai_bot_add_to_header: "YZ Bot ile bir kişisel mesaj başlatmak için başlıkta bir düğme gösterin"
     ai_bot_github_access_token: "GitHub AI araçlarıyla kullanım için GitHub erişim token'ı (arama desteği için gereklidir)"
     ai_stability_api_key: "stability.ai API'si için API anahtarı"
     ai_stability_engine: "stability.ai API'si için kullanılacak görüntü oluşturma motoru"
@@ -260,7 +260,7 @@ tr_TR:
           stable_diffusion_xl: "Stable Diffusion XL'den görüntü"
           dall_e_3: "DALL-E 3'den görüntü"
       image_caption:
-        attribution: "AI tarafından altyazılı"
+        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"
@@ -282,49 +282,49 @@ tr_TR:
       logging_subject: "Spam tespiti"
     ai_bot:
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
-      default_pm_prefix: "[Adsız YZ botu kişisel mesajı]"
+      default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünüyorum..."
       personas:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_persona: "Sistem kişilikleri silinemez, lütfen bunun yerine devre dışı bırakın"
         cannot_edit_system_persona: "Sistem kişileri yalnızca yeniden adlandırılabilir, araçları veya sistem istemini düzenleyemezsiniz, bunun yerine devre dışı bırakıp bir kopyasını oluşturabilirsiniz"
-        cannot_have_duplicate_tools: "Yinelenen araçlara sahip olunamaz"
+        cannot_have_duplicate_tools: "Eş kopya araçlara sahip olunamaz"
         github_helper:
           name: "GitHub Yardımcısı"
-          description: "GitHub ile ilgili görevlere ve sorulara yardımcı olma konusunda uzmanlaşmış YZ Botu"
+          description: "GitHub ile ilgili görevlere ve sorulara yardımcı olma konusunda uzmanlaşmış YZ Bot"
         general:
           name: Forum Yardımcısı
-          description: "Çeşitli görevleri yerine getirebilen genel amaçlı AI Botu"
+          description: "Çeşitli görevleri yerine getirebilen genel amaçlı YZ Bot"
         artist:
           name: Sanatçı
-          description: "Görsel üretme konusunda uzmanlaşmış AI Bot"
+          description: "Görsel üretme konusunda uzmanlaşmış YZ Bot"
         designer:
           name: Tasarımcı
-          description: "Görüntü oluşturma ve düzenleme konusunda uzmanlaşmış YZ Botu"
+          description: "Görüntü oluşturma ve düzenleme konusunda uzmanlaşmış YZ Bot"
         forum_researcher:
           name: Forum Araştırmacısı
-          description: "Forum için derin araştırmalara odaklanan YZ Botu"
+          description: "Forum için derin araştırmalara odaklanan YZ Bot"
         sql_helper:
           name: SQL Yardımcısı
-          description: "Bu Discourse örneğinde SQL sorguları oluşturmaya yardımcı olma konusunda uzmanlaşmış AI Bot"
+          description: "Bu Discourse örneğinde SQL sorguları oluşturmaya yardımcı olma konusunda uzmanlaşmış YZ Bot"
         settings_explorer:
           name: Ayarlar Gezgini
-          description: "Discourse site ayarlarını keşfetmeye yardımcı olma konusunda uzmanlaşmış AI Bot"
+          description: "Discourse site ayarlarını keşfetmeye yardımcı olma konusunda uzmanlaşmış YZ Bot"
         researcher:
           name: Web Araştırmacısı
-          description: "Web sayfalarını hem arayabilen hem de okuyabilen Google erişimli YZ Botu"
+          description: "Web sayfalarını hem arayabilen hem de okuyabilen Google erişimli YZ Bot"
         creative:
           name: Yaratıcı
-          description: "Yaratıcı görevlerde uzmanlaşmış, harici entegrasyonları olmayan AI Bot"
+          description: "Yaratıcı görevlerde uzmanlaşmış, harici entegrasyonları olmayan YZ Bot"
         dall_e3:
           name: "DALL-E 3"
-          description: "DALL-E 3 kullanarak görüntü üretme konusunda uzmanlaşmış AI Bot"
+          description: "DALL-E 3 kullanarak görüntü üretme konusunda uzmanlaşmış YZ Bot"
         discourse_helper:
           name: "Discourse Yardımcısı"
-          description: "Discourse ile ilgili görevlere yardımcı olma konusunda uzmanlaşmış YZ Botu"
+          description: "Discourse ile ilgili görevlere yardımcı olma konusunda uzmanlaşmış YZ Bot"
         web_artifact_creator:
           name: "Web Artifact'i Oluşturucu"
-          description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Botu"
+          description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Bot"
         summarizer:
           name: "Özetleyici"
           description: "YZ özetlerini desteklemek için kullanılan varsayılan kişilik"
@@ -390,12 +390,12 @@ tr_TR:
           description: "Rapor otomasyon komut dosyasında kullanılan varsayılan kişilik"
       topic_not_found: "Özet mevcut değil, konu bulunamadı!"
       summarizing: "Konu özetleniyor"
-      searching: "Aranıyor: '%{query}'"
+      searching: "Aranıyor: \"%{query}\""
       tool_options:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Araştırma için kullanılacak dil modeli (varsayılan olarak mevcut kişiliğin LLM'si)"
+            description: "Araştırma için kullanılacak dil modeli (varsayılan olarak mevcut kişiliğin LLM'i)"
           max_tokens_per_batch:
             name: "Seri başına maksimum token sayısı"
             description: "Araştırmada her seri için kullanılacak maksimum token sayısı"
@@ -436,7 +436,7 @@ tr_TR:
             description: "Kullanıcının erişebildiği tüm konuları arama sonuçlarına dâhil et (varsayılan olarak yalnızca herkese açık konular dâhil edilir)"
           max_results:
             name: "Maksimum sonuç sayısı"
-            description: "Aramaya dahil edilecek maksimum sonuç sayısı; boşsa varsayılan kurallar kullanılır ve kullanılan modele bağlı olarak sayım ölçeklendirilir. En yüksek değer 100'dür."
+            description: "Aramaya dâhil edilecek maksimum sonuç sayısı; boşsa varsayılan kurallar kullanılır ve kullanılan modele bağlı olarak sayım ölçeklendirilir. En yüksek değer 100'dür."
           base_query:
             name: "Temel Arama Sorgusu"
             description: "Arama yaparken kullanılacak temel sorgu. Örnek: \"#acil\" arama sorgusuna \"#acil\" iadesini ekler ve yalnızca acil kategorisine veya etiketine sahip konuları içerir."
@@ -536,8 +536,8 @@ tr_TR:
           one: "Araştırılıyor: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
           other: "Araştırılıyor: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
         search_settings:
-          one: "'%{query}' için %{count} sonuç bulundu"
-          other: "'%{query}' için %{count} sonuç bulundu"
+          one: "\"%{query}\" için %{count} sonuç bulundu"
+          other: "\"%{query}\" için %{count} sonuç bulundu"
       discoveries:
         continue_conversation:
           title: "Keşif konuşması: %{query} için arama yapın"
@@ -553,7 +553,7 @@ tr_TR:
         overall_sentiment: "Genel duygu (Olumlu - Olumsuz)"
         post_emotion:
           sadness: "Üzüntü \U0001F622"
-          surprise: "Sürpriz \U0001F631"
+          surprise: "Şaşırma \U0001F631"
           neutral: "Nötr \U0001F610"
           fear: "Korku \U0001F628"
           anger: "Öfke \U0001F621"
@@ -584,12 +584,12 @@ tr_TR:
     personas:
       malformed_examples: "Verilen örneklerin formatı yanlış."
     embeddings:
-      delete_failed: "Bu model şu anda kullanımda. Öncelikle `ai embeddings selected model`i güncelleyin."
+      delete_failed: "Bu model şu anda kullanımda. Öncelikle `ai embeddings selected model`ı güncelleyin."
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
       configuration:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
         invalid_config: "Geçersiz bir seçenek seçtiniz."
-        choose_model: "Önce 'ai embeddings selected model'i ayarlayın."
+        choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
     llm_models:
       missing_provider_param: "%{param} boş olamaz"
       bedrock_invalid_url: "Bu modeli kullanmak için lütfen tüm alanları doldurun."
@@ -615,4 +615,4 @@ tr_TR:
         other: "%{names} adlı özel araçlar zaten mevcut."
   dashboard:
     problem:
-      ai_llm_status: "LLM modeli: %{model_name} sorunlarla karşılaşıyor. Lütfen <a href='%{url}'>modelinin yapılandırma sayfasını</a> kontrol edin."
+      ai_llm_status: "LLM modeli: %{model_name} sorunlarla karşılaşıyor. Lütfen <a href='%{url}'>modelin yapılandırma sayfasını</a> kontrol edin."

@@ -36,6 +36,10 @@ es:
     no_solutions:
       self: "Todavía no te han marcado ninguna respuesta como solución."
       others: "No hay soluciones aceptadas."
+    filter:
+      description:
+        solved: "Filtrar temas que se han resuelto"
+        unsolved: "Filtrar temas que no se han resuelto"
   badges:
     solved_1:
       name: "¡Solucionado!"

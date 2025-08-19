@@ -4630,8 +4630,8 @@ tr_TR:
       admin:
         title: "Yönetici"
         search_prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
-        search_open: "%{shortcut} Yönetici arayüzü için aramayı açın"
-        search_full_page: "%{shortcut} Tam sayfa yönetici aramasını açın"
+        search_open: "%{shortcut} Yönetici arayüzü için aramayı aç"
+        search_full_page: "%{shortcut} Tam sayfa yönetici aramasını aç"
     badges:
       earned_n_times:
         one: "Bu rozeti %{count} kez kazandı"
@@ -5034,7 +5034,7 @@ tr_TR:
       clear_filter: "Filtreyi temizle"
       no_results:
         title: "Sonuç yok"
-        description_admin_search: "\"%{filter}\" ile eşleşen hiçbir şey bulamadık."
+        description_admin_search: "\"%{filter}\" ile eşleşen bir şey bulamadık."
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
       search: "Ara"
@@ -5199,7 +5199,7 @@ tr_TR:
         no_tags:
           all:
             latest: "Etiketsiz en son konular"
-            top: "Etiketsiz en popüler konular"
+            top: "Etiketsiz popüler konular"
             new: "Etiketsiz yeni konular"
             unread: "Etiketsiz okunmamış konular"
             unseen: "Etiketsiz görülmemiş konular"
@@ -5209,7 +5209,7 @@ tr_TR:
             default: "Etiketsiz konular"
           category:
             latest: "%{category} kategorisindeki etiketsiz en son konular"
-            top: "%{category} kategorisindeki etiketsiz en popüler konular"
+            top: "%{category} kategorisindeki etiketsiz popüler konular"
             new: "%{category} kategorisindeki etiketsiz yeni konular"
             unread: "%{category} kategorisindeki etiketsiz okunmamış konular"
             unseen: "%{category} kategorisindeki etiketsiz görülmemiş konular"
@@ -5293,7 +5293,7 @@ tr_TR:
             saved: "Logo ayarları kaydedildi."
             logo:
               title: "Birincil logo"
-              description: "Sitenin üst navigasyonunda ve sitenin E-posta Bildirimleri'nin üstünde görünür."
+              description: "Sitenin üst navigasyonunda ve sitenin E-posta Bildirimlerinin üstünde görünür."
               help_text: "Önerilen boyut 600 x 80 pikseldir."
             logo_dark:
               required: "Karanlık mod için farklı bir logo kullanılsın mı?"
@@ -5331,26 +5331,26 @@ tr_TR:
               help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
             manifest_icon:
               title: "Manifest simgesi"
-              description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
+              description: "Android'de logo/açılış resmî olarak kullanılan görüntü. Boş bırakılırsa large_icon kullanılır."
               help_text: "Önerilen boyut 512 x 512 pikseldir."
             manifest_screenshots:
               title: "Manifest ekran görüntüleri"
               description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
             apple_touch_icon:
               title: "Apple dokunmatik simgesi"
-              description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
+              description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa large_icon kullanılır."
               help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
             digest_logo:
               title: "Digest logosu"
-              description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
+              description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa `logo` ayarındaki görüntü kullanılır."
               help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
             opengraph_image:
               title: "OpenGraph görüntüsü"
               description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
             x_summary_large_image:
               title: "X özeti büyük resim"
-              description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
-              help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
+              description: "X kartı \"özet büyük görüntü\". Boş bırakılırsa aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
+              help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG görüntüsü kullanmayın."
         fonts:
           title: "Yazı Tipleri"
           header_description: "Temel yazı tipi, başlık yazı tipi ve varsayılan metin boyutu dâhil olmak üzere sitenizde kullanılan yazı tiplerini yapılandırın"
@@ -5389,7 +5389,7 @@ tr_TR:
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
         search_everything:
           title: "Ara"
-          header_description: "Yönetici arayüzünde her şeyi burada bulabilirsiniz. Aşağıdaki sonuçları filtreleyebilirsiniz ve tercihleriniz hatırlanacaktır. Bu aramayı yönetici arayüzünde herhangi bir yerde açmak için %{shortcutHTML}tuşuna basın."
+          header_description: "Yönetici arayüzünde her şeyi burada bulabilirsiniz. Aşağıdaki sonuçları filtreleyebilirsiniz ve tercihleriniz hatırlanır. Bu aramayı yönetici arayüzünde herhangi bir yerde açmak için %{shortcutHTML} seçeneğine basın."
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -5413,13 +5413,13 @@ tr_TR:
           header_description: "Kullanıcıları görüntüleyin ve yönetin, davetiye gönderin ve kullanıcı verilerini dışa aktarın"
         groups:
           title: "Grup"
-          header_description: "Gruplar oluşturun ve yönetin, grup izinlerini ayarlayın, grup aktivitesini ve gelen kutularını görüntüleyin"
+          header_description: "Grup oluşturun ve yönetin, grup izinlerini ayarlayın, grup aktivitesini ve gelen kutularını görüntüleyin"
         site_settings:
           title: "Tüm site ayarları"
           header_description: "Discourse sitenizin görünümünü, işlevselliğini ve kullanıcı deneyimini özelleştirmek için tüm ayarları yapılandırın"
         whats_new:
           title: "Yenilikler"
-          header_description: "Discourse'taki en son özellikden ve iyileştirmelerden haberdar olun"
+          header_description: "Discourse'taki en son özellik ve iyileştirmelerden haberdar olun"
           keywords: "değişiklik günlüğü|özellik|yayın"
         backups:
           title: "Yedeklemeler"
@@ -5511,7 +5511,7 @@ tr_TR:
               header_description: "Discourse'un alınan e-postaları nasıl işlediğine bakın"
             templates:
               title: "Şablonlar"
-              header_description: "E-postaları oluşturmak için kullanılan şablonları özelleştirin"
+              header_description: "E-posta oluşturmak için kullanılan şablonları özelleştirin"
         email_logs:
           title: "E-posta günlükleri"
           header_description: "Sitenizden gönderilen e-postaların günlüklerini görüntüleyin"
@@ -5521,16 +5521,16 @@ tr_TR:
               title: "Gönderilen"
               header_description: "Gönderilen e-postaların günlüğünü görüntüleyin"
             skipped:
-              title: "Atlandı"
+              title: "Atlanan"
               header_description: "Atlanan e-postaların günlüğünü görüntüleyin"
             bounced:
-              title: "Geri Döndü"
+              title: "Geri dönen"
               header_description: "Geri dönen e-postaların günlüğünü görüntüleyin"
             received:
-              title: "Alındı"
+              title: "Alınan"
               header_description: "Alınan e-postaların günlüğünü görüntüleyin"
             rejected:
-              title: "Reddedildi"
+              title: "Reddedilen"
               header_description: "Reddedilen e-postaların günlüğünü görüntüleyin"
         email_appearance:
           title: "Görünüm"
@@ -6187,7 +6187,7 @@ tr_TR:
             order: "Sıralama düzeni"
             initial_members: "Genişletilmiş üyeler"
             initial_members_description: "Daha fazlasını görüntüle düğmesi eklenmeden önce gösterilecek grup üyesi sayısı."
-            show_description: "Açıklamayı ekle"
+            show_description: "Açıklamayı dâhil et"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -6252,7 +6252,7 @@ tr_TR:
             install: "Yükle"
           components:
             title: "Bileşenler"
-            description: "Forum tasarımınızın yüzey ögelerini değiştiren veya ekstra ön uç özellikleri ekleyen özelleştirmeler"
+            description: "Forum tasarımınızın yüzey ögelerini değiştiren veya ekstra ön uç özellikleri ekleyen özelleştirmeler ekleyin"
             components_intro: "Başlamak için yeni bir bileşen yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
             new_component: "Yeni bileşen"
             back: "Bileşenlere geri dön"
@@ -6261,7 +6261,7 @@ tr_TR:
             used_on: "Kullanılma tarihi:"
             enabled: "Etkin mi?"
             by_author: "Yazan: %{name}"
-            learn_more: "Daha fazla bilgi edin"
+            learn_more: "Daha fazla bilgi edinin"
             edit: "Düzenle"
             parent_themes_two: "%{name1} ve %{name2}"
             parent_themes_three: "%{name1}, %{name2} ve %{name3}"
@@ -6270,7 +6270,7 @@ tr_TR:
               other: "%{name1}, %{name2}, %{name3} ve %{count} kişi daha"
             add_to_theme: "Temaya ekle"
             preview: "Ön izle"
-            update: "En sona güncelle"
+            update: "En yeniye güncelle"
             check_update: "Güncellemeleri kontrol et"
             update_available: "Güncelleme mevcut!"
             export: "Dışa Aktar"
@@ -6303,7 +6303,7 @@ tr_TR:
         color_palettes:
           palette_name: "Ad"
           copy_to_clipboard: "Panoya kopyala"
-          copied_to_clipboard: "Panoya Kopyalandı"
+          copied_to_clipboard: "Panoya kopyalandı"
           copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
           duplicate: "Eş Kopya"
           delete: "Sil"
@@ -6607,7 +6607,7 @@ tr_TR:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
             minimum: "Dircourse %{version} sürümü veya üstünü gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
-          update_to_latest: "En sona güncelle"
+          update_to_latest: "En yeniye güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor…"
           update_success: "%{theme} Güncelleme tamamlandı"
@@ -6644,7 +6644,7 @@ tr_TR:
             title: "SCSS sözdizimini destekleyen özel CSS kuralları"
           header:
             text: "Başlıktan önce"
-            title: "Discourse başlığının üstünde oluşturulacak temel HTML"
+            title: "Discourse başlığının üzerinde oluşturulacak temel HTML"
           after_header:
             text: "Başlıktan Sonra"
             title: "Discourse başlığının altında oluşturulacak temel HTML"
@@ -6671,10 +6671,10 @@ tr_TR:
               Eklentiler ve/veya çekirdek ile çakışmaları önlemek için özellik adlarının önüne eklenmesi önemle tavsiye edilir.
           head_tag:
             text: "<head>"
-            title: "<head> sonuna eklenecek HTML, script etiketleri desteğiyle"
+            title: "<head> sonuna eklenecek HTML, komut dizisi etiketleri desteğiyle"
           body_tag:
             text: "<body>"
-            title: "<body> sonuna eklenecek HTML, script etiketleri desteğiyle"
+            title: "<body> sonuna eklenecek HTML, komut dizisi etiketleri desteğiyle"
           js:
             text: "JS"
             title: "Ember'ın \"şablon etiketi\" sözdizimini destekleyen JavaScript başlatıcısı"
@@ -6714,7 +6714,8 @@ tr_TR:
           select_base:
             title: "Temel renk paletini seçin"
             description: "Temel palet:"
-          preference_warning: "<a href='%{link}'>Kişisel tema ayarlarınızı</a> değiştirdiniz, bu nedenle palet değişiklikleri sizin için görünür olmayabilir. Varsayılan ayarlarını değiştirmemiş olan ziyaretçiler, burada yaptığınız değişiklikleri görmeye devam ederler."
+          light: "açık"
+          dark: "koyu"
           title: "Renkler"
           edit: "Düzenle"
           set_default_light: "Varsayılan temada açık renk paleti olarak ayarla (%{theme})"
@@ -6772,10 +6773,10 @@ tr_TR:
             description: "Güçlü vurgu"
           highlight-medium:
             name: "vurgula-orta"
-            description: "Orta vurgu"
+            description: "Orta seviye vurgu"
           highlight-low:
             name: "vurgula-düşük"
-            description: "İnce vurgu"
+            description: "Hafif vurgu"
           danger:
             name: "tehlike"
             description: "Hatalar ve silme eylemleri"
@@ -7047,7 +7048,7 @@ tr_TR:
             tag_group_destroy: "etiket grubu sil"
             tag_group_change: "etiket grubunu değiştir"
             delete_associated_accounts: "ilişkili hesapları sil"
-            change_theme_site_setting: "tema sitesi ayarını değiştirin"
+            change_theme_site_setting: "tema site ayarını değiştirin"
         screened_emails:
           title: "Taranan e-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilir ve kayıt engellenir veya başka bir işlem gerçekleştirilir."
@@ -7231,7 +7232,7 @@ tr_TR:
           select_template: "Form şablonları seçin"
           select_template_help: "Form Şablonları Ekle/Düzenle"
         errors:
-          multiple_tags_not_allowed: '"%{tag_name}" etiketinden daha fazla etiket seçemezsiniz. Sorunları önlemek için Form Şablonunu kullanın'
+          multiple_tags_not_allowed: '"%{tag_name}" etiketinden daha fazla etiket seçemezsiniz. Sorunları önlemek için Form Şablonu kullanın'
       impersonate:
         title: "Kimliğine Bürün"
         help: "Hata ayıklama amacıyla bir kullanıcı hesabının kimliğine bürünmek için bu aracı kullanın. Bittiğinde oturumu kapatmanız gerekecek."

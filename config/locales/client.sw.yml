@@ -2909,6 +2909,8 @@ sw:
               too_small: "izidi au iwe sawa na %{count}"
               too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
+          light: "hafifu"
+          dark: "nyeusi"
           title: "Rangi"
           edit: "Hariri"
           filters:
