@@ -322,9 +322,9 @@ en:
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
-        logged_in_members: ""
-        anonymous_members: ""
-      search: "Search"
+        logged_in_members: "Coolest thing you have seen today"
+        anonymous_members: "Coolest thing you have seen today"
+      search_placeholder: "Search"
 
     impersonation:
       notice: "You are impersonating %{username}"
