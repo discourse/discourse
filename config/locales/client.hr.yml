@@ -6113,6 +6113,8 @@ hr:
           select_base:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
+          light: "svijetlo"
+          dark: "tamno"
           title: "Boje"
           edit: "Uredi"
           filters:

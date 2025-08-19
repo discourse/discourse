@@ -31,7 +31,7 @@ nl:
         one: "%{count} stem"
         other: "%{count} stemmen"
       anonymous_button:
-        one: "Stemmen"
+        one: "Stem"
         other: "Stemmen"
       remove_vote: "Stem verwijderen"
       no_votes_title_self: "Je hebt nog niet gestemd op topics"

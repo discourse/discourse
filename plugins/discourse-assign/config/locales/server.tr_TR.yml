@@ -78,7 +78,7 @@ tr_TR:
       %{newest_assignments}
       %{oldest_assignments}
 
-      Birden fazla atanmış konunuz varsa bu hatırlatma %{frequency} adresine gönderilir.
+      Birden fazla atanmış konunuz varsa bu anımsatıcı %{frequency} gönderilir.
     newest: |
       ### En yeni
       %{topic_0}

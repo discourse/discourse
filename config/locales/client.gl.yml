@@ -4184,6 +4184,8 @@ gl:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
+          light: "claro"
+          dark: "escuro"
           title: "Cores"
           edit: "Editar"
           filters:

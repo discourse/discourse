@@ -18,7 +18,7 @@ ar:
       builder:
         title: السياسة
         attach: إنشاء سياسة
-        save: احفظ التغييرات
+        save: حفظ التغييرات
         insert: إدراج
         errors:
           group: المجموعة مطلوبة

@@ -12,6 +12,8 @@ pl_PL:
           poll: "Ankieta Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Ankieta jest dynamiczna. Opcje można edytować po opublikowaniu."
       voters:
         one: "głosujący"
         few: "głosujących"
@@ -164,6 +166,8 @@ pl_PL:
           step: Krok
         poll_public:
           label: Pokaż kto głosował
+        poll_dynamic:
+          label: Zezwól na edycję opcji po opublikowaniu (dynamiczna ankieta)
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:

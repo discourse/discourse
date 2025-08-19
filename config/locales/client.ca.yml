@@ -3748,6 +3748,8 @@ ca:
           select_base:
             title: "Seleccioneu la paleta de colors base"
             description: "Paleta base:"
+          light: "clar"
+          dark: "fosc"
           title: "Colors"
           edit: "Edita"
           filters:

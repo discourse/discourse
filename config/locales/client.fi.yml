@@ -6723,7 +6723,8 @@ fi:
           select_base:
             title: "Valitse perusväripaletti"
             description: "Peruspaletti:"
-          preference_warning: "Olet muuttanut <a href='%{link}'>henkilökohtaisia teeman asetuksiasi</a>, joten paletin muutokset eivät välttämättä näy sinulle. Vierailijat, jotka eivät ole muuttaneet oletusasetuksiaan, näkevät edelleen tekemäsi muutokset täällä."
+          light: "vaalea"
+          dark: "tumma"
           title: "Värit"
           edit: "Muokkaa"
           set_default_light: "Aseta vaaleaksi paletiksi oletusteemaan (%{theme})"
@@ -6772,16 +6773,16 @@ fi:
             description: "Päätausta ja jokin painikkeen teksti"
           tertiary:
             name: "kolmassijainen"
-            description: "Korostus väri (linkit, painikkeet, arvot)"
+            description: "Korostusväri (linkit, painikkeet, kunniamerkit)"
           quaternary:
             name: "neljässijainen"
             description: "Valinnainen teeman korostus"
           header_background:
             name: "yläpalkin tausta"
-            description: "Otsikon tausta"
+            description: "Ylätunnisteen tausta"
           header_primary:
             name: "yläpalkin ensisijainen"
-            description: "Otsikon teksti ja kuvakkeet"
+            description: "Ylätunnisteen teksti ja kuvakkeet"
           highlight:
             name: "korostus"
             description: "Korostetut viestit tai aiheet"
@@ -6790,25 +6791,25 @@ fi:
             description: "Vahva korostus"
           highlight-medium:
             name: "highlight-medium"
-            description: "Keskisuuri korostus"
+            description: "Keskitason korostus"
           highlight-low:
             name: "highlight-low"
             description: "Hienovarainen kohokohta"
           danger:
             name: "vaara"
-            description: "Virheet ja poiston toiminnot"
+            description: "Virheet ja poistotoiminnot"
           success:
             name: "onnistuminen"
-            description: "Onnistuneet toimet"
+            description: "Onnistuneet toiminnot"
           love:
             name: "tykkäys"
-            description: "Tykkää painike"
+            description: "Tykkäyspainike"
           selected:
             name: "valittu"
             description: "Aktiiviset tai valitut kohteet"
           hover:
             name: "osoitus"
-            description: "Paina tai tarkenna tausta"
+            description: "Tausta osoitettaessa tai kohdistettaessa"
           editor:
             light: "Vaalea"
             dark: "Tumma"
@@ -7202,7 +7203,7 @@ fi:
           dropdown: "Pudotusvalikko"
           upload: "Lataa tiedosto"
           multiselect: "Monivalinta"
-          tagchooser: "Tagiryhmän valitsin"
+          tagchooser: "Tunnisteryhmän valitsin"
         validations_modal:
           button_title: "Validoinnit"
           modal_title: "Validointivaihtoehdot"
@@ -7495,7 +7496,7 @@ fi:
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
         delete_confirm_title: "Oletko varma, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
-        delete_and_block: "Poista käyttäjä ja estä heidän sähköposti- ja IP-osoitteensa"
+        delete_and_block: "Poista käyttäjä ja estä hänen sähköposti- ja IP-osoitteensa"
         delete_dont_block: "Poista käyttäjä"
         deleting_user: "Poistetaan käyttäjää…"
         deleted: "Käyttäjä poistettiin."
@@ -7683,7 +7684,7 @@ fi:
           other: "Tallenna kaikki muutokset"
         dirty_banner:
           one: "Sinulla on <b>%{count}</b> tallentamaton muutos"
-          other: "Sinulla on <b>%{count}</b> tallentamattomia muutoksia"
+          other: "Sinulla on <b>%{count}</b> tallentamatonta muutosta"
         emoji_list:
           invalid_input: "Emoji-luettelossa tulisi olla vain kelvollisia emojien nimiä, esim. hugs"
           add_emoji_button:

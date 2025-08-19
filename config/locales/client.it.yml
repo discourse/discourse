@@ -1527,7 +1527,7 @@ it:
       watched_first_post_categories_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento in queste categorie."
       watched_first_post_tags: "Osservazione Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
-      watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
+      watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nelle etichette che sto osservando anche se appartengono a un oggetto silenziato"
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
@@ -4986,7 +4986,7 @@ it:
               title: "Tutti i distintivi disponibili"
             filter:
               content: "Filtro"
-              title: "Filtra gli argomenti per categoria, tag o altri criteri"
+              title: "Filtra gli argomenti per categoria, etichetta o altri criteri"
             topics:
               content: "Argomenti"
               title: "Tutti gli argomenti"
@@ -5143,7 +5143,7 @@ it:
     powered_by_discourse: "Con tecnologia Discourse"
     safari_15_warning: "Il tuo browser sarà presto incompatibile con questa community. Per continuare a partecipare, aggiorna il tuo browser o scopri di più <a href='%{url}'></a>."
     filter:
-      placeholder: "Filtra gli argomenti per categoria, tag o altri criteri"
+      placeholder: "Filtra gli argomenti per categoria, etichetta o altri criteri"
       description:
         yesterday: "Ieri"
         last_week: "Ultima settimana"
@@ -6711,7 +6711,8 @@ it:
           select_base:
             title: "Seleziona la tavolozza dei colori di base"
             description: "Tavolozza di base:"
-          preference_warning: "Hai modificato <a href='%{link}'>le impostazioni del tuo tema personale</a>, quindi le modifiche allo schema potrebbero non essere visibili. I visitatori che non hanno modificato le impostazioni predefinite vedranno comunque le modifiche che apporti qui."
+          light: "chiaro"
+          dark: "scuro"
           title: "Colori"
           edit: "Modifica"
           set_default_light: "Imposta come schema chiaro sul tema predefinito (%{theme})"
@@ -7228,7 +7229,7 @@ it:
           select_template: "Seleziona i modelli di modulo"
           select_template_help: "Aggiungi/modifica modelli di modulo"
         errors:
-          multiple_tags_not_allowed: 'Non puoi selezionare altri tag da "%{tag_name}". Per evitare problemi, usa il modello di modulo'
+          multiple_tags_not_allowed: 'Non puoi selezionare altre etichette da "%{tag_name}". Per evitare problemi, usa il modello di modulo'
       impersonate:
         title: "Impersona utente"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."

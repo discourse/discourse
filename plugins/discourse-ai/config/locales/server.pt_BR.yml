@@ -65,7 +65,7 @@ pt_BR:
     ai_openai_image_generation_url: "A URL para a API de geração de imagem da OpenAI"
     ai_openai_image_edit_url: "A URL para a API de edição de imagens da OpenAI"
     ai_helper_enabled: "Habilite o assistente de IA."
-    composer_ai_helper_allowed_groups: "Os usuários desses grupos visualizarão o botão de assistência por IA no compositor."
+    composer_ai_helper_allowed_groups: "Os(as) usuários(as) desses grupos visualizarão o botão de assistência por IA no compositor."
     ai_helper_allowed_in_pm: "Ative o ajudante de IA do compositor em MPs."
     ai_helper_model: "Modelo usado para o ajudante de IA."
     ai_helper_custom_prompts_allowed_groups: "Os(as) usuários(as) que estiverem nestes grupos verão um prompt personalizado no ajudante da IA."
@@ -98,7 +98,7 @@ pt_BR:
     ai_bot_enable_chat_warning: "Exiba um aviso quando o bate-papo por MP for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
     ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
-    ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público através de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
+    ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público por meio de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
     ai_bot_add_to_header: "Exibir botão no cabeçalho para começar uma MP com um Bot de IA"
     ai_bot_github_access_token: "Token de acesso do GitHub a ser usado com ferramentas de IA do GitHub (necessário para ter compatibilidade com pesquisa)"
     ai_stability_api_key: "Chave de API para a API stability.ai"
@@ -234,7 +234,7 @@ pt_BR:
         browse_web_jina:
           name: "Navegar na Web com (jina.ai)"
         exchange_rate:
-          name: "Taxa de câmbio"
+          name: "Taxa de troca"
         stock_quote:
           name: "Cotação de ação (AlphaVantage)"
         image_generation:
@@ -395,7 +395,7 @@ pt_BR:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "O modelo de linguagem para usar nas pesquisas (o padrão é a LLM atual da persona)"
+            description: "O modelo de linguagem para usar nas pesquisas (o padrão é o LLM atual da persona)"
           max_tokens_per_batch:
             name: "Máximo de tokens por lote"
             description: "A quantidade máxima de tokens a serem usados para cada lote na pesquisa"
@@ -477,7 +477,7 @@ pt_BR:
         github_search_files: "Procurar arquivos no repositório do GitHub"
         github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
         github_pull_request_diff: "Recuperar diferença de solicitação pull do GitHub"
-        random_picker: "Escolher um número ou elemento aleatório de uma lista"
+        random_picker: "Escolha um número ou elemento aleatório de uma lista"
         categories: "Listar todas as categorias visíveis publicamente no fórum"
         search: "Pesquisar todos os tópicos públicos no fórum"
         tags: "Listar todas as etiquetas no fórum"
@@ -566,7 +566,7 @@ pt_BR:
     llm:
       configuration:
         create_llm: "Você precisa definir um LLM antes de ativar este recurso"
-        disable_modules_first: "Você precisa desativar estes módulos primeiros: %{settings}"
+        disable_modules_first: "Você precisa desativar estes módulos primeiro: %{settings}"
         set_llm_first: "Defina %{setting} primeiro"
         model_unreachable: "Não foi possível obter uma resposta deste modelo. Confira as configurações primeiro."
         invalid_seeded_model: "Não é possível usar este modelo com este recurso"

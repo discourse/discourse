@@ -33,7 +33,7 @@ ar:
         few: "حلول"
         many: "حلًا"
         other: "حلًا"
-      accepted_html: "%{icon} تم الحل <span class='by'>بواسطة <a href data-user-card='%{username_lower}'>%{username}</a></span> في <a href='%{post_path}' class='back'>المنشور رقم %{post_number}</a>"
+      accepted_answer_post_number: "المنشور %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "الكل"
@@ -42,7 +42,6 @@ ar:
       no_solved_topics_title: "لم تحل أي موضوعات بعد"
       no_solved_topics_title_others: "لم يحل %{username} أي موضوعات حتى الآن"
       no_solved_topics_body: "عندما تقدِّم ردًا مفيدًا على أحد الموضوعات، فقد يحدِّد مالك الموضوع أو فريق العمل ردك على أنه الحل."
-      marked_solved_by: "تم وضع علامة \"تم الحل\" بواسطة <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."

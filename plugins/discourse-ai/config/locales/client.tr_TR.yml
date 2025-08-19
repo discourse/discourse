@@ -32,19 +32,19 @@ tr_TR:
       logs:
         staff_actions:
           actions:
-            create_ai_llm_model: "LLM modeli oluşturun"
-            update_ai_llm_model: "LLM modelini güncelleyin"
-            delete_ai_llm_model: "LLM modelini silin"
-            create_ai_persona: "YZ kişiliği yaratın"
-            update_ai_persona: "YZ kişiliğini güncelleyin"
+            create_ai_llm_model: "LLM modeli oluştur"
+            update_ai_llm_model: "LLM modelini güncelle"
+            delete_ai_llm_model: "LLM modelini sil"
+            create_ai_persona: "YZ kişiliği yarat"
+            update_ai_persona: "YZ kişiliğini güncelle"
             delete_ai_persona: "YZ kişiliğini sil"
-            create_ai_tool: "YZ aracı oluşturun"
-            update_ai_tool: "YZ aracını güncelleyin"
-            delete_ai_tool: "YZ aracını silin"
-            create_ai_embedding: "YZ yerleştirme oluşturun"
-            update_ai_embedding: "YZ yerleştirmeyi güncelleyin"
-            delete_ai_embedding: "YZ yerleştirmeyi silin"
-            update_ai_spam_settings: "YZ spam ayarlarını güncelleyin"
+            create_ai_tool: "YZ aracı oluştur"
+            update_ai_tool: "YZ aracını güncelle"
+            delete_ai_tool: "YZ aracını sil"
+            create_ai_embedding: "YZ yerleştirme oluştur"
+            update_ai_embedding: "YZ yerleştirmeyi güncelle"
+            delete_ai_embedding: "YZ yerleştirmeyi sil"
+            update_ai_spam_settings: "YZ spam ayarlarını güncelle"
   js:
     discourse_automation:
       scriptables:
@@ -87,10 +87,10 @@ tr_TR:
               label: "Etiketler"
               description: "Konuları yalnızca bu etiketlere filtrele"
             exclude_tags:
-              label: "Etiketleri Hariç Tut"
+              label: "Etiketleri hariç tut"
               description: "Bu etiketlere sahip konuları hariç tut"
             exclude_categories:
-              label: "Kategorileri Dışla"
+              label: "Kategorileri hariç tut"
               description: "Bu kategorilere sahip konuları hariç tut"
             allow_secure_categories:
               label: "Güvenli kategorilere izin ver"
@@ -139,7 +139,7 @@ tr_TR:
               description: "Sınıflandırma için kullanılan kişilik. Eylemi tetiklemek için kullanabileceğiniz tek bir kelime ile yanıt verdiğinden emin olun"
             max_post_tokens:
               label: "Maksimum Gönderi Token'ı Sayısı"
-              description: "LLM sınıflandırmayı kullanılarak taranacak maksimum token sayısı"
+              description: "LLM sınıflandırması kullanılarak taranacak maksimum token sayısı"
             stop_sequences:
               label: "Durdurma Dizileri"
               description: "Modele, bu değerlerden birine ulaşıldığında token oluşturmayı durdurması talimatını verin"
@@ -332,16 +332,16 @@ tr_TR:
         request_tokens: "Talep token'ları"
         response_tokens: "Karşılık token'ları"
         net_request_tokens: "Net talep token'ları"
-        cached_tokens: "Önbelleğe alınan token'lar"
-        cached_request_tokens: "Önbelleğe alınmış talep token'ları"
+        cached_tokens: "Ön belleğe alınan token'lar"
+        cached_request_tokens: "Ön belleğe alınmış talep token'ları"
         total_spending: "Tahminî maliyet"
         no_users: "Kullanıcı kullanım verisi bulunamadı"
         no_models: "Model kullanım verisi bulunamadı"
         no_features: "Özellik kullanım verisi bulunamadı"
         subheader_description: "Token'lar, LLM'lerin metinleri anlamak ve üretmek için kullandıkları temel birimlerdir, kullanım verileri maliyetleri etkileyebilir"
         stat_tooltips:
-          total_requests: "Discourse aracılığıyla LLM'lere yapılan tüm talepler"
-          total_tokens: "LLM istenirken kullanılan tüm token'lar"
+          total_requests: "Discourse aracılığıyla LLM'lere gönderilen tüm talepler"
+          total_tokens: "LLM'e istem yaparken kullanılan tüm token'lar"
           request_tokens: "LLM'in söylediklerinizi anlamaya çalışırken kullandığı token'lar"
           response_tokens: "LLM'in isteminize yanıt verdiğinde kullanılan token'lar"
           cached_tokens: "LLM'in performansı ve maliyeti optimize etmek için yeniden kullandığı daha önce işlenmiş talep token'ları"
@@ -467,9 +467,9 @@ tr_TR:
           description_with_images: "Düz metin (.txt), markdown (.md), PDF (.pdf) veya resim (.png, .jpeg)"
           button: "Dosya ekle"
           filter: "Yüklemeleri filtrele"
-          indexed: "İndekslendi"
-          indexing: "İndeksleniyor"
-          uploaded: "İndekslenmeye hazır"
+          indexed: "Dizinlendi"
+          indexing: "Dizinleniyor"
+          uploaded: "Dizinlenmeye hazır"
           uploading: "Yükleniyor..."
           remove: "Yüklemeyi kaldır"
       tools:
@@ -484,7 +484,7 @@ tr_TR:
         name_help: "Ad, Discourse kullanıcı arayüzünde görünür ve aracı çeşitli ayarlarda bulmak için kullanacağınız kısa tanımlayıcıdır, farklı olmalıdır (gerekli)"
         new: "Yeni araç"
         tool_name: "Araç Adı"
-        tool_name_help: "Araç Adı büyük dil modeline sunulur. Farklı değildir ancak kişilik başına farklıdır. (kişilik, kayır sırasında doğrulanır)"
+        tool_name_help: "Araç Adı büyük dil modeline sunulur. Farklı değildir ancak kişilik başına farklıdır. (kişilik, kaydetme sırasında doğrulanır)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
         subheader_description: "Araçlar, kullanıcı tanımlı JavaScript işlevleri ile YZ botlarının yeteneklerini genişletir."
@@ -593,7 +593,7 @@ tr_TR:
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
-        preconfigured_llms: "LLM'nizi seçin"
+        preconfigured_llms: "LLM'inizi seçin"
         preconfigured:
           title_no_llms: "Başlamak için bir şablon seçin"
           title: "Yapılandırılmamış LLM şablonları"
@@ -661,10 +661,10 @@ tr_TR:
         suggest: "YZ ile öner"
         suggest_errors:
           too_many_tags:
-            one: "En fazla sadece %{count} etiketine sahip olabilirsiniz"
-            other: "En fazla sadece %{count} etiketine sahip olabilirsiniz"
+            one: "En fazla sadece %{count} etikete sahip olabilirsiniz"
+            other: "En fazla sadece %{count} etikete sahip olabilirsiniz"
           no_suggestions: "Mevcut öneri yok"
-        missing_content: "Lütfen öneri oluşturmak için biraz içerik girin."
+        missing_content: "Lütfen öneri oluşturmak için birkaç içerik girin."
         context_menu:
           trigger: "YZ'ye sor"
           loading: "YZ oluşturuyor"
@@ -698,7 +698,7 @@ tr_TR:
         image_caption:
           button_label: "YZ ile alt yazı"
           generating: "Alt yazı oluşturuluyor..."
-          credits: "AI tarafından altyazılı"
+          credits: "Alt yazı YZ tarafından hazırlandı"
           save_caption: "Kaydet"
         no_content_error: "Üzerinde YZ eylemleri gerçekleştirmek için önce içerik ekleyin"
       reviewables:
@@ -722,7 +722,7 @@ tr_TR:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."
           success: "Başarılı!"
-          failure: "Bir gömme oluşturmaya çalışmak şu sonucu verdi: %{error}"
+          failure: "Gömme oluşturmaya çalışmak şu sonucu verdi: %{error}"
         hints:
           dimensions_warning: "Kaydedildikten sonra bu değer değiştirilemez."
           matryoshka_dimensions: "Verilerin hiyerarşik veya çok katmanlı temsili için kullanılan iç içe yerleştirmelerin boyutunu tanımlar, iç içe geçmiş matruşka bebeklerinin birbirinin içine sığmasına benzer."
@@ -742,7 +742,7 @@ tr_TR:
         matryoshka_dimensions: "Matruşka boyutları"
         distance_function: "Mesafe işlevi"
         distance_functions:
-          "<#>": "Negatif iç çarpım"
+          "<#>": "Negatif iç ürün"
           <=>: "Kosinüs mesafesi"
         providers:
           hugging_face: "Hugging Face"
@@ -756,15 +756,15 @@ tr_TR:
         semantic_search: "Konular (Semantik)"
         semantic_search_loading: "YZ kullanarak daha fazla sonuç arama"
         semantic_search_results:
-          toggle: "YZ kullanılarak bulunan %{count} sonuçları gösteriliyor"
+          toggle: "YZ kullanılarak bulunan %{count} sonuç gösteriliyor"
           toggle_hidden: "YZ kullanılarak bulunan %{count} sonuç gizleniyor"
           none: "Üzgünüz, YZ aramamız eşleşen konu bulamadı"
           new: "YZ ile yeni sonuçlar aramaya başlamak için \"ara\" seçeneğine basın"
           unavailable: "YZ sonuçları kullanılamıyor"
         semantic_search_tooltips:
-          results_explanation: "Etkinleştirildiğinde, ek YZ arama sonuçları aşağıya eklenir."
-          invalid_sort: "YZ sonuçlarını göstermek için arama sonuçları Alaka Düzeyine göre sıralanmalıdır"
-        semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları Alaka Düzeyine göre sıralanmalıdır"
+          results_explanation: "Etkinleştirildiğinde ek YZ arama sonuçları aşağıya eklenir."
+          invalid_sort: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
+        semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
         ai_generated_result: "YZ kullanılarak bulunan arama sonucu"
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"

@@ -5347,6 +5347,8 @@ sv:
           select_base:
             title: "Välj grundfärgspalett"
             description: "Grundpalett:"
+          light: "ljust"
+          dark: "mörkt"
           title: "Färger"
           edit: "Redigera"
           filters:

@@ -317,7 +317,7 @@ ja:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "ユーザーエージェントは、正当なユーザーを誤ってレート制限しないように、3 文字以上である必要があります。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
-      x_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
+      x_summary_large_image_no_svg: "twitter:image メタデータに使用される X の要約画像に .svg 画像を使用できません。"
       tl0_and_anonymous_flag: "匿名ユーザーの場合は、'site contact email' または 'email address to report illegal content' のいずれかが指定されている必要があります。"
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "この設定では、先に 'allow anonymous mode' 設定が有効になっている必要があります。"
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
@@ -5117,11 +5117,11 @@ ja:
         complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
         title: "削除"
-        complete: "削除された投稿."
+        complete: "投稿は削除されました。"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
-        complete: "削除された投稿."
+        complete: "投稿は削除されました。"
       delete_and_ignore_replies:
         title: "通報を無視し、投稿と返信を削除する"
         description: "通報をキューから削除して通報を無視し、投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
@@ -5130,7 +5130,7 @@ ja:
       delete_and_agree:
         title: "投稿を削除する"
         description: "通報に同意し、この投稿を削除します。最初の投稿である場合は、トピックも削除します。"
-        complete: "削除された投稿."
+        complete: "投稿は削除されました。"
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
@@ -5142,7 +5142,7 @@ ja:
         complete: "投稿を復元しました。"
       disagree:
         title: "いいえ"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       discard_post:
         title: "投稿を破棄"
         complete: "投稿を破棄しました。"
@@ -5151,33 +5151,33 @@ ja:
         complete: "投稿を修正待ちで拒否しました。"
       ignore:
         title: "無視"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       ignore_and_do_nothing:
         title: "何もしない"
         description: "何もアクションを起こさずにキューから通報を削除して、通報を無視します。非表示の投稿は非表示のままになり、自動ツールによって処理されます。"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       approve:
         title: "承認"
-        complete: "投稿が承認されました."
+        complete: "投稿は承認されました。"
       approve_post:
         title: "投稿の承認"
-        complete: "投稿が承認されました."
+        complete: "投稿は承認されました。"
       approve_post_closed:
         title: "投稿の承認"
-        confirm: "このトピックはクローズされました。それでも投稿を作成しますか？"
-        complete: "投稿が承認されました."
+        confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"
+        complete: "投稿は承認されました。"
       reject_post:
         title: "投稿の拒否"
-        complete: "投稿が拒否されました."
+        complete: "投稿は拒否されました。"
       approve_user:
         title: "ユーザーの承認"
-        complete: "ユーザーが承認されました."
+        complete: "ユーザーは承認されました。"
       reject_user:
         title: "ユーザーを削除…"
         delete:
           title: "ユーザーの削除"
           description: "ユーザーはフォーラムから削除されます。"
-          complete: "削除されたユーザー."
+          complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
@@ -5205,7 +5205,7 @@ ja:
         complete: "投稿を承認して非表示状態を解除しました"
       delete_user:
         reason: "レビューキューを介して削除されました"
-        complete: "削除されたユーザー."
+        complete: "ユーザーは削除されました。"
   email_style:
     html_missing_placeholder: "html テンプレートには %{placeholder} が含まれている必要があります。"
   notification_level:

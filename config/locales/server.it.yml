@@ -628,7 +628,7 @@ it:
     "new-topic": |
       Grazie per aver contribuito a %{site_name}!
 
-      Prima di pubblicare, seleziona una categoria o un tag per raggruppare questo argomento con discussioni correlate, così che sia più facile per gli altri trovarlo.
+      Prima di pubblicare, seleziona una categoria o un'etichetta per raggruppare questo argomento con discussioni correlate, così che sia più facile per gli altri trovarlo.
 
       Per ulteriori suggerimenti e consigli sulla partecipazione alla nostra community, [consulta le nostre linee guida](%{base_path}/guidelines).
     "new-reply": |
@@ -1787,8 +1787,8 @@ it:
     content_security_policy_script_src: "Sorgenti di script aggiuntivi consentite. Il server e la rete CDN in uso sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti</a> (CSP). Quando è abilitata strict-dynamic, le altre sorgenti host vengono ignorate."
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     suppress_secured_categories_from_admin: "Sopprimi argomenti privati e MP in alcune parti dell'interfaccia utente per gli amministratori. Il contenuto sarà comunque visibile in alcuni punti. Questa non è una funzionalità di sicurezza: gli amministratori possono sempre accedere a tutti i contenuti del sito."
-    include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un tag includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un tag in cui tutti gli argomenti sono nelle categorie pubbliche."
-    display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con un determinato tag."
+    include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un'etichetta includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un'etichetta in cui tutti gli argomenti sono nelle categorie pubbliche."
+    display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con una determinata etichetta."
     top_menu: "Determina quali elementi vengono visualizzati nella navigazione della home page e in quale ordine."
     post_menu: "Configura la visibilità e l'ordine delle voci di menu predefinite dei messaggi. Le voci aggiuntive aggiunte da plugin o temi vengono gestite separatamente e non appariranno in questo elenco."
     post_menu_hidden_items: "Le voci di menu da nascondere di default nel menu dei messaggi a meno che non si clicchi su un'ellissi di espansione. Le voci aggiuntive aggiunte da plugin o temi vengono gestite separatamente e non appariranno in questo elenco."
@@ -1866,7 +1866,7 @@ it:
     enable_local_logins_via_email: "Consenti agli utenti di richiedere un collegamento di accesso usa e getta, che gli verrà inviato tramite email."
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se l'opzione è deselezionata, non sarà possibile creare nuovi account."
     enable_signup_cta: "Mostra una notifica agli utenti anonimi che ritornano chiedendo loro di registrare un account."
-    enable_discourse_id: "Abilita l'autenticazione tramite Discourse ID, un servizio Single Sign-On che consente agli utenti di accedere a più siti Discourse utilizzando un unico account. I provider di accesso social più comuni come Google, Facebook e Twitter sono supportati senza alcuna configurazione aggiuntiva. Per maggiori dettagli, consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
+    enable_discourse_id: "Abilita l'autenticazione tramite Discourse ID, un servizio Single Sign-On che consente agli utenti di accedere a più siti Discourse utilizzando un unico account. I provider di accesso social più comuni come Google, Facebook e Twitter sono supportati senza alcuna configurazione aggiuntiva. Per maggiori dettagli, consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Abilita l'autenticazione di Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede chiave e segreto. Vedi <a href='https://meta.discourse.org/t/15858' target='_blank'>Configurare l'accesso a Discourse tramite Google</a> ."
     google_oauth2_client_id: "L'ID client univoco fornito dalla tua applicazione Google, utilizzato per il processo di autenticazione."
     google_oauth2_client_secret: "Segreto client della tua applicazione Google."
@@ -2202,7 +2202,7 @@ it:
     digest_min_excerpt_length: "Lunghezza minima dell'estratto del messaggio nell'email riepilogativa, in caratteri."
     suppress_digest_email_after_days: "Sopprimi le email riepilogative per gli utenti che non visitano il sito per più di (n) giorni."
     digest_suppress_categories: "Sopprimi queste categorie dalle email riepilogative."
-    digest_suppress_tags: "Elimina questi tag dalle e-mail di riepilogo."
+    digest_suppress_tags: "Elimina queste etichette dalle email di riepilogo."
     disable_digest_emails: "Disattiva le email di riepilogo per ogni utente del sito. L'utente non riceverà più email che promuovono argomenti popolari e altri riepiloghi di contenuti dal tuo sito."
     apply_custom_styles_to_digest: "I modelli email e css personalizzati sono applicati alle email di riepilogo."
     email_accent_bg_color: "Colore da usare come background per alcuni elementi delle email HTML. Inserire il nome di un colore ('red') o un valore esadecimale ('#FF0000')."
@@ -2390,10 +2390,10 @@ it:
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
     min_trust_to_create_tag: "Il livello di attendibilità minimo per creare un'etichetta."
     create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
-    edit_tags_allowed_groups: "Gruppi a cui è consentito modificare tag, descrizioni di tag e sinonimi di tag."
+    edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
-    enable_max_tags_per_email_subject: "Usa max_tags_per_email_subject per generare l'oggetto di un'e-mail"
-    max_tags_per_email_subject: "Il numero massimo di tag che possono essere nell'oggetto di un'e-mail"
+    enable_max_tags_per_email_subject: "Usa max_tags_per_email_subject per generare l'oggetto di un'email"
+    max_tags_per_email_subject: "Il numero massimo di tag che possono essere nell'oggetto di un'email"
     max_tag_length: "La quantità massima di caratteri utilizzabili in un'etichetta."
     max_tag_search_results: "Il numero massimo di risultati da mostrare nella ricerca di etichette."
     max_tags_in_filter_list: "Numero massimo di etichette da mostrare nell'elenco a discesa del filtro. Saranno mostrate le etichette più usate."
@@ -4567,7 +4567,7 @@ it:
     required_tags_from_group:
       one: "Devi includere almeno %{count} etichetta %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
       other: "Devi includere almeno %{count} etichette %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
-    limited_to_one_tag_from_group: "I tag %{tags} non possono essere utilizzati contemporaneamente. Includine solo uno."
+    limited_to_one_tag_from_group: "Le etichette %{tags} non possono essere utilizzate contemporaneamente. Includine solo una."
     invalid_target_tag: "non può essere sinonimo di un sinonimo"
     synonyms_exist: "non è consentito finché esistono sinonimi"
     user_not_permitted: "Non hai i permessi per etichettare gli argomenti"

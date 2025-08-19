@@ -5335,6 +5335,8 @@ te:
           select_base:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"
             description: "బేస్ పాలెట్:"
+          light: "లేత"
+          dark: "డార్క్"
           title: "రంగులు"
           edit: "సవరించండి"
           filters:

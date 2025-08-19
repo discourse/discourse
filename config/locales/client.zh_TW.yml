@@ -5975,6 +5975,8 @@ zh_TW:
           select_base:
             title: "選擇調色盤"
             description: "基本顏色："
+          light: "輕亮"
+          dark: "黑暗"
           title: "顏色"
           edit: "編輯"
           filters:

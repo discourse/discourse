@@ -30,12 +30,12 @@ tr_TR:
     chat_editing_grace_period_max_diff_low_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 0 ve 1)."
     chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
     chat_preferred_index: "/chat yüklenirken tercih edilen sekme."
-    allow_chat_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların sohbet özelliğini kullanabilmesi için bu ayarı etkinleştirin. Bu ayar, `anonim moda izin ver` ayarının etkinleştirilmesini gerektirir."
+    allow_chat_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların sohbet özelliğini kullanabilmesi için bu ayarı etkinleştirin. Bu ayar, `allow anonymous mode` ayarının etkinleştirilmesini gerektirir."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
       chat_upload_not_allowed_secure_uploads: "Güvenli yüklemeler site ayarı etkinleştirildiğinde sohbet yüklemelerine izin verilmez."
-      allow_chat_in_anonymous_mode_invalid: "Bu ayar öncelikle \"anonim moduna izin ver\" ayarının etkinleştirilmesini gerektiriyor."
+      allow_chat_in_anonymous_mode_invalid: "Bu ayar öncelikle `allow anonymous mode` ayarının etkinleştirilmesini gerektiriyor."
   system_messages:
     private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:

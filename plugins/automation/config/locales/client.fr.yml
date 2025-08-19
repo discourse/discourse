@@ -173,7 +173,7 @@ fr:
               description: Facultatif, ne se déclenchera que si le sujet de la publication appartient exactement aux catégories spécifiées ci-dessus
             restricted_archetype:
               label: Type de sujet
-              description: Facultatif, autorisez le déclenchement uniquement sur des sujets ou des messages personnels
+              description: Facultatif, autorisez le déclenchement uniquement sur des sujets ou des messages privés
             restricted_groups:
               label: Groupes restreints
               description: Facultatif, ne se déclenchera que si l'utilisateur de la publication appartient à l'un de ces groupes
@@ -201,7 +201,7 @@ fr:
           created: Créé
           edited: Modifié
           topics: Tous les sujets
-          personal_messages: Messages personnels
+          personal_messages: Messages privés
           public_topics: Sujets publics (exclure toutes les catégories sécurisées)
           with_images: Images
           with_links: Liens

@@ -9,7 +9,7 @@ pt_BR:
     admin:
       site_settings:
         categories:
-          styleguide: "Guia de estilo Discourse"
+          styleguide: "Guia de estilo do Discourse"
   js:
     styleguide:
       title: "Guia de estilo"

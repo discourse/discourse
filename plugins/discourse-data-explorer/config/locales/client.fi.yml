@@ -65,7 +65,7 @@ fi:
       link: "Linkki:"
       report_name: "Raportti"
       query_description: "Kuvaus"
-      query_time: "Viimeinen ajo"
+      query_time: "Viimeisin suoritus"
       query_user: "Luonut"
       column: "Sarake %{number}"
       explain_label: "Sisällytä kyselysuunnitelma?"

@@ -60,6 +60,8 @@ es:
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
+    too_many_urls: "No se pueden incluir más de 10 URL en una única solicitud de onebox."
+    concurrency_not_allowed: "No se permiten solicitudes simultáneas de inline-oneboxing. Envía una sola solicitud a la vez."
   components:
     enabled_filter: "Activado"
     disabled_filter: "Desactivado"
@@ -1622,6 +1624,7 @@ es:
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda"
     min_post_length: "Longitud mínima permitida de la publicación en caracteres (excluyendo mensajes personales)"
     min_first_post_length: "Longitud mínima permitida de la primera publicación (cuerpo del tema) (excluidos los mensajes personales)"
+    prevent_uploads_only_posts: "No tengas en cuenta el código markdown subido al comprobar la longitud mínima de la publicación"
     min_personal_message_post_length: "Longitud mínima permitida en caracteres para las publicaciones (tanto para el primer mensaje como para las respuestas)"
     max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
     topic_featured_link_enabled: "Permite a los usuarios asociar un enlace de función a sus temas. Cuando está activado, los temas pueden tener un enlace destacado adjunto, que es visible públicamente y puede editarse si el usuario tiene permisos suficientes. El enlace de característica puede mejorar la comprensibilidad de un tema proporcionando contenido adicional relacionado."
@@ -1779,6 +1782,7 @@ es:
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
+    allowed_iframes: "Una lista de prefijos de URL de iframe src que Discourse puede permitir de forma segura en las publicaciones. * se puede usar para que coincida con cualquier número de caracteres que no sean /."
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
@@ -1846,6 +1850,7 @@ es:
     block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
     auth_skip_create_confirm: Al registrarse a través de autenticación externa, omitir la ventana de creación de cuenta. Funciona mejor si los ajustes auth_overrides_email, auth_overrides_username y auth_overrides_name están activados.
     auth_immediately: "Redireccionar automáticamente al sistema de inicio de sesión externo sin interacción del usuario. Solo funciona cuando el ajuste login_required está activado, y solo hay un método de autenticación externo."
+    auth_require_interaction: "Requiere interacción del usuario antes de redirigir a un sistema de inicio de sesión externo a través de «/auth/*». Se trata de una defensa exhaustiva contra ataques de inicio de sesión CSRF. Desactiva esta opción solo si confías plenamente en todos los métodos de autenticación habilitados y están protegidos contra CSRF."
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
@@ -1868,6 +1873,7 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión en un clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
+    enable_discourse_id: "Activa la autenticación mediante Discourse ID, un servicio de inicio de sesión único que permite que los usuarios inicien sesión en varios sitios de Discourse con una única cuenta. Proveedores de inicio de sesión con red social comunes, como Google, Facebook y X son compatibles sin necesidad de configuración adicional. Consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para más detalles."
     enable_google_oauth2_logins: "Activa la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
     google_oauth2_client_id: "El ID de cliente único proporcionado por tu aplicación de Google, utilizado para el proceso de autenticación."
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
@@ -1897,6 +1903,7 @@ es:
     allow_restore: "Activar la restauración. ¡Esto puede sobrescribir TODOS los datos! Déjalo desactivado en todo momento, y actívalo solo para restaurar una copia de seguridad."
     maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán. Las copias de seguridad más antiguas se eliminan automáticamente"
     remove_older_backups: "Eliminar las copias de seguridad anteriores al número de días especificado. Dejar en blanco para desactivar."
+    backup_frequency: "Especifica el intervalo, en días, con el que se crean las copias de seguridad automáticas del sitio. Si se establece en 7, por ejemplo, se generará una nueva copia de seguridad cada semana. Establécelo en 0 para desactivarlo."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
@@ -2349,7 +2356,7 @@ es:
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_smart_lists: "Activar por defecto las listas inteligentes al escribir en el compositor."
     default_other_enable_defer: "Activar la funcionalidad de temas diferidos por defecto."
-    default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del editor por defecto."
+    default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."
     default_other_like_notification_frequency: "Establece la frecuencia con la que los usuarios reciben notificaciones de «Me gusta» por defecto. Los usuarios que no hayan personalizado sus ajustes de notificaciones seguirán este comportamiento por defecto."
@@ -2444,19 +2451,40 @@ es:
     show_topic_map_in_topics_without_replies: "Muestra el mapa del tema incluso aunque el tema no tenga respuestas."
     enable_welcome_banner: "Muestra un banner en las páginas de la lista de temas principales para dar la bienvenida a los miembros y permitirles buscar contenido en el sitio."
     welcome_banner_image: "Configura una imagen para que se muestre en el fondo del banner de bienvenida."
+    welcome_banner_location: "Determina en qué parte de la página aparecerá el banner de bienvenida."
+    welcome_banner_page_visibility: "Determina en qué páginas aparecerá el banner de bienvenida."
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
+    glimmer_post_stream_mode: "Controla si se utiliza la nueva implementación de flujo de publicaciones «glimmer». «auto» se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
+    glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación de flujo de publicaciones «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
+    deactivate_widgets_rendering: "Desactiva el motor de renderizado de widgets heredados. Esto desactivará todos los widgets que no se hayan actualizado para los componentes Glimmer y forzará la activación incondicional del flujo de publicaciones Glimmer sin importar el valor del ajuste «glimmer_post_stream_mode». Este ajuste no se recomienda para sitios de producción, ya que puede dañar los temas y plugins existentes."
+    floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
+    floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
+    floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
+    experimental_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     about_page_hidden_groups: "No mostrar a los miembros de determinados grupos en la página /about."
+    about_page_extra_groups: "Grupos que se mostrarán en la página Acerca de, debajo de los moderadores."
+    about_page_extra_groups_initial_members: "Número de miembros a ampliar en cada grupo en la página Acerca de."
+    about_page_extra_groups_show_description: "Si se incluirán las descripciones del grupo en la página Acerca de."
+    about_page_extra_groups_order: "Ordenación de los grupos adicionales en la página Acerca de."
     adobe_analytics_tags_url: "URL de las etiquetas de Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
+    rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
+    default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
+    viewport_based_mobile_mode: "EXPERIMENTAL: Desactiva los modos móvil/escritorio basados en agente de usuario y usa el ancho de la ventana gráfica en su lugar."
+    reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
+    content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
+    content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
+    content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
+    content_localization_anon_language_switcher: "Activa el selector de idiomas, que permite que los visitantes del sitio que no hayan iniciado sesión puedan cambiar entre versiones traducidas de Discourse y contenido aportado por los usuarios. Depende de la lista de idiomas configurados en «idiomas compatibles con la localización de contenido»."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2519,6 +2547,7 @@ es:
         other: "La lista debe contener exactamente %{count} valores."
       markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Debes configurar todos los ajustes de «google oauth2 hd» antes de activar este ajuste."
+      discourse_id_credentials: "Debes configurar las credenciales de Discourse ID («discourse_id_client_id» y «discourse_id_client_secret») antes de activar este ajuste."
       linkedin_oidc_credentials: "Debes configurar las credenciales OIDC de LinkedIn («linkedin_oidc_client_id» y «linkedin_oidc_client_secret») antes de activar este ajuste."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
@@ -2526,10 +2555,15 @@ es:
       delete_rejected_email_after_days: "Esta configuración no puede ser menor que la configuración delete_email_logs_after_days o mayor que %{max}"
       invalid_uncategorized_category_setting: 'No se puede seleccionar la categoría «Sin categoría» si no está activada la opción «Permitir temas sin categorizar».'
       invalid_search_ranking_weights: "El valor no es válido para la configuración del sitio search_ranking_weights. Por ejemplo: «{0.1,0.2,0.3,1.0}». Ten en cuenta que el valor máximo para cada peso es 1,0."
+      content_localization_locale_limit: "La cantidad de idiomas locales compatibles no puede ser superior a %{max}."
+      content_localization_anon_language_switcher_requirements: "El selector de idioma requiere que el ajuste del sitio «set locale from cookie» esté activado y que la opción «content localization supported locales» tenga al menos un idioma."
+      mediaconvert_role_arn_required: "ARN de función de AWS IAM es obligatorio para usar MediaConvert para la conversión de vídeo."
+      s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:
       clean_up_inactive_users_after_days: "desactivado|inactivo|no activado"
       navigation_menu: "barra lateral|menú desplegable de encabezado"
       purge_unactivated_users_grace_period_days: "desactivado|inactivo|no activado"
+      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -2592,7 +2626,7 @@ es:
       in_pinned: "Mostrar temas anclados"
       in_bookmarked: "Mostrar temas que has añadido a marcadores"
       in_watching: "Mostrar temas que estás viendo"
-      in_tracking: "Mostrar los temas que estás siguiendo"
+      in_tracking: "Mostrar temas que estás siguiendo"
       in_muted: "Mostrar temas silenciados"
       in_normal: "Mostrar temas con nivel de notificación normal"
       in_watching_first_post: "Mostrar temas que estás viendo para la primera publicación"
@@ -2841,6 +2875,7 @@ es:
       inactive_user: "Usuario inactivo"
       reviewable_reject_auto: "Manejar automáticamente los revisables en cola"
       reviewable_reject: "Usuario revisable rechazado"
+      reviewable_details_scrubbed: "Detalles de usuario borrados por %{staff}\n\nMotivo: %{reason}\n\nMarca de tiempo: %{timestamp}"
     email_in_spam_header: "El primer correo electrónico del usuario se marcó como spam."
     already_silenced: "El usuario ya fue silenciado por %{staff} %{time_ago}."
     already_suspended: "El usuario ya fue suspendido por %{staff} %{time_ago}."
@@ -3700,6 +3735,8 @@ es:
     only_reply_by_email_pm_button_only: "[Visita el mensaje](%{base_url}%{url})"
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder a %{participants}."
+    visit_link_to_respond_button_only: "[Visita el tema](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Visita el mensaje](%{base_url}%{url})"
     reply_above_line: "## Escribe tu respuesta sobre esta línea. ##"
     posted_by: "Publicado por %{username} el %{post_date}"
     pm_participants: "Participantes: %{participants}"
@@ -3962,6 +3999,7 @@ es:
 
         Motivo: %{reason}
     account_deleted:
+      title: "Cuenta eliminada"
       subject_template: "[%{email_prefix}] Tu cuenta se ha eliminado"
       text_body_template: |
         Hola:
@@ -4193,6 +4231,8 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
+  login_required:
+    welcome_message: "# Te damos la bienvenida a %{title}"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -5130,8 +5170,15 @@ es:
       revoked: Revocada
       restored: Restaurada
     bulk_user_delete: "eliminado en una operación de eliminación en bloque"
+    cli_bulk_post_delete: "Eliminado en lote de la tarea rake"
+    api_post_delete: "Eliminado mediante API"
+    reminder_deleted: "Reemplazado por un recordatorio nuevo"
+    user_associated_posts_deleted: "El usuario ha sido destruido"
     imap_email_deleted: "El correo electrónico se ha eliminado del servidor IMAP"
     imap_email_marked_as_spam: "El correo electrónico se ha movido a la carpeta de correo no deseado del servidor IMAP"
+    auto_deleted_hidden_posts: "Publicaciones ocultas destruidas automáticamente"
+    seed_data_topic_updated: "Tema de datos de semillas actualizado"
+    seed_data_topic_deleted: "Tema de datos de semillas eliminado"
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
     already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
@@ -5155,6 +5202,9 @@ es:
       new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
       fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
       auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
+      watched_word:
+        one: "Esta publicación incluía una palabra vigilada. La palabra es: %{words}. Consulta los %{link} para obtener más información."
+        other: "Esta publicación incluía palabras vigiladas. Las palabras son: %{words}. Consulta los %{link} para obtener más información."
       staged: "El personal debe aprobar los nuevos temas y publicaciones de usuarios temporales. Ver %{link}."
       category: "El personal debe aprobar manualmente las publicaciones en esta categoría. Ver %{link}."
       must_approve_users: "El personal debe aprobar todos los usuarios nuevos. Ver %{link}."
@@ -5165,7 +5215,10 @@ es:
       contains_media: "Esta publicación incluye archivos multimedia incrustados. Ver %{link}."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
       links:
+        watched_word: ajustes de palabras vigiladas
         category: ajustes de la categoría
+      no_context:
+        watched_word: "Esta publicación incluía una palabra vigilada. Consulta los %{link} para obtener más información."
     actions:
       agree:
         title: "Sí"
@@ -5330,6 +5383,7 @@ es:
       duplicate_ids: "tiene identificadores duplicados"
       reserved_id: "tiene una palabra clave reservada como id: %{id}"
       unsafe_description: "tiene una descripción HTML no segura"
+      invalid_tag_group: "tiene un grupo de etiquetas no válido: %{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

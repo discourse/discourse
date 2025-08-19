@@ -499,7 +499,7 @@ nl:
       created: "Je hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       created_generic: "Je hebt een bladwijzer hiervoor gemaakt. %{name}"
       create: "Bladwijzer maken"
-      clear_reminder: "Herinnering verwijderen"
+      clear_reminder: "Herinnering wissen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
@@ -4908,7 +4908,7 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
-          delete_public_confirm: "Deze sectie is zichtbaar voor iedereen, weet je zeker dat je het wilt verwijderen?"
+          delete_public_confirm: "Deze sectie is zichtbaar voor iedereen, weet je zeker dat je deze wilt verwijderen?"
           update_public_confirm: "Wijzigingen zijn <strong>zichtbaar voor iedereen</strong> op deze site. Weet je het zeker?"
           mark_as_private_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>. Na de update is de sectie <strong>alleen zichtbaar voor jou</strong>. Weet je het zeker?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
@@ -5151,7 +5151,7 @@ nl:
         yesterday: "Gisteren"
         last_week: "Vorige week"
         last_month: "Vorige maand"
-        last_year: "Afgelopen jaar"
+        last_year: "Vorig jaar"
     discovery:
       headings:
         all:
@@ -5460,7 +5460,7 @@ nl:
               title: "Statistieken en drempels"
         permalinks:
           title: "Permalinks"
-          header_description: "Toe te passen omleiding voor URL's die onbekend zijn voor het forum"
+          header_description: "Toe te passen omleidingen voor URL's die onbekend zijn voor het forum"
         user_defaults:
           title: "Standaardinstellingen voor gebruikers"
           header_description: "Stel standaardwaarden in voor instellingen die van invloed zijn op je gebruikers en hun onboardingervaring configureren"
@@ -5534,7 +5534,7 @@ nl:
               header_description: "Bekijk een log van geweigerde e-mails"
         email_appearance:
           title: "Vormgeving"
-          header_description: "Het sjabloon waarin alle html-e-mails worden gerenderd aanpassen, en stileren via CSS"
+          header_description: "Pas sjabloon aan waarin alle html-e-mails worden gerenderd en stileer met CSS"
         staff_action_logs:
           title: "Logs en screening"
           header_description: "Met logs en screening kun je je community bewaken en beheren, zodat deze veilig en respectvol blijft. Je kunt logs bekijken van alle acties van medewerkers, zoeklogs en de configuratie van gebruikersscreening"
@@ -5542,7 +5542,7 @@ nl:
           sub_pages:
             screened_emails:
               title: "Gescreende e-mails"
-              header_description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd"
+              header_description: "Als iemand een nieuw account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en wordt de registratie geblokkeerd, of wordt een andere actie uitgevoerd"
             screened_ips:
               title: "Gecontroleerde IP-adressen"
               header_description: "IP-adressen die worden bewaakt. Individuele IP-adressen kunnen op een toegestane lijst worden geplaatst."
@@ -6261,7 +6261,7 @@ nl:
             used_on: "Gebruikt op"
             enabled: "Ingeschakeld?"
             by_author: "Van %{name}"
-            learn_more: "Meer info"
+            learn_more: "Meer informatie"
             edit: "Bewerken"
             parent_themes_two: "%{name1} en %{name2}"
             parent_themes_three: "%{name1}, %{name2} en %{name3}"
@@ -6277,7 +6277,7 @@ nl:
             convert: "Converteren"
             delete: "Verwijderen"
             filter_by: "Filteren op"
-            filter_by_all: "Alle"
+            filter_by_all: "Alles"
             filter_by_used: "Gebruikt"
             filter_by_unused: "Ongebruikt"
             filter_by_updates_available: "Updates beschikbaar"
@@ -6714,7 +6714,8 @@ nl:
           select_base:
             title: "Basiskleurenpalet selecteren"
             description: "Basispalet"
-          preference_warning: "Je hebt <a href='%{link}'>je persoonlijke thema-instellingen</a> gewijzigd, dus de paletwijzigingen zijn mogelijk niet zichtbaar voor jou. Bezoekers die hun standaardinstellingen niet hebben gewijzigd, zien de wijzigingen die je hier aanbrengt wel."
+          light: "licht"
+          dark: "donker"
           title: "Kleuren"
           edit: "Bewerken"
           set_default_light: "Instellen als licht palet voor standaardthema (%{theme})"
@@ -6723,7 +6724,7 @@ nl:
           from_theme: "Van thema: %{name}"
           filters:
             search_placeholder: "Filter op palet- of themanaam..."
-            all: "Alle"
+            all: "Alles"
             user_selectable: "Door gebruiker te selecteren"
             from_theme: "Van thema"
             no_results: "Geen kleurenpaletten gevonden"

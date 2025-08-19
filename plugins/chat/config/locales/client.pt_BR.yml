@@ -302,7 +302,7 @@ pt_BR:
         one: "%{count} arquivo"
         other: "%{count} arquivos"
       you_flagged: "Você sinalizou esta mensagem"
-      exit: "sair do bate-papo"
+      exit: "sair do chat"
       channel_status:
         read_only_header: "O canal é somente para leitura"
         read_only: "Somente leitura"
@@ -531,7 +531,7 @@ pt_BR:
         select_emoji: "Escolher emoji"
         system: "sistema"
         title: "Webhooks recebidos"
-        header_description: "Os webhooks recebidos podem ser usados por sistemas externos para postar mensagens em um canal de bate-papo designado como um usuário(a) bot"
+        header_description: "Os webhooks recebidos podem ser usados por sistemas externos para postar mensagens em um canal de chat designado como um(a) usuário(a) bot"
         url: "URL"
         url_instructions: "Esta URL contém um valor secreto - mantenha-o seguro."
         username: "Nome de usuário(a)"
@@ -645,9 +645,9 @@ pt_BR:
         header: "Novas mensagens"
         cancel: "Cancelar"
       quick_reaction_type:
-        title: "Reações de um clique no bate-papo"
+        title: "Reações de um clique no chat"
         options:
-          frequent: "Reações usadas com mais frequência no bate-papo"
+          frequent: "Reações usadas com mais frequência no chat"
           custom: "Reações personalizadas"
     notifications:
       chat_invitation: "convidou você para participar de um canal de chat"

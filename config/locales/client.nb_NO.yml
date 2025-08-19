@@ -5054,6 +5054,8 @@ nb_NO:
               too_small: "må være lik eller større enn %{count}"
               too_large: "må være lik eller mindre enn %{count}"
         colors:
+          light: "lys"
+          dark: "mørk"
           title: "Farger"
           edit: "Rediger"
           filters:

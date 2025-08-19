@@ -3283,7 +3283,7 @@ de:
         filter: "Es gibt keine Themen."
         education:
           topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
-          unread: "Alles gelesen … beeindruckend!"
+          unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
       bottom:
@@ -5278,7 +5278,7 @@ de:
         localization:
           title: "Lokalisierung"
           header_description: "Konfiguriere die Sprache der Benutzeroberfläche deiner Community und andere Lokalisierungsoptionen für deine Mitglieder"
-          keywords: "Gebietsschema|Sprache|Zeitzone|unicode|ltr|Umlaute"
+          keywords: "Gebietsschema|Sprachvariante|Sprache|Zeitzone|unicode|ltr|Umlaute"
         login_and_authentication:
           title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
@@ -6313,7 +6313,7 @@ de:
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von „%{name}“ erstellt.'
-          illegal_character_in_color: "Die Farbe darf nur aus Hexadezimalzeichen bestehen."
+          illegal_character_in_color: "Die Farbe darf nur aus Hexadezimalzeichen bestehen"
           invalid_color_length: "Die Farbe muss das Format #rrggbb oder #rgb haben."
           blocked_edit_for_system: "Farbpaletten, die zu einem System-Theme gehören, können nicht bearbeitet werden."
           delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
@@ -6610,7 +6610,7 @@ de:
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
-          theme_settings: "Benutzerdefinierte Theme-Einstellungen"
+          theme_settings: "Theme-eigene Einstellungen"
           theme_site_settings: "Einstellungen, die das Theme überschreiben kann"
           edit_objects_theme_setting: "Editor für Objekteinstellungen"
           overriden_settings_explanation: "Änderungen gegenüber der Standardeinstellung werden mit einem Punkt und einer Hervorhebung gekennzeichnet. Klicke auf Zurücksetzen, um die Standardeinstellungen wiederherzustellen."
@@ -6710,7 +6710,8 @@ de:
           select_base:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
-          preference_warning: "Du hast <a href='%{link}'>deine persönlichen Theme-Einstellungen</a> geändert, sodass die Änderungen an der Palette für dich möglicherweise nicht sichtbar sind. Besucher, die ihre Standardeinstellungen nicht geändert haben, sehen trotzdem die Änderungen, die du hier vornimmst."
+          light: "hell"
+          dark: "dunkel"
           title: "Farben"
           edit: "Bearbeiten"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
