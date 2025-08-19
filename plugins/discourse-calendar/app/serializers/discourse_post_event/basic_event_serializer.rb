@@ -35,32 +35,55 @@ module DiscoursePostEvent
     end
 
     def rrule
+      return nil unless include_rrule?
+
+      # Use UTC for RRULE to avoid timezone compatibility issues with FullCalendar
       RRuleGenerator.generate_string(
-        starts_at: object.original_starts_at.in_time_zone(object.timezone),
-        timezone: object.timezone,
+        starts_at: object.original_starts_at,
+        timezone: "UTC",
         recurrence: object.recurrence,
-        recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
-        dtstart: object.original_starts_at.in_time_zone(object.timezone),
+        recurrence_until: object.recurrence_until,
+        dtstart: object.original_starts_at,
       )
     end
 
     def starts_at
-      # For recurring events, use the original start time to be consistent with rrule
-      # For non-recurring events, use the calculated start time
+      # For recurring events, use UTC to match RRULE
+      # For non-recurring events, use the event's timezone
       if object.recurring?
         object.original_starts_at
       else
-        object.starts_at
+        object.starts_at.in_time_zone(object.timezone)
       end
     end
 
     def ends_at
       if object.ends_at
-        object.ends_at
+        if object.recurring?
+          object.ends_at
+        else
+          object.ends_at.in_time_zone(object.timezone)
+        end
       else
-        # For recurring events, use original_starts_at as the base for calculation
-        base_starts_at = object.recurring? ? object.original_starts_at : object.starts_at
-        base_starts_at + 1.hour
+        # Use consistent timezone as starts_at for calculation
+        base_starts_at =
+          (
+            if object.recurring?
+              object.original_starts_at
+            else
+              object.starts_at.in_time_zone(object.timezone)
+            end
+          )
+        (base_starts_at + 1.hour)
+      end
+    end
+
+    def timezone
+      # For events with RRULE, return UTC since we're sending UTC times
+      if include_rrule?
+        "UTC"
+      else
+        object.timezone
       end
     end
   end
