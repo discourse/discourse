@@ -5,6 +5,7 @@ module PageObjects
     class AdminCustomizeThemesConfigArea < PageObjects::Pages::Base
       def visit(query_params = {})
         page.visit("/admin/config/customize?#{query_params.to_query}")
+        self
       end
 
       def find_theme_card(theme)
@@ -47,6 +48,10 @@ module PageObjects
 
       def click_edit(theme)
         find_theme_card(theme).find(".edit").click
+      end
+
+      def click_install_button
+        PageObjects::Components::AdminCustomizeThemeInstallButton.new.click
       end
     end
   end
