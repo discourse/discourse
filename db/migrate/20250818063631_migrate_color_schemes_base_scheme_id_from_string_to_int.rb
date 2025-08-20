@@ -2,6 +2,7 @@
 
 class MigrateColorSchemesBaseSchemeIdFromStringToInt < ActiveRecord::Migration[8.0]
   NAMES_TO_ID_MAP = {
+    "default" => -1,
     "Light" => -1,
     "Dark" => -2,
     "Neutral" => -3,
