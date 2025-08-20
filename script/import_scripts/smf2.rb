@@ -306,7 +306,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     last_post_id = -1
     total =
       query(
-        "SELECT COUNT(*) count FROM smf_personal_messages WHERE deleted_by_sender = 0",
+        "SELECT COUNT(*) count FROM {prefix}personal_messages WHERE deleted_by_sender = 0",
         as: :single,
       )
 
@@ -317,8 +317,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
              , msgtime
              , subject
              , body
-             , (SELECT GROUP_CONCAT(id_member) FROM smf_pm_recipients r WHERE r.id_pm = pm.id_pm) recipients
-          FROM smf_personal_messages pm
+             , (SELECT GROUP_CONCAT(id_member) FROM {prefix}_pm_recipients r WHERE r.id_pm = pm.id_pm) recipients
+          FROM {prefix}personal_messages pm
          WHERE deleted_by_sender = 0
            AND id_pm > #{last_post_id}
          ORDER BY id_pm
