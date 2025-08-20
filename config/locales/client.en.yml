@@ -7152,7 +7152,7 @@ en:
             reset: "Reset filters"
           default_dark_badge:
             text: "Default dark"
-            title: "Default light color palette"
+            title: "Default dark color palette"
           default_both_badge:
             text: "Default light and dark"
             title: "Default light and dark color palette"
