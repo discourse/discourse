@@ -331,7 +331,9 @@ module Jobs
 
     def add_custom_fields(user, user_info_array, user_field_ids)
       if user_field_ids.present?
-        user.user_fields.each { |custom_field| user_info_array << escape_comma(custom_field[1]) }
+        user.user_fields.each do |custom_field|
+          user_info_array << escape_comma(custom_field[1].to_s)
+        end
       end
       user_info_array
     end

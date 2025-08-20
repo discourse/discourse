@@ -234,7 +234,9 @@ es:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
         channels_list: "Lista de canales de chat"
+      no_direct_message_channels: "¡No te has unido a ningún mensaje directo todavía!"
       no_direct_message_channels_cta: "Inicia una conversación"
+      no_public_channels: "¡No te has unido a ningún canal todavía!"
       no_public_channels_cta: "Examinar canales"
       kicked_from_channel: "Ya no puedes acceder a este canal."
       only_chat_push_notifications:
@@ -300,7 +302,7 @@ es:
         one: "%{count} archivo"
         other: "%{count} archivos"
       you_flagged: "Has denunciado este mensaje"
-      exit: "atrás"
+      exit: "salir del chat"
       channel_status:
         read_only_header: "El canal es de solo lectura"
         read_only: "Solo lectura"
@@ -529,6 +531,7 @@ es:
         select_emoji: "Elegir emoji"
         system: "sistema"
         title: "Webhooks entrantes"
+        header_description: "Los sistemas externos pueden usar los webhooks entrantes para publicar mensajes en un canal de chat designado como usuario de bot"
         url: "URL"
         url_instructions: "Esta URL contiene un valor secreto: mantenlo seguro."
         username: "Nombre de usuario"
@@ -641,6 +644,11 @@ es:
       draft_channel_screen:
         header: "Nuevo mensaje"
         cancel: "Cancelar"
+      quick_reaction_type:
+        title: "Reacciones de chat con un solo clic"
+        options:
+          frequent: "Reacciones de chat más usadas"
+          custom: "Reacciones personalizadas"
     notifications:
       chat_invitation: "te invitó a unirte a un canal de chat"
       chat_invitation_html: "<span>%{username}</span> <span>te ha invitado a unirte a un canal de chat</span>"
@@ -698,7 +706,7 @@ es:
           switch_channel_arrows: "%{shortcut} Cambiar de canal"
           switch__unread_channel_arrows: "%{shortcut} Cambiar canal no leído"
           open_quick_channel_selector: "%{shortcut} Abrir selector rápido de canales"
-          open_insert_link_modal: "%{shortcut} Insertar hipervínculo (solo compositor)"
+          open_insert_link_modal: "%{shortcut} Insertar enlace (solo compositor)"
           composer_bold: "%{shortcut} Negrita (solo compositor)"
           composer_italic: "%{shortcut} Cursiva (solo compositor)"
           composer_code: "%{shortcut} Código (solo compositor)"

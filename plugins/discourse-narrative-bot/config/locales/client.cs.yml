@@ -14,4 +14,4 @@ cs:
     admin:
       site_settings:
         categories:
-          discourse_narrative_bot: "Diskuse Narrative Bot"
+          discourse_narrative_bot: "Discourse vítací bot"

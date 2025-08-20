@@ -448,8 +448,6 @@ sk:
             label: Verzia
           status:
             label: Stav
-          enabled:
-            label: Povolené
           disabled:
             label: Vypnuté
           placeholders:

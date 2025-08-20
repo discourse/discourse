@@ -942,7 +942,6 @@ ro:
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
     set_locale_from_accept_language_header: "Setează limba interfeței pentru utilizatorii anonimi din anteturile de limbă ale navigatorului lor web"
     set_locale_from_cookie: "Permite setarea localei unui utilizator anonim prin intermediul localei din cookie-ului navigatorului"
-    set_locale_from_param: "Permite setarea localei unui utilizator anonim prin intermediul parametrului URL „lang”, de exemplu ?lang=es"
     support_mixed_text_direction: "Acceptă indicații de text mixte de la stânga la dreapta și de la dreapta la stânga"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
@@ -1011,6 +1010,7 @@ ro:
     topics_per_period_in_top_summary: "Numărul celor mai bune subiecte afișate în rezumatul implicit al celor mai bune subiecte."
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
     top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
+    moderators_view_ips: "Permite moderatorilor să vadă adresele IP ale utilizatorilor."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     enable_rich_text_paste: "Activează conversia automată din HTML în Markdown la lipirea textului în compozitor."
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
@@ -1030,7 +1030,6 @@ ro:
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
-    automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_use_acls: "AWS recomandă să nu folosești ACL pentru bucket-urile S3; debifează această opțiune doar dacă intenționezi să configurezi politici de permisiuni pe `s3_upload_bucket` și `s3_backup_bucket`."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -1115,7 +1114,6 @@ ro:
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
     mobile_category_page_style: "Această setare determină aspectul vizual al paginii /categories pe mobil."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
-    default_dark_mode_color_scheme_id: "Paleta de culori utilizată în modul întunecat."
     dark_mode_none: "Nimeni"
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
@@ -1251,6 +1249,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_enable_smart_lists: "Activează listele inteligente atunci când introduci în compozitor în mod implicit."
+    default_other_enable_markdown_monospace_font: "Folosește fontul monospace implicit în modul Markdown al compozitorului."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
     default_other_skip_new_user_tips: "Omite sfaturi și insigne de înscriere pentru utilizatori noi."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
@@ -1261,6 +1260,7 @@ ro:
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     min_trust_to_create_tag: "Nivelul minim de încredere necesar pentru crearea unei etichete."
+    edit_tags_allowed_groups: "Grupuri care au permisiunea de a edita etichetele, descrierile etichetelor și sinonimele etichetelor."
     max_tags_per_topic: "Numărul maxim de etichete care pot fi aplicate unui subiect."
     max_tag_length: "Numărul maxim de caractere care poate fi folosit într-o etichetă."
     max_tag_search_results: "La căutarea de etichete, numărul maxim de rezultate care să fie afișat."
@@ -1275,11 +1275,13 @@ ro:
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
+    welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     deactivate_widgets_rendering: "Dezactivează motorul de randare a pieselor vechi. Aceasta va dezactiva toate piesele care nu au fost actualizate la componentele Glimmer și va forța activarea necondiționată a fluxului de postări Glimmer, indiferent de valoarea setării `glimmer_post_stream_mode`. Această setare nu este recomandată pentru site-urile de producție, deoarece poate deteriora temele și modulele existente."
+    floatkit_autocomplete_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitor. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
+    floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
-    experimental_sidebar_messages_count_enabled_groups: "Arată un indicator sau un număr pentru mesaje necitite lângă legătura din partea laterală „Mesajele mele”, în funcție de preferințele de navigare ale utilizatorului"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
@@ -2292,7 +2294,7 @@ ro:
         complete: "Postarea a fost restaurată."
       agree_and_hide:
         complete: "Postarea a fost ascunsă, utilizatorul a fost notificat."
-      delete_single:
+      delete:
         title: "Șterge"
         complete: "Postarea a fost ștearsă."
       delete_and_ignore:
@@ -2319,6 +2321,8 @@ ro:
         title: "Aprobare"
         complete: "Postarea a fost aprobată."
       approve_post:
+        complete: "Postarea a fost aprobată."
+      approve_post_closed:
         complete: "Postarea a fost aprobată."
       reject_post:
         complete: "Postarea a fost respinsă."
@@ -2348,6 +2352,9 @@ ro:
       delete_user:
         complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
+  form_templates:
+    errors:
+      invalid_tag_group: "are un grup de etichete nevalid: %{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

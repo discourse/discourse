@@ -20,7 +20,7 @@ fi:
       group_mention_template: "Maininnat: @%{name}"
       group_message_template: "Viestejä käyttäjälle: @%{name}"
       choose_group: "(valitse ryhmä) "
-      all_categories: "(kaikki luokat)"
+      all_categories: "(kaikki alueet)"
       all_tags: "(kaikki tunnisteet) "
       create_rule: "Luo sääntö"
       create_channel: "Luo kanava"
@@ -46,7 +46,7 @@ fi:
         thread: 'Kaikki viestit, joissa on ketjutettuja vastauksia'
       rule_table:
         filter: "Suodatin"
-        category: "Luokka"
+        category: "Alue"
         tags: "Tunnisteet"
         edit_rule: "Muokkaa"
         delete_rule: "Poista"
@@ -66,7 +66,7 @@ fi:
         type: Tyyppi
         channel: Kanava
         filter: Suodatin
-        category: Luokka
+        category: Alue
         group: Ryhmä
         tags: Tunnisteet
         instructions:
@@ -151,7 +151,7 @@ fi:
           param:
             identifier:
               title: Kanava
-              help: "esim. #kanava, @käyttäjänimi."
+              help: "esim. #kanava, @käyttäjätunnus."
           errors:
             invalid_channel: "Tätä kanavaa ei ole olemassa Rocket Chatissa"
         gitter:

@@ -1765,7 +1765,6 @@ sk:
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
     set_locale_from_accept_language_header: "Nastavenie jazyka rozhrania pre anonymných používateľov z jazykových hlavičiek ich webového prehliadača"
     set_locale_from_cookie: "Umožňuje nastavenie lokálneho jazyka anonymného používateľa prostredníctvom súboru cookie prehliadača \"locale\"."
-    set_locale_from_param: "Umožňuje nastavenie lokálneho jazyka anonymného používateľa prostredníctvom parametra 'lang' adresy URL, napr. ?lang=es"
     support_mixed_text_direction: "Podpora zmiešaných smerov textu zľava doprava a sprava doľava"
     min_post_length: "Minimálna povolená dĺžka príspevku v znakoch (okrem osobných správ)"
     min_first_post_length: "Minimálna povolená dĺžka prvého príspevku (tela témy) (okrem osobných správ)"
@@ -2046,8 +2045,6 @@ sk:
     allow_restore: "Povoľte obnovenie, ktoré môže nahradiť VŠETKY údaje o lokalite! Nechajte vypnuté, pokiaľ neplánujete obnoviť zálohu"
     maximum_backups: "Maximálny počet záloh, ktoré sa majú zachovať. Staršie zálohy sa automaticky vymažú"
     remove_older_backups: "Odstráňte zálohy staršie ako zadaný počet dní. Ak chcete deaktivovať, ponechajte prázdne."
-    automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
-    backup_frequency: "Určuje interval v dňoch, v ktorom sa vytvárajú automatické zálohy lokality. Ak sa nastaví napríklad na hodnotu 7, nová záloha sa bude vytvárať každý týždeň. Aktivácia tohto nastavenia je podmienená nastavením `automatic_backups_enabled`."
     s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
     s3_endpoint: "Koncový bod je možné upraviť tak, aby zálohoval do služby kompatibilnej so službou S3, napríklad DigitalOcean Spaces alebo Minio. VAROVANIE: Ak používate AWS S3, nechajte prázdne."
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
@@ -2212,7 +2209,6 @@ sk:
     desktop_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na ploche. Zahŕňa možnosti, ako je zobrazenie podkategórií s odporúčanými témami, zobrazenie najnovších tém alebo prezentácia top tém. Zvolený štýl ovplyvní spôsob interakcie používateľov a navigácie v kategóriách na stránke."
     mobile_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na mobilných zariadeniach."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
-    default_dark_mode_color_scheme_id: "Paleta farieb používaná v tmavom režime."
     dark_mode_none: "Žiadny"
     max_image_size_kb: "Maximálna veľkosť nahraného obrázka. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy. Obrázky väčšie ako táto veľkosť a menšie ako client_max_body_size sa pri odosielaní zmenšia tak, aby sa zmestili."
     max_attachment_size_kb: "Maximálna veľkosť nahraných súborov prílohy. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy."
@@ -2606,7 +2602,6 @@ sk:
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
-    experimental_sidebar_messages_count_enabled_groups: "Zobrazenie indikátora neprečítaných správ alebo ich počtu vedľa prepojenia bočného panela \"Moje správy\" v závislosti od preferencií používateľa navigácie."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
@@ -5485,11 +5480,9 @@ sk:
         title: "Súhlasím a upraviť príspevok"
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
         complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
-      delete_single:
+      delete:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
-      delete:
-        title: "Odstrániť…"
       delete_and_ignore:
         title: "Ignorovať príznak a vymazať príspevok"
         description: "Ignorujte označenie odstránením z fronty a zmažte príspevok; ak je to prvý príspevok, zmažte aj tému. "
@@ -5533,7 +5526,10 @@ sk:
         complete: "Príspevok schválený."
       approve_post:
         title: "Schváliť príspevok"
-        confirm_closed: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
+        complete: "Príspevok schválený."
+      approve_post_closed:
+        title: "Schváliť príspevok"
+        confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
         complete: "Príspevok schválený."
       reject_post:
         title: "Odmietnuť príspevok"

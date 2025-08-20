@@ -29,6 +29,7 @@ it:
       solution_summary:
         one: "soluzione"
         other: "soluzioni"
+      accepted_answer_post_number: "messaggio %{post_number}"
       accepted_notification: "<p> <span>%{username}</span> %{description} </p>"
       topic_status_filter:
         all: "tutti"

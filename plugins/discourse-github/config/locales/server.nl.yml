@@ -36,5 +36,26 @@ nl:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Actie vereist voor Discourse-Github-plug-in"
+      repository_identifier_invalid_pm: |
+        Een repository opgegeven in de Discourse-Github-plug-in is ongeldig:
+        %{repo_name}
+
+        Deze moet worden opgegeven als 'gebruiker/respository'.
+
+        Badges worden pas toegekend als de naam is gecorrigeerd in
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Discourse-Github-site-instellingen</a>
+        en 'github_badges_enabled' weer is ingeschakeld.
       repository_not_found_pm_title: "Actie vereist voor Discourse-Github-plug-in"
+      repository_not_found_pm: |
+        Een repository opgegeven in de Discourse-Github-plug-in heeft een 'Niet gevonden'-fout
+        geretourneerd: %{repo_name}
+
+        Badges worden pas toegekend als de naam is gecorrigeerd in
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Discourse-Github-site-instellingen</a>
+        en 'github_badges_enabled' weer is ingeschakeld.
       invalid_octokit_credentials_pm_title: "Actie vereist voor Discourse-Github-plug-in"
+      invalid_octokit_credentials_pm: |
+        De GitHub-aanmeldgegevens die aan de Discourse-Github-plug-in zijn verstrekt, zijn ongeldig. De site-instelling 'github badges enabled' is uitgeschakeld en commits worden niet meer ingevuld totdat het probleem is opgelost.
+
+        Controleer de site-instelling 'github linkback access token' om zeker te zijn dat het token juist is en toestemming heeft voor alle repository's via
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Discourse-Github-site-instellingen</a>.

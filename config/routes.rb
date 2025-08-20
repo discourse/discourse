@@ -438,7 +438,6 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
-        get "theme-site-settings" => "theme_site_settings#index"
         get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
@@ -458,6 +457,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end
       end

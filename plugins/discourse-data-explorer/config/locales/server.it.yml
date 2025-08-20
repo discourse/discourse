@@ -20,4 +20,26 @@ it:
     report_generator:
       private_message:
         title: "Report programmato per %{query_name}"
+        body: |
+          Ciao %{recipient_name}, il tuo report Data Explorer è pronto.
+
+          Nome query:
+          %{query_name}
+
+          Ecco i risultati:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Visualizza query in Data Explorer</a>
+
+          Creazione report: %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Report programmato per %{query_name}
+
+          Ecco i risultati:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Visualizza query in Data Explorer</a>
+
+          Creazione report: %{created_at} (%{timezone})
       upload_appendix: "Appendice: [%{filename}|allegato](%{short_url})"

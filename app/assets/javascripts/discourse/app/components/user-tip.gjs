@@ -10,7 +10,6 @@ import { i18n } from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class UserTip extends Component {
-  @service currentUser;
   @service userTips;
   @service tooltip;
 

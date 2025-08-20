@@ -24,6 +24,7 @@ ja:
     solved_add_schema_markup: "QAPage スキーママークアップを HTML に追加します。"
     enable_solved_tags: "ユーザーが解決策を選択できるようにするタグ。"
     prioritize_solved_topics_in_search: "検索結果では解決済みのトピックが優先されます。"
+    show_who_marked_solved: "トピックを解決済みとしてマークしたユーザーを表示する。これは、トピックの最初の投稿と、回答投稿のツールチップに表示されます。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ ja:
     no_solutions:
       self: "受け入れられた解決策はありません。"
       others: "受け入れられた解決策はありません。"
+    filter:
+      description:
+        solved: "解決済みのトピックを絞り込む"
+        unsolved: "解決されていないトピックを絞り込む"
   badges:
     solved_1:
       name: "解決済み!"

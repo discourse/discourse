@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  site_settings:
+    sign_in_with_apple_enabled: 'Ativar login com a Apple?'
+    apple_client_id: "(Login com a Apple) O \"identificador de serviço\" da Apple do console do desenvolvedor. Geralmente é uma string característica de nome de domínio invertido (por exemplo, com.example.auth) (Login com a Apple)"
+    apple_team_id: '(Entrar com a Apple) Apple Team ID (dez caracteres)'
+    apple_key_id: '(Entrar com a Apple) Apple Key ID (dez caracteres)'
+    apple_pem: '(Entrar com a Apple) Conteúdo do arquivo PEM da Apple. Inclua as linhas BEGIN e END'

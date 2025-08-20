@@ -12,6 +12,8 @@ pl_PL:
           poll: "Ankieta Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Ankieta jest dynamiczna. Opcje można edytować po opublikowaniu."
       voters:
         one: "głosujący"
         few: "głosujących"
@@ -131,7 +133,7 @@ pl_PL:
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
-        title: Zbuduj ankietę
+        title: Skonstruuj ankietę
         insert: Wstaw ankietę
         help:
           options_min_count: Wprowadź co najmniej 1 opcję.
@@ -164,6 +166,8 @@ pl_PL:
           step: Krok
         poll_public:
           label: Pokaż kto głosował
+        poll_dynamic:
+          label: Zezwól na edycję opcji po opublikowaniu (dynamiczna ankieta)
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:

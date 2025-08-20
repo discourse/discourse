@@ -1564,7 +1564,6 @@ fa_IR:
     allow_new_registrations: "اجازه ثبت نام کاربر جدید. برای جلوگیری از ایجاد حساب جدید، این تنظیم را غیر فعال کنید."
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_secret: "Client secret برنامه گوگل شما. "
-    automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
     s3_backup_bucket: "میزبان راه‌دور برای نگهداری از نسخه‌های پشتیبان. اخطار: مطمئن شوید که میزبان خصوصی است."
     backup_time_of_day: "زمان UTC روز برای رخ دادن نسخه پشتیبان."
     backup_with_uploads: "قراردادن فایل های بارگذاری شده در نسخه های پشتیبان. غیر فعال کردن این بخش باعث تهیه نسخه پشتیبان از دیتابیس می‌شود."
@@ -1814,6 +1813,11 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  filter:
+    description:
+      in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"
+      in_new_replies: "نمایش موضوعات با پاسخ‌های جدید"
+      in_new_topics: "نمایش موضوعات جدید"
   discourse_connect:
     login_error: "خطا در ورود"
     not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
@@ -2871,11 +2875,9 @@ fa_IR:
         title: "کاربر تعلیق شده"
       agree_and_restore:
         title: "بازیابی نوشته"
-      delete_single:
+      delete:
         title: "حذف"
         complete: "نوشته حذف شده."
-      delete:
-        title: "حذف…"
       delete_and_ignore:
         complete: "نوشته حذف شده."
       delete_and_agree:
@@ -2893,6 +2895,8 @@ fa_IR:
         title: "تایید"
         complete: "نوشته تایید شده."
       approve_post:
+        complete: "نوشته تایید شده."
+      approve_post_closed:
         complete: "نوشته تایید شده."
       reject_post:
         complete: "نوشته رد شده."

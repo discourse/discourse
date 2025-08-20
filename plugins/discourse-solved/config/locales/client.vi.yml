@@ -12,6 +12,7 @@ vi:
           accepted_notification: "đã chấp nhận"
     solved:
       title: "Đã xử lý"
+      accepted_answer_post_number: "bài viết %{post_number}"
       topic_status_filter:
         all: "Tất cả"
         solved: "đã xử lý"

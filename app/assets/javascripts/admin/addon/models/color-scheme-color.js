@@ -56,6 +56,9 @@ export default class ColorSchemeColor extends EmberObject {
   // Whether the saved value is different than Discourse's default color scheme.
   @discourseComputed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
+    if (!defaultHex) {
+      return false;
+    }
     return this.originals.hex !== defaultHex;
   }
 
@@ -71,20 +74,14 @@ export default class ColorSchemeColor extends EmberObject {
 
   @discourseComputed("name")
   translatedName(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.name`);
-    } else {
-      return name;
-    }
+    return i18n(`admin.customize.colors.${name}.name`, { defaultValue: name });
   }
 
   @discourseComputed("name")
   description(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.description`);
-    } else {
-      return "";
-    }
+    return i18n(`admin.customize.colors.${name}.description`, {
+      defaultValue: "",
+    });
   }
 
   /**

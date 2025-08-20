@@ -39,6 +39,7 @@ ar:
       date: "التاريخ"
       add_to_calendar: "الإضافة إلى تقويم Google"
       toggle_timezone_offset_title: "تبديل إزاحة المنطقة الزمنية"
+      local_time: "التوقيت المحلي"
       region:
         title: "المنطقة"
         none: "لا يوجد"
@@ -247,7 +248,7 @@ ar:
           sk: "سلوفاكيا"
           th: "تايلاند"
           tn: "تونس"
-          tr: "ديك رومي"
+          tr: "تركيا"
           ua: "أوكرانيا"
           us_ak: "الولايات المتحدة (us_ak)"
           us_al: "الولايات المتحدة (us_al)"
@@ -323,10 +324,8 @@ ar:
         after_event_reminder: "هناك حدث انتهى"
         ongoing_event_reminder: "هناك حدث جارٍ"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{description}"
-        before_event_reminder_html: "هناك حدث على وشك البدء %{description}"
-        after_event_reminder_html: "انتهى حدث %{description}"
-        ongoing_event_reminder_html: "هناك حدث جارٍ %{description}"
+        invite_user_predefined_attendance_notification: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{eventName}"
+        an_event: "حدث"
       edit_reason: "تم تحديث الحدث"
       edit_reason_closed: "تم إغلاق الحدث"
       edit_reason_opened: "تم فتح الحدث"
@@ -379,6 +378,8 @@ ar:
         creator: "المنشئ"
         status: "الحالة"
         starts_at: "يبدأ في"
+        all_events: "كل الأحداث"
+        my_events: "أحداثي"
       upcoming_events_list:
         title: "الأحداث القادمة"
         empty: "لا توجد أحداث قادمة"
@@ -456,6 +457,9 @@ ar:
         update: "حفظ"
         attach: "إنشاء حدث"
         add_reminder: "إضافة تذكير"
+        show_local_time:
+          label: "عرض التوقيت المحلي"
+          description: "ستُعرض التواريخ والأوقات وفقًا للمنطقة الزمنية: %{timezone}. يُستحسن استخدام هذا الإعداد للأحداث المقامة في موقع محدد، لضمان تطابق الأوقات مع المنطقة الزمنية لمكان الحدث."
         timezone:
           label: المنطقة الزمنية
           remove_timezone: لا توجد منطقة زمنية (UTC)
@@ -472,6 +476,8 @@ ar:
           periods:
             before: "قبل"
             after: "بعد"
+        recurrence_until:
+          label: "حتى (شامل)"
         recurrence:
           label: "التكرار"
           none: "بلا تكرار"
@@ -484,13 +490,18 @@ ar:
         minimal:
           label: "حدث صغير"
           checkbox_label: "إخفاء زرَّي ذاهب/غير ذاهب وحالة المدعوين"
+        allow_chat:
+          label: "تكامل الدردشة"
+          checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
         url:
           label: "عنوان URL"
           placeholder: "اختياري"
         location:
           label: "الموقع الجغرافي"
+          placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
         description:
           label: "الوصف"
+          placeholder: "قدّم للجمهور مزيدًا من المعلومات حول حدثك. يدعم النص الأسطر الجديدة والروابط."
         name:
           label: "اسم الحدث"
           placeholder: "اختياري، الإعدادات الافتراضية لعنوان الموضوع"

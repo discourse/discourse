@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse Ayrıntıları"
   js:
     details:
-      title: Ayrıntıları Gizle
+      title: Ayrıntıları gizle
     composer:
       details_title: Özet
       details_text: "Bu metin gizlenecek"
