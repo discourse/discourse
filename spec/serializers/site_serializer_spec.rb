@@ -88,7 +88,11 @@ RSpec.describe SiteSerializer do
   end
 
   it "includes user-selectable color schemes" do
-    dark_scheme = ColorScheme.create_from_base(name: "AnotherDarkScheme", base_scheme_id: "Dark")
+    dark_scheme =
+      ColorScheme.create_from_base(
+        name: "AnotherDarkScheme",
+        base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+      )
     dark_scheme.user_selectable = true
     dark_scheme.save!
 
