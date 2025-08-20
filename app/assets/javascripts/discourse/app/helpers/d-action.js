@@ -9,8 +9,6 @@ import { get } from "@ember/-internals/metal";
 import { flaggedInstrument } from "@ember/instrumentation";
 import { join } from "@ember/runloop";
 
-const ACTIONS = new WeakSet();
-
 function NOOP(args) {
   return args;
 }
@@ -86,11 +84,10 @@ function invokeRef(value) {
 }
 
 // a port of ember's builtin action helper
-export default setInternalHelperManager((args, a, b, c) => {
+export default setInternalHelperManager(({ named, positional }) => {
   // TODO: deprecation
   // `Usage of the \`(action)\` helper is deprecated. Migrate to native functions and function invocation.`
 
-  let { named, positional } = args;
   let [context, action, ...restArgs] = positional;
 
   let target = "target" in named ? named["target"] : context;
@@ -110,8 +107,6 @@ export default setInternalHelperManager((args, a, b, c) => {
       processArgs
     );
   }
-
-  ACTIONS.add(fn);
 
   return createUnboundRef(fn, "(result of an `action` helper)");
 }, {});
