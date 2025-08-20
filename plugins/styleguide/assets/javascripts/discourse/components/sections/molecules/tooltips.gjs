@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import withEventValue from "discourse/helpers/with-event-value";
 import DTooltip from "float-kit/components/d-tooltip";
 import { TOOLTIP } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
@@ -156,25 +157,53 @@ export default class Tooltips extends Component {
 
       <Controls>
         <Row @name="Example label">
-          <Input @value={{this.label}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.label)))}}
+            type="text"
+            value={{this.label}}
+          />
         </Row>
         <Row @name="[@content]">
-          <Input @value={{this.content}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.content)))}}
+            type="text"
+            value={{this.content}}
+          />
         </Row>
         <Row @name="[@identifier]">
-          <Input @value={{this.identifier}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.identifier)))}}
+            type="text"
+            value={{this.identifier}}
+          />
         </Row>
         <Row @name="[@offset]">
-          <Input @value={{this.offset}} @type="number" />
+          <input
+            {{on "input" (withEventValue (fn (mut this.offset)))}}
+            type="number"
+            value={{this.offset}}
+          />
         </Row>
         <Row @name="[@triggers]">
-          <Input @value={{this.triggers}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.triggers)))}}
+            type="text"
+            value={{this.triggers}}
+          />
         </Row>
         <Row @name="[@untriggers]">
-          <Input @value={{this.untriggers}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.untriggers)))}}
+            type="text"
+            value={{this.untriggers}}
+          />
         </Row>
         <Row @name="[@maxWidth]">
-          <Input @value={{this.maxWidth}} @type="number" />
+          <input
+            {{on "input" (withEventValue (fn (mut this.maxWidth)))}}
+            type="number"
+            value={{this.maxWidth}}
+          />
         </Row>
         <Row @name="[@interactive]">
           <DToggleSwitch
