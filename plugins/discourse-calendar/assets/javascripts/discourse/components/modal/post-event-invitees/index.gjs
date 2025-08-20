@@ -114,6 +114,7 @@ export default class PostEventInviteesModal extends Component {
               {{#each this.inviteesList.invitees as |invitee|}}
                 <li class="invitee">
                   <User @user={{invitee.user}} />
+
                   {{#if @model.event.canActOnDiscoursePostEvent}}
                     <DButton
                       class="remove-invitee"
@@ -132,14 +133,17 @@ export default class PostEventInviteesModal extends Component {
                 {{#each this.inviteesList.suggestedUsers as |user|}}
                   <li class="invitee">
                     <User @user={{user}} />
-                    <DButton
-                      class="add-invitee"
-                      @icon="plus"
-                      @action={{fn this.addInvitee user}}
-                      title={{i18n
-                        "discourse_post_event.invitees_modal.add_invitee"
-                      }}
-                    />
+
+                    {{#if @model.event.canActOnDiscoursePostEvent}}
+                      <DButton
+                        class="add-invitee"
+                        @icon="plus"
+                        @action={{fn this.addInvitee user}}
+                        title={{i18n
+                          "discourse_post_event.invitees_modal.add_invitee"
+                        }}
+                      />
+                    {{/if}}
                   </li>
                 {{/each}}
               </ul>
