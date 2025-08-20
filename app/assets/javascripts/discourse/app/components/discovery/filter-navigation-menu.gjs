@@ -211,8 +211,9 @@ export default class FilterNavigationMenu extends Component {
   }
 
   @action
-  clearInput() {
-    this.updateInput("", true);
+  async clearInput() {
+    await this.updateInput("", true);
+    await this.ensureFreshSuggestions();
     this.inputElement?.focus();
   }
 
