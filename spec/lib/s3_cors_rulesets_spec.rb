@@ -19,6 +19,7 @@ RSpec.describe S3CorsRulesets do
         global_setting :s3_bucket, "s3-upload-bucket"
         global_setting :s3_backup_bucket, "s3-backup-upload-bucket"
         global_setting :s3_region, "us-west-2"
+        global_setting :s3_file_uploads_profile, "test-profile"
       end
 
       it "does nothing if !s3_install_cors_rule" do
