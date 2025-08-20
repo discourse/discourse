@@ -2,7 +2,6 @@ import { eq } from "truth-helpers";
 import { i18n } from "discourse-i18n";
 
 <template>
-  asdasd
   {{#if @status}}
     <div class="job desc site-setting">
       {{#if (eq @status "enqueued")}}
