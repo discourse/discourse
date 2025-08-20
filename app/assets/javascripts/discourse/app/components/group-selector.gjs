@@ -1,195 +1,108 @@
-/* eslint-disable ember/no-classic-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import { getOwner } from "@ember/owner";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { observes, on as onDecorator } from "@ember-decorators/object";
-import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
-import groupAutocomplete from "discourse/lib/autocomplete/group";
-import discourseComputed from "discourse/lib/decorators";
-import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DMultiSelect from "discourse/components/d-multi-select";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSelector extends Component {
   @service siteSettings;
 
-  @tracked selectedItems = [];
+  @tracked selectedGroups = [];
 
-  @discourseComputed("placeholderKey")
-  placeholder(placeholderKey) {
-    return placeholderKey ? i18n(placeholderKey) : "";
+  constructor() {
+    super(...arguments);
+    this.initializeSelectedGroups();
   }
 
-  get shouldHideInput() {
-    return this.single && this.selectedItems.length > 0;
-  }
-
-  @observes("groupNames")
-  _update() {
-    if (this.canReceiveUpdates === "true") {
-      this._initializeAutocomplete({ updateData: true });
-    }
-  }
-
-  @onDecorator("didInsertElement")
-  _initializeAutocomplete(opts) {
-    const inputElement = this.element.querySelector("input");
-
-    // Initialize selected items from groupNames
-    this.initializeSelectedItems(opts);
-
-    // Set up multi-select UI
-    this.setupMultiSelectUI(inputElement, opts);
-
-    if (!this.siteSettings.floatkit_autocomplete_input_fields) {
-      this.setupJQueryAutocomplete(inputElement);
+  initializeSelectedGroups() {
+    const groupNames = this.args.groupNames;
+    if (isEmpty(groupNames)) {
+      this.selectedGroups = [];
       return;
     }
 
-    this.setupAutocomplete(inputElement);
-  }
-
-  initializeSelectedItems(opts) {
-    if (opts?.updateData) {
-      // For updates, keep existing selected items
-      return;
+    // Convert groupNames (string or array) to array of group objects
+    let names = Array.isArray(groupNames) ? groupNames : [groupNames];
+    if (typeof groupNames === "string" && groupNames.includes(",")) {
+      names = groupNames.split(",").map((name) => name.trim());
     }
 
-    const groupNames = this.groupNames;
-    this.selectedItems = Array.isArray(groupNames)
-      ? [...groupNames]
-      : isEmpty(groupNames)
-        ? []
-        : [groupNames];
+    // Create minimal group objects from names
+    this.selectedGroups = names
+      .filter((name) => name && name.length > 0)
+      .map((name) => ({ id: name, name }));
   }
 
-  setupMultiSelectUI(inputElement) {
-    // Clear input value
-    inputElement.value = "";
+  get placeholder() {
+    return this.args.placeholderKey ? i18n(this.args.placeholderKey) : "";
   }
 
-  removeSelectedItem(item) {
-    const index = this.selectedItems.indexOf(item);
-    if (index > -1) {
-      this.selectedItems.splice(index, 1);
-      this.selectedItems = [...this.selectedItems]; // Trigger reactivity
-      this.notifyItemsChanged();
-
-      // Focus input if single mode and no items
-      if (this.single && this.selectedItems.length === 0) {
-        const inputElement = this.element.querySelector("input");
-        inputElement.focus();
-      }
-    }
-  }
-
-  addSelectedItem(item) {
-    if (this.single) {
-      this.selectedItems = [item];
-    } else if (!this.selectedItems.includes(item)) {
-      this.selectedItems.push(item);
-    }
-
-    this.selectedItems = [...this.selectedItems]; // Trigger reactivity
-    this.notifyItemsChanged();
-
-    // Clear input after selection
-    const inputElement = this.element.querySelector("input");
-    inputElement.value = "";
-  }
-
-  notifyItemsChanged() {
-    if (this.onChange) {
-      this.onChange(this.selectedItems.join(","));
-    } else if (this.onChangeCallback) {
-      this.onChangeCallback(this.groupNames, this.selectedItems);
-    } else {
-      this.set("groupNames", this.selectedItems.join(","));
-    }
-  }
-
-  filteredGroupFinder(term) {
-    return this.groupFinder(term).then((groups) => {
-      if (!this.selectedItems || this.selectedItems.length === 0) {
-        return groups;
+  get loadFn() {
+    return async (term) => {
+      if (!this.args.groupFinder) {
+        return [];
       }
 
-      return groups.filter((group) => {
-        return !this.selectedItems.includes(group.name);
-      });
-    });
-  }
+      const groups = await this.args.groupFinder(term);
 
-  setupAutocomplete(inputElement) {
-    const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
-
-    DAutocompleteModifier.setupAutocomplete(
-      getOwner(this),
-      inputElement,
-      autocompleteHandler,
-      {
-        debounced: true,
-        template: groupAutocomplete,
-        transformComplete: (g) => {
-          // Instead of inserting into text, add to selected items
-          this.addSelectedItem(g.name);
-          return ""; // Return empty string to prevent text insertion
-        },
-        dataSource: (term) => this.filteredGroupFinder(term),
+      // Filter out already selected groups
+      if (this.selectedGroups.length > 0) {
+        const selectedNames = this.selectedGroups.map((g) => g.name);
+        return groups.filter((group) => !selectedNames.includes(group.name));
       }
-    );
+
+      return groups;
+    };
   }
 
-  setupJQueryAutocomplete(inputElement) {
-    $(inputElement).autocomplete({
-      debounced: true,
-      allowAny: false,
-      items: this.selectedItems,
-      single: this.single,
-      fullWidthWrap: this.fullWidthWrap,
-      updateData: false,
-      onChangeItems: (items) => {
-        this.selectedItems = [...items];
-        this.notifyItemsChanged();
-      },
-      transformComplete: (g) => g.name,
-      dataSource: (term) => this.filteredGroupFinder(term),
-      template: groupAutocomplete,
-    });
+  @action
+  handleSelectionChange(selectedGroups) {
+    // Handle single selection mode
+    if (this.args.single && selectedGroups.length > 1) {
+      selectedGroups = [selectedGroups[selectedGroups.length - 1]];
+    }
+
+    this.selectedGroups = selectedGroups;
+
+    // Convert back to names for compatibility
+    const groupNames = selectedGroups.map((group) => group.name);
+
+    // Notify parent components
+    if (this.args.onChange) {
+      this.args.onChange(groupNames.join(","));
+    } else if (this.args.onChangeCallback) {
+      this.args.onChangeCallback(groupNames.join(","), groupNames);
+    }
+  }
+
+  @action
+  compareGroups(a, b) {
+    return a.name === b.name;
   }
 
   <template>
     <div
-      class="ac-wrap clearfix {{if this.disabled 'disabled'}}"
-      style={{unless this.fullWidthWrap "width: 200px"}}
+      class="group-selector-wrapper {{if @disabled 'disabled'}}"
+      style={{if @fullWidthWrap "width: 100%" "min-width: 350px"}}
     >
-      {{#each this.selectedItems as |item|}}
-        <div class="item">
-          <span>
-            {{item}}
-            <a
-              class="remove"
-              href="#"
-              {{on "click" (fn this.removeSelectedItem item)}}
-            >
-              {{icon "xmark"}}
-            </a>
-          </span>
-        </div>
-      {{/each}}
-
-      <input
-        placeholder={{this.placeholder}}
-        class="group-selector {{if this.single 'fullwidth-input'}}"
-        type="text"
-        name="groups"
-        style={{if this.shouldHideInput "display: none"}}
-      />
+      <DMultiSelect
+        @selection={{this.selectedGroups}}
+        @loadFn={{this.loadFn}}
+        @onChange={{this.handleSelectionChange}}
+        @label={{this.placeholder}}
+        @compareFn={{this.compareGroups}}
+        class="group-selector"
+        style="width: 100%"
+      >
+        <:selection as |group|>
+          {{group.name}}
+        </:selection>
+        <:result as |group|>
+          {{group.name}}
+        </:result>
+      </DMultiSelect>
     </div>
   </template>
 }
