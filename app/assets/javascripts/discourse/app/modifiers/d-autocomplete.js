@@ -122,6 +122,7 @@ export default class DAutocompleteModifier extends Modifier {
         case "Enter":
         case "Tab":
           event.preventDefault();
+          event.stopImmediatePropagation();
           if (this.selectedIndex >= 0) {
             await this.selectResult(this.results[this.selectedIndex], event);
           }

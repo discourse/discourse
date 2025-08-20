@@ -67,7 +67,6 @@ pt:
       error_while_fetching_voters: "Lamentamos, mas ocorreu um erro ao exibir os votantes."
       error_while_exporting_results: "Lamentamos, mas ocorreu um erro ao exportar os resultados da sondagem."
       ui_builder:
-        title: Criar Sondagem
         insert: Inserir Sondagem
         help:
           options_min_count: Insira pelo menos uma opção.

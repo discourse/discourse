@@ -10,6 +10,7 @@ ru:
     discourse_templates_categories: "Категории для получения шаблонов"
     discourse_templates_enable_private_templates: "Позволяет использовать приватные шаблоны"
     discourse_templates_groups_allowed_private_templates: "Группам разрешается использовать приватные шаблоны. Сотрудники могут использовать их всегда."
+    discourse_templates_private_templates_tags: "Теги, которые идентифицируют личное сообщение как личный шаблон"
   default_category_template:
     name: Шаблоны
     description: |

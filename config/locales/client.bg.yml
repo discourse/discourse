@@ -1143,11 +1143,10 @@ bg:
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
       color_schemes:
         default_description: "Темата по подразбиране"
-        disable_dark_scheme: "Същото като обикновения"
         undo: "Нулиране"
-        regular: "Редовен"
         dark: "Тъмен режим"
-        default_dark_scheme: "(сайт по подразбиране)"
+        picker:
+          active: "Активни"
       dark_mode: "Тъмен режим"
       text_size_default_on_all_devices: "Направете това размерът на текста по подразбиране на всички мои устройства"
       allow_private_messages: "Позволете на други потребители да ми изпращат лични съобщения"
@@ -1989,6 +1988,8 @@ bg:
     full_name_requirement:
       required_at_signup: "Задъжителни"
       optional_at_signup: "По избор"
+    welcome_banner_page_visibility:
+      homepage: "Начална страница"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2059,7 +2060,7 @@ bg:
       whisper: "шепот"
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
-      toggle_whisper: "Включи шепот"
+      toggle_whisper: "Превключете шепот"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
       saved_local_draft_tip: "запазено локално"
       drafts_offline: "чернови офлайн"
@@ -2132,10 +2133,7 @@ bg:
       paste_code_text: "въведете или поставете кода тук"
       upload_title: "Качване"
       upload_description: "причина за качването"
-      olist_title: "Номериран списък"
-      ulist_title: "Списък с водещи символи"
       list_item: "Списък"
-      toggle_direction: "Превключване на посоката"
       help: "Помощ с Markdown"
       collapse: "минимизирайте панела на композитора"
       open: "отворете панела на композитора"
@@ -3861,7 +3859,7 @@ bg:
           edit: "Редактирай"
           mobile: "Мобилен"
           preview: "Преглед"
-          default: "Активни"
+          default: "По подразбиране"
           cancel: "Прекрати"
           collapse: Намали
           upload: "Качване"
@@ -3896,8 +3894,6 @@ bg:
           edit: "Редактирай"
           filters:
             all: "Всички"
-          active_badge:
-            text: "Активни"
           copy_name_prefix: "Копие на"
           undo: "Отмени"
           undo_title: "Върнете промените направени на този цвят до последно запазените."

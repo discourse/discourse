@@ -93,10 +93,10 @@ fi:
       reminders_frequency:
         description: "Osoitettujen ketjujen muistutusten toistuvuus"
         never: "Ei koskaan"
-        daily: "Päivittäinen"
-        weekly: "Viikoittainen"
-        monthly: "Kuukausittainen"
-        quarterly: "Neljännesvuosittainen"
+        daily: "Päivittäin"
+        weekly: "Viikoittain"
+        monthly: "Kuukausittain"
+        quarterly: "Neljännesvuosittain"
       admin:
         groups:
           manage:

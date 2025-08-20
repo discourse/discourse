@@ -1098,7 +1098,6 @@ vi:
     enable_github_logins: "Bật xác thực GitHub, yêu cầu github_client_id và github_client_secret. Xem <a href='https://meta.discourse.org/t/13745' target='_blank'>Định cấu hình đăng nhập GitHub cho Discourse</a>."
     github_client_id: "Id ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Bí mật ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
@@ -2143,7 +2142,7 @@ vi:
     actions:
       agree:
         title: "Đồng ý"
-      delete_single:
+      delete:
         title: "Xóa"
         complete: "Bài viết đã bị xóa."
       delete_and_ignore:
@@ -2163,6 +2162,8 @@ vi:
       approve:
         title: "Duyệt"
       approve_post:
+        title: "Phê duyệt bài đăng"
+      approve_post_closed:
         title: "Phê duyệt bài đăng"
       reject_post:
         title: "Từ chối bài đăng"
