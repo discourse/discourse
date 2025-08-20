@@ -1097,7 +1097,7 @@ class Theme < ActiveRecord::Base
 
       copy = palette.dup
       copy.theme_id = self.id
-      copy.base_scheme_id = 0
+      copy.base_scheme_id = nil
       copy.user_selectable = false
       copy.via_wizard = false
       copy.save!
