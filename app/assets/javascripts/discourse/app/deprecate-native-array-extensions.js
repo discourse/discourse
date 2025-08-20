@@ -13,9 +13,7 @@ Array.from(NativeArray.keys())
     // eslint-disable-next-line no-extend-native
     Array.prototype[k] = function () {
       deprecated(
-        "array." +
-          k +
-          " is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.",
+        `The method \`array.${k}\` is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.`,
         {
           id: `discourse.ember.native-array-extensions.${k}`,
           since: "3.6.0.beta1-dev",
@@ -35,7 +33,7 @@ const squareBracketDescriptor = Object.getOwnPropertyDescriptor(
 Object.defineProperty(Array.prototype, "[]", {
   get() {
     deprecated(
-      'array["[]"] is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.',
+      'The `array["[]"]` getter is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.',
       {
         id: "discourse.ember.native-array-extensions.[]",
         since: "3.6.0.beta1-dev",
@@ -46,7 +44,7 @@ Object.defineProperty(Array.prototype, "[]", {
   },
   set(value) {
     deprecated(
-      'array["[]"] is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.',
+      'The `array["[]"]` setter is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.',
       {
         id: "discourse.ember.native-array-extensions.[]",
         since: "3.6.0.beta1-dev",
