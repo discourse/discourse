@@ -130,7 +130,8 @@ export async function updatePosition(trigger, content, options) {
             ".fk-d-menu__inner-content"
           );
 
-          const hideElement = options.minHeight && availableHeight < options.minHeight;
+          const hideElement =
+            options.minHeight && availableHeight < options.minHeight;
 
           if (inner) {
             inner.style.display = hideElement ? "none" : "";

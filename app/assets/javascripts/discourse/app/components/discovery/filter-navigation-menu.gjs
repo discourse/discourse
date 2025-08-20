@@ -232,9 +232,9 @@ export default class FilterNavigationMenu extends Component {
       maxWidth: 2000,
       matchTriggerWidth: true,
       visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
-      constrainHeightToViewport: true, // we want to resize the menu as viewport shrinks
-      crossAxisShift: false, // may position it on top of input without this
-      minHeight: 80, // we do not want autocomplete to be too small
+      constrainHeightToViewport: true,
+      crossAxisShift: false, // NOTE: this should not be needed, but is. Without it when shrinking window autocomplete renders on top of input
+      minHeight: 80,
     });
 
     if (!this.suggestions.length) {
