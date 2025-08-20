@@ -35,6 +35,7 @@ export default class extends DiscourseRoute {
     const { referrer } = document;
     const { canSignUp } = this.controllerFor("application");
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
+    const redirect = auth_immediately || login_required || !from || wantsTo;
 
     // Can't sign up when the site is read-only
     if (isReadOnly) {
@@ -69,18 +70,19 @@ export default class extends DiscourseRoute {
       }
     }
 
-    // When Discourse Connect is enabled, redirect to the SSO endpoint
-    if (auth_immediately && enable_discourse_connect) {
-      const returnPath = cookie("destination_url")
-        ? getURL("/")
-        : encodeURIComponent(url);
-      window.location = getURL(`/session/sso?return_path=${returnPath}`);
-      return;
-    }
-
     // Automatically kick off the external login if it's the only one available
-    if (isOnlyOneExternalLoginMethod) {
-      if (auth_immediately || login_required || !from || wantsTo) {
+    if (enable_discourse_connect) {
+      if (redirect) {
+        this.#isRedirecting = true;
+        const returnPath = cookie("destination_url")
+          ? getURL("/")
+          : encodeURIComponent(url);
+        window.location = getURL(`/session/sso?return_path=${returnPath}`);
+      } else {
+        router.replaceWith("discovery.login-required");
+      }
+    } else if (isOnlyOneExternalLoginMethod) {
+      if (redirect) {
         this.#isRedirecting = true;
         singleExternalLogin({ signup: true });
       } else {
@@ -90,8 +92,6 @@ export default class extends DiscourseRoute {
   }
 
   setupController(controller) {
-    const { enable_discourse_connect } = this.siteSettings;
-
     super.setupController(...arguments);
 
     // We're in the middle of an authentication flow
@@ -100,7 +100,6 @@ export default class extends DiscourseRoute {
     }
 
     // Shows the loading spinner while waiting for the redirection to external auth
-    controller.isRedirectingToExternalAuth =
-      this.#isRedirecting || enable_discourse_connect;
+    controller.isRedirectingToExternalAuth = this.#isRedirecting;
   }
 }
