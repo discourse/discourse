@@ -5,6 +5,7 @@ class MigrateColorSchemesBaseSchemeIdFromStringToInt < ActiveRecord::Migration[8
     "default" => -1,
     "Light" => -1,
     "Dark" => -2,
+    "dark" => -2,
     "Neutral" => -3,
     "Grey Amber" => -4,
     "Shades of Blue" => -5,
