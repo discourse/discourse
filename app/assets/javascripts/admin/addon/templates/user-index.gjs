@@ -956,6 +956,7 @@ export default RouteTemplate(
           {{#if @controller.model.can_impersonate}}
             <DButton
               @action={{@controller.impersonate}}
+              @isLoading={{@controller.isLoading}}
               @icon="crosshairs"
               @label="admin.impersonate.title"
               @title="admin.impersonate.help"
