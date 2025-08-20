@@ -491,7 +491,11 @@ RSpec.describe Stylesheet::Manager do
     fab!(:theme)
 
     it "updates digest when updating a color scheme" do
-      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      scheme =
+        ColorScheme.create_from_base(
+          name: "Neutral",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
+        )
       manager = manager(theme.id)
 
       builder =
@@ -685,7 +689,11 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "generates the dark mode of a color scheme when the dark option is specified" do
-      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      scheme =
+        ColorScheme.create_from_base(
+          name: "Neutral",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
+        )
       ColorSchemeRevisor.revise(
         scheme,
         colors: [{ name: "primary", hex: "CABFAF", dark_hex: "FAFCAB" }],
@@ -720,7 +728,11 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "uses the light colors as fallback if the dark scheme doesn't define them" do
-      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      scheme =
+        ColorScheme.create_from_base(
+          name: "Neutral",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
+        )
       ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "BACFAB", dark_hex: nil }])
       theme = Fabricate(:theme)
       manager = manager(theme.id)
@@ -752,7 +764,11 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "updates outputted colors when updating a color scheme" do
-      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      scheme =
+        ColorScheme.create_from_base(
+          name: "Neutral",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
+        )
       theme = Fabricate(:theme)
       manager = manager(theme.id)
 
@@ -810,7 +826,12 @@ RSpec.describe Stylesheet::Manager do
       end
 
       let(:scheme) { ColorScheme.base }
-      let(:dark_scheme) { ColorScheme.create_from_base(name: "Dark", base_scheme_id: "Dark") }
+      let(:dark_scheme) do
+        ColorScheme.create_from_base(
+          name: "Dark",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        )
+      end
 
       it "includes theme color definitions in color scheme" do
         manager = manager(theme.id)
@@ -882,7 +903,11 @@ RSpec.describe Stylesheet::Manager do
 
       it "child theme SCSS includes the default theme's color scheme variables" do
         SiteSetting.default_theme_id = theme.id
-        custom_scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+        custom_scheme =
+          ColorScheme.create_from_base(
+            name: "Neutral",
+            base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
+          )
         ColorSchemeRevisor.revise(custom_scheme, colors: [{ name: "primary", hex: "CC0000" }])
         theme.color_scheme_id = custom_scheme.id
         theme.save!
