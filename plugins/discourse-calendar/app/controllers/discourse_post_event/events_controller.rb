@@ -8,6 +8,9 @@ module DiscoursePostEvent
           post: :topic,
         )
 
+      # The detailed serializer is currently not used anywhere in the frontend, but available via API
+      serializer = params[:include_details] == "true" ? EventSerializer : BasicEventSerializer
+
       render json:
                ActiveModel::ArraySerializer.new(
                  @events,

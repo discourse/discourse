@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -18,8 +17,6 @@ export default class UpcomingEventsCalendar extends Component {
   @service router;
   @service capabilities;
   @service siteSettings;
-  @service discoursePostEventService;
-  @service loadingSlider;
 
   @tracked resolvedEvents;
 
@@ -44,13 +41,13 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   get events() {
-    if (!this.resolvedEvents) {
+    if (!this.args.events) {
       return [];
     }
 
     const tagsColorsMap = JSON.parse(this.siteSettings.map_events_to_color);
 
-    return (this.resolvedEvents || []).map((event) => {
+    return this.args.events.map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
       let backgroundColor;
@@ -131,44 +128,13 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
 
-    await this.fetchEvents(info);
-
-    let start = info.startStr;
-
-    if (info.view.type === "dayGridMonth") {
-      start = moment(info.view.currentStart).format("YYYY-MM-DD");
-    }
-
-    if (this.router?.transitionTo) {
-      this.router.transitionTo({
-        queryParams: {
-          view: info.view.type,
-          start,
-        },
-      });
-    }
-  }
-
-  @action
-  async fetchEvents(info) {
-    this.resolvedEvents = null;
-
-    const params = { after: info.startStr, before: info.endStr };
-
-    if (this.args.mine) {
-      params.attending_user = this.currentUser?.username;
-    }
-
-    try {
-      this.loadingSlider.transitionStarted();
-
-      this.resolvedEvents =
-        await this.discoursePostEventService.fetchEvents(params);
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loadingSlider.transitionEnded();
-    }
+    this.router.transitionTo({
+      queryParams: {
+        view: info.view.type,
+        start: moment(info.view.currentStart).format("YYYY-MM-DD"),
+        end: moment(info.view.currentEnd).format("YYYY-MM-DD"),
+      },
+    });
   }
 
   @action
