@@ -448,7 +448,7 @@ class TopicsFilter
         next
       end
 
-      user_ids = User.where(staged: false).where("username_lower IN (?)", usernames).pluck(:id)
+      user_ids = User.not_staged.where("username_lower IN (?)", usernames).pluck(:id)
 
       if user_ids.empty?
         @scope = @scope.none
