@@ -5,7 +5,7 @@ class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
   # Store a reference to the raw association reader, since we're
-  # overriding `#user`` later in the class definition.
+  # overriding `#user` later in the class definition.
   alias_method :acting_user, :user
 
   ROTATE_TIME_MINS = 10
@@ -31,17 +31,12 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def user
-    impersonated_user || super
+    impersonated_user || acting_user
   end
 
   def impersonated_user
     return if impersonated_user_id.blank?
-    return if impersonation_expires_at.blank?
-
-    if impersonation_expires_at.past?
-      update!(impersonated_user_id: nil, impersonation_expires_at: nil)
-      return
-    end
+    return if impersonation_expires_at.blank? || impersonation_expires_at.past?
 
     guardian = Guardian.new(acting_user)
     puppet = User.find_by(id: impersonated_user_id)
@@ -322,7 +317,8 @@ end
 #
 # Indexes
 #
-#  index_user_auth_tokens_on_auth_token       (auth_token) UNIQUE
-#  index_user_auth_tokens_on_prev_auth_token  (prev_auth_token) UNIQUE
-#  index_user_auth_tokens_on_user_id          (user_id)
+#  index_user_auth_tokens_on_auth_token                (auth_token) UNIQUE
+#  index_user_auth_tokens_on_impersonation_expires_at  (impersonation_expires_at) WHERE (impersonation_expires_at IS NOT NULL)
+#  index_user_auth_tokens_on_prev_auth_token           (prev_auth_token) UNIQUE
+#  index_user_auth_tokens_on_user_id                   (user_id)
 #

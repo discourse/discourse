@@ -46,10 +46,6 @@ RSpec.describe UserAuthToken do
 
         token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.ago)
 
-        expect { token.user }.to change {
-          [token.impersonated_user_id, token.impersonation_expires_at]
-        }.to([nil, nil])
-
         expect(token.user).to eq(admin)
         expect(token.user.is_impersonating).to be_falsey
       end
