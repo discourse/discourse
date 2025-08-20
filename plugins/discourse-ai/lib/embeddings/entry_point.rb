@@ -72,6 +72,17 @@ module DiscourseAi
           :discourse_ai,
           { search: { actions: %w[discourse_ai/embeddings/embeddings#search] } },
         )
+
+        plugin.register_modifier(:similar_topic_candidate_ids) do |plugin_candidate_ids, args|
+          if DiscourseAi::Embeddings.enabled?
+            query = [args[:title], args[:raw]].join("\n\n")
+
+            DiscourseAi::Embeddings::SemanticSearch
+              .new(args[:guardian])
+              .similar_topic_ids_to(query, candidates: args[:candidates])
+              .each { |similar_topic_id| plugin_candidate_ids << similar_topic_id }
+          end
+        end
       end
     end
   end
