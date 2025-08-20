@@ -6,12 +6,12 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-class Foo extends Component {
-  layout = hbs`<button {{on "click" (d-action "bar")}}>foobarcvx</button>`;
+class FooString extends Component {
+  layout = hbs`<button {{on "click" (d-action "bar")}}>test</button>`;
 
   @action
   bar() {
-    debugger;
+    this.callback();
   }
 }
 
@@ -19,9 +19,9 @@ module("Integration | Helper | action", function (hooks) {
   setupRenderingTest(hooks);
 
   test("string argument", async function (assert) {
-    this.registry.register("component:foo", Foo);
-    this.foo = () => assert.step("called");
-    await render(hbs`<Foo />`);
+    this.registry.register("component:foo", FooString);
+    this.callback = () => assert.step("called");
+    await render(hbs`<Foo @callback={{this.callback}} />`);
 
     await click("button");
     assert.verifySteps(["called"]);

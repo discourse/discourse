@@ -92,7 +92,6 @@ export default setInternalHelperManager((args, a, b, c) => {
 
   let { named, positional } = args;
   let [context, action, ...restArgs] = positional;
-  debugger;
 
   let target = "target" in named ? named["target"] : context;
   let processArgs = makeArgsProcessor(
