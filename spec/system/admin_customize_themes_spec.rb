@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes", type: :system do
-  fab!(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: "light") }
+  fab!(:color_scheme) do
+    Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+  end
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
