@@ -178,7 +178,7 @@ RSpec.describe UsersController do
     end
 
     context "when cookies contains a destination URL" do
-      context "when destination URL have a query" do
+      context "when the destination URL has a query" do
         it "should redirect to the URL and preserve the query" do
           destination_url = "http://thisisasite.com/somepath?latest=1"
           cookies[:destination_url] = destination_url

@@ -272,13 +272,13 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
 
-      context "when sets the destination_url cookie" do
-        it "is not logged in and path is /login with valid redirect param" do
+      context "when setting the destination_url cookie" do
+        it "respects the redirect parameter in the cookie" do
           get "/login", params: { redirect: "/foo" }
           expect(response.cookies["destination_url"]).to eq("/foo")
         end
 
-        it "is not logged in and path is /login with valid redirect param and has a query" do
+        it "respects the redirect parameter including the query params" do
           get "/login", params: { redirect: "/foo?filter=test" }
           expect(response.cookies["destination_url"]).to eq("/foo?filter=test")
         end
@@ -307,12 +307,12 @@ RSpec.describe StaticController do
       end
 
       context "when sets the destination_url cookie" do
-        it "is not logged in and path is /login with valid redirect param" do
+        it "respects the redirect parameter in the cookie" do
           get "/login", params: { redirect: "/foo" }
           expect(response.cookies["destination_url"]).to eq("/sub_test/foo")
         end
 
-        it "is not logged in and path is /login with valid redirect param and has a query" do
+        it "respects the redirect parameter including the query params" do
           get "/login", params: { redirect: "/foo?filter=test" }
           expect(response.cookies["destination_url"]).to eq("/sub_test/foo?filter=test")
         end

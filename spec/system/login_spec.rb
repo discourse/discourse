@@ -154,7 +154,7 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".private_message")
     end
 
-    it "redirects to a new-topic after login and keeps the query" do
+    it "redirects to a route with a query parameters after login and keeps the query parameters" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
@@ -219,7 +219,7 @@ shared_examples "login scenarios" do
       expect(page).to have_css("#topic-title")
     end
 
-    it "redirects to a new-topic after login and keeps the query" do
+    it "redirects to a route with a query parameters after login and keeps the query parameters" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
