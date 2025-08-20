@@ -90,7 +90,9 @@ export default class AdminConfigAreasThemes extends Component {
       }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.themes.description"
-        themeSiteSettingsUrl=(getURL "/admin/config/theme-site-settings")
+        themeSiteSettingsUrl=(getURL
+          "/admin/config/customize/theme-site-settings"
+        )
       }}
     >
       <:actions as |actions|>

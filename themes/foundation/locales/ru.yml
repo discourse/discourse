@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ru:
+  theme_metadata:
+    description: "Классическая тема Discourse, которая отлично подходит для настройки под конкретные потребности вашего сообщества."

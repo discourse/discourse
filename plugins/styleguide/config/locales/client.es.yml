@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Guía de estilo de Discourse"
   js:
     styleguide:
       title: "Guía de estilos"
@@ -25,6 +30,8 @@ es:
           title: "Campos de entrada de fecha/hora"
         menus:
           title: "Menús"
+        multi_select:
+          title: "Selección múltiple"
         toasts:
           title: "Ventanas emergentes"
         font_scale:
@@ -82,8 +89,8 @@ es:
           title: "Mapa del tema"
         site_header:
           title: "Encabezado del sitio"
-        suggested_topics:
-          title: "Temas sugeridos"
+        more_topics:
+          title: "Más temas"
         post_menu:
           title: "Menú de la publicación"
         modal:

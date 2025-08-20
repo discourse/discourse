@@ -14,6 +14,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -462,7 +463,12 @@ export default class Composer extends RestModel {
 
     if (post) {
       options.label = i18n(`post.${action}`);
-      options.userAvatar = tinyAvatar(post.avatar_template);
+      const avatarTemplate = applyValueTransformer(
+        "composer-reply-options-user-avatar-template",
+        post.avatar_template,
+        { post }
+      );
+      options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
@@ -484,7 +490,12 @@ export default class Composer extends RestModel {
         anchor: i18n("post.post_number", { number: postNumber }),
       };
 
-      const name = prioritizeNameFallback(post.name, post.username);
+      const namePrioritized = prioritizeNameFallback(post.name, post.username);
+      const name = applyValueTransformer(
+        "composer-reply-options-user-link-name",
+        namePrioritized,
+        { post }
+      );
 
       options.userLink = {
         href: `${topic.url}/${postNumber}`,

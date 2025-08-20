@@ -51,6 +51,8 @@ te:
           name: "శోధించండి"
         spam:
           name: "స్పామ్"
+      translations:
+        title: "అనువాదాలు"
       spam:
         short_title: "స్పామ్"
         enable: "ప్రారంభించండి"

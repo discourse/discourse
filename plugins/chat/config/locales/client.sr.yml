@@ -44,7 +44,6 @@ sr:
       save: "Sačuvaj"
       sounds:
         none: "Ništa"
-      exit: "nazad"
       channel_status:
         open: "Otvori"
       browse:

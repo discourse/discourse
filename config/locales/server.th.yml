@@ -539,7 +539,7 @@ th:
     actions:
       agree:
         title: "ใช่"
-      delete_single:
+      delete:
         title: "ลบ"
         complete: "โพสต์ถูกลบ."
       delete_and_ignore:

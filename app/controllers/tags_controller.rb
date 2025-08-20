@@ -160,6 +160,22 @@ class TagsController < ::ApplicationController
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
 
+      if @additional_tags.present?
+        additional_tags_trimmed = @additional_tags.dup
+        additional_tags_trimmed.delete(@tag_id)
+        additional_tags_trimmed = additional_tags_trimmed&.uniq
+
+        if additional_tags_trimmed != @additional_tags
+          if additional_tags_trimmed.present?
+            params[:additional_tag_ids] = additional_tags_trimmed&.join("/")
+          else
+            params[:additional_tag_ids] = nil
+          end
+
+          return redirect_to url_for(params.to_unsafe_hash)
+        end
+      end
+
       list_opts = build_topic_list_options
       @list = nil
 

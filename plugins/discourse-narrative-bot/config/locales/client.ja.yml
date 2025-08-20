@@ -10,3 +10,8 @@ ja:
       welcome_post_type:
         new_user_track: "すべての新規ユーザーに新規ユーザー向けチュートリアルを開始する"
         welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

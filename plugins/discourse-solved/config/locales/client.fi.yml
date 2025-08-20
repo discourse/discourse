@@ -29,6 +29,7 @@ fi:
       solution_summary:
         one: "ratkaisu"
         other: "ratkaisua"
+      accepted_answer_post_number: "viesti %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "kaikki"

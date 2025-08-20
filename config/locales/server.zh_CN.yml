@@ -74,6 +74,7 @@ zh_CN:
     bad_color_scheme: "无法更新主题，调色板无效"
     other_error: "更新主题时出错"
     ember_selector_error: "抱歉 - 不允许使用 #ember 或 .ember-view CSS 选择器，因为这些名称是在运行时动态生成的，并且会随着时间变化，最终会导致 CSS 损坏。尝试其他选择器。"
+    setting_not_themeable: "设置“%{name}”不可作为主题。"
     import_error:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
@@ -1491,6 +1492,13 @@ zh_CN:
         anon_views: 匿名
         total_views: 总计
       description: "在某一日期范围内浏览次数最多的前 100 个话题，包括登录和匿名浏览。可以按类别进行筛选。"
+    associated_accounts_by_provider:
+      title: "按登录方法分组的关联帐户"
+      labels:
+        provider: 登录提供商
+        no_accounts: "无关联帐户"
+        total_users: "成员总数"
+      description: "显示按登录提供商分组的关联帐户数量。仅在启用社交登录方法时适用。"
   dashboard:
     problem:
       twitter_login: 'X 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
@@ -1536,14 +1544,14 @@ zh_CN:
     allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
     set_locale_from_accept_language_header: "通过匿名用户浏览器的语言标头为其设置界面语言"
     set_locale_from_cookie: "允许通过 'locale' 浏览器 Cookie 设置匿名用户的区域设置"
-    set_locale_from_param: "允许通过 'lang' URL 参数（例如 ?lang=es）设置匿名用户的区域设置"
+    set_locale_from_param: "允许通过 'tl' URL 参数设置匿名用户的语言环境，例如 ?tl=es"
     support_mixed_text_direction: "支持从左到右和从右到左混合的文本方向"
     min_post_length: "允许的帖子的最小长度，以字符为单位（不包括个人消息）"
     min_first_post_length: "允许的第一个帖子（即话题正文）的最小长度（不包括个人消息）"
     prevent_uploads_only_posts: "检查最小文章长度时，不计算上传的 Markdown 代码"
     min_personal_message_post_length: "消息的最小允许帖子长度（包括第一个帖子和回复），以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
-    topic_featured_link_enabled: "允许用户将功能链接与其话题关联。开启后，话题可以附加一个突出显示的链接，该链接公开可见，如果用户有足够的权限，还可以对其进行编辑。功能链接可以提供相关的附加内容，从而增强话题的可理解性。"
+    topic_featured_link_enabled: "允许用户将功能链接与其话题关联。开启后，话题可以附加一个高亮显示的链接，该链接公开可见，如果用户有足够的权限，还可以对其进行编辑。功能链接可以提供相关的附加内容，从而增强话题的可理解性。"
     show_topic_featured_link_in_digest: "在摘要电子邮件中显示话题精选链接。"
     min_topic_views_for_delete_confirm: "话题在删除时出现确认弹出窗口必须具有的最小浏览量"
     min_topic_title_length: "允许的最小话题长度（以字符为单位）"
@@ -1732,6 +1740,7 @@ zh_CN:
     redirect_users_to_top_page: "自动将新用户和长期不在的用户重定向到热门页面。仅在 'top menu' 网站设置中出现 'top' 时适用。"
     top_page_default_timeframe: "匿名用户的默认顶部页面时间段（会基于登录用户最后一次访问自动为其调整）。"
     moderators_view_emails: "允许版主查看用户电子邮件地址。"
+    moderators_view_ips: "允许版主查看用户 IP 地址。"
     prioritize_username_in_ux: "在用户页面、用户卡片和帖子上先显示用户名（先显示禁用名称时）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时启用 HTML 到 Markdown 的自动转换。"
     send_old_credential_reminder_days: "几天后提醒旧凭据"
@@ -1788,6 +1797,7 @@ zh_CN:
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
+    enable_discourse_id: "通过 Discourse ID 启用身份验证，这是一种单点登录服务，允许用户使用一个帐户登录多个 Discourse 站点。无需额外配置即可支持 Google、Facebook 和 Twitter 等常见社交登录提供商。如需了解详情，请参阅 <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>。"
     enable_google_oauth2_logins: "启用 Google Oauth2 身份验证。这是 Google 当前支持的身份验证方法。要求密钥和密钥代码。请参阅<a href='https://meta.discourse.org/t/15858' target='_blank'>为 Discourse 配置 Google 登录</a>。"
     google_oauth2_client_id: "由 Google 应用程序提供的唯一客户端 ID，用于身份验证流程。"
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
@@ -1817,8 +1827,7 @@ zh_CN:
     allow_restore: "允许恢复，这可以替换所有网站数据！除非您计划恢复备份，否则请保持禁用状态"
     maximum_backups: "要保留的最大备份数。系统将自动删除较旧的备份"
     remove_older_backups: "移除超过指定天数的备份。留空表示禁用。"
-    automatic_backups_enabled: "按照定义的备份频率运行自动备份"
-    backup_frequency: "指定创建网站自动备份的间隔（以天为单位）。例如，如果设置为 7，将每周生成一个新备份。此设置是否生效取决于 `automatic_backups_enabled`。"
+    backup_frequency: "指定创建站点自动备份的间隔（以天为单位）。例如，如果设置为 7，将每周生成一个新备份。设置为 0 将禁用。"
     s3_backup_bucket: "存放备份的远程存储桶。警告：确认它是私有存储桶。"
     s3_endpoint: "可以修改端点以备份到 S3 兼容服务，如 DigitalOcean Spaces 或 Minio。警告：如果使用 AWS S3，请留空。"
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
@@ -1894,6 +1903,9 @@ zh_CN:
     composer_media_optimization_image_resize_dimensions_threshold: "触发客户端大小调整的最小图片宽度"
     composer_media_optimization_image_resize_width_target: "宽度大于 `composer_media_optimization_image_dimensions_resize_threshold` 的图片将调整为此宽度。必须 >= `composer_media_optimization_image_dimensions_resize_threshold`。"
     composer_media_optimization_image_encode_quality: "重新编码过程中使用的 JPG 编码质量。"
+    video_conversion_enabled: "为上传的视频文件启用视频转换。这可以将视频转换为与网页兼容的格式。"
+    video_conversion_service: "用于处理所上传视频的视频转换服务。"
+    mediaconvert_role_arn: "用于 MediaConvert 服务的 AWS IAM 角色 ARN。使用 AWS MediaConvert 进行视频转换时需要此角色。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
     default_invitee_trust_level: "受邀用户的默认信任级别 (0-4)。"
@@ -1980,7 +1992,6 @@ zh_CN:
     desktop_category_page_style: "此设置决定桌面版 /categories 页面的视觉布局。其中包括显示带有精选话题的子类别、显示最新话题或呈现热门话题等选项。所选样式将影响用户在网站上类别间的互动和导航方式。"
     mobile_category_page_style: "此设置决定移动设备上 /categories 页面的视觉布局。"
     category_colors: "设置类别允许的十六进制颜色值列表。"
-    default_dark_mode_color_scheme_id: "在深色模式下使用的调色板。"
     dark_mode_none: "无"
     max_image_size_kb: "上传的最大图片尺寸。也必须在 nginx (client_max_body_size) /apache 或代理中配置此设置。大于此值或小于 client_max_body_size 的图片在上传时将被调整大小。"
     max_attachment_size_kb: "上传的最大附件文件大小。也必须在 nginx (client_max_body_size) / apache 或代理中配置此设置。"
@@ -1991,18 +2002,18 @@ zh_CN:
     title_prettify: "防止常见的标题拼写错误和错误，包括全部大写、第一个字符小写、多个 ! 和 ?、结尾出现额外的 . 等。"
     title_remove_extraneous_space: "移除末尾标点符号前面的前导空格。"
     automatic_topic_heat_values: '基于网站活动自动更新“topic views heat”和“topic post like heat”设置。'
-    topic_views_heat_low: "获得此数量的浏览后，浏览字段将被稍稍突出显示。"
-    topic_views_heat_medium: "获得此数量的浏览后，浏览字段将被适度突出显示。"
-    topic_views_heat_high: "获得此数量的浏览后，浏览字段将被显著突出显示。"
+    topic_views_heat_low: "获得此数量的浏览后，浏览次数字段将被稍稍高亮显示。"
+    topic_views_heat_medium: "获得此数量的浏览后，浏览次数字段将被适度高亮显示。"
+    topic_views_heat_high: "获得此数量的浏览后，浏览次数字段将被显著高亮显示。"
     cold_age_days_low: "经过此天数的对话后，最后一个活动日期稍微变暗。"
     cold_age_days_medium: "经过此天数的对话后，最后一个活动日期适度变暗。"
     cold_age_days_high: "经过此天数的对话后，最后一个活动日期显著变暗。"
-    history_hours_low: "在此小时数内编辑过的帖子会略微突出显示编辑指示器"
-    history_hours_medium: "在此小时数内编辑过的帖子会适度突出显示编辑指示器."
-    history_hours_high: "在此小时数内编辑过的帖子会强烈突出显示编辑指示器."
-    topic_post_like_heat_low: "在点赞:帖子比例超过此值后，帖子计数字段会被略微突出显示。"
-    topic_post_like_heat_medium: "在点赞:帖子比例超过此值后，帖子计数字段会被适度突出显示。"
-    topic_post_like_heat_high: "在点赞:帖子比例超过此值后，帖子计数字段会被强烈突出显示。"
+    history_hours_low: "在此小时数内编辑过的帖子会略微高亮显示编辑指示器"
+    history_hours_medium: "在此小时数内编辑过的帖子会适度高亮显示编辑指示器."
+    history_hours_high: "在此小时数内编辑过的帖子会强烈高亮显示编辑指示器."
+    topic_post_like_heat_low: "在点赞:帖子比例超过此值后，帖子计数字段会被略微高亮显示。"
+    topic_post_like_heat_medium: "在点赞:帖子比例超过此值后，帖子计数字段会被适度高亮显示。"
+    topic_post_like_heat_high: "在点赞:帖子比例超过此值后，帖子计数字段会被强烈高亮显示。"
     faq_url: "如果您想使用在别处托管的常见问题解答，请在此处提供完整 URL。"
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
@@ -2022,7 +2033,7 @@ zh_CN:
     num_hours_to_close_topic: "暂停话题以进行干预的小时数。"
     auto_respond_to_flag_actions: "处理举报时启用自动回复。"
     min_first_post_typing_time: "用户在第一次发帖时必须输入的最短时间（以毫秒为单位），如果未达到阈值，发布将自动进入需求审批队列。设置为 0 将禁用（不推荐）"
-    fast_typing_threshold: "发布第一篇帖子时，用户必须输入的最短时间（以毫秒为单位）。如果未达到该阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
+    fast_typing_threshold: "发布第一个帖子时，用户必须输入的最短时间（以毫秒为单位）。如果未达到该阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
     auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"
@@ -2148,6 +2159,7 @@ zh_CN:
     delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联帐户。"
     allow_featured_topic_on_user_profiles: "允许用户在他们的用户卡片和个人资料上添加指向某个话题的链接。"
     show_inactive_accounts: "允许登录用户浏览闲置帐户的个人资料。"
+    hide_silencing_reasons: "不在用户个人资料中公开显示禁言原因。"
     hide_suspension_reasons: "不在用户个人资料中公开显示封禁原因。"
     log_personal_messages_views: "管理员为其他用户/群组记录个人消息浏览。"
     ignored_users_count_message_threshold: "如果某个特定用户被此数量的其他用户忽略，则通知版主。"
@@ -2268,6 +2280,7 @@ zh_CN:
     default_other_enable_quoting: "默认启用高亮显示文本的引用回复。"
     default_other_enable_smart_lists: "默认情况下，在编辑器中输入时启用智能列表。"
     default_other_enable_defer: "默认启用延迟话题功能。"
+    default_other_enable_markdown_monospace_font: "默认在输入框的 Markdown 模式下使用等宽字体。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
     default_other_like_notification_frequency: "设置用户默认接收点赞通知的频率。未自定义通知设置的用户将遵循此默认行为。"
@@ -2308,6 +2321,7 @@ zh_CN:
     tagging_enabled: "启用话题标签？有关详情，请参阅 <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta 上的标签管理员指南</a>。"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     create_tag_allowed_groups: "能够创建标签的群组。管理员和版主始终可以创建标签。"
+    edit_tags_allowed_groups: "能够编辑标签、标签描述和标签同义词的群组。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
     enable_max_tags_per_email_subject: "生成电子邮件主题时使用 max_tags_per_email_subject"
     max_tags_per_email_subject: "电子邮件主题中可以包含的最大标签数"
@@ -2346,6 +2360,7 @@ zh_CN:
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
+    gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服务制作用户头像。这将阻止用户改用 Gravatar 制作头像，但不会影响已使用 Gravatar 的用户。"
     gravatar_name: "指定 Gravatar 服务提供商的名称。此名称通常用于标识向网站提供 Gravatar 头像的来源。"
     gravatar_base_url: "指定用于访问 Gravatar 提供商的 API 的 URL。此设置对于将电子邮件地址转换为存储头像图片的 Gravatar URL 至关重要。"
     gravatar_login_url: "相对于 `gravatar_base_url` 的 URL，它为用户提供了登录 Gravatar 服务的途径。"
@@ -2359,6 +2374,9 @@ zh_CN:
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎会员并允许他们搜索站点内容"
+    welcome_banner_image: "设置在欢迎横幅背景中显示的图片。"
+    welcome_banner_location: "确定欢迎横幅在页面上的显示位置。"
+    welcome_banner_page_visibility: "确定哪些页面会显示欢迎横幅。"
     splash_screen: "在加载网站资源时显示临时加载屏幕"
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
@@ -2366,6 +2384,10 @@ zh_CN:
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
     glimmer_post_stream_mode: "控制是否使用新的 'glimmer' 帖子流实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_stream_mode_auto_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子流实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    deactivate_widgets_rendering: "禁用旧版微件渲染引擎。这将禁用所有未更新为 Glimmer 组件的微件，并且无论 `glimmer_post_stream_mode` 设置的值如何，都会强制无条件启用 Glimmer Post Stream。不建议在生产站点使用此设置，因为它可能会破坏现有的主题和插件。"
+    floatkit_autocomplete_composer: "在输入框中启用基于 Floatkit 的自动补全菜单。这是一个 UI 增强功能，将取代当前基于 jQuery 的自动补全菜单。"
+    floatkit_autocomplete_input_fields: "启用基于Floatkit的自动完成菜单，用于全页搜索和组选择器字段的输入字段。 这是一个 UI 增强功能，将取代当前基于 jQuer的自动完成菜单。"
+    floatkit_autocomplete_chat_composer: "在聊天输入框中启用基于 Floatkit 的自动补全菜单。这是一个 UI 增强功能，将取代当前基于 jQuery 的自动补全菜单。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
@@ -2377,8 +2399,9 @@ zh_CN:
     about_page_extra_groups_initial_members: "关于页面上每个群组上需要展开的成员数量。"
     about_page_extra_groups_show_description: "是否在关于页面中包含群组描述。"
     about_page_extra_groups_order: "关于页面上额外群组的顺序。"
-    adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/...`)"
+    adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/…`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
+    rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术含量更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
@@ -2445,6 +2468,7 @@ zh_CN:
         other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
+      discourse_id_credentials: "启用此设置前，必须先配置 Discourse ID 凭据 ('discourse_id_client_id' and 'discourse_id_client_secret')。"
       linkedin_oidc_credentials: "启用此设置前，必须先配置 LinkedIn OIDC 凭据 ('linkedin_oidc_client_id' 和 'linkedin_oidc_client_secret')。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
@@ -2452,11 +2476,15 @@ zh_CN:
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
+      content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
       content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 网站设置，并且 `content localization supported locales` 至少有一种语言。"
+      mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
+      s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
       navigation_menu: "边栏|标题下拉菜单"
       purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
+      default_composition_mode: "rte|富文本|输入框|Markdown|富文本编辑器"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2487,6 +2515,65 @@ zh_CN:
       exclude_tag: "排除带有特定标签的话题"
       exclude_tags_any: "排除带有任何指定标签的话题（以逗号分隔）"
       exclude_tags_all: "排除带有所有指定标签的话题（以加号分隔）"
+      tags_alias: "“标签：”筛选器的别名"
+      tag_group: "显示带有特定标签组的标签的话题"
+      exclude_tag_group: "排除带有特定标签组的标签的话题"
+      activity_before: "显示最新活动在某个日期之前（YYYY-MM-DD 或几天前）的话题"
+      activity_after: "显示最新活动在某个日期之后（YYYY-MM-DD 或几天前）的话题"
+      created_before: "显示在某个日期之前（YYYY-MM-DD 或几天前）创建的话题"
+      created_after: "显示在某个日期之后（YYYY-MM-DD 或几天前）创建的话题"
+      created_by: "显示特定用户创建的话题"
+      created_by_user: "显示由用户名（不带 @）创建的话题"
+      created_by_multiple: "显示由任意指定用户（以逗号分隔）创建的话题"
+      latest_post_before: "显示最新帖子在某个日期之前（YYYY-MM-DD 或几天前）的话题"
+      latest_post_after: "显示最新帖子在某个日期之后（YYYY-MM-DD 或几天前）的话题"
+      likes_min: "显示至少有这些赞的话题"
+      likes_max: "显示最多有这些赞的话题"
+      likes_op_min: "显示第一个帖子至少有这些赞的话题"
+      likes_op_max: "显示第一个帖子最多有这些赞的话题"
+      posts_min: "显示至少有这些帖子的话题"
+      posts_max: "显示最多有这些帖子的话题"
+      posters_min: "显示至少有这些参与者的话题"
+      posters_max: "显示最多有这些参与者的话题"
+      views_min: "显示至少有这些观看量的话题"
+      views_max: "显示最多有这些观看量的话题"
+      status_open: "显示开放的话题（未关闭或归档）"
+      status_closed: "显示关闭的话题"
+      status_archived: "显示归档的话题"
+      status_listed: "显示公开的（可见）话题"
+      status_unlisted: "显示取消公开的（隐藏）话题"
+      status_deleted: "显示删除的话题（如果您有权限）"
+      status_public: "显示公共类别的话题"
+      in_pinned: "显示置顶的话题"
+      in_bookmarked: "显示您添加了书签的话题"
+      in_watching: "显示您正在关注的话题"
+      in_tracking: "显示您正在跟踪的话题"
+      in_muted: "显示设为免打扰的话题"
+      in_normal: "显示具有正常通知级别的话题"
+      in_watching_first_post: "显示您正在关注第一个帖子的话题"
+      in_new: "显示新话题或有新回复的话题"
+      in_new_replies: "显示有新回复的话题"
+      in_new_topics: "显示新话题"
+      order_activity: "按最新活动排序（最新的活动优先）"
+      order_activity_asc: "按最新活动排序（最早的活动优先）"
+      order_category: "按类别名称排序 (Z-A)"
+      order_category_asc: "按类别名称排序 (A-Z)"
+      order_created: "按创建日期排序（日期最新的优先）"
+      order_created_asc: "按创建日期排序（日期最早的优先）"
+      order_latest_post: "按最后帖子日期排序（日期最新的优先）"
+      order_latest_post_asc: "按最后帖子日期排序（日期最早的优先）"
+      order_likes: "按赞数排序（数量最多的优先）"
+      order_likes_asc: "按赞数排序（数量最少的优先）"
+      order_likes_op: "按第一个帖子的赞数排序（数量最多的优先）"
+      order_likes_op_asc: "按第一个帖子的赞数排序（数量最少的优先）"
+      order_posters: "按参与人数排序（数量最多的优先）"
+      order_posters_asc: "按参与人数排序（数量最少的优先）"
+      order_title: "按标题排序 (Z-A)"
+      order_title_asc: "按标题排序 (A-Z)"
+      order_views: "按浏览量排序（数量最多的优先）"
+      order_views_asc: "按浏览量排序（数量最少的优先）"
+      order_read: "按最后阅读时间排序（时间最近的优先）"
+      order_read_asc: "按最后阅读时间排序（时间最早的优先）"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"
@@ -2594,6 +2681,9 @@ zh_CN:
     omniauth_error:
       generic_without_provider: "抱歉，尝试使用登录服务授权您的帐户时出现错误。请重试。"
       generic_with_provider: "抱歉，尝试使用 %{provider} 授权您的帐户时出错。请重试。"
+      csrf_detected: "抱歉，授权超时，或者您已切换浏览器。请重试。"
+      request_error: "抱歉，启动授权时发生错误。请重试。"
+      invalid_iat: "抱歉，由于服务器时钟差异，无法验证授权令牌。请重试。"
     omniauth_error_unknown: "处理您的登录时出错，请重试。"
     omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"
@@ -4624,7 +4714,7 @@ zh_CN:
       name: 首次引用
       description: 引用了一个帖子
       long_description: |
-        当您首次在回复中引用帖子时，将授予此徽章。在您的回复中引用之前帖子的相关部分有助于将讨论联系在一起并围绕话题进行。最简单的引用方法是突出显示帖子的某个部分，然后按任意回复按钮。慷慨地引用吧！
+        当您首次在回复中引用帖子时，将授予此徽章。在您的回复中引用之前帖子的相关部分有助于将讨论联系在一起并围绕话题进行。最简单的引用方法是高亮显示帖子的某个部分，然后按任意回复按钮。慷慨地引用吧！
     read_guidelines:
       name: 阅读准则
       description: 阅读<a href="%{base_uri}/guidelines">社区准则</a>
@@ -4737,6 +4827,7 @@ zh_CN:
         连续 365 天访问论坛会被授予此徽章。哇哦，一整年！
     badge_title_metadata: "%{site_title}上的%{display_name}徽章"
   admin_login:
+    acknowledgement: "如果存在电子邮件地址为 %{email} 的管理员帐户，您将收到一封包含登录链接的电子邮件。"
     email_input: "管理员电子邮件"
     submit_button: "发送电子邮件"
     safe_mode: "安全模式：登录时禁用所有主题/插件"
@@ -5038,11 +5129,9 @@ zh_CN:
         title: "同意并编辑帖子"
         description: "同意举报并打开编辑器窗口以编辑帖子。"
         complete: "举报已确认，您现在可以编辑该帖子。"
-      delete_single:
+      delete:
         title: "删除"
         complete: "帖子已删除。"
-      delete:
-        title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
@@ -5086,7 +5175,10 @@ zh_CN:
         complete: "帖子已批准."
       approve_post:
         title: "批准帖子"
-        confirm_closed: "此话题已被关闭。仍要创建帖子吗？"
+        complete: "帖子已批准."
+      approve_post_closed:
+        title: "批准帖子"
+        confirm: "此话题已被关闭。仍要创建帖子吗？"
         complete: "帖子已批准."
       reject_post:
         title: "拒绝帖子"
@@ -5122,6 +5214,9 @@ zh_CN:
       approve_and_restore:
         title: "批准并恢复帖子"
         complete: "帖子已批准并恢复。"
+      approve_and_unhide:
+        title: "批准并取消隐藏帖子"
+        complete: "帖子已获批准并取消隐藏"
       delete_user:
         reason: "已通过审核队列删除"
         complete: "用户已删除。"
@@ -5166,6 +5261,7 @@ zh_CN:
       duplicate_ids: "有重复的 ID"
       reserved_id: "有一个保留关键字 ID：%{id}"
       unsafe_description: "有不安全的 HTML 描述"
+      invalid_tag_group: "具有无效的标签组：%{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

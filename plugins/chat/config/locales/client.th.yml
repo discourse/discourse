@@ -42,7 +42,6 @@ th:
       save: "บันทึก"
       sounds:
         none: "ไม่มี"
-      exit: "กลับ"
       channel_status:
         closed: "ปิด"
         open: "เปิด"

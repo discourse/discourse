@@ -11,6 +11,7 @@ import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
+import AdminFilterControls from "admin/components/admin-filter-controls";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ThemeSiteSettings extends Component {
@@ -33,13 +34,9 @@ export default class ThemeSiteSettings extends Component {
     });
   }
 
-  isLastThemeSettingOverride(overrides, theme) {
-    return theme === overrides.themes.at(-1);
-  }
-
   @action
   async loadThemeSiteSettings() {
-    let url = "/admin/config/theme-site-settings.json";
+    let url = "/admin/config/customize/theme-site-settings.json";
     const response = await ajax(url, {
       method: "GET",
     });
@@ -56,76 +53,117 @@ export default class ThemeSiteSettings extends Component {
     return this.themesWithSiteSettingOverrides;
   }
 
+  isLastThemeSettingOverride(overrides, theme) {
+    return theme === overrides.themes.at(-1);
+  }
+
+  filterableSettings(settings) {
+    if (!settings) {
+      return [];
+    }
+
+    const filterableSettings = [];
+    for (const [settingName, overrides] of Object.entries(settings)) {
+      filterableSettings.push({
+        humanized_name: overrides.humanized_name,
+        name: settingName,
+        description: overrides.description,
+        default: overrides.default,
+        themeNames:
+          overrides.themes?.map((t) => t.theme_name.toLowerCase()).join(",") ||
+          "",
+        themes: overrides.themes,
+      });
+    }
+
+    return filterableSettings;
+  }
+
   <template>
     <div class="theme-site-settings">
+      <DPageSubheader
+        @descriptionLabel={{i18n
+          "admin.theme_site_settings.help"
+          currentTheme=this.currentTheme.name
+          basePath=basePath
+          currentThemeId=this.currentThemeIdValue
+        }}
+      />
+
       <AsyncContent @asyncData={{this.loadThemeSiteSettings}}>
         <:content as |content|>
-          <DPageSubheader
-            @descriptionLabel={{i18n
-              "admin.theme_site_settings.help"
-              currentTheme=this.currentTheme.name
-              basePath=basePath
-              currentThemeId=this.currentThemeIdValue
+          <AdminFilterControls
+            @array={{this.filterableSettings content}}
+            @searchableProps={{array
+              "humanized_name"
+              "name"
+              "description"
+              "themeNames"
             }}
-          />
-          <table class="d-admin-table admin-theme-site-settings">
-            <thead>
-              <tr>
-                <th>{{i18n "admin.theme_site_settings.setting"}}</th>
-                <th>{{i18n "admin.theme_site_settings.default_value"}}</th>
-                <th>{{i18n "admin.theme_site_settings.overridden_by"}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each-in content as |settingName overrides|}}
-                <tr
-                  class="admin-theme-site-settings-row d-admin-row__content"
-                  data-setting-name={{settingName}}
-                >
-                  <td class="admin-theme-site-settings-row__setting">
-                    <p class="setting-label">{{overrides.humanized_name}}</p>
-                    <div
-                      class="setting-description"
-                    >{{overrides.description}}</div>
-                  </td>
-                  <td class="admin-theme-site-settings-row__default">
-                    {{overrides.default}}
-                  </td>
-                  <td class="admin-theme-site-settings-row__overridden">
-                    {{#each overrides.themes as |theme|}}
-                      <DTooltip>
-                        <:trigger>
-                          <LinkTo
-                            @route="adminCustomizeThemes.show"
-                            @models={{array "themes" theme.theme_id}}
-                            class="theme-link"
-                            data-theme-id={{theme.theme_id}}
-                          >
-                            {{theme.theme_name}}
-                          </LinkTo>
-                        </:trigger>
-                        <:content>
-                          {{i18n
-                            "admin.theme_site_settings.overridden_value"
-                            value=theme.value
-                          }}
-                        </:content>
-                      </DTooltip>
-                      {{#unless
-                        (this.isLastThemeSettingOverride overrides theme)
-                      }},{{/unless}}
-                    {{/each}}
-                    {{#unless overrides.themes}}
-                      -
-                    {{/unless}}
-                  </td>
-                </tr>
-              {{/each-in}}
-            </tbody>
-          </table>
+            @inputPlaceholder={{i18n "admin.theme_site_settings.filter"}}
+            @noResultsMessage={{i18n
+              "admin.theme_site_settings.filter_no_results"
+            }}
+          >
+            <:content as |filteredSettings|>
+              <table class="d-admin-table admin-theme-site-settings">
+                <thead>
+                  <tr>
+                    <th>{{i18n "admin.theme_site_settings.setting"}}</th>
+                    <th>{{i18n "admin.theme_site_settings.default_value"}}</th>
+                    <th>{{i18n "admin.theme_site_settings.overridden_by"}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each filteredSettings as |fs|}}
+                    <tr
+                      class="admin-theme-site-settings-row d-admin-row__content"
+                      data-setting-name={{fs.name}}
+                    >
+                      <td class="admin-theme-site-settings-row__setting">
+                        <p class="setting-label">{{fs.humanized_name}}</p>
+                        <div
+                          class="setting-description"
+                        >{{fs.description}}</div>
+                      </td>
+                      <td class="admin-theme-site-settings-row__default">
+                        {{fs.default}}
+                      </td>
+                      <td class="admin-theme-site-settings-row__overridden">
+                        {{#each fs.themes as |theme|}}
+                          <DTooltip>
+                            <:trigger>
+                              <LinkTo
+                                @route="adminCustomizeThemes.show"
+                                @models={{array "themes" theme.theme_id}}
+                                class="theme-link"
+                                data-theme-id={{theme.theme_id}}
+                              >
+                                {{theme.theme_name}}
+                              </LinkTo>
+                            </:trigger>
+                            <:content>
+                              {{i18n
+                                "admin.theme_site_settings.overridden_value"
+                                value=theme.value
+                              }}
+                            </:content>
+                          </DTooltip>
+                          {{#unless
+                            (this.isLastThemeSettingOverride fs theme)
+                          }},{{/unless}}
+                        {{/each}}
+                        {{#unless fs.themes}}
+                          -
+                        {{/unless}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </:content>
+          </AdminFilterControls>
         </:content>
-        <:empty>
-        </:empty>
       </AsyncContent>
     </div>
   </template>
