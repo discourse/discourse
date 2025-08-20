@@ -32,6 +32,7 @@ export default class extends DiscourseRoute {
       login_required,
     } = this.siteSettings;
     const { pathname: url } = window.location;
+    const { search: query } = window.location;
     const { referrer } = document;
     const { canSignUp } = this.controllerFor("application");
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
@@ -64,7 +65,7 @@ export default class extends DiscourseRoute {
     // Automatically store the current URL (aka. the one **before** the transition)
     if (!currentUser) {
       if (isValidDestinationUrl(url)) {
-        cookie("destination_url", url);
+        cookie("destination_url", url + query);
       } else if (DiscourseURL.isInternalTopic(referrer)) {
         cookie("destination_url", referrer);
       }
