@@ -34,7 +34,7 @@ function deprecateArrayMethod(methodName) {
 
   ARRAY_PROTO[methodName] = function (...args) {
     deprecated(
-      `The method \`array.${methodName}\` is a deprecated Ember native array extension. Instead, use native array methods, an Ember array or a TrackedArray.`,
+      `The method \`array.${methodName}\` is a deprecated Ember native array extension. Instead, use native array methods, an Ember array or a TrackedArray instead.`,
       {
         id: `${DEPRECATION_ID_PREFIX}.${methodName}`,
         since: DEPRECATION_SINCE,
@@ -60,7 +60,7 @@ function wrapSquareBracketDescriptor() {
   Object.defineProperty(ARRAY_PROTO, "[]", {
     get() {
       deprecated(
-        'The array["[]"] getter is a deprecated Ember native array extension. Use native array methods or an Ember Array instead.',
+        'The array["[]"] getter is a deprecated Ember native array extension. Use native array methods, an Ember array or a TrackedArray instead.',
         {
           id: `${DEPRECATION_ID_PREFIX}.[]`,
           since: DEPRECATION_SINCE,
@@ -70,7 +70,7 @@ function wrapSquareBracketDescriptor() {
     },
     set(value) {
       deprecated(
-        'The array["[]"] setter is a deprecated Ember native array extension. Use native array methods or an Ember Array instead.',
+        'The array["[]"] setter is a deprecated Ember native array extension. Use native array method, an Ember array or a TrackedArray instead.',
         {
           id: `${DEPRECATION_ID_PREFIX}.[]`,
           since: DEPRECATION_SINCE,
