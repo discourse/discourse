@@ -51,29 +51,30 @@ const extension = {
       const { schema } = state;
       const textNode = schema.text(i18n("composer.spoiler_text"));
 
-      let spoilerNode;
-      if (start === 0) {
-        // Block spoiler at start of line
-        spoilerNode = schema.nodes.spoiler.createAndFill(
-          null,
-          schema.nodes.paragraph.createAndFill(null, textNode)
+      const atStart = state.doc.resolve(start).parentOffset === 0;
+
+      const tr = state.tr;
+
+      if (atStart) {
+        tr.replaceWith(
+          start - 1,
+          end,
+          schema.nodes.spoiler.createAndFill(
+            null,
+            schema.nodes.paragraph.createAndFill(null, textNode)
+          )
         );
       } else {
-        // Inline spoiler
-        spoilerNode = schema.nodes.inline_spoiler.createAndFill(null, textNode);
+        tr.replaceWith(
+          start,
+          end,
+          schema.nodes.inline_spoiler.createAndFill(null, textNode)
+        );
       }
 
-      const tr = state.tr.replaceWith(start, end, spoilerNode);
-
-      // Select the placeholder text for editing
-      // For block spoilers, text is inside paragraph inside spoiler (depth 2)
-      // For inline spoilers, text is directly inside spoiler (depth 1)
-      const textStart = start === 0 ? start + 2 : start + 1;
-      tr.setSelection(
-        TextSelection.create(tr.doc, textStart, textStart + textNode.nodeSize)
+      return tr.setSelection(
+        TextSelection.create(tr.doc, start + 1, start + 1 + textNode.nodeSize)
       );
-
-      return tr;
     },
   }),
   state: ({ utils, schema }, state) => ({

@@ -43,7 +43,7 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     expect(composer).to have_value("This is a test [spoiler]spoiler[/spoiler] ")
   end
 
-  it "creates block spoiler when cursor is at beginning of line" do
+  it "creates block spoiler when cursor is at start of line" do
     open_composer
 
     click_spoiler_button
@@ -54,6 +54,15 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     composer.toggle_rich_editor
 
     expect(composer).to have_value("[spoiler]\nspoiler\n\n[/spoiler]\n\n")
+  end
+
+  it "creates block spoiler with input rule when cursor is at start of line" do
+    open_composer
+    composer.type_content("[spoiler]")
+    composer.type_content("inside")
+    composer.toggle_rich_editor
+
+    expect(composer).to have_value("[spoiler]\ninside\n\n[/spoiler]\n\n")
   end
 
   it "wraps selected text in inline spoiler when selection is within same paragraph" do
