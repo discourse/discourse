@@ -6,14 +6,14 @@ import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 Array.from(NativeArray.keys())
   .filter(
     (k) =>
-      NativeArray._without.indexOf(k) === -1 && Array.prototype[k] && k !== "[]" // TODO (ember-native-array-extensions) remove this exception
+      NativeArray._without.indexOf(k) === -1 && Array.prototype[k] && k !== "[]" // [] is a special case - a getter/setter property added by Ember's NativeArray
   )
   .forEach((k) => {
     const deprecatedMethod = Array.prototype[k];
     // eslint-disable-next-line no-extend-native
     Array.prototype[k] = function () {
       deprecated(
-        "[]." +
+        "array." +
           k +
           " is an Ember native array extension and is deprecated. Use the native array methods or an Ember array instead.",
         {
