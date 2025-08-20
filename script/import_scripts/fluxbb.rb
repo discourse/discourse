@@ -33,7 +33,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         username: FLUXBB_USER,
         password: FLUXBB_PW,
         database: FLUXBB_DB,
-        encoding: 'utf8mb4',
+        encoding: "utf8mb4",
       )
   end
 
@@ -163,7 +163,10 @@ class ImportScripts::FluxBB < ImportScripts::Base
     puts "", "creating topics and posts"
 
     total_count = mysql_query("SELECT count(*) count from #{FLUXBB_PREFIX}posts").first["count"]
-    sticky_first_posts = mysql_query("select first_post_id pid from #{FLUXBB_PREFIX}topics where sticky = 1 and first_post_id > 0").map { |r| r["pid"] }.to_set
+    sticky_first_posts =
+      mysql_query(
+        "select first_post_id pid from #{FLUXBB_PREFIX}topics where sticky = 1 and first_post_id > 0",
+      ).map { |r| r["pid"] }.to_set
 
     batches(BATCH_SIZE) do |offset|
       results =
@@ -201,9 +204,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         if m["id"] == m["first_post_id"]
           mapped[:category] = category_id_from_imported_category_id("child##{m["category_id"]}")
           mapped[:title] = CGI.unescapeHTML(m["title"])
-          if sticky_first_posts.include? m["id"]
-            mapped[:pinned_at] = Time.zone.at(m["created_at"])
-          end
+          mapped[:pinned_at] = Time.zone.at(m["created_at"]) if sticky_first_posts.include? m["id"]
         else
           parent = topic_lookup_from_imported_post_id(m["first_post_id"])
           if parent
@@ -276,24 +277,24 @@ class ImportScripts::FluxBB < ImportScripts::Base
     s.gsub!(%r{\[http(s)?://(www\.)?}, "[")
 
     # some tags only work well when on its own line
-    s.gsub!(/(?<=[^\n])\[\/?(quote|code)/m, "\n\\0")
-    s.gsub!(/\[\/?(quote|code)[^\]]*\](?=[^\n])/m, "\\0\n")
+    s.gsub!(%r{(?<=[^\n])\[/?(quote|code)}m, "\n\\0")
+    s.gsub!(%r{\[/?(quote|code)[^\]]*\](?=[^\n])}m, "\\0\n")
 
     # [del] & [ins] are not supported
-    s.gsub!('[del]', '[s]')
-    s.gsub!('[/del]', '[/s]')
-    s.gsub!(/\[ins\]([^\]]+)\[\/ins\]/, '<mark>\1</mark>')
+    s.gsub!("[del]", "[s]")
+    s.gsub!("[/del]", "[/s]")
+    s.gsub!(%r{\[ins\]([^\]]+)\[/ins\]}, '<mark>\1</mark>')
 
     # [img] with alt text with spaces doesn't work
-    s.gsub!(/\[img=([^\]]+)\]([^\]]+)\[\/img\]/, '![\1](\2)')
+    s.gsub!(%r{\[img=([^\]]+)\]([^\]]+)\[/img\]}, '![\1](\2)')
 
-    s.gsub!(/\[list=[^\]]+\]/, '')
-    s.gsub!('[/list]', '')
-    s.gsub!('[*]', '* ')
-    s.gsub!('[/*]', '')
+    s.gsub!(/\[list=[^\]]+\]/, "")
+    s.gsub!("[/list]", "")
+    s.gsub!("[*]", "* ")
+    s.gsub!("[/*]", "")
 
-    s.gsub!('[em]', '[b]')
-    s.gsub!('[/em]', '[/b]')
+    s.gsub!("[em]", "[b]")
+    s.gsub!("[/em]", "[/b]")
 
     s
   end
