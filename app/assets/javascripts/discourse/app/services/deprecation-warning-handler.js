@@ -2,7 +2,7 @@ import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { bind } from "discourse/lib/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
@@ -73,7 +73,7 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const matchingConfig = DEPRECATION_WORKFLOW.find(opts.id);
+    const matchingConfig = DeprecationWorkflow.find(opts.id);
 
     if (matchingConfig?.handler?.split("|").includes("silence")) {
       return;

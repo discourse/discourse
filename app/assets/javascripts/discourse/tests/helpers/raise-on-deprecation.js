@@ -1,6 +1,6 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import QUnit from "qunit";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 
 let disabled = false;
@@ -13,7 +13,7 @@ export function configureRaiseOnDeprecation() {
   registerDeprecationHandler((message, options, next) => {
     if (
       disabled ||
-      DEPRECATION_WORKFLOW.find(options.id) ||
+      DeprecationWorkflow.find(options.id) ||
       options.id.startsWith("ember-metal.")
     ) {
       return next(message, options);
@@ -22,7 +22,7 @@ export function configureRaiseOnDeprecation() {
   });
 
   registerDiscourseDeprecationHandler((message, options) => {
-    if (disabled || DEPRECATION_WORKFLOW.find(options?.id)) {
+    if (disabled || DeprecationWorkflow.find(options?.id)) {
       return;
     }
     raiseDeprecationError(message, options);

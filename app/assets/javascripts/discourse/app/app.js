@@ -1,4 +1,5 @@
 import "./setup-deprecation-workflow";
+import "./deprecate-native-array-extensions";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";

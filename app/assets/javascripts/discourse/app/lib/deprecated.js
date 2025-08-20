@@ -1,4 +1,4 @@
-import DEPRECATION_WORKFLOW from "../deprecation-workflow";
+import DeprecationWorkflow from "../deprecation-workflow";
 
 const handlers = [];
 const disabledDeprecations = new Set();
@@ -48,7 +48,7 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  const matchedWorkflow = DEPRECATION_WORKFLOW.find(id);
+  const matchedWorkflow = DeprecationWorkflow.find(id);
 
   if (
     raiseError ||
