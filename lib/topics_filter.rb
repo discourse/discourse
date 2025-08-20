@@ -419,29 +419,34 @@ class TopicsFilter
     filter_by_topic_range(column_name: "topics.views", min:, max:)
   end
 
+  def calculate_all_or_any(value)
+    require_all = nil
+    names = nil
+
+    if value.include?("+")
+      names = value.split("+")
+      require_all = true
+      if value.include?(",")
+        # no mix and match
+        return nil, []
+      end
+    else
+      names = value.split(",")
+      require_all = false
+      if value.include?("+")
+        # no mix and match
+        return nil, []
+      end
+    end
+
+    [require_all, names.map(&:downcase).reject(&:blank?)]
+  end
+
   # users:a,b => any of a or b participated in the topic
   # users:a+b => both a and b participated in the topic
   def filter_users(values:)
     values.each do |value|
-      if value.include?("+")
-        usernames = value.split("+")
-        require_all = true
-        if value.include?(",")
-          # no mix and match
-          @scope = @scope.none
-          next
-        end
-      else
-        usernames = value.split(",")
-        require_all = false
-        if value.include?("+")
-          # no mix and match
-          @scope = @scope.none
-          next
-        end
-      end
-
-      usernames = usernames.map(&:downcase).reject(&:blank?)
+      require_all, usernames = calculate_all_or_any(value)
 
       if usernames.empty?
         @scope = @scope.none
@@ -487,25 +492,7 @@ class TopicsFilter
   # group:staff+moderators => both groups have participation
   def filter_groups(values:)
     values.each do |value|
-      if value.include?("+")
-        group_names = value.split("+")
-        require_all = true
-        if value.include?(",")
-          # no mix and match
-          @scope = @scope.none
-          next
-        end
-      else
-        group_names = value.split(",")
-        require_all = false
-        if value.include?("+")
-          # no mix and match
-          @scope = @scope.none
-          next
-        end
-      end
-
-      group_names = group_names.map(&:downcase).reject(&:blank?)
+      require_all, group_names = calculate_all_or_any(value)
 
       if group_names.empty?
         @scope = @scope.none
