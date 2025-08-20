@@ -11,6 +11,25 @@ const DEPRECATION_SINCE = "3.6.0.beta1-dev";
 const ARRAY_PROTO = Array.prototype;
 
 /**
+ * Display a consistent deprecation warning for array extension usage.
+ *
+ * @param {string} name
+ * @param {"method"|"getter"|"setter"} kind
+ */
+function warn(name, kind = "method") {
+  const qualifiedName =
+    kind === "method" ? `array.${name}` : `array["${name}"] ${kind}`;
+
+  deprecated(
+    `The ${qualifiedName} is a deprecated Ember native array extension. Use native array methods, an EmberArray, or a TrackedArray instead.`,
+    {
+      id: `${DEPRECATION_ID_PREFIX}.${name}`,
+      since: DEPRECATION_SINCE,
+    }
+  );
+}
+
+/**
  * Checks if a method is a deprecated Ember native array extension
  *
  * @param {string} methodName - The name of the method to check
@@ -33,13 +52,7 @@ function deprecateArrayMethod(methodName) {
   const original = ARRAY_PROTO[methodName];
 
   ARRAY_PROTO[methodName] = function (...args) {
-    deprecated(
-      `The method \`array.${methodName}\` is a deprecated Ember native array extension. Instead, use native array methods, an Ember array or a TrackedArray instead.`,
-      {
-        id: `${DEPRECATION_ID_PREFIX}.${methodName}`,
-        since: DEPRECATION_SINCE,
-      }
-    );
+    warn(methodName);
     return original.apply(this, args);
   };
 }
@@ -59,23 +72,11 @@ function wrapSquareBracketDescriptor() {
 
   Object.defineProperty(ARRAY_PROTO, "[]", {
     get() {
-      deprecated(
-        'The array["[]"] getter is a deprecated Ember native array extension. Use native array methods, an Ember array or a TrackedArray instead.',
-        {
-          id: `${DEPRECATION_ID_PREFIX}.[]`,
-          since: DEPRECATION_SINCE,
-        }
-      );
+      warn("[]", "getter");
       return squareBracketDescriptor.get.bind(this)();
     },
     set(value) {
-      deprecated(
-        'The array["[]"] setter is a deprecated Ember native array extension. Use native array method, an Ember array or a TrackedArray instead.',
-        {
-          id: `${DEPRECATION_ID_PREFIX}.[]`,
-          since: DEPRECATION_SINCE,
-        }
-      );
+      warn("[]", "setter");
       withSilencedDeprecations(`${DEPRECATION_ID_PREFIX}.replace`, () => {
         squareBracketDescriptor.set.bind(this)(value);
       });
