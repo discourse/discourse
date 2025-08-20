@@ -27,6 +27,7 @@ const extension = {
     html_inline: {
       group: "inline",
       inline: true,
+      defining: true,
       content: "inline*",
       attrs: { tag: {} },
       parseDOM: ALLOWED_INLINE.map((tag) => ({

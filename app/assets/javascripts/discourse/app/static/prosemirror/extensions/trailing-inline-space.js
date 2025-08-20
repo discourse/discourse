@@ -29,10 +29,12 @@ const extension = {
         return false;
       }
 
+      const initialDepth = findInlineContainerDepth(selection.$from);
       if (!dispatch) {
-        return selection.empty
-          ? findInlineContainerDepth(selection.$from) !== null
-          : true;
+        return selection.empty ? initialDepth !== null : true;
+      }
+      if (selection.empty && initialDepth === null) {
+        return false;
       }
 
       const tr = state.tr;
