@@ -243,11 +243,12 @@ class DiscoursePoll::Poll
 
     where_clause = params[:option_digest] ? "AND po.digest = :option_digest" : ""
     query = <<~SQL.gsub("/* where */", where_clause)
-      SELECT poll_id, digest, rank, user_id
+      SELECT poll_id, digest, user_id,
+             CASE int_rank WHEN 0 THEN 'Abstain' ELSE CAST(int_rank AS text) END AS rank
         FROM (
           SELECT pv.poll_id
                , po.digest
-               , CASE pv.rank WHEN 0 THEN 'Abstain' ELSE CAST(pv.rank AS text) END AS rank
+               , pv.rank AS int_rank
                , pv.user_id
                , u.username
                , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at) AS row
@@ -258,7 +259,7 @@ class DiscoursePoll::Poll
                 /* where */
         ) v
         WHERE row BETWEEN :offset AND :offset_plus_limit
-        ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
+        ORDER BY digest, int_rank, username
       SQL
 
     votes = DB.query(query, params.merge(poll_ids: uncached_poll_ids))
