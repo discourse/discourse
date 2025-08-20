@@ -566,14 +566,16 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  .discard-button {
-    color: var(--danger);
-
+  .discard {
     @include viewport.from(sm) {
       margin-left: auto;
       flex: 1;
       text-align: right;
     }
+  }
+
+  .discard-button {
+    color: var(--danger);
 
     @include viewport.until(sm) {
       .d-icon {
