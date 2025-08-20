@@ -78,9 +78,9 @@ const extension = {
     },
   }),
   state: ({ utils, schema }, state) => ({
-    inSpoiler:
-      utils.inNode(state, schema.nodes.spoiler) ||
-      utils.inNode(state, schema.nodes.inline_spoiler),
+    inSpoiler: SPOILER_NODES.some((nodeType) =>
+      utils.inNode(state, schema.nodes[nodeType])
+    ),
   }),
   commands: ({ schema, utils, pmState: { TextSelection } }) => ({
     toggleSpoiler() {

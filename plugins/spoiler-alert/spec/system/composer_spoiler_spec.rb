@@ -88,7 +88,6 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     composer.select_all
     click_spoiler_button
 
-    expect(rich).to have_css("div.spoiled")
     expect(rich).to have_css("div.spoiled p", text: "First paragraph")
     expect(rich).to have_css("div.spoiled p", text: "Second paragraph")
 
@@ -190,14 +189,11 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     # ENTER at the end of the node
     composer.send_keys(:enter)
 
-    sleep 0.1
+    # Backspace, position cursor at hell|o, ENTER
     composer.send_keys(:backspace)
-    sleep 0.1
     composer.send_keys(:left)
-    sleep 0.1
     composer.send_keys(:left)
-    sleep 0.1
-    # ENTER at the middle of the node
+    sleep 0.01
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p", text: "Test")
