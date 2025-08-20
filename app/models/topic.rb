@@ -771,6 +771,15 @@ class Topic < ActiveRecord::Base
         candidates:,
       )
 
+    blurb_sql = "LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb"
+    select_fragment = ->(similarity_expr) do
+      DB.sql_fragment(
+        "topics.*, #{similarity_expr} AS similarity, #{blurb_sql}",
+        title: title,
+        raw: raw,
+      )
+    end
+
     if plugin_candidate_ids.present? && plugin_candidate_ids.length > 0
       ids = plugin_candidate_ids.map(&:to_i)
       candidate_ids =
@@ -787,8 +796,8 @@ class Topic < ActiveRecord::Base
             .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
             .where(id: candidate_ids)
             .select(
-              DB.sql_fragment(
-                "topics.*, (array_length(#{rank_array_sql}, 1) - array_position(#{rank_array_sql}, topics.id) + 1) AS similarity, LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb",
+              select_fragment.call(
+                "(array_length(#{rank_array_sql}, 1) - array_position(#{rank_array_sql}, topics.id) + 1)",
               ),
             )
             .order("similarity DESC")
@@ -816,23 +825,17 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb",
-          title: title,
-          raw: raw,
-        ),
+        select_fragment.call("similarity(topics.title, :title) + similarity(p.raw, :raw)"),
       ).where(
         "similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2",
         title: title,
         raw: raw,
       )
     else
-      similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) AS similarity, LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb",
-          title: title,
-        ),
-      ).where("similarity(topics.title, :title) > 0.2", title: title)
+      similars.select(select_fragment.call("similarity(topics.title, :title)")).where(
+        "similarity(topics.title, :title) > 0.2",
+        title: title,
+      )
     end
   end
 

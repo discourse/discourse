@@ -700,14 +700,18 @@ describe Topic do
 
         plugin_instance = Plugin::Instance.new
         begin
+          blk =
+            lambda do |candidates, args|
+              expect(args[:title]).to eq("any title")
+              expect(args[:raw]).to eq("any raw")
+              desired_order
+            end
+
           DiscoursePluginRegistry.register_modifier(
             plugin_instance,
             :similar_topic_candidate_ids,
-          ) do |candidates, args|
-            expect(args[:title]).to eq("any title")
-            expect(args[:raw]).to eq("any raw")
-            desired_order
-          end
+            &blk
+          )
 
           results = Topic.similar_to("any title", "any raw")
 
@@ -728,7 +732,11 @@ describe Topic do
             expect(topic["blurb"]).to eq(topic.posts.first.cooked)
           end
         ensure
-          DiscoursePluginRegistry.reset_register!(:modifiers)
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
         end
       end
     end
