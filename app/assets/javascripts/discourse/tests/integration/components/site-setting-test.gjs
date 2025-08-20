@@ -8,6 +8,7 @@ import {
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import SiteSettingComponent from "admin/components/site-setting";
@@ -213,6 +214,104 @@ module("Integration | Component | SiteSetting", function (hooks) {
         "href",
         `/admin/logs/staff_action_logs?filters=${encodeURIComponent(JSON.stringify({ subject: "enable_badges", action_name: "change_site_setting" }))}&force_refresh=true`
       );
+  });
+
+  test("Shows update status for default_categories_ sitesettings", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_categories_test",
+        value: "",
+        type: "category_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "enqueued",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "enqueued",
+      progress: "10/100",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+    assert.dom(".desc.site-setting").hasTextContaining("10/100");
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update completed");
+  });
+
+  test("Shows update status for default_tags_ sitesettings", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_tags_test",
+        value: "",
+        type: "tag_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+      progress: "10/100",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+    assert.dom(".desc.site-setting").hasTextContaining("10/100");
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update completed");
+  });
+
+  test("Doesn't shows update status for other site settings besides default_tags_test or default_categories_test", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_test",
+        value: "",
+        type: "tag_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+    });
+    assert.dom(".desc.site-setting").doesNotExist();
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").doesNotExist();
   });
 });
 

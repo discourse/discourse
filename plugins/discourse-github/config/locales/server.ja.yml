@@ -36,5 +36,23 @@ ja:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "discourse-github プラグインにアクションが必要です"
+      repository_identifier_invalid_pm: |
+        discourse-github プラグインに指定されたリポジトリは無効です:
+        %{repo_name}
+
+        `user/repo` の形式で指定されている必要があります。
+
+        この名前が
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github のサイト設定</a>で修正され、"github_badges_enabled" がもう一度オンになるまで、バッジは授与されません。
       repository_not_found_pm_title: "discourse-github プラグインにアクションが必要です"
+      repository_not_found_pm: |
+        discourse-github プラグインに指定されたリポジトリから "見つかりません"
+        エラーが返されました: %{repo_name}
+
+        この名前が
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github のサイト設定</a>で修正され、"github_badges_enabled" がもう一度オンになるまで、バッジは授与されません。
       invalid_octokit_credentials_pm_title: "discourse-github プラグインにアクションが必要です"
+      invalid_octokit_credentials_pm: |
+        discourse-github プラグインに指定された GitHub 資格情報は無効です。"github badges enabled\ サイト設定が無効になっているため、この問題が解決するまでコミットは表示されません。
+
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github サイト設定</a>から "GitHub バックリンクアクセストークン" サイト設定を確認し、トークンが正しく、すべてのリポジトリへの権限が付与されていることを確認してください。

@@ -1069,7 +1069,7 @@ bs_BA:
         description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
       agree_and_silence:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
-      delete_single:
+      delete:
         title: "Delete"
         complete: "Post izbrisan."
       delete_and_ignore:

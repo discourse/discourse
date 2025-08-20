@@ -1225,14 +1225,12 @@ sr:
       color_scheme: "Paleta Boja"
       color_schemes:
         default_description: "Podrzumevane vrednosti vizuelne teme"
-        disable_dark_scheme: "Kao i regularno"
         dark_instructions: "Možete pregledati paletu boja tamnog režima tako što ćete uključiti tamni mod na vašem uređaju."
         undo: "Reset"
-        regular: "Stalni član"
         dark: "Tamni mod"
-        default_dark_scheme: "(podrazumevana vrednost sajta)"
+        picker:
+          active: "Aktivni"
       dark_mode: "Tamni Mod"
-      dark_mode_enable: "Uključi automatsku paletu boja za tamni mod"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       experimental_sidebar:
@@ -1785,8 +1783,6 @@ sr:
       paste_code_text: "unesi ili nalepi kod ovde"
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
-      olist_title: "Brojčani popis"
-      ulist_title: "Tačkasti popis"
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
       collapse: "smanji panel za sastavljanje teksta"
@@ -2965,7 +2961,7 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
-          default: "Aktivno"
+          default: "Подразумевано"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"
@@ -2995,8 +2991,6 @@ sr:
           edit: "Izmeni"
           filters:
             all: "Sve"
-          active_badge:
-            text: "Aktivni"
           copy_name_prefix: "Kopija od"
           undo: "Vrati na prethodno"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."

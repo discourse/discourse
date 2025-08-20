@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -16,11 +17,11 @@ export default RouteTemplate(
           {{i18n "discourse_subscriptions.admin.products.product.name"}}
         </label>
 
-        <Input
-          @type="text"
+        <input
+          type="text"
           name="product_name"
-          @value={{@controller.model.product.name}}
-          disabled={{true}}
+          value={{@controller.model.product.name}}
+          disabled
         />
       </p>
 
@@ -29,10 +30,14 @@ export default RouteTemplate(
           {{i18n "discourse_subscriptions.admin.plans.plan.nickname"}}
         </label>
 
-        <Input
-          @type="text"
+        <input
+          {{on
+            "input"
+            (withEventValue (fn (mut @controller.model.plan.nickname)))
+          }}
+          type="text"
           name="name"
-          @value={{@controller.model.plan.nickname}}
+          value={{@controller.model.plan.nickname}}
         />
 
         <div class="control-instructions">
@@ -63,10 +68,11 @@ export default RouteTemplate(
         </label>
 
         {{#if @controller.planFieldDisabled}}
-          <Input
+          <input
             class="plan-amount plan-currency"
-            disabled={{true}}
-            @value={{@controller.model.plan.currency}}
+            disabled
+            type="text"
+            value={{@controller.model.plan.currency}}
           />
         {{else}}
           <ComboBox
@@ -77,11 +83,15 @@ export default RouteTemplate(
           />
         {{/if}}
 
-        <Input
+        <input
+          {{on
+            "input"
+            (withEventValue (fn (mut @controller.model.plan.amountDollars)))
+          }}
           class="plan-amount"
-          @type="text"
+          type="text"
           name="name"
-          @value={{@controller.model.plan.amountDollars}}
+          value={{@controller.model.plan.amountDollars}}
           disabled={{@controller.planFieldDisabled}}
         />
       </p>
@@ -96,7 +106,7 @@ export default RouteTemplate(
             @type="checkbox"
             name="recurring"
             @checked={{@controller.model.plan.isRecurring}}
-            disabled={{true}}
+            disabled
           />
         {{else}}
           <Input
@@ -115,7 +125,11 @@ export default RouteTemplate(
           </label>
 
           {{#if @controller.planFieldDisabled}}
-            <Input disabled={{true}} @value={{@controller.selectedInterval}} />
+            <input
+              disabled
+              type="text"
+              value={{@controller.selectedInterval}}
+            />
           {{else}}
             <ComboBox
               @valueProperty="name"
@@ -132,10 +146,16 @@ export default RouteTemplate(
             ({{i18n "discourse_subscriptions.optional"}})
           </label>
 
-          <Input
-            @type="text"
+          <input
+            {{on
+              "input"
+              (withEventValue
+                (fn (mut @controller.model.plan.trial_period_days))
+              )
+            }}
+            type="text"
             name="trial"
-            @value={{@controller.model.plan.trial_period_days}}
+            value={{@controller.model.plan.trial_period_days}}
           />
 
           <div class="control-instructions">

@@ -2,7 +2,7 @@
 
 class AddDeleteOptionToBookmarks < ActiveRecord::Migration[6.0]
   def up
-    add_column :bookmarks, :auto_delete_preference, :integer, index: true, null: false, default: 0
+    add_column :bookmarks, :auto_delete_preference, :integer, null: false, default: 0
     DB.exec("UPDATE bookmarks SET auto_delete_preference = 1 WHERE delete_when_reminder_sent")
   end
 

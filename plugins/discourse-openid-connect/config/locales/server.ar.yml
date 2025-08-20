@@ -6,6 +6,7 @@
 
 ar:
   site_settings:
+    openid_connect_enabled: تفعيل مصادقة OpenID Connect. يمكنك تخصيص نص واجهة المستخدم من <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>هنا</a>
     openid_connect_discovery_document: "عنوان URL لمستند استكشاف OpenID Connect. موجود عادةً على \"https://your.domain/.well-known/openid-configuration\""
     openid_connect_client_id: "معرِّف العميل لـ OpenID Connect"
     openid_connect_client_secret: "سر عميل OpenID Connect"

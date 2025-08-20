@@ -293,10 +293,7 @@ da:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} har automatisk indstillet din deltagelse og inviteret dig til %{description}"
-        before_event_reminder_html: "En begivenhed er ved at starte %{description}"
-        after_event_reminder_html: "En begivenhed er afsluttet %{description}"
-        ongoing_event_reminder_html: "En begivenhed er i gang  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} har automatisk indstillet din deltagelse og inviteret dig til %{eventName}"
       edit_reason: "Begivenhed opdateret"
       topic_title:
         starts_at: "Begivenheden starter: %{date}"

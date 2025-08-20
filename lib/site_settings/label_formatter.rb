@@ -2,57 +2,85 @@
 
 module SiteSettings
   class LabelFormatter
-    HUMANIZED_ACRONYMS = %w[
-      acl
-      ai
-      api
-      bg
-      cdn
-      cors
-      cta
-      cx
-      dm
-      eu
-      faq
-      fg
-      ga
-      gb
-      gtm
-      hd
-      http
-      https
-      iam
-      id
-      imap
-      ip
-      jpg
-      json
-      kb
-      llm
-      mb
-      oidc
-      pm
-      png
-      pop3
-      s3
-      smtp
-      svg
-      tei
-      tl
-      tl0
-      tl1
-      tl2
-      tl3
-      tl4
-      tld
-      txt
-      ui
-      url
-      ux
-    ].freeze
+    HUMANIZED_ACRONYMS =
+      Set.new(
+        %w[
+          2fa
+          acl
+          ai
+          api
+          arn
+          aws
+          bg
+          cdn
+          cors
+          csp
+          csrf
+          css
+          cta
+          csv
+          cx
+          db
+          dm
+          dns
+          eu
+          faq
+          fg
+          ga
+          gb
+          gpu
+          gpt
+          gtm
+          hd
+          html
+          http
+          https
+          iam
+          id
+          imap
+          ip
+          jpg
+          json
+          kb
+          llm
+          mb
+          mfa
+          oauth
+          oidc
+          pdf
+          pm
+          png
+          pop3
+          rest
+          rss
+          s3
+          saml
+          smtp
+          sso
+          svg
+          tei
+          tl
+          tl0
+          tl1
+          tl2
+          tl3
+          tl4
+          tld
+          totp
+          txt
+          ui
+          url
+          ux
+          vpc
+          xml
+          yaml
+          yml
+        ],
+      ).freeze
 
     HUMANIZED_MIXED_CASE = [
       ["adobe analytics", "Adobe Analytics"],
+      ["amazon web services", "Amazon Web Services"],
       %w[android Android],
       %w[chinese Chinese],
       %w[discord Discord],
@@ -63,12 +91,16 @@ module SiteSettings
       %w[facebook Facebook],
       %w[github GitHub],
       %w[google Google],
+      ["google analytics", "Google Analytics"],
+      ["google tag manager", "Google Tag Manager"],
       %w[gravatar Gravatar],
       %w[gravatars Gravatars],
       %w[ios iOS],
       %w[japanese Japanese],
       %w[linkedin LinkedIn],
+      %w[mediaconvert MediaConvert],
       %w[oauth2 OAuth2],
+      ["openid connect", "OpenID Connect"],
       %w[openai OpenAI],
       %w[opengraph OpenGraph],
       ["powered by discourse", "Powered by Discourse"],
@@ -80,33 +112,39 @@ module SiteSettings
       %w[youtube YouTube],
     ].freeze
 
+    HUMANIZED_MIXED_CASE_REGEX =
+      HUMANIZED_MIXED_CASE.map { |key, value| [/\b#{Regexp.escape(key)}\b/i, value] }.freeze
+
     class << self
       def description(setting)
         I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
       end
 
       def humanized_name(setting)
-        name = setting.to_s.gsub("_", " ")
+        name = setting.to_s.tr("_", " ")
+        words = name.split(" ")
 
-        formatted_name =
-          (name[0].upcase + name[1..-1])
-            .split(" ")
-            .map { |word| HUMANIZED_ACRONYMS.include?(word.downcase) ? word.upcase : word }
-            .map do |word|
-              if word.end_with?("s")
-                singular = word[0...-1].downcase
-                HUMANIZED_ACRONYMS.include?(singular) ? singular.upcase + "s" : word
-              else
-                word
-              end
-            end
-            .join(" ")
+        words[0] = words[0].capitalize
 
-        HUMANIZED_MIXED_CASE.each do |key, value|
-          formatted_name = formatted_name.gsub(/\b#{key}\b/i, value)
+        words.map! do |word|
+          word_downcase = word.downcase
+
+          if HUMANIZED_ACRONYMS.include?(word_downcase)
+            word.upcase
+          elsif word.end_with?("s") && HUMANIZED_ACRONYMS.include?(word_downcase[0...-1])
+            word_downcase[0...-1].upcase + "s"
+          else
+            word
+          end
         end
 
-        formatted_name
+        result = words.join(" ")
+
+        HUMANIZED_MIXED_CASE_REGEX.each do |regex, replacement|
+          result = result.gsub(regex, replacement)
+        end
+
+        result
       end
 
       def keywords(setting)

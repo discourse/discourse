@@ -13,6 +13,8 @@ ja:
     reviewables:
       comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"
   js:
+    discourse_post_voting:
+      title: "投稿の投票"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -105,6 +107,8 @@ ja:
         activity: "アクティビティ"
         answer_count:
           other: "回答 %{count} 件"
+        voters_count_diff:
+          other: "および他 %{count} 人のユーザー"
     review:
       transcript:
         view: "前のメッセージのトランスクリプトを表示"

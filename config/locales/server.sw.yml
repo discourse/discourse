@@ -2013,7 +2013,7 @@ sw:
         description: "Kubaliana na bendera na nyamazisha mtumiaji."
       agree_and_restore:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
-      delete_single:
+      delete:
         title: "Futa"
       disagree_and_restore:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."

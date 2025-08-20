@@ -52,6 +52,8 @@ ca:
           name: "Brossa"
       modals:
         select_option: "Trieu una opció..."
+      translations:
+        title: "Traduccions"
       spam:
         short_title: "Brossa"
         last_seven_days: "Els darrers 7 dies"

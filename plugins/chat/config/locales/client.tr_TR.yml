@@ -234,7 +234,9 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
+      no_direct_message_channels: "Henüz herhangi bir doğrudan mesaja katılmadınız!"
       no_direct_message_channels_cta: "Konuşma başlat"
+      no_public_channels: "Henüz hiçbir kanala katılmadınız!"
       no_public_channels_cta: "Kanallara göz at"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:
@@ -300,7 +302,7 @@ tr_TR:
         one: "%{count} dosya"
         other: "%{count} dosya"
       you_flagged: "Bu mesaja bayrak eklediniz"
-      exit: "geri"
+      exit: "sohbetten çık"
       channel_status:
         read_only_header: "Kanal salt okunur"
         read_only: "Salt Okunur"
@@ -529,6 +531,7 @@ tr_TR:
         select_emoji: "Emoji seçin"
         system: "sistem"
         title: "Gelen web kancaları"
+        header_description: "Gelen web kancaları, harici sistemler tarafından bot kullanıcısı olarak belirlenmiş bir sohbet kanalına mesaj göndermek için kullanılabilir"
         url: "URL"
         url_instructions: "Bu URL gizli bir değer içerir, onu güvende tutun."
         username: "Kullanıcı Adı"
@@ -641,6 +644,11 @@ tr_TR:
       draft_channel_screen:
         header: "Yeni Mesaj"
         cancel: "İptal et"
+      quick_reaction_type:
+        title: "Tek tıklamayla sohbet tepkileri"
+        options:
+          frequent: "En sık kullanılan sohbet tepkileri"
+          custom: "Özel tepkiler"
     notifications:
       chat_invitation: "sizi bir sohbet kanalına katılmaya davet etti"
       chat_invitation_html: "<span>%{username}</span> <span>sizi bir sohbet kanalına katılmaya davet etti</span>"
@@ -698,7 +706,7 @@ tr_TR:
           switch_channel_arrows: "%{shortcut} Kanalı değiştir"
           switch__unread_channel_arrows: "%{shortcut} Okunmamış kanalı değiştir"
           open_quick_channel_selector: "%{shortcut} Hızlı kanal seçiciyi aç"
-          open_insert_link_modal: "%{shortcut} Köprü ekle (yalnızca besteci)"
+          open_insert_link_modal: "%{shortcut} Bağlantı ekle (sadece besteci)"
           composer_bold: "%{shortcut} Kalın (yalnızca besteci)"
           composer_italic: "%{shortcut} İtalik (yalnızca besteci)"
           composer_code: "%{shortcut} Kod (yalnızca besteci)"

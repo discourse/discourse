@@ -339,6 +339,7 @@ discourse_ai:
     hidden: true
   ai_summary_gists_enabled:
     default: false
+    client: true
     area: "ai-features/summarization"
   ai_summary_gists_persona:
     default: "-12"
