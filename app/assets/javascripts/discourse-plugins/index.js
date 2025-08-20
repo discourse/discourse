@@ -105,7 +105,7 @@ module.exports = {
   },
 
   setupPreprocessorRegistry(type, registry) {
-    if (type === "parent") {
+    if (type === "self") {
       const plugin = this._buildActionPlugin();
       plugin.parallelBabel = {
         requireFile: __filename,

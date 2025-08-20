@@ -7,7 +7,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class Foo extends Component {
-  layout = hbs`<button {{on "click" (d-action "bar")}}>test</button>`;
+  layout = hbs`<button {{on "click" (d-action "bar")}}>foobarcvx</button>`;
 
   @action
   bar() {
