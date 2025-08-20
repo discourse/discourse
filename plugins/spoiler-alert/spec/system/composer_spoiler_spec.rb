@@ -114,15 +114,14 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     expect(rich).to have_content("This is a testsecret")
   end
 
-  it "removes block spoiler when cursor is inside block spoiler" do
+  it "removes spoiler when cursor is inside block spoiler" do
     open_composer
 
     click_spoiler_button
 
-    expect(rich).to have_no_css("div.spoiled")
+    expect(rich).to have_css("div.spoiled")
 
     composer.type_content("secret content")
-    composer.send_keys(:left, :left, :left, :left)
 
     click_spoiler_button
 
