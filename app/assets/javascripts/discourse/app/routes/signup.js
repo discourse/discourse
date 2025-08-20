@@ -35,6 +35,7 @@ export default class extends DiscourseRoute {
     const { referrer } = document;
     const { canSignUp } = this.controllerFor("application");
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
+    const redirect = auth_immediately || login_required || !from || wantsTo;
 
     // Can't sign up when the site is read-only
     if (isReadOnly) {
@@ -69,12 +70,10 @@ export default class extends DiscourseRoute {
       }
     }
 
-    this.#isRedirecting =
-      auth_immediately || login_required || !from || wantsTo;
-
     // Automatically kick off the external login if it's the only one available
     if (enable_discourse_connect) {
-      if (this.#isRedirecting) {
+      if (redirect) {
+        this.#isRedirecting = true;
         const returnPath = cookie("destination_url")
           ? getURL("/")
           : encodeURIComponent(url);
@@ -83,7 +82,8 @@ export default class extends DiscourseRoute {
         router.replaceWith("discovery.login-required");
       }
     } else if (isOnlyOneExternalLoginMethod) {
-      if (this.#isRedirecting) {
+      if (redirect) {
+        this.#isRedirecting = true;
         singleExternalLogin();
       } else {
         router.replaceWith("discovery.login-required");
