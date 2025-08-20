@@ -2,7 +2,17 @@
 
 module DiscoursePostEvent
   class BasicEventSerializer < ApplicationSerializer
-    attributes :id,  :category_id, :name, :recurrence, :recurrence_until, :starts_at, :ends_at, :rrule, :show_local_time, :timezone, :post
+    attributes :id,
+               :category_id,
+               :name,
+               :recurrence,
+               :recurrence_until,
+               :starts_at,
+               :ends_at,
+               :rrule,
+               :show_local_time,
+               :timezone,
+               :post
 
     def category_id
       object.post.topic.category_id
