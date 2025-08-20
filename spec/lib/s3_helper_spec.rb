@@ -404,15 +404,19 @@ RSpec.describe "S3Helper" do
   describe ".s3_options" do
     it "includes profile when specified" do
       GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
+      GlobalSetting.stubs(:s3_file_uploads_profile).returns("test-profile")
+      profile = GlobalSetting.s3_file_uploads_profile
 
-      options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
+      options = S3Helper.s3_options(GlobalSetting, profile: profile)
       expect(options[:profile]).to eq("test-profile")
     end
 
     it "does not include access keys when using profile" do
       GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
+      GlobalSetting.stubs(:s3_file_uploads_profile).returns("test-profile")
+      profile = GlobalSetting.s3_file_uploads_profile
 
-      options = S3Helper.s3_options(GlobalSetting, profile: "test-profile")
+      options = S3Helper.s3_options(GlobalSetting, profile: profile)
       expect(options).not_to have_key(:access_key_id)
       expect(options).not_to have_key(:secret_access_key)
     end
