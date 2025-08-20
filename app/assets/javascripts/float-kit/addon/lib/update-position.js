@@ -71,10 +71,7 @@ export async function updatePosition(trigger, content, options) {
     if (options.limitShift) {
       limiter = limitShift(options.limitShift);
     }
-    let crossAxis = true;
-    if (options.crossAxisShift !== undefined) {
-      crossAxis = options.crossAxisShift;
-    }
+    const crossAxis = options.crossAxisShift ?? true;
     middleware.push(
       shift({
         padding: detectOverflowOptions.padding,
