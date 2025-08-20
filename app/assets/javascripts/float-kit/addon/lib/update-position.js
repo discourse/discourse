@@ -138,11 +138,7 @@ export async function updatePosition(trigger, content, options) {
           }
 
           if (inner) {
-            if (hideElement) {
-              inner.style.display = "none";
-            } else {
-              inner.style.display = "";
-            }
+            inner.style.display = hideElement ? "none" : "";
             Object.assign(inner.style, {
               maxHeight: `${max}px`,
             });
