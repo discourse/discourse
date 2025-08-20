@@ -24,8 +24,8 @@ class SiteSettingUpdateExistingUsers
       )
       MessageBus.publish(
         "/site_setting/#{id}/process",
-        { status: "enqueued" },
-        group_ids: [Group::AUTO_GROUPS[:admin]],
+        status: "enqueued",
+        group_ids: [Group::AUTO_GROUPS[:admins]],
       )
     elsif id.start_with?("default_tags_")
       Jobs.enqueue(
@@ -34,8 +34,8 @@ class SiteSettingUpdateExistingUsers
       )
       MessageBus.publish(
         "/site_setting/#{id}/process",
-        { status: "enqueued" },
-        group_ids: [Group::AUTO_GROUPS[:admin]],
+        status: "enqueued",
+        group_ids: [Group::AUTO_GROUPS[:admins]],
       )
     elsif self.is_sidebar_default_setting?(id)
       Jobs.enqueue(
@@ -245,12 +245,11 @@ class SiteSettingUpdateExistingUsers
       end
 
     progress = modified.empty? ? nil : "#{processed_total}/#{total_users_to_process}"
-
     MessageBus.publish(
       "/site_setting/#{site_setting_name}/process",
       status: status,
       progress: progress,
-      group_ids: [Group::AUTO_GROUPS[:admin]],
+      group_ids: [Group::AUTO_GROUPS[:admins]],
     )
   end
 end

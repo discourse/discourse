@@ -29,6 +29,20 @@ describe Jobs::SiteSettingUpdateDefaultTags do
           User.real.where(staged: false).count - 1,
         )
       end
+
+      it "should publish a MessageBus informing the correct groups" do
+        messages =
+          MessageBus.track_publish("/site_setting/default_tags_watching/process") do
+            job.execute(
+              id: "default_tags_watching",
+              value: tags.last(2).pluck(:name).join("|"),
+              previous_value: tags.first(2).pluck(:name).join("|"),
+            )
+          end
+
+        expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(messages[0][:data][:status]).to eq("completed")
+      end
     end
   end
 end

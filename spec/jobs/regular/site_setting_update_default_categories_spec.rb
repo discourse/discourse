@@ -72,6 +72,20 @@ describe Jobs::SiteSettingUpdateDefaultCategories do
           TopicUser.notification_levels[:watching],
         )
       end
+
+      it "should publish a MessageBus informing the correct groups" do
+        messages =
+          MessageBus.track_publish("/site_setting/default_categories_watching/process") do
+            job.execute(
+              id: "default_categories_watching",
+              value: category_ids.last(2).join("|"),
+              previous_value: category_ids.first(2).join("|"),
+            )
+          end
+
+        expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(messages[0][:data][:status]).to eq("completed")
+      end
     end
   end
 end

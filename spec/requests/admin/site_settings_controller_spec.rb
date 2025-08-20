@@ -530,6 +530,20 @@ RSpec.describe Admin::SiteSettingsController do
 
           expect(response.status).to eq(200)
         end
+
+        it "should publish a MessageBus informing the correct groups" do
+          messages =
+            MessageBus.track_publish("/site_setting/default_categories_watching/process") do
+              put "/admin/site_settings/default_categories_watching.json",
+                  params: {
+                    default_categories_watching: category_ids.last(2).join("|"),
+                    update_existing_user: true,
+                  }
+            end
+
+          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0][:data][:status]).to eq("enqueued")
+        end
       end
 
       context "with default tags" do
@@ -585,6 +599,19 @@ RSpec.describe Admin::SiteSettingsController do
           )
 
           expect(response.status).to eq(200)
+        end
+
+        it "should publish a MessageBus informing the correct groups" do
+          messages =
+            MessageBus.track_publish("/site_setting/default_tags_watching/process") do
+              put "/admin/site_settings/default_tags_watching.json",
+                  params: {
+                    default_tags_watching: tags.last(2).pluck(:name).join("|"),
+                    update_existing_user: true,
+                  }
+            end
+          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0][:data][:status]).to eq("enqueued")
         end
       end
 
@@ -739,8 +766,6 @@ RSpec.describe Admin::SiteSettingsController do
             notification_level: tracking,
             user: user2,
           )
-
-          Jobs.run_immediately!
         end
 
         it "doesn't update default categories" do
@@ -752,14 +777,7 @@ RSpec.describe Admin::SiteSettingsController do
 
           expect(response.status).to eq(404)
 
-          expect_not_enqueued_with(
-            job: Jobs::SiteSettingUpdateDefaultCategories,
-            args: {
-              id: "default_categories_watching",
-              value: category_ids.last(2).join("|"),
-              previous_value: category_ids.first(2).join("|"),
-            },
-          )
+          expect_not_enqueued_with(job: Jobs::SiteSettingUpdateDefaultCategories)
 
           expect(
             CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
@@ -768,13 +786,14 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default tags" do
-        let(:tags) { 3.times.collect { Fabricate(:tag) } }
+        fab!(:tag_1, :tag)
+        fab!(:tag_2, :tag)
+        fab!(:tag_3, :tag)
+        let(:tags) { [tag_1, tag_2, tag_3] }
 
         before do
           SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
-
-          Jobs.run_immediately!
         end
 
         it "doesn't update default categories" do
@@ -786,14 +805,7 @@ RSpec.describe Admin::SiteSettingsController do
 
           expect(response.status).to eq(404)
 
-          expect_not_enqueued_with(
-            job: Jobs::SiteSettingUpdateDefaultTags,
-            args: {
-              id: "default_tags_watching",
-              value: tags.last(2).pluck(:name).join("|"),
-              previous_value: tags.first(2).pluck(:name).join("|"),
-            },
-          )
+          expect_not_enqueued_with(job: Jobs::SiteSettingUpdateDefaultTags)
 
           expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
         end
