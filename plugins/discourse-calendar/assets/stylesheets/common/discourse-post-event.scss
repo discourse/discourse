@@ -425,8 +425,8 @@ $show-interested: inherit;
   .event-invitees-icon .going {
     font-size: var(--font-down-3);
     position: absolute;
-    right: -2px;
-    bottom: -8px;
+    right: 0;
+    bottom: 0;
     background: var(--secondary);
     border-radius: 50%;
     display: flex;

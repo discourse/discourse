@@ -28,13 +28,13 @@ export default class UpcomingEventsCalendar extends Component {
       mineEvents: {
         text: i18n("discourse_post_event.upcoming_events.my_events"),
         click: () => {
-          this.router.transitionTo("discourse-post-event-upcoming-events.mine");
+          this.router.replaceWith("discourse-post-event-upcoming-events.mine");
         },
       },
       allEvents: {
         text: i18n("discourse_post_event.upcoming_events.all_events"),
         click: () => {
-          this.router.transitionTo(
+          this.router.replaceWith(
             "discourse-post-event-upcoming-events.index",
             { queryParams: this.router.currentRoute.queryParams }
           );
@@ -131,7 +131,7 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
 
-    this.router.transitionTo({
+    this.router.replaceWith({
       queryParams: {
         view: info.view.type,
         start: moment(info.view.currentStart).format("YYYY-MM-DD"),
