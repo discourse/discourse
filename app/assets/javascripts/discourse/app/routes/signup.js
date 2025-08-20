@@ -84,7 +84,7 @@ export default class extends DiscourseRoute {
     } else if (isOnlyOneExternalLoginMethod) {
       if (redirect) {
         this.#isRedirecting = true;
-        singleExternalLogin();
+        singleExternalLogin({ signup: true });
       } else {
         router.replaceWith("discovery.login-required");
       }
