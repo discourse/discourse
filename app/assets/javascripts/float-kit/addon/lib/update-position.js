@@ -143,11 +143,7 @@ export async function updatePosition(trigger, content, options) {
               maxHeight: `${max}px`,
             });
           } else {
-            if (hideElement) {
-              elements.floating.style.display = "none";
-            } else {
-              elements.floating.style.display = "";
-            }
+            elements.floating.style.display = hideElement ? "none" : "";
             Object.assign(elements.floating.style, {
               maxHeight: `${max}px`,
               overflow: "auto",
