@@ -117,11 +117,14 @@ describe "User preferences | Interface", type: :system do
         )
       end
 
-      it "has and can change default color scheme for light and dark" do
+      before do
         Theme.find_default.update!(
           color_scheme: color_scheme_light_1,
           dark_color_scheme: color_scheme_dark_1,
         )
+      end
+
+      it "has and can change default color scheme for light and dark" do
         user_preferences_interface_page.visit(user)
 
         expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_name(
@@ -296,6 +299,30 @@ describe "User preferences | Interface", type: :system do
         ),
         "the dropdown should still have dark mode selected after a page refresh"
       end
+
+      it "shows the mode selector when user has selected a dark color scheme" do
+        user.user_option.update!(dark_scheme_id: color_scheme_dark_1.id)
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_css(".interface-color-mode")
+      end
+
+      it "hides the mode selector when theme has identical light and dark schemes" do
+        Theme.find_default.update!(
+          color_scheme_id: color_scheme_light_1,
+          dark_color_scheme_id: color_scheme_light_1,
+        )
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_no_css(".interface-color-mode")
+      end
+
+      it "hides the mode selector when theme has no dark scheme" do
+        Theme.find_default.update!(color_scheme_id: color_scheme_light_1, dark_color_scheme_id: nil)
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_no_css(".interface-color-mode")
+      end
     end
 
     context "when changing another user's preferences as an admin" do
@@ -305,6 +332,10 @@ describe "User preferences | Interface", type: :system do
         sign_in(admin)
         admin.user_option.update!(interface_color_mode: UserOption::DARK_MODE)
         user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+        Theme.find_default.update!(
+          color_scheme: ColorScheme.first,
+          dark_color_scheme: ColorScheme.last,
+        )
       end
 
       it "doesn't affect the viewing admin preferences and changes the target user's default preference for all devices" do
