@@ -54,13 +54,11 @@
 }
 
 .ProseMirror .spoiled {
-  padding-left: var(--space-1);
-  padding-right: var(--space-1);
+  padding-inline: var(--space-1);
 
   &:not(.spoiler-blurred) {
     border-radius: var(--d-border-radius);
     box-shadow: 0 0 4px 4px rgb(var(--primary-rgb), 0.2);
-    inline-size: fit-content;
     max-width: 100%;
   }
 }

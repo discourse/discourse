@@ -31,6 +31,11 @@ module(
         '<p>hey</p><div class="spoiled"><blockquote><p>did you know the good guys die</p></blockquote></div><p>in the end?</p>',
         "hey\n\n[spoiler]\n> did you know the good guys die\n\n[/spoiler]\n\nin the end?",
       ],
+      "inline spoiler with trailing space": [
+        "[spoiler]the answer is 42[/spoiler] ",
+        '<p><span class="spoiled spoiler-blurred">the answer is 42</span> </p>',
+        "[spoiler]the answer is 42[/spoiler] ",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);

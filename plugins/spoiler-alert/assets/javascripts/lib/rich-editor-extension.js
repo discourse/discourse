@@ -45,71 +45,6 @@ const extension = {
       state.write("[/spoiler]");
     },
   },
-  keymap({ pmState: { Selection } }) {
-    return {
-      Enter: (state, dispatch) => {
-        const { $from } = state.selection;
-
-        if ($from.node().type.name === "inline_spoiler") {
-          if (dispatch) {
-            const tr = state.tr;
-
-            // Find the spoiler node
-            let spoilerDepth = null;
-            for (let depth = $from.depth; depth > 0; depth--) {
-              if ($from.node(depth).type.name === "inline_spoiler") {
-                spoilerDepth = depth;
-                break;
-              }
-            }
-
-            if (spoilerDepth !== null) {
-              const spoilerPos = $from.before(spoilerDepth);
-              const spoilerEnd = $from.after(spoilerDepth);
-              const cursorPos = $from.pos;
-
-              // Split spoiler content at cursor
-              const beforeCursor = tr.doc.slice(
-                spoilerPos + 1,
-                cursorPos
-              ).content;
-              const afterCursor = tr.doc.slice(
-                cursorPos,
-                spoilerEnd - 1
-              ).content;
-
-              // Create new spoiler with content before cursor
-              const spoilerNode = state.schema.nodes.inline_spoiler.create(
-                null,
-                beforeCursor
-              );
-
-              // Create new paragraph with content after cursor (not in spoiler)
-              const paragraphNode = state.schema.nodes.paragraph.create(
-                null,
-                afterCursor
-              );
-
-              // Replace the original spoiler with spoiler + paragraph
-              tr.replaceWith(spoilerPos, spoilerEnd + 1, [
-                spoilerNode,
-                paragraphNode,
-              ]);
-
-              // Set cursor at start of new paragraph content
-              const newCursorPos = spoilerPos + spoilerNode.nodeSize + 1;
-              tr.setSelection(Selection.near(tr.doc.resolve(newCursorPos)));
-
-              dispatch(tr);
-            }
-          }
-          return true;
-        }
-
-        return false;
-      },
-    };
-  },
   inputRules: ({ pmState: { TextSelection } }) => ({
     match: /\[spoiler\]$/,
     handler: (state, match, start, end) => {
@@ -146,9 +81,9 @@ const extension = {
       utils.inNode(state, schema.nodes.spoiler) ||
       utils.inNode(state, schema.nodes.inline_spoiler),
   }),
-  commands: ({ schema, utils, pmState: { TextSelection } }, view) => ({
+  commands: ({ schema, utils, pmState: { TextSelection } }) => ({
     toggleSpoiler() {
-      return (state, dispatch) => {
+      return (state, dispatch, view) => {
         const { selection } = state;
         const { empty, $from, $to } = selection;
 

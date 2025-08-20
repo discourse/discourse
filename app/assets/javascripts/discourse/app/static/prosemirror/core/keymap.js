@@ -28,12 +28,11 @@ export function buildKeymap(
     ...extractKeymap(extensions, params),
   };
 
-  // Chain core commands with existing extension commands
-  function chainWithExisting(key, coreCommand) {
+  function chainWithExisting(key, ...commands) {
     if (keys[key]) {
-      keys[key] = chainCommands(keys[key], coreCommand);
+      keys[key] = chainCommands(keys[key], ...commands);
     } else {
-      keys[key] = coreCommand;
+      keys[key] = chainCommands(...commands);
     }
   }
 
@@ -50,7 +49,9 @@ export function buildKeymap(
 
   chainWithExisting(
     "Backspace",
-    chainCommands(undoInputRule, backspaceUnset, joinTextblockBackward)
+    undoInputRule,
+    backspaceUnset,
+    joinTextblockBackward
   );
 
   if (!isMac) {
@@ -66,19 +67,16 @@ export function buildKeymap(
 
   const schema = params.schema;
 
-  chainWithExisting(
-    "Shift-Enter",
-    chainCommands(exitCode, (state, dispatch) => {
-      if (dispatch) {
-        dispatch(
-          state.tr
-            .replaceSelectionWith(schema.nodes.hard_break.create())
-            .scrollIntoView()
-        );
-      }
-      return true;
-    })
-  );
+  chainWithExisting("Shift-Enter", exitCode, (state, dispatch) => {
+    if (dispatch) {
+      dispatch(
+        state.tr
+          .replaceSelectionWith(schema.nodes.hard_break.create())
+          .scrollIntoView()
+      );
+    }
+    return true;
+  });
 
   const doubleSpaceHardBreak = (state, dispatch) => {
     const { $from } = state.selection;
@@ -101,10 +99,11 @@ export function buildKeymap(
     return false;
   };
 
-  chainWithExisting("Enter", chainCommands(
+  chainWithExisting(
+    "Enter",
     doubleSpaceHardBreak,
     splitListItem(schema.nodes.list_item)
-  ));
+  );
 
   chainWithExisting("Mod-Shift-_", (state, dispatch) => {
     dispatch?.(

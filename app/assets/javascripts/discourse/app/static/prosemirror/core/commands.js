@@ -3,12 +3,10 @@ export function buildCommands(extensions, pluginParams, view) {
 
   for (const { commands } of extensions) {
     if (commands) {
-      for (let [name, command] of Object.entries(
-        commands(pluginParams, view)
-      )) {
+      for (let [name, command] of Object.entries(commands(pluginParams))) {
         allCommands[name] = (...args) => {
           view.focus();
-          return command(...args)(view.state, view.dispatch);
+          return command(...args)(view.state, view.dispatch, view);
         };
       }
     }

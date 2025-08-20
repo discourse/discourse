@@ -169,11 +169,50 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     expect(rich).to have_css("span.spoiled", text: I18n.t("js.composer.spoiler_text"))
 
     composer.type_content("hello")
-    composer.send_keys(:left, :left, :left)
+    composer.send_keys(:right)
+    composer.type_content("X")
+
+    expect(rich).to have_css("span.spoiled.spoiler-blurred", text: "hello")
+
+    composer.send_keys(:left)
+    composer.send_keys(:left)
+
+    expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
+
+    # ENTER at the end of the node
+    composer.send_keys(:enter)
+
+    sleep 0.1
+    composer.send_keys(:backspace)
+    sleep 0.1
+    composer.send_keys(:left)
+    sleep 0.1
+    composer.send_keys(:left)
+    sleep 0.1
+    # ENTER at the middle of the node
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p", text: "Test")
-    expect(rich).to have_css("span.spoiled", text: "hel")
-    expect(rich).to have_css("p", text: "lo")
+    expect(rich).to have_css("span.spoiled", text: "hell")
+    expect(rich).to have_css("p:has(span.spoiled) + p", text: "o X")
+  end
+
+  it "keeps inline spoiler when pressing Enter at start of node" do
+    open_composer
+
+    composer.type_content(" ")
+    click_spoiler_button
+
+    expect(rich).to have_css("span.spoiled", text: I18n.t("js.composer.spoiler_text"))
+
+    composer.type_content("hello")
+
+    expect(rich).to have_css("span.spoiled", text: "hello")
+
+    composer.send_keys(:control, :left)
+    composer.send_keys(:backspace)
+    composer.send_keys(:enter)
+
+    expect(rich).to have_css("p:not(:has(span.spoiled)) + p:has(span.spoiled)", text: "hello")
   end
 end

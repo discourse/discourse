@@ -10,12 +10,12 @@ module(
     Object.entries({
       "basic inline HTML tags": [
         "<kbd>Ctrl</kbd>",
-        "<p><kbd>Ctrl</kbd></p>",
+        "<p><kbd>Ctrl</kbd> </p>",
         "<kbd>Ctrl</kbd>",
       ],
       "nested inline HTML": [
         "<sup><small>text</small></sup>",
-        "<p><sup><small>text</small></sup></p>",
+        "<p><sup><small>text</small></sup> </p>",
         "<sup><small>text</small></sup>",
       ],
       "inline marks using HTML": [
@@ -25,12 +25,12 @@ module(
       ],
       "mixed HTML inline and marks": [
         "<kbd><strong>Ctrl+B</strong></kbd>",
-        "<p><kbd><strong>Ctrl+B</strong></kbd></p>",
+        "<p><kbd><strong>Ctrl+B</strong></kbd> </p>",
         "<kbd>**Ctrl+B**</kbd>",
       ],
       "multiple inline elements": [
         "Text with <sub>subscript</sub> and <sup>superscript</sup>",
-        "<p>Text with <sub>subscript</sub> and <sup>superscript</sup></p>",
+        "<p>Text with <sub>subscript</sub> and <sup>superscript</sup> </p>",
         "Text with <sub>subscript</sub> and <sup>superscript</sup>",
       ],
       "HTML mark aliases": [
@@ -40,7 +40,7 @@ module(
       ],
       "semantic HTML elements": [
         "<ins>inserted</ins> and <del>deleted</del>",
-        "<p><ins>inserted</ins> and <del>deleted</del></p>",
+        "<p><ins>inserted</ins> and <del>deleted</del> </p>",
         "<ins>inserted</ins> and <del>deleted</del>",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
