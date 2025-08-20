@@ -15,9 +15,25 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   newColorPalette() {
+    // If a base palette exists in database, it should be removed from the list in the modal as potential base to not display duplicated names.
+    const deduplicatedColorPalettes = this.args.palettes.filter((base) => {
+      if (
+        base.id < 0 &&
+        this.args.palettes.find((palette) => {
+          return (
+            palette.name === base.name &&
+            palette.base_scheme_id === base.base_scheme_id &&
+            palette.id > 0
+          );
+        })
+      ) {
+        return false;
+      }
+      return true;
+    });
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        colorSchemes: this.args.palettes,
+        colorSchemes: deduplicatedColorPalettes,
         newColorSchemeWithBase: this.newColorPaletteWithBase,
       },
     });

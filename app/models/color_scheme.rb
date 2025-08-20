@@ -498,7 +498,7 @@ class ColorScheme < ActiveRecord::Base
           acc[color.name] = color.hex
           acc
         end if base_scheme_id
-    colors || ColorScheme.base_colors
+    colors || (base_scheme_id ? {} : ColorScheme.base_colors)
   end
 
   def resolved_colors(dark: false)

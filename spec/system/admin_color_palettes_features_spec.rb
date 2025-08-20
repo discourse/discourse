@@ -334,5 +334,6 @@ describe "Admin Color Palettes Features", type: :system do
     create_color_palette_modal.create_button.click
 
     expect(page).to have_current_path(%r{/admin/customize/colors/\d+})
+    expect(page).to have_no_css(".revert")
   end
 end

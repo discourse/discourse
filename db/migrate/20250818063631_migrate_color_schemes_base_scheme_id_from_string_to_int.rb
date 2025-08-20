@@ -18,23 +18,12 @@ class MigrateColorSchemesBaseSchemeIdFromStringToInt < ActiveRecord::Migration[8
   }
   def up
     return if column_exists?(:color_schemes, :base_scheme_id, :integer)
-    execute <<-SQL
-      UPDATE color_schemes
-      SET base_scheme_id = (
-        SELECT id FROM color_schemes base_schemes
-        WHERE base_scheme_id = base_schemes.base_scheme_id
-        AND base_schemes.via_wizard IS TRUE
-        LIMIT 1
-      )
-      WHERE color_schemes.via_wizard IS FALSE
-      AND color_schemes.base_scheme_id IS NOT NULL
-    SQL
 
     NAMES_TO_ID_MAP.each { |name, id| execute <<-SQL }
       UPDATE color_schemes
       SET base_scheme_id = #{id}
       WHERE base_scheme_id = '#{name}'
-      AND via_wizard IS TRUE
+      AND base_scheme_id IS NOT NULL
     SQL
 
     execute <<-SQL
