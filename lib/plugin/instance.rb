@@ -1280,6 +1280,13 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
+  # Transform the HTML response before it is returned to the crawler. You should return the same type.
+  #
+  # @param block [Proc] A block that receives the Nokogiri::HTML5::Document as an argument and can modify it.
+  def register_crawler_html_fragment_transformation(&block)
+    DiscoursePluginRegistry.register_crawler_html_fragment_transformation(block, self)
+  end
+
   def register_search_group_query_callback(callback)
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end

@@ -157,6 +157,9 @@ module Discourse
     require "middleware/default_headers"
     config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
 
+    require "middleware/crawler_hooks"
+    config.middleware.use Middleware::CrawlerHooks
+
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware

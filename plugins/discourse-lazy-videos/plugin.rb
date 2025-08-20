@@ -13,6 +13,7 @@ register_asset "stylesheets/lazy-videos.scss"
 require_relative "lib/lazy-videos/lazy_youtube"
 require_relative "lib/lazy-videos/lazy_vimeo"
 require_relative "lib/lazy-videos/lazy_tiktok"
+require_relative "lib/lazy-videos/video_embed"
 
 after_initialize do
   on(:reduce_cooked) do |fragment|
@@ -23,5 +24,11 @@ after_initialize do
         href = video.at_css("a")["href"]
         video.replace("<p><a href=\"#{href}\">#{title}</a></p>")
       end
+  end
+
+  register_crawler_html_fragment_transformation do |html_fragment|
+    # transform regardless of the site setting being enabled
+    # as cooked html may historically contain lazy video containers
+    LazyVideos::VideoEmbed.transform_lazy_video_containers(html_fragment)
   end
 end

@@ -129,6 +129,7 @@ class DiscoursePluginRegistry
   define_filtered_register :flag_applies_to_types
 
   define_filtered_register :custom_filter_mappings
+  define_filtered_register :crawler_html_fragment_transformations
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do
