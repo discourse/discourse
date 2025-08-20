@@ -133,6 +133,29 @@
       color: var(--danger);
     }
 
+    .job.site-setting {
+      display: flex;
+      flex-direction: row;
+
+      p {
+        margin: 0;
+      }
+
+      .alert {
+        color: var(--danger);
+        background-color: transparent;
+        padding: 0;
+      }
+
+      .success {
+        color: var(--success);
+      }
+
+      .progress {
+        margin-left: 0.5rem;
+      }
+    }
+
     .desc {
       color: var(--primary-medium);
     }

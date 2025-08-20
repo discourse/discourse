@@ -18,81 +18,25 @@ class SiteSettingUpdateExistingUsers
 
       UserOption.human_users.where(user_option => previous_value).update_all(attrs)
     elsif id.start_with?("default_categories_")
-      previous_category_ids = previous_value.split("|")
-      new_category_ids = new_value.split("|")
-
-      notification_level = self.category_notification_level(id)
-
-      categories_to_unwatch = previous_category_ids - new_category_ids
-      CategoryUser.where(
-        category_id: categories_to_unwatch,
-        notification_level: notification_level,
-      ).delete_all
-      TopicUser
-        .joins(:topic)
-        .where(
-          notification_level: TopicUser.notification_levels[:watching],
-          notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-          topics: {
-            category_id: categories_to_unwatch,
-          },
-        )
-        .update_all(notification_level: TopicUser.notification_levels[:regular])
-
-      (new_category_ids - previous_category_ids).each do |category_id|
-        skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
-
-        User
-          .real
-          .where(staged: false)
-          .where.not(id: skip_user_ids)
-          .select(:id)
-          .find_in_batches do |users|
-            category_users = []
-            users.each do |user|
-              category_users << {
-                category_id: category_id,
-                user_id: user.id,
-                notification_level: notification_level,
-              }
-            end
-            CategoryUser.insert_all!(category_users)
-          end
-      end
+      Jobs.enqueue(
+        :site_setting_update_default_categories,
+        { id: id, value: value, previous_value: previous_value },
+      )
+      MessageBus.publish(
+        "/site_setting/#{id}/process",
+        status: "enqueued",
+        group_ids: [Group::AUTO_GROUPS[:admins]],
+      )
     elsif id.start_with?("default_tags_")
-      previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
-      new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
-      now = Time.zone.now
-
-      notification_level = self.tag_notification_level(id)
-
-      TagUser.where(
-        tag_id: (previous_tag_ids - new_tag_ids),
-        notification_level: notification_level,
-      ).delete_all
-
-      (new_tag_ids - previous_tag_ids).each do |tag_id|
-        skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
-
-        User
-          .real
-          .where(staged: false)
-          .where.not(id: skip_user_ids)
-          .select(:id)
-          .find_in_batches do |users|
-            tag_users = []
-            users.each do |user|
-              tag_users << {
-                tag_id: tag_id,
-                user_id: user.id,
-                notification_level: notification_level,
-                created_at: now,
-                updated_at: now,
-              }
-            end
-            TagUser.insert_all!(tag_users)
-          end
-      end
+      Jobs.enqueue(
+        :site_setting_update_default_tags,
+        { id: id, value: value, previous_value: previous_value },
+      )
+      MessageBus.publish(
+        "/site_setting/#{id}/process",
+        status: "enqueued",
+        group_ids: [Group::AUTO_GROUPS[:admins]],
+      )
     elsif self.is_sidebar_default_setting?(id)
       Jobs.enqueue(
         :backfill_sidebar_site_settings,
@@ -165,5 +109,147 @@ class SiteSettingUpdateExistingUsers
 
   def self.is_sidebar_default_setting?(setting_name)
     %w[default_navigation_menu_categories default_navigation_menu_tags].include?(setting_name.to_s)
+  end
+
+  def self.default_categories(id, value, previous_value)
+    new_value = value.nil? ? "" : value
+
+    batch_size = 50_000
+    previous_category_ids = previous_value.split("|")
+    new_category_ids = new_value.split("|")
+
+    notification_level = category_notification_level(id)
+
+    categories_to_unwatch = previous_category_ids - new_category_ids
+
+    CategoryUser
+      .where(category_id: categories_to_unwatch, notification_level: notification_level)
+      .in_batches(of: batch_size) { |batch| batch.delete_all }
+
+    TopicUser
+      .joins(:topic)
+      .where(
+        notification_level: TopicUser.notification_levels[:watching],
+        notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
+        topics: {
+          category_id: categories_to_unwatch,
+        },
+      )
+      .select("topic_users.id")
+      .in_batches(of: batch_size) do |batch|
+        batch.update_all(notification_level: TopicUser.notification_levels[:regular])
+      end
+
+    modified_categories = new_category_ids - previous_category_ids
+
+    skip_user_ids = {}
+    users_scope = {}
+
+    modified_categories.each do |category_id|
+      skip_user_ids[category_id] = CategoryUser.where(category_id: category_id).pluck(:user_id)
+      users_scope[category_id] = User
+        .real
+        .where(staged: false)
+        .where.not(id: skip_user_ids[category_id])
+    end
+
+    total_users_to_process = users_scope.values.map(&:count).sum
+    processed_total = 0
+
+    modified_categories.each do |category_id|
+      users_scope[category_id]
+        .select(:id)
+        .find_in_batches(batch_size: batch_size) do |users|
+          category_users =
+            users.map do |user|
+              { category_id: category_id, user_id: user.id, notification_level: notification_level }
+            end
+
+          CategoryUser.insert_all!(category_users)
+
+          processed_total += users.size
+          publish_progress(id, processed_total, total_users_to_process, modified_categories)
+        end
+    end
+
+    publish_progress(id, processed_total, total_users_to_process, modified_categories)
+  end
+
+  def self.default_tags(id, value, previous_value)
+    new_value = value.nil? ? "" : value
+
+    batch_size = 50_000
+
+    previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
+    new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
+    now = Time.zone.now
+
+    notification_level = tag_notification_level(id)
+
+    TagUser
+      .where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level)
+      .in_batches(of: batch_size) { |batch| batch.delete_all }
+
+    modified_tags = new_tag_ids - previous_tag_ids
+
+    skip_user_ids = {}
+    users_scope = {}
+
+    modified_tags.each do |tag_id|
+      skip_user_ids[:tag_id] = TagUser.where(tag_id: tag_id).pluck(:user_id)
+      users_scope[:tag_id] = User.real.where(staged: false).where.not(id: skip_user_ids[:tag_id])
+    end
+
+    total_users_to_process = users_scope.values.map(&:count).sum
+    processed_total = 0
+
+    modified_tags.each do |tag_id|
+      skip_user_ids[:tag_id] = TagUser.where(tag_id: tag_id).pluck(:user_id)
+      users_scope[:tag_id] = User.real.where(staged: false).where.not(id: skip_user_ids[:tag_id])
+
+      users_scope[:tag_id]
+        .select(:id)
+        .find_in_batches(batch_size: batch_size) do |users|
+          tag_users =
+            users.map do |user|
+              {
+                tag_id: tag_id,
+                user_id: user.id,
+                notification_level: notification_level,
+                created_at: now,
+                updated_at: now,
+              }
+            end
+
+          TagUser.insert_all!(tag_users)
+
+          processed_total += users.size
+          publish_progress(id, processed_total, total_users_to_process, modified_tags)
+        end
+    end
+
+    publish_progress(id, processed_total, total_users_to_process, modified_tags)
+  end
+
+  def self.publish_progress(
+    site_setting_name,
+    processed_total = 0,
+    total_users_to_process = 0,
+    modified = nil
+  )
+    status =
+      if modified.empty? || processed_total >= total_users_to_process
+        "completed"
+      else
+        "enqueued"
+      end
+
+    progress = modified.empty? ? nil : "#{processed_total}/#{total_users_to_process}"
+    MessageBus.publish(
+      "/site_setting/#{site_setting_name}/process",
+      status: status,
+      progress: progress,
+      group_ids: [Group::AUTO_GROUPS[:admins]],
+    )
   end
 end
