@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe ColorSchemeSerializer do
-  fab!(:color_scheme) { Fabricate(:color_scheme, name: "Test Scheme", base_scheme_id: "WCAG") }
+  fab!(:color_scheme) do
+    Fabricate(
+      :color_scheme,
+      name: "Test Scheme",
+      base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+    )
+  end
 
   describe "#colors" do
     it "returns colors sorted in a specific order" do

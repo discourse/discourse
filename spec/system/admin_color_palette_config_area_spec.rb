@@ -100,7 +100,7 @@ describe "Admin Color Palette Config Area Page", type: :system do
   end
 
   it "allows reverting colors to their default values" do
-    color_scheme.update!(base_scheme_id: "Dark")
+    color_scheme.update!(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     color_scheme.colors.create!(name: "primary", hex: "aaaaaa")
 
     config_area.visit(color_scheme.id)

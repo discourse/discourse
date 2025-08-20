@@ -181,13 +181,17 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
+    const base = this.model.find((palette) => palette.id === baseKey);
+
     const newColorScheme = base.copy();
     newColorScheme.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id: base.get("base_scheme_id"),
+      base_scheme_id: base.get("id"),
     });
     newColorScheme.save().then(() => {
+      newColorScheme.colors.forEach((color) => {
+        color.default_hex = color.originals.hex;
+      });
       this.model.pushObject(newColorScheme);
       newColorScheme.set("savingStatus", null);
 
@@ -197,9 +201,26 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorScheme() {
+    // If a base palette exists in database, it should be removed from the list in the modal as potential base to not display duplicated names.
+    const deduplicatedColorPalettes = this.model.filter((base) => {
+      if (
+        base.id < 0 &&
+        this.model.find((palette) => {
+          return (
+            palette.name === base.name &&
+            palette.base_scheme_id === base.base_scheme_id &&
+            palette.id > 0
+          );
+        })
+      ) {
+        return false;
+      }
+      return true;
+    });
+
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.allBaseColorSchemes,
+        colorSchemes: deduplicatedColorPalettes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
       },
     });
