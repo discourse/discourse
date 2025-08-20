@@ -65,7 +65,7 @@ describe "User preferences | Interface", type: :system do
   describe "Color palette" do
     context "when there's only 1 dark color palette" do
       before do
-        dark = ColorScheme.find_by(base_scheme_id: "Dark")
+        dark = ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
         ColorScheme.where.not(id: dark.id).destroy_all
         dark.update!(user_selectable: false)
         user.user_option.update!(dark_scheme_id: dark.id, theme_ids: [SiteSetting.default_theme_id])
@@ -90,15 +90,31 @@ describe "User preferences | Interface", type: :system do
     before { SiteSetting.interface_color_selector = "sidebar_footer" }
 
     context "when changing own preferences" do
-      fab!(:color_scheme_light_1) { Fabricate(:color_scheme, base_scheme_id: "Light") }
-      fab!(:color_scheme_dark_1) { Fabricate(:color_scheme, base_scheme_id: "Dark") }
-      fab!(:color_scheme_light_2) { Fabricate(:color_scheme, base_scheme_id: "Light") }
-      fab!(:color_scheme_dark_2) { Fabricate(:color_scheme, base_scheme_id: "Dark") }
+      fab!(:color_scheme_light_1) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+      end
+      fab!(:color_scheme_dark_1) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
+      fab!(:color_scheme_light_2) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+      end
+      fab!(:color_scheme_dark_2) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
       fab!(:color_scheme_light_3) do
-        Fabricate(:color_scheme, base_scheme_id: "Light", user_selectable: true)
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"],
+          user_selectable: true,
+        )
       end
       fab!(:color_scheme_dark_3) do
-        Fabricate(:color_scheme, base_scheme_id: "Dark", user_selectable: true)
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+          user_selectable: true,
+        )
       end
 
       it "has and can change default color scheme for light and dark" do

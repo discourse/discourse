@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "تفاصيل Discourse"
   js:
     details:
       title: إخفاء التفاصيل

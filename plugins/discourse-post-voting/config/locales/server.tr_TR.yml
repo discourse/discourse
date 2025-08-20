@@ -32,6 +32,7 @@ tr_TR:
     post_voting_comment_limit_per_post: "Her gönderide izin verilen yorum sayısı"
     min_trust_to_flag_posts_voting_comments: "Bir gönderi oylama yorumuna bayrak eklemek için minimum güven seviyesi"
     flag_posts_voting_comments_allowed_groups: "Bir oylama yorumuna bayrak eklemesine izin verilen gruplar"
+    post_voting_comment_enabled: "Gönderi Oylaması konularındaki Gönderilerde yorumları etkinleştirin"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ tr_TR:
         limit_exceeded: "Gönderi başına %{limit} yorum limitine ulaşıldı."
         perform: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen Gönderi Oylama Yorumu."
         auto_silence_from_flags: "Bayrak eklenmesi nedeniyle otomatik olarak susturuldu."
+        disabled: "Gönderiye yorum yapılmasına izin verilmiyor."
       reviewables:
         comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
         actions:

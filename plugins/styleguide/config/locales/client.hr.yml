@@ -69,8 +69,8 @@ hr:
           title: "Karta teme"
         site_header:
           title: "Zaglavlje web lokacije"
-        suggested_topics:
-          title: "Preporučene teme"
+        more_topics:
+          title: "Više tema"
         post_menu:
           title: "Izbornik objava"
         modal:

@@ -20,4 +20,26 @@ es:
     report_generator:
       private_message:
         title: "Informe programado para %{query_name}"
+        body: |
+          Hola, %{recipient_name}: tu informe del explorador de datos ya está disponible.
+
+          Nombre de la consulta:
+          %{query_name}
+
+          Aquí tienes los resultados:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Ver consulta en el explorador de datos</a>
+
+          Informe creado a las %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Informe programado para %{query_name}
+
+          Aquí tienes los resultados:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Ver consulta en el explorador de datos</a>
+
+          Informe creado a las %{created_at} (%{timezone})
       upload_appendix: "Apéndice: [%{filename}|archivo adjunto](%{short_url})"

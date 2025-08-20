@@ -11,6 +11,7 @@ sr:
         solved:
           accepted_notification: "prihvaćen"
     solved:
+      accepted_answer_post_number: "poruka %{post_number}"
       topic_status_filter:
         all: "sve"
     discourse_automation:

@@ -33,6 +33,11 @@ es:
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "Se anuló la asignación del tema"
+    filter:
+      description:
+        assigned: "Filtrar temas asignados a un usuario o grupo específico"
+        nobody: "Filtrar temas que no están asignados a nadie"
+        anyone: "Filtrar temas asignados a cualquier persona"
     already_claimed: "Ese tema ya ha sido reclamado."
     already_assigned: "El tema ya está asignado a @%{username}"
     too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."

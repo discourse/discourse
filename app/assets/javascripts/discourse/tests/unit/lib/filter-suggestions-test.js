@@ -37,6 +37,27 @@ function buildTips() {
       priority: 1,
     },
     {
+      name: "users:",
+      description: "Users",
+      type: "username",
+      priority: 1,
+      delimiters: [
+        { name: ",", description: "any" },
+        { name: "+", description: "all" },
+      ],
+    },
+    {
+      name: "group:",
+      alias: "groups:",
+      description: "Group",
+      type: "group",
+      priority: 1,
+      delimiters: [
+        { name: ",", description: "any" },
+        { name: "+", description: "all" },
+      ],
+    },
+    {
       name: "after:",
       description: "Filter by date",
       type: "date",
@@ -72,7 +93,15 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
 
     assert.deepEqual(
       names,
-      ["after:", "category:", "status:solved", "status:unsolved", "tag:"],
+      [
+        "after:",
+        "category:",
+        "group:",
+        "status:solved",
+        "status:unsolved",
+        "tag:",
+        "users:",
+      ],
       "returns only top-level tips sorted alphabetically within same priority"
     );
   });
@@ -234,6 +263,37 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
       buildContext()
     );
     assert.strictEqual(suggestions.length, 20, "limits results to 20");
+  });
+
+  test("username suggestions include delimiters when exact match is present", async function (assert) {
+    pretender.get("/u/search/users.json", () =>
+      response({ users: [{ username: "sam", name: "Sam" }] })
+    );
+
+    const res = await FilterSuggestions.getSuggestions(
+      "users:sam",
+      buildTips(),
+      buildContext()
+    );
+    const names = res.suggestions.map((s) => s.name);
+
+    assert.true(names.includes("users:sam+"), "offers + delimiter");
+    assert.true(names.includes("users:sam,"), "offers , delimiter");
+  });
+
+  test("group suggestions are fetched and include delimiters", async function (assert) {
+    pretender.get("/groups/search.json", () =>
+      response([{ name: "team", full_name: "Team" }])
+    );
+
+    const res = await FilterSuggestions.getSuggestions(
+      "group:te",
+      buildTips(),
+      buildContext()
+    );
+    const names = res.suggestions.map((s) => s.name);
+
+    assert.true(names.includes("group:team"), "includes group name suggestion");
   });
 
   test("username_group_list suggests users and filters out already-used values", async function (assert) {

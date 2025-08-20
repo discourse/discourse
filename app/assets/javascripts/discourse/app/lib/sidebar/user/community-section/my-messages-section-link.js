@@ -23,10 +23,10 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
 
   get text() {
     return i18n(
-      `sidebar.sections.community.links.${this.overridenName
+      `sidebar.sections.community.links.${this.overriddenName
         .toLowerCase()
         .replace(" ", "_")}.content`,
-      { defaultValue: this.overridenName }
+      { defaultValue: this.overriddenName }
     );
   }
 

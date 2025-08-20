@@ -62,7 +62,6 @@ et:
         none: "Pole"
       title: "vestlus"
       title_capitalized: "Vestlus"
-      exit: "tagasi"
       channel_status:
         closed: "Suletud"
         open: "Ava"

@@ -516,10 +516,11 @@ be:
       dismiss_notifications_tooltip: "Адзначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "скінуць"
-        regular: "звычайны"
         interface_modes:
           light: "святло"
           dark: "цёмна"
+        picker:
+          active: "актыўны"
       experimental_sidebar:
         options: "Налады"
         navigation_section: "рух"
@@ -868,6 +869,8 @@ be:
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
     full_name_requirement:
       required_at_signup: "абавязковыя"
+    welcome_banner_page_visibility:
+      homepage: "хатняя старонка"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
@@ -913,8 +916,6 @@ be:
       paste_code_text: "увядзіце ці ўстаўце код тут"
       upload_title: "спампаваць"
       upload_description: "увядзіце апісанне загрузкі"
-      olist_title: "нумараваны спіс"
-      ulist_title: "маркіраваны спіс"
       list_item: "элемент спісу"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
@@ -1912,7 +1913,7 @@ be:
           edit: "рэдагаваць"
           mobile: "Мабільны"
           preview: "папярэдні прагляд"
-          default: "актыўныя"
+          default: "Default"
           cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"
@@ -1934,12 +1935,12 @@ be:
             number:
               too_large: "павінен быць менш або роўны %{count}"
         colors:
+          light: "святло"
+          dark: "цёмна"
           title: "<......"
           edit: "Рэдагаваць"
           filters:
             all: "усе"
-          active_badge:
-            text: "актыўны"
           copy_name_prefix: "капіяваць з"
           undo: "Адмяніць"
           undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."

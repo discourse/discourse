@@ -114,7 +114,7 @@ de:
           one: "%{count} Antwort"
           other: "%{count} Antworten"
         voters_count_diff:
-          one: "und %{count} weiterer Benutzer ..."
+          one: "und %{count} weiterer Benutzer …"
           other: "und %{count} weitere Benutzer …"
     review:
       transcript:

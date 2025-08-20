@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 fi:
+  site_settings:
+    sign_in_with_apple_enabled: 'Otetaanko kirjautuminen Apple-tilillä käyttöön?'
+    apple_client_id: "(Kirjaudu sisään Apple-tilillä) Applen \"Service Identifier\" kehittäjäkonsolista. Yleensä käänteisen verkkotunnuksen tyylinen merkkijono (esim. com.example.auth) (Kirjaudu sisään Apple-tilillä)"
+    apple_team_id: '(Kirjaudu sisään Apple-tilillä) Applen Team ID (10 merkkiä)'
+    apple_key_id: '(Kirjaudu sisään Apple-tilillä) Applen Key ID (10 merkkiä)'
+    apple_pem: '(Kirjaudu sisään Apple-tilillä) Applen Pem-tiedoston sisältö. Sisällytä BEGIN- ja END-rivit.'

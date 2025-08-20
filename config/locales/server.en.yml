@@ -2934,6 +2934,14 @@ en:
       order_views_asc: "Sort by view count (least first)"
       order_read: "Sort by when you last read (most recent first)"
       order_read_asc: "Sort by when you last read (oldest first)"
+      order_hot: "Sort by hot score (most first)"
+      order_hot_asc: "Sort by hot score (least first)"
+      users: "Filter topics by participants"
+      users_any: "Show topics with any of the specified users (comma-separated)"
+      users_all: "Show topics with all of the specified users (plus-separated)"
+      group: "Filter topics by groups"
+      groups_any: "Show topics with any of the specified groups (comma-separated)"
+      groups_all: "Show topics with all of the specified groups (plus-separated)"
 
   discourse_connect:
     login_error: "Login Error"

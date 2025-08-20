@@ -53,7 +53,7 @@ pl_PL:
             Każdy dolar się liczy i zostanie dobrze wykorzystany.
           </p>
 
-          <p>Dziękujemy za wsparcie!<p>
+          <p>Dziękujemy za wsparcie!</p>
 
           <p>
             <a class="btn btn-large btn-danger" href="%{campaignUrl}">Zostań patronem</a>

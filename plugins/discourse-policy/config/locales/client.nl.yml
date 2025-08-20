@@ -38,6 +38,7 @@ nl:
         reminder:
           label: Herinnering
           description: Hoe vaak een herinneringsmelding moet worden gestuurd om het beleid te accepteren
+          no_reminder: (Geen herinnering)
         accept:
           label: Accepteren
           description: Tekst op de accepteerknop
@@ -50,6 +51,9 @@ nl:
         send-email:
           label: E-mail sturen?
           description: Gebruikers per e-mail op de hoogte brengen van het nieuwe beleid
+        add-users-to-group:
+          label: Gebruikers toevoegen aan groep
+          description: Voeg gebruikers toe aan de volgende groep wanneer ze akkoord gaan met dit beleid
       preferences:
         title: Beleid
         policy_emails:

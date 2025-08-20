@@ -9,7 +9,7 @@ pt_BR:
     admin:
       site_settings:
         categories:
-          discourse_details: "Detalhes Discourse"
+          discourse_details: "Detalhes do Discourse"
   js:
     details:
       title: Ocultar detalhes

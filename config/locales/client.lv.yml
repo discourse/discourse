@@ -967,11 +967,10 @@ lv:
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
       color_schemes:
         default_description: "Tēma pēc noklusējuma"
-        disable_dark_scheme: "Tāds pats kā parasts"
         undo: "Atlikt"
-        regular: "Regulārs"
         dark: "Tumšais režīms"
-        default_dark_scheme: "(vietnes noklusējums)"
+        picker:
+          active: "Aktīvs"
       dark_mode: "Tumšais režīms"
       text_size_default_on_all_devices: "Padarīt to par noklusējuma teksta izmēru visās manās ierīcēs"
       allow_private_messages: "Atļaut citiem lietotājiem sūtīt man personiskas ziņas"
@@ -1683,7 +1682,6 @@ lv:
       whisper: "čuksts"
       unlist: "paslēpts"
       add_warning: "Šis ir oficiāls brīdinājums."
-      toggle_whisper: "Čukstēšana"
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"
@@ -1720,8 +1718,6 @@ lv:
       paste_code_text: "ierakstiet vai ielīmējiet formatēto tekstu šeit"
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
-      olist_title: "Numurēts saraksts"
-      ulist_title: "Nenumurēts saraksts"
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
@@ -3310,10 +3306,10 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
-          default: "Aktīvi"
+          default: "Noklusējums"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
-          color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
+          color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains."
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
           cancel: "Atcelt"
@@ -3351,8 +3347,6 @@ lv:
           edit: "Labot"
           filters:
             all: "Visi"
-          active_badge:
-            text: "Aktīvs"
           undo: "Atsaukt"
           revert: "Atgriezt"
           primary:

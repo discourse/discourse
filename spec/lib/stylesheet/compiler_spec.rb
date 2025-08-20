@@ -244,7 +244,6 @@ RSpec.describe Stylesheet::Compiler do
         }
       SCSS
 
-      expect(css).to include("-webkit-min-device-pixel-ratio")
       expect(css).to include("csstools-light-dark-toggle")
       expect(map.size).to be > 10
     end

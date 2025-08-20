@@ -30,7 +30,6 @@ export default class PostStream extends Component {
   @service header;
   @service screenTrack;
   @service search;
-  @service site;
   @service siteSettings;
 
   @tracked cloakAbove;

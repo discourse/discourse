@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 it:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Sondaggio Discourse"
   js:
     poll:
       voters:
@@ -110,7 +115,7 @@ it:
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
       error_while_exporting_results: "Spiacenti, si è verificato un errore durante l'esportazione dei risultati del sondaggio."
       ui_builder:
-        title: Crea Sondaggio
+        title: Crea un sondaggio
         insert: Inserisci Sondaggio
         help:
           options_min_count: Inserisci almeno un'opzione.
