@@ -200,6 +200,7 @@ export default class ComposerContainer extends Component {
                 @toggleToolbar={{this.composer.toggleToolbar}}
                 @toggleFullscreen={{this.composer.fullscreenComposer}}
                 @disableTextarea={{this.composer.disableTextarea}}
+                @saveAndClose={{this.composer.saveAndClose}}
               />
             </div>
 
@@ -342,26 +343,14 @@ export default class ComposerContainer extends Component {
                   @disableSubmit={{this.composer.disableSubmit}}
                 />
 
-                {{#if this.composer.model.replyDirty}}
-                  <DButton
-                    @action={{this.composer.saveAndClose}}
-                    @icon={{if
-                      this.site.mobileView
-                      (if this.composer.canEdit "xmark" "trash-can")
-                      null
-                    }}
-                    class="cancel btn-transparent"
-                    @preventFocus={{true}}
-                    @title="composer.save_and_close"
-                    @label={{if
-                      this.site.mobileView
-                      null
-                      "composer.save_and_close"
-                    }}
-                  />
-                {{/if}}
-
                 {{#if this.site.mobileView}}
+                  <DButton
+                    @action={{this.composer.cancel}}
+                    @icon="trash-can"
+                    class="discard-button btn-transparent"
+                    @preventFocus={{true}}
+                    @title="composer.discard"
+                  />
 
                   {{#if this.composer.model.noBump}}
                     <span class="no-bump">{{icon "anchor"}}</span>
@@ -469,13 +458,15 @@ export default class ComposerContainer extends Component {
               {{/if}}
 
               <div class="discard">
-                <DButton
-                  @action={{this.composer.cancel}}
-                  class="discard btn-transparent"
-                  @preventFocus={{true}}
-                  @title="composer.discard"
-                  @label="composer.discard"
-                />
+                {{#unless this.site.mobileView}}
+                  <DButton
+                    @action={{this.composer.cancel}}
+                    class="discard-button btn-transparent"
+                    @preventFocus={{true}}
+                    @title="composer.discard"
+                    @label="composer.discard"
+                  />
+                {{/unless}}
               </div>
 
               {{#if (and this.composer.allowPreview this.site.desktopView)}}
@@ -520,6 +511,7 @@ export default class ComposerContainer extends Component {
             @toggleFullscreen={{this.composer.openIfDraft}}
             @toggleComposer={{this.composer.toggle}}
             @toggleToolbar={{this.composer.toggleToolbar}}
+            @saveAndClose={{this.composer.saveAndClose}}
           />
         {{/if}}
       {{/if}}

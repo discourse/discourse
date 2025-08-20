@@ -1662,9 +1662,10 @@ export default class ComposerService extends Service {
       this.appEvents.trigger("composer:cancelled");
       this.skipAutoSave = false;
       return true;
+    } else {
+      // Otherwise just close the composer and discard any empty draft
+      return this.cancelComposer();
     }
-
-    return false;
   }
 
   unshrink() {

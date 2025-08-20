@@ -566,11 +566,22 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  .discard {
-    margin-left: auto;
-    flex: 1;
-    text-align: right;
+  .discard-button {
     color: var(--danger);
+
+    @include viewport.from(sm) {
+      margin-left: auto;
+      flex: 1;
+      text-align: right;
+    }
+
+    @include viewport.until(sm) {
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-medium);
+        padding: 0.35em;
+      }
+    }
   }
 
   #draft-status,
