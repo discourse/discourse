@@ -104,11 +104,6 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
   {
-    handler: "throw",
-    matchId: /^discourse\.ember\.native-array-extensions\..+$/,
-    env: ["development"],
-  },
-  {
     handler: "silence|counter",
     matchId: /^discourse\.ember\.native-array-extensions\..+$/,
     env: ["test"],
