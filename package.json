@@ -84,8 +84,5 @@
         "webpack"
       ]
     }
-  },
-  "dependencies": {
-    "postcss-nesting": "^13.0.2"
   }
 }

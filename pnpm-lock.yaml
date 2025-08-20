@@ -27,10 +27,6 @@ patchedDependencies:
 importers:
 
   .:
-    dependencies:
-      postcss-nesting:
-        specifier: ^13.0.2
-        version: 13.0.2(postcss@8.5.6)
     devDependencies:
       '@babel/plugin-proposal-decorators':
         specifier: ^7.28.0
@@ -1109,6 +1105,9 @@ importers:
       postcss-media-minmax:
         specifier: ^5.0.0
         version: 5.0.0(postcss@8.5.6)
+      postcss-nesting:
+        specifier: ^13.0.2
+        version: 13.0.2(postcss@8.5.6)
       readable-stream:
         specifier: ^4.7.0
         version: 4.7.0
