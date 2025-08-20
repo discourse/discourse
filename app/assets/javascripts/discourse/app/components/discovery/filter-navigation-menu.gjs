@@ -231,7 +231,10 @@ export default class FilterNavigationMenu extends Component {
       data: this.trackedMenuListData,
       maxWidth: 2000,
       matchTriggerWidth: true,
-      visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
+      visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
+      constrainHeightToViewport: true, // we want to resize the menu as viewport shrinks
+      crossAxisShift: false, // may position it on top of input without this
+      minHeight: 80, // we do not want autocomplete to be too small
     });
 
     if (!this.suggestions.length) {

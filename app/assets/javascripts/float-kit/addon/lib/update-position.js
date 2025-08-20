@@ -36,21 +36,6 @@ export async function updatePosition(trigger, content, options) {
     boundary: options.boundary,
   };
 
-  // Determine which visibility optimizer middleware to use
-  const visibilityOptimizer =
-    options.visibilityOptimizer ?? VISIBILITY_OPTIMIZERS.FLIP;
-
-  const visibilityOptimizerMiddleware =
-    visibilityOptimizer === VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT
-      ? autoPlacement({
-          allowedPlacements: options.allowedPlacements ?? FLOAT_UI_PLACEMENTS,
-          ...detectOverflowOptions,
-        })
-      : flip({
-          fallbackPlacements: options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
-          ...detectOverflowOptions,
-        });
-
   const middleware = [];
   const isCentered = options.placement === "center";
 
@@ -63,17 +48,38 @@ export async function updatePosition(trigger, content, options) {
       middleware.push(inline());
     }
 
-    middleware.push(visibilityOptimizerMiddleware);
+    const visibilityOptimizer =
+      options.visibilityOptimizer ?? VISIBILITY_OPTIMIZERS.FLIP;
+
+    if (visibilityOptimizer !== VISIBILITY_OPTIMIZERS.NONE) {
+      const visibilityOptimizerMiddleware =
+        visibilityOptimizer === VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT
+          ? autoPlacement({
+              allowedPlacements:
+                options.allowedPlacements ?? FLOAT_UI_PLACEMENTS,
+              ...detectOverflowOptions,
+            })
+          : flip({
+              fallbackPlacements:
+                options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
+              ...detectOverflowOptions,
+            });
+      middleware.push(visibilityOptimizerMiddleware);
+    }
 
     let limiter;
     if (options.limitShift) {
       limiter = limitShift(options.limitShift);
     }
+    let crossAxis = true;
+    if (options.crossAxisShift !== undefined) {
+      crossAxis = options.crossAxisShift;
+    }
     middleware.push(
       shift({
         padding: detectOverflowOptions.padding,
         limiter,
-        crossAxis: true,
+        crossAxis,
       })
     );
   }
@@ -114,6 +120,48 @@ export async function updatePosition(trigger, content, options) {
             minWidth: `${rects.reference.width}px`,
           });
         },
+      })
+    );
+  }
+
+  if (options.constrainHeightToViewport) {
+    middleware.push(
+      size({
+        apply({ availableHeight, elements }) {
+          const max = Math.max(50, (availableHeight ?? 0) - 4);
+          const inner = elements.floating.querySelector(
+            ".fk-d-menu__inner-content"
+          );
+
+          let hideElement = false;
+          if (options.minHeight) {
+            if (availableHeight < options.minHeight) {
+              hideElement = true;
+            }
+          }
+
+          if (inner) {
+            if (hideElement) {
+              inner.style.display = "none";
+            } else {
+              inner.style.display = "";
+            }
+            Object.assign(inner.style, {
+              maxHeight: `${max}px`,
+            });
+          } else {
+            if (hideElement) {
+              elements.floating.style.display = "none";
+            } else {
+              elements.floating.style.display = "";
+            }
+            Object.assign(elements.floating.style, {
+              maxHeight: `${max}px`,
+              overflow: "auto",
+            });
+          }
+        },
+        ...detectOverflowOptions,
       })
     );
   }
