@@ -1,4 +1,3 @@
-//
 import { splitBlock } from "prosemirror-commands";
 import { TextSelection } from "prosemirror-state";
 

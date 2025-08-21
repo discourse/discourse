@@ -215,8 +215,40 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
 
     composer.send_keys(:control, :left)
     composer.send_keys(:backspace)
+    sleep 0.01
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p:not(:has(span.spoiled)) + p:has(span.spoiled)", text: "hello")
+  end
+
+  it "selects the resulting node after a select all and spoiler click" do
+    open_composer
+
+    composer.type_content("This is a test")
+    composer.select_all
+    click_spoiler_button
+
+    expect(rich).to have_css("div.spoiled", text: "This is a test")
+
+    composer.type_content("spoiled")
+
+    composer.toggle_rich_editor
+    expect(composer).to have_value("[spoiler]\nspoiled\n\n[/spoiler]\n\n")
+  end
+
+  it "can spoiler a block node selection" do
+    open_composer
+
+    composer.type_content("> Blockquote")
+
+    find("blockquote").click(SystemHelpers::PLATFORM_KEY_MODIFIER)
+    find("blockquote").click(SystemHelpers::PLATFORM_KEY_MODIFIER)
+
+    click_spoiler_button
+
+    expect(rich).to have_css("div.spoiled", text: "Blockquote")
+
+    composer.toggle_rich_editor
+    expect(composer).to have_value("[spoiler]\n> Blockquote\n\n[/spoiler]\n\n")
   end
 end

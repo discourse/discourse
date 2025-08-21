@@ -82,7 +82,7 @@ const extension = {
       utils.inNode(state, schema.nodes[nodeType])
     ),
   }),
-  commands: ({ schema, utils, pmState: { TextSelection } }) => ({
+  commands: ({ schema, utils, pmState: { TextSelection }, pmCommands }) => ({
     toggleSpoiler() {
       return (state, dispatch, view) => {
         const { selection } = state;
@@ -93,130 +93,100 @@ const extension = {
         );
 
         if (inSpoiler) {
+          // Find the nearest spoiler node and unwrap it by replacing with its contents
           for (let depth = $from.depth; depth > 0; depth--) {
             const node = $from.node(depth);
             if (SPOILER_NODES.includes(node.type.name)) {
-              const spoilerPos = $from.before(depth);
-              const start = spoilerPos;
-              const end = spoilerPos + node.nodeSize;
+              const spoilerStart = $from.before(depth);
+              const spoilerEnd = spoilerStart + node.nodeSize;
 
               // Extract content and replace spoiler with it
-              const innerContent = state.doc.slice(start + 1, end - 1).content;
-              const tr = state.tr.replaceWith(start, end, innerContent);
-              dispatch(tr);
+              const tr = state.tr.replaceWith(
+                spoilerStart,
+                spoilerEnd,
+                node.content
+              );
+
+              dispatch?.(tr);
+
               return true;
             }
           }
-          return true;
+
+          return false;
         }
 
+        // For empty selection, create spoiler with placeholder text
         if (empty) {
-          let spoilerNode;
           const textNode = schema.text(i18n("composer.spoiler_text"));
-          if (view.endOfTextblock("backward")) {
-            spoilerNode = schema.nodes.spoiler.createAndFill(
-              null,
-              schema.nodes.paragraph.createAndFill(null, textNode)
-            );
-          } else {
-            spoilerNode = schema.nodes.inline_spoiler.createAndFill(
-              null,
-              textNode
-            );
-          }
+          const isBlockSpoiler = view.endOfTextblock("backward");
+          const spoilerNode = isBlockSpoiler
+            ? schema.nodes.spoiler.createAndFill(
+                null,
+                schema.nodes.paragraph.createAndFill(null, textNode)
+              )
+            : schema.nodes.inline_spoiler.createAndFill(null, textNode);
 
           const tr = state.tr.replaceSelectionWith(spoilerNode);
-          const insertPos = $from.pos;
-          // Select the placeholder text for editing
           tr.setSelection(
             TextSelection.create(
               tr.doc,
-              insertPos + 1,
-              insertPos + 1 + textNode.nodeSize
+              $from.pos + 1,
+              $from.pos + 1 + textNode.nodeSize
             )
           );
 
-          dispatch(tr);
+          dispatch?.(tr);
 
           return true;
         }
 
-        const slice = selection.content();
-
-        // Count paragraph nodes in the slice - if more than 1, use block spoiler
-        let paragraphCount = 0;
-        slice.content.forEach((node) => {
-          if (node.type.name === "paragraph") {
-            paragraphCount++;
-          }
-        });
-
-        const isInlineSelection = paragraphCount <= 1;
-
-        let spoilerNode;
-        if (isInlineSelection) {
-          // For inline spoilers, preserve all inline content including formatting
-          let inlineContent = [];
-          slice.content.forEach((node) => {
-            if (node.isBlock) {
-              // Extract inline content from block nodes
-              node.content.forEach((child) => {
-                inlineContent.push(child);
-              });
-            } else {
-              // Keep inline nodes as-is (text, bold, italic, etc.)
-              inlineContent.push(node);
-            }
-          });
-
-          spoilerNode = schema.nodes.inline_spoiler.createAndFill(
-            null,
-            inlineContent
-          );
-        } else {
-          // For block spoilers, ensure content is wrapped in paragraphs
-          const blockContent = [];
-          slice.content.forEach((node) => {
-            if (node.isBlock) {
-              blockContent.push(node);
-            } else if (node.isText) {
-              // Wrap text nodes in paragraphs
-              const para = schema.nodes.paragraph.createAndFill(null, [node]);
-              if (para) {
-                blockContent.push(para);
-              }
-            } else {
-              // For other inline nodes, try to wrap in paragraph
-              const para = schema.nodes.paragraph.createAndFill(null, [node]);
-              if (para) {
-                blockContent.push(para);
-              }
-            }
-          });
-
-          // Ensure we have at least one paragraph if blockContent is empty
-          if (blockContent.length === 0) {
-            const emptyPara = schema.nodes.paragraph.createAndFill();
-            if (emptyPara) {
-              blockContent.push(emptyPara);
-            }
-          }
-
-          spoilerNode = schema.nodes.spoiler.createAndFill(null, blockContent);
+        const isBlockNodeSelection =
+          $from.parent === $to.parent &&
+          $from.parentOffset === 0 &&
+          $to.parentOffset === $from.parent.content.size &&
+          $from.parent.isBlock &&
+          $from.depth > 0;
+        if (isBlockNodeSelection) {
+          return pmCommands.wrapIn(schema.nodes.spoiler)(state, dispatch);
         }
 
-        const tr = state.tr.replaceWith($from.pos, $to.pos, spoilerNode);
-        tr.setSelection(
-          TextSelection.create(
-            tr.doc,
-            $from.pos + 1,
-            $from.pos + spoilerNode.nodeSize - 1
-          )
-        );
+        const slice = selection.content();
+        const isInlineSelection = slice.openStart > 0 || slice.openEnd > 0;
 
-        dispatch(tr);
+        if (isInlineSelection) {
+          const content = [];
+          slice.content.forEach((node) =>
+            node.isBlock
+              ? node.content.forEach((child) => content.push(child))
+              : content.push(node)
+          );
+          const spoilerNode = schema.nodes.inline_spoiler.createAndFill(
+            null,
+            content
+          );
 
-        return true;
+          const tr = state.tr.replaceWith($from.pos, $to.pos, spoilerNode);
+          tr.setSelection(
+            TextSelection.create(
+              tr.doc,
+              $from.pos + 1,
+              $from.pos + 1 + spoilerNode.content.size
+            )
+          );
+
+          dispatch?.(tr);
+
+          return true;
+        } else {
+          return pmCommands.wrapIn(schema.nodes.spoiler)(state, (tr) => {
+            tr.setSelection(
+              TextSelection.create(tr.doc, $from.pos + 2, $to.pos)
+            );
+
+            dispatch?.(tr);
+          });
+        }
       };
     },
   }),
