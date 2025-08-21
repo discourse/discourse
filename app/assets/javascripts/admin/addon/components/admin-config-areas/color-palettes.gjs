@@ -8,6 +8,7 @@ import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
+import ColorScheme from "admin/models/color-scheme";
 
 export default class AdminConfigAreasColorPalettes extends Component {
   @service router;
@@ -41,16 +42,26 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   async newColorPaletteWithBase(baseKey) {
-    const base = this.args.palettes.find((palette) => palette.id === baseKey);
-    const newPalette = base.copy();
+    let newPalette;
+    let base;
+    if (baseKey) {
+      base = this.args.palettes.find((palette) => palette.id === baseKey);
+      newPalette = base.copy();
+    } else {
+      newPalette = new ColorScheme();
+      newPalette.colors = [];
+    }
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id: base.get("id"),
+      base_scheme_id: base?.get("id"),
     });
+
     await newPalette.save();
-    newPalette.colors.forEach((color) => {
-      color.default_hex = color.originals.hex;
-    });
+    if (baseKey) {
+      newPalette.colors.forEach((color) => {
+        color.default_hex = color.originals.hex;
+      });
+    }
     await this.router.refresh();
     this.router.replaceWith("adminConfig.colorPalettes.show", newPalette);
   }

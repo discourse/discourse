@@ -6,6 +6,7 @@ import { currentThemeId } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
+import ColorScheme from "admin/models/color-scheme";
 
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
@@ -181,12 +182,20 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.model.find((palette) => palette.id === baseKey);
+    let base;
+    let newColorScheme;
 
-    const newColorScheme = base.copy();
+    if (baseKey) {
+      base = this.model.find((palette) => palette.id === baseKey);
+      newColorScheme = base.copy();
+    } else {
+      newColorScheme = new ColorScheme();
+      newColorScheme.colors = [];
+      newColorScheme.originals = { name: "" };
+    }
     newColorScheme.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id: base.get("id"),
+      base_scheme_id: base?.get("id"),
     });
     newColorScheme.save().then(() => {
       newColorScheme.colors.forEach((color) => {
