@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
-import { service } from "@ember/service";
 
 export default class PostEventUpcomingEventsIndexRoute extends DiscourseRoute {
   @service discoursePostEventService;
