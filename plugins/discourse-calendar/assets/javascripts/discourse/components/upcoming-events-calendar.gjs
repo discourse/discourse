@@ -27,7 +27,9 @@ export default class UpcomingEventsCalendar extends Component {
       mineEvents: {
         text: i18n("discourse_post_event.upcoming_events.my_events"),
         click: () => {
-          this.router.replaceWith("discourse-post-event-upcoming-events.mine");
+          this.router.replaceWith("discourse-post-event-upcoming-events.mine", {
+            queryParams: this.router.currentRoute.queryParams,
+          });
         },
       },
       allEvents: {
@@ -133,8 +135,8 @@ export default class UpcomingEventsCalendar extends Component {
     this.router.replaceWith({
       queryParams: {
         view: info.view.type,
-        start: moment(info.view.currentStart).format("YYYY-MM-DD"),
-        end: moment(info.view.currentEnd).format("YYYY-MM-DD"),
+        start: moment(info.view.currentStart).toISOString(),
+        end: moment(info.view.currentEnd).toISOString(),
       },
     });
   }
