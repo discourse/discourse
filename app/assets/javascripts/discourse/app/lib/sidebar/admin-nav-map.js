@@ -114,6 +114,13 @@ export const ADMIN_NAV_MAP = [
             icon: "gear",
             settings_area: "authenticators",
           },
+          {
+            name: "admin_login_discourseconnect",
+            route: "adminConfig.login.discourseconnect",
+            label: "admin.config.login.discourseconnect.title",
+            icon: "gear",
+            settings_area: "discourseconnect",
+          },
         ],
       },
       {
