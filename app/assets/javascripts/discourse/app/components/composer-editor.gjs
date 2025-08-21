@@ -226,31 +226,63 @@ export default class ComposerEditor extends Component {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
+  @on("willDestroyElement")
+  _composerClosed() {
+    this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
+
+    // need to wait a bit for the "slide down" transition of the composer
+    discourseLater(
+      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
+      400
+    );
+
+    // this is somewhat complicated, but the lifecycle for ember components is tricky
+    // willDestroyElement is called, element is cleared and then willDestroy is called from the glimmer callbacks
+    // so we ensure we clear this here
+    //
+    // Once we port this to a glimmer component a lot of this complexity will go away
+    this._composerEditorDestroyPreview();
+    this._composerEditorDestroyEditor();
+  }
+
   @action
   _composerEditorInitPreview() {
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
+    this._editorInitPreview = true;
   }
 
   @action
   _composerEditorDestroyPreview() {
+    if (!this._editorInitPreview) {
+      return;
+    }
+
+    this._editorInitPreview = false;
+
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
-    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
-    preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
-    preview?.removeEventListener("click", this._handleImageGridButtonClick);
-    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
-    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
+    if (preview) {
+      preview.removeEventListener(
+        "click",
+        this._handleAltTextCancelButtonClick
+      );
+      preview.removeEventListener("click", this._handleAltTextEditButtonClick);
+      preview.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview.removeEventListener("click", this._handleImageDeleteButtonClick);
+      preview.removeEventListener("click", this._handleImageGridButtonClick);
+      preview.removeEventListener("click", this._handleImageScaleButtonClick);
+      preview.removeEventListener("keypress", this._handleAltTextInputKeypress);
 
-    apiImageWrapperBtnEvents.forEach((fn) =>
-      preview?.removeEventListener("click", fn)
-    );
+      apiImageWrapperBtnEvents.forEach((fn) =>
+        preview.removeEventListener("click", fn)
+      );
+    }
   }
 
   @action
   _composerEditorInitEditor() {
+    this._editorInitEditor = true;
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
     }
@@ -258,6 +290,10 @@ export default class ComposerEditor extends Component {
 
   @action
   _composerEditorDestroyEditor() {
+    if (!this._editorInitEditor) {
+      return;
+    }
+    this._editorInitEditor = false;
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.teardown();
     }
@@ -875,17 +911,6 @@ export default class ComposerEditor extends Component {
 
     apiImageWrapperBtnEvents.forEach((fn) =>
       preview.addEventListener("click", fn)
-    );
-  }
-
-  @on("willDestroyElement")
-  _composerClosed() {
-    this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
-
-    // need to wait a bit for the "slide down" transition of the composer
-    discourseLater(
-      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-      400
     );
   }
 
