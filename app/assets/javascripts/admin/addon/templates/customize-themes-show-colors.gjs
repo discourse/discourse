@@ -15,7 +15,7 @@ export default RouteTemplate(
     }
 
     @action
-    onLightColorChange(color, value) {
+    onColorChange(color, value) {
       color.hex = value;
       if (color.hex !== color.originalHex) {
         this.args.controller.colorPaletteChangeTracker.addDirtyLightColor(
@@ -23,20 +23,6 @@ export default RouteTemplate(
         );
       } else {
         this.args.controller.colorPaletteChangeTracker.removeDirtyLightColor(
-          color.name
-        );
-      }
-    }
-
-    @action
-    onDarkColorChange(color, value) {
-      color.dark_hex = value;
-      if (color.dark_hex !== color.originalDarkHex) {
-        this.args.controller.colorPaletteChangeTracker.addDirtyDarkColor(
-          color.name
-        );
-      } else {
-        this.args.controller.colorPaletteChangeTracker.removeDirtyDarkColor(
           color.name
         );
       }
@@ -57,8 +43,7 @@ export default RouteTemplate(
     <template>
       <ColorPaletteEditor
         @colors={{@model.colorPalette.colors}}
-        @onLightColorChange={{this.onLightColorChange}}
-        @onDarkColorChange={{this.onDarkColorChange}}
+        @onColorChange={{this.onColorChange}}
         @hideRevertButton={{true}}
         @system={{@model.system}}
       />

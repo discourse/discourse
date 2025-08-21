@@ -305,23 +305,6 @@ describe "Admin Customize Themes", type: :system do
       expect(updated_color).to eq(original_hex)
     end
 
-    it "allows editing dark mode colors" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#000fff")
-
-      theme_page.changes_banner.click_save
-
-      page.refresh
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      updated_dark_color = theme_page.color_palette_editor.get_color_value("primary")
-      expect(updated_dark_color).to eq("#000fff")
-    end
-
     it "shows count of unsaved colors" do
       theme_page.visit(theme.id)
       theme_page.colors_tab.click
@@ -332,17 +315,9 @@ describe "Admin Customize Themes", type: :system do
         I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 1),
       )
 
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#ff80ee")
-
-      expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
-      )
-
       theme_page.color_palette_editor.change_color("secondary", "#ee30ab")
       expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 3),
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
       )
     end
 
