@@ -3862,7 +3862,7 @@ it:
           locale: "Localizzazione"
           actions: "Azioni"
           edit: "Modifica"
-          delete: "Cancella"
+          delete: "Elimina"
         add: "Aggiungi nuova traduzione"
         view:
           one: "Visualizza %{count} lingua tradotta"
@@ -5243,7 +5243,7 @@ it:
         appearance:
           title: "Aspetto"
         email:
-          title: "Email"
+          title: "E-mail"
         security:
           title: "Sicurezza"
         plugins:
@@ -5316,7 +5316,7 @@ it:
               title: "Logo piccolo scuro"
               help_text: "La dimensione consigliata è 120 x 120 pixel."
             mobile: "Mobile"
-            email: "Email"
+            email: "E-mail"
             social_media: "Social media"
             mobile_logo:
               title: "Logo mobile"
@@ -5339,7 +5339,7 @@ it:
               help_text: "La dimensione consigliata è 180 x 180 pixel. Si sconsiglia l'uso di uno sfondo trasparente."
             digest_logo:
               title: "Logo digest"
-              description: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'email del tuo sito. Se lasciata vuota, verrà utilizzata l'immagine dall'impostazione `logo`."
+              description: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'e-mail del tuo sito. Se lasciata vuota, verrà utilizzata l'immagine dall'impostazione `logo`."
               help_text: "Utilizza un'immagine rettangolare ampia. Non utilizzare un'immagine SVG."
             opengraph_image:
               title: "Immagine OpenGraph"
@@ -5502,7 +5502,7 @@ it:
               header_description: "Configura le impostazioni per le e-mail inviate ai tuoi membri"
             preview_summary:
               title: "Anteprima del riepilogo"
-              header_description: "Vedi in anteprima il contenuto delle email riepilogative inviate agli utenti inattivi"
+              header_description: "Vedi in anteprima il contenuto delle e-mail di riepilogo inviate agli utenti inattivi"
             advanced_test:
               title: "Test avanzato"
               header_description: "Scopri come Discourse elabora le e-mail ricevute"
@@ -5539,7 +5539,7 @@ it:
           sub_pages:
             screened_emails:
               title: "Email filtrate"
-              header_description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email saranno controllati e la loro registrazione bloccata, oppure sarà eseguita qualche altra azione"
+              header_description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi e-mail saranno controllati e la loro registrazione bloccata, oppure sarà eseguita qualche altra azione"
             screened_ips:
               title: "IP scansionati"
               header_description: "Indirizzi IP monitorati. I singoli indirizzi IP possono essere inseriti in una lista consentita."
@@ -6240,9 +6240,10 @@ it:
         themes_and_components:
           breadcrumb_title: "Personalizza"
           install: "Installa"
+          theme_site_settings:
+            title: "Impostazioni del tema del sito"
           themes:
             title: "Temi"
-            description: 'Temi a livello di sito che modificano l''aspetto generale del tuo sito per tutti gli utenti. Vuoi verificare quali impostazioni del sito vengono sostituite dai tuoi temi? <a href="%{themeSiteSettingsUrl}">Visualizza le impostazioni del tema del sito</a>'
             themes_intro: "Per iniziare, installa un nuovo tema oppure creane uno tuo da zero utilizzando queste risorse."
             new_theme: "Nuovo tema"
             back: "Torna ai temi"
@@ -6640,7 +6641,7 @@ it:
             text: "CSS"
             title: "Regole CSS personalizzate con supporto per la sintassi SCSS"
           header:
-            text: "Prima del titolo"
+            text: "Prima dell'intestazione"
             title: "HTML di base da visualizzare sopra l'intestazione di Discourse"
           after_header:
             text: "Dopo Intestazione"

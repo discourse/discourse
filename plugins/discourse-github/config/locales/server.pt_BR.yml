@@ -47,7 +47,7 @@ pt_BR:
         e "github_badges_enabled" seja reativado.
       repository_not_found_pm_title: "Ação necessária para o plugin discourse-github"
       repository_not_found_pm: |
-        Um repositório especificado no plugin discourse-github retornou um "Não encontrado"
+        Um repositório especificado no plugin discourse-github retornou um erro de "Não encontrado":
         %{repo_name}
 
         Emblemas não serão concedidos até que o nome seja corrigido

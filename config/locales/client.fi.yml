@@ -6250,9 +6250,11 @@ fi:
         themes_and_components:
           breadcrumb_title: "Mukauta"
           install: "Asenna"
+          theme_site_settings:
+            title: "Teeman sivustoasetukset"
           themes:
             title: "Teemat"
-            description: 'Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja käyttökokemusta kaikille käyttäjille. Haluatko tarkistaa, mitkä sivuston asetukset teemasi korvaavat? <a href="%{themeSiteSettingsUrl}">Näytä teeman sivustoasetukset</a>'
+            description: 'Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille.'
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
@@ -6744,7 +6746,6 @@ fi:
             reset: "Palauta suodattimet"
           default_dark_badge:
             text: "Oletusarvoinen tumma"
-            title: "Oletusarvoinen vaalea väripaletti"
           default_both_badge:
             text: "Oletusarvoinen vaalea ja tumma"
             title: "Oletusarvoinen vaalea ja tumma väripaletti"

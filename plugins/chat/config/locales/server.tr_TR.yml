@@ -19,7 +19,7 @@ tr_TR:
     chat_auto_silence_from_flags_duration: "Kullanıcıların, işaretli sohbet mesajları nedeniyle otomatik olarak susturulduğunda, susturulacakları dakika sayısı."
     chat_duplicate_message_sensitivity: "Aynı gönderen tarafından eş kopya bir mesajın kısa bir süre içinde engellenme olasılığı. 0 ila 1,0 arasında ondalık sayı, 1,0 en yüksek ayardır (mesajları daha kısa sürede daha sık engeller). Eş kopya mesajlara izin vermek için \"0\" olarak ayarlayın."
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
-    chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
+    chat_allow_uploads: "Herkese açık sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
@@ -35,7 +35,7 @@ tr_TR:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
       chat_upload_not_allowed_secure_uploads: "Güvenli yüklemeler site ayarı etkinleştirildiğinde sohbet yüklemelerine izin verilmez."
-      allow_chat_in_anonymous_mode_invalid: "Bu ayar öncelikle `allow anonymous mode` ayarının etkinleştirilmesini gerektiriyor."
+      allow_chat_in_anonymous_mode_invalid: "Bu ayar öncelikle \"allow anonymous mode\" ayarının etkinleştirilmesini gerektiriyor."
   system_messages:
     private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
@@ -241,7 +241,7 @@ tr_TR:
           other: "[%{site_name}] Yeni mesajlar"
         watched_thread:
           one: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
-          other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
+          other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajları"
         watched_threads:
           one: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"
           other: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"

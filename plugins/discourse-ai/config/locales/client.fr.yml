@@ -163,7 +163,7 @@ fr:
               description: "Rendez le sujet invisible au public si l'action est déclenchée"
             flag_type:
               label: "Type de signalement"
-              description: "Type de signalement à appliquer au message (contenu indésirable ou simplement marquer pour examen)"
+              description: "Type de signalement à appliquer à la publication (contenu indésirable ou simplement marquer pour examen)"
             flag_post:
               label: "Signaler cette publication"
               description: "Signale la publication (soit comme contenu indésirable ou pour examen)"
@@ -262,7 +262,7 @@ fr:
           short_text_translator: "Traducteur de textes courts"
         spam:
           name: "Contenu indésirable"
-          description: "Identifie les contenus indésirables à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
+          description: "Identifie les contenus indésirables potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
           inspect_posts: "Inspecter les publications"
         automation_reports:
           name: "Rapports automatisés"

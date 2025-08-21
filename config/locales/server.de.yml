@@ -2549,7 +2549,7 @@ de:
       content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
       content_localization_anon_language_switcher_requirements: "Für den Sprachumschalter muss die Seiteneinstellung `set locale from cookie` aktiviert sein und `content localization supported locales` muss mindestens eine Sprache enthalten."
       mediaconvert_role_arn_required: "Die AWS IAM role ARN ist erforderlich, wenn du AWS MediaConvert für die Videokonvertierung verwendest."
-      s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Zugangsdaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
+      s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
     keywords:
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"
@@ -2596,10 +2596,10 @@ de:
       created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer erstellt wurden (durch Kommas getrennt)"
       latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
       latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
-      likes_min: "Themen mit mindestens so vielen „Gefällt mir“ anzeigen"
-      likes_max: "Themen mit höchstens so vielen „Gefällt mir“ anzeigen"
-      likes_op_min: "Themen anzeigen, deren erster Beitrag mindestens so viele „Gefällt mir“ hat"
-      likes_op_max: "Themen anzeigen, bei denen der erste Beitrag höchstens so viele „Gefällt mir“ hat"
+      likes_min: "Themen mit mindestens so vielen „Gefällt mir“-Angaben anzeigen"
+      likes_max: "Themen mit höchstens so vielen „Gefällt mir“-Angaben anzeigen"
+      likes_op_min: "Themen anzeigen, deren erster Beitrag mindestens so viele „Gefällt mir“-Angaben hat"
+      likes_op_max: "Themen anzeigen, bei denen der erste Beitrag höchstens so viele „Gefällt mir“-Angaben hat"
       posts_min: "Themen mit mindestens so vielen Beiträgen anzeigen"
       posts_max: "Themen mit höchstens so vielen Beiträgen anzeigen"
       posters_min: "Themen mit mindestens dieser Teilnehmerzahl anzeigen"
@@ -2620,6 +2620,7 @@ de:
       in_muted: "Stummgeschaltete Themen anzeigen"
       in_normal: "Themen mit normaler Benachrichtigungsstufe anzeigen"
       in_watching_first_post: "Themen anzeigen, bei denen du den ersten Beitrag beobachtest"
+      in_new_topics: "Zeige neue Themen"
       order_activity: "Nach letzter Aktivität sortieren (die neuesten zuerst)"
       order_activity_asc: "Nach letzter Aktivität sortieren (die ältesten zuerst)"
       order_category: "Nach Kategoriename sortieren (Z-A)"
@@ -4849,7 +4850,7 @@ de:
       name: Respektiert
       description: Hat je 2 „Gefällt mir“ auf 100 Beiträge erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du mindestens 2 „Gefällt mir“ auf 100 verschiedene Beiträge erhältst. Die Community respektiert deine zahlreichen Beiträge zu den Unterhaltungen zunehmend!
+        Dieses Abzeichen wird verliehen, wenn du mindestens 2 „Gefällt mir“-Angaben auf 100 verschiedene Beiträge erhältst. Die Community respektiert deine zahlreichen Beiträge zu den Unterhaltungen zunehmend!
     admired:
       name: Bewundert
       description: Hat je 5 „Gefällt mir“ auf 300 Beiträge erhalten
@@ -5371,7 +5372,7 @@ de:
       duplicate_ids: "hat doppelte IDs"
       reserved_id: "hat ein reserviertes Schlüsselwort als ID: %{id}"
       unsafe_description: "hat eine unsichere HTML-Beschreibung"
-      invalid_tag_group: "hat eine ungültige Schlagwort-Gruppe: %{tag_group_name}"
+      invalid_tag_group: "hat eine ungültige Schlagwortgruppe: %{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

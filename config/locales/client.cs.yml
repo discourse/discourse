@@ -5762,6 +5762,10 @@ cs:
             bookmarks: "Témata v %{category} bez štítků, která jste si uložili do záložek"
             default: "%{filter} témata v %{category} bez štítků"
         categories: "Všechny kategorie"
+    content_localization:
+      toggle_localized:
+        translated: "Stránka je strojově přeložena. Klepnutím zobrazíte originál."
+        not_translated: "Stránka není přeložena. Kepnutím ji přeložíte."
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
@@ -6120,6 +6124,8 @@ cs:
         select_setting: "Vyberte nastavení webu pro zobrazení aktuálních hodnot motivu"
         add: "Přejít na nastavení webu motivem"
         help: "Motiv, který právě používáte, je <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Přejděte na <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>stránku konfigurace motivu</a> a změňte nastavení webu motivem nebo klikněte na odkazovaný motiv v tabulce níže a upravte jeho nastavení."
+        filter: "Filtrujte nastavení motivu pomocí názvu nastavení, popisu nebo názvu motivu..."
+        filter_no_results: "Vašemu filtru neodpovídá žádné nastavení"
       search:
         modal_title: "Hledat vše v administraci"
         title: "Vyhledat"
@@ -6185,10 +6191,18 @@ cs:
           only_experiments: "Zobrazit pouze experimentální funkce"
           experiment_enabled: "Povolili jste experimentální funkci."
           experiment_disabled: "Vypnuli jste experimentální funkci."
+          feature_enabled: "Funkci jste povolili."
+          feature_disabled: "Funkci jste zakázali."
+          toggled_too_fast: "Přepínač jste přepnuli příliš rychle. Počkejte prosím několik vteřin před dalším pokusem."
           experiment_tooltip:
+            title_disabled: "Vyzkoušejte tuto experimentální funkci"
             title_enabled: "Vypněte experimentální funkci"
+            content_disabled: "Vyzkoušejte naši nejnovější funkci ve vývoji! Je stále v experimentální fázi, takže ji můžeme kdykoli odstranit. Můžete se odhlásit, kdykoli budete chtít.<br/><br/>Přepnutím ji povolíte pro všechny uživatele."
             content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
           feature_tooltip:
+            title_disabled: "Vyzkoušejte tuto funkci"
+            title_enabled: "Vypnout funkci"
+            content_disabled: "Vyzkoušejte tuto novou funkci! Můžete ji vypnout, kdykoli budete chtít.<br/><br/>Přepnutím povolíte funkci povolí pro všechny uživatele."
             content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
@@ -6821,9 +6835,12 @@ cs:
         themes_and_components:
           breadcrumb_title: "Přizpůsobení"
           install: "Instalovat"
+          theme_site_settings:
+            title: "Nastavení webu motivem"
+            description: "Nastavení, která umožňují motivům mít větší kontrolu nad celým webem přepsáním malé podmnožiny základních nastavení."
           themes:
             title: "Motivy"
-            description: 'Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele. Chcete zkontrolovat, která nastavení webu vaše motivy přepisují? <a href="%{themeSiteSettingsUrl}">Zobrazit nastavení webu motivem</a>'
+            description: 'Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele.'
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
             back: "Zpět na motivy"
@@ -7100,6 +7117,7 @@ cs:
           default_light_scheme: "Světlé (výchozí)"
           color_scheme_select: "Vybrat barvy motivu."
           dark_color_scheme_select: "Vyberte barvy, které mají být použity pro motivy ve tmavém režimu."
+          edit_colors: "Upravit barvy"
           custom_sections: "Vlastní sekce:"
           theme_components: "Komponenty motivu"
           add_all_themes: "Přidat všechny motivy"
@@ -7111,10 +7129,12 @@ cs:
           convert_theme_alert_generic: "Opravdu chcete tento motiv převést na komponentu?"
           convert_theme_tooltip: "Převést tento motiv na komponentu"
           inactive_themes: "Neaktivní motivy:"
+          set_default_theme: "Nastavit jako výchozí"
           default_theme: "Výchozí motiv"
           set_default_success: "Výchozí motiv nastaven na %{theme}"
           setting_was_saved: "Nastavení motivu bylo uloženo"
           install_success: "%{theme} úspěšně nainstalován!"
+          delete_success: "%{theme} byl úspěšně odstraněn!"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybráno"
@@ -7310,12 +7330,16 @@ cs:
           select_base:
             title: "Vyberte základní paletu barev"
             description: "Základní paleta:"
+          non_default_theme_warning: "Vaše <a href='%{link}'>osobní předvolby</a> jsou jiné než výchozí. Změny, které zde provedete, se na vás nemusí vztahovat, ale budou se vztahovat na každého, kdo používá výchozí nastavení (%{themeName})."
+          custom_schemes_warning: "Vaše <a href='%{link}'>osobní předvolby</a> pro paletu barev %{colorModes} se liší od výchozího nastavení. Změny v paletě %{colorModes} se nemusí vztahovat na vás, ale budou platit pro každého, kdo použije výchozí nastavení."
           light: "světlý režim"
           dark: "tmavý režim"
           title: "Barvy"
           edit: "Upravit"
+          view: "Zobrazit"
           set_default_light: "Nastavit jako světlou paletu ve výchozím motivu (%{theme})"
           set_default_dark: "Nastavit jako tmavou paletu ve výchozím motivu (%{theme})"
+          set_default_success: "%{schemeName} nastavena jako výchozí paleta pro %{themeName}"
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
           filters:
@@ -7325,7 +7349,15 @@ cs:
             from_theme: "Z motivu"
             no_results: "Nebyly nalezeny žádné palety barev"
           default_light_badge:
+            text: "Výchozí světlá"
+            title: "Výchozí světlá paleta barev"
             reset: "Odstranit filtry"
+          default_dark_badge:
+            text: "Výchozí tmavá"
+            title: "Výchozí tmavá paleta barev"
+          default_both_badge:
+            text: "Výchozí světlá a tmavá"
+            title: "Výchozí světlá i tmavá paleta barev"
           system_palette: "Toto je vestavěná paleta barev, nelze ji upravovat ani mazat."
           back_to_colors: "Zpět na palety barev"
           long_title: "Palety barev"

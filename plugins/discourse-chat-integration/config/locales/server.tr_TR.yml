@@ -101,22 +101,22 @@ tr_TR:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
         help: |
-          *Yeni kural:* "/discourse [thread|watch|follow|mute] [category] [tag:name]"
+          *Yeni kural:* "/discourse [ileti dizisi|izle|takip et|sessize al] [kategori] [etiket:ad]"
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
-          - *thread* - yeni konular için bu kanalı bilgilendirin, mümkünse konu yanıtlarıyla
-          - *watch* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
-          - *follow* - yeni konular için bu kanalı bilgilendirin
-          - *mute* - bu kanala bildirimleri engelleyin
+          - *ileti dizisi* - yeni konular için bu kanalı bilgilendirin, mümkünse konu yanıtlarıyla
+          - *izle* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
+          - *takip et* - yeni konular için bu kanalı bilgilendirin
+          - *sessize al* - bu kanala bildirimleri engelleyin
 
-          *Remove rule:* "/discourse remove [rule number]"
+          *Kuralı kaldır:* "/discourse remove [kural numarası]"
           ("[kural sayısı]", "/discourse status" çalıştırılarak bulunabilir)
 
-          *List rules:* "/discourse status"
+          *Liste kuralları:* "/discourse status"
 
-          *[Experimental] Post transcript:* "/discourse post [n]"
+          *[Deneysel] Post transcript:* "/discourse post [n]"
           Discourse'ta bu kanalda son "n" gönderiyi içeren bir taslak konu oluşturun
 
-          *Help:* "/discourse help"
+          *Yardım:* "/discourse help"
         transcript:
           modal_title: "Transkript Oluştur"
           modal_description: "Başlıktaki tüm mesajlar tek bir forum gönderisinde toplanır. Göndermeden önce transkripti düzenleme fırsatı verilir."
@@ -207,7 +207,7 @@ tr_TR:
           - *sessize al* - bu kanala gelen bildirimleri engelleyin
 
           *Kuralı kaldırın:* "/discourse remove [kural numarası]"
-          ("[rule number]", "/discourse status" çalıştırılarak bulunabilir)
+          ("[kural numarası]", "/discourse status" çalıştırılarak bulunabilir)
 
           *Kuralları listele:* "/discourse status"
 
