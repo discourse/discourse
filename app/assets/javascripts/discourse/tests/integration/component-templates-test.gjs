@@ -56,7 +56,7 @@ module("Integration | Initializers | plugin-component-templates", function () {
         .dom("div.test-class")
         .hasText(
           "non-colocated component",
-          "renders split component/template "
+          "renders split component/template"
         );
     });
   });
