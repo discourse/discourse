@@ -1,14 +1,66 @@
 # frozen_string_literal: true
 
-describe "Composer - discard draft modal", type: :system do
+describe "Composer - Drafts", type: :system do
   fab!(:topic)
   fab!(:current_user, :admin)
 
+  let(:toasts) { PageObjects::Components::Toasts.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 
   before { sign_in(current_user) }
+
+  context "when clicking X (save and close)" do
+    it "saves the draft and shows a toast" do
+      visit "/new-topic"
+
+      composer.fill_title("this is a test topic")
+      composer.fill_content("a b c d e f g")
+
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
+
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+      expect(Draft.where(user: current_user).count).to eq(1)
+    end
+  end
+
+  context "when clicking discard" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    before { Jobs.run_immediately! }
+
+    it "does not show confirmation if there is no user input in the composer" do
+      visit "/new-topic"
+
+      expect(composer).to be_opened
+      composer.discard
+
+      expect(discard_draft_modal).to be_closed
+      expect(composer).to be_closed
+    end
+
+    it "destroys draft after discard confirmation" do
+      visit "/new-topic"
+
+      composer.fill_title("this is a test topic")
+      composer.fill_content("a b c d e f g")
+
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
+
+      composer.discard
+
+      expect(discard_draft_modal).to be_open
+      discard_draft_modal.click_discard
+
+      expect(discard_draft_modal).to be_closed
+      expect(composer).to be_closed
+
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(0) }
+    end
+  end
 
   context "when editing different post" do
     fab!(:post_1) { Fabricate(:post, topic:, user: current_user) }
@@ -70,31 +122,6 @@ describe "Composer - discard draft modal", type: :system do
 
       expect(discard_draft_modal).to be_closed
       expect(composer).to be_opened
-    end
-  end
-
-  context "when clicking discard draft" do
-    let(:dialog) { PageObjects::Components::Dialog.new }
-
-    before { Jobs.run_immediately! }
-
-    it "destroys draft" do
-      visit "/new-topic"
-
-      composer.fill_title("this is a test topic")
-      composer.fill_content("a b c d e f g")
-
-      try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
-
-      composer.discard
-
-      expect(discard_draft_modal).to be_open
-      discard_draft_modal.click_discard
-
-      expect(discard_draft_modal).to be_closed
-      expect(composer).to be_closed
-
-      try_until_success { expect(Draft.where(user: current_user).count).to eq(0) }
     end
   end
 end
