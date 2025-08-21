@@ -28,8 +28,8 @@ if !theme_exists
       )
   end
 
-  Theme.foundation_theme.set_default!
+  Theme.horizon_theme.set_default!
 
-  dark_scheme_id = ColorScheme.where(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]).pick(:id)
-  Theme.foundation_theme.update!(dark_color_scheme_id: dark_scheme_id) if dark_scheme_id.present?
+  dark_scheme_id = ColorScheme.where(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Horizon Dark"]).pick(:id)
+  Theme.horizon_theme.update!(dark_color_scheme_id: dark_scheme_id) if dark_scheme_id.present?
 end
