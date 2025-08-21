@@ -2,17 +2,17 @@
 
 describe "Composer - discard draft modal", type: :system do
   fab!(:topic)
-  fab!(:admin)
+  fab!(:current_user, :admin)
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 
-  before { sign_in(admin) }
+  before { sign_in(current_user) }
 
   context "when editing different post" do
-    fab!(:post_1) { Fabricate(:post, topic:, user: admin) }
-    fab!(:post_2) { Fabricate(:post, topic:, user: admin) }
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user) }
+    fab!(:post_2) { Fabricate(:post, topic:, user: current_user) }
 
     it "shows the discard modal when there are changes in the composer" do
       topic_page.visit_topic(post_1.topic)
@@ -38,7 +38,7 @@ describe "Composer - discard draft modal", type: :system do
   end
 
   context "when editing the same post" do
-    fab!(:post_1) { Fabricate(:post, topic:, user: admin) }
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user) }
 
     it "doesn’t show the discard modal even if there are changes in the composer" do
       topic_page.visit_topic(post_1.topic)
@@ -73,7 +73,7 @@ describe "Composer - discard draft modal", type: :system do
     end
   end
 
-  context "when clicking abandon draft" do
+  context "when clicking discard draft" do
     let(:dialog) { PageObjects::Components::Dialog.new }
 
     before { Jobs.run_immediately! }
@@ -84,14 +84,17 @@ describe "Composer - discard draft modal", type: :system do
       composer.fill_title("this is a test topic")
       composer.fill_content("a b c d e f g")
 
-      wait_for(timeout: 5) { Draft.count == 1 }
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
 
-      composer.close
+      composer.discard
 
       expect(discard_draft_modal).to be_open
       discard_draft_modal.click_discard
 
-      wait_for(timeout: 5) { Draft.count == 0 }
+      expect(discard_draft_modal).to be_closed
+      expect(composer).to be_closed
+
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(0) }
     end
   end
 end
