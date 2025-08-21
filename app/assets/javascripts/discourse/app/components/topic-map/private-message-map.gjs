@@ -6,7 +6,6 @@ import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { groupPath } from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
 
 export default class PrivateMessageMap extends Component {
   @service site;
@@ -88,23 +87,15 @@ class PmMapUserGroup extends Component {
 }
 
 class PmRemoveGroupLink extends Component {
-  @service dialog;
-
   @action
-  showConfirmDialog() {
-    this.dialog.deleteConfirm({
-      message: i18n("private_message_info.remove_allowed_group", {
-        name: this.args.model.name,
-      }),
-      confirmButtonLabel: "private_message_info.remove_group",
-      didConfirm: () => this.args.removeAllowedGroup(this.args.model),
-    });
+  removeGroup() {
+    this.args.removeAllowedGroup(this.args.model);
   }
 
   <template>
     <DButton
       class="remove-invited btn-small"
-      @action={{this.showConfirmDialog}}
+      @action={{this.removeGroup}}
       @icon="xmark"
     />
   </template>
@@ -149,29 +140,15 @@ class PmMapUser extends Component {
 }
 
 class PmRemoveLink extends Component {
-  @service dialog;
-
   @action
-  showConfirmDialog() {
-    const messageKey = this.args.isCurrentUser
-      ? "private_message_info.leave_message"
-      : "private_message_info.remove_allowed_user";
-
-    this.dialog.deleteConfirm({
-      message: i18n(messageKey, {
-        name: this.args.model.username,
-      }),
-      confirmButtonLabel: this.args.isCurrentUser
-        ? "private_message_info.leave"
-        : "private_message_info.remove_user",
-      didConfirm: () => this.args.removeAllowedUser(this.args.model),
-    });
+  removeUser() {
+    this.args.removeAllowedUser(this.args.model);
   }
 
   <template>
     <DButton
       class="remove-invited btn-small"
-      @action={{this.showConfirmDialog}}
+      @action={{this.removeUser}}
       @icon="xmark"
     />
   </template>
