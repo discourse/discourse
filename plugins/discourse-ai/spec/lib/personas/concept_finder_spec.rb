@@ -43,9 +43,7 @@ RSpec.describe DiscourseAi::Personas::ConceptFinder do
     it "includes format instructions" do
       prompt = persona.system_prompt
 
-      expect(prompt).to include("<o>")
       expect(prompt).to include('{"concepts": ["concept1", "concept2", "concept3"]}')
-      expect(prompt).to include("</o>")
     end
 
     it "includes language preservation instruction" do

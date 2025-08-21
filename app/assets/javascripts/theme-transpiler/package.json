@@ -35,6 +35,7 @@
     "postcss": "^8.5.6",
     "postcss-js": "^4.0.1",
     "postcss-media-minmax": "^5.0.0",
+    "postcss-nesting": "^13.0.2",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
     "terser": "^5.43.1"

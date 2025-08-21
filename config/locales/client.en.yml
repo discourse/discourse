@@ -7156,7 +7156,7 @@ en:
             reset: "Reset filters"
           default_dark_badge:
             text: "Default dark"
-            title: "Default light color palette"
+            title: "Default dark color palette"
           default_both_badge:
             text: "Default light and dark"
             title: "Default light and dark color palette"
@@ -8227,7 +8227,9 @@ en:
           block_common_passwords:
             prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-
+        job_status:
+          completed: "Update completed"
+          enqueued: "Update in progress"
       badges:
         status: Status
         title: Badges
