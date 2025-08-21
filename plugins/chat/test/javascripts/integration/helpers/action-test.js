@@ -24,6 +24,9 @@ class FooReference extends Component {
   }
 }
 
+// This is a core test but has to be in a plugin since the transform
+// (that injects `this` into actions' params) is applied only to
+// themes and plugins
 module("Integration | Helper | action", function (hooks) {
   setupRenderingTest(hooks);
 
