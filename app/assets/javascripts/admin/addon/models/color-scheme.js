@@ -26,6 +26,7 @@ export default class ColorScheme extends EmberObject {
             base_scheme_id: colorScheme.base_scheme_id,
             user_selectable: colorScheme.user_selectable,
             colors: colorScheme.colors,
+            is_dark: colorScheme.is_dark,
           })
         );
       });
@@ -158,6 +159,7 @@ export default class ColorScheme extends EmberObject {
 
       if (!opts?.saveNameOnly) {
         data.user_selectable = this.user_selectable;
+        data.default_on_theme = this.default_on_theme;
         data.base_scheme_id = this.base_scheme_id;
         data.colors = [];
         this.colors.forEach((c) => {

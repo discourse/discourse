@@ -20,6 +20,18 @@ class ColorSchemeRevisor
       @color_scheme.user_selectable = @params[:user_selectable] if @params.has_key?(
         :user_selectable,
       )
+
+      if @color_scheme.is_dark? && @params.has_key?(:default_on_theme)
+        Theme.find_default.update!(
+          dark_color_scheme_id: @params[:default_on_theme] ? @color_scheme.id : nil,
+        )
+      end
+      if !@color_scheme.is_dark? && @params.has_key?(:default_on_theme)
+        Theme.find_default.update!(
+          color_scheme_id: @params[:default_on_theme] ? @color_scheme.id : nil,
+        )
+      end
+
       @color_scheme.base_scheme_id = @params[:base_scheme_id] if @params.has_key?(:base_scheme_id)
       has_colors = @params[:colors]
 
