@@ -1758,7 +1758,7 @@ Discourse::Application.routes.draw do
     if Rails.env.development?
       get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
           :constraints => {
-            testem_id: /\d+/,
+            testem_id: /-?\d+/,
           }
     end
 
