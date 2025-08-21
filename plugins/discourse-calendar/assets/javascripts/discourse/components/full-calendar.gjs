@@ -69,34 +69,37 @@ export default class FullCalendar extends Component {
       ],
       headerToolbar: this.headerToolbar,
       customButtons: this.args.customButtons || {},
-      eventWillUnmount: () => {
-        this.menu.getByIdentifier("post-event-menu")?.close?.();
-        this.menu.getByIdentifier("post-event-tooltip")?.close?.();
+      eventWillUnmount: async () => {
+        await this.activeMenu?.close?.();
+        await this.activeTooltip?.close?.();
       },
       datesSet: (info) => {
         this.args.onDatesChange?.(info);
       },
-      eventClick: async ({ el, event, jsEvent }) => {
-        const { htmlContent, postNumber, postUrl, postEvent } =
-          event.extendedProps;
+      eventMouseLeave: async () => {
+        await this.activeTooltip?.close?.();
+      },
+      eventMouseEnter: async ({ el, event }) => {
+        const { htmlContent } = event.extendedProps;
 
-        if (postUrl) {
-          DiscourseURL.routeTo(postUrl);
-        } else if (postNumber) {
-          this.topic.send("jumpToPost", postNumber);
-        } else if (htmlContent) {
-          this.tooltip.show(el, {
+        if (htmlContent) {
+          this.activeTooltip = await this.tooltip.show(el, {
             identifier: "post-event-tooltip",
             triggers: ["hover"],
             content: htmlSafe(
               // this is a workaround to allow linebreaks in the tooltip
-              "<div>" + event.extendedProps.htmlContent + "</div>"
+              "<div>" + htmlContent + "</div>"
             ),
           });
-        } else if (postEvent.id) {
+        }
+      },
+      eventClick: async ({ el, event, jsEvent }) => {
+        const { postNumber, postUrl, postEvent } = event.extendedProps;
+
+        if (postEvent.id) {
           jsEvent.preventDefault();
 
-          await this.menu.show(
+          this.activeMenu = await this.menu.show(
             {
               getBoundingClientRect() {
                 return el.getBoundingClientRect();
@@ -115,6 +118,10 @@ export default class FullCalendar extends Component {
               },
             }
           );
+        } else if (postNumber) {
+          this.topic.send("jumpToPost", postNumber);
+        } else if (postUrl) {
+          DiscourseURL.routeTo(postUrl);
         }
       },
     });
