@@ -267,19 +267,16 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  _composerEditorInitEditor() {
+  _composerEditorInitEditor(elem) {
     if (this.composer.allowUpload) {
-      this.uppyComposerUpload.setup(this.element);
-      this._cleanupComposerUploadElement = this.element;
+      this.uppyComposerUpload.setup(elem);
     }
   }
 
   @action
-  _composerEditorDestroyEditor() {
+  _composerEditorDestroyEditor(elem) {
     if (this.composer.allowUpload && this._cleanupComposerUploadElement) {
-      // we are acting at a distance with this event so we target the original one
-      this.uppyComposerUpload.teardown(this._cleanupComposerUploadElement);
-      this._cleanupComposerUploadElement = null;
+      this.uppyComposerUpload.teardown(elem);
     }
   }
 
