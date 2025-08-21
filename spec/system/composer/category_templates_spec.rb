@@ -210,6 +210,7 @@ describe "Composer Form Templates", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     SiteSetting.experimental_form_templates = true
@@ -391,7 +392,7 @@ describe "Composer Form Templates", type: :system do
     expect(form_template_chooser).to have_selected_name(form_template_2.name)
   end
 
-  it "allows uploading after switching from a template category to a non-template category" do
+  it "allows uploading from paste after switching from a template category to a non-template category" do
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_input
@@ -400,7 +401,10 @@ describe "Composer Form Templates", type: :system do
     composer.switch_category(category_no_template.name)
     expect(composer).to have_composer_input
 
-    attach_file("file-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
+    composer.focus
+    cdp.allow_clipboard
+    cdp.copy_test_image
+    cdp.paste
 
     expect(composer).to have_no_in_progress_uploads
     expect(composer.preview).to have_css(".image-wrapper")
