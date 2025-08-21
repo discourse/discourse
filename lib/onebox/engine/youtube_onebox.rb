@@ -66,6 +66,7 @@ module Onebox
               frameborder="0"
               allowfullscreen
               class="youtube-onebox"
+              loading="lazy"
             ></iframe>
           HTML
         elsif list_id
@@ -77,6 +78,7 @@ module Onebox
               frameborder="0"
               allowfullscreen
               class="youtube-onebox"
+              loading="lazy"
             ></iframe>
           HTML
         else

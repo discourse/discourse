@@ -24,6 +24,7 @@ module Onebox
               width
               data-original-href
               data-unsanitized-src
+              loading
             ],
             "source" => %w[src type],
             "video" => %w[
