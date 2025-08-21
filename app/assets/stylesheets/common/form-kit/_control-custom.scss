@@ -1,5 +1,9 @@
 .form-kit__field-custom {
   width: auto !important;
+
+  &.--full {
+    width: 100% !important;
+  }
   min-width: var(--form-kit-small-input);
 
   .form-kit__control-custom {
