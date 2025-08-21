@@ -1671,7 +1671,9 @@ en:
       labels:
         provider: Login provider
         no_accounts: "No associated accounts"
-        total_users: "Total number of members"
+        discourse_connect: "SSO via Discourse Connect"
+        no_sso_accounts: "Accounts without an SSO record"
+        total_users: "Total active user accounts"
       description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:

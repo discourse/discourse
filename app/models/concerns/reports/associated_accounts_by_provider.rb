@@ -20,7 +20,7 @@ module Reports::AssociatedAccountsByProvider
 
       enabled_authenticators = Discourse.enabled_authenticators.map(&:name)
 
-      if !enabled_authenticators.empty?
+      if !enabled_authenticators.empty? && !SiteSetting.enable_discourse_connect
         query =
           UserAssociatedAccount
             .joins(:user)
@@ -41,13 +41,27 @@ module Reports::AssociatedAccountsByProvider
         end
       end
 
-      # Add total users count
+      if SiteSetting.enable_discourse_connect
+        discourse_connect_count =
+          SingleSignOnRecord.joins(:user).where(users: { active: true }).distinct.count(:user_id)
+
+        report.data << {
+          key: "discourse_connect",
+          provider: I18n.t("reports.associated_accounts_by_provider.labels.discourse_connect"),
+          count: discourse_connect_count,
+        }
+      end
+
       total_users = Statistics.users[:count]
-      report.data << {
-        key: "total_users",
-        provider: I18n.t("reports.associated_accounts_by_provider.labels.total_users"),
-        count: total_users,
-      }
+
+      # Don't output total for DiscourseConnect (it's the only auth method when enabled)
+      if !SiteSetting.enable_discourse_connect
+        report.data << {
+          key: "total_users",
+          provider: I18n.t("reports.associated_accounts_by_provider.labels.total_users"),
+          count: total_users,
+        }
+      end
 
       # Add users with no associated accounts count (only considering enabled providers)
       users_with_accounts =
@@ -61,10 +75,20 @@ module Reports::AssociatedAccountsByProvider
         else
           0
         end
+
+      users_with_accounts = discourse_connect_count if SiteSetting.enable_discourse_connect
       users_without_accounts = total_users - users_with_accounts
+
       report.data << {
         key: "no_accounts",
-        provider: I18n.t("reports.associated_accounts_by_provider.labels.no_accounts"),
+        provider:
+          (
+            if SiteSetting.enable_discourse_connect
+              I18n.t("reports.associated_accounts_by_provider.labels.no_sso_accounts")
+            else
+              I18n.t("reports.associated_accounts_by_provider.labels.no_accounts")
+            end
+          ),
         count: users_without_accounts,
       }
 
