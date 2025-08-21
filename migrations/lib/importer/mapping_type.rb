@@ -6,6 +6,7 @@ module Migrations::Importer
     BADGES = 2
     CATEGORIES = 3
     GROUPS = 4
+    USER_FIELDS = 5
     UPLOADS = 10
   end
 end
