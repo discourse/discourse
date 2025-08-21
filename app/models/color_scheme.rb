@@ -346,12 +346,6 @@ class ColorScheme < ActiveRecord::Base
   belongs_to :theme
   belongs_to :base_scheme, class_name: "ColorScheme"
 
-  has_one :theme_color_scheme, dependent: :destroy
-  has_one :owning_theme, class_name: "Theme", through: :theme_color_scheme, source: :theme
-
-  scope :without_theme_owned_palettes,
-        -> { where("color_schemes.id NOT IN (SELECT color_scheme_id FROM theme_color_schemes)") }
-
   validates_associated :color_scheme_colors
 
   BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss"
@@ -450,18 +444,17 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme
   end
 
-  def self.lookup_hex_for_name(name, scheme_id = nil, dark: false)
+  def self.lookup_hex_for_name(name, scheme_id = nil)
     enabled_color_scheme = find_by(id: scheme_id) if scheme_id
     enabled_color_scheme ||= Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
     color_record = (enabled_color_scheme || base).colors.find { |c| c.name == name }
     return if !color_record
-    dark ? color_record.dark_hex || color_record.hex : color_record.hex
+    color_record.hex
   end
 
-  def self.hex_for_name(name, scheme_id = nil, dark: false)
+  def self.hex_for_name(name, scheme_id = nil)
     cache_key = scheme_id ? "#{name}_#{scheme_id}" : name
-    cache_key += "_dark" if dark
-    hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id, dark:) }
+    hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id) }
   end
 
   def colors=(arr)
@@ -501,16 +494,10 @@ class ColorScheme < ActiveRecord::Base
     colors || (base_scheme_id ? {} : ColorScheme.base_colors)
   end
 
-  def resolved_colors(dark: false)
+  def resolved_colors
     from_base = ColorScheme.base_colors
     from_custom_scheme = base_colors
-    from_db =
-      colors
-        .map do |c|
-          hex = dark ? (c.dark_hex || c.hex) : c.hex
-          [c.name, hex]
-        end
-        .to_h
+    from_db = colors.map { |c| [c.name, c.hex] }.to_h
 
     resolved = from_base.merge(from_custom_scheme).except("hover", "selected").merge(from_db)
 

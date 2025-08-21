@@ -4152,11 +4152,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
-    area: "experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list

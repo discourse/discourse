@@ -989,17 +989,6 @@ RSpec.describe ApplicationHelper do
         <meta name="theme-color" media="all" content="#abcdef">
       HTML
     end
-
-    context "when use_overhauled_theme_color_palette setting is true" do
-      before { SiteSetting.use_overhauled_theme_color_palette = true }
-
-      it "renders a light and dark theme-color meta tag using the light and dark palettes of the same color scheme record" do
-        expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
-          <meta name="theme-color" media="(prefers-color-scheme: light)" content="#abcdef">
-          <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#fedcba">
-        HTML
-      end
-    end
   end
 
   describe "#discourse_color_scheme_meta_tag" do
@@ -1054,15 +1043,6 @@ RSpec.describe ApplicationHelper do
 
     it "returns the value set in the dark_scheme_id cookie" do
       expect(helper.dark_scheme_id).to eq(dark_scheme.id)
-    end
-
-    context "when use_overhauled_theme_color_palette is true" do
-      before { SiteSetting.use_overhauled_theme_color_palette = true }
-
-      it "returns the same value as #scheme_id" do
-        expect(helper.dark_scheme_id).to eq(helper.scheme_id)
-        expect(helper.scheme_id).to eq(light_scheme.id)
-      end
     end
   end
 
