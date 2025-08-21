@@ -235,32 +235,18 @@ export default class ComposerEditor extends Component {
       () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
       400
     );
-
-    // this is somewhat complicated, but the lifecycle for ember components is tricky
-    // willDestroyElement is called, element is cleared and then willDestroy is called from the glimmer callbacks
-    // so we ensure we clear this here
-    //
-    // Once we port this to a glimmer component a lot of this complexity will go away
-    this._composerEditorDestroyPreview();
-    this._composerEditorDestroyEditor();
   }
 
   @action
-  _composerEditorInitPreview() {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+  _composerEditorInitPreview(elem) {
+    const preview = elem.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
     this._editorInitPreview = true;
   }
 
   @action
-  _composerEditorDestroyPreview() {
-    if (!this._editorInitPreview) {
-      return;
-    }
-
-    this._editorInitPreview = false;
-
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+  _composerEditorDestroyPreview(elem) {
+    const preview = elem.querySelector(".d-editor-preview-wrapper");
 
     if (preview) {
       preview.removeEventListener(
@@ -282,20 +268,18 @@ export default class ComposerEditor extends Component {
 
   @action
   _composerEditorInitEditor() {
-    this._editorInitEditor = true;
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
+      this._cleanupComposerUploadElement = this.element;
     }
   }
 
   @action
   _composerEditorDestroyEditor() {
-    if (!this._editorInitEditor) {
-      return;
-    }
-    this._editorInitEditor = false;
-    if (this.composer.allowUpload) {
-      this.uppyComposerUpload.teardown();
+    if (this.composer.allowUpload && this._cleanupComposerUploadElement) {
+      // we are acting at a distance with this event so we target the original one
+      this.uppyComposerUpload.teardown(this._cleanupComposerUploadElement);
+      this._cleanupComposerUploadElement = null;
     }
   }
 
