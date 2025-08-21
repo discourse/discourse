@@ -1072,6 +1072,9 @@ importers:
       discourse:
         specifier: workspace:0.0.0
         version: link:../discourse
+      discourse-plugins:
+        specifier: workspace:1.0.0
+        version: link:../discourse-plugins
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs

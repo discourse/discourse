@@ -6,6 +6,7 @@ import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import EmberThisFallback from "ember-this-fallback";
 import { memfs } from "memfs";
+import transformActionSyntax from "discourse-plugins/transform-action-syntax";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
@@ -72,6 +73,7 @@ globalThis.rollup = function (modules, opts) {
                   isTheme: true,
                 }).plugin,
                 buildEmberTemplateManipulatorPlugin(opts.themeId),
+                transformActionSyntax,
               ],
             },
           ],
