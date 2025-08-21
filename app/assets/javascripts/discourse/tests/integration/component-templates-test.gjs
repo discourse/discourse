@@ -54,10 +54,7 @@ module("Integration | Initializers | plugin-component-templates", function () {
       await render(hbs`<PluginSplitComponent class='test-class'/>`);
       assert
         .dom("div.test-class")
-        .hasText(
-          "non-colocated component",
-          "renders split component/template"
-        );
+        .hasText("non-colocated component", "renders split component/template");
     });
   });
 });
