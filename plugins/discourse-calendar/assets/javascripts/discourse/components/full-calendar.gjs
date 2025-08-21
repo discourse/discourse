@@ -60,7 +60,13 @@ export default class FullCalendar extends Component {
         calendarModule.MomentTimezone,
       ],
       initialView: this.initialView,
-      events: this.args.events || [],
+      eventSources: [
+        {
+          events: (info, successCallback) => {
+            successCallback(this.args.events || []);
+          },
+        },
+      ],
       headerToolbar: this.headerToolbar,
       customButtons: this.args.customButtons || {},
       eventWillUnmount: () => {
@@ -119,8 +125,11 @@ export default class FullCalendar extends Component {
   @action
   updateCalendar() {
     if (this.calendar) {
-      this.calendar.setOption("events", this.args.events || []);
+      this.calendar.refetchEvents();
       this.calendar.setOption("headerToolbar", this.headerToolbar);
+      if (this.args.initialDate) {
+        this.calendar.gotoDate(this.args.initialDate);
+      }
     }
   }
 
@@ -159,7 +168,11 @@ export default class FullCalendar extends Component {
   <template>
     <div
       {{didInsert this.setupCalendar}}
-      {{didUpdate this.updateCalendar @events this.capabilities.viewport.md}}
+      {{didUpdate
+        this.updateCalendar
+        this.args.events
+        this.capabilities.viewport.md
+      }}
       ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}
