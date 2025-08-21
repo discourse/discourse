@@ -96,7 +96,7 @@ export default class FullCalendar extends Component {
       eventClick: async ({ el, event, jsEvent }) => {
         const { postNumber, postUrl, postEvent } = event.extendedProps;
 
-        if (postEvent.id) {
+        if (postEvent?.id) {
           jsEvent.preventDefault();
 
           this.activeMenu = await this.menu.show(
@@ -118,10 +118,10 @@ export default class FullCalendar extends Component {
               },
             }
           );
-        } else if (postNumber) {
-          this.topic.send("jumpToPost", postNumber);
         } else if (postUrl) {
           DiscourseURL.routeTo(postUrl);
+        } else if (postNumber) {
+          this.topic.send("jumpToPost", postNumber);
         }
       },
     });
