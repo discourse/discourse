@@ -139,6 +139,17 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE user_associated_accounts
+(
+    provider_name TEXT      NOT NULL,
+    user_id       NUMERIC,
+    created_at    DATETIME,
+    info          JSON_TEXT,
+    last_used     DATETIME  NOT NULL,
+    provider_uid  TEXT      NOT NULL,
+    PRIMARY KEY (user_id, provider_name)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
