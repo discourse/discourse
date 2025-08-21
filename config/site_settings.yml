@@ -745,15 +745,15 @@ login:
     client: true
     default: false
     validator: "EnableSsoValidator"
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_allowed_redirect_domains:
     default: ""
     type: list
     list_type: simple
-    area: "authenticators"
+    area: "discourseconnect"
   verbose_discourse_connect_logging:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   verbose_upload_logging:
     hidden: true
     default: false
@@ -766,42 +766,43 @@ login:
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_secret:
     default: ""
     secret: true
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_groups:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_bio:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_avatar:
     default: false
     client: true
     area: "authenticators"
   discourse_connect_overrides_profile_background:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_location:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_website:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_overrides_card_background:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_not_approved_url:
     default: ""
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_csrf_protection:
     default: true
     hidden: true
-  enable_discourse_connect_provider:
+    area: "discourseconnect"
+  discourseconnect:
     default: false
-    area: "authenticators"
+    area: "discourseconnect"
   discourse_connect_provider_secrets:
     default: ""
     type: list
@@ -810,7 +811,7 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
-    area: "authenticators"
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list

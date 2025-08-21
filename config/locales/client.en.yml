@@ -5694,9 +5694,11 @@ en:
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
           sub_pages:
             common_settings:
-              title: "Login settings"
+              title: "Settings"
             authenticators:
-              title: "Auth providers"
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"

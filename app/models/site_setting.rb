@@ -6,6 +6,7 @@ class SiteSetting < ActiveRecord::Base
     analytics
     login
     authenticators
+    discourseconnect
     badges
     categories_and_tags
     email

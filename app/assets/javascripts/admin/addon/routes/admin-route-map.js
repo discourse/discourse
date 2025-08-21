@@ -243,6 +243,7 @@ export default function () {
             path: "/",
           });
           this.route("authenticators");
+          this.route("discourseconnect");
         });
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });

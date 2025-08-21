@@ -26,6 +26,10 @@ export default RouteTemplate(
           @route="adminConfig.login.authenticators"
           @label="admin.config.login.sub_pages.authenticators.title"
         />
+        <NavItem
+          @route="adminConfig.login.discourseconnect"
+          @label="admin.config.login.sub_pages.discourseconnect.title"
+        />
       </:tabs>
     </DPageHeader>
 
