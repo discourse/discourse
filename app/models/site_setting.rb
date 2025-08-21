@@ -9,6 +9,7 @@ class SiteSetting < ActiveRecord::Base
     email
     embedding
     emojis
+    experimental
     flags
     fonts
     group_permissions
