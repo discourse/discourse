@@ -4,6 +4,8 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
@@ -221,14 +223,44 @@ export default class ComposerEditor extends Component {
 
   @on("didInsertElement")
   _composerEditorInit() {
+    this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
+  }
+
+  @action
+  _composerEditorInitPreview() {
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
+  }
 
+  @action
+  _composerEditorDestroyPreview() {
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+
+    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+    preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
+    preview?.removeEventListener("click", this._handleImageGridButtonClick);
+    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
+    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
+
+    apiImageWrapperBtnEvents.forEach((fn) =>
+      preview?.removeEventListener("click", fn)
+    );
+  }
+
+  @action
+  _composerEditorInitEditor() {
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
     }
+  }
 
-    this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
+  @action
+  _composerEditorDestroyEditor() {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.teardown();
+    }
   }
 
   /**
@@ -848,30 +880,12 @@ export default class ComposerEditor extends Component {
 
   @on("willDestroyElement")
   _composerClosed() {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (this.composer.allowUpload) {
-      this.uppyComposerUpload.teardown();
-    }
-
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
 
     // need to wait a bit for the "slide down" transition of the composer
     discourseLater(
       () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
       400
-    );
-
-    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
-    preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
-    preview?.removeEventListener("click", this._handleImageGridButtonClick);
-    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
-    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
-
-    apiImageWrapperBtnEvents.forEach((fn) =>
-      preview?.removeEventListener("click", fn)
     );
   }
 
@@ -1051,11 +1065,19 @@ export default class ComposerEditor extends Component {
             @forcePreview={{this.forcePreview}}
             @onPreviewUpdated={{this.previewUpdated}}
             @outletArgs={{this.outletArgs}}
+            {{didInsert this._composerEditorInitPreview}}
+            {{willDestroy this._composerEditorDestroyPreview}}
           />
         {{/if}}
       </div>
     {{else if this.showTranslationEditor}}
-      <PostTranslationEditor @setupEditor={{this.setupEditor}} />
+      <PostTranslationEditor
+        @setupEditor={{this.setupEditor}}
+        {{didInsert this._composerEditorInitEditor}}
+        {{willDestroy this._composerEditorDestroyEditor}}
+        {{didInsert this._composerEditorInitPreview}}
+        {{willDestroy this._composerEditorDestroyPreview}}
+      />
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
@@ -1081,6 +1103,10 @@ export default class ComposerEditor extends Component {
         @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
+        {{didInsert this._composerEditorInitEditor}}
+        {{willDestroy this._composerEditorDestroyEditor}}
+        {{didInsert this._composerEditorInitPreview}}
+        {{willDestroy this._composerEditorDestroyPreview}}
       >
         {{yield}}
       </DEditor>
