@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
+overrides:
+  '@ember/test-waiters': 4.1.1
+
 patchedDependencies:
   '@ember-compat/tracked-built-ins@0.9.1':
     hash: s67qh4jsmpbr3llstdi3a5zeze
@@ -412,7 +415,7 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(@babel/core@7.28.3)(@glint/template@1.6.0-alpha.2)
       '@ember/test-waiters':
-        specifier: ^4.1.1
+        specifier: 4.1.1
         version: 4.1.1(@glint/template@1.6.0-alpha.2)
       '@embroider/compat':
         specifier: ^3.8.5
@@ -425,7 +428,7 @@ importers:
         version: 1.16.12(@glint/template@1.6.0-alpha.2)
       '@embroider/router':
         specifier: ^2.1.8
-        version: 2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))
+        version: 2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)
       '@embroider/webpack':
         specifier: ^4.1.0
         version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.3)(esbuild@0.25.9))
@@ -1935,10 +1938,6 @@ packages:
 
   '@ember/test-helpers@5.2.2':
     resolution: {integrity: sha512-Cclqeh0j6RnYvoaElAVC3Nd1fsSUkc3oUTwTsLlNiC3riyPq8lNYxh96VM59/yji2ntrd/cJQ7qhhSZWd6hsEw==}
-
-  '@ember/test-waiters@3.1.0':
-    resolution: {integrity: sha512-bb9h95ktG2wKY9+ja1sdsFBdOms2lB19VWs8wmNpzgHv1NCetonBoV5jHBV4DHt0uS1tg9z66cZqhUVlYs96KQ==}
-    engines: {node: 10.* || 12.* || >= 14.*}
 
   '@ember/test-waiters@4.1.1':
     resolution: {integrity: sha512-HbK70JYCDJcGI0CrwcbjeL2QHAn0HLwa3oGep7mr6l/yO95U7JYA8VN+/9VTsWJTmKueLtWayUqEmGS3a3mVOg==}
@@ -11380,15 +11379,6 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  '@ember/test-waiters@3.1.0':
-    dependencies:
-      calculate-cache-key-for-tree: 2.0.0
-      ember-cli-babel: 7.26.11
-      ember-cli-version-checker: 5.1.2
-      semver: 7.7.2
-    transitivePeerDependencies:
-      - supports-color
-
   '@ember/test-waiters@4.1.1(@glint/template@1.6.0-alpha.2)':
     dependencies:
       '@embroider/addon-shim': 1.10.0
@@ -11522,13 +11512,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/router@2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))':
+  '@embroider/router@2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)':
     dependencies:
-      '@ember/test-waiters': 3.1.0
+      '@ember/test-waiters': 4.1.1(@glint/template@1.6.0-alpha.2)
       '@embroider/addon-shim': 1.10.0
     optionalDependencies:
       '@embroider/core': 3.5.5(@glint/template@1.6.0-alpha.2)
     transitivePeerDependencies:
+      - '@glint/template'
       - supports-color
 
   '@embroider/shared-internals@2.9.0(supports-color@8.1.1)':

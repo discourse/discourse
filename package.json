@@ -83,6 +83,9 @@
       "ignoreMissing": [
         "webpack"
       ]
+    },
+    "overrides": {
+      "@ember/test-waiters": "4.1.1"
     }
   }
 }
