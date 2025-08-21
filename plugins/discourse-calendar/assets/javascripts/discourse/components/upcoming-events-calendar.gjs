@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -137,27 +136,6 @@ export default class UpcomingEventsCalendar extends Component {
         start: moment(info.view.currentStart).format("YYYY-MM-DD"),
         end: moment(info.view.currentEnd).format("YYYY-MM-DD"),
       },
-    });
-  }
-
-  @action
-  applyCustomButtonsState() {
-    schedule("afterRender", () => {
-      if (this.args.mine) {
-        document
-          .querySelector(".fc-mineEvents-button")
-          .classList.add("fc-button-active");
-        document
-          .querySelector(".fc-allEvents-button")
-          .classList.remove("fc-button-active");
-      } else {
-        document
-          .querySelector(".fc-allEvents-button")
-          .classList.add("fc-button-active");
-        document
-          .querySelector(".fc-mineEvents-button")
-          .classList.remove("fc-button-active");
-      }
     });
   }
 
