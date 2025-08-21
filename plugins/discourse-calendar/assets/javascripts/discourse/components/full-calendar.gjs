@@ -52,6 +52,7 @@ export default class FullCalendar extends Component {
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
+      events: this.args.events || [],
       plugins: [
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
@@ -60,13 +61,6 @@ export default class FullCalendar extends Component {
         calendarModule.MomentTimezone,
       ],
       initialView: this.initialView,
-      eventSources: [
-        {
-          events: (info, successCallback) => {
-            successCallback(this.args.events || []);
-          },
-        },
-      ],
       headerToolbar: this.headerToolbar,
       customButtons: this.args.customButtons || {},
       eventWillUnmount: async () => {
@@ -132,8 +126,8 @@ export default class FullCalendar extends Component {
   @action
   updateCalendar() {
     if (this.calendar) {
-      this.calendar.refetchEvents();
       this.calendar.setOption("headerToolbar", this.headerToolbar);
+      this.calendar.setOption("events", this.args.events || []);
       if (this.args.initialDate) {
         this.calendar.gotoDate(this.args.initialDate);
       }
