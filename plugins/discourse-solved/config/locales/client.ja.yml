@@ -14,7 +14,7 @@ ja:
     notifications:
       alt:
         solved:
-          accepted_notification: "承諾"
+          accepted_notification: "同意"
     solutions: "解決策"
     solved:
       title: "解決済み"

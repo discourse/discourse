@@ -131,7 +131,6 @@ ar:
               help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Matrix."
             room_id:
               title: "مُعرِّف الغرفة"
-              help: "\"المُعرِّف الخاص\" للغرفة. يجب أن يبدو مثل !abcdefg:matrix.org"
           errors:
             unknown_token: "رمز الوصول غير صالح"
             unknown_room: "مُعرِّف الغرفة غير صالح"

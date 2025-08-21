@@ -119,7 +119,7 @@ pt_BR:
           description: "Concorde com a sinalização e suspenda o usuário(a)."
         agree_and_silence:
           title: "Silenciar usuário(a)"
-          description: "Concorde com a sinalização e silencie o usuário(a)."
+          description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
         agree_and_restore:
           title: "Restaurar mensagem"
           description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."

@@ -54,9 +54,9 @@ pt_BR:
     chat_integration_groupme_bot_ids: "IDs de Robô *necessárias*, separadas por \",\", se houver várias"
     chat_integration_groupme_instance_names: " Nome do chat do GroupMe *necessário*, separado por \",\", se houver vários (mesma ordem de IDs de Robô)"
     chat_integration_teams_enabled: "Ativar o provedor de integração de chat do Microsoft Teams"
-    chat_integration_teams_excerpt_length: "Tamanho do trecho da publicação do Microsoft Teams"
+    chat_integration_teams_excerpt_length: "Tamanho do trecho da postagem do Microsoft Teams"
     chat_integration_powerautomate_enabled: "Ativar o provedor de integração de chat do Microsoft Power Automate"
-    chat_integration_powerautomate_excerpt_length: "Tamanho do trecho da publicação do Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "Tamanho do trecho da postagem do Microsoft Power Automate"
     chat_integration_webex_enabled: "Ativar o provedor de integração de chat do Webex Teams"
     chat_integration_webex_excerpt_length: "Tamanho do trecho da postagem do Webex Teams"
     chat_integration_google_enabled: "Ative o provedor de integração de chat do \"Google Chat\""
@@ -119,7 +119,7 @@ pt_BR:
           *Ajuda:* `/discourse help`
         transcript:
           modal_title: "Criar transcrição"
-          modal_description: "Todas as mensagens na conversa serão reunidas em uma única publicação no fórum. Você terá oportunidade de editar a transcrição antes de postar."
+          modal_description: "Todas as mensagens na conversa serão reunidas em uma única postagem no fórum. Você terá oportunidade de editar a transcrição antes de postar."
           transcript_ready: "Transcrição pronta"
           continue_on_discourse: "Continuar no fórum"
           error: "Algo deu errado ao criar a transcrição, desculpe!"
@@ -228,7 +228,7 @@ pt_BR:
       flowdock:
         message_title: "postou"
       google:
-        new_post: "Nova publicação em %{site_title}"
+        new_post: "Nova postagem em %{site_title}"
         new_topic: "Novo tópico em %{site_title}"
         author: "por @%{username}"
         link: "Visualizar em %{site_title}"

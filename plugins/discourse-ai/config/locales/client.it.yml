@@ -220,7 +220,7 @@ it:
         summarization:
           name: "Riepiloghi"
           description: "Rende disponibile un pulsante attraverso cui i visitatori possono ottenere un riepilogo degli argomenti"
-          topic_summaries: "Ripeiloghi argomenti"
+          topic_summaries: "Riepiloghi degli argomenti"
           gists: "Mini riepiloghi dell'elenco argomenti"
         search:
           name: "Cerca"
@@ -883,7 +883,7 @@ it:
         main_title: "Scoperte del discobot"
         regular_results: "Argomenti"
         tell_me_more: "Dimmi di più..."
-        continue_convo: "Copia la conversazione..."
+        continue_convo: "Continua la conversazione..."
         loading_convo: "Caricamento conversazione"
         collapse: "Comprimi"
         timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."

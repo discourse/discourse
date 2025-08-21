@@ -6243,9 +6243,10 @@ nl:
         themes_and_components:
           breadcrumb_title: "Aanpassen"
           install: "Installeren"
+          theme_site_settings:
+            title: "Site-instellingen thema"
           themes:
             title: "Thema's"
-            description: 'Sitebrede thema''s die de algehele look en feel van je site wijzigen voor alle gebruikers. Wil je controleren welke site-instellingen je thema''s overschrijven? <a href="%{themeSiteSettingsUrl}">Bekijk de site-instellingen van de thema''s</a>'
             themes_intro: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
             new_theme: "Nieuw thema"
             back: "Terug naar thema's"

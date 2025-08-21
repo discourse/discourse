@@ -124,8 +124,8 @@ pt_BR:
       flagged_by_nsfw: O plugin de IA sinalizou isto após classificar pelo menos uma das imagens anexas como NSFW.
   reports:
     sentiment_analysis:
-      title: "Análise de sentimentos"
-      description: "Este relatório fornece análise de sentimentos para a postagem agrupados por categorias, com pontuações positivas, negativas e neutras para cada postagem e categoria."
+      title: "Análise de sentimento"
+      description: "Este relatório fornece análise de sentimento para a postagem agrupados por categorias, com pontuações positivas, negativas e neutras para cada postagem e categoria."
     overall_sentiment:
       title: "Sentimento geral"
       description: 'Este gráfico compara a quantidade de postagens classificadas como positiva ou negativa. São calculadas quando as pontuações negativas e positivas forem maiores que a pontuação de limite. Ou seja, postagens neutras não são exibidas. Mensagens pessoais (PM) também não. Classificado com "cardiffnlp/twitter-roberta-base-sentiment-latest"'
@@ -223,7 +223,7 @@ pt_BR:
           other: "Você tem apenas %{count} chaves no artefato."
       link: "Exibir na aba nova"
       copy_embed: "Copiar incorporado"
-      view_source: "Ver origem"
+      view_source: "Visualizar origem"
       view_changes: "Visualizar alterações"
       change_description: "Alterar descrição"
       copied: "Copiou para área de transferência"
@@ -368,10 +368,10 @@ pt_BR:
           name: "Legendas em imagens"
           description: "A persona padrão que alimenta o recurso de legendas em imagens do Ajudante"
         locale_detector:
-          name: "Detector de local"
-          description: "Alimenta o recurso de tradução ao detectar a localização de um determinado texto (postagens, títulos etc.)"
+          name: "Detector de localidade"
+          description: "Alimenta o recurso de tradução ao detectar a localidade de um determinado texto (postagens, títulos etc.)"
         post_raw_translator:
-          name: "Tradutor de publicação"
+          name: "Tradutor de postagem"
           description: "Alimenta o recurso de tradução ao traduzir postagens que contêm o Markdown do Discourse"
         topic_title_translator:
           name: "Tradutor de título de tópico"

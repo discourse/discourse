@@ -25,7 +25,7 @@ zh_CN:
         flagged_post: |
           <div>模型的回答：</div>
           <p>%%LLM_RESPONSE%%</p>
-          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发。</b>
+          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发</b>。
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
@@ -36,8 +36,8 @@ zh_CN:
     ai_toxicity_enabled: "启用毒性模块。"
     ai_toxicity_inference_service_api_endpoint: "为毒性模块运行 API 的 URL"
     ai_toxicity_inference_service_api_key: "毒性 API 的 API 密钥"
-    ai_toxicity_inference_service_api_model: "用于推断的模型。多语言模型适用于意大利语、法语、俄语、葡萄牙语、西班牙语和土耳其语。"
-    ai_toxicity_flag_automatically: "自动举报高于已配置阈值的帖子/聊天消息。"
+    ai_toxicity_inference_service_api_model: "用于推断的模型。多语言模型支持意大利语、法语、俄语、葡萄牙语、西班牙语和土耳其语。"
+    ai_toxicity_flag_automatically: "自动标记高于已配置阈值的帖子/聊天消息。"
     ai_toxicity_flag_threshold_toxicity: "毒性：粗鲁、无礼或不合理的评论，可能会让您离开讨论或放弃分享您的观点"
     ai_toxicity_flag_threshold_severe_toxicity: "严重毒性：极度仇恨、激进或无礼的评论，很可能让您离开讨论或放弃分享您的观点"
     ai_toxicity_flag_threshold_obscene: "淫秽"
@@ -53,7 +53,7 @@ zh_CN:
     ai_nsfw_detection_enabled: "启用 NSFW 模块。"
     ai_nsfw_inference_service_api_endpoint: "为 NSFW 模块运行 API 的 URL"
     ai_nsfw_inference_service_api_key: "NSFW API 的 API 密钥"
-    ai_nsfw_flag_automatically: "自动举报高于已配置阈值的 NSFW 帖子。"
+    ai_nsfw_flag_automatically: "自动标记高于已配置阈值的 NSFW 帖子。"
     ai_nsfw_flag_threshold_general: "图片被视为 NSFW 的一般阈值。"
     ai_nsfw_flag_threshold_drawings: "绘图被视为 NSFW 的阈值。"
     ai_nsfw_flag_threshold_hentai: "分类为成人内容的图片被视为 NSFW 的阈值。"
@@ -595,7 +595,7 @@ zh_CN:
       user_not_found: 指定的用户不存在。请检查 username 参数。
       persona_disabled: 指定的角色被禁用。请检查 persona_name 或 persona_id 参数。
       no_default_llm: 角色必须定义一个 default_llm。
-      user_not_allowed: 该用户无法参与该话题。
+      user_not_allowed: 该用户无权参与该话题。
       prompt_message_length: 消息 %{idx} 超过 1000 个字符限制。
       persona_already_exists: 名称为“%{name}”的角色已存在。
       custom_tool_exists:

@@ -446,6 +446,8 @@ de:
             label: Version
           status:
             label: Status
+          enabled:
+            label: "Automatisierung aktivieren"
           disabled:
             label: Deaktiviert
           placeholders:
@@ -456,3 +458,4 @@ de:
             label: Letzte Ausführung
           last_updated_by:
             label: Aktualisiert von
+          enable_toggle_disabled: "Du kannst diese Automatisierung aktivieren, sobald alle erforderlichen Felder ausgefüllt sind."
