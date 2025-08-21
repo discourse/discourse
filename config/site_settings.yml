@@ -800,7 +800,7 @@ login:
     default: true
     hidden: true
     area: "discourseconnect"
-  discourseconnect:
+  enable_discourse_connect_provider:
     default: false
     area: "discourseconnect"
   discourse_connect_provider_secrets:
