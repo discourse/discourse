@@ -14,6 +14,7 @@ da:
       allow_accepted_answers: "Tillad ejer af emne og stab at markere svar som en løsning"
       accepted_answer: "Løsning"
       solution: "Løsning"
+      accepted_answer_post_number: "indlæg %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "alle"

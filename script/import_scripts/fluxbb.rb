@@ -33,6 +33,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         username: FLUXBB_USER,
         password: FLUXBB_PW,
         database: FLUXBB_DB,
+        encoding: "utf8mb4",
       )
   end
 
@@ -70,7 +71,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         mysql_query(
           "SELECT id, username, realname name, url website, email email, registered created_at,
                 registration_ip registration_ip_address, last_visit last_visit_time,
-                last_email_sent last_emailed_at, location, group_id
+                last_email_sent last_emailed_at, location, group_id, signature bio
          FROM #{FLUXBB_PREFIX}users
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};",
@@ -88,13 +89,25 @@ class ImportScripts::FluxBB < ImportScripts::Base
           name: user["name"],
           created_at: Time.zone.at(user["created_at"]),
           website: user["website"],
+          bio_raw: user["bio"],
           registration_ip_address: user["registration_ip_address"],
           last_seen_at: Time.zone.at(user["last_visit_time"]),
           last_emailed_at:
-            user["last_emailed_at"] == nil ? 0 : Time.zone.at(user["last_emailed_at"]),
+            user["last_emailed_at"] == nil ? nil : Time.zone.at(user["last_emailed_at"]),
           location: user["location"],
           moderator: user["group_id"] == 2,
           admin: user["group_id"] == 1,
+          # Uncomment the following and fill in site_url to import avatars
+          # post_create_action:
+          #   proc do |u|
+          #     begin
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.png", u)
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.jpg", u)
+          #       UserAvatar.import_url_for_user("#{site_url}/img/avatars/#{user["id"]}.gif", u)
+          #     rescue StandardError => e
+          #       nil
+          #     end
+          #   end,
         }
       end
 
@@ -150,6 +163,10 @@ class ImportScripts::FluxBB < ImportScripts::Base
     puts "", "creating topics and posts"
 
     total_count = mysql_query("SELECT count(*) count from #{FLUXBB_PREFIX}posts").first["count"]
+    sticky_first_posts =
+      mysql_query(
+        "select first_post_id pid from #{FLUXBB_PREFIX}topics where sticky = 1 and first_post_id > 0",
+      ).map { |r| r["pid"] }.to_set
 
     batches(BATCH_SIZE) do |offset|
       results =
@@ -187,6 +204,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         if m["id"] == m["first_post_id"]
           mapped[:category] = category_id_from_imported_category_id("child##{m["category_id"]}")
           mapped[:title] = CGI.unescapeHTML(m["title"])
+          mapped[:pinned_at] = Time.zone.at(m["created_at"]) if sticky_first_posts.include? m["id"]
         else
           parent = topic_lookup_from_imported_post_id(m["first_post_id"])
           if parent
@@ -257,6 +275,26 @@ class ImportScripts::FluxBB < ImportScripts::Base
     #
     # Work around it for now:
     s.gsub!(%r{\[http(s)?://(www\.)?}, "[")
+
+    # some tags only work well when on its own line
+    s.gsub!(%r{(?<=[^\n])\[/?(quote|code)}m, "\n\\0")
+    s.gsub!(%r{\[/?(quote|code)[^\]]*\](?=[^\n])}m, "\\0\n")
+
+    # [del] & [ins] are not supported
+    s.gsub!("[del]", "[s]")
+    s.gsub!("[/del]", "[/s]")
+    s.gsub!(%r{\[ins\]([^\]]+)\[/ins\]}, '<mark>\1</mark>')
+
+    # [img] with alt text with spaces doesn't work
+    s.gsub!(%r{\[img=([^\]]+)\]([^\]]+)\[/img\]}, '![\1](\2)')
+
+    s.gsub!(/\[list=[^\]]+\]/, "")
+    s.gsub!("[/list]", "")
+    s.gsub!("[*]", "* ")
+    s.gsub!("[/*]", "")
+
+    s.gsub!("[em]", "[b]")
+    s.gsub!("[/em]", "[/b]")
 
     s
   end

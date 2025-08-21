@@ -11,11 +11,11 @@ export default class BaseCommunitySectionLink {
   @service siteSettings;
   @service topicTrackingState;
 
-  constructor(owner, { inMoreDrawer, overridenName, overridenIcon } = {}) {
+  constructor(owner, { inMoreDrawer, overriddenName, overriddenIcon } = {}) {
     setOwner(this, owner);
     this.inMoreDrawer = inMoreDrawer;
-    this.overridenName = overridenName;
-    this.overridenIcon = overridenIcon;
+    this.overriddenName = overriddenName;
+    this.overriddenIcon = overriddenIcon;
   }
 
   /**
@@ -111,7 +111,7 @@ export default class BaseCommunitySectionLink {
    * @returns {string} The name of the fontawesome icon to be displayed before the link.
    */
   get prefixValue() {
-    return this.overridenIcon || this.defaultPrefixValue;
+    return this.overriddenIcon || this.defaultPrefixValue;
   }
 
   _notImplemented() {

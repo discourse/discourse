@@ -60,15 +60,15 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
       end
     end
 
-    context "when page_size is a above limit" do
-      fab!(:message_3) { Fabricate(:chat_message, thread: thread, chat_channel: thread.channel) }
+    context "when page_size is above limit" do
+      fab!(:message_3) { Fabricate(:chat_message, thread:, chat_channel: thread.channel) }
 
       it "clamps it to the max" do
         stub_const(Chat::Api::ChannelThreadMessagesController, "MAX_PAGE_SIZE", 1) do
           get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages?page_size=9999"
 
-          expect(response.status).to eq(200)
-          expect(response.parsed_body["messages"].length).to eq(1)
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["messages"].size).to eq(1)
         end
       end
     end

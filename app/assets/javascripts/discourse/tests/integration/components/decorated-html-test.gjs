@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -6,7 +7,6 @@ import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
@@ -68,7 +68,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
             <div id="render-glimmer">Hello from {{@value}} Component</div>
           </template>,
           { value: "Curried" },
-          getOwnerWithFallback(this)
+          getOwner(this)
         )
       );
     };

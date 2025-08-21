@@ -28,4 +28,27 @@ acceptance("Rendering polls with pie charts", function (needs) {
       .dom(".poll .poll-results-chart")
       .exists({ count: 1 }, "Renders the chart div instead of bar container");
   });
+
+  test("Renders results containing @mention correctly", async function (assert) {
+    // enable user status for the test to ensure the application renders without errors
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/t/-/pie_chart_poll_with_mention");
+
+    assert
+      .dom(".poll .poll-info_counts-count:first-child .info-number")
+      .hasText("2", "it should display the right number of voters");
+
+    assert
+      .dom(".poll .poll-info_counts-count:last-child .info-number")
+      .hasText("5", "it should display the right number of votes");
+
+    assert
+      .dom(".poll-outer")
+      .hasClass("pie", "pie class is present on poll div");
+
+    assert
+      .dom(".poll .poll-results-chart")
+      .exists({ count: 1 }, "Renders the chart div instead of bar container");
+  });
 });

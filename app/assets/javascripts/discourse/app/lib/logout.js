@@ -8,14 +8,11 @@ export default function logout({ redirect } = {}) {
     return;
   }
 
-  const ctx = helperContext();
-  let keyValueStore = ctx.keyValueStore;
+  const { keyValueStore, siteSettings } = helperContext();
+
   keyValueStore.abandonLocal();
 
-  if (!isEmpty(redirect)) {
-    window.location.href = redirect;
-    return;
-  }
-  const url = ctx.siteSettings.login_required ? "/login" : "/";
-  window.location.href = getURL(url);
+  window.location = isEmpty(redirect)
+    ? getURL(siteSettings.login_required ? "/login" : "/")
+    : redirect;
 }

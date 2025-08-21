@@ -86,8 +86,8 @@ body:not(.has-full-page-chat, .wizard) {
         padding-bottom: var(--composer-height);
       }
 
-      > *:not(.experimental-screen, .activate-account) {
-        @include viewport.from(lg) {
+      @include viewport.from(sm) {
+        > *:not(.experimental-screen, .activate-account) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;

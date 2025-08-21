@@ -8,7 +8,7 @@ module DiscourseChatIntegration
       CHANNEL_IDENTIFIER_KEY = "name".freeze
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
-        { key: "room_id", regex: '^\!\S+:\S+$', unique: true, hidden: true },
+        { key: "room_id", regex: '^\!\S+$', unique: true, hidden: true },
       ]
 
       def self.send_message(room_id, message)

@@ -7,10 +7,11 @@ const browsers = [
   "last 1 Chrome versions",
   "last 1 Firefox versions",
   "last 1 Safari versions",
+  "Safari 16.4",
 ];
 
 if (isCI || isProduction) {
-  browsers.push("Safari 15");
+  // Add older browsers here if needed
 }
 
 module.exports = {

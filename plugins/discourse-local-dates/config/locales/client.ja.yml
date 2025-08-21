@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse 現地の日付形式"
   js:
     discourse_local_dates:
       relative_dates:

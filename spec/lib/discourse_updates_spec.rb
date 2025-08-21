@@ -249,25 +249,25 @@ RSpec.describe DiscourseUpdates do
       expect(result[2]["title"]).to eq("Bells")
     end
 
-    it "correctly shows features with correct boolean experimental site settings" do
+    it "correctly shows features with correct boolean site settings" do
       features_with_versions = [
         {
           "emoji" => "🤾",
           "title" => "Bells",
           "created_at" => 2.days.ago,
-          "experiment_setting" => "enable_mobile_theme",
+          "related_site_setting" => "enable_mobile_theme",
         },
         {
           "emoji" => "🙈",
           "title" => "Whistles",
           "created_at" => 3.days.ago,
-          "experiment_setting" => "default_theme_id",
+          "related_site_setting" => "default_theme_id",
         },
         {
           "emoji" => "🙈",
           "title" => "Confetti",
           "created_at" => 4.days.ago,
-          "experiment_setting" => "wrong value",
+          "related_site_setting" => "wrong value",
         },
       ]
 
@@ -276,12 +276,12 @@ RSpec.describe DiscourseUpdates do
       result = DiscourseUpdates.new_features
 
       expect(result.length).to eq(3)
-      expect(result[0]["experiment_setting"]).to eq("enable_mobile_theme")
-      expect(result[0]["experiment_enabled"]).to eq(true)
-      expect(result[1]["experiment_setting"]).to be_nil
-      expect(result[1]["experiment_enabled"]).to eq(false)
-      expect(result[2]["experiment_setting"]).to be_nil
-      expect(result[2]["experiment_enabled"]).to eq(false)
+      expect(result[0]["setting_enabled"]).to eq(true)
+      expect(result[0]["related_site_setting"]).to eq("enable_mobile_theme")
+      expect(result[1]["setting_enabled"]).to eq(false)
+      expect(result[1]["related_site_setting"]).to be_nil
+      expect(result[2]["setting_enabled"]).to eq(false)
+      expect(result[2]["related_site_setting"]).to be_nil
     end
 
     it "correctly shows features when related plugins are installed" do

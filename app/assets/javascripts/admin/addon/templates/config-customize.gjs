@@ -27,6 +27,10 @@ export default RouteTemplate(
           @route="adminConfig.customize.components"
           @label="admin.config.components.title"
         />
+        <NavItem
+          @route="adminConfig.customize.themeSiteSettings"
+          @label="admin.config.theme_site_settings.title"
+        />
       </:tabs>
     </DPageHeader>
 

@@ -1,11 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 
 export default class NewListHeaderControlsWrapper extends Component {
-  @service site;
-
   @action
   click(e) {
     const target = e.target;

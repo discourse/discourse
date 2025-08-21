@@ -26,7 +26,11 @@
       .sidebar-new-topic-button {
         border-radius: var(--d-button-border-radius) 0 0
           var(--d-button-border-radius);
-        border-right: 1px solid var(--primary-300);
+        border-right: 1px solid
+          light-dark(
+            oklch(from var(--primary-300) l c h),
+            oklch(from var(--primary-700) l c h)
+          ) !important;
       }
     }
 

@@ -26,7 +26,6 @@ import RagUploader from "./rag-uploader";
 
 export default class PersonaEditor extends Component {
   @service router;
-  @service store;
   @service dialog;
   @service toasts;
   @service siteSettings;

@@ -15,10 +15,8 @@ RSpec.describe DiscourseAi::Personas::ConceptDeduplicator do
     let(:prompt) { persona.system_prompt }
 
     it "specifies output format" do
-      expect(prompt).to include("<streamlined_tags>")
-      expect(prompt).to include("<o>")
+      expect(prompt).to include("streamlined_tags")
       expect(prompt).to include('"streamlined_tags": ["tag1", "tag3"]')
-      expect(prompt).to include("</o>")
     end
   end
 

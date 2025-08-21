@@ -108,3 +108,9 @@ aside.quote.accepted-answer {
   .fk-d-tooltip__inner-content {
   display: block;
 }
+
+.topic-statuses .topic-status.solved {
+  .d-icon {
+    color: $solved-color;
+  }
+}

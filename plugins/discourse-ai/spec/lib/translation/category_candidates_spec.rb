@@ -19,48 +19,48 @@ describe DiscourseAi::Translation::CategoryCandidates do
 
   describe ".get_completion_per_locale" do
     context "when (scenario A) percentage determined by category's locale" do
-      it "returns 100% completion if all categories are in the locale" do
+      it "returns done = total if all categories are in the locale" do
         locale = "pt_BR"
         Fabricate(:category, locale:)
         Category.update_all(locale: locale)
         Fabricate(:category, locale: "pt")
 
         completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1.0)
+        expect(completion).to eq({ done: Category.count, total: Category.count })
       end
 
-      it "returns X% completion if some categories are in the locale" do
+      it "returns correct done and total if some categories are in the locale" do
         locale = "pt_BR"
         Fabricate(:category, locale:)
         Fabricate(:category, locale: "not_pt")
 
         completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1 / Category.count.to_f)
+        expect(completion).to eq({ done: 1, total: Category.count })
       end
     end
 
     context "when (scenario B) percentage determined by category localizations" do
-      it "returns 100% completion if all categories have a localization in the locale" do
+      it "returns done = total if all categories have a localization in the locale" do
         locale = "pt_BR"
         Fabricate(:category)
         Category.all.each { |category| Fabricate(:category_localization, category:, locale:) }
         Fabricate(:category_localization, locale: "pt")
 
         completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1.0)
+        expect(completion).to eq({ done: Category.count, total: Category.count })
       end
 
-      it "returns X% completion if some categories have a localization in the locale" do
+      it "returns correct done and total if some categories have a localization in the locale" do
         locale = "es"
         Fabricate(:category_localization, locale:)
         Fabricate(:category_localization, locale: "pt")
 
         completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1 / Category.count.to_f)
+        expect(completion).to eq({ done: 1, total: Category.count })
       end
     end
 
-    it "returns the correct percentage based on (scenario A & B) `category.locale` and `CategoryLocalization` in the specified locale" do
+    it "returns the correct done and total based on (scenario A & B) `category.locale` and `CategoryLocalization` in the specified locale" do
       locale = "pt_BR"
 
       # translated candidates
@@ -80,25 +80,25 @@ describe DiscourseAi::Translation::CategoryCandidates do
       completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
       translated_candidates = 2 # category1 + category2
       total_candidates = Category.count - 1 # excluding the read restricted category
-      expect(completion).to eq(translated_candidates / total_candidates.to_f)
+      expect(completion).to eq({ done: translated_candidates, total: total_candidates })
     end
 
-    it "does not exceed 100% completion when category.locale and category_localization both exist" do
+    it "does not allow done to exceed total when category.locale and category_localization both exist" do
       locale = "pt_BR"
       Category.update_all(locale:)
       category = Fabricate(:category, locale:)
       Fabricate(:category_localization, category:, locale:)
 
       completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
-      expect(completion).to be(1.0)
+      expect(completion).to eq({ done: Category.count, total: Category.count })
     end
 
-    it "returns 100% completion when there are no categories" do
+    it "returns nil - nil for done and total when there are no categories" do
       SiteSetting.ai_translation_backfill_limit_to_public_content = false
       Category.destroy_all
 
       completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale("pt")
-      expect(completion).to eq(1.0)
+      expect(completion).to eq({ done: 0, total: 0 })
     end
   end
 end

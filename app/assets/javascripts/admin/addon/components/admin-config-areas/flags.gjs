@@ -10,7 +10,6 @@ import AdminFlagItem from "admin/components/admin-flag-item";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
-  @service siteSettings;
 
   @tracked flags = this.site.flagTypes;
 

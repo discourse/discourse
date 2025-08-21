@@ -3,8 +3,8 @@
 shared_context "with omniauth setup" do
   include OmniauthHelpers
 
-  let(:login_form) { PageObjects::Pages::Login.new }
-  let(:signup_form) { PageObjects::Pages::Signup.new }
+  let(:login_page) { PageObjects::Pages::Login.new }
+  let(:signup_page) { PageObjects::Pages::Signup.new }
 
   before { OmniAuth.config.test_mode = true }
 end
@@ -21,14 +21,14 @@ shared_examples "social authentication scenarios" do
         mock_facebook_auth
         visit("/")
 
-        signup_form.open.click_social_button("facebook")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
+        signup_page.open.click_social_button("facebook")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
 
-        signup_form.click_create_account
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -41,14 +41,14 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
-        signup_form.open.click_social_button("google_oauth2")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
+        signup_page.open.click_social_button("google_oauth2")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
 
-        signup_form.click_create_account
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
@@ -57,14 +57,14 @@ shared_examples "social authentication scenarios" do
           mock_google_auth(verified: false)
           visit("/")
 
-          signup_form.open.click_social_button("google_oauth2")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          expect(signup_form).to have_no_right_side_column
+          signup_page.open.click_social_button("google_oauth2")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_no_right_side_column
 
-          signup_form.click_create_account
+          signup_page.click_create_account
           expect(page).to have_css(".account-created")
         end
       end
@@ -78,13 +78,13 @@ shared_examples "social authentication scenarios" do
         mock_github_auth
         visit("/")
 
-        signup_form.open.click_social_button("github")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
-        signup_form.click_create_account
+        signup_page.open.click_social_button("github")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
@@ -93,13 +93,13 @@ shared_examples "social authentication scenarios" do
           mock_github_auth(verified: false)
           visit("/")
 
-          signup_form.open.click_social_button("github")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          expect(signup_form).to have_no_right_side_column
-          signup_form.click_create_account
+          signup_page.open.click_social_button("github")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_no_right_side_column
+          signup_page.click_create_account
           expect(page).to have_css(".account-created")
         end
       end
@@ -114,17 +114,17 @@ shared_examples "social authentication scenarios" do
           mock_github_auth(name: "")
           visit("/")
 
-          signup_form.open.click_social_button("github")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          expect(signup_form).to have_editable_name_input
+          signup_page.open.click_social_button("github")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_editable_name_input
 
-          signup_form.fill_input("#new-account-name", "Test User")
+          signup_page.fill_input("#new-account-name", "Test User")
 
-          expect(signup_form).to have_no_right_side_column
-          signup_form.click_create_account
+          expect(signup_page).to have_no_right_side_column
+          signup_page.click_create_account
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
 
@@ -132,14 +132,14 @@ shared_examples "social authentication scenarios" do
           mock_github_auth(name: "Some Name")
           visit("/")
 
-          signup_form.open.click_social_button("github")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          expect(signup_form).to have_disabled_name_input
+          signup_page.open.click_social_button("github")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_disabled_name_input
 
-          signup_form.click_create_account
+          signup_page.click_create_account
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
       end
@@ -153,14 +153,14 @@ shared_examples "social authentication scenarios" do
         mock_twitter_auth
         visit("/")
 
-        signup_form.open.click_social_button("twitter")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        signup_form.fill_email(OmniauthHelpers::EMAIL)
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
-        signup_form.click_create_account
+        signup_page.open.click_social_button("twitter")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        signup_page.fill_email(OmniauthHelpers::EMAIL)
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
+        signup_page.click_create_account
         expect(page).to have_css(".account-created")
       end
 
@@ -169,13 +169,13 @@ shared_examples "social authentication scenarios" do
           mock_twitter_auth(verified: false)
           visit("/")
 
-          signup_form.open.click_social_button("twitter")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          signup_form.fill_email(OmniauthHelpers::EMAIL)
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          signup_form.click_create_account
+          signup_page.open.click_social_button("twitter")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          signup_page.fill_email(OmniauthHelpers::EMAIL)
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          signup_page.click_create_account
           expect(page).to have_css(".account-created")
         end
       end
@@ -189,13 +189,13 @@ shared_examples "social authentication scenarios" do
         mock_discord_auth
         visit("/")
 
-        signup_form.open.click_social_button("discord")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
-        signup_form.click_create_account
+        signup_page.open.click_social_button("discord")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -212,13 +212,13 @@ shared_examples "social authentication scenarios" do
         mock_linkedin_auth
         visit("/")
 
-        signup_form.open.click_social_button("linkedin_oidc")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
-        signup_form.click_create_account
+        signup_page.open.click_social_button("linkedin_oidc")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -232,13 +232,13 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
-        signup_form.open.click_social_button("google_oauth2")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_no_right_side_column
-        signup_form.click_create_account
+        signup_page.open.click_social_button("google_oauth2")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_no_right_side_column
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -255,15 +255,15 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
-        signup_form.open.click_social_button("google_oauth2")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        expect(signup_form).to have_disabled_username
-        expect(signup_form).to have_disabled_email
-        expect(signup_form).to have_disabled_name
-        signup_form.click_create_account
+        signup_page.open.click_social_button("google_oauth2")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+        expect(signup_page).to have_disabled_username
+        expect(signup_page).to have_disabled_email
+        expect(signup_page).to have_disabled_name
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -279,7 +279,7 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
-        signup_form.open.click_social_button("google_oauth2")
+        signup_page.open.click_social_button("google_oauth2")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -299,23 +299,24 @@ shared_examples "social authentication scenarios" do
           mock_google_auth
 
           visit("/login")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
 
           visit("/signup")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
 
           visit("/")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          signup_form.click_create_account
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+
+          signup_page.click_create_account
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
 
@@ -324,22 +325,22 @@ shared_examples "social authentication scenarios" do
           mock_google_auth
 
           visit("/login")
-          expect(page).to have_css(".btn-social")
+          expect(signup_page).to be_open
 
           visit("/")
           expect(page).to have_css(".login-welcome")
           expect(page).to have_css(".site-logo")
 
           find(".login-welcome .login-button").click
-          expect(signup_form).to be_open
+          expect(signup_page).to be_open
 
           visit("/")
           find(".login-welcome .sign-up-button").click
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          signup_form.click_create_account
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          signup_page.click_create_account
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
 
@@ -348,11 +349,11 @@ shared_examples "social authentication scenarios" do
           mock_google_auth
 
           visit("/signup")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          signup_form.click_create_account
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          signup_page.click_create_account
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
 
@@ -366,37 +367,51 @@ shared_examples "social authentication scenarios" do
         end
       end
 
-      it "automatically redirects when using the login button" do
+      it "automatically redirects when using the login button or the routes" do
         SiteSetting.auth_immediately = false
         mock_google_auth
 
         visit("/")
         find(".header-buttons .login-button").click
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        signup_form.click_create_account
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+
+        visit("/login")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+
+        visit("/signup")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+
+        signup_page.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
-      it "automatically redirects when using the routes" do
-        SiteSetting.auth_immediately = false
+      it "redirects the user back to the last page they visited" do
         mock_google_auth
 
-        visit("/login")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
+        category = Fabricate(:category)
 
-        visit("/signup")
-        expect(signup_form).to be_open
-        expect(signup_form).to have_no_password_input
-        expect(signup_form).to have_valid_username
-        expect(signup_form).to have_valid_email
-        signup_form.click_create_account
+        visit(category.url)
+
+        find(".header-buttons .login-button").click
+
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_email
+
+        signup_page.click_create_account
+
         expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(page).to have_current_path(category.url)
       end
     end
   end
@@ -419,8 +434,28 @@ shared_examples "social authentication scenarios" do
         mock_facebook_auth
         visit("/")
 
-        signup_form.open.click_social_button("facebook")
+        signup_page.open.click_social_button("facebook")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      context "with a suspended user" do
+        before do
+          user.suspended_till = 2.years.from_now
+          user.suspended_at = Time.now
+          user.save!
+        end
+
+        it "shows suspended message" do
+          mock_facebook_auth
+          visit("/")
+
+          signup_page.open.click_social_button("facebook")
+
+          expect(page).to have_css(
+            ".alert-error",
+            text: I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
+          )
+        end
       end
     end
 
@@ -432,7 +467,7 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
-        signup_form.open.click_social_button("google_oauth2")
+        signup_page.open.click_social_button("google_oauth2")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -445,7 +480,7 @@ shared_examples "social authentication scenarios" do
         mock_github_auth
         visit("/")
 
-        signup_form.open.click_social_button("github")
+        signup_page.open.click_social_button("github")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -464,7 +499,7 @@ shared_examples "social authentication scenarios" do
         mock_twitter_auth
         visit("/")
 
-        signup_form.open.click_social_button("twitter")
+        signup_page.open.click_social_button("twitter")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -477,7 +512,7 @@ shared_examples "social authentication scenarios" do
         mock_discord_auth
         visit("/")
 
-        signup_form.open.click_social_button("discord")
+        signup_page.open.click_social_button("discord")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -494,7 +529,7 @@ shared_examples "social authentication scenarios" do
         mock_linkedin_auth
         visit("/")
 
-        signup_form.open.click_social_button("linkedin_oidc")
+        signup_page.open.click_social_button("linkedin_oidc")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -504,11 +539,11 @@ end
 describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
-  context "when fullpage desktop" do
+  context "when desktop" do
     include_examples "social authentication scenarios"
   end
 
-  context "when fullpage mobile", mobile: true do
+  context "when mobile", mobile: true do
     include_examples "social authentication scenarios"
   end
 end

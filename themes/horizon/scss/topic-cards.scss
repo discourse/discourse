@@ -61,7 +61,6 @@
 
   @include viewport.until(lg) {
     gap: 0.5em;
-    padding: 0 0.5em;
   }
 
   @include viewport.until(sm) {

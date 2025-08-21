@@ -36,5 +36,28 @@ es:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Acción requerida para el plugin discourse-github"
+      repository_identifier_invalid_pm: |
+        Un repositorio especificado en el plugin discourse-github no es válido:
+        %{repo_name}
+
+        Deben especificarse como «user/repo».
+
+        No se concederán medallas hasta que se corrija el nombre en
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">los ajustes del sitio de discourse-github</a>
+        y «github_badges_enabled» esté activado de nuevo.
       repository_not_found_pm_title: "Acción requerida para el plugin discourse-github"
+      repository_not_found_pm: |
+        Un repositorio especificado en el plugin discourse-github ha devuelto un error
+        «No encontrado»: %{repo_name}
+
+        No se concederán medallas hasta que se corrija el nombre en
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">los ajustes del sitio de discourse-github</a>
+        y «github_badges_enabled» esté activado de nuevo.
       invalid_octokit_credentials_pm_title: "Acción requerida para el plugin discourse-github"
+      invalid_octokit_credentials_pm: |
+        Las credenciales de GitHub proporcionadas al plugin discourse-github no son válidas. El ajuste «github badges enabled\ site»
+        ha sido deshabilitado, y los commits ya no se poblarán hasta que se resuelva el problema.
+
+        Comprueba la configuración de tu «token de acceso al enlace de retorno de github» para asegurarte de que el token es correcto y tienes permiso para todos los
+        repositorios a través de
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">los ajustes del sitio de discourse-github</a>.

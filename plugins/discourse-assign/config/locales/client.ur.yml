@@ -114,6 +114,8 @@ ur:
               label: تفویض کا روں کاگروپ
             minimum_time_between_assignments:
               label: اسائنمنٹس کے درمیان کم از کم گھنٹے
+    notification_reason:
+      user: "آپ کو نئے جوابات کی تعداد نظر آئے گی کیونکہ یہ موضوع آپ کو تفویض کیا گیا."
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:

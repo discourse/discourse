@@ -32,7 +32,7 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   }
 
   get description() {
-    return this.bookmark.title;
+    return this.bookmark.fancy_title;
   }
 
   get topicId() {

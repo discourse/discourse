@@ -86,7 +86,7 @@ module("Unit | Model | post", function (hooks) {
       id: 1,
       can_delete: true,
       version: 1,
-      user,
+      username: "eviltrout",
     });
 
     await post.destroy(user);
@@ -106,12 +106,12 @@ module("Unit | Model | post", function (hooks) {
 
   test("destroy by non-staff", async function (assert) {
     const originalCooked = "this is the original cooked value";
-    const user = this.store.createRecord("user", { username: "evil trout" });
+    const user = this.store.createRecord("user", { username: "regular-user" });
     const post = this.store.createRecord("post", {
       id: 1,
       can_delete: true,
       version: 1,
-      user,
+      username: "eviltrout",
       cooked: originalCooked,
     });
 

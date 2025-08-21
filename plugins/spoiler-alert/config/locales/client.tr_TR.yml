@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse Spoiler Uyarısı"
   js:
     spoiler:
-      title: Spoiler'ı Bulanıklaştır
+      title: Spoiler'ı bulanıklaştır
       label:
         show: "Gizli içeriği göster"
     composer:

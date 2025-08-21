@@ -32,8 +32,8 @@ zh_TW:
           title: "話題計時器"
         post:
           title: "貼文"
-        suggested_topics:
-          title: "推薦的話題"
+        more_topics:
+          title: "更多話題"
         tooltips:
           description: "簡述"
           header: "頁首"

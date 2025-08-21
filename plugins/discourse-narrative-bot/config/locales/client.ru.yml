@@ -10,3 +10,8 @@ ru:
       welcome_post_type:
         new_user_track: "Включить интерактивное обучение для всех новых пользователей"
         welcome_message: "Отправлять всем новым пользователям приветственное сообщение с кратким руководством"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative бот"

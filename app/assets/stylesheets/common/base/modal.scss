@@ -1,3 +1,30 @@
+@use "lib/viewport";
+
+html.modal-open {
+  // prevents bg scrolling when modal is open
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+html.keyboard-visible.mobile-view {
+  .d-modal {
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
+    bottom: 0;
+  }
+
+  .d-modal__container {
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
+  }
+}
+
+html:not(.keyboard-visible).mobile-device {
+  .d-modal__container {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+  }
+}
+
 // Modal wrappers
 .d-modal {
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
@@ -9,6 +36,16 @@
   top: 0;
   z-index: z("modal", "content");
   overflow: auto;
+
+  @include viewport.until(sm) {
+    align-items: flex-end;
+  }
+
+  @include viewport.from(sm) {
+    --modal-max-width: 600px;
+    --modal-width: 30em; // set in ems to scale with user font-size
+    --modal-min-width: 400px;
+  }
 
   &.-inline {
     position: relative;
@@ -24,14 +61,40 @@
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);
     max-height: var(--modal-max-height, 80vh); // unset, optional theme utility
+
+    @include viewport.until(sm) {
+      // this is a hack to prevent issues on safari with transforms
+      position: fixed;
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(var(--composer-vh, 1dvh) * 85);
+    }
+
+    @include viewport.from(sm) {
+      max-width: var(--modal-max-width);
+      min-width: var(--modal-min-width);
+      min-height: var(--modal-min-height); // unset, optional theme utility
+
+      .d-modal.-large & {
+        max-width: 800px;
+      }
+
+      .d-modal.-max & {
+        max-width: 90vw;
+      }
+    }
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
+    padding: 0.5rem;
     border-bottom: 1px solid var(--content-border-color);
+
+    &:not(.--has-primary-action) {
+      padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
+    }
 
     .modal-close {
       margin-left: auto;
@@ -58,8 +121,12 @@
   }
 
   &__title-text {
-    font-size: var(--font-up-3);
+    font-size: var(--font-up-1-rem);
     line-height: var(--line-height-medium);
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   &__title-text,
@@ -121,6 +188,17 @@
     padding: 1rem 1.5rem;
     border-top: 1px solid var(--content-border-color);
     gap: 0.5rem;
+
+    @include viewport.until(sm) {
+      &__footer {
+        margin-top: auto;
+
+        .--stacked & {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+    }
   }
 
   &__backdrop {
@@ -141,6 +219,23 @@
 
   #modal-alert {
     padding-left: 1.5rem;
+  }
+
+  .ios-device & {
+    &__footer {
+      margin-top: auto;
+    }
+  }
+
+  // fixes modal placement on Android when keyboard is visible
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+
+    .d-modal__container {
+      max-height: 100%;
+      min-height: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -245,6 +340,26 @@
   pre code {
     white-space: pre-wrap;
     max-width: var(--modal-max-width);
+  }
+
+  .close {
+    font-size: var(--font-up-4);
+    text-decoration: none;
+    cursor: pointer;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+  }
+
+  @include viewport.from(sm) {
+    .category-chooser {
+      width: 50%;
+    }
   }
 }
 
@@ -537,4 +652,70 @@
 .rename-passkey__message {
   max-width: 500px;
   margin-bottom: 2em;
+}
+
+@include viewport.from(sm) {
+  .flag-modal-body .flag-message {
+    height: 3em;
+  }
+
+  .choose-topic-modal {
+    #choosing-topic {
+      // prevents content from moving when user selects different move options 525px
+      width: 525px;
+
+      p {
+        margin-top: 0;
+      }
+
+      .radios {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+
+        .radio-label {
+          display: inline-block;
+          padding-right: 15px;
+        }
+      }
+
+      button {
+        margin-top: 10px;
+        display: block;
+      }
+
+      form {
+        width: 95%;
+        margin-top: 20px;
+
+        .participant-selector {
+          width: 100%;
+        }
+
+        div.ac-wrap {
+          width: 100%;
+          margin-bottom: 9px;
+        }
+      }
+    }
+  }
+
+  .create-invite-modal,
+  .create-invite-bulk-modal,
+  .share-topic-modal {
+    .title {
+      align-items: center;
+      display: flex;
+
+      .subtitle {
+        margin-left: 0.5em;
+      }
+    }
+
+    .alert-error {
+      label {
+        display: inline-block;
+      }
+    }
+  }
 }

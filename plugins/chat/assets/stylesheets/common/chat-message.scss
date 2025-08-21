@@ -81,6 +81,14 @@
       &.highlighted {
         background: var(--tertiary-low);
       }
+
+      .user-status-message {
+        margin-left: var(--space-1);
+
+        .emoji {
+          vertical-align: middle;
+        }
+      }
     }
 
     // unlinked, invalid mention

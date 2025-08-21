@@ -63,10 +63,6 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
-  if (event.status === "public") {
-    params.allowedGroups = "trust_level_0";
-  }
-
   if (event.reminders && event.reminders.length) {
     params.reminders = event.reminders
       .map((r) => {

@@ -33,6 +33,18 @@ module PageObjects
       def clear_filter
         find(".clear-filters").click
       end
+
+      def click_export_button
+        find(".export-staff-action-logs").click
+      end
+
+      def fill_date_filter_from(date)
+        find(".d-date-time-input.from .d-date-input input").set(date)
+      end
+
+      def fill_date_filter_to(date)
+        find(".d-date-time-input.to .d-date-input input").set(date)
+      end
     end
   end
 end

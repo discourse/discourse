@@ -522,7 +522,9 @@ export default {
     this.appEvents.trigger("header:keyboard-trigger", { type: "user", event });
   },
 
-  showHelpModal() {
+  showHelpModal(event) {
+    event.preventDefault();
+
     getOwner(this)
       .lookup("controller:application")
       .send("showKeyboardShortcutsHelp");

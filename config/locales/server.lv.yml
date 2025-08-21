@@ -537,7 +537,7 @@ lv:
     actions:
       agree:
         title: "Jā"
-      delete_single:
+      delete:
         title: "Dzēst"
         complete: "Ieraksts dzēsts."
       delete_and_ignore:

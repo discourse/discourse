@@ -41,21 +41,30 @@ module Jobs
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        regionless_locale = locale.split("_").first
-        next if post.post_localizations.where("locale LIKE ?", "#{regionless_locale}%").exists?
+        exists = post.localizations.matching_locale(locale).exists?
 
-        begin
-          DiscourseAi::Translation::PostLocalizer.localize(post, locale)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-          # do nothing, there are too many sporadic lookup failures
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
+        if exists && !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
+          next
         end
+
+        localize(post, locale)
       end
 
       MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+    end
+
+    private
+
+    def localize(post, locale)
+      begin
+        DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+        # do nothing, there are too many sporadic lookup failures
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
+      end
     end
   end
 end

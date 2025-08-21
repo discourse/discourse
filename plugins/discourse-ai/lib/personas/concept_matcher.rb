@@ -27,11 +27,11 @@ module DiscourseAi
 
           Format your response as a JSON object with a single key named "matching_concepts", which has an array of concept strings from the provided list.
           Your output should be in the following format:
-            <o>
-              {"matching_concepts": ["concept1", "concept3", "concept5"]}
-            </o>
+
+          {"matching_concepts": ["concept1", "concept3", "concept5"]}
 
           Only include concepts from the provided list that match the content. If no concepts match, return an empty array.
+          reply with valid JSON only
         PROMPT
       end
 

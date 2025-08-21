@@ -30,10 +30,12 @@ pt_BR:
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
     chat_preferred_index: "Aba preferencial ao carregar /chat."
+    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o chat. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."
       chat_upload_not_allowed_secure_uploads: "Enviar arquivos no chat não é permitido quando a configuração do site de envios seguros estiver ativada."
+      allow_chat_in_anonymous_mode_invalid: "Para usar esta configuração, ative a definição \"allow anonymous mode\" primeiro."
   system_messages:
     private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
@@ -117,7 +119,7 @@ pt_BR:
           description: "Concorde com a sinalização e suspenda o usuário(a)."
         agree_and_silence:
           title: "Silenciar usuário(a)"
-          description: "Concorde com a sinalização e silencie o usuário(a)."
+          description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
         agree_and_restore:
           title: "Restaurar mensagem"
           description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
@@ -137,7 +139,7 @@ pt_BR:
           description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
-        transcript_body: "Para dar mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
+        transcript_body: "Para fornecer mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
     channel:
       users_invited_to_channel:
         one: "%{invited_users} foi convidado(a) por %{inviting_user}."
@@ -156,6 +158,7 @@ pt_BR:
     mention_warning:
       dismiss: "descartar"
       cannot_see: "%{first_identifier} não pode acessar este canal e não foi notificado(a)."
+      cannot_see_group: "Alguns membros de %{group_name} não podem acessar este canal e não receberam notificação."
       cannot_see_multiple:
         one: "%{first_identifier} e mais %{count} usuário(a) não podem acessar este canal nem foram notificados(as)."
         other: "%{first_identifier} e %{count} outros usuários não podem acessar este canal e não foram notificados"

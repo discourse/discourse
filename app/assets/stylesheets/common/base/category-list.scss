@@ -256,13 +256,13 @@
   .subcategories {
     display: flex;
     flex-flow: wrap;
+    gap: var(--space-2);
 
     .subcategory {
       display: flex;
       align-items: center;
 
       @include ellipsis;
-      margin-bottom: 0.6em;
 
       .badge-category__wrapper {
         overflow: hidden;
@@ -270,8 +270,12 @@
 
       .subcategory-image-placeholder {
         display: inline-block;
-        margin-right: 0.6em;
         flex: 1 0 auto;
+
+        .category-logo.aspect-image {
+          margin-top: 0;
+          margin-right: var(--space-1);
+        }
       }
 
       .subcategory-link {

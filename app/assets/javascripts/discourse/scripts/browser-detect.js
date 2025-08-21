@@ -1,13 +1,22 @@
 /* eslint-disable no-var */ // `let` is not supported in very old browsers
 
 (function () {
+  function check(name, passed) {
+    if (!passed) {
+      // eslint-disable-next-line no-console
+      console.warn(name + " is not supported");
+    }
+    return passed;
+  }
   if (
-    !window.WeakMap ||
-    !window.Promise ||
-    typeof globalThis === "undefined" ||
-    !String.prototype.replaceAll ||
-    !CSS.supports ||
-    !CSS.supports("aspect-ratio: 1")
+    !check("weakMap", window.WeakMap) ||
+    !check("promise", window.Promise) ||
+    !check("globalThis", typeof globalThis !== "undefined") ||
+    !check("replaceAll", String.prototype.replaceAll) ||
+    !check("supports", CSS.supports) ||
+    !check("aspectRatio", CSS.supports("aspect-ratio: 1")) ||
+    !check("relativeColor", CSS.supports("(color: hsl(from white h s l))")) ||
+    !check("subgrid", CSS.supports("(grid-template-rows: subgrid)"))
   ) {
     window.unsupportedBrowser = true;
   } else {

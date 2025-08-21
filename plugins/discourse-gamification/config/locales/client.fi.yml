@@ -54,7 +54,7 @@ fi:
           weekly: "Viikoittainen"
           daily: "Päivittäinen"
         rank: "Sijoitus"
-      create: "Aloitus"
+      create: "Luo"
       cancel: "Peruuta"
       close: "Sulje"
       delete: "Poista"

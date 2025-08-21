@@ -11,12 +11,10 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
 
 export default class ChatFooter extends Component {
-  @service router;
   @service chat;
   @service chatHistory;
   @service siteSettings;
   @service site;
-  @service currentUser;
   @service chatChannelsManager;
   @service chatStateManager;
 

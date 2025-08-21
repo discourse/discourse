@@ -20,4 +20,26 @@ ja:
     report_generator:
       private_message:
         title: "%{query_name} の定期レポート"
+        body: |
+          %{recipient_name} さん、こんにちは。データエクスプローラーのレポートの準備ができました。
+
+          クエリ名:
+          %{query_name}
+
+          以下はその結果です。
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>データエクスプローラーでクエリを見る</a>
+
+          レポート作成日: %{created_at}（%{timezone}）
+      post:
+        body: |
+          ### %{query_name} の定期レポート
+
+          以下はその結果です。
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>データエクスプローラーでクエリを見る</a>
+
+          レポート作成日: %{created_at}（%{timezone}）
       upload_appendix: "付録: [%{filename}|添付ファイル](%{short_url})"

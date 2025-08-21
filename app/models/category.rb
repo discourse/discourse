@@ -16,6 +16,7 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include Localizable
 
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]

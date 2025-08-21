@@ -15,7 +15,6 @@ import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
   @service site;
-  @service siteSettings;
   @service currentUser;
   @service appEvents;
 

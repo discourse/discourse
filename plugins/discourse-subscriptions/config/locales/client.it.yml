@@ -458,7 +458,7 @@ it:
             trial_help: Gli abbonamenti a questo piano inizieranno automaticamente con una prova gratuita di questa durata
             group: Gruppo di utenti
             group_help: Si tratta del gruppo di utenti Discourse a cui il cliente viene aggiunto alla creazione dell''abbonamento.
-            active: Attivi
+            active: Attivo
             created_at: Creato
             recurring: Piano periodico?
         coupons:

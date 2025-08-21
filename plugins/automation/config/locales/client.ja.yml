@@ -13,12 +13,16 @@ ja:
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
+      table_title: 自動化
+      create: 自動化を追加
+      update: 自動化を更新
       back: 戻る
       edit: 編集
       select_script: スクリプトを選択
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
+      no_automation_yet: 現在、構成された自動化はありません
       filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:
@@ -162,8 +166,22 @@ ja:
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
             restricted_categories:
               label: カテゴリ
+              description: オプション。投稿のトピックがこれらのカテゴリにある場合にのみトリガーされます
+            exclude_subcategories:
+              label: サブカテゴリを除外
+              description: オプション。投稿のトピックが上記で指定されたカテゴリに正確認一致する場合にのみトリガーされます
+            restricted_archetype:
+              label: トピックの種類
+              description: オプション。トピックまたは個人メッセージでのみトリガーできるようにします
+            restricted_groups:
+              label: 限定グループ
+              description: オプション。投稿ユーザーがこれらのいずれかのグループに属する場合にのみトリガーされます
             restricted_inbox_groups:
+              label: 限定された受信トレイグループ
               description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
+            excluded_groups:
+              label: 除外されるグループ
+              description: オプション。投稿ユーザーがこれらのいずれかのグループに属する場合はトリガーをスキップします
             ignore_automated:
               label: 自動送信元を無視
               description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
@@ -176,8 +194,14 @@ ja:
             skip_via_email:
               label: "メールの場合はスキップ"
               description: "投稿がメールで作成された場合はトリガーをスキップします"
+            post_features:
+              label: 投稿機能
+              description: "オプション。これらの機能を持つ投稿のみにトリガーを制限します"
           created: 作成
           edited: 編集
+          topics: すべてのトピック
+          personal_messages: 個人メッセージ
+          public_topics: 公開トピック (すべてのセキュリティ保護されたカテゴリを除く)
           with_images: 画像
           with_links: リンク
           with_code: コード
@@ -382,6 +406,7 @@ ja:
               label: PM
             sender:
               label: PM 送信者
+              description: "受信者に PM を送信する適切な権限が送信者にあることを確認します"
         close_topic:
           fields:
             topic:
@@ -405,6 +430,11 @@ ja:
           name:
             label: トリガー
         automation:
+          runs_today: "今日 %{count} 回"
+          runs_this_week: "今週 %{count} 回"
+          runs_this_month: "今月 %{count} 回"
+          runs:
+            label: 実行
           name:
             label: 名前
           trigger:
@@ -416,12 +446,15 @@ ja:
           status:
             label: ステータス
           enabled:
-            label: 有効
+            label: "自動化を有効にする"
           disabled:
             label: 無効
           placeholders:
             label: プレースホルダー
           last_updated_at:
             label: 最終更新
+          last_run:
+            label: 最終実行
           last_updated_by:
             label: 更新者
+          enable_toggle_disabled: "すべての必須フィールドに入力したら、この自動化を有効にできます。"

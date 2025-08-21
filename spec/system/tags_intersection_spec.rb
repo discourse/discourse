@@ -31,4 +31,23 @@ describe "Tags intersection", type: :system do
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
   end
+
+  it "removes the main tag from the additional tags list" do
+    visit("/tags/intersection/sour/tangy/sour")
+    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+
+    visit("/tags/intersection/sour/tangy/sour/sour")
+    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+
+    visit("/tags/intersection/sour/sour")
+    expect(page).to have_current_path("/tag/sour")
+  end
+
+  it "removes duplicates from the additional tags list" do
+    visit("/tags/intersection/sour/tangy/tangy")
+    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+
+    visit("/tags/intersection/sour/tangy/tangy/tangy")
+    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+  end
 end

@@ -99,15 +99,6 @@ export default class Dropdown extends Component {
     }
   }
 
-  get nameProperty() {
-    switch (this.args.field.id) {
-      case "default_locale":
-        return "name";
-      default:
-        return "label";
-    }
-  }
-
   keyPress(event) {
     event.stopPropagation();
   }
@@ -123,9 +114,8 @@ export default class Dropdown extends Component {
       class="wizard-container__dropdown"
       value=@field.value
       content=@field.choices
-      nameProperty=this.nameProperty
+      nameProperty="label"
       tabindex="9"
-      onChange=this.onChangeValug
       options=(hash translatedNone=false)
     }}
   </template>

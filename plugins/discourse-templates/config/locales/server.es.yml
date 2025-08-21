@@ -10,6 +10,7 @@ es:
     discourse_templates_categories: "Categorías de las que obtener las plantillas"
     discourse_templates_enable_private_templates: "Permite el uso de plantillas privadas"
     discourse_templates_groups_allowed_private_templates: "Los grupos pueden usar plantillas privadas. Siempre se permite a los miembros del personal."
+    discourse_templates_private_templates_tags: "Etiquetas que identifican un mensaje personal como plantilla privada"
   default_category_template:
     name: Plantillas
     description: |

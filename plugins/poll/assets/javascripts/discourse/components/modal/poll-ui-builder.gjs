@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-classic-components */
-import Component, { Input, Textarea } from "@ember/component";
+import Component, { Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
@@ -15,6 +15,7 @@ import InputTip from "discourse/components/input-tip";
 import RadioButton from "discourse/components/radio-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
@@ -50,6 +51,7 @@ export default class PollUiBuilderModal extends Component {
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
   publicPoll = this.siteSettings.poll_default_public;
+  dynamic = false;
 
   @or("showAdvanced", "isNumber") showNumber;
   @or("showAdvanced", "isRankedChoice") showRankedChoice;
@@ -148,6 +150,7 @@ export default class PollUiBuilderModal extends Component {
     "pollType",
     "pollResult",
     "publicPoll",
+    "dynamic",
     "pollTitle",
     "pollOptions.@each.value",
     "pollMin",
@@ -161,6 +164,7 @@ export default class PollUiBuilderModal extends Component {
     pollType,
     pollResult,
     publicPoll,
+    dynamic,
     pollTitle,
     pollOptions,
     pollMin,
@@ -204,6 +208,9 @@ export default class PollUiBuilderModal extends Component {
     pollHeader += ` public=${publicPoll ? "true" : "false"}`;
     if (chartType && pollType !== NUMBER_POLL_TYPE) {
       pollHeader += ` chartType=${chartType}`;
+    }
+    if (dynamic) {
+      pollHeader += ` dynamic=true`;
     }
     if (pollGroups && pollGroups.length > 0) {
       pollHeader += ` groups=${pollGroups}`;
@@ -476,7 +483,11 @@ export default class PollUiBuilderModal extends Component {
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_title.label"
               }}</label>
-            <Input @value={{this.pollTitle}} />
+            <input
+              {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
+              type="text"
+              value={{this.pollTitle}}
+            />
           </div>
         {{/if}}
 
@@ -540,9 +551,10 @@ export default class PollUiBuilderModal extends Component {
               <label class="input-group-label">{{i18n
                   "poll.ui_builder.poll_config.min"
                 }}</label>
-              <Input
-                @type="number"
-                @value={{this.pollMin}}
+              <input
+                {{on "input" (withEventValue (fn (mut this.pollMin)))}}
+                type="number"
+                value={{this.pollMin}}
                 class="poll-options-min"
                 min="1"
               />
@@ -552,9 +564,10 @@ export default class PollUiBuilderModal extends Component {
               <label class="input-group-label">{{i18n
                   "poll.ui_builder.poll_config.max"
                 }}</label>
-              <Input
-                @type="number"
-                @value={{this.pollMax}}
+              <input
+                {{on "input" (withEventValue (fn (mut this.pollMax)))}}
+                type="number"
+                value={{this.pollMax}}
                 class="poll-options-max"
                 min="1"
               />
@@ -565,9 +578,10 @@ export default class PollUiBuilderModal extends Component {
                 <label class="input-group-label">{{i18n
                     "poll.ui_builder.poll_config.step"
                   }}</label>
-                <Input
-                  @type="number"
-                  @value={{this.pollStep}}
+                <input
+                  {{on "input" (withEventValue (fn (mut this.pollStep)))}}
+                  type="number"
+                  value={{this.pollStep}}
                   min="1"
                   class="poll-options-step"
                 />
@@ -590,6 +604,14 @@ export default class PollUiBuilderModal extends Component {
         </div>
 
         {{#if this.showAdvanced}}
+          <div class="input-group poll-dynamic">
+            <DToggleSwitch
+              @state={{this.dynamic}}
+              @label="poll.ui_builder.poll_dynamic.label"
+              class="poll-toggle-dynamic"
+              {{on "click" (fn (mut this.dynamic) (not this.dynamic))}}
+            />
+          </div>
           <div class="input-group poll-allowed-groups">
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_groups.label"

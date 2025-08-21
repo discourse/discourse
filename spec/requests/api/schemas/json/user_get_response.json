@@ -717,6 +717,9 @@
             "enable_smart_lists": {
               "type": "boolean"
             },
+            "enable_markdown_monospace_font": {
+              "type": "boolean"
+            },
             "enable_defer": {
               "type": "boolean"
             },
@@ -836,6 +839,7 @@
             "dynamic_favicon",
             "enable_quoting",
             "enable_smart_lists",
+            "enable_markdown_monospace_font",
             "enable_defer",
             "digest_after_minutes",
             "automatically_unpin_topics",

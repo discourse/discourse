@@ -8,7 +8,6 @@ import ToggleAllSections from "./toggle-all-sections";
 
 export default class PanelHeader extends Component {
   @service sidebarState;
-  @service currentUser;
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.displayHeader;

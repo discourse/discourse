@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import cookie from "discourse/lib/cookie";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { i18n } from "discourse-i18n";
 
@@ -14,8 +13,7 @@ export default class UserActivityAssigned extends UserTopicListRoute {
 
   beforeModel() {
     if (!this.currentUser) {
-      cookie("destination_url", window.location.href);
-      this.router.transitionTo("login");
+      this.send("showLogin");
     }
   }
 

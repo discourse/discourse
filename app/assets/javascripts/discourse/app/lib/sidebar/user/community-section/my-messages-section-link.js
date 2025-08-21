@@ -23,18 +23,14 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
 
   get text() {
     return i18n(
-      `sidebar.sections.community.links.${this.overridenName
+      `sidebar.sections.community.links.${this.overriddenName
         .toLowerCase()
         .replace(" ", "_")}.content`,
-      { defaultValue: this.overridenName }
+      { defaultValue: this.overriddenName }
     );
   }
 
   get totalCount() {
-    if (!this.currentUser?.use_experimental_sidebar_messages_count) {
-      return 0;
-    }
-
     const newUserMsgs = this._lookupCount({ type: "new", inboxFilter: "user" });
     const unreadUserMsgs = this._lookupCount({
       type: "unread",
@@ -70,10 +66,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get showCount() {
-    return (
-      this.currentUser?.use_experimental_sidebar_messages_count &&
-      this.currentUser?.sidebarShowCountOfNewItems
-    );
+    return this.currentUser.sidebarShowCountOfNewItems;
   }
 
   get badgeText() {

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Apple ile oturum açın"
+        sr_title: "Apple ile oturum açın"
+        message: "Apple ile kimlik doğrulama"

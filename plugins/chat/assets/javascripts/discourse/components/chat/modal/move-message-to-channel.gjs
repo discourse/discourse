@@ -11,7 +11,6 @@ import { i18n } from "discourse-i18n";
 import ChatChannelChooser from "../../chat-channel-chooser";
 
 export default class ChatModalMoveMessageToChannel extends Component {
-  @service chat;
   @service chatApi;
   @service router;
   @service chatChannelsManager;

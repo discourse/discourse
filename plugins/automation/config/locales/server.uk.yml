@@ -9,6 +9,12 @@ uk:
     discourse_automation_enabled: "Увімкнути плагін для автоматизації дискурсу"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Скрипт не може бути порожнім"
+          trigger_blank: "Тригер не може бути порожнім"
+          script_missing_required_fields: "У скрипті відсутні обов'язкові поля: %{fields}"
+          trigger_missing_required_fields: "У тригері відсутні обов'язкові поля: %{fields}"
       fields:
         required_field: 'Поле `%{name}` має бути заповнене: `%{target}:%{target_name}`.'
         invalid_field: 'Компонент поля `%{component}` не підходить для: `%{target}:%{target_name}`.'

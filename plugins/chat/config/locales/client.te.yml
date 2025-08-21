@@ -46,7 +46,6 @@ te:
       select: "ఎంచుకోండి"
       sounds:
         none: "ఏదీ లేదు"
-      exit: "వెనుకకు"
       channel_status:
         closed: "మూసివేయబడినవి"
       browse:

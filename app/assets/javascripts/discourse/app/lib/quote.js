@@ -1,5 +1,6 @@
 import { helperContext } from "discourse/lib/helpers";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export const QUOTE_REGEXP =
   /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
@@ -37,5 +38,12 @@ export function buildQuote(post, contents, opts = {}) {
     params.push(`username:${opts.username || post.username}`);
   }
 
-  return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
+  const transformedParams = applyValueTransformer("quote-params", params, {
+    post,
+    contents,
+    opts,
+  });
+
+  const paramsString = transformedParams.join(", ");
+  return `[quote="${paramsString}"]\n${contents.trim()}\n[/quote]\n\n`;
 }

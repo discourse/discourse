@@ -152,7 +152,8 @@ export default class PollInfoComponent extends Component {
       this.resultsOnVote ||
       this.resultsOnClose ||
       this.resultsStaffOnly ||
-      this.publicTitle
+      this.publicTitle ||
+      this.args.isDynamic
     );
   }
 
@@ -172,6 +173,12 @@ export default class PollInfoComponent extends Component {
       </div>
       {{#if this.showInstructionsSection}}
         <ul class="poll-info_instructions">
+          {{#if (if @isDynamic true this.poll.dynamic)}}
+            <li class="is-dynamic">
+              {{icon "shuffle"}}
+              <span>{{i18n "poll.dynamic.enabled_hint"}}</span>
+            </li>
+          {{/if}}
           {{#if this.showMultipleHelpText}}
             <li class="multiple-help-text">
               {{icon "list-ul"}}

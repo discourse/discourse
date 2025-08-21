@@ -19,7 +19,6 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
-  @service router;
   @service dialog;
   @service site;
 

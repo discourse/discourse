@@ -484,7 +484,7 @@ class RemoteTheme < ActiveRecord::Base
           value: value,
         },
         guardian: Discourse.system_user.guardian,
-      ) { |result| }
+      )
     end
 
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)

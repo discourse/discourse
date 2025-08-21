@@ -1,7 +1,7 @@
 @use "lib/viewport";
 @use "sass:string";
 
-$category-settings-width: string.unquote("min(500px, 90%)");
+$category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {

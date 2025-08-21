@@ -128,16 +128,16 @@ export default class CommunitySection {
   #initializeSectionLink(
     sectionLinkClass,
     inMoreDrawer,
-    overridenName,
-    overridenIcon
+    overriddenName,
+    overriddenIcon
   ) {
     if (this.router.isDestroying) {
       return;
     }
     return new sectionLinkClass(getOwner(this), {
       inMoreDrawer,
-      overridenName,
-      overridenIcon,
+      overriddenName,
+      overriddenIcon,
     });
   }
 }

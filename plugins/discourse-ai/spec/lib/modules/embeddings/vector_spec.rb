@@ -25,6 +25,41 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
         expect(vector.vector_from(text)).to eq(expected_embedding_1)
       end
+
+      it "passes asymmetric parameter to prepare_query_text correctly" do
+        text = "This is a piece of text"
+        vdef.update!(search_prompt: "Search: ")
+        prepared_text = vdef.prepare_query_text(text, asymmetric: true)
+        stub_vector_mapping(prepared_text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text, true)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: true)
+      end
+
+      it "defaults asymmetric parameter to false" do
+        text = "This is a piece of text"
+        stub_vector_mapping(text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: false)
+      end
+
+      it "handles asymmetric parameter explicitly set to false" do
+        text = "This is a piece of text"
+        stub_vector_mapping(text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text, false)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: false)
+      end
     end
 
     describe "#generate_representation_from" do

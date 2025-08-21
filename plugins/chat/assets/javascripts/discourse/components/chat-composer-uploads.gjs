@@ -16,7 +16,6 @@ import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat
 @classNames("chat-composer-uploads")
 export default class ChatComposerUploads extends Component {
   @service mediaOptimizationWorker;
-  @service chatStateManager;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",

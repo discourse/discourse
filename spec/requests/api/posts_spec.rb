@@ -199,9 +199,6 @@ RSpec.describe "posts" do
                        reviewable_score_pending_count: {
                          type: :integer,
                        },
-                       has_post_localizations: {
-                         type: :boolean,
-                       },
                        post_localizations: {
                          type: :array,
                          items: {

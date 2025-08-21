@@ -6,6 +6,7 @@
 
 ja:
   site_settings:
+    openid_connect_enabled: OpenID Connect 認証を有効にする。ユーザーインターフェースのテキストは<a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>こちら</a>でカスタマイズしてください
     openid_connect_discovery_document: "OpenID Connect 検出ドキュメント URL。通常、'https://your.domain/.well-known/openid-configuration' にあります"
     openid_connect_client_id: "OpenID Connect クライアント ID"
     openid_connect_client_secret: "OpenID Connect クライアントシークレット"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAutomation::AdminAutomationsController do
-  fab!(:automation)
+  fab!(:automation) { Fabricate(:automation, enabled: true) }
 
   before do
     SiteSetting.discourse_automation_enabled = true

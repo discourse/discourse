@@ -69,8 +69,8 @@ gl:
           title: "Mapa de temas"
         site_header:
           title: "Cabeceira do sitio"
-        suggested_topics:
-          title: "Temas suxeridos"
+        more_topics:
+          title: "Máis temas"
         post_menu:
           title: "Menú de publicación"
         modal:

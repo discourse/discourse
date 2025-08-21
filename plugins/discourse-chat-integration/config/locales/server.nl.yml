@@ -61,6 +61,9 @@ nl:
     chat_integration_webex_excerpt_length: "Lengte uittreksel Webex-bericht"
     chat_integration_google_enabled: "Google Chat-chatintegratieprovider inschakelen"
     chat_integration_google_excerpt_length: "Lengte uittreksel Google Chat-bericht"
+  dashboard:
+    problem:
+      channel_errors: "Sommige chatintegratiekanalen hebben fouten. Ga naar <a href='%{base_path}/admin/plugins/chat-integration'>het onderdeel Chatintegratie</a> voor meer informatie."
   discourse_automation:
     scriptables:
       send_slack_message:

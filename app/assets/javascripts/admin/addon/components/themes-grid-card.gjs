@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
@@ -20,7 +19,6 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // and technical debt, so anything copied from there to here is subject
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
-  @service siteSettings;
   @service toasts;
 
   @tracked isUpdating = false;
@@ -28,7 +26,7 @@ export default class ThemeCard extends Component {
   get themeCardClasses() {
     return [
       "theme-card",
-      this.args.theme.get("default") ? "-active" : "",
+      this.args.theme.get("default") ? "--default" : "",
       this.isUpdating ? "--updating" : "",
       dasherize(this.args.theme.name),
     ].join(" ");
@@ -138,7 +136,7 @@ export default class ThemeCard extends Component {
       <:content>
         {{#if @theme.default}}
           <span
-            class="theme-card__badge --active"
+            class="theme-card__badge --default"
             title={{i18n "admin.customize.theme.default_theme"}}
           >
             {{i18n "admin.customize.theme.default"}}
@@ -199,7 +197,6 @@ export default class ThemeCard extends Component {
                 @onRegisterApi={{this.onRegisterApi}}
                 @modalForMobile={{true}}
                 @icon="ellipsis"
-                @triggers={{array "click"}}
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
@@ -210,7 +207,7 @@ export default class ThemeCard extends Component {
                         @action={{this.setDefault}}
                         @preventFocus={{true}}
                         @icon={{if @theme.default "star" "far-star"}}
-                        class="theme-card__button set-active"
+                        class="theme-card__button set-default"
                         @translatedLabel={{i18n
                           (if
                             @theme.default

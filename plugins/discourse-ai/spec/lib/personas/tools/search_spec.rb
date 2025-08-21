@@ -105,10 +105,15 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
 
     describe "semantic search" do
       let(:query) { "this is an expanded search" }
-      after { DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query) }
+
+      after do
+        DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query)
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = false
+      end
 
       it "supports semantic search when enabled" do
         assign_fake_provider_to(:ai_default_llm_model)
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = true
 
         vector_def = Fabricate(:embedding_definition)
         SiteSetting.ai_embeddings_selected_model = vector_def.id

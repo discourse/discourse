@@ -16,7 +16,7 @@ fr:
     unassign_on_group_archive: "Quand un message est archivé par un groupe, annuler l'attribution du message (réattribué s'il est à nouveau déplacé dans la boîte de réception)"
     unassign_on_close: "Quand un sujet est fermé, annuler l'attribution du sujet"
     reassign_on_open: "Lorsqu'un sujet est ouvert, réattribuer les utilisateurs/groupes précédemment attribués"
-    invite_on_assign: "Lorsqu'un message personnel est attribué à un utilisateur ou à un groupe, invitez-le dans le MD s'il n'est pas déjà participant."
+    invite_on_assign: "Lorsqu'un message privé est attribué à un utilisateur ou à un groupe, invitez-le dans le MP s'il n'est pas déjà participant."
     assign_mailer: "Quand envoyer un e-mail de notification pour les attributions"
     remind_assigns: "Rappelle aux utilisateurs les attributions en attente."
     remind_assigns_frequency: "Fréquence à laquelle rappeler les attributions aux utilisateurs."
@@ -33,16 +33,21 @@ fr:
   discourse_assign:
     assigned_to: "Sujet attribué à @%{username}"
     unassigned: "L'attribution du sujet a été annulée"
+    filter:
+      description:
+        assigned: "Filtrer les sujets attribués à un utilisateur ou à un groupe spécifique"
+        nobody: "Filtrer les sujets qui ne sont attribués à personne"
+        anyone: "Filtrer les sujets attribués à n'importe qui"
     already_claimed: "Le sujet a déjà été réservé."
     already_assigned: "Le sujet est déjà attribué à @%{username}"
     too_many_assigns: "@%{username} a atteint le nombre maximal de sujets attribués (%{max})."
     too_many_assigns_for_topic: "La limite de %{limit} attributions par sujet a été atteinte."
     forbidden_assign_to: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'appartient pas aux groupes autorisés attribués."
-    forbidden_assignee_not_pm_participant: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'a pas accès à ce MD. Vous pouvez accorder l'accès à %{username} en l'invitant dans ce MD."
+    forbidden_assignee_not_pm_participant: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'a pas accès à ce MP. Vous pouvez accorder l'accès à %{username} en l'invitant dans ce MP."
     forbidden_assignee_cant_see_topic: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'a pas accès à ce sujet."
     group_already_assigned: "Le sujet est déjà attribué à @%{group}"
     forbidden_group_assign_to: "@%{group} ne peut pas recevoir d'attribution, car ce groupe n'appartient pas aux groupes autorisés attribués."
-    forbidden_group_assignee_not_pm_participant: "@%{group} ne peut pas recevoir d'attribution, car tous les membres n'ont pas accès à ce MD."
+    forbidden_group_assignee_not_pm_participant: "@%{group} ne peut pas recevoir d'attribution, car tous les membres n'ont pas accès à ce MP."
     forbidden_group_assignee_cant_see_topic: "@%{group} ne peut pas recevoir d'attribution, car tous les membres n'ont pas accès à ce sujet."
     flag_assigned: "Nous sommes désolés, le sujet de ce signalement est attribué à un autre utilisateur."
     flag_unclaimed: "Vous devez réserver ce sujet avant d'agir sur le signalement"
@@ -50,25 +55,25 @@ fr:
     topic_group_assigned_excerpt: "a attribué le sujet « %{title} » à @%{group}"
     reminders_frequency:
       never: "jamais"
-      daily: "tous les jours"
-      weekly: "toutes les semaines"
-      monthly: "mensuel"
-      quarterly: "trimestriel"
+      daily: "chaque jour"
+      weekly: "chaque semaine"
+      monthly: "chaque mois"
+      quarterly: "chaque trimestre"
   assign_mailer:
     title: "Attribuer un expéditeur"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a attribué le sujet « %{topic_title} » !"
     text_body_template: |
-      Hey, %{assignee_name} vous a **attribué** une discussion
+      Bonjour, %{assignee_name} vous a **attribué** une discussion
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      Si vous êtes intéressé(e), cliquez sur le lien suivant :
+      Si cela vous intéresse, cliquez sur le lien suivant :
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "Vous avez %{pending_assignments} attribution(s) en attente"
     body: |
-      Vous avez actuellement [%{pending_assignments} attribution(s) en attente](%{assignments_link}).
+      Vous avez actuellement [%{pending_assignments} attributions en attente](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}

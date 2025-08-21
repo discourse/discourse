@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { modifier } from "ember-modifier";
 import DTextarea from "discourse/components/d-textarea";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 
@@ -110,7 +111,13 @@ export default class TextareaEditor extends Component {
       @input={{@change}}
       @focusIn={{@focusIn}}
       @focusOut={{@focusOut}}
-      class={{@class}}
+      class={{concatClass
+        @class
+        (if
+          this.currentUser.user_option.enable_markdown_monospace_font
+          "--markdown-monospace"
+        )
+      }}
       @id={{@id}}
       {{this.registerTextarea}}
     />

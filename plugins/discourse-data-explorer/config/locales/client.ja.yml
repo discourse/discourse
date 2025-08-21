@@ -29,6 +29,7 @@ ja:
         auto_resolution: "<h2>エンティティの自動解決</h2> <p>クエリがエンティティ ID を返す場合、データエクスプローラーはクエリ結果において、それを自動的にエンティティ名とその他の有用な情報に置き換えることができます。自動解決は、<i><b>user_id</b></i>、<i><b>group_id</b></i>、<i><b>topic_id</b></i>、<i><b>category_id</b></i>、および <i><b>badge_id</b></i> で利用できます。次のクエリを実行して試してください。</p>\n<pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>カスタムパラメーターの作成</h2> <p>クエリのカスタムパラメーターを作成するには、次のコードをクエリの先頭に配置し、フォーマットに従います。</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意: 最初の [params] の行は必須です。また、その前と宣言するカスタムパラメーターの前に 2 つのダッシュが必要です。</i></p>"
         default_values: "<h3>デフォルト値</h3> <p>パラメーターはデフォルト値の有無に関係なく宣言できます。デフォルト値はクエリエディターの下のテキストフィールドに表示され、必要に応じて編集することができます。パラメーターはデフォルト値なしで宣言された場合でもテキストフィールドを生成しますが、空となり、赤でハイライトされます。</p>\n<pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>データ型</h3> <p>以下は、使用できる共通のデータ型です。</p> <ul> <li><b>整数</b> - 符号付き 4 バイト整数</li> <li><b>テキスト</b> - 可変長文字列</li> <li><b>ブール</b> – true/false</li> <li><b>日付</b> - 暦日（年、月、日）</li> </ul> <p>データ型の詳細については、<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>こちらのウェブサイト</a>をご覧ください。</p>"
       schema:
         title: "データベーススキーマ"
         filter: "検索..."
@@ -99,6 +100,8 @@ ja:
               label: 結果がない場合は PM の送信をスキップする
             attach_csv:
               label: CSV ファイルを PM に添付する
+            users_from_group:
+              label: 各グループメンバーに個別の PM を送信する
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

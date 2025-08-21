@@ -11,6 +11,7 @@ te:
         solved:
           accepted_notification: "ఆమోదించబడిన"
     solved:
+      accepted_answer_post_number: "పోస్ట్ %{post_number}"
       topic_status_filter:
         all: "అన్నీ"
     discourse_automation:

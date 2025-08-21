@@ -13,12 +13,16 @@ ar:
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
-      back: الرجوع
+      table_title: الأتمتة
+      create: إضافة الأتمتة
+      update: تحديث الأتمتة
+      back: رجوع
       edit: تعديل
       select_script: حدِّد برنامجًا نصيًا
       select_trigger: حدِّد مشغلًا
       confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟
       confirm_automation_trigger: سيؤدي هذا الإجراء إلى تشغيل الأتمتة، هل تريد المتابعة؟
+      no_automation_yet: لا توجد أتمتات مُهيأة في الوقت الحالي.
       filter_placeholder: التصفية حسب الاسم أو الوصف...
       edit_automation:
         trigger_section:
@@ -167,8 +171,22 @@ ar:
               description: اختياري، لن يتم تشغيله إلا إذا كان المنشور يحتوي على أي هذه الوسوم
             restricted_categories:
               label: الفئات
+              description: اختياري، سيتم التنفيذ فقط إذا كان موضوع المنشور في هذه الفئات
+            exclude_subcategories:
+              label: استبعاد الفئات الفرعية
+              description: اختياري، سيُفعل فقط إذا كان موضوع المنشور ينتمي تمامًا إلى الفئات المحددة أعلاه.
+            restricted_archetype:
+              label: نوع الموضوع
+              description: اختياري، يُتيح التفعيل حصريًا على الموضوعات أو الرسائل الشخصية
+            restricted_groups:
+              label: المجموعات المقيدة
+              description: اختياري، سيُفعل فقط إذا كان مستخدم المنشور ينتمي لأي من هذه المجموعات
             restricted_inbox_groups:
-              description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في أحد صناديق البريد الوارد للمجموعة
+              label: مجموعات ذات صناديق وارد مقيدة
+              description: اختياري، سيتم تفعيله فقط إذا كان موضوع المنشور رسالة شخصية في إحدى صناديق البريد الجماعية
+            excluded_groups:
+              label: المجموعات المستثناة
+              description: اختياري، تخطى التفعيل إذا كان مستخدم المنشور ينتمي لأي من هذه المجموعات
             ignore_automated:
               label: تجاهل الرسائل الآلية
               description: تخطي المشغِّل إذا كان لدى المرسل بريد إلكتروني غير صحيح أو كان من مصدرٍ آلي. لا ينطبق ذلك إلا على المنشورات التي تم إنشاؤها عبر البريد الإلكتروني
@@ -181,8 +199,14 @@ ar:
             skip_via_email:
               label: "التخطي عبر البريد الإلكتروني"
               description: "تخطي المشغِّل إذا كان المنشور قد تم إنشاؤه عبر البريد الإلكتروني"
+            post_features:
+              label: ميزات المنشور
+              description: "اختياري، يقتصر التفعيل على المنشورات التي تتضمن هذه الميزات فقط"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
+          topics: كل الموضوعات
+          personal_messages: الرسائل الشخصية
+          public_topics: الموضوعات العامة (استبعاد جميع الفئات الآمنة)
           with_images: الصور
           with_links: الروابط
           with_code: الرمز
@@ -387,6 +411,7 @@ ar:
               label: الرسائل الشخصية
             sender:
               label: مُرسل الرسائل الشخصية
+              description: "تأكد من أن المرسل لديه الأذونات الصحيحة لإرسال الرسائل الخاصة إلى المستلم"
         close_topic:
           fields:
             topic:
@@ -410,6 +435,11 @@ ar:
           name:
             label: المشغِّل
         automation:
+          runs_today: "%{count} اليوم"
+          runs_this_week: "%{count} هذا الاسبوع"
+          runs_this_month: "%{count} هذا الشهر"
+          runs:
+            label: عدد مرات التشغيل
           name:
             label: الاسم
           trigger:
@@ -421,12 +451,15 @@ ar:
           status:
             label: الحالة
           enabled:
-            label: مفعَّلة
+            label: "تفعيل الأتمتة"
           disabled:
             label: متوقفة
           placeholders:
             label: العناصر النائبة
           last_updated_at:
             label: آخر تحديث
+          last_run:
+            label: آخر تشغيل
           last_updated_by:
             label: تم التحديث بواسطة
+          enable_toggle_disabled: "يمكنك تفعيل هذه الأتمتة بمجرد إكمال جميع الحقول المطلوبة."

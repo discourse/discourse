@@ -106,7 +106,12 @@ export default class AdminConfigAreasComponents extends Component {
       },
       duration: "short",
     });
-    this.load();
+
+    this.router.transitionTo(
+      "adminCustomizeThemes.show.index",
+      "components",
+      component.id
+    );
   }
 
   @action
@@ -227,33 +232,35 @@ export default class AdminConfigAreasComponents extends Component {
           @onResetFilters={{this.onResetFilters}}
           @loading={{this.loading}}
         >
-          <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
-            <table class="d-table component-list">
-              <thead class="d-table__header">
-                <tr class="d-table__row">
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.name"
-                    }}</th>
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.used_on"
-                    }}</th>
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.enabled"
-                    }}</th>
-                  <th class="d-table__header-cell"></th>
-                </tr>
-              </thead>
-              <tbody class="d-table__body">
-                {{#each this.components as |comp|}}
-                  <ComponentRow
-                    @component={{comp}}
-                    @deleteComponent={{this.deleteComponentById}}
-                  />
-                {{/each}}
-              </tbody>
-            </table>
-            <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-          </LoadMore>
+          <:content>
+            <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+              <table class="d-table component-list">
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.name"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.used_on"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.enabled"
+                      }}</th>
+                    <th class="d-table__header-cell"></th>
+                  </tr>
+                </thead>
+                <tbody class="d-table__body">
+                  {{#each this.components as |comp|}}
+                    <ComponentRow
+                      @component={{comp}}
+                      @deleteComponent={{this.deleteComponentById}}
+                    />
+                  {{/each}}
+                </tbody>
+              </table>
+              <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+            </LoadMore>
+          </:content>
         </AdminFilterControls>
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>

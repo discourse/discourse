@@ -8,6 +8,19 @@ cs:
   admin_js:
     discourse_templates:
       title: "Šablony"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "Discourse Šablony"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Šablony (v textovém poli)"
+        insert_template: "%{shortcut} Vložit šablonu"
     templates:
-      source: "Zdrojový kód"
+      filter_hint: "Filtrovat podle názvu..."
+      insert_template: "Vložit šablonu"
+      close_templates: "Zavřít výběr šablon"
+      copy: "Kopírovat šablonu"
+      new_topic: "Nové téma ze šablony"
+      source: "Zdroj"

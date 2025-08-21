@@ -9,7 +9,9 @@ es:
     user_notes:
       title: "Notas de usuario"
       attach: "Añadir nota de usuario"
+      attach_note_description: "Añade una nota sobre este usuario. Esta nota solo será visible para el personal."
       remove: "Eliminar nota de usuario"
       show: "Notas de usuario (%{count})"
       delete_confirm: "¿Seguro que quieres eliminar este nota del usuario?"
       show_post: "Mostrar publicación"
+      copy_reviewable_note: "¿Copiar nota en el perfil de usuario?"

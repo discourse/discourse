@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class UserBadge < ActiveRecord::Base
-  self.ignored_columns = [
-    :old_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   belongs_to :badge
   belongs_to :user
   belongs_to :granted_by, class_name: "User"

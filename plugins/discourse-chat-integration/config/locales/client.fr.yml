@@ -131,7 +131,6 @@ fr:
               help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Matrix."
             room_id:
               title: "ID du salon"
-              help: "L'« identifiant privé » du salon. Il devrait ressembler à !abcdefg:matrix.org"
           errors:
             unknown_token: "Le jeton d'accès est invalide"
             unknown_room: "L'ID du salon est invalide"

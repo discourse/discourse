@@ -24,11 +24,12 @@ module DiscourseAi
 
           Format your response as a JSON object with a single key named "summary", which has the summary as the value.
           Your output should be in the following format:
-            <output>
-              {"summary": "xx"}
-            </output>
+
+          {"summary": "xx"}
+
 
           Where "xx" is replaced by the summary.
+          reply with valid JSON only
         PROMPT
       end
 

@@ -4,7 +4,6 @@ import DModal from "discourse/components/d-modal";
 import AdminSearch from "admin/components/admin-search";
 
 export default class AdminSearchModal extends Component {
-  @service currentUser;
   @service router;
 
   constructor() {

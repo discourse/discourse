@@ -29,6 +29,7 @@ it:
         auto_resolution: "<h2>Risoluzione automatica dell'entità</h2> <p>Quando la query restituisce l'ID di un'entità, Data Explorer può sostituirla automaticamente con il nome dell'entità e altre informazioni utili nei risultati delle query. La risoluzione automatica è disponibile per i dati <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> e <i><b>badge_id</b></i>. Fai una prova, eseguendo questa query:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Creazione di parametri personalizzati</h2> <p>Per creare parametri personalizzati per le query, inserisci questo codice nella parte superiore della query e segui il formato:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Nota: la prima riga con [params] è obbligatoria, come i due trattini che precedono e tutti i parametri personalizzati che intendi dichiarare.</i></p>"
         default_values: "<h3>Valori predefiniti</h3> <p>È possibile dichiarare parametri con o senza valori predefiniti. I valori predefiniti verranno visualizzati in un campo di testo sotto l'editor di query, che può essere modificato in base alle esigenze. I parametri dichiarati senza valori predefiniti genereranno comunque un campo di testo, ma saranno vuoti ed evidenziati in rosso.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Tipi di dati</h3> <p>Di seguito sono riportati i tipi di dati comuni che puoi utilizzare:</p> <ul> <li><b>integer</b> - intero a quattro byte con segno</li> <li><b>text</b> - stringa di caratteri di lunghezza variabile</li> <li><b>boolean</b> – valore vero/falso</li> <li><b>data</b> - data di calendario (anno, mese, giorno)</li> </ul> <p>Per ulteriori informazioni sui tipi di dati, visita <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>questo sito web</a>.</p>"
       schema:
         title: "Schema del Database "
         filter: "Ricerca..."
@@ -101,6 +102,8 @@ it:
               label: Salta l'invio di MP se non ci sono risultati
             attach_csv:
               label: Allega il file CSV al MP
+            users_from_group:
+              label: Invia un messaggio privato individuale a ciascun membro del gruppo
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

@@ -9,9 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import ColorPaletteEditor, {
-  LIGHT,
-} from "admin/components/color-palette-editor";
+import ColorPaletteEditor from "admin/components/color-palette-editor";
 
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
@@ -19,7 +17,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   @service dialog;
 
   @tracked editingName = false;
-  @tracked editorMode = LIGHT;
   @tracked saving = false;
   @tracked hasChangedName = false;
   @tracked hasChangedUserSelectable = false;
@@ -56,14 +53,8 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  onLightColorChange(color, value) {
+  onColorChange(color, value) {
     color.hex = value;
-    this.hasChangedColors = true;
-  }
-
-  @action
-  onDarkColorChange(color, value) {
-    color.dark_hex = value;
     this.hasChangedColors = true;
   }
 
@@ -119,11 +110,6 @@ export default class AdminConfigAreasColorPalette extends Component {
     } finally {
       this.saveNameOnly = false;
     }
-  }
-
-  @action
-  onEditorTabSwitch(newMode) {
-    this.editorMode = newMode;
   }
 
   @action
@@ -327,11 +313,8 @@ export default class AdminConfigAreasColorPalette extends Component {
             >
               <field.Custom>
                 <ColorPaletteEditor
-                  @initialMode={{this.editorMode}}
                   @colors={{transientData.colors}}
-                  @onLightColorChange={{this.onLightColorChange}}
-                  @onDarkColorChange={{this.onDarkColorChange}}
-                  @onTabSwitch={{this.onEditorTabSwitch}}
+                  @onColorChange={{this.onColorChange}}
                 />
               </field.Custom>
             </form.Field>

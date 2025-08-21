@@ -56,18 +56,19 @@ end
 # Table name: discourse_calendar_post_event_dates
 #
 #  id                       :bigint           not null, primary key
-#  event_id                 :integer
-#  starts_at                :datetime
 #  ends_at                  :datetime
-#  reminder_counter         :integer          default(0)
-#  event_will_start_sent_at :datetime
 #  event_started_sent_at    :datetime
+#  event_will_start_sent_at :datetime
 #  finished_at              :datetime
+#  reminder_counter         :integer          default(0)
+#  starts_at                :datetime
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  event_id                 :integer
 #
 # Indexes
 #
-#  index_discourse_calendar_post_event_dates_on_event_id     (event_id)
-#  index_discourse_calendar_post_event_dates_on_finished_at  (finished_at)
+#  idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq  (event_id,starts_at) UNIQUE
+#  index_discourse_calendar_post_event_dates_on_event_id            (event_id)
+#  index_discourse_calendar_post_event_dates_on_finished_at         (finished_at)
 #

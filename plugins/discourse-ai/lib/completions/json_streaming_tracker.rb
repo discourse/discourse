@@ -52,13 +52,14 @@ module DiscourseAi
         return if @broken
 
         begin
+          pre_append_buffer = @parser.buf.dup
           @parser << raw_json
         rescue DiscourseAi::Completions::ParserError
           # Note: We're parsing JSON content that was itself embedded as a string inside another JSON object.
           # During the outer JSON.parse, any escaped control characters (like "\\n") are unescaped to real characters ("\n"),
           # which corrupts the inner JSON structure when passed to the parser here.
           # To handle this, we retry parsing with the string JSON-escaped again (`.dump[1..-2]`) if the first attempt fails.
-          try_escape_and_parse(raw_json)
+          try_escape_and_parse(raw_json, pre_append_buffer)
           return if @broken
         end
 
@@ -73,13 +74,20 @@ module DiscourseAi
 
       private
 
-      def try_escape_and_parse(raw_json)
+      def try_escape_and_parse(raw_json, pre_append_buffer)
         if !raw_json.is_a?(String)
           @broken = true
           return
         end
         # Escape the string as JSON and remove surrounding quotes
         escaped_json = raw_json.dump[1..-2]
+
+        # Assume we could have already processed some of the chunk which was stored in the parser's buffer.
+        already_processed_chunk = @parser.buf
+        last_seen_char_idx = already_processed_chunk.length - pre_append_buffer.length
+
+        escaped_json = escaped_json[last_seen_char_idx..]
+
         @parser << escaped_json
       rescue DiscourseAi::Completions::ParserError
         @broken = true

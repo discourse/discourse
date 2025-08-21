@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ru:
+  theme_metadata:
+    description: "Простая и красивая тема, которая сразу же улучшает работу сайтов Discourse."

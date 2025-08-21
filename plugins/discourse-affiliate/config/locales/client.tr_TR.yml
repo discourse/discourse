@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Discourse İş Ortağı"

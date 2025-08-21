@@ -449,7 +449,7 @@ he:
           status:
             label: מצב
           enabled:
-            label: פעיל
+            label: "הפעלת אוטומציה"
           disabled:
             label: כבוי
           placeholders:

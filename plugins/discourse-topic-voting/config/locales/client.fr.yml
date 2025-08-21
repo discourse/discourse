@@ -21,6 +21,9 @@ fr:
       voted_title: "Voté"
       voting_closed_title: "Fermé"
       voting_limit: "Limite"
+      votes_left:
+        one: "Il vous reste %{count} vote, consultez <a href='%{path}'>vos votes</a>."
+        other: "Il vous reste %{count} votes, consultez <a href='%{path}'>vos votes</a>."
       votes_left_button_title:
         one: "Il vous reste %{count} vote."
         other: "Il vous reste %{count} votes."
@@ -28,7 +31,7 @@ fr:
         one: "%{count} vote"
         other: "%{count} votes"
       anonymous_button:
-        one: "Voter"
+        one: "Vote"
         other: "Votes"
       remove_vote: "Supprimer le vote"
       no_votes_title_self: "Vous n'avez encore voté pour aucun sujet"

@@ -16,8 +16,6 @@ import SectionLinkButton from "../section-link-button";
 export default class SidebarCustomSection extends Component {
   @service currentUser;
   @service navigationMenu;
-  @service site;
-  @service siteSettings;
 
   @tracked section = this.initialSection;
 

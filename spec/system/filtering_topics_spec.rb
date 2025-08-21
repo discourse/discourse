@@ -92,14 +92,14 @@ describe "Filtering topics", type: :system do
       expect(topic_list).to have_topic(topic_with_tag2)
       expect(topic_list).to have_topic(topic_with_tag_and_tag2)
 
-      topic_query_filter.fill_in("tags:tag1")
+      topic_query_filter.fill_in("tag:tag1")
 
       expect(topic_list).to have_topics(count: 2)
       expect(topic_list).to have_topic(topic_with_tag)
       expect(topic_list).to have_topic(topic_with_tag_and_tag2)
       expect(topic_list).to have_no_topic(topic_with_tag2)
 
-      topic_query_filter.fill_in("tags:tag1+tag2")
+      topic_query_filter.fill_in("tag:tag1+tag2")
 
       expect(topic_list).to have_topics(count: 1)
       expect(topic_list).to have_no_topic(topic_with_tag)

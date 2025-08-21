@@ -1,12 +1,11 @@
 {
   "name": "Horizon",
   "authors": "Design Team",
-  "about_url": "https://meta.discourse.org/t/horizon-theme/360486",
-  "license_url": "https://github.com/discourse/horizon/blob/main/LICENSE",
-  "learn_more": "https://meta.discourse.org/t/installing-a-theme-or-theme-component/63682",
-  "theme_version": "0.0.1",
+  "theme_version": "1.0.0",
   "modifiers": {
-    "svg_icons": ["fire"],
+    "svg_icons": [
+      "fire"
+    ],
     "serialize_topic_is_hot": true
   },
   "color_schemes": {
@@ -131,7 +130,10 @@
       "hover": "584B3E"
     }
   },
-  "screenshots": ["screenshots/light.png", "screenshots/dark.png"],
+  "screenshots": [
+    "screenshots/light.png",
+    "screenshots/dark.png"
+  ],
   "theme_site_settings": {
     "enable_welcome_banner": true,
     "search_experience": "search_field"

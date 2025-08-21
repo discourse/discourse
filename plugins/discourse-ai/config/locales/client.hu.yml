@@ -60,6 +60,8 @@ hu:
         select_option: "Válasszon egy lehetőséget…"
       layout:
         table: "Táblázat"
+      translations:
+        title: "Fordítások"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"

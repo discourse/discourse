@@ -28,27 +28,16 @@ export function listColorSchemes(site, options = {}) {
     }
   });
 
-  if (options.darkOnly) {
-    const defaultDarkColorScheme = site.get("default_dark_color_scheme");
-    if (defaultDarkColorScheme) {
-      const existing = schemes.findBy("id", defaultDarkColorScheme.id);
-      if (!existing) {
-        results.unshift({
-          id: defaultDarkColorScheme.id,
-          name: `${defaultDarkColorScheme.name} ${i18n(
-            "user.color_schemes.default_dark_scheme"
-          )}`,
-          theme_id: defaultDarkColorScheme.theme_id,
-          colors: defaultDarkColorScheme.colors,
-        });
-      }
-    }
+  const defaultLightColorScheme = site.get("default_light_color_scheme");
+  const defaultDarkColorScheme = site.get("default_dark_color_scheme");
 
-    results.unshift({
-      id: -1,
-      name: i18n("user.color_schemes.disable_dark_scheme"),
-    });
-  }
+  results.unshift({
+    id: -1,
+    name: `${i18n("user.color_schemes.default_description")}`,
+    colors: options.darkOnly
+      ? defaultDarkColorScheme?.colors || []
+      : defaultLightColorScheme?.colors || [],
+  });
 
   return results.length === 0 ? null : results;
 }

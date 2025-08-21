@@ -45,13 +45,17 @@ export default class CustomReaction extends RestModel {
       return reactions.map((reaction) => {
         reaction.user = User.create(reaction.user);
         reaction.topic = Topic.create(reaction.post.topic);
-        reaction.post_user = User.create(reaction.post.user);
         reaction.category = Category.findById(reaction.post.category_id);
 
         const postAttrs = { ...reaction.post };
-        delete postAttrs.url; // Auto-calculated by Model implementation
+
+        // Delete fields auto-calculated by the model implementation
+        delete postAttrs.url;
+        delete postAttrs.user;
 
         reaction.post = Post.create(postAttrs);
+        reaction.post_user = reaction.post.user;
+
         return EmberObject.create(reaction);
       });
     });

@@ -54,6 +54,8 @@ pt:
           name: "Spam"
       modals:
         select_option: "Selecione uma opção..."
+      translations:
+        title: "Traduções"
       spam:
         short_title: "Spam"
         last_seven_days: "Últimos 7 Dias"

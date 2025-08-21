@@ -10,7 +10,6 @@ import concatClass from "discourse/helpers/concat-class";
 export default class AdminPostMenu extends Component {
   @service currentUser;
   @service siteSettings;
-  @service store;
   @service adminPostMenuButtons;
 
   get reviewUrl() {

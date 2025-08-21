@@ -56,6 +56,16 @@ RSpec.describe "Users", type: :request do
         post "/u.json", params: user_params
         expect(JSON.parse(response.body)["success"]).to be(true)
       end
+
+      context "when site is login-required" do
+        before { SiteSetting.login_required = true }
+
+        it "succeeds in registration" do
+          post "/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(true)
+        end
+      end
     end
 
     context "when h_captcha is disabled" do

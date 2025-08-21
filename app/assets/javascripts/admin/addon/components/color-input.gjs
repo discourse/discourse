@@ -59,6 +59,11 @@ export default class ColorInput extends Component {
     this.set("hexValue", event.target.value.replace("#", ""));
   }
 
+  @action
+  handleBlur() {
+    this.onBlur?.(this.normalize(this.hexValue));
+  }
+
   @observes("hexValue", "brightnessValue", "valid")
   hexValueChanged() {
     const hex = this.hexValue;
@@ -83,6 +88,7 @@ export default class ColorInput extends Component {
       @input={{this.onHexInput}}
       class="hex-input"
       aria-labelledby={{this.ariaLabelledby}}
+      {{on "blur" this.handleBlur}}
     />
     <input
       class="picker"

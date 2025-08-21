@@ -5,6 +5,7 @@ require_relative "post_item_excerpt"
 class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
   include TopicTagsMixin
   include PostItemExcerpt
+  include LocalizedFancyTopicTitleMixin
 
   attributes :topic_id,
              :linked_post_number,
@@ -24,10 +25,6 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
 
   def title
     topic.title
-  end
-
-  def fancy_title
-    topic.fancy_title
   end
 
   def category_id

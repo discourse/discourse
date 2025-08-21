@@ -8,7 +8,7 @@
       <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
         <% @breadcrumbs.each_with_index do |c, i| %>
           <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a href="<%= @topic_view.topic.category.url %>" class="badge-wrapper bullet" itemprop="item">
+            <a href="<%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
               <span class='badge-category-bg' style='background-color: #<%= c[:color] %>'></span>
               <span class='badge-category clear-badge'>
                 <span class='category-name' itemprop='name'><%= c[:name] %></span>

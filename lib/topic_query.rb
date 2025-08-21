@@ -305,6 +305,7 @@ class TopicQuery
       TopicsFilter.new(
         guardian: @guardian,
         scope: latest_results(include_muted: false, skip_ordering: true),
+        loaded_topic_users_reference: @guardian.authenticated?,
       )
 
     results = topics_filter.filter_from_query_string(@options[:q])

@@ -10,13 +10,18 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
   @service siteSettings;
   @service languageNameLookup;
 
-  get availableLocales() {
-    return this.siteSettings.available_content_localization_locales.map(
-      ({ value }) => ({
-        name: this.languageNameLookup.getLanguageName(value),
-        value,
-      })
-    );
+  get selectableLocales() {
+    const supported =
+      this.siteSettings.available_content_localization_locales.map(
+        (obj) => obj.value
+      );
+    const committed = this.transientData.localizations.map((obj) => obj.locale);
+    const allLocales = [...supported, ...committed].uniq();
+
+    return allLocales.map((value) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+    }));
   }
 
   <template>
@@ -47,7 +52,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             as |field|
           >
             <field.Select as |select|>
-              {{#each this.availableLocales as |locale|}}
+              {{#each this.selectableLocales as |locale|}}
                 <select.Option
                   @value={{locale.value}}
                 >{{locale.name}}</select.Option>

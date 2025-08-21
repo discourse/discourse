@@ -394,7 +394,6 @@ export default class SpreadsheetEditor extends Component {
             {{/if}}
             <DTooltip
               @icon="question"
-              @triggers="click"
               @arrow={{false}}
               class="btn btn-icon no-text"
             >

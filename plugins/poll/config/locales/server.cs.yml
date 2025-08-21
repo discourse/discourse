@@ -45,6 +45,8 @@ cs:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Po prvních %{minutes} minutách již nelze hlasování změnit."
       cannot_edit_named_poll_with_votes: "Hlasování s názvem <strong>${name}</strong> nelze změnit po prvních %{minutes} minutách."
+    dynamic_poll:
+      enabled_hint: "Toto hlasování je dynamické. Po odeslání hlasu lze stále upravovat možnosti."
     no_poll_with_this_name: "Tento příspěvek nemá žádné hlasování se jménem <strong>%{name}</strong>. "
     post_is_deleted: "Operaci na smazaném příspěvku nelze provést."
     user_cant_post_in_topic: "Nemůžete hlasovat, protože v tomto tématu nemůžete odesílat příspěvky."

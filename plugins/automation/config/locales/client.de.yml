@@ -173,7 +173,7 @@ de:
               description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags genau in die oben angegebenen Kategorien fällt
             restricted_archetype:
               label: Thementyp
-              description: Optional, nur bei Themen oder persönlichen Nachrichten auslösen lassen
+              description: Optional, erlaube das Auslösen nur bei Themen oder persönlichen Nachrichten
             restricted_groups:
               label: Eingeschränkte Gruppen
               description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in einer dieser Gruppen ist
@@ -407,7 +407,7 @@ de:
               label: PN
             sender:
               label: PN-Absender
-              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PNs an den Empfänger zu senden."
+              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PN an den Empfänger zu senden."
         close_topic:
           fields:
             topic:
@@ -435,7 +435,7 @@ de:
           runs_this_week: "%{count} diese Woche"
           runs_this_month: "%{count} diesen Monat"
           runs:
-            label: Läuft
+            label: Ausführungen
           name:
             label: Name
           trigger:
@@ -447,7 +447,7 @@ de:
           status:
             label: Status
           enabled:
-            label: Aktiviert
+            label: "Automatisierung aktivieren"
           disabled:
             label: Deaktiviert
           placeholders:
@@ -455,6 +455,7 @@ de:
           last_updated_at:
             label: Letzte Aktualisierung
           last_run:
-            label: Letzter Lauf
+            label: Letzte Ausführung
           last_updated_by:
             label: Aktualisiert von
+          enable_toggle_disabled: "Du kannst diese Automatisierung aktivieren, sobald alle erforderlichen Felder ausgefüllt sind."

@@ -7,7 +7,6 @@ import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channe
 export default class ChatDrawerRoutesChannel extends Component {
   @service chat;
   @service chatStateManager;
-  @service chatChannelsManager;
   @service chatHistory;
 
   get backBtnRoute() {

@@ -33,6 +33,11 @@ ja:
   discourse_assign:
     assigned_to: "@%{username} に割り当てられたトピック"
     unassigned: "トピックの割り当てが解除されました"
+    filter:
+      description:
+        assigned: "特定のユーザーまたはグループに割り当てられたトピックを絞り込みます"
+        nobody: "誰にも割り当てられていないトピックに絞り込みます"
+        anyone: "誰かに割り当てられているトピックに絞り込みます"
     already_claimed: "そのトピックはすでに引き受けられています。"
     already_assigned: "トピックはすでに @%{username} に割り当てられています"
     too_many_assigns: "@%{username} はすでに割り当てられるトピックの最大数（%{max}）に達しています。"
@@ -52,7 +57,7 @@ ja:
       never: "送信しない"
       daily: "毎日"
       weekly: "毎週"
-      monthly: "月間"
+      monthly: "毎月"
       quarterly: "3 か月ごとに"
   assign_mailer:
     title: "割り当てメール"
@@ -68,19 +73,19 @@ ja:
   pending_assigns_reminder:
     title: "保留中の割り当てが %{pending_assignments} 件あります"
     body: |
-      [保留中の割り当てが %{pending_assignments} 件]あります（%{assignments_link}）。
+      [保留中の割り当てが %{pending_assignments} 件](%{assignments_link})あります。
 
       %{newest_assignments}
       %{oldest_assignments}
 
       これは、割り当てられたトピックが 2 件以上ある場合に、%{frequency}送信されるリマインダーです。
     newest: |
-      ### 最新
+      ### 新しい順
       %{topic_0}
       %{topic_1}
       %{topic_2}
     oldest: |
-      ### 最古
+      ### 古い順
       %{topic_0}
       %{topic_1}
       %{topic_2}

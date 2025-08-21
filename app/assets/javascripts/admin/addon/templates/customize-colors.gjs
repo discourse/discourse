@@ -45,35 +45,30 @@ export default RouteTemplate(
       </:actions>
     </DPageSubheader>
 
-    {{#if @controller.changedThemePreferences}}
-      <div class="alert alert-info">
-        {{htmlSafe
-          (i18n
-            "admin.customize.colors.preference_warning"
-            link=(getUrl "/my/preferences/interface")
-          )
-        }}
-      </div>
-    {{/if}}
-
-    {{#unless @controller.changedThemePreferences}}
-      {{! only show one alert at a time, changedThemePreferences takes precedence }}
-      {{#if @controller.isUsingDarkMode}}
-        <div class="alert alert-info">
+    {{#if @controller.preferencesWarningMessage}}
+      <p class="color-palette__warning">
+        {{#if @controller.preferencesWarningMessage.usingNonDefaultTheme}}
           {{htmlSafe
             (i18n
-              "admin.customize.colors.dark_mode_warning"
-              link=(getUrl
-                "/admin/site_settings/category/all_results?filter=default dark mode"
-              )
+              "admin.customize.colors.non_default_theme_warning"
+              themeName=@controller.preferencesWarningMessage.themeName
+              link=(getUrl "/my/preferences/interface")
             )
           }}
-        </div>
-      {{/if}}
-    {{/unless}}
+        {{else}}
+          {{htmlSafe
+            (i18n
+              "admin.customize.colors.custom_schemes_warning"
+              colorModes=@controller.preferencesWarningMessage.colorModes
+              link=(getUrl "/my/preferences/interface")
+            )
+          }}
+        {{/if}}
+      </p>
+    {{/if}}
 
     <AdminFilterControls
-      @array={{@controller.sortedColorSchemes}}
+      @array={{@controller.displayedPalettes}}
       @minItemsForFilter={{FILTER_MINIMUM}}
       @searchableProps={{@controller.searchableProps}}
       @dropdownOptions={{@controller.dropdownOptions}}
@@ -81,20 +76,22 @@ export default RouteTemplate(
         "admin.customize.colors.filters.search_placeholder"
       }}
       @noResultsMessage={{i18n "admin.customize.colors.filters.no_results"}}
-      as |schemes|
     >
-      <ul class="color-palette__list">
-        {{#each schemes as |scheme|}}
-          <ColorPaletteListItem
-            @scheme={{scheme}}
-            @defaultTheme={{@controller.defaultTheme}}
-            @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
-            @toggleUserSelectable={{@controller.toggleUserSelectable}}
-            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
-            @deleteColorScheme={{@controller.deleteColorScheme}}
-          />
-        {{/each}}
-      </ul>
+      <:content as |schemes|>
+        <ul class="color-palette__list">
+          {{#each schemes as |scheme|}}
+            <ColorPaletteListItem
+              @scheme={{scheme}}
+              @defaultTheme={{@controller.defaultTheme}}
+              @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
+              @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
+              @toggleUserSelectable={{@controller.toggleUserSelectable}}
+              @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+              @deleteColorScheme={{@controller.deleteColorScheme}}
+            />
+          {{/each}}
+        </ul>
+      </:content>
     </AdminFilterControls>
   </template>
 );

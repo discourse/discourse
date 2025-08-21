@@ -1,35 +1,34 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
-import cookie from "discourse/lib/cookie";
+import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class extends DiscourseRoute {
-  @service router;
-  @service modal;
-  @service dialog;
   @service currentUser;
+  @service dialog;
+  @service modal;
+  @service router;
 
   async beforeModel(transition) {
-    if (this.currentUser) {
-      if (transition.from) {
-        // when navigating from another ember route
-        transition.abort();
-        this.#openInviteModalIfAllowed();
-      } else {
-        // when landing on this route from a full page load
-        this.router
-          .replaceWith("discovery.latest")
-          .followRedirects()
-          .then(() => {
-            this.#openInviteModalIfAllowed();
-          });
-      }
-    } else {
-      cookie("destination_url", window.location.href);
-      this.router.replaceWith("login");
+    if (!this.currentUser) {
+      transition.send("showLogin");
+      return;
     }
+
+    // when navigating from another ember route
+    if (transition.from) {
+      transition.abort();
+      this.#openInviteModalIfAllowed();
+      return;
+    }
+
+    // when landing on the route from a full page load
+    this.router
+      .replaceWith(`discovery.${defaultHomepage()}`)
+      .followRedirects()
+      .then(() => this.#openInviteModalIfAllowed());
   }
 
   #openInviteModalIfAllowed() {

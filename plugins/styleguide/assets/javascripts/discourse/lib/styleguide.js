@@ -33,9 +33,9 @@ import topicList from "../components/sections/organisms/04-topic-list";
 import basicTopicList from "../components/sections/organisms/basic-topic-list";
 import categoriesList from "../components/sections/organisms/categories-list";
 import modal from "../components/sections/organisms/modal";
+import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
-import suggestedTopics from "../components/sections/organisms/suggested-topics";
 import userAbout from "../components/sections/organisms/user-about";
 import bem from "../components/sections/syntax/00-bem";
 
@@ -106,7 +106,7 @@ const SECTIONS = [
   { component: modal, category: "organisms", id: "modal" },
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
-  { component: suggestedTopics, category: "organisms", id: "suggested-topics" },
+  { component: moreTopics, category: "organisms", id: "more-topics" },
   { component: userAbout, category: "organisms", id: "user-about" },
 ];
 

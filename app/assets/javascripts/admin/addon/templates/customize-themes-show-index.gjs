@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, not, or } from "truth-helpers";
@@ -17,7 +18,7 @@ import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
 import ThemeTranslation from "admin/components/theme-translation";
-import ColorPalettes from "select-kit/components/color-palettes";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
@@ -120,7 +121,7 @@ export default RouteTemplate(
     {{#unless @controller.model.component}}
       {{#unless @controller.siteSettings.use_overhauled_theme_color_palette}}
         <section
-          class="form-horizontal theme settings control-unit theme-settings__color-scheme"
+          class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
         >
           <div class="row setting">
             <div class="setting-label">
@@ -129,37 +130,97 @@ export default RouteTemplate(
 
             <div class="setting-value">
               <div class="color-palette-input-group">
-                <ColorPalettes
+                <ColorPalettePicker
                   @content={{@controller.colorSchemes}}
                   @value={{@controller.colorSchemeId}}
                   @icon="paintbrush"
-                  @options={{hash filterable=true}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
                 />
-                {{#if @controller.colorSchemeId}}
-                  <DButton
-                    @icon="pencil"
-                    @action={{@controller.editColorScheme}}
-                    @title="admin.customize.theme.edit_color_scheme"
-                  />
-                {{/if}}
               </div>
 
               <div class="desc">{{i18n
                   "admin.customize.theme.color_scheme_select"
-                }}</div>
+                }}
+
+                {{#if @controller.colorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.colorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
             </div>
 
             <div class="setting-controls">
-              {{#if @controller.colorSchemeChanged}}
+              {{#if @controller.lightColorSchemeChanged}}
                 <DButton
-                  @action={{@controller.changeScheme}}
+                  @action={{@controller.changeLightScheme}}
                   @icon="check"
-                  class="ok submit-edit"
+                  class="ok submit-light-edit"
                 />
                 <DButton
-                  @action={{@controller.cancelChangeScheme}}
+                  @action={{@controller.cancelChangeLightScheme}}
                   @icon="xmark"
-                  class="cancel cancel-edit"
+                  class="cancel cancel-light-edit"
+                />
+              {{/if}}
+            </div>
+          </div>
+        </section>
+        <section
+          class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
+        >
+          <div class="row setting">
+            <div class="setting-label">
+              {{i18n "admin.customize.theme.dark_color_scheme"}}
+            </div>
+
+            <div class="setting-value">
+              <div class="color-palette-input-group">
+                <ColorPalettePicker
+                  @content={{@controller.colorSchemes}}
+                  @value={{@controller.darkColorSchemeId}}
+                  @icon="paintbrush"
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
+                />
+              </div>
+
+              <div class="desc">
+                {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+
+                {{#if @controller.darkColorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.darkColorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
+            </div>
+            <div class="setting-controls">
+              {{#if @controller.darkColorSchemeChanged}}
+                <DButton
+                  @action={{@controller.changeDarkScheme}}
+                  @icon="check"
+                  class="ok submit-dark-edit"
+                />
+                <DButton
+                  @action={{@controller.cancelChangeDarkScheme}}
+                  @icon="xmark"
+                  class="cancel cancel-dark-edit"
                 />
               {{/if}}
             </div>
@@ -299,7 +360,7 @@ export default RouteTemplate(
               (i18n
                 "admin.customize.theme.overriden_site_settings_explanation"
                 themeSiteSettingsConfigUrl=(getURL
-                  "/admin/config/theme-site-settings"
+                  "/admin/config/customize/theme-site-settings"
                 )
               )
             }}</i></p>
@@ -396,7 +457,7 @@ export default RouteTemplate(
         <DButton
           @action={{@controller.switchType}}
           @label="admin.customize.theme.convert"
-          @icon={{@controller.convertIcon}}
+          @icon="rotate"
           @title={{@controller.convertTooltip}}
           class="btn-default btn-normal"
         />

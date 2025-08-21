@@ -25,7 +25,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -99,4 +99,4 @@ jobs:
 
       - name: Glint
         if: ${{ !cancelled() }}
-        run: pnpm glint -p jsconfig.json --noEmit
+        run: pnpm lint:glint

@@ -57,6 +57,7 @@ module DiscoursePostEvent
           recurrence_until: object.recurrence_until,
         )
         .map { |date| { starts_at: date, ends_at: date + difference.seconds } }
+        .take(31)
     end
   end
 end

@@ -13,10 +13,14 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;
   @service store;
 
-  queryParams = ["filters"];
+  queryParams = ["filters", "startDate", "endDate"];
   model = null;
   filters = null;
   userHistoryActions = null;
+  /** @type {moment.Moment | null} */
+  startDate = null;
+  /** @type {moment.Moment | null} */
+  endDate = null;
 
   @discourseComputed("filters.action_name")
   actionFilter(name) {
@@ -29,25 +33,31 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   }
 
   _refresh() {
-    this.store.findAll("staff-action-log", this.filters).then((result) => {
-      this.set("model", result);
+    this.store
+      .findAll("staff-action-log", {
+        ...this.filters,
+        start_date: this.startDate?.toISOString(),
+        end_date: this.endDate?.toISOString(),
+      })
+      .then((result) => {
+        this.set("model", result);
 
-      if (!this.userHistoryActions) {
-        this.set(
-          "userHistoryActions",
-          result.extras.user_history_actions
-            .map((historyAction) => ({
-              id: historyAction.id,
-              action_id: historyAction.action_id,
-              name: i18n(
-                "admin.logs.staff_actions.actions." + historyAction.id
-              ),
-              name_raw: historyAction.id,
-            }))
-            .sort((a, b) => a.name.localeCompare(b.name))
-        );
-      }
-    });
+        if (!this.userHistoryActions) {
+          this.set(
+            "userHistoryActions",
+            result.extras.user_history_actions
+              .map((historyAction) => ({
+                id: historyAction.id,
+                action_id: historyAction.action_id,
+                name: i18n(
+                  "admin.logs.staff_actions.actions." + historyAction.id
+                ),
+                name_raw: historyAction.id,
+              }))
+              .sort((a, b) => a.name.localeCompare(b.name))
+          );
+        }
+      });
   }
 
   scheduleRefresh() {
@@ -145,7 +155,11 @@ export default class AdminLogsStaffActionLogsController extends Controller {
 
   @action
   exportStaffActionLogs() {
-    exportEntity("staff_action").then(outputExportResult);
+    exportEntity("staff_action", {
+      ...this.filters,
+      start_date: this.startDate?.toISOString(),
+      end_date: this.endDate?.toISOString(),
+    }).then(outputExportResult);
   }
 
   @action
@@ -167,5 +181,17 @@ export default class AdminLogsStaffActionLogsController extends Controller {
     this.modal.show(AdminStaffActionLogComponent, {
       model: { staffActionLog: model },
     });
+  }
+
+  /**
+   * @arg {moment.Moment} from
+   * @arg {moment.Moment} to
+   */
+  @action
+  onChangeDateRange({ from, to }) {
+    this.set("startDate", from);
+    this.set("endDate", to);
+    this.set("model", EmberObject.create({ loadingMore: true }));
+    this.scheduleRefresh();
   }
 }

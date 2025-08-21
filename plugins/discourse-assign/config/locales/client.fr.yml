@@ -93,10 +93,10 @@ fr:
       reminders_frequency:
         description: "Fréquence à laquelle recevoir des rappels de sujets attribués"
         never: "Jamais"
-        daily: "Quotidien"
-        weekly: "Hebdomadaire"
-        monthly: "Mensuel"
-        quarterly: "Trimestriel"
+        daily: "Chaque jour"
+        weekly: "Chaque semaine"
+        monthly: "Chaque mois"
+        quarterly: "Chaque trimestre"
       admin:
         groups:
           manage:

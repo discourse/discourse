@@ -339,8 +339,14 @@ after_initialize do
     Chat::AutoJoinChannels.call(params: { user_id: user.id }) if user.active?
   end
 
-  on(:user_added_to_group) do |user, _group|
-    Chat::AutoJoinChannels.call(params: { user_id: user.id })
+  on(:user_added_to_group) do |user, group|
+    Chat::AutoJoinChannels.call(params: { user_id: user.id }) do |result|
+      on_exceptions do |exception|
+        Rails.logger.warn(
+          "[chat] Error auto-joining user #{user.id} to channels after being added to group #{group.id}: #{exception.message}\n\n#{result.inspect_steps}",
+        )
+      end
+    end
   end
 
   on(:user_removed_from_group) do |user, _group|

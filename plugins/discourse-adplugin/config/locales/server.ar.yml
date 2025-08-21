@@ -15,6 +15,7 @@ ar:
     house_ads_after_nth_topic: 'إظهار إعلان بعد كل N من الموضوعات في حال تحديد الإعلانات الداخلية "بين الموضوعات"، حيث N هي القيمة.'
     house_ads_after_nth_post: 'عرض إعلان بعد كل N من المنشورات، حيث تكون N هي القيمة، إذا تم تحديد إعلانات داخلية "بين المنشورات"'
     house_ads_frequency: "النسبة المئوية لمعدل عرض الإعلانات الداخلية إذا تم إعداد شبكات إعلانية أخرى للظهور في مساحة إعلانية"
+    ads_txt: "محتوى ملف ads.txt الخاص بك. يمكنك العثور على مزيد من التفاصيل في <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>صفحة المساعدة من Google AdSense</a>."
     dfp_publisher_id: "أدخل رمز شبكة مدير إعلانات Google (DFP سابقًا)، والذي يمكنك العثور عليه في إعدادات شبكتك. ملاحظة: ستحتاج إلى تحديث الإعداد \"content security policy script src\". راجع <a href='https://meta.discourse.org/t/33734' target='_blank'>هذا الموضوع</a> للحصول على أحدث التعليمات."
     dfp_publisher_id_mobile: "(اختياري) إذا كنت ترغب في استخدام رقم تعريفي مختلف للناشر في \"مدير الإعلانات\" لإصدار الجوَّال من الموقع، فأدخل ه هنا. اتركه فارغًا لاستخدام dfp_publisher_id على الجوَّال."
     dfp_through_trust_level: "عرض إعلاناتك للمستخدمين حسب مستويات الثقة. لن يرى الإعلانات المستخدمون ذوو مستوى الثقة الأعلى من هذه القيمة."
@@ -44,6 +45,7 @@ ar:
     dfp_mobile_post_bottom_ad_sizes: "اختر حجم الإعلان للوحدة الإعلانية المعروضة بين المنشورات في طريقة عرض الجوَّال."
     dfp_target_post_bottom_key_code: "أدخل مفاتيح الاستهداف المخصصة - على مستوى المستودع الإعلاني"
     dfp_target_post_bottom_value_code: "أدخل قيم الاستهداف المخصصة - على مستوى المستودع الإعلاني"
+    adsense_publisher_code: "معرف الناشر الخاص بك. أدخل الرقم فقط بدون \"pub-\". ملاحظة: ستحتاج إلى تحديث إعداد content security policy script src. راجع <a href='https://meta.discourse.org/t/33734' target='_blank'>هذا الموضوع</a> للحصول على أحدث التعليمات."
     adsense_through_trust_level: "عرض إعلاناتك للمستخدمين حسب مستويات الثقة. لن يرى الإعلانات المستخدمون ذوو مستوى الثقة الأعلى من هذه القيمة."
     adsense_exclude_groups: "لن يتم عرض الإعلانات لأعضاء هذه المجموعات"
     adsense_topic_list_top_code: "أدخل رمز الوحدة الإعلانية للعرض أعلى قائمة الموضوعات. هذا هو الرقم المحدَّد للوحدة الإعلانية، وليس رمز JavaScript."
@@ -96,6 +98,7 @@ ar:
     carbonads_exclude_groups: "لن يتم عرض الإعلانات لأعضاء هذه المجموعات"
     carbonads_topic_list_top_enabled: "عرض إعلان فوق قائمة الموضوعات"
     carbonads_above_post_stream_enabled: "عرض إعلان فوق تدفُّق المنشورات"
+    adbutler_publisher_id: "معرف الناشر في AdButler. ملاحظة: قد تحتاج إلى تحديث إعداد content security policy script src. راجع <a href='https://meta.discourse.org/t/33734' target='_blank'>هذا الموضوع</a> للحصول على أحدث الإرشادات."
     adbutler_mobile_topic_list_top_zone_id: "مُعرِّف المنطقة للمكان أعلى قائمة الموضوعات على الجوَّال"
     adbutler_mobile_topic_above_post_stream_zone_id: "مُعرِّف المنطقة في الموضوع فوق مكان تدفُّق المنشورات على الجوَّال"
     adbutler_mobile_post_bottom_zone_id: "مُعرِّف المنطقة للمكان أسفل المنشورات على الجوَّال"

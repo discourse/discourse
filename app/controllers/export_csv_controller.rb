@@ -67,7 +67,7 @@ class ExportCsvController < ApplicationController
     @_export_params ||=
       begin
         params.require(:entity)
-        params.permit(:entity, args: Report::FILTERS).to_h
+        params.permit(:entity, args: [*Report::FILTERS, *UserHistory.staff_filters]).to_h
       end
   end
 end

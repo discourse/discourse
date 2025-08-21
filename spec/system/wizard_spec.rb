@@ -11,6 +11,7 @@ describe "Wizard", type: :system do
     visit("/wizard")
     expect(wizard_page).to be_on_step("introduction")
     wizard_page.fill_field("text", "title", "My Test Site")
+    wizard_page.select_dropdown_option("default-locale", "en")
     wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("privacy")
     wizard_page.go_to_next_step

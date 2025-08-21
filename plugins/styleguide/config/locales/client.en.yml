@@ -85,8 +85,8 @@ en:
           title: "Topic Map"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Suggested Topics"
+        more_topics:
+          title: "More Topics"
         post_menu:
           title: "Post Menu"
         modal:
@@ -109,4 +109,3 @@ en:
         char_counter:
           title: "Character Counter"
           placeholder: "Enter your text here..."
-

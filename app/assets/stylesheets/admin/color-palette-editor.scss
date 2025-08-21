@@ -1,18 +1,4 @@
 .color-palette-editor {
-  &__nav-pills {
-    display: flex;
-    margin-bottom: 1em;
-
-    li {
-      flex: 1 1 auto;
-
-      a {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-  }
-
   &__colors-list {
     display: flex;
     flex-direction: column;

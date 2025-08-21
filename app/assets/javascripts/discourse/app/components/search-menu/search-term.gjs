@@ -21,7 +21,6 @@ export function resetOnKeyUpCallbacks() {
 
 export default class SearchTerm extends Component {
   @service search;
-  @service appEvents;
 
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;

@@ -61,6 +61,9 @@ tr_TR:
     chat_integration_webex_excerpt_length: "Webex Team gönderisi alıntı uzunluğu"
     chat_integration_google_enabled: "\"Google Chat\" sohbet entegrasyon sağlayıcısını etkinleştirin"
     chat_integration_google_excerpt_length: "Google Chat gönderisi alıntı uzunluğu"
+  dashboard:
+    problem:
+      channel_errors: "Bazı sohbet entegrasyon kanallarında hatalar var. Daha fazla bilgi edinmek için <a href='%{base_path}/admin/plugins/chat-integration'>sohbet entegrasyonu bölümünü</a> ziyaret edin."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -98,22 +101,22 @@ tr_TR:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
         help: |
-          *Yeni kural:* "/discourse [thread|watch|follow|mute] [category] [tag:name]"
+          *Yeni kural:* "/discourse [ileti dizisi|izle|takip et|sessize al] [kategori] [etiket:ad]"
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
-          - *thread* - yeni konular için bu kanalı bilgilendirin, mümkünse konu yanıtlarıyla
-          - *watch* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
-          - *follow* - yeni konular için bu kanalı bilgilendirin
-          - *mute* - bu kanala bildirimleri engelleyin
+          - *ileti dizisi* - yeni konular için bu kanalı bilgilendirin, mümkünse konu yanıtlarıyla
+          - *izle* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
+          - *takip et* - yeni konular için bu kanalı bilgilendirin
+          - *sessize al* - bu kanala bildirimleri engelleyin
 
-          *Remove rule:* "/discourse remove [rule number]"
+          *Kuralı kaldır:* "/discourse remove [kural numarası]"
           ("[kural sayısı]", "/discourse status" çalıştırılarak bulunabilir)
 
-          *List rules:* "/discourse status"
+          *Liste kuralları:* "/discourse status"
 
-          *[Experimental] Post transcript:* "/discourse post [n]"
+          *[Deneysel] Post transcript:* "/discourse post [n]"
           Discourse'ta bu kanalda son "n" gönderiyi içeren bir taslak konu oluşturun
 
-          *Help:* "/discourse help"
+          *Yardım:* "/discourse help"
         transcript:
           modal_title: "Transkript Oluştur"
           modal_description: "Başlıktaki tüm mesajlar tek bir forum gönderisinde toplanır. Göndermeden önce transkripti düzenleme fırsatı verilir."
@@ -163,11 +166,11 @@ tr_TR:
           tag: "<b>%{name}</b> etiketi bulunamadı."
           category: "<b>%{name}</b> kategorisi bulunamadı. Mevcut kategoriler: <b>%{list}</b>"
         help: |
-          <b>Yeni kural:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          <b>Yeni kural:</b> <code>/[izle|takip et|sessize al] [kategori] [etiket:ad]</code>
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
-          - <b>watch</b> - yeni konular ve yeni yanıtlar için bu kanalı bilgilendir
-          - <b>follow</b> - yeni konular için bu kanalı bilgilendir
-          - <b>mute</b> - bu kanala bildirimleri engelle
+          - <b>izle</b> - yeni konular ve yeni yanıtlar için bu kanalı bilgilendir
+          - <b>takip et</b> - yeni konular için bu kanalı bilgilendir
+          - <b>sessize al</b> - bu kanala bildirimleri engelle
 
           <b>Kural kaldırma:</b> <code>/remove [kural numarası]</code>
           (<code>[kural numarası]</code> <code>/status</code>çalıştırılarak bulunabilir)
@@ -197,14 +200,14 @@ tr_TR:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
         help: |
-          *Yeni kural:* "/discourse [watch|follow|mute] [category] [tag:name]"
+          *Yeni kural:* "/discourse [izle|takip et|sessize al] [kategori] [etiket:ad]"
           (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
           - *izle* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
           - *takip et* - yeni konular için bu kanalı bilgilendirin
           - *sessize al* - bu kanala gelen bildirimleri engelleyin
 
-          *Kuralı kaldırın:* "/discourse remove [rule number]"
-          ("[rule number]", "/discourse status" çalıştırılarak bulunabilir)
+          *Kuralı kaldırın:* "/discourse remove [kural numarası]"
+          ("[kural numarası]", "/discourse status" çalıştırılarak bulunabilir)
 
           *Kuralları listele:* "/discourse status"
 
@@ -212,13 +215,13 @@ tr_TR:
       matrix:
         text_message: "%{user} %{title} - %{post_url} adresinde gönderi yaptı"
         formatted_message: |
-          <b>%{user}</b> <b><a href='%{post_url}'>%{title}</a></b> adresinde gönderi yaptı
+          <b>%{user}</b> <b><a href='%{post_url}'>%{title}</a></b> adresinde gönderi paylaştı
           <blockquote>
           %{excerpt}
           </blockquote>
       zulip:
         message: |
-          **%{user}** **[%{title}](%{post_url})** adresinde gönderi yaptı
+          **%{user}** **[%{title}](%{post_url})** adresinde gönderi paylaştı
           ~~~quote
           %{excerpt}
           ~~~

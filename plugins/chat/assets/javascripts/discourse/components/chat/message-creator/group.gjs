@@ -4,7 +4,6 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatableGroup extends Component {
-  @service currentUser;
   @service siteSettings;
 
   group_with_too_many_members = i18n(

@@ -9,7 +9,6 @@ import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 
 export default class Sidebar extends Component {
-  @service appEvents;
   @service site;
   @service siteSettings;
   @service currentUser;

@@ -36,7 +36,7 @@ ar:
         other: "تفاعل على %{count} منشور من منشوراتك"
       reaction_2_users: "%{username}، %{username2}"
       reaction_multiple_users:
-        zero: "%{username} و%{count} مستخدم آخر"
+        zero: "%{username} و%{count} من المستخدمين الآخرين"
         one: "%{username} وواحد (%{count}) آخر"
         two: "%{username} ومستخدمان (%{count}) آخران"
         few: "%{username} و%{count} مستخدمين آخرين"

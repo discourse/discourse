@@ -21,7 +21,6 @@ import ComboBox from "select-kit/components/combo-box";
 import SpamTestModal from "./modal/spam-test-modal";
 
 export default class AiSpam extends Component {
-  @service siteSettings;
   @service toasts;
   @service modal;
 

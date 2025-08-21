@@ -128,7 +128,6 @@ sv:
               help: "Ett namn som beskriver kanalen. Det används inte för anslutningen till Matrix."
             room_id:
               title: "Rums-ID"
-              help: "Den 'privata identifieraren' för rummet. Den borde vara något i stil med !abcdefg:matrix.org"
           errors:
             unknown_token: "Åtkomstbevis är ogiltigt"
             unknown_room: "Rums-ID är ogiltigt"

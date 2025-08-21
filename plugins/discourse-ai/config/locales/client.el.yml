@@ -72,8 +72,6 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
-            model:
-              label: "Μοντέλο"
     discourse_ai:
       features:
         back: "Πίσω"
@@ -95,6 +93,8 @@ el:
           name: "Ανεπιθύμητα"
       modals:
         select_option: "Διαλέξτε μία επιλογή..."
+      translations:
+        title: "Μεταφράσεις"
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"

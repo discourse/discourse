@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/components/d-button";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
@@ -115,35 +115,31 @@ export default class ReactionsReactionButton extends Component {
       title={{this.title}}
     >
       {{#if @post.current_user_used_main_reaction}}
-        <button
-          type="button"
-          class="btn-toggle-reaction-like btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon this.siteSettings.discourse_reactions_like_icon}}
-        </button>
+        <DButton
+          class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+          @translatedTitle={{this.title}}
+          @icon={{this.siteSettings.discourse_reactions_like_icon}}
+        />
       {{else if @post.current_user_reaction}}
-        <button
-          type="button"
-          class="btn-icon no-text reaction-button"
-          title={{this.title}}
+        <DButton
+          class="btn-icon no-text btn-flat reaction-button"
+          @translatedTitle={{this.title}}
         >
           <img
             class="btn-toggle-reaction-emoji reaction-button"
             src={{emojiUrlFor @post.current_user_reaction.id}}
             alt={{concat ":" @post.current_user_reaction.id}}
           />
-        </button>
+        </DButton>
       {{else}}
-        <button
-          type="button"
-          class="btn-toggle-reaction-like btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon
-            (concat "far-" this.siteSettings.discourse_reactions_like_icon)
+        <DButton
+          class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+          @translatedTitle={{this.title}}
+          @icon={{concat
+            "far-"
+            this.siteSettings.discourse_reactions_like_icon
           }}
-        </button>
+        />
       {{/if}}
     </div>
   </template>

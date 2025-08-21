@@ -464,6 +464,7 @@
 
   &__shortcut-hint {
     background-color: rgb(var(--tertiary-rgb), 0.1);
+    min-width: 26px;
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);

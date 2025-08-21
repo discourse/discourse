@@ -32,6 +32,7 @@ nl:
     post_voting_comment_limit_per_post: "Aantal toegestane reacties op elk bericht"
     min_trust_to_flag_posts_voting_comments: "Minimaal vertrouwensniveau om een Stemmen op berichten-reactie te markeren"
     flag_posts_voting_comments_allowed_groups: "Groepen mogen een reactie op een Stemmen op berichten-reactie markeren"
+    post_voting_comment_enabled: "Reacties op bericht in topics met stemmen op berichten inschakelen"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ nl:
         limit_exceeded: "Limiet van %{limit} reacties per bericht is bereikt."
         perform: "Stemmen op berichten-reactie gemarkeerd met een score die hoog genoeg is om de gebruiker te dempen."
         auto_silence_from_flags: "Automatisch gedempt wegens markeringen."
+        disabled: "Reageren op een bericht is niet toegestaan."
       reviewables:
         comment_already_handled: "Bedankt, maar we hebben deze reactie al beoordeeld en vastgesteld dat deze niet opnieuw hoeft te worden gemarkeerd."
         actions:

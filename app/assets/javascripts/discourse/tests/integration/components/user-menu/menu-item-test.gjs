@@ -536,7 +536,7 @@ module(
 
     test("item description is the bookmark title", async function (assert) {
       const item = getBookmark(
-        { title: "Custom bookmark title" },
+        { fancy_title: "Custom bookmark title" },
         this.siteSettings,
         this.site
       );

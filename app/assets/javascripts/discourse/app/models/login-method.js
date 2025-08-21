@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
@@ -75,6 +76,11 @@ export default class LoginMethod extends EmberObject {
       if (email) {
         params.email = email;
       }
+    }
+
+    const destinationUrl = cookie("destination_url");
+    if (destinationUrl) {
+      params.origin = destinationUrl;
     }
 
     return LoginMethod.buildPostForm(getURL(`/auth/${this.name}`), params).then(

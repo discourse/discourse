@@ -22,7 +22,7 @@ fr:
         cant_remove_reaction: "Vous ne pouvez plus supprimer votre réaction"
         remove_reaction: "Supprimer cette réaction %{reaction}"
       main_reaction:
-        add: "Aimer ce message"
+        add: "J'aime cette publication"
         remove: "Supprimer ce « J'aime »"
         cant_remove: "Vous ne pouvez plus supprimer votre J'aime"
         unauthenticated: "Veuillez vous inscrire ou vous connecter pour aimer cet article"

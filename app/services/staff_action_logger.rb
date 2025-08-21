@@ -566,6 +566,12 @@ class StaffActionLogger
     )
   end
 
+  def log_stop_impersonation(user, opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:stop_impersonating], target_user_id: user.id),
+    )
+  end
+
   def log_roll_up(subnet, ips, opts = {})
     UserHistory.create!(
       params(opts).merge(

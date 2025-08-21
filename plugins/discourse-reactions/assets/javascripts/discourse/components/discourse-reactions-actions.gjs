@@ -271,8 +271,7 @@ export default class DiscourseReactionsActions extends Component {
   toggle(params) {
     if (!this.currentUser) {
       if (this.args.showLogin) {
-        this.args.showLogin();
-        return;
+        return this.args.showLogin();
       }
     }
 
@@ -453,8 +452,7 @@ export default class DiscourseReactionsActions extends Component {
   toggleFromButton(attrs) {
     if (!this.currentUser) {
       if (this.args.showLogin) {
-        this.args.showLogin();
-        return;
+        return this.args.showLogin();
       }
     }
 

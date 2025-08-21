@@ -30,10 +30,12 @@ it:
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
     chat_preferred_index: "Scheda preferita per il caricamento di /chat."
+    allow_chat_in_anonymous_mode: "Abilita questa impostazione per consentire agli utenti che navigano sul tuo sito in modo anonimo di utilizzare la chat. Questa impostazione richiede che l'opzione \"Consenti modalità anonima\" sia abilitata."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
       chat_upload_not_allowed_secure_uploads: "I caricamenti di chat non sono consentiti quando l'impostazione del sito per i caricamenti sicuri è abilitata."
+      allow_chat_in_anonymous_mode_invalid: "Per questa impostazione è necessario prima abilitare l'impostazione \"Consenti modalità anonima\"."
   system_messages:
     private_channel_title: "Canale %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ it:
     deleted_chat_username: eliminato
     errors:
       users_cant_be_added_to_channel: "Impossibile aggiungere membri a questo canale."
+      user_cant_be_removed_from_channel: "L'utente non può essere rimosso da questo canale"
       channel_exists_for_category: "Esiste già un canale per questa categoria e questo nome"
       channel_new_message_disallowed:
         archived: "Il canale è archiviato, non è possibile inviare nuovi messaggi"
@@ -90,6 +93,7 @@ it:
       actor_muting_target_user: "Hai silenziato %{username}, quindi non puoi inviare messaggi a questo destinatario."
       actor_disallowed_dms: "Hai scelto di impedire agli utenti di inviarti messaggi personali e diretti, quindi non puoi creare nuovi messaggi diretti."
       actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi personali e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
+      not_reachable: "Spiacenti, %{username} non sta utilizzando la chat."
       user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
       over_chat_max_direct_message_users_allow_self: "Puoi creare solo un messaggio diretto a te stesso."
       over_chat_max_direct_message_users:
@@ -234,6 +238,12 @@ it:
         private_email:
           one: "[%{site_name}] Nuovo messaggio"
           other: "[%{site_name}] Nuovi messaggi"
+        watched_thread:
+          one: "[%{site_name}] Nuovo messaggio nel thread in %{channel}"
+          other: "[%{site_name}] Nuovi messaggi nel thread in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nuovi messaggi nel thread in %{channel} e %{count} altro"
+          other: "[%{site_name}] Nuovi messaggi nel thread in %{channel} e altri %{count}"
         chat_dm_1:
           one: "[%{site_name}] Nuovo messaggio da %{name}"
           other: "[%{site_name}] Nuovi messaggi da %{name}"

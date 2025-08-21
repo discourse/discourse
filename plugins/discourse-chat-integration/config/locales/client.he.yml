@@ -131,7 +131,6 @@ he:
               help: "שם לתיאור הערוץ. הוא לא משמש לחיבור אל Matrix."
             room_id:
               title: "מזהה חדר"
-              help: "ה‚מזהה הפרטי’ של החדר. הוא אמור להיראות בערך ככה: ‎!abcdefg:matrix.org"
           errors:
             unknown_token: "אסימון הגישה שגוי"
             unknown_room: "מזהה החדר שגוי"

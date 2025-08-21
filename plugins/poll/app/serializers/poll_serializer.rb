@@ -6,6 +6,7 @@ class PollSerializer < ApplicationSerializer
              :type,
              :status,
              :public,
+             :dynamic,
              :results,
              :min,
              :max,

@@ -9,8 +9,15 @@ es:
     discourse_automation_enabled: "Activar el plugin discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "El script no puede estar en blanco"
+          trigger_blank: "El activador no puede estar en blanco"
+          script_missing_required_fields: "Al script le faltan campos obligatorios: %{fields}"
+          trigger_missing_required_fields: "Al activador le faltan campos obligatorios: %{fields}"
       fields:
         required_field: El campo «%{name}» debe rellenarse en «%{target}:%{target_name}».
+        invalid_field: El componente del campo «%{component}» no es utilizable en «%{target}:%{target_name}».
         invalid_metadata: Los datos de «%{field}» no son válidos o el componente «%{component}» es desconocido.
     triggerables:
       errors:

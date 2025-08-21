@@ -303,7 +303,7 @@ en:
         one: "%{count} file"
         other: "%{count} files"
       you_flagged: "You flagged this message"
-      exit: "back"
+      exit: "exit chat"
       channel_status:
         read_only_header: "Channel is read only"
         read_only: "Read Only"
@@ -741,7 +741,7 @@ en:
           switch_channel_arrows: "%{shortcut} Switch channel"
           switch__unread_channel_arrows: "%{shortcut} Switch unread channel"
           open_quick_channel_selector: "%{shortcut} Open quick channel selector"
-          open_insert_link_modal: "%{shortcut} Insert hyperlink (composer only)"
+          open_insert_link_modal: "%{shortcut} Insert link (composer only)"
           composer_bold: "%{shortcut} Bold (composer only)"
           composer_italic: "%{shortcut} Italic (composer only)"
           composer_code: "%{shortcut} Code (composer only)"

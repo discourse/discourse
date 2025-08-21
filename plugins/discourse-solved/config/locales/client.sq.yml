@@ -11,6 +11,7 @@ sq:
         solved:
           accepted_notification: "pranuar"
     solved:
+      accepted_answer_post_number: "postimi %{post_number}"
       topic_status_filter:
         all: "të gjitha"
     discourse_automation:

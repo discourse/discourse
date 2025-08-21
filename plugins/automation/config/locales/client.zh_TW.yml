@@ -143,7 +143,5 @@ zh_TW:
             label: 版本
           status:
             label: 狀態
-          enabled:
-            label: 啟用
           disabled:
             label: 停用

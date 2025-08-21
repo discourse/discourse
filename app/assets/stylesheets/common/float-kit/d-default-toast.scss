@@ -5,14 +5,14 @@
 
   &__close-container {
     width: calc(40px - 0.5rem);
-    height: 30px;
+    height: calc(1em + (2 * 0.65em));
   }
 
   &__icon-container {
     flex: 1 0 auto;
     display: flex;
     width: calc(40px - 0.5rem);
-    height: 30px;
+    height: calc(1em + (2 * 0.65em));
     align-items: center;
     justify-content: center;
 
@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 30px;
+    min-height: calc(1em + (2 * 0.65em));
   }
 
   &__progress-bar {
@@ -89,7 +89,7 @@
   }
 
   &__texts {
-    min-height: 30px;
+    min-height: inherit;
     display: flex;
     justify-content: center;
     flex-direction: column;

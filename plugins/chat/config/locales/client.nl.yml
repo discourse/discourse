@@ -234,7 +234,9 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
+      no_public_channels: "Je neemt nog niet deel aan kanalen!"
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:
@@ -300,7 +302,7 @@ nl:
         one: "%{count} bestand"
         other: "%{count} bestanden"
       you_flagged: "Je hebt dit bericht gemarkeerd"
-      exit: "vorige"
+      exit: "chat afsluiten"
       channel_status:
         read_only_header: "Kanaal is alleen-lezen"
         read_only: "Alleen-lezen"
@@ -529,6 +531,7 @@ nl:
         select_emoji: "Kies emoji"
         system: "systeem"
         title: "Inkomende webhooks"
+        header_description: "Binnenkomende webhooks kunnen door externe systemen worden gebruikt om berichten te plaatsen als botgebruiker in een aangewezen chatkanaal"
         url: "URL"
         url_instructions: "Deze URL bevat een geheime waarde, bewaar deze veilig."
         username: "Gebruikersnaam"
@@ -641,6 +644,11 @@ nl:
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
+      quick_reaction_type:
+        title: "Chatreacties met één klik"
+        options:
+          frequent: "Meest gebruikte chatreacties"
+          custom: "Aangepaste reacties"
     notifications:
       chat_invitation: "heeft je uitgenodigd om deel te nemen aan een chatkanaal"
       chat_invitation_html: "<span>%{username}</span> <span>heeft je uitgenodigd voor een chatkanaal</span>"
@@ -698,7 +706,7 @@ nl:
           switch_channel_arrows: "%{shortcut} Kanaal wisselen"
           switch__unread_channel_arrows: "%{shortcut} Ongelezen kanaal wisselen"
           open_quick_channel_selector: "%{shortcut} Snelle kanaalkiezer openen"
-          open_insert_link_modal: "%{shortcut} Hyperlink invoegen (alleen opstellen)"
+          open_insert_link_modal: "%{shortcut} Link invoegen (alleen opstellen)"
           composer_bold: "%{shortcut} Vet (alleen opstellen)"
           composer_italic: "%{shortcut} Cursief (alleen opstellen)"
           composer_code: "%{shortcut} Code (alleen opstellen)"

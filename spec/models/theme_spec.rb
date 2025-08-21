@@ -595,6 +595,7 @@ HTML
         .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
+      :common,
       :admin,
       :desktop,
       :mobile,

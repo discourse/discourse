@@ -29,6 +29,7 @@ hu:
       solution_summary:
         one: "megoldás"
         other: "megoldás"
+      accepted_answer_post_number: "%{post_number}. bejegyzés"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "összes"

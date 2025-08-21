@@ -20,9 +20,7 @@ RSpec.describe DiscourseAi::Personas::ConceptMatcher do
 
     it "specifies output format" do
       expect(prompt).to include("matching_concepts")
-      expect(prompt).to include("<o>")
       expect(prompt).to include('{"matching_concepts": ["concept1", "concept3", "concept5"]}')
-      expect(prompt).to include("</o>")
     end
   end
 

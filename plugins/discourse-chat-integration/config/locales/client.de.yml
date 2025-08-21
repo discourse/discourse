@@ -32,7 +32,7 @@ de:
         title: "Test-Nachricht senden"
         topic: "Thema"
         send: "Test-Nachricht senden"
-        close: "Beenden"
+        close: "Schließen"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
@@ -131,7 +131,6 @@ de:
               help: "Ein Name, um den Kanal zu beschreiben. Dieser wird nicht verwendet, um die Verbindung zu Matrix herzustellen."
             room_id:
               title: "Raum-ID"
-              help: "Die „private Kennung“ für den Raum. Sie sollte etwa so aussehen: !abcdefg:matrix.org"
           errors:
             unknown_token: "Zugriffstoken ist ungültig"
             unknown_room: "Raum-ID ist ungültig"

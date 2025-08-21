@@ -2400,7 +2400,7 @@ RSpec.describe TopicQuery do
       topic_query = TopicQuery.new(user)
       topic_list = topic_query.list_latest
 
-      expect(topic_list.topics.first.association(:topic_localizations).loaded?).to eq(true)
+      expect(topic_list.topics.first.association(:localizations).loaded?).to eq(true)
 
       queries =
         track_sql_queries { topic_list.topics.each { |topic| topic.get_localization&.fancy_title } }

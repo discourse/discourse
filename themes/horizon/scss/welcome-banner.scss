@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .welcome-banner {
-  &.--below-site-header {
+  &.--location-below-site-header {
     background-color: var(--background-color);
     border-radius: 0;
 
@@ -37,7 +37,7 @@
       margin-top: 0;
     }
 
-    .--below-site-header & {
+    .--location-below-site-header & {
       border-bottom: 0;
       padding: var(--space-4) var(--space-4) var(--space-8);
 
@@ -50,7 +50,7 @@
       }
     }
 
-    .--above-topic-content & {
+    .--location-above-topic-content & {
       @container (width <= 800px) {
         flex-direction: column;
         gap: var(--space-4);
@@ -65,7 +65,7 @@
       width: 100%;
       align-self: center;
 
-      .--above-topic-content & {
+      .--location-above-topic-content & {
         @container (width >= 800px) {
           width: 50cqw;
         }
@@ -113,7 +113,7 @@
     margin: 0;
     color: var(--search-color);
 
-    .--above-topic-content & {
+    .--location-above-topic-content & {
       @container (width >= 800px) {
         flex-grow: 1;
       }

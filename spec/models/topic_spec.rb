@@ -3673,6 +3673,9 @@ describe Topic do
 
       expect(topic.in_user_locale?).to eq(true)
 
+      topic.update!(locale: "ja_JP")
+      expect(topic.in_user_locale?).to eq(true)
+
       topic.update!(locale: "es")
       expect(topic.in_user_locale?).to eq(false)
     end

@@ -38,18 +38,19 @@ export default class AdminReports extends Component {
           @searchableProps={{array "title" "description"}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
-          as |filteredReports|
         >
-          <AdminSectionLandingWrapper class="admin-reports-list">
-            {{#each filteredReports as |report|}}
-              <AdminSectionLandingItem
-                @titleLabelTranslated={{report.title}}
-                @descriptionLabelTranslated={{report.description}}
-                @titleRoute="adminReports.show"
-                @titleRouteModel={{report.type}}
-              />
-            {{/each}}
-          </AdminSectionLandingWrapper>
+          <:content as |filteredReports|>
+            <AdminSectionLandingWrapper class="admin-reports-list">
+              {{#each filteredReports as |report|}}
+                <AdminSectionLandingItem
+                  @titleLabelTranslated={{report.title}}
+                  @descriptionLabelTranslated={{report.description}}
+                  @titleRoute="adminReports.show"
+                  @titleRouteModel={{report.type}}
+                />
+              {{/each}}
+            </AdminSectionLandingWrapper>
+          </:content>
         </AdminFilterControls>
       </:content>
     </AsyncContent>

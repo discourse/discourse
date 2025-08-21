@@ -357,8 +357,8 @@ acceptance("User menu", function (needs) {
     withPluginApi((api) => {
       api.registerModelTransformer("bookmark", (bookmarks) => {
         bookmarks.forEach((bookmark) => {
-          if (bookmark.title) {
-            bookmark.title = `pluginBookmarkTransformer ${bookmark.title}`;
+          if (bookmark.fancy_title) {
+            bookmark.fancy_title = `pluginBookmarkTransformer ${bookmark.fancy_title}`;
           }
         });
       });

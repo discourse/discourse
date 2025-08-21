@@ -74,5 +74,20 @@ describe "User tips", type: :system do
 
       expect(tooltip).to be_not_present
     end
+
+    it "displays the labels correctly even in French (with apostrophes)" do
+      SiteSetting.default_locale = :fr
+
+      I18n.with_locale(:fr) do
+        sign_in(user)
+        visit("/")
+
+        expect(tooltip).to be_present(text: "Votre première notification !")
+
+        tooltip.find(".user-tip__buttons .btn", text: "J'ai compris !").click
+
+        expect(tooltip).to be_not_present
+      end
+    end
   end
 end

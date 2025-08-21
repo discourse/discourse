@@ -4,8 +4,7 @@
 
 The online home for your community. 
 
-![readme](https://github.com/user-attachments/assets/db764ef2-5cc2-4873-b11d-4a2052e1993d)
-
+<img width="1920" height="1135" alt="github-readme" src="https://github.com/user-attachments/assets/abaaf30f-0cfb-4505-a530-6f8e5a43d24b" />
 
 > You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
 >
@@ -65,7 +64,7 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 | Microsoft Edge        |              |              |
 | Mozilla Firefox       |              |              |
 
-Additionally, we aim to support Safari on iOS 15.7+.
+Additionally, we aim to support Safari on iOS 16.4+.
 
 ## Built With
 

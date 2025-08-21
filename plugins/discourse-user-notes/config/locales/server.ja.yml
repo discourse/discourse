@@ -7,6 +7,7 @@
 ja:
   site_settings:
     user_notes_enabled: "スタッフユーザーがユーザーにメモを添付することを許可する"
+    user_notes_icon_placement: "投稿にユーザーメモを示すアイコンを配置"
     user_notes_moderators_delete: "モデレーターがユーザーメモを削除することを許可する"
   user_notes:
     official_warning: "運営スタッフからの警告を @%{username} から受信しました -- %{warning_link}"
@@ -18,5 +19,5 @@ ja:
       description: "直近のユーザーメモをリストします。"
       labels:
         user: ユーザー
-        note: 注意
+        note: メモ
         moderator: モデレーター

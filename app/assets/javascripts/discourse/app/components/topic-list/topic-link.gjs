@@ -19,7 +19,7 @@ export default class TopicLink extends Component {
         data-topic-id={{@topic.id}}
         class="title"
         ...attributes
-      >{{htmlSafe @topic.fancyTitle}}</a>
+      >{{htmlSafe @topic.fancyTitle}}{{yield}}</a>
       {{~! no whitespace ~}}
     </PluginOutlet>
     {{~! no whitespace ~}}

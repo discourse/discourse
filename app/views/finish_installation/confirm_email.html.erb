@@ -3,7 +3,7 @@
 <%= raw(t 'finish_installation.confirm_email.message', email: @email) %>
 
 <div class='row'>
-  <%= button_to(finish_installation_resend_email_path, method: :put, class: 'wizard-container__button primary') do %>
+  <%= button_to(finish_installation_resend_email_path, method: :put, class: 'wizard-container__button btn-primary') do %>
     <%= t 'finish_installation.resend_email.title' %>
   <% end %>
 </div>

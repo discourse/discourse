@@ -20,9 +20,15 @@ import puppeteer from "puppeteer-core";
     executablePath: Launcher.getInstallations()[0],
     // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
-    args: ["--disable-local-storage", "--no-sandbox"],
+    args: ["--no-sandbox"],
   });
   const page = await browser.newPage();
+  page.on("console", (msg) => {
+    if (["error", "warning"].includes(msg.type())) {
+      console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
+    }
+  });
+  page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
 
   await page.setViewport({
     width: 1366,

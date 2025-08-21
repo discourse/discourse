@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 nl:
+  theme_metadata:
+    description: "Het klassieke Discourse-thema dat zich uitstekend leent voor aanpassing aan de specifieke behoeften van je community."

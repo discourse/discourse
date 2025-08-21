@@ -6,6 +6,8 @@ en:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "This poll is dynamic. Options can be edited after posting."
       voters:
         one: "voter"
         other: "voters"
@@ -128,7 +130,7 @@ en:
       error_while_exporting_results: "Sorry, there was an error exporting poll results."
 
       ui_builder:
-        title: Build Poll
+        title: Build poll
         insert: Insert Poll
         help:
           options_min_count: Enter at least 1 option.
@@ -161,6 +163,8 @@ en:
           step: Step
         poll_public:
           label: Show who voted
+        poll_dynamic:
+          label: Allow editing options after posting (dynamic poll)
         poll_title:
           label: Title (optional)
         poll_options:

@@ -37,6 +37,16 @@ RSpec.describe Jobs::FastTrackTopicGist do
           expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
           expect(gist.summarized_text).not_to eq(updated_gist)
         end
+
+        it "regenerates when force_regenerate is true" do
+          DiscourseAi::Completions::Llm.with_prepared_responses([updated_gist]) do
+            job.execute(topic_id: topic_1.id, force_regenerate: true)
+          end
+
+          gist = AiSummary.gist.find_by(target: topic_1)
+          expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
+          expect(gist.summarized_text).to eq(updated_gist)
+        end
       end
 
       context "when it's outdated" do
@@ -64,6 +74,19 @@ RSpec.describe Jobs::FastTrackTopicGist do
           expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
           expect(gist.summarized_text).not_to eq(updated_gist)
           expect(gist.original_content_sha).to eq(AiSummary.build_sha("12"))
+        end
+
+        it "regenerates when force_regenerate is true even if created recently" do
+          ai_gist.update!(created_at: 2.minutes.ago)
+
+          DiscourseAi::Completions::Llm.with_prepared_responses([updated_gist]) do
+            job.execute(topic_id: topic_1.id, force_regenerate: true)
+          end
+
+          gist = AiSummary.gist.find_by(target: topic_1)
+          expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
+          expect(gist.summarized_text).to eq(updated_gist)
+          expect(gist.original_content_sha).to eq(AiSummary.build_sha("123"))
         end
       end
     end

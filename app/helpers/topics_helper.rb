@@ -20,4 +20,13 @@ module TopicsHelper
 
     Plugin::Filter.apply(:topic_categories_breadcrumb, topic, breadcrumb)
   end
+
+  def localize_topic_view_content(topic_view)
+    crawl_locale = params[Discourse::LOCALE_PARAM].presence || SiteSetting.default_locale
+
+    LocalizationAttributesReplacer.replace_topic_attributes(topic_view.topic, crawl_locale)
+    topic_view.posts.each do |post|
+      LocalizationAttributesReplacer.replace_post_attributes(post, crawl_locale)
+    end
+  end
 end

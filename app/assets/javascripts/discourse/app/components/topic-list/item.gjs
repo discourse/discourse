@@ -141,57 +141,57 @@ export default class Item extends Component {
   }
 
   @action
-  click(e) {
+  click(event) {
     applyBehaviorTransformer(
       "topic-list-item-click",
       () => {
         if (
-          e.target.classList.contains("raw-topic-link") ||
-          e.target.classList.contains("post-activity") ||
-          e.target.classList.contains("badge-posts")
+          event.target.classList.contains("raw-topic-link") ||
+          event.target.classList.contains("post-activity") ||
+          event.target.classList.contains("badge-posts")
         ) {
-          if (wantsNewWindow(e)) {
+          if (wantsNewWindow(event)) {
             return;
           }
 
-          e.preventDefault();
-          this.navigateToTopic(this.args.topic, e.target.href);
+          event.preventDefault();
+          this.navigateToTopic(this.args.topic, event.target.href);
           return;
         }
 
         // make full row click target on mobile, due to size constraints
         if (
           this.site.mobileView &&
-          e.target.matches(
+          event.target.matches(
             ".topic-list-data, .main-link, .right, .topic-item-stats, .topic-item-stats__category-tags, .discourse-tags"
           )
         ) {
-          if (wantsNewWindow(e)) {
+          if (wantsNewWindow(event)) {
             return;
           }
 
-          e.preventDefault();
+          event.preventDefault();
           this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
           return;
         }
       },
       {
+        event,
         topic: this.args.topic,
-        event: e,
         navigateToTopic: this.navigateToTopic,
       }
     );
   }
 
   @action
-  keyDown(e) {
+  keyDown(event) {
     if (
-      e.key === "Enter" &&
-      (e.target.classList.contains("post-activity") ||
-        e.target.classList.contains("badge-posts"))
+      event.key === "Enter" &&
+      (event.target.classList.contains("post-activity") ||
+        event.target.classList.contains("badge-posts"))
     ) {
-      e.preventDefault();
-      this.navigateToTopic(this.args.topic, e.target.href);
+      event.preventDefault();
+      this.navigateToTopic(this.args.topic, event.target.href);
     }
   }
 
@@ -238,6 +238,7 @@ export default class Item extends Component {
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
+      {{on "auxclick" this.click}}
       data-topic-id={{@topic.id}}
       role={{this.role}}
       aria-level={{this.ariaLevel}}

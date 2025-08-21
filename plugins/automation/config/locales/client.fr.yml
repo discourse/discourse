@@ -13,12 +13,16 @@ fr:
             delete_automation: supprimer l'automatisation
     discourse_automation:
       title: Automatisation
-      back: Revenir en arrière
+      table_title: Automatisations
+      create: Ajouter une automatisation
+      update: Mettre à jour l'automatisation
+      back: Retour
       edit: Modifier
       select_script: Sélectionner un script
       select_trigger: Sélectionner un déclencheur
       confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré. Voulez-vous continuer ?
       confirm_automation_trigger: Cette action déclenchera l'automatisation. Voulez-vous continuer ?
+      no_automation_yet: Il n'y a actuellement aucune automatisation configurée.
       filter_placeholder: Filtrer par nom ou description...
       edit_automation:
         trigger_section:
@@ -163,8 +167,22 @@ fr:
               description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
             restricted_categories:
               label: Catégories
+              description: Facultatif, ne se déclenchera que si le sujet de la publication appartient à ces catégories
+            exclude_subcategories:
+              label: Exclure les sous-catégories
+              description: Facultatif, ne se déclenchera que si le sujet de la publication appartient exactement aux catégories spécifiées ci-dessus
+            restricted_archetype:
+              label: Type de sujet
+              description: Facultatif, autorisez le déclenchement uniquement sur des sujets ou des messages privés
+            restricted_groups:
+              label: Groupes restreints
+              description: Facultatif, ne se déclenchera que si l'utilisateur de la publication appartient à l'un de ces groupes
             restricted_inbox_groups:
-              description: Facultatif, ne se déclenchera que si le sujet de la publication est un message direct dans l'une des boîtes de réception du groupe
+              label: Groupes de boîtes de réception restreints
+              description: Facultatif, ne se déclenchera que si le sujet de la publication est un message privé dans l'une des boîtes de réception du groupe
+            excluded_groups:
+              label: Groupes exclus
+              description: Facultatif, ignorez le déclencheur si l'utilisateur de la publication appartient à l'un de ces groupes
             ignore_automated:
               label: Ignorer l'automatisation
               description: Ignorer le déclencheur si l'expéditeur a un e-mail de non-réponse ou provient d'une source automatique. Ne s'applique qu'aux publications créées par e-mail
@@ -177,8 +195,14 @@ fr:
             skip_via_email:
               label: "Ignorer par e-mail"
               description: "Ignorez le déclencheur si la publication a été créée par e-mail"
+            post_features:
+              label: Caractéristiques de la publication
+              description: "Facultatif, limitez le déclenchement aux seules publications dotées de ces caractéristiques"
           created: Créé
           edited: Modifié
+          topics: Tous les sujets
+          personal_messages: Messages privés
+          public_topics: Sujets publics (exclure toutes les catégories sécurisées)
           with_images: Images
           with_links: Liens
           with_code: Code
@@ -383,6 +407,7 @@ fr:
               label: MP
             sender:
               label: Expéditeur du MP
+              description: "Assurez-vous que l'expéditeur dispose des autorisations appropriées pour envoyer des MP au destinataire"
         close_topic:
           fields:
             topic:
@@ -406,6 +431,11 @@ fr:
           name:
             label: Déclencheur
         automation:
+          runs_today: "%{count} aujourd'hui"
+          runs_this_week: "%{count} cette semaine"
+          runs_this_month: "%{count} ce mois-ci"
+          runs:
+            label: Exécutions
           name:
             label: Nom
           trigger:
@@ -417,12 +447,15 @@ fr:
           status:
             label: Statut
           enabled:
-            label: Activé
+            label: "Activer l'automatisation"
           disabled:
             label: Désactivé
           placeholders:
             label: Espaces réservés
           last_updated_at:
             label: Dernière mise à jour
+          last_run:
+            label: Dernière exécution
           last_updated_by:
             label: Mis à jour par
+          enable_toggle_disabled: "Vous pouvez activer cette automatisation une fois que tous les champs obligatoires sont remplis."

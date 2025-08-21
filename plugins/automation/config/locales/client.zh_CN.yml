@@ -166,22 +166,22 @@ zh_CN:
               description: 可选，仅在帖子具有以下任意标签时触发
             restricted_categories:
               label: 类别
-              description: 可选，只有当帖子的主题属于以下类别时才会触发
+              description: 可选，只有当帖子的话题属于以下类别时才会触发
             exclude_subcategories:
               label: 排除子类别
-              description: 可选，仅当帖子的主题完全属于上述指定类别时才会触发
+              description: 可选，仅当帖子的话题完全属于上述指定类别时才会触发
             restricted_archetype:
-              label: 主题类型
-              description: 可选，仅允许在主题或个人消息上触发
+              label: 话题类型
+              description: 可选，仅允许在话题或个人消息上触发
             restricted_groups:
               label: 受限制的群组
               description: 可选，只有当发帖用户属于以下任一组时才会触发
             restricted_inbox_groups:
-              label: 受限收件箱组
-              description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
+              label: 受限收件箱群组
+              description: 可选，只有当帖子的话题是某个群组收件箱中的个人消息时才会触发
             excluded_groups:
               label: 排除的群组
-              description: 可选，如果发帖用户属于以下组别，则跳过触发器
+              description: 可选，如果发帖用户属于以下群组，则跳过触发器
             ignore_automated:
               label: 忽略自动源
               description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的帖子
@@ -200,7 +200,7 @@ zh_CN:
           created: 创建
           edited: 已编辑
           topics: 所有话题
-          personal_messages: 个人信息
+          personal_messages: 个人消息
           public_topics: 公共话题（排除所有安全类别）
           with_images: 图片
           with_links: 链接
@@ -432,7 +432,7 @@ zh_CN:
         automation:
           runs_today: "%{count} 今天"
           runs_this_week: "%{count} 本周"
-          runs_this_month: "本月 %{count}"
+          runs_this_month: "%{count} 本月"
           runs:
             label: 运行
           name:
@@ -446,7 +446,7 @@ zh_CN:
           status:
             label: 状态
           enabled:
-            label: 已启用
+            label: "启用自动化"
           disabled:
             label: 已禁用
           placeholders:
@@ -457,3 +457,4 @@ zh_CN:
             label: 最后一次运行
           last_updated_by:
             label: 更新者
+          enable_toggle_disabled: "填写完所有必填字段后，即可启用此自动化。"

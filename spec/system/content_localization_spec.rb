@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
+  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
   fab!(:admin)
@@ -68,9 +70,16 @@ describe "Content Localization" do
       topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
-      page.find("button.btn-toggle-localized-content").click
+
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.not_translated"),
+      )
 
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")

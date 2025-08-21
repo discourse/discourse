@@ -49,16 +49,16 @@ ru:
     topic_assigned_excerpt: "назначил вам тему '%{title}'"
     topic_group_assigned_excerpt: "назначил(а) тему «%{title}» группе «@%{group}»"
     reminders_frequency:
-      never: "Никогда"
+      never: "никогда"
       daily: "ежедневно"
       weekly: "еженедельно"
-      monthly: "за месяц"
-      quarterly: "за квартал"
+      monthly: "ежемесячно"
+      quarterly: "ежеквартально"
   assign_mailer:
     title: "Уведомление о назначении"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"
     text_body_template: |
-      Привет, %{assignee_name} **назначил(а)** Вас ответственным в теме
+      Привет! %{assignee_name} **назначил(-а)** вас ответственным в обсуждении
       > **%{topic_title}**
       >
       > %{topic_excerpt}
@@ -67,7 +67,7 @@ ru:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "У вас есть отложенные назначения: %{pending_assignments}"
-    body: "В настоящее время у вас есть [%{pending_assignments} отложенных назначений] (%{assignments_link}).\n\n%{newest_assignments}\n%{oldest_assignments} \n\nЭто напоминание будет отправляться %{frequency}, если у вас более одной назначенной темы.\n"
+    body: "В настоящее время у вас есть [отложенные назначения (%{pending_assignments})] (%{assignments_link}).\n\n%{newest_assignments}\n%{oldest_assignments} \n\nЭто напоминание будет отправляться %{frequency}, если у вас более одной назначенной темы.\n"
     newest: |
       ### Самые новые
       %{topic_0}

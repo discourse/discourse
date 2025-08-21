@@ -15,6 +15,7 @@ ja:
     house_ads_after_nth_topic: '「トピックとトピックの間」に自社広告が表示されるように定義されている場合、N 件のトピックごとに広告を表示します。N はこの値です。'
     house_ads_after_nth_post: '「投稿と投稿の間」に表示される自社広告が定義されている場合、Ｎ 件の投稿ごとに広告を表示します。N はこの値です。'
     house_ads_frequency: "ほかの広告ネットワークが広告スロットに表示されるように構成されている場合に、自社広告が表示される頻度をパーセンテージで表します。"
+    ads_txt: "ads.txt ファイルのコンテンツ。詳細は、<a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>こちらの Google AdSense ヘルプページ</a>をご覧ください。"
     dfp_publisher_id: "Google アドマネージャー（旧 DFP）のネットワークコードを入力します。このコードはネットワーク設定にあります。注意: 「Content-Security-Policy の script-src」設定を更新する必要があります。最新の手順は、<a href='https://meta.discourse.org/t/33734' target='_blank'>こちらのトピック</a>をご覧ください。"
     dfp_publisher_id_mobile: "（オプション）モバイル版のサイトに別のアドマネージャーのサイト運営者 ID を使用する場合は、ここに入力します。モバイルで dfp_publisher_id を使用する場合は空白のままにします。"
     dfp_through_trust_level: "信頼レベルに基づいてユーザーに広告を表示します。信頼レベルがこの値より高いユーザーには、広告は表示されません。"
@@ -44,6 +45,7 @@ ja:
     dfp_mobile_post_bottom_ad_sizes: "モバイルビューで投稿と投稿の間に表示する広告ユニットの広告サイズを選択します。"
     dfp_target_post_bottom_key_code: "カスタムターゲティングキーを入力 - 広告枠レベル"
     dfp_target_post_bottom_value_code: "カスタムターゲティング値を入力 - 広告枠レベル"
+    adsense_publisher_code: "サイト運営者 ID です。「pub-」を除いた番号のみを入力します。注意: 「Content-Security-Policy の script-src」設定を更新する必要があります。最新の手順は、<a href='https://meta.discourse.org/t/33734' target='_blank'>こちらのトピック</a>をご覧ください。"
     adsense_through_trust_level: "信頼レベルに基づいてユーザーに広告を表示します。信頼レベルがこの値より高いユーザーには、広告は表示されません。"
     adsense_exclude_groups: "これらのグループのメンバーには広告は表示されません"
     adsense_topic_list_top_code: "トピックリストの一番上に表示する広告ユニットのコードを入力します。これは、JavaScript コードではなく、広告ユニットに割り当てられた番号です。"
@@ -96,6 +98,7 @@ ja:
     carbonads_exclude_groups: "これらのグループのメンバーには広告は表示されません"
     carbonads_topic_list_top_enabled: "トピックリストの上に広告を表示する"
     carbonads_above_post_stream_enabled: "投稿ストリームの上に広告を表示する"
+    adbutler_publisher_id: "AdButler Publisher ID です。注意: 「Content-Security-Policy の script-src」設定を更新する必要がある場合があります。最新の手順は、<a href='https://meta.discourse.org/t/33734' target='_blank'>こちらのトピック</a>をご覧ください。"
     adbutler_mobile_topic_list_top_zone_id: "モバイルトピックリストの一番上のゾーン ID"
     adbutler_mobile_topic_above_post_stream_zone_id: "投稿ストリームの上のモバイルトピックのゾーン ID"
     adbutler_mobile_post_bottom_zone_id: "モバイル投稿の一番下のゾーン ID"

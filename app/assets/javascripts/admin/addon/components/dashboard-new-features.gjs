@@ -75,7 +75,7 @@ export default class DashboardNewFeatures extends Component {
       return true;
     }
 
-    return feature.experiment_setting !== null;
+    return feature.experiment === true;
   }
 
   @action

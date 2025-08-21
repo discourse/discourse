@@ -15,6 +15,12 @@ RSpec.describe Chat::AutoJoinChannels do
       it { is_expected.to fail_a_policy(:chat_enabled?) }
     end
 
+    context "when a duplicate key error occurs" do
+      before { allow(DB).to receive(:query_array).and_raise(PG::UniqueViolation) }
+
+      it { is_expected.to fail_with_exception(PG::UniqueViolation) }
+    end
+
     context "when chat is enabled" do
       let(:trust_level) { 1 } # SiteSetting.chat_allowed_groups defaults to admins, moderators, and TL1 users
       let(:last_seen_at) { 5.minutes.ago } # Users must have been seen "recently" to be auto-joined to a channel

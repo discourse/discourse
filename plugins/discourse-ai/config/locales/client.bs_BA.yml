@@ -53,6 +53,8 @@ bs_BA:
           name: "Spam"
       modals:
         select_option: "Odaberi opciju..."
+      translations:
+        title: "Prevodi"
       spam:
         short_title: "Spam"
         enable: "Omogući"

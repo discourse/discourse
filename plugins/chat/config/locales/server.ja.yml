@@ -30,10 +30,12 @@ ja:
     chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     chat_preferred_index: "/chat を読み込む際の優先タブ。"
+    allow_chat_in_anonymous_mode: "この設定を有効にすると、匿名でサイトを閲覧しているユーザーがチャットを使用できるようになります。この設定には、`allow anonymous mode` を有効にする必要があります。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
       chat_upload_not_allowed_secure_uploads: "安全なアップロードのサイト設定が有効でない場合、チャットのアップロードは行えません。"
+      allow_chat_in_anonymous_mode_invalid: "この設定では、先に 'allow anonymous mode' 設定が有効になっている必要があります。"
   system_messages:
     private_channel_title: "チャンネル %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ ja:
     deleted_chat_username: 削除済み
     errors:
       users_cant_be_added_to_channel: "このチャンネルにはユーザーを追加できません。"
+      user_cant_be_removed_from_channel: "このチャンネルからユーザーを削除できません"
       channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
       channel_new_message_disallowed:
         archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません"
@@ -88,6 +91,7 @@ ja:
       actor_muting_target_user: "%{username} をミュートしているため、メッセージを送信できません。"
       actor_disallowed_dms: "ユーザーがあなたに個人メッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       actor_preventing_target_user_from_dm: "%{username} があなたに個人メッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
+      not_reachable: "%{username} はチャットを使用していません。"
       user_cannot_send_direct_messages: "ダイレクトメッセージを送信できません。"
       over_chat_max_direct_message_users_allow_self: "自分自身へのダイレクトメッセージのみを作成できます。"
       over_chat_max_direct_message_users:
@@ -148,6 +152,7 @@ ja:
     mention_warning:
       dismiss: "閉じる"
       cannot_see: "%{first_identifier} はこのチャンネルにアクセスできないため通知されませんでした。"
+      cannot_see_group: "%{group_name} の一部のメンバーはこのチャンネルにアクセスできないため通知されませんでした。"
       cannot_see_multiple:
         other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルにアクセスできないため通知されませんでした。"
       invitations_sent:
@@ -219,6 +224,10 @@ ja:
       subject:
         private_email:
           other: "[%{site_name}] 新しいメッセージ"
+        watched_thread:
+          other: "[%{site_name}] %{channel} の新しいスレッドメッセージ"
+        watched_threads:
+          other: "[%{site_name}] %{channel} と他 %{count} 個のチャンネルの新しいスレッドメッセージ"
         chat_dm_1:
           other: "[%{site_name}] %{name} からの新しいメッセージ"
         chat_dm_2: "[%{site_name}] %{name_1} と %{name_2} からの新しいメッセージ"

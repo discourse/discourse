@@ -53,6 +53,8 @@ zh_TW:
           name: "搜尋"
         spam:
           name: "垃圾內容"
+      translations:
+        title: "翻譯"
       spam:
         short_title: "垃圾內容"
         last_seven_days: "過去 7 天"

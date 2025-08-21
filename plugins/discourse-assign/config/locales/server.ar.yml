@@ -33,6 +33,11 @@ ar:
   discourse_assign:
     assigned_to: "تم تعيين الموضوع إلى @%{username}"
     unassigned: "تم إلغاء تعيين الموضوع"
+    filter:
+      description:
+        assigned: "تصفية الموضوعات المخصصة لمستخدم أو مجموعة محددة"
+        nobody: "تصفية الموضوعات غير المخصصة لأي شخص"
+        anyone: "تصفية الموضوعات المخصصة لأي شخص"
     already_claimed: "تمت المطالبة بملكية هذا الموضوع بالفعل."
     already_assigned: "الموضوع معيَّن بالفعل إلى @%{username}"
     too_many_assigns: "لقد بلغ @%{username} أقصى عدد من الموضوعات المعيَّنة (%{max})."
@@ -63,7 +68,7 @@ ar:
       >
       > %{topic_excerpt}
 
-      إذا كنت مهتمًا، فانقر على الرابط أدناه:
+      إذا كنت مهتمًا، انقر على الرابط أدناه:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "لديك %{pending_assignments} من المهام المعيَّنة قيد الانتظار"

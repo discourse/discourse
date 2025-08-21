@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
   js:
+    topic:
+      create_zendesk_issue: "Vytvořit Zendesk Ticket"
+      view_zendesk_issue: "Zobrazit na Zendesku"
     zendesk:
+      credentials_not_setup: Nenastavili jste si přihlašovací údaje k Zendesku.
+      url_not_set: Vaše URL adresa Zendesku momentálně není nastavena.
       general_error: Něco se pokazilo.
+  site_settings:
+    zendesk_url: Vaše adresa Zendesk URL adresa. např. https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: Povolit plugin Zendesk
+    zendesk_autogenerate_all_categories: Automaticky vytvářet tikety pro všechny kategorie. Pokud je tato možnost povolena, je `zendesk_autogenerate_categories` ignorováno.
+    zendesk_autogenerate_categories: Seznam kategorií, které automaticky vytvoří tikety Zendesku.
+    zendesk_jobs_api_token: API token pro ověřování Zendesk
+    zendesk_jobs_email: E-mail, který se má použít pro ověřování v Zendesku
+    zendesk_job_push_all_posts: Odeslat všechny příspěvky v tématu jako komentáře Zendesku? Pokud je tato možnost zakázána, bude do Zendesku odeslán pouze první příspěvek.
+    zendesk_job_push_only_author_posts: Odesílat do Zendesku pouze příspěvky od původního autora tématu. Platí pouze v případě, že je povolena možnost `zendesk_job_push_all_posts`.
+    sync_comments_from_zendesk: Automaticky zveřejňovat komentáře ze Zendesku do Discourse. Platí pouze pro témata v kategorii `zendesk_autogenerate_categories`.
+    zendesk_incoming_webhook_token: Token odeslaný v datové části z odchozího webhooku Zendesk. Vyžadováno pouze v případě, že je povolena funkce `sync_comments_from_zendesk`.
+    zendesk_tags: Seznam štítků, které chcete přidat ke každému tiketu

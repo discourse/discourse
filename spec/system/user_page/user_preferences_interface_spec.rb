@@ -65,24 +65,18 @@ describe "User preferences | Interface", type: :system do
   describe "Color palette" do
     context "when there's only 1 dark color palette" do
       before do
-        dark = ColorScheme.find_by(base_scheme_id: "Dark")
+        dark = ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
         ColorScheme.where.not(id: dark.id).destroy_all
+        dark.update!(user_selectable: false)
         user.user_option.update!(dark_scheme_id: dark.id, theme_ids: [SiteSetting.default_theme_id])
       end
 
-      it "displays a checkbox for activating/deactivating the dark palette" do
+      it "always display a mode selector when schemes selectors are available" do
         user_preferences_interface_page.visit(user)
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(true)
-
-        user_preferences_interface_page.dark_mode_checkbox.click
-        user_preferences_interface_page.save_changes
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
-
-        page.refresh
-
-        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::AUTO_MODE,
+        ),
+        "the default value should be auto mode"
       end
     end
   end
@@ -96,6 +90,93 @@ describe "User preferences | Interface", type: :system do
     before { SiteSetting.interface_color_selector = "sidebar_footer" }
 
     context "when changing own preferences" do
+      fab!(:color_scheme_light_1) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+      end
+      fab!(:color_scheme_dark_1) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
+      fab!(:color_scheme_light_2) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+      end
+      fab!(:color_scheme_dark_2) do
+        Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
+      fab!(:color_scheme_light_3) do
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"],
+          user_selectable: true,
+        )
+      end
+      fab!(:color_scheme_dark_3) do
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+          user_selectable: true,
+        )
+      end
+
+      before do
+        Theme.find_default.update!(
+          color_scheme: color_scheme_light_1,
+          dark_color_scheme: color_scheme_dark_1,
+        )
+      end
+
+      it "has and can change default color scheme for light and dark" do
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.default_description"),
+        )
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_value(-1)
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.default_description"),
+        )
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_value(-1)
+        expect(user_preferences_interface_page).to have_light_scheme_css(color_scheme_light_1)
+        expect(user_preferences_interface_page).to have_dark_scheme_css(color_scheme_dark_1)
+
+        Theme.find_default.update!(
+          color_scheme: color_scheme_light_2,
+          dark_color_scheme: color_scheme_dark_2,
+        )
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.default_description"),
+        )
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_value(-1)
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.default_description"),
+        )
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_value(-1)
+        expect(user_preferences_interface_page).to have_light_scheme_css(color_scheme_light_2)
+        expect(user_preferences_interface_page).to have_dark_scheme_css(color_scheme_dark_2)
+
+        user_preferences_interface_page.light_scheme_dropdown.expand
+        user_preferences_interface_page.light_scheme_dropdown.select_row_by_value(
+          color_scheme_light_3.id,
+        )
+        user_preferences_interface_page.dark_scheme_dropdown.expand
+        user_preferences_interface_page.dark_scheme_dropdown.select_row_by_value(
+          color_scheme_dark_3.id,
+        )
+        user_preferences_interface_page.save_changes
+
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_name(
+          color_scheme_light_3.name,
+        )
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_name(
+          color_scheme_dark_3.name,
+        )
+        expect(user_preferences_interface_page).to have_light_scheme_css(color_scheme_light_3)
+        expect(user_preferences_interface_page).to have_dark_scheme_css(color_scheme_dark_3)
+      end
+
       it "can change the color mode for the current device only" do
         user_preferences_interface_page.visit(user)
 
@@ -218,6 +299,30 @@ describe "User preferences | Interface", type: :system do
         ),
         "the dropdown should still have dark mode selected after a page refresh"
       end
+
+      it "shows the mode selector when user has selected a dark color scheme" do
+        user.user_option.update!(dark_scheme_id: color_scheme_dark_1.id)
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_css(".interface-color-mode")
+      end
+
+      it "hides the mode selector when theme has identical light and dark schemes" do
+        Theme.find_default.update!(
+          color_scheme_id: color_scheme_light_1,
+          dark_color_scheme_id: color_scheme_light_1,
+        )
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_no_css(".interface-color-mode")
+      end
+
+      it "hides the mode selector when theme has no dark scheme" do
+        Theme.find_default.update!(color_scheme_id: color_scheme_light_1, dark_color_scheme_id: nil)
+
+        user_preferences_interface_page.visit(user)
+        expect(page).to have_no_css(".interface-color-mode")
+      end
     end
 
     context "when changing another user's preferences as an admin" do
@@ -227,6 +332,10 @@ describe "User preferences | Interface", type: :system do
         sign_in(admin)
         admin.user_option.update!(interface_color_mode: UserOption::DARK_MODE)
         user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+        Theme.find_default.update!(
+          color_scheme: ColorScheme.first,
+          dark_color_scheme: ColorScheme.last,
+        )
       end
 
       it "doesn't affect the viewing admin preferences and changes the target user's default preference for all devices" do

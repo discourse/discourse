@@ -19,5 +19,5 @@ export function categoryHashtagTriggerRule(textarea, opts) {
       id: "discourse.category-hashtags.categoryHashtagTriggerRule",
     }
   );
-  return hashtagTriggerRule(textarea, opts);
+  return hashtagTriggerRule(opts);
 }

@@ -190,6 +190,13 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         described_class.after_cooked_post(post)
       }.to change(Jobs::AiSpamScan.jobs, :size).by(1)
     end
+
+    it "does nothing when staff is the last revisor" do
+      expect {
+        PostRevisor.new(post).revise!(moderator, title: "#{post.topic.title} spam spam")
+        described_class.after_cooked_post(post)
+      }.not_to change(Jobs::AiSpamScan.jobs, :size)
+    end
   end
 
   describe ".hide_post" do

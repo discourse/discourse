@@ -1,6 +1,6 @@
 *Welcome to your new community, and thank you for choosing Discourse!*
 
-## :e_mail: Test your email configuration
+## 📫 Test your email configuration
 
 Email is required for new account signups and notifications.
 
@@ -8,7 +8,7 @@ Email is required for new account signups and notifications.
 
 → Email didn’t arrive? Read our guide on [email providers](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md).
 
-## :handshake: Invite your team
+## 🤝 Invite your team
 
 Collaborating with others?
 
@@ -22,7 +22,7 @@ Give your early members a place to start interacting.
 
 → Discuss ideas and plans for your community with your team.
 
-## :artist_palette: Make it your own
+## 🧑‍🎨 Make it your own
 
 Help your new members feel right at home when they first arrive.
 
@@ -32,7 +32,7 @@ Help your new members feel right at home when they first arrive.
 
 → Set up different **[<kbd>login methods</kbd>](%{base_url}/admin/config/login-and-authentication)** for your members.
 
-## :waving_hand:  Invite your first members
+## 👋  Invite your first members
 
 Welcome a few people in - the more, the merrier!
 

@@ -9,6 +9,7 @@ require "git_utils"
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
+  LOCALE_PARAM = "tl"
 
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
@@ -1219,7 +1220,7 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale = request.params["lang"] if SiteSetting.set_locale_from_param
+    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
     locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header

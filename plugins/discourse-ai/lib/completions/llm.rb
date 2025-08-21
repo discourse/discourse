@@ -51,9 +51,9 @@ module DiscourseAi
                       output_cost: 4,
                     },
                     {
-                      name: "claude-opus-4-0",
+                      name: "claude-opus-4-1",
                       tokens: 200_000,
-                      display_name: "Claude 4 Opus",
+                      display_name: "Claude 4.1 Opus",
                       input_cost: 15,
                       cached_input_cost: 1.50,
                       output_cost: 75,
@@ -126,28 +126,31 @@ module DiscourseAi
                       output_cost: 8,
                     },
                     {
-                      name: "gpt-4.1",
-                      tokens: 800_000,
-                      display_name: "GPT-4.1",
-                      input_cost: 2,
-                      cached_input_cost: 0.5,
-                      output_cost: 8,
+                      name: "gpt-5",
+                      tokens: 400_000,
+                      display_name: "GPT-5",
+                      input_cost: 1.25,
+                      cached_input_cost: 0.125,
+                      output_cost: 10,
+                      max_output_tokens: 128_000,
                     },
                     {
-                      name: "gpt-4.1-mini",
-                      tokens: 800_000,
-                      display_name: "GPT-4.1 Mini",
-                      input_cost: 0.40,
-                      cached_input_cost: 0.10,
-                      output_cost: 1.60,
-                    },
-                    {
-                      name: "gpt-4.1-nano",
-                      tokens: 800_000,
-                      display_name: "GPT-4.1 Nano",
-                      input_cost: 0.10,
+                      name: "gpt-5-mini",
+                      tokens: 400_000,
+                      display_name: "GPT-5 Mini",
+                      input_cost: 0.25,
                       cached_input_cost: 0.025,
+                      output_cost: 2.0,
+                      max_output_tokens: 128_000,
+                    },
+                    {
+                      name: "gpt-5-nano",
+                      tokens: 400_000,
+                      display_name: "GPT-5 Nano",
+                      input_cost: 0.05,
+                      cached_input_cost: 0.005,
                       output_cost: 0.40,
+                      max_output_tokens: 128_000,
                     },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
@@ -221,6 +224,30 @@ module DiscourseAi
                   endpoint: "https://openrouter.ai/api/v1/chat/completions",
                   provider: "open_router",
                 },
+                {
+                  id: "groq",
+                  models: [
+                    {
+                      name: "openai/gpt-oss-120b",
+                      tokens: 131_072,
+                      display_name: "GPT-OSS 120B",
+                      input_cost: 0.15,
+                      output_cost: 0.75,
+                      max_output_tokens: 65_536,
+                    },
+                    {
+                      name: "openai/gpt-oss-20b",
+                      display_name: "GPT-OSS 20B",
+                      tokens: 131_072,
+                      input_cost: 0.1,
+                      output_cost: 0.5,
+                      max_output_tokens: 65_536,
+                    },
+                  ],
+                  tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
+                  endpoint: "https://api.groq.com/openai/v1/chat/completions",
+                  provider: "groq",
+                },
               ]
             end
         end
@@ -238,6 +265,7 @@ module DiscourseAi
             samba_nova
             mistral
             open_router
+            groq
           ]
           if !Rails.env.production?
             providers << "fake"

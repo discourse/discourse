@@ -147,4 +147,8 @@
   --float-kit-arrow-stroke-color: var(--primary-low);
   --float-kit-arrow-fill-color: var(--secondary);
   --topic-timeline-border-color: #{$tertiary-low-or-tertiary-high};
+  --topic-timeline-handle-color: light-dark(
+    var(--tertiary-400),
+    var(--tertiary)
+  );
 }

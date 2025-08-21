@@ -132,4 +132,75 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       end
     end
   end
+
+  describe "#regen_gist" do
+    fab!(:admin)
+    fab!(:group)
+    fab!(:topic)
+    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+
+    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:post_3) { Fabricate(:post, topic: topic_1, post_number: 1) }
+    fab!(:post_4) { Fabricate(:post, topic: topic_1, post_number: 2) }
+
+    before do
+      enable_current_plugin
+      assign_fake_provider_to(:ai_default_llm_model)
+      SiteSetting.ai_summarization_enabled = true
+      SiteSetting.ai_summary_gists_enabled = true
+
+      group.add(admin)
+      assign_persona_to(:ai_summary_gists_persona, [group.id])
+      Jobs.run_immediately!
+    end
+
+    context "when a single topic id is provided" do
+      before { sign_in(admin) }
+
+      it "regenerates the gist" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.gist.where(target: topic).count).to eq(1)
+      end
+    end
+
+    context "when multiple topic ids are provided" do
+      before { sign_in(admin) }
+
+      it "regenerates the gists" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_ids: [topic.id, topic_1.id] }
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.gist.where(target: topic).count).to eq(1)
+        expect(AiSummary.gist.where(target: topic_1).count).to eq(1)
+      end
+    end
+
+    context "when more than 30 topics are provided" do
+      before { sign_in(admin) }
+
+      it "raises an error" do
+        topics = 31.times.map { Fabricate(:topic) }
+        topic_ids = topics.map(&:id)
+
+        put "/discourse-ai/summarization/regen_gist", params: { topic_ids: topic_ids }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "when user is not allowed to regenerate gists" do
+      fab!(:user)
+
+      before { sign_in(user) }
+
+      it "returns a 403" do
+        put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(403)
+      end
+    end
+  end
 end

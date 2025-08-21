@@ -24,6 +24,7 @@ el:
       solution_summary:
         one: "λύση"
         other: "λύση"
+      accepted_answer_post_number: "ανάρτηση %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "όλα"

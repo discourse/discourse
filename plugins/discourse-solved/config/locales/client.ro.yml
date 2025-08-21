@@ -24,6 +24,7 @@ ro:
         one: "soluţie"
         few: "soluţii"
         other: "soluţii"
+      accepted_answer_post_number: "postarea %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tot"

@@ -29,6 +29,8 @@ ro:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+        invite_user_predefined_attendance_notification: "%{username} ți-a setat automat participarea și te-a invitat la %{eventName}"
+        an_event: "un eveniment"
       invite: "Notifică un utilizator"
       add_to_calendar: "Adaugă în calendar"
       send_pm_to_creator: "Trimite PM către %{username}"

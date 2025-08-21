@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ru:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Войдите в систему с помощью Apple"
+        sr_title: "Войдите в систему с помощью Apple"
+        message: "Аутентификация с помощью Apple"

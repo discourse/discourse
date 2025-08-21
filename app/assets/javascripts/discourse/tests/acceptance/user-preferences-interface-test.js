@@ -1,5 +1,5 @@
 import { click, find, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -65,45 +65,7 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
   });
 
-  test("does not show option to disable dark mode by default", async function (assert) {
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".control-group.dark-mode").doesNotExist("option not visible");
-  });
-
-  test("shows light/dark color scheme pickers", async function (assert) {
-    let site = Site.current();
-    site.set("user_color_schemes", [
-      { id: 2, name: "Cool Breeze" },
-      { id: 3, name: "Dark Night", is_dark: true },
-    ]);
-
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".light-color-scheme").exists("has regular dropdown");
-    assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
-  });
-
-  test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
-    let site = Site.current();
-    site.set("user_themes", [
-      { theme_id: 1, name: "Cool Theme", color_scheme_id: null },
-    ]);
-
-    site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
-
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".light-color-scheme").exists("has regular dropdown");
-
-    assert.strictEqual(
-      selectKit(".light-color-scheme .select-kit").header().value(),
-      null
-    );
-    assert.strictEqual(
-      selectKit(".light-color-scheme .select-kit").header().label(),
-      i18n("user.color_schemes.default_description")
-    );
-  });
-
-  test("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
+  skip("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
     let meta = document.createElement("meta");
     meta.name = "discourse_theme_id";
     meta.content = "2";
@@ -161,14 +123,13 @@ acceptance(
   "User Preferences Color Schemes (with default dark scheme)",
   function (needs) {
     needs.user();
-    needs.settings({ default_dark_mode_color_scheme_id: 1 });
     needs.pretender((server, helper) => {
-      server.get("/color-scheme-stylesheet/2.json", () => {
+      server.get("/color-scheme-stylesheet/2/2.json", () => {
         return helper.response({
           success: "OK",
         });
       });
-      server.get("/color-scheme-stylesheet/3.json", () => {
+      server.get("/color-scheme-stylesheet/3/2.json", () => {
         return helper.response({
           new_href: "3.css",
         });
@@ -177,13 +138,11 @@ acceptance(
         return helper.response(userFixtures["/u/charlie.json"]);
       });
     });
-
-    test("show option to disable dark mode", async function (assert) {
-      await visit("/u/eviltrout/preferences/interface");
-
-      assert
-        .dom(".control-group.dark-mode")
-        .exists("has the option to disable dark mode");
+    needs.hooks.beforeEach(() => {
+      let meta = document.createElement("meta");
+      meta.name = "discourse_theme_id";
+      meta.content = "2";
+      document.getElementsByTagName("head")[0].appendChild(meta);
     });
 
     test("no color scheme picker by default", async function (assert) {
@@ -222,11 +181,14 @@ acceptance(
         );
     });
 
-    test("display 'Theme default' when default color scheme is not marked as selectable", async function (assert) {
+    test("always display 'Theme default'", async function (assert) {
       let meta = document.createElement("meta");
       meta.name = "discourse_theme_id";
       meta.content = "1";
       document.getElementsByTagName("head")[0].appendChild(meta);
+
+      let session = Session.current();
+      session.userColorSchemeId = -1;
 
       let site = Site.current();
       site.set("user_themes", [
@@ -239,14 +201,14 @@ acceptance(
 
       assert.dom(".light-color-scheme").exists("has regular dropdown");
       const dropdownObject = selectKit(".light-color-scheme .select-kit");
-      assert.strictEqual(dropdownObject.header().value(), null);
+      assert.strictEqual(dropdownObject.header().value(), "-1");
       assert.strictEqual(
         dropdownObject.header().label(),
         i18n("user.color_schemes.default_description")
       );
 
       await dropdownObject.expand();
-      assert.strictEqual(dropdownObject.rows().length, 1);
+      assert.strictEqual(dropdownObject.rows().length, 2);
 
       document.querySelector("meta[name='discourse_theme_id']").remove();
     });
@@ -270,6 +232,11 @@ acceptance(
       };
 
       await visit("/u/eviltrout/preferences/interface");
+
+      // force light mode, otherwise mode is ambiguous
+      const interfaceColor = this.container.lookup("service:interface-color");
+      interfaceColor.forceLightMode();
+
       assert.dom(".light-color-scheme").exists("has regular dropdown");
       assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
       assert
@@ -279,9 +246,6 @@ acceptance(
           session.userDarkSchemeId.toString(),
           "sets site default as selected dark scheme"
         );
-      assert
-        .dom(".control-group.dark-mode")
-        .doesNotExist("does not show disable dark mode checkbox");
 
       removeCookie("color_scheme_id");
       removeCookie("dark_scheme_id");
@@ -290,6 +254,11 @@ acceptance(
       await selectKit(".light-color-scheme .combobox").selectRowByValue(2);
       assert.strictEqual(
         cookie("color_scheme_id"),
+        undefined,
+        "cookie is not set"
+      );
+      assert.strictEqual(
+        cookie("dark_scheme_id"),
         undefined,
         "cookie is not set"
       );
@@ -303,6 +272,11 @@ acceptance(
         undefined,
         "cookie is unchanged"
       );
+      assert.strictEqual(
+        cookie("dark_scheme_id"),
+        undefined,
+        "cookie is unchanged"
+      );
 
       // Switch to saving changes in cookies
       await click(".color-scheme-checkbox input[type=checkbox]");
@@ -312,19 +286,9 @@ acceptance(
       // dark scheme
       await selectKit(".dark-color-scheme .combobox").expand();
       assert.true(
-        selectKit(".dark-color-scheme .combobox").rowByValue(1).exists(),
-        "default dark scheme is included"
+        selectKit(".dark-color-scheme .combobox").rowByValue(3).exists(),
+        "user selectable dark scheme is included"
       );
-
-      await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
-      assert.strictEqual(
-        cookie("dark_scheme_id"),
-        undefined,
-        "cookie is not set before saving"
-      );
-
-      await savePreferences();
-      assert.strictEqual(cookie("dark_scheme_id"), "-1", "cookie is set");
 
       await click("button.undo-preview");
       assert.strictEqual(
@@ -340,8 +304,16 @@ acceptance(
       );
     });
 
-    test("preview the color scheme only in current user's profile", async function (assert) {
+    skip("preview the color scheme only in current user's profile", async function (assert) {
       let site = Site.current();
+      site.set("user_themes", [
+        {
+          theme_id: 2,
+          name: "Cool Theme",
+          color_scheme_id: 3,
+          dark_color_scheme_id: 1,
+        },
+      ]);
 
       site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
       site.set("user_color_schemes", [

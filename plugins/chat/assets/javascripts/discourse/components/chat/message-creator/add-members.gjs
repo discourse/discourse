@@ -9,7 +9,6 @@ import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 
 export default class AddMembers extends Component {
-  @service chat;
   @service chatApi;
   @service router;
   @service toasts;

@@ -1,14 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class UserColorPaletteMenuItem extends Component {
-  @service site;
-  @service session;
-
   get siteStyle() {
     return `--icon-color: ${this.args.colorPalette.accent}`;
   }

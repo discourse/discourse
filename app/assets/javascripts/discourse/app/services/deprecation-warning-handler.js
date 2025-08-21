@@ -32,6 +32,8 @@ export const CRITICAL_DEPRECATIONS = [
   "component-template-resolving",
   "discourse.script-tag-hbs",
   "discourse.script-tag-discourse-plugin",
+  "discourse.post-stream-widget-overrides",
+  "discourse.widgets-end-of-life",
 ];
 
 const REPLACEMENT_URLS = {

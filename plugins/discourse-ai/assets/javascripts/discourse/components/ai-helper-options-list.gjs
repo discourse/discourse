@@ -15,7 +15,7 @@ export default class AiHelperOptionsList extends Component {
   }
 
   get shortcut() {
-    return translateModKey(`${PLATFORM_KEY_MODIFIER}+alt+p`);
+    return translateModKey(`${PLATFORM_KEY_MODIFIER} alt p`);
   }
 
   <template>

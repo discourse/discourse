@@ -23,6 +23,7 @@ bs_BA:
         one: "riješenje"
         few: "riješenja"
         other: "riješenja"
+      accepted_answer_post_number: "post %{post_number}"
       topic_status_filter:
         all: "sve"
         solved: "riješeno"

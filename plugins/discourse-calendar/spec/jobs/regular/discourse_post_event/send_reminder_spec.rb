@@ -93,7 +93,6 @@ describe Jobs::DiscoursePostEventSendReminder do
             original_starts_at: 3.hours.from_now,
           )
         end
-        let!(:event_date_1) { Fabricate(:event_date, event: event_1, starts_at: 3.hours.from_now) }
 
         before { init_invitees }
 
@@ -155,7 +154,6 @@ describe Jobs::DiscoursePostEventSendReminder do
         let!(:event_1) do
           Fabricate(:event, post: post_1, reminders: reminders, original_starts_at: 3.hours.ago)
         end
-        let!(:event_date_1) { Fabricate(:event_date, event: event_1, starts_at: 3.hours.ago) }
 
         before do
           init_invitees

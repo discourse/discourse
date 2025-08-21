@@ -22,12 +22,10 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     {{bodyClass "login-page"}}
 
-    {{#if @controller.isRedirectingToExternalAuth}}
-      {{! Hide the login form if the site has only one external }}
-      {{! authentication method and is being automatically redirected to it }}
-      {{loadingSpinner}}
-    {{else}}
-      <div class="login-fullpage">
+    <div class="login-fullpage">
+      {{#if @controller.isRedirectingToExternalAuth}}
+        {{loadingSpinner size="large"}}
+      {{else}}
         <FlashMessage
           @flash={{@controller.flash}}
           @type={{@controller.flashType}}
@@ -71,11 +69,13 @@ export default RouteTemplate(
                 />
               </WelcomeHeader>
               {{#if @controller.showLoginButtons}}
+
                 <LoginButtons
-                  @externalLogin={{@controller.externalLoginAction}}
+                  @externalLogin={{@controller.externalLogin}}
                   @passkeyLogin={{@controller.passkeyLogin}}
                   @context="login"
                 />
+
               {{/if}}
             {{/if}}
 
@@ -91,33 +91,43 @@ export default RouteTemplate(
                     />
                   </WelcomeHeader>
                 {{/if}}
-                <LocalLoginForm
-                  @loginName={{@controller.loginName}}
-                  @loginNameChanged={{@controller.loginNameChanged}}
-                  @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
-                  @canUsePasskeys={{@controller.canUsePasskeys}}
-                  @passkeyLogin={{@controller.passkeyLogin}}
-                  @loginPassword={{@controller.loginPassword}}
-                  @secondFactorMethod={{@controller.secondFactorMethod}}
-                  @secondFactorToken={{@controller.secondFactorToken}}
-                  @backupEnabled={{@controller.backupEnabled}}
-                  @totpEnabled={{@controller.totpEnabled}}
-                  @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
-                  @securityKeyChallenge={{@controller.securityKeyChallenge}}
-                  @showSecurityKey={{@controller.showSecurityKey}}
-                  @otherMethodAllowed={{@controller.otherMethodAllowed}}
-                  @showSecondFactor={{@controller.showSecondFactor}}
-                  @handleForgotPassword={{@controller.handleForgotPassword}}
-                  @login={{@controller.triggerLogin}}
-                  @flashChanged={{@controller.flashChanged}}
-                  @flashTypeChanged={{@controller.flashTypeChanged}}
-                  @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
-                />
+
+                <PluginOutlet
+                  @name="login-wrapper"
+                  @outletArgs={{lazyHash
+                    externalLogin=@controller.externalLogin
+                  }}
+                >
+                  <LocalLoginForm
+                    @loginName={{@controller.loginName}}
+                    @loginNameChanged={{@controller.loginNameChanged}}
+                    @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
+                    @canUsePasskeys={{@controller.canUsePasskeys}}
+                    @passkeyLogin={{@controller.passkeyLogin}}
+                    @loginPassword={{@controller.loginPassword}}
+                    @loginPasswordChanged={{@controller.loginPasswordChanged}}
+                    @secondFactorMethod={{@controller.secondFactorMethod}}
+                    @secondFactorToken={{@controller.secondFactorToken}}
+                    @backupEnabled={{@controller.backupEnabled}}
+                    @totpEnabled={{@controller.totpEnabled}}
+                    @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
+                    @securityKeyChallenge={{@controller.securityKeyChallenge}}
+                    @showSecurityKey={{@controller.showSecurityKey}}
+                    @otherMethodAllowed={{@controller.otherMethodAllowed}}
+                    @showSecondFactor={{@controller.showSecondFactor}}
+                    @handleForgotPassword={{@controller.handleForgotPassword}}
+                    @login={{@controller.localLogin}}
+                    @flashChanged={{@controller.flashChanged}}
+                    @flashTypeChanged={{@controller.flashTypeChanged}}
+                    @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
+                  />
+                </PluginOutlet>
+
                 {{#if @controller.site.desktopView}}
                   <LoginPageCta
                     @canLoginLocal={{@controller.canLoginLocal}}
                     @showSecurityKey={{@controller.showSecurityKey}}
-                    @login={{@controller.triggerLogin}}
+                    @login={{@controller.localLogin}}
                     @loginButtonLabel={{@controller.loginButtonLabel}}
                     @loginDisabled={{@controller.loginDisabled}}
                     @showSignupLink={{@controller.showSignupLink}}
@@ -132,6 +142,7 @@ export default RouteTemplate(
             {{#if
               (and @controller.showLoginButtons @controller.site.desktopView)
             }}
+
               {{#unless @controller.canLoginLocal}}
                 <div class="login-left-side">
                   <WelcomeHeader @header={{i18n "login.header_title"}} />
@@ -140,12 +151,13 @@ export default RouteTemplate(
               {{#if @controller.hasAtLeastOneLoginButton}}
                 <div class="login-right-side">
                   <LoginButtons
-                    @externalLogin={{@controller.externalLoginAction}}
+                    @externalLogin={{@controller.externalLogin}}
                     @passkeyLogin={{@controller.passkeyLogin}}
                     @context="login"
                   />
                 </div>
               {{/if}}
+
             {{/if}}
           {{/if}}
 
@@ -154,7 +166,7 @@ export default RouteTemplate(
               <LoginPageCta
                 @canLoginLocal={{@controller.canLoginLocal}}
                 @showSecurityKey={{@controller.showSecurityKey}}
-                @login={{@controller.triggerLogin}}
+                @login={{@controller.localLogin}}
                 @loginButtonLabel={{@controller.loginButtonLabel}}
                 @loginDisabled={{@controller.loginDisabled}}
                 @showSignupLink={{@controller.showSignupLink}}
@@ -164,9 +176,10 @@ export default RouteTemplate(
               />
             {{/unless}}
           {{/if}}
+
         </div>
         <PluginOutlet @name="below-login-page" />
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 );

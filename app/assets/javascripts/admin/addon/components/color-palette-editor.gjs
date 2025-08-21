@@ -10,31 +10,9 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export const LIGHT = "light";
-export const DARK = "dark";
-
-function isColorOverriden(color, darkModeActive) {
-  if (darkModeActive) {
-    return color.default_dark_hex && color.default_dark_hex !== color.dark_hex;
-  } else {
-    return color.default_hex && color.default_hex !== color.hex;
-  }
+function isColorOverriden(color) {
+  return color.default_hex && color.default_hex !== color.hex;
 }
-
-const NavTab = <template>
-  <li>
-    <a
-      class={{concatClass "" (if @active "active")}}
-      tabindex="0"
-      {{on "click" @action}}
-      {{on "keydown" @action}}
-      ...attributes
-    >
-      {{icon @icon}}
-      <span>{{@label}}</span>
-    </a>
-  </li>
-</template>;
 
 const Picker = class extends Component {
   @service toasts;
@@ -44,21 +22,13 @@ const Picker = class extends Component {
   @action
   onInput(event) {
     const color = event.target.value.replace("#", "");
-    if (this.args.showDark) {
-      this.args.onDarkChange(color);
-    } else {
-      this.args.onLightChange(color);
-    }
+    this.args.onChange(color);
   }
 
   @action
   onChange(event) {
     const color = event.target.value.replace("#", "");
-    if (this.args.showDark) {
-      this.args.onDarkChange(color);
-    } else {
-      this.args.onLightChange(color);
-    }
+    this.args.onChange(color);
   }
 
   @action
@@ -80,11 +50,7 @@ const Picker = class extends Component {
     this.invalid = false;
 
     color = this.ensureSixDigitsHex(color);
-    if (this.args.showDark) {
-      this.args.onDarkChange(color);
-    } else {
-      this.args.onLightChange(color);
-    }
+    this.args.onChange(color);
   }
 
   @action
@@ -155,23 +121,12 @@ const Picker = class extends Component {
   }
 
   get displayedColor() {
-    let color;
-    if (this.args.showDark) {
-      color = this.args.color.dark_hex;
-    } else {
-      color = this.args.color.hex;
-    }
-
+    const color = this.args.color.hex;
     return this.ensureSixDigitsHex(color);
   }
 
   get activeValue() {
-    let color;
-    if (this.args.showDark) {
-      color = this.args.color.dark_hex;
-    } else {
-      color = this.args.color.hex;
-    }
+    const color = this.args.color.hex;
 
     if (color) {
       return `#${this.ensureSixDigitsHex(color)}`;
@@ -237,42 +192,11 @@ const Picker = class extends Component {
 };
 
 export default class ColorPaletteEditor extends Component {
-  @tracked selectedMode;
   editorElement;
-
-  get currentMode() {
-    return this.selectedMode ?? this.args.initialMode ?? LIGHT;
-  }
-
-  get lightModeActive() {
-    return this.currentMode === LIGHT;
-  }
-
-  get darkModeActive() {
-    return this.currentMode === DARK;
-  }
-
-  @action
-  changeMode(newMode, event) {
-    if (
-      event.type === "click" ||
-      (event.type === "keydown" && event.keyCode === 13)
-    ) {
-      if (this.args.onTabSwitch) {
-        this.args.onTabSwitch(newMode);
-      } else {
-        this.selectedMode = newMode;
-      }
-    }
-  }
 
   @action
   revert(color) {
-    if (this.darkModeActive) {
-      this.args.onDarkColorChange(color, color.default_dark_hex);
-    } else {
-      this.args.onLightColorChange(color, color.default_hex);
-    }
+    this.args.onColorChange(color, color.default_hex);
   }
 
   @action
@@ -282,22 +206,6 @@ export default class ColorPaletteEditor extends Component {
 
   <template>
     <div class="color-palette-editor" {{didInsert this.editorInserted}}>
-      <div class="nav-pills color-palette-editor__nav-pills">
-        <NavTab
-          @active={{this.lightModeActive}}
-          @action={{fn this.changeMode LIGHT}}
-          @icon="sun"
-          @label={{i18n "admin.customize.colors.editor.light"}}
-          class="light-tab"
-        />
-        <NavTab
-          @active={{this.darkModeActive}}
-          @action={{fn this.changeMode DARK}}
-          @icon="moon"
-          @label={{i18n "admin.customize.colors.editor.dark"}}
-          class="dark-tab"
-        />
-      </div>
       <div class="color-palette-editor__colors-list">
         {{#each @colors as |color index|}}
           <div
@@ -326,9 +234,7 @@ export default class ColorPaletteEditor extends Component {
                 @position={{index}}
                 @totalColors={{@colors.length}}
                 @editorElement={{this.editorElement}}
-                @showDark={{this.darkModeActive}}
-                @onLightChange={{fn @onLightColorChange color}}
-                @onDarkChange={{fn @onDarkColorChange color}}
+                @onChange={{fn @onColorChange color}}
                 @system={{@system}}
               />
               {{#unless @hideRevertButton}}
@@ -336,9 +242,7 @@ export default class ColorPaletteEditor extends Component {
                   class={{concatClass
                     "btn-flat"
                     "color-palette-editor__revert"
-                    (unless
-                      (isColorOverriden color this.darkModeActive) "--hidden"
-                    )
+                    (unless (isColorOverriden color) "--hidden")
                   }}
                   @icon="arrow-rotate-left"
                   @action={{fn this.revert color}}

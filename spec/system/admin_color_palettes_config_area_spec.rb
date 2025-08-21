@@ -26,12 +26,22 @@ describe "Admin Color Palettes Config Area Page", type: :system do
   it "can create new color palettes" do
     config_area.visit
 
-    max_id = ColorScheme.maximum(:id) + 1
     config_area.create_button.click
     create_color_palette_modal.base_dropdown.select_row_by_name("Grey Amber")
     create_color_palette_modal.create_button.click
 
-    expect(page).to have_current_path("/admin/config/colors/#{max_id}")
-    expect(edit_config_area.palette_id).to eq(max_id)
+    expect(page).to have_current_path(%r{/admin/config/colors/\d+})
+  end
+
+  it "can create new color palette from custom palette" do
+    config_area.visit
+
+    config_area.create_button.click
+    create_color_palette_modal.base_dropdown.select_row_by_name("A Test Palette 2")
+
+    create_color_palette_modal.create_button.click
+
+    expect(page).to have_current_path(%r{/admin/config/colors/\d+})
+    expect(page).to have_no_css(".revert")
   end
 end

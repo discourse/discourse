@@ -1612,7 +1612,6 @@ hu:
     allow_user_locale: "A felhasználók számára lehetővé teszi, hogy kiválasszák saját nyelvi felület preferenciájukat."
     set_locale_from_accept_language_header: "Állítsa be a kezelőfelület nyelvét az anonim felhasználók számára a böngésző nyelvi fejlécéből"
     set_locale_from_cookie: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a \"locale\" böngésző süti segítségével."
-    set_locale_from_param: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a 'lang' URL paraméteren keresztül, pl. ?lang=es"
     support_mixed_text_direction: "Támogatja a vegyes balról jobbra és jobbról balra haladó szöveges irányokat"
     min_post_length: "Minimálisan megengedett bejegyzéshossz karakterekben (a személyes üzeneteket kivéve)"
     min_first_post_length: "Minimálisan megengedett első bejegyzés (téma törzse) hossza (a személyes üzeneteket kivéve)"
@@ -1893,8 +1892,6 @@ hu:
     allow_restore: "Engedélyezze a helyreállítást, amely képes helyettesíteni MINDEN webhelyadatot! Hagyja kikapcsolva, hacsak nem tervezi a biztonsági mentés visszaállítását"
     maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
     remove_older_backups: "A megadott napnál régebbi biztonsági mentések eltávolítása. Hagyja üresen a kikapcsolva."
-    automatic_backups_enabled: "Automatikus biztonsági mentések futtatása a mentési gyakoriságban meghatározottak szerint"
-    backup_frequency: "Meghatározza azt az időintervallumot napokban, amellyel a webhely automatikus biztonsági mentései létrejönnek. Ha például 7-re van állítva, hetente készül új biztonsági mentés. Ennek a beállításnak az aktiválása az `automatic_backups_enabled` beállítástól függ."
     s3_backup_bucket: "Távoli tárhely a biztonsági mentések tárolására. FIGYELMEZTETÉS: Győződjön meg róla, hogy a tárhely privát."
     s3_endpoint: "A végpont módosítható, hogy S3-kompatibilis szolgáltatásba, például DigitalOcean Spaces-be vagy Minio-ba készítsen biztonsági mentést. FIGYELMEZTETÉS: Hagyja üresen, ha AWS S3-at használ."
     s3_configure_tombstone_policy: "Automatikus törlési szabályzat engedélyezése a törölt feltöltésekre. FONTOS: Ha ki van kapcsolva, a feltöltések törlése után nem szabadul fel tárhely."
@@ -2055,7 +2052,6 @@ hu:
     desktop_category_page_style: "Ez a beállítás határozza meg a /categories oldal vizuális elrendezését az asztalon. Olyan lehetőségeket tartalmaz, mint az alkategóriák megjelenítése kiemelt témákkal, a legújabb témák megjelenítése vagy a legnépszerűbb témák bemutatása. A választott stílus befolyásolja a felhasználók interakcióját és a kategóriák közötti navigálást a webhelyen."
     mobile_category_page_style: "Ez a beállítás határozza meg a /categories oldal vizuális elrendezését mobilon."
     category_colors: "A kategóriákhoz engedélyezett hexadecimális színértékek listája."
-    default_dark_mode_color_scheme_id: "A sötét módban használt színpaletta."
     dark_mode_none: "Egyik sem"
     max_image_size_kb: "A maximális kép feltöltési méret. Ezt konfigurálni kell az nginx-ben (client_max_body_size) / apache-ban vagy proxy-ban is. Az ennél nagyobb, de a client_max_body_size-nál kisebb képek átméretezésre kerülnek, hogy megfeleljenek feltöltéskor."
     max_attachment_size_kb: "A csatolt fájlok maximális feltöltési mérete. Ezt az nginxben (client_max_body_size) / apache-ban vagy proxyban is be kell állítani."
@@ -5090,11 +5086,9 @@ hu:
         title: "Elfogadás és bejegyzés szerkesztése"
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
         complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
-      delete_single:
+      delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
-      delete:
-        title: "Törlés..."
       delete_and_ignore:
         title: "Megjelölés figyelmen kívül hagyása, és a bejegyzés törlése"
         description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és a bejegyzés törlésével; ha ez az első hozzászólás, akkor a témát is törli. "
@@ -5138,7 +5132,10 @@ hu:
         complete: "Bejegyzés jóváhagyva."
       approve_post:
         title: "Bejegyzés jóváhagyása"
-        confirm_closed: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"
+        complete: "Bejegyzés jóváhagyva."
+      approve_post_closed:
+        title: "Bejegyzés jóváhagyása"
+        confirm: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"
         complete: "Bejegyzés jóváhagyva."
       reject_post:
         title: "Bejegyzés elutasítása"

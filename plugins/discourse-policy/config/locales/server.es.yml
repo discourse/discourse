@@ -15,6 +15,8 @@ es:
       group_not_found: "Grupo no encontrado para la política"
       no_policy: "No existe ninguna política para la publicación"
       staff_only: "Es posible que las políticas solo se apliquen a las publicaciones del personal"
+    error:
+      no_permission: "Sin autorización"
   reports:
     unaccepted-policies:
       title: Políticas no aceptadas

@@ -148,6 +148,8 @@ export default class EmojiPicker extends Component {
   @action
   didInputFilter(value) {
     this.isFiltering = true;
+    this.term = value;
+
     if (!value?.length) {
       cancel(this.debouncedFilterHandler);
       this.visibleSections = DEFAULT_VISIBLE_SECTIONS;

@@ -69,8 +69,8 @@ pt:
           title: "Mapa de Tópicos"
         site_header:
           title: "Cabeçalho do Site"
-        suggested_topics:
-          title: "Tópicos Sugeridos"
+        more_topics:
+          title: "Mais Tópicos"
         post_menu:
           title: "Menu de Postagem"
         modal:

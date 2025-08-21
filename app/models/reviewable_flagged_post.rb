@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableFlaggedPost < Reviewable
+  include ReviewableActionBuilder
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed
@@ -308,27 +310,6 @@ class ReviewableFlaggedPost < Reviewable
     create_result(:success, :approved) do |result|
       result.update_flag_stats = { status: :agreed, user_ids: actions.map(&:user_id) }
       result.recalculate_score = true
-    end
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "#{prefix}.title"
-      action.description = "#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
-      action.completed_message = "#{prefix}.complete"
     end
   end
 

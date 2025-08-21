@@ -49,7 +49,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
-      { href: "/organisms/suggested-topics", title: "Suggested Topics" },
+      { href: "/organisms/more-topics", title: "More Topics" },
       { href: "/organisms/user-about", title: "User About Box" },
     ],
   }

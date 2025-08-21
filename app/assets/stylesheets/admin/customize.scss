@@ -544,7 +544,6 @@
     }
 
     .color-picker input {
-      width: 80px;
       margin-bottom: 0;
     }
 
@@ -961,12 +960,6 @@
 }
 
 .mobile-view .admin-customize {
-  .admin-container {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-  }
-
   .color-scheme {
     h1,
     h1 input {

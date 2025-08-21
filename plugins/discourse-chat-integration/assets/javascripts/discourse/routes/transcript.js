@@ -1,6 +1,7 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class Transcript extends DiscourseRoute {
@@ -10,18 +11,17 @@ export default class Transcript extends DiscourseRoute {
 
   async model(params) {
     if (!this.currentUser) {
-      this.session.set("shouldRedirectToUrl", window.location.href);
-      this.router.replaceWith("login");
+      this.send("showLogin");
       return;
     }
 
-    await this.router.replaceWith("discovery.latest").followRedirects();
+    await this.router
+      .replaceWith(`discovery.${defaultHomepage()}`)
+      .followRedirects();
 
     try {
-      const result = await ajax(`/chat-transcript/${params.secret}`);
-      this.composer.openNewTopic({
-        body: result.content,
-      });
+      const { content: body } = await ajax(`/chat-transcript/${params.secret}`);
+      this.composer.openNewTopic({ body });
     } catch (e) {
       popupAjaxError(e);
     }

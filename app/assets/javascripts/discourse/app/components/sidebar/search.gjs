@@ -14,7 +14,7 @@ export default class Search extends Component {
   }
 
   get sidebarShortcutCombo() {
-    return `${translateModKey("Meta")}+/`;
+    return `${translateModKey("Meta")} /`;
   }
 
   @action

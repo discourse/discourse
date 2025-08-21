@@ -42,7 +42,6 @@ gl:
       save: "Gardar"
       sounds:
         none: "Ningunha"
-      exit: "volver"
       channel_status:
         closed: "Pechado"
         open: "Abrir"

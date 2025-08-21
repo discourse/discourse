@@ -8,8 +8,7 @@ import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class ColorSchemeSelectBase extends Component {
-  @tracked
-  selectedBaseThemeId = this.args.model.baseColorSchemes?.[0]?.base_scheme_id;
+  @tracked selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.id;
 
   @action
   selectBase() {
@@ -27,10 +26,11 @@ export default class ColorSchemeSelectBase extends Component {
         {{i18n "admin.customize.colors.select_base.description"}}
         <ComboBox
           class="select-base-palette"
-          @content={{@model.baseColorSchemes}}
+          @content={{@model.colorSchemes}}
           @value={{this.selectedBaseThemeId}}
+          @nameProperty="name"
+          @valueProperty="id"
           @onChange={{fn (mut this.selectedBaseThemeId)}}
-          @valueProperty="base_scheme_id"
         />
       </:body>
       <:footer>

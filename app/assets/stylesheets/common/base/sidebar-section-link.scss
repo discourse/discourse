@@ -113,9 +113,13 @@
     .sidebar-section-link-content-text {
       @include ellipsis;
 
+      .user-status-message {
+        vertical-align: -0.125em;
+      }
+
       .emoji {
-        width: 15px;
-        height: 15px;
+        width: 1em;
+        height: 1em;
         vertical-align: baseline;
       }
 

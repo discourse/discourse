@@ -1,11 +1,8 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { not } from "truth-helpers";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {
-  @service currentUser;
-
   get tracking() {
     return this.args.item.tracking;
   }

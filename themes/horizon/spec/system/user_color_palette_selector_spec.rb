@@ -19,7 +19,14 @@ describe "Horizon theme | User color palette selector", type: :system do
   let(:marigold_palette) { theme.color_schemes.find_by(name: "Marigold") }
   let(:marigold_palette_dark) { theme.color_schemes.find_by(name: "Marigold Dark") }
 
-  before { SiteSetting.interface_color_selector = "sidebar_footer" }
+  before do
+    SiteSetting.interface_color_selector = "sidebar_footer"
+    SiteSetting.default_theme_id = theme.id
+    theme.update!(
+      color_scheme_id: marigold_palette.id,
+      dark_color_scheme_id: marigold_palette_dark.id,
+    )
+  end
 
   it "does not show the sidebar button if there are no user-selectable color palettes" do
     ColorScheme.update_all(user_selectable: false)

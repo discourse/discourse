@@ -9,8 +9,15 @@ tr_TR:
     discourse_automation_enabled: "discourse-automation eklentisini etkinleştirin"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Komut dosyası boş olamaz"
+          trigger_blank: "Tetikleyici boş olamaz"
+          script_missing_required_fields: "Komut dosyasında gerekli alanlar eksik: %{fields}"
+          trigger_missing_required_fields: "Tetikleyicide gerekli alanlar eksik: %{fields}"
       fields:
         required_field: '`%{name}` alanı `%{target}:%{target_name}` üzerinde doldurulmalıdır.'
+        invalid_field: Alanın `%{component}` bileşeni `%{target}:%{target_name}` üzerinde kullanılamıyor.
         invalid_metadata: '`%{field}` verileri geçersiz veya `%{component}` bileşeni bilinmiyor.'
     triggerables:
       errors:

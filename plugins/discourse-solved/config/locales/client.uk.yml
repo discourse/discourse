@@ -31,7 +31,8 @@ uk:
         few: "рішення"
         many: "рішення"
         other: "рішення"
-      accepted_html: "%{icon} Вирішено <span class='by'>користувачем <a href data-user-card='%{username_lower}'>%{username}</a></span> у <a href='%{post_path}' class='back'>дописі #%{post_number}</a>"
+      accepted_answer_solver_info: "Вирішено %{user} в %{post}"
+      accepted_answer_post_number: "допис %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "всі"
@@ -40,7 +41,7 @@ uk:
       no_solved_topics_title: "Ви ще не вирішили жодної теми"
       no_solved_topics_title_others: "%{username} ще не вирішив жодної теми"
       no_solved_topics_body: "Коли ви надаєте корисну відповідь на тему, ваша відповідь може бути обрана як рішення власником теми або співробітниками."
-      marked_solved_by: "Позначено як вирішене <a href data-user-card='%{username_lower}'>%{username}</a></span>"
+      marked_solved_by: "Позначено як вирішене користувачем %{user}"
       no_answer:
         title: Чи було отримано відповідь на ваше запитання?
         description: "Виділіть відповідь та допоможіть іншим, використовуючи кнопку рішення під правильною відповіддю."

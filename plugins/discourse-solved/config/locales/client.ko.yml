@@ -21,6 +21,7 @@ ko:
       solution: "해결책"
       solution_summary:
         other: "해결책"
+      accepted_answer_post_number: "%{post_number}번째 글"
       topic_status_filter:
         all: "모두"
         solved: "해결됨"

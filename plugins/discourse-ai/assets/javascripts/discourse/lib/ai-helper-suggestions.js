@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { later } from "@ember/runloop";
 import { i18n } from "discourse-i18n";
 

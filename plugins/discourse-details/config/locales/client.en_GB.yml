@@ -6,8 +6,6 @@
 
 en_GB:
   js:
-    details:
-      title: Hide Details
     composer:
       details_title: Summary
       details_text: "This text will be hidden"

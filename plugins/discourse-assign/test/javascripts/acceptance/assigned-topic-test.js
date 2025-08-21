@@ -4,7 +4,6 @@ import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -114,7 +113,7 @@ function assignNewUserToTopic(needs) {
           );
         assert
           .dom("#post_1 .assigned-to")
-          .includesText("#2 to Developers", "Also shows indirects assignments");
+          .includesText("#2 to Developers", "Also shows indirect assignments");
         assert.dom("#post_1 .assigned-to svg.d-icon-user-plus").exists();
         assert.dom("#post_1 .assigned-to a[href='/']").exists();
         assert
@@ -174,25 +173,24 @@ function assignNewUserToTopic(needs) {
 
         await visit("/u/eviltrout/notifications");
 
-        const notification = query(
-          "section.user-content .user-notifications-list li.notification"
-        );
+        assert
+          .dom("section.user-content .user-notifications-list li.notification")
+          .hasClass("assigned", "with correct assigned class");
 
-        assert.true(
-          notification.classList.contains("assigned"),
-          "with correct assigned class"
-        );
-
-        assert.strictEqual(
-          notification.querySelector("a").title,
-          i18n("notifications.titles.assigned"),
-          "with correct title"
-        );
-        assert.strictEqual(
-          notification.querySelector("svg use").href["baseVal"],
-          "#user-plus",
-          "with correct icon"
-        );
+        assert
+          .dom(
+            "section.user-content .user-notifications-list li.notification a"
+          )
+          .hasAttribute(
+            "title",
+            i18n("notifications.titles.assigned"),
+            "with correct title"
+          );
+        assert
+          .dom(
+            "section.user-content .user-notifications-list li.notification svg use"
+          )
+          .hasAttribute("href", "#user-plus", "with correct icon");
       });
     }
   );

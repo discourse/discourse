@@ -24,6 +24,7 @@ nl:
     solved_add_schema_markup: "Voeg QAPage-schemaopmaak toe aan HTML."
     enable_solved_tags: "Tags waarbij gebruikers oplossingen kunnen selecteren."
     prioritize_solved_topics_in_search: "Geef prioriteit aan opgeloste topics in zoekresultaten."
+    show_who_marked_solved: "Geef weer wie het topic als opgelost heeft gemarkeerd. Dit wordt aangegeven in het eerste bericht van het topic en in het antwoordbericht in een tooltip."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ nl:
     no_solutions:
       self: "Je hebt nog geen geaccepteerde oplossingen."
       others: "Geen geaccepteerde oplossingen."
+    filter:
+      description:
+        solved: "Filter topics die zijn opgelost"
+        unsolved: "Filter topics die niet zijn opgelost"
   badges:
     solved_1:
       name: "Opgelost!"

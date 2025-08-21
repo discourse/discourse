@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 describe "Solved", type: :system do
   fab!(:admin)
   fab!(:solver) { Fabricate(:user) }
-  fab!(:accepter) { Fabricate(:user) }
+  fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
   fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }
 
@@ -20,6 +21,7 @@ describe "Solved", type: :system do
     SiteSetting.allow_solved_on_all_topics = true
     SiteSetting.accept_all_solutions_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.show_who_marked_solved = true
+    SiteSetting.display_name_on_posts = true
   end
 
   %w[enabled disabled].each do |value|
@@ -91,9 +93,9 @@ describe "Solved", type: :system do
   end
 
   def verify_solver_and_accepter_info
-    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.username}")
+    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.name}")
     expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(
-      "Marked as solved by #{accepter.username}",
+      "Marked as solved by #{accepter.name}",
     )
   end
 

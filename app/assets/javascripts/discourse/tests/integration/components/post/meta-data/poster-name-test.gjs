@@ -31,6 +31,7 @@ module(
     });
 
     test("basic rendering", async function (assert) {
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
       this.post.name = "Robin Ward";
       this.post.user_title = "Trout Master";
@@ -48,6 +49,7 @@ module(
     });
 
     test("extra classes and glyphs", async function (assert) {
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
       this.post.staff = true;
       this.post.admin = true;
@@ -67,6 +69,7 @@ module(
 
     test("disable display name on posts", async function (assert) {
       this.siteSettings.display_name_on_posts = false;
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
       this.post.name = "Robin Ward";
 
@@ -78,6 +81,7 @@ module(
     test("doesn't render a name if it's similar to the username", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = true;
       this.siteSettings.display_name_on_posts = true;
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
       this.post.name = "evil-trout";
 
@@ -105,10 +109,8 @@ module(
     });
 
     test("renders badges that are passed in", async function (assert) {
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
       this.post.badges_granted = [
         { badge: { id: 1, icon: "heart", slug: "badge1", name: "Badge One" } },
         { badge: { id: 2, icon: "target", slug: "badge2", name: "Badge Two" } },
@@ -138,10 +140,8 @@ module(
     });
 
     test("api.addPosterIcons", async function (assert) {
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
 
       withPluginApi((api) => {
         api.addPosterIcons((_, { username }) => {
@@ -189,10 +189,8 @@ module(
     });
 
     test("poster name additional classes", async function (assert) {
+      this.post.user_id = 1;
       this.post.username = "eviltrout";
-      this.post.user = this.store.createRecord("user", {
-        username: "eviltrout",
-      });
       withPluginApi((api) => {
         api.registerValueTransformer(
           "poster-name-class",
@@ -208,6 +206,21 @@ module(
       await renderComponent(this.post);
       assert.dom("span.custom-class").exists();
       assert.dom("span.another-class").exists();
+    });
+
+    test("poster-name-user-title transformer", async function (assert) {
+      this.post.user_id = 1;
+      this.post.username = "eviltrout";
+      this.post.user_title = "Original Title";
+
+      withPluginApi((api) => {
+        api.registerValueTransformer("poster-name-user-title", ({ value }) => {
+          return value + " - Transformed";
+        });
+      });
+
+      await renderComponent(this.post);
+      assert.dom(".user-title").hasText("Original Title - Transformed");
     });
   }
 );

@@ -45,6 +45,8 @@ uk:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Ви не можете змінити опитування після перших %{minutes} хвилин."
       cannot_edit_named_poll_with_votes: "Ви не можете змінити назву опитування <strong>${name}</strong> після перших %{minutes} хвилин."
+    dynamic_poll:
+      enabled_hint: "Це опитування динамічне. Параметри можна редагувати після публікації."
     no_poll_with_this_name: "Для цього допису відсутнє голосування під назвою <strong>%{name}</strong>."
     post_is_deleted: "Немає дій над видаленою публікацією."
     user_cant_post_in_topic: "Ви не можете голосувати, тому що ви не можете писати в цій темі."

@@ -5,8 +5,10 @@ module DiscourseAi
     class EntryPoint
       def inject_into(plugin)
         plugin.on(:post_created) { |post| ::DiscourseAi::AiModeration::SpamScanner.new_post(post) }
-        plugin.on(:post_edited) do |post|
-          ::DiscourseAi::AiModeration::SpamScanner.edited_post(post)
+        plugin.on(:post_edited) do |post, _, revisor|
+          if revisor.reviewable_content_changed?
+            ::DiscourseAi::AiModeration::SpamScanner.edited_post(post)
+          end
         end
         plugin.on(:post_process_cooked) do |_doc, post|
           ::DiscourseAi::AiModeration::SpamScanner.after_cooked_post(post)

@@ -5,15 +5,19 @@ require "faker"
 
 module DiscourseDev
   class Thread < Record
-    def initialize(channel_id:, message_count: nil, ignore_current_count: false)
+    def initialize(channel_id:, count: nil, ignore_current_count: false)
       @channel_id = channel_id
-      @message_count = message_count&.to_i || 30
+      @message_count = count&.to_i || 30
       @ignore_current_count = ignore_current_count
       super(::Chat::Thread, 1)
     end
 
     def data
-      channel = ::Chat::Channel.find(@channel_id)
+      if @channel_id
+        channel = ::Chat::Channel.find(@channel_id)
+      else
+        channel = ::Chat::Channel.where(chatable_type: "Category").order("RANDOM()").first
+      end
       return if !channel
 
       if !channel.threading_enabled
@@ -28,9 +32,11 @@ module DiscourseDev
       om =
         Chat::CreateMessage.call(
           guardian: user.guardian,
-          message: Faker::Lorem.paragraph,
-          chat_channel_id: channel.id,
-        ).message
+          params: {
+            message: Faker::Lorem.paragraph,
+            chat_channel_id: channel.id,
+          },
+        ).message_instance
 
       { original_message_user: user, original_message: om, channel: channel }
     end

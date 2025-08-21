@@ -20,8 +20,8 @@ bs_BA:
           title: "Trajanje tema"
         post:
           title: "Objava"
-        suggested_topics:
-          title: "Preporučene teme"
+        more_topics:
+          title: "Još tema"
         tooltips:
           description: "Opis"
           header: "Header"

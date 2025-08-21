@@ -11,22 +11,19 @@ class SystemThemesManager
 
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
+    is_initial_install = !Theme.exists?(id: theme_id)
+
     remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    if remote_theme.color_scheme
-      remote_theme.color_scheme.update!(user_selectable: true)
-      alternative_theme_name =
-        if remote_theme.color_scheme.name =~ / Dark$/
-          remote_theme.color_scheme.name.sub(" Dark", "")
-        else
-          "#{remote_theme.color_scheme.name} Dark"
-        end
-      remote_theme
-        .color_schemes
-        .where(name: alternative_theme_name)
-        .first
-        &.update!(user_selectable: true)
-    end
     remote_theme.update_column(:enabled, true)
+
+    if is_initial_install
+      if theme_id == Theme::CORE_THEMES["horizon"]
+        remote_theme.update!(
+          dark_color_scheme: remote_theme.color_schemes.find_by(name: "Horizon Dark"),
+        )
+      end
+    end
+
     Stylesheet::Manager.clear_theme_cache!
   end
 

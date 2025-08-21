@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          spoiler_alert: "Discourse Spoiler-Alarm"
+          spoiler_alert: "Discourse – Spoiler-Alarm"
   js:
     spoiler:
       title: Spoiler unkenntlich machen

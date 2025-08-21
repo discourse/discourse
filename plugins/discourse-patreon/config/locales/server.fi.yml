@@ -23,6 +23,9 @@ fi:
     patreon_donation_prompt_campaign_url: "Lahjoituskehotuskampanjan URL"
     errors:
       patreon_creator_username_not_set: "Sinun täytyy määrittää Patreon Creator Discourse -käyttäjätunnusasetus ennen kuin otat Patreon-kirjautumisen käyttöön."
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon Creatorin access token- ja refresh token -arvot ovat virheellisiä. Sinun täytyy kopioida ja liittää uudet tunnukset <a href='https://www.patreon.com/platform/documentation/clients'>Patreonin verkkosivustolta</a> <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>sivustoasetuksiin</a>."
   patreon:
     error:
       invalid_response: "Virheellinen vastaus Patreonin APIsta"

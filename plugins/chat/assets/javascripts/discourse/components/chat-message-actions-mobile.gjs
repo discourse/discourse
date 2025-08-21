@@ -20,7 +20,6 @@ export default class ChatMessageActionsMobile extends Component {
   @service chat;
   @service site;
   @service capabilities;
-  @service modal;
   @service menu;
 
   @tracked hasExpandedReply = false;

@@ -19,7 +19,6 @@ import SmoothStreamer from "../../lib/smooth-streamer";
 import AiIndicatorWave from "../ai-indicator-wave";
 
 export default class ModalDiffModal extends Component {
-  @service currentUser;
   @service messageBus;
 
   @tracked loading = false;

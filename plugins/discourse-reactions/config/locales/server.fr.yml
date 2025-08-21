@@ -20,7 +20,7 @@ fr:
       name: Première réaction
       description: A réagi au message
       long_description: |
-        Ce badge est accordé la première fois que vous réagissez à un message. Les réactions sont un excellent moyen de faire savoir aux autres membres de la communauté que leurs messages sont intéressants, utiles, cools ou amusants. Partagez vos réactions !
+        Ce badge est accordé la première fois que vous réagissez à une publication. Les réactions sont un excellent moyen de faire savoir aux autres membres de la communauté que leurs publications sont intéressantes, utiles, cools ou amusantes. Partagez vos réactions !
   reports:
     reactions:
       title: "Réactions"

@@ -113,7 +113,7 @@ acceptance("Create Account", function () {
     sinon.stub(LoginMethod, "buildPostForm").callsFake((url, params) => {
       assert.step("buildPostForm");
       assert.strictEqual(url, "/auth/facebook");
-      assert.deepEqual(params, { signup: true });
+      assert.true(params.signup);
     });
 
     await visit("/signup");

@@ -10,3 +10,8 @@ tr_TR:
       welcome_post_type:
         new_user_track: "Tüm yeni kullanıcılar için yeni kullanıcı öğreticisini başlatın"
         welcome_message: "Tüm yeni kullanıcılara hızlı başlangıç kılavuzu içeren bir karşılama mesajı gönderin"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

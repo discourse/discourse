@@ -54,6 +54,11 @@ module(
         "<p>Hello @invalid, how are you?</p>",
         "Hello @invalid, how are you?",
       ],
+      "here mention": [
+        "Hello @here, how are you?",
+        '<p>Hello <a class="mention" data-name="here" contenteditable="false" draggable="true">@here</a>, how are you?</p>',
+        "Hello @here, how are you?",
+      ],
     };
 
     Object.entries(testCases).forEach(

@@ -22,10 +22,8 @@ import AiSummarySkeleton from "../../components/ai-summary-skeleton";
 import SmoothStreamer from "../../lib/smooth-streamer";
 
 export default class AiSummaryModal extends Component {
-  @service siteSettings;
   @service messageBus;
   @service currentUser;
-  @service site;
   @service modal;
 
   @tracked text = "";

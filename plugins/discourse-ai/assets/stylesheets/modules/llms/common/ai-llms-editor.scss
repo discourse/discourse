@@ -50,10 +50,6 @@
 .ai-persona-list-editor__current,
 .ai-llms-list-editor__configured {
   .d-admin-table {
-    tr:hover {
-      background: inherit;
-    }
-
     @include viewport.from(md) {
       th,
       td {

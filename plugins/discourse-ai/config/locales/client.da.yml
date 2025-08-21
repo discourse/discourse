@@ -57,6 +57,8 @@ da:
         select_option: "Vælg en indstilling..."
       layout:
         table: "Tabel"
+      translations:
+        title: "Oversættelser"
       spam:
         short_title: "Spam"
         last_seven_days: "Seneste 7 dage"

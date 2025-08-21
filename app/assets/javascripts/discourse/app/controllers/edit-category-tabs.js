@@ -65,6 +65,10 @@ export default class EditCategoryTabsController extends Controller {
       return false;
     }
 
+    if (transientData.text_color.length < 6) {
+      return false;
+    }
+
     if (this.saving || this.deleting) {
       return true;
     }

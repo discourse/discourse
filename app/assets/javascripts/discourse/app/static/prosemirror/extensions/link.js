@@ -76,16 +76,20 @@ const extension = {
         state.linkMarkup = mark.attrs.markup;
 
         if (state.linkMarkup === "autolink") {
+          state.inAutolink = true;
           return "<";
         }
 
         if (state.linkMarkup === "linkify") {
+          state.inAutolink = true;
           return "";
         }
 
         return "[";
       },
       close(state, mark) {
+        state.inAutolink = undefined;
+
         const { linkMarkup } = state;
         state.linkMarkup = undefined;
 

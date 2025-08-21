@@ -131,7 +131,7 @@ uk:
               help: "Назва для опису каналу. Він не використовується для з’єднання з Matrix."
             room_id:
               title: "Room ID"
-              help: "'private identifier' для кімнати. Це має виглядати приблизно так !abcdefg:matrix.org"
+              help: "«Приватний ідентифікатор» кімнати. Він має виглядати приблизно так: !abcdefghijkl"
           errors:
             unknown_token: "Маркер доступу недійсний"
             unknown_room: "Room ID недійсний"

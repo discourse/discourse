@@ -29,10 +29,8 @@ import { i18n } from "discourse-i18n";
 import PeriodChooser from "select-kit/components/period-chooser";
 
 export default class DiscoveryTopics extends Component {
-  @service router;
   @service composer;
   @service documentTitle;
-  @service modal;
   @service currentUser;
   @service topicTrackingState;
   @service site;

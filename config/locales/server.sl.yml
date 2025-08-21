@@ -1983,7 +1983,7 @@ sl:
         description: "Potrdi prijavo in utišaj uporabnika"
       agree_and_restore:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      delete_single:
+      delete:
         title: "Izbriši"
         complete: "Prispevek izbrisan."
       delete_and_ignore:
@@ -2006,6 +2006,9 @@ sl:
         title: "Odobri"
         complete: "Objava odobrena."
       approve_post:
+        title: "Odobri prispevek"
+        complete: "Objava odobrena."
+      approve_post_closed:
         title: "Odobri prispevek"
         complete: "Objava odobrena."
       reject_post:

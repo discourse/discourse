@@ -31,7 +31,7 @@ de:
         one: "%{count} Stimme"
         other: "%{count} Stimmen"
       anonymous_button:
-        one: "Abstimmen"
+        one: "Stimme"
         other: "Stimmen"
       remove_vote: "Stimme entfernen"
       no_votes_title_self: "Du hast noch für kein Thema gestimmt"

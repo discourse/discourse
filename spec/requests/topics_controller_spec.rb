@@ -5566,10 +5566,12 @@ RSpec.describe TopicsController do
         )
       end
 
-      it "renders with the crawler layout, and handles proper pagination" do
-        user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      let!(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
 
-        get topic.relative_url, env: { "HTTP_USER_AGENT" => user_agent }
+      it "renders with the crawler layout, and handles proper pagination" do
+        get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
 
         body = response.body
 
@@ -5582,7 +5584,7 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page1_time.httpdate)
 
-        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page2_time.httpdate)
@@ -5593,7 +5595,7 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
 
-        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
@@ -5639,20 +5641,38 @@ RSpec.describe TopicsController do
         get "#{topic.relative_url}/2"
       end
 
+      it "adds breadcrumbs to the correct subcategory and category url in subfolder" do
+        set_subfolder "/subpath"
+
+        subcategory = Fabricate(:category, parent_category_id: category.id)
+        topic.update!(category: subcategory)
+
+        get "/t/#{topic.slug}/#{topic.id}",
+            env: {
+              "HTTP_USER_AGENT" => "Mozilla/5.0 ...",
+              "HTTP_VIA" => "HTTP/1.0 web.archive.org",
+            }
+        expect(response.body).to have_tag(
+          "a",
+          with: {
+            href: subcategory.url,
+          },
+          text: subcategory.name,
+        )
+        expect(response.body).to have_tag("a", with: { href: category.url }, text: category.name)
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
-        let!(:user_agent) do
-          "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        end
 
         it "set to topic.url when embed_set_canonical_url is false" do
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.topic.url)
         end
 
         it "set to topic_embed.embed_url when embed_set_canonical_url is true" do
           SiteSetting.embed_set_canonical_url = true
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.embed_url)
         end
       end
@@ -5669,6 +5689,119 @@ RSpec.describe TopicsController do
 
           expect(body).to have_tag(:body, with: { class: "crawler" })
           expect(body).to_not have_tag(:meta, with: { name: "fragment" })
+        end
+      end
+
+      context "when content localization is enabled" do
+        fab!(:category) { Fabricate(:category, locale: "en") }
+        fab!(:subcategory) { Fabricate(:category, parent_category: category, locale: "en") }
+        fab!(:tag)
+
+        before do
+          SiteSetting.content_localization_enabled = true
+
+          topic.update!(category: subcategory, tags: [tag], locale: "en")
+          topic.first_post.update(locale: "en")
+          # randomly create localizations for an untested locale
+          topic
+            .posts
+            .sample(3)
+            .each do |post|
+              post.update!(locale: "en")
+              Fabricate(:post_localization, post:, locale: "de")
+            end
+        end
+
+        describe "when tl param is absent" do
+          fab!(:pt_topic) { Fabricate(:topic_localization, topic:, locale: "pt") }
+          fab!(:pt_category) { Fabricate(:category_localization, category:, locale: "pt") }
+          fab!(:pt_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "pt")
+          end
+          fab!(:pt_first_post) do
+            Fabricate(:post_localization, post: topic.first_post, locale: "pt_BR")
+          end
+
+          it "localizes (english) topic for crawler to (portuguese) default locale when localization exists" do
+            SiteSetting.default_locale = "pt"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(pt_topic.title)
+            expect(response.body).to include(pt_category.name)
+            expect(response.body).to include(pt_subcategory.name)
+            expect(response.body).to include(pt_first_post.cooked)
+          end
+
+          it "leaves topic as-is if no localization" do
+            SiteSetting.default_locale = "es"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(topic.title)
+            expect(response.body).to include(category.name)
+            expect(response.body).to include(subcategory.name)
+            expect(response.body).to include(topic.first_post.cooked)
+          end
+        end
+
+        describe "when tl param is present ?tl=ja" do
+          fab!(:ja_topic) { Fabricate(:topic_localization, topic:, locale: "ja") }
+          fab!(:ja_category) { Fabricate(:category_localization, category:, locale: "ja") }
+          fab!(:ja_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "ja")
+          end
+
+          it "localizes topic for crawler" do
+            get topic.relative_url,
+                env: {
+                  "HTTP_USER_AGENT" => bot_user_agent,
+                },
+                params: {
+                  tl: "ja",
+                }
+
+            expect(response.body).to include(ja_topic.title)
+            # breadcrumbs
+            expect(response.body).to include(ja_category.name)
+            expect(response.body).to include(ja_subcategory.name)
+          end
+        end
+
+        it "does not have N+1s when loading localizations" do
+          Fabricate(:topic_localization, topic:, locale: "ja")
+          topic
+            .posts
+            .where("post_number < 4")
+            .each { |post| Fabricate(:post_localization, post:, locale: "ja") }
+
+          initial_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          Fabricate(:post_localization, post: topic.posts.find_by_post_number(4), locale: "ja")
+
+          new_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          expect(new_sql_queries).to eq(initial_sql_queries)
         end
       end
     end

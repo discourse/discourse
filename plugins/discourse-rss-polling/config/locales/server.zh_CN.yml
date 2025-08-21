@@ -6,4 +6,7 @@
 
 zh_CN:
   site_settings:
+    rss_polling_enabled: "[RSS 轮询] 允许从多个 RSS Feed 导入嵌入帖子"
     rss_polling_frequency: "[RSS Polling] 消息轮询频率（分钟）"
+    rss_polling_use_pubdate: "[RSS 轮询] 将话题创建日期设置为 RSS Feed 中的 pubDate"
+    rss_polling_update_tags: "[RSS 轮询] 当话题更新时更新话题标签。禁用此功能会提取初始标签，但会禁用进一步的标签更改。"

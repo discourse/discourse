@@ -11,6 +11,7 @@ gl:
         solved:
           accepted_notification: "aceptado"
     solved:
+      accepted_answer_post_number: "publicación %{post_number}"
       topic_status_filter:
         all: "todo"
     discourse_automation:

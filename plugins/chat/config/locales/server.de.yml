@@ -93,7 +93,7 @@ de:
       actor_muting_target_user: "Du hast %{username} stummgeschaltet, daher kannst du keine Nachrichten an die Person senden."
       actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine persönlichen und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
       actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine persönlichen und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
-      not_reachable: "Entschuldigung, %{username} verwendet den Chat nicht."
+      not_reachable: "Entschuldige, %{username} verwendet den Chat nicht."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
@@ -158,6 +158,7 @@ de:
     mention_warning:
       dismiss: "verwerfen"
       cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+      cannot_see_group: "Einige Mitglieder von %{group_name} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
       cannot_see_multiple:
         one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         other: "%{first_identifier} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."

@@ -19,6 +19,8 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
+register_asset "stylesheets/modules/translation/common/admin-translations.scss"
+
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
 register_asset "stylesheets/modules/ai-helper/desktop/ai-helper-fk-modals.scss", :desktop
 register_asset "stylesheets/modules/ai-helper/mobile/ai-helper.scss", :mobile
@@ -146,4 +148,8 @@ after_initialize do
     face-angry
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
+
+  add_model_callback(DiscourseAutomation::Automation, :after_save) do
+    DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
 end

@@ -262,7 +262,8 @@
   }
 }
 
-.category-boxes.with-subcategories {
+.category-boxes,
+.category-boxes-with-topics {
   .category-logo {
     display: none;
   }
@@ -352,7 +353,6 @@
 
     .subcategories {
       margin-top: auto;
-      row-gap: 0.5em;
 
       .subcategory {
         margin-bottom: 0;

@@ -36,5 +36,27 @@ it:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Azione richiesta per il plug-in discourse-github"
+      repository_identifier_invalid_pm: |
+        Un archivio indicato nel plugin discourse-github non è valido:
+        %{repo_name}
+
+        Dovrebbe essere indicato in formato `user/repo`.
+
+        I distintivi non saranno assegnati fino a quando il nome non sarà corretto nelle
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Impostazioni del sito discourse-github</a>
+        e l'opzione "github_badges_enabled" non sarà riattivata.
       repository_not_found_pm_title: "Azione richiesta per il plug-in discourse-github"
+      repository_not_found_pm: |
+        Un archivio indicato nel plugin discourse-github ha restituito un errore "Non trovato": %{repo_name}
+
+        I distintivi non saranno assegnati fino a quando il nome non sarà corretto nelle
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Impostazioni del sito discourse-github </a>
+        e l'opzione "github_badges_enabled" non sarà riattivata.
       invalid_octokit_credentials_pm_title: "Azione richiesta per il plug-in discourse-github"
+      invalid_octokit_credentials_pm: |
+        Le credenziali GitHub fornite al plug-in discourse-github non sono valide. L'impostazione del sito "github badge enabled"
+        è stata disabilitata e i commit non verranno più compilati fino a quando il problema non sarà risolto.
+
+        Controlla l'impostazione del sito "github linkback access token" per assicurarti che il token sia corretto e abbia l'autorizzazione per tutti gli
+        accessi tramite le
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Impostazioni del sito discourse-github</a>.

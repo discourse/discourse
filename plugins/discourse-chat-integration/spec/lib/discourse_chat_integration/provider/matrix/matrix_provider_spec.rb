@@ -14,7 +14,7 @@ RSpec.describe DiscourseChatIntegration::Provider::MatrixProvider do
         provider: "matrix",
         data: {
           name: "Awesome Channel",
-          room_id: "!blah:matrix.org",
+          room_id: "!blah_blah_7",
         },
       )
     end
@@ -23,7 +23,7 @@ RSpec.describe DiscourseChatIntegration::Provider::MatrixProvider do
       stub1 =
         stub_request(
           :put,
-          %r{https://matrix.org/_matrix/client/r0/rooms/!blah:matrix.org/send/m.room.message/*},
+          %r{https://matrix.org/_matrix/client/r0/rooms/!blah_blah_7/send/m.room.message/*},
         ).to_return(status: 200)
       described_class.trigger_notification(post, chan1, nil)
       expect(stub1).to have_been_requested.once
@@ -33,7 +33,7 @@ RSpec.describe DiscourseChatIntegration::Provider::MatrixProvider do
       stub1 =
         stub_request(
           :put,
-          %r{https://matrix.org/_matrix/client/r0/rooms/!blah:matrix.org/send/m.room.message/*},
+          %r{https://matrix.org/_matrix/client/r0/rooms/!blah_blah_7/send/m.room.message/*},
         ).to_return(status: 400, body: '{"errmsg":"M_UNKNOWN"}')
       expect(stub1).to have_been_requested.times(0)
       expect { described_class.trigger_notification(post, chan1, nil) }.to raise_exception(

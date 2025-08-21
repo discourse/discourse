@@ -489,13 +489,9 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
-      SiteSetting
-        .all_settings(include_locale_setting: false)
-        .select do |setting|
-          site_setting_icons |= setting[:value].split("|") if setting[:setting].to_s.include?(
-            "_icon",
-          ) && String === setting[:value]
-        end
+      SiteSetting.settings_hash.each do |key, value|
+        site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
+      end
 
       site_setting_icons
     end

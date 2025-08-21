@@ -19,6 +19,17 @@ RSpec.describe PrettyText do
     )
   end
 
+  it "supports dynamic attribute passthrough" do
+    cooked = PrettyText.cook <<~MD
+      [poll dynamic=true]
+      * A
+      * B
+      [/poll]
+    MD
+
+    expect(cooked).to include('data-poll-dynamic="true"')
+  end
+
   it "can dynamically generate a poll" do
     cooked = PrettyText.cook <<~MD
       [poll type=number min=1 max=20 step=1]

@@ -29,14 +29,11 @@ const DEFAULT_HINT = htmlSafe(
 );
 
 export default class ChatModalCreateChannel extends Component {
-  @service chat;
   @service dialog;
   @service chatChannelsManager;
   @service chatApi;
   @service router;
-  @service currentUser;
   @service siteSettings;
-  @service site;
 
   @tracked flash;
   @tracked name;

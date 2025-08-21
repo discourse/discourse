@@ -23,11 +23,8 @@ import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/comp
 const FADEOUT_CLASS = "-fade-out";
 
 export default class ChatChannelRow extends Component {
-  @service api;
   @service capabilities;
   @service chat;
-  @service currentUser;
-  @service router;
   @service site;
 
   @tracked isAtThreshold = false;

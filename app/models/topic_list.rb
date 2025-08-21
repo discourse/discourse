@@ -133,13 +133,16 @@ class TopicList
       ft.topic_list = self
     end
 
+    category_associations = [:parent_category]
+    category_associations << :localizations if SiteSetting.content_localization_enabled
+
     topic_preloader_associations = [
       :image_upload,
       { topic_thumbnails: :optimized_image },
-      { category: :parent_category },
+      { category: category_associations },
     ]
 
-    topic_preloader_associations << :topic_localizations if SiteSetting.content_localization_enabled
+    topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]

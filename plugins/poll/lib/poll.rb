@@ -402,6 +402,7 @@ class DiscoursePoll::Poll
         step: poll["step"],
         chart_type: poll["charttype"] || "bar",
         groups: poll["groups"],
+        dynamic: poll["dynamic"].to_s == "true",
       )
 
     poll["options"].each do |option|

@@ -22,6 +22,7 @@ export default class ComposerSaveButton extends Component {
       @translatedTitle={{this.translatedTitle}}
       @forwardEvent={{@forwardEvent}}
       class={{concatClass "btn-primary create" (if @disableSubmit "disabled")}}
+      aria-keyshortcuts={{translateModKey "Meta+Enter" "+"}}
       ...attributes
     />
   </template>

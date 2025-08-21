@@ -23,6 +23,9 @@ ru:
     patreon_donation_prompt_campaign_url: "URL рекламной кампании для пожертвований"
     errors:
       patreon_creator_username_not_set: "Перед включением входа через Patreon необходимо установить настройку имени пользователя в Patreon Creator Discourse."
+  dashboard:
+    problem:
+      access_token_invalid: "Значения токенов доступа и обновления Patreon Creator неверны. Необходимо скопировать и вставить новые токены из <a href='https://www.patreon.com/platform/documentation/clients'>сайта Patreon</a> в <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>настройки сайта</a>."
   patreon:
     error:
       invalid_response: "Неверный ответ от Patreon API"
