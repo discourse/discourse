@@ -1599,12 +1599,10 @@ export default class ComposerService extends Service {
   cancelComposer(opts = {}) {
     this.skipAutoSave = true;
 
-    if (this._saveDraftDebounce) {
-      cancel(this._saveDraftDebounce);
-    }
+    cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
-      if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
+      if (this.get("model.anyDirty")) {
         const overridesDraft =
           this.model.composeState === Composer.OPEN &&
           this.model.draftKey === opts.draftKey &&
