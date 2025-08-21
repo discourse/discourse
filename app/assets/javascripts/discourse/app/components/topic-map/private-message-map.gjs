@@ -55,7 +55,7 @@ export default class PrivateMessageMap extends Component {
         <DButton
           @action={{@showInvite}}
           @icon="plus"
-          class="btn-default add-participant-btn"
+          class="btn-default btn-small add-participant-btn"
         />
       {{/if}}
     </div>
@@ -103,7 +103,7 @@ class PmRemoveGroupLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited"
+      class="remove-invited btn-small"
       @action={{this.showConfirmDialog}}
       @icon="xmark"
     />
@@ -170,7 +170,7 @@ class PmRemoveLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited"
+      class="remove-invited btn-small"
       @action={{this.showConfirmDialog}}
       @icon="xmark"
     />
