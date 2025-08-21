@@ -188,7 +188,7 @@ export default class UpcomingEventsCalendar extends Component {
         @initialDate={{this.router.currentRoute.queryParams.start}}
         @onDatesChange={{this.onDatesChange}}
         @events={{this.events}}
-        @initialView={{@controller.view}}
+        @initialView={{@view}}
         @customButtons={{this.customButtons}}
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
