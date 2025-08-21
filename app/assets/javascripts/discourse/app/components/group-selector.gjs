@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -93,6 +94,9 @@ export default class GroupSelector extends Component {
         @onChange={{this.handleSelectionChange}}
         @label={{this.placeholder}}
         @compareFn={{this.compareGroups}}
+        @placement="bottom-start"
+        @allowedPlacements={{array "top-start" "bottom-start"}}
+        @matchTriggerWidth={{true}}
         class="group-selector"
         style="width: 100%"
       >

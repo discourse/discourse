@@ -150,3 +150,7 @@
   animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: var(--d-border-radius);
 }
+
+.fk-d-menu[data-identifier="d-multi-select"] {
+  z-index: z("modal", "dialog") + 1;
+}

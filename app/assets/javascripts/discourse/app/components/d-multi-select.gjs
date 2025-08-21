@@ -179,6 +179,11 @@ export default class DMultiSelect extends Component {
       @identifier="d-multi-select"
       @triggerComponent={{element "div"}}
       @triggerClass={{concatClass (if this.hasSelection "--has-selection")}}
+      @visibilityOptimizer={{@visibilityOptimizer}}
+      @placement={{@placement}}
+      @allowedPlacements={{@allowedPlacements}}
+      @offset={{@offset}}
+      @matchTriggerWidth={{@matchTriggerWidth}}
       ...attributes
     >
       <:trigger>
