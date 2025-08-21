@@ -28,11 +28,7 @@ describe "Upcoming Events", type: :system do
   end
 
   context "when display events with showLocalTime" do
-    let(:fixed_time) { Time.utc(2025, 6, 2, 19, 00) }
-
     before do
-      freeze_time(fixed_time)
-
       admin.user_option.update!(timezone: "America/New_York")
 
       PostCreator.create!(
@@ -55,8 +51,9 @@ describe "Upcoming Events", type: :system do
       )
     end
 
-    it "shows the local time in the title", timezone: "Australia/Brisbane" do
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.set_fixed_time(fixed_time) }
+    it "shows the local time in the title",
+       timezone: "Australia/Brisbane",
+       time: Time.utc(2025, 6, 2, 19, 00) do
       upcoming_events.visit
       upcoming_events.open_year_list
 
@@ -79,8 +76,32 @@ describe "Upcoming Events", type: :system do
   end
 
   context "when filtering my events" do
-    it "shows only the events the user is attending" do
+    it "shows only the events the user is attending", time: Time.utc(2025, 6, 2, 19, 00) do
+      attending_event =
+        PostCreator.create!(
+          admin,
+          title: "attending post event",
+          raw: "[event status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
+        )
+      non_attending_event =
+        PostCreator.create!(
+          admin,
+          title: "non attending post event",
+          raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
+        )
+      DiscoursePostEvent::Event.find(attending_event.id).create_invitees(
+        [{ user_id: admin.id, status: 0 }],
+      )
+
       upcoming_events.visit
+
+      expect(page).to have_css(".fc-event-title", text: "Attending post event")
+      expect(page).to have_css(".fc-event-title", text: "Non attending post event")
+
+      upcoming_events.open_mine_events
+
+      expect(page).to have_css(".fc-event-title", text: "Attending post event")
+      expect(page).to have_no_css(".fc-event-title", text: "Non attending post event")
     end
   end
 
@@ -92,7 +113,7 @@ describe "Upcoming Events", type: :system do
         "/upcoming-events?end=2025-09-01&start=2025-08-01&view=dayGridMonth",
       )
 
-      find(".fc-listYear-button").click
+      upcoming_events.open_year_list
 
       expect(page).to have_current_path(
         "/upcoming-events?end=2026-01-01&start=2025-01-01&view=listYear",
@@ -103,11 +124,7 @@ describe "Upcoming Events", type: :system do
   context "when event is recurring" do
     fab!(:event)
 
-    let(:fixed_time) { Time.utc(2025, 6, 2, 19, 00) }
-
     before do
-      freeze_time(fixed_time)
-
       event.update!(
         original_starts_at: Time.utc(2025, 3, 18, 13, 00),
         timezone: "Australia/Brisbane",
@@ -116,8 +133,7 @@ describe "Upcoming Events", type: :system do
       )
     end
 
-    it "respects the until date" do
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.set_fixed_time(fixed_time) }
+    it "respects the until date", time: Time.utc(2025, 6, 2, 19, 00) do
       upcoming_events.visit
 
       expect(page).to have_css(".fc-daygrid-event-harness", count: 4)

@@ -11,6 +11,10 @@ module PageObjects
         def open_year_list
           find(".fc-listYear-button").click
         end
+
+        def open_mine_events
+          find(".fc-mineEvents-button").click
+        end
       end
     end
   end
