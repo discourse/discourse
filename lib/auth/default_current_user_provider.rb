@@ -281,6 +281,21 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = user
   end
 
+  def start_impersonating_user(user)
+    @user_token.update!(
+      impersonated_user_id: user.id,
+      impersonation_expires_at:
+        SiteSetting.experimental_impersonation_time_limit_minutes.minutes.from_now,
+    )
+  end
+
+  def stop_impersonating_user
+    @user_token.update!(impersonated_user_id: nil, impersonation_expires_at: nil)
+    # Clear memoization of `current_user` so we can get the acting user back in
+    # the context of the same request.
+    @env.delete(CURRENT_USER_KEY)
+  end
+
   def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
     data = {
       token: unhashed_auth_token,
