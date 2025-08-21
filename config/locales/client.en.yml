@@ -6914,7 +6914,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
-          default: "Default"
+          default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
@@ -7153,9 +7153,6 @@ en:
           default_dark_badge:
             text: "Default dark"
             title: "Default dark color palette"
-          default_both_badge:
-            text: "Default light and dark"
-            title: "Default light and dark color palette"
           system_palette: "This is a built-in color palette, it cannot be edited or deleted."
           back_to_colors: "Back to color palettes"
           long_title: "Color palettes"
