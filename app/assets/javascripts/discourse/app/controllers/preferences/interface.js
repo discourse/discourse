@@ -277,9 +277,15 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed("selectedDarkColorSchemeId")
-  showInterfaceColorModeSelector(selectedDarkColorSchemeId) {
-    return this.defaultDarkSchemeId > 0 || selectedDarkColorSchemeId > 0;
+  @discourseComputed("selectedDarkColorSchemeId", "currentThemeId")
+  showInterfaceColorModeSelector(selectedDarkColorSchemeId, themeId) {
+    const theme = this.userSelectableThemes?.findBy("id", themeId);
+    return (
+      (this.defaultDarkSchemeId > 0 &&
+        theme.color_scheme_id &&
+        theme.color_scheme_id !== theme.dark_color_scheme_id) ||
+      selectedDarkColorSchemeId > 0
+    );
   }
 
   @discourseComputed
