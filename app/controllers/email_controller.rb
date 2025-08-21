@@ -8,7 +8,7 @@ class EmailController < ApplicationController
                      :redirect_to_login_if_required,
                      :redirect_to_profile_if_required
 
-  skip_before_action :verify_authenticity_token, only: [:unsubscribe], if: :one_click_unsubscribe?
+  skip_before_action :verify_authenticity_token, if: :one_click_unsubscribe?
 
   def unsubscribe
     key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
@@ -75,6 +75,6 @@ class EmailController < ApplicationController
   private
 
   def one_click_unsubscribe?
-    request.post? && params["List-Unsubscribe"] == "One-Click"
+    request.post? && params[:action] == "unsubscribe" && params["List-Unsubscribe"] == "One-Click"
   end
 end
