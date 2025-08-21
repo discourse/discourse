@@ -63,6 +63,8 @@ cs:
           param:
             name:
               title: "Název"
+            room_id:
+              help: "„Soukromý identifikátor“ místnosti. Měl by vypadat nějak takto !abcdefg:matrix.org"
         zulip:
           param:
             subject:

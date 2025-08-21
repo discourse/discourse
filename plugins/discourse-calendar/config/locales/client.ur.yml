@@ -30,6 +30,7 @@ ur:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      edit_reason: "ایونٹ اپ ڈیٹ"
       show_all: "تمام دکھائیں"
       add_to_calendar: "کیلنڈر میں شامل کریں"
       created_by: "نے بنایا"
@@ -54,6 +55,7 @@ ur:
       builder_modal:
         custom_fields:
           placeholder: "اختیاری"
+        update_event_title: "ایونٹ میں ترمیم"
         create: "بنائیں"
         update: "محفوظ کریں"
         show_local_time:

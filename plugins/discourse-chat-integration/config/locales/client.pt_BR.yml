@@ -13,7 +13,7 @@ pt_BR:
   js:
     chat_integration:
       menu_title: "Integrações de chat"
-      settings: "Definições"
+      settings: "Configurações"
       no_providers: "Você precisa habilitar alguns provedores nas configurações do plugin"
       channels_with_errors: "Alguns canais deste provedor falharam na última vez em que as mensagens foram enviadas. Clique no(s) ícone(s) de erro para saber mais."
       channel_exception: "Um erro desconhecido ocorreu na última vez que uma mensagem foi enviada para este canal."

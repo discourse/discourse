@@ -418,7 +418,7 @@ tr_TR:
               title: "Bağımsız"
               description: "Bağımsız bir etkinliğe katılınamaz."
             public:
-              title: "Genel"
+              title: "Herkese Açık"
               description: "Herkese açık bir etkinliğe herkes katılabilir."
             private:
               title: "Özel"

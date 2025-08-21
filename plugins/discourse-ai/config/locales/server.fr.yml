@@ -45,7 +45,7 @@ fr:
     ai_toxicity_flag_threshold_insult: "Insulte"
     ai_toxicity_flag_threshold_threat: "Menace"
     ai_toxicity_flag_threshold_sexual_explicit: "Sexualité explicite"
-    ai_toxicity_groups_bypass: "Les utilisateurs de ces groupes ne verront pas leurs messages classés par le module de toxicité."
+    ai_toxicity_groups_bypass: "Les utilisateurs de ces groupes ne verront pas leurs publications classées par le module de toxicité."
     ai_sentiment_enabled: "Activez le module de sentiment."
     ai_sentiment_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de sentiment"
     ai_sentiment_inference_service_api_key: "Clé d'API pour l'API de sentiment"

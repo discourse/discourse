@@ -311,12 +311,16 @@ ur:
             head:
               user: صارف
         products:
+          operations:
+            update: پروڈکٹ اپ ڈیٹ
           product:
             description: تفصیل
             active: فعال
             created_at: بنایا گیا
             updated_at: اپ ڈیٹ
         plans:
+          operations:
+            update: اپ ڈیٹ پلان
           plan:
             active: فعال
             created_at: بنایا گیا

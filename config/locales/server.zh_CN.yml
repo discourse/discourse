@@ -239,12 +239,12 @@ zh_CN:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
-      invalid_locale: "%{invalid_locale} 不是一个有效的语言环境"
+      invalid_locale: "%{invalid_locale} 不是一个有效的语言区域"
       too_long_validation:
         other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
-      reserved: "%{name} 组名已保留，请选择其他名称"
+      reserved: "%{name} 群组名称已预留，请选择其他名称"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -294,10 +294,10 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
-      site_settings_are_deprecated: "以下设置已弃用： %{old_names}。请改用 %{new_names}。"
-      site_settings_are_hidden: "你无权更改隐藏设置： %{setting_names}"
-      site_settings_are_shadowed_globally: "你无法更改这些设置，因为它们是全局配置的： %{setting_names}"
-      site_settings_are_unconfigurable: "你无权更改不可配置的设置： %{setting_names}"
+      site_settings_are_deprecated: "以下设置已弃用：%{old_names}。请改用 %{new_names}。"
+      site_settings_are_hidden: "您无权更改隐藏设置：%{setting_names}"
+      site_settings_are_shadowed_globally: "您无法更改这些设置，因为它们在全局范围内配置：%{setting_names}"
+      site_settings_are_unconfigurable: "您无权更改不可配置的设置：%{setting_names}"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
@@ -317,7 +317,7 @@ zh_CN:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度必须至少为 3 个字符，以避免意外限制合法用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中：%{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了 'composer media optimization image enabled'，则无法禁用带状图片元数据。在禁用带状图片元数据之前，禁用 'composer media optimization image enabled'。"
-      x_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
+      x_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 摘要图片不能是 .svg 图片。"
       tl0_and_anonymous_flag: "对于匿名用户，必须提供 'site contact email' 或 'email address to report illegal content'。"
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "此设置需要首先启用“允许匿名模式”设置。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -537,7 +537,7 @@ zh_CN:
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
       invalid_domain: "'%{domain}' 不是有效网域。"
-      too_many_domains: "域名过多。最多为 %{max}。"
+      too_many_domains: "域过多。最多为 %{max} 个。"
       invalid_incoming_email: "'%{email}' 不是有效的电子邮件地址。"
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
@@ -547,7 +547,7 @@ zh_CN:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
       counting_too_many_email_domains:
-        other: "一次最多可统计 %{count} 个电子邮件域名"
+        other: "一次最多可以统计 %{count} 个电子邮件域"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
     default_names:
@@ -581,21 +581,21 @@ zh_CN:
     "new-topic": |
       感谢您对 %{site_name} 做出贡献！
 
-      发帖之前，请选择一个类别或标签，将此主题与相关讨论分组，以便其他人轻松找到它。
+      发帖之前，请选择一个类别或标签，将此话题与相关讨论分组，以便其他人可以轻松找到它。
 
-      有关参与我们社区的更多提示和建议，[查看我们的社区准则](%{base_path}/guidelines)。
+      有关参与我们社区的更多提示和建议，请[查看我们的社区准则](%{base_path}/guidelines)。
     "new-reply": |
       感谢您对 %{site_name} 的贡献！
 
-      请记得，我们都是活生生的人。请友善对待您的社区成员。
+      请记住，我们都是活生生的人。请友善对待您的社区成员。
 
-      如需了解更多参与社区的提示和建议，[请查看我们的社区准则](%{base_path}/guidelines)。
-    dominating_topic: 你在这个主题中发表了很多文章！请考虑让其他人也有机会参与进来。
+      有关参与社区的更多提示和建议，请[查看我们的社区准则](%{base_path}/guidelines)。
+    dominating_topic: 您在这个话题中发表了很多帖子！请考虑让其他人也有机会参与进来。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
-    dont_feed_the_trolls: 该帖子已经被举报过以引起版主注意。回复负面内容会可能会引发更多的负面行为——你确定要继续吗？
+    dont_feed_the_trolls: 此帖子已经被举报过以引起版主注意。回复负面内容会可能会引发更多的负面行为 – 确定要继续吗？
     too_many_replies: |
-      新用户在同一主题下回复数量暂时限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他主题，以继续了解社区。
+      新用户在同一话题下的回复数量暂时被限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他话题，以继续了解社区。
   activerecord:
     attributes:
       category:
@@ -1542,13 +1542,13 @@ zh_CN:
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此 Discourse 实例的默认语言。您可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本</a>中替换系统生成的类别和话题的文本。"
     allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
-    set_locale_from_accept_language_header: "通过匿名用户浏览器的语言标头为其设置界面语言"
+    set_locale_from_accept_language_header: "从网络浏览器的语言标头为匿名用户设置界面语言"
     set_locale_from_cookie: "允许通过 'locale' 浏览器 Cookie 设置匿名用户的区域设置"
-    set_locale_from_param: "允许通过 'tl' URL 参数设置匿名用户的语言环境，例如 ?tl=es"
+    set_locale_from_param: "允许通过 'tl' URL 参数设置匿名用户的语言区域，例如 ?tl=es"
     support_mixed_text_direction: "支持从左到右和从右到左混合的文本方向"
     min_post_length: "允许的帖子的最小长度，以字符为单位（不包括个人消息）"
     min_first_post_length: "允许的第一个帖子（即话题正文）的最小长度（不包括个人消息）"
-    prevent_uploads_only_posts: "检查最小文章长度时，不计算上传的 Markdown 代码"
+    prevent_uploads_only_posts: "检查最小帖子长度时，不计入上传的 Markdown 代码"
     min_personal_message_post_length: "消息的最小允许帖子长度（包括第一个帖子和回复），以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
     topic_featured_link_enabled: "允许用户将功能链接与其话题关联。开启后，话题可以附加一个高亮显示的链接，该链接公开可见，如果用户有足够的权限，还可以对其进行编辑。功能链接可以提供相关的附加内容，从而增强话题的可理解性。"
@@ -1616,7 +1616,7 @@ zh_CN:
     block_onebox_on_redirect: "防止为重定向 URL 创建 onebox。此配置可以停止为任何重定向到不同目的地的 URL 创建视觉卡 (onebox)，确保直接、非重定向 URL 优先获得 onebox。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
     enable_inline_onebox_on_all_domains: "忽略 allowed_inline_onebox_domains 网站设置并在所有域上允许内联 Onebox。"
-    onebox_locale: "发送给 onebox 提供商的语言环境。如果留空，将使用默认语言环境"
+    onebox_locale: "发送给 onebox 提供商的语言区域。如果留空，将使用默认语言区域"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
     max_oneboxes_per_post: "设置单个帖子中可以包含的最大 onebox 数量。onebox 提供了帖子中链接内容的预览。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
@@ -1706,7 +1706,7 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
-    allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非/字符。"
+    allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非 / 字符。"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -1765,7 +1765,7 @@ zh_CN:
     login_required: "需要进行身份验证才能阅读此网站上的内容，禁止匿名访问。"
     min_username_length: "最小用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值短，您的网站将无法正常工作！"
     max_username_length: "最大用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值长，您的网站将无法正常工作！"
-    unicode_usernames: "允许用户名和组名包含 Unicode 字母和数字"
+    unicode_usernames: "允许用户名和群组名称包含 Unicode 字母和数字"
     allowed_unicode_username_characters: "仅在用户名中允许某些 Unicode 字符的正则表达式。ASCII 字符和数字将始终被允许，不需要包含在白名单中。"
     reserved_usernames: "不允许注册的用户名。通配符 * 可用于匹配任何字符零次或多次。"
     min_password_length: "定义网站上用户密码所需的最少字符数。过低的值可能会让未经授权的人员更容易猜到密码，从而影响安全性；而过高的值则可能会让用户更难记住密码。"
@@ -1885,7 +1885,7 @@ zh_CN:
     s3_use_cdn_url_for_all_uploads: "对上传到 s3 的所有文件使用 CDN URL，而不仅仅对图片使用。"
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "允许使用外部服务生成系统头像。启用此设置后，用户头像将不再由 Discourse 系统生成，而是由 `external_system_avatars_ur` 设置指定的外部服务生成和提供。"
-    external_system_avatars_url: "外部系统头像服务的 URL。允许替换为 {username} {first_letter} {color} {size}。留空则禁用。"
+    external_system_avatars_url: "外部系统头像服务的 URL。允许的替换为 {username} {first_letter} {color} {size}。留空会禁用。"
     external_emoji_url: "表情符号图片的外部服务的 URL。留空将禁用。"
     use_site_small_logo_as_system_avatar: "使用网站的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
@@ -2147,8 +2147,8 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_mode: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_likes_in_anonymous_mode: "启用此设置可让匿名浏览网站的用户点赞帖子。激活后，用户在网站上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_mode`。"
+    allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
+    allow_likes_in_anonymous_mode: "启用此设置可让匿名浏览站点的用户点赞帖子。激活后，用户在站点上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_mode`。"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -2197,10 +2197,10 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
-    svg_icon_subset: "添加你希望包含在资产中的其他 FontAwesome 图标。实心图标不使用前缀，普通图标使用 \"far-\"，品牌图标使用 \"fab-\"。"
+    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。实心图标不使用前缀，普通图标使用 'far-'，品牌图标使用 'fab-'。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_requirement: "将全名字段设为注册表单中的必选字段、可选字段或可选但隐藏的字段。"
-    interface_color_selector: "配置界面颜色的亮/暗模式选择器的可用位置。"
+    interface_color_selector: "配置界面颜色的浅色/深色模式选择器的可用位置。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
@@ -2373,7 +2373,7 @@ zh_CN:
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
-    enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎会员并允许他们搜索站点内容"
+    enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
     welcome_banner_image: "设置在欢迎横幅背景中显示的图片。"
     welcome_banner_location: "确定欢迎横幅在页面上的显示位置。"
     welcome_banner_page_visibility: "确定哪些页面会显示欢迎横幅。"
@@ -2386,29 +2386,29 @@ zh_CN:
     glimmer_post_stream_mode_auto_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子流实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     deactivate_widgets_rendering: "禁用旧版微件渲染引擎。这将禁用所有未更新为 Glimmer 组件的微件，并且无论 `glimmer_post_stream_mode` 设置的值如何，都会强制无条件启用 Glimmer Post Stream。不建议在生产站点使用此设置，因为它可能会破坏现有的主题和插件。"
     floatkit_autocomplete_composer: "在输入框中启用基于 Floatkit 的自动补全菜单。这是一个 UI 增强功能，将取代当前基于 jQuery 的自动补全菜单。"
-    floatkit_autocomplete_input_fields: "启用基于Floatkit的自动完成菜单，用于全页搜索和组选择器字段的输入字段。 这是一个 UI 增强功能，将取代当前基于 jQuer的自动完成菜单。"
+    floatkit_autocomplete_input_fields: "在全页搜索和群组选择器字段中为输入字段启用基于 Floatkit 的自动补全菜单。这是一个 UI 增强功能，将取代当前基于 jQuer 的自动补全菜单。"
     floatkit_autocomplete_chat_composer: "在聊天输入框中启用基于 Floatkit 的自动补全菜单。这是一个 UI 增强功能，将取代当前基于 jQuery 的自动补全菜单。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
-    experimental_auto_grid_images: "当在编辑器中上传了 3 张或更多图像时，自动将图像包裹在 [grid] 标签中。"
+    experimental_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图像包装在 [grid] 标记中。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
-    about_page_extra_groups: "显示在关于页面版主下方的群组。"
-    about_page_extra_groups_initial_members: "关于页面上每个群组上需要展开的成员数量。"
-    about_page_extra_groups_show_description: "是否在关于页面中包含群组描述。"
-    about_page_extra_groups_order: "关于页面上额外群组的顺序。"
+    about_page_extra_groups: "显示在“关于”页面版主下方的群组。"
+    about_page_extra_groups_initial_members: "“关于”页面上每个群组上可以展开的成员数量。"
+    about_page_extra_groups_show_description: "是否在“关于”页面中包含群组描述。"
+    about_page_extra_groups_order: "“关于”页面上额外群组的顺序。"
     adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/…`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
-    default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术含量更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
+    default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
-    content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和主题。支持的语言环境在 'content localization supported locales' 中设置。"
-    content_localization_supported_locales: "用户内容可翻译成的受支持本地语言列表。要求 'content localization enabled'。"
-    content_localization_allowed_groups: "允许群组更新本地化内容。需要 'content localization enabled''。"
-    content_localization_anon_language_switcher: "启用语言切换器，允许未登录的网站访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。取决于 'content localization supported locales' 中定义的语言列表"
+    content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
+    content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
+    content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
+    content_localization_anon_language_switcher: "启用语言切换器，允许未登录的站点访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。取决于 'content localization supported locales' 中定义的语言列表"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2450,10 +2450,10 @@ zh_CN:
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       min_username_length_exists: "您不能将最小用户名长度设置为高于最短用户名 (%{username})。"
-      min_group_name_length_exists: "您不能将最小用户名长度设置为高于最短群组名 (%{group_name})。"
+      min_group_name_length_exists: "您不能将最小用户名长度设置为大于最短群组名称 (%{group_name})。"
       min_username_length_range: "您不能将最小值设置为高于最大值。"
       max_username_length_exists: "您不能将最大用户名长度设置为低于最长用户名 (%{username})。"
-      max_group_name_length_exists: "您不能将最大用户名长度设置为低于最长群组名 (%{group_name})。"
+      max_group_name_length_exists: "您不能将最大用户名长度设置为小于最长群组名称 (%{group_name})。"
       max_username_length_range: "您不能将最大值设置为低于最小值。"
       invalid_hex_value: "颜色值必须是 6 位十六进制代码。"
       empty_selectable_avatars: "在启用此设置之前，您必须先上传至少两个可选择的头像。"
@@ -2477,7 +2477,7 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
-      content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 网站设置，并且 `content localization supported locales` 至少有一种语言。"
+      content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 站点设置，并且 `content localization supported locales` 至少有一种语言。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
       s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:
@@ -2501,20 +2501,20 @@ zh_CN:
     video: "[视频]"
   filter:
     description:
-      status: "根据状态筛选话题"
+      status: "按状态筛选话题"
       in: "在个人列表中筛选话题"
-      order: "按特定字段排序话题"
+      order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
-      category_any: "显示任意指定类别中的话题（以逗号分隔）"
-      exclude_category: "排除特定类别的话题"
-      category_without_subcategories: "只显示父类别中的话题，不显示子类别"
-      exclude_category_without_subcategories: "仅从父类别中排除话题，不排除子类别"
+      category_any: "显示任意指定类别（以逗号分隔）中的话题"
+      exclude_category: "排除特定类别中的话题"
+      category_without_subcategories: "只显示父类别中的话题，排除子类别"
+      exclude_category_without_subcategories: "仅排除父类别中的话题，不排除子类别"
       tag: "显示带有特定标签的话题"
-      tags_any: "显示具有任意指定标签的话题（以逗号分隔）"
-      tags_all: "显示带有所有指定标签的主题（以加号分隔）"
+      tags_any: "显示具有任意指定标签（以逗号分隔）的话题"
+      tags_all: "显示带有所有指定标签（以加号分隔）的话题"
       exclude_tag: "排除带有特定标签的话题"
-      exclude_tags_any: "排除带有任何指定标签的话题（以逗号分隔）"
-      exclude_tags_all: "排除带有所有指定标签的话题（以加号分隔）"
+      exclude_tags_any: "排除带有任意指定标签（以逗号分隔）的话题"
+      exclude_tags_all: "排除带有所有指定标签（以加号分隔）的话题"
       tags_alias: "“标签：”筛选器的别名"
       tag_group: "显示带有特定标签组的标签的话题"
       exclude_tag_group: "排除带有特定标签组的标签的话题"
@@ -2679,7 +2679,7 @@ zh_CN:
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了点问题，可能该用户名或电子邮件地址已被注册，试试点击忘记密码链接。"
     omniauth_error:
-      generic_without_provider: "抱歉，尝试使用登录服务授权您的帐户时出现错误。请重试。"
+      generic_without_provider: "抱歉，尝试使用登录服务授权您的帐户时出错。请重试。"
       generic_with_provider: "抱歉，尝试使用 %{provider} 授权您的帐户时出错。请重试。"
       csrf_detected: "抱歉，授权超时，或者您已切换浏览器。请重试。"
       request_error: "抱歉，启动授权时发生错误。请重试。"
@@ -2774,14 +2774,14 @@ zh_CN:
       inactive_user: "停用用户"
       reviewable_reject_auto: "自动处理排队的可审核条目"
       reviewable_reject: "可审核用户被拒绝"
-      reviewable_details_scrubbed: "用户详细信息被 %{staff} 清除\n\n原因： %{reason}\n\n时间戳： %{timestamp}"
+      reviewable_details_scrubbed: "用户详细信息被 %{staff} 清除\n\n原因：%{reason}\n\n时间戳：%{timestamp}"
     email_in_spam_header: "用户的第一封电子邮件已被举报为垃圾邮件"
     already_silenced: "用户已在 %{time_ago}被 %{staff} 禁言。"
     already_suspended: "用户已在 %{time_ago}被 %{staff} 封禁。"
     cannot_delete_has_posts:
       other: "用户 %{username} 在公开话题或个人消息中有 %{count} 个帖子，因此无法被删除。"
     cannot_bulk_delete: "无法删除一个或多个用户，因为他们是管理员、有太多帖子或有很早之前的帖子。"
-    cannot_remove_all_auth: "您必须至少有一个关联账户、密钥或密码。"
+    cannot_remove_all_auth: "您必须设置至少一个关联帐户、通行密钥或密码。"
   unsubscribe_mailer:
     title: "退订邮件"
     subject_template: "确认您不再希望收到%{site_title}的电子邮件动态"
@@ -3896,7 +3896,7 @@ zh_CN:
 
         %{flag_reason}
 
-        请查看我们的 [社区准则](%{base_url}/guidelines) 了解详情。
+        请查看我们的[社区准则](%{base_url}/guidelines)了解详情。
     account_exists:
       title: "帐户已存在"
       subject_template: "[%{email_prefix}] 帐户已存在"
@@ -4147,7 +4147,7 @@ zh_CN:
     images:
       too_large: "抱歉，您尝试上传的图片过大（大小上限为 %{max_size_kb}KB），请调整大小并重试。"
       too_large_humanized: "抱歉，您尝试上传的图片太大（大小上限为 %{max_size}），请调整大小并重试。"
-      larger_than_x_megapixels: "抱歉，文件名为 %{original_filename} 的图片过大（最大尺寸为 %{max_image_megapixels} 万像素），请调整大小后再试。"
+      larger_than_x_megapixels: "抱歉，文件名为 %{original_filename} 的图片过大（最大尺寸为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
       size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
       too_large: "（图片大小超过 %{max_size_kb}KB）"
@@ -5050,15 +5050,15 @@ zh_CN:
       revoked: 已撤消
       restored: 已恢复
     bulk_user_delete: "已通过批量删除操作删除"
-    cli_bulk_post_delete: "从 rake 任务中批量删除"
-    api_post_delete: "已通过 API 删除"
-    reminder_deleted: "由新的提醒替换"
+    cli_bulk_post_delete: "通过 rake 任务批量删除"
+    api_post_delete: "通过 API 删除"
+    reminder_deleted: "由新提醒替换"
     user_associated_posts_deleted: "用户已被删除"
     imap_email_deleted: "电子邮件已在 IMAP 服务器上删除"
     imap_email_marked_as_spam: "电子邮件已在 IMAP 服务器上移至垃圾邮件"
     auto_deleted_hidden_posts: "自动删除隐藏的帖子"
-    seed_data_topic_updated: "种子数据主题已更新"
-    seed_data_topic_deleted: "种子数据主题已删除"
+    seed_data_topic_updated: "种子数据话题已更新"
+    seed_data_topic_deleted: "种子数据话题已删除"
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
@@ -5083,7 +5083,7 @@ zh_CN:
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅%{link}。"
       auto_silence_regex: "第一个帖子与%{link}设置匹配的新用户。"
       watched_word:
-        other: "此帖子包括一个关注词，举报词为：%{words}。更多信息请查看 %{link}。"
+        other: "此帖子包括关注词，举报词为：%{words}。请查看%{link}了解更多信息。"
       staged: "暂存用户的新话题和帖子必须由管理人员批准。请参阅%{link}。"
       category: "此类别中的帖子要求管理人员手动审批。请参阅%{link}。"
       must_approve_users: "所有新用户都必须由管理人员审批。请参阅%{link}。"
@@ -5097,7 +5097,7 @@ zh_CN:
         watched_word: 关注词设置
         category: 类别设置
       no_context:
-        watched_word: "此帖子包括一个关注词。更多信息请查看%{link}。"
+        watched_word: "此帖子包括一个关注词。请查看%{link}了解更多信息。"
     actions:
       agree:
         title: "是"
@@ -5116,7 +5116,7 @@ zh_CN:
       agree_and_silence:
         title: "将用户禁言"
         description: "同意举报并禁言用户。"
-        complete: "用户已禁言。"
+        complete: "用户被禁言。"
       agree_and_restore:
         title: "恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
@@ -5131,71 +5131,71 @@ zh_CN:
         complete: "举报已确认，您现在可以编辑该帖子。"
       delete:
         title: "删除"
-        complete: "帖子已删除。"
+        complete: "帖子已被删除。"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
-        complete: "帖子已删除。"
+        complete: "帖子已被删除。"
       delete_and_ignore_replies:
         title: "忽略举报，删除帖子和回复"
         description: "忽略举报，将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该话题"
         confirm: "确定要同时删除对帖子的回复吗？"
-        complete: "帖子和回复已删除。"
+        complete: "帖子和回复已被删除。"
       delete_and_agree:
         title: "删除帖子"
         description: "同意举报并删除此帖子；如果是第一个帖子，同时删除话题。"
-        complete: "帖子已删除。"
+        complete: "帖子已被删除。"
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
         confirm: "确定要同时删除对帖子的回复吗？"
-        complete: "帖子和回复已删除。"
+        complete: "帖子和回复已被删除。"
       disagree_and_restore:
         title: "否，恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
         complete: "帖子已恢复。"
       disagree:
         title: "否"
-        complete: "举报已忽略."
+        complete: "举报已被忽略。"
       discard_post:
         title: "舍弃帖子"
-        complete: "帖子已丢弃。"
+        complete: "帖子已被舍弃。"
       revise_and_reject_post:
         title: "修订帖子…"
         complete: "帖子被拒绝，等待修改。"
       ignore:
         title: "忽略"
-        complete: "举报已忽略."
+        complete: "举报已被忽略。"
       ignore_and_do_nothing:
         title: "不进行操作"
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
-        complete: "举报已忽略."
+        complete: "举报已被忽略。"
       approve:
         title: "批准"
-        complete: "帖子已批准."
+        complete: "帖子已被批准。"
       approve_post:
         title: "批准帖子"
-        complete: "帖子已批准."
+        complete: "帖子已被批准。"
       approve_post_closed:
         title: "批准帖子"
         confirm: "此话题已被关闭。仍要创建帖子吗？"
-        complete: "帖子已批准."
+        complete: "帖子已被批准。"
       reject_post:
         title: "拒绝帖子"
-        complete: "帖子被拒绝."
+        complete: "帖子被拒绝。"
       approve_user:
         title: "批准用户"
-        complete: "用户已批准."
+        complete: "用户已被批准。"
       reject_user:
         title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
-          complete: "用户已删除。"
+          complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
-          complete: "用户已删除并被屏蔽。"
+          complete: "用户已被删除并被屏蔽。"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"
@@ -5204,22 +5204,22 @@ zh_CN:
         complete: "帖子被拒绝，用户被暂停。"
       reject_and_silence:
         title: "拒绝并禁言用户"
-        complete: "帖子被拒绝，用户禁言。"
+        complete: "帖子被拒绝，用户被禁言。"
       reject_and_delete:
         title: "拒绝并删除帖子"
-        complete: "帖子被拒绝并删除。"
+        complete: "帖子被拒绝并被删除。"
       reject_and_keep_deleted:
         title: "保持帖子删除"
-        complete: "帖子被拒绝，保持被删除。"
+        complete: "帖子被拒绝，保持删除状态。"
       approve_and_restore:
         title: "批准并恢复帖子"
-        complete: "帖子已批准并恢复。"
+        complete: "帖子被批准并恢复。"
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
       delete_user:
         reason: "已通过审核队列删除"
-        complete: "用户已删除。"
+        complete: "用户已被删除。"
   email_style:
     html_missing_placeholder: "HTML 模板必须包含 %{placeholder}"
   notification_level:

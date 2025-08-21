@@ -55,7 +55,7 @@ tr_TR:
         içinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
       invalid_octokit_credentials_pm_title: "discourse-github eklentisi için eylem gerekli"
       invalid_octokit_credentials_pm: |
-        discourse-github eklentisine eklenen GitHub kimlik bilgileri geçersiz. "github rozetleri etkin\ site
+        discourse-github eklentisine eklenen GitHub giriş bilgileri geçersiz. "github rozetleri etkin\ site
         ayarı devre dışı ve sorun çözülene kadar taahhütler doldurulmaz.
 
         Belirtecin doğru olduğundan ve

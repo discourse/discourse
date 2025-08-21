@@ -212,7 +212,7 @@ tr_TR:
           configured: "Yapılandırılmış"
           unconfigured: "Yapılandırılmamış"
         filters:
-          all: "Hepsi"
+          all: "Tümü"
           text: "Arama özellikleri, kişilikler, LLM'ler veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
@@ -464,7 +464,7 @@ tr_TR:
         uploads:
           title: "Yüklemeler"
           description: "PDF (.pdf), Düz Metin (.txt) veya markdown (.md)"
-          description_with_images: "Düz metin (.txt), markdown (.md), PDF (.pdf) veya resim (.png, .jpeg)"
+          description_with_images: "Düz metin (.txt), markdown (.md), PDF (.pdf) veya görüntü (.png, .jpeg)"
           button: "Dosya ekle"
           filter: "Yüklemeleri filtrele"
           indexed: "Dizinlendi"
@@ -682,7 +682,7 @@ tr_TR:
           trigger: "YZ'ye sor"
           title: "YZ'ye sor"
           loading: "YZ oluşturuyor"
-          close: "Bitir"
+          close: "Kapat"
           copy: "Kopyala"
           copied: "Kopyalandı!"
           cancel: "İptal et"
@@ -777,7 +777,7 @@ tr_TR:
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
-        default_pm_prefix: "[Adsız YZ botu kişisel mesajı]"
+        default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
         exit: "YZ botundan çık"
         share: "YZ konuşmasını kopyala"
@@ -853,7 +853,7 @@ tr_TR:
         sentiment_analysis:
           share_chart: "Bağlantıyı grafiğe kopyala"
           filter_types:
-            all: "Hepsi"
+            all: "Tümü"
             positive: "Pozitif"
             neutral: "Nötr"
             negative: "Negatif"
