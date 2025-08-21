@@ -132,7 +132,7 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
 
-    this.router.replaceWith({
+    this.router.replaceWith?.({
       queryParams: {
         view: info.view.type,
         start: moment(info.view.currentStart).toISOString(),
