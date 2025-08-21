@@ -54,7 +54,7 @@ module PageObjects
 
       def has_bg_img?(url)
         has_css?(
-          ".welcome-banner.--with-bg-img",
+          ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap",
           style: "background-image: url(#{url})",
           visible: :visible,
         )
