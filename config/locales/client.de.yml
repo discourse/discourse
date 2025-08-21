@@ -2875,7 +2875,7 @@ de:
         edit: "Link bearbeiten"
         copy: "Link kopieren"
         remove: "Link entfernen"
-        visit: "Link in externem Tab öffnen"
+        visit: "Link in externer Registerkarte öffnen"
         link_copied: "Link kopiert!"
     notifications:
       tooltip:
@@ -5214,6 +5214,10 @@ de:
             bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
             default: "%{filter} Themen in %{category} ohne Schlagwörter"
         categories: "Alle Kategorien"
+    content_localization:
+      toggle_localized:
+        translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
+        not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5471,7 +5475,7 @@ de:
           title: "Farbpaletten"
           header_description: "Diese Paletten steuern die Farben, die in deiner Community verwendet werden. Wenn du eine Palette für Benutzer auswählbar machst, können die Mitglieder ihre bevorzugten Farben in ihren Einstellungen wählen."
         emoji:
-          title: "Emojis"
+          title: "Emoji"
           header_description: "Füge neue Emojis hinzu, die dann für alle verfügbar sind. Wähle mehrere Dateien aus, um Emojis unter Verwendung ihrer Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden."
         themes:
           title: "Themes"
@@ -5570,6 +5574,8 @@ de:
         select_setting: "Wähle eine Website-Einstellung aus, um die aktuellen Werte des Themes zu sehen"
         add: "Theme-spezifische Website-Einstellungen öffnen"
         help: "Das Theme, das du derzeit verwendest, ist <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Gehe auf die <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>Theme-Konfigurationsseite</a>, um die Theme-spezifischen Website-Einstellungen zu ändern, oder klicke auf ein verlinktes Theme in der Tabelle unten, um seine Einstellungen zu bearbeiten."
+        filter: "Filtere die Theme-spezifischen Website-Einstellungen nach Einstellungsname, Beschreibung oder Themename …"
+        filter_no_results: "Keine Theme-spezifische Website-Einstellung passt zu deinem Filter"
       search:
         modal_title: "Durchsuche alles im Adminbereich"
         title: "Suche"
@@ -5623,10 +5629,16 @@ de:
           only_experiments: "Nur experimentelle Funktionen anzeigen"
           experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
           experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
+          feature_enabled: "Du hast die Funktion aktiviert."
+          feature_disabled: "Du hast die Funktion deaktiviert."
+          toggled_too_fast: "Du hast den Umschalter zu schnell betätigt. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
           experiment_tooltip:
+            title_disabled: "Probiere diese experimentelle Funktion aus"
             title_enabled: "Experimentelle Funktion ausschalten"
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
           feature_tooltip:
+            title_disabled: "Probiere diese Funktion aus"
+            title_enabled: "Deaktiviere diese Funktion"
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
@@ -6239,9 +6251,12 @@ de:
         themes_and_components:
           breadcrumb_title: "Anpassen"
           install: "Installieren"
+          theme_site_settings:
+            title: "Theme-spezifische Website-Einstellungen"
+            description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: 'Website-weite Themes, die das gesamte Erscheinungsbild deiner Website für alle Benutzer ändern. Willst du wissen, welche Website-Einstellungen deine Themes außer Kraft setzen? <a href="%{themeSiteSettingsUrl}">Theme-spezifische Website-Einstellungen ansehen</a>'
+            description: 'Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern.'
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6516,6 +6531,7 @@ de:
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme."
           dark_color_scheme_select: "Wähle Farben im dunklen Modus für dieses Theme."
+          edit_colors: "Farben bearbeiten"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
           add_all_themes: "Alle Themes hinzufügen"
@@ -6527,10 +6543,12 @@ de:
           convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
+          set_default_theme: "Als Standard festlegen"
           default_theme: "Standard-Theme"
           set_default_success: "Standard-Theme auf %{theme} festgelegt"
           setting_was_saved: "Theme-Einstellung wurde gespeichert"
           install_success: "%{theme} erfolgreich installiert!"
+          delete_success: "%{theme} erfolgreich gelöscht!"
           inactive_components: "Nicht verwendete Komponenten:"
           selected:
             one: "%{count} ausgewählt"
@@ -6714,6 +6732,7 @@ de:
           dark: "dunkel"
           title: "Farben"
           edit: "Bearbeiten"
+          view: "Ansehen"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
           set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
@@ -6725,7 +6744,15 @@ de:
             from_theme: "Vom Theme"
             no_results: "Keine Farbpaletten gefunden"
           default_light_badge:
+            text: "Standard hell"
+            title: "Standardmäßige helle Farbpalette"
             reset: "Filter zurücksetzen"
+          default_dark_badge:
+            text: "Standard dunkel"
+            title: "Standardmäßige dunkle Farbpalette"
+          default_both_badge:
+            text: "Standard hell und dunkel"
+            title: "Standardmäßige helle und dunkle Farbpalette"
           system_palette: "Dies ist eine integrierte Farbpalette, sie kann nicht bearbeitet oder gelöscht werden."
           back_to_colors: "Zurück zu Farbpaletten"
           long_title: "Farbpaletten"
@@ -7755,6 +7782,9 @@ de:
           block_common_passwords:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
+        job_status:
+          completed: "Update abgeschlossen"
+          enqueued: "Update läuft"
       badges:
         status: Status
         title: Abzeichen

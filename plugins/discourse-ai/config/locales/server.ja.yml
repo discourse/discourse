@@ -8,9 +8,9 @@ ja:
   discourse_automation:
     ai:
       flag_types:
-        review: "レビューキューに投稿を追加"
+        review: "レビューキューに投稿を追加する"
         review_hide: "投稿をレビューキューに追加して非表示にする"
-        spam: "迷惑として通報して投稿を非表示"
+        spam: "迷惑として通報して投稿を非表示にする"
         spam_silence: "迷惑として通報し、投稿を非表示にしてユーザーを投稿禁止にする"
     scriptables:
       llm_tool_triage:
@@ -38,8 +38,8 @@ ja:
     ai_toxicity_inference_service_api_key: "毒コメント API の API キー"
     ai_toxicity_inference_service_api_model: "推論に使用するモデル。多言語モデルは、イタリア語、フランス語、ロシア語、ポルトガル語、スペイン語、およびトルコ語で動作します。"
     ai_toxicity_flag_automatically: "構成されたしきい値を超える投稿 / チャットメッセージを自動的に通報します。"
-    ai_toxicity_flag_threshold_toxicity: "毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性がある程度ある、失礼、無礼、または不合理なコメント"
-    ai_toxicity_flag_threshold_severe_toxicity: "深刻な毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性が高い、非常に憎しみに満ちた、攻撃的、または無礼なコメント"
+    ai_toxicity_flag_threshold_toxicity: "毒コメント: ディスカッションからの退出や意見の共有の断念をある程度強要している可能性のある、失礼、無礼、または不合理なコメント"
+    ai_toxicity_flag_threshold_severe_toxicity: "深刻な毒コメント: ディスカッションからの退出や意見の共有の断念をかなり強要している可能性のある、非常に憎しみに満ちた、攻撃的、または無礼なコメント"
     ai_toxicity_flag_threshold_obscene: "わいせつ"
     ai_toxicity_flag_threshold_identity_attack: "アイデンティティ攻撃"
     ai_toxicity_flag_threshold_insult: "侮辱"
@@ -80,9 +80,9 @@ ja:
     ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"
     ai_embeddings_semantic_related_topics: "関連トピックセクションに表示する最大トピック数。"
     ai_embeddings_backfill_batch_size: "15 分ごとにバックフィルする埋め込みの数。"
-    ai_embeddings_semantic_search_enabled: "全ページのセマンティック検索を有効にします。"
+    ai_embeddings_semantic_search_enabled: "全ページのセマンティック検索を有効にする。"
     ai_embeddings_semantic_search_use_hyde: "セマンティック前ページ検索に HyDE を使用する。LLM を使って、ユーザーの検索語句から仮定される投稿を作成し、一致検索を支援します。"
-    ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にします。"
+    ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にする。"
     ai_embeddings_semantic_related_include_closed_topics: "閉鎖トピックをセマンティック検索結果に含める"
     ai_embeddings_semantic_search_hyde_model: "セマンティック検索中に得られる結果を改善するためにキーワードの拡張に使用されるモデル"
     ai_embeddings_per_post_enabled: 各投稿の埋め込みを生成する
@@ -98,7 +98,7 @@ ja:
     ai_bot_enable_chat_warning: "PM チャットが開始されたら警告を表示する。翻訳文字列の discourse_ai.ai_bot.pm_warning を編集して上書き可能"
     ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
-    ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可します。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
+    ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
     ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
     ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
     ai_stability_api_key: "stability.ai API の API キー"
@@ -235,7 +235,7 @@ ja:
         exchange_rate:
           name: "為替レート"
         stock_quote:
-          name: "下部か (AlphaVantage)"
+          name: "株価 (AlphaVantage)"
         image_generation:
           name: "Flux 画像ジェネレーター (Together.ai)"
         empty_tool:
@@ -248,7 +248,7 @@ ja:
       prompts:
         translate: '%{language} に翻訳する'
         generate_titles: トピックのタイトルを提案
-        proofread: テキストを構成
+        proofread: テキストを校正
         markdown_table: Markdown テーブルを生成
         custom_prompt: "カスタムプロンプト"
         explain: "説明"
@@ -427,7 +427,7 @@ ja:
             description: "検索時に使用する基本クエリ。例: 「site:example.com」には example.com からの結果のみが含まれ、「before:2022-01-01」には 2021 年以前の結果のみが含まれます。このテキストは検索クエリの先頭に追加されます。"
         read:
           read_private:
-            name: "非公開を読む"
+            name: "非公開を読み取る"
             description: "ユーザーがアクセスできるすべてのトピックへのアクセスを許可します (デフォルトでは公開トピックのみが含まれます)"
         search:
           search_private:
@@ -441,8 +441,8 @@ ja:
             description: "検索時に使用するベースクエリ。例: '#urgent' は検索クエリの先頭に '#urgent' を追加し、緊急のカテゴリまたはタグを持つトピックのみが含まれます。"
       tool_summary:
         read_artifact: "ウェブアーティファクトを読み取る"
-        update_artifact: "ウェブアーティファクトの更新"
-        create_artifact: "ウェブアーティファクトを作成します"
+        update_artifact: "ウェブアーティファクトを更新"
+        create_artifact: "ウェブアーティファクトを作成"
         web_browser: "ウェブを閲覧"
         github_search_files: "GitHub 検索ファイル"
         github_search_code: "GitHub コード検索"
@@ -456,9 +456,9 @@ ja:
         summarize: "要約"
         image: "画像を生成"
         google: "Google で検索"
-        read: "トピックを読む"
-        setting_context: "サイト設定のコンテキストを検索します"
-        schema: "データベーススキーマを検索します"
+        read: "トピックを読み取る"
+        setting_context: "サイト設定のコンテキストを検索"
+        schema: "データベーススキーマを検索"
         search_settings: "サイト設定を検索中"
         dall_e: "画像を生成"
         search_meta_discourse: "Discrouse Meta を検索"
@@ -469,30 +469,30 @@ ja:
         researcher_dry_run: "調査の準備"
       tool_help:
         read_artifact: "AI ボットを使用してウェブアーティファクトを読み取る"
-        update_artifact: "AI ボットを使ってウェブアーティファクトを更新します"
-        create_artifact: "AI ボットを使用してウェブアーティファクトを作成します"
+        update_artifact: "AI ボットを使ってウェブアーティファクトを更新する"
+        create_artifact: "AI ボットを使用してウェブアーティファクトを作成する"
         web_browser: "AI ボットを使ってウェブページを閲覧する"
         github_search_code: "GitHub リポジトリでコードを検索する"
         github_search_files: "GitHub リポジトリでファイルを検索する"
         github_file_content: "GitHub リポジトリからファイルのコンテンツを取得する"
         github_pull_request_diff: "GitHub プルリクエストの差分を取得する"
         random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
-        categories: "フォーラムのすべての公開カテゴリをリストします"
-        search: "フォーラムのすべての公開トピックを検索します"
-        tags: "フォーラムのすべてのタグをリストします"
-        time: "様々なタイムゾーンの時間を調べます"
-        summary: "トピックを要約します"
-        image: "Stable Diffusion を使って画像を生成します"
+        categories: "フォーラムのすべての公開カテゴリをリストする"
+        search: "フォーラムのすべての公開トピックを検索する"
+        tags: "フォーラムのすべてのタグをリストする"
+        time: "様々なタイムゾーンの時間を調べる"
+        summary: "トピックを要約する"
+        image: "Stable Diffusion を使って画像を生成する"
         create_image: "OpenAI GPT 画像モデルを使用して画像を生成する"
         edit_image: "OpenAI GPT 画像モデルを使用して画像を編集する"
-        google: "Googleでクエリを検索します"
-        read: "フォーラムの公開トピックを読み取ります"
-        setting_context: "サイト設定のコンテキストを検索します"
-        schema: "データベーススキーマを検索します"
-        search_settings: "サイト設定を検索します"
-        dall_e: "DALL-E 3 を使って画像を生成します"
-        search_meta_discourse: "Discrouse Meta を検索"
-        javascript_evaluator: "JavaScript を評価"
+        google: "Googleでクエリを検索する"
+        read: "フォーラムの公開トピックを読み取る"
+        setting_context: "サイト設定のコンテキストを検索する"
+        schema: "データベーススキーマを検索する"
+        search_settings: "サイト設定を検索する"
+        dall_e: "DALL-E 3 を使って画像を生成する"
+        search_meta_discourse: "Discrouse Meta を検索する"
+        javascript_evaluator: "JavaScript を評価する"
         researcher: "AI ボットを使用してフォーラム情報を調査する"
       tool_description:
         read_artifact: "AI ボットを使用してウェブアーティファクトを読み取る"
@@ -503,7 +503,7 @@ ja:
         github_search_code: "%{repo} で「%{query}」を検索しました"
         github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
         github_file_content: "%{repo_name}@%{branch} から %{file_paths} のコンテンツを取得しました"
-        random_picker: "%{options} から選択。選択: %{result}"
+        random_picker: "%{options} から選択中。選択: %{result}"
         read: "読み取り中: <a href='%{url}'>%{title}</a>"
         time: "%{timezone} の時刻は %{time} です"
         summarize: "<a href='%{url}'>%{title}</a> の要約"
@@ -540,7 +540,7 @@ ja:
         no_targets: "選択された期間中にメッセージはありませんでした。"
     sentiment:
       reports:
-        overall_sentiment: "全体的なセンチメント (肯定的 - 否定的)"
+        overall_sentiment: "全体的なセンチメント (ポジティブ - ネガティブ)"
         post_emotion:
           sadness: "悲しみ \U0001F622"
           surprise: "驚き \U0001F631"
@@ -575,9 +575,9 @@ ja:
       delete_failed: "このモデルは使用中です。先に `ai embeddings selected model` を更新してください。"
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
       configuration:
-        disable_embeddings: "まず「AI 埋め込み対応」を無効にしてください。"
+        disable_embeddings: "先に 'ai embeddings enabled' を無効にしてください。"
         invalid_config: "無効なオプションを選択しました。"
-        choose_model: "先に「AI 埋め込みに選択されたモデル」を設定してください。"
+        choose_model: "先に 'ai embeddings selected model' を設定してください。"
     llm_models:
       missing_provider_param: "%{param} は空白にできません"
       bedrock_invalid_url: "このモデルを使用するには、すべてのフィールドに入力してください。"

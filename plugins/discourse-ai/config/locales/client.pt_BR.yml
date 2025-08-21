@@ -256,9 +256,9 @@ pt_BR:
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
-          locale_detector: "Detector de localização"
+          locale_detector: "Detector de localidade"
           post_raw_translator: "Tradutor sem processamento de postagens"
-          topic_title_translator: "Tradutor de títulos de tópicos"
+          topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
         spam:
           name: "Spam"
@@ -604,7 +604,7 @@ pt_BR:
           title: "Próximo"
         tests:
           title: "Executar teste"
-          running: "Rodando teste..."
+          running: "Executando teste..."
           success: "Sucesso!"
           failure: "Erro retornado ao tentar entrar em contato com o modelo: %{error}"
         hints:
@@ -733,7 +733,7 @@ pt_BR:
         display_name: "Nome"
         provider: "Provedor"
         url: "URL de serviço de incorporação"
-        api_key: "Chave de serviço de incorporação"
+        api_key: "Chave de API de serviço de incorporação"
         tokenizer: "Tokenizador"
         dimensions: "Dimensões de incorporação"
         max_sequence_length: "Tamanho da sequência"

@@ -381,7 +381,7 @@ ja:
         vision_enabled_help: 有効にすると、AI は、ビジョンのサポートに使用されているモデルに応じてユーザーがトピックに投稿する画像を理解しようとします。Anthropic、Google、および OpenAI の最新モデルでサポートされています。
         vision_max_pixels: サポートされている画像サイズ
         vision_max_pixel_sizes:
-          low: 低品質 - 最割安 (256x256)
+          low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
           high: 高品質 - 最も遅い (1024x1024)
         tool_details: ツールの詳細を表示
@@ -408,7 +408,7 @@ ja:
         force_default_llm: "常にデフォルトの言語モデルを使用する"
         save: "保存"
         saved: "ペルソナが保存されました"
-        enabled: "有効化？"
+        enabled: "有効ですか？"
         tools: "有効なツール"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
@@ -647,7 +647,7 @@ ja:
           disable_native_tools: "ネイティブツールのサポートを無効にする (XML ベースのツールを使用する)"
           provider_order: "プロバイダーの順序 (カンマ区切りリスト)"
           provider_quantizations: "プロバイダーの量子化の順序 (カンマ区切りリスト 例: fp16,fp8)"
-          disable_streaming: "ストリーミングの完了を無効にする (ストリーミングを非ストリーミングリクエストに変換する)"
+          disable_streaming: "ストリーミングの補完を無効にする (ストリーミングを非ストリーミングリクエストに変換する)"
           reasoning_effort: "Reasoning effort (推論モデルにのみ適用)"
           enable_reasoning: "推論を有効にする (推論モデルにのみ適用)"
           enable_thinking: "思考を有効にする (flash 2.5 などの該当するモデルのみ)"
@@ -717,11 +717,11 @@ ja:
         saved: "埋め込み構成が保存されました"
         delete: "削除"
         confirm_delete: この埋め込み構成を削除してもよろしいですか？
-        empty: "埋め込みはまだ構成されていません"
+        empty: "埋め込みはまだセットアップされていません"
         presets: "プリセットを選択..."
         configure_manually: "手動で構成"
         edit: "編集"
-        seeded_warning: "これはサイト上で事前設定されているため、編集できません。"
+        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         tests:
           title: "テストを実行"
           running: "テストを実行中…"

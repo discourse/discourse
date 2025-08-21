@@ -68,7 +68,7 @@ zh_CN:
       >
       > %{topic_excerpt}
 
-      如果您感兴趣，点击下方的链接：
+      如果您感兴趣，请点击下方链接：
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "您有 %{pending_assignments} 个待处理任务指定"

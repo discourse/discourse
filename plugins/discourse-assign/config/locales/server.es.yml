@@ -63,17 +63,17 @@ es:
     title: "Asignar correo"
     subject_template: "¡[%{email_prefix}] %{assignee_name} te ha asignado a «%{topic_title}»!"
     text_body_template: |
-      Hola, %{assignee_name}, **te ha asignado** a una discusión
+      Hola, %{assignee_name} **te ha asignado** a una discusión
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      Si estás interesado, haz clic en el siguiente enlace:
+      Si te interesa, haz clic en el siguiente enlace:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "Tienes %{pending_assignments} asignaciones pendientes"
     body: |
-      Actualmente tienes [%{pending_assignments} asignaciones pendientes](%{assignments_link}).
+      Actualmente, tienes [%{pending_assignments} asignaciones pendientes](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}
