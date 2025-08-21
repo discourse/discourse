@@ -211,30 +211,6 @@ export default class ComposerContainer extends Component {
                 />
                 {{#unless this.composer.model.viewFullscreen}}
                   {{#if this.composer.model.canEditTitle}}
-                    {{#if this.composer.model.creatingPrivateMessage}}
-                      <div class="user-selector">
-                        <ComposerUserSelector
-                          @topicId={{this.composer.topicModel.id}}
-                          @recipients={{this.composer.model.targetRecipients}}
-                          @hasGroups={{this.composer.model.hasTargetGroups}}
-                          @focusTarget={{this.composer.focusTarget}}
-                          class={{concatClass
-                            "users-input"
-                            (if this.composer.showWarning "can-warn")
-                          }}
-                        />
-                        {{#if this.composer.showWarning}}
-                          <label class="add-warning">
-                            <Input
-                              @type="checkbox"
-                              @checked={{this.composer.model.isWarning}}
-                            />
-                            <span>{{i18n "composer.add_warning"}}</span>
-                          </label>
-                        {{/if}}
-                      </div>
-                    {{/if}}
-
                     <div
                       class="title-and-category
                         {{if this.composer.isPreviewVisible 'with-preview'}}"
@@ -244,6 +220,18 @@ export default class ComposerContainer extends Component {
                         @lastValidatedAt={{this.composer.lastValidatedAt}}
                         @focusTarget={{this.composer.focusTarget}}
                       />
+
+                      {{#if this.composer.model.creatingPrivateMessage}}
+                        <div class="user-selector">
+                          <ComposerUserSelector
+                            class="users-input"
+                            @topicId={{this.composer.topicModel.id}}
+                            @recipients={{this.composer.model.targetRecipients}}
+                            @hasGroups={{this.composer.model.hasTargetGroups}}
+                            @focusTarget={{this.composer.focusTarget}}
+                          />
+                        </div>
+                      {{/if}}
 
                       {{#if this.composer.model.showCategoryChooser}}
                         <div class="category-input">
