@@ -91,6 +91,10 @@ module PageObjects
         find(".form-template-form-preview-modal").present?
       end
 
+      def has_no_preview_modal?
+        has_no_css?(".form-template-form-preview-modal")
+      end
+
       def has_validations_modal?
         find(".admin-form-template-validation-options-modal").present?
       end
