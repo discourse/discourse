@@ -9,6 +9,7 @@ export default class PostEventUpcomingEventsMineRoute extends DiscourseRoute {
   queryParams = {
     start: { refreshModel: true },
     end: { refreshModel: true },
+    view: { refreshModel: true },
   };
 
   async model(params) {
