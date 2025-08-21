@@ -4098,6 +4098,14 @@ experimental:
     client: true
     default: false
     area: "experimental"
+  experimental_impersonation:
+    default: false
+    hidden: true
+    area: "experimental"
+  experimental_impersonation_time_limit_minutes:
+    default: 15
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
