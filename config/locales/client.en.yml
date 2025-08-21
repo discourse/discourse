@@ -326,6 +326,10 @@ en:
         anonymous_members: ""
       search: "Search"
 
+    impersonation:
+      notice: "You are impersonating %{username}"
+      stop: "Stop impersonating"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors. Check the browser console for more information."
