@@ -1,4 +1,5 @@
-[data-content][data-identifier="user-tip"] {
+[data-content][data-identifier="user-tip"],
+[data-content][data-identifier="markdown-tip"] {
   min-width: 300px;
   background-color: var(--tertiary);
   border: none;
@@ -41,5 +42,11 @@
   .btn-flat.btn-text {
     background-color: transparent;
     color: var(--secondary);
+  }
+}
+
+[data-content][data-identifier="markdown-tip"] {
+  .arrow {
+    margin-left: -0.75em;
   }
 }
