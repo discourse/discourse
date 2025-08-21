@@ -6,7 +6,7 @@ export default RouteTemplate(
   <template>
     <div class="discourse-post-event-upcoming-events">
       {{#each (array @model) as |model|}}
-        <UpcomingEventsCalendar @events={{model}} />
+        <UpcomingEventsCalendar @events={{model}} @view={{@controller.view}} />
       {{/each}}
     </div>
   </template>

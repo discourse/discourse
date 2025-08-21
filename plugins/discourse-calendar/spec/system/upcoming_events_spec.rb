@@ -78,6 +78,28 @@ describe "Upcoming Events", type: :system do
     end
   end
 
+  context "when filtering my events" do
+    it "shows only the events the user is attending" do
+      upcoming_events.visit
+    end
+  end
+
+  context "when changing view" do
+    it "displays the chosen view" do
+      upcoming_events.visit
+
+      expect(page).to have_current_path(
+        "/upcoming-events?end=2025-09-01&start=2025-08-01&view=dayGridMonth",
+      )
+
+      find(".fc-listYear-button").click
+
+      expect(page).to have_current_path(
+        "/upcoming-events?end=2026-01-01&start=2025-01-01&view=listYear",
+      )
+    end
+  end
+
   context "when event is recurring" do
     fab!(:event)
 
