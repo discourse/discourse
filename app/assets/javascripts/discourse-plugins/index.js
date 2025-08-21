@@ -8,6 +8,7 @@ const fs = require("fs");
 const concat = require("broccoli-concat");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
+const transformActionSyntax = require("./transform-action-syntax");
 
 function fixLegacyExtensions(tree) {
   return new Funnel(tree, {
@@ -101,6 +102,28 @@ module.exports = {
     "ember-this-fallback": {
       enableLogging: false,
     },
+  },
+
+  setupPreprocessorRegistry(type, registry) {
+    if (type === "self") {
+      const plugin = this._buildActionPlugin();
+      plugin.parallelBabel = {
+        requireFile: __filename,
+        buildUsing: "_buildActionPlugin",
+        params: {},
+      };
+
+      registry.add("htmlbars-ast-plugin", plugin);
+    }
+  },
+
+  _buildActionPlugin() {
+    return {
+      name: "transform-action-syntax",
+      plugin: transformActionSyntax,
+      baseDir: transformActionSyntax.baseDir,
+      cacheKey: transformActionSyntax.cacheKey,
+    };
   },
 
   pluginInfos() {
