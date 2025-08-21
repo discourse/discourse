@@ -2509,7 +2509,7 @@ fr:
       not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par e-mail lorsque vous pourrez vous connecter."
       discourse_id:
         name: "Discourse ID"
-        title: "Se connecter avec Discord ID"
+        title: "Se connecter avec Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Se connecter avec Google"
@@ -3428,8 +3428,8 @@ fr:
           other {}
         }
       reply_count_link:
-        one: "%{count} réponse. Passer au premier message"
-        other: "%{count} réponses. Passer au premier message"
+        one: "%{count} réponse. Passer à la première publication"
+        other: "%{count} réponses. Passer à la première publication"
       created_at: "Date de création : %{date}"
       bumped_at: "Plus récent : %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
@@ -3849,8 +3849,8 @@ fr:
         one: "%{count} personne a aimé cette publication."
         other: "%{count} personnes ont aimé cette publication."
       sr_post_read_count_button:
-        one: "%{count} personne a lu ce message."
-        other: "%{count} personnes ont lu ce message."
+        one: "%{count} personne a lu cette publication."
+        other: "%{count} personnes ont lu cette publication."
       filtered_replies_hint:
         one: "Voir ce message et sa réponse"
         other: "Voir ce message et ses %{count} réponses"
@@ -3862,7 +3862,7 @@ fr:
       badge_granted_tooltip: "%{username} a obtenu le badge « %{badge_name} » pour cette publication !"
       localizations:
         table:
-          locale: "Paramètres régionaux"
+          locale: "Paramètre régional"
           actions: "Actions"
           edit: "Modifier"
           delete: "Supprimer"
@@ -4276,7 +4276,7 @@ fr:
       delete_spammer: "Supprimer le spammeur"
       flag_for_review: "Mettre en file d'attente pour examen"
       delete_confirm_MF: |
-        Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse e-mail <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?
+        Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> publication} other {<b>#</b> publication}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse e-mail <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"

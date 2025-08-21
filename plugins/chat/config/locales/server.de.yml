@@ -158,6 +158,7 @@ de:
     mention_warning:
       dismiss: "verwerfen"
       cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+      cannot_see_group: "Einige Mitglieder von %{group_name} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
       cannot_see_multiple:
         one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         other: "%{first_identifier} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."

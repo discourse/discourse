@@ -216,6 +216,7 @@ de:
           text: "Suche nach Funktionen, Personas, LLMs oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
+        no_automations: "Es gibt noch keine Automatisierungen"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
@@ -263,6 +264,12 @@ de:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
           inspect_posts: "Beiträge prüfen"
+        automation_reports:
+          name: "Automatisierte Berichte"
+          description: "Erstellt automatisch kompakte Übersichten der Aktivitäten und hebt Trends, wichtige Themen und Engagement hervor"
+        automation_triage:
+          name: "Beitragssichtung"
+          description: "Automatisiert die Moderation und Verwaltung von Beiträgen mithilfe von konfigurierbaren Automatisierungsregeln"
       modals:
         select_option: "Wähle eine Option aus …"
       layout:
@@ -270,6 +277,17 @@ de:
         card: "Karte"
       translations:
         title: "Übersetzungen"
+        description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
+        admin_actions:
+          translation_settings: "Übersetzungseinstellungen"
+          localization_settings: "Lokalisierungseinstellungen"
+          disabled_state:
+            configure: "Übersetzungen konfigurieren"
+            empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
+        progress_chart:
+          title: "Übersetzungsfortschritt"
+          completed: "Abgeschlossen"
+          remaining: "Verbleibend"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -374,7 +392,7 @@ de:
         tool_details_help: Zeigt den Endnutzern Details darüber, welche Tools das Sprachmodell ausgelöst hat.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
-        user: Nutzer
+        user: Benutzer
         create_user: Benutzer erstellen
         create_user_help: Du kannst dieser Persona optional einen Nutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
@@ -777,7 +795,7 @@ de:
         conversation_shared: "Unterhaltung kopiert"
         embed_copied: "Einbettung in die Zwischenablage kopiert"
         debug_ai: "Rohdaten der KI-Anfrage und -Antwort anzeigen"
-        sidebar_empty: "Der Verlauf der Bot-Konversation wird hier angezeigt."
+        sidebar_empty: "Der Verlauf der Bot-Unterhaltung wird hier angezeigt."
         debug_ai_modal:
           title: "KI-Interaktion ansehen"
           copy_request: "Anfrage kopieren"
@@ -798,7 +816,7 @@ de:
           title: "Diese KI-Unterhaltung öffentlich teilen"
         invite_ai_conversation:
           button: "Einladen"
-          title: "Zur KI-Konversation einladen"
+          title: "Zur KI-Unterhaltung einladen"
         ai_label: "KI"
         ai_title: "Unterhaltung mit KI"
         share_modal:
