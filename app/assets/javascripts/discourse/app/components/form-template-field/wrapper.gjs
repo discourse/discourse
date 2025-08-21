@@ -89,11 +89,7 @@ export default class FormTemplateFieldWrapper extends Component {
 
   // child components expect an onChange function
   get onChange() {
-    if (this.args.onChange) {
-      return this.args.onChange;
-    } else {
-      return () => {};
-    }
+    return this.args.onChange || () => {};
   }
 
   <template>
