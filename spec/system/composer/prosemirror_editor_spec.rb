@@ -821,7 +821,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>")
+      expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
   end
 
