@@ -38,7 +38,7 @@ async function loadThemeFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
-      error
+      JSON.stringify(error)
     );
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
