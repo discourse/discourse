@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -13,14 +12,9 @@ import FullCalendar from "./full-calendar";
 
 export default class UpcomingEventsCalendar extends Component {
   @service currentUser;
-  @service site;
   @service router;
   @service capabilities;
   @service siteSettings;
-  @service discoursePostEventService;
-  @service loadingSlider;
-
-  @tracked resolvedEvents;
 
   get customButtons() {
     return {

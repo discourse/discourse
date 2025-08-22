@@ -15,7 +15,6 @@ export default class PostCalendar extends Component {
   @service siteSettings;
   @service capabilities;
   @service postCalendar;
-  @service router;
   @service store;
 
   @tracked post = this.args.post;
