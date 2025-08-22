@@ -20,7 +20,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     this.warnStub = Sinon.stub(console, "warn");
     this.counterStub = Sinon.stub(
       DeprecationCounter.prototype,
-      "incrementDeprecation"
+      "incrementCount"
     );
   });
 
@@ -43,12 +43,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.(unknown)"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -69,12 +69,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -100,12 +100,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -121,12 +121,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
