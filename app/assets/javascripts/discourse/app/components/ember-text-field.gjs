@@ -2,7 +2,6 @@
 /* eslint-disable ember/no-classic-classes */
 import { MUTABLE_CELL } from "@ember/-internals/views";
 import Component from "@ember/component";
-import { assert } from "@ember/debug";
 import { computed, get, set } from "@ember/object";
 
 const inputTypes = Object.create(null);
@@ -26,28 +25,6 @@ const KEY_EVENTS = {
   Enter: "insertNewline",
   Escape: "cancel",
 };
-
-function getTarget(instance) {
-  let target = get(instance, "target");
-  if (target) {
-    if (typeof target === "string") {
-      let value = get(instance, target);
-      if (value === undefined) {
-        value = get(context.lookup, target);
-      }
-
-      return value;
-    } else {
-      return target;
-    }
-  }
-
-  if (instance._target) {
-    return instance._target;
-  }
-
-  return null;
-}
 
 function sendAction(eventName, view, event) {
   let action = get(view, `attrs.${eventName}`);
@@ -203,50 +180,6 @@ const TextField = Component.extend({
 
   keyDown(event) {
     sendAction("key-down", this, event);
-  },
-
-  target: null,
-  action: null,
-  actionContext: null,
-
-  actionContextObject: computed("actionContext", function () {
-    let actionContext = get(this, "actionContext");
-
-    if (typeof actionContext === "string") {
-      return get(this, actionContext);
-    } else {
-      return actionContext;
-    }
-  }),
-
-  triggerAction(opts = {}) {
-    let { action, target, actionContext } = opts;
-    action = action || get(this, "action");
-    target = target || getTarget(this);
-
-    if (actionContext === undefined) {
-      actionContext = get(this, "actionContextObject") || this;
-    }
-
-    if (target && action) {
-      let ret;
-
-      if (target.send) {
-        ret = target.send(...[action].concat(actionContext));
-      } else {
-        assert(
-          `The action '${action}' did not exist on ${target}`,
-          typeof target[action] === "function"
-        );
-        ret = target[action](...[].concat(actionContext));
-      }
-
-      if (ret !== false) {
-        return true;
-      }
-    }
-
-    return false;
   },
 });
 
