@@ -32,6 +32,7 @@ es:
     post_voting_comment_limit_per_post: "Número de comentarios permitidos en cada publicación"
     min_trust_to_flag_posts_voting_comments: "Nivel de confianza mínimo para denunciar un comentario de votación de publicación"
     flag_posts_voting_comments_allowed_groups: "Grupos autorizados a denunciar un comentario de votación de publicación"
+    post_voting_comment_enabled: "Activa los comentarios en publicaciones en temas de Votar publicación"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ es:
         limit_exceeded: "Se ha alcanzado el límite de %{limit} comentarios por publicación."
         perform: "Comentario de votación de publicación denunciado con una puntuación lo suficientemente alta como para silenciar al usuario."
         auto_silence_from_flags: "Silenciado automáticamente debido a denuncias."
+        disabled: "No se permite comentar en las publicaciones."
       reviewables:
         comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
         actions:

@@ -17,6 +17,7 @@ import orderedList from "./ordered-list";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
+import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
@@ -49,6 +50,7 @@ const defaultExtensions = [
   markdownPaste,
   orderedList,
   bulletList,
+  trailingInlineSpace,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

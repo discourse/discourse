@@ -81,6 +81,7 @@ uk:
     ai_embeddings_semantic_related_topics: "Максимальна кількість тем для показу в розділі пов’язаних тем."
     ai_embeddings_backfill_batch_size: "Кількість закладок для заповнення кожні 15 хвилин."
     ai_embeddings_semantic_search_enabled: "Увімкнути повносторінковий семантичний пошук."
+    ai_embeddings_semantic_search_use_hyde: "Використовуйте HyDE для семантичного пошуку по всій сторінці. Використовує LLM для створення гіпотетичного допису з пошукового запиту користувача, щоб допомогти знайти збіги."
     ai_embeddings_semantic_quick_search_enabled: "Увімкнути опцію семантичного пошуку у спливаючому меню пошуку."
     ai_embeddings_semantic_related_include_closed_topics: "Включити закриті теми в результати семантичного пошуку"
     ai_embeddings_semantic_search_hyde_model: "Модель, що використовується для розширення ключових слів для отримання кращих результатів під час семантичного пошуку"
@@ -178,15 +179,56 @@ uk:
     emotion_gratitude:
       title: "\U0001F64F Вдячність"
       description: "Дописи, класифіковані з емоцією подяки за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_grief:
+      title: "\U0001F622 Горе"
+      description: "Дописи класифіковані з емоцією горе за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "\U0001F60A Радість"
+      description: "Дописи класифіковані за допомогою емоції радості за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
+    emotion_love:
+      title: '❤️ Любов'
+      description: "Дописи, класифіковані з емоцією love за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_nervousness:
+      title: "\U0001F630 Нервозність"
+      description: "Дописи класифіковані за емоцією \"нервозність\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
       title: "\U0001F610 Нейтральна"
+      description: "Дописи класифіковані як нейтральні за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_optimism:
+      title: "\U0001F31F Оптимізм"
+      description: "Дописи, класифіковані з емоцією оптимізму за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_pride:
+      title: "\U0001F981 Гордість"
+      description: "Дописи, класифіковані з емоцією гордість за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_realization:
+      title: "\U0001F4A1 Реалізація"
+      description: "Дописи, класифіковані з реалізацією емоцій за допомогою ШІ, з використанням моделі \"SamLowe/roberta-base-go_emotions\"."
+    emotion_relief:
+      title: "\U0001F60C Полегшення"
+      description: "Дописи, класифіковані з урахуванням емоцій за допомогою ШІ, з використанням моделі \"SamLowe/roberta-base-go_emotions\"."
+    emotion_remorse:
+      title: "\U0001F614 Докори сумління"
+      description: "Дописи, класифіковані з емоцією каяття за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
       title: "\U0001F62D Смуток"
+      description: "Дописи, класифіковані з емоцією смуток за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
       title: "\U0001F632 Сюрприз"
+      description: "Дописи, класифіковані за емоцією \"сюрприз\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
+    ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Ви можете мати лише %{count} ключ в артефакті."
+          few: "Ви можете мати лише %{count} ключі в артефакті."
+          many: "Ви можете мати лише %{count} ключі в артефакті."
+          other: "Ви можете мати лише %{count} ключі в артефакті."
+      link: "Показати в новій вкладці"
+      copy_embed: "Скопіювати вставку"
+      view_source: "Переглянути джерело"
+      view_changes: "Переглянути зміни"
+      change_description: "Змінити опис"
+      copied: "Скопійовано в буфер обміну"
     unknown_model: "Невідома модель ШІ"
     tools:
       custom_name: "%{name} (користувацький)"
@@ -201,6 +243,8 @@ uk:
           name: "Генератор зображень Flux (Together.ai)"
         empty_tool:
           name: "Почніть з чистого аркуша..."
+      name:
+        characters: "повинні містити тільки цифри, літери та підкреслення"
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
@@ -212,6 +256,7 @@ uk:
         custom_prompt: "Користувацький запит"
         explain: "Пояснити"
         illustrate_post: "Проілюструвати допис"
+        replace_dates: "Розумні дати"
       painter:
         attribution:
           stable_diffusion_xl: "Зображення від Stable Diffusion XL"
@@ -230,13 +275,22 @@ uk:
         failed_to_share: "Не вдалося поділитися розмовою"
         conversation_deleted: "Спільний доступ до розмови успішно видалено"
     spam_detection:
+      flag_reason: "Позначено як спам за допомогою <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "Користувач автоматично заблокований <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "Наданий невірний тип помилки"
+      unexpected: "Сталася неочікувана помилка"
+      bot_user_update_failed: "Не вдалося оновити користувача бота для сканування спаму"
+      configuration_missing: "Конфігурація виявлення спаму AI відсутня. Додайте конфігурацію в розділі «Адміністратор > Плагіни > Discourse AI > Спам» перед увімкненням."
       logging_subject: "Виявлення спаму"
     ai_bot:
+      reply_error: "Вибачте, схоже, наша система зіткнулася з несподіваною проблемою під час спроби відповісти.\n\n[details='Деталі помилки']\n%{details}\n[/details]"
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
+      thinking: "Думаю..."
       personas:
         default_llm_required: "Перед увімкненням чату потрібно встановити модель LLM за замовчуванням"
         cannot_delete_system_persona: "Системні персони не можуть бути видалені, замість цього, будь ласка, вимкніть їх"
         cannot_edit_system_persona: "Системні персони можна лише перейменовувати, ви не можете редагувати інструменти або системні підказки, натомість вимкніть і зробіть копію"
+        cannot_have_duplicate_tools: "Не можна мати дублікати інструментів"
         github_helper:
           name: "Помічник GitHub"
           description: "AI Bot, що спеціалізується на допомозі із завданнями та запитаннями, пов’язаними з GitHub"
@@ -246,6 +300,12 @@ uk:
         artist:
           name: Художник
           description: "AI Bot спеціалізується на створенні зображень"
+        designer:
+          name: Дизайнер
+          description: "ШІ-бот, що спеціалізується на створенні та редагуванні зображень"
+        forum_researcher:
+          name: Дослідник форуму
+          description: "ШІ Бот спеціалізується на глибоких дослідженнях форуму"
         sql_helper:
           name: SQL помічник
           description: "AI Bot спеціалізується на допомозі створювати запити SQL для цього екземпляра Discourse"
@@ -253,6 +313,7 @@ uk:
           name: Провідник налаштувань
           description: "AI Bot спеціалізується на допомозі досліджувати налаштування сайту Discourse"
         researcher:
+          name: Веб-дослідник
           description: "ШІ-бот з доступом до Google, який може шукати та читати веб-сторінки"
         creative:
           name: Творчий

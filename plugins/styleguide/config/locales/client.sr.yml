@@ -69,8 +69,8 @@ sr:
           title: "Мапа тема"
         site_header:
           title: "Заглавље странице"
-        suggested_topics:
-          title: "Predložene Teme"
+        more_topics:
+          title: "Više tema"
         post_menu:
           title: "Meni za post"
         modal:

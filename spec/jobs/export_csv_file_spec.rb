@@ -335,11 +335,6 @@ RSpec.describe Jobs::ExportCsvFile do
       location
       website
       views
-      external_id
-      external_email
-      external_username
-      external_name
-      external_avatar_url
     ]
   end
 
@@ -374,10 +369,43 @@ RSpec.describe Jobs::ExportCsvFile do
       external_email: "test@test.com",
     )
 
+    user_list_header.push(
+      "external_id",
+      "external_email",
+      "external_username",
+      "external_name",
+      "external_avatar_url",
+    )
+
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
     expect(user["location"]).to eq('"La,La Land"')
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
+  end
+
+  it "exports user fields" do
+    user_field_1 = Fabricate(:user_field, name: "custom field 1")
+    user_field_2 = Fabricate(:user_field, name: "custom field 2", field_type: "confirm")
+    user_field_3 = Fabricate(:user_field, name: "custom field 3", field_type: "confirm")
+
+    user = Fabricate(:user)
+    user.set_user_field(user_field_1.id, "Answer custom 1")
+    user.set_user_field(user_field_2.id, true)
+    user.set_user_field(user_field_3.id, false)
+    user.save!
+
+    user_list_header.push(
+      "custom field 1 (custom user field)",
+      "custom field 2 (custom user field)",
+      "custom field 3 (custom user field)",
+    )
+
+    export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+    puts export_user.pretty_inspect
+
+    expect(export_user["custom field 1 (custom user field)"]).to eq("Answer custom 1")
+    expect(export_user["custom field 2 (custom user field)"]).to eq("true")
+    expect(export_user["custom field 3 (custom user field)"]).to eq("false")
   end
 end

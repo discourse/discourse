@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";

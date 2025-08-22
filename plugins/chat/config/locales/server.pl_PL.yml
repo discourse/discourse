@@ -170,6 +170,7 @@ pl_PL:
     mention_warning:
       dismiss: "odrzuć"
       cannot_see: "%{first_identifier} nie ma dostępu do tego kanału i nie został powiadomiony."
+      cannot_see_group: "Niektórzy członkowie %{group_name} nie mają dostępu do tego kanału i nie zostali o tym powiadomieni."
       cannot_see_multiple:
         one: "%{first_identifier} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."

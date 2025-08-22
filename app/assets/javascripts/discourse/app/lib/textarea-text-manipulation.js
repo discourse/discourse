@@ -3,6 +3,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -70,6 +71,9 @@ export default class TextareaTextManipulation {
 
   autocompleteHandler;
   placeholder;
+
+  /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
+  state = new TrackedObject();
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);

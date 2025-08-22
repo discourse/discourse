@@ -19,9 +19,9 @@ html.keyboard-visible.mobile-view {
   }
 }
 
-html:not(.keyboard-visible.mobile-view) {
+html:not(.keyboard-visible).mobile-device {
   .d-modal__container {
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
   }
 }
 

@@ -8,11 +8,13 @@ pt_BR:
   admin_js:
     site_settings:
       categories:
-        post_voting: Votação em publicação
+        post_voting: Votação em postagem
   post_voting:
     reviewables:
       comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
   js:
+    discourse_post_voting:
+      title: "Votação em postagem"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -20,18 +22,18 @@ pt_BR:
       popup:
         question_answer_user_commented: '%{username} comentou em "%{topic}" - %{site_title}'
     category:
-      post_voting_settings_heading: Votação em publicação
-      create_as_post_voting_default: Novos tópicos padrão para tópicos de "Votação de publicação" nesta categoria.
+      post_voting_settings_heading: Votação em postagem
+      create_as_post_voting_default: Novos tópicos padrão para tópicos de "Votação em postagem" nesta categoria.
       only_post_voting_in_this_category: Novos tópicos podem ser apenas tópicos de "votação em postagem" nesta categoria
     composer:
       create_post_voting:
-        label: "Criar tópico de votação de publicação"
+        label: "Criar tópico de votação em postagem"
       composer_actions:
         create_as_post_voting:
-          label: "Alterar votação de publicação"
+          label: "Alterar votação em postagem"
           desc: "O tópico será criado com publicações para votar"
         remove_as_post_voting:
-          label: "Remover votação de publicação"
+          label: "Remover votação em postagem"
           desc: "O tópico será criado no formato regular"
     vote:
       already_voted: "Você só pode votar uma vez por pergunta."
@@ -81,7 +83,7 @@ pt_BR:
                 description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
               agree_and_silence:
                 title: "Silenciar usuário(a)"
-                description: "Concorde com a sinalização e silencie o usuário(a)."
+                description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
               agree_and_restore:
                 title: "Restaurar comentário"
                 description: "Restaure o comentário para que os(as) usuários(as) possam ver."
@@ -111,6 +113,9 @@ pt_BR:
         answer_count:
           one: "%{count} resposta"
           other: "%{count} respostas"
+        voters_count_diff:
+          one: "e mais %{count} usuário(a)..."
+          other: "e mais %{count} usuários(as)..."
     review:
       transcript:
         view: "Ver transcrição de mensagens anteriores"

@@ -26,10 +26,7 @@ module ApplicationHelper
       EmberENV: {
         FEATURES: {
         },
-        EXTEND_PROTOTYPES: {
-          Date: false,
-          String: false,
-        },
+        EXTEND_PROTOTYPES: false,
       },
       APP: {
         name: "discourse",

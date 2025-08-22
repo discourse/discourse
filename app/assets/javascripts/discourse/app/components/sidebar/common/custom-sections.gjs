@@ -4,12 +4,7 @@ import CustomSection from "./custom-section";
 
 export default class SidebarCustomSections extends Component {
   @service currentUser;
-  @service router;
-  @service messageBus;
-  @service appEvents;
-  @service topicTrackingState;
   @service site;
-  @service siteSettings;
 
   anonymous = false;
 

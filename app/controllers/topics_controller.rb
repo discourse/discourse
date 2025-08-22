@@ -1382,6 +1382,8 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html do
         @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+
+        helpers.localize_topic_view_content(@topic_view) if SiteSetting.content_localization_enabled
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta =
           @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary

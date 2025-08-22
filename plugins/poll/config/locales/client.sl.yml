@@ -69,7 +69,6 @@ sl:
       error_while_fetching_voters: "Prišlo je do napake med prikazom glasovalcev."
       error_while_exporting_results: "Prišlo je do napake pri izvozu rezultatov ankete."
       ui_builder:
-        title: Ustvari anketo
         insert: Vstavi anketo
         help:
           options_min_count: Vnesite vsaj eno možnost.

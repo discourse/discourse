@@ -217,6 +217,9 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -268,12 +271,35 @@ en:
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
 
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
+
       modals:
         select_option: "Select an option..."
 
       layout:
         table: "Table"
         card: "Card"
+
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          disabled_state:
+            configure: "Configure translations"
+            empty_label: "Automatic translations are disabled, click below to configure"
+        progress_chart:
+          title: "Translation progress"
+          completed: "Completed"
+          remaining: "Remaining"
+
 
       spam:
         short_title: "Spam"
@@ -588,9 +614,9 @@ en:
           google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
           google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
-          open_ai-o3: "Open AI's most capable reasoning model"
+          open_ai-o3: "OpenAI's most capable reasoning model"
           open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
-          open_ai-gpt-5: "Open AI's flagship model. It is well suited for problem solving across domains"
+          open_ai-gpt-5: "OpenAI's flagship model. It is well suited for problem solving across domains"
           open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
           open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
@@ -600,6 +626,8 @@ en:
           open_router-x-ai-grok-3-beta: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
+          groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
+          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by OpenAI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -646,6 +674,7 @@ en:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Custom"
 
         provider_fields:
@@ -903,6 +932,14 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
+          regenerate: "Regenerate short summary"
+          regenerate_bulk: "Regenerate short summaries"
+          regenerate_success:
+            one: "Short summary regenerated successfully"
+            other: "%{count} short summaries regenerated successfully"
+          regenerate_error:
+            one: "Failed to regenerate short summary"
+            other: "Failed to regenerate %{count} short summaries"
         topic_list_layout:
           button:
             compact: "Compact"

@@ -49,7 +49,6 @@ vi:
       select: "Chọn"
       sounds:
         none: "Không có gì"
-      exit: "quay lại"
       channel_status:
         closed: "Đã "
         open: "Mở"

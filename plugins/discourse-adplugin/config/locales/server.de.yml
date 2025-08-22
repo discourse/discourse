@@ -15,7 +15,7 @@ de:
     house_ads_after_nth_topic: 'Falls Eigenanzeigen für „Zwischen Themen“ definiert sind, zeige eine Anzeige nach jeweils N Thema, wobei N dieser Wert ist.'
     house_ads_after_nth_post: 'Falls Eigenanzeigen für „Zwischen Beiträgen“ definiert sind, zeige eine Anzeige nach jeweils N Beiträgen, wobei N dieser Wert ist.'
     house_ads_frequency: "Falls andere Werbenetzwerke zur Anzeige an einem Werbeplatz konfiguriert sind: die Häufigkeit in Prozent, mit der Eigenanzeigen dargestellt werden sollen."
-    ads_txt: "Inhalt deiner Datei „ads.txt“. Mehr Information sind auf <a href='https://support.google.com/adsense/answer/7532444?hl=de' target='_blank'>dieser Google-AdSense-Hilfeseite</a> verfügbar."
+    ads_txt: "Inhalt deiner Datei „ads.txt“. Weitere Informationen findest du auf <a href='https://support.google.com/adsense/answer/7532444?hl=de' target='_blank'>dieser Google-AdSense-Hilfeseite</a>."
     dfp_publisher_id: "Gib deinen Netzwerkcode für Google Ad Manager (früher DFP) ein, den du in deinen Netzwerkeinstellungen findest. HINWEIS: Du musst die Einstellung „content security policy script src“ aktualisieren. In <a href='https://meta.discourse.org/t/33734' target='_blank'>diesem Thema</a> findest du die aktuellsten Anweisungen."
     dfp_publisher_id_mobile: "(Optional) Falls du eine andere Ad-Manager-Publisher-ID für die mobile Version der Website verwenden möchtest, gib sie hier ein. Lasse das Feld leer, um dfp_publisher_id auf Mobilgeräten zu verwenden."
     dfp_through_trust_level: "Zeige Benutzern deine Werbung auf Grundlage der Vertrauensstufe. Benutzer mit einer höheren Vertrauensstufe als der angegebene Wert werden keine Werbung sehen."

@@ -32,6 +32,7 @@ it:
     post_voting_comment_limit_per_post: "Numero di commenti consentiti su ogni messaggio"
     min_trust_to_flag_posts_voting_comments: "Livello di attendibilità minimo per contrassegnare un commento di votazione dei messaggi"
     flag_posts_voting_comments_allowed_groups: "Gruppi autorizzati a contrassegnare un commento di votazione dei messaggi"
+    post_voting_comment_enabled: "Abilita i commenti nei messaggi negli argomenti con voto sui messaggi"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ it:
         limit_exceeded: "È stato raggiunto il limite di %{limit} commenti per messaggio."
         perform: "Commento di votazione di messaggio contrassegnato con un punteggio sufficientemente alto per silenziare l'utente."
         auto_silence_from_flags: "Silenziato automaticamente a causa della segnalazione."
+        disabled: "Non è consentito commentare un messaggio."
       reviewables:
         comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
         actions:

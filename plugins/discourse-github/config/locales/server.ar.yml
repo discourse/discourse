@@ -36,5 +36,26 @@ ar:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
+      repository_identifier_invalid_pm: |
+        المستودع المحدَّد في المكوِّن الإضافي discourse-github غير صالح:
+        %{repo_name}
+
+        يجب تحديده بالصيغة `user/repo`.
+
+        لن يتم منح الشارات حتى يتم تصحيح الاسم في
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">إعدادات الموقع لـ discourse-github</a>
+        وإعادة تفعيل خيار "github_badges_enabled".
       repository_not_found_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
+      repository_not_found_pm: |
+        أرجع المستودع المحدَّد في المكوِّن الإضافي discourse-github رسالة الخطأ "غير موجود":
+        %{repo_name}
+
+        لن يتم منح الشارات حتى يتم تصحيح الاسم في
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">إعدادات موقع discourse-github</a>
+        وإعادة تفعيل خيار "github_badges_enabled".
       invalid_octokit_credentials_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
+      invalid_octokit_credentials_pm: |
+        بيانات اعتماد GitHub التي أدخلتها للمكوِّن الإضافي discourse-github غير صالحة. تم تعطيل إعداد الموقع "تفعيل شارات github"، ولن تُحدَّث بيانات العمليات (commits) حتى يتم حل المشكلة.
+
+        تحقَّق من إعداد الموقع "رمز الوصول إلى رابط github الخلفي" للتأكُّد من صحة الرمز المميَّز وأن لديه الإذن للوصول إلى جميع المستودعات عبر
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">إعدادات الموقع لـ discourse-github</a>.

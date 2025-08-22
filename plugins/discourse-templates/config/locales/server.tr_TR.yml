@@ -10,6 +10,7 @@ tr_TR:
     discourse_templates_categories: "Şablonların alınacağı kategoriler"
     discourse_templates_enable_private_templates: "Özel şablonların kullanımını etkinleştirir"
     discourse_templates_groups_allowed_private_templates: "Grupların özel şablonları kullanmasına izin verilir. Personel üyelerine her zaman izin verilir."
+    discourse_templates_private_templates_tags: "Bir kişisel mesajı özel şablon olarak tanımlayan etiketler"
   default_category_template:
     name: Şablonlar
     description: |

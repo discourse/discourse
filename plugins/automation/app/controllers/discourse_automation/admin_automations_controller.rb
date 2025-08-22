@@ -56,6 +56,9 @@ module DiscourseAutomation
 
       automation =
         DiscourseAutomation::Automation.includes(:fields, :pending_automations).find(params[:id])
+
+      automation.perform_required_fields_validation = true
+
       if automation.scriptable.forced_triggerable
         params[:trigger] = automation.scriptable.forced_triggerable[:triggerable].to_s
       end

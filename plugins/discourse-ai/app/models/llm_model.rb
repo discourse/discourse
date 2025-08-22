@@ -59,6 +59,17 @@ class LlmModel < ActiveRecord::Base
           default: "default",
         },
       },
+      groq: {
+        disable_native_tools: :checkbox,
+        disable_temperature: :checkbox,
+        disable_top_p: :checkbox,
+        disable_streaming: :checkbox,
+        reasoning_effort: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+        },
+      },
       mistral: {
         disable_native_tools: :checkbox,
       },
@@ -71,6 +82,12 @@ class LlmModel < ActiveRecord::Base
       },
       azure: {
         disable_native_tools: :checkbox,
+        enable_responses_api: :checkbox,
+        reasoning_effort: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+        },
       },
       hugging_face: {
         disable_system_prompt: :checkbox,

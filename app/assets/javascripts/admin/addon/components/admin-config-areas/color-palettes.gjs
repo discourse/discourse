@@ -13,15 +13,27 @@ export default class AdminConfigAreasColorPalettes extends Component {
   @service router;
   @service modal;
 
-  get baseColorPalettes() {
-    return this.args.palettes.filter((palette) => palette.is_base);
-  }
-
   @action
   newColorPalette() {
+    // If a base palette exists in database, it should be removed from the list in the modal as potential base to not display duplicated names.
+    const deduplicatedColorPalettes = this.args.palettes.filter((base) => {
+      if (
+        base.id < 0 &&
+        this.args.palettes.find((palette) => {
+          return (
+            palette.name === base.name &&
+            palette.base_scheme_id === base.base_scheme_id &&
+            palette.id > 0
+          );
+        })
+      ) {
+        return false;
+      }
+      return true;
+    });
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.baseColorPalettes,
+        colorSchemes: deduplicatedColorPalettes,
         newColorSchemeWithBase: this.newColorPaletteWithBase,
       },
     });
@@ -29,15 +41,16 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
   @action
   async newColorPaletteWithBase(baseKey) {
-    const base = this.baseColorPalettes.find(
-      (palette) => palette.base_scheme_id === baseKey
-    );
+    const base = this.args.palettes.find((palette) => palette.id === baseKey);
     const newPalette = base.copy();
     newPalette.setProperties({
       name: i18n("admin.customize.colors.new_name"),
-      base_scheme_id: base.get("base_scheme_id"),
+      base_scheme_id: base.get("id"),
     });
     await newPalette.save();
+    newPalette.colors.forEach((color) => {
+      color.default_hex = color.originals.hex;
+    });
     await this.router.refresh();
     this.router.replaceWith("adminConfig.colorPalettes.show", newPalette);
   }

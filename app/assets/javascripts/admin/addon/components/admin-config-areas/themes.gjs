@@ -68,13 +68,12 @@ export default class AdminConfigAreasThemes extends Component {
       },
       duration: "short",
     });
+
     this.router.transitionTo(
-      `adminConfig.customize.${theme.component ? "components" : "themes"}`,
-      {
-        queryParams: { repoUrl: null, repoName: null },
-      }
+      "adminCustomizeThemes.show.index",
+      "themes",
+      theme.id
     );
-    this.router.refresh();
   }
 
   @action
@@ -91,7 +90,9 @@ export default class AdminConfigAreasThemes extends Component {
       }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.themes.description"
-        themeSiteSettingsUrl=(getURL "/admin/config/theme-site-settings")
+        themeSiteSettingsUrl=(getURL
+          "/admin/config/customize/theme-site-settings"
+        )
       }}
     >
       <:actions as |actions|>

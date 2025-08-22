@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    <div class="show-current-style">
+    <div class="show-current-style admin-customize-themes-show">
       <div class="back-to-themes-and-components">
         <LinkTo
           @route={{if
@@ -43,7 +43,7 @@ export default RouteTemplate(
         />
       </span>
 
-      <div class="title">
+      <div class="title admin-customize-themes-show__title">
         {{#if @controller.editingName}}
           <div class="container-edit-title">
             <TextField @value={{@controller.model.name}} @autofocus="true" />

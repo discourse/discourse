@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 class ColorScheme < ActiveRecord::Base
+  NAMES_TO_ID_MAP = {
+    "Light" => -1,
+    "Dark" => -2,
+    "Neutral" => -3,
+    "Grey Amber" => -4,
+    "Shades of Blue" => -5,
+    "Latte" => -6,
+    "Summer" => -7,
+    "Dark Rose" => -8,
+    "WCAG" => -9,
+    "WCAG Dark" => -10,
+    "Dracula" => -11,
+    "Solarized Light" => -12,
+    "Solarized Dark" => -13,
+  }
+
   BUILT_IN_SCHEMES = {
     Dark: {
       "primary" => "dddddd",
@@ -277,19 +293,35 @@ class ColorScheme < ActiveRecord::Base
     },
   }
 
-  LIGHT_THEME_ID = "Light"
+  LIGHT_PALETTE_NAME = "Light"
+  COLORS_ORDER = %w[
+    primary
+    secondary
+    tertiary
+    quaternary
+    header_background
+    header_primary
+    selected
+    hover
+    highlight
+    danger
+    success
+    love
+  ].freeze
 
   def self.base_color_scheme_colors
     base_with_hash = []
 
     base_colors.each { |name, color| base_with_hash << { name: name, hex: "#{color}" } }
 
-    list = [{ id: LIGHT_THEME_ID, colors: base_with_hash }]
+    list = [
+      { id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME, colors: base_with_hash },
+    ]
 
     BUILT_IN_SCHEMES.each do |k, v|
       colors = []
       v.each { |name, color| colors << { name: name, hex: "#{color}" } }
-      list.push(id: k.to_s, colors: colors)
+      list.push(id: NAMES_TO_ID_MAP[k.to_s], name: k.to_s, colors: colors)
     end
 
     list
@@ -301,6 +333,7 @@ class ColorScheme < ActiveRecord::Base
 
   attr_accessor :is_base
   attr_accessor :skip_publish
+  attr_accessor :is_builtin_default
 
   has_many :color_scheme_colors, -> { order("id ASC") }, dependent: :destroy
 
@@ -311,6 +344,7 @@ class ColorScheme < ActiveRecord::Base
   after_save_commit :dump_caches
   after_destroy :dump_caches
   belongs_to :theme
+  belongs_to :base_scheme, class_name: "ColorScheme"
 
   has_one :theme_color_scheme, dependent: :destroy
   has_one :owning_theme, class_name: "Theme", through: :theme_color_scheme, source: :theme
@@ -362,20 +396,27 @@ class ColorScheme < ActiveRecord::Base
     base_color_scheme_colors.map do |hash|
       scheme =
         new(
-          name: I18n.t("color_schemes.#{hash[:id].downcase.gsub(" ", "_")}"),
+          id: hash[:id],
+          name: I18n.t("color_schemes.#{hash[:name].downcase.gsub(" ", "_")}"),
           base_scheme_id: hash[:id],
         )
       scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
       scheme.is_base = true
+      scheme.is_builtin_default = hash[:id] == NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
       scheme
     end
   end
 
   def self.base
     return @base_color_scheme if @base_color_scheme
-    @base_color_scheme = new(name: I18n.t("color_schemes.base_theme_name"))
+    @base_color_scheme =
+      new(
+        id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME],
+        name: I18n.t("admin_js.admin.customize.theme.default_light_scheme"),
+      )
     @base_color_scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
     @base_color_scheme.is_base = true
+    @base_color_scheme.is_builtin_default = true
     @base_color_scheme
   end
 
@@ -388,12 +429,13 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
-    new_color_scheme.user_selectable = true
+
+    scheme_name = NAMES_TO_ID_MAP.invert[params[:base_scheme_id]]
 
     colors =
-      BUILT_IN_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
-        { name: name, hex: hex }
-      end if params[:base_scheme_id]
+      BUILT_IN_SCHEMES[scheme_name.to_sym]&.map { |name, hex| { name: name, hex: hex } } if params[
+      :base_scheme_id
+    ]
     colors ||= base.colors_hashes
 
     # Override base values
@@ -447,8 +489,16 @@ class ColorScheme < ActiveRecord::Base
 
   def base_colors
     colors = nil
-    colors = BUILT_IN_SCHEMES[base_scheme_id.to_sym] if base_scheme_id && base_scheme_id != "Light"
-    colors || ColorScheme.base_colors
+    colors = BUILT_IN_SCHEMES[NAMES_TO_ID_MAP.invert[base_scheme_id].to_sym] if base_scheme_id &&
+      base_scheme_id < 0 && base_scheme_id != NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
+    colors ||=
+      base_scheme
+        &.colors
+        &.reduce({}) do |acc, color|
+          acc[color.name] = color.hex
+          acc
+        end if base_scheme_id
+    colors || (base_scheme_id ? {} : ColorScheme.base_colors)
   end
 
   def resolved_colors(dark: false)
@@ -508,6 +558,12 @@ class ColorScheme < ActiveRecord::Base
     end
   end
 
+  def self.sort_colors(hash)
+    sorted = hash.slice(*COLORS_ORDER)
+    sorted.merge!(hash.except(*COLORS_ORDER)) if sorted.size < hash.size
+    sorted
+  end
+
   def dump_caches
     self.class.hex_cache.clear
     ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
@@ -527,7 +583,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def is_wcag?
-    base_scheme_id&.start_with?("WCAG")
+    base_scheme_id == NAMES_TO_ID_MAP["WCAG"] || base_scheme_id == NAMES_TO_ID_MAP["WCAG Dark"]
   end
 end
 
@@ -537,11 +593,11 @@ end
 #
 #  id              :integer          not null, primary key
 #  name            :string           not null
+#  user_selectable :boolean          default(FALSE), not null
 #  version         :integer          default(1), not null
+#  via_wizard      :boolean          default(FALSE), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  via_wizard      :boolean          default(FALSE), not null
-#  base_scheme_id  :string
+#  base_scheme_id  :integer
 #  theme_id        :integer
-#  user_selectable :boolean          default(FALSE), not null
 #

@@ -5,6 +5,7 @@ module PageObjects
     class AdminCustomizeThemesConfigArea < PageObjects::Pages::Base
       def visit(query_params = {})
         page.visit("/admin/config/customize?#{query_params.to_query}")
+        self
       end
 
       def find_theme_card(theme)
@@ -19,9 +20,9 @@ module PageObjects
         find_theme_card(theme).find(".theme-card__footer-menu-trigger").click
       end
 
-      def mark_as_active(theme)
+      def mark_as_default(theme)
         open_theme_menu(theme)
-        find(".set-active").click
+        find(".set-default").click
       end
 
       def has_badge?(theme, badge)
@@ -36,6 +37,10 @@ module PageObjects
         expect(all(".theme-card__title").map(&:text)).to eq(names)
       end
 
+      def has_no_theme?(name)
+        has_no_css?(".theme-card.#{name.parameterize}")
+      end
+
       def toggle_selectable(theme)
         open_theme_menu(theme)
         find(".set-selectable").click
@@ -43,6 +48,10 @@ module PageObjects
 
       def click_edit(theme)
         find_theme_card(theme).find(".edit").click
+      end
+
+      def click_install_button
+        PageObjects::Components::AdminCustomizeThemeInstallButton.new.click
       end
     end
   end
