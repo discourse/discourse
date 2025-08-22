@@ -83,12 +83,11 @@ describe "Upcoming Events", type: :system do
           title: "attending post event",
           raw: "[event status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
         )
-      non_attending_event =
-        PostCreator.create!(
-          admin,
-          title: "non attending post event",
-          raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
-        )
+      PostCreator.create!(
+        admin,
+        title: "non attending post event",
+        raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
+      )
       DiscoursePostEvent::Event.find(attending_event.id).create_invitees(
         [{ user_id: admin.id, status: 0 }],
       )
@@ -110,13 +109,13 @@ describe "Upcoming Events", type: :system do
       upcoming_events.visit
 
       expect(page).to have_current_path(
-        "/upcoming-events?end=2025-09-01&start=2025-08-01&view=dayGridMonth",
+        "/upcoming-events?end=2025-08-31T22%3A00%3A00.000Z&start=2025-07-31T22%3A00%3A00.000Z&view=dayGridMonth",
       )
 
       upcoming_events.open_year_list
 
       expect(page).to have_current_path(
-        "/upcoming-events?end=2026-01-01&start=2025-01-01&view=listYear",
+        "/upcoming-events?end=2025-12-31T23%3A00%3A00.000Z&start=2024-12-31T23%3A00%3A00.000Z&view=listYear",
       )
     end
   end
