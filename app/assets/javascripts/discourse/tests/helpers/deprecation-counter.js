@@ -73,7 +73,12 @@ export default class DeprecationCounter {
     let msg = `| ${idColumn.padEnd(maxIdLength)} |    ${countColumn} |\n`;
     msg += `| ${"".padEnd(maxIdLength, "-")} | -------- |\n`;
 
-    for (const [id, count] of this.counts.entries()) {
+    for (const [id, count] of Array.from(this.counts.entries()).sort(
+      ([id1], [id2]) => {
+        // sort id alphabetically
+        return id1.localeCompare(id2);
+      }
+    )) {
       const countString = count.toString();
       msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(8)} |\n`;
     }
