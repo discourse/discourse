@@ -102,12 +102,15 @@ RSpec.describe ReviewablePost do
         expect(actions.has?(:delete_and_block_user)).to eq(true)
       end
 
-      it "does not include user actions bundle when no target_created_by" do
+      it "includes a minimal user actions bundle when no target_created_by" do
         reviewable.target_created_by = nil
         actions = reviewable_actions(guardian)
-        bundles = actions.bundles
 
-        expect(bundles.map(&:id)).not_to include("#{reviewable.id}-user-actions")
+        expect(actions.has?(:no_action_user)).to eq(true)
+        expect(actions.has?(:silence_user)).to eq(false)
+        expect(actions.has?(:suspend_user)).to eq(false)
+        expect(actions.has?(:delete_user)).to eq(false)
+        expect(actions.has?(:delete_and_block_user)).to eq(false)
       end
 
       def reviewable_actions(guardian)
