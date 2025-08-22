@@ -111,9 +111,11 @@ export default {
     messageBus.backgroundCallbackInterval =
       siteSettings.background_polling_interval;
     
-    if (siteSettings.long_polling_base_url && 
-        siteSettings.long_polling_base_url !== "/") {
-      messageBus.baseUrl = 
+    if (
+      siteSettings.long_polling_base_url &&
+      siteSettings.long_polling_base_url !== "/"
+    ) {
+      messageBus.baseUrl =
         siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
     } else {
       messageBus.baseUrl = getURL("/");
