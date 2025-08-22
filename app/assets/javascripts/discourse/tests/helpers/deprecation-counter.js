@@ -8,11 +8,6 @@ import {
 
 export default class DeprecationCounter {
   counts = new Map();
-  #config;
-
-  constructor(config) {
-    this.#config = config;
-  }
 
   start() {
     registerDeprecationHandler(this.handleEmberDeprecation);
@@ -20,21 +15,10 @@ export default class DeprecationCounter {
   }
 
   @bind
-  findConfig(id) {
-    return this.#config.find((config) => {
-      if (config.matchId instanceof RegExp) {
-        return config.matchId.test(id);
-      }
-
-      return config.matchId === id;
-    });
-  }
-
-  @bind
   handleEmberDeprecation(message, options, next) {
     const { id } = options;
 
-    const handlers = this.findConfig(id)?.handler?.split("|");
+    const handlers = DeprecationWorkflow.find(id)?.handler?.split("|");
 
     const isSilenced = isDeprecationSilenced(id);
     const hasSilence = handlers?.includes("silence") ?? false;
@@ -59,13 +43,20 @@ export default class DeprecationCounter {
     let { id } = options;
     id ||= "discourse.(unknown)";
 
-    const matchingConfigs = this.findConfig(id)?.handler?.split("|");
+    const handlers = DeprecationWorkflow.find(id)?.handler?.split("|");
 
-    if (
-      !matchingConfigs ||
-      !matchingConfigs.includes("silence") ||
-      matchingConfigs.includes("counter")
-    ) {
+    const isSilenced = isDeprecationSilenced(id);
+    const hasSilence = handlers?.includes("silence") ?? false;
+    const hasCounter = handlers?.includes("counter") ?? false;
+
+    // Increment when the id is not silenced and either:
+    // - no handlers are configured
+    // - the handler "silence" is not included
+    // - explicitly includes the handler "counter"
+    const shouldIncrement =
+      !isSilenced && (!handlers || !hasSilence || hasCounter);
+
+    if (shouldIncrement) {
       this.incrementDeprecation(id);
     }
   }
@@ -108,7 +99,7 @@ function reportToTestem(id) {
 }
 
 export function setupDeprecationCounter(qunit) {
-  const deprecationCounter = new DeprecationCounter(DeprecationWorkflow.list);
+  const deprecationCounter = new DeprecationCounter();
 
   qunit.begin(() => deprecationCounter.start());
 
