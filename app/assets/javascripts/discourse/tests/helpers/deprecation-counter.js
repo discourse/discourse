@@ -1,7 +1,10 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { bind } from "discourse/lib/decorators";
-import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
+import {
+  isDeprecationSilenced,
+  registerDeprecationHandler as registerDiscourseDeprecationHandler,
+} from "discourse/lib/deprecated";
 
 export default class DeprecationCounter {
   counts = new Map();
@@ -30,13 +33,21 @@ export default class DeprecationCounter {
   @bind
   handleEmberDeprecation(message, options, next) {
     const { id } = options;
-    const matchingConfigs = this.findConfig(id)?.handler?.split("|");
 
-    if (
-      !matchingConfigs ||
-      !matchingConfigs.includes("silence") ||
-      matchingConfigs.includes("counter")
-    ) {
+    const handlers = this.findConfig(id)?.handler?.split("|");
+
+    const isSilenced = isDeprecationSilenced(id);
+    const hasSilence = handlers?.includes("silence") ?? false;
+    const hasCounter = handlers?.includes("counter") ?? false;
+
+    // Increment when the id is not silenced and either:
+    // - no handlers are configured
+    // - the handler "silence" is not included
+    // - explicitly includes the handler "counter"
+    const shouldIncrement =
+      !isSilenced && (!handlers || !hasSilence || hasCounter);
+
+    if (shouldIncrement) {
       this.incrementDeprecation(id);
     }
 
