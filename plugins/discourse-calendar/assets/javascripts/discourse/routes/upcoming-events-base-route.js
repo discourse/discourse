@@ -20,8 +20,7 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const year = parseInt(params.year, 10);
       after = moment.utc({ year }).startOf("year").toISOString();
       before = moment.utc({ year }).endOf("year").toISOString();
-      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
-      initialDate = moment.utc({ year }).hour(23).minute(59).toISOString();
+      initialDate = moment.utc({ year }).format("YYYY-MM-DD");
     } else if (params.view === "month") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -29,12 +28,7 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month });
       after = date.clone().startOf("month").toISOString();
       before = date.clone().endOf("month").toISOString();
-      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
-      initialDate = moment
-        .utc({ year, month })
-        .hour(23)
-        .minute(59)
-        .toISOString();
+      initialDate = moment.utc({ year, month }).format("YYYY-MM-DD");
     } else if (params.view === "week") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -43,12 +37,7 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month, day });
       after = date.clone().startOf("week").toISOString();
       before = date.clone().endOf("week").toISOString();
-      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
-      initialDate = moment
-        .utc({ year, month, day })
-        .hour(23)
-        .minute(59)
-        .toISOString();
+      initialDate = moment.utc({ year, month, day }).format("YYYY-MM-DD");
     } else if (params.view === "day") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -57,12 +46,7 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month, day });
       after = date.clone().startOf("day").toISOString();
       before = date.clone().endOf("day").toISOString();
-      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
-      initialDate = moment
-        .utc({ year, month, day })
-        .hour(23)
-        .minute(59)
-        .toISOString();
+      initialDate = moment.utc({ year, month, day }).format("YYYY-MM-DD");
     }
 
     const fetchParams = {
