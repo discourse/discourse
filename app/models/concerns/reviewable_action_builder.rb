@@ -157,6 +157,15 @@ module ReviewableActionBuilder
 
   private
 
+  # Returns the user associated with the reviewable, if applicable.
+  # For most reviewables, this will be the user who created the reviewable, though some
+  # reviewables may need to implement this method differently (for example, ReviewableUser).
+  #
+  # @return [User] The user associated with the reviewable.
+  def target_user
+    try(:target_created_by)
+  end
+
   # Options for deleting a user, used by perform_delete_user and perform_delete_and_block_user.
   def delete_opts
     {
