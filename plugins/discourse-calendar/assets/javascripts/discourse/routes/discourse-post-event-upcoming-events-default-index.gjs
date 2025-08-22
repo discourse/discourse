@@ -6,7 +6,6 @@ export default class PostEventUpcomingEventsDefaultIndexRoute extends DiscourseR
   @service router;
 
   beforeModel() {
-    // Use local time to get the current date in user's timezone
     const today = moment();
     const year = today.year();
     const month = today.month() + 1; // moment months are 0-indexed, but URLs use 1-indexed
