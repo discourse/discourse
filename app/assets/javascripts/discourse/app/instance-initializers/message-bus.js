@@ -110,14 +110,21 @@ export default {
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval =
       siteSettings.background_polling_interval;
-    messageBus.baseUrl =
-      siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
+    
+    // Set messageBus.baseUrl
+    // If a custom long_polling_base_url is configured (not the default "/"), use it
+    // Otherwise use the application's relative path
+    if (siteSettings.long_polling_base_url && siteSettings.long_polling_base_url !== "/") {
+      // Use custom long polling URL (e.g., for separate message server or CDN)
+      messageBus.baseUrl = siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
+    } else {
+      // Use default relative path
+      messageBus.baseUrl = getURL("/");
+    }
 
     messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
 
     messageBus.ajax = (opts) => mbAjax(messageBus, opts);
-
-    messageBus.baseUrl = getURL("/");
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;
