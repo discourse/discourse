@@ -4,13 +4,13 @@ require "enum_site_setting"
 
 class TopicListDesignSetting < EnumSiteSetting
   def self.valid_value?(val)
-    values.any? { |v| v[:value] == val }
+    values.any? { |v| v[:value].to_s == val.to_s }
   end
 
   def self.values
     @values ||= [
-      { name: "topic_list_design.topic_table", value: 0 },
-      { name: "topic_list_design.topic_cards", value: 1 },
+      { name: "topic_list_design.topic_table", value: "topic_table" },
+      { name: "topic_list_design.topic_cards", value: "topic_cards" },
     ]
   end
 
