@@ -6,18 +6,14 @@ module ReviewableActionBuilder
   FLAGGABLE = false
 
   # Standard user-actions bundle and default user actions.
-  # Callers should gate invocation (e.g., only when
-  # target_created_by is present, or only while pending).
-  #
-  # @see #allow_user_suspend_actions?
-  # @see #allow_user_delete_actions?
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param user [User] User instance to check permissions against.
   #
   # @return [Reviewable::Actions::Bundle] The created user actions bundle.
-  def build_user_actions_bundle(actions, guardian, user)
+  def build_user_actions_bundle(actions, guardian)
+    return nil unless target_user
+
     bundle =
       actions.add_bundle(
         "#{id}-user-actions",
@@ -27,41 +23,20 @@ module ReviewableActionBuilder
     # Always include the no-op action
     build_action(actions, :no_action_user, bundle: bundle)
 
-    if user && allow_user_suspend_actions?(guardian, user)
+    if guardian.can_silence_user?(target_user)
       build_action(actions, :silence_user, bundle: bundle, client_action: "silence")
+    end
+
+    if guardian.can_suspend?(target_user)
       build_action(actions, :suspend_user, bundle: bundle, client_action: "suspend")
     end
 
-    if user && allow_user_delete_actions?(guardian, user)
+    if guardian.can_delete_user?(target_user)
       build_action(actions, :delete_user, bundle: bundle)
       build_action(actions, :delete_and_block_user, bundle: bundle)
     end
 
     bundle
-  end
-
-  # Check if the current guardian can perform user suspend actions. Used by
-  # {#build_user_actions_bundle} to gate action availability. Callers to
-  # {#build_user_actions_bundle} should override this method to implement custom logic.
-  #
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param user [User] User instance to check permissions against.
-  #
-  # @return [Boolean] True if the guardian can suspend the user, false otherwise.
-  def allow_user_suspend_actions?(guardian, user)
-    guardian.can_suspend?(user)
-  end
-
-  # Check if the current guardian can perform user delete actions. Used by
-  # {#build_user_actions_bundle} to gate action availability. Callers to
-  # {#build_user_actions_bundle} should override this method to implement custom logic.
-  #
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param user [User] User instance to check permissions against.
-  #
-  # @return [Boolean] True if the guardian can delete the user, false otherwise.
-  def allow_user_delete_actions?(guardian, user)
-    guardian.can_delete_user?(user)
   end
 
   # Build actions for the reviewable based on the current state and guardian permissions.
@@ -187,7 +162,7 @@ module ReviewableActionBuilder
   # @return [Reviewable::PerformResult] The result object.
   def perform_delete_user(performed_by, args, &)
     user = try(:target_created_by)
-    delete_user(user, delete_opts, performed_by)
+    delete_user(user, delete_opts, performed_by) if user
     successful_transition :rejected, recalculate_score: false, &
   end
 
@@ -202,7 +177,7 @@ module ReviewableActionBuilder
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(user, delete_options, performed_by)
+    delete_user(user, delete_options, performed_by) if user
     successful_transition :rejected, recalculate_score: false, &
   end
 
