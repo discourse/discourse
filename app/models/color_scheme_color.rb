@@ -19,12 +19,11 @@ end
 # Table name: color_scheme_colors
 #
 #  id              :integer          not null, primary key
-#  name            :string           not null
 #  hex             :string           not null
-#  color_scheme_id :integer          not null
+#  name            :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  dark_hex        :string(6)
+#  color_scheme_id :integer          not null
 #
 # Indexes
 #

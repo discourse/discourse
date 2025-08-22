@@ -956,20 +956,12 @@ RSpec.describe ApplicationHelper do
   describe "#discourse_theme_color_meta_tags" do
     before do
       light = Fabricate(:color_scheme)
-      light.color_scheme_colors << ColorSchemeColor.new(
-        name: "header_background",
-        hex: "abcdef",
-        dark_hex: "fedcba",
-      )
+      light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
       light.save!
       helper.request.cookies["color_scheme_id"] = light.id
 
       dark = Fabricate(:color_scheme)
-      dark.color_scheme_colors << ColorSchemeColor.new(
-        name: "header_background",
-        hex: "defabc",
-        dark_hex: "cbafed",
-      )
+      dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
     end

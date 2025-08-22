@@ -19,7 +19,6 @@ class ThemeSerializer < BasicThemeSerializer
              :system
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
-  has_one :base_palette, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object
 
@@ -57,14 +56,6 @@ class ThemeSerializer < BasicThemeSerializer
 
   def parent_themes
     object.parent_themes
-  end
-
-  def base_palette
-    ColorScheme.base
-  end
-
-  def include_base_palette?
-    object.color_scheme_id.blank?
   end
 
   def settings
