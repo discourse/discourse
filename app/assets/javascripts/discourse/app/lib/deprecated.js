@@ -120,7 +120,7 @@ export function isDeprecationSilenced(id) {
     id &&
     disabledDeprecations.length &&
     disabledDeprecations.find((disabledId) => {
-      if (disabledId.matchId instanceof RegExp) {
+      if (disabledId instanceof RegExp) {
         return disabledId.test(id);
       }
 
