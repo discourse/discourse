@@ -1,5 +1,6 @@
 import { NativeArray } from "@ember/array";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
+import escapeRegExp from "discourse/lib/escape-regexp";
 
 /**
  * Provides backward compatibility for Ember native array extensions that were deprecated and removed in Ember 6.0.
@@ -12,8 +13,10 @@ import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
  * EmberArray, or TrackedArray alternatives.
  **/
 
-const ARRAY_PROTO = Array.prototype;
 const DEPRECATION_ID_PREFIX = "discourse.ember.native-array-extensions";
+const SILENCED_ARRAY_DEPRECATIONS = new RegExp(
+  `^${escapeRegExp(DEPRECATION_ID_PREFIX)}\..+$`
+);
 const DEPRECATION_SINCE = "3.6.0.beta1-dev";
 
 /**
@@ -44,7 +47,7 @@ function warn(name, kind = "method") {
 function isDeprecatedMethod(methodName) {
   return (
     NativeArray._without.indexOf(methodName) === -1 &&
-    ARRAY_PROTO[methodName] &&
+    Array.prototype[methodName] &&
     methodName !== "[]" // [] is a special case - a getter/setter property added by Ember's NativeArray
   );
 }
@@ -55,11 +58,15 @@ function isDeprecatedMethod(methodName) {
  * @param {string} methodName - The name of the method to deprecate
  */
 function deprecateArrayMethod(methodName) {
-  const original = ARRAY_PROTO[methodName];
+  const original = Array.prototype[methodName];
 
-  ARRAY_PROTO[methodName] = function (...args) {
+  // eslint-disable-next-line no-extend-native
+  Array.prototype[methodName] = function (...args) {
     warn(methodName);
-    return original.apply(this, args);
+
+    return withSilencedDeprecations(SILENCED_ARRAY_DEPRECATIONS, () =>
+      original.apply(this, args)
+    );
   };
 }
 
@@ -68,22 +75,28 @@ function deprecateArrayMethod(methodName) {
  * for both getter and setter
  */
 function wrapSquareBracketDescriptor() {
+  const propertyName = "[]";
   const squareBracketDescriptor = Object.getOwnPropertyDescriptor(
-    ARRAY_PROTO,
-    "[]"
+    Array.prototype,
+    propertyName
   );
   if (!squareBracketDescriptor) {
     return;
   }
 
-  Object.defineProperty(ARRAY_PROTO, "[]", {
+  // eslint-disable-next-line no-extend-native
+  Object.defineProperty(Array.prototype, propertyName, {
     get() {
-      warn("[]", "getter");
-      return squareBracketDescriptor.get.bind(this)();
+      warn(propertyName, "getter");
+
+      return withSilencedDeprecations(SILENCED_ARRAY_DEPRECATIONS, () =>
+        squareBracketDescriptor.get.bind(this)()
+      );
     },
     set(value) {
-      warn("[]", "setter");
-      withSilencedDeprecations(`${DEPRECATION_ID_PREFIX}.replace`, () => {
+      warn(propertyName, "setter");
+
+      withSilencedDeprecations(SILENCED_ARRAY_DEPRECATIONS, () => {
         squareBracketDescriptor.set.bind(this)(value);
       });
     },
@@ -91,7 +104,7 @@ function wrapSquareBracketDescriptor() {
 }
 
 // Apply the shim to the native Array prototype to mantain compatibility with existing code.
-NativeArray.apply(ARRAY_PROTO, true);
+NativeArray.apply(Array.prototype, true);
 
 // Wrap all applicable native array extension methods with deprecations
 Array.from(NativeArray.keys())
