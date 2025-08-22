@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import {
   blur,
   click,
   fillIn,
   render,
+  settled,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -13,15 +15,11 @@ module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
-    const self = this;
+    const values = "vinkas\nosama";
+    await render(<template><SimpleList @values={{values}} /></template>);
 
-    this.set("values", "vinkas\nosama");
-
-    await render(<template><SimpleList @values={{self.values}} /></template>);
-
-    assert
-      .dom(".add-value-btn[disabled]")
-      .exists("while loading the + button is disabled");
+    assert.dom(".values .value").exists({ count: 2 });
+    assert.dom(".add-value-btn").isDisabled("disabled when input is empty");
 
     await fillIn(".add-value-input", "penar");
     await click(".add-value-btn");
@@ -39,27 +37,25 @@ module("Integration | Component | simple-list", function (hooks) {
 
     assert
       .dom(".values .value")
-      .exists({ count: 4 }, "adds the value when keying Enter");
+      .exists({ count: 4 }, "adds the value when pressing Enter");
   });
 
   test("adding a value when list is predefined", async function (assert) {
-    const self = this;
-
-    this.set("values", "vinkas\nosama");
-    this.set("choices", ["vinkas", "osama", "kris"]);
+    const values = "vinkas\nosama";
+    const choices = ["vinkas", "osama", "kris", "jeff"];
 
     await render(
       <template>
         <SimpleList
-          @values={{self.values}}
+          @values={{values}}
           @allowAny={{false}}
-          @choices={{self.choices}}
+          @choices={{choices}}
         />
       </template>
     );
 
     await click(".add-value-input summary");
-    assert.dom(".select-kit-row").exists({ count: 1 });
+    assert.dom(".select-kit-row").exists({ count: 2 });
     await click(".select-kit-row");
 
     assert
@@ -68,19 +64,17 @@ module("Integration | Component | simple-list", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    const self = this;
-
     const done = assert.async();
 
-    this.set("values", "vinkas\nosama");
-    this.set("onChange", function (collection) {
+    const values = "vinkas\nosama";
+    const onChange = (collection) => {
       assert.deepEqual(collection, ["vinkas", "jarek"]);
       done();
-    });
+    };
 
     await render(
       <template>
-        <SimpleList @values={{self.values}} @onChange={{self.onChange}} />
+        <SimpleList @values={{values}} @onChange={{onChange}} />
       </template>
     );
 
@@ -91,11 +85,8 @@ module("Integration | Component | simple-list", function (hooks) {
   });
 
   test("removing a value", async function (assert) {
-    const self = this;
-
-    this.set("values", "vinkas\nosama");
-
-    await render(<template><SimpleList @values={{self.values}} /></template>);
+    const values = "vinkas\nosama";
+    await render(<template><SimpleList @values={{values}} /></template>);
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
@@ -109,13 +100,9 @@ module("Integration | Component | simple-list", function (hooks) {
   });
 
   test("delimiter support", async function (assert) {
-    const self = this;
-
-    this.set("values", "vinkas|osama");
-
     await render(
       <template>
-        <SimpleList @values={{self.values}} @inputDelimiter="|" />
+        <SimpleList @values="vinkas|osama" @inputDelimiter="|" />
       </template>
     );
 
@@ -129,5 +116,26 @@ module("Integration | Component | simple-list", function (hooks) {
     assert
       .dom(".values .value[data-index='2'] .value-input")
       .hasValue("eviltrout", "adds the correct value");
+  });
+
+  test("updates when values change", async function (assert) {
+    const state = new (class {
+      @tracked values = "vinkas|osama";
+    })();
+
+    await render(
+      <template>
+        <SimpleList @values={{state.values}} @inputDelimiter="|" />
+      </template>
+    );
+
+    assert
+      .dom(".values .value[data-index='0'] .value-input")
+      .hasValue("vinkas");
+
+    state.values = "kris|jeff";
+    await settled();
+
+    assert.dom(".values .value[data-index='0'] .value-input").hasValue("kris");
   });
 });
