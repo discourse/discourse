@@ -773,7 +773,7 @@ zh_CN:
         reviewable_post:
           title: "帖子"
           noun: "帖子"
-      flagged_as: "被举报为"
+      flagged_as: "被标记为"
       assigned_to: "已指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
@@ -1759,7 +1759,7 @@ zh_CN:
         revoke: "撤消"
         cancel: "取消"
         not_connected: "（未连接）"
-        confirm_modal_title: "连接 %{provider} 帐户"
+        confirm_modal_title: "关联 %{provider} 帐户"
         confirm_description:
           disconnect: "您现有的 %{provider} 帐户 '%{account_description}' 将被断开连接。"
           account_specific: "您的 %{provider} 帐户 '%{account_description}' 将被用于身份验证。"
@@ -2722,7 +2722,7 @@ zh_CN:
         edit: "编辑链接"
         copy: "复制链接"
         remove: "移除链接"
-        visit: "在外部标签中打开链接"
+        visit: "在外部标签页中打开链接"
         link_copied: "链接已复制！"
     notifications:
       tooltip:
@@ -4871,8 +4871,8 @@ zh_CN:
       placeholder: "按类别、标签或其他条件筛选话题"
       description:
         yesterday: "昨天"
-        last_week: "上周"
-        last_month: "上个月"
+        last_week: "过去一周"
+        last_month: "过去一个月"
         last_year: "去年"
     discovery:
       headings:
@@ -4991,7 +4991,7 @@ zh_CN:
         flags:
           title: "审核"
           header_description: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
-          keywords: "举报|评论|垃圾|非法"
+          keywords: "举报|评论|垃圾信息|非法"
         files:
           title: "文件"
           header_description: "控制文件大小与类型限制、头像大小与来源、文件存储、图片质量和压缩等的设置"
@@ -5031,7 +5031,7 @@ zh_CN:
               help_text: "建议尺寸为 512 x 512 像素。"
             favicon:
               title: "网站图标"
-              description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
+              description: "徽标将作为图标出现在浏览器标签页和浏览器收藏夹/书签中。"
             logo_small:
               title: "小徽标"
               description: "您的站点左上角的小徽标图片，向下滚动时可见。如果留空，将显示首页字形。"
@@ -5115,8 +5115,8 @@ zh_CN:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
         spam:
-          title: "垃圾内容"
-          header_description: "配置系统如何分析用户的注册和发帖行为，以快速识别和阻止垃圾内容"
+          title: "垃圾信息"
+          header_description: "配置系统如何分析用户的注册和发帖行为，以快速识别和阻止垃圾信息"
         trust_levels:
           title: "信任级别"
           header_description: "信任级别设置允许您微调社区升级系统的要求和通知，当用户在论坛中表现出持续、积极的参与时，系统会自动将用户提升到更高的信任级别"
@@ -5150,7 +5150,7 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
         reports:
-          title: "报告"
+          title: "举报"
           header_description: "报告是帮助您了解站点上所发生事情的强大工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
           sub_pages:
             settings:
@@ -5164,7 +5164,7 @@ zh_CN:
           keywords: "搜索|google|站点地图"
         interface:
           title: "界面与布局"
-          header_description: "自定义站点总体布局和用户界面"
+          header_description: "自定义站点总体布局和用户界面的详细信息"
           keywords: "斜杠"
         content:
           title: "内容"

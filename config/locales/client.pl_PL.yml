@@ -7911,7 +7911,7 @@ pl_PL:
           title: "Wyświetl adres email tego użytkownika"
           text: "Pokaż"
         check_sso:
-          title: "Reveal SSO payload"
+          title: "Ujawnij ładunek SSO"
           text: "Pokaż"
         delete_associated_accounts:
           title: "Usuń wszystkie powiązane konta dla tego użytkownika"

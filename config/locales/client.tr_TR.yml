@@ -1344,7 +1344,7 @@ tr_TR:
       download_archive:
         title: "Verilerinizi dışa aktarın"
         description: "Hesap aktivitenizin ve tercihlerinizin arşivini indirin."
-        button_text: "Arşiv talep edin"
+        button_text: "Talep arşivi"
         confirm: "Hesap aktivitenizin ve tercihlerinizin arşivini indirmeyi gerçekten istiyor musunuz?"
         success: "Arşivinizi toplamaya başladık, işlem tamamlandığında bir mesaj alacaksınız."
         rate_limit_error: "Hesap arşivleri günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
@@ -5561,7 +5561,7 @@ tr_TR:
           keywords: "token|kapsam"
         webhooks:
           title: "Web Kancaları"
-          header_description: "Web kancaları, Discourse'un sitenizde belirli olaylar gerçekleştiğinde harici servisleri bilgilendirmesini sağlar. Web kancaları tetiklendiğinde, sağlanan URL'lere bir GÖNDERİ isteği gönderilir."
+          header_description: "Web kancaları, Discourse'un sitenizde belirli olaylar gerçekleştiğinde harici servisleri bilgilendirmesini sağlar. Web kancaları tetiklendiğinde, sağlanan URL'lere bir GÖNDERİ talebi gönderilir."
           keywords: "olay|yük|url"
         embedding:
           title: "Gömme"
