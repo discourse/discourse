@@ -3013,7 +3013,7 @@ fi:
       delete: "Poista"
       uploading: "Ladataan"
       processing: "Käsitellään lähetystä"
-      select_file: "Napsauta ladataksesi tai vedä ja pudota tiedosto"
+      select_file: "Klikkaa ladataksesi tai vedä ja pudota tiedosto"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -4099,7 +4099,7 @@ fi:
         description: "Kuvaus"
         add: "Lisää uusi kielialue"
         remove: "Poista"
-        hint: "Tällä hetkellä tähän kategoriaan ei ole lokalisointia. Napsauta \"Lisää uusi kielialue\" alla aloittaaksesi lokalisointien lisäämisen."
+        hint: "Tällä hetkellä tähän kategoriaan ei ole lokalisointia. Klikkaa \"Lisää uusi kielialue\" alla aloittaaksesi lokalisointien lisäämisen."
       tags_allowed_tags: "Rajoita nämä tunnisteet alueeseen \"%{categoryName}\":"
       tags_allowed_tags_new_category: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajoita nämä tunnisteryhmät alueeseen \"%{categoryName}\":"
@@ -4141,7 +4141,7 @@ fi:
         options:
           square: "Neliö"
           icon: "Kuvake"
-          emoji: "Emoji"
+          emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
       name_placeholder: "Enintään yksi tai kaksi sanaa"
@@ -5328,7 +5328,7 @@ fi:
             mobile_logo_dark:
               required: "Käytetäänkö tummassa tilassa eri mobiililogoa?"
               title: "Mobiililogo tumma"
-              help_text: "Käytä laajaa suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1."
+              help_text: "Käytä leveää suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde on suurempi kuin 3:1."
             manifest_icon:
               title: "Manifestin kuvake"
               description: "Kuva, jota käytetään logona/splash-kuvana Androidissa. Jos jätetään tyhjäksi, käytetään large_icon-kuvaa."
@@ -5502,7 +5502,7 @@ fi:
           sub_pages:
             server_settings:
               title: "Palvelimen asetukset"
-              header_description: "Määritä asetukset sähköposteille, jotka lähetetään jäsenillesi"
+              header_description: "Määritä jäsenillesi lähetettävien sähköpostien asetukset"
             preview_summary:
               title: "Esikatsele yhteenveto"
               header_description: "Esikatsele ei-aktiivisille käyttäjille lähetettyjen yhteenvetosähköpostien sisältöä"
@@ -5573,7 +5573,7 @@ fi:
         overridden_value: "Korvattu arvo: %{value}"
         select_setting: "Valitse sivustoasetus nähdäksesi nykyiset teeman arvot"
         add: "Siirry teeman sivustoasetuksiin"
-        help: "Tällä hetkellä käyttämäsi teema on <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Siirry <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>teeman määrityssivulle</a> muuttaaksesi teeman sivustoasetuksia tai napsauta linkitettyä teemaa alla olevassa taulukossa muokataksesi sen asetuksia."
+        help: "Tällä hetkellä käyttämäsi teema on <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Siirry <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>teeman määrityssivulle</a> muuttaaksesi teeman sivustoasetuksia tai klikkaa linkitettyä teemaa alla olevassa taulukossa muokataksesi sen asetuksia."
       search:
         modal_title: "Hae kaikkea ylläpidossa"
         title: "Hae"
@@ -6626,8 +6626,8 @@ fi:
           theme_settings: "Mukautetut teeman asetukset"
           theme_site_settings: "Asetukset, jotka teema voi korvata"
           edit_objects_theme_setting: "Objektien asetuseditori"
-          overriden_settings_explanation: "Oletuksista tehdyt muutokset on merkitty pisteellä ja korostuksella. Palauta oletusasetukset napsauttamalla Palauta."
-          overriden_site_settings_explanation: "Sivustoasetukset, joita teema voi mukauttaa. Palauta sivuston asetukset oletusarvoihin napsauttamalla Palauta. Voit nähdä kaikki teemojen korvaamat sivustoasetukset <a href='%{themeSiteSettingsConfigUrl}'>teeman sivustoasetusten määrityssivulla</a>."
+          overriden_settings_explanation: "Oletuksista tehdyt muutokset on merkitty pisteellä ja korostuksella. Palauta oletusasetukset klikkaamalla Palauta."
+          overriden_site_settings_explanation: "Sivustoasetukset, joita teema voi mukauttaa. Palauta sivuston asetukset oletusarvoihin klikkaamalla Palauta. Voit nähdä kaikki teemojen korvaamat sivustoasetukset <a href='%{themeSiteSettingsConfigUrl}'>teeman sivustoasetusten määrityssivulla</a>."
           no_settings: "Teemalla ei ole asetuksia."
           theme_translations: "Teeman käännökset"
           empty: "Ei kohteita"
@@ -7258,7 +7258,7 @@ fi:
         invalid: "Et voi valitettavasti esiintyä tuona käyttäjänä."
       users:
         title: "Käyttäjät"
-        description: "Tarkastele ja hallinnoi käyttäjiä."
+        description: "Tarkastele ja hallitse käyttäjiä."
         create: "Lisää ylläpitäjä"
         last_emailed: "Viimeksi lähetetty sähköpostia"
         not_found: "Tätä käyttäjätunnusta ei löydy järjestelmästä."

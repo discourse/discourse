@@ -346,7 +346,7 @@ fi:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
       x_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
       tl0_and_anonymous_flag: "Joko \"site contact email\" tai \"email address to report illegal content\" täytyy antaa anonyymeille käyttäjille."
-      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Tämä asetus edellyttää, että ”allow anonymous mode” -asetus otetaan ensin käyttöön."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Tämä asetus edellyttää, että \"allow anonymous mode\" -asetus otetaan ensin käyttöön."
     conflicting_google_user_id: 'Tämän tilin Google-tilitunnus on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Valitettavasti emme voineet luoda esikatselua tälle verkkosivulle, koska palvelinta '%{hostname}' ei löydy. Esikatselun sijaan viestissä näkyy vain linkki. :cry:"
@@ -1573,7 +1573,7 @@ fi:
         provider: Kirjautumispalveluntarjoaja
         no_accounts: "Ei liitettyjä tilejä"
         total_users: "Jäsenten kokonaismäärä"
-      description: "Näytä liitettyjen tilien määrä ryhmiteltynä kirjautumispalveluntarjoajan mukaan. Käytössä vain, kun sosiaalisen median kirjautumistavat ovat käytössä."
+      description: "Näytä liitettyjen tilien määrä ryhmiteltynä kirjautumispalveluntarjoajan mukaan. Käytössä vain, kun yhteisökirjautumistavat ovat käytössä."
   dashboard:
     problem:
       twitter_login: 'Twitter-kirjautuminen ei näytä toimivan tällä hetkellä. Tarkista tunnistetiedot <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Sivuston asetuksista</a>.'
@@ -1873,7 +1873,7 @@ fi:
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Poista tämä asetus käytöstä estääksesi uusien tilien luomisen."
     enable_signup_cta: "Näytä palaaville kirjautumattomille käyttäjille ilmoitus, jossa heitä kehotetaan luomaan tili."
-    enable_discourse_id: "Ota käyttöön todennus Discourse ID:n kautta. Discourse ID on kertakirjautumispalvelu, jonka avulla käyttäjät voivat kirjautua useille Discourse-sivustoille yhdellä tilillä. Yleisiä sosiaalisen median kirjautumispalveluntarjoajia, kuten Googlea, Facebookia ja Twitteriä, tuetaan ilman lisämäärityksiä. Lisätietoja on osoitteessa <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
+    enable_discourse_id: "Ota käyttöön todennus Discourse ID:n kautta. Discourse ID on kertakirjautumispalvelu, jonka avulla käyttäjät voivat kirjautua useille Discourse-sivustoille yhdellä tilillä. Yleisiä yhteisökirjautumispalveluntarjoajia, kuten Googlea, Facebookia ja Twitteriä, tuetaan ilman lisämäärityksiä. Lisätietoja on osoitteessa <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 -todennus. Tämä on todennustapa, jota Google tukee tällä hetkellä. Avain ja salainen koodi vaaditaan. Katso <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Google-sovelluksesi antama yksilöllinen asiakastunnus, jota käytetään todennusprosessissa."
     google_oauth2_client_secret: "Google-sovelluksesi asiakkaan salatunnus."

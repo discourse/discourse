@@ -292,7 +292,7 @@ nl:
       message: "We hebben deze site bijgewerkt, <span>vernieuw</span> om alles soepel te laten werken."
       dismiss: "Negeren"
     bootstrap_mode: "Aan de slag"
-    back_button: "Vorige"
+    back_button: "Terug"
     welcome_banner:
       header:
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
@@ -300,7 +300,7 @@ nl:
       search: "Zoeken"
     themes:
       default_description: "Standaard"
-      broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/component fouten bevat. Zie de browserconsole voor meer informatie."
+      broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/onderdeel fouten bevat. Zie de browserconsole voor meer informatie."
       error_caused_by: "Veroorzaakt door '%{name}'. <a target='blank' href='%{path}'>Klik hier</a> om bij te werken, opnieuw te configureren of uit te schakelen."
       only_admins: "(dit bericht wordt alleen getoond aan sitebeheerders)"
     broken_decorator_alert: "Berichten worden mogelijk niet correct weergegeven omdat een van de bewerkers van de inhoud op je site een fout heeft gemeld."
@@ -887,7 +887,7 @@ nl:
         solution_marked: "Oplossing gemarkeerd"
         topic_has_solution: "Dit topic heeft een oplossing"
         visibility: "Zichtbaarheid"
-        topic_unlisted: "Dit onderwerp is niet zichtbaar. Alleen toegankelijk via een directe link – niet openbaar."
+        topic_unlisted: "Dit topic is niet zichtbaar. Alleen toegankelijk via een directe link – niet openbaar."
       help:
         moderation_guide: "Discourse-moderatiegids"
         flag_priorities: "Beheer van gebruikersreputatie en markeringsprioriteiten"
@@ -2208,7 +2208,7 @@ nl:
         title: "Primaire groep"
         none: "(geen)"
       filters:
-        all: "Alle"
+        all: "Alles"
       stream:
         posted_by: "Geplaatst door"
         sent_by: "Verzonden door"
@@ -2509,7 +2509,7 @@ nl:
       not_approved: "Je account is nog niet goedgekeurd. Je ontvangt een melding via e-mail zodra je je kunt aanmelden."
       discourse_id:
         name: "Discourse ID"
-        title: "Aanmelden met Discord ID"
+        title: "Aanmelden met Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Aanmelden met Google"
@@ -4815,7 +4815,7 @@ nl:
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."
     forced_anonymous_login_required: "De website staat onder extreme belasting en kan op dit moment niet worden geladen, probeer het over een paar minuten opnieuw."
     footer_nav:
-      back: "Vorige"
+      back: "Terug"
       forward: "Volgende"
       share: "Delen"
       dismiss: "Sluiten"
@@ -5483,11 +5483,11 @@ nl:
         components:
           title: "Onderdelen"
           header_description: "Componenten zijn kleinere aanpassingen die aan thema's kunnen worden toegevoegd om specifieke elementen van de stijl van je forumontwerp te wijzigen"
-          keywords: "thema|component|extensie"
+          keywords: "thema|onderdeel|extensie"
         themes_and_components:
           title: "Thema's en onderdelen"
           header_description: "Personaliseer je Discourse-site met thema's en onderdelen die aansluiten bij je behoeften"
-          keywords: "thema|component|extensie|aanpassen"
+          keywords: "thema|onderdeel|extensie|aanpassen"
         site_admin:
           title: "Sitebeheerder"
           header_description: "Configureer verschillende instellingen met betrekking tot het beheer van je site"
@@ -5498,14 +5498,14 @@ nl:
         email:
           title: "E-mailinstellingen"
           header_description: "Configureer instellingen voor e-mails die naar je leden worden verzonden"
-          keywords: "digest|afmelden|e-mail|smtp|mailgun|sendgrid|samenvatting"
+          keywords: "digest|afmelden|e-mail|smtp|mailgun|sendgrid|voorbeeldsamenvatting"
           sub_pages:
             server_settings:
               title: "Serverinstellingen"
               header_description: "Configureer instellingen voor e-mails die naar je leden worden verzonden"
             preview_summary:
               title: "Voorbeeld van samenvatting"
-              header_description: "Bekijk een voorbeeld van de e-mailsamenvattingen die naar inactieve leden worden gestuurd"
+              header_description: "Bekijk een voorbeeld van de samenvattings-e-mails die naar inactieve leden worden gestuurd"
             advanced_test:
               title: "Geavanceerde test"
               header_description: "Bekijk hoe Discourse ontvangen e-mails verwerkt"
@@ -5691,7 +5691,7 @@ nl:
           all_time: "Sinds het begin"
           7_days_ago: "7 dagen geleden"
           30_days_ago: "30 dagen geleden"
-          all: "Alle"
+          all: "Alles"
           view_table: "tabel"
           view_graph: "grafiek"
           refresh_report: "Rapport vernieuwen"
@@ -6915,7 +6915,7 @@ nl:
           block: "blokkeren"
           do_nothing: "niets doen"
         staff_actions:
-          all: "alle"
+          all: "alles"
           filter: "Filter:"
           title: "Medewerkeracties"
           clear_filters: "Alles weergeven"
@@ -7691,7 +7691,7 @@ nl:
         table_column_heading:
           status: "Status"
         categories:
-          all_results: "Alle"
+          all_results: "Alles"
           required: "Vereist"
           branding: "Branding"
           basic: "Basisinstellingen"
