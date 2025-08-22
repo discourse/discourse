@@ -16,15 +16,12 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
   async model(params) {
     let after, before, initialDate;
 
-    // Get user's timezone for initialDate (FullCalendar expects dates in user timezone)
-    const userTimezone =
-      this.currentUser?.user_option?.timezone || moment.tz.guess();
-
     if (params.view === "year") {
       const year = parseInt(params.year, 10);
       after = moment.utc({ year }).startOf("year").toISOString();
       before = moment.utc({ year }).endOf("year").toISOString();
-      initialDate = moment.tz({ year }, userTimezone).toISOString();
+      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
+      initialDate = moment.utc({ year }).hour(23).minute(59).toISOString();
     } else if (params.view === "month") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -32,7 +29,12 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month });
       after = date.clone().startOf("month").toISOString();
       before = date.clone().endOf("month").toISOString();
-      initialDate = moment.tz({ year, month }, userTimezone).toISOString();
+      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
+      initialDate = moment
+        .utc({ year, month })
+        .hour(23)
+        .minute(59)
+        .toISOString();
     } else if (params.view === "week") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -41,7 +43,12 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month, day });
       after = date.clone().startOf("week").toISOString();
       before = date.clone().endOf("week").toISOString();
-      initialDate = moment.tz({ year, month, day }, userTimezone).toISOString();
+      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
+      initialDate = moment
+        .utc({ year, month, day })
+        .hour(23)
+        .minute(59)
+        .toISOString();
     } else if (params.view === "day") {
       const year = parseInt(params.year, 10);
       const month = parseInt(params.month, 10) - 1; // moment months are 0-indexed
@@ -50,7 +57,12 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const date = moment.utc({ year, month, day });
       after = date.clone().startOf("day").toISOString();
       before = date.clone().endOf("day").toISOString();
-      initialDate = moment.tz({ year, month, day }, userTimezone).toISOString();
+      // Create date at end of day UTC to ensure it's interpreted correctly in all timezones
+      initialDate = moment
+        .utc({ year, month, day })
+        .hour(23)
+        .minute(59)
+        .toISOString();
     }
 
     const fetchParams = {

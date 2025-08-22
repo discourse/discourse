@@ -136,27 +136,47 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
 
-    // Skip navigation if this is the initial calendar setup
-    // FullCalendar triggers datesSet immediately after initialization
-    if (!this._calendarInitialized) {
-      this._calendarInitialized = true;
+    const view = normalizeViewForRoute(info.view.type);
+    const currentParams = this.router.currentRoute.params;
+    const viewStart = moment(info.view.currentStart);
+    const viewEnd = moment(info.view.currentEnd);
+    const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
+    const middleYear = viewMiddle.year();
+    const middleMonth = viewMiddle.month() + 1; // moment months are 0-indexed
+    const middleDay = viewMiddle.date();
+    const currentYear = parseInt(currentParams.year, 10);
+    const currentMonth = parseInt(currentParams.month, 10);
+    const currentDay = parseInt(currentParams.day, 10);
+
+    // Check if we need to update the URL
+    let shouldNavigate = false;
+
+    if (currentParams.view !== view) {
+      shouldNavigate = true; // View type changed
+    } else if (
+      view === "month" &&
+      (currentYear !== middleYear || currentMonth !== middleMonth)
+    ) {
+      shouldNavigate = true; // Month view: year or month changed
+    } else if (
+      view !== "month" &&
+      (currentYear !== middleYear ||
+        currentMonth !== middleMonth ||
+        currentDay !== middleDay)
+    ) {
+      shouldNavigate = true; // Week/day view: any date component changed
+    }
+
+    if (!shouldNavigate) {
       return;
     }
 
-    // Get a representative date from the current view
-    const currentDate = moment(info.view.currentStart);
-    const view = normalizeViewForRoute(info.view.type);
-    const year = currentDate.year();
-    const month = currentDate.month() + 1; // moment months are 0-indexed, but URLs use 1-indexed
-    const day = currentDate.date();
-
-    // Navigate to the new route structure
     this.router.replaceWith(
       this.router.currentRouteName,
       view,
-      year,
-      month,
-      day
+      middleYear,
+      middleMonth,
+      middleDay
     );
   }
 

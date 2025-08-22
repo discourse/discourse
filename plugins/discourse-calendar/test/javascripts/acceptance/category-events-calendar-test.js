@@ -121,9 +121,13 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
       .dom(".fc-event")
       .exists({ count: 4 }, "Events are displayed on the calendar");
 
-    assert.dom(".fc-daygrid-event-harness a[href='/t/-/18449/1']").hasStyle({
-      "background-color": "rgb(231, 76, 60)",
-    });
+    assert
+      .dom(
+        ".fc-daygrid-event-harness a[href='/t/-/18449/1']  .fc-daygrid-event-dot"
+      )
+      .hasStyle({
+        "border-color": "rgb(231, 76, 60)",
+      });
 
     assert
       .dom(
