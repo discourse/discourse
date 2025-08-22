@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^3.0.0",
     "content-tag": "^4.0.0",
-    "core-js": "^3.45.0",
+    "core-js": "^3.45.1",
     "decorator-transforms": "^2.3.0",
     "discourse": "workspace:0.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
