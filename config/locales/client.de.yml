@@ -6515,7 +6515,7 @@ de:
           extra_files_upload: "Theme exportieren, um diese Dateien anzuzeigen."
           extra_files_remote: "Theme exportieren oder das Git-Repository überprüfen, um diese Dateien anzuzeigen."
           preview: "Vorschau"
-          default: "Standard"
+          default: "Standard-Theme"
           settings_editor: "Einstellungseditor"
           show_advanced: "Erweiterte anzeigen"
           is_default: "Theme ist standardmäßig aktiviert"
@@ -6750,9 +6750,6 @@ de:
           default_dark_badge:
             text: "Standard dunkel"
             title: "Standardmäßige dunkle Farbpalette"
-          default_both_badge:
-            text: "Standard hell und dunkel"
-            title: "Standardmäßige helle und dunkle Farbpalette"
           system_palette: "Dies ist eine integrierte Farbpalette, sie kann nicht bearbeitet oder gelöscht werden."
           back_to_colors: "Zurück zu Farbpaletten"
           long_title: "Farbpaletten"

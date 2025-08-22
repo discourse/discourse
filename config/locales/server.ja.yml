@@ -1497,7 +1497,6 @@ ja:
       labels:
         provider: ログインプロバイダー
         no_accounts: "関連アカウントはありません"
-        total_users: "メンバー総数"
       description: "ログインプロバイダーでグループ化された関連アカウントの数を表示します。ソーシャルログインが有効になっている場合にのみ適用有れます。"
   dashboard:
     problem:

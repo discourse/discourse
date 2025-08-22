@@ -6231,7 +6231,7 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
-          default: "デフォルト"
+          default: "デフォルトのテーマ"
           settings_editor: "設定エディター"
           show_advanced: "詳細を表示"
           is_default: "テーマはデフォルトで有効"
@@ -6456,9 +6456,6 @@ ja:
             reset: "フィルタをリセット"
           default_dark_badge:
             text: "デフォルトのダーク"
-          default_both_badge:
-            text: "デフォルトのライトとダーク"
-            title: "デフォルトのライトとダークの色パレット"
           system_palette: "これは組み込みの色パレットであるため、編集または削除できません。"
           back_to_colors: "色パレットに戻る"
           long_title: "色パレット"

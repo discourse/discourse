@@ -44,7 +44,7 @@ es:
             create_ai_embedding: "Crear incrustación de IA"
             update_ai_embedding: "Actualizar incrustación de IA"
             delete_ai_embedding: "Eliminar incrustación de IA"
-            update_ai_spam_settings: "Actualizar ajustes de detección de correo no deseado de IA"
+            update_ai_spam_settings: "Actualizar ajustes de detección de spam de IA"
   js:
     discourse_automation:
       scriptables:
@@ -250,7 +250,7 @@ es:
           smart_dates: "Fechas inteligentes"
           translate: "Traducir"
           markdown_tables: "Generar tabla Markdown"
-          custom_prompt: "Instruccón personalizada"
+          custom_prompt: "Instrucción personalizada"
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
         translation:
@@ -262,7 +262,7 @@ es:
           short_text_translator: "Traductor de textos cortos"
         spam:
           name: "Spam"
-          description: "Identifica el correo no deseado potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
+          description: "Identifica el spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
           inspect_posts: "Inspeccionar publicaciones"
         automation_reports:
           name: "Informes automatizados"
@@ -290,39 +290,39 @@ es:
           remaining: "Restante"
       spam:
         short_title: "Spam"
-        title: "Configurar el manejo de correo no deseado"
+        title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
         select_persona: "Seleccionar persona"
         custom_instructions: "Instrucciones personalizadas"
-        custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación del correo no deseado, por ejemplo: «Sé más agresivo a la hora de escanear los mensajes que no estén en inglés»."
+        custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
         last_seven_days: "Últimos 7 días"
         scanned_count: "Publicaciones escaneadas"
         false_positives: "Denunciado incorrectamente"
-        false_negatives: "Correo no deseado perdido"
-        spam_detected: "Correo no deseado detectado"
-        custom_instructions_placeholder: "Instrucciones específicas del sitio para que la IA ayude a identificar el correo no deseado con mayor precisión"
+        false_negatives: "Spam perdido"
+        spam_detected: "Spam detectado"
+        custom_instructions_placeholder: "Instrucciones específicas del sitio para que la IA ayude a identificar spam con mayor precisión"
         enable: "Activar"
-        spam_tip: "La detección de correo no deseado mediante IA escaneará los 3 primeros mensajes de todos los usuarios nuevos en temas públicos. Los marcará para su revisión y bloqueará a los usuarios si es probable que sean correo no deseado."
+        spam_tip: "La detección spam mediante IA escaneará las 3 primeras publicaciones de todos los usuarios nuevos en temas públicos. Las marcará para su revisión y bloqueará a los usuarios si es probable que sean spam."
         settings_saved: "Ajustes guardados"
-        spam_description: "Identifica el correo no deseado potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
+        spam_description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
         no_llms: "No hay LLM disponibles"
         test_button: "Prueba..."
         save_button: "Guardar cambios"
         test_modal:
-          title: "Probar la detección de correo no deseado"
+          title: "Probar la detección de spam"
           post_url_label: "URL o ID de la publicación"
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
           scan_log: "Registro de escaneo"
           run: "Ejecutar prueba"
           spam: "Spam"
-          not_spam: "No es correo no deseado"
+          not_spam: "No es spam"
         stat_tooltips:
-          incorrectly_flagged: "Elementos que el bot de IA marcó como correo no deseado en los que los moderadores no estaban de acuerdo"
-          missed_spam: "Elementos denunciados por la comunidad como correo no deseado que no fueron detectados por el bot de IA, con los que los moderadores estaban de acuerdo"
+          incorrectly_flagged: "Elementos que el bot de IA marcó como spam en los que los moderadores no estaban de acuerdo"
+          missed_spam: "Elementos denunciados por la comunidad como spam que no fueron detectados por el bot de IA, con los que los moderadores estaban de acuerdo"
         errors:
           scan_not_admin:
-            message: "Advertencia: el escaneo de correo no deseado no funcionará correctamente porque la cuenta de escaneo de correo no deseado no es un administrador"
+            message: "Advertencia: El escaneo de spam no funcionará correctamente porque la cuenta de escaneo de spam no es un administrador"
             action: "Corregir"
           resolved: "¡Se ha resuelto el error!"
       usage:
@@ -399,7 +399,7 @@ es:
         default_llm_help: El modelo de idioma por defecto que se utilizará para esta persona. Obligatorio si deseas mencionar a la persona en publicaciones públicas.
         question_consolidator_llm: Modelo lingüístico para el consolidador de preguntas
         question_consolidator_llm_help: El modelo lingüístico a utilizar para el consolidador de preguntas, puedes elegir un modelo menos potente para ahorrar costes.
-        system_prompt: Aviso del sistema
+        system_prompt: Instrucción del sistema
         forced_tool_strategy: Estrategia de herramienta forzada
         allow_chat_direct_messages: "Permitir mensajes directos de chat"
         allow_chat_direct_messages_help: "Si se activa, los usuarios de los grupos permitidos pueden enviar mensajes directos a esta persona."
@@ -431,7 +431,7 @@ es:
         tool_options: "Opciones de herramientas"
         rag_conversation_chunks: "Buscar fragmentos de conversación"
         rag_conversation_chunks_help: "El número de fragmentos a utilizar para las búsquedas del modelo RAG. Aumentar para incrementar la cantidad de contexto que puede utilizar la IA."
-        persona_description: "Las personas son una potente característica que te permite personalizar el comportamiento del motor de IA en tu foro de Discourse. Actúan como un «mensaje del sistema» que guía las respuestas e interacciones de la IA, ayudando a crear una experiencia de usuario más personalizada y atractiva."
+        persona_description: "Las personas son una característica potente que te permite personalizar el comportamiento del motor de IA en tu foro de Discourse. Actúan como un «mensaje del sistema» que guía las respuestas e interacciones de la IA, ayudando a crear una experiencia de usuario más personalizada y atractiva."
         response_format:
           title: "Formato de respuesta JSON"
           no_format: "No se ha especificado ningún formato JSON"
@@ -467,22 +467,22 @@ es:
           rag_chunk_tokens: "Cargar tokens de fragmentos"
           rag_chunk_tokens_help: "El número de tokens a utilizar para cada fragmento en el modelo RAG. Aumentar para incrementar la cantidad de contexto que puede utilizar la IA. (Al cambiar se reindexarán todas las cargas)"
           rag_chunk_overlap_tokens: "Cargar tokens de solapamiento de fragmentos"
-          rag_chunk_overlap_tokens_help: "El número de tokens a solapar entre fragmentos en el modelo RAG. (al cambiar se reindexarán todas las cargas)"
+          rag_chunk_overlap_tokens_help: "El número de tokens a solapar entre fragmentos en el modelo RAG. (Al cambiar se reindexarán todas las cargas)"
           rag_llm_model: "Modelo de lenguaje de indexación"
           rag_llm_model_help: "El modelo de lenguaje utilizado para el OCR durante la indexación de archivos PDF e imágenes"
           show_indexing_options: "Mostrar opciones de carga"
           hide_indexing_options: "Ocultar opciones de carga"
         uploads:
-          title: "Cargas"
+          title: "Subidas"
           description: "PDF (.pdf), texto sin formato (.txt) o markdown (.md)"
           description_with_images: "Texto sin formato (.txt), markdown (.md), PDF (.pdf) o imagen (.png, .jpeg)"
           button: "Añadir archivos"
-          filter: "Filtrar cargas"
+          filter: "Filtrar subidas"
           indexed: "Indexado"
           indexing: "Indexando"
           uploaded: "Listo para ser indexado"
           uploading: "Subiendo..."
-          remove: "Eliminar carga"
+          remove: "Eliminar subida"
       tools:
         back: "Atrás"
         short_title: "Herramientas"
@@ -589,9 +589,7 @@ es:
           google-gemini-2-0-flash: "Ligero, rápido y rentable con razonamiento multimodal (generación anterior)"
           google-gemini-2-5-flash: "Ligero, rápido y rentable con razonamiento multimodal"
           google-gemini-2-0-flash-lite: "Modelo rentable y de baja latencia"
-          open_ai-o3: "El modelo de razonamiento más capaz de OpenAI"
           open_ai-o4-mini: "Modelo de razonamiento rentable avanzado"
-          open_ai-gpt-5: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
           open_ai-gpt-5-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste que lo convierte en un modelo atractivo para muchos casos de uso."
           open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multilingüe, ligero y eficaz"
@@ -616,15 +614,15 @@ es:
         tests:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
-          success: "¡Éxito!"
-          failure: "Al intentar contactar con la modelo, se devolvió este error: %{error}"
+          success: "Se ha realizado correctamente"
+          failure: "Al intentar contactar con el modelo, se devolvió este error: %{error}"
         hints:
           max_prompt_tokens: "El número máximo de tokens que el modelo puede procesar en una sola solicitud"
           max_output_tokens: "El número máximo de tokens que el modelo puede generar en una sola solicitud"
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
-          enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MPs con el bot de IA"
+          enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MP con el bot de IA"
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
           cost_cached_input: "El coste de entrada en caché por cada millón de tokens para este modelo"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
@@ -633,7 +631,7 @@ es:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
           vllm: "vLLM"
-          hugging_face: "Cara de abrazo"
+          hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
@@ -686,7 +684,7 @@ es:
           changes: "Ediciones sugeridas"
           custom_prompt:
             title: "Instruccón personalizada"
-            placeholder: "Introduzca un aviso personalizado..."
+            placeholder: "Introduce una instrucción personalizada..."
             submit: "Enviar instrucción"
           translate_prompt: "Traducir a %{language}"
         post_options_menu:
@@ -698,7 +696,7 @@ es:
           copied: "¡Copiado!"
           cancel: "Cancelar"
           insert_footnote: "Añadir nota al pie de página"
-          footnote_disabled: "Inserción automática desactivada, pulsa el botón copiar y edítalo manualmente"
+          footnote_disabled: "Inserción automática desactivada, pulsa el botón copiar y edítala manualmente"
           footnote_credits: "Explicación por IA"
         fast_edit:
           suggest_button: "Sugerir edición"
@@ -732,7 +730,7 @@ es:
         tests:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
-          success: "¡Éxito!"
+          success: "Se ha realizado correctamente"
           failure: "El intento de generar una incrustación dio como resultado: %{error}"
         hints:
           dimensions_warning: "Una vez guardado, este valor no se puede cambiar."
@@ -748,15 +746,15 @@ es:
         tokenizer: "Tokenizador"
         dimensions: "Dimensiones de incrustación"
         max_sequence_length: "Longitud de la secuencia"
-        embed_prompt: "Incrustar aviso"
-        search_prompt: "Buscar aviso"
+        embed_prompt: "Incrustar instrucción"
+        search_prompt: "Buscar instrucción"
         matryoshka_dimensions: "Dimensiones de la matrioska"
         distance_function: "Función de distancia"
         distance_functions:
           "<#>": "Producto interno negativo"
           <=>: "Distancia del coseno"
         providers:
-          hugging_face: "Cara de abrazo"
+          hugging_face: "Hugging Face"
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
@@ -857,7 +855,7 @@ es:
           uploads_in_progress: "No se puede enviar mientras se están subiendo archivos"
       sentiments:
         dashboard:
-          title: "Sentiment"
+          title: "Sentimiento"
         sidebar:
           overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
@@ -872,7 +870,7 @@ es:
             category: "Categoría"
             tag: "Etiquetar"
           table:
-            sentiment: "Sentiment"
+            sentiment: "Sentimiento"
             total_count: "Total"
       summarization:
         chat:

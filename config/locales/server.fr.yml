@@ -1572,7 +1572,6 @@ fr:
       labels:
         provider: Fournisseur de connexion
         no_accounts: "Aucun compte associé"
-        total_users: "Nombre total de membres"
       description: "Affichez le nombre de comptes associés regroupés par fournisseur de connexion. Applicable uniquement lorsque les méthodes de connexion via les réseaux sociaux sont activées."
   dashboard:
     problem:

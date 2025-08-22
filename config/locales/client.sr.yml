@@ -2961,7 +2961,6 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
-          default: "Подразумевано"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"

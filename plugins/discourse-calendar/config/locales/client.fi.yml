@@ -472,7 +472,7 @@ fi:
           checkbox_label: "Piilota Menossa- ja Ei menossa -painikeet sekä kutsuttujen tila"
         allow_chat:
           label: "Chat-integraatio"
-          checkbox_label: "Luo ja hallinnoi tapahtumakohtaista chat-kanavaa"
+          checkbox_label: "Luo ja hallitse tapahtumakohtaista chat-kanavaa"
         url:
           label: "URL"
           placeholder: "Valinnainen"

@@ -592,7 +592,7 @@ fi:
         header: "Uusi viesti"
         cancel: "Peruuta"
       quick_reaction_type:
-        title: "Yhden napsautuksen chat-reaktiot"
+        title: "Yhden klikkauksen chat-reaktiot"
         options:
           frequent: "Yleisimmin käytetyt chat-reaktiot"
           custom: "Mukautetut reaktiot"
