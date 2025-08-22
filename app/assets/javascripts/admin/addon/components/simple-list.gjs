@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -7,7 +7,6 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { gt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
-import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -15,11 +14,9 @@ import ComboBox from "select-kit/components/combo-box";
 export default class SimpleList extends Component {
   @tracked newValue = "";
 
-  // TODO: check
-  @resettableTracked collection = new TrackedArray(this.defaultCollection);
-
-  get defaultCollection() {
-    return (
+  @cached
+  get collection() {
+    return new TrackedArray(
       this.args.values
         ?.split(this.args.inputDelimiter || "\n")
         .filter(Boolean) || []
