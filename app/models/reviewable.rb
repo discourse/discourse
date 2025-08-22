@@ -82,6 +82,10 @@ class Reviewable < ActiveRecord::Base
     [ReviewableUser]
   end
 
+  def self.flaggable_types
+    [ReviewableFlaggedPost, ReviewablePost]
+  end
+
   def self.sti_names
     self.types.map(&:sti_name)
   end

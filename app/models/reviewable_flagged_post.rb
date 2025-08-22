@@ -3,7 +3,7 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
-  def flaggable?
+  def self.flaggable?
     true
   end
 
