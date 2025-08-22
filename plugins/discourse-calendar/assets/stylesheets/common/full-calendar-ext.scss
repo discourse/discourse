@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+.fc {
+  padding-bottom: 5px;
+}
+
 .fc-button,
 .fc-button-active:focus {
   box-shadow: none !important;
