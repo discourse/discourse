@@ -3,7 +3,7 @@ import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
-import TextField from "./text-field";
+import TextField from "./ember-text-field";
 
 const DEBOUNCE_MS = 500;
 

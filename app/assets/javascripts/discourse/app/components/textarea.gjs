@@ -1,5 +1,5 @@
+/* eslint-disable ember/no-classic-components */
 import { MUTABLE_CELL } from "@ember/-internals/views";
-// eslint-disable-next-line ember/no-classic-components
 import Component from "@ember/component";
 import { assert } from "@ember/debug";
 import { computed, get, set } from "@ember/object";

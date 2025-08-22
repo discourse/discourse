@@ -1,5 +1,5 @@
 import { attributeBindings } from "@ember-decorators/component";
-import TextArea from "discourse/components/textarea";
+import TextArea from "./textarea";
 
 @attributeBindings("aria-label")
 export default class DTextarea extends TextArea {}

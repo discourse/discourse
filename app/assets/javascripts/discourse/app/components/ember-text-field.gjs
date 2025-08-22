@@ -1,8 +1,9 @@
-import Component from "@ember/component";
-import { get, set, computed } from "@ember/object";
-import Mixin from "@ember/object/mixin";
+/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-classes */
 import { MUTABLE_CELL } from "@ember/-internals/views";
+import Component from "@ember/component";
 import { assert } from "@ember/debug";
+import { computed, get, set } from "@ember/object";
 
 const inputTypes = Object.create(null);
 function canSetTypeOfInput(type) {
@@ -14,7 +15,7 @@ function canSetTypeOfInput(type) {
 
   try {
     inputTypeTestElement.type = type;
-  } catch (e) {
+  } catch {
     // ignored
   }
 
