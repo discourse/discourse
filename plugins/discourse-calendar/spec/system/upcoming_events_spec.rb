@@ -104,21 +104,17 @@ describe "Upcoming Events", type: :system do
     end
   end
 
-  context "when changing view" do
+  context "when changing view", time: Time.utc(2025, 8, 21, 14, 00) do
     it "displays the chosen view" do
       upcoming_events.visit
 
       expect(page).to have_content("August 2025")
-      expect(page).to have_current_path(
-        "/upcoming-events?end=2025-08-31T22%3A00%3A00.000Z&start=2025-07-31T22%3A00%3A00.000Z&view=dayGridMonth",
-      )
+      expect(page).to have_current_path("/upcoming-events/month/2025/8/21")
 
       upcoming_events.open_day_view
 
       expect(page).to have_content("August 1, 2025")
-      expect(page).to have_current_path(
-        "/upcoming-events?end=2025-08-01T22%3A00%3A00.000Z&start=2025-07-31T22%3A00%3A00.000Z&view=timeGridDay",
-      )
+      expect(page).to have_current_path("/upcoming-events/day/2025/8/1")
     end
   end
 
