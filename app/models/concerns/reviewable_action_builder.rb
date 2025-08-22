@@ -124,54 +124,24 @@ module ReviewableActionBuilder
     end
   end
 
-  # Perform no action on the user. This action is a no-op and does not change the user's state.
-  #
-  # @param performed_by [User] The user performing the action.
-  # @param args [Hash] Additional arguments for the action.
-  #
-  # @return [Reviewable::PerformResult] The result object.
   def perform_no_action_user(performed_by, args)
     successful_transition :approved
   end
 
-  # Silence the user. This action is a no-op, as silencing a user is handled client-side.
-  #
-  # @param performed_by [User] The user performing the action.
-  # @param args [Hash] Additional arguments for the action.
-  #
-  # @return [Reviewable::PerformResult] The result object.
   def perform_silence_user(performed_by, args)
     successful_transition :rejected
   end
 
-  # Suspend the user. This action is a no-op, as suspending a user is handled client-side.
-  #
-  # @param performed_by [User] The user performing the action.
-  # @param args [Hash] Additional arguments for the action.
-  #
-  # @return [Reviewable::PerformResult] The result object.
   def perform_suspend_user(performed_by, args)
     successful_transition :rejected
   end
 
-  # Delete the user.
-  #
-  # @param performed_by [User] The user performing the action.
-  # @param args [Hash] Additional arguments for the action.
-  #
-  # @return [Reviewable::PerformResult] The result object.
   def perform_delete_user(performed_by, args, &)
     user = try(:target_created_by)
     delete_user(user, delete_opts, performed_by) if user
     successful_transition :rejected, recalculate_score: false, &
   end
 
-  # Delete and block the user.
-  #
-  # @param performed_by [User] The user performing the action.
-  # @param args [Hash] Additional arguments for the action.
-  #
-  # @return [Reviewable::PerformResult] The result object.
   def perform_delete_and_block_user(performed_by, args, &)
     user = try(:target_created_by)
     delete_options = delete_opts
@@ -194,13 +164,6 @@ module ReviewableActionBuilder
     }
   end
 
-  # Delete the user and send an account deletion email.
-  #
-  # @param user [User] The user to delete.
-  # @param delete_options [Hash] Options for deleting the user.
-  # @param performed_by [User] The user performing the action.
-  #
-  # @return [void]
   def delete_user(user, delete_options, performed_by)
     email = user.email
 
