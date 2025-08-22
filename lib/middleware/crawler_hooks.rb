@@ -10,8 +10,9 @@ module Middleware
       request = Rack::Request.new(env)
       status, headers, response = @app.call(env)
 
-      if status == 200 && headers["Content-Type"]&.include?("text/html") &&
-           CrawlerDetection.crawler?(request.user_agent, request.get_header("HTTP_VIA"))
+      if status == 200 && headers["X-Discourse-Crawler-View"] &&
+           SiteSetting.content_localization_enabled &&
+           SiteSetting.content_localization_crawler_param
         response = transform_response(request:, response:)
       end
 

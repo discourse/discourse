@@ -13,11 +13,13 @@ RSpec.describe Middleware::CrawlerHooks do
     html_arr
   end
 
-  # one middleware instance for each response type
-  let(:html_middleware) do
-    Middleware::CrawlerHooks.new(
-      lambda { |_| [200, { "Content-Type" => "text/html; charset=utf-8" }, html_response] },
-    )
+  let(:middleware) { Middleware::CrawlerHooks.new(app) }
+  let(:app) do
+    lambda do |env|
+      headers = { "Content-Type" => "text/html; charset=utf-8" }
+      headers["X-Discourse-Crawler-View"] = "true" if env["X-Discourse-Crawler-View"]
+      [200, headers, html_response]
+    end
   end
   let(:json_middleware) do
     Middleware::CrawlerHooks.new(
@@ -51,7 +53,7 @@ RSpec.describe Middleware::CrawlerHooks do
 
   describe "handling regular users" do
     it "does not modify responses for non-crawler requests" do
-      status, headers, response = html_middleware.call(env("HTTP_USER_AGENT" => regular_user_agent))
+      status, headers, response = middleware.call(env("HTTP_USER_AGENT" => regular_user_agent))
 
       expect(status).to eq(200)
       expect(headers["Content-Type"]).to include("text/html")
@@ -60,6 +62,14 @@ RSpec.describe Middleware::CrawlerHooks do
   end
 
   describe "handling crawler requests" do
+    it "does not modify responses without X-Discourse-Crawler-View header" do
+      status, headers, response = middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to include("text/html")
+      expect(response).to eq(html_response)
+    end
+
     it "does not modify responses for non-HTML content types" do
       status, headers, response = json_middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))
 
@@ -81,13 +91,14 @@ RSpec.describe Middleware::CrawlerHooks do
       SiteSetting.content_localization_crawler_param = true
 
       status, headers, response =
-        html_middleware.call(
+        middleware.call(
           env(
             :path => "https://discourse.site",
             :params => {
               "locale" => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
+            "X-Discourse-Crawler-View" => true,
           ),
         )
 
@@ -101,13 +112,14 @@ RSpec.describe Middleware::CrawlerHooks do
       SiteSetting.content_localization_crawler_param = false
 
       status, headers, response =
-        html_middleware.call(
+        middleware.call(
           env(
             :path => "https://discourse.site",
             :params => {
               "locale" => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
+            "X-Discourse-Crawler-View" => true,
           ),
         )
 
@@ -116,7 +128,7 @@ RSpec.describe Middleware::CrawlerHooks do
       expect(response).to eq(html_response)
     end
 
-    it "appends locale parameter to links in HTML responses when both settings are enabled" do
+    it "appends locale parameter to links in HTML responses when both settings are enabled and crawler header present" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
 
@@ -131,7 +143,10 @@ RSpec.describe Middleware::CrawlerHooks do
       request = Rack::Request.new(test_env)
 
       # Create our middleware and test response transformation
-      middleware_instance = Middleware::CrawlerHooks.new(lambda { |_| [200, {}, []] })
+      middleware_instance =
+        Middleware::CrawlerHooks.new(
+          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+        )
       response = html_response
 
       transformed_response =
@@ -148,8 +163,12 @@ RSpec.describe Middleware::CrawlerHooks do
       SiteSetting.content_localization_crawler_param = true
 
       status, headers, response =
-        html_middleware.call(
-          env(:path => "https://discourse.site", "HTTP_USER_AGENT" => crawler_user_agent),
+        middleware.call(
+          env(
+            :path => "https://discourse.site",
+            "HTTP_USER_AGENT" => crawler_user_agent,
+            "X-Discourse-Crawler-View" => true,
+          ),
         )
 
       expect(status).to eq(200)
@@ -176,7 +195,10 @@ RSpec.describe Middleware::CrawlerHooks do
         )
       request = Rack::Request.new(test_env)
 
-      middleware_instance = Middleware::CrawlerHooks.new(lambda { |_| [200, {}, []] })
+      middleware_instance =
+        Middleware::CrawlerHooks.new(
+          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+        )
 
       transformed_response =
         middleware_instance.send(
