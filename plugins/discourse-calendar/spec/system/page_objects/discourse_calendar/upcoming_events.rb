@@ -8,8 +8,12 @@ module PageObjects
           super("/upcoming-events")
         end
 
-        def open_year_list
+        def open_year_view
           find(".fc-listYear-button").click
+        end
+
+        def open_day_view
+          find(".fc-timeGridDay-button").click
         end
 
         def open_mine_events
