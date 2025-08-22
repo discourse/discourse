@@ -2151,6 +2151,15 @@ files:
     hidden: true
     min: 60
     max: 604800
+  s3_file_uploads_profile:
+    default: ""
+    secret: true
+  s3_backups_profile:
+    default: ""
+    secret: true
+  s3_signing_profile:
+    default: ""
+    secret: true
   allow_profile_backgrounds:
     client: true
     default: true
