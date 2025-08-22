@@ -138,12 +138,17 @@ export default class UpcomingEventsCalendar extends Component {
 
     const view = normalizeViewForRoute(info.view.type);
     const currentParams = this.router.currentRoute.params;
+
+    // Use the middle of the calendar view period to avoid edge cases
+    // (FullCalendar month view includes dates from previous/next months)
     const viewStart = moment(info.view.currentStart);
     const viewEnd = moment(info.view.currentEnd);
     const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
+
     const middleYear = viewMiddle.year();
     const middleMonth = viewMiddle.month() + 1; // moment months are 0-indexed
     const middleDay = viewMiddle.date();
+
     const currentYear = parseInt(currentParams.year, 10);
     const currentMonth = parseInt(currentParams.month, 10);
     const currentDay = parseInt(currentParams.day, 10);
