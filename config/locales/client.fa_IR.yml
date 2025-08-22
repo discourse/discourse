@@ -5891,7 +5891,7 @@ fa_IR:
           extra_files_upload: "برای مشاهده این فایل‌ها، پوسته را صادر کنید."
           extra_files_remote: "برای مشاهده این فایل‌ها، پوسته را صادر کنید یا مخزن git را بررسی کنید."
           preview: "پیش‌نمایش"
-          default: "پیش‌فرض"
+          default: "پوسته پیش‌فرض"
           settings_editor: "تنظیمات ویرایشگر"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"

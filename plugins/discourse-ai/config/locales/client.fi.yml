@@ -578,9 +578,7 @@ fi:
           google-gemini-2-0-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä (edellinen sukupolvi)"
           google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
           google-gemini-2-0-flash-lite: "Kustannustehokas ja matalan latenssin malli"
-          open_ai-o3: "OpenAI:n kyvykkäin päättelymalli"
           open_ai-o4-mini: "Kehittynyt kustannustehokas päättelymalli"
-          open_ai-gpt-5: "OpenAI:n lippulaivamalli. Sopii hyvin ongelmanratkaisuun eri aloilla."
           open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
           open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
@@ -858,7 +856,7 @@ fi:
             neutral: "Neutraali"
             negative: "Negatiivinen"
           group_types:
-            category: "Kategoria"
+            category: "Alue"
             tag: "Tunniste"
           table:
             sentiment: "Sävy"

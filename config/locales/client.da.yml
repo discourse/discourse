@@ -4921,7 +4921,7 @@ da:
           extra_files_upload: "Eksporter tema for at se disse filer."
           extra_files_remote: "Eksporter tema eller tjek git-arkivet for at se disse filer."
           preview: "Forhåndsvisning"
-          default: "Standard"
+          default: "Standard tema"
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
           auto_update: "Opdater automatisk når Discourse er blevet opdateret"

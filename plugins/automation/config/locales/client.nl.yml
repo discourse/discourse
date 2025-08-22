@@ -16,7 +16,7 @@ nl:
       table_title: Automatiseringen
       create: Automatisering toevoegen
       update: Automatisering bijwerken
-      back: Vorige
+      back: Terug
       edit: Bewerken
       select_script: Selecteer een script
       select_trigger: Selecteer een trigger

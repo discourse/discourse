@@ -7612,7 +7612,7 @@ ar:
           extra_files_upload: "يجب تصدير السمة لعرض هذه الملفات."
           extra_files_remote: "يجب تصدير السمة أو التحقُّق من مستودع Git لعرض هذه الملفات."
           preview: "معاينة"
-          default: "افتراضي"
+          default: "السمة الافتراضية"
           settings_editor: "محرر الإعدادات"
           show_advanced: "عرض الخيارات المتقدمة"
           is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"

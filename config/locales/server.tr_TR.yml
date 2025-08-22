@@ -60,8 +60,8 @@ tr_TR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
-    too_many_urls: "Tek bir istekte 10’dan fazla URL’yi satır içinde onebox olarak ekleyemezsiniz"
-    concurrency_not_allowed: "Eş zamanlı satır içi onebox yapma isteklerine izin verilmez. Lütfen her seferinde bir istek gönderin."
+    too_many_urls: "Tek bir talepte 10’dan fazla URL’yi satır içinde onebox olarak ekleyemezsiniz."
+    concurrency_not_allowed: "Eş zamanlı satır içi onebox yapma taleplerine izin verilmez. Lütfen her seferinde bir talep gönderin."
   components:
     enabled_filter: "Etkin"
     disabled_filter: "Devre Dışı"
@@ -1480,7 +1480,7 @@ tr_TR:
     http_total_reqs:
       title: "Toplam"
       xaxis: "Gün"
-      yaxis: "Toplam talepler"
+      yaxis: "Toplam talep sayısı"
     time_to_first_response:
       title: "İlk yanıta kadar geçen süre"
       xaxis: "Gün"
@@ -1572,7 +1572,6 @@ tr_TR:
       labels:
         provider: Giriş sağlayıcısı
         no_accounts: "İlişkili hesap yok"
-        total_users: "Toplam üye sayısı"
       description: "Giriş sağlayıcısına göre gruplandırılmış ilişkili hesap sayısını gösterin. Yalnızca sosyal giriş yöntemleri etkinleştirildiğinde geçerlidir."
   dashboard:
     problem:

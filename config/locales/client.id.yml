@@ -2578,7 +2578,6 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Asal"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
