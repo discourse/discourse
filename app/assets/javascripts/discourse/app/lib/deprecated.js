@@ -73,7 +73,7 @@ export function registerDeprecationHandler(callback) {
 
 /**
  * Silence one or more deprecations while running `callback`
- * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
+ * @param {(string|string[]|RegExp|RegExp[])} deprecationIds A single id, or an array of ids, of deprecations to silence
  * @param {function} callback The function to call while deprecations are silenced.
  */
 export function withSilencedDeprecations(deprecationIds, callback) {
@@ -96,7 +96,7 @@ export function withSilencedDeprecations(deprecationIds, callback) {
 /**
  * Silence one or more deprecations while running an async `callback`
  * @async
- * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
+ * @param {(string|string[]|RegExp|RegExp[])} deprecationIds A single id, or an array of ids, of deprecations to silence
  * @param {function} callback The asynchronous function to call while deprecations are silenced.
  */
 export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
