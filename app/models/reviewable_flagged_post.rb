@@ -3,7 +3,9 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
-  FLAGGABLE = true
+  def flaggable?
+    true
+  end
 
   scope :pending_and_default_visible, -> { pending.default_visible }
 

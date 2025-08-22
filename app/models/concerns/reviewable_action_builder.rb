@@ -3,7 +3,13 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
-  FLAGGABLE = false
+  # Indicates whether the reviewable can be flagged. Flaggable reviewable types
+  # should override this method and return true.
+  #
+  # @return [Boolean]
+  def flaggable?
+    false
+  end
 
   # Standard user-actions bundle and default user actions.
   #
@@ -183,7 +189,7 @@ module ReviewableActionBuilder
   def successful_transition(to_state, recalculate_score: true)
     create_result(:success, to_state) do |result|
       result.recalculate_score = recalculate_score
-      result.update_flag_stats = { status: to_state, user_ids: [created_by_id] } if FLAGGABLE
+      result.update_flag_stats = { status: to_state, user_ids: [created_by_id] } if flaggable?
       yield result if block_given?
     end
   end
