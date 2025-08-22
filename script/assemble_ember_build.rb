@@ -15,9 +15,12 @@ DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
 
 PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
 
-BUILD_INFO_FILE = "dist/BUILD_INFO.json"
+JS_SOURCE_PATHS = %w[app/assets/javascripts package.json pnpm-lock.yaml]
 
-Dir.chdir("#{__dir__}/../app/assets/javascripts/discourse")
+EMBER_APP_DIR = "app/assets/javascripts/discourse"
+BUILD_INFO_FILE = "#{EMBER_APP_DIR}/dist/BUILD_INFO.json"
+
+Dir.chdir("#{__dir__}/..")
 
 def capture(*args)
   output, status = Open3.capture2(*args)
@@ -29,8 +32,8 @@ def log(message)
   STDERR.puts "[assemble_ember_build] #{message}"
 end
 
-# Returns a git tree-hash representing the current state of Discourse core.
-# If the working directory is clean, it will match the tree hash (note: different to the commit hash) of the HEAD commit.
+# Returns a git tree-hash representing the current state of Discourse core JS source paths.
+# Only files in JS_SOURCE_PATHS are included in the tree hash.
 def core_tree_hash
   Tempfile.create do |f|
     f.close
@@ -39,8 +42,12 @@ def core_tree_hash
     FileUtils.cp "#{git_dir}/index", f.path
 
     env = { "GIT_INDEX_FILE" => f.path }
-    system(env, "git", "add", "-A", exception: true)
-    return capture(env, "git", "write-tree").strip
+
+    # Remove all files from the index, then add only JS_SOURCE_PATHS
+    system(env, "git", "rm", "-r", "--cached", ".", "--quiet", exception: true)
+    system(env, "git", "add", *JS_SOURCE_PATHS, exception: true)
+
+    capture(env, "git", "write-tree").strip
   end
 end
 
@@ -84,9 +91,10 @@ end
 def download_prebuild_assets!
   return false if !DOWNLOAD_PRE_BUILT_ASSETS
 
-  git_is_clean = capture("git", "status", "--porcelain").strip.empty?
+  status_output = capture("git", "status", "--porcelain", *JS_SOURCE_PATHS).strip
+  git_is_clean = status_output.empty?
   if !git_is_clean
-    log "Git working directory is not clean. Cannot download prebuilt assets."
+    log "JS-related files in the git working directory have been changed. Skipping download of prebuilt assets."
     return false
   end
 
@@ -103,10 +111,18 @@ def download_prebuild_assets!
     return false
   end
 
-  FileUtils.rm_rf("dist")
-  FileUtils.mkdir_p("dist")
+  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
+  FileUtils.mkdir_p("#{EMBER_APP_DIR}/dist")
   begin
-    system("tar", "--strip-components=1", "-xzf", DOWNLOAD_TEMP_FILE, "-C", "dist", exception: true)
+    system(
+      "tar",
+      "--strip-components=1",
+      "-xzf",
+      DOWNLOAD_TEMP_FILE,
+      "-C",
+      "#{EMBER_APP_DIR}/dist",
+      exception: true,
+    )
   rescue RuntimeError => e
     log "Failed to extract prebuilt assets: #{e.message}"
     return false
@@ -145,15 +161,18 @@ elsif core_build_reusable
   build_env["SKIP_CORE_BUILD"] = "1"
   build_cmd << "-o" << "dist/_plugin_only_build"
   begin
-    system(build_env, *build_cmd, exception: true)
-    FileUtils.rm_rf("dist/assets/plugins")
-    FileUtils.mv("dist/_plugin_only_build/assets/plugins", "dist/assets/plugins")
+    system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
+    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/assets/plugins")
+    FileUtils.mv(
+      "#{EMBER_APP_DIR}/dist/_plugin_only_build/assets/plugins",
+      "#{EMBER_APP_DIR}/dist/assets/plugins",
+    )
   ensure
-    FileUtils.rm_rf("dist/_plugin_only_build")
+    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/_plugin_only_build")
   end
   log "Plugin build successfully integrated into dist"
 else
   log "Running full core build..."
-  system(build_env, *build_cmd, exception: true)
+  system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
   File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end
