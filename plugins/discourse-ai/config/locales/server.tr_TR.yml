@@ -95,7 +95,7 @@ tr_TR:
     ai_summary_gists_allowed_groups: "Popüler konular listesindeki özetleri görme yetkisine sahip gruplar."
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
     ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
-    ai_bot_enable_chat_warning: "Kişisel mesaj sohbeti başlatıldığında bir uyarı görüntüleyin. Çeviri dizesi düzenlenerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
+    ai_bot_enable_chat_warning: "Kişisel mesaj sohbeti başlatıldığında bir uyarı gösterin. Çeviri dizesi düzenlenerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "GPT Botunun Kişisel Mesaja erişimi olduğunda, bu grupların üyelerine yanıt verir."
     ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ isteğini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
     ai_bot_public_sharing_allowed_groups: "Bu grupların, herkese açık benzersiz bir bağlantı aracılığıyla YZ kişisel mesajlarını herkese açık şekilde paylaşmasına izin verin. Not: Siteniz giriş yapılmasını gerektiriyorsa paylaşımlar da giriş yapılmasını gerektirir."
@@ -253,7 +253,7 @@ tr_TR:
         markdown_table: Markdown tablosu oluştur
         custom_prompt: "Özel İstem"
         explain: "Açıkla"
-        illustrate_post: "Gönderiyi göster"
+        illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
       painter:
         attribution:

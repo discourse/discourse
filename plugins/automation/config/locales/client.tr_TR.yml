@@ -202,7 +202,7 @@ tr_TR:
           edited: Düzenlendi
           topics: Tüm Konular
           personal_messages: Kişisel Mesajlar
-          public_topics: Genel Konular (tüm güvenli kategorileri hariç tut)
+          public_topics: Herkese Açık Konular (tüm güvenli kategorileri hariç tut)
           with_images: Görüntüler
           with_links: Bağlantılar
           with_code: Kod

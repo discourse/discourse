@@ -97,7 +97,6 @@ export class DiscourseDeprecationWorkflow {
 
 const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
-  { handler: "silence", matchId: "deprecate-array-prototype-extensions" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
   {
     handler: "silence",

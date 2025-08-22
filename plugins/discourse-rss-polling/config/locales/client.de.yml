@@ -17,7 +17,7 @@ de:
       rss_polling:
         feed: Feed-Einstellungen
         discourse: Discourse-Einstellungen
-        author: Autor
+        author: Verfasser
         feed_url: URL
         discourse_category: Kategorie
         discourse_tags: Schlagwörter

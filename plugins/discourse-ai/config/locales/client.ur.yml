@@ -127,6 +127,7 @@ ur:
         back: "واپس"
         export: "برآمد"
         import: "درآمد"
+        import_error_conflict: "ٹول پہلے سے موجود ہے، کیا آپ اسے اپ ڈیٹ کرنا چاہیں گے؟"
         name: "نام"
         description: "تفصیل"
         summary: "Summary"
@@ -194,6 +195,8 @@ ur:
           response: "جواب"
           next_log: "اگلا"
           previous_log: "پچھلی"
+        share_full_topic_modal:
+          update: "لنک کو اپ ڈیٹ اور کاپی کریں"
         invite_ai_conversation:
           button: "دعوت دیں"
         share_modal:

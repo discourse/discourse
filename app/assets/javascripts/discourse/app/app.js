@@ -1,3 +1,4 @@
+import "./array-shim";
 import "./setup-deprecation-workflow";
 import "./deprecate-native-array-extensions";
 import "decorator-transforms/globals";

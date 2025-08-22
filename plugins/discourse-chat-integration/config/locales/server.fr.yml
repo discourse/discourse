@@ -149,7 +149,7 @@ fr:
           <pre>%{post_excerpt}</pre>
         status:
           header: |
-            <b>*Règles pour ce canal*</b>
+            <b>Règles pour ce canal</b>
             (si plusieurs règles correspondent à une publication, la première règle sera appliquée)
           no_rules: "Aucune règle n'est définie pour ce canal. Exécutez <code>/help</code> pour obtenir des instructions."
           rule_string: "<b>%{index})</b> <b>%{filter}</b> messages dans la catégorie <b>%{category}</b>"

@@ -131,7 +131,6 @@ fi:
               help: "Kanavaa kuvaava nimi. Sitä ei käytetä Matrixiin yhdistämiseen."
             room_id:
               title: "Huoneen tunnus"
-              help: "Huoneen \"yksityinen tunniste\". Sen pitäisi näyttää tältä: !abcdefg:matrix.org"
           errors:
             unknown_token: "Käyttöoikeustunnus on virheellinen"
             unknown_room: "Huoneen tunnus ei kelpaa"

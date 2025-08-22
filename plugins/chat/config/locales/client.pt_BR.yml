@@ -611,7 +611,7 @@ pt_BR:
         close: "Fechar linha de discussão"
         original_message:
           started_by: "Iniciado por"
-        settings: "Definições"
+        settings: "Configurações"
         last_reply: "última resposta"
         notifications:
           regular:

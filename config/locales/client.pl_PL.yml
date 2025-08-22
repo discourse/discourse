@@ -354,6 +354,9 @@ pl_PL:
         logged_in_members: "Witaj z powrotem, %{preferred_display_name}!"
         anonymous_members: "Witaj na %{site_name}!"
       search: "Szukaj"
+    impersonation:
+      notice: "Podszywasz się pod %{username}"
+      stop: "Przestań się podszywać"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja witryna może nie działać, ponieważ motyw/komponent zawiera błędy. Sprawdź konsolę przeglądarki, aby uzyskać więcej informacji."
@@ -6101,6 +6104,8 @@ pl_PL:
         select_setting: "Wybierz ustawienia witryny, aby zobaczyć aktualne wartości motywu"
         add: "Przejdź do ustawień witryny motywu"
         help: "Aktualnie używany motyw to <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Przejdź na stronę konfiguracji motywu <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> , aby zmienić ustawienia witryny motywu, lub kliknij powiązany motyw w poniższej tabeli, aby edytować jego ustawienia."
+        filter: "Filtruj ustawienia witryny motywu według nazwy ustawienia, opisu lub nazwy motywu..."
+        filter_no_results: "Żadne ustawienia witryny tematycznej nie pasują do Twojego filtra"
       search:
         modal_title: "Wyszukaj wszystko w panelu administracyjnym"
         title: "Szukaj"
@@ -6810,9 +6815,12 @@ pl_PL:
         themes_and_components:
           breadcrumb_title: "Wygląd"
           install: "Zainstaluj"
+          theme_site_settings:
+            title: "Ustawienia witryny motywu"
+            description: "Ustawienia umożliwiające motywom większą kontrolę nad całym działaniem witryny poprzez nadpisanie niewielkiego podzbioru podstawowych ustawień witryny."
           themes:
             title: "Motywy"
-            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd dla wszystkich użytkowników. Chcesz sprawdzić, które ustawienia witryny zastępują Twoje motywy? <a href="%{themeSiteSettingsUrl}">Zobacz ustawienia witryny motywu</a>'
+            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników.'
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
@@ -7326,7 +7334,7 @@ pl_PL:
             reset: "Zresetuj filtry"
           default_dark_badge:
             text: "Domyślny ciemny"
-            title: "Domyślna jasna paleta kolorów"
+            title: "Domyślna ciemna paleta kolorów"
           default_both_badge:
             text: "Domyślny jasny i ciemny"
             title: "Domyślna jasna i ciemna paleta kolorów"
@@ -8391,6 +8399,9 @@ pl_PL:
           block_common_passwords:
             prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
+        job_status:
+          completed: "Aktualizacja ukończona"
+          enqueued: "Aktualizacja w toku"
       badges:
         status: Status
         title: Odznaki
