@@ -55,7 +55,7 @@ describe "Upcoming Events", type: :system do
        timezone: "Australia/Brisbane",
        time: Time.utc(2025, 6, 2, 19, 00) do
       upcoming_events.visit
-      upcoming_events.open_year_list
+      upcoming_events.open_year_view
 
       first_item = find(".fc-event:nth-child(2)")
       expect(first_item.find(".fc-list-event-time")).to have_text("2:05am")
@@ -108,14 +108,16 @@ describe "Upcoming Events", type: :system do
     it "displays the chosen view" do
       upcoming_events.visit
 
+      expect(page).to have_content("August 2025")
       expect(page).to have_current_path(
         "/upcoming-events?end=2025-08-31T22%3A00%3A00.000Z&start=2025-07-31T22%3A00%3A00.000Z&view=dayGridMonth",
       )
 
-      upcoming_events.open_year_list
+      upcoming_events.open_day_view
 
+      expect(page).to have_content("August 1, 2025")
       expect(page).to have_current_path(
-        "/upcoming-events?end=2025-12-31T23%3A00%3A00.000Z&start=2024-12-31T23%3A00%3A00.000Z&view=listYear",
+        "/upcoming-events?end=2025-08-01T22%3A00%3A00.000Z&start=2025-07-31T22%3A00%3A00.000Z&view=timeGridDay",
       )
     end
   end
