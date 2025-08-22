@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
+import moment from "moment";
 import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
-import moment from "moment";
 
 export default class UpcomingEventsBaseRoute extends DiscourseRoute {
   @service discoursePostEventService;
@@ -51,10 +51,6 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       after = date.clone().startOf("day").toISOString();
       before = date.clone().endOf("day").toISOString();
       initialDate = moment.tz({ year, month, day }, userTimezone).toISOString();
-    } else {
-      // Fallback for query params (backward compatibility)
-      after = params.start;
-      before = params.end;
     }
 
     const fetchParams = {
@@ -62,7 +58,6 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       before,
     };
 
-    // Add attending_user for mine route - subclasses can override this
     this.addRouteSpecificParams(fetchParams);
 
     const events =
@@ -76,7 +71,5 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
   }
 
   // Override in subclasses to add route-specific parameters
-  addRouteSpecificParams(fetchParams) {
-    // Base implementation does nothing
-  }
+  addRouteSpecificParams() {}
 }
