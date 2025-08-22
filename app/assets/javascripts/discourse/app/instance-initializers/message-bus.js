@@ -111,14 +111,11 @@ export default {
     messageBus.backgroundCallbackInterval =
       siteSettings.background_polling_interval;
     
-    // Set messageBus.baseUrl
-    // If a custom long_polling_base_url is configured (not the default "/"), use it
-    // Otherwise use the application's relative path
-    if (siteSettings.long_polling_base_url && siteSettings.long_polling_base_url !== "/") {
-      // Use custom long polling URL (e.g., for separate message server or CDN)
-      messageBus.baseUrl = siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
+    if (siteSettings.long_polling_base_url && 
+        siteSettings.long_polling_base_url !== "/") {
+      messageBus.baseUrl = 
+        siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
     } else {
-      // Use default relative path
       messageBus.baseUrl = getURL("/");
     }
 
