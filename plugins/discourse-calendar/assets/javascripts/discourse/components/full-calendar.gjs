@@ -161,7 +161,7 @@ export default class FullCalendar extends Component {
     }
 
     return (
-      this.args.initialView ||
+      initialView ||
       (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
     );
   }
