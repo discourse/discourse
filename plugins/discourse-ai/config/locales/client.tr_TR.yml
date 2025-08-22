@@ -13,6 +13,7 @@ tr_TR:
             discourse_ai:
               search: "YZ aramasına izin verir"
               stream_completion: "YZ kişilik tamamlamalarının yayınlanmasına izin verir"
+              update_personas: "YZ kişiliklerinin güncellenmesine izin verir"
       site_settings:
         categories:
           discourse_ai: "Discourse YZ"
@@ -22,10 +23,28 @@ tr_TR:
           description: "Tablo, belirli bir duyguyla sınıflandırılan gönderilerin sayısını listeler. \"SamLowe/roberta-base-go_emotions\" modeliyle sınıflandırılmıştır."
         reports:
           filters:
+            group_by:
+              label: "Gruplama ölçütü"
             sort_by:
               label: "Sıralama ölçütü"
             tag:
               label: "Etiket"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "LLM modeli oluştur"
+            update_ai_llm_model: "LLM modelini güncelle"
+            delete_ai_llm_model: "LLM modelini sil"
+            create_ai_persona: "YZ kişiliği yarat"
+            update_ai_persona: "YZ kişiliğini güncelle"
+            delete_ai_persona: "YZ kişiliğini sil"
+            create_ai_tool: "YZ aracı oluştur"
+            update_ai_tool: "YZ aracını güncelle"
+            delete_ai_tool: "YZ aracını sil"
+            create_ai_embedding: "YZ yerleştirme oluştur"
+            update_ai_embedding: "YZ yerleştirmeyi güncelle"
+            delete_ai_embedding: "YZ yerleştirmeyi sil"
+            update_ai_spam_settings: "YZ spam ayarlarını güncelle"
   js:
     discourse_automation:
       scriptables:
@@ -68,10 +87,10 @@ tr_TR:
               label: "Etiketler"
               description: "Konuları yalnızca bu etiketlere filtrele"
             exclude_tags:
-              label: "Etiketleri Hariç Tut"
+              label: "Etiketleri hariç tut"
               description: "Bu etiketlere sahip konuları hariç tut"
             exclude_categories:
-              label: "Kategorileri Dışla"
+              label: "Kategorileri hariç tut"
               description: "Bu kategorilere sahip konuları hariç tut"
             allow_secure_categories:
               label: "Güvenli kategorilere izin ver"
@@ -87,20 +106,40 @@ tr_TR:
               description: "Raporda bu gruptan gelen içeriği önceliklendirin"
             temperature:
               label: "Sıcaklık"
+              description: "LLM için kullanılacak sıcaklık. Rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın)"
             top_p:
               label: "Üst P"
+              description: "LLM için kullanılacak en iyi P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın)"
+            persona_id:
+              label: "Kişilik"
+              description: "Rapor oluşturmada kullanılacak YZ Kişiliği"
         llm_tool_triage:
           fields:
             model:
               label: "Model"
+              description: "Sınıflandırma için kullanılan varsayılan dil modeli"
+            tool:
+              label: "Araç"
+              description: "Sınıflandırma için kullanılacak araç (aracın tanımlanmış parametresi olmamalıdır)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Kişilik"
+              description: "Sınıflandırma için kullanılacak YZ Kişiliği (varsayılan LLM'si ve belirli Kullanıcı olmalıdır)"
+            whisper:
+              label: "Fısıltı olarak yanıtla"
+              description: "Kişinin tepkisinin bir fısıltı olması gerekip gerekmediği"
+            silent_mode:
+              label: "Sessiz Mod"
+              description: "Sessiz modda, kişi içeriği alır ancak forumda hiçbir gönderi paylaşmaz. Bu, araçları kullanarak sınıflandırma yaparken kullanışlıdır"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Sistem İstemi"
-              description: "Triyaj için kullanılacak istem, eylemi tetiklemek için kullanabileceğiniz tek bir kelime ile yanıt verdiğinden emin olun"
+            triage_persona:
+              label: "Kişilik"
+              description: "Sınıflandırma için kullanılan kişilik. Eylemi tetiklemek için kullanabileceğiniz tek bir kelime ile yanıt verdiğinden emin olun"
             max_post_tokens:
               label: "Maksimum Gönderi Token'ı Sayısı"
-              description: "LLM triyajı kullanılarak taranacak maksimum token sayısı"
+              description: "LLM sınıflandırması kullanılarak taranacak maksimum token sayısı"
             stop_sequences:
               label: "Durdurma Dizileri"
               description: "Modele, bu değerlerden birine ulaşıldığında token oluşturmayı durdurması talimatını verin"
@@ -131,17 +170,33 @@ tr_TR:
             include_personal_messages:
               label: "Kişisel mesaj dâhil edin"
               description: "Ayrıca kişisel mesajları tarayın ve önceliklendirin"
-            model:
-              label: "Model"
-              description: "Triyaj için kullanılan dil modeli"
-            temperature:
-              label: "Sıcaklık"
+            whisper:
+              label: "Fısıltı olarak yanıtla"
+              description: "YZ'nin tepkisinin bir fısıltı olması gerekip gerekmediği"
+            reply_persona:
+              label: "Yanıt Kişiliği"
+              description: "Yanıtlar için kullanılacak YZ Kişiliği (varsayılan LLM'ye sahip olmalı), hazır yanıtlara kıyasla öncelik verilir"
+            max_output_tokens:
+              label: "Maks. çıktı token'ları"
+              description: "Belirtildiğinde, modelin üretebileceği maksimum token sayısına bir üst limit belirler. LLM'in maksimum çıktı token'ı limitine uyar"
     discourse_ai:
       title: "YZ"
+      default_llm:
+        title: "Varsayılan LLM modeli"
+        description: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli. Özellik yapılandırmasında veya kişilikte herhangi bir LLM belirtilmemişse bu model kullanılır. Varsayılan bir LLM belirtilmemişse en son oluşturulan LLM modeli kullanılır."
       features:
+        short_title: "Özellikler"
+        description: "Bunlar, sitenizdeki ziyaretçilerin kullanımına sunulan YZ özellikleridir. Bunlar, belirli kişileri ve LLM'leri kullanacak şekilde yapılandırılabilir ve gruplar tarafından erişim kontrolü sağlanabilir."
         back: "Geri"
         disabled: "(devre Dışı)"
+        persona:
+          one: "Kişilik:"
+          other: "Kişilikler:"
         groups: "Gruplar:"
+        llm:
+          one: "LLM:"
+          other: "LLM'ler:"
+        no_llm: "LLM seçilmedi"
         no_persona: "Ayarlanmamış"
         no_groups: "Hiçbiri"
         edit: "Düzenle"
@@ -149,31 +204,84 @@ tr_TR:
           one: "(%{count} tane Daha)"
           other: "(%{count} tane Daha)"
         collapse_list: "(daha az göster)"
+        bot:
+          bot: "Sohbet botu"
+          name: "Bot"
+          description: "Kişisel mesajlarda, forumda ve sohbette kullanıcılara sorularını yanıtlayabilen ve yardımcı olabilen bir sohbet robotu"
+        nav:
+          configured: "Yapılandırılmış"
+          unconfigured: "Yapılandırılmamış"
         filters:
-          all: "Hepsi"
+          all: "Tümü"
+          text: "Arama özellikleri, kişilikler, LLM'ler veya gruplar..."
+          no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
+        no_automations: "Henüz otomasyon yok"
+        summarization:
+          name: "Özetler"
+          description: "Ziyaretçilerin konuları özetlemesine olanak tanıyan bir özetleme düğmesi sunar"
+          topic_summaries: "Konu özetleri"
+          gists: "Konu listesinin kısa özetleri"
         search:
           name: "Ara"
+          description: "Sorgulara YZ tarafından oluşturulan yanıtlar sağlayarak arama deneyimini geliştirir"
+          discoveries: "Keşifler"
         embeddings:
           name: "Gömmeler"
+          description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
+          hyde: "HyDE"
+        discord:
+          name: "Discord entegrasyonu"
+          description: "Discord kanallarında arama yapma özelliğini ekler"
+          search: "Discord araması"
+        inference:
+          name: "Çıkarılan kavramlar"
+          description: "Konuları ve gönderileri ilgi alanlarına/etiketlere göre sınıflandırır."
+          generate_concepts: "Kavram çıkarımı"
+          match_concepts: "Kavram eşleştirme"
+          deduplicate_concepts: "Kavram tekilleştirme"
         ai_helper:
           name: "Yardımcı"
+          description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
           proofread: Yazım hataları düzeltilmiş metin
+          title_suggestions: "Başlık öner"
           explain: "Açıkla"
+          illustrate_post: "Gönderiyi çiz"
           smart_dates: "Akıllı tarihler"
+          translate: "Çevir"
           markdown_tables: "Markdown tablosu oluştur"
           custom_prompt: "Özel istem"
+          image_caption: "Görüntülere alt yazı ekle"
+          translator: "Çevirmen"
+        translation:
+          name: "Çeviri"
+          description: "İçeriği desteklenen dillere çevirir"
+          locale_detector: "Yerel ayar dedektörü"
+          post_raw_translator: "Gönderi ham çevirmeni"
+          topic_title_translator: "Konu başlığı çevirmeni"
+          short_text_translator: "Kısa metin çevirmeni"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
+          inspect_posts: "Gönderileri incele"
+        automation_reports:
+          name: "Otomatik raporlar"
+          description: "Otomatik olarak, trendleri, önemli konuları ve etkileşimi vurgulayarak aktivitenin kısa genel bakışlarını oluşturur"
+        automation_triage:
+          name: "Gönderi sınıflandırması"
+          description: "Yapılandırılabilir otomasyon kurallarını kullanarak gönderilerin moderasyonunu ve yönetimini otomatikleştirir"
       modals:
         select_option: "Seçenek belirleyin..."
       layout:
         table: "Tablo"
+        card: "Kart"
+      translations:
+        title: "Çeviriler"
       spam:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        select_persona: "Kişilik seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
         last_seven_days: "Son 7 gün"
@@ -224,18 +332,20 @@ tr_TR:
         request_tokens: "Talep token'ları"
         response_tokens: "Karşılık token'ları"
         net_request_tokens: "Net talep token'ları"
-        cached_tokens: "Önbelleğe alınan token'lar"
-        cached_request_tokens: "Önbelleğe alınmış talep token'ları"
+        cached_tokens: "Ön belleğe alınan token'lar"
+        cached_request_tokens: "Ön belleğe alınmış talep token'ları"
+        total_spending: "Tahminî maliyet"
         no_users: "Kullanıcı kullanım verisi bulunamadı"
         no_models: "Model kullanım verisi bulunamadı"
         no_features: "Özellik kullanım verisi bulunamadı"
         subheader_description: "Token'lar, LLM'lerin metinleri anlamak ve üretmek için kullandıkları temel birimlerdir, kullanım verileri maliyetleri etkileyebilir"
         stat_tooltips:
-          total_requests: "Discourse aracılığıyla LLM'lere yapılan tüm talepler"
-          total_tokens: "LLM istenirken kullanılan tüm token'lar"
+          total_requests: "Discourse aracılığıyla LLM'lere gönderilen tüm talepler"
+          total_tokens: "LLM'e istem yaparken kullanılan tüm token'lar"
           request_tokens: "LLM'in söylediklerinizi anlamaya çalışırken kullandığı token'lar"
           response_tokens: "LLM'in isteminize yanıt verdiğinde kullanılan token'lar"
           cached_tokens: "LLM'in performansı ve maliyeti optimize etmek için yeniden kullandığı daha önce işlenmiş talep token'ları"
+          total_spending: "LLM yapılandırma ayarlarına eklenen belirtilen maliyet metriklerine dayalı olarak LLM'ler tarafından kullanılan tüm token'ların kümülatif maliyeti"
         periods:
           last_day: "Son 24 saat"
           last_week: "Geçen hafta"
@@ -253,8 +363,11 @@ tr_TR:
         edit: "Düzenle"
         export: "Dışa Aktar"
         import: "İçe Aktar"
+        import_error_conflict: "%{name} içe aktarılırken çakışma algılandı, mevcut kişiliği güncellemek ister misiniz?"
+        overwrite: "Üzerine yaz"
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
+        use_parent_llm: "Kişilik dil modelini kullan"
         max_context_posts: "Maksimum bağlam gönderisi sayısı"
         max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
         vision_enabled: Vizyon etkin
@@ -309,26 +422,54 @@ tr_TR:
         rag_conversation_chunks_help: "RAG modeli aramaları için kullanılacak parça sayısı. YZ'nin kullanabileceği bağlam miktarını artırmak için artırın."
         persona_description: "Kişilikler, Discourse forumunuzdaki YZ motorunun davranışını özelleştirmenize olanak tanıyan güçlü bir özelliktir. YZ'nin yanıtlarını ve etkileşimlerini yönlendiren bir \"sistem mesajı\" olarak hareket ederek daha kişiselleştirilmiş ve ilgi çekici bir kullanıcı deneyimi oluşturmaya yardımcı olurlar."
         response_format:
+          title: "JSON yanıt biçimi"
+          no_format: "JSON biçimi belirtilmedi"
           open_modal: "Düzenle"
           modal:
+            root_title: "Yanıt yapısı"
             key_title: "Anahtar"
+        examples:
+          title: Örnekler
+          examples_help: LLM ile daha önceki etkileşimleri simüle edin ve daha iyi sonuçlar elde etmek için bunları temellendirin.
+          new: Yeni örnek
+          remove: Örneği sil
+          collapsable_title: "Örnek #%{number}"
+          user: "Kullanıcı mesajı"
+          model: "Model yanıtı"
+        list:
+          enabled: "YZ Botu?"
+        ai_bot:
+          title: "YZ botu seçenekleri"
+          save_first: "Kişiliği kaydettiğinizde daha fazla YZ botu seçeneği kullanılabilir hâle gelir."
         filters:
+          text: "Kişilik bul"
           reset: "Sıfırla"
+          no_results: "Filtrelerinizle eşleşen bir kişilik bulunamadı."
+          all_features: "Herhangi bir özellik"
+        features_list:
+          one: "Özellik:"
+          other: "Özellikler:"
+        llms_list: "LLM:"
       rag:
+        title: "RAG"
         options:
           rag_chunk_tokens: "Parça token'ı yükle"
           rag_chunk_tokens_help: "RAG modelindeki her parça için kullanılacak belirteç sayısı. YZ'nin kullanabileceği bağlam miktarını artırmak için artırın. (değiştirmek tüm yüklemeleri yeniden indeksler)"
           rag_chunk_overlap_tokens: "Parça örtüşme token'ı yükle"
           rag_chunk_overlap_tokens_help: "RAG modelinde parçalar arasında üst üste binecek token sayısı. (değiştirme tüm yüklemeleri yeniden indeksler)"
+          rag_llm_model: "Dizinleme Dil Modeli"
+          rag_llm_model_help: "PDF ve resimlerin indekslenmesi sırasında OCR için kullanılan dil modeli"
           show_indexing_options: "Yükleme seçeneklerini göster"
           hide_indexing_options: "Yükleme seçeneklerini gizle"
         uploads:
           title: "Yüklemeler"
+          description: "PDF (.pdf), Düz Metin (.txt) veya markdown (.md)"
+          description_with_images: "Düz metin (.txt), markdown (.md), PDF (.pdf) veya görüntü (.png, .jpeg)"
           button: "Dosya ekle"
           filter: "Yüklemeleri filtrele"
-          indexed: "İndekslendi"
-          indexing: "İndeksleniyor"
-          uploaded: "İndekslenmeye hazır"
+          indexed: "Dizinlendi"
+          indexing: "Dizinleniyor"
+          uploaded: "Dizinlenmeye hazır"
           uploading: "Yükleniyor..."
           remove: "Yüklemeyi kaldır"
       tools:
@@ -336,9 +477,14 @@ tr_TR:
         short_title: "Araçlar"
         export: "Dışa Aktar"
         import: "İçe Aktar"
+        import_error_conflict: "Araç zaten mevcut, güncellemek ister misiniz?"
+        overwrite: "Üzerine yaz"
         no_tools: "Henüz herhangi bir araç oluşturmadınız"
         name: "Ad"
+        name_help: "Ad, Discourse kullanıcı arayüzünde görünür ve aracı çeşitli ayarlarda bulmak için kullanacağınız kısa tanımlayıcıdır, farklı olmalıdır (gerekli)"
         new: "Yeni araç"
+        tool_name: "Araç Adı"
+        tool_name_help: "Araç Adı büyük dil modeline sunulur. Farklı değildir ancak kişilik başına farklıdır. (kişilik, kaydetme sırasında doğrulanır)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
         subheader_description: "Araçlar, kullanıcı tanımlı JavaScript işlevleri ile YZ botlarının yeteneklerini genişletir."
@@ -347,6 +493,8 @@ tr_TR:
         script: "Komut Dosyası"
         parameters: "Parametreler"
         save: "Kaydet"
+        parameter_type: "Parametre türü"
+        add_parameter: "Parametre ekle"
         remove_parameter: "Kaldır"
         parameter_required: "Gerekli"
         parameter_enum: "Numaralandırma"
@@ -371,11 +519,16 @@ tr_TR:
         name: "Model kimliği"
         provider: "Sağlayıcı"
         tokenizer: "Token'laştırıcı"
+        max_prompt_tokens: "Bağlam penceresi"
+        max_output_tokens: "Maks. çıktı token'ları"
         url: "Modeli barındıran hizmetin URL'si"
         api_key: "Modeli barındıran hizmetin API Anahtarı"
         enabled_chat_bot: "YZ bot seçicisine izin verin"
         vision_enabled: "Vizyon etkin"
         ai_bot_user: "YZ botu Kullanıcısı"
+        cost_input: "Girdi maliyeti"
+        cost_cached_input: "Ön belleğe alınmış girdi maliyeti"
+        cost_output: "Çıktı maliyeti"
         save: "Kaydet"
         edit: "Düzenle"
         saved: "LLM modeli kaydedildi"
@@ -400,29 +553,47 @@ tr_TR:
             custom: "Özel..."
           hours: "saat"
           max_tokens_help: "Bu gruptaki her kullanıcının belirtilen süre içinde kullanabileceği maksimum token (kelime ve karakter) sayısı. Token'lar, YZ modelleri tarafından metni işlemek için kullanılan birimlerdir; kabaca 1 token = 4 karakter veya bir kelimenin 3/4'ü."
+          max_tokens_required: "Maks. kullanımlar ayarlanmamışsa ayarlanmalıdır"
           max_usages_help: "Bu gruptaki her kullanıcının belirtilen süre içinde yapay zekâ modelini kullanabileceği maksimum sayı. Bu kota, grup genelinde paylaşılmaz, bireysel kullanıcı başına izlenir."
+          max_usages_required: "Maks. token'lar ayarlanmamışsa ayarlanmalıdır"
         usage:
           ai_bot: "YZ botu"
+          ai_helper: "Yardımcı (%{persona})"
+          ai_helper_image_caption: "Görüntü yazısı"
           ai_persona: "Kişilik (%{persona})"
           ai_summarization: "Özetle"
           ai_embeddings_semantic_search: "YZ araması"
           ai_spam: "İstenmeyen içerik"
+          automation: "Otomasyon (%{persona})"
         in_use_warning:
           one: "Bu model şu anda %{settings} tarafından kullanılıyor. Yanlış yapılandırılırsa özellik beklendiği gibi çalışmaz."
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-0: "Antropic'in en akıllı modeli"
+          anthropic-claude-opus-4-1: "Antropic'in en akıllı modeli"
+          anthropic-claude-sonnet-4-0: "Hız ve maliyetin optimum dengesi"
+          anthropic-claude-3-7-sonnet-latest: "Hız ve maliyetin optimum dengesi (önceki nesil)"
           anthropic-claude-3-5-haiku-latest: "Hızlı ve uygun maliyetli"
+          google-gemini-2-5-pro: "Çok çeşitli görevleri yerine getirebilen büyük çok modlu model"
+          google-gemini-2-0-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli (önceki nesil)"
           google-gemini-2-5-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli"
+          google-gemini-2-0-flash-lite: "Maliyet açısından verimli ve düşük gecikmeli model"
+          open_ai-o3: "Open AI'ın en yetenekli muhakeme modeli"
+          open_ai-o4-mini: "Gelişmiş Uygun maliyetli muhakeme modeli"
+          open_ai-gpt-5: "Open AI'ın amiral gemisi modeli. Alan adları arasındaki çözmek için oldukça uygundur."
+          open_ai-gpt-5-mini: "Zekâ, hız ve maliyet arasında bir denge sağlar ve bu da onu birçok kullanım durumu için cazip bir model hâline getirir."
+          open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Verimli hafif çok dilli model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Güçlü çok amaçlı model"
           mistral-mistral-large-latest: "Mistral'in en güçlü modeli"
           mistral-pixtral-large-latest: "Mistral'in en güçlü görüş yeteneğine sahip modeli"
+          open_router-x-ai-grok-3-beta: "xAI'ın en son modeli"
+          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek'in en son muhakeme modeli"
+          open_router-meta-llama-3-3-70b-instruct: "Son derece yetenekli çok dilli model"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
-        preconfigured_llms: "LLM'nizi seçin"
+        preconfigured_llms: "LLM'inizi seçin"
         preconfigured:
           title_no_llms: "Başlamak için bir şablon seçin"
           title: "Yapılandırılmamış LLM şablonları"
@@ -437,9 +608,16 @@ tr_TR:
           success: "Başarılı!"
           failure: "Modelle iletişim kurmaya çalışmak şu hatayı döndürdü: %{error}"
         hints:
+          max_prompt_tokens: "Modelin tek bir istekte işleyebileceği maksimum token sayısı"
+          max_output_tokens: "Modelin tek bir istekte oluşturabileceği maksimum token sayısı"
+          display_name: "Sitenizin arayüzünde bu modele atıfta bulunmak için kullanılan ad."
           name: "Hangi modeli kullanacağımızı belirtmek için bunu API çağrısına dâhil ediyoruz"
           vision_enabled: "Etkinleştirilirse YZ görüntüleri anlamaya çalışır. Görmeyi destekleyen kullanılan modele bağlıdır. Anthropic, Google ve OpenAI'ın en son modelleri tarafından desteklenir."
           enabled_chat_bot: "Etkinleştirilirse kullanıcılar YZ botu ile kişisel mesajlar oluştururken bu modeli seçebilir"
+          cost_input: "Bu model için 1 milyon token başına girdi maliyeti"
+          cost_cached_input: "Bu model için 1 milyon token başına ön belleğe alınmış girdi maliyeti"
+          cost_output: "Bu model için 1 milyon token başına çıktı maliyeti"
+          cost_measure: "$/1 milyon token"
         providers:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
@@ -466,6 +644,13 @@ tr_TR:
           provider_quantizations: "Sağlayıcı nicelleştirmelerinin sırası (virgülle ayrılmış liste, ör.: fp16,fp8)"
           disable_streaming: "Akış tamamlamalarını devre dışı bırak (akışı akış dışı taleplere dönüştür)"
           reasoning_effort: "Muhakeme eforu (yalnızca muhakeme modelleri için)"
+          enable_reasoning: "Muhakemeyi etkinleştirin (yalnızca muhakeme modelleri için geçerlidir)"
+          enable_thinking: "Düşünmeyi etkinleştir (yalnızca uygulanabilir modellerde, ör.: flash 2.5)"
+          thinking_tokens: "Düşünmek için kullanılan token sayısı"
+          reasoning_tokens: "Muhakeme için kullanılan token sayısı"
+          disable_temperature: "Sıcaklığı devre dışı bırakın (bazı düşünme modelleri sıcaklığı desteklemez)"
+          disable_top_p: "Üst P'yi devre dışı bırakın (bazı düşünme modelleri üst P'yi desteklemez)"
+          enable_responses_api: "Yanıt API'sini etkinleştirin (belirli OpenAI modellerinde gerekli)"
       related_topics:
         title: "İlgili konular"
         pill: "İlgili"
@@ -476,10 +661,10 @@ tr_TR:
         suggest: "YZ ile öner"
         suggest_errors:
           too_many_tags:
-            one: "En fazla sadece %{count} etiketine sahip olabilirsiniz"
-            other: "En fazla sadece %{count} etiketine sahip olabilirsiniz"
+            one: "En fazla sadece %{count} etikete sahip olabilirsiniz"
+            other: "En fazla sadece %{count} etikete sahip olabilirsiniz"
           no_suggestions: "Mevcut öneri yok"
-        missing_content: "Lütfen öneri oluşturmak için biraz içerik girin."
+        missing_content: "Lütfen öneri oluşturmak için birkaç içerik girin."
         context_menu:
           trigger: "YZ'ye sor"
           loading: "YZ oluşturuyor"
@@ -497,7 +682,7 @@ tr_TR:
           trigger: "YZ'ye sor"
           title: "YZ'ye sor"
           loading: "YZ oluşturuyor"
-          close: "Bitir"
+          close: "Kapat"
           copy: "Kopyala"
           copied: "Kopyalandı!"
           cancel: "İptal et"
@@ -513,7 +698,7 @@ tr_TR:
         image_caption:
           button_label: "YZ ile alt yazı"
           generating: "Alt yazı oluşturuluyor..."
-          credits: "AI tarafından altyazılı"
+          credits: "Alt yazı YZ tarafından hazırlandı"
           save_caption: "Kaydet"
         no_content_error: "Üzerinde YZ eylemleri gerçekleştirmek için önce içerik ekleyin"
       reviewables:
@@ -521,6 +706,7 @@ tr_TR:
         accuracy: "Doğruluk:"
       embeddings:
         short_title: "Gömmeler"
+        description: "Gömmeler, anlam ve ilişkileri yakalayan verilerin sayısal temsilleridir ve İlgili Konular ve YZ Araması gibi Discourse YZ özelliklerinin içeriği anlamasını ve bağlamasını sağlar."
         new: "Yeni gömme"
         back: "Geri"
         save: "Kaydet"
@@ -536,10 +722,12 @@ tr_TR:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."
           success: "Başarılı!"
-          failure: "Bir gömme oluşturmaya çalışmak şu sonucu verdi: %{error}"
+          failure: "Gömme oluşturmaya çalışmak şu sonucu verdi: %{error}"
         hints:
           dimensions_warning: "Kaydedildikten sonra bu değer değiştirilemez."
           matryoshka_dimensions: "Verilerin hiyerarşik veya çok katmanlı temsili için kullanılan iç içe yerleştirmelerin boyutunu tanımlar, iç içe geçmiş matruşka bebeklerinin birbirinin içine sığmasına benzer."
+          embed_prompt: "Forum içeriğinin gömülü ögelerini oluştururken görev talimatı ön eki. YALNIZCA nomic-embed veya stella gibi ön ek gerektiren gömülü ögeler için. Çoğu model için gerekli değildir."
+          search_prompt: "Arama sorgularının gömülü ögelerini oluştururken görev talimatı ön eki. YALNIZCA nomic-embed veya stella gibi ön ek gerektiren gömülü ögeler için. Çoğu model için gerekli değildir."
           sequence_length: "Gömmeler oluştururken veya bir sorguyu işlerken aynı anda işlenebilecek maksimum belirteç sayısı."
           distance_function: "Gömmeler arasındaki benzerliğin, kosinüs mesafesi (vektörler arasındaki açıyı ölçer) veya negatif iç çarpım (vektör değerlerinin örtüşmesini ölçer) kullanılarak nasıl hesaplanacağını belirler."
         display_name: "Ad"
@@ -554,7 +742,7 @@ tr_TR:
         matryoshka_dimensions: "Matruşka boyutları"
         distance_function: "Mesafe işlevi"
         distance_functions:
-          "<#>": "Negatif iç çarpım"
+          "<#>": "Negatif iç ürün"
           <=>: "Kosinüs mesafesi"
         providers:
           hugging_face: "Hugging Face"
@@ -568,15 +756,15 @@ tr_TR:
         semantic_search: "Konular (Semantik)"
         semantic_search_loading: "YZ kullanarak daha fazla sonuç arama"
         semantic_search_results:
-          toggle: "YZ kullanılarak bulunan %{count} sonuçları gösteriliyor"
+          toggle: "YZ kullanılarak bulunan %{count} sonuç gösteriliyor"
           toggle_hidden: "YZ kullanılarak bulunan %{count} sonuç gizleniyor"
           none: "Üzgünüz, YZ aramamız eşleşen konu bulamadı"
           new: "YZ ile yeni sonuçlar aramaya başlamak için \"ara\" seçeneğine basın"
           unavailable: "YZ sonuçları kullanılamıyor"
         semantic_search_tooltips:
-          results_explanation: "Etkinleştirildiğinde, ek YZ arama sonuçları aşağıya eklenir."
-          invalid_sort: "YZ sonuçlarını göstermek için arama sonuçları Alaka Düzeyine göre sıralanmalıdır"
-        semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları Alaka Düzeyine göre sıralanmalıdır"
+          results_explanation: "Etkinleştirildiğinde ek YZ arama sonuçları aşağıya eklenir."
+          invalid_sort: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
+        semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
         ai_generated_result: "YZ kullanılarak bulunan arama sonucu"
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
@@ -585,14 +773,18 @@ tr_TR:
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
+        persona: "Kişilik"
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
-        default_pm_prefix: "[Adsız YZ botu kişisel mesajı]"
+        default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
+        exit: "YZ botundan çık"
         share: "YZ konuşmasını kopyala"
         conversation_shared: "Konuşma kopyalandı"
+        embed_copied: "Gömme panoya kopyalandı"
         debug_ai: "Ham YZ isteğini ve yanıtını görüntüleyin"
+        sidebar_empty: "Bot konuşma geçmişi burada görünür."
         debug_ai_modal:
           title: "YZ etkileşimini görüntüleyin"
           copy_request: "İsteği kopyala"
@@ -613,6 +805,7 @@ tr_TR:
           title: "Bu YZ konuşmasını herkese açık olarak paylaşın"
         invite_ai_conversation:
           button: "Davet et"
+          title: "YZ konuşmasına davet et"
         ai_label: "YZ"
         ai_title: "YZ ile konuşma"
         share_modal:
@@ -637,15 +830,30 @@ tr_TR:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          header: "Nasıl yardımcı olabilirim?"
+          submit: "Soru gönder"
+          disclaimer: "Üretken YZ, hata yapabilir. Önemli bilgileri doğrulayın."
+          placeholder: "Soru sorun..."
+          new: "Yeni Soru"
+          min_input_length_message:
+            one: "Mesaj %{count} karakter veya daha uzun olmalıdır"
+            other: "Mesaj %{count} karakter veya daha uzun olmalıdır"
+          messages_sidebar_title: "Konuşmalar"
           today: "Bugün"
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
+          upload_files: "Dosya yükle"
+          uploads_in_progress: "Yüklemeler devam ederken gönderilemiyor"
       sentiments:
         dashboard:
           title: "Duyarlılık"
+        sidebar:
+          overview: "Duyarlılığa genel bakış"
+          analysis: "Duyarlılık analizi"
         sentiment_analysis:
+          share_chart: "Bağlantıyı grafiğe kopyala"
           filter_types:
-            all: "Hepsi"
+            all: "Tümü"
             positive: "Pozitif"
             neutral: "Nötr"
             negative: "Negatif"
@@ -672,11 +880,22 @@ tr_TR:
             expanded: "Genişletilmiş"
             expanded_description: "YZ özetleriyle"
       discobot_discoveries:
+        main_title: "Discobot keşifleri"
         regular_results: "Konular"
+        tell_me_more: "Daha fazla bilgi verin..."
+        continue_convo: "Konuşmaya devam edin..."
+        loading_convo: "Konuşma yükleniyor"
         collapse: "Daralt"
+        timed_out: "Discobot herhangi bir keşif bulamadı. Bir şeyler ters gitti."
+        user_setting: "Arama keşiflerini etkinleştirin"
         tooltip:
+          header: "YZ destekli arama"
+          content: "%{model} tarafından desteklenen doğal dil araması"
           actions:
+            info: "Nasıl çalışır?"
             disable: "Devre dışı bırak"
+      user_preferences:
+        empty: "Şu anda ilgili bir ayar bulunmuyor"
     review:
       types:
         reviewable_ai_post:

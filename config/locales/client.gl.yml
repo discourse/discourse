@@ -996,14 +996,13 @@ gl:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
-        disable_dark_scheme: "O mesmo que o normal"
         undo: "Restabelecer"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(predeterminado do sitio)"
         interface_modes:
           light: "Claro"
           dark: "Escuro"
+        picker:
+          active: "Activo"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
@@ -1725,6 +1724,8 @@ gl:
     full_name_requirement:
       required_at_signup: "Obrigatorio"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Páxina de inicio"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1857,10 +1858,7 @@ gl:
       paste_code_text: "escriba un título ou pégueo aquí"
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
-      olist_title: "Listaxe numerada"
-      ulist_title: "Listaxe con símbolos"
       list_item: "Elemento da listaxe"
-      toggle_direction: "Trocar dirección"
       help: "Axuda para a edición con Markdown"
       collapse: "minimizar o panel de composición"
       open: "abrir o panel de composición"
@@ -2767,8 +2765,8 @@ gl:
         name: "Nome"
         description: "Descrición"
         remove: "Retirar"
-      tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
-      tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
+      tags_allowed_tags_new_category: "Restrinxir estas etiquetas a esta categoría:"
+      tags_allowed_tag_groups_new_category: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
       tags_tab_description: "As etiquetas e os grupos de etiquetas anteriores só estarán dispoñíbeis nesta categoría e outras que as inclúan. Non poderán usarse noutras categorías."
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
@@ -4062,13 +4060,13 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          default: "Activo"
+          default: "Predeterminado"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
-          color_scheme_select: "Seleccione as cores que quere utilizar no tema"
+          color_scheme_select: "Seleccione as cores que quere utilizar no tema."
           custom_sections: "Seccións personalizadas:"
           theme_components: "Compoñentes do tema"
           add_all_themes: "Engadir todos os temas"
@@ -4186,12 +4184,12 @@ gl:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
+          light: "claro"
+          dark: "escuro"
           title: "Cores"
           edit: "Editar"
           filters:
             all: "Todas"
-          active_badge:
-            text: "Activo"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"

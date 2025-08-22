@@ -6,7 +6,7 @@ function renderOption({ src, code, label }) {
       `<span class='emoji-shortname'>${escapeExpression(code)}</span>`
     : escapeExpression(label);
 
-  return `<li><a href>${content}</a></li>`;
+  return `<li><a href><span class='text-content'>${content}</span></a></li>`;
 }
 
 export default function renderEmojiAutocomplete({ options }) {

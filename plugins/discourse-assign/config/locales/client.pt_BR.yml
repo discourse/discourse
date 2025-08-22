@@ -37,11 +37,11 @@ pt_BR:
       sidebar_name_filter_placeholder: "Nome/nome de usuário(a)"
       assigned: "Atribuiu"
       group_everyone: "Todos(as)"
-      assigned_to: "Atribuído a"
+      assigned_to: "Atribuído(a) a"
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
       assign_post_to_multiple: "#%{post_number} para %{username}"
-      assigned_to_w_ellipsis: "Atribuído a..."
+      assigned_to_w_ellipsis: "Atribuído(a) a..."
       unassign:
         title: "Remover atribuição"
         title_w_ellipsis: "Remover atribuição..."
@@ -115,7 +115,7 @@ pt_BR:
         assigned: "Atribuiu"
       no_assignments_title: "Você não tem atribuições ainda"
       no_assignments_body: >
-        Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)/a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
+        Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)</a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
       dismiss_assigned_tooltip: "Marcar todas as notificações atribuídas não lidas como lidas"
       assigned_to_group:
         post: "postagem atribuída a %{group_name}"
@@ -138,7 +138,7 @@ pt_BR:
           assigned: "foram atribuídos"
           unassigned: "tiveram atribuição removida"
         assigned:
-          label: "Atribuído a"
+          label: "Atribuído(a) a"
     topics:
       bulk:
         unassign: "Remover atribuição de tópicos"

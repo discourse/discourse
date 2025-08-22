@@ -247,7 +247,6 @@ export default class TopicMapSummary extends Component {
         @arrow={{true}}
         @identifier="topic-map__views"
         @interactive={{true}}
-        @triggers="click"
         @modalForMobile={{true}}
         @placement="right"
         @groupIdentifier="topic-map"
@@ -280,7 +279,6 @@ export default class TopicMapSummary extends Component {
           @arrow={{true}}
           @identifier="topic-map__likes"
           @interactive={{true}}
-          @triggers="click"
           @modalForMobile={{true}}
           @placement="right"
           @groupIdentifier="topic-map"
@@ -300,7 +298,10 @@ export default class TopicMapSummary extends Component {
             <ConditionalLoadingSpinner @condition={{this.loading}}>
               <PluginOutlet
                 @name="most-liked-replies"
-                @outletArgs={{lazyHash posts=this.top3LikedPosts}}
+                @outletArgs={{lazyHash
+                  posts=this.top3LikedPosts
+                  postUrl=this.postUrl
+                }}
               >
                 <ul>
                   {{#each this.top3LikedPosts as |post|}}
@@ -335,7 +336,6 @@ export default class TopicMapSummary extends Component {
           @arrow={{true}}
           @identifier="topic-map__links"
           @interactive={{true}}
-          @triggers="click"
           @modalForMobile={{true}}
           @groupIdentifier="topic-map"
           @placement="right"
@@ -383,7 +383,6 @@ export default class TopicMapSummary extends Component {
           @arrow={{true}}
           @identifier="topic-map__users"
           @interactive={{true}}
-          @triggers="click"
           @placement="right"
           @modalForMobile={{true}}
           @groupIdentifier="topic-map"

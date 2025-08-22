@@ -1419,7 +1419,6 @@ ko:
     discord_trusted_guilds: '이 Discord 길드 회원만 Discord를 통해 로그인할 수 있습니다. 길드에 숫자 ID를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>에서 지침을 확인하세요. 모든 길드를 허용하려면 공백으로 두세요.'
     enable_backups: "관리자가 포럼 백업을 생성하도록 허용"
     allow_restore: "모든 사이트 데이터를 대체할 수 있는 복원을 허용합니다! 백업을 복원할 계획이 아니라면 비활성화된 상태로 두세요."
-    automatic_backups_enabled: "백업 주기에 정의된 대로 자동 백업 실행"
     s3_backup_bucket: "백업을 보관할 원격 버킷입니다. 경고: 비공개 버킷인지 확인하세요."
     s3_endpoint: "엔드포인트를 수정하여 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스로 백업할 수 있습니다. 경고: AWS S3를 사용하는 경우 비워두세요."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 활성화합니다. 중요: 비활성화하면 업로드가 삭제된 후 공간이 확보되지 않습니다."
@@ -3683,7 +3682,7 @@ ko:
         description: "신고에 동의하고 사용자를 차단합니다."
       agree_and_restore:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      delete_single:
+      delete:
         title: "삭제"
         complete: "게시물 삭제됨."
       delete_and_ignore:
@@ -3706,7 +3705,9 @@ ko:
         title: "승인"
       approve_post:
         title: "게시물 승인"
-        confirm_closed: "이 주제는 종료되었습니다. 그래도 게시물을 작성할까요?"
+      approve_post_closed:
+        title: "게시물 승인"
+        confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"
       reject_post:
         title: "게시물 거부"
       approve_user:

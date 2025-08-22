@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -24,7 +25,6 @@ import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -137,7 +137,7 @@ export default class ComposerService extends Service {
   @or("replyingToWhisper", "model.whisper") isWhispering;
 
   get topicController() {
-    return getOwnerWithFallback(this).lookup("controller:topic");
+    return getOwner(this).lookup("controller:topic");
   }
 
   get isPreviewVisible() {
@@ -275,10 +275,7 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
-    const storedVal = keyValueStore.get("toolbar-enabled");
+    const storedVal = this.keyValueStore.get("toolbar-enabled");
     if (this._toolbarEnabled === undefined && storedVal === undefined) {
       // iPhone 6 is 375, anything narrower and toolbar should
       // be default disabled.
@@ -290,11 +287,8 @@ export default class ComposerService extends Service {
   }
 
   set showToolbar(val) {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
     this._toolbarEnabled = val;
-    keyValueStore.set({
+    this.keyValueStore.set({
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });

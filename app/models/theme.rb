@@ -113,7 +113,11 @@ class Theme < ActiveRecord::Base
             :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
-            child_themes: %i[color_scheme locale_fields theme_translation_overrides],
+            child_themes: [
+              { color_scheme: :base_scheme },
+              :locale_fields,
+              :theme_translation_overrides,
+            ],
           )
         end
 
@@ -124,8 +128,8 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            color_scheme: %i[theme color_scheme_colors],
-            owned_color_scheme: %i[theme color_scheme_colors],
+            color_scheme: %i[theme color_scheme_colors base_scheme],
+            owned_color_scheme: %i[theme color_scheme_colors base_scheme],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end

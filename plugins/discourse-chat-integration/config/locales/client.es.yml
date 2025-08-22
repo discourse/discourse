@@ -131,7 +131,6 @@ es:
               help: "Un nombre para describir el canal. No se usa para la conexión con Matrix."
             room_id:
               title: "ID de la sala"
-              help: "El «identificador privado» de la sala. Debería ser algo como !abcdefg:matrix.org"
           errors:
             unknown_token: "Token de acceso no válido"
             unknown_room: "La ID de la sala no es válida"

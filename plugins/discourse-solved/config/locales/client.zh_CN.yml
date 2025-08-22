@@ -28,6 +28,7 @@ zh_CN:
       solution: "解决方案"
       solution_summary:
         other: "解决方案"
+      accepted_answer_post_number: "帖子 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "所有"
@@ -38,7 +39,7 @@ zh_CN:
       no_solved_topics_body: "当您对某个话题提供有用的回复时，您的回复可能会被话题所有者或管理人员选为解决方案。"
       no_answer:
         title: 您的问题是否已被解答？
-        description: "在正确回复下方使用解决方案按钮突出显示回答并帮助他人。"
+        description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
       notification:
         title: "您的帖子已被标记为解决方案"
     topic_statuses:

@@ -20,4 +20,14 @@ he:
     report_generator:
       private_message:
         title: "דוח מתוזמן עבור %{query_name}"
+      post:
+        body: |
+          ### דוח מתוזמן עבור %{query_name}
+
+          הנה התוצאות:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>הצגת השאילתה בדפדפן הנתונים</a>
+
+          הדוח נוצר ב־%{created_at} (%{timezone})
       upload_appendix: "נספח: [%{filename}|attachment](%{short_url})"

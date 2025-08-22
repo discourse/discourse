@@ -16,22 +16,26 @@ import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import userAutocomplete from "discourse/lib/autocomplete/user";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import {
+  hashtagAutocompleteOptions,
+  setupHashtagAutocomplete,
+} from "discourse/lib/hashtag-autocomplete";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
 
 export default class AiBotConversations extends Component {
   @service aiBotConversationsHiddenSubmit;
-  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -177,58 +181,114 @@ export default class AiBotConversations extends Component {
 
   @action
   setupAutocomplete(textarea) {
-    const $textarea = $(textarea);
-    this.applyUserAutocomplete($textarea);
-    this.applyHashtagAutocomplete($textarea);
+    this.applyUserAutocomplete(textarea);
+    this.applyHashtagAutocomplete(textarea);
   }
 
   @action
-  applyUserAutocomplete($textarea) {
+  applyUserAutocomplete(textarea) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
 
-    $textarea.autocomplete({
-      template: userAutocomplete,
-      dataSource: (term) => {
-        destroyUserStatuses();
-        return userSearch({
-          term,
-          includeGroups: true,
-        }).then((result) => {
-          initUserStatusHtml(getOwner(this), result.users);
-          return result;
-        });
-      },
-      onRender: (options) => renderUserStatusHtml(options),
-      key: "@",
-      width: "100%",
-      treatAsTextarea: true,
-      autoSelectFirstSuggestion: true,
-      transformComplete: (obj) => obj.username || obj.name,
-      afterComplete: (text) => {
-        this.textarea.value = text;
-        this.focusTextarea();
-        this.updateInputValue({ target: { value: text } });
-      },
-      onClose: destroyUserStatuses,
-    });
+    if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
+      $(textarea).autocomplete({
+        template: userAutocomplete,
+        dataSource: (term) => {
+          destroyUserStatuses();
+          return userSearch({
+            term,
+            includeGroups: true,
+          }).then((result) => {
+            initUserStatusHtml(getOwner(this), result.users);
+            return result;
+          });
+        },
+        onRender: (options) => renderUserStatusHtml(options),
+        key: "@",
+        width: "100%",
+        treatAsTextarea: true,
+        autoSelectFirstSuggestion: true,
+        transformComplete: (obj) => {
+          validateSearchResult(obj);
+          return obj.username || obj.name;
+        },
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+        onClose: destroyUserStatuses,
+      });
+    }
+
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      {
+        template: userAutocomplete,
+        dataSource: (term) => {
+          destroyUserStatuses();
+          return userSearch({
+            term,
+            includeGroups: true,
+          }).then((result) => {
+            initUserStatusHtml(getOwner(this), result.users);
+            return result;
+          });
+        },
+        onRender: (options) => renderUserStatusHtml(options),
+        key: "@",
+        fixedTextareaPosition: true,
+        autoSelectFirstSuggestion: true,
+        offset: 2,
+        transformComplete: (obj) => {
+          validateSearchResult(obj);
+          return obj.username || obj.name;
+        },
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+        onClose: destroyUserStatuses,
+      }
+    );
   }
 
   @action
-  applyHashtagAutocomplete($textarea) {
+  applyHashtagAutocomplete(textarea) {
     // Use the "topic-composer" configuration or create a specific one for AI bot
     // You can change this to "chat-composer" if that's more appropriate
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
-    setupHashtagAutocomplete(hashtagConfig, $textarea, this.siteSettings, {
-      treatAsTextarea: true,
-      afterComplete: (text) => {
-        this.textarea.value = text;
-        this.focusTextarea();
-        this.updateInputValue({ target: { value: text } });
-      },
-    });
+    if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
+      setupHashtagAutocomplete(hashtagConfig, $(textarea), {
+        treatAsTextarea: true,
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+      });
+    }
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      hashtagAutocompleteOptions(hashtagConfig, {
+        offset: 2,
+        fixedTextareaPosition: true,
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+      })
+    );
   }
 
   @action

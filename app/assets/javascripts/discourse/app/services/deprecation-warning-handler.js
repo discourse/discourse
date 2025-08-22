@@ -29,14 +29,14 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.post-stream.trigger-new-post",
   "discourse.plugin-outlet-classic-args-clash",
   "discourse.decorate-plugin-outlet",
-  "component-template-resolving",
+  "discourse.component-template-resolving",
   "discourse.script-tag-hbs",
   "discourse.script-tag-discourse-plugin",
+  "discourse.post-stream-widget-overrides",
+  "discourse.widgets-end-of-life",
 ];
 
-const REPLACEMENT_URLS = {
-  "component-template-resolving": "https://meta.discourse.org/t/370019",
-};
+const REPLACEMENT_URLS = {};
 
 if (DEBUG) {
   // used in system specs

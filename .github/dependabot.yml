@@ -50,11 +50,11 @@ updates:
           - "actionmailer"
           - "actionpack"
           - "actionview"
-          - "actionmodel"
+          - "activemodel"
           - "activerecord"
+          - "activejob"
           - "activesupport"
           - "railties"
-          - "sprockets-rails"
       sass:
         patterns:
           - "sass*"

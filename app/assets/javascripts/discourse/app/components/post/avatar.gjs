@@ -18,18 +18,24 @@ export default class PostAvatar extends Component {
 
     const avatarTemplate = applyValueTransformer(
       "post-avatar-template",
-      this.args.post.avatar_template,
+      user.avatar_template,
       this.#transformerContext(user)
     );
-    // returns a proxy object to user which overrides the avatarTemplate
-    return new Proxy(user, {
-      get(target, prop) {
-        if (prop === "avatar_template") {
-          return avatarTemplate;
-        }
-        return target[prop];
-      },
-    });
+
+    if (avatarTemplate !== user.avatar_template) {
+      // returns a proxy object to user which overrides the avatarTemplate
+      return new Proxy(user, {
+        get(target, prop) {
+          if (prop === "avatar_template") {
+            return avatarTemplate;
+          }
+          return target[prop];
+        },
+      });
+    }
+
+    // if the template is unchanged, return the original user object directly
+    return user;
   }
 
   get size() {

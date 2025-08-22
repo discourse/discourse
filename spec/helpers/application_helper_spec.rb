@@ -215,7 +215,8 @@ RSpec.describe ApplicationHelper do
           Theme.create(
             name: "Dark",
             user_id: Discourse::SYSTEM_USER_ID,
-            color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
+            color_scheme_id:
+              ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]).id,
           )
         helper.request.env[:resolved_theme_id] = dark_theme.id
       end
@@ -275,7 +276,8 @@ RSpec.describe ApplicationHelper do
           Theme.create(
             name: "Dark",
             user_id: Discourse::SYSTEM_USER_ID,
-            color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
+            color_scheme_id:
+              ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]).id,
           )
       end
 
@@ -300,7 +302,8 @@ RSpec.describe ApplicationHelper do
           Theme.create(
             name: "Dark",
             user_id: Discourse::SYSTEM_USER_ID,
-            color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
+            color_scheme_id:
+              ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]).id,
           )
         helper.request.env[:resolved_theme_id] = dark_theme.id
         SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png")
@@ -862,7 +865,7 @@ RSpec.describe ApplicationHelper do
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).not_to include("color_definitions_flamboyant")
-        expect(color_stylesheets).to include("color_definitions_base")
+        expect(color_stylesheets).to include("color_definitions_light-default")
       end
     end
 
@@ -922,7 +925,8 @@ RSpec.describe ApplicationHelper do
         Theme.create(
           name: "Dark",
           user_id: Discourse::SYSTEM_USER_ID,
-          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
+          color_scheme_id:
+            ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]).id,
         )
       helper.request.env[:resolved_theme_id] = dark_theme.id
 

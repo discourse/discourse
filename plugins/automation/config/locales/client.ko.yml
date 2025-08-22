@@ -153,7 +153,5 @@ ko:
             label: 버전
           status:
             label: 상태
-          enabled:
-            label: 활성화
           disabled:
             label: 비활성

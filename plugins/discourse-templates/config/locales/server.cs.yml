@@ -5,5 +5,19 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    discourse_templates_enabled: "Povolit používat dostupné šablony uživatelům s přístupem k zobrazení níže uvedené kategorie"
+    discourse_templates_categories: "Kategorie, ze kterých se načítají šablony"
+    discourse_templates_enable_private_templates: "Umožňuje použití soukromých šablon"
+    discourse_templates_groups_allowed_private_templates: "Skupiny, které mohou používat soukromé šablony. Členové redakce mají povoleno vždy."
+    discourse_templates_private_templates_tags: "Štítky, které identifikují soukromou zprávu jako soukromou šablonu"
   default_category_template:
     name: Šablony
+    description: |
+      Tato kategorie se používá k ukládání šablon.
+
+      Šablony umožňují uživatelům ukládat obsah pro časté opakované použití.
+
+      Každé téma v této kategorii představuje jinou šablonu. **První příspěvek** každého tématu se používá jako model pro šablonu.
+
+      Upozorňujeme, že každý uživatel s přístupem k této kategorii bude moci šablony používat.

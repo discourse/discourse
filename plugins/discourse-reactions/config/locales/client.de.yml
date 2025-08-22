@@ -9,12 +9,12 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_reactions: "Discourse-Reaktionen"
+          discourse_reactions: "Discourse – Reaktionen"
   js:
     discourse_reactions:
       reactions_title: "Reaktionen"
       state_panel:
-        more_users: "und %{count} mehr..."
+        more_users: "und %{count} weitere …"
       reaction:
         forbidden: "Diese Reaktion wurde vor zu langer Zeit erstellt. Sie kann nicht mehr bearbeitet oder gelöscht werden."
       picker:

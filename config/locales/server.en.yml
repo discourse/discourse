@@ -1666,6 +1666,15 @@ en:
         anon_views: Anonymous
         total_views: Total
       description: "The top 100 most viewed topics in a date range, combining logged in and anonymous views. Can be filtered by category."
+    associated_accounts_by_provider:
+      title: "Associated accounts by login method"
+      labels:
+        provider: Login provider
+        no_accounts: "No associated accounts"
+        discourse_connect: "SSO via Discourse Connect"
+        no_sso_accounts: "Accounts without an SSO record"
+        total_users: "Total active user accounts"
+      description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
     problem:
@@ -2717,6 +2726,7 @@ en:
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
+    welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
     welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
 
@@ -2729,11 +2739,14 @@ en:
     glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting. This setting is not recommended for production sites, as it may break existing themes and plugins."
     floatkit_autocomplete_composer: "Enable the Floatkit-based autocomplete menu in composer. This is an UI enhancement that will replace the current JQuery-based autocomplete menu."
+    floatkit_autocomplete_input_fields: "Enable the Floatkit-based autocomplete menu for input fields in full page search and group selector fields. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     floatkit_autocomplete_chat_composer: "Enable the Floatkit-based autocomplete menu in chat composer. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    experimental_impersonation: "Impersonate a user without having to log out of your admin account."
+    experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2902,6 +2915,9 @@ en:
       in_muted: "Show muted topics"
       in_normal: "Show topics with normal notification level"
       in_watching_first_post: "Show topics you're watching for first post"
+      in_new: "Show topics that are new or have new replies"
+      in_new_replies: "Show topics with new replies"
+      in_new_topics: "Show new topics"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -2922,6 +2938,14 @@ en:
       order_views_asc: "Sort by view count (least first)"
       order_read: "Sort by when you last read (most recent first)"
       order_read_asc: "Sort by when you last read (oldest first)"
+      order_hot: "Sort by hot score (most first)"
+      order_hot_asc: "Sort by hot score (least first)"
+      users: "Filter topics by participants"
+      users_any: "Show topics with any of the specified users (comma-separated)"
+      users_all: "Show topics with all of the specified users (plus-separated)"
+      group: "Filter topics by groups"
+      groups_any: "Show topics with any of the specified groups (comma-separated)"
+      groups_all: "Show topics with all of the specified groups (plus-separated)"
 
   discourse_connect:
     login_error: "Login Error"

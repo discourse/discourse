@@ -312,7 +312,9 @@ export default class DModal extends Component {
       @inline={{@inline}}
       @append={{true}}
     >
-      {{htmlClass "modal-open"}}
+      {{#unless @inline}}
+        {{htmlClass "modal-open"}}
+      {{/unless}}
       <this.dynamicElement
         class={{concatClass
           "modal"

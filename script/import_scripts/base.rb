@@ -372,6 +372,9 @@ class ImportScripts::Base
       end
 
       u.activate if opts[:active] && opts[:password].present?
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Invalid user info, skipped: #{original_opts.inspect}"
+      return
     rescue => e
       # try based on email
       if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?

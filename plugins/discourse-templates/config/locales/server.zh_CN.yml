@@ -10,6 +10,7 @@ zh_CN:
     discourse_templates_categories: "要从中获取模板的类别"
     discourse_templates_enable_private_templates: "允许使用私有模板"
     discourse_templates_groups_allowed_private_templates: "允许使用私有模板的群组。始终允许管理人员使用。"
+    discourse_templates_private_templates_tags: "将个人消息标识为私有模板的标签"
   default_category_template:
     name: 模板
     description: |
@@ -17,6 +18,6 @@ zh_CN:
 
       模板允许用户存储内容以便经常重复使用。
 
-      此类别中的每个话题都代表一个不同的模板。每个话题的**第一篇帖子**用作模板的模型。
+      此类别中的每个话题都代表一个不同的模板。每个话题的**第一个帖子**用作模板的模型。
 
       请注意，每个具有此类别访问权限的用户都可以使用模板。

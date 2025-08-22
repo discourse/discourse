@@ -18,8 +18,8 @@ te:
           title: "వర్గాల జాబితా"
         post:
           title: "పోస్ట్"
-        suggested_topics:
-          title: "సూచించే విషయాలు"
+        more_topics:
+          title: "మరిన్ని విషయాలు"
         tooltips:
           description: "వివరణ"
           header: "హెడర్"

@@ -1384,7 +1384,6 @@ gl:
     discord_client_id: 'ID de cliente de Discord (necesita unha? Visite <a href="https://discordapp.com/developers/applications/me">o portal de programadores de Discord</a>)'
     discord_trusted_guilds: 'Só lles permite aos membros destes colectivos de Discord iniciar sesión a través de Discord. Utilice o identificador numérico para o colectivo. Para saber máis, consulte as instrucións <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Déixeo en branco para permitirllo a calquera colectivo.'
     enable_backups: "Permitir que os administradores creen copias de seguranza do foro"
-    automatic_backups_enabled: "Executar copias de seguranza automáticas segundo se defina en Frecuencia das copias de seguranza"
     s3_backup_bucket: "O contedor remoto para facer copias de seguranza. AVISO: Asegúrese de que se trata dun contedor privado."
     s3_endpoint: "O punto final pódese modificar para facer unha copia de seguranza nun servizo compatíbel con S3 como DigitalOcean Spaces ou Minio. AVISO: Déixeo en branco se usa AWS S3."
     s3_configure_tombstone_policy: "Activar a política de eliminación automática para cargas tombstone. IMPORTANTE: se está desactivado, non se reclamará ningún espazo despois de eliminar as cargas."
@@ -3552,7 +3551,7 @@ gl:
         description: "De acordo con esta denuncia e silenciar o usuario."
       agree_and_restore:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      delete_single:
+      delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
       delete_and_ignore:
@@ -3575,7 +3574,9 @@ gl:
         title: "Aprobar"
       approve_post:
         title: "Aprobar publicación"
-        confirm_closed: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
+      approve_post_closed:
+        title: "Aprobar publicación"
+        confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
       reject_post:
         title: "Rexeitar a publicación"
       approve_user:

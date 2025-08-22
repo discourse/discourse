@@ -354,6 +354,9 @@ pl_PL:
         logged_in_members: "Witaj z powrotem, %{preferred_display_name}!"
         anonymous_members: "Witaj na %{site_name}!"
       search: "Szukaj"
+    impersonation:
+      notice: "Podszywasz się pod %{username}"
+      stop: "Przestań się podszywać"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja witryna może nie działać, ponieważ motyw/komponent zawiera błędy. Sprawdź konsolę przeglądarki, aby uzyskać więcej informacji."
@@ -1621,26 +1624,26 @@ pl_PL:
       color_scheme: "Paleta Kolorów"
       color_schemes:
         default_description: "Motyw domyślny"
-        disable_dark_scheme: "Taki sam jak zwykły"
         dark_instructions: "Możesz wyświetlić paletę kolorów ciemnych poprzez przełączenie trybu ciemnego urządzenia."
         undo: "Przywróć"
-        regular: "Normalny"
+        regular: "Tryb jasny"
         dark: "Tryb ciemny"
-        default_dark_scheme: "(domyślny na stronie)"
         interface_mode: "Tryb"
         interface_mode_instructions: "Opcja „Automatyczny” wykorzystuje preferencje systemu dotyczące trybu jasnego lub ciemnego."
         interface_modes:
           auto: "Automatyczny"
           light: "Jasny"
           dark: "Ciemny"
+        picker:
+          active: "Aktywny"
       dark_mode: "Tryb ciemny"
-      dark_mode_enable: "Włącz automatyczną paletę kolorów trybu ciemnego"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
+      enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -1718,7 +1721,7 @@ pl_PL:
       api_last_used_at: "Ostatnio użyto:"
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
-      home: "Domyślna strona domowa"
+      home: "Domyślna strona główna"
       staged: "Wystawiany na scenie"
       staff_counters:
         flags_given:
@@ -2844,10 +2847,16 @@ pl_PL:
     welcome_banner_location:
       above_topic_content: "Powyżej treści tematu"
       below_site_header: "Poniżej nagłówka witryny"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Strony menu głównego"
+      homepage: "Strona główna"
+      discovery: "Odkrycie"
+      all_pages: "Wszystkie strony"
     composition_mode:
       markdown: "Markdown"
       rich: "Tekst sformatowany"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2933,6 +2942,9 @@ pl_PL:
       confirm_publish: "Czy na pewno chcesz opublikować ten szkic?"
       publishing: "Publikowanie tematu..."
     composer:
+      autocomplete:
+        username_missing: "W wybranym wyniku autouzupełniania brakuje nazwy użytkownika."
+        name_missing: "Brak nazwy wybranego wyniku autouzupełniania."
       emoji: "Emoji :)"
       more_emoji: "więcej…"
       options: "Opcje"
@@ -3080,7 +3092,7 @@ pl_PL:
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
-      toggle_direction: "Zmień kierunek"
+      toggle_direction: "Przełącz kierunek"
       help: "Pomoc formatowania Markdown"
       collapse: "zminimalizuj panel kompozytora"
       open: "otwórz panel kompozytora"
@@ -4530,8 +4542,10 @@ pl_PL:
         add: "Dodaj nowe ustawienia regionalne"
         remove: "Usuń"
         hint: "Obecnie nie ma żadnych lokalizacji dla tej kategorii. Kliknij \"Dodaj nowe ustawienia regionalne\" poniżej, aby rozpocząć dodawanie lokalizacji."
-      tags_allowed_tags: "Zabroń następujących tagów w tej kategorii: "
-      tags_allowed_tag_groups: "Zabroń następujących grup tagów w tej kategorii:"
+      tags_allowed_tags: "Ogranicz te tagi do kategorii „%{categoryName}”:"
+      tags_allowed_tags_new_category: "Zabroń następujących tagów w tej kategorii: "
+      tags_allowed_tag_groups: "Ogranicz te grupy tagów do kategorii „%{categoryName}”:"
+      tags_allowed_tag_groups_new_category: "Zabroń następujących grup tagów w tej kategorii:"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
       tags_tab_description: "Tagi i grupy tagów określone powyżej będą dostępne tylko w tej kategorii i innych kategoriach, w których zostały określone. Nie będzie można ich używać w innych kategoriach."
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
@@ -4978,6 +4992,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} lub %{shortcut2}"
@@ -5026,6 +5041,8 @@ pl_PL:
       composing:
         title: "Komponowanie"
         return: "%{shortcut} Powróć do kompozytora"
+        minimize: "%{shortcut} Minimalizuj kompozytor"
+        create_or_reply: "%{shortcut} Utwórz temat lub napisz odpowiedź"
         fullscreen: "%{shortcut} Pełnoekranowy kompozytor"
         insert_current_time: "%{shortcut} Wstaw aktualny czas"
         bold: "%{shortcut} Pogrubienie"
@@ -5597,7 +5614,7 @@ pl_PL:
       title: "Konstruktor tabeli"
       modal:
         title: "Konstruktor tabeli"
-        create: "Zbuduj tabelę"
+        create: "Skonstruuj tabelę"
         help:
           title: "Za pomocą edytora arkusza kalkulacyjnego"
           enter_key: "Enter"
@@ -5725,6 +5742,10 @@ pl_PL:
             bookmarks: "Tematy w %{category} bez tagów, które dodałeś do zakładek"
             default: "Tematów %{filter} w %{category} bez tagów"
         categories: "Wszystkie kategorie"
+    content_localization:
+      toggle_localized:
+        translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
+        not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
@@ -6083,6 +6104,8 @@ pl_PL:
         select_setting: "Wybierz ustawienia witryny, aby zobaczyć aktualne wartości motywu"
         add: "Przejdź do ustawień witryny motywu"
         help: "Aktualnie używany motyw to <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Przejdź na stronę konfiguracji motywu <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> , aby zmienić ustawienia witryny motywu, lub kliknij powiązany motyw w poniższej tabeli, aby edytować jego ustawienia."
+        filter: "Filtruj ustawienia witryny motywu według nazwy ustawienia, opisu lub nazwy motywu..."
+        filter_no_results: "Żadne ustawienia witryny tematycznej nie pasują do Twojego filtra"
       search:
         modal_title: "Wyszukaj wszystko w panelu administracyjnym"
         title: "Szukaj"
@@ -6148,11 +6171,18 @@ pl_PL:
           only_experiments: "Pokaż tylko funkcje eksperymentalne"
           experiment_enabled: "Włączono funkcję eksperymentalną."
           experiment_disabled: "Wyłączono funkcję eksperymentalną."
-          experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+          feature_enabled: "Włączyłeś tę funkcję."
+          feature_disabled: "Wyłączyłeś tę funkcję."
+          toggled_too_fast: "Przełączyłeś przełącznik zbyt szybko. Odczekaj kilka sekund przed ponowną próbą."
           experiment_tooltip:
-            title_disabled: "Wypróbuj naszą eksperymentalną funkcję"
+            title_disabled: "Wypróbuj tę eksperymentalną funkcję"
             title_enabled: "Wyłącz funkcję eksperymentalną"
-            content_disabled: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz zrezygnować, kiedy tylko zechcesz.<br/><br/>Zmiana tej opcji włączy funkcję dla wszystkich użytkowników."
+            content_disabled: "Wypróbuj naszą najnowszą, rozwijaną funkcję! Jest jeszcze w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
+            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
+          feature_tooltip:
+            title_disabled: "Wypróbuj tę funkcję"
+            title_enabled: "Wyłącz funkcję"
+            content_disabled: "Wypróbuj tę nową funkcję! Możesz z niej zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
             content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
@@ -6785,9 +6815,12 @@ pl_PL:
         themes_and_components:
           breadcrumb_title: "Wygląd"
           install: "Zainstaluj"
+          theme_site_settings:
+            title: "Ustawienia witryny motywu"
+            description: "Ustawienia umożliwiające motywom większą kontrolę nad całym działaniem witryny poprzez nadpisanie niewielkiego podzbioru podstawowych ustawień witryny."
           themes:
             title: "Motywy"
-            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd dla wszystkich użytkowników. Chcesz sprawdzić, które ustawienia witryny zastępują Twoje motywy? <a href="%{themeSiteSettingsUrl}">Zobacz ustawienia witryny motywu</a>'
+            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników.'
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
@@ -7048,21 +7081,23 @@ pl_PL:
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
-          default: "Aktywni"
+          default: "Domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
           user_selectable_button_label: "Pozwól użytkownikom wybrać"
-          user_selectable_unavailable_button_label: "Uczyń niedostępnym dla użytkowników"
+          user_selectable_unavailable_button_label: "Nie zezwalaj użytkownikom na wybór"
           broken_badge_label: "Zepsuty motyw"
           color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
-          edit_color_scheme: "Edytuj paletę kolorów"
+          dark_color_scheme: "Ciemna paleta kolorów"
           default_light_scheme: "Jasny (domyślnie)"
-          color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
+          color_scheme_select: "Wybierz kolory, które mają być użyte w zależności od motywu."
+          dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym."
+          edit_colors: "Edytuj kolory"
           custom_sections: "Spersonalizowane sekcje:"
           theme_components: "Komponenty motywu"
           add_all_themes: "Dodaj wszystkie motywy"
@@ -7074,11 +7109,12 @@ pl_PL:
           convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
           convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
-          set_default_theme: "Ustaw jako aktywny"
-          default_theme: "Aktywny motyw"
+          set_default_theme: "Ustaw jako domyślne"
+          default_theme: "Motyw domyślny"
           set_default_success: "Domyślny motyw ustawiony na %{theme}"
           setting_was_saved: "Ustawienia motywu zostały zapisane"
           install_success: "Motyw %{theme} zainstalowany pomyślnie!"
+          delete_success: "Pomyślnie usunięto %{theme}!"
           inactive_components: "Nieużywane komponenty:"
           selected:
             one: "%{count} wybrano"
@@ -7274,12 +7310,16 @@ pl_PL:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
-          preference_warning: "Zmieniłeś <a href='%{link}'>ustawienia swojego motywu osobistego</a>, więc zmiany palety barw mogą być dla Ciebie niewidoczne. Osoby odwiedzające, które nie zmieniły swoich ustawień domyślnych, nadal zobaczą wprowadzone przez Ciebie zmiany."
-          dark_mode_warning: "Obecnie używasz trybu ciemnego. Podczas ustawiania aktywnej palety kolorów kolory zostaną zastosowane do jasnego trybu motywu. Jeśli chcesz zmienić domyślne kolory trybu ciemnego, edytuj <a href='%{link}'>ustawienia witryny trybu ciemnego</a>."
+          non_default_theme_warning: "Twoje osobiste preferencje <a href='%{link}'>dotyczące motywu</a> różnią się od domyślnych. Wprowadzone tu zmiany mogą nie dotyczyć Ciebie, ale będą miały zastosowanie do wszystkich użytkowników motywu domyślnego (%{themeName})."
+          custom_schemes_warning: "Twoje osobiste preferencje <a href='%{link}'>dotyczące palety kolorów</a> dla palety %{colorModes} różnią się od domyślnych. Zmiany w palecie %{colorModes} mogą nie dotyczyć Ciebie, ale będą miały zastosowanie do wszystkich użytkowników korzystających z palety domyślnej."
+          light: "jasny"
+          dark: "ciemny"
           title: "Kolory"
           edit: "Edytuj"
-          set_default: "Aktywuj na domyślnym motywie (%{theme})"
-          set_default_success: "%{schemeName} ustawiono jako aktywną paletę dla %{themeName}"
+          view: "Widok"
+          set_default_light: "Ustaw jako jasną paletę w domyślnym motywie (%{theme})"
+          set_default_dark: "Ustaw jako ciemną paletę w domyślnym motywie (%{theme})"
+          set_default_success: "%{schemeName} ustaw jako domyślną paletę dla %{themeName}"
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"
           filters:
@@ -7288,9 +7328,16 @@ pl_PL:
             user_selectable: "Możliwe do wyboru przez użytkownika"
             from_theme: "Z motywu"
             no_results: "Nie znaleziono palet kolorów"
-          active_badge:
-            text: "Aktywni"
-            title: "Aktywna paleta kolorów"
+          default_light_badge:
+            text: "Domyślny jasny"
+            title: "Domyślna jasna paleta kolorów"
+            reset: "Zresetuj filtry"
+          default_dark_badge:
+            text: "Domyślny ciemny"
+            title: "Domyślna ciemna paleta kolorów"
+          default_both_badge:
+            text: "Domyślny jasny i ciemny"
+            title: "Domyślna jasna i ciemna paleta kolorów"
           system_palette: "Jest to wbudowana paleta kolorów, której nie można edytować ani usunąć."
           back_to_colors: "Powrót do palet kolorów"
           long_title: "Palety kolorów"
@@ -7492,6 +7539,7 @@ pl_PL:
           modal_title: "Szczegóły"
           no_previous: "Nie ma wcześniejszej wartości."
           deleted: "Nie ma nowej wartości. Zapis został usunięty."
+          filter_date_time: "Filtruj datę i godzinę"
           actions:
             permanently_delete_post_revisions: "trwale usuń wersje posta"
             delete_user: "usunięcie użytkownika"
@@ -8201,6 +8249,7 @@ pl_PL:
           disabled: "Niewyszukiwalny"
         field_types:
           text: "Tekst"
+          textarea: "Obszar tekstowy"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"
@@ -8350,6 +8399,9 @@ pl_PL:
           block_common_passwords:
             prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
+        job_status:
+          completed: "Aktualizacja ukończona"
+          enqueued: "Aktualizacja w toku"
       badges:
         status: Status
         title: Odznaki

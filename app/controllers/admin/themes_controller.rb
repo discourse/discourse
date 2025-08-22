@@ -177,7 +177,15 @@ class Admin::ThemesController < Admin::AdminController
         .strict_loading
         .all
         .without_theme_owned_palettes
-        .includes(:theme, color_scheme_colors: :color_scheme)
+        .includes(
+          :theme,
+          :base_scheme,
+          color_scheme_colors: {
+            color_scheme: {
+              base_scheme: :color_scheme_colors,
+            },
+          },
+        )
         .to_a
 
     payload = {

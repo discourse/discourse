@@ -35,6 +35,16 @@ module PageObjects
         find_field(field_type, field_id).fill_in(with: value)
       end
 
+      def select_dropdown_option(field_id, option_value)
+        droppdown =
+          PageObjects::Components::SelectKit.new(
+            ".wizard-container__field.dropdown-#{field_id} .wizard-container__dropdown",
+          )
+        droppdown.expand
+        droppdown.select_row_by_value(option_value)
+        droppdown.collapse
+      end
+
       def has_field_with_value?(field_type, field_id, value)
         find_field(field_type, field_id).find("input").value == value
       end

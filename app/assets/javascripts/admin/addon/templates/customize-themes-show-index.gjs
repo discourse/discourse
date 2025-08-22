@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, not, or } from "truth-helpers";
@@ -140,18 +141,21 @@ export default RouteTemplate(
                     )
                   }}
                 />
-                {{#if @controller.colorSchemeId}}
-                  <DButton
-                    @icon="pencil"
-                    @action={{@controller.editLightColorScheme}}
-                    @title="admin.customize.theme.edit_color_scheme"
-                  />
-                {{/if}}
               </div>
 
               <div class="desc">{{i18n
                   "admin.customize.theme.color_scheme_select"
-                }}</div>
+                }}
+
+                {{#if @controller.colorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.colorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
             </div>
 
             <div class="setting-controls">
@@ -191,18 +195,20 @@ export default RouteTemplate(
                     )
                   }}
                 />
-                {{#if @controller.darkColorSchemeId}}
-                  <DButton
-                    @icon="pencil"
-                    @action={{@controller.editDarkColorScheme}}
-                    @title="admin.customize.theme.edit_dark_color_scheme"
-                  />
-                {{/if}}
               </div>
 
-              <div class="desc">{{i18n
-                  "admin.customize.theme.dark_color_scheme_select"
-                }}</div>
+              <div class="desc">
+                {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+
+                {{#if @controller.darkColorSchemeId}}
+                  <LinkTo
+                    @route="adminCustomize.colors-show"
+                    @model={{@controller.darkColorSchemeId}}
+                  >
+                    {{i18n "admin.customize.theme.edit_colors"}}
+                  </LinkTo>
+                {{/if}}
+              </div>
             </div>
             <div class="setting-controls">
               {{#if @controller.darkColorSchemeChanged}}
@@ -354,7 +360,7 @@ export default RouteTemplate(
               (i18n
                 "admin.customize.theme.overriden_site_settings_explanation"
                 themeSiteSettingsConfigUrl=(getURL
-                  "/admin/config/theme-site-settings"
+                  "/admin/config/customize/theme-site-settings"
                 )
               )
             }}</i></p>
@@ -451,7 +457,7 @@ export default RouteTemplate(
         <DButton
           @action={{@controller.switchType}}
           @label="admin.customize.theme.convert"
-          @icon={{@controller.convertIcon}}
+          @icon="rotate"
           @title={{@controller.convertTooltip}}
           class="btn-default btn-normal"
         />

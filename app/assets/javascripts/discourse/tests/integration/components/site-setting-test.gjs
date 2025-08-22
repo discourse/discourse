@@ -1,13 +1,20 @@
-import { click, fillIn, render, typeIn } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  triggerEvent,
+  typeIn,
+} from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import SiteSettingComponent from "admin/components/site-setting";
 import SiteSetting from "admin/models/site-setting";
 
-module("Integration | Component | site-setting", function (hooks) {
+module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays host-list setting value", async function (assert) {
@@ -29,7 +36,7 @@ module("Integration | Component | site-setting", function (hooks) {
     assert.dom(".formatted-selection").hasText("a.com, b.com");
   });
 
-  test("Error response with html_message is rendered as HTML", async function (assert) {
+  test("error response with html_message is rendered as HTML", async function (assert) {
     const self = this;
 
     this.set(
@@ -56,7 +63,7 @@ module("Integration | Component | site-setting", function (hooks) {
     assert.dom(".validation-error").includesHtml(message);
   });
 
-  test("Error response without html_message is not rendered as HTML", async function (assert) {
+  test("error response without html_message is not rendered as HTML", async function (assert) {
     const self = this;
 
     this.set(
@@ -180,10 +187,136 @@ module("Integration | Component | site-setting", function (hooks) {
     assert.dom(".input-setting-string").hasAttribute("type", "password");
     assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
   });
+
+  test("shows link to the staff action logs for the setting on hover", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "enable_badges",
+        value: "false",
+        default: "true",
+        type: "bool",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await triggerEvent("[data-setting='enable_badges']", "mouseenter");
+
+    assert
+      .dom("[data-setting='enable_badges'] .staff-action-log-link")
+      .exists()
+      .hasAttribute(
+        "href",
+        `/admin/logs/staff_action_logs?filters=${encodeURIComponent(JSON.stringify({ subject: "enable_badges", action_name: "change_site_setting" }))}&force_refresh=true`
+      );
+  });
+
+  test("Shows update status for default_categories_ sitesettings", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_categories_test",
+        value: "",
+        type: "category_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "enqueued",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "enqueued",
+      progress: "10/100",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+    assert.dom(".desc.site-setting").hasTextContaining("10/100");
+
+    await publishToMessageBus("/site_setting/default_categories_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update completed");
+  });
+
+  test("Shows update status for default_tags_ sitesettings", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_tags_test",
+        value: "",
+        type: "tag_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+      progress: "10/100",
+    });
+
+    assert.dom(".desc.site-setting").hasTextContaining("Update in progress");
+    assert.dom(".desc.site-setting").hasTextContaining("10/100");
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").hasTextContaining("Update completed");
+  });
+
+  test("Doesn't shows update status for other site settings besides default_tags_test or default_categories_test", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "default_test",
+        value: "",
+        type: "tag_list",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "enqueued",
+    });
+    assert.dom(".desc.site-setting").doesNotExist();
+
+    await publishToMessageBus("/site_setting/default_tags_test/process", {
+      status: "completed",
+    });
+    assert.dom(".desc.site-setting").doesNotExist();
+  });
 });
 
 module(
-  "Integration | Component | site-setting | file_size_restriction type",
+  "Integration | Component | SiteSetting | file_size_restriction type",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -434,7 +567,7 @@ module(
 );
 
 module(
-  "Integration | Component | site-setting | font-list type",
+  "Integration | Component | SiteSetting | font-list type",
   function (hooks) {
     setupRenderingTest(hooks);
 

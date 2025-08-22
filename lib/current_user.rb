@@ -23,6 +23,14 @@ module CurrentUser
     current_user_provider.log_off_user(session, cookies)
   end
 
+  def start_impersonating_user(user)
+    current_user_provider.start_impersonating_user(user)
+  end
+
+  def stop_impersonating_user
+    current_user_provider.stop_impersonating_user
+  end
+
   def is_api?
     current_user_provider.is_api?
   end

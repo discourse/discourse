@@ -110,6 +110,105 @@ ja:
       placeholder: 日付
       from_placeholder: "開始日"
       to_placeholder: "終了日"
+    languages:
+      ar:
+        name: アラビア語
+      be:
+        name: ベラルーシ語
+      bg:
+        name: ブルガリア語
+      bs_BA:
+        name: ボスニア語
+      ca:
+        name: カタルーニャ語
+      cs:
+        name: チェコ語
+      da:
+        name: デンマーク語
+      de:
+        name: ドイツ語
+      el:
+        name: ギリシャ語
+      en:
+        name: 英語 (米国)
+      en_GB:
+        name: 英語 (英国)
+      es:
+        name: スペイン語
+      et:
+        name: エストニア語
+      fa_IR:
+        name: ペルシャ語
+      fi:
+        name: フィンランド語
+      fr:
+        name: フランス語
+      gl:
+        name: ガリシア語
+      he:
+        name: ヘブライ語
+      hr:
+        name: クロアチア語
+      hu:
+        name: ハンガリー語
+      hy:
+        name: アルメニア語
+      id:
+        name: インドネシア語
+      it:
+        name: イタリア語
+      ja:
+        name: 日本語
+      ko:
+        name: 韓国語
+      lt:
+        name: リトアニア語
+      lv:
+        name: ラトビア語
+      nb_NO:
+        name: ノルウェー語 (ブークモール)
+      nl:
+        name: オランダ語
+      pl_PL:
+        name: ポーランド語
+      pt:
+        name: ポルトガル語
+      pt_BR:
+        name: ポルトガル語
+      ro:
+        name: ルーマニア語
+      ru:
+        name: ロシア語
+      sk:
+        name: スロバキア語
+      sl:
+        name: スロベニア語
+      sq:
+        name: アルバニア語
+      sr:
+        name: セルビア語
+      sv:
+        name: スウェーデン語
+      sw:
+        name: スワヒリ語
+      te:
+        name: テルグ語
+      th:
+        name: タイ語
+      tr_TR:
+        name: トルコ語
+      ug:
+        name: ウイグル語
+      uk:
+        name: ウクライナ語
+      ur:
+        name: ウルドゥー語
+      vi:
+        name: ベトナム語
+      zh_TW:
+        name: 中国語
+      zh_CN:
+        name: 中国語 (簡体字)
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
@@ -168,16 +267,24 @@ ja:
     back_button: "戻る"
     welcome_banner:
       header:
+        logged_in_members: "%{preferred_display_name}、おかえりなさい！"
         anonymous_members: "%{site_name} へようこそ！"
       search: "検索"
     themes:
       default_description: "デフォルト"
+      broken_theme_alert: "テーマ / コンポーネントにエラーがあるため、サイトが動作しない可能性があります。詳細はブラウザコンソールを確認してください。"
       error_caused_by: "原因は '%{name}' です。<a target='blank' href='%{path}'>ここをクリック</a>して、更新、再構成、または無効にしてください。"
       only_admins: "(このメッセージはサイト管理者にのみ表示されます)"
     broken_decorator_alert: "サイトのいずれかの投稿コンテンツデコレータでエラーが発生したため、投稿が正しく表示されない可能性があります。"
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     broken_transformer_alert: "エラーが発生しました。サイトが正しく動作しない可能性があります。"
+    critical_deprecation:
+      notice: "<b>[管理者からのお知らせ]</b> %{source} には更新が必要なコードが含まれています。（id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>詳細</em></a>)"
+      theme_source: "テーマ <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "プラグイン「%{name}」"
+      unknown_source: "テーマまたはプラグインの 1 つ"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -342,6 +449,7 @@ ja:
       bookmarked_success: "ブックマークしました！"
       deleted_bookmark_success: "ブックマークが削除されました！"
       reminder_set_success: "リマインダーを設定しました！"
+      reminder_clear_success: "リマインダーをクリアしました"
       created: "この投稿をブックマークしました。%{name}"
       created_generic: "これをブックマークしました。%{name}"
       create: "ブックマークを作成"
@@ -405,9 +513,11 @@ ja:
       remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しい個人メッセージの下書き"
+      edit_topic: "トピックの下書きを編集"
       dropdown:
         title: "最新の下書きメニューを開く"
         untitled: "無題の下書き"
+        view_all: "すべての下書きを表示"
         other_drafts:
           other: "他 %{count} 件の下書き"
     topic_count_all:
@@ -465,6 +575,16 @@ ja:
       date_filter: "投稿期間"
       in_reply_to: "返信"
       filtered_flagged_by: "通報者"
+      unknown:
+        title:
+          other: "無効化されたプラグインに保留中のレビュー待ち項目があります:"
+        instruction: "関連するプラグインが有効化されるまで、正しく表示されません。プラグインを有効化してページを更新してください。または、無視することもできます。<a href='%{url}' target='_blank'>詳細...</a>"
+        reviewable_unknown_source: "%{reviewableType} (不明なプラグイン)"
+        reviewable_known_source: "%{reviewableType} (「%{pluginName}」プラグイン)"
+        ignore_all: "すべて無視"
+        enable_plugins: "プラグインを有効化"
+        delete_confirm: "無効化されたプラグインで作成されたすべてのレビューを削除してもよろしいですか？"
+        ignore_success: "無効化されたプラグインで作成されたすべてのレビューは削除されました。"
       explain:
         why: "この項目が、キューに追加された理由を説明してください"
         title: "レビュー待ち項目スコア"
@@ -499,6 +619,7 @@ ja:
         required: "レビューする前に項目を自分に割り当てる必要があります。"
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
+        automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
       claim:
         title: "トピックを自分に割り当てる"
       unclaim:
@@ -534,9 +655,17 @@ ja:
         name: "名前"
         fields: "フィールド"
         reject_reason: "理由"
+        scrubbed_by: "レコードを削除したユーザー:"
         scrubbed_reason: "理由"
+        scrubbed_at: "削除日時:"
+        scrubbed_reject_reason: "ユーザーが拒否した理由"
         scrub_record:
+          button: レコードを削除
+          confirm_title: 個人データの削除
+          confirm_body: "このレビューキューのレコードを削除してもよろしいですか？すべての個人情報 (ユーザー名、メールアドレス、IP アドレス) はこのレコードから永久に削除されます。"
+          reason_title: "このレコードを削除する理由が必要です。"
           reason_placeholder: "理由..."
+          confirm_button: "削除を確定"
           cancel_button: "キャンセル"
       user_percentage:
         summary:
@@ -644,15 +773,59 @@ ja:
         reviewable_post:
           title: "投稿"
           noun: "投稿"
+      flagged_as: "通報:"
+      assigned_to: "割り当て先"
+      moderator_actions: "モデレーターのアクション"
+      timeline_and_notes: "タイムラインとメモ"
+      timeline:
+        target_created: "投稿を作成"
+        target_created_by: "%{username} が投稿を作成 · %{relativeDate}"
+        flagged: "通報"
+        flagged_as_by: "%{username} が%{flagReason}として通報 · %{relativeDate}"
+        claimed: "引き受け"
+        claimed_by: "%{username} が引き受け · %{relativeDate}"
+        reviewed: "レビュー"
+        reviewed_by: "%{username} がレビュー · %{relativeDate}"
+        view_conversation: "PM を見る"
+        note_added: "モデレーターのメモ"
+        note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
+        no_events: "表示するタイムラインイベントはありません"
       notes:
+        add_note_description: "モデレーターのみに表示されます。このメモを使用して、レビューの背景情報や決定事項を追加してください。"
+        add_note_button: "メモを追加"
+        placeholder: "ここにメモを入力してください..."
+        chars_remaining: "残り %{count} 文字"
+        delete_note: "このメモを削除する"
         delete: "削除"
+      new_topic_label: "新規トピック"
+      queued_user: "キューのユーザー"
+      posted_in: "投稿先:"
+      flagged_user: "通報されたユーザー"
       review_user: "ユーザー"
+      need_help: "ヘルプが必要ですか？"
       copy_link: "リンクをコピー"
+      view_source: "ソースを表示"
       insights:
+        title: "インサイト"
+        flag_volume: "通報回数"
+        flagged_by_users:
+          other: "%{count} 人のユニークユーザーによる通報"
+        similar_posts: "過去の同様の投稿"
+        flagged_in_timeframe: "過去に %{count} 回通報"
+        user_activity: "ユーザーアクティビティ"
         activities:
+          new_account: "新規アカウント"
+          trust_level: "信頼レベル: %{trustLevelName}"
           posts:
             other: "投稿 %{count} 件"
+        solution_marked: "解決策に指定"
+        topic_has_solution: "このトピックには解決策があります"
         visibility: "表示状態"
+        topic_unlisted: "このトピックは非表示です。ダイレクトリンクでのみアクセスできます。非公開。"
+      help:
+        moderation_guide: "Discourse モデレーションガイド"
+        flag_priorities: "ユーザーの評判と通報の優先順位の管理"
+        spam_detection: "迷惑行為の検出"
       approval:
         title: "承認待ちの投稿"
         description: "あなたの新しい投稿を受領しましたが、表示するにはモデレーターの承認が必要です。しばらくお待ちください。"
@@ -1075,6 +1248,7 @@ ja:
     user_fields:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
+      required_select: '「%{name}」の値を選択してください'
       required_checkbox: '"%{name}" フィールドは必須です'
       same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません"
       optional: (オプション)
@@ -1198,26 +1372,30 @@ ja:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
       reset_seen_user_tips: "ユーザーヒントをもう一度表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
+      color_scheme_default_on_all_devices: "デフォルトの色パレットとモードをすべてのデバイスに設定する"
       color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
-        disable_dark_scheme: "通常と同じ"
         dark_instructions: "デバイスをダークモードに切り替えると、ダークモードの色パレットをプレビューできます。"
         undo: "リセット"
-        regular: "通常"
+        regular: "ライトモード"
         dark: "ダークモード"
-        default_dark_scheme: "(サイトのデフォルト)"
+        interface_mode: "モード"
+        interface_mode_instructions: "‘Auto’ では、システムのライトモードまたはダークモードの設定が使用されます。"
         interface_modes:
+          auto: "自動"
           light: "ライト"
           dark: "ダーク"
+        picker:
+          active: "アクティブ"
       dark_mode: "ダークモード"
-      dark_mode_enable: "ダークモードの色パレットを自動的に有効にする"
       text_size_default_on_all_devices: "これをすべてのデバイスのデフォルトのテキストサイズにする"
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
       enable_defer: "トピックを未読としてマークする"
+      enable_markdown_monospace_font: "作成ツールの Markdown モードで等幅フォントを使用する"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -1235,7 +1413,8 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
-      silenced_permanently: "このユーザーは投稿を禁止されています."
+      silenced_notice: "このユーザーは %{date} まで投稿禁止にされています。"
+      silenced_permanently: "このユーザーは投稿を禁止されています。"
       silenced_reason: "理由: "
       github_profile: "GitHub"
       email_activity_summary: "アクティビティの概要"
@@ -1304,6 +1483,8 @@ ja:
           other: '<span class="%{className}">%{count}</span> 通報された投稿'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 削除された投稿'
+        silencings:
+          other: '<span class="%{className}">%{count}</span> 投稿禁止'
         suspensions:
           other: '<span class="%{className}">%{count}</span> 凍結'
         warnings_received:
@@ -1403,6 +1584,8 @@ ja:
         choose: "パスワードを選択する"
         verify_identity: "続行するには本人確認を行ってください。"
         title: "パスワードをリセット"
+        remove: "パスワードを削除"
+        remove_detail: "パスワードをリセットしない限り、アカウントにアクセスできなくなります。"
       second_factor_backup:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
@@ -1738,6 +1921,10 @@ ja:
         user: "招待したユーザー"
         none:
           title: "表示する招待はありません。"
+          cta: "招待リンクを作成"
+          tip:
+            prefix: "次の方法でも一括招待を送信できます:"
+            action: "CSV ファイルのアップロード"
         truncated:
           other: "最初の %{count} 件の招待を表示しています。"
         redeemed: "承諾済みの招待"
@@ -1887,6 +2074,7 @@ ja:
         title: "登録時の IP アドレス"
       avatar:
         title: "プロファイル画像"
+        header_title: "通知とアカウント"
         name_and_description: "%{name} - %{description}"
         edit: "プロファイル画像を編集"
       title:
@@ -1925,6 +2113,7 @@ ja:
     user_tips:
       button: "了解！"
       skip: "ヒントをスキップ"
+      dont_show_again: "再度表示しない"
       first_notification:
         title: "はじめての通知です！"
         content: "通知は、コミュニティーで起きていることに関する最新情報を提供するために使用されます。"
@@ -1966,13 +2155,18 @@ ja:
     multi_select:
       no_results: "結果がありません"
       search: "検索…"
+      label: "オプションを選択"
     form_kit:
       reset: リセット
       optional: オプション
       errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
       errors:
+        starts_with: "%{prefix} で始まる必要があります"
+        ends_with: "%{suffix} で終わる必要があります"
         required: "必須"
+        date_before_or_equal: "%{date} 以前である必要があります"
+        date_after_or_equal: "%{date} 以降である必要があります"
         invalid_url: "有効な URL である必要があります"
         not_an_integer: "整数である必要があります"
         not_accepted: "同意する必要があります"
@@ -2184,10 +2378,17 @@ ja:
       to_continue: "ログインしてください"
       preferences: "ユーザー設定を変更するには、ログインする必要があります。"
       not_approved: "あなたのアカウントはまだ承認されていません。ログインできるようになったら、メールで通知します。"
+      discourse_id:
+        name: "Discourse ID"
+        title: "Discourse ID でログイン"
       google_oauth2:
         name: "Google"
         title: "Google でサインイン"
         sr_title: "Google でサインイン"
+      twitter:
+        name: "X"
+        title: "X でサインイン"
+        sr_title: "X でサインイン"
       instagram:
         name: "Instagram"
         title: "Instagram でログイン"
@@ -2229,6 +2430,18 @@ ja:
       password_label: "パスワード"
     password_reset:
       continue: "%{site_name} に進む"
+    emoji_set:
+      apple_international: "Apple/International (Twemoji に変更)"
+      google: "Google (Noto Emoji に変更)"
+      twitter: "Twitter (Twemoji に変更)"
+      win10: "Win10 (Fluent Emoji に変更)"
+      google_classic: "Google Classic (Noto Emoji に変更)"
+      facebook_messenger: "Facebook Messenger (Standard に変更)"
+      openmoji: OpenMoji
+      standard: 標準
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "カテゴリのみ"
       categories_with_featured_topics: "注目のトピックのカテゴリ"
@@ -2242,7 +2455,23 @@ ja:
       required_at_signup: "必須"
       optional_at_signup: "オプション"
       hidden_at_signup: "オプション、登録時に非表示"
+    interface_color_selector:
+      disabled: "表示しない"
+      sidebar_footer: "サイドバーのフッターに表示"
+      header: "ヘッダーに表示"
+    welcome_banner_location:
+      above_topic_content: "トピックコンテンツの上"
+      below_site_header: "サイトヘッダーの下"
+    welcome_banner_page_visibility:
+      top_menu_pages: "トップメニューページ"
+      homepage: "ホームページ"
+      discovery: "発見"
+      all_pages: "すべてのページ"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "リッチテキスト"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2254,6 +2483,8 @@ ja:
         other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
+    timezone_input:
+      ambiguous_ist: "IST はあいまいです。特定のタイムゾーンを選択してください（「アジア/コルカタ」など）"
     select_kit:
       delete_item: "%{name} を削除"
       filter_by: "フィルタ: %{name}"
@@ -2311,6 +2542,9 @@ ja:
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピックを公開中…"
     composer:
+      autocomplete:
+        username_missing: "選択した自動補完候補にはユーザー名がありません。"
+        name_missing: "選択した自動補完候補には名前がありません。"
       emoji: "絵文字 :)"
       more_emoji: "もっと…"
       options: "オプション"
@@ -2327,6 +2561,12 @@ ja:
       esc: "esc"
       esc_label: "メッセージを閉じる"
       ok_proceed: "OK、続行する"
+      translations:
+        title: "投稿の翻訳"
+        select: "翻訳を選択"
+        save: "翻訳を保存"
+        original_content: "元の投稿のコンテンツ"
+        placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
@@ -2380,6 +2620,8 @@ ja:
       remove_featured_link: "トピックからリンクを削除してください。"
       reply_placeholder: "ここに入力してください。 Markdown、BBCode、HTML を使用できます。画像はドラッグか貼り付けできます。"
       reply_placeholder_no_images: "ここに入力してください。 Markdown、BBCode、HTML を使用できます。"
+      reply_placeholder_rte: "ここに入力してください。ツールバーまたは Markdown を使用して整形します。画像はドラッグまたは貼り付けで挿入します。"
+      reply_placeholder_rte_no_images: "ここに入力してください。ツールバーまたは Markdown を使用して整形します。"
       reply_placeholder_choose_category: "カテゴリを選択してから、ここに入力してください。"
       view_new_post: "新しい投稿を表示します。"
       saving: "保存中"
@@ -2388,6 +2630,8 @@ ja:
       uploading: "アップロード中…"
       show_preview: "プレビューを表示"
       hide_preview: "プレビューを非表示"
+      switch_to_markdown: "標準の Markdown エディターに切り替える (%{keyboardShortcut})"
+      switch_to_rich_text: "新しいリッチテキストエディターに切り替える (%{keyboardShortcut})"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -2395,13 +2639,24 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
+      heading_title: "見出し"
+      heading_level_n: "見出し %{levelNumber}"
+      heading_level_n_title: "見出し %{levelNumber}"
+      heading_level_paragraph: "段落"
+      heading_level_paragraph_title: "段落"
       link_title: "リンク"
       link_description: "リンクの説明をここに入力"
+      link_dialog_title: "リンクの挿入"
       link_dialog_action: "挿入"
+      link_edit_title: "リンクの編集"
       link_edit_action: "更新"
+      link_text_label: "リンクのテキスト"
       link_optional_text: "テキスト"
+      link_url_label: "リンクまたはトピック"
+      link_url_placeholder: "リンクを貼り付けるかトピックを検索してください"
       blockquote_title: "ブロック引用"
       blockquote_text: "ブロック引用"
+      heading_text: "見出し"
       code_title: "整形済みテキスト"
       code_text: "4 文字スペースでインデント"
       paste_code_text: "コードをここに入力または貼り付け"
@@ -2461,6 +2716,9 @@ ja:
         toggle_topic_bump:
           label: "トピックのバンプを切り替える"
           desc: "最新の返信日を変更せずに返信します"
+        toggle_unlisted:
+          label: 非表示の切り替え
+          desc: 非表示のトピックは、メンバーがダイレクトリンクでのみアクセスできます
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -2468,11 +2726,17 @@ ja:
         title: "画像の説明の追加"
       image_toolbar:
         alt_text: "画像の説明の追加"
+        zoom_out: "画像を縮小"
+        zoom_in: "画像を拡大"
+        remove: "画像の削除"
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
       link_toolbar:
+        edit: "リンクの編集"
         copy: "リンクをコピー"
+        remove: "リンクの削除"
+        visit: "外部タブでリンクを開く"
         link_copied: "リンクがコピーされました！"
     notifications:
       tooltip:
@@ -2588,14 +2852,18 @@ ja:
         new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
+      change: "変更"
       delete: "削除"
       uploading: "アップロード中"
+      processing: "アップロードを処理中"
+      select_file: "クリックしてアップロードまたはファイルをドラッグアンドドロップ"
       default_image_alt_text: 画像
     search:
       sort_by: "並べ替え"
       relevance: "関連性の高い項目"
       latest_post: "最新の投稿"
       latest_topic: "最新のトピック"
+      last_read: "最終閲覧"
       most_viewed: "最も閲覧されている項目"
       most_liked: "「いいね！」の多い項目"
       select_all: "すべて選択"
@@ -2630,9 +2898,13 @@ ja:
       in_messages_tooltip: "通常のトピックの検索に切り替えます"
       in_topics_posts: "すべてのトピックと投稿"
       enter_hint: "または Enter キーを押します"
+      mobile_enter_hint: "または「検索」をタップ"
       in_posts_by: "%{username} の投稿内"
       recent: "最近の検索"
       clear_recent: "最近の検索をクリア"
+      experience:
+        search_field: "サイトヘッダーの検索フィールド"
+        search_icon: "プロファイルアバターの近くの検索アイコン"
       type:
         default: "トピック/投稿"
         users: "ユーザー"
@@ -2715,6 +2987,7 @@ ja:
           aria_label: 最大閲覧数でフィルタ
         additional_options:
           label: "投稿数とトピックの閲覧数でフィルタ"
+    hamburger_menu: "ナビゲーションメニュー"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
@@ -2836,6 +3109,11 @@ ja:
         top: "人気のトピックはありません。"
         hot: "ホットなトピックはありません。"
         filter: "トピックはありません。"
+        education:
+          topic_tracking_preferences: '新規トピックの追跡の設定は、<a href="%{basePath}/my/preferences/tracking">設定</a>で表示および変更できます。'
+          unread: "未読はありません... お見事！"
+          new_new: "今のところ新着はありません... また後で確認してください！"
+          new: "今のところ新着はありません... また後で確認してください！"
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -2964,11 +3242,14 @@ ja:
           false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
           other {}
         }
+      reply_count_link:
+        other: "%{count} 件の返信、最初の投稿にジャンプ"
       created_at: "作成日: %{date}"
       bumped_at: "最新: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
+      browse_latest_topics: "最新のトピックを閲覧する"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply: "投稿の下の場所にジャンプする"
       jump_reply_aria: "元の場所にある @%{username} の投稿にジャンプする"
@@ -3359,6 +3640,8 @@ ja:
         other: "あなたと他 %{count} 人がこの投稿に「いいね！」しました"
       sr_post_like_count_button:
         other: "%{count} 人がこの投稿に「いいね！」しました."
+      sr_post_read_count_button:
+        other: "%{count} 人がこの投稿を読みました。"
       filtered_replies_hint:
         other: "この投稿との %{count} 件の返信を表示します"
       filtered_replies_viewing:
@@ -3368,11 +3651,23 @@ ja:
       badge_granted_tooltip: "%{username} はこの投稿で '%{badge_name}' バッジを獲得しました！"
       localizations:
         table:
+          locale: "ロケール"
           actions: "操作"
           edit: "編集"
           delete: "削除"
+        add: "新しい翻訳を追加"
+        view:
+          other: "%{count} 個の翻訳済みロケールを表示"
+        modal:
+          title: "投稿の翻訳"
+          confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
+        success: "翻訳は正しく更新されました"
         post_language_selector:
           none: "なし"
+        edit_warning:
+          message: "これは翻訳された投稿です。<br><br>元の%{language}の投稿を編集しますか？またはこの翻訳を編集しますか？"
+          action_original: "元の投稿を編集する"
+          action_translation: "この翻訳を編集する"
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度お試しください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度お試しください。"
@@ -3487,6 +3782,9 @@ ja:
         confirm:
           other: "これらの %{count} 件の投稿をマージしてよろしいですか？"
       revisions:
+        locale:
+          no_locale_set: "言語が設定されていません"
+          locale_removed: "言語が削除されました"
         controls:
           first: "最初のリビジョン"
           previous: "前のリビジョン"
@@ -3557,6 +3855,8 @@ ja:
       share:
         title: "投稿 #%{post_number} の共有"
         instructions: "この投稿へのリンクを共有します:"
+      original_language: "元の投稿は%{language}で書かれました"
+      original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
@@ -3570,12 +3870,18 @@ ja:
       settings: "設定"
       topic_template: "テンプレート"
       tags: "タグ"
+      localizations: "ローカリゼーション"
       localization:
+        locale: "ロケール"
         name: "名前"
         description: "説明"
+        add: "新しいロケールを追加"
         remove: "削除"
-      tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
-      tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
+        hint: "現在、このカテゴリのローカリゼーションはありません。下の「新しいロケールを追加」をクリックして、ローカリゼーションを追加し始めましょう。"
+      tags_allowed_tags: "次のタグを '%{categoryName}' カテゴリに制限します:"
+      tags_allowed_tags_new_category: "これらのタグをこのカテゴリに制限する:"
+      tags_allowed_tag_groups: "次のタググループを '%{categoryName}' カテゴリに制限します:"
+      tags_allowed_tag_groups_new_category: "これらのタググループをこのカテゴリに制限する:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
       tags_tab_description: "上記に指定されたタグとタググループはこのカテゴリと、それらを同様に指定したほかのカテゴリでのみ利用できるようになります。指定されていないカテゴリでは利用できません。"
       tag_groups_placeholder: "(オプション) 許可されたタググループのリスト"
@@ -3596,16 +3902,22 @@ ja:
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
       name: "カテゴリ名"
+      untitled: "無題のカテゴリ"
       description: "説明"
       logo: "カテゴリのロゴの画像"
       logo_dark: "ダークモードのカテゴリロゴの画像"
+      logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
       background_image: "カテゴリの背景画像"
       background_image_dark: "ダークのカテゴリ背景画像"
+      style: "スタイル"
       background_color: "色"
+      foreground_color: "テキストの色"
       styles:
+        type: "スタイル"
         icon: "アイコン"
         emoji: "絵文字"
         options:
+          square: "正方形"
           icon: "アイコン"
           emoji: "絵文字"
       color_used: "使用中の色"
@@ -3724,6 +4036,7 @@ ja:
       description: "違法コンテンツを報告するには、<a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a> まで連絡してください。"
     flagging:
       title: "ご報告ありがとうございます！"
+      review_process_description: "すべての通報はモデレーターが受け取り、できるだけ速やかにレビューされます。"
       action: "投稿を通報"
       take_action: "対応する…"
       take_action_options:
@@ -3907,11 +4220,16 @@ ja:
           other: "新規 (%{count})"
         help: "数日以内に作成されたトピック"
         all: "すべて"
+        all_tooltip: "数日以内のすべての新規トピックと返信されたトピック"
         all_with_count: "すべて (%{count})"
+        new_topics_tooltip: "新規トピック"
         topics: "トピック"
         topics_with_count: "トピック (%{count})"
+        new_replies_tooltip: "新しい返信"
         replies: "返信"
         replies_with_count: "返信 (%{count})"
+      new_new:
+        help: "数日以内に作成または返信されたトピック"
       posted:
         title: "自分の投稿"
         help: "投稿したトピック"
@@ -3946,6 +4264,7 @@ ja:
         today: "今日"
     custom_homepage:
       admin_message: 'テーマの 1 つで "custom_homepage" 修飾子が有効になっていますが、[custom-homepage] コネクタには何も出力されません。(このメッセージはサイト管理者にのみ表示されます。)'
+    browser_update: '残念ながら、<a href="https://discourse.org/about#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -3961,7 +4280,9 @@ ja:
       content_load_error: '<a href="%url%">コンテンツ</a>を読み込めませんでした。'
       image_load_error: '<a href="%url%">画像</a>を読み込めませんでした。'
     cannot_render_video: ブラウザがコーデックをサポートしていないため、この動画をレンダリングできません。
+    invalid_video_url: URL が無効であるか利用できないため、この動画を再生できません。
     keyboard_shortcuts_help:
+      search_placeholder: "説明またはキーの組み合わせでショートカットを検索する"
       shortcut_key_delimiter_comma: "、"
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} または %{shortcut2}"
@@ -3970,6 +4291,7 @@ ja:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ショートカットキー"
       short_title: "ショートカット"
+      search_ctrl_f_tip: "このフォーラム全体を検索するするには <kbd>/</kbd> を押します"
       jump_to:
         title: "ページ移動"
         home: "%{shortcut} ホーム"
@@ -4009,8 +4331,23 @@ ja:
       composing:
         title: "作成"
         return: "%{shortcut} コンポーザーに戻る"
+        minimize: "%{shortcut} 作成ツールの最小化"
+        create_or_reply: "%{shortcut} トピックの作成または返信の投稿"
         fullscreen: "%{shortcut} コンポーザーを全画面表示にする"
         insert_current_time: "%{shortcut} 現在の時刻を挿入"
+        bold: "%{shortcut} 太字"
+        italic: "%{shortcut} 斜体"
+        link: "%{shortcut} リンクの挿入"
+        preformatted: "%{shortcut} 整形済みテキスト"
+        paragraph: "%{shortcut} 段落"
+        heading_1: "%{shortcut} 見出し 1"
+        heading_2: "%{shortcut} 見出し 2"
+        heading_3: "%{shortcut} 見出し 3"
+        heading_4: "%{shortcut} 見出し 4"
+        toggle_direction: "%{shortcut} テキストの方向の切り替え"
+        ordered_list: "%{shortcut} 順序リスト"
+        unordered_list: "%{shortcut} 箇条書きリスト"
+        blockquote: "%{shortcut} 引用ブロック"
       bookmarks:
         title: "ブックマークの設定"
         enter: "%{shortcut} 保存して閉じる"
@@ -4055,6 +4392,8 @@ ja:
       admin:
         title: "管理"
         search_prev_next: "%{shortcut} 選択を上下に移動"
+        search_open: "%{shortcut} 管理者インターフェースの検索を開く"
+        search_full_page: "%{shortcut} フルページの管理者検索を開く"
     badges:
       earned_n_times:
         other: "このバッジを %{count} 回獲得しました"
@@ -4391,7 +4730,8 @@ ja:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
             filter:
-              content: "フィルター"
+              content: "フィルタ"
+              title: "カテゴリ、タグ、その他の基準でトピックを絞り込む"
             topics:
               content: "トピック"
               title: "すべてのトピック"
@@ -4409,6 +4749,7 @@ ja:
               title: "すべてのユーザーのリスト"
             my_posts:
               content: "自分の投稿"
+              content_drafts: "下書き"
               title: "最近のトピックアクティビティ"
               title_drafts: "未投稿の下書き"
               draft_count:
@@ -4421,14 +4762,19 @@ ja:
             invite:
               content: "招待"
               title: "新しいメンバーの招待"
+            my_messages:
+              content: "メッセージ"
+              title: "個人メッセージ"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
           label: フォーラム
       back_to_forum: "フォーラムに戻る"
+      filter_links: "リンクをフィルタ..."
       clear_filter: "フィルタをクリア"
       no_results:
         title: "結果がありません"
+        description_admin_search: "「%{filter}」に一致するものは見つかりませんでした。"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
       search: "検索"
@@ -4436,6 +4782,7 @@ ja:
         interface_color_selector:
           light: "ライト"
           dark: "ダーク"
+          auto: "自動"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
@@ -4533,7 +4880,9 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    safari_15_warning: "お使いのブラウザはまもなくこのコミュニティーに対応しなくなります。引き続き参加するには、ブラウザをアップグレードするか、<a href='%{url}'>詳細</a>をご確認ください。"
     filter:
+      placeholder: "カテゴリ、タグ、その他の基準でトピックを絞り込む"
       description:
         yesterday: "昨日"
         last_week: "先週"
@@ -4541,8 +4890,69 @@ ja:
         last_year: "昨年"
     discovery:
       headings:
+        all:
+          latest: "すべての最新のトピック"
+          top: "すべての人気のトピック"
+          new: "すべての新規トピック"
+          unread: "すべての未読トピック"
+          unseen: "すべての未表示のトピック"
+          hot: "すべてのホットなトピック"
+          posted: "次の投稿先のすべてのトピック:"
+          bookmarks: "ブックマークしたすべてのトピック"
+          default: "すべての%{filter}トピック"
+        category:
+          latest: "%{category} の最新のトピック"
+          top: "%{category} の人気のトピック"
+          new: "%{category} の新規トピック"
+          unread: "%{category} の未読トピック"
+          unseen: "%{category} の未表示のトピック"
+          hot: "%{category} のホットなトピック"
+          posted: "次の投稿先の %{category} のトピック:"
+          bookmarks: "ブックマークした %{category} のトピック"
+          default: "%{category} の%{filter}トピック"
+        single_tag:
+          latest: "%{tag} がタグ付けされた最新のトピック"
+          top: "%{tag} がタグ付けされた人気のトピック"
+          new: "%{tag} がタグ付けされた新規トピック"
+          unread: "%{tag} がタグ付けされた未読トピック"
+          unseen: "%{tag} がタグ付けされた未表示のトピック"
+          hot: "%{tag} がタグ付けされたホットなトピック"
+          posted: "次の投稿先の %{tag} がタグ付けされたトピック:"
+          bookmarks: "ブックマークした %{tag} がタグ付けされたトピック"
+          default: "%{tag} がタグ付けされた%{filter}トピック"
         multi_tag:
           default: "%{tags} がタグ付けされたトピック"
+        category_tag:
+          latest: "%{tag} がタグ付けされた %{category} の最新のトピック"
+          top: "%{tag} がタグ付けされた %{category} の人気のトピック"
+          new: "%{tag} がタグ付けされた %{category} の新規トピック"
+          unread: "%{tag} がタグ付けされた %{category} の未読トピック"
+          unseen: "%{tag} がタグ付けされた %{category} の未表示のトピック"
+          hot: "%{tag} がタグ付けされた %{category} のホットなトピック"
+          posted: "次の投稿先の %{tag} がタグ付けされた %{category} のトピック"
+          bookmarks: "ブックマークした %{tag} がタグ付けされた %{category} のトピック"
+          default: "%{tag} がタグ付けされた %{category} の%{filter}トピック"
+        no_tags:
+          all:
+            latest: "タグのない最新のトピック"
+            top: "タグのない人気トピック"
+            new: "タグのない新規トピック"
+            unread: "タグのない未読トピック"
+            unseen: "タグのない未表示のトピック"
+            hot: "タグのないホットなトピック"
+            posted: "投稿先のタグのないトピック"
+            bookmarks: "ブックマークしたタグのないトピック"
+            default: "タグのないトピック"
+          category:
+            latest: "タグのない %{category} の最新トピック"
+            top: "タグのない %{category} の人気トピック"
+            new: "タグのない %{category} の新規トピック"
+            unread: "タグのない %{category} の未読トピック"
+            unseen: "タグのない %{category} の未表示のトピック"
+            hot: "タグのない %{category} のホットなトピック"
+            posted: "投稿先のタグのない %{category} のトピック"
+            bookmarks: "ブックマークしたタグのない %{category} のトピック"
+            default: "タグのない %{category} の%{filter}トピック"
         categories: "すべてのカテゴリ"
   admin_js:
     type_to_filter: "入力してフィルタ..."
@@ -4551,6 +4961,7 @@ ja:
       title: "Discourse の管理者"
       moderator: "モデレーター"
       filter_reports: "レポートをフィルタ..."
+      filter_reports_no_results: "フィルタに一致するレポートはありません"
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -4590,35 +5001,112 @@ ja:
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
         emojis:
           title: "絵文字"
+          header_description: "誰でも使用できる新しい絵文字を追加します。複数のファイルを選択すると、そのファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。"
         flags:
           title: "モデレーション"
           header_description: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
+          keywords: "通報|レビュー|迷惑|違法"
         files:
           title: "ファイル"
           header_description: "ファイルのサイズと形式の制限、アバターのサイズとソース、ファイルストレージ、画像の品質と圧縮などを制御する設定"
         legal:
           title: "法関連"
           header_description: "利用規約、プライバシーポリシー、連絡先の詳細、EU 固有の考慮事項など、法的な設定を構成します"
+        theme_site_settings:
+          title: "テーマサイト設定"
+          header_description: "すべてのテーマサイト設定と現在それらを上書きしているテーマを表示します"
+        localization:
+          title: "ローカリゼーション"
+          header_description: "コミュニティーのインターフェース言語とメンバー向けのその他のローカリゼーションオプションを構成します"
+          keywords: "ロケール|言語|タイムゾーン|Unicode|ltr"
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
         logo:
+          title: "ロゴ"
+          header_description: "サイト全体で使用されるロゴとアイコンを構成します"
           form:
+            saved: "ロゴの設定が保存されました。"
             logo:
               title: "プライマリーロゴ"
+              description: "サイトのトップナビゲーションと、サイトのメール通知の上部に表示されます。"
+              help_text: "推奨サイズは 600 x 80 ピクセルです。"
+            logo_dark:
+              required: "ダークモードでは別のロゴを使用しますか？"
+              title: "プライマリーロゴ - ダーク"
+              help_text: "推奨サイズは 600 x 80 ピクセルです。"
+            large_icon:
+              title: "正方形のアイコン"
+              description: "管理の上部に正方形バージョンのロゴの画像が表示されます。モバイル版ホーム画面のアプリロゴでもあります。"
+              help_text: "推奨サイズは 512 x 512 ピクセルです。"
+            square_icon_dark:
+              required: "ダークモードでは別の正方形のアイコンを使用しますか？"
+              title: "正方形のアイコン - ダーク"
+              help_text: "推奨サイズは 512 x 512 ピクセルです。"
+            favicon:
+              title: "ファビコン"
+              description: "ロゴは、ブラウザのタブとブラウザのお気に入り/ブックマークにアイコンとして表示されます。"
+            logo_small:
+              title: "小さいロゴ"
+              description: "あなたのサイトの左上にある小さいロゴ画像です。下にスクロールしたときに見えます。空白の場合、ホームグリフが表示されます。"
+              help_text: "推奨サイズは 120 x 120 ピクセルです。"
+            logo_small_dark:
+              required: "ダークモードでは別の小さいロゴを使用しますか？"
+              title: "小さいロゴ - ダーク"
+              help_text: "推奨サイズは 120 x 120 ピクセルです。"
             mobile: "モバイル"
             email: "メール"
+            social_media: "ソーシャルメディア"
+            mobile_logo:
+              title: "モバイルロゴ"
+              description: "サイトのモバイルバージョンに使用されるロゴ。空白の場合、`logo` で設定した画像が使用されます。"
+              help_text: "高さ 120、アスペクト比 3:1 以上の幅広の長方形画像を使用します。"
+            mobile_logo_dark:
+              required: "ダークモードでは別のモバイルロゴを使用しますか？"
+              title: "モバイルロゴ - ダーク"
+              help_text: "高さ 120、アスペクト比 3:1 以上の幅広の長方形画像を使用します。"
+            manifest_icon:
+              title: "マニフェストアイコン"
+              description: "Android でロゴ/スプラッシュ画像に使用される画像。空白の場合、large_icon が使用されます。"
+              help_text: "推奨サイズは 512 x 512 ピクセルです。"
             manifest_screenshots:
+              title: "マニフェストのスクリーンショット"
               description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
+            apple_touch_icon:
+              title: "Apple タッチアイコン"
+              description: "Apple タッチデバイスで使用されるアイコン。空白の場合、large_icon が使用されます。"
+              help_text: "推奨サイズは 180 x 180 ピクセルです。透明な背景は推奨されません。"
+            digest_logo:
+              title: "ダイジェストロゴ"
+              description: "サイトのメール要約の上部で使用されるロゴの代替画像です。空白のままにすると、`logo` で設定した画像が使用されます。"
+              help_text: "幅広の長方形画像を使用します。SVG 画像は使用しないでください。"
             opengraph_image:
-              description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+              title: "OpenGraph 画像"
+              description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空白の場合、large_icon が使用されます."
+            x_summary_large_image:
+              title: "X 要約の大きい画像"
+              description: "X カードの「要約の大きい画像」。空白の場合、.svg でない OpenGraph_image を使って通常のカードのメタデータが生成されます。"
+              help_text: "推奨サイズは 280 x 150 ピクセル以上です。SVG 画像は使用しないでください。"
         fonts:
           title: "フォント"
+          header_description: "ベースフォント、見出しフォント、デフォルトのテキストサイズを含む、サイト全体で使用されるフォントを構成します。"
           form:
+            more_fonts: "フォントを増やす"
+            fewer_fonts: "フォントを減らす"
+            saved: "フォントの設定が保存されました。"
+            base_font:
+              title: "ベースフォント"
             heading_font:
               title: "見出しのフォント"
+            default_text_size:
+              title: "デフォルトのテキストサイズ"
+              description: "このサイズは後で各ユーザーが好みに応じて調整できます。"
           backfill_modal:
+            title: "新しいデフォルトのテキスト設定を適用しますか？"
+            description:
+              other: "デフォルトのテキストサイズを更新しました。この変更を %{count} 人の既存のユーザーに適用しますか？"
             modal_yes: "はい"
+            modal_no: "いいえ。今後適用する"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -4632,9 +5120,11 @@ ja:
           title: "レート制限"
           header_description: "トピックの作成、メッセージの送信、返信の投稿など、ユーザーが特定の操作を実行できる頻度を構成します"
         search:
+          title: "設定の検索"
           header_description: "ログ記録やトークン化など、中国語と日本語の検索設定を構成します"
         search_everything:
           title: "検索"
+          header_description: "ここで管理者インターフェースのあらゆる項目を検索できます。検索結果は以下で絞り込め、設定は記憶されます。この検索を管理者インターフェースの任意の場所で開くには、%{shortcutHTML} を押してください。"
         security:
           title: "セキュリティ"
           header_description: "二要素認証、モデレーター権限、コンテンツセキュリティポリシーなどのセキュリティ設定を構成します"
@@ -4652,14 +5142,19 @@ ja:
           header_description: "グループで使用するアプリの権限はすべてここで管理されます。Discourse 内の様々な機能へのアクセスを制御できます。"
         dashboard:
           title: "ダッシュボード"
+          header_description: "ダッシュボードには、トラフィック、ユーザーアクティビティ、その他の主なメトリクスなど、コミュニティーの健全性のスナップショットが表示されます。"
         users:
           title: "ユーザー"
+          header_description: "ユーザーの表示と管理、招待の送信、ユーザーデータのエクスポート"
         groups:
           title: "グループ"
+          header_description: "グループの作成と管理、グループ権限の設定、グループアクティビティと受信トレイの表示"
         site_settings:
           title: "すべてのサイト設定"
+          header_description: "Discourse サイトの外観、機能、およびユーザーエクスペリエンスのすべての設定をカスタマイズして構成します"
         whats_new:
           title: "新機能"
+          header_description: "Discourse の最新の機能と改善に関する最新情報を確認しましょう"
           keywords: "変更ログ|機能|リリース"
         backups:
           title: "バックアップ"
@@ -4667,17 +5162,44 @@ ja:
           sub_pages:
             logs:
               title: "ログ"
+              header_description: "バックアップ、復元、およびアップロードのログを表示および管理します"
         reports:
           title: "レポート"
-          header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
+          header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の検出、データに基づく決定に役立ちます。"
+          sub_pages:
+            settings:
+              title: "ダッシュボードの設定"
         badges:
           title: "バッジ"
+          header_description: "コミュニティー内での前向きな行動と取り組みを認識、検証、奨励するために、バッジによってユーザーの活動、貢献、および実績を称えます"
+        analytics:
+          title: "分析と SEO"
+          header_description: "検索エンジンでのサイトの可視性を改善し、サイト訪問者の追跡方法を構成します"
+          keywords: "検索|google|サイトマップ"
+        interface:
+          title: "インターフェースとレイアウト"
+          header_description: "サイトの全体的なレイアウトとユーザーインターフェースの詳細をカスタマイズします"
+          keywords: "スプラッシュ"
         content:
+          title: "コンテンツ"
+          header_description: "トピックと投稿の管理方法を構成し、メンバーのコンテンツ作成エクスペリエンスをカスタマイズします"
+          keywords: "トピック|投稿|カテゴリ|タグ"
           sub_pages:
+            categories_and_tags:
+              title: "カテゴリとタグ"
+            sharing:
+              title: "共有"
             posts_and_topics:
               title: "投稿とトピック"
+            stats_and_thresholds:
+              title: "統計としきい値"
         permalinks:
           title: "パーマリンク"
+          header_description: "フォーラムが認識していない URL に適用するリダイレクト"
+        user_defaults:
+          title: "ユーザーのデフォルト"
+          header_description: "ユーザーに影響を与える設定のデフォルト値を設定し、オンボーディングエクスペリエンスを構成します"
+          keywords: "ユーザー|オンボーディング|新規"
         user_fields:
           title: "ユーザーフィールド"
           header_description: "カスタムユーザーフィールドを作成すると、コミュニティーメンバーに関する追加の詳細情報を収集できます。登録時に必要な情報、プロファイルに表示される内容、ユーザーが更新できる情報を選択できます。"
@@ -4686,64 +5208,118 @@ ja:
           header_description: "ウォッチ中の語は、特定の語を含む投稿のブロック、検閲、リンク、通報など、複数の様々な操作を実行できるモデレーションツールです。"
         color_palettes:
           title: "色パレット"
+          header_description: "これらのパレットはコミュニティー全体で使用される色を制御します。ユーザーがパレットを選択できるようにすると、メンバーは設定から好みの色を選択できます。"
         emoji:
           title: "絵文字"
           header_description: "誰でも使用できる新しい絵文字を作成します。複数のファイルを選択すると、そのファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。"
         themes:
           title: "テーマ"
+          header_description: "テーマは、フォーラムのデザインの複数のスタイル要素を変更する広範なカスタマイズテンプレートであり、多くの場合、フロントエンドの追加機能も含まれています"
         components:
           title: "コンポーネント"
+          header_description: "コンポーネントは、フォーラムデザインの特定のスタイル要素を変更するために、テーマに追加できる小さなカスタマイズです"
+          keywords: "テーマ|コンポーネント|拡張機能"
+        themes_and_components:
+          title: "テーマとコンポーネント"
+          header_description: "テーマとコンポーネントを使って、ニーズに合わせてDiscourse サイトをパーソナライズします"
+          keywords: "テーマ|コンポーネント|拡張機能|カスタマイズ"
+        site_admin:
+          title: "サイト管理者"
+          header_description: "サイトの管理に関する様々な設定を構成します"
+          keywords: "発見|ブートストラップ|アプリ"
         site_texts:
           title: "サイトのテキスト"
+          header_description: "コミュニティーの意見や口調に合わせて Discourse で使用されるテキストをカスタマイズします"
         email:
+          title: "メールの設定"
+          header_description: "メンバーに送信されるメールの設定を構成します"
+          keywords: "ダイジェスト|購読解除|メール|smtp|mailgun|sendgrid|プレビュー要約"
           sub_pages:
+            server_settings:
+              title: "サーバーの設定"
+              header_description: "メンバーに送信されるメールの設定を構成します"
             preview_summary:
               title: "要約をプレビュー"
+              header_description: "非アクティブユーザーに送信される要約メールのコンテンツをプレビューします"
             advanced_test:
               title: "高度なテスト"
+              header_description: "Discourse が受信したメールを処理する方法を表示します"
             templates:
               title: "テンプレート"
+              header_description: "メールの作成に使用されるテンプレートをカスタマイズします"
         email_logs:
+          title: "メールのログ"
+          header_description: "サイトから送信されるメールのログを表示します"
+          keywords: "送信済み|スキップ|バウンス|受信|拒否|メールのログ"
           sub_pages:
             sent:
               title: "送信済み"
+              header_description: "送信されたメールのログを表示します"
             skipped:
               title: "スキップ"
+              header_description: "スキップされたメールのログを表示します"
             bounced:
               title: "バウンス"
+              header_description: "バウンスされたメールのログを表示します"
             received:
               title: "受信"
+              header_description: "受信されたメールのログを表示します"
             rejected:
               title: "拒否"
+              header_description: "拒否されたメールのログを表示します"
         email_appearance:
           title: "外観"
+          header_description: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します"
         staff_action_logs:
           title: "ログとスクリーニング"
+          header_description: "ログとスクリーニングではコミュニティーの監視と管理を行い、コミュニティーの安全と礼節を維持することができます。スタッフメンバーが実行したすべての操作のログ、検索ログ、およびユーザースクリーニングの構成を表示できます"
           keywords: "エラーログ|スタッフの操作|スクリーン対象メール|スクリーン対象 IP|スクリーン対象 URL|検索ログ"
           sub_pages:
             screened_emails:
               title: "スクリーン対象メール"
+              header_description: "誰かが新規アカウントを作成すると、次のメールアドレスがチェックされるか、登録がブロックされるか、ほかの操作が実行されます"
             screened_ips:
               title: "スクリーン対象 IP"
+              header_description: "ウォッチされている IP アドレス。個々の IP アドレスを許可リストに登録できます。"
             screened_urls:
               title: "スクリーン対象 URL"
+              header_description: "ここにリストされている URL は、スパムユーザーとして認識されているユーザーの投稿に使用されています"
             search_logs:
               title: "検索ログ"
+              header_description: "実行された検索のログを表示します"
         plugins:
           title: "インストール済みのプラグイン"
+          header_description: "プラグインは追加機能によってコミュニティーの機能を強化します。以下には、事前インストール済みのプラグインとカスタムプラグインがリストされています。"
         api_keys:
           title: "API キー"
           header_description: "API キー機能を使用すると、Discourse を外部のシステムと安全に統合し、操作を自動化できます。管理者はリソースと機密データへのアクセスを制御するために、特定の範囲でキーを作成できます。機能は範囲によって制限されるため、セキュリティが強化されます。"
+          keywords: "トークン|範囲"
         webhooks:
           title: "Webhook"
+          header_description: "Webhook を使うと、サイトで特定のイベントが発生したときに、Discourse から外部サービスに通知できるようになります。Webhook がトリガーされると、指定された URL に POST リスクエストが送信されます。"
+          keywords: "イベント|ペイロード|url"
         embedding:
           title: "埋め込み"
           header_description: "Discourse には、IFRAME を作成する JavaScript API を使用して、リモートサイトのトピックのコメントを埋め込む機能があります。"
       theme_site_settings:
+        setting: "設定"
+        overridden_by: "上書きしたユーザー"
         default_value: "デフォルト"
+        overridden_value: "上書きされた値: %{value}"
+        select_setting: "サイトの設定を選択して現在のテーマの値を確認してください"
+        add: "テーマサイト設定に移動"
+        help: "現在使用しているテーマは <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a> です。<a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>テーマ構成ページ</a>に移動すると、テーマサイト設定を変更できます。または以下のテーブルでリンクされたテーマをクリックすると、その設定を編集できます。"
       search:
+        modal_title: "管理者のすべての項目を検索"
         title: "検索"
+        instructions: "管理者のすべての項目を検索..."
+        full_page_link: "全ページ検索に切り替える"
+        no_results: '「%{filter}」に一致するものは見つかりませんでした。'
+        result_count:
+          other: '「%{filter}」の %{count} 件の結果'
         result_types:
+          page:
+            other: "ページ"
           report:
             other: "レポート"
           setting:
@@ -4777,13 +5353,21 @@ ja:
           previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
           experimental: "実験的"
+          only_experiments: "実験的機能のみを表示"
           experiment_enabled: "実験的機能を有効にしました。"
           experiment_disabled: "実験的機能を無効にしました。"
-          experiment_toggled_too_fast: "実験的機能の切り替え操作が速すぎます。数秒待ってから、もう一度お試しください。"
+          feature_enabled: "機能を有効にしました。"
+          feature_disabled: "機能を無効にしました。"
+          toggled_too_fast: "切り替え操作が速すぎます。数秒待ってから、もう一度お試しください。"
           experiment_tooltip:
-            title_disabled: "実験的機能をお試しください"
+            title_disabled: "この実験的機能を試す"
             title_enabled: "実験的機能をオフにする"
             content_disabled: "開発中の最新の機能をぜひお試しください！実験段階であるため、いつか削除される可能性があります。いつでもオプトアウトできます。<br/><br/>これを変更すると、すべてのユーザーに対して機能が有効になります。"
+            content_enabled: "これを変更すると、すべてのユーザーに対して機能が無効になります。"
+          feature_tooltip:
+            title_disabled: "この機能を試す"
+            title_enabled: "機能をオフにする"
+            content_disabled: "この新機能をぜひお試しください！いつでもオプトアウトできます。<br/><br/>これを変更すると、すべてのユーザーに対して機能が有効になります。"
             content_enabled: "これを変更すると、すべてのユーザーに対して機能が無効になります。"
         last_checked: "最終チェック"
         refresh_problems: "更新"
@@ -4916,6 +5500,7 @@ ja:
             automatic_membership_email_domains: "メールのドメインがこのリストにあるものと完全に一致する場合、そのメールのユーザーは自動的にこのグループに追加されます。"
             automatic_membership_user_count:
               other: "%{count} 人のユーザーが新しいメールドメインを持っており、グループに追加されます。"
+            automatic_membership_user_unknown_count: "新しいメールドメインの 1 つを使用するユーザーはグループに追加されます。"
             automatic_membership_associated_groups: "ここに表示されているサービスのグループメンバーであるユーザーは、サービスにログインすると、自動的にこのグループに追加されます。"
             primary_group: "自動的にプライマリーグループとして設定する"
           alert:
@@ -5001,6 +5586,7 @@ ja:
             スコープを使用する場合、API キーを特定のエンドポイントのセットに制限できます。
             また、どのパラメーターが許可されるかを定義することもできます。複数の値はカンマ区切りで指定してください。
           title: スコープ
+          one_or_more: 範囲を 1 つ以上選択する必要があります。
           granular: 詳細
           read_only: 読み取り専用
           global: グローバル
@@ -5249,7 +5835,8 @@ ja:
           emoji: "絵文字"
           navigation: "ナビゲーション"
           themes_and_components:
-            keywords: "拡張子"
+            title: "テーマとコンポーネント"
+            keywords: "拡張機能"
           site_texts: "サイトのテキスト"
       email_settings:
         title: "メールの設定"
@@ -5285,6 +5872,8 @@ ja:
           community_title: "コミュニティーのタイトル"
           community_title_help: "ブラウザのタブに表示される、カテゴリやトピックリストなどの主要ページの短い説明です。"
           banner_image: "バナー画像"
+          banner_image_help: |
+            推奨: 1100 x 300 px。形式: JPG、PNG、SVG (最大 10 MB)。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
@@ -5319,13 +5908,20 @@ ja:
           city_for_disputes_help: |
             このフォーラムに関連する法的紛争を解決するための都市を指定します。
           extra_groups:
+            heading: "グループのリスト"
+            description: "情報ページに表示される追加グループ。"
             groups: "グループ"
+            order: "並べ替え順"
+            initial_members: "拡大メンバー"
+            initial_members_description: "「さらに表示」ボタンを追加する前に表示するグループメンバーの数。"
+            show_description: "説明を含める"
           optional: "(オプション)"
           update: "更新"
           toasts:
             general_settings_saved: "一般設定が保存されました"
             contact_information_saved: "連絡先情報が保存されました"
             your_organization_saved: "組織が保存されました"
+            extra_groups_saved: "グループリストが保存されました"
           saved: "保存しました！"
         flags:
           edit_header: "通報を編集"
@@ -5350,6 +5946,8 @@ ja:
             post: "投稿"
             chat_message: "チャットメッセージ"
             enabled: "保存後にこのカスタム通報を有効にする"
+            create_warning: "カスタム通報が使用されると、無効にしたり編集したりすることはできますが、削除は行えません。"
+            edit_warning: "通報の名前と説明を編集すると、データの不整合が発生する可能性があります。カスタム通報は一度使用されると、無効にしたり編集したりすることはできますが、削除は行えません。"
             edit_flag: "通報を編集"
             non_editable: "これはシステム通報であるかレビューシステムですでに使用されているため編集できません。無効にすることはできます。"
             delete_flag: "通報を削除"
@@ -5372,21 +5970,36 @@ ja:
         themes_and_components:
           breadcrumb_title: "カスタマイズ"
           install: "インストール"
+          theme_site_settings:
+            title: "テーマサイト設定"
           themes:
             title: "テーマ"
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
             new_theme: "新しいテーマ"
+            back: "テーマに戻る"
             install: "インストール"
           components:
             title: "コンポーネント"
+            description: "フォーラムのデザインの表面的な要素を変更したり、フロントエンドの機能を追加したりするカスタマイズ"
+            components_intro: "新しいコンポーネントをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
+            new_component: "新しいコンポーネント"
+            back: "コンポーネントに戻る"
             install: "インストール"
             name: "名前"
-            enabled: "有効化？"
+            used_on: "使用場所"
+            enabled: "有効ですか？"
             by_author: "作成者: %{name}"
-            learn_more: "もっと読む"
+            learn_more: "もっと詳しく"
             edit: "編集"
+            parent_themes_two: "%{name1}、%{name2}"
+            parent_themes_three: "%{name1}、%{name2}、%{name3}"
+            parent_themes_more_than_three:
+              other: "%{name1}、%{name2}、%{name3}、他 %{count} 箇所"
+            add_to_theme: "テーマに追加"
             preview: "プレビュー"
-            check_update: "アップデートを確認"
+            update: "最新に更新"
+            check_update: "更新を確認"
+            update_available: "更新があります！"
             export: "エクスポート"
             convert: "変換"
             delete: "削除"
@@ -5394,7 +6007,15 @@ ja:
             filter_by_all: "すべて"
             filter_by_used: "使用中"
             filter_by_unused: "未使用"
-            delete_confirm: '"%{name}" を削除してもよろしいですか？'
+            filter_by_updates_available: "更新があります"
+            search_components: "コンポーネント名または説明でフィルタ..."
+            new_update_for_component: "%{name} の新しい更新があります！"
+            component_up_to_date: '「%{name}」は最新状態です。'
+            updated_successfully: '「%{name}」は正しく更新されました。'
+            delete_confirm: '「%{name}」を削除してもよろしいですか？'
+            deleted_successfully: '「%{name}」は正しく削除されました。'
+            no_components: "コンポーネントはインストールされていません。"
+            no_components_found: "フィルタに一致するコンポーネントはありません。"
             badge_unused: "未使用"
         user_fields:
           field: "フィールド"
@@ -5414,10 +6035,19 @@ ja:
           duplicate: "複製"
           delete: "削除"
           color_options:
+            title: "色オプション"
             toggle: "ユーザー選択可能"
-            toggle_description: "ユーザーが色パレットを選択できる"
+            toggle_description: "ユーザーが色パレットを選択できます"
           colors:
             title: "色"
+          save_changes: "変更を保存"
+          unsaved_changes: "保存されていない変更があります"
+          copy_of: "%{name} のコピー"
+          copy_created: '「%{name}」の新しいコピーが作成されました'
+          illegal_character_in_color: "色は 16 進数文字のみを使用できます"
+          invalid_color_length: "色は #rrggbb または #rgb の形式である必要があります"
+          blocked_edit_for_system: "システムテーマに属する色パレットは編集できません。"
+          delete_confirm: "この色パレットを削除してもよろしいですか？"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -5434,11 +6064,15 @@ ja:
         author: "作成者: %{author}"
         experimental_badge: "実験的"
         learn_more: "もっと詳しく"
+        preinstalled: "事前インストール済み"
         filters:
           all: "すべて"
           enabled: "有効"
           disabled: "無効"
+          preinstalled: "事前インストール済み"
+          search_placeholder: "プラグインを検索..."
           reset: "リセット"
+          no_results: "フィルタに一致するプラグインは見つかりませんでした"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -5564,12 +6198,15 @@ ja:
           theme: "テーマ"
           component: "コンポーネント"
           components: "コンポーネント"
+          search_placeholder: "テーマ名または説明でフィルタ..."
           filter_all: "すべて"
           filter_user_selectable: "ユーザー選択可能"
+          no_themes_found: "フィルタに一致するテーマはありません"
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"
           themes_intro_new: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
+          components_intro_new: "新しいコンポーネントをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
           themes_intro_img_alt: "新しいテーマのプレースホルダー"
           beginners_guide_title: "Discourse テーマの使用に関する初心者ガイド"
           developers_guide_title: "Discourse テーマの開発者ガイド"
@@ -5594,17 +6231,23 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
-          default: "アクティブ"
+          default: "デフォルト"
           settings_editor: "設定エディター"
+          show_advanced: "詳細を表示"
           is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
           user_selectable_badge_label: "ユーザー選択可能"
+          user_selectable_button_label: "ユーザーによる選択を許可する"
+          user_selectable_unavailable_button_label: "ユーザーによる選択を許可しない"
+          broken_badge_label: "破損したテーマ"
           color_scheme_user_selectable: "ユーザーが色パレットを選択できる"
           auto_update: "Discourse が更新された時に自動更新する"
           color_scheme: "色パレット"
-          edit_color_scheme: "色パレットを編集"
+          dark_color_scheme: "ダークの色パレット"
           default_light_scheme: "ライト (デフォルト)"
-          color_scheme_select: "テーマで使用する色を選択してください"
+          color_scheme_select: "テーマで使用する色を選択してください."
+          dark_color_scheme_select: "ダークモードのテーマで使用する色を選択してください."
+          edit_colors: "色を編集"
           custom_sections: "カスタムセクション:"
           theme_components: "テーマのコンポーネント"
           add_all_themes: "すべてのテーマを追加"
@@ -5616,7 +6259,10 @@ ja:
           convert_theme_alert_generic: "このテーマをコンポーネントに変換してもよろしいですか？"
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
+          set_default_theme: "デフォルトに設定"
+          default_theme: "デフォルトのテーマ"
           set_default_success: "デフォルトのテーマは %{theme} に設定されました"
+          setting_was_saved: "テーマ設定は保存されました"
           install_success: "%{theme} が正常にインストールされました！"
           inactive_components: "未使用のコンポーネント:"
           selected:
@@ -5627,6 +6273,7 @@ ja:
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"
           updates_available_tooltip: "このテーマの更新があります"
+          update_available: "更新が必要です"
           and_x_more:
             other: "と他 %{count} 個。"
           collapse: 折りたたむ
@@ -5646,6 +6293,9 @@ ja:
           unsaved_parent_themes: "テーマにコンポーネントを割り当てていません。続行しますか？"
           discard: "破棄"
           stay: "移動しない"
+          css_html: "カスタムコード"
+          edit_css_html: "コードを編集"
+          edit_css_html_help: "まだコードを編集していません。"
           delete_upload_confirm: "このアップロードを削除しますか？(テーマの CSS が動作しなくなる可能性があります！)"
           component_on_themes: "これらのテーマにコンポーネントを含める"
           included_components: "含まれているコンポーネント"
@@ -5684,34 +6334,54 @@ ja:
             error: "このテーマは、このバージョンの Discourse と互換性がないため、自動的に無効になりました。"
             minimum: "Discourse バージョン %{version} 以上が必要です。"
             maximum: "Discourse バージョン %{version} 以下が必要です。"
-          check_for_updates: "アップデートを確認"
+          update_to_latest: "最新に更新"
+          check_for_updates: "更新を確認"
           updating: "更新中…"
           update_success: "%{theme} の更新が完了しました"
           up_to_date: "テーマは最新です。最終確認日:"
           has_overwritten_history: "現在のテーマのバージョンは、Git 履歴が強制プッシュで上書きされたため、存在しなくなりました。"
           add: "追加"
+          theme_settings: "カスタムテーマ設定"
+          theme_site_settings: "テーマが上書きできる設定"
+          edit_objects_theme_setting: "オブジェクト設定エディター"
+          overriden_settings_explanation: "デフォルトの変更は、ドットとハイライトで表示されます。デフォルトにリセットするには「リセット」をクリックしてください。"
+          overriden_site_settings_explanation: "テーマでカスタマイズできるサイト設定。サイト設定のデフォルト値に戻すには、「リセット」をクリックしてください。テーマで上書きされるすべてのサイト設定は、<a href='%{themeSiteSettingsConfigUrl}'>テーマサイト設定の構成ページ</a>をご確認ください。"
           no_settings: "このテーマには設定がありません。"
+          theme_translations: "テーマの翻訳"
           empty: "項目なし"
           commits_behind:
             other: "テーマは %{count} コミット遅れです！"
           compare_commits: "(新しいコミットを参照)"
           remote_theme_edits: "このテーマを編集する場合は、<a href='%{repoURL}' target='_blank'>そのリポジトリに変更を送信</a>する必要があります"
           repo_unreachable: "このテーマの Git リポジトリに接続できませんでした。エラーメッセージ:"
+          built_in_description: "このテーマは事前インストール済みであるため、削除またはカスタマイズできません"
           imported_from_archive: "このテーマは .zip ファイルからインポートされました"
           settings: "設定"
           colors: "色"
+          unsaved_colors:
+            other: "保存されていない色が %{count} 色あります"
+          unsaved_colors_leave_route_confirmation: "色パレットの変更をまだ保存していません。終了してもよろしいですか？"
+          save_colors: "色を保存"
           discard_colors: "破棄"
           colors_title: "色"
           scss:
             text: "CSS"
+            title: "SCSS 構文をサポートするカスタム CSS ルール"
+          header:
+            text: "ヘッダーの前"
+            title: "Discourse ヘッダーの上にレンダリングされる基本的な HTML"
           after_header:
             text: "ヘッダーの後"
+            title: "Discourse ヘッダーの下にレンダリングされる基本的な HTML"
           footer:
             text: "フッター"
+            title: "ページの下部にレンダリングされる基本的な HTML"
           embedded_scss:
             text: "埋め込み CSS"
+            title: "Discourse コメントが別のサイトに埋め込まれる場合に含められる CSS"
           embedded_header:
             text: "埋め込みヘッダー"
+            title: "Discourse コメントが別のサイトに埋め込まれる際にコメントの上にレンダリングされる基本的な HTML"
           color_definitions:
             text: "色の定義"
             title: "カスタム色定義を入力してください (上級ユーザーのみ)"
@@ -5724,12 +6394,23 @@ ja:
               %{example}
 
               プラグインやコアとの競合を避けるには、プロパティ名に接頭辞を付けることを強くお勧めします。
+          head_tag:
+            text: "<head>"
+            title: "<head> の最後に挿入する HTML (script タグをサポート)"
+          body_tag:
+            text: "<body>"
+            title: "<body> の最後に挿入する HTML (script タグをサポート)"
+          js:
+            text: "JS"
+            title: "JavaScript イニシャライザ (Ember の「テンプレートタグ」構文をサポート)"
           scss_color_variables_warning: 'テーマにコア SCSS 色変数を使用することは推奨されません。CSS カスタムプロパティを使用してください。詳細については、<a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">こちらのガイド</a>を参照してください。'
           scss_warning_inline: "テーマにコア SCSS 色変数を使用するのは推奨されません。"
           all_filter: "すべて"
           active_filter: "アクティブ"
           inactive_filter: "非アクティブ"
           updates_available_filter: "アップデートあり"
+          theme_setting_saved: "テーマ設定は保存されました！"
+          theme_site_setting_saved: "テーマサイト設定は保存されました！"
         schema:
           title: "%{name} 設定の編集"
           back_button: "%{name} に戻る"
@@ -5754,55 +6435,92 @@ ja:
           select_base:
             title: "基本色パレットを選択してください"
             description: "基本パレット:"
+          light: "ライト"
+          dark: "ダーク"
           title: "色"
           edit: "編集"
+          set_default_light: "デフォルトのテーマのライトパレットとして設定する (%{theme})"
+          set_default_dark: "デフォルトのテーマのダークパレットとして設定する (%{theme})"
+          set_default_success: "%{schemeName} を %{themeName} のデフォルトのパレットとして設定しました"
+          saved_refreshing: "保存されました！色を更新しています..."
+          from_theme: "元のテーマ: %{name}"
           filters:
+            search_placeholder: "パレットまたはテーマ名でフィルタ..."
             all: "すべて"
             user_selectable: "ユーザー選択可能"
-          active_badge:
-            text: "アクティブ"
+            from_theme: "元のテーマ"
+            no_results: "色パレットが見つかりません"
+          default_light_badge:
+            text: "デフォルトのライト"
+            title: "デフォルトのライトの色パレット"
+            reset: "フィルタをリセット"
+          default_dark_badge:
+            text: "デフォルトのダーク"
+          default_both_badge:
+            text: "デフォルトのライトとダーク"
+            title: "デフォルトのライトとダークの色パレット"
+          system_palette: "これは組み込みの色パレットであるため、編集または削除できません。"
+          back_to_colors: "色パレットに戻る"
           long_title: "色パレット"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"
+          delete_confirm: "この色パレットを削除してもよろしいですか？"
           undo: "元に戻す"
           undo_title: "変更を元に戻して、前回保存された色にします。"
           revert: "戻す"
           revert_title: "この色を Discourse のデフォルトの色パレットにリセットします。"
           primary:
             name: "プライマリー"
+            description: "メインのテキストとアイコン"
           primary-medium:
             name: "primary-medium"
+            description: "無効またはミュートされたテキスト"
           primary-low-mid:
             name: "primary-low-mid"
+            description: "ボーダーと微妙なアクセント"
           secondary:
             name: "セカンダリー"
+            description: "メインの背景と一部のボタンテキスト"
           tertiary:
             name: "ターシャリー"
+            description: "アクセントカラー (リンク、ボタン、バッジ)"
           quaternary:
             name: "クォータナリー"
+            description: "オプションのテーマアクセント"
           header_background:
             name: "ヘッダー背景"
+            description: "ヘッダーの背景"
           header_primary:
             name: "ヘッダーのプライマリー"
+            description: "ヘッダーのテキストとアイコン"
           highlight:
             name: "ハイライト"
+            description: "ハイライトされた投稿またはトピック"
           highlight-high:
             name: "highlight-high"
+            description: "強いハイライト"
           highlight-medium:
             name: "highlight-medium"
+            description: "中程度のハイライト"
           highlight-low:
             name: "highlight-low"
+            description: "微妙なハイライト"
           danger:
             name: "危険"
+            description: "エラーと削除アクション"
           success:
             name: "成功"
+            description: "完了したアクション"
           love:
             name: "ラブ"
+            description: "「いいね」ボタン"
           selected:
             name: "選択済み"
+            description: "アクティブまたは選択された項目"
           hover:
             name: "ホバー"
+            description: "背景をホバーまたはフォーカス"
           editor:
             light: "ライト"
             dark: "ダーク"
@@ -5942,6 +6660,7 @@ ja:
           modal_title: "詳細"
           no_previous: "変更前の値がありません。"
           deleted: "変更後の値がありません。レコードが削除されました。"
+          filter_date_time: "日時をフィルタ"
           actions:
             permanently_delete_post_revisions: "投稿のリビジョンを永久に削除"
             delete_user: "ユーザーの削除"
@@ -6058,6 +6777,7 @@ ja:
             tag_group_destroy: "タググループの削除"
             tag_group_change: "タググループの変更"
             delete_associated_accounts: "関連アカウントの削除"
+            change_theme_site_setting: "テーマサイト設定を変更"
         screened_emails:
           title: "スクリーン対象メール"
           description: "誰かが新規アカウントを作成すると、次のメールアドレスがチェックされるか、登録がブロックされるか、ほかの操作が実行されます。"
@@ -6193,6 +6913,7 @@ ja:
           dropdown: "ドロップダウン"
           upload: "ファイルをアップロードする"
           multiselect: "複数選択"
+          tagchooser: "タググループのセレクター"
         validations_modal:
           button_title: "検証"
           modal_title: "検証オプション"
@@ -6238,6 +6959,8 @@ ja:
           toggle_form_template: "フォームテンプレートが有効になっています"
           select_template: "フォームテンプレートを選択する"
           select_template_help: "フォームテンプレートの追加/編集"
+        errors:
+          multiple_tags_not_allowed: '「%{tag_name}」からこれ以上のタグを選択できません。問題を回避するには、フォームテンプレートを使用してください'
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"
@@ -6387,6 +7110,7 @@ ja:
         activity: アクティビティ
         like_count: '「いいね！」した数/された数'
         last_100_days: "過去 100 日間"
+        private_topics_count: 個人メッセージ
         posts_read_count: 既読の投稿数
         post_count: 作成した投稿数
         second_factor_enabled: 二要素認証が有効です
@@ -6474,6 +7198,8 @@ ja:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
         delete_confirm_title: "このユーザーを削除してもよろしいですか？永久に削除されます！"
         delete_confirm: "一般に、ユーザーを削除するのではなく、匿名化して既存のディスカッションからコンテンツを削除しないようにするのが推奨されます。"
+        delete_and_block: "ユーザーを削除してそのメールアドレスと IP アドレスを削除する"
+        delete_dont_block: "ユーザーを削除"
         deleting_user: "ユーザーを削除中…"
         deleted: "ユーザーが削除されました。"
         delete_failed: "ユーザーを削除中にエラーが発生しました。このユーザーのすべての投稿を削除したことを確認してから、ユーザーを削除してください。"
@@ -6611,6 +7337,7 @@ ja:
           disabled: "検索不可"
         field_types:
           text: "テキスト"
+          textarea: "テキストエリア"
           confirm: "確認"
           dropdown: "ドロップダウン"
           multiselect: "複数選択"
@@ -6649,6 +7376,12 @@ ja:
       site_settings:
         title: "サイトの設定"
         description: "Discourse サイトの外観、機能、およびユーザーエクスペリエンスの設定をカスタマイズして構成します。"
+        discard:
+          other: "変更を破棄"
+        save:
+          other: "すべての変更を保存"
+        dirty_banner:
+          other: "保存されていない変更が <b>%{count}</b> 個あります"
         emoji_list:
           invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: hugs"
           add_emoji_button:
@@ -6678,6 +7411,7 @@ ja:
           basic: "基本設定"
           users: "ユーザー"
           posting: "投稿"
+          content_localization: "コンテンツのローカリゼーション"
           email: "メール"
           files: "ファイル"
           trust: "信頼レベル"

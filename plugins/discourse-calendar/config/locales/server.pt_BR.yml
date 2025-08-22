@@ -27,7 +27,7 @@ pt_BR:
       text_body_template: |
         Seu arquivo de convites em massa para usuários(as) foi processado, %{processed} convites foram enviados por e-mail com %{failed} erro(s).
 
-        Aqui está o registro:
+        Confira o registro:
 
         ``` texto
         %{logs}

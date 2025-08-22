@@ -326,6 +326,10 @@ en:
         anonymous_members: ""
       search: "Search"
 
+    impersonation:
+      notice: "You are impersonating %{username}"
+      stop: "Stop impersonating"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors. Check the browser console for more information."
@@ -2880,6 +2884,10 @@ en:
       publishing: "Publishing Topic…"
 
     composer:
+      autocomplete:
+        username_missing: "Selected autocomplete result is missing username."
+        name_missing: "Selected autocomplete result is missing name."
+
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
@@ -5576,6 +5584,10 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
+    content_localization:
+      toggle_localized:
+        translated: "Page is machine-translated. Click to view original."
+        not_translated: "Page is not translated. Click to translate."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5943,6 +5955,8 @@ en:
         select_setting: "Select a site setting to see current theme values"
         add: "Go to theme site settings"
         help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
+        filter: "Filter theme site settings by setting name, description, or theme name..."
+        filter_no_results: "No theme site settings match your filter"
 
       search:
         modal_title: "Search everything in admin"
@@ -5998,11 +6012,18 @@ en:
           only_experiments: "Only show experimental features"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
-          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          feature_enabled: "You have enabled the feature."
+          feature_disabled: "You have disabled the feature."
+          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
           experiment_tooltip:
-            title_disabled: "Try our experimental feature"
+            title_disabled: "Try this experimental feature"
             title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_enabled: "Changing this will disable the feature for all users."
+          feature_tooltip:
+            title_disabled: "Try this feature"
+            title_enabled: "Turn off feature"
+            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
             content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
@@ -6627,9 +6648,12 @@ en:
         themes_and_components:
           breadcrumb_title: "Customize"
           install: "Install"
+          theme_site_settings:
+            title: "Theme site settings"
+            description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href="%{themeSiteSettingsUrl}">View theme site settings</a>'
+            description: 'Site-wide themes that change the overall look and feel of your site for all users.'
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6894,7 +6918,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
-          default: "Active"
+          default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
@@ -6907,11 +6931,10 @@ en:
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           dark_color_scheme: "Dark Color Palette"
-          edit_color_scheme: "Edit Color Palette"
-          edit_dark_color_scheme: "Edit DarkWColor Palette"
           default_light_scheme: "Light (default)"
-          color_scheme_select: "Select colors to be used by theme"
-          dark_color_scheme_select: "Select colors to be used by theme in dark mode"
+          color_scheme_select: "Select colors to be used by theme."
+          dark_color_scheme_select: "Select colors to be used by theme in dark mode."
+          edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
           add_all_themes: "Add all themes"
@@ -6923,11 +6946,12 @@ en:
           convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
-          set_default_theme: "Set as active"
-          default_theme: "Active theme"
+          set_default_theme: "Set as default"
+          default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
           setting_was_saved: "Theme setting was saved"
           install_success: "%{theme} installed successfully!"
+          delete_success: "%{theme} deleted successfully!"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
@@ -7108,12 +7132,16 @@ en:
           select_base:
             title: "Select base color palette"
             description: "Base palette:"
-          preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
+          non_default_theme_warning: "Your <a href='%{link}'>personal preferences</a> for theme are different than the default. Changes you make here may not apply to you, but will apply to everyone using the default (%{themeName})."
+          custom_schemes_warning: "Your <a href='%{link}'>personal preferences</a> for %{colorModes} color palette are different than the default. Changes to the %{colorModes} palette may not apply to you, but will apply to everyone using the default."
+          light: "light"
+          dark: "dark"
           title: "Colors"
           edit: "Edit"
+          view: "View"
           set_default_light: "Set as light palette on default theme (%{theme})"
           set_default_dark: "Set as dark palette on default theme (%{theme})"
-          set_default_success: "%{schemeName} set as active palette for %{themeName}"
+          set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
@@ -7122,16 +7150,13 @@ en:
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
-          active_light_badge:
-            text: "Active light"
-            title: "Active light color palette"
+          default_light_badge:
+            text: "Default light"
+            title: "Default light color palette"
             reset: "Reset filters"
-          active_dark_badge:
-            text: "Active dark"
-            title: "Active light color palette"
-          active_both_badge:
-            text: "Active light and dark"
-            title: "Active light and dark color palette"
+          default_dark_badge:
+            text: "Default dark"
+            title: "Default dark color palette"
           system_palette: "This is a built-in color palette, it cannot be edited or deleted."
           back_to_colors: "Back to color palettes"
           long_title: "Color palettes"
@@ -8199,7 +8224,9 @@ en:
           block_common_passwords:
             prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-
+        job_status:
+          completed: "Update completed"
+          enqueued: "Update in progress"
       badges:
         status: Status
         title: Badges

@@ -131,12 +131,12 @@ de:
               description: "Ob die Antwort der Persona ein Flüstern sein soll"
             silent_mode:
               label: "Stiller Modus"
-              description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum - nützlich bei der Sichtung mit Tools"
+              description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum – nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
-            system_prompt:
-              label: "System-Eingabeaufforderung"
-              description: "Die Eingabeaufforderung, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
+            triage_persona:
+              label: "Persona"
+              description: "Persona, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -174,14 +174,8 @@ de:
               label: "Als Flüstern antworten"
               description: "Ob die Antwort der KI ein Flüstern sein soll"
             reply_persona:
-              label: "Antwort Persona"
+              label: "Antwort-Persona"
               description: "KI-Persona, die für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
-            model:
-              label: "Modell"
-              description: "Für die Triage verwendetes Sprachmodell"
-            temperature:
-              label: "Temperatur"
-              description: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -204,7 +198,7 @@ de:
           other: "LLM:"
         no_llm: "Kein LLM ausgewählt"
         no_persona: "Nicht festgelegt"
-        no_groups: "Keiner"
+        no_groups: "Keine"
         edit: "Bearbeiten"
         expand_list:
           one: "(%{count} weitere)"
@@ -219,14 +213,15 @@ de:
           unconfigured: "Nicht konfiguriert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Personas, LLMs oder Gruppen..."
+          text: "Suche nach Funktionen, Personas, LLMs oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
+        no_automations: "Es gibt noch keine Automatisierungen"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
           topic_summaries: "Themenzusammenfassungen"
-          gists: "Kurze Zusammenfassungen der in Themenliste"
+          gists: "Kurze Zusammenfassungen der Themenliste"
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
@@ -241,7 +236,7 @@ de:
           search: "Discord-Suche"
         inference:
           name: "Abgeleitete Konzepte"
-          description: "Ordnet Themen und Beiträge in Interessensgebiete / Labels."
+          description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
           generate_concepts: "Konzepterkennung"
           match_concepts: "Passende Konzepte"
           deduplicate_concepts: "Deduplizierung von Konzepten"
@@ -269,11 +264,30 @@ de:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
           inspect_posts: "Beiträge prüfen"
+        automation_reports:
+          name: "Automatisierte Berichte"
+          description: "Erstellt automatisch kompakte Übersichten der Aktivitäten und hebt Trends, wichtige Themen und Engagement hervor"
+        automation_triage:
+          name: "Beitragssichtung"
+          description: "Automatisiert die Moderation und Verwaltung von Beiträgen mithilfe von konfigurierbaren Automatisierungsregeln"
       modals:
-        select_option: "Wähle eine Option aus..."
+        select_option: "Wähle eine Option aus …"
       layout:
         table: "Tabelle"
         card: "Karte"
+      translations:
+        title: "Übersetzungen"
+        description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
+        admin_actions:
+          translation_settings: "Übersetzungseinstellungen"
+          localization_settings: "Lokalisierungseinstellungen"
+          disabled_state:
+            configure: "Übersetzungen konfigurieren"
+            empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
+        progress_chart:
+          title: "Übersetzungsfortschritt"
+          completed: "Abgeschlossen"
+          remaining: "Verbleibend"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -330,7 +344,7 @@ de:
         response_tokens: "Antwort-Token"
         net_request_tokens: "Token für Netzanfragen"
         cached_tokens: "Zwischengespeicherte Token"
-        cached_request_tokens: "Zwischengespeicherte Anfragetoken"
+        cached_request_tokens: "Zwischengespeicherte Anfrage-Token"
         total_spending: "Geschätzte Kosten"
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
@@ -339,7 +353,7 @@ de:
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
           total_tokens: "Alle Token, die bei der Abfrage einer LLM verwendet werden"
-          request_tokens: "Tokens, die verwendet werden, wenn das LLM versucht zu verstehen, was du sagst"
+          request_tokens: "Token, die verwendet werden, wenn das LLM versucht zu verstehen, was du sagst"
           response_tokens: "Token, die verwendet werden, wenn die LLM auf deine Aufforderung antwortet"
           cached_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM wiederverwendet, um Leistung und Kosten zu optimieren"
           total_spending: "Kumulierte Kosten aller von den LLM verwendeten Token auf Grundlage der spezifischen Kostenmetriken, die zu den LLM-Konfigurationseinstellungen hinzugefügt wurden"
@@ -364,7 +378,7 @@ de:
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
-        use_parent_llm: "Verwende das Personas Sprachmodell"
+        use_parent_llm: "Persona-Sprachmodell verwenden"
         max_context_posts: "Max. Kontext-Beiträge"
         max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
         vision_enabled: Sehen aktiviert
@@ -378,7 +392,7 @@ de:
         tool_details_help: Zeigt den Endnutzern Details darüber, welche Tools das Sprachmodell ausgelöst hat.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
-        user: Nutzer
+        user: Benutzer
         create_user: Benutzer erstellen
         create_user_help: Du kannst dieser Persona optional einen Nutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
@@ -415,7 +429,7 @@ de:
         priority: "Priorität"
         priority_help: "Personas mit Priorität werden den Benutzern am Anfang der Persona-Liste angezeigt. Wenn mehrere Personas Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
-        rag_conversation_chunks: "Unterhaltungs-Chunks durchsuchen"
+        rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
         persona_description: "Personas sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
@@ -452,7 +466,7 @@ de:
         options:
           rag_chunk_tokens: "Chunk-Token hochladen"
           rag_chunk_tokens_help: "Die Anzahl der Token, die für jeden Chunk im RAG-Modell verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
-          rag_chunk_overlap_tokens: "Chunk-Überlappungs-Token hochladen"
+          rag_chunk_overlap_tokens: "Upload-Chunk-Überlappungs-Token"
           rag_chunk_overlap_tokens_help: "Die Anzahl der Token, die sich zwischen den Chunks im RAG-Modell überlappen sollen. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
           rag_llm_model: "Indizierungssprachmodell"
           rag_llm_model_help: "Das für die OCR bei der Indizierung von PDFs und Bildern verwendete Sprachmodell"
@@ -567,7 +581,7 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-0: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-0: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-3-7-sonnet-latest: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten (vorherige Generation)"
           anthropic-claude-3-5-haiku-latest: "Schnell und kosteneffizient"
@@ -575,11 +589,11 @@ de:
           google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
-          open_ai-o3: "Das leistungsfähigste Argumentationsmodell von Open AI"
+          open_ai-o3: "Das leistungsfähigste Argumentationsmodell von OpenAI"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
-          open_ai-gpt-4-1: "Das Vorzeigemodell von Open AI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-4-1-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
-          open_ai-gpt-4-1-nano: "Das schnellste und kostengünstigste GPT-4.1-Modell."
+          open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
+          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
           mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
@@ -587,6 +601,8 @@ de:
           open_router-x-ai-grok-3-beta: "Das neueste Modell von xAI"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
           open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
+          groq-openai-gpt-oss-120b: "Hochmodernes Open-Weight-Modell von Open AI"
+          groq-openai-gpt-oss-20b: "Leichtes, schnelles, offenes Modell von Open AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"
@@ -629,6 +645,7 @@ de:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Benutzerdefiniert"
         provider_fields:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
@@ -776,11 +793,12 @@ de:
         cancel_streaming: "Antwort abbrechen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
+        exit: "KI-Bot verlassen"
         share: "KI-Unterhaltung kopieren"
         conversation_shared: "Unterhaltung kopiert"
         embed_copied: "Einbettung in die Zwischenablage kopiert"
         debug_ai: "Rohdaten der KI-Anfrage und -Antwort anzeigen"
-        sidebar_empty: "Der Verlauf der Bot-Konversation wird hier angezeigt."
+        sidebar_empty: "Der Verlauf der Bot-Unterhaltung wird hier angezeigt."
         debug_ai_modal:
           title: "KI-Interaktion ansehen"
           copy_request: "Anfrage kopieren"
@@ -801,7 +819,7 @@ de:
           title: "Diese KI-Unterhaltung öffentlich teilen"
         invite_ai_conversation:
           button: "Einladen"
-          title: "Zur KI-Konversation einladen"
+          title: "Zur KI-Unterhaltung einladen"
         ai_label: "KI"
         ai_title: "Unterhaltung mit KI"
         share_modal:
@@ -829,7 +847,7 @@ de:
           header: "Wie kann ich helfen?"
           submit: "Frage abschicken"
           disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
-          placeholder: "Stell eine Frage ..."
+          placeholder: "Stell eine Frage …"
           new: "Neue Frage"
           min_input_length_message:
             one: "Nachricht muss mindestens %{count} Zeichen lang sein"
@@ -870,6 +888,14 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
+          regenerate: "Kurzzusammenfassung neu generieren"
+          regenerate_bulk: "Kurzzusammenfassungen neu generieren"
+          regenerate_success:
+            one: "Kurzzusammenfassung erfolgreich neu generiert"
+            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
+          regenerate_error:
+            one: "Kurzzusammenfassung konnte nicht neu generiert werden"
+            other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
           button:
             compact: "Kompakt"

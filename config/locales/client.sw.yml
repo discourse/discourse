@@ -669,10 +669,11 @@ sw:
       dismiss_notifications_tooltip: "Weka alama kuwa taarifa zote ambazo hazijasomwa kuwa zimesomwa"
       color_schemes:
         undo: "Anza Upya"
-        regular: "Kawaida"
         interface_modes:
           light: "Hafifu"
           dark: "Nyeusi"
+        picker:
+          active: "Amilifu"
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
@@ -1200,6 +1201,8 @@ sw:
     full_name_requirement:
       required_at_signup: "Muhimu na Inahitajika"
       optional_at_signup: "Sio muhimu"
+    welcome_banner_page_visibility:
+      homepage: "Ukurasa mkuu"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1245,7 +1248,6 @@ sw:
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
       add_warning: "Hii ni onyo rasmi."
-      toggle_whisper: "Badilisha Nong'ono"
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
@@ -1287,10 +1289,7 @@ sw:
       paste_code_text: "andika au bandika kodi hapa"
       upload_title: "Pakia"
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
-      olist_title: "Listi yenye namba"
-      ulist_title: "Listi yenye vitufe"
       list_item: "Listi kitu"
-      toggle_direction: "Badilisha uwelekeo"
       help: "Msaada kwenye kuhariri MarkDown"
       collapse: "Shusha chini paneli ya Composer"
       abandon: "Funga Composer na acha rasimu"
@@ -2861,10 +2860,10 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
-          default: "Mara kwa Mara"
+          default: "Halisi"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
-          color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
+          color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari."
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
           cancel: "Ghairi"
@@ -2910,12 +2909,12 @@ sw:
               too_small: "izidi au iwe sawa na %{count}"
               too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
+          light: "hafifu"
+          dark: "nyeusi"
           title: "Rangi"
           edit: "Hariri"
           filters:
             all: "Yote"
-          active_badge:
-            text: "Amilifu"
           copy_name_prefix: "Nakala ya"
           undo: "Tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
