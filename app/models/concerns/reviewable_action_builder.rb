@@ -143,17 +143,15 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    user = try(:target_created_by)
-    delete_user(user, delete_opts, performed_by) if user
+    delete_user(target_user, delete_opts, performed_by) if target_user
     successful_transition :rejected, recalculate_score: false, &
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
-    user = try(:target_created_by)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(user, delete_options, performed_by) if user
+    delete_user(target_user, delete_options, performed_by) if target_user
     successful_transition :rejected, recalculate_score: false, &
   end
 
