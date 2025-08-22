@@ -7,7 +7,7 @@ module ReviewableActionBuilder
   # should override this method and return true.
   #
   # @return [Boolean]
-  def self.flaggable?
+  def flaggable?
     false
   end
 
