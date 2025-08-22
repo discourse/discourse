@@ -778,10 +778,6 @@ html.composer-open:not(.has-full-page-chat) {
       display: none;
     }
 
-    &.open.show-preview {
-      height: 70vh;
-    }
-
     &.show-preview {
       .submit-panel {
         padding-top: 0.5em;
