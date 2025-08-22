@@ -18,8 +18,6 @@ module ReviewableActionBuilder
   #
   # @return [Reviewable::Actions::Bundle] The created user actions bundle.
   def build_user_actions_bundle(actions, guardian)
-    return nil unless target_user
-
     bundle =
       actions.add_bundle(
         "#{id}-user-actions",
@@ -28,6 +26,8 @@ module ReviewableActionBuilder
 
     # Always include the no-op action
     build_action(actions, :no_action_user, bundle: bundle)
+
+    return bundle unless target_user
 
     if guardian.can_silence_user?(target_user)
       build_action(actions, :silence_user, bundle: bundle, client_action: "silence")

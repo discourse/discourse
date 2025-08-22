@@ -35,8 +35,11 @@ RSpec.describe ReviewableActionBuilder do
     end
 
     it "includes only the no-op action when user is nil" do
+      allow(reviewable_post).to receive(:target_created_by).and_return(nil)
+
       bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
       server_actions = bundle.actions.map(&:server_action)
+
       expect(server_actions).to include("no_action_user")
       expect(server_actions - ["no_action_user"]).to be_empty
     end
