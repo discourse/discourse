@@ -5,10 +5,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
-import Topic from "discourse/models/topic";
 import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
 import FullCalendar from "./full-calendar";
 
@@ -32,45 +30,12 @@ export default class PostCalendar extends Component {
     this.postCalendar.teardownComponent();
   }
 
-  @action
-  onEventClick(info) {
-    if (info.event.extendedProps.postUrl) {
-      this.router.transitionTo(info.event.extendedProps.postUrl);
-    }
-  }
-
-  @action
-  async refresh() {
-    try {
-      const post = await this.store.find("post", this.post.id);
-      const topicJSON = await Topic.find(post.topic_id, {});
-      const topic = Topic.create(topicJSON);
-      post.set("topic", topic);
-      this.post = post;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   get isStatic() {
     return this.args.options.calendarType === "static";
   }
 
   get isFullDay() {
     return this.args.options.calendarFullDay === "true";
-  }
-
-  get timezone() {
-    let defaultTimezone = this.args.options.calendarDefaultTimezone;
-    const isValidDefaultTimezone = !!moment.tz.zone(
-      this.calendarDefaultTimezone
-    );
-
-    if (!isValidDefaultTimezone) {
-      defaultTimezone = null;
-    }
-
-    return defaultTimezone || this.currentUser?.timezone || moment.tz.guess();
   }
 
   get events() {
@@ -340,7 +305,6 @@ export default class PostCalendar extends Component {
         @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
         @events={{this.events}}
         @height={{@height}}
-        @onEventClick={{this.onEventClick}}
       />
     </div>
   </template>
