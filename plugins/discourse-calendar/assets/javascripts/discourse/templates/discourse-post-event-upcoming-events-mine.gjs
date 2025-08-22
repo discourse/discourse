@@ -5,9 +5,10 @@ export default RouteTemplate(
   <template>
     <div class="discourse-post-event-upcoming-events">
       <UpcomingEventsCalendar
-        @events={{@model}}
+        @events={{@controller.events}}
         @mine={{true}}
-        @view={{@controller.view}}
+        @initialView={{@controller.initialView}}
+        @initialDate={{@controller.initialDate}}
       />
     </div>
   </template>

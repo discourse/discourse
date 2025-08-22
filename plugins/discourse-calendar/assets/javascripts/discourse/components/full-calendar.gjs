@@ -12,6 +12,7 @@ import {
   getCalendarButtonsText,
   getCurrentBcp47Locale,
 } from "../lib/calendar-locale";
+import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent
@@ -149,19 +150,10 @@ export default class FullCalendar extends Component {
   }
 
   get initialView() {
-    let initialView = this.args.initialView;
-    if (initialView === "agendaDay") {
-      initialView = "timeGridDay";
-    } else if (initialView === "agendaWeek") {
-      initialView = "timeGridWeek";
-    } else if (initialView === "month") {
-      initialView = "dayGridMonth";
-    } else if (initialView === "listNextYear") {
-      initialView = "listYear";
-    }
+    const normalizedView = normalizeViewForCalendar(this.args.initialView);
 
     return (
-      initialView ||
+      normalizedView ||
       (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
     );
   }
