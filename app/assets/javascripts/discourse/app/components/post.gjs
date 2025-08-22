@@ -511,7 +511,7 @@ export default class Post extends Component {
                     <div
                       class={{concatClass
                         "post__regular regular"
-                        (unless this.repliesShown "post__contents contents")
+                        "post__contents contents"
                         (if
                           this.isReplyToTabDisplayed
                           "post__contents--avoid-tab avoid-tab"
