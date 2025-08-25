@@ -454,7 +454,7 @@ ar:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "لا يمكنك إيقاف إزالة البيانات الوصفية للصورة إذا كان 'composer media optimization image enabled' مفعلًا. أوقف 'composer media optimization image enabled' قبل إيقاف إزالة البيانات الوصفية للصورة."
       x_summary_large_image_no_svg: "لا يمكن أن تكون صور ملخص Twitter المُستخدَمة في البيانات الوصفية لـ twitter:image بتنسيق svg."
       tl0_and_anonymous_flag: "يجب إدخال 'site contact email' أو 'email address to report illegal content' للمستخدمين المجهولين."
-      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "يشترط هذا الإعداد تفعيل خيار 'السماح بوضع المستخدم المجهول' مسبقًا."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "يشترط هذا الإعداد تفعيل خيار \"السماح بوضع المستخدم المجهول\" مسبقًا."
     conflicting_google_user_id: 'تم تغيير معرِّف حساب Google لهذا الحساب؛ مطلوب تدخُّل فريق العمل لأسباب أمنية. يُرجى التواصل مع فريق العمل وتوجيهه إلى <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "عذرًا، لم نتمكن من إنشاء معاينة لصفحة الويب هذه لتعذُّر العثور على الخادم \"%{hostname}\". بدلًا من المعاينة، سيظهر رابط فقط في منشورك. :cry:"
@@ -2538,7 +2538,7 @@ ar:
     delete_associated_accounts_on_password_reset: "حذف الحساب المرتبط بالمستخدم عندما يغير المستخدم كلمة المرور."
     allow_featured_topic_on_user_profiles: "السماح للمستخدمين بعرض رابط لموضوع على بطاقة المستخدم والملف الشخصي"
     show_inactive_accounts: "السماح للمستخدمين الذين سجَّلوا الدخول باستعراض الملفات الشخصية للحسابات غير النشطة"
-    hide_silencing_reasons: "عدم إظهار أسباب تقييد أو كتم المستخدم علنًا على صفحة ملفه الشخصي."
+    hide_silencing_reasons: "عدم عرض أسباب تقييد أو كتم المستخدم علنًا على صفحة ملفه الشخصي."
     hide_suspension_reasons: "عدم عرض أسباب التعليق بشكلٍٍ عام في الملفات الشخصية للمستخدمين"
     log_personal_messages_views: "تسجيل مرات عرض الرسائل الشخصية بواسطة المسؤول للمستخدمين/المجموعات الأخرى"
     ignored_users_count_message_threshold: "إرسال إشعار إلى المشرفين إذا تم تجاهل مستخدم معيَّن بواسطة هذا العدد من المستخدمين الآخرين"
@@ -2752,7 +2752,7 @@ ar:
     suggest_weekends_in_date_pickers: "تضمين عطلات نهاية الأسبوع (السبت والأحد) في اقتراحات منتقي التاريخ (يمكنك إيقاف هذا الإعداد إذا كنت تستخدم Discouse في أيام الأسبوع فقط؛ أي من الاثنين إلى الجمعة)."
     show_bottom_topic_map: "يظهر خريطة الموضوع أسفل الموضوع عندما يحتوي على 10 ردود أو أكثر."
     show_topic_map_in_topics_without_replies: "يظهر خريطة الموضوع حتى إذا كان الموضوع لا يحتوي على ردود."
-    enable_welcome_banner: "عرض لافتة في صفحات قائمة الموضوعات الرئيسية بهدف الترحيب بالأعضاء وتمكينهم من إجراء البحث ضمن محتوى الموقع."
+    enable_welcome_banner: "عرض بانر في صفحات قائمة الموضوعات الرئيسية بهدف الترحيب بالأعضاء وتمكينهم من إجراء البحث ضمن محتوى الموقع."
     welcome_banner_image: "تحديد صورة لتُعرض في خلفية بانر الترحيب."
     welcome_banner_location: "يحدد مكان ظهور بانر الترحيب على الصفحة."
     welcome_banner_page_visibility: "يحدد الصفحات التي سيظهر فيها بانر الترحيب."
@@ -2872,7 +2872,7 @@ ar:
       content_localization_locale_limit: "لا يمكن أن يتجاوز عدد اللغات المحلية المدعومة %{max}."
       content_localization_anon_language_switcher_requirements: "يتطلب مفتاح تغيير اللغة تفعيل إعداد الموقع تعيين اللغة من الكوكيز، كما يجب أن يحتوي اللغات المدعومة لتوطين المحتوى على لغة واحدة على الأقل."
       mediaconvert_role_arn_required: "مطلوب تحديد معرف الدور (ARN) في AWS IAM عند استخدام خدمة AWS MediaConvert لتحويل مقاطع الفيديو."
-      s3_credentials_required_for_video_conversion: "تتطلب عملية تحويل الفيديو بيانات اعتماد S3. يرجى إعداد مفاتيح الوصول إلى S3 أو تمكين ملف تعريف IAM."
+      s3_credentials_required_for_video_conversion: "تتطلب عملية تحويل الفيديو بيانات اعتماد S3. يرجى إعداد مفاتيح الوصول إلى S3 أو تفعيل ملف تعريف IAM."
     keywords:
       clean_up_inactive_users_after_days: "تم إلغاء تنشيطه|غير نشط|لم يتم تنشيطه"
       navigation_menu: "شريط جانبي|قائمة منسدلة للرأس"

@@ -25,6 +25,7 @@ ur:
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
+        read: "موضوع پڑھیں"
       tool_description:
         time: "%{timezone} میں وقت %{time} ہے"
     sentiment:
