@@ -32,8 +32,20 @@
       background-position: center;
       background-repeat: no-repeat;
       margin-bottom: var(--space-2);
-      text-shadow: var(--secondary) var(--space-half) var(--space-half)
-        var(--space);
+
+      @if is-dark-color-scheme() {
+        color: var(--header_primary);
+        text-shadow: var(--header_background)
+          var(--space-half)
+          var(--space-half)
+          var(--space);
+      } @else {
+        color: var(--header_background);
+        text-shadow: var(--header_primary)
+          var(--space-half)
+          var(--space-half)
+          var(--space);
+      }
     }
 
     @include viewport.until(md) {

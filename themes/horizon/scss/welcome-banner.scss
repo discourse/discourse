@@ -111,7 +111,6 @@
   &__title {
     text-align: left;
     margin: 0;
-    color: var(--search-color);
 
     .--location-above-topic-content & {
       @container (width >= 800px) {
