@@ -243,6 +243,10 @@ body.signup-page {
     .btn-social {
       border: 1px solid var(--content-border-color);
       padding: 0.75em 0.77em; // matches input padding
+
+      &.discourse_id {
+        border-color: var(--discourse_id-border);
+      }
     }
   }
 
