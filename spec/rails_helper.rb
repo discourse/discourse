@@ -434,6 +434,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -474,6 +475,38 @@ RSpec.configure do |config|
         end
       end
     end
+
+    module SomePatch
+      def click(keys = [], **options)
+        super
+
+        puts "clicked #{keys}"
+        start_time = Time.now.to_f
+        timeout = 5
+        session = @driver.send(:session)
+
+        loop do
+          if Time.now.to_f - start_time > timeout
+            puts "timeout"
+            break
+          else
+            result = session.evaluate_script("window.emberIsSettled()")
+
+            if result
+              puts "ember is settled"
+              break
+            else
+              puts "ember is not settled"
+              sleep 0.1
+            end
+          end
+        end
+
+        puts "Clicked: #{Time.now.to_f - start_time}"
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(SomePatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now

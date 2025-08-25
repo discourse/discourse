@@ -454,7 +454,7 @@ describe "About page", type: :system do
 
       about_page.edit_link.click
 
-      try_until_success { expect(current_url).to end_with("/admin/config/about") }
+      expect(current_url).to end_with("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do
