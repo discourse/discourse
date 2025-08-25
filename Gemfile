@@ -118,7 +118,7 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
-gem "goldiloader", require: false
+gem "goldiloader"
 
 group :test do
   gem "capybara", require: false
