@@ -172,9 +172,9 @@ fi:
         instructions: |-
           Seuraavaksi voitko jakaa yhden näistä linkeistä minulle? Vastaa **linkillä omalla rivillä**, ja se laajenee automaattisesti sisältämään näppärän yhteenvedon.
 
-          Voit kopioida minkä tahansa linkin napauttamalla pitkään mobiililaitteella tai napsauttamalla hiiren kakkospainikkeella:
+          Voit kopioida minkä tahansa linkin napauttamalla pitkään mobiililaitteella tai klikkaamalla hiiren kakkospainikkeella:
 
-          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en. ikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
           [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
           [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-

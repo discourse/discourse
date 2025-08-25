@@ -5795,7 +5795,7 @@ zh_TW:
           extra_files_upload: "匯出主題以檢視這些檔案。"
           extra_files_remote: "導出主題或檢查 git 存儲庫以查看這些文件。"
           preview: "預覽"
-          default: "預設"
+          default: "預設佈景主題"
           settings_editor: "設定編輯器"
           show_advanced: "顯示進階"
           is_default: "佈景主題預設啟用"

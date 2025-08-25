@@ -1572,7 +1572,6 @@ es:
       labels:
         provider: Proveedor de inicio de sesión
         no_accounts: "No hay cuentas asociadas"
-        total_users: "Número total de miembros"
       description: "Muestra el número de cuentas asociadas agrupadas por proveedor de inicio de sesión. Solo se aplica cuando los métodos de inicio de sesión con red social están activados."
   dashboard:
     problem:

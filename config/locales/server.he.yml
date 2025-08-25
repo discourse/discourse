@@ -1717,7 +1717,6 @@ he:
       labels:
         provider: ספק כניסה
         no_accounts: "אין חשבונות משויכים"
-        total_users: "סך כמות החברים"
   dashboard:
     problem:
       twitter_login: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'

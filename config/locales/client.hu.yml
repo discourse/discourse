@@ -6474,7 +6474,7 @@ hu:
           extra_files_upload: "Téma exportálása a fájlok megtekintéséhez."
           extra_files_remote: "A fájlok megtekintéséhez exportálja a témát, vagy ellenőrizze a git-tárat."
           preview: "Előnézet"
-          default: "Alapértelmezett"
+          default: "Alapértelmezett téma"
           settings_editor: "Beállítások szerkesztő"
           show_advanced: "Speciális megjelenítése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."

@@ -4484,7 +4484,6 @@ vi:
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
-          default: "Mặc định"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"

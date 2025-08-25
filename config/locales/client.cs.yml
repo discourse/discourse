@@ -354,6 +354,9 @@ cs:
         logged_in_members: "Vítejte zpět, %{preferred_display_name}!"
         anonymous_members: "Vítejte v %{site_name}!"
       search: "Vyhledat"
+    impersonation:
+      notice: "Vydáváte se za %{username}"
+      stop: "Zastavit impersonaci"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby. Další informace naleznete v konzoli prohlížeče."
@@ -6086,8 +6089,8 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a filtrování"
-          header_description: "Protokoly a filtrování vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci filtrování uživatelů"
+          title: "Protokoly a minitoring"
+          header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:
             screened_emails:
@@ -7101,7 +7104,7 @@ cs:
           extra_files_upload: "Chcete-li tyto soubory zobrazit, exportujte motiv."
           extra_files_remote: "Chcete-li tyto soubory zobrazit, exportujte motiv nebo zkontrolujte úložiště git."
           preview: "Náhled"
-          default: "Výchozí"
+          default: "Výchozí motiv"
           settings_editor: "Editor nastavení"
           show_advanced: "Zobrazit pokročilé"
           is_default: "Výchozí motiv"
@@ -7355,9 +7358,6 @@ cs:
           default_dark_badge:
             text: "Výchozí tmavá"
             title: "Výchozí tmavá paleta barev"
-          default_both_badge:
-            text: "Výchozí světlá a tmavá"
-            title: "Výchozí světlá i tmavá paleta barev"
           system_palette: "Toto je vestavěná paleta barev, nelze ji upravovat ani mazat."
           back_to_colors: "Zpět na palety barev"
           long_title: "Palety barev"
@@ -7525,7 +7525,7 @@ cs:
           delete_topic: "smazání tématu"
           post_approved: "Příspěvek schválen"
       logs:
-        title: "Protokoly a filtrování"
+        title: "Protokoly a monitoring"
         description: "Protokoly a filtrování vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci filtrování uživatelů."
         nav_title: "Protokoly"
         action: "Akce"
@@ -8429,6 +8429,9 @@ cs:
           block_common_passwords:
             prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
+        job_status:
+          completed: "Aktualizace dokončena"
+          enqueued: "Probíhá aktualizace"
       badges:
         status: Stav
         title: Odznaky

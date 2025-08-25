@@ -4745,7 +4745,6 @@ pt:
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
-          default: "Predefinição"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"

@@ -6512,7 +6512,7 @@ es:
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
-          default: "Por defecto"
+          default: "Tema predeterminado"
           settings_editor: "Editor de ajustes"
           show_advanced: "Mostrar avanzados"
           is_default: "El tema está activado por defecto"
@@ -6749,9 +6749,6 @@ es:
             reset: "Restablecer filtros"
           default_dark_badge:
             text: "Oscuro por defecto"
-          default_both_badge:
-            text: "Claro y oscuro por defecto"
-            title: "Paleta de colores claros y oscuros por defecto"
           system_palette: "Esta es una paleta de colores incorporada, no se puede editar ni eliminar."
           back_to_colors: "Volver a las paletas de colores"
           long_title: "Paletas de colores"

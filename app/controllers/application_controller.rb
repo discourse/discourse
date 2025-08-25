@@ -45,6 +45,7 @@ class ApplicationController < ActionController::Base
   before_action :preload_json
   before_action :initialize_application_layout_preloader
   before_action :check_xhr
+  before_action :set_crawler_header
   after_action :add_readonly_header
   after_action :perform_refresh_session
   after_action :dont_cache_page
@@ -1054,5 +1055,9 @@ class ApplicationController < ActionController::Base
 
   def service_params
     { params: params.to_unsafe_h, guardian: }
+  end
+
+  def set_crawler_header
+    response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
   end
 end
