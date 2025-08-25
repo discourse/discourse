@@ -32,8 +32,10 @@ module DiscourseAi
       end
 
       def error_message
-        I18n.t("discourse_ai.embeddings.configuration.disable_embeddings") if @disable_embeddings
-        I18n.t("discourse_ai.embeddings.configuration.invalid_config") if @missing_record
+        if @disable_embeddings
+          return I18n.t("discourse_ai.embeddings.configuration.disable_embeddings")
+        end
+        return I18n.t("discourse_ai.embeddings.configuration.invalid_config") if @missing_record
 
         I18n.t("discourse_ai.embeddings.configuration.model_test_failed")
       end

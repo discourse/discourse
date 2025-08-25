@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Configuration::EmbeddingDefsValidator do
-  subject(:validator) { described_class.new({ run_check_in_tests: true }) }
-
   before { enable_current_plugin }
 
   describe "#valid_value?" do
     fab!(:embedding_definition)
+    let(:validator) { described_class.new({ run_check_in_tests: true }) }
 
     context "when resetting the value back to blank" do
       before do
