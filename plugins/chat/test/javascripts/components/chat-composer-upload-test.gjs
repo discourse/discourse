@@ -1,10 +1,10 @@
 import { fn } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
-import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
 
 module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
   setupRenderingTest(hooks);
@@ -104,7 +104,9 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     const self = this;
 
     try {
-      setupURL("//cdn.example.com", "http://test.local", "", { snapshot: true });
+      setupURL("//cdn.example.com", "http://test.local", "", {
+        snapshot: true,
+      });
 
       this.set("upload", {
         type: ".png",
