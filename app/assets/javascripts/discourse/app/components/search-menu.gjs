@@ -454,6 +454,7 @@ export default class SearchMenu extends Component {
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
             @inputId={{this.searchInputId}}
+            @placeholder={{@placeholder}}
           />
 
           {{#if this.loading}}
