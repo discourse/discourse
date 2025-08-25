@@ -17,6 +17,8 @@ export default class UpcomingEventsCalendar extends Component {
   @service capabilities;
   @service siteSettings;
 
+  _isInitializing = true;
+
   get customButtons() {
     return {
       mineEvents: {
@@ -142,13 +144,20 @@ export default class UpcomingEventsCalendar extends Component {
     const currentMonth = parseInt(currentParams.month, 10);
     const currentDay = parseInt(currentParams.day, 10);
 
+    const isViewChanged = currentParams.view !== view;
+
     const {
       year: urlYear,
       month: urlMonth,
       day: urlDay,
-    } = this.#calculateUrlParams(view, info.view, currentYear, currentMonth);
+    } = this.#calculateUrlParams(
+      view,
+      info.view,
+      currentYear,
+      currentMonth,
+      isViewChanged
+    );
 
-    const isViewChanged = currentParams.view !== view;
     const isMonthChanged =
       view === "month" &&
       (currentYear !== urlYear || currentMonth !== urlMonth);
@@ -157,6 +166,24 @@ export default class UpcomingEventsCalendar extends Component {
       (currentYear !== urlYear ||
         currentMonth !== urlMonth ||
         currentDay !== urlDay);
+
+    // Prevent URL changes during calendar initialization, but allow view changes
+    if (this._isInitializing) {
+      // Allow view changes even during initialization
+      if (isViewChanged) {
+        this.router.replaceWith(
+          this.router.currentRouteName,
+          view,
+          urlYear,
+          urlMonth,
+          urlDay
+        );
+      }
+
+      // Mark initialization as complete after initial setup
+      this._isInitializing = false;
+      return;
+    }
 
     if (isViewChanged || isMonthChanged || isDayChanged) {
       this.router.replaceWith(
@@ -169,10 +196,25 @@ export default class UpcomingEventsCalendar extends Component {
     }
   }
 
-  #calculateUrlParams(view, calendarView, currentYear, currentMonth) {
+  #calculateUrlParams(
+    view,
+    calendarView,
+    currentYear,
+    currentMonth,
+    isViewChanged = false
+  ) {
     const viewStart = moment(calendarView.currentStart);
     const viewEnd = moment(calendarView.currentEnd);
     const currentParams = this.router.currentRoute.params;
+
+    // For view changes, preserve the current date from URL
+    if (isViewChanged) {
+      return {
+        year: currentYear,
+        month: currentMonth,
+        day: parseInt(currentParams.day, 10),
+      };
+    }
 
     if (view === "month") {
       const startYear = viewStart.year();
@@ -211,12 +253,18 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   #isSequentialMonthNavigation(currentYear, currentMonth, newYear, newMonth) {
-    if (newYear === currentYear && newMonth === currentMonth + 1) return true;
-    if (newYear === currentYear && newMonth === currentMonth - 1) return true;
-    if (newYear === currentYear + 1 && newMonth === 1 && currentMonth === 12)
+    if (newYear === currentYear && newMonth === currentMonth + 1) {
       return true;
-    if (newYear === currentYear - 1 && newMonth === 12 && currentMonth === 1)
+    }
+    if (newYear === currentYear && newMonth === currentMonth - 1) {
       return true;
+    }
+    if (newYear === currentYear + 1 && newMonth === 1 && currentMonth === 12) {
+      return true;
+    }
+    if (newYear === currentYear - 1 && newMonth === 12 && currentMonth === 1) {
+      return true;
+    }
 
     return false;
   }
@@ -226,7 +274,7 @@ export default class UpcomingEventsCalendar extends Component {
     return (
       newYear === today.year() &&
       newMonth === today.month() + 1 &&
-      (currentParams.year != newYear || currentParams.month != newMonth)
+      (currentParams.year !== newYear || currentParams.month !== newMonth)
     );
   }
 

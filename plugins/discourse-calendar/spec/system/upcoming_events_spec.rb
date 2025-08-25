@@ -258,4 +258,14 @@ describe "Upcoming Events", type: :system do
       end
     end
   end
+
+  describe "switching from month to week view" do
+    it "keeps the same day" do
+      visit("/upcoming-events/month/2025/8/21")
+
+      upcoming_events.open_day_view
+
+      expect(page).to have_current_path("/upcoming-events/day/2025/8/21")
+    end
+  end
 end
