@@ -305,9 +305,9 @@ RSpec.describe TopicEmbed do
           expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
         end
 
-        it "will revert to defaults if the modifier returns nil" do
+        it "will revert to defaults if the modifier returns empty args" do
           plugin = Plugin::Instance.new
-          plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
+          plugin.register_modifier(:topic_embed_import_create_args) { |args| {} }
 
           Jobs.run_immediately!
           imported_post =

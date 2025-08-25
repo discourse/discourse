@@ -362,7 +362,9 @@ module Email
 
       email_size = 0
       posts.each do |post|
-        next unless DiscoursePluginRegistry.apply_modifier(:should_add_email_attachments, post)
+        unless DiscoursePluginRegistry.apply_modifier(:should_add_email_attachments, true, post)
+          next
+        end
 
         post.uploads.each do |original_upload|
           optimized_1X = original_upload.optimized_images.first
