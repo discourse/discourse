@@ -105,10 +105,15 @@ function createApplication(config, settings) {
 
 function setupToolbar() {
   // Most default toolbar items aren't useful for Discourse
-  QUnit.config.urlConfig = QUnit.config.urlConfig.reject((c) =>
-    ["noglobals", "nolint", "devmode", "dockcontainer", "nocontainer"].includes(
-      c.id
-    )
+  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
+    (c) =>
+      ![
+        "noglobals",
+        "nolint",
+        "devmode",
+        "dockcontainer",
+        "nocontainer",
+      ].includes(c.id)
   );
 
   const pluginNames = new Set();

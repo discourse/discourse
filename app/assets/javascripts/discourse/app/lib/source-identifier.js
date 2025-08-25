@@ -28,7 +28,7 @@ export default function identifySource(error) {
     ""
   );
 
-  if (BROWSER_EXTENSION_PROTOCOLS.any((p) => stack.includes(p))) {
+  if (BROWSER_EXTENSION_PROTOCOLS.some((p) => stack.includes(p))) {
     return {
       type: "browser-extension",
     };

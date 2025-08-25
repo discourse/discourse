@@ -1,30 +1,39 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { bind } from "discourse/lib/decorators";
-import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
+import {
+  isDeprecationSilenced,
+  registerDeprecationHandler as registerDiscourseDeprecationHandler,
+} from "discourse/lib/deprecated";
 
 export default class DeprecationCounter {
   counts = new Map();
-  #configById = new Map();
-
-  constructor(config) {
-    for (const c of config) {
-      this.#configById.set(c.matchId, c.handler);
-    }
-  }
 
   start() {
     registerDeprecationHandler(this.handleEmberDeprecation);
     registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
   }
 
+  shouldCount(id) {
+    const handlers = DeprecationWorkflow.find(id)?.handler?.split("|");
+
+    const isSilenced = isDeprecationSilenced(id);
+    const hasSilence = handlers?.includes("silence") ?? false;
+    const hasCounter = handlers?.includes("counter") ?? false;
+
+    // Increment when the id is not silenced and either:
+    // - no handlers are configured
+    // - the handler "silence" is not included
+    // - explicitly includes the handler "counter"
+    return !isSilenced && (!handlers || !hasSilence || hasCounter);
+  }
+
   @bind
   handleEmberDeprecation(message, options, next) {
     const { id } = options;
-    const matchingConfig = this.#configById.get(id);
 
-    if (matchingConfig !== "silence") {
-      this.incrementDeprecation(id);
+    if (this.shouldCount(id)) {
+      this.incrementCount(id);
     }
 
     next(message, options);
@@ -32,21 +41,18 @@ export default class DeprecationCounter {
 
   @bind
   handleDiscourseDeprecation(message, options) {
-    let { id } = options;
-    id ||= "discourse.(unknown)";
+    const id = options?.id || "discourse.(unknown)";
 
-    const matchingConfig = this.#configById.get(id);
-
-    if (matchingConfig !== "silence") {
-      this.incrementDeprecation(id);
+    if (this.shouldCount(id)) {
+      this.incrementCount(id);
     }
   }
 
-  incrementDeprecation(id) {
+  incrementCount(id) {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
     if (window.Testem) {
-      reportToTestem(id);
+      reportDeprecationToTestem(id);
     }
   }
 
@@ -55,23 +61,33 @@ export default class DeprecationCounter {
   }
 
   generateTable() {
+    const idColumn = "id";
+    const countColumn = "count";
+
     const maxIdLength = Math.max(
-      ...Array.from(this.counts.keys()).map((k) => k.length)
+      ...Array.from(this.counts.keys())
+        .concat(idColumn)
+        .map((k) => k.length)
     );
 
-    let msg = `| ${"id".padEnd(maxIdLength)} | count |\n`;
-    msg += `| ${"".padEnd(maxIdLength, "-")} | ----- |\n`;
+    let msg = `| ${idColumn.padEnd(maxIdLength)} |    ${countColumn} |\n`;
+    msg += `| ${"".padEnd(maxIdLength, "-")} | -------- |\n`;
 
-    for (const [id, count] of this.counts.entries()) {
+    for (const [id, count] of Array.from(this.counts.entries()).sort(
+      ([id1], [id2]) => {
+        // sort id alphabetically
+        return id1.localeCompare(id2);
+      }
+    )) {
       const countString = count.toString();
-      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
+      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(8)} |\n`;
     }
 
     return msg;
   }
 }
 
-function reportToTestem(id) {
+function reportDeprecationToTestem(id) {
   window.Testem.useCustomAdapter(function (socket) {
     socket.emit("test-metadata", "increment-deprecation", {
       id,
@@ -80,7 +96,7 @@ function reportToTestem(id) {
 }
 
 export function setupDeprecationCounter(qunit) {
-  const deprecationCounter = new DeprecationCounter(DEPRECATION_WORKFLOW);
+  const deprecationCounter = new DeprecationCounter();
 
   qunit.begin(() => deprecationCounter.start());
 
