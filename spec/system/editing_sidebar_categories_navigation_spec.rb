@@ -250,44 +250,25 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     it "shows the 'Show more' link after loading additional subcategories via intersection observer" do
       visit "/latest"
 
-      sidebar.click_edit_categories_button
+      modal = sidebar.click_edit_categories_button
 
-      # Initial load should show the parent category and 4 subcategories
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{parent_category.id}']",
-      )
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{subcategory1.id}']",
-      )
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{subcategory2.id}']",
-      )
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{subcategory3.id}']",
-      )
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{subcategory4.id}']",
-      )
+      expect(modal).to have_category_row(parent_category)
+      expect(modal).to have_category_row(subcategory1)
+      expect(modal).to have_category_row(subcategory2)
+      expect(modal).to have_category_row(subcategory3)
+      expect(modal).to have_category_row(subcategory4)
 
-      # Initially no "Show more" button since we only have 4 subcategories loaded
-      expect(page).not_to have_css(
-        "button",
-        text: I18n.t("js.sidebar.categories_form_modal.show_more"),
-      )
+      expect(modal).to have_no_show_more_button
 
-      # Scroll to the bottom to trigger intersection observer
-      scroll_to(
-        find(".sidebar-categories-form__category-row[data-category-id=\"#{subcategory4.id}\"]"),
-      )
+      modal.scroll_to_category(subcategory4)
 
-      expect(page).to have_css(
-        ".sidebar-categories-form__category-row[data-category-id='#{subcategory5.id}']",
-      )
-      expect(page).to have_css(".sidebar-categories-form__show-more-btn")
+      expect(modal).to have_category_row(subcategory5)
+
+      expect(modal).to have_show_more_button
 
       # We need to briefly wait for things to settle, otherwise clicking the button doesn't work.
       wait_for_timeout(200)
-      find(".sidebar-categories-form__show-more-btn").click
+      modal.click_show_more_button
 
       expect(page).to have_content(subcategory6.name)
     end
