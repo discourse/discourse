@@ -90,6 +90,7 @@ class Capabilities {
               `executes during page rendering.`,
             {
               id: "discourse.static-viewport-initialization",
+              url: "https://meta.discourse.org/t/367810",
             }
           );
         }
