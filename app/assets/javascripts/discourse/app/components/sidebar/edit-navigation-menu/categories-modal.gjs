@@ -200,10 +200,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       categories = [...this.fetchedCategories.slice(index), ...categories];
     }
 
-    this.partialCategoryInfos = new Map([
-      ...this.partialCategoryInfos,
-      ...findPartialCategories(categories),
-    ]);
+    // Recalculate the partialCategoryInfos using the full set of categories
+    // to properly identify categories that now have exactly 5 subcategories
+    // after loading more via the intersection observer
+    this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
 
     this.recomputeGroupings();
   }
@@ -224,10 +224,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         ...this.fetchedCategories.slice(index),
       ];
 
-      this.partialCategoryInfos = new Map([
-        ...this.partialCategoryInfos,
-        ...findPartialCategories(subcategories),
-      ]);
+      // Recalculate partial categories based on the full set of categories
+      // to ensure we properly identify categories with exactly 5 subcategories
+      this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
 
       this.partialCategoryInfos.set(id, {
         offset: offset + subcategories.length,
@@ -504,7 +503,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                           <DButton
                             @label="sidebar.categories_form_modal.show_more"
                             @action={{fn this.loadSubcategories c.id c.offset}}
-                            class="btn-flat"
+                            class="sidebar-categories-form__show-more-btn btn-flat"
                           />
                         </div>
                       </div>

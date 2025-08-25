@@ -50,6 +50,28 @@ module PageObjects
           ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
         )
       end
+
+      def has_category_row?(category)
+        has_css?(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
+      end
+
+      def has_no_show_more_button?
+        has_no_css?(".sidebar-categories-form__show-more-btn")
+      end
+
+      def has_show_more_button?
+        has_css?(".sidebar-categories-form__show-more-btn")
+      end
+
+      def scroll_to_category(category)
+        scroll_to(find(".sidebar-categories-form__category-row[data-category-id='#{category.id}']"))
+        self
+      end
+
+      def click_show_more_button
+        find(".sidebar-categories-form__show-more-btn").click
+        self
+      end
     end
   end
 end
