@@ -39,8 +39,12 @@ module PageObjects
         form.field("user_selectable")
       end
 
-      def default_on_theme_field
-        form.field("default_on_theme")
+      def default_light_on_theme_field
+        form.field("default_light_on_theme")
+      end
+
+      def default_dark_on_theme_field
+        form.field("default_dark_on_theme")
       end
 
       def color_palette_editor

@@ -47,7 +47,8 @@ class Admin::ColorSchemesController < Admin::AdminController
         :base_scheme_id,
         :name,
         :user_selectable,
-        :default_on_theme,
+        :default_light_on_theme,
+        :default_dark_on_theme,
         colors: %i[name hex dark_hex],
       ],
     )[

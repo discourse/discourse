@@ -8,8 +8,7 @@ class ColorSchemeSerializer < ApplicationSerializer
              :theme_id,
              :theme_name,
              :user_selectable,
-             :is_builtin_default,
-             :is_dark
+             :is_builtin_default
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects
 
   def theme_name
@@ -22,9 +21,5 @@ class ColorSchemeSerializer < ApplicationSerializer
     resolved.map do |name, default|
       db_colors[name] || ColorSchemeColor.new(name: name, hex: default, color_scheme: object)
     end
-  end
-
-  def is_dark
-    object.is_dark?
   end
 end
