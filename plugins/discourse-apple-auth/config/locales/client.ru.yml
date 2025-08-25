@@ -9,6 +9,6 @@ ru:
     login:
       apple:
         name: "Apple"
-        title: "Войдите в систему с помощью Apple"
-        sr_title: "Войдите в систему с помощью Apple"
+        title: "Войти через Apple"
+        sr_title: "Войти через Apple"
         message: "Аутентификация с помощью Apple"
