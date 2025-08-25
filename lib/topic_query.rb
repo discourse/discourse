@@ -430,6 +430,10 @@ class TopicQuery
     end
   end
 
+  def self.unseen_filter(list, user)
+    self.new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
+  end
+
   def self.new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
     if treat_as_new_topic_start_date
       list =
@@ -655,6 +659,13 @@ class TopicQuery
 
     results = results.order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
     suggested_ordering(results, options)
+  end
+
+  def unseen_filter(list, user_first_seen_at, whisperer)
+    list = list.where("topics.bumped_at >= ?", user_first_seen_at)
+
+    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
+    list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 
   protected
@@ -1256,13 +1267,6 @@ class TopicQuery
   end
 
   private
-
-  def unseen_filter(list, user_first_seen_at, whisperer)
-    list = list.where("topics.bumped_at >= ?", user_first_seen_at)
-
-    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
-    list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
-  end
 
   def apply_max_age_limit(results, options)
     if @user

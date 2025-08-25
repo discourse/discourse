@@ -722,11 +722,7 @@ class TopicsFilter
 
       if values.delete("unseen")
         ensure_topic_users_reference!
-        first_seen_at = @guardian.user.first_seen_at || Time.at(0)
-        @scope =
-          @scope.where("topics.bumped_at >= ?", first_seen_at).where(
-            "tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number",
-          )
+        @scope = TopicQuery.unseen_filter(@scope, @guardian.user)
       end
 
       if values.delete("bookmarked")
