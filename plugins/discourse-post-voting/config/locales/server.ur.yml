@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ur:
+  topic:
+    post_voting:
+      answer_count:
+        one: "%{count} جواب"
+        other: "%{count} جوابات"
   post_action_types:
     vote:
       title: "ووٹ"

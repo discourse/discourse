@@ -35,7 +35,7 @@ ar:
       chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
       direct_message_enabled_groups_invalid: "يجب عليك تحديد مجموعة واحدة على الأقل لهذا الإعداد. إذا كنت لا تريد أن يقوم أي شخص باستثناء فريق العمل بإرسال رسائل مباشرة، فاختر مجموعة فريق العمل."
       chat_upload_not_allowed_secure_uploads: "غير مسموح بتحميلات الدردشة عندما يكون إعداد الموقع المسؤول عن التحميلات الآمنة مفعَّلًا."
-      allow_chat_in_anonymous_mode_invalid: "يتطلب هذا الإعداد تفعيل خيار \"السماح بالوضع المجهول\" أولًا."
+      allow_chat_in_anonymous_mode_invalid: "يشترط هذا الإعداد تفعيل خيار \"السماح بوضع المستخدم المجهول\" مسبقًا."
   system_messages:
     private_channel_title: "القناة %{id}"
     chat_channel_archive_complete:

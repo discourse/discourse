@@ -14,7 +14,7 @@ ru:
       comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
   js:
     discourse_post_voting:
-      title: "Опубликовать голосование"
+      title: "Голосование по публикациям"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -127,9 +127,9 @@ ru:
           other: "%{count} ответа"
         voters_count_diff:
           one: "и еще %{count} пользователь..."
-          few: "и еще %{count} пользователей..."
+          few: "и еще %{count} пользователя..."
           many: "и еще %{count} пользователей..."
-          other: "и еще %{count} пользователи..."
+          other: "и еще %{count} пользователя..."
     review:
       transcript:
         view: "Просмотр содержимого предыдущих сообщений"

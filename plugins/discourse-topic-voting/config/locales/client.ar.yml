@@ -44,8 +44,8 @@ ar:
         other: "%{count} صوت"
       anonymous_button:
         zero: "أصوات"
-        one: "تصويت واحد"
-        two: "تصويتان"
+        one: "صوت واحد"
+        two: "صوتان"
         few: "أصوات"
         many: "صوتًا"
         other: "صوت"

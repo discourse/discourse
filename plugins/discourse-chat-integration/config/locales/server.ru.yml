@@ -63,7 +63,7 @@ ru:
     chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
   dashboard:
     problem:
-      channel_errors: "В некоторых каналах интеграции чата есть ошибки. Подробнее см. в разделе <a href='%{base_path}/admin/plugins/chat-integration'>об интеграции чата</a> ."
+      channel_errors: "В некоторых каналах интеграции чата обнаружены ошибки. Перейдите в <a href='%{base_path}/admin/plugins/chat-integration'>раздел интеграции чата</a>, чтобы узнать подробности."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -184,7 +184,7 @@ ru:
         status:
           header: |
             *Правила для этого канала*
-            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
+            (если публикация соответствует нескольким правилам, то выполняется самое верхнее правило)
           no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
           rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
           rule_string_tags_suffix: " с тегами: *%{tags}*"
