@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+body {
+  background: red;
+}
+
 .post-stream {
   .contents {
     font-size: var(--font-up-1);
@@ -58,6 +62,11 @@ body:not(.d-toc-installed) {
     @media screen and (width <= 924px) {
       grid-template-columns: auto auto;
     }
+  }
+
+  .topic-navigation-popup {
+    min-width: 250px;
+    right: 0;
   }
 }
 
