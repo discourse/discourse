@@ -42,6 +42,13 @@ describe "User preferences | Profile", type: :system do
         requirement: :for_all_users,
         editable: true,
       )
+      UserField.create!(
+        field_type: "confirm",
+        name: "Updated terms",
+        description: "Please accept our updated our terms of service.",
+        requirement: :for_all_users,
+        editable: true,
+      )
     end
 
     it "server-side redirects to the profile page to fill up required fields" do
@@ -82,6 +89,7 @@ describe "User preferences | Profile", type: :system do
       user_preferences_profile_page.visit(user)
 
       find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
+      find(".user-field-updated-terms input").check
       find(".save-button .btn-primary").click
 
       expect(page).to have_selector(".pref-bio")
