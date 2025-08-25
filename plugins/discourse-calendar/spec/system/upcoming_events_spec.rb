@@ -148,4 +148,114 @@ describe "Upcoming Events", type: :system do
       )
     end
   end
+
+  context "when navigating between dates" do
+    context "when clicking today", time: Time.utc(2025, 6, 2, 19, 00) do
+      it "shows the current date" do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.today
+
+        expect(page).to have_current_path("/upcoming-events/month/2025/6/2")
+
+        context "when in a different timezone", timezone: "Europe/London" do
+          it "also works" do
+            visit("/upcoming-events/day/2025/8/1")
+
+            upcoming_events.today
+
+            expect(page).to have_current_path("/upcoming-events/day/2025/6/2")
+          end
+        end
+      end
+    end
+
+    context "when clicking next" do
+      it "shows the next month" do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.next
+
+        expect(page).to have_current_path("/upcoming-events/month/2025/9/1")
+      end
+
+      it "shows the next week" do
+        visit("/upcoming-events/week/2025/8/4")
+
+        upcoming_events.next
+
+        expect(page).to have_current_path("/upcoming-events/week/2025/8/11")
+      end
+
+      context "when in a different timezone", timezone: "Europe/London" do
+        it "shows the next day" do
+          visit("/upcoming-events/day/2025/8/4")
+
+          upcoming_events.next
+
+          expect(page).to have_current_path("/upcoming-events/day/2025/8/5")
+        end
+
+        it "shows the next week" do
+          visit("/upcoming-events/week/2025/8/4")
+
+          upcoming_events.next
+
+          expect(page).to have_current_path("/upcoming-events/week/2025/8/11")
+        end
+      end
+    end
+
+    context "when clicking prev" do
+      it "shows the prev day" do
+        visit("/upcoming-events/day/2025/8/1")
+
+        upcoming_events.prev
+
+        expect(page).to have_current_path("/upcoming-events/day/2025/7/31")
+      end
+
+      it "shows the prev month" do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.prev
+
+        expect(page).to have_current_path("/upcoming-events/month/2025/7/1")
+      end
+
+      it "shows the prev week" do
+        visit("/upcoming-events/week/2025/8/4")
+
+        upcoming_events.prev
+
+        expect(page).to have_current_path("/upcoming-events/week/2025/7/28")
+      end
+
+      context "when in a different timezone", timezone: "Europe/London" do
+        it "shows the prev day" do
+          visit("/upcoming-events/day/2025/8/1")
+
+          upcoming_events.prev
+
+          expect(page).to have_current_path("/upcoming-events/day/2025/7/31")
+        end
+
+        it "shows the prev month" do
+          visit("/upcoming-events/month/2025/8/1")
+
+          upcoming_events.prev
+
+          expect(page).to have_current_path("/upcoming-events/month/2025/7/1")
+        end
+
+        it "shows the prev week" do
+          visit("/upcoming-events/week/2025/8/4")
+
+          upcoming_events.prev
+
+          expect(page).to have_current_path("/upcoming-events/week/2025/7/28")
+        end
+      end
+    end
+  end
 end

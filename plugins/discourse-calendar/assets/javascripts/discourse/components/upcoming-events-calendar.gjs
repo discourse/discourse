@@ -138,50 +138,95 @@ export default class UpcomingEventsCalendar extends Component {
 
     const view = normalizeViewForRoute(info.view.type);
     const currentParams = this.router.currentRoute.params;
-
-    // Use the middle of the calendar view period to avoid edge cases
-    // (FullCalendar month view includes dates from previous/next months)
-    const viewStart = moment(info.view.currentStart);
-    const viewEnd = moment(info.view.currentEnd);
-    const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
-
-    const middleYear = viewMiddle.year();
-    const middleMonth = viewMiddle.month() + 1; // moment months are 0-indexed
-    const middleDay = viewMiddle.date();
-
     const currentYear = parseInt(currentParams.year, 10);
     const currentMonth = parseInt(currentParams.month, 10);
     const currentDay = parseInt(currentParams.day, 10);
 
-    // Check if we need to update the URL
-    let shouldNavigate = false;
+    const {
+      year: urlYear,
+      month: urlMonth,
+      day: urlDay,
+    } = this.#calculateUrlParams(view, info.view, currentYear, currentMonth);
 
-    if (currentParams.view !== view) {
-      shouldNavigate = true; // View type changed
-    } else if (
+    const isViewChanged = currentParams.view !== view;
+    const isMonthChanged =
       view === "month" &&
-      (currentYear !== middleYear || currentMonth !== middleMonth)
-    ) {
-      shouldNavigate = true; // Month view: year or month changed
-    } else if (
+      (currentYear !== urlYear || currentMonth !== urlMonth);
+    const isDayChanged =
       view !== "month" &&
-      (currentYear !== middleYear ||
-        currentMonth !== middleMonth ||
-        currentDay !== middleDay)
-    ) {
-      shouldNavigate = true; // Week/day view: any date component changed
-    }
+      (currentYear !== urlYear ||
+        currentMonth !== urlMonth ||
+        currentDay !== urlDay);
 
-    if (!shouldNavigate) {
-      return;
+    if (isViewChanged || isMonthChanged || isDayChanged) {
+      this.router.replaceWith(
+        this.router.currentRouteName,
+        view,
+        urlYear,
+        urlMonth,
+        urlDay
+      );
     }
+  }
 
-    this.router.replaceWith(
-      this.router.currentRouteName,
-      view,
-      middleYear,
-      middleMonth,
-      middleDay
+  #calculateUrlParams(view, calendarView, currentYear, currentMonth) {
+    const viewStart = moment(calendarView.currentStart);
+    const viewEnd = moment(calendarView.currentEnd);
+    const currentParams = this.router.currentRoute.params;
+
+    if (view === "month") {
+      const startYear = viewStart.year();
+      const startMonth = viewStart.month() + 1;
+
+      if (
+        this.#isSequentialMonthNavigation(
+          currentYear,
+          currentMonth,
+          startYear,
+          startMonth
+        )
+      ) {
+        return { year: startYear, month: startMonth, day: 1 };
+      } else if (
+        this.#isTodayNavigation(currentParams, startYear, startMonth)
+      ) {
+        return { year: startYear, month: startMonth, day: moment().date() };
+      } else {
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
+        return {
+          year: viewMiddle.year(),
+          month: viewMiddle.month() + 1,
+          day: viewMiddle.date(),
+        };
+      }
+    } else {
+      return {
+        year: viewStart.year(),
+        month: viewStart.month() + 1,
+        day: viewStart.date(),
+      };
+    }
+  }
+
+  #isSequentialMonthNavigation(currentYear, currentMonth, newYear, newMonth) {
+    if (newYear === currentYear && newMonth === currentMonth + 1) return true;
+    if (newYear === currentYear && newMonth === currentMonth - 1) return true;
+    if (newYear === currentYear + 1 && newMonth === 1 && currentMonth === 12)
+      return true;
+    if (newYear === currentYear - 1 && newMonth === 12 && currentMonth === 1)
+      return true;
+
+    return false;
+  }
+
+  #isTodayNavigation(currentParams, newYear, newMonth) {
+    const today = moment();
+    return (
+      newYear === today.year() &&
+      newMonth === today.month() + 1 &&
+      (currentParams.year != newYear || currentParams.month != newMonth)
     );
   }
 
