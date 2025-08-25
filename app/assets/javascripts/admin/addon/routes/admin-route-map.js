@@ -244,6 +244,9 @@ export default function () {
           });
           this.route("authenticators");
           this.route("discourseconnect");
+          this.route("oauth2");
+          this.route("oidc");
+          this.route("saml");
         });
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });

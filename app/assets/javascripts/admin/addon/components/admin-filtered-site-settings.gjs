@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
@@ -53,21 +54,23 @@ export default class AdminFilteredSiteSettings extends Component {
   }
 
   <template>
-    <AdminSiteSettingsFilterControls
-      @onChangeFilter={{this.filterChanged}}
-      @initialFilter={{@initialFilter}}
-    />
+    <PluginOutlet @name="admin-config-area-filtered-site-settings">
+      <AdminSiteSettingsFilterControls
+        @onChangeFilter={{this.filterChanged}}
+        @initialFilter={{@initialFilter}}
+      />
 
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <section class="admin-filtered-site-settings form-horizontal settings">
-        {{#each this.visibleSettings as |setting|}}
-          <SiteSetting @setting={{setting}} />
-        {{/each}}
+      <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <section class="admin-filtered-site-settings form-horizontal settings">
+          {{#each this.visibleSettings as |setting|}}
+            <SiteSetting @setting={{setting}} />
+          {{/each}}
 
-        {{#if this.noResults}}
-          {{i18n "admin.site_settings.no_results"}}
-        {{/if}}
-      </section>
-    </ConditionalLoadingSpinner>
+          {{#if this.noResults}}
+            {{i18n "admin.site_settings.no_results"}}
+          {{/if}}
+        </section>
+      </ConditionalLoadingSpinner>
+    </PluginOutlet>
   </template>
 }

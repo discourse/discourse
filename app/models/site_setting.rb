@@ -7,6 +7,9 @@ class SiteSetting < ActiveRecord::Base
     login
     authenticators
     discourseconnect
+    oauth2
+    oidc
+    saml
     badges
     categories_and_tags
     email
