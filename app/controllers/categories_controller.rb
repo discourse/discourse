@@ -184,6 +184,13 @@ class CategoriesController < ApplicationController
       category_params[:email_in] = nil if category_params[:email_in]&.blank?
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
+      if category_params[:auto_close_hours]
+        cat.set_or_create_timer! user: current_user,
+                                 status_type: CategoryDefaultTimer.types[:close],
+                                 duration_minutes: category_params[:auto_close_hours].to_i * 60,
+                                 based_on_last_post: category_params[:auto_close_based_on_last_post]
+      end
+
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
 

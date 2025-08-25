@@ -303,7 +303,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
-  has_many :topic_timers, dependent: :destroy
+  has_many :topic_timers, foreign_key: :timerable_id, dependent: :destroy
   has_many :reviewables
   has_many :user_profiles
 
@@ -411,7 +411,7 @@ class Topic < ActiveRecord::Base
     write_attribute(:fancy_title, Topic.fancy_title(title)) if title_changed?
 
     if category_id_changed? || new_record?
-      inherit_auto_close_from_category
+      inherit_topic_timer_from_category
       inherit_slow_mode_from_category
     end
 
@@ -1578,35 +1578,39 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def inherit_auto_close_from_category(timer_type: :close)
-    auto_close_hours = self.category&.auto_close_hours
+  def inherit_topic_timer_from_category(timer_type: nil)
+    default_timer = self.category&.category_default_timer
 
-    if self.open? && !@ignore_category_auto_close && auto_close_hours.present? &&
+    if self.open? && !@ignore_category_auto_close && default_timer&.duration_minutes.present? &&
          public_topic_timer&.execute_at.blank?
-      based_on_last_post = self.category.auto_close_based_on_last_post
-      duration_minutes = based_on_last_post ? auto_close_hours * 60 : nil
+      based_on_last_post = default_timer.based_on_last_post
+      duration_minutes = based_on_last_post ? default_timer.duration_minutes : nil
 
       # the timer time can be a timestamp or an integer based
       # on the number of hours
-      auto_close_time = auto_close_hours
+      target_time = default_timer.duration_minutes
 
       if !based_on_last_post
         # set auto close to the original time it should have been
         # when the topic was first created.
         start_time = self.created_at || Time.zone.now
-        auto_close_time = start_time + auto_close_hours.hours
+        target_time = start_time + default_timer.duration_minutes.minutes
 
         # if we have already passed the original close time then
         # we should not recreate the auto-close timer for the topic
-        return if auto_close_time < Time.zone.now
+        return if target_time < Time.zone.now
 
         # timestamp must be a string for set_or_create_timer
-        auto_close_time = auto_close_time.to_s
+        target_time = target_time.to_s
       end
 
       self.set_or_create_timer(
-        TopicTimer.types[timer_type],
-        auto_close_time,
+        if timer_type.present?
+          TopicTimer.types[timer_type]
+        else
+          default_timer.status_type
+        end,
+        target_time,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
         duration_minutes: duration_minutes,
