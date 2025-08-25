@@ -153,23 +153,21 @@ export default class UpcomingEventsList extends Component {
       return result;
     }, {});
 
-    // Convert object to Map and sort
-    const sortedData = new Map(
+    const sortedMonths = new Map(
       Object.entries(events).sort(([a], [b]) => a.localeCompare(b))
     );
 
-    // For nested objects, sort those too:
-    const fullysorted = new Map();
-    for (const [month, days] of sortedData) {
+    const fullySorted = new Map();
+    for (const [month, days] of sortedMonths) {
       const sortedDays = new Map(
         Object.entries(days).sort(
           ([a], [b]) => parseInt(a, 10) - parseInt(b, 10)
         )
       );
-      fullysorted.set(month, sortedDays);
+      fullySorted.set(month, sortedDays);
     }
 
-    return fullysorted;
+    return fullySorted;
   }
 
   <template>
