@@ -110,7 +110,7 @@ export default {
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval =
       siteSettings.background_polling_interval;
-    
+
     if (
       siteSettings.long_polling_base_url &&
       siteSettings.long_polling_base_url !== "/"
