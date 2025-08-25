@@ -2,23 +2,23 @@ login:
   oauth2_enabled:
     default: false
     client: true
-    area: "authenticators"
+    area: "oauth2"
   oauth2_client_id:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_client_secret:
     default: ""
     secret: true
-    area: "authenticators"
+    area: "oauth2"
   oauth2_authorize_url:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_authorize_signup_url:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_token_url:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_token_url_method:
     default: "POST"
     type: enum
@@ -26,75 +26,75 @@ login:
       - GET
       - POST
       - PUT
-    area: "authenticators"
+    area: "oauth2"
   oauth2_callback_user_id_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_callback_user_info_paths:
     type: list
     default: "id"
-    area: "authenticators"
+    area: "oauth2"
   oauth2_fetch_user_details:
     default: true
     validator: "Oauth2FetchUserDetailsValidator"
-    area: "authenticators"
+    area: "oauth2"
   oauth2_user_json_url:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_user_json_url_method:
     default: "GET"
     type: enum
     choices:
       - GET
       - POST
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_user_id_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_username_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_name_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_email_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_email_verified_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_json_avatar_path:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_email_verified:
     default: false
-    area: "authenticators"
+    area: "oauth2"
   oauth2_overrides_email:
     default: false
-    area: "authenticators"
+    area: "oauth2"
   oauth2_send_auth_header:
     default: true
-    area: "authenticators"
+    area: "oauth2"
   oauth2_send_auth_body:
     default: true
-    area: "authenticators"
+    area: "oauth2"
   oauth2_debug_auth:
     default: false
-    area: "authenticators"
+    area: "oauth2"
   oauth2_authorize_options:
     default: "scope"
     type: list
-    area: "authenticators"
+    area: "oauth2"
   oauth2_scope:
     default: ""
-    area: "authenticators"
+    area: "oauth2"
   oauth2_button_title:
     default: "with OAuth2"
     client: true
-    area: "authenticators"
+    area: "oauth2"
   oauth2_allow_association_change:
     default: false
-    area: "authenticators"
+    area: "oauth2"
   oauth2_disable_csrf:
     default: false
     hidden: true
