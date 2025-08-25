@@ -16,7 +16,7 @@ module Jobs
         topic.reload
 
         if topic_timer.based_on_last_post
-          topic.inherit_auto_close_from_category(timer_type: silent ? :silent_close : :close)
+          topic.inherit_topic_timer_from_category(timer_type: silent ? :silent_close : :close)
         end
 
         return

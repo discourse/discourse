@@ -35,13 +35,13 @@ module Jobs
           topic.update_status("autoclosed", state, user, { silent: args[:silent] })
         end
 
-        topic.inherit_auto_close_from_category(timer_type: timer_type) if state == false
+        topic.inherit_topic_timer_from_category(timer_type: timer_type) if state == false
       else
         topic_timer.destroy!
         topic.reload
 
         if topic_timer.based_on_last_post
-          topic.inherit_auto_close_from_category(timer_type: timer_type)
+          topic.inherit_topic_timer_from_category(timer_type: timer_type)
         end
       end
     end

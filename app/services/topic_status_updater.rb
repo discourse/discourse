@@ -71,7 +71,7 @@ TopicStatusUpdater =
           topic.delete_topic_timer(TopicTimer.types[:silent_close])
         elsif status.manually_opening_topic? || status.opening_topic?
           topic.delete_topic_timer(TopicTimer.types[:open])
-          topic.inherit_auto_close_from_category
+          topic.inherit_topic_timer_from_category
         end
       end
 
