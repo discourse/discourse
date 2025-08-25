@@ -2,9 +2,15 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class ComposerToggles extends Component {
   @service site;
+
+  get additionalClasses() {
+    return applyValueTransformer("composer-toggles-class", "");
+  }
 
   get showCollapseButton() {
     return (
@@ -42,7 +48,7 @@ export default class ComposerToggles extends Component {
   }
 
   <template>
-    <div class="composer-controls">
+    <div class={{concatClass "composer-controls" this.additionalClasses}}>
       <span>
         <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
       </span>
