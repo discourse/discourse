@@ -31,6 +31,7 @@ export default class ComposerPeekModeToggle extends Component {
       @action={{this.togglePeekMode}}
       @preventFocus={{true}}
       @icon="discourse-sidebar"
+      @title="composer.peek_mode_toggle"
       class="btn-mini-toggle no-text peek-mode-toggle btn-transparent"
     />
   </template>

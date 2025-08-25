@@ -257,6 +257,11 @@ export default class Composer extends RestModel {
     return (title || "").trim() !== (original || "").trim();
   }
 
+  @discourseComputed("replyDirty", "titleDirty", "hasMetaData")
+  anyDirty(replyDirty, titleDirty, hasMetaData) {
+    return replyDirty || titleDirty || hasMetaData;
+  }
+
   @dependentKeyCompat
   get categoryId() {
     return this._categoryId;

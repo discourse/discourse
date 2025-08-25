@@ -222,7 +222,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if there is no draft on a topic without a template" do
       category_page.visit(category_no_template)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -230,7 +230,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_no_template)
       category_page.new_topic_button.click
       composer.fill_content("abc")
-      composer.close
+      composer.discard
       expect(composer).to be_opened
       expect(composer).to have_discard_draft_modal
     end
@@ -238,7 +238,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if there is no draft on a topic with a topic template" do
       category_page.visit(category_topic_template)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -246,7 +246,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_topic_template)
       category_page.new_topic_button.click
       composer.append_content(" some more content")
-      composer.close
+      composer.discard
       expect(composer).to be_opened
       expect(composer).to have_discard_draft_modal
     end
@@ -254,7 +254,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if on a topic with a form template" do
       category_page.visit(category_with_template_1)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -274,7 +274,7 @@ describe "Composer Form Templates", type: :system do
       it "does not show the modal if there is no draft" do
         category_page.visit(default_category)
         category_page.new_topic_button.click
-        composer.close
+        composer.discard
         expect(composer).to be_closed
       end
 
@@ -282,7 +282,7 @@ describe "Composer Form Templates", type: :system do
         category_page.visit(default_category)
         category_page.new_topic_button.click
         composer.append_content(" some more content")
-        composer.close
+        composer.discard
         expect(composer).to be_opened
         expect(composer).to have_discard_draft_modal
       end
