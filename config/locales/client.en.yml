@@ -5665,10 +5665,22 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
+            oauth2:
+              title: "OAuth2.0"
+            oidc:
+              title: "OIDC"
+            saml:
+              title: "SAML"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
