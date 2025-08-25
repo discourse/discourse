@@ -36,6 +36,7 @@ import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/compo
 
 export default class AiBotConversations extends Component {
   @service aiBotConversationsHiddenSubmit;
+  @service capabilities;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -81,7 +82,7 @@ export default class AiBotConversations extends Component {
           this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
             optimizeFn: (data, opts) =>
               this.mediaOptimizationWorker.optimizeImage(data, opts),
-            runParallel: !this.site.isMobileDevice,
+            runParallel: !this.capabilities.isMobileDevice,
           });
         }
 

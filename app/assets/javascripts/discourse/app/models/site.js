@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
@@ -92,6 +92,7 @@ export default class Site extends RestModel {
   @sort("categories", "topicCountDesc") categoriesByCount;
 
   #glimmerPostStreamEnabled;
+  #siteInitialized = false;
 
   init() {
     super.init(...arguments);
@@ -107,8 +108,37 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get mobileView() {
+    this.#siteInitialized ||= getOwnerWithFallback(this).lookup(
+      "-application-instance:main"
+    )?._booted;
+
+    if (!this.#siteInitialized) {
+      if (isTesting() || isRailsTesting()) {
+        throw new Error(
+          "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase. " +
+            "Move these checks to a component, transformer, or API callback that executes during page rendering."
+        );
+      }
+
+      deprecated(
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase is deprecated. " +
+          "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
+          "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+          "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
+          " rendering.",
+        {
+          since: "3.5.0.beta9-dev",
+          id: "discourse.static-viewport-initialization",
+          url: "https://meta.discourse.org/t/367810",
+        }
+      );
+    }
+
     if (this.siteSettings.viewport_based_mobile_mode) {
-      return !this.capabilities.viewport.sm;
+      return withSilencedDeprecations(
+        "discourse.static-viewport-initialization",
+        () => !this.capabilities.viewport.sm
+      );
     } else {
       return Mobile.mobileView;
     }
@@ -116,6 +146,16 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get isMobileDevice() {
+    deprecated(
+      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
+        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
+      {
+        id: "discourse.site.is-mobile-device",
+        since: "3.5.0.beta9-dev",
+        url: "https://meta.discourse.org/t/367810",
+      }
+    );
+
     return this.mobileView;
   }
 

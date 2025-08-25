@@ -1,16 +1,15 @@
+import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 
 let mobileForced = false;
 
 //  An object that is responsible for logic related to mobile devices.
 const Mobile = {
-  isMobileDevice: false,
   mobileView: false,
 
   init() {
     const documentClassList = document.documentElement.classList;
-    this.isMobileDevice =
-      mobileForced || documentClassList.contains("mobile-device");
     this.mobileView = mobileForced || documentClassList.contains("mobile-view");
 
     if (isTesting() || mobileForced) {
@@ -31,6 +30,20 @@ const Mobile = {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
     }
+  },
+
+  get mobileForced() {
+    return mobileForced;
+  },
+
+  get isMobileDevice() {
+    deprecated(
+      "`Mobile.isMobileDevice` is deprecated. Use `capabilities.isMobileDevice` instead.",
+      { id: "discourse.site.is-mobile-device", since: "3.5.0.beta9-dev" }
+    );
+
+    return getOwnerWithFallback(this).lookup("service:capabilities")
+      .isMobileDevice;
   },
 
   maybeReload() {
