@@ -4,18 +4,47 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { isImage } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
+import { getURLWithCDN } from "discourse/lib/get-url";
 
+/**
+ * @component chat-composer-upload
+ * @param {Object} @upload
+ * @param {boolean} @isDone
+ * @param {Function} @onCancel
+ */
 export default class ChatComposerUpload extends Component {
+  /**
+   * Returns true when the current upload is an image type.
+   *
+   * @returns {boolean}
+   */
   get isImage() {
     return isImage(
       this.args.upload.original_filename || this.args.upload.fileName
     );
   }
 
+  /**
+   * File name to display depending on upload state.
+   *
+   * @returns {string}
+   */
   get fileName() {
     return this.args.isDone
       ? this.args.upload.original_filename
       : this.args.upload.fileName;
+  }
+
+  /**
+   * CDN-aware URL for the preview image.
+   *
+   * Ensures that when a CDN is configured (e.g., S3 CDN), the
+   * preview uses the CDN URL instead of the origin.
+   *
+   * @returns {string}
+   */
+  get previewImageSrc() {
+    return getURLWithCDN(this.args.upload?.short_path);
   }
 
   <template>
@@ -30,7 +59,7 @@ export default class ChatComposerUpload extends Component {
         <div class="preview">
           {{#if this.isImage}}
             {{#if @isDone}}
-              <img class="preview-img" src={{@upload.short_path}} />
+              <img class="preview-img" src={{this.previewImageSrc}} />
             {{else}}
               {{icon "far-image"}}
             {{/if}}
