@@ -3,10 +3,6 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
-  def flaggable?
-    true
-  end
-
   def self.action_aliases
     { reject_and_silence: :reject_and_suspend }
   end

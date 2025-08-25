@@ -3,10 +3,6 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
-  def flaggable?
-    true
-  end
-
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed

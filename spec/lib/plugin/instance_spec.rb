@@ -639,24 +639,6 @@ TEXT
         MyScrubbableReviewable
       end
 
-      let(:new_flaggable_type) do
-        class MyFlaggableReviewable < Reviewable
-          def self.flaggable?
-            true
-          end
-        end
-        MyFlaggableReviewable
-      end
-
-      let(:new_unflaggable_type) do
-        class MyUnflaggableReviewable < Reviewable
-          def self.flaggable?
-            false
-          end
-        end
-        MyUnflaggableReviewable
-      end
-
       it "adds the provided class to the existing types" do
         expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
         expect(Reviewable.types).to include(new_type)
@@ -675,21 +657,6 @@ TEXT
       it "is listed as a scrubbable type if it has a scrub method" do
         plugin_instance.register_reviewable_type(new_scrubbable_type)
         expect(Reviewable.scrubbable_types).to include(new_scrubbable_type)
-      end
-
-      it "isn't listed as a flaggable type if it doesn't have a flaggable method" do
-        register_reviewable_type
-        expect(Reviewable.flaggable_types).not_to include(new_type)
-      end
-
-      it "isn't listed as a flaggable type if the flaggable method is false" do
-        plugin_instance.register_reviewable_type(new_unflaggable_type)
-        expect(Reviewable.flaggable_types).not_to include(new_unflaggable_type)
-      end
-
-      it "is listed as a flaggable type if it has a flaggable method that returns true" do
-        plugin_instance.register_reviewable_type(new_flaggable_type)
-        expect(Reviewable.flaggable_types).to include(new_flaggable_type)
       end
 
       context "when the plugin is disabled" do

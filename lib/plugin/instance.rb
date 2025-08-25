@@ -897,9 +897,6 @@ class Plugin::Instance
     if reviewable_type_class.method_defined?(:scrub)
       extend_list_method(Reviewable, :scrubbable_types, reviewable_type_class)
     end
-    if reviewable_type_class.try(:flaggable?)
-      extend_list_method(Reviewable, :flaggable_types, reviewable_type_class)
-    end
   end
 
   def extend_list_method(klass, method, new_attributes)
