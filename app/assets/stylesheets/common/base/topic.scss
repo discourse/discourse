@@ -60,19 +60,25 @@
       top: 0;
       overflow-y: auto;
       z-index: z("timeline");
-      padding: 10px 10px 35px 10px;
+      padding: var(--space-4);
       box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
+
+      h2 {
+        font-size: var(--font-0);
+        padding-right: calc(
+          1em + 0.65em - var(--space-2)
+        ); // more or less reserved space for floating close button
+      }
 
       .close {
         display: flex;
         align-items: center;
         position: absolute;
         right: 0;
-        top: 8px;
+        top: 0;
         color: var(--primary);
         opacity: 0.5;
-        font-size: var(--font-up-1);
       }
     }
   }
