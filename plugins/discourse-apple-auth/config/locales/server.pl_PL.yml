@@ -7,7 +7,7 @@
 pl_PL:
   site_settings:
     sign_in_with_apple_enabled: 'Włączyć logowanie przez Apple?'
-    apple_client_id: "(Zaloguj się przez Apple) Identyfikator usługi Apple z konsoli programisty. Zwykle jest to ciąg w stylu odwrotnej nazwy domeny (np. com.example.auth) (Zaloguj się przez Apple)"
+    apple_client_id: "(Zaloguj się przez Apple) Identyfikator usługi Apple z konsoli programisty. Zwykle jest to ciąg w stylu odwrotnej nazwy domeny (np. com.example.auth)."
     apple_team_id: '(Zaloguj się przez Apple) Identyfikator zespołu Apple (10 znaków)'
     apple_key_id: '(Zaloguj się przez Apple) Identyfikator klucza Apple (10 znaków)'
     apple_pem: '(Zaloguj się przez Apple) Zawartość pliku Apple PEM. Uwzględnij wiersze BEGIN i END.'

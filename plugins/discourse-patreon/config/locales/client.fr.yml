@@ -55,6 +55,6 @@ fr:
 
           <p>Merci pour votre soutien !</p>
 
-          </p>
+          <p>
             <a class="btn btn-large btn-danger" href="%{campaignUrl}">Devenir mécène</a>
           </p>

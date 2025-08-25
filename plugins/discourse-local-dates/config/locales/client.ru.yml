@@ -9,7 +9,7 @@ ru:
     admin:
       site_settings:
         categories:
-          discourse_local_dates: "Местные даты Discourse"
+          discourse_local_dates: "Плагин Discourse «Локальные даты»"
   js:
     discourse_local_dates:
       relative_dates:

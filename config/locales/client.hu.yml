@@ -6214,9 +6214,11 @@ hu:
         themes_and_components:
           breadcrumb_title: "Személyre szabás"
           install: "Telepítés"
+          theme_site_settings:
+            title: "Téma oldal beállításai"
           themes:
             title: "Témák"
-            description: 'Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát az összes felhasználó számára. Szeretné ellenőrizni, hogy a témák mely webhelybeállításokat írják felül? <a href="%{themeSiteSettingsUrl}">Téma webhelybeállításainak megtekintése</a>'
+            description: 'Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát minden felhasználó számára.'
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
             new_theme: "Új téma"
             back: "Vissza a témákhoz"
@@ -6472,7 +6474,7 @@ hu:
           extra_files_upload: "Téma exportálása a fájlok megtekintéséhez."
           extra_files_remote: "A fájlok megtekintéséhez exportálja a témát, vagy ellenőrizze a git-tárat."
           preview: "Előnézet"
-          default: "Alapértelmezett"
+          default: "Alapértelmezett téma"
           settings_editor: "Beállítások szerkesztő"
           show_advanced: "Speciális megjelenítése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."

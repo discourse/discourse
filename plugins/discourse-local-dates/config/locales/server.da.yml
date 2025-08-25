@@ -6,6 +6,8 @@
 
 da:
   site_settings:
-    discourse_local_dates_enabled: "Aktivér funktionen discourse-local-dates. Dette tilføjer understøttelse til lokale tidszone-bevidste datoer i indlæg ved hjælp af [dato] -elementet"
+    discourse_local_dates_enabled: "Aktivér funktionen discourse-local-dates. Dette tilføjer understøttelse til lokale tidszone-bevidste datoer i indlæg ved hjælp af [date] -elementet"
     discourse_local_dates_default_formats: "Ofte anvendte datotidsformater , se: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_default_timezones: "Standardliste med tidszoner skal være en gyldig <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Format der bruges til at vise en dato i e-mails, eksempler: 'LLLL', 'lllll' eller 'YYYY-MM-DDTHH:mm:ss[Z]'. se: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs streng format</a>"
+    discourse_local_dates_email_timezone: "Tidszone brugt til at vise datoer i e-mails, skal være en gyldig <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

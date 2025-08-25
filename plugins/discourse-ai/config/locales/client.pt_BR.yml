@@ -256,9 +256,9 @@ pt_BR:
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
-          locale_detector: "Detector de localização"
+          locale_detector: "Detector de localidade"
           post_raw_translator: "Tradutor sem processamento de postagens"
-          topic_title_translator: "Tradutor de títulos de tópicos"
+          topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
         spam:
           name: "Spam"
@@ -578,9 +578,7 @@ pt_BR:
           google-gemini-2-0-flash: "Modelo leve, rápido e econômico com raciocínio multimodal (geração anterior)"
           google-gemini-2-5-flash: "Modelo leve, rápido e econômico com raciocínio multimodal"
           google-gemini-2-0-flash-lite: "Modelo de baixa latência e econômico"
-          open_ai-o3: "Modelo de raciocínio com maior capacidade da Open IA"
           open_ai-o4-mini: "Modelo de raciocínio econômico avançado"
-          open_ai-gpt-5: "Abra o modelo principal da Open AI. É adequado para a solução de problemas em vários domínios"
           open_ai-gpt-5-mini: "Proporciona equilíbrio entre inteligência, velocidade e custo, tornando-se um modelo atraente para muitos casos de uso."
           open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multi-idioma leve e eficiente"
@@ -604,7 +602,7 @@ pt_BR:
           title: "Próximo"
         tests:
           title: "Executar teste"
-          running: "Rodando teste..."
+          running: "Executando teste..."
           success: "Sucesso!"
           failure: "Erro retornado ao tentar entrar em contato com o modelo: %{error}"
         hints:
@@ -733,7 +731,7 @@ pt_BR:
         display_name: "Nome"
         provider: "Provedor"
         url: "URL de serviço de incorporação"
-        api_key: "Chave de serviço de incorporação"
+        api_key: "Chave de API de serviço de incorporação"
         tokenizer: "Tokenizador"
         dimensions: "Dimensões de incorporação"
         max_sequence_length: "Tamanho da sequência"

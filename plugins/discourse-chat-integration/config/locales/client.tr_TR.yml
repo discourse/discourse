@@ -32,7 +32,7 @@ tr_TR:
         title: "Test mesajı gönderin"
         topic: "Konu"
         send: "Test Mesajı gönderin"
-        close: "Bitir"
+        close: "Kapat"
         error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerine bakın."
         success: "Mesaj başarıyla gönderildi"
       type:
@@ -131,7 +131,6 @@ tr_TR:
               help: "Kanalı tanımlamak için bir ad. Matrix bağlantısı için kullanılmaz."
             room_id:
               title: "Oda Kimliği"
-              help: "Oda için “özel tanımlayıcı”. Şuna benzer !abcdefg:matrix.org"
           errors:
             unknown_token: "Erişim jetonu geçersiz"
             unknown_room: "Oda Kimliği geçersiz"

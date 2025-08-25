@@ -220,7 +220,7 @@ it:
         summarization:
           name: "Riepiloghi"
           description: "Rende disponibile un pulsante attraverso cui i visitatori possono ottenere un riepilogo degli argomenti"
-          topic_summaries: "Ripeiloghi argomenti"
+          topic_summaries: "Riepiloghi degli argomenti"
           gists: "Mini riepiloghi dell'elenco argomenti"
         search:
           name: "Cerca"
@@ -578,9 +578,7 @@ it:
           google-gemini-2-0-flash: "Leggero, veloce ed economicamente efficiente con ragionamento multimodale (generazione precedente)"
           google-gemini-2-5-flash: "Leggero, veloce ed economico con ragionamento multimodale"
           google-gemini-2-0-flash-lite: "Modello economico e a bassa latenza"
-          open_ai-o3: "Il modello di ragionamento più capace di Open AI"
           open_ai-o4-mini: "Modello di ragionamento economicamente efficiente avanzato"
-          open_ai-gpt-5: "Il modello di punta di Open AI. Particolarmente adatto alla risoluzione di problemi trasversali"
           open_ai-gpt-5-mini: "Grazie all'equilibrio tra intelligenza, velocità e costo, è un modello che si presta a numerosi casi d'uso."
           open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modello multilingue leggero ed efficiente"
@@ -883,7 +881,7 @@ it:
         main_title: "Scoperte del discobot"
         regular_results: "Argomenti"
         tell_me_more: "Dimmi di più..."
-        continue_convo: "Copia la conversazione..."
+        continue_convo: "Continua la conversazione..."
         loading_convo: "Caricamento conversazione"
         collapse: "Comprimi"
         timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."

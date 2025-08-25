@@ -3306,7 +3306,6 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
-          default: "Noklusējums"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains."

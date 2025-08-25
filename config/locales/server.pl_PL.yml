@@ -1722,7 +1722,9 @@ pl_PL:
       labels:
         provider: Dostawca logowania
         no_accounts: "Brak powiązanych kont"
-        total_users: "Łączna liczba członków"
+        discourse_connect: "SSO poprzez Discourse Connect"
+        no_sso_accounts: "Konta bez rekordu SSO"
+        total_users: "Łączna liczba aktywnych kont użytkowników"
       description: "Pokaż liczbę powiązanych kont pogrupowanych według dostawcy logowania. Dotyczy tylko sytuacji, gdy włączone są metody logowania społecznościowego."
   dashboard:
     problem:
@@ -2620,6 +2622,8 @@ pl_PL:
     show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
+    experimental_impersonation: "Podszywaj się pod użytkownika bez konieczności wylogowywania się z konta administratora."
+    experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
@@ -2811,6 +2815,14 @@ pl_PL:
       order_views_asc: "Sortuj według liczby wyświetleń (najmniej na początku)"
       order_read: "Sortuj według daty ostatniego czytania (najnowsze na początku)"
       order_read_asc: "Sortuj według daty ostatniego czytania (najstarsze na początku)"
+      order_hot: "Sortuj według najgorętszego wyniku (najgorętsze na początku)"
+      order_hot_asc: "Sortuj według najgorętszego wyniku (najgorętsze na końcu)"
+      users: "Filtruj tematy według uczestników"
+      users_any: "Pokaż tematy z dowolnymi określonymi użytkownikami (rozdzielone przecinkami)"
+      users_all: "Pokaż tematy ze wszystkimi określonymi użytkownikami (rozdzielonymi znakiem plus)"
+      group: "Filtruj tematy według grup"
+      groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
+      groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
   discourse_connect:
     login_error: "Błąd logowania"
     not_found: "Nie można znaleźć Twojego konta. Skontaktuj się z administratorem serwisu."

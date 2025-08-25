@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 cs:
+  theme_metadata:
+    description: "Jednoduché a krásné téma, které vylepšuje zážitek z prostředí Discourse ihned po instalaci."

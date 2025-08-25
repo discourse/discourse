@@ -566,7 +566,7 @@ pt_BR:
       dropdown:
         title: "Abrir menu de rascunhos mais recentes"
         untitled: "Rascunho sem título"
-        view_all: "ver todos os rascunhos"
+        view_all: "visualizar todos os rascunhos"
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
@@ -838,7 +838,7 @@ pt_BR:
           title: "Postagem"
           noun: "postagem"
       flagged_as: "Sinalizado como"
-      assigned_to: "Atribuído a"
+      assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
       timeline:
@@ -850,7 +850,7 @@ pt_BR:
         claimed_by: "Reivindicado(a) por %{username} - %{relativeDate}"
         reviewed: "Revisado(a)"
         reviewed_by: "Avaliado(a) por %{username} - %{relativeDate}"
-        view_conversation: "ver PM"
+        view_conversation: "visualizar MP"
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
@@ -868,7 +868,7 @@ pt_BR:
       review_user: "Usuário(a)"
       need_help: "Precisa de ajuda?"
       copy_link: "Copiar link"
-      view_source: "Exibir fonte"
+      view_source: "Visualizar origem"
       insights:
         title: "Percepções"
         flag_volume: "Volume do sinalizador"
@@ -1312,7 +1312,7 @@ pt_BR:
     ip_lookup:
       title: Pesquisa de endereço IP
       hostname: Nome do host
-      location: Localização
+      location: Local
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefone
@@ -2590,7 +2590,7 @@ pt_BR:
       header: "Exibir no cabeçalho"
     welcome_banner_location:
       above_topic_content: "Conteúdo acima do tópico"
-      below_site_header: "Conteúdo abaixo do site"
+      below_site_header: "Abaixo do cabeçalho do site"
     welcome_banner_page_visibility:
       top_menu_pages: "Páginas do menu superior"
       homepage: "Página Inicial"
@@ -3286,7 +3286,7 @@ pt_BR:
         hot: "Não há tópicos principais."
         filter: "Não existem tópicos."
         education:
-          topic_tracking_preferences: 'Você pode visualizar e alterar suas novas configurações de rastreamento de tópicos em <a href="%{basePath}/my/preferences/tracking">suas preferências</a>.'
+          topic_tracking_preferences: 'Você pode visualizar e alterar suas novas configurações de monitoramento de tópicos em <a href="%{basePath}/my/preferences/tracking">suas preferências</a>.'
           unread: "Nada ficou sem ser lido... impressionante!"
           new_new: "Nada de novo no momento... volte em breve!"
           new: "Nada de novo no momento... volte em breve!"
@@ -3742,7 +3742,7 @@ pt_BR:
         invalid_slug: "Desculpe, você não pode publicar esta página."
         unpublish: "Cancelar postagem"
         unpublished: "A publicação da sua página foi cancelada e ela não está mais acessível."
-        publishing_settings: "Configurações de publicação"
+        publishing_settings: "Configurações de postagem"
       change_owner:
         title: "Trocar autor(a)"
         action: "trocar propriedade"
@@ -3815,12 +3815,12 @@ pt_BR:
       sr_load_more_replies: "Carregar mais respostas incorporadas"
       sr_date: "Data da postagem"
       sr_expand_replies:
-        one: "Esta publicação tem %{count} resposta"
+        one: "Esta postagem tem %{count} resposta"
         other: "Esta postagem tem %{count} respostas"
       expand_collapse: "expandir/recolher"
       sr_below_embedded_posts_description: "poste #%{post_number} respostas"
       sr_embedded_reply_description: "resposta por @%{username} à postagem #%{post_number}"
-      locked: "um membro da equipe bloqueou esta publicação para edição"
+      locked: "um membro da equipe bloqueou esta postagem para edição"
       gap:
         one: "ver %{count} resposta oculta"
         other: "ver %{count} respostas ocultas"
@@ -3862,14 +3862,14 @@ pt_BR:
       badge_granted_tooltip: "%{username} recebeu o emblema '%{badge_name} para esta postagem!"
       localizations:
         table:
-          locale: "Local"
+          locale: "Localidade"
           actions: "Ações"
           edit: "Editar"
           delete: "Excluir"
         add: "Adicionar nova tradução"
         view:
-          one: "Exibir %{count} local traduzido"
-          other: "Exibir %{count} locais traduzidos"
+          one: "Visualizar %{count} local traduzido"
+          other: "Visualizar %{count} locais traduzidos"
         modal:
           title: "Traduções para postagem"
           confirm_delete: "Tem certeza de que deseja excluir as traduções para \"%{languageCode}\"?"
@@ -4075,8 +4075,8 @@ pt_BR:
         post_number: "%{username}, postagem #%{post_number}"
         show_all: "Exibir tudo"
       share:
-        title: "Compartilhar Publicação #%{post_number}"
-        instructions: "Compartilhar o link desta publicação:"
+        title: "Compartilhar postagem #%{post_number}"
+        instructions: "Compartilhar o link desta postagem:"
       original_language: "Esta postagem foi originalmente escrita em %{language}"
       original_language_and_outdated: "Esta postagem foi escrita originalmente em %{language}. A tradução pode estar desatualizada"
     category:
@@ -4230,7 +4230,7 @@ pt_BR:
       sort_options:
         default: "padrão"
         likes: "Curtidas"
-        op_likes: "Curtidas da publicação original"
+        op_likes: "Curtidas da postagem original"
         views: "Visualizações"
         posts: "Postagens"
         activity: "Atividade"
@@ -4459,7 +4459,7 @@ pt_BR:
         all: "Tudo"
         all_tooltip: "Todos os novos tópicos e os tópicos respondidos nos últimos dias"
         all_with_count: "Tudo (%{count})"
-        new_topics_tooltip: "Novo tópico"
+        new_topics_tooltip: "Novos tópicos"
         topics: "Tópicos"
         topics_with_count: "Tópicos (%{count})"
         new_replies_tooltip: "Novas respostas"
@@ -5519,19 +5519,19 @@ pt_BR:
           sub_pages:
             sent:
               title: "Enviados(as)"
-              header_description: "Ver um log de e-mails que foram enviados"
+              header_description: "Visualizar um log de e-mails que foram enviados"
             skipped:
               title: "Ignorados(as)"
-              header_description: "Ver um log de e-mails que foram ignorados"
+              header_description: "Visualizar um log de e-mails que foram ignorados"
             bounced:
               title: "Devolvidos(as)"
-              header_description: "Ver um log de e-mails que foram devolvidos"
+              header_description: "Visualizar um log de e-mails que foram devolvidos"
             received:
               title: "Recebidos(as)"
-              header_description: "Ver um log de e-mails que foram recebidos"
+              header_description: "Visualizar um log de e-mails que foram recebidos"
             rejected:
               title: "Recusados(as)"
-              header_description: "Ver um log de e-mails que foram recusados"
+              header_description: "Visualizar um log de e-mails que foram recusados"
         email_appearance:
           title: "Aparência"
           header_description: "Personalize o modelo no qual todos os e-mails em HTML são renderizados e estilize usando CSS"
@@ -6243,9 +6243,10 @@ pt_BR:
         themes_and_components:
           breadcrumb_title: "Personalizar"
           install: "Instalar"
+          theme_site_settings:
+            title: "Configurações do site substituídas por tema"
           themes:
             title: "Temas"
-            description: 'Temas aplicados no site para alterar o aspecto visual e a impressão que ele causa nos(as) visitantes. Deseja conferir quais configurações do site serão substituídas pelos seus temas? <a href="%{themeSiteSettingsUrl}">Ver configurações do site</a>'
             themes_intro: "Instale um novo tema para começar, ou crie um do zero usando estes recursos."
             new_theme: "Novo tema"
             back: "Voltar para os temas"
@@ -6270,7 +6271,7 @@ pt_BR:
               other: "%{name1}, %{name2}, %{name3} e mais %{count}"
             add_to_theme: "Adicionar ao tema"
             preview: "Pré-visualizar"
-            update: "Atualizar para o mais recente"
+            update: "Atualizar para mais recente"
             check_update: "Verificar atualizações"
             update_available: "Atualização disponível!"
             export: "Exportar"
@@ -6339,7 +6340,7 @@ pt_BR:
         learn_more: "Saiba mais"
         preinstalled: "Pré-instalados(as)"
         filters:
-          all: "Todos(as)"
+          all: "Tudo"
           enabled: "Ativados(as)"
           disabled: "Desativados(as)"
           preinstalled: "Pré-instalados(as)"
@@ -6472,7 +6473,7 @@ pt_BR:
           component: "Componente"
           components: "Componentes"
           search_placeholder: "Filtrar por descrição ou nome do tema..."
-          filter_all: "Todos(as)"
+          filter_all: "Tudo"
           filter_user_selectable: "Selecionável por usuário(a)"
           no_themes_found: "Nenhum tema corresponde aos seus filtros"
           theme_name: "Nome do tema"
@@ -6504,7 +6505,7 @@ pt_BR:
           extra_files_upload: "Exporte o tema para visualizar estes arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
-          default: "Padrão"
+          default: "Tema padrão"
           settings_editor: "Editor de configurações"
           show_advanced: "Exibir avançados"
           is_default: "O tema está ativado por padrão"
@@ -6636,7 +6637,7 @@ pt_BR:
             one: "Você tem %{count} cor não salva"
             other: "Você tem %{count} cores não salvas"
           unsaved_colors_leave_route_confirmation: "Você ainda não salvou as alterações da sua paleta de cores. Deseja mesmo sair?"
-          save_colors: "Cores salvas"
+          save_colors: "Salvar cores"
           discard_colors: "Descartar"
           colors_title: "Cores"
           scss:
@@ -7119,7 +7120,7 @@ pt_BR:
           require_approval: "Exija a aprovação da equipe para postagens que contenham essas palavras antes que elas possam ser vistas por outras pessoas."
           flag: "Permita mensagens que contenham estas palavras, mas sinalize-as como inadequadas para que sejam revistas pelos moderadores."
           replace: "Substitua palavras em postagens por outras palavras."
-          tag: "Coloque uma etiqueta automaticamente em tópicos se a primeira publicação contiver uma palavra específica."
+          tag: "Coloque uma etiqueta automaticamente em tópicos se a primeira postagem contiver uma palavra específica."
           silence: "Silencie novas contas se a primeira postagem contiver qualquer uma destas palavras. A postagem será ocultada automaticamente até ter a aprovação da equipe."
           link: "Substitua palavras em postagens por links."
         form:
@@ -7253,7 +7254,7 @@ pt_BR:
         bulk_actions:
           title: "Ações em massa"
           admin_cant_be_deleted: "Não é possível excluir este(a) usuário(a), pois faz parte da administração"
-          too_many_or_old_posts: "Este(s) usuário(s) não poderá ser excluído, pois tem postagens de mais ou uma postagem muito antiga"
+          too_many_or_old_posts: "Este(s) usuário(s) não poderá ser excluído(a), pois tem postagens de mais ou uma postagem muito antiga"
           too_many_selected_users:
             one: "Você atingiu o limite de usuários(as) de %{count} para exclusão em massa"
             other: "Você atingiu o limite de usuários(as) de %{count} para a exclusão em massa"

@@ -60,7 +60,7 @@ ar:
     ai_nsfw_flag_threshold_porn: "الحد الأدنى للصورة المصنَّفة كمحتوى إباحي ليتم اعتبارها غير آمنة لبيئة العمل."
     ai_nsfw_flag_threshold_sexy: "الحد الأدنى للصورة المصنَّفة كمحتوى جنسي ليتم اعتبارها غير آمنة لبيئة العمل."
     ai_nsfw_models: "النماذج المراد استخدامها في الاستدلال على المحتوى غير الآمن لبيئة العمل."
-    ai_spam_detection_enabled: "تفعيل وحدة اكتشاف الرسائل العشوائية بالذكاء الاصطناعي"
+    ai_spam_detection_enabled: "تفعيل وحدة اكتشاف المحتوى العشوائي بالذكاء الاصطناعي"
     ai_openai_api_key: "مفتاح API الخاص بـ OpenAI. يُستخدم فقط لإنشاء الصور وتحريرها. لاستخدام GPT، استخدم تبويب إعدادات نموذج اللغة الكبير"
     ai_openai_image_generation_url: "عنوان URL الخاص بـ API لتوليد الصور من OpenAI"
     ai_openai_image_edit_url: "عنوان URL الخاص بـ API لتحرير الصور من OpenAI"
@@ -133,98 +133,98 @@ ar:
       yaxis: "التاريخ"
     emotion_admiration:
       title: "\U0001F929 الإعجاب"
-      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_amusement:
       title: "\U0001F604 التسلية"
-      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_anger:
       title: "\U0001F620 الغضب"
-      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_annoyance:
       title: "\U0001F612 الإزعاج"
-      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_approval:
       title: "\U0001F44D الموافقة"
-      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_caring:
       title: "\U0001F917 الاهتمام"
-      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_confusion:
       title: "\U0001F615 الارتباك"
-      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_curiosity:
       title: "\U0001F914 الفضول"
-      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_desire:
       title: "\U0001F60D الرغبة"
-      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disappointment:
       title: "\U0001F61E خيبة الأمل"
-      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disapproval:
       title: "\U0001F44E عدم الموافقة"
-      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disgust:
       title: "\U0001F922 الاشمئزاز"
-      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_embarrassment:
       title: "\U0001F633 الإحراج"
-      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_excitement:
       title: "\U0001F92A الإثارة"
-      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_fear:
       title: "\U0001F628 الخوف"
-      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_gratitude:
       title: "\U0001F64F الامتنان"
-      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_grief:
       title: "\U0001F622 الكآبة"
-      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_joy:
       title: "\U0001F60A المرح"
-      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_love:
       title: '❤️ الحب'
-      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_nervousness:
       title: "\U0001F630 التوتر"
-      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_neutral:
       title: "\U0001F610 محايدة"
-      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_optimism:
       title: "\U0001F31F التفاؤل"
-      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_pride:
       title: "\U0001F981 الفخر"
-      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_realization:
       title: "\U0001F4A1 الإدراك"
-      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_relief:
       title: "\U0001F60C الراحة"
-      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_remorse:
       title: "\U0001F614 الندم"
-      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_sadness:
       title: "\U0001F62D الحزن"
-      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_surprise:
       title: "\U0001F632 المفاجأة"
-      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
   discourse_ai:
     ai_artifact:
       errors:
         max_keys_exceeded:
-          zero: "لا يمكن أن يتضمن الملف الثانوي سوى %{count} من المفاتيح فقط."
-          one: "لا يمكن أن يتضمن الملف الثانوي سوى مفتاح واحد %{count} فقط."
-          two: "لا يمكن أن يتضمن الملف الثانوي سوى مفتاحين %{count} فقط."
-          few: "لا يمكن أن يتضمن الملف الثانوي سوى %{count} مفاتيح فقط."
-          many: "لا يمكن أن يتضمن الملف الثانوي سوى %{count} مفتاحًا فقط."
-          other: "لا يمكن أن يتضمن الملف الثانوي سوى %{count} مفتاح فقط."
+          zero: "لا يمكن أن تتضمن أداة الويب سوى %{count} من المفاتيح فقط."
+          one: "لا يمكن أن تتضمن أداة الويب سوى مفتاح واحد %{count} فقط."
+          two: "لا يمكن أن تتضمن أداة الويب سوى مفتاحين %{count} فقط."
+          few: "لا يمكن أن تتضمن أداة الويب سوى %{count} مفاتيح فقط."
+          many: "لا يمكن أن تتضمن أداة الويب سوى %{count} مفتاحًا فقط."
+          other: "لا يمكن أن تتضمن أداة الويب سوى %{count} مفتاح فقط."
       link: "عرض في تبويب جديد"
       copy_embed: "نسخ الرابط المضمّن"
       view_source: "عرض المصدر"
@@ -282,7 +282,7 @@ ar:
       invalid_error_type: "تم إدخال نوع خطأ غير صالح"
       unexpected: "حدث خطأ غير متوقع"
       bot_user_update_failed: "فشل تحديث مستخدم روبوت فحص المحتوى العشوائي"
-      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > الرسائل العشوائية' قبل التفعيل."
+      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
       logging_subject: "اكتشاف المحتوى العشوائي"
     ai_bot:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
@@ -385,7 +385,7 @@ ar:
           description: "يشغّل ميزة الترجمة كمترجم نصوص عام، يُستخدم للنصوص القصيرة مثل أسماء الفئات أو الوسوم"
         spam_detector:
           name: "كاشف المحتوى العشوائي"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة كشف المحتوى العشوائي لدينا"
+          description: "الشخصية الافتراضية المسؤولة عن ميزة اكتشاف المحتوى العشوائي لدينا"
         content_creator:
           name: "مبدع المحتوى"
           description: "الشخصية الافتراضية المسؤولة عن تشغيل بحث HyDE"
@@ -516,40 +516,40 @@ ar:
         edit_image: "%{prompt}"
         image: "%{prompt}"
         categories:
-          zero: "تم العثور على %{count} فئات"
+          zero: "تم العثور على %{count} من الفئات"
           one: "تم العثور على فئة واحدة (%{count})"
           two: "تم العثور على فئتين (%{count})"
           few: "تم العثور على %{count} فئات"
-          many: "تم العثور على %{count} فئات"
-          other: "تم العثور على %{count} فئات"
+          many: "تم العثور على %{count} فئة"
+          other: "تم العثور على %{count} فئة"
         tags:
-          zero: "تم العثور على %{count} وسمًا"
+          zero: "تم العثور على %{count} من الأوسمة"
           one: "تم العثور على وسم واحد (%{count})"
           two: "تم العثور على وسمين (%{count})"
           few: "تم العثور على %{count} وسوم"
           many: "تم العثور على %{count} وسمًا"
-          other: "تم العثور على %{count} وسمًا"
+          other: "تم العثور على %{count} وسم"
         search:
-          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          zero: "تم العثور على %{count} <a href='%{url}'>من النتائج</a> لاستعلام البحث '%{query}'"
           one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
           two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
           few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
         search_meta_discourse:
-          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          zero: "تم العثور على %{count} <a href='%{url}'>من النتائج</a> لاستعلام البحث '%{query}'"
           one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
           two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
           few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
         google:
-          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          zero: "تم العثور على %{count} <a href='%{url}'>من النتائج</a> لاستعلام البحث '%{query}'"
           one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
           two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
           few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
-          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
         setting_context: "سياق القراءة لـ: %{setting_name}"
         schema: "%{tables}"
         researcher_dry_run:
@@ -567,12 +567,12 @@ ar:
           many: "البحث عن: %{goals}\n\nتم العثور على %{count} منشورًا يطابقون \"%{filter}\""
           other: "البحث عن: %{goals}\n\nتم العثور على %{count} منشور يطابقون \"%{filter}\""
         search_settings:
-          zero: "تم العثور على %{count} نتائج لـ '%{query}'"
-          one: "تم العثور على نتيجة واحدة (%{count}) لـ '%{query}'"
-          two: "تم العثور على نتيجتين (%{count}) لـ '%{query}'"
-          few: "تم العثور على %{count} نتائج لـ '%{query}'"
-          many: "تم العثور على %{count} نتائج لـ '%{query}'"
-          other: "تم العثور على %{count} نتائج لـ '%{query}'"
+          zero: "تم العثور على %{count} من النتائج لاستعلام البحث '%{query}'"
+          one: "تم العثور على نتيجة واحدة (%{count}) لاستعلام البحث '%{query}'"
+          two: "تم العثور على نتيجتين (%{count}) لاستعلام البحث '%{query}'"
+          few: "تم العثور على %{count} نتائج لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} نتيجة لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} نتيجة لاستعلام البحث '%{query}'"
       discoveries:
         continue_conversation:
           title: "محادثة الاستكشاف: البحث عن %{query}"
@@ -612,7 +612,7 @@ ar:
         invalid_persona_response_format: "يجب أن تحتوي الشخصية المختارة على تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
         must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
       endpoints:
-        not_configured: "%{display_name} (not configured)"
+        not_configured: "%{display_name} (لم يتم التكوين)"
         configuration_hint:
           zero: "تأكَّد من تكوين الإعدادات `%{settings}`."
           one: "تأكد من تكوين الإعداد `%{settings}`."

@@ -10,8 +10,8 @@ it:
       flag_types:
         review: "Aggiungi il messaggio alla coda di revisione"
         review_hide: "Aggiungi il messaggio alla coda di revisione e nascondilo"
-        spam: "Segnala come spam e nascondi il post"
-        spam_silence: "Segnala come spam, nascondi il post e silenzia l'utente"
+        spam: "Segnala come spam e nascondi il messaggio"
+        spam_silence: "Segnala come spam, nascondi il messaggio e silenzia l'utente"
     scriptables:
       llm_tool_triage:
         title: Triage dei messaggi con strumento IA
@@ -81,11 +81,11 @@ it:
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
     ai_embeddings_backfill_batch_size: "Numero di embedding da riempire ogni 15 minuti."
     ai_embeddings_semantic_search_enabled: "Abilita la ricerca semantica a pagina intera."
-    ai_embeddings_semantic_search_use_hyde: "Utilizza HyDE per la ricerca semantica a pagina intera. Utilizza un LLM per creare un post ipotetico a partire dal termine di ricerca dell'utente, per facilitare le corrispondenze."
+    ai_embeddings_semantic_search_use_hyde: "Utilizza HyDE per la ricerca semantica a pagina intera. Utilizza un LLM per creare un messaggio ipotetico a partire dal termine di ricerca dell'utente, per facilitare le corrispondenze."
     ai_embeddings_semantic_quick_search_enabled: "Abilita l'opzione di ricerca semantica nel popup del menu di ricerca."
     ai_embeddings_semantic_related_include_closed_topics: "Includi argomenti chiusi nei risultati della ricerca semantica"
     ai_embeddings_semantic_search_hyde_model: "Modello utilizzato per espandere le parole chiave per ottenere risultati migliori durante una ricerca semantica"
-    ai_embeddings_per_post_enabled: Genera integrazioni per ogni post
+    ai_embeddings_per_post_enabled: Genera integrazioni per ogni messaggio
     ai_summarization_enabled: "Abilita la funzionalità riepilogo"
     ai_summarization_model: "Modello da utilizzare per il riepilogo"
     ai_summarization_persona: "Personaggio da utilizzare per la funzionalità riepilogo"
@@ -117,7 +117,7 @@ it:
     ai_translation_model: "Il modello da utilizzare per la traduzione. Il modello deve supportare la funzionalità di traduzione. I personaggi possono ignorare questa impostazione."
     ai_translation_backfill_limit_to_public_content: "Se abilitata, verranno tradotti solo i contenuti nelle categorie pubbliche. Se disabilitata, verranno inviati all'assistente di traduzione anche gli MP di gruppo e le categorie private."
     ai_translation_max_post_length: "La lunghezza massima di un messaggio da tradurre. I messaggi che superano la lunghezza impostata non verranno tradotti."
-    ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messeggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
+    ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messaggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
   reviewables:
     reasons:
       flagged_by_toxicity: Il plugin IA lo ha segnalato dopo averlo classificato come tossico.
@@ -282,7 +282,7 @@ it:
       logging_subject: "Rilevamento spam"
     ai_bot:
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
-      default_pm_prefix: "[Bot IA senza titolo MP]"
+      default_pm_prefix: "[MP di bot IA senza titolo]"
       thinking: "Sto pensando..."
       personas:
         default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
@@ -371,7 +371,7 @@ it:
           name: "Assistente rilevazione locale"
           description: "Assiste la funzionalità di traduzione rilevando il parametro locale dei vari testi (messaggi, titoli, ecc.)"
         post_raw_translator:
-          name: "Assistente post traduzione"
+          name: "Traduttore messaggi"
           description: "Assiste la funzionalità di traduzione traducendo messaggi che contengono formattazione markdown di Discourse"
         topic_title_translator:
           name: "Assistente traduzione titolo argomenti"
@@ -401,7 +401,7 @@ it:
             description: "Numero massimo di token utilizzabili per ciascun batch della ricerca"
           max_tokens_per_post:
             name: "Massimo token per messaggio"
-            description: "Numero massimo di token utilizzabili per ciascun post della ricerca"
+            description: "Numero massimo di token utilizzabili per ciascun messaggio della ricerca"
           max_results:
             name: "Numero massimo di risultati"
             description: "Numero massimo di risultati da includere in un filtro"

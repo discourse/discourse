@@ -489,7 +489,7 @@ basic:
     area: "analytics"
   enable_user_tips:
     client: true
-    default: true
+    default: false
     refresh: true
     area: "users"
   page_loading_indicator:
@@ -1658,6 +1658,9 @@ content_localization:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  content_localization_crawler_param:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -3645,11 +3648,6 @@ uncategorized:
     default: false
     area: "users"
 
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
-
   splash_screen:
     default: true
     area: "interface"
@@ -4083,20 +4081,33 @@ experimental:
   experimental_auto_grid_images:
     default: false
     client: true
+    area: "experimental"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
+    area: "experimental"
   experimental_form_templates:
     client: true
     default: false
+    area: "experimental"
+  experimental_impersonation:
+    default: false
+    hidden: true
+    area: "experimental"
+  experimental_impersonation_time_limit_minutes:
+    default: 15
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
+    area: "experimental"
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -4104,7 +4115,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-    area: "group_permissions|navigation"
+    area: "group_permissions|navigation|experimental"
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list
@@ -4112,6 +4123,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "experimental"
   glimmer_post_stream_mode:
     client: true
     type: enum
@@ -4120,25 +4132,31 @@ experimental:
       - auto
       - enabled
     default: "auto"
+    area: "experimental"
   deactivate_widgets_rendering:
     client: true
     default: false
+    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
+    area: "experimental"
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+    area: "experimental"
   lazy_load_categories_groups:
     default: ""
     type: group_list
     list_type: compact
-    area: "group_permissions"
+    area: "group_permissions|experimental"
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
     client: true
+    area: "experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
+    area: "experimental"

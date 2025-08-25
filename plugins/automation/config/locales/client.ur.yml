@@ -126,10 +126,17 @@ ur:
             restricted_categories:
               label: اقسام
           created: بنایا گیا
+          topics: تمام موضوعات
           with_images: تصاویر
           with_links: لنکس
           with_code: کَوڈ
           with_uploads: اَپ لوڈز
+        user_updated:
+          fields:
+            once_per_user:
+              label: ایک بار فی صارف
+            new_users_only:
+              label: صرف نئے صارفین
         category_created_edited:
           fields:
             restricted_category:
@@ -153,12 +160,25 @@ ur:
               label: ٹیگز
         post:
           fields:
+            creator:
+              updated_user_context: تازہ ترین صارف
             topic:
               label: ٹاپک ID
+        topic:
+          fields:
+            creator:
+              updated_user_context: تازہ ترین صارف
+            title:
+              label: موضوع کا عنوان
+            category:
+              label: موضوع کا زمرہ
         group_category_notification_default:
           fields:
             group:
               label: گروپ
+            update_existing_members:
+              label: موجودہ اراکین کو اپ ڈیٹ کریں۔
+              description: موجودہ گروپ ممبران کے لیے اطلاع کی سطح کو اپ ڈیٹ کیا
         user_global_notice:
           fields:
             level:

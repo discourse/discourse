@@ -6688,9 +6688,11 @@ sk:
         themes_and_components:
           breadcrumb_title: "Upraviť"
           install: "Inštalácia"
+          theme_site_settings:
+            title: "Nastavenia témy webu"
           themes:
             title: "Témy"
-            description: 'Témy pre celú lokalitu, ktoré zmenia celkový vzhľad lokality pre všetkých používateľov. Chcete skontrolovať, ktoré nastavenia lokality vaše témy prepisujú? <a href="%{themeSiteSettingsUrl}">Zobraziť nastavenia témy lokality</a>'
+            description: 'Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov.'
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
@@ -6948,7 +6950,7 @@ sk:
           extra_files_upload: "Téma exportu na zobrazenie týchto súborov."
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
-          default: "Predvolené"
+          default: "Predvolená téma"
           settings_editor: "Editor nastavení"
           show_advanced: "Zobraziť pokročilé"
           is_default: "Téma je predvolene povolená"

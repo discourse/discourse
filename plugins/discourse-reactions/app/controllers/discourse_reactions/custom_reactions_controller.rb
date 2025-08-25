@@ -9,10 +9,16 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def toggle
     post = fetch_post_from_params
+    reaction = params[:reaction]
 
-    if DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      return render_json_error(post)
-    end
+    invalid_reaction =
+      if SiteSetting.discourse_reactions_experimental_allow_any_emoji
+        !Emoji.exists?(reaction)
+      else
+        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
+      end
+
+    return render_json_error(post) if invalid_reaction
 
     begin
       manager =

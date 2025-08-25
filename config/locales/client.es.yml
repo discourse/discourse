@@ -3846,7 +3846,7 @@ es:
         one: "A ti y a %{count} persona os ha gustado esta publicación"
         other: "A ti y a otras %{count} personas os ha gustado esta publicación"
       sr_post_like_count_button:
-        one: "%{count} persona le ha dado Me gusta a esta publicación."
+        one: "%{count} persona le ha dado me gusta a esta publicación."
         other: "%{count} personas le han dado me gusta a esta publicación."
       sr_post_read_count_button:
         one: "%{count} persona ha leído esta publicación."
@@ -5265,7 +5265,7 @@ es:
           header_description: "Activa o desactiva las características experimentales de tu sitio; la mayoría de ellas se pueden controlar en grupo"
         emojis:
           title: "Emoji"
-          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo"
+          header_description: "Añade nuevos emojis que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
         flags:
           title: "Moderación"
           header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
@@ -5335,7 +5335,7 @@ es:
               help_text: "El tamaño recomendado es 512 x 512 píxeles."
             manifest_screenshots:
               title: "Capturas de pantalla del manifiesto"
-              description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
+              description: "Capturas de pantalla para mostrar las características del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
             apple_touch_icon:
               title: "Icono táctil de Apple"
               description: "Icono usado para dispositivos táctiles de Apple. Si se deja en blanco, se usará large_icon."
@@ -5346,7 +5346,7 @@ es:
               help_text: "Usa una imagen rectangular ancha. No uses una imagen SVG."
             opengraph_image:
               title: "Imagen de OpenGraph"
-              description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+              description: "Imagen de gráfico abierto por defecto, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
             x_summary_large_image:
               title: "Imagen grande de resumen de X"
               description: "Tarjeta de X «imagen grande de resumen». Si se deja en blanco, se generan metadatos de tarjeta normales usando OpenGraph_image, siempre y cuando no sea también un archivo .svg."
@@ -5476,7 +5476,7 @@ es:
           header_description: "Estas paletas controlan los colores que se usan en tu comunidad. Al hacer que una paleta sea seleccionable para el usuario, los miembros pueden elegir sus colores favoritos según sus preferencias."
         emoji:
           title: "Emoji"
-          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
+          header_description: "Añade nuevos emojis que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
         themes:
           title: "Tema"
           header_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end"
@@ -5595,7 +5595,7 @@ es:
             other: "Ajustes"
           theme:
             one: "Tema"
-            other: "Tema"
+            other: "Temas"
           component:
             one: "Componente"
             other: "Componentes"
@@ -6250,9 +6250,10 @@ es:
         themes_and_components:
           breadcrumb_title: "Personalizar"
           install: "Instalar"
+          theme_site_settings:
+            title: "Ajustes del tema del sitio"
           themes:
             title: "Tema"
-            description: 'Temas para todo el sitio que cambian la apariencia general de tu sitio para todos los usuarios. ¿Quieres comprobar qué ajustes del sitio anulan tus temas? <a href="%{themeSiteSettingsUrl}">Ver la configuración del tema del sitio</a>'
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
             back: "Volver a los temas"
@@ -6511,7 +6512,7 @@ es:
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
-          default: "Por defecto"
+          default: "Tema predeterminado"
           settings_editor: "Editor de ajustes"
           show_advanced: "Mostrar avanzados"
           is_default: "El tema está activado por defecto"
@@ -6700,7 +6701,7 @@ es:
           title: "Editar el ajuste de %{name}"
           back_button: "Volver a %{name}"
           fields:
-            required: "*obligatorio"
+            required: "* obligatorio"
             groups:
               at_least:
                 one: "se requiere al menos %{count} grupo"
@@ -6711,7 +6712,7 @@ es:
                 other: "se requieren al menos %{count} categorías"
             tags:
               at_least:
-                one: "Se requiere al menos %{count} etiqueta"
+                one: "se requiere al menos %{count} etiqueta"
                 other: "se requieren al menos %{count} etiquetas"
             string:
               too_short:
@@ -6748,10 +6749,6 @@ es:
             reset: "Restablecer filtros"
           default_dark_badge:
             text: "Oscuro por defecto"
-            title: "Paleta de colores claros por defecto"
-          default_both_badge:
-            text: "Claro y oscuro por defecto"
-            title: "Paleta de colores claros y oscuros por defecto"
           system_palette: "Esta es una paleta de colores incorporada, no se puede editar ni eliminar."
           back_to_colors: "Volver a las paletas de colores"
           long_title: "Paletas de colores"

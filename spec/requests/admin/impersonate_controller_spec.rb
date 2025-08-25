@@ -61,6 +61,18 @@ RSpec.describe Admin::ImpersonateController do
         expect(session[:current_user_id]).to eq(admin.id)
       end
 
+      context "when using experimental impersonation feature" do
+        it "raises an invalid access error if admin is already impersonating someone" do
+          SiteSetting.experimental_impersonation = true
+          User.any_instance.stubs(:is_impersonating).returns(true)
+
+          post "/admin/impersonate.json", params: { username_or_email: user.username }
+
+          expect(response.status).to eq(403)
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
+      end
+
       context "with success" do
         it "succeeds and logs the impersonation" do
           expect do
@@ -104,6 +116,36 @@ RSpec.describe Admin::ImpersonateController do
       include_examples "impersonation not allowed" do
         let(:current_user) { user }
       end
+    end
+  end
+
+  describe "#destroy" do
+    before { sign_in(admin) }
+
+    it "raises a not found error when experimental impersonation is disabled" do
+      SiteSetting.experimental_impersonation = false
+
+      delete "/admin/impersonate.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "does not pass routing constraint when current user is not impersonating" do
+      SiteSetting.experimental_impersonation = true
+      User.any_instance.stubs(:is_impersonating).returns(false)
+
+      delete "/admin/impersonate.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "stops impersonating" do
+      SiteSetting.experimental_impersonation = true
+      User.any_instance.stubs(:is_impersonating).returns(true)
+
+      delete "/admin/impersonate.json"
+
+      expect(response.status).to eq(200)
     end
   end
 end

@@ -19,5 +19,5 @@ ja:
       description: "直近のユーザーメモをリストします。"
       labels:
         user: ユーザー
-        note: 注意
+        note: メモ
         moderator: モデレーター

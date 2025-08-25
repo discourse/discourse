@@ -59,6 +59,8 @@ ur:
               label: "ٹیگز"
             canned_reply:
               label: "جواب"
+            hide_topic:
+              label: "موضوع چھپائیں"
     discourse_ai:
       features:
         back: "واپس"
@@ -127,6 +129,7 @@ ur:
         back: "واپس"
         export: "برآمد"
         import: "درآمد"
+        import_error_conflict: "ٹول پہلے سے موجود ہے، کیا آپ اسے اپ ڈیٹ کرنا چاہیں گے؟"
         name: "نام"
         description: "تفصیل"
         summary: "Summary"
@@ -163,6 +166,9 @@ ur:
         providers:
           google: "گُوگَل"
           fake: "اپنی مرضی کا"
+      related_topics:
+        title: "متعلقہ موضوعات"
+        pill: "متعلقہ"
       ai_helper:
         context_menu:
           cancel: "منسوخ"
@@ -194,6 +200,10 @@ ur:
           response: "جواب"
           next_log: "اگلا"
           previous_log: "پچھلی"
+        share_full_topic_modal:
+          share: "لنک کو شیئر اور کاپی کریں"
+          update: "لنک کو اپ ڈیٹ اور کاپی کریں"
+          delete: "شیئر کو حذف کریں"
         invite_ai_conversation:
           button: "دعوت دیں"
         share_modal:
@@ -215,6 +225,9 @@ ur:
       summarization:
         chat:
           summarize: "خلاصہ"
+        topic:
+          title: "موضوع کا خلاصہ"
+          close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
         regular_results: "ٹاپک"
         collapse: "بند کریں"

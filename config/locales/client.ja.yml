@@ -5970,9 +5970,10 @@ ja:
         themes_and_components:
           breadcrumb_title: "カスタマイズ"
           install: "インストール"
+          theme_site_settings:
+            title: "テーマサイト設定"
           themes:
             title: "テーマ"
-            description: 'すべてのユーザーに対するサイトの全体的な外観と使用感を変更するサイト全体のテーマ。テーマで上書きされるサイト設定を確認する場合は、<a href="%{themeSiteSettingsUrl}">テーマサイト設定を確認</a>してください'
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
             new_theme: "新しいテーマ"
             back: "テーマに戻る"
@@ -6230,7 +6231,7 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
-          default: "デフォルト"
+          default: "デフォルトのテーマ"
           settings_editor: "設定エディター"
           show_advanced: "詳細を表示"
           is_default: "テーマはデフォルトで有効"
@@ -6455,10 +6456,6 @@ ja:
             reset: "フィルタをリセット"
           default_dark_badge:
             text: "デフォルトのダーク"
-            title: "デフォルトのライトの色パレット"
-          default_both_badge:
-            text: "デフォルトのライトとダーク"
-            title: "デフォルトのライトとダークの色パレット"
           system_palette: "これは組み込みの色パレットであるため、編集または削除できません。"
           back_to_colors: "色パレットに戻る"
           long_title: "色パレット"

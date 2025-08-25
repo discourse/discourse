@@ -362,8 +362,8 @@ ur:
       other: "لنکس"
     faq: "عمومی سوالات"
     guidelines: "ہدایات"
-    privacy_policy: "نجی معلومات کی حفاظت پالیسی"
-    privacy: "جی معلومات کی حفاظت"
+    privacy_policy: "پردہ داری کی پالیسی"
+    privacy: "پردہ داری"
     tos: "سروس کی شرائط"
     rules: "قوانین"
     conduct: "ضابطہ اخلاق"
@@ -1091,7 +1091,7 @@ ur:
         categories:
           title: زُمرَہ جات
           long_title: "زمرہ کی ڈیفالٹ اطلاعات"
-          description: "جب صارفین کو اس گروپ میں شامل کیا جائے گا، تو ان کی زمرہ  کی اطلاع کی ترتیبات ان ڈیفالٹس پر سیٹ کردی جائیں گی۔ اس کے بعد وہ انہیں تبدیل کرسکتے ہیں۔"
+          description: "جب صارفین کو اس گروپ میں شامل کیا جائے گا، تو ان کی زمرہ کی اطلاع کی ترتیبات ان ڈیفالٹس پر سیٹ کردی جائیں گی۔ اس کے بعد وہ انہیں تبدیل کرسکتے ہیں۔"
           watched_categories_instructions: "ان موضوعات میں خود بخود تمام موضوعات دیکھیں۔ گروپ ممبران کو تمام نئی لڑیاں اور موضوعات سے آگاہ کیا جائے گا ، اور نئی لڑیوں کی گنتی بھی موضوع کے ساتھ سامنے آئے گی۔"
           tracked_categories_instructions: "ان زمروں میں تمام موضوعات کو خود بخود ڈھونڈیں۔ موضوع کے ساتھ ہی نئی لڑیوں کی گنتی ظاہر ہوگی۔"
           watching_first_post_categories_instructions: "صارفین کو ان زمروں میں ہر نئے موضوع میں پہلی لڑی کے بارے میں مطلع کیا جائے گا۔"
@@ -2416,7 +2416,7 @@ ur:
     search_hint: "صارف نام، ای میل یا IP ایڈریس"
     create_account:
       header_title: "خوش آمدید!"
-      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پرائیوِیسی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
+      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پردہ داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
       title: "سائن اپ"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا لنک اِستعمال کر کے دیکھیں"
       associate: "پہلے سے ہی اکاؤنٹ ہے؟ <a href='%{associate_link}'>اپنے %{provider} اکاؤنٹ کو لنک کرنے کے لیے</a> لاگ ان کریں۔"
@@ -4617,7 +4617,7 @@ ur:
         flag: "%{shortcut} پوسٹ فلَیگ کریں"
         bookmark: "%{shortcut} پوسٹ بُک مارک کریں"
         edit: "%{shortcut} پوسٹ ترمیم کریں"
-        delete: "%{shortcut} پوسٹ حذف کریں"
+        delete: "%{shortcut} لڑی حذف کریں"
         mark_muted: "%{shortcut} ٹاپک خاموش کریں"
         mark_regular: "%{shortcut} عام (پہلے سے طے شدہ) موضوع"
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
@@ -4995,7 +4995,7 @@ ur:
               content: "فِلٹر"
               title: "زمرہ، دہجی، یا دیگر معیار کے لحاظ سے موضوعات کو چھانے"
             topics:
-              content: "ٹاپکس"
+              content: "موضوعات"
               title: "تمام موضوعات"
             faq:
               content: "عمومی سوالات"
@@ -5277,7 +5277,7 @@ ur:
           header_description: "وہ ترتیبات جو فائل کے سائز اور قسم کی حدود، اوتار کے سائز اور ذرائع، فائل اسٹوریج، تصویر کا معیار اور کمپریشن وغیرہ کو کنٹرول کرتی ہیں"
         legal:
           title: "قانونی"
-          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، رازداری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
+          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، پردہ داری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
         theme_site_settings:
           title: "سائٹ تھیم کی ترتیبات"
           header_description: "سائٹ تھیم کی تمام ترتیبات اور تھیمز دکھاتا ہے جو فی الحال ان کو اوور رائیڈ کر رہے"
@@ -5496,11 +5496,13 @@ ur:
           keywords: "دریافت کریں | بوٹسٹریپ | ایپس"
         site_texts:
           title: "سائٹ کے متون"
+          header_description: "اپنی کمیونٹی کی آواز اور لہجے سے ملنے کے لیے ڈسکورس میں استعمال ہونے والے کسی بھی متن کو حسب ضرورت بنائیں"
         email:
           title: "ای میل کی ترتیبات"
           header_description: "ان ای میلز کے لیے ترتیبات بنائیں جو آپ کے اراکین کو بھیجی جاتی ہیں۔"
           sub_pages:
             server_settings:
+              title: "سرور کی ترتیبات"
               header_description: "ان ای میلز کے لیے ترتیبات بنائیں جو آپ کے اراکین کو بھیجی جاتی ہیں۔"
             preview_summary:
               header_description: "غیر فعال صارفین کو بھیجی گئی سمری ای میلز کے مواد کا جائزہ لیں"
@@ -5744,7 +5746,7 @@ ur:
         about: "یہاں اپنے گروپ کی رکنیت کو اور ناموں میں ترمیم کریں"
         group_members: "گروپ کے اراکین"
         delete: "حذف کریں"
-        delete_warning: "حذف شدہ گروپس کو بحال نہیں کیا جا سکتا۔\n"
+        delete_warning: "حذف شدہ گروپس کو بحال نہیں کیا جا سکتا۔"
         delete_failed: "گروپ کو مٹانے میں ناکامی۔ اگر یہ ایک خودکار گروپ ہے تو اسے ختم نہیں کیا جا سکتا۔"
         delete_automatic_group: یہ ایک خودکار گروپ ہے اور اسے حذف نہیں کیا جا سکتا۔
         delete_owner_confirm: "'%{username}' کے لیے مالک کے استحقاق کو ہٹائیں؟"
@@ -5816,7 +5818,10 @@ ur:
             topics:
               read: اس میں کوئی موضوع یا کوئی مخصوص پوسٹ پڑھیں۔ آر ایس ایس کی بھی حمایت حاصل ہے۔
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
+              delete: ایک موضوع کو حذف کریں۔
+              recover: ایک موضوع بازیافت کریں۔
               read_lists: موضوع، نیا، تازہ ترین، وغیرہ جیسے موضوعات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
+              status: "کسی موضوع کی حیثیت کو اپ ڈیٹ کریں۔ حیثیت: بند، محفوظ شدہ دستاویزات، مرئی، پن۔ فعال: سچا، غلط۔ یہاں اور درخواست کے پے لوڈ میں ایک زمرہ آئی ڈی کی وضاحت کریں تاکہ صرف اس زمرے کے عنوانات پر حیثیت کی تبدیلی کی اجازت دی جائے۔"
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
             categories:
@@ -5871,6 +5876,13 @@ ur:
         groups_filter_instructions: "متعلقہ وَیب ھُوک٘س٘ صرف اُس صورت میں متحرک کیے جائیں گے اگر واقعہ مخصوص گروپوں کے ساتھ تعلق رکھتا ہے۔ تمام گروپوں کے لئے وَیب ھُوک٘س٘ متحرک کرنے کیلئے خالی چھوڑ دیں۔"
         groups_filter: "متحرک کیے گئے گروپ"
         delete_confirm: "اِس وَیب ھُوک کوحذف کریں؟"
+        topic_event:
+          group_name: "موضوعی واقعات"
+          topic_created: "موضوع بنایا گیا"
+          topic_revised: "موضوع پر نظر ثانی کی گئی"
+          topic_edited: "موضوع کو اپ ڈیٹ کیا گیا"
+          topic_destroyed: "موضوع حذف کر دیا گیا"
+          topic_recovered: "موضوع بازیافت ہوا"
         user_badge_event:
           group_name: "تمغات ایونٹس"
           user_badge_granted: "صارف کا تمغہ دیا گیا ہے۔"
@@ -5932,6 +5944,7 @@ ur:
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes_and_components:
+            title: "تھیمز اور اجزاء"
             keywords: "ایکسٹینشن"
       email_settings:
         sidebar_link:
@@ -5949,7 +5962,10 @@ ur:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
+          company_name_warning: |
+            اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا پردہ داری کا نوٹس فراہم نہیں کیا جائے گا۔
           governing_law_placeholder: "صوبہ، ریاست یا ملک"
           extra_groups:
             groups: "گروپس"
@@ -5980,24 +5996,53 @@ ur:
         themes_and_components:
           breadcrumb_title: "مرضی کے مطابق بنائیں"
           install: "انسٹال"
+          theme_site_settings:
+            title: "سائٹ تھیم کی ترتیبات"
           themes:
             title: "تِھیمز"
-            description: 'پوری سائٹ پر مبنی تھیمز جو تمام صارفین کے لیے آپ کی سائٹ کی مجموعی شکل و صورت کو بدل دیتے ہیں۔ یہ دیکھنا چاہتے ہیں کہ آپ کے تھیمز کو کون سی سائٹ کی ترتیبات اوور رائیڈ کرتی ہیں؟ <a href="%{themeSiteSettingsUrl}">تھیم سائٹ کی ترتیبات دیکھیں</a>'
+            themes_intro: "شروع کرنے کے لیے ایک نئی تھیم انسٹال کریں، یا ان وسائل کا استعمال کرتے ہوئے شروع سے اپنی تخلیق کریں۔"
+            new_theme: "نئی تھیم"
+            back: "تھیمز پر واپسی"
             install: "انسٹال"
           components:
             title: "اجزاء"
+            description: "تبدیلیاں جو آپ کے فورم کے ڈیزائن کے سطحی عناصر کو تبدیل، یا اضافی فرنٹ اینڈ خصوصیات شامل کرتی ہیں۔"
+            components_intro: "شروع کرنے کے لیے ایک نیا جزو انسٹال کریں، یا ان وسائل کا استعمال کرتے ہوئے شروع سے اپنا تخلیق کریں۔"
+            new_component: "نیا جزو"
+            back: "اجزاء پر واپسی"
             install: "انسٹال"
             name: "نام"
+            used_on: "پر استعمال"
             enabled: "فعال؟"
             by_author: "%{name} کی طرف سے"
             learn_more: "مزید جانیں"
             edit: "ترمیم کریں"
+            parent_themes_two: "%{name1} اور %{name2}"
+            parent_themes_three: "%{name1}، %{name2} اور %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} اور %{count} مزید"
+              other: "%{name1}, %{name2}, %{name3} اور %{count} مزید"
+            add_to_theme: "تھیم میں شامل کریں"
             preview: "پیشگی دیکھیں"
+            update: "تازہ ترین میں اپ ڈیٹ"
+            check_update: "اپ ڈیٹس کے لیے چیک کریں"
+            update_available: "اپ ڈیٹ دستیاب!"
             export: "برآمد"
             convert: "تبدیل کریں"
             delete: "مٹائیں"
+            filter_by: "کے لحاظ سے فلٹر"
             filter_by_all: "تمام"
+            filter_by_used: "استعمال شدہ"
+            filter_by_unused: "غیر استعمال شدہ"
+            filter_by_updates_available: "اپ ڈیٹس دستیاب"
+            search_components: "جزو کے نام یا تفصیل کے لحاظ سے فلٹر..."
+            new_update_for_component: "%{name} کی نئی اپ ڈیٹ دستیاب!"
+            component_up_to_date: '"%{name}" تازہ ترین ہے۔'
+            updated_successfully: '"%{name}" کو کامیابی سے اپ ڈیٹ کر دیا گیا۔'
             delete_confirm: 'کیا آپ واقعی "%{name}" مٹانا چاہتے ہیں؟'
+            deleted_successfully: '"%{name}" کو کامیابی کے ساتھ حذف کر دیا گیا۔'
+            no_components: "کوئی اجزاء انسٹال نہیں۔"
+            no_components_found: "کوئی اجزاء آپ کے فلٹرز سے مماثل نہیں۔"
             badge_unused: "غیر استعمال شدہ"
         user_fields:
           type: "قِسم"
@@ -6103,6 +6148,7 @@ ur:
         install: "انسٹال"
         delete: "حذف کریں"
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" مٹانا چاہتے ہیں؟'
+        bulk_components_delete_confirm: "یہ مندرجہ ذیل اجزاء کو ان انسٹال کر دے گا، وہ آپ کی سائٹ پر کسی بھی صارف کے ذریعہ مزید استعمال کے قابل نہیں ہوں گے:"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "نقل"
@@ -6119,7 +6165,11 @@ ur:
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
         component:
           all_filter: "تمام"
+          used_filter: "استعمال شدہ"
+          unused_filter: "غیر استعمال شدہ"
+          enabled_filter: "فعال"
           disabled_filter: "غیر فعال"
+          updates_available_filter: "اپ ڈیٹس دستیاب"
         theme:
           theme: "تھیم"
           component: "جزو"
@@ -6128,11 +6178,13 @@ ur:
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
+          components_intro_new: "شروع کرنے کے لیے ایک نیا جزو انسٹال کریں، یا ان وسائل کا استعمال کرتے ہوئے شروع سے اپنا تخلیق کریں۔"
           beginners_guide_title: "ڈسکورس تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
           developers_guide_title: "ڈسکورس تِھیمز کیلئے ڈویلپر رہنمائی"
           browse_themes: "کمیونٹی تِھیمز دیکھیں"
           customize_desc: "مرضی کے مطابق بنائیں:"
           title: "تِھیمز"
+          components_description: "اجزاء چھوٹی تبدیلیاں ہیں جو آپ کے فورم ڈیزائن کے انداز کے مخصوص عناصر کو تبدیل کرنے کے لیے تھیمز میں شامل کی جا سکتی ہیں۔"
           create: "بنائیں"
           create_type: "قِسم"
           create_name: "نام"
@@ -6149,7 +6201,6 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
-          default: "ڈِیفالٹ"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
           user_selectable_badge_label: "صارف کے قابل انتخاب"
@@ -6188,6 +6239,7 @@ ur:
             no_overwrite: "غلط وَیری اَیبل نام۔ موجودہ وَیری اَیبل کے اوپر نہیں لکھا جا سکتا۔"
             must_be_unique: "غلط وَیری اَیبل نام۔ منفرد ہونا ضروری ہے۔"
           upload: "اَپ لوڈ"
+          select_component: "ایک جزو منتخب کریں…"
           unsaved_changes_alert: "آپ نے ابھی تک اپنی تبدیلیوں کو محفوظ نہیں کیا ہے، کیا آپ ان کو رد کر کہ آگے جانا چاہتے ہیں؟"
           unsaved_parent_themes: "آپ نے تھیمز کے لیے جزو تفویض نہیں کیا ہے، کیا آپ آگے بڑھنا چاہتے ہیں؟"
           discard: "منسوخ"
@@ -6311,6 +6363,7 @@ ur:
             name: "ہیڈر بنیادی"
           highlight:
             name: "اجاگر کریں"
+            description: "نمایاں کردہ لڑیاں یا موضوعات"
           highlight-high:
             name: "ہائی لائٹ-اعلیٰ"
           highlight-medium:
@@ -6442,7 +6495,7 @@ ur:
             change_site_setting: "ویب سائٹ کی سیٹِنگ تبدیل کریں"
             change_theme: "تِھیم تبدیل کریں"
             delete_theme: "تِھیم حذف کریں"
-            change_site_text: "سائٹ ٹَیکسٹ تبدیل کریں"
+            change_site_text: "سائٹ کا متن تبدیل کریں"
             suspend_user: "صارف معطل کریں"
             unsuspend_user: "صارف کی معطلی ختم کریں"
             removed_suspend_user: "صارف معطل (ہٹا دیا)"
@@ -6556,7 +6609,7 @@ ur:
           searches: "سرچز"
           click_through_rate: "CTR"
           types:
-            all_search_types: "تمام سرچ ٹاپکس"
+            all_search_types: "تلاش کی تمام اقسام"
             header: "ہَیڈر"
             click_through_only: "تمام (صرف کلِک تھرُو)"
       watched_words:
@@ -6581,6 +6634,7 @@ ur:
         action_descriptions:
           flag: "ایسی لڑیوں کی جن میں یہ الفاظ ہوں، لیکن نگرانوں کے جائزے کے لیے انہیں نامناسب کے طور پر نشاندہ کریں، کی اجازت دیں۔"
           replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں."
+          tag: "اگر پہلی لڑی میں کوئی مخصوص لفظ ہو تو خودکار طور پر موضوعات کو ٹیگ کریں۔"
           link: "پوسٹس میں الفاظ کو لنکس سے بدلیں."
         form:
           replace_label: "متبادل"
@@ -6703,8 +6757,8 @@ ur:
         post_edits: "پوسٹ ترامیم"
         view_edits: "ترامیم دیکھیں"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
-        penalty_post_delete: "پوسٹ حذف کریں"
-        penalty_post_delete_replies: "پوسٹ حذف کریں + جوابات کو بھی"
+        penalty_post_delete: "لڑی حذف کریں"
+        penalty_post_delete_replies: "لڑی حذف کریں + جوابات کو بھی"
         penalty_post_edit: "پوسٹ میں ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"
@@ -6743,6 +6797,7 @@ ur:
         activity: سرگرمی
         like_count: لائیکس دیے / ملے
         last_100_days: "پچھلے 100 دنوں میں"
+        private_topics_count: ذاتی پیغامات
         posts_read_count: پڑھی گئیں پوسٹس
         post_count: بنائی گئیں پوسٹس
         second_factor_enabled: دو عنصری توثیق فعال ہے
@@ -6765,7 +6820,7 @@ ur:
         anonymize_failed: "اِس اکاؤنٹ کو گمنام بنانے میں ایک مسئلہ پیش آیا۔"
         delete: "صارف حذف کریں"
         delete_posts:
-          button: "تمام پوسٹس حذف کریں"
+          button: "تمام لڑیاں حذف کریں"
           progress:
             title: "پوسٹس کو مٹانے کی پیشرفت"
           confirmation:
@@ -6857,6 +6912,7 @@ ur:
           username: "صارف نام"
           trust_level: "اعتماد کی سطح"
           read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+          topics_entered: "درج کردہ موضوعات"
           posts: "پوسٹس"
         tl3_requirements:
           title: "اعتماد کی سطح 3 کے تقاضے"
@@ -6866,7 +6922,7 @@ ur:
           value_heading: "وَیلِیو"
           requirement_heading: "ضروریات"
           days: "دن"
-          topics_replied_to: "جن ٹاپکس کا جواب دیا گیا"
+          topics_replied_to: "موضوعات کا جواب دیا"
           topics_viewed: "دیکھے گئے موضوعات"
           topics_viewed_all_time: "دیکھ لیے گئے ٹاپک (تمام وقت)"
           posts_read: "پڑھی گئیں پوسٹس"
@@ -6920,7 +6976,9 @@ ur:
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"
       site_text:
-        search: "آپ جس ٹَیکسٹ میں ترمیم کرنا چاہتے اُسے سرچ کریں"
+        description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
+        search: "وہ متن تلاش کریں جس میں آپ ترمیم کرنا چاہتے ہیں۔"
+        title: "سائٹ کے متون"
         edit: "ترمیم کریں"
         revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
@@ -7112,6 +7170,7 @@ ur:
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
         edit: "ترمیم کریں"
+        posts_and_topics: "لڑیوں اور موضوعات کی ترتیب"
         crawlers_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
         embed_by_username: "ٹاپک کی تخلیق کیلئے صارف نام"
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
@@ -7122,10 +7181,12 @@ ur:
         blocked_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
         allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "محفوظ کریں"
+        posts_and_topics_settings_saved: "لڑیوں اور موضوعات کی ترتیبات محفوظ ہوئی"
         host_form:
           save: "محفوظ کریں"
         nav:
           settings: "ترتیبات"
+          posts_and_topics: "لڑیاں اور موضوعات"
           crawlers: "کرالرز"
       permalink:
         title: "دائمی لِنکس"

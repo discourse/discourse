@@ -120,6 +120,7 @@ export default class DiscourseReactionsActions extends Component {
 
   @tracked reactionsPickerExpanded = false;
   @tracked statePanelExpanded = false;
+  @tracked clickOutsideDisabled = false;
 
   get classes() {
     const { post } = this.args;
@@ -294,43 +295,58 @@ export default class DiscourseReactionsActions extends Component {
 
       const scales = [1.0, 1.75];
       return new Promise((resolve) => {
-        scaleReactionAnimation(pickedReaction, scales[0], scales[1], () => {
-          scaleReactionAnimation(pickedReaction, scales[1], scales[0], () => {
-            const post = this.args.post;
-            const postContainer = document.querySelector(
-              `[data-post-id="${params.postId}"]`
-            );
+        if (!pickedReaction) {
+          this.toggleReaction(params);
+          const post = this.args.post;
 
-            if (
-              post.current_user_reaction &&
-              post.current_user_reaction.id === params.reaction
-            ) {
-              this.toggleReaction(params);
+          CustomReaction.toggle(post, params.reaction)
+            .then(resolve)
+            .catch((err) => {
+              this.dialog.alert(this._extractErrors(err));
+              this._rollbackState(post);
+            });
+        } else {
+          scaleReactionAnimation(pickedReaction, scales[0], scales[1], () => {
+            scaleReactionAnimation(pickedReaction, scales[1], scales[0], () => {
+              const post = this.args.post;
+              const postContainer = document.querySelector(
+                `[data-post-id="${params.postId}"]`
+              );
 
-              later(() => {
-                dropReaction(postContainer, params.reaction, () => {
-                  return CustomReaction.toggle(this.args.post, params.reaction)
+              if (
+                post.current_user_reaction &&
+                post.current_user_reaction.id === params.reaction
+              ) {
+                this.toggleReaction(params);
+
+                later(() => {
+                  dropReaction(postContainer, params.reaction, () => {
+                    return CustomReaction.toggle(
+                      this.args.post,
+                      params.reaction
+                    )
+                      .then(resolve)
+                      .catch((err) => {
+                        this.dialog.alert(this._extractErrors(err));
+                        this._rollbackState(post);
+                      });
+                  });
+                }, 100);
+              } else {
+                addReaction(postContainer, params.reaction, () => {
+                  this.toggleReaction(params);
+
+                  CustomReaction.toggle(this.args.post, params.reaction)
                     .then(resolve)
-                    .catch((e) => {
-                      this.dialog.alert(this._extractErrors(e));
+                    .catch((err) => {
+                      this.dialog.alert(this._extractErrors(err));
                       this._rollbackState(post);
                     });
                 });
-              }, 100);
-            } else {
-              addReaction(postContainer, params.reaction, () => {
-                this.toggleReaction(params);
-
-                CustomReaction.toggle(this.args.post, params.reaction)
-                  .then(resolve)
-                  .catch((e) => {
-                    this.dialog.alert(this._extractErrors(e));
-                    this._rollbackState(post);
-                  });
-              });
-            }
+              }
+            });
           });
-        });
+        }
       }).finally(() => {
         this.collapseAllPanels();
       });
@@ -441,7 +457,6 @@ export default class DiscourseReactionsActions extends Component {
     } else {
       post.current_user_used_main_reaction = false;
     }
-
     // Trigger re-render for anything autotracking reactions.
     // In future, we should make reactions a deeply-trackable structure.
     // eslint-disable-next-line no-self-assign
@@ -525,8 +540,8 @@ export default class DiscourseReactionsActions extends Component {
 
           CustomReaction.toggle(this.args.post, toggleReaction)
             .then(resolve)
-            .catch((e) => {
-              this.dialog.alert(this._extractErrors(e));
+            .catch((err) => {
+              this.dialog.alert(this._extractErrors(err));
               this._rollbackState(post);
             });
         });
@@ -537,6 +552,16 @@ export default class DiscourseReactionsActions extends Component {
   @action
   cancelCollapse() {
     cancel(this._collapseHandler);
+  }
+
+  @action
+  disableClickOutside() {
+    this.clickOutsideDisabled = true;
+  }
+
+  @action
+  enableClickOutside() {
+    this.clickOutsideDisabled = false;
   }
 
   @action
@@ -565,6 +590,9 @@ export default class DiscourseReactionsActions extends Component {
 
   @action
   clickOutside() {
+    if (this.clickOutsideDisabled) {
+      return;
+    }
     if (this.reactionsPickerExpanded || this.statePanelExpanded) {
       this.collapseAllPanels();
     }
@@ -756,6 +784,8 @@ export default class DiscourseReactionsActions extends Component {
             @post={{@post}}
             @scheduleCollapse={{this.scheduleCollapse}}
             @cancelCollapse={{this.cancelCollapse}}
+            @disableClickOutside={{this.disableClickOutside}}
+            @enableClickOutside={{this.enableClickOutside}}
             @reactionsPickerExpanded={{this.reactionsPickerExpanded}}
             @toggle={{this.toggle}}
           />

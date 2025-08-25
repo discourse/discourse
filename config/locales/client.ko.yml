@@ -4403,7 +4403,6 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
-          default: "기본"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"

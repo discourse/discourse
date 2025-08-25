@@ -720,7 +720,7 @@ tr_TR:
         scrub_record:
           button: Temizleme kaydı
           confirm_title: Kişisel verileri kaldırın
-          confirm_body: "Bu değerlendirme sırası kaydını temizlemek istediğinizden EMİN misiniz? Tüm kişisel bilgiler (ör. kullanıcı adı, e-posta, IP adresi) bu kayıttan kalıcı olarak silinecek."
+          confirm_body: "Bu inceleme sırası kaydını temizlemek istediğinizden EMİN misiniz? Tüm kişisel bilgiler (ör. kullanıcı adı, e-posta, IP adresi) bu kayıttan kalıcı olarak silinecek."
           reason_title: "Bu kaydın temizlenmesi için bir neden gerekli."
           reason_placeholder: "Sebep..."
           confirm_button: "Kaldırmayı onayla"
@@ -891,7 +891,7 @@ tr_TR:
       help:
         moderation_guide: "Discourse moderasyon kılavuzu"
         flag_priorities: "Kullanıcı itibarını ve bayrak önceliklerini yönetme"
-        spam_detection: "Spam tespiti"
+        spam_detection: "İstenmeyen içerik tespiti"
       approval:
         title: "Gönderi Onay Gerektiriyor"
         description: "Yeni gönderinizi aldık fakat görünmeden önce moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
@@ -1052,7 +1052,7 @@ tr_TR:
           smtp_instructions: "Grup için SMTP'yi etkinleştirdiğinizde, grubun gelen kutusundan gönderilen tüm e-postalar, forumunuz tarafından gönderilen diğer e-postalar için yapılandırılmış posta sunucusu yerine burada belirtilen SMTP ayarları gözetilerek gönderilir."
           imap_title: "IMAP"
           imap_additional_settings: "Ek Ayarlar"
-          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında senkronize edilir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş kimlik bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
+          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında senkronize edilir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş giriş bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
           imap_alpha_warning: "Uyarı: Bu bir alfa aşaması özelliğidir. Resmi olarak yalnızca Gmail desteklenmektedir. Kendi sorumluluğunuzda kullanın!"
           imap_settings_valid: "IMAP ayarları geçerli."
           smtp_disable_confirm: "SMTP'yi devre dışı bırakırsanız tüm SMTP ve IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
@@ -1161,9 +1161,9 @@ tr_TR:
         automatic_groups: "Otomatik Gruplar"
         automatic: "Otomatik"
         closed: "Kapalı"
-        public: "Genel"
+        public: "Herkese Açık"
         private: "Özel"
-        public_groups: "Genel Gruplar"
+        public_groups: "Herkese Açık Gruplar"
         my_groups: "Gruplarım"
         group_type: "Grup türü"
         is_group_user: "Üye"
@@ -1344,7 +1344,7 @@ tr_TR:
       download_archive:
         title: "Verilerinizi dışa aktarın"
         description: "Hesap aktivitenizin ve tercihlerinizin arşivini indirin."
-        button_text: "Arşiv talep edin"
+        button_text: "Talep arşivi"
         confirm: "Hesap aktivitenizin ve tercihlerinizin arşivini indirmeyi gerçekten istiyor musunuz?"
         success: "Arşivinizi toplamaya başladık, işlem tamamlandığında bir mesaj alacaksınız."
         rate_limit_error: "Hesap arşivleri günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
@@ -1684,7 +1684,7 @@ tr_TR:
         choose: "Şifre seç"
         verify_identity: "Devam etmek için lütfen kimliğinizi doğrulayın."
         title: "Şifre Sıfırlama"
-        remove: "Parolayı Kaldır"
+        remove: "Şifreyi Kaldır"
         remove_detail: "Hesap şifrenizi sıfırlamadığınız sürece artık hesabınıza erişilemeyecektir."
       second_factor_backup:
         title: "İki Adımlı Yedek Kodları"
@@ -2023,7 +2023,7 @@ tr_TR:
         search: "davetlerde aramak için yazın…"
         user: "Davet Edilen Kullanıcı"
         none:
-          title: "Görüntülenecek davet yok."
+          title: "Gösterilecek davet yok."
           cta: "Davet bağlantısı oluştur"
           tip:
             prefix: "Ayrıca toplu davetleri şu şekilde de gönderebilirsiniz:"
@@ -2414,7 +2414,7 @@ tr_TR:
       header_title: "Hoş geldiniz!"
       disclaimer: "Kaydolarak, <a href='%{privacy_link}' target='blank'>gizlilik politikası</a> ve <a href='%{tos_link}' target='blank'>hizmet şartlarını</a>kabul etmiş olursunuz."
       title: "Kaydol"
-      failed: "Bir şeyler ters gitti, belki de bu e-posta zaten kayıtlıdır, şifremi unuttum bağlantısını deneyin"
+      failed: "Bir şeyler ters gitti, belki de bu e-posta zaten kayıtlı, şifremi unuttum bağlantısını deneyin"
       associate: "Zaten bir hesabınız var mı? %{provider} hesabınızı bağlamak için <a href='%{associate_link}'>giriş yapın</a>."
       activation_title: "Hesabınızı etkinleştirin"
       already_have_account: "Zaten hesabınız var mı?"
@@ -2437,7 +2437,7 @@ tr_TR:
       complete_email_found: "<b>%{email}</b> ile eşleşen bir hesap bulduk. Kısa süre içinde şifrenizi nasıl sıfırlayacağınızla ilgili yönergeleri içeren bir e-posta alacaksınız."
       complete_username_not_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap yok"
       complete_email_not_found: "<b>%{email}</b> ile eşleşen bir hesap yok"
-      help: "E-posta gelmedi mi? Önce spam klasörünüzü kontrol ettiğinizden emin olun.<p>Hangi e-posta adresini kullandığınızdan emin değil misiniz? Bir e-posta adresi girin, burada varsa size haber verelim.</p><p>Hesabınızdaki e-posta adresine artık erişiminiz yoksa lütfen <a href='%{basePath}/about'>yardımsever personelimizle</a> iletişime geçin.</p>"
+      help: "E-posta gelmedi mi? Önce istenmeyen klasörünüzü kontrol ettiğinizden emin olun.<p>Hangi e-posta adresini kullandığınızdan emin değil misiniz? Bir e-posta adresi girin, burada varsa size haber verelim.</p><p>Hesabınızdaki e-posta adresine artık erişiminiz yoksa lütfen <a href='%{basePath}/about'>yardımsever personelimizle</a> iletişime geçin.</p>"
       button_ok: "Tamam"
       button_help: "Yardım"
     email_login:
@@ -2472,7 +2472,7 @@ tr_TR:
       security_key_alternative: "Başka bir yol deneyin"
       security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
       security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
-      security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgileri bulunamadı."
+      security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen giriş bilgileri bulunamadı."
       security_key_support_missing_error: "Mevcut cihazınız veya tarayıcınız güvenlik anahtarlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
       security_key_invalid_response_error: "Güvenlik anahtarı kimlik doğrulama işlemi geçersiz bir yanıt nedeniyle başarısız oldu."
       passkey_security_error: "Güvenlik hatası oluştu: %{message}"
@@ -2502,8 +2502,8 @@ tr_TR:
       change_email: "E-posta adresini değiştir"
       provide_new_email: "Yeni bir adres girin ve onay e-postanızı yeniden gönderelim."
       submit_new_email: "E-posta Adresini Güncelle"
-      sent_activation_email_again: "<b>%{currentEmail}</b> adresine bir etkinleştirme e-postası daha gönderdik. Gelmesi birkaç dakika sürebilir; spam klasörünüzü kontrol ettiğinizden emin olun."
-      sent_activation_email_again_generic: "Başka bir etkinleştirme e-postası daha gönderdik. Gelmesi birkaç dakika sürebilir; spam klasörünüzü kontrol ettiğinizden emin olun."
+      sent_activation_email_again: "<b>%{currentEmail}</b> adresine bir etkinleştirme e-postası daha gönderdik. Gelmesi birkaç dakika sürebilir; istenmeyen klasörünüzü kontrol ettiğinizden emin olun."
+      sent_activation_email_again_generic: "Başka bir etkinleştirme e-postası daha gönderdik. Gelmesi birkaç dakika sürebilir; istenmeyen klasörünüzü kontrol ettiğinizden emin olun."
       to_continue: "Lütfen Giriş Yapın"
       preferences: "Kullanıcı tercihlerinizi değiştirmek için giriş yapmanız gerekir."
       not_approved: "Hesabınız henüz onaylanmadı. Giriş yapmaya hazır olduğunuzda e-posta ile bilgilendirileceksiniz."
@@ -3989,7 +3989,7 @@ tr_TR:
             other: "ve %{count} kişi daha bunu okudu"
         by_you:
           off_topic: "Buna konu dışı bayrağı eklediniz"
-          spam: "Buna spam bayrağı eklediniz"
+          spam: "Buna istenmeyen içerik bayrağı eklediniz"
           inappropriate: "Buna uygunsuz bayrağı eklediniz"
           illegal: "Bunu yasa dışı olarak işaretlediniz"
           notify_moderators: "Buna moderasyon için bayrak eklediniz"
@@ -4273,11 +4273,11 @@ tr_TR:
           details: "Bayrak eşiğine ulaşın ve kullanıcıyı susturun"
       notify_action: "Mesaj"
       official_warning: "Resmi Uyarı"
-      delete_spammer: "Spam Yapanları Sil"
+      delete_spammer: "İstenmeyen İçerik Göndereni sil"
       flag_for_review: "İnceleme Kuyruğu"
       delete_confirm_MF: |
-        Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spam yaptığından emin misiniz??
-      yes_delete_spammer: "Evet, Spam Yapanı Sil"
+        Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten istenmeyen içerik gönderdiğinden emin misiniz?
+      yes_delete_spammer: "Evet, İstenmeyen İçerik Göndereni Sil"
       ip_address_missing: "(Geçersiz)"
       hidden_email_address: "(gizli)"
       submit_tooltip: "Özel bayrağı gönder"
@@ -4287,7 +4287,7 @@ tr_TR:
       formatted_name:
         off_topic: "Konu Dışı"
         inappropriate: "Uygunsuz"
-        spam: "Spam"
+        spam: "İstenmeyen İçerik"
         illegal: "Bu Yasa Dışı"
       custom_placeholder_notify_user: "Spesifik, yapıcı ve her zaman kibar olun."
       notify_user_textarea_label: "Kullanıcı için mesaj"
@@ -5269,7 +5269,7 @@ tr_TR:
         flags:
           title: "Moderasyon"
           header_description: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
-          keywords: "bayrak|inceleme|spam|yasa dışı"
+          keywords: "bayrak|inceleme|istenmeyen içerik|yasa dışı"
         files:
           title: "Dosyalar"
           header_description: "Dosya boyutu ve türü limitlerini, avatar boyutlarını ve kaynaklarını, dosya depolamayı, görüntü kalitesini ve sıkıştırmayı ve daha fazlasını kontrol eden ayarlar"
@@ -5296,15 +5296,15 @@ tr_TR:
               description: "Sitenin üst navigasyonunda ve sitenin E-posta Bildirimlerinin üstünde görünür."
               help_text: "Önerilen boyut 600 x 80 pikseldir."
             logo_dark:
-              required: "Karanlık mod için farklı bir logo kullanılsın mı?"
+              required: "Koyu mod için farklı bir logo kullanılsın mı?"
               title: "Birincil logo koyu"
               help_text: "Önerilen boyut 600 x 80 pikseldir."
             large_icon:
               title: "Kare simge"
-              description: "Logo görselinin kare bir versiyonu, yönetimin üst kısmında görünür ve aynı zamanda mobil ana ekran uygulaması logosudur."
+              description: "Logo görüntüsünün kare bir versiyonu, yönetimin üst kısmında görünür ve aynı zamanda mobil ana ekran uygulaması logosudur."
               help_text: "Önerilen boyut 512 x 512 pikseldir."
             square_icon_dark:
-              required: "Karanlık mod için farklı bir kare simge kullanılsın mı?"
+              required: "Koyu mod için farklı bir kare simge kullanılsın mı?"
               title: "Kare simge koyu"
               help_text: "Önerilen boyut 512 x 512 pikseldir."
             favicon:
@@ -5323,12 +5323,12 @@ tr_TR:
             social_media: "Sosyal medya"
             mobile_logo:
               title: "Mobil logo"
-              description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
-              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+              description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa `logo` ayarındaki görüntü kullanılır."
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir görüntü kullanın."
             mobile_logo_dark:
-              required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
+              required: "Koyu mod için farklı bir mobil logo mu kullanacaksınız?"
               title: "Mobil logo koyu"
-              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir görüntü kullanın."
             manifest_icon:
               title: "Manifest simgesi"
               description: "Android'de logo/açılış resmî olarak kullanılan görüntü. Boş bırakılırsa large_icon kullanılır."
@@ -5348,7 +5348,7 @@ tr_TR:
               title: "OpenGraph görüntüsü"
               description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
             x_summary_large_image:
-              title: "X özeti büyük resim"
+              title: "X özeti büyük görüntü"
               description: "X kartı \"özet büyük görüntü\". Boş bırakılırsa aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
               help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG görüntüsü kullanmayın."
         fonts:
@@ -5407,12 +5407,12 @@ tr_TR:
           header_description: "Discourse dâhilindeki çeşitli özelliklere erişimi kontrol eden tüm grup tabanlı uygulama izinleri burada yönetilir"
         dashboard:
           title: "Pano"
-          header_description: "Kontrol paneli, trafik, kullanıcı aktivitesi ve diğer önemli ölçümler dâhil olmak üzere topluluğunuzun sağlığının anlık bir görüntüsünü sağlar"
+          header_description: "Pano, trafik, kullanıcı aktivitesi ve diğer önemli ölçümler dâhil olmak üzere topluluğunuzun sağlığının anlık bir görüntüsünü sağlar"
         users:
           title: "Kullanıcılar"
           header_description: "Kullanıcıları görüntüleyin ve yönetin, davetiye gönderin ve kullanıcı verilerini dışa aktarın"
         groups:
-          title: "Grup"
+          title: "Gruplar"
           header_description: "Grup oluşturun ve yönetin, grup izinlerini ayarlayın, grup aktivitesini ve gelen kutularını görüntüleyin"
         site_settings:
           title: "Tüm site ayarları"
@@ -5548,7 +5548,7 @@ tr_TR:
               header_description: "İzlenen IP adresleri. Bireysel IP adresleri izin listesine eklenebilir."
             screened_urls:
               title: "Taranan URL'ler"
-              header_description: "Burada listelenen URL'ler, spam gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır"
+              header_description: "Burada listelenen URL'ler, istenmeyen içerik gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır"
             search_logs:
               title: "Arama günlükleri"
               header_description: "Gerçekleştirilen aramaların günlüğünü görüntüleyin"
@@ -5561,7 +5561,7 @@ tr_TR:
           keywords: "token|kapsam"
         webhooks:
           title: "Web Kancaları"
-          header_description: "Web kancaları, Discourse'un sitenizde belirli olaylar gerçekleştiğinde harici servisleri bilgilendirmesini sağlar. Web kancaları tetiklendiğinde, sağlanan URL'lere bir GÖNDERİ isteği gönderilir."
+          header_description: "Web kancaları, Discourse'un sitenizde belirli olaylar gerçekleştiğinde harici servisleri bilgilendirmesini sağlar. Web kancaları tetiklendiğinde, sağlanan URL'lere bir GÖNDERİ talebi gönderilir."
           keywords: "olay|yük|url"
         embedding:
           title: "Gömme"
@@ -6183,7 +6183,7 @@ tr_TR:
           extra_groups:
             heading: "Grup listesi"
             description: "Hakkında sayfasında gösterilecek ekstra gruplar."
-            groups: "Grup"
+            groups: "Gruplar"
             order: "Sıralama düzeni"
             initial_members: "Genişletilmiş üyeler"
             initial_members_description: "Daha fazlasını görüntüle düğmesi eklenmeden önce gösterilecek grup üyesi sayısı."
@@ -6243,9 +6243,10 @@ tr_TR:
         themes_and_components:
           breadcrumb_title: "Kişiselleştir"
           install: "Yükle"
+          theme_site_settings:
+            title: "Tema site ayarları"
           themes:
             title: "Temalar"
-            description: 'Tüm kullanıcılar için sitenizin genel görünümünü ve hissini değiştiren site genelinde temalar. Temalarınızın hangi site ayarlarını geçersiz kıldığını kontrol etmek ister misiniz? <a href="%{themeSiteSettingsUrl}">Tema site ayarlarını görüntüleyin</a>'
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
             new_theme: "Yeni tema"
             back: "Temalara geri dön"
@@ -6504,7 +6505,7 @@ tr_TR:
           extra_files_upload: "Bu dosyaları görüntülemek için temayı dışa aktarın."
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
-          default: "Varsayılan"
+          default: "Varsayılan tema"
           settings_editor: "Ayar Düzenleyici"
           show_advanced: "Gelişmiş göster"
           is_default: "Tema varsayılan olarak etkinleştirildi"
@@ -6724,7 +6725,7 @@ tr_TR:
           from_theme: "Temadan: %{name}"
           filters:
             search_placeholder: "Palet veya tema adına göre filtreleyin..."
-            all: "Hepsi"
+            all: "Tümü"
             user_selectable: "Kullanıcı tarafından seçilebilir"
             from_theme: "Temadan"
             no_results: "Renk paleti bulunamadı"
@@ -7057,7 +7058,7 @@ tr_TR:
             allow: "İzin Ver"
         screened_urls:
           title: "Taranan URL'ler"
-          description: "Burada listelenen URL'ler, spam gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır."
+          description: "Burada listelenen URL'ler, istenmeyen içerik gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır."
           url: "URL"
           domain: "Alan Adı"
         screened_ips:
@@ -7704,7 +7705,7 @@ tr_TR:
           security: "Güvenlik"
           onebox: "Onebox"
           seo: "SEO"
-          spam: "Spam"
+          spam: "İstenmeyen içerik"
           rate_limits: "Oran Limitleri"
           developer: "Geliştirici"
           embedding: "Yerleştirme"

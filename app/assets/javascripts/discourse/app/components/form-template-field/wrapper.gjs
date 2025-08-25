@@ -66,7 +66,6 @@ export default class FormTemplateFieldWrapper extends Component {
   _loadTemplate(templateContent) {
     try {
       this.parsedTemplate = Yaml.load(templateContent);
-
       this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {
       this.error = e;
@@ -88,6 +87,11 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._loadTemplate(templateContent);
   }
 
+  // child components expect an onChange function
+  get onChange() {
+    return this.args.onChange || (() => {});
+  }
+
   <template>
     {{#if this.parsedTemplate}}
       <div
@@ -99,7 +103,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @component={{get this.fieldTypes content.type}}
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
-            @onChange={{@onChange}}
+            @onChange={{this.onChange}}
           />
         {{/each}}
       </div>

@@ -61,6 +61,6 @@ ja:
           away_description: ポリシーのステータスが変更された時点で 10 分以上アクセスがない場合で、新しいアクティビティメールにオプトインしている場合にのみ、メールを送信します。
           label: ポリシーをレビューする必要がある場合にメールで通知を受け取る
           email_frequency_options:
-            never: 未使用
+            never: 送信しない
             when_away: 退席中の時のみ
             always: 常時

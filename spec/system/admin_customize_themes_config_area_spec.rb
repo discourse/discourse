@@ -38,11 +38,13 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   it "allows to mark theme as default" do
     config_area.visit
-    expect(config_area).to have_badge(foundation_theme, "--default")
-    expect(config_area).to have_no_badge(theme_2, "--default")
+    expect(config_area).to have_default_badge(foundation_theme)
+    expect(config_area).to have_no_default_badge(theme_2)
+
     config_area.mark_as_default(theme_2)
-    expect(config_area).to have_badge(theme_2, "--default")
-    expect(config_area).to have_no_badge(foundation_theme, "--default")
+
+    expect(config_area).to have_default_badge(theme_2)
+    expect(config_area).to have_no_default_badge(foundation_theme)
   end
 
   it "allows to make theme selectable by users" do
