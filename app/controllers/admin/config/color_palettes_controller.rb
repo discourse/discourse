@@ -2,7 +2,7 @@
 
 class Admin::Config::ColorPalettesController < Admin::AdminController
   def index
-    palettes = ColorScheme.without_theme_owned_palettes.to_a
+    palettes = ColorScheme.all.to_a
     palettes.unshift(ColorScheme.base)
     default_theme = Theme.find_default
     default_light_palette = default_theme&.color_scheme_id
@@ -55,10 +55,6 @@ class Admin::Config::ColorPalettesController < Admin::AdminController
   end
 
   def show
-    render_serialized(
-      ColorScheme.without_theme_owned_palettes.find(params[:id]),
-      ColorSchemeSerializer,
-      root: false,
-    )
+    render_serialized(ColorScheme.find(params[:id]), ColorSchemeSerializer, root: false)
   end
 end

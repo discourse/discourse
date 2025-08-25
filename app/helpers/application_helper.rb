@@ -575,10 +575,7 @@ module ApplicationHelper
     return user_scheme_id if user_scheme_id
     return if theme_id.blank?
 
-    if SiteSetting.use_overhauled_theme_color_palette
-      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
-    end
-    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
+    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def user_dark_scheme_id
@@ -588,12 +585,8 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    if SiteSetting.use_overhauled_theme_color_palette
-      scheme_id
-    else
-      user_dark_scheme_id ||
-        (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
-    end
+    user_dark_scheme_id ||
+      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
   end
 
   def current_homepage
@@ -684,7 +677,6 @@ module ApplicationHelper
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        dark: SiteSetting.use_overhauled_theme_color_palette,
         fallback_to_base: false,
       )
     end
@@ -702,7 +694,6 @@ module ApplicationHelper
       dark_href =
         stylesheet_manager.color_scheme_stylesheet_link_tag_href(
           dark_scheme_id,
-          dark: SiteSetting.use_overhauled_theme_color_palette,
           fallback_to_base: false,
         )
     end
@@ -786,11 +777,7 @@ module ApplicationHelper
   end
 
   def dark_color_hex_for_name(name)
-    ColorScheme.hex_for_name(
-      name,
-      dark_scheme_id,
-      dark: SiteSetting.use_overhauled_theme_color_palette,
-    )
+    ColorScheme.hex_for_name(name, dark_scheme_id)
   end
 
   def dark_elements_media_query

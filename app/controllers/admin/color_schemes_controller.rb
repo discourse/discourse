@@ -4,10 +4,7 @@ class Admin::ColorSchemesController < Admin::AdminController
   before_action :fetch_color_scheme, only: %i[update destroy]
 
   def index
-    schemes =
-      ColorScheme.without_theme_owned_palettes.includes(:base_scheme).order("color_schemes.id ASC")
-
-    schemes = schemes.where(theme_id: nil) if params[:exclude_theme_owned]
+    schemes = ColorScheme.includes(:base_scheme).order("color_schemes.id ASC")
 
     render_serialized(ColorScheme.base_color_schemes + schemes.to_a, ColorSchemeSerializer)
   end
@@ -38,13 +35,11 @@ class Admin::ColorSchemesController < Admin::AdminController
   private
 
   def fetch_color_scheme
-    @color_scheme = ColorScheme.without_theme_owned_palettes.find(params[:id])
+    @color_scheme = ColorScheme.find(params[:id])
   end
 
   def color_scheme_params
-    params.permit(
-      color_scheme: [:base_scheme_id, :name, :user_selectable, colors: %i[name hex dark_hex]],
-    )[
+    params.permit(color_scheme: [:base_scheme_id, :name, :user_selectable, colors: %i[name hex]])[
       :color_scheme
     ]
   end

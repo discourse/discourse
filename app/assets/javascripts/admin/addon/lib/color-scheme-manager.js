@@ -70,12 +70,7 @@ export async function applyColorScheme(scheme, options = {}) {
 
     const apiUrl = `/color-scheme-stylesheet/${id}.json`;
 
-    const data = await ajax(apiUrl, {
-      data: {
-        include_dark_scheme: !!darkTag,
-      },
-      dataType: "json",
-    });
+    const data = await ajax(apiUrl);
 
     if (data?.new_href && lightTag) {
       lightTag.href = data.new_href;
@@ -84,16 +79,6 @@ export async function applyColorScheme(scheme, options = {}) {
         lightTag.setAttribute("data-scheme-id", id);
       } else if (replace && !id) {
         lightTag.removeAttribute("data-scheme-id");
-      }
-    }
-
-    if (data?.new_dark_href && darkTag) {
-      darkTag.href = data.new_dark_href;
-
-      if (replace && id) {
-        darkTag.setAttribute("data-scheme-id", id);
-      } else if (replace && !id) {
-        darkTag.removeAttribute("data-scheme-id");
       }
     }
 

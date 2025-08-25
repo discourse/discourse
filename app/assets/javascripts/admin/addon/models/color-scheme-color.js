@@ -7,10 +7,8 @@ import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
   @tracked hex;
-  @tracked dark_hex;
 
   @tracked originalHex;
-  @tracked originalDarkHex;
 
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
@@ -18,19 +16,16 @@ export default class ColorSchemeColor extends EmberObject {
   init(object) {
     super.init(...arguments);
     this.originalHex = object.hex;
-    this.originalDarkHex = object.dark_hex;
   }
 
   discardColorChange() {
     this.hex = this.originalHex;
-    this.dark_hex = this.originalDarkHex;
   }
 
   @on("init")
   startTrackingChanges() {
     this.set("originals", {
       hex: this.hex || "FFFFFF",
-      darkHex: this.dark_hex,
     });
 
     // force changed property to be recalculated
@@ -38,18 +33,14 @@ export default class ColorSchemeColor extends EmberObject {
   }
 
   // Whether value has changed since it was last saved.
-  @discourseComputed("hex", "dark_hex")
-  changed(hex, darkHex) {
+  @discourseComputed("hex")
+  changed(hex) {
     if (!this.originals) {
       return false;
     }
     if (hex !== this.originals.hex) {
       return true;
     }
-    if (darkHex !== this.originals.darkHex) {
-      return true;
-    }
-
     return false;
   }
 

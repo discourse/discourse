@@ -160,21 +160,19 @@ module Stylesheet
       if @color_scheme_id
         colors =
           begin
-            ColorScheme.find(@color_scheme_id).resolved_colors(dark: @dark)
+            ColorScheme.find(@color_scheme_id).resolved_colors
           rescue StandardError
             ColorScheme.base_colors
           end
       elsif (@theme_id && !theme.component)
-        colors = theme&.color_scheme&.resolved_colors(dark: @dark) || ColorScheme.base_colors
+        colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,
         # we shouldn't be using the default theme color scheme for components
         # (most components use CSS custom properties which work fine without this)
         colors =
-          Theme
-            .find_by_id(SiteSetting.default_theme_id)
-            &.color_scheme
-            &.resolved_colors(dark: @dark) || ColorScheme.base_colors
+          Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
+            ColorScheme.base_colors
       end
 
       colors.each { |n, hex| contents << "$#{n}: ##{hex} !default; " }
@@ -195,7 +193,6 @@ module Stylesheet
       @theme = options[:theme]
       @theme_id = options[:theme_id]
       @color_scheme_id = options[:color_scheme_id]
-      @dark = options[:dark]
 
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
