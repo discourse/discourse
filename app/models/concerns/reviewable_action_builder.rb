@@ -3,6 +3,89 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
+  # Standard user-actions bundle and default user actions.
+  #
+  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
+  # @param guardian [Guardian] Guardian instance to check permissions.
+  #
+  # @return [Reviewable::Actions::Bundle] The created user actions bundle.
+  def build_user_actions_bundle(actions, guardian)
+    bundle =
+      actions.add_bundle(
+        "#{id}-user-actions",
+        label: "reviewables.actions.user_actions.bundle_title",
+      )
+
+    # Always include the no-op action
+    build_action(actions, :no_action_user, bundle: bundle)
+
+    return bundle unless target_user
+
+    if guardian.can_silence_user?(target_user)
+      build_action(actions, :silence_user, bundle: bundle, client_action: "silence")
+    end
+
+    if guardian.can_suspend?(target_user)
+      build_action(actions, :suspend_user, bundle: bundle, client_action: "suspend")
+    end
+
+    if guardian.can_delete_user?(target_user)
+      build_action(actions, :delete_user, bundle: bundle)
+      build_action(actions, :delete_and_block_user, bundle: bundle)
+    end
+
+    bundle
+  end
+
+  # Build actions for the reviewable based on the current state and guardian permissions.
+  #
+  # @TODO (reviewable-refresh) Replace this method with {Reviewable#build_actions} once the new UI is fully implemented.
+  #
+  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
+  # @param guardian [Guardian] Guardian instance to check permissions.
+  # @param args [Hash] Additional arguments for building actions.
+  #
+  # @return [void]
+  def build_actions(actions, guardian, args)
+    if guardian.can_see_reviewable_ui_refresh?
+      build_new_separated_actions(actions, guardian, args)
+    else
+      build_legacy_combined_actions(actions, guardian, args)
+    end
+  end
+
+  # Build legacy combined actions for the reviewable.
+  #
+  # Classes that include this module should implement this method to define
+  # the legacy combined actions for their specific reviewable type.
+  #
+  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
+  #
+  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
+  # @param guardian [Guardian] Guardian instance to check permissions.
+  # @param args [Hash] Additional arguments for building actions.
+  #
+  # @return [void]
+  def build_legacy_combined_actions(actions, guardian, args)
+    raise NotImplementedError, "Including class must implement #build_legacy_combined_actions"
+  end
+
+  # Build new separated actions for the reviewable.
+  #
+  # Classes that include this module should implement this method to define
+  # the new separated actions for their specific reviewable type.
+  #
+  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
+  #
+  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
+  # @param guardian [Guardian] Guardian instance to check permissions.
+  # @param args [Hash] Additional arguments for building actions.
+  #
+  # @return [void]
+  def build_new_separated_actions(actions, guardian, args)
+    raise NotImplementedError, "Including class must implement #build_new_separated_actions"
+  end
+
   # Build a single reviewable action and add it to the provided actions list.
   # This is the canonical API used by both the legacy and refreshed UI code paths.
   #
@@ -37,5 +120,94 @@ module ReviewableActionBuilder
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
     end
+  end
+
+  def perform_no_action_user(performed_by, args)
+    create_result(:success, :approved)
+  end
+
+  def perform_silence_user(performed_by, args)
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    create_result(:success, :rejected)
+  end
+
+  def perform_delete_user(performed_by, args, &)
+    delete_user(target_user, delete_opts, performed_by) if target_user
+    create_result(:success, :rejected, [], recalculate_score: false, &)
+  end
+
+  def perform_delete_and_block_user(performed_by, args, &)
+    delete_options = delete_opts
+    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
+
+    delete_user(target_user, delete_options, performed_by) if target_user
+    create_result(:success, :rejected, [], recalculate_score: false, &)
+  end
+
+  private
+
+  # Returns the user associated with the reviewable, if applicable.
+  # For most reviewables, this will be the user who created the reviewable, though some
+  # reviewables may need to implement this method differently (for example, ReviewableUser).
+  #
+  # @return [User] The user associated with the reviewable.
+  def target_user
+    try(:target_created_by)
+  end
+
+  # Options for deleting a user, used by perform_delete_user and perform_delete_and_block_user.
+  def delete_opts
+    {
+      delete_posts: true,
+      prepare_for_destroy: true,
+      block_urls: true,
+      delete_as_spammer: true,
+      context: "review",
+    }
+  end
+
+  def delete_user(user, delete_options, performed_by)
+    email = user.email
+
+    UserDestroyer.new(performed_by).destroy(user, delete_options)
+
+    message = UserNotifications.account_deleted(email, self)
+    Email::Sender.new(message, :account_deleted).send
+  end
+
+  def map_reviewable_status_to_flag_status(status)
+    case status
+    when :approved
+      :agreed
+    when :rejected
+      :disagreed
+    else
+      status
+    end
+  end
+
+  # Create a result object.
+  #
+  # @param status [Symbol] The status of the result.
+  # @param transition_to [Symbol] The state to transition to.
+  # @param recalculate_score [Boolean] Whether to recalculate the score.
+  # @yield [result] The result object.
+  #
+  # @return [Reviewable::PerformResult] The created result object.
+  def create_result(status, transition_to = nil, flagging_user_ids = [], recalculate_score = true)
+    result = Reviewable::PerformResult.new(self, status)
+    result.transition_to = transition_to
+    if flagging_user_ids.any?
+      result.update_flag_stats = {
+        status: map_reviewable_status_to_flag_status(transition_to),
+        user_ids: flagging_user_ids,
+      }
+      result.recalculate_score = recalculate_score
+    end
+    yield result if block_given?
+    result
   end
 end
