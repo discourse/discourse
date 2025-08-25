@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class CategoryDefaultTimer < BaseTimer
   belongs_to :user
-  belongs_to :config_category, class_name: "Category"
+  belongs_to :category, class_name: "Category", foreign_key: :timerable_id
 end
 
 # == Schema Information

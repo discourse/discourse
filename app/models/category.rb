@@ -48,7 +48,7 @@ class Category < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
 
   has_one :category_setting, dependent: :destroy
-  has_one :category_default_timer, foreign_key: :config_category_id, dependent: :destroy
+  has_one :category_default_timer, foreign_key: :timerable_id, dependent: :destroy
 
   delegate :auto_bump_cooldown_days,
            :num_auto_bump_daily,
