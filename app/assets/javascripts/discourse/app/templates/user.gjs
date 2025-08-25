@@ -2,6 +2,7 @@ import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -403,7 +404,12 @@ export default RouteTemplate(
 
               <section class="controls">
                 <ul>
-                  {{#if @controller.model.can_send_private_message_to_user}}
+                  {{#if
+                    (and
+                      @controller.model.can_send_private_message_to_user
+                      (not @controller.viewingSelf)
+                    )
+                  }}
                     <li>
                       <DButton
                         @action={{fn
