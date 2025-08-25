@@ -91,8 +91,7 @@ export default class ProfileController extends Controller {
     return siteFields
       .filter(
         (siteField) =>
-          siteField.requirement === "for_all_users" &&
-          isEmpty(userFields[siteField.id])
+          siteField.requirement === "for_all_users" && !userFields[siteField.id]
       )
       .map((field) => EmberObject.create({ field, value: "" }));
   }
@@ -155,11 +154,11 @@ export default class ProfileController extends Controller {
 
     return this.model
       .save(this.saveAttrNames)
-      .then(({ user }) => this.model.set("bio_cooked", user.bio_cooked))
-      .catch(popupAjaxError)
-      .finally(() => {
+      .then(({ user }) => {
+        this.model.set("bio_cooked", user.bio_cooked);
         this.currentUser.set("needs_required_fields_check", false);
         this.set("saved", true);
-      });
+      })
+      .catch(popupAjaxError);
   }
 }
