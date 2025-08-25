@@ -52,6 +52,7 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
+  searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
 
   _debouncer = null;
   _activeSearch = null;
@@ -454,6 +455,7 @@ export default class SearchMenu extends Component {
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
             @inputId={{this.searchInputId}}
+            @inputPlaceholder={{this.searchInputPlaceholder}}
           />
 
           {{#if this.loading}}

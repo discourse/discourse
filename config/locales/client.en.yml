@@ -324,7 +324,7 @@ en:
       subheader:
         logged_in_members: ""
         anonymous_members: ""
-      search: "Search"
+      search_placeholder: "Search"
 
     impersonation:
       notice: "You are impersonating %{username}"
@@ -6657,7 +6657,7 @@ en:
             description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users.'
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"

@@ -96,7 +96,10 @@
     height: calc(100% - var(--composer-height, 0px));
 
     html:not(.composer-has-preview) & {
-      height: 100%;
+      @include viewport.from(lg) {
+        // essentially for tablet landscape orientation
+        height: 100%;
+      }
     }
   }
 
