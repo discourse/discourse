@@ -5898,3 +5898,6 @@ en:
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
       invalid_tag_group: "has invalid tag group: %{tag_group_name}"
+
+  discourse_id:
+    already_registered: "This site is already registered with Discourse ID"
