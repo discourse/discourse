@@ -110,14 +110,20 @@ export default {
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval =
       siteSettings.background_polling_interval;
-    messageBus.baseUrl =
-      siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
+
+    if (
+      siteSettings.long_polling_base_url &&
+      siteSettings.long_polling_base_url !== "/"
+    ) {
+      messageBus.baseUrl =
+        siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
+    } else {
+      messageBus.baseUrl = getURL("/");
+    }
 
     messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
 
     messageBus.ajax = (opts) => mbAjax(messageBus, opts);
-
-    messageBus.baseUrl = getURL("/");
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;
