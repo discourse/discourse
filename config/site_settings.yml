@@ -3648,11 +3648,6 @@ uncategorized:
     default: false
     area: "users"
 
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
-
   splash_screen:
     default: true
     area: "interface"
