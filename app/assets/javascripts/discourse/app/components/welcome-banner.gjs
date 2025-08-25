@@ -51,22 +51,27 @@ export default class WelcomeBanner extends Component {
   });
 
   get displayForRoute() {
-    switch (this.siteSettings.welcome_banner_page_visibility) {
+    const { currentRouteName } = this.router;
+    const { hide_for_basic_routes, top_menu, welcome_banner_page_visibility } =
+      this.siteSettings;
+
+    switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
-        return this.siteSettings.top_menu
+        return top_menu
           .split("|")
-          .any(
-            (menuItem) =>
-              `discovery.${menuItem}` === this.router.currentRouteName
-          );
+          .any((menuItem) => `discovery.${menuItem}` === currentRouteName);
       case "homepage":
-        return (
-          this.router.currentRouteName === `discovery.${defaultHomepage()}`
-        );
+        return currentRouteName === `discovery.${defaultHomepage()}`;
       case "discovery":
-        return this.router.currentRouteName.startsWith("discovery.");
+        return currentRouteName.startsWith("discovery.");
       case "all_pages":
-        return true;
+        return (
+          currentRouteName !== "full-page-search" &&
+          !currentRouteName.startsWith("admin.") &&
+          !hide_for_basic_routes
+            .split("|")
+            .any((routeName) => routeName === currentRouteName)
+        );
       default:
         return false;
     }
