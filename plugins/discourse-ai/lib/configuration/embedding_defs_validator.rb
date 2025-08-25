@@ -8,11 +8,34 @@ module DiscourseAi
       end
 
       def valid_value?(val)
-        val.present? || !SiteSetting.ai_embeddings_enabled
+        if val.blank?
+          if SiteSetting.ai_embeddings_enabled
+            @disable_embeddings = true
+            return false
+          else
+            return true
+          end
+        end
+
+        embedding_def = EmbeddingDefinition.find_by(id: val)
+        if embedding_def.blank?
+          @missing_record = true
+          return false
+        end
+
+        return true if Rails.env.test? && @opts[:run_check_in_tests].blank?
+
+        DiscourseAi::Embeddings::Vector.new(embedding_def).vector_from("this is a test")
+        true
+      rescue Net::HTTPBadResponse => e
+        false
       end
 
       def error_message
-        I18n.t("discourse_ai.embeddings.configuration.disable_embeddings")
+        I18n.t("discourse_ai.embeddings.configuration.disable_embeddings") if @disable_embeddings
+        I18n.t("discourse_ai.embeddings.configuration.invalid_config") if @missing_record
+
+        I18n.t("discourse_ai.embeddings.configuration.model_unreachable")
       end
     end
   end

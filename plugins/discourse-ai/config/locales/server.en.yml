@@ -610,6 +610,7 @@ en:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         invalid_config: "You selected a invalid option."
         choose_model: "Set 'ai embeddings selected model' first."
+        model_unreachable: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
