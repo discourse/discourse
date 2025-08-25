@@ -1,5 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { formatUsername, postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -73,11 +74,16 @@ export default class NotificationTypeBase {
    * @returns {string} The label is the first part of the text content displayed in the notification. For example, in a like notification, the username of the user who liked the post is the label. If a falsey value is returned, the label is omitted.
    */
   get label() {
+    let notificationLabel;
     if (!this.siteSettings.prioritize_full_name_in_ux) {
-      return this.username;
+      notificationLabel = this.username;
+    } else {
+      notificationLabel = this.notification.acting_user_name || this.username;
     }
 
-    return this.notification.acting_user_name || this.username;
+    return applyValueTransformer("notification-label", notificationLabel, {
+      notification: this.notification,
+    });
   }
 
   /**

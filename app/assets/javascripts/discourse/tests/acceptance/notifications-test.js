@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import {
   acceptance,
@@ -89,5 +90,40 @@ acceptance("User Notifications", function (needs) {
       currentURL(),
       "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
     );
+  });
+
+  test("notification-label transformer can customize notification labels", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("notification-label", () => {
+        return "Custom Label";
+      });
+    });
+
+    await visit("/u/eviltrout/notifications");
+
+    assert
+      .dom(".user-notifications-list .notification:first-child")
+      .includesText("Custom Label", "custom label is displayed");
+  });
+
+  test("notification-acting-user-avatar transformer can customize avatars in user menu", async function (assert) {
+    this.siteSettings.show_user_menu_avatars = true;
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("notification-acting-user-avatar", () => {
+        return "/custom-avatar.png";
+      });
+    });
+
+    await visit("/");
+    await click("#toggle-current-user");
+
+    assert
+      .dom(".user-menu .icon-avatar img")
+      .hasAttribute(
+        "src",
+        "/custom-avatar.png",
+        "custom avatar URL is displayed"
+      );
   });
 });
