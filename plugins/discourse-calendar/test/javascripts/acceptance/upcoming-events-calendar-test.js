@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { tomorrow, twoDays } from "discourse/lib/time-utils";
+import { tomorrow } from "discourse/lib/time-utils";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
@@ -47,17 +47,8 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
-            upcoming_dates: [
-              {
-                starts_at: tomorrow().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: tomorrow().format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-              {
-                starts_at: twoDays().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: twoDays().format("YYYY-MM-DDT16:14:00.000Z"),
-              },
-            ],
             category_id: 1,
+            rrule: `DTSTART:${tomorrow().add(1, "hour").format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${tomorrow().add(2, "days").format("YYYYMMDD")}`,
           },
           {
             id: 67502,
@@ -88,24 +79,28 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
       .dom("#upcoming-events-calendar")
       .exists("Upcoming Events calendar is shown");
 
-    assert.dom(".fc-view-container").exists("FullCalendar is loaded");
+    assert.dom(".fc").exists("FullCalendar is loaded");
   });
 
   test("upcoming events category colors", async function (assert) {
     await visit("/upcoming-events");
 
-    const [first, second] = [...document.querySelectorAll(".fc-event")];
+    const [first, second] = [
+      ...document.querySelectorAll(
+        ".fc-daygrid-event-harness .fc-daygrid-event-dot"
+      ),
+    ];
     assert
       .dom(first)
       .hasStyle(
-        { backgroundColor: "rgb(190, 10, 10)" },
+        { borderColor: "rgb(190, 10, 10)" },
         "Event item uses the proper color from category 1"
       );
 
     assert
       .dom(second)
       .hasStyle(
-        { backgroundColor: "rgb(15, 120, 190)" },
+        { borderColor: "rgb(15, 120, 190)" },
         "Event item uses the proper color from category 2"
       );
   });
@@ -113,9 +108,11 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
   test("upcoming events calendar shows recurrent events", async function (assert) {
     await visit("/upcoming-events");
 
-    const [, second, third] = [...document.querySelectorAll(".fc-event")];
-    assert.dom(".fc-title", second).hasText("Awesome Event");
-    assert.dom(".fc-title", third).hasText("Awesome Event");
+    const [, second, third] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
+    assert.dom(".fc-event-title", third).hasText("Awesome Event");
 
     const secondCell = second.closest("td");
     const thirdCell = third.closest("td");

@@ -84,7 +84,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
         },
       ],
       {
-        recurrenceRule: event.recurrenceRule,
+        rrule: event.rrule,
         location: event.url,
         details: getAbsoluteURL(event.post.url),
       }
@@ -253,6 +253,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       @identifier="discourse-post-event-more-menu"
       @triggerClass={{concatClass
         "more-dropdown"
+        "btn-small"
         (if this.isSavingEvent "--saving")
       }}
       @icon="ellipsis"

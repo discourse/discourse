@@ -30,7 +30,7 @@ export default class DownloadCalendar extends Component {
         this.args.model.calendar.title,
         this.args.model.calendar.dates,
         {
-          recurrenceRule: this.args.model.calendar.recurrenceRule,
+          rrule: this.args.model.calendar.rrule,
           location: this.args.model.calendar.location,
           details: this.args.model.calendar.details,
         }
@@ -40,7 +40,7 @@ export default class DownloadCalendar extends Component {
         this.args.model.calendar.title,
         this.args.model.calendar.dates,
         {
-          recurrenceRule: this.args.model.calendar.recurrenceRule,
+          rrule: this.args.model.calendar.rrule,
           location: this.args.model.calendar.location,
           details: this.args.model.calendar.details,
         }

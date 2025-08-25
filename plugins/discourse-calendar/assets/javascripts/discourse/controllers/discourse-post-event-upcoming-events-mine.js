@@ -1,5 +1,18 @@
 import Controller from "@ember/controller";
+import { service } from "@ember/service";
 
 export default class DiscoursePostEventUpcomingEventsMineController extends Controller {
-  queryParams = ["view"];
+  @service router;
+
+  get initialView() {
+    return this.model.view;
+  }
+
+  get initialDate() {
+    return this.model.initialDate;
+  }
+
+  get events() {
+    return this.model.events;
+  }
 }

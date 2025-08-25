@@ -59,40 +59,19 @@ module DiscoursePostEvent
 
       return if !starts_at_changed && !ends_at_changed
 
-      event_dates.update_all(finished_at: Time.current)
       set_next_date
     end
 
     def set_next_date
-      next_dates = calculate_next_date
-      return if !next_dates
+      next_date_result = calculate_next_date
 
-      date_args = { starts_at: next_dates[:starts_at], ends_at: next_dates[:ends_at] }
-      if next_dates[:ends_at] && next_dates[:ends_at] < Time.current
-        date_args[:finished_at] = next_dates[:ends_at]
-      end
+      return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
 
-      existing_date = event_dates.find_by(starts_at: date_args[:starts_at])
-
-      if existing_date && existing_date.ends_at == date_args[:ends_at] &&
-           existing_date.finished_at == date_args[:finished_at]
-        # exact same state in DB, this is a dupe call, return early
-        return
-      end
-
-      if existing_date
-        existing_date.update!(date_args)
-      else
-        event_dates.create!(date_args)
-      end
-
-      invitees.where.not(status: Invitee.statuses[:going]).update_all(status: nil, notified: false)
-
-      if !next_dates[:rescheduled]
-        notify_invitees!
-        notify_missing_invitees!
-      end
-
+      starts_at, ends_at = next_date_result
+      finish_previous_event_dates(starts_at) if dates_changed?
+      upsert_event_date(starts_at, ends_at)
+      reset_invitee_notifications
+      notify_if_new_event
       publish_update!
     end
 
@@ -400,27 +379,71 @@ module DiscoursePostEvent
     end
 
     def calculate_next_date
-      if self.recurrence.blank? || original_starts_at > Time.current
-        return { starts_at: original_starts_at, ends_at: original_ends_at, rescheduled: false }
+      if recurrence.blank? || original_starts_at > Time.current
+        return original_starts_at, original_ends_at
       end
 
-      next_starts_at =
-        RRuleGenerator.generate(
-          starts_at: original_starts_at.in_time_zone(timezone),
-          timezone:,
-          recurrence:,
-          recurrence_until:,
-        ).first
-      return unless next_starts_at
+      next_starts_at = calculate_next_recurring_date
+      return nil unless next_starts_at
 
-      if original_ends_at
-        difference = original_ends_at - original_starts_at
-        next_ends_at = next_starts_at + difference.seconds
+      next_ends_at = original_ends_at ? next_starts_at + event_duration : nil
+      [next_starts_at, next_ends_at]
+    end
+
+    private
+
+    def dates_changed?
+      saved_change_to_original_starts_at || saved_change_to_original_ends_at
+    end
+
+    def finish_previous_event_dates(current_starts_at)
+      existing_date = event_dates.find_by(starts_at: current_starts_at)
+      event_dates
+        .where.not(id: existing_date&.id)
+        .where(finished_at: nil)
+        .update_all(finished_at: Time.current)
+    end
+
+    def upsert_event_date(starts_at, ends_at)
+      finished_at = ends_at && ends_at < Time.current ? ends_at : nil
+
+      existing_date = event_dates.find_by(starts_at:)
+
+      if existing_date
+        # Only update if something actually changed
+        unless existing_date.ends_at == ends_at && existing_date.finished_at == finished_at
+          existing_date.update!(ends_at:, finished_at:)
+        end
       else
-        next_ends_at = nil
+        event_dates.create!(starts_at:, ends_at:, finished_at:)
       end
+    end
 
-      { starts_at: next_starts_at, ends_at: next_ends_at, rescheduled: true }
+    def reset_invitee_notifications
+      invitees.where.not(status: Invitee.statuses[:going]).update_all(status: nil, notified: false)
+    end
+
+    def notify_if_new_event
+      is_generating_future_recurrence = recurrence.present? && original_starts_at <= Time.current
+
+      unless is_generating_future_recurrence
+        notify_invitees!
+        notify_missing_invitees!
+      end
+    end
+
+    def calculate_next_recurring_date
+      RRuleGenerator.generate(
+        starts_at: original_starts_at.in_time_zone(timezone),
+        timezone: timezone,
+        recurrence: recurrence,
+        recurrence_until: recurrence_until,
+        dtstart: original_starts_at.in_time_zone(timezone),
+      ).first
+    end
+
+    def event_duration
+      original_ends_at - original_starts_at
     end
   end
 end
