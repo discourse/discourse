@@ -89,6 +89,7 @@ schema:
       columns:
         exclude:
           - "id"
+    tag_groups: {}
     tags:
       columns:
         exclude:
@@ -345,7 +346,6 @@ schema:
         - "summary_sections"
         - "tag_group_memberships"
         - "tag_group_permissions"
-        - "tag_groups"
         - "tag_search_data"
         - "tag_users"
         - "tags_web_hooks"
