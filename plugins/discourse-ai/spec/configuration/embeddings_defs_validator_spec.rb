@@ -49,7 +49,7 @@ RSpec.describe DiscourseAi::Configuration::EmbeddingDefsValidator do
 
         expect(validator.valid_value?(embedding_definition.id)).to eq(false)
         expect(validator.error_message).to eq(
-          I18n.t("discourse_ai.embeddings.configuration.model_unreachable"),
+          I18n.t("discourse_ai.embeddings.configuration.model_test_failed"),
         )
       end
 
