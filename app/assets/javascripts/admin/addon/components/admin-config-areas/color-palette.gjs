@@ -21,10 +21,11 @@ export default class AdminConfigAreasColorPalette extends Component {
   @tracked saving = false;
   @tracked hasChangedName = false;
   @tracked hasChangedUserSelectable = false;
-  @tracked hasChangedDefaultOnTheme = false;
+  @tracked hasChangedDefaultLightOnTheme = false;
+  @tracked hasChangedDefaultDarkOnTheme = false;
   @tracked hasChangedColors = false;
-  @tracked darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
   @tracked lightColorSchemeId = this.defaultTheme.color_scheme_id;
+  @tracked darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
 
   saveNameOnly = false;
   fkApi;
@@ -33,38 +34,12 @@ export default class AdminConfigAreasColorPalette extends Component {
     return this.site.user_themes.find((theme) => theme.default);
   }
 
-  get defaultThemePaletteId() {
-    return this.args.colorPalette.is_dark
-      ? this.darkColorSchemeId
-      : this.lightColorSchemeId;
-  }
-
-  get defaultOnThemeDisabled() {
-    return (
-      this.defaultThemePaletteId &&
-      this.defaultThemePaletteId !== this.args.colorPalette.id
-    );
-  }
-
-  get defaultOnThemeDescription() {
-    if (this.args.colorPalette.is_dark) {
-      return i18n(
-        "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
-        { themeName: this.defaultTheme.name }
-      );
-    } else {
-      return i18n(
-        "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
-        { themeName: this.defaultTheme.name }
-      );
-    }
-  }
-
   get hasUnsavedChanges() {
     return (
       this.hasChangedName ||
       this.hasChangedUserSelectable ||
-      this.hasChangedDefaultOnTheme ||
+      this.hasChangedDefaultLightOnTheme ||
+      this.hasChangedDefaultDarkOnTheme ||
       this.hasChangedColors
     );
   }
@@ -74,8 +49,10 @@ export default class AdminConfigAreasColorPalette extends Component {
     return {
       name: this.args.colorPalette.name,
       user_selectable: this.args.colorPalette.user_selectable,
-      default_on_theme:
-        this.defaultThemePaletteId === this.args.colorPalette.id,
+      default_light_on_theme:
+        this.lightColorSchemeId === this.args.colorPalette.id,
+      default_dark_on_theme:
+        this.darkColorSchemeId === this.args.colorPalette.id,
       colors: this.args.colorPalette.colors,
     };
   }
@@ -103,22 +80,22 @@ export default class AdminConfigAreasColorPalette extends Component {
 
     if (!this.saveNameOnly) {
       this.args.colorPalette.user_selectable = data.user_selectable;
-      if (!this.defaultOnThemeDisabled) {
-        this.args.colorPalette.default_on_theme = data.default_on_theme;
 
-        if (this.args.colorPalette.is_dark && this.hasChangedDefaultOnTheme) {
-          this.defaultTheme.dark_color_scheme_id = data.default_on_theme
-            ? this.args.colorPalette.id
-            : null;
-          this.darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
-        }
-
-        if (!this.args.colorPalette.is_dark && this.hasChangedDefaultOnTheme) {
-          this.defaultTheme.color_scheme_id = data.default_on_theme
-            ? this.args.colorPalette.id
-            : null;
-          this.lightColorSchemeId = this.defaultTheme.color_scheme_id;
-        }
+      if (this.hasChangedDefaultLightOnTheme) {
+        this.args.colorPalette.default_light_on_theme =
+          data.default_light_on_theme;
+        this.defaultTheme.color_scheme_id = data.default_light_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.lightColorSchemeId = this.defaultTheme.color_scheme_id;
+      }
+      if (this.hasChangedDefaultDarkOnTheme) {
+        this.args.colorPalette.default_dark_on_theme =
+          data.default_dark_on_theme;
+        this.defaultTheme.dark_color_scheme_id = data.default_dark_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
       }
     }
 
@@ -139,7 +116,8 @@ export default class AdminConfigAreasColorPalette extends Component {
 
       if (!this.saveNameOnly) {
         this.hasChangedUserSelectable = false;
-        this.hasChangedDefaultOnTheme = false;
+        this.hasChangedDefaultLightOnTheme = false;
+        this.hasChangedDefaultDarkOnTheme = false;
 
         if (this.hasChangedColors) {
           await this.applyColorChangesIfPossible();
@@ -230,9 +208,15 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  handleDefaultOnThemeChange(value, { set }) {
-    set("default_on_theme", value);
-    this.hasChangedDefaultOnTheme = true;
+  handleDefaultLightOnThemeChange(value, { set }) {
+    set("default_light_on_theme", value);
+    this.hasChangedDefaultLightOnTheme = true;
+  }
+
+  @action
+  handleDefaultDarkOnThemeChange(value, { set }) {
+    set("default_dark_on_theme", value);
+    this.hasChangedDefaultDarkOnTheme = true;
   }
 
   @action
@@ -328,35 +312,59 @@ export default class AdminConfigAreasColorPalette extends Component {
           @heading="admin.config_areas.color_palettes.color_options.title"
         >
           <:content>
-            <form.Field
-              @name="default_on_theme"
-              @title={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle"
-              }}
-              @showTitle={{false}}
-              @description={{this.defaultOnThemeDescription}}
-              @format="full"
-              @disabled={{this.defaultOnThemeDisabled}}
-              @onSet={{this.handleDefaultOnThemeChange}}
-              as |field|
-            >
-              <field.Toggle />
-            </form.Field>
-            <form.Field
-              @name="user_selectable"
-              @title={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle"
-              }}
-              @showTitle={{false}}
-              @description={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle_description"
-              }}
-              @format="full"
-              @onSet={{this.handleUserSelectableChange}}
-              as |field|
-            >
-              <field.Toggle />
-            </form.Field>
+            <form.Row>
+              <form.Field
+                @name="default_light_on_theme"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
+                  themeName=this.defaultTheme.name
+                }}
+                @format="full"
+                @onSet={{this.handleDefaultLightOnThemeChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
+            <form.Row>
+              <form.Field
+                @name="default_dark_on_theme"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
+                  themeName=this.defaultTheme.name
+                }}
+                @format="full"
+                @onSet={{this.handleDefaultDarkOnThemeChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
+            <form.Row>
+              <form.Field
+                @name="user_selectable"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_description"
+                }}
+                @format="full"
+                @onSet={{this.handleUserSelectableChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
           </:content>
         </AdminConfigAreaCard>
         <AdminConfigAreaCard

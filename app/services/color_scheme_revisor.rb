@@ -21,14 +21,14 @@ class ColorSchemeRevisor
         :user_selectable,
       )
 
-      if @color_scheme.is_dark? && @params.has_key?(:default_on_theme)
+      if @params.has_key?(:default_light_on_theme)
         Theme.find_default.update!(
-          dark_color_scheme_id: @params[:default_on_theme] ? @color_scheme.id : nil,
+          color_scheme_id: @params[:default_light_on_theme] ? @color_scheme.id : nil,
         )
       end
-      if !@color_scheme.is_dark? && @params.has_key?(:default_on_theme)
+      if @params.has_key?(:default_dark_on_theme)
         Theme.find_default.update!(
-          color_scheme_id: @params[:default_on_theme] ? @color_scheme.id : nil,
+          dark_color_scheme_id: @params[:default_dark_on_theme] ? @color_scheme.id : nil,
         )
       end
 
