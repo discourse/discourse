@@ -2,47 +2,23 @@ import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import { isImage } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
-import { getURLWithCDN } from "discourse/lib/get-url";
 
-/**
- * @component chat-composer-upload
- * @param {Object} @upload
- * @param {boolean} @isDone
- * @param {Function} @onCancel
- */
 export default class ChatComposerUpload extends Component {
-  /**
-   * Returns true when the current upload is an image type.
-   *
-   * @returns {boolean}
-   */
   get isImage() {
     return isImage(
       this.args.upload.original_filename || this.args.upload.fileName
     );
   }
 
-  /**
-   * File name to display depending on upload state.
-   *
-   * @returns {string}
-   */
   get fileName() {
     return this.args.isDone
       ? this.args.upload.original_filename
       : this.args.upload.fileName;
   }
 
-  /**
-   * CDN-aware URL for the preview image.
-   *
-   * Ensures that when a CDN is configured (e.g., S3 CDN), the
-   * preview uses the CDN URL instead of the origin.
-   *
-   * @returns {string}
-   */
   get previewImageSrc() {
     return getURLWithCDN(this.args.upload?.short_path);
   }
