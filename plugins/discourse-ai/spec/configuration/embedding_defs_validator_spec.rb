@@ -36,13 +36,6 @@ RSpec.describe DiscourseAi::Configuration::EmbeddingDefsValidator do
     end
 
     context "when selecting a model" do
-      it "returns false if we cannot find a matching record" do
-        expect(validator.valid_value?(-9_999_999_999_999)).to eq(false)
-        expect(validator.error_message).to eq(
-          I18n.t("discourse_ai.embeddings.configuration.invalid_config"),
-        )
-      end
-
       it "returns false if the test fails" do
         WebMock.stub_request(:post, embedding_definition.url).to_return(status: 404)
 

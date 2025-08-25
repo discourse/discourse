@@ -17,15 +17,13 @@ module DiscourseAi
           end
         end
 
-        embedding_def = EmbeddingDefinition.find_by(id: val)
-        if embedding_def.blank?
-          @missing_record = true
-          return false
-        end
-
         return true if Rails.env.test? && @opts[:run_check_in_tests].blank?
 
-        DiscourseAi::Embeddings::Vector.new(embedding_def).vector_from("this is a test")
+        embedding_def = EmbeddingDefinition.find_by(id: val)
+        if embedding_def.present?
+          DiscourseAi::Embeddings::Vector.new(embedding_def).vector_from("this is a test")
+        end
+
         true
       rescue Net::HTTPBadResponse => e
         false
@@ -35,7 +33,6 @@ module DiscourseAi
         if @disable_embeddings
           return I18n.t("discourse_ai.embeddings.configuration.disable_embeddings")
         end
-        return I18n.t("discourse_ai.embeddings.configuration.invalid_config") if @missing_record
 
         I18n.t("discourse_ai.embeddings.configuration.model_test_failed")
       end
