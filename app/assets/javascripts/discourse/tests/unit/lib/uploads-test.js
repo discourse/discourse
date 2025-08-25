@@ -341,6 +341,15 @@ module("Unit | Utility | uploads", function (hooks) {
     );
   });
 
+  test("getUploadMarkdown sanitizes attachment filenames containing markdown/control characters", function (assert) {
+    const short_url = "uploads://weird.ext";
+    assert.strictEqual(
+      testUploadMarkdown("foo (discourse [new.txt|attachment", { short_url }),
+      `[foo (discourse new.txtattachment|attachment](${short_url}) (42 Bytes)`,
+      "brackets and pipes in filename are removed to avoid breaking attachment syntax"
+    );
+  });
+
   test("getUploadMarkdown - replaces GUID in image alt text on iOS", function (assert) {
     assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
