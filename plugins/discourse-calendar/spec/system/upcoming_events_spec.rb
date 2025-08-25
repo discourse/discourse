@@ -15,19 +15,17 @@ describe "Upcoming Events", type: :system do
     sign_in(admin)
   end
 
-  context "when user is signed in" do
+  describe "basic functionality" do
     fab!(:event)
 
-    before { sign_in(admin) }
-
-    it "shows the upcoming events" do
+    it "displays events in the calendar" do
       upcoming_events.visit
 
       expect(page).to have_css("#upcoming-events-calendar .fc", text: event.post.topic.title)
     end
   end
 
-  context "when display events with showLocalTime" do
+  describe "local time display" do
     before do
       admin.user_option.update!(timezone: "America/New_York")
 
@@ -51,7 +49,7 @@ describe "Upcoming Events", type: :system do
       )
     end
 
-    it "shows the local time in the title",
+    it "shows local time when showLocalTime is enabled",
        timezone: "Australia/Brisbane",
        time: Time.utc(2025, 6, 2, 19, 00) do
       upcoming_events.visit
@@ -75,8 +73,9 @@ describe "Upcoming Events", type: :system do
     end
   end
 
-  context "when filtering my events" do
-    it "shows only the events the user is attending", time: Time.utc(2025, 6, 2, 19, 00) do
+  describe "event filtering" do
+    it "shows only events the user is attending when filtered",
+       time: Time.utc(2025, 6, 2, 19, 00) do
       attending_event =
         PostCreator.create!(
           admin,
@@ -104,8 +103,8 @@ describe "Upcoming Events", type: :system do
     end
   end
 
-  context "when changing view", time: Time.utc(2025, 8, 21, 14, 00) do
-    it "displays the chosen view" do
+  describe "view switching", time: Time.utc(2025, 8, 21, 14, 00) do
+    it "switches between month and day views" do
       upcoming_events.visit
 
       expect(page).to have_content("August 2025")
@@ -118,7 +117,7 @@ describe "Upcoming Events", type: :system do
     end
   end
 
-  context "when event is recurring" do
+  describe "recurring events" do
     fab!(:event)
 
     before do
@@ -130,7 +129,8 @@ describe "Upcoming Events", type: :system do
       )
     end
 
-    it "respects the until date", time: Time.utc(2025, 6, 2, 19, 00) do
+    it "displays recurring events until the specified end date",
+       time: Time.utc(2025, 6, 2, 19, 00) do
       upcoming_events.visit
 
       expect(page).to have_css(".fc-daygrid-event-harness", count: 4)
@@ -149,29 +149,29 @@ describe "Upcoming Events", type: :system do
     end
   end
 
-  context "when navigating between dates" do
-    context "when clicking today", time: Time.utc(2025, 6, 2, 19, 00) do
-      it "shows the current date" do
+  describe "calendar navigation" do
+    describe "today button" do
+      it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
         visit("/upcoming-events/month/2025/8/1")
 
         upcoming_events.today
 
         expect(page).to have_current_path("/upcoming-events/month/2025/6/2")
+      end
 
-        context "when in a different timezone", timezone: "Europe/London" do
-          it "also works" do
-            visit("/upcoming-events/day/2025/8/1")
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
+          visit("/upcoming-events/day/2025/8/1")
 
-            upcoming_events.today
+          upcoming_events.today
 
-            expect(page).to have_current_path("/upcoming-events/day/2025/6/2")
-          end
+          expect(page).to have_current_path("/upcoming-events/day/2025/6/2")
         end
       end
     end
 
-    context "when clicking next" do
-      it "shows the next month" do
+    describe "next button" do
+      it "navigates to next month" do
         visit("/upcoming-events/month/2025/8/1")
 
         upcoming_events.next
@@ -179,7 +179,7 @@ describe "Upcoming Events", type: :system do
         expect(page).to have_current_path("/upcoming-events/month/2025/9/1")
       end
 
-      it "shows the next week" do
+      it "navigates to next week" do
         visit("/upcoming-events/week/2025/8/4")
 
         upcoming_events.next
@@ -187,8 +187,8 @@ describe "Upcoming Events", type: :system do
         expect(page).to have_current_path("/upcoming-events/week/2025/8/11")
       end
 
-      context "when in a different timezone", timezone: "Europe/London" do
-        it "shows the next day" do
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to next day" do
           visit("/upcoming-events/day/2025/8/4")
 
           upcoming_events.next
@@ -196,7 +196,7 @@ describe "Upcoming Events", type: :system do
           expect(page).to have_current_path("/upcoming-events/day/2025/8/5")
         end
 
-        it "shows the next week" do
+        it "navigates to next week" do
           visit("/upcoming-events/week/2025/8/4")
 
           upcoming_events.next
@@ -206,8 +206,8 @@ describe "Upcoming Events", type: :system do
       end
     end
 
-    context "when clicking prev" do
-      it "shows the prev day" do
+    describe "prev button" do
+      it "navigates to previous day" do
         visit("/upcoming-events/day/2025/8/1")
 
         upcoming_events.prev
@@ -215,7 +215,7 @@ describe "Upcoming Events", type: :system do
         expect(page).to have_current_path("/upcoming-events/day/2025/7/31")
       end
 
-      it "shows the prev month" do
+      it "navigates to previous month" do
         visit("/upcoming-events/month/2025/8/1")
 
         upcoming_events.prev
@@ -223,7 +223,7 @@ describe "Upcoming Events", type: :system do
         expect(page).to have_current_path("/upcoming-events/month/2025/7/1")
       end
 
-      it "shows the prev week" do
+      it "navigates to previous week" do
         visit("/upcoming-events/week/2025/8/4")
 
         upcoming_events.prev
@@ -231,8 +231,8 @@ describe "Upcoming Events", type: :system do
         expect(page).to have_current_path("/upcoming-events/week/2025/7/28")
       end
 
-      context "when in a different timezone", timezone: "Europe/London" do
-        it "shows the prev day" do
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to previous day" do
           visit("/upcoming-events/day/2025/8/1")
 
           upcoming_events.prev
@@ -240,7 +240,7 @@ describe "Upcoming Events", type: :system do
           expect(page).to have_current_path("/upcoming-events/day/2025/7/31")
         end
 
-        it "shows the prev month" do
+        it "navigates to previous month" do
           visit("/upcoming-events/month/2025/8/1")
 
           upcoming_events.prev
@@ -248,7 +248,7 @@ describe "Upcoming Events", type: :system do
           expect(page).to have_current_path("/upcoming-events/month/2025/7/1")
         end
 
-        it "shows the prev week" do
+        it "navigates to previous week" do
           visit("/upcoming-events/week/2025/8/4")
 
           upcoming_events.prev
