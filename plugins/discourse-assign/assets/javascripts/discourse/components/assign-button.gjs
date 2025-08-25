@@ -58,6 +58,7 @@ export default class AssignButton extends Component {
       @action={{this.acceptAnswer}}
       @icon={{this.icon}}
       @title={{this.title}}
+      @ariaLabel={{this.title}}
     />
   </template>
 }

@@ -8,6 +8,7 @@ const PostMenuCopyLinkButton = <template>
     @icon="d-post-share"
     @label={{if @showLabel "post.controls.copy_action"}}
     @title="post.controls.copy_title"
+    @ariaLabel="post.controls.copy_action"
   />
 </template>;
 

@@ -4,6 +4,7 @@ import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { i18n } from "discourse-i18n";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HeaderSearch from "./header-search";
@@ -141,7 +142,13 @@ export default class Contents extends Component {
           }}
         />
       </div>
-      <div class="panel" role="navigation">{{yield}}</div>
+      <div
+        class="panel"
+        role="navigation"
+        aria-label={{i18n "header_navigation_aria_label"}}
+      >
+        {{yield}}
+      </div>
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"

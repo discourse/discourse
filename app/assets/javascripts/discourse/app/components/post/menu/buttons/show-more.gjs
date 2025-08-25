@@ -13,6 +13,7 @@ export default class PostMenuShowMoreButton extends Component {
       @action={{@buttonActions.showMoreActions}}
       @icon="ellipsis"
       @title="show_more"
+      @ariaLabel="show_more"
     />
   </template>
 }

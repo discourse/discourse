@@ -15,6 +15,7 @@ import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
+import { i18n } from "discourse-i18n";
 import Post from "./post";
 import PostGap from "./post/gap";
 import PostPlaceholder from "./post/placeholder";
@@ -249,8 +250,16 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
+
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
         <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        <div
+          role="region"
+          aria-label={{i18n "load_more_posts_above"}}
+          class="sr-only"
+        >
+          <p>{{i18n "load_more_posts_above"}}</p>
+        </div>
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -358,6 +367,15 @@ export default class PostStream extends Component {
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
           <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+          <div
+            role="region"
+            aria-label={{i18n "load_more_posts_below"}}
+            class="sr-only"
+          >
+            <p>
+              {{i18n "load_more_posts_below"}}
+            </p>
+          </div>
         {{else}}
           <div
             class="post-stream__bottom-boundary"
