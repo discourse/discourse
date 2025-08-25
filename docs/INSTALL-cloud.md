@@ -77,7 +77,7 @@ Create your new Droplet. You may receive an email with the root password, howeve
 
 > ⚠️ Now you have created your cloud server! Go back to your DNS controls and use the IP address to set up an `A record` for your `discourse.example.com` hostname.
 
-> ⚠️ Note: DigitalOcean now [blocks SMTP ports](https://docs.digitalocean.com/support/why-is-smtp-blocked/) on Droplets by default. You'll need to open a support ticket to get them unblocked before you can install Discourse.
+> ⚠️ Note: DigitalOcean now [blocks SMTP ports](https://docs.digitalocean.com/support/why-is-smtp-blocked/) on Droplets by default. You'll need to open a support ticket to get them unblocked before you can install Discourse. (Or try another port, for example, port 2525.) 
 
 ### 4. Access Your Cloud Server
 
