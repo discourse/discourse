@@ -139,6 +139,15 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE tag_users
+(
+    tag_id             NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    created_at         DATETIME,
+    notification_level INTEGER  NOT NULL,
+    PRIMARY KEY (tag_id, user_id)
+);
+
 CREATE TABLE tags
 (
     original_id NUMERIC  NOT NULL PRIMARY KEY,
