@@ -19,7 +19,7 @@ export default class ReactionsReactionButton extends Component {
     this.args.cancelCollapse();
 
     const currentUserReaction = this.args.post.current_user_reaction;
-    if (!this.capabilities.touch || !this.site.mobileView) {
+    if (!this.capabilities.touch || this.site.desktopView) {
       this.args.toggleFromButton({
         reaction: currentUserReaction
           ? currentUserReaction.id

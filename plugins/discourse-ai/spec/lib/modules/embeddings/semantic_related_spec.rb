@@ -25,14 +25,6 @@ describe DiscourseAi::Embeddings::SemanticRelated do
   describe "#related_topic_ids_for" do
     it "returns empty array if AI embeddings are disabled" do
       SiteSetting.ai_embeddings_enabled = false
-      SiteSetting.ai_embeddings_selected_model = 1234
-
-      expect(semantic_related.related_topic_ids_for(normal_topic_1)).to eq([])
-    end
-
-    it "returns empty array if AI embeddings model is invalid" do
-      SiteSetting.ai_embeddings_enabled = true
-      SiteSetting.ai_embeddings_selected_model = 1234
 
       expect(semantic_related.related_topic_ids_for(normal_topic_1)).to eq([])
     end

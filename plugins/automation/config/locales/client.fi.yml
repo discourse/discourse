@@ -166,7 +166,7 @@ fi:
               label: Tunnisteet
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_categories:
-              label: Kategoriat
+              label: Alueet
               description: Valinnainen, käynnistyy vain, jos viestin aihe on näissä kategorioissa
             exclude_subcategories:
               label: Jätä pois alakategoriat

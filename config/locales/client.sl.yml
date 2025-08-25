@@ -4228,7 +4228,6 @@ sl:
           desktop: "Namizno"
           mobile: "Mobilno"
           preview: "Predogled"
-          default: "Privzeto"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"

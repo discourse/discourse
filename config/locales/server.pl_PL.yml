@@ -1722,7 +1722,9 @@ pl_PL:
       labels:
         provider: Dostawca logowania
         no_accounts: "Brak powiązanych kont"
-        total_users: "Łączna liczba członków"
+        discourse_connect: "SSO poprzez Discourse Connect"
+        no_sso_accounts: "Konta bez rekordu SSO"
+        total_users: "Łączna liczba aktywnych kont użytkowników"
       description: "Pokaż liczbę powiązanych kont pogrupowanych według dostawcy logowania. Dotyczy tylko sytuacji, gdy włączone są metody logowania społecznościowego."
   dashboard:
     problem:

@@ -6505,7 +6505,7 @@ pt_BR:
           extra_files_upload: "Exporte o tema para visualizar estes arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
-          default: "Padrão"
+          default: "Tema padrão"
           settings_editor: "Editor de configurações"
           show_advanced: "Exibir avançados"
           is_default: "O tema está ativado por padrão"

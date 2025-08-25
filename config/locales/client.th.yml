@@ -2925,7 +2925,6 @@ th:
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           preview: "แสดงตัวอย่าง"
-          default: "ค่าเริ่มต้น"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"

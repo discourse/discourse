@@ -537,7 +537,7 @@ html.composer-open:not(.has-full-page-chat) {
       display: flex;
       margin-left: 1em;
       line-height: normal;
-      color: var(--primary-high);
+      color: var(--accent-color);
       transition: color 250ms;
       padding: 0;
 
@@ -563,6 +563,26 @@ html.composer-open:not(.has-full-page-chat) {
 
     .preview-template {
       margin-left: 0.5rem;
+    }
+  }
+
+  .discard {
+    @include viewport.from(sm) {
+      margin-left: auto;
+      flex: 1;
+      text-align: right;
+    }
+  }
+
+  .discard-button {
+    color: var(--danger);
+
+    @include viewport.until(sm) {
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-medium);
+        padding: 0.35em;
+      }
     }
   }
 
@@ -776,10 +796,6 @@ html.composer-open:not(.has-full-page-chat) {
   #reply-control {
     .grippie {
       display: none;
-    }
-
-    &.open.show-preview {
-      height: 70vh;
     }
 
     &.show-preview {

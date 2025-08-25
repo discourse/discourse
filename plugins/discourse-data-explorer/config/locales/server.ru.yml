@@ -26,20 +26,12 @@ ru:
           Запрос:
           %{query_name}
 
-          Вот результаты:
+          Результаты:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Просмотреть запрос в проводнике данных</a>
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Открыть запрос в проводнике данных</a>
 
           Отчет создан: %{created_at} (%{timezone})
       post:
-        body: |
-          ### Запланированный отчет по запросу «%{query_name}»
-
-          Вот результаты:
-          %{table}
-
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Просмотреть запрос в проводнике данных</a>
-
-          Отчет создан: %{created_at} (%{timezone})
+        body: "### Плановый отчет по запросу «%{query_name}»\n\nРезультаты: \n%{table}\n\n<a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Открыть запрос в проводнике данных</a>\n\nДата создания отчета: %{created_at} (%{timezone})\n"
       upload_appendix: "Приложение: [%{filename}|вложение](%{short_url})"

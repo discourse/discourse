@@ -134,14 +134,6 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard class={{this.themeCardClasses}}>
       <:content>
-        {{#if @theme.default}}
-          <span
-            class="theme-card__badge --default"
-            title={{i18n "admin.customize.theme.default_theme"}}
-          >
-            {{i18n "admin.customize.theme.default"}}
-          </span>
-        {{/if}}
 
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
@@ -168,6 +160,14 @@ export default class ThemeCard extends Component {
                 class="theme-card__badge"
               >{{icon "arrows-rotate"}}
                 {{i18n "admin.customize.theme.update_available"}}</span>
+            {{/if}}
+
+            {{#if @theme.default}}
+              <span
+                class="theme-card__badge --default"
+                title={{i18n "admin.customize.theme.default_theme"}}
+              >{{icon "paintbrush"}}
+                {{i18n "admin.customize.theme.default"}}</span>
             {{/if}}
 
             {{#if @theme.user_selectable}}

@@ -56,6 +56,7 @@ export default apiInitializer((api) => {
       const footnoteContent = elem.querySelector(footnoteId)?.innerHTML;
 
       const expandableFootnote = document.createElement("span");
+      expandableFootnote.className = "inline-footnote";
       footnoteRef.replaceWith(expandableFootnote);
 
       helper.renderGlimmer(expandableFootnote, InlineFootnote, {

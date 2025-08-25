@@ -7081,7 +7081,7 @@ pl_PL:
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
-          default: "Domyślny"
+          default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
           is_default: "Motyw ustawiony jako domyślny"
@@ -7335,9 +7335,6 @@ pl_PL:
           default_dark_badge:
             text: "Domyślny ciemny"
             title: "Domyślna ciemna paleta kolorów"
-          default_both_badge:
-            text: "Domyślny jasny i ciemny"
-            title: "Domyślna jasna i ciemna paleta kolorów"
           system_palette: "Jest to wbudowana paleta kolorów, której nie można edytować ani usunąć."
           back_to_colors: "Powrót do palet kolorów"
           long_title: "Palety kolorów"
@@ -7923,7 +7920,7 @@ pl_PL:
           title: "Wyświetl adres email tego użytkownika"
           text: "Pokaż"
         check_sso:
-          title: "Reveal SSO payload"
+          title: "Ujawnij ładunek SSO"
           text: "Pokaż"
         delete_associated_accounts:
           title: "Usuń wszystkie powiązane konta dla tego użytkownika"

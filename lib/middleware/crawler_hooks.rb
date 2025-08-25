@@ -10,8 +10,9 @@ module Middleware
       request = Rack::Request.new(env)
       status, headers, response = @app.call(env)
 
-      if status == 200 && headers["Content-Type"]&.include?("text/html") &&
-           CrawlerDetection.crawler?(request.user_agent, request.get_header("HTTP_VIA"))
+      if status == 200 && headers["X-Discourse-Crawler-View"] &&
+           SiteSetting.content_localization_enabled &&
+           SiteSetting.content_localization_crawler_param
         response = transform_response(request:, response:)
       end
 
@@ -28,12 +29,9 @@ module Middleware
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment
-          .css("a")
+          .css("a[href^='/'], a[href^='#{Discourse.base_url}']")
           .each do |link|
-            href = link["href"]
-            next if href.blank? || !href.start_with?("/", Discourse.base_url)
-
-            uri = Addressable::URI.parse(href)
+            uri = Addressable::URI.parse(link["href"])
             uri.query_values = (uri.query_values || {}).merge(Discourse::LOCALE_PARAM => locale)
             link["href"] = uri.to_s
           end

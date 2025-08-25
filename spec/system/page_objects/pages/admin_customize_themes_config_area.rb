@@ -25,8 +25,16 @@ module PageObjects
         find(".set-default").click
       end
 
-      def has_badge?(theme, badge)
-        find_theme_card(theme).has_css?(".theme-card__badge.#{badge}")
+      def has_default_badge?(theme)
+        has_badge?(theme, "--default", text: I18n.t("admin_js.admin.customize.theme.default"))
+      end
+
+      def has_no_default_badge?(theme)
+        has_no_badge?(theme, "--default")
+      end
+
+      def has_badge?(theme, badge, **kwargs)
+        find_theme_card(theme).has_css?(".theme-card__badge.#{badge}", **kwargs)
       end
 
       def has_no_badge?(theme, badge)
