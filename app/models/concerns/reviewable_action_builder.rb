@@ -123,20 +123,20 @@ module ReviewableActionBuilder
   end
 
   def perform_no_action_user(performed_by, args)
-    successful_transition :approved
+    create_result(:success, :approved)
   end
 
   def perform_silence_user(performed_by, args)
-    successful_transition :rejected
+    create_result(:success, :rejected)
   end
 
   def perform_suspend_user(performed_by, args)
-    successful_transition :rejected
+    create_result(:success, :rejected)
   end
 
   def perform_delete_user(performed_by, args, &)
     delete_user(target_user, delete_opts, performed_by) if target_user
-    successful_transition :rejected, recalculate_score: false, &
+    create_result(:success, :rejected, [], recalculate_score: false, &)
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
@@ -144,7 +144,7 @@ module ReviewableActionBuilder
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
     delete_user(target_user, delete_options, performed_by) if target_user
-    successful_transition :rejected, recalculate_score: false, &
+    create_result(:success, :rejected, [], recalculate_score: false, &)
   end
 
   private
@@ -178,19 +178,14 @@ module ReviewableActionBuilder
     Email::Sender.new(message, :account_deleted).send
   end
 
-  # Create a successful transition result.
-  #
-  # @param to_state [Symbol] The state to transition to.
-  # @param recalculate_score [Boolean] Whether to recalculate the score.
-  # @yield [result] The result object.
-  #
-  # @return [Reviewable::PerformResult] The created result object.
-  def successful_transition(to_state, recalculate_score: true)
-    create_result(:success, to_state) do |result|
-      result.recalculate_score = recalculate_score
-      result.update_flag_stats = { status: to_state, user_ids: [created_by_id] } if created_by_id !=
-        Discourse.system_user.id
-      yield result if block_given?
+  def map_reviewable_status_to_flag_status(status)
+    case status
+    when :approved
+      :agreed
+    when :rejected
+      :disagreed
+    else
+      status
     end
   end
 
@@ -198,12 +193,20 @@ module ReviewableActionBuilder
   #
   # @param status [Symbol] The status of the result.
   # @param transition_to [Symbol] The state to transition to.
+  # @param recalculate_score [Boolean] Whether to recalculate the score.
   # @yield [result] The result object.
   #
   # @return [Reviewable::PerformResult] The created result object.
-  def create_result(status, transition_to = nil)
+  def create_result(status, transition_to = nil, flagging_user_ids = [], recalculate_score = true)
     result = Reviewable::PerformResult.new(self, status)
     result.transition_to = transition_to
+    if flagging_user_ids.any?
+      result.update_flag_stats = {
+        status: map_reviewable_status_to_flag_status(transition_to),
+        user_ids: flagging_user_ids,
+      }
+      result.recalculate_score = recalculate_score
+    end
     yield result if block_given?
     result
   end

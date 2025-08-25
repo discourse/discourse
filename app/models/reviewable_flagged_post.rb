@@ -184,9 +184,7 @@ class ReviewableFlaggedPost < Reviewable
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
 
-    create_result(:success, :ignored) do |result|
-      result.update_flag_stats = { status: :ignored, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :ignored, actions.map(&:user_id), false)
   end
 
   def perform_agree_and_keep(performed_by, args)
@@ -253,9 +251,7 @@ class ReviewableFlaggedPost < Reviewable
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
 
-    create_result(:success, :rejected) do |result|
-      result.update_flag_stats = { status: :disagreed, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :rejected, actions.map(&:user_id), false)
   end
 
   def perform_delete_and_ignore(performed_by, args)
@@ -315,10 +311,7 @@ class ReviewableFlaggedPost < Reviewable
       yield(actions.first) if block_given?
     end
 
-    create_result(:success, :approved) do |result|
-      result.update_flag_stats = { status: :agreed, user_ids: actions.map(&:user_id) }
-      result.recalculate_score = true
-    end
+    create_result(:success, :approved, actions.map(&:user_id), false)
   end
 
   def unassign_topic(performed_by, post)

@@ -85,33 +85,33 @@ class ReviewablePost < Reviewable
 
   # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
   def perform_approve(performed_by, _args)
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_reject_and_keep_deleted(performed_by, _args)
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_approve_and_restore(performed_by, _args)
     PostDestroyer.new(performed_by, post).recover
 
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_approve_and_unhide(performed_by, _args)
     post.unhide!
 
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_reject_and_delete(performed_by, _args)
     PostDestroyer.new(performed_by, post, reviewable: self).destroy
 
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_reject_and_suspend(performed_by, _args)
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
   # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
 
