@@ -8,7 +8,7 @@ pt_BR:
   post:
     post_voting:
       errors:
-        post_voting_not_enabled: "A votação de publicação não está ativada."
+        post_voting_not_enabled: "A votação em postagem não está ativada."
         replying_to_post_not_permited: "Você não tem permissão para criar uma postagem em resposta a outra postagem."
         voting_not_permitted: "Você não tem permissão para votar nesta postagem."
         comment_cannot_be_downvoted: "Você só pode votar nos comentários."
@@ -18,20 +18,21 @@ pt_BR:
   topic:
     post_voting:
       errors:
-        post_voting_not_enabled: "A votação de publicação não está ativada."
-        subtype_not_allowed: "O subtipo da votação de publicação só poder ser usada com tópicos regulares."
-        cannot_change_to_post_voting_subtype: "Não é permitido alterar o subtipo de um tópico de \"Votação de publicação\"."
+        post_voting_not_enabled: "A votação em postagem não está ativada."
+        subtype_not_allowed: "O subtipo da votação em postagem só pode ser usada com tópicos regulares."
+        cannot_change_to_post_voting_subtype: "Não é permitido alterar o subtipo de um tópico de \"Votação em postagem\"."
       answer_count:
         one: "%{count} resposta"
         other: "%{count} respostas"
   site_settings:
-    qa_tags: "Etiquetas para ativar votação de publicação no tópico"
-    post_voting_enabled: "Ativar plugin de votação em publicação"
-    post_voting_enable_likes_on_answers: "Ative o botão de curtir nas respostas, nos tópicos de votação em publicação"
-    post_voting_undo_vote_action_window: "Número de minutos em que os(as) usuários(as) podem cancelar votos em tópicos de votação em publicação (digite 0 para não ter limite)"
-    post_voting_comment_limit_per_post: "Quantidade de comentários permitidos em cada publicação"
+    qa_tags: "Etiquetas para ativar votação em postagem no tópico"
+    post_voting_enabled: "Ativar plugin de votação em postagem"
+    post_voting_enable_likes_on_answers: "Ative o botão de curtir nas respostas, nos tópicos de votação em postagem"
+    post_voting_undo_vote_action_window: "Número de minutos em que os(as) usuários(as) podem cancelar votos em tópicos de votação em postagem (digite 0 para não ter limite)"
+    post_voting_comment_limit_per_post: "Quantidade de comentários permitidos em cada postagem"
     min_trust_to_flag_posts_voting_comments: "Nível mínimo de confiança para sinalizar comentário de votação em postagem"
     flag_posts_voting_comments_allowed_groups: "Grupos com permissão para sinalizar comentário de votação em postagem"
+    post_voting_comment_enabled: "Ativar comentários na postagem, nos tópicos de votação em postagem"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -53,11 +54,12 @@ pt_BR:
   post_voting:
     comment:
       errors:
-        post_voting_not_enabled: "Não é permitido comentar em uma postagem que não esteja em um tópico de \"Votação de publicação\"."
+        post_voting_not_enabled: "Não é permitido comentar em uma postagem que não esteja em um tópico de \"Votação em postagem\"."
         not_permitted: "Não é permitido comentar na postagem associada."
         limit_exceeded: "O limite de %{limit} comentários por postagem foi atingido."
         perform: "Comentário de votação em postagem sinalizado com pontuação alta o suficiente para silenciar o(a) usuário(a)."
         auto_silence_from_flags: "Silenciado(a) automaticamente devido à sinalização."
+        disabled: "Não é permitido comentar na postagem."
       reviewables:
         comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
         actions:
@@ -72,7 +74,7 @@ pt_BR:
             description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
           agree_and_silence:
             title: "Silenciar usuário(a)"
-            description: "Concorde com a sinalização e silencie o usuário(a)."
+            description: "Concorde com a sinalização e silencie o(a) usuário(a)."
           agree_and_restore:
             title: "Restaurar comentário"
             description: "Restaure o comentário para que os(as) usuários(as) possam ver."

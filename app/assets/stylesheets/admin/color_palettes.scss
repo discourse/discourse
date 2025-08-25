@@ -62,6 +62,11 @@
   }
 
   &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-1);
+    margin: var(--space-1) 0;
     min-height: 2rem;
   }
 

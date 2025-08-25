@@ -106,7 +106,12 @@ export default class AdminConfigAreasComponents extends Component {
       },
       duration: "short",
     });
-    this.load();
+
+    this.router.transitionTo(
+      "adminCustomizeThemes.show.index",
+      "components",
+      component.id
+    );
   }
 
   @action

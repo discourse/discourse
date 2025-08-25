@@ -80,7 +80,7 @@
     flex-grow: 1;
   }
 
-  &.-active {
+  &.--default {
     @include theme-card-border(tertiary);
   }
 
@@ -201,16 +201,6 @@
     svg {
       height: 0.75em;
       color: var(--primary-high);
-    }
-
-    &.--active {
-      background-color: var(--tertiary);
-      color: var(--secondary);
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      font-size: var(--font-down-3);
-      text-transform: uppercase;
     }
   }
 

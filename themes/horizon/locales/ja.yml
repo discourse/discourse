@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ja:
+  theme_metadata:
+    description: "Discourse サイトのすぐに使用できるエクスペリエンスを向上させる、シンプルで美しいテーマ"

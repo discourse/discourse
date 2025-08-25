@@ -54,6 +54,8 @@ nb_NO:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
+      translations:
+        title: "Oversettelser"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"

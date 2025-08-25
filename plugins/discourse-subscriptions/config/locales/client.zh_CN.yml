@@ -93,7 +93,7 @@ zh_CN:
         payments:
           id: 付款 ID
           amount: 金额
-          created_at: 创建
+          created_at: 创建时间
         payments_help: 没有付款
         plans:
           rate: 费率
@@ -107,7 +107,7 @@ zh_CN:
           update_card:
             heading: "订阅更新卡片：%{sub_id}"
             single: "更新"
-          created_at: 创建
+          created_at: 创建时间
           cancel: 取消
           cancelled: 已取消
           operations:
@@ -434,7 +434,7 @@ zh_CN:
             repurchase_help: 允许多次购买产品和关联方案
             active: 有效
             active_help: 在您的产品准备好向客户开放前请关闭此项。
-            created_at: 创建
+            created_at: 创建时间
             updated_at: 更新时间
           product_help: 您需要至少创建一个产品及关联方案，然后客户才可以订阅您的站点。
         plans:
@@ -459,7 +459,7 @@ zh_CN:
             group: 用户群组
             group_help: 这是创建订阅时客户将被添加到的 Discourse 用户群组。
             active: 有效
-            created_at: 创建
+            created_at: 创建时间
             recurring: 定期重复的方案？
         coupons:
           title: 优惠券
@@ -479,6 +479,6 @@ zh_CN:
             product: 产品
             plan: 方案
             status: 状态
-            created_at: 创建
+            created_at: 创建时间
         ask_refund: 对客户最近一笔付款进行退款？
         canceled: "该订阅已被取消。"

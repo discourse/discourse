@@ -6,8 +6,6 @@
 
 zh_TW:
   js:
-    details:
-      title: 隱藏細節
     composer:
       details_title: 摘要
       details_text: "此文字將被隱藏"

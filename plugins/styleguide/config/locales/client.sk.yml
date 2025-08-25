@@ -89,8 +89,8 @@ sk:
           title: "Mapa tém"
         site_header:
           title: "Záhlavie stránky"
-        suggested_topics:
-          title: "Odporúčané témy"
+        more_topics:
+          title: "Viac tém"
         post_menu:
           title: "Ponuka príspevkov"
         modal:

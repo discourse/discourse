@@ -9,6 +9,7 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -79,9 +80,8 @@ export default class WelcomeBanner extends Component {
     }
 
     return i18n("welcome_banner.header.logged_in_members", {
-      preferred_display_name: prioritizeNameFallback(
-        this.currentUser.name,
-        this.currentUser.username
+      preferred_display_name: sanitize(
+        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
       ),
     });
   }
@@ -118,7 +118,9 @@ export default class WelcomeBanner extends Component {
   get bgImgStyle() {
     if (this.siteSettings.welcome_banner_image) {
       return htmlSafe(
-        `background-image: url(${escapeExpression(this.siteSettings.welcome_banner_image)})`
+        `background-image: url(${escapeExpression(
+          this.siteSettings.welcome_banner_image
+        )})`
       );
     }
   }
@@ -157,6 +159,7 @@ export default class WelcomeBanner extends Component {
               <SearchMenu
                 @location="welcome-banner"
                 @searchInputId="welcome-banner-search-input"
+                @placeholder={{i18n "welcome_banner.search"}}
               />
             </div>
             <PluginOutlet @name="welcome-banner-below-input" />

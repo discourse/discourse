@@ -7,9 +7,11 @@ function renderUserItem(item) {
     <li data-index="${escapeExpression(item.index?.toString())}">
       <a href title="${escapeExpression(item.name)}" class="${escapeExpression(item.cssClasses)}">
         ${avatar(item, { imageSize: "tiny" })}
-        <span class='username'>${escapeExpression(formatUsername(item.username))}</span>
-        ${item.name ? `<span class='name'>${escapeExpression(item.name)}</span>` : ""}
-        ${item.status ? `<span class='user-status'></span>` : ""}
+        <span class="text-content">
+          <span class="username">${escapeExpression(formatUsername(item.username))}</span>
+          ${item.name ? `<span class="name">${escapeExpression(item.name)}</span>` : ""}
+        </span>
+        ${item.status ? `<span class="user-status"></span>` : ""}
       </a>
     </li>
   `;
@@ -20,7 +22,7 @@ function renderEmailItem(item) {
     <li>
       <a href title="${escapeExpression(item.username)}">
         ${iconHTML("envelope")}
-        <span class='username'>${escapeExpression(formatUsername(item.username))}</span>
+        <span class="text-content username">${escapeExpression(formatUsername(item.username))}</span>
       </a>
     </li>
   `;
@@ -31,8 +33,10 @@ function renderGroupItem(item) {
     <li>
       <a href title="${escapeExpression(item.full_name)}">
         ${iconHTML("users")}
-        <span class='username'>${escapeExpression(item.name)}</span>
-        <span class='name'>${escapeExpression(item.full_name)}</span>
+        <span class="text-content">
+          <span class="username">${escapeExpression(item.name)}</span>
+          <span class="name">${escapeExpression(item.full_name)}</span>
+        </span>
       </a>
     </li>
   `;
@@ -52,7 +56,7 @@ function renderItem(item) {
 
 export default function userAutocomplete({ options }) {
   return `
-    <div class='autocomplete ac-user'>
+    <div class="autocomplete ac-user">
       <ul>
         ${options.map(renderItem).join("")}
       </ul>

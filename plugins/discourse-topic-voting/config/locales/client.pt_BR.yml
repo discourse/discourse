@@ -21,6 +21,9 @@ pt_BR:
       voted_title: "Votou"
       voting_closed_title: "Fechados"
       voting_limit: "Limite"
+      votes_left:
+        one: "Você tem %{count} voto restante, veja <a href='%{path}'>seus votos</a>."
+        other: "Você tem %{count} votos restantes, veja <a href='%{path}'>seus votos</a>."
       votes_left_button_title:
         one: "Você tem %{count} voto restante."
         other: "Você tem %{count} votos restantes."

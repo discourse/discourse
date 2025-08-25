@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreasAboutContactInformation from "admin/components/admin-config-area-cards/about/contact-information";
 import AdminConfigAreasAboutExtraGroups from "admin/components/admin-config-area-cards/about/extra-groups";
@@ -9,8 +8,6 @@ import AdminConfigAreasAboutGeneralSettings from "admin/components/admin-config-
 import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config-area-cards/about/your-organization";
 
 export default class AdminConfigAreasAbout extends Component {
-  @service siteSettings;
-
   @tracked saving = false;
 
   get generalSettings() {

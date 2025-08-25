@@ -683,6 +683,64 @@ describe Topic do
       expect(Topic.similar_to("'bad quotes'", "'bad quotes'")).to eq([])
     end
 
+    context "with plugin similar_topic_candidate_ids modifier" do
+      it "uses plugin-provided candidate ids preserving order and respecting limit" do
+        t1 = Fabricate(:topic)
+        t2 = Fabricate(:topic)
+        t3 = Fabricate(:topic)
+        t4 = Fabricate(:topic)
+
+        raws = { t1.id => "raw one", t2.id => "raw two", t3.id => "raw three", t4.id => "raw four" }
+
+        [t1, t2, t3, t4].each do |t|
+          Fabricate(:post, topic: t, user: t.user, post_number: 1, raw: raws[t.id])
+        end
+
+        desired_order = [t3.id, t1.id, t2.id, t4.id]
+
+        plugin_instance = Plugin::Instance.new
+        begin
+          blk =
+            lambda do |candidates, args|
+              expect(args[:title]).to eq("any title")
+              expect(args[:raw]).to eq("any raw")
+              desired_order
+            end
+
+          DiscoursePluginRegistry.register_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+
+          results = Topic.similar_to("any title", "any raw")
+
+          # keeping this 3 but test will break if MAX_SIMILAR_TOPICS is changed (by design)
+          expected_ids = desired_order.first(3)
+          expect(results.map(&:id)).to eq(expected_ids)
+
+          # ensure extra selected columns are present and correct
+          results.each_with_index do |topic, idx|
+            # topics.* still present
+            expect(topic).to be_a(Topic)
+            expect(topic.id).to eq(expected_ids[idx])
+
+            # similarity is computed as 3,2,1 for our limited set
+            expect(topic["similarity"]).to eq(expected_ids.length - idx)
+
+            # blurb is first post cooked
+            expect(topic["blurb"]).to eq(topic.posts.first.cooked)
+          end
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+        end
+      end
+    end
+
     context "with a similar topic" do
       fab!(:post) do
         with_search_indexer_enabled do

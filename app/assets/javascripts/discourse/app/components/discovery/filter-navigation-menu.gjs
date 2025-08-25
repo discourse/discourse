@@ -211,8 +211,9 @@ export default class FilterNavigationMenu extends Component {
   }
 
   @action
-  clearInput() {
-    this.updateInput("", true);
+  async clearInput() {
+    await this.updateInput("", true);
+    await this.ensureFreshSuggestions();
     this.inputElement?.focus();
   }
 
@@ -231,7 +232,10 @@ export default class FilterNavigationMenu extends Component {
       data: this.trackedMenuListData,
       maxWidth: 2000,
       matchTriggerWidth: true,
-      visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
+      visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
+      constrainHeightToViewport: true,
+      crossAxisShift: false, // NOTE: this should not be needed, but is. Without it when shrinking window autocomplete renders on top of input
+      minHeight: 80,
     });
 
     if (!this.suggestions.length) {

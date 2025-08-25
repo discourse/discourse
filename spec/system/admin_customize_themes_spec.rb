@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes", type: :system do
-  fab!(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: "light") }
+  fab!(:color_scheme) do
+    Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+  end
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
@@ -53,6 +56,17 @@ describe "Admin Customize Themes", type: :system do
         I18n.t("admin_js.admin.customize.theme.edit_colors"),
         href: "/admin/customize/colors/#{color_scheme.id}",
       )
+    end
+
+    it "allows a theme to be deleted" do
+      theme_page.visit(theme).click_delete_button_and_confirm
+
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("admin_js.admin.customize.theme.delete_success", theme: theme.name),
+      )
+
+      expect(page).to have_current_path("/admin/config/customize/themes")
+      expect(themes_page).to have_no_theme(theme.name)
     end
   end
 
@@ -291,23 +305,6 @@ describe "Admin Customize Themes", type: :system do
       expect(updated_color).to eq(original_hex)
     end
 
-    it "allows editing dark mode colors" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#000fff")
-
-      theme_page.changes_banner.click_save
-
-      page.refresh
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      updated_dark_color = theme_page.color_palette_editor.get_color_value("primary")
-      expect(updated_dark_color).to eq("#000fff")
-    end
-
     it "shows count of unsaved colors" do
       theme_page.visit(theme.id)
       theme_page.colors_tab.click
@@ -318,17 +315,9 @@ describe "Admin Customize Themes", type: :system do
         I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 1),
       )
 
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#ff80ee")
-
-      expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
-      )
-
       theme_page.color_palette_editor.change_color("secondary", "#ee30ab")
       expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 3),
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
       )
     end
 

@@ -20,7 +20,6 @@ export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
   @service toasts;
-  @service site;
 
   @tracked quicksaved = false;
 

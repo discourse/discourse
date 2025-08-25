@@ -322,7 +322,6 @@ sk:
         many: "%{count} súborov"
         other: "%{count} súborov"
       you_flagged: "Túto správu ste označili"
-      exit: "späť"
       channel_status:
         read_only_header: "Kanál je len na čítanie"
         read_only: "Iba na čítanie"
@@ -778,7 +777,6 @@ sk:
           switch_channel_arrows: "%{shortcut} Prepnúť kanál"
           switch__unread_channel_arrows: "%{shortcut} Prepnutie neprečítaného kanála"
           open_quick_channel_selector: "%{shortcut} Otvorte rýchly výber kanálov"
-          open_insert_link_modal: "%{shortcut} Vložiť hypertextový odkaz (iba skladateľ)"
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"
           composer_italic: "%{shortcut} Kurzíva (iba skladateľ)"
           composer_code: "%{shortcut} Kód (iba skladateľ)"

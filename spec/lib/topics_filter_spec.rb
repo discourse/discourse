@@ -45,6 +45,7 @@ RSpec.describe TopicsFilter do
         in:muted
         in:normal
         in:watching_first_post
+        in:unseen
       ]
 
       user_specific_options.each { |option| expect(anon_option_names).not_to include(option) }
@@ -88,6 +89,135 @@ RSpec.describe TopicsFilter do
   end
 
   describe "#filter_from_query_string" do
+    describe "when filtering with the `users` and `group` filters" do
+      fab!(:u1) { Fabricate(:user, username: "alice") }
+      fab!(:u2) { Fabricate(:user, username: "bob") }
+      fab!(:u3) { Fabricate(:user, username: "cara") }
+      fab!(:g1) { Fabricate(:group, name: "group1") }
+      fab!(:g2) { Fabricate(:group, name: "group2") }
+
+      before do
+        g1.add(u1)
+        g2.add(u2)
+      end
+
+      fab!(:topic_by_u1) { Fabricate(:topic).tap { |t| Fabricate(:post, topic: t, user: u1) } }
+      fab!(:topic_by_u2) { Fabricate(:topic).tap { |t| Fabricate(:post, topic: t, user: u2) } }
+      fab!(:topic_by_u1_and_u2) do
+        Fabricate(:topic).tap do |t|
+          Fabricate(:post, topic: t, user: u1)
+          Fabricate(:post, topic: t, user: u2)
+        end
+      end
+
+      it "users:alice returns topics where alice participated" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("users:alice")
+            .pluck(:id)
+        expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        expect(ids).not_to include(topic_by_u2.id)
+      end
+
+      it "users:alice,bob returns topics with either alice or bob" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("users:alice,bob")
+            .pluck(:id)
+        expect(ids).to include(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "users:alice+bob returns only topics where both participated/allowed" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("users:alice+bob")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
+      end
+
+      it "-users:alice,bob returns topics where neither alice nor bob participated" do
+        post = Fabricate(:post)
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-users:alice,bob")
+            .pluck(:id)
+        expect(ids).to contain_exactly(post.topic_id)
+      end
+
+      it "-users:alice+bob returns topics where bob and alice did not participate together" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-users:alice+bob")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id)
+      end
+
+      it "-user:alice,bob (alias) returns topics where neither alice nor bob participated" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-user:alice,bob")
+            .pluck(:id)
+        expect(ids).to contain_exactly()
+      end
+
+      it "group:group1 returns topics with participants from the group or group-allowed PMs" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1")
+            .pluck(:id)
+        expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+      end
+
+      it "groups:group1,group2 returns union of both groups" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("groups:group1,group2")
+            .pluck(:id)
+        expect(ids).to include(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "group:group1+group2 returns only topics with both groups represented" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1+group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
+      end
+    end
+
+    describe "ordering by hot score" do
+      fab!(:t1) { Fabricate(:topic) }
+      fab!(:t2) { Fabricate(:topic) }
+
+      before do
+        TopicHotScore.create!(topic_id: t1.id, score: 2.0)
+        TopicHotScore.create!(topic_id: t2.id, score: 3.0)
+      end
+
+      it "order:hot sorts by topic_hot_scores.score desc" do
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("order:hot").pluck(:id),
+        ).to start_with(t2.id, t1.id)
+      end
+
+      it "order:hot-asc sorts ascending" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("order:hot-asc")
+            .pluck(:id),
+        ).to start_with(t1.id, t2.id)
+      end
+    end
     describe "when filtering with multiple filters" do
       fab!(:tag) { Fabricate(:tag, name: "tag1") }
       fab!(:tag2) { Fabricate(:tag, name: "tag2") }
@@ -184,6 +314,20 @@ RSpec.describe TopicsFilter do
               .where(id: [new_topic.id, unread_topic.id])
               .pluck(:id)
           expect(ids).to contain_exactly(new_topic.id, unread_topic.id)
+        end
+
+        it "in:unseen returns only unseen topics" do
+          user_for_unseen_filters = user_for_new_filters
+          seen_topic = Fabricate(:topic)
+          TopicUser.update_last_read(user_for_unseen_filters, seen_topic.id, 1, 1, 0)
+          unseen_topic = Fabricate(:topic)
+          ids =
+            TopicsFilter
+              .new(guardian: user_for_unseen_filters.guardian)
+              .filter_from_query_string("in:unseen")
+              .where(id: [seen_topic.id, unseen_topic.id])
+              .pluck(:id)
+          expect(ids).to contain_exactly(unseen_topic.id)
         end
 
         it "anonymous user with in:new returns none" do

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ur:
+  topic:
+    post_voting:
+      answer_count:
+        one: "%{count} جواب"
+        other: "%{count} جوابات"
   post_action_types:
     vote:
       title: "ووٹ"
@@ -24,4 +29,5 @@ ur:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
+          comment_pm_title: "پوسٹ ووٹنگ کا تبصرہ عملے کی توجہ کا متقاضی ہے۔"
           comment_pm_body: "%{link}\n\n%{comment}"

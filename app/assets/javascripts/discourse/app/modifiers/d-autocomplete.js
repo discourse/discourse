@@ -29,6 +29,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {Function} [triggerRule] - Function to determine if autocomplete should trigger: (element, opts) => Promise<boolean>
  * @param {Function} [onKeyUp] - Function to extract search patterns from text on keyup: (text, caretPosition) => Array<string>
  * @param {boolean} [fixedTextareaPosition=false] - If true, positions autocomplete relative to textarea bounds instead of cursor position
+ * @param {number} [offset] - Displaces the content from its reference trigger in pixels
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -121,6 +122,7 @@ export default class DAutocompleteModifier extends Modifier {
         case "Enter":
         case "Tab":
           event.preventDefault();
+          event.stopImmediatePropagation();
           if (this.selectedIndex >= 0) {
             await this.selectResult(this.results[this.selectedIndex], event);
           }
@@ -419,6 +421,11 @@ export default class DAutocompleteModifier extends Modifier {
         },
       };
 
+      // Add offset if specified
+      if (this.options.offset !== undefined) {
+        menuOptions.offset = this.options.offset;
+      }
+
       await this.menu.show(virtualElement, menuOptions);
       this.expanded = true;
     } catch (e) {
@@ -642,7 +649,7 @@ export default class DAutocompleteModifier extends Modifier {
         left: textareaRect.left,
         top: textareaRect.top,
         width: textareaRect.width,
-        height: 2,
+        height: textareaRect.height,
       }),
     };
   }

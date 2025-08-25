@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { not, or } from "truth-helpers";
+import { not } from "truth-helpers";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -23,6 +23,16 @@ export default class ColorPaletteListItem extends Component {
 
   get canEdit() {
     return !this.isBuiltInDefault && this.args.scheme?.id;
+  }
+
+  get isThemePalette() {
+    return this.args.scheme?.theme_id;
+  }
+
+  get editButtonLabel() {
+    return this.isThemePalette && !this.isBuiltInDefault
+      ? "admin.customize.colors.view"
+      : "admin.customize.colors.edit";
   }
 
   get canDelete() {
@@ -57,26 +67,6 @@ export default class ColorPaletteListItem extends Component {
       this.args.defaultTheme &&
       this.args.isDefaultThemeDarkColorScheme(this.args.scheme)
     );
-  }
-
-  get activeBadgeTitle() {
-    if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.active_both_badge.title");
-    }
-    if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.active_light_badge.title");
-    }
-    return i18n("admin.customize.colors.active_dark_badge.title");
-  }
-
-  get activeBadgeText() {
-    if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.active_both_badge.text");
-    }
-    if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.active_light_badge.text");
-    }
-    return i18n("admin.customize.colors.active_dark_badge.text");
   }
 
   @bind
@@ -130,6 +120,28 @@ export default class ColorPaletteListItem extends Component {
           </div>
 
           <div class="color-palette__badges">
+            {{#if this.isDefaultLight}}
+              <span
+                title={{i18n
+                  "admin.customize.colors.default_light_badge.title"
+                }}
+                class="theme-card__badge --default"
+              >
+                {{icon "sun"}}
+                {{i18n "admin.customize.colors.default_light_badge.text"}}
+              </span>
+            {{/if}}
+
+            {{#if this.isDefaultDark}}
+              <span
+                title={{i18n "admin.customize.colors.default_dark_badge.title"}}
+                class="theme-card__badge --default"
+              >
+                {{icon "moon"}}
+                {{i18n "admin.customize.colors.default_dark_badge.text"}}
+              </span>
+            {{/if}}
+
             {{#if @scheme.user_selectable}}
               <span
                 title={{i18n "admin.customize.theme.user_selectable"}}
@@ -140,15 +152,6 @@ export default class ColorPaletteListItem extends Component {
               </span>
             {{/if}}
           </div>
-
-          {{#if (or this.isDefaultLight this.isDefaultDark)}}
-            <span
-              title={{this.activeBadgeTitle}}
-              class="theme-card__badge --active"
-            >
-              {{this.activeBadgeText}}
-            </span>
-          {{/if}}
         </div>
 
         <div class="color-palette__controls">
@@ -157,7 +160,7 @@ export default class ColorPaletteListItem extends Component {
               <DButton
                 @route="adminCustomize.colors-show"
                 @routeModels={{array @scheme.id}}
-                @label="admin.customize.colors.edit"
+                @label={{this.editButtonLabel}}
                 class="btn-secondary"
                 @disabled={{not this.canEdit}}
               />

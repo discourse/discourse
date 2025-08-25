@@ -70,37 +70,22 @@ describe "Admin Color Palette Config Area Page", type: :system do
   it "allows changing colors" do
     config_area.visit(color_scheme.id)
 
-    expect(config_area.color_palette_editor).to have_light_tab_active
-
     config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
 
     expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.color_palette_editor.switch_to_dark_tab
-    expect(config_area.color_palette_editor).to have_dark_tab_active
-
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#fedcba")
-    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#111222")
 
     config_area.form.submit
 
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.color_palette_editor).to have_dark_tab_active
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#fedcba")
-    expect(config_area.color_palette_editor.input_for_color("secondary").value).to eq("#111222")
 
-    config_area.color_palette_editor.switch_to_light_tab
-    expect(config_area.color_palette_editor).to have_light_tab_active
     expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
 
     expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
-    expect(color_scheme.colors.find_by(name: "primary").dark_hex).to eq("fedcba")
-    expect(color_scheme.colors.find_by(name: "secondary").dark_hex).to eq("111222")
   end
 
   it "allows reverting colors to their default values" do
-    color_scheme.update!(base_scheme_id: "Dark")
+    color_scheme.update!(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     color_scheme.colors.create!(name: "primary", hex: "aaaaaa")
 
     config_area.visit(color_scheme.id)

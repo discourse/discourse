@@ -16,6 +16,7 @@ export const FLOAT_UI_PLACEMENTS = [
 export const VISIBILITY_OPTIMIZERS = {
   FLIP: "flip",
   AUTO_PLACEMENT: "autoPlacement",
+  NONE: "none",
 };
 
 export const TOOLTIP = {

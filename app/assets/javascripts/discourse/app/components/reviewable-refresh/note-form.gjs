@@ -19,7 +19,6 @@ import { i18n } from "discourse-i18n";
  */
 export default class ReviewableNoteForm extends Component {
   @service appEvents;
-  @service currentUser;
 
   /**
    * Registers the Form API reference.

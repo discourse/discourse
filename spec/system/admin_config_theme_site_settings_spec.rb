@@ -26,13 +26,13 @@ describe "Admin Theme Site Settings", type: :system do
   before { sign_in(current_user) }
 
   it "shows the themeable site settings and their name, description, and default value" do
-    visit "/admin/config/theme-site-settings"
+    visit "/admin/config/customize/theme-site-settings"
     expect(theme_site_settings_page).to have_setting_with_default("enable_welcome_banner")
     expect(theme_site_settings_page).to have_setting_with_default("search_experience")
   end
 
   it "shows links to each theme that overrides the default and overridden values" do
-    visit "/admin/config/theme-site-settings"
+    visit "/admin/config/customize/theme-site-settings"
     expect(theme_site_settings_page).to have_theme_overriding(
       "enable_welcome_banner",
       theme_1,

@@ -89,8 +89,8 @@ zh_CN:
           title: "话题图"
         site_header:
           title: "网站标头"
-        suggested_topics:
-          title: "建议的话题"
+        more_topics:
+          title: "更多话题"
         post_menu:
           title: "帖子菜单"
         modal:

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 fr:
+  site_settings:
+    sign_in_with_apple_enabled: 'Activer la connexion avec Apple ?'
+    apple_team_id: '(Se connecter avec Apple) ID d''équipe Apple (10 caractères)'
+    apple_key_id: '(Se connecter avec Apple) ID de clé Apple (10 caractères)'
+    apple_pem: '(Se connecter avec Apple) Contenu du fichier Apple Pem. Incluez les lignes de début et de fin'

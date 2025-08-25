@@ -128,7 +128,6 @@ gl:
               help: "Un nome para describir a canle. Non se utiliza para a conexión con Matrix."
             room_id:
               title: "ID de sala"
-              help: "O «identificador privado» da sala. Debería parecerse a algo como !abcdefg:matrix.org"
           errors:
             unknown_token: "O token de acceso non é correcto"
             unknown_room: "O ID da sala non é correcto"

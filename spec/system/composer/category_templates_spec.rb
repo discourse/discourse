@@ -210,6 +210,7 @@ describe "Composer Form Templates", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     SiteSetting.experimental_form_templates = true
@@ -221,7 +222,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if there is no draft on a topic without a template" do
       category_page.visit(category_no_template)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -229,7 +230,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_no_template)
       category_page.new_topic_button.click
       composer.fill_content("abc")
-      composer.close
+      composer.discard
       expect(composer).to be_opened
       expect(composer).to have_discard_draft_modal
     end
@@ -237,7 +238,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if there is no draft on a topic with a topic template" do
       category_page.visit(category_topic_template)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -245,7 +246,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_topic_template)
       category_page.new_topic_button.click
       composer.append_content(" some more content")
-      composer.close
+      composer.discard
       expect(composer).to be_opened
       expect(composer).to have_discard_draft_modal
     end
@@ -253,7 +254,7 @@ describe "Composer Form Templates", type: :system do
     it "does not show the modal if on a topic with a form template" do
       category_page.visit(category_with_template_1)
       category_page.new_topic_button.click
-      composer.close
+      composer.discard
       expect(composer).to be_closed
     end
 
@@ -273,7 +274,7 @@ describe "Composer Form Templates", type: :system do
       it "does not show the modal if there is no draft" do
         category_page.visit(default_category)
         category_page.new_topic_button.click
-        composer.close
+        composer.discard
         expect(composer).to be_closed
       end
 
@@ -281,7 +282,7 @@ describe "Composer Form Templates", type: :system do
         category_page.visit(default_category)
         category_page.new_topic_button.click
         composer.append_content(" some more content")
-        composer.close
+        composer.discard
         expect(composer).to be_opened
         expect(composer).to have_discard_draft_modal
       end
@@ -389,6 +390,24 @@ describe "Composer Form Templates", type: :system do
     expect(form_template_chooser).to have_selected_name(form_template_1.name)
     form_template_chooser.select_row_by_name(form_template_2.name)
     expect(form_template_chooser).to have_selected_name(form_template_2.name)
+  end
+
+  it "allows uploading from paste after switching from a template category to a non-template category" do
+    category_page.visit(category_with_template_1)
+    category_page.new_topic_button.click
+    expect(composer).to have_no_composer_input
+    expect(composer).to have_form_template
+
+    composer.switch_category(category_no_template.name)
+    expect(composer).to have_composer_input
+
+    composer.focus
+    cdp.allow_clipboard
+    cdp.copy_test_image
+    cdp.paste
+
+    expect(composer).to have_no_in_progress_uploads
+    expect(composer.preview).to have_css(".image-wrapper")
   end
 
   it "forms a post when template fields are filled in" do

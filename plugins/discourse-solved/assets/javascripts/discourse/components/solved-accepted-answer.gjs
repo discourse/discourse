@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import PostQuotedContent from "discourse/components/post/quoted-content";
+import UserLink from "discourse/components/user-link";
 import concatClass from "discourse/helpers/concat-class";
-import { iconHTML } from "discourse/lib/icon-library";
-import { formatUsername } from "discourse/lib/utilities";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {
@@ -35,53 +36,45 @@ export default class SolvedAcceptedAnswer extends Component {
     return htmlSafe(this.acceptedAnswer.excerpt);
   }
 
-  get htmlAccepter() {
-    if (!this.siteSettings.show_who_marked_solved) {
-      return;
-    }
-
-    const { accepter_username, accepter_name } = this.acceptedAnswer;
-    const displayName = this.#getDisplayName(accepter_username, accepter_name);
-
-    if (!displayName) {
-      return;
-    }
-
-    return htmlSafe(
-      i18n("solved.marked_solved_by", {
-        username: displayName,
-        username_lower: accepter_username.toLowerCase(),
-      })
-    );
+  get showMarkedBy() {
+    return this.siteSettings.show_who_marked_solved;
   }
 
-  get htmlSolvedBy() {
-    const { username, name, post_number: postNumber } = this.acceptedAnswer;
-    if (!username || !postNumber) {
-      return;
-    }
-
-    const displayedUser = this.#getDisplayName(username, name);
-    const data = {
-      icon: iconHTML("square-check", { class: "accepted" }),
-      username_lower: username.toLowerCase(),
-      username: displayedUser,
-      post_path: `${this.topic.url}/${postNumber}`,
-      post_number: postNumber,
-      user_path: this.store.createRecord("user", { username }).path,
-    };
-
-    return htmlSafe(i18n("solved.accepted_html", data));
+  get showSolvedBy() {
+    return !(!this.acceptedAnswer.username || !this.acceptedAnswer.post_number);
   }
 
-  #getDisplayName(username, name) {
-    if (!username) {
-      return null;
-    }
+  get postNumber() {
+    return i18n("solved.accepted_answer_post_number", {
+      post_number: this.acceptedAnswer.post_number,
+    });
+  }
 
-    return this.siteSettings.display_name_on_posts && name
-      ? name
-      : formatUsername(username);
+  get solverUsername() {
+    return this.acceptedAnswer.username;
+  }
+
+  get accepterUsername() {
+    return this.acceptedAnswer.accepter_username;
+  }
+
+  get solverDisplayName() {
+    const username = this.acceptedAnswer.username;
+    const name = this.acceptedAnswer.name;
+
+    return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  get accepterDisplayName() {
+    const username = this.acceptedAnswer.accepter_username;
+    const name = this.acceptedAnswer.accepter_name;
+
+    return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  get postPath() {
+    const postNumber = this.acceptedAnswer.post_number;
+    return `${this.topic.url}/${postNumber}`;
   }
 
   <template>
@@ -103,10 +96,38 @@ export default class SolvedAcceptedAnswer extends Component {
         <:title>
           <div class="accepted-answer--solver-accepter">
             <div class="accepted-answer--solver">
-              {{this.htmlSolvedBy}}
+              {{#if this.showSolvedBy}}
+                {{icon "square-check" class="accepted"}}
+                <InterpolatedTranslation
+                  @key="solved.accepted_answer_solver_info"
+                  as |Placeholder|
+                >
+                  <Placeholder @name="user">
+                    <UserLink
+                      @username={{this.solverUsername}}
+                    >{{this.solverDisplayName}}</UserLink>
+                  </Placeholder>
+                  <Placeholder @name="post">
+                    <a href={{this.postPath}}>{{this.postNumber}}</a>
+                  </Placeholder>
+                </InterpolatedTranslation>
+                <br />
+              {{/if}}
+
             </div>
             <div class="accepted-answer--accepter">
-              {{this.htmlAccepter}}
+              {{#if this.showMarkedBy}}
+                <InterpolatedTranslation
+                  @key="solved.marked_solved_by"
+                  as |Placeholder|
+                >
+                  <Placeholder @name="user">
+                    <UserLink
+                      @username={{this.accepterUsername}}
+                    >{{this.accepterDisplayName}}</UserLink>
+                  </Placeholder>
+                </InterpolatedTranslation>
+              {{/if}}
             </div>
           </div>
         </:title>

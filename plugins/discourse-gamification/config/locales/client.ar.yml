@@ -74,6 +74,13 @@ ar:
         all_time: "طوال الوقت"
         custom_date_range: "نطاق مخصَّص"
       custom_range_from: "من"
+      daily_update_scores_availability:
+        zero: "%{count} من مرات إعادة الحساب اليومية متبقية"
+        one: "مرة إعادة حساب يومية واحدة (%{count}) متبقية"
+        two: "مرتان إعادة حساب يومية (%{count}) متبقيتان"
+        few: "%{count} مرات إعادة حساب يومية متبقية"
+        many: "%{count} مرة إعادة حساب يومية متبقية"
+        other: "%{count} مرة إعادة حساب يومية متبقية"
       admin:
         title: "التلعيب"
         name: "الاسم"

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ar:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "تسجيل الدخول باستخدام Apple"
+        sr_title: "تسجيل الدخول باستخدام Apple"
+        message: "المصادقة باستخدام Apple"

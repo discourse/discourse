@@ -65,6 +65,9 @@ describe "Admin Color Palettes Features", type: :system do
   let(:selectable_custom_scheme_b) do
     Fabricate(:color_scheme, name: "Selectable custom scheme b", user_selectable: true)
   end
+  let(:default_light_scheme) { Fabricate(:color_scheme, name: "Default light") }
+  let(:default_dark_scheme) { Fabricate(:color_scheme, name: "Default dark") }
+  let(:create_color_palette_modal) { PageObjects::Modals::CreateColorPalette.new }
 
   before { sign_in(admin) }
 
@@ -157,8 +160,8 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
-          ".theme-card__badge.--active",
-          text: I18n.t("admin_js.admin.customize.colors.active_light_badge.text").upcase,
+          ".theme-card__badge.--default",
+          text: I18n.t("admin_js.admin.customize.colors.default_light_badge.text"),
         )
       end
 
@@ -175,8 +178,8 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
-          ".theme-card__badge.--active",
-          text: I18n.t("admin_js.admin.customize.colors.active_both_badge.text").upcase,
+          ".theme-card__badge.--default",
+          text: I18n.t("admin_js.admin.customize.colors.default_dark_badge.text"),
         )
       end
     end
@@ -191,6 +194,60 @@ describe "Admin Color Palettes Features", type: :system do
       expect(palette_item[:style]).to include("--primary--preview:")
       expect(palette_item[:style]).to include("--secondary--preview:")
       expect(palette_item[:style]).to include("--tertiary--preview:")
+    end
+  end
+
+  describe "live preview functionality" do
+    it "does not show toast when live preview is available" do
+      admin.user_option.update!(
+        theme_ids: [Theme.find_default.id],
+        color_scheme_id: -1,
+        dark_scheme_id: -1,
+      )
+
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      expect(page).to have_no_css(".fk-d-default-toast.-success")
+    end
+
+    it "shows toast when admin cannot see live preview" do
+      custom_scheme = Fabricate(:color_scheme, name: "Custom Scheme")
+      admin.user_option.update!(
+        theme_ids: [Theme.find_default.id],
+        color_scheme_id: custom_scheme.id,
+      )
+
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      expected_message =
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_success",
+          schemeName: regular_palette.name,
+          themeName: Theme.find_default.name,
+        )
+      expect(toasts).to have_success(expected_message)
     end
   end
 
@@ -209,6 +266,12 @@ describe "Admin Color Palettes Features", type: :system do
       selectable_horizon_theme_scheme_b
       selectable_custom_scheme_a
       selectable_custom_scheme_b
+      default_light_scheme
+      default_dark_scheme
+      Theme.horizon_theme.update!(
+        color_scheme: default_light_scheme,
+        dark_color_scheme: default_dark_scheme,
+      )
     end
     it "sorts schemes in order: selectable, custom, current default theme, alphabetical for horizon theme" do
       SiteSetting.default_theme_id = Theme.horizon_theme.id
@@ -216,6 +279,8 @@ describe "Admin Color Palettes Features", type: :system do
       color_schemes = page.all(".color-palette__details h3").map(&:text)
       expect(color_schemes).to eq(
         [
+          "Default light",
+          "Default dark",
           "Selectable custom scheme a",
           "Selectable custom scheme b",
           "Selectable horizon scheme a",
@@ -239,6 +304,7 @@ describe "Admin Color Palettes Features", type: :system do
       color_schemes = page.all(".color-palette__details h3").map(&:text)
       expect(color_schemes).to eq(
         [
+          "Light (default)",
           "Selectable custom scheme a",
           "Selectable custom scheme b",
           "Selectable foundation scheme a",
@@ -247,13 +313,27 @@ describe "Admin Color Palettes Features", type: :system do
           "Selectable horizon scheme b",
           "Custom scheme a",
           "Custom scheme b",
+          "Default dark",
+          "Default light",
           "Foundation scheme a",
           "Foundation scheme b",
-          "Light (default)",
           "Horizon scheme a",
           "Horizon scheme b",
         ],
       )
     end
+  end
+
+  it "can create new color palette from custom palette" do
+    visit("/admin/customize/colors")
+
+    page.find(".d-page-action-button").click
+
+    create_color_palette_modal.base_dropdown.select_row_by_name("Theme Palette")
+
+    create_color_palette_modal.create_button.click
+
+    expect(page).to have_current_path(%r{/admin/customize/colors/\d+})
+    expect(page).to have_no_css(".revert")
   end
 end
