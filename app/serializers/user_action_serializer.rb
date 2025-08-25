@@ -33,7 +33,8 @@ class UserActionSerializer < ApplicationSerializer
              :edit_reason,
              :category_id,
              :closed,
-             :archived
+             :archived,
+             :tags
 
   def avatar_template
     User.avatar_template(object.username, object.uploaded_avatar_id)
@@ -97,5 +98,9 @@ class UserActionSerializer < ApplicationSerializer
 
   def action_code_path
     object.action_code_path
+  end
+
+  def tags
+    object.topic_tags || []
   end
 end
