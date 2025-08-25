@@ -492,7 +492,7 @@ class TopicsFilter
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid}
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL
               LIMIT 1
             )
           SQL
@@ -504,6 +504,7 @@ class TopicsFilter
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 WHERE p.user_id IN (:user_ids)
+                  AND p.deleted_at IS NULL
               )
             SQL
       end
