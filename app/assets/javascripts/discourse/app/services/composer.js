@@ -1707,18 +1707,22 @@ export default class ComposerService extends Service {
         }
       }
 
-      this._saveDraftPromise = this.model.saveDraft().finally(() => {
-        if (showToast) {
-          this.toasts.success({
-            duration: "short",
-            data: {
-              message: i18n("composer.draft_saved"),
-            },
-          });
-        }
-        this._lastDraftSaved = Date.now();
-        this._saveDraftPromise = null;
-      });
+      this._saveDraftPromise = this.model
+        .saveDraft()
+        .then(() => {
+          if (showToast) {
+            this.toasts.success({
+              duration: "short",
+              data: {
+                message: i18n("composer.draft_saved"),
+              },
+            });
+          }
+        })
+        .finally(() => {
+          this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
+        });
     }
   }
 

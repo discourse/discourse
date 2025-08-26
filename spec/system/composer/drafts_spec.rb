@@ -41,6 +41,19 @@ describe "Composer - Drafts", type: :system do
         try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
       end
     end
+
+    context "when only title is specified" do
+      it "does not save the draft or show a toast" do
+        visit "/new-topic"
+
+        expect(composer).to be_opened
+        composer.fill_title("this is a test topic")
+        composer.close
+
+        expect(toasts).to have_no_message(I18n.t("js.composer.draft_saved"))
+        expect(Draft.where(user: current_user).count).to eq(0)
+      end
+    end
   end
 
   context "when clicking discard" do
