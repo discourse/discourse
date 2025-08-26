@@ -156,8 +156,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.3)
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -246,8 +246,8 @@ importers:
         version: link:../truth-helpers
     devDependencies:
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -451,8 +451,8 @@ importers:
         specifier: ^1.13.4
         version: 1.13.4
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -819,8 +819,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.3)
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -895,8 +895,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.3)
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -989,8 +989,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.3)
       '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
+        specifier: ^3.5.33
+        version: 3.5.33
       '@types/qunit':
         specifier: ^2.19.13
         version: 2.19.13
@@ -2889,8 +2889,8 @@ packages:
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
-  '@types/jquery@3.5.32':
-    resolution: {integrity: sha512-b9Xbf4CkMqS02YH8zACqN1xzdxc3cO735Qe5AbSUFmyOiaWAbcpqh9Wna+Uk0vgACvoQHpWDg2rGdHkYPLmCiQ==}
+  '@types/jquery@3.5.33':
+    resolution: {integrity: sha512-SeyVJXlCZpEki5F0ghuYe+L+PprQta6nRZqhONt9F13dWBtR/ftoaIbdRQ7cis7womE+X2LKhsDdDtkkDhJS6g==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -2940,8 +2940,8 @@ packages:
   '@types/serve-static@1.15.8':
     resolution: {integrity: sha512-roei0UY3LhpOJvjbIP6ZZFngyLKl5dskOtDhxY5THRSpO+ZI+nzJ+m5yUMzGrp89YRa7lvknKkMYjqQFGwA7Sg==}
 
-  '@types/sizzle@2.3.8':
-    resolution: {integrity: sha512-0vWLNK2D5MT9dg0iOo8GlKguPAU02QjmZitPEsXRuJXU/OGIOt9vT9Fc26wtYuavLxtO45v9PGleoL9Z0k1LHg==}
+  '@types/sizzle@2.3.10':
+    resolution: {integrity: sha512-TC0dmN0K8YcWEAEfiPi5gJP14eJe30TTGjkvek3iM/1NdHHsdCA/Td6GvNndMOo/iSnIsZ4HuuhrYPDAmbxzww==}
 
   '@types/supports-color@8.1.3':
     resolution: {integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==}
@@ -11516,9 +11516,9 @@ snapshots:
 
   '@types/http-errors@2.0.5': {}
 
-  '@types/jquery@3.5.32':
+  '@types/jquery@3.5.33':
     dependencies:
-      '@types/sizzle': 2.3.8
+      '@types/sizzle': 2.3.10
 
   '@types/json-schema@7.0.15': {}
 
@@ -11567,7 +11567,7 @@ snapshots:
       '@types/node': 24.3.0
       '@types/send': 0.17.5
 
-  '@types/sizzle@2.3.8': {}
+  '@types/sizzle@2.3.10': {}
 
   '@types/supports-color@8.1.3': {}
 

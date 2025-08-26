@@ -25,7 +25,7 @@
     "@ember/optional-features": "^2.2.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
-    "@types/jquery": "^3.5.32",
+    "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
