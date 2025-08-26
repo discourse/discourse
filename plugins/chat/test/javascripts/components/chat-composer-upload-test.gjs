@@ -88,7 +88,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
-      short_path: "/images/avatar.png",
+      url: "/images/avatar.png",
     });
 
     await render(
