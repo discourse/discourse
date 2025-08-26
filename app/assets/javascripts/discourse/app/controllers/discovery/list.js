@@ -169,6 +169,10 @@ export default class DiscoveryListController extends Controller {
     });
   }
 
+  get tagRestricted() {
+    return this.model.tag?.staff && !this.currentUser?.staff;
+  }
+
   @action
   createTopic() {
     this.composer.openNewTopic({
@@ -177,6 +181,7 @@ export default class DiscoveryListController extends Controller {
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))
         .join(","),
+      tagRestricted: this.tagRestricted,
     });
   }
 

@@ -1468,8 +1468,17 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
+  async openNewTopic({
+    title,
+    body,
+    category,
+    tags,
+    tagRestricted,
+    formTemplate,
+  } = {}) {
     const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    tags = !tagRestricted ? tags : null;
+
     return this.open({
       prioritizedCategoryId: category?.id,
       topicCategoryId: category?.id,

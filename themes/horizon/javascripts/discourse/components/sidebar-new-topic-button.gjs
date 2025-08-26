@@ -44,11 +44,16 @@ export default class SidebarNewTopicButton extends Component {
     return subcategory ?? this.category;
   }
 
+  get tagRestricted() {
+    return this.tag?.staff && !this.currentUser?.staff;
+  }
+
   @action
   createNewTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
       tags: this.tag?.id,
+      tagRestricted: this.tagRestricted,
     });
   }
 
