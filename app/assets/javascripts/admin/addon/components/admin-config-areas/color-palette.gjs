@@ -186,33 +186,16 @@ export default class AdminConfigAreasColorPalette extends Component {
       return;
     }
 
-    const tags = document.querySelectorAll(`link[data-scheme-id="${id}"]`);
+    const tag = document.querySelector(`link[data-scheme-id="${id}"]`);
 
-    if (tags.length === 0) {
+    if (!tag) {
       return;
     }
 
-    let darkTag;
-    let lightTag;
-    for (const tag of tags) {
-      if (tag.classList.contains("dark-scheme")) {
-        darkTag = tag;
-      } else if (tag.classList.contains("light-scheme")) {
-        lightTag = tag;
-      }
-    }
-
     try {
-      const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
-        data: {
-          include_dark_scheme: !!darkTag,
-        },
-      });
-      if (data?.new_href && lightTag) {
-        lightTag.href = data.new_href;
-      }
-      if (data?.new_dark_href && darkTag) {
-        darkTag.href = data.new_dark_href;
+      const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
+      if (data?.new_href) {
+        tag.href = data.new_href;
       }
     } catch (error) {
       // eslint-disable-next-line no-console

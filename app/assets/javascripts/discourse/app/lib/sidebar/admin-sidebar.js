@@ -374,16 +374,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
-    if (siteSettings.use_overhauled_theme_color_palette) {
-      this.adminNavManager.overrideSectionLink(
-        "appearance",
-        "admin_color_palettes",
-        {
-          route: "adminConfig.colorPalettes",
-        }
-      );
-    }
-
     for (const [sectionName, additionalLinks] of Object.entries(
       additionalAdminSidebarSectionLinks
     )) {
