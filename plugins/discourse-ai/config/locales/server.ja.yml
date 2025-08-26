@@ -576,7 +576,6 @@ ja:
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
       configuration:
         disable_embeddings: "先に 'ai embeddings enabled' を無効にしてください。"
-        invalid_config: "無効なオプションを選択しました。"
         choose_model: "先に 'ai embeddings selected model' を設定してください。"
     llm_models:
       missing_provider_param: "%{param} は空白にできません"

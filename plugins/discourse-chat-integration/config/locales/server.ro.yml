@@ -7,14 +7,27 @@
 ro:
   chat_integration:
     all_categories: "(toate categoriile)"
+    deleted_category: "(categorie ștearsă)"
+    deleted_group: "(grup șters)"
+    group_mention_template: "mențiuni despre: @%{name}"
+    group_message_template: "mesaje către: @%{name}"
     topic_tag_changed:
       added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
       added: "Adăugată în %{added}"
       removed: "Eliminată %{removed}"
     provider:
       slack:
+        status:
+          rule_string_tags_suffix: " cu etichetele: *%{tags}*"
         messaging:
           topic_tag_changed:
             added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
             added: "Adăugată în %{added}"
             removed: "Eliminată %{removed}"
+      flowdock:
+        message_title: "postat"
+      google:
+        new_post: "Postare nouă pe %{site_title}"
+        new_topic: "Subiect nou pe %{site_title}"
+        author: "de @%{username}"
+        link: "Vezi în %{site_title}"

@@ -314,7 +314,7 @@ sk:
         month: "Mesiac"
         week: "Týždeň"
         day: "Deň"
-        list: "Zoznam"
+        year: "Rok"
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"

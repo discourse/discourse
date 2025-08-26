@@ -22,6 +22,7 @@ th:
         today: "วันนี้"
         month: "เดือน"
         week: "สัปดาห์"
+        year: "ปี"
     group_timezones:
       search: "ค้นหา..."
     discourse_post_event:

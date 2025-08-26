@@ -3286,9 +3286,12 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_user:
+        title: "Ingen handling"
       delete_user:
+        title: "Slet bruger"
+        complete: "Bruger slettet"
         reason: "Slettet via gennemgangskø"
-        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

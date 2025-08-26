@@ -24,6 +24,7 @@ ro:
         month: "Lună"
         week: "Săptămână"
         day: "Zi"
+        year: "An"
     group_timezones:
       search: "Caută..."
     discourse_post_event:

@@ -23,6 +23,7 @@ vi:
         month: "Tháng"
         week: "Tuần"
         day: "Ngày"
+        year: "Năm"
     group_timezones:
       search: "Tìm kiếm..."
     discourse_post_event:

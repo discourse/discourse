@@ -588,7 +588,6 @@ fi:
       cannot_edit_builtin: "Et voi muokata sisäänrakennettua mallia."
       configuration:
         disable_embeddings: "Sinun täytyy ensin poistaa \"ai embeddings enabled\" käytöstä."
-        invalid_config: "Valitsit virheellisen vaihtoehdon."
         choose_model: "Aseta \"ai embeddings selected model\" ensin."
     llm_models:
       missing_provider_param: "%{param} ei voi olla tyhjä"

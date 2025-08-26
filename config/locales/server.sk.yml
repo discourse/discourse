@@ -5568,9 +5568,20 @@ sk:
       approve_and_unhide:
         title: "Schváliť a Odkryť príspevok"
         complete: "Príspevok schválený a odkrytý"
+      no_action_user:
+        title: "Žiadna akcia"
+      silence_user:
+        title: "Umlčať používateľa"
+        complete: "Používateľ umlčaný"
+      suspend_user:
+        title: "Pozastavenie používateľa"
+        complete: "Pozastavenie používateľa"
       delete_user:
+        title: "Odstránenie používateľa"
+        complete: "Používateľ odstránený"
         reason: "Odstránené prostredníctvom poradia na kontrolu"
-        complete: "Používateľ odstránený."
+      delete_and_block_user:
+        complete: "Používateľ vymazaný a zablokovaný"
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"
   notification_level:

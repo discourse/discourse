@@ -1693,6 +1693,7 @@ lv:
       reply: "Atbildēt"
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
+      discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -3329,10 +3330,6 @@ lv:
           disable: "Atslēgt"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
-          settings: "Iestatījumi"
-          colors: "Krāsas"
-          discard_colors: "Izmest"
-          colors_title: "Krāsas"
           scss:
             text: "CSS"
           all_filter: "Viss"

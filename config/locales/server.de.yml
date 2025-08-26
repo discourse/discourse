@@ -5327,9 +5327,20 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      no_action_user:
+        title: "Keine Aktion"
+      silence_user:
+        title: "Benutzer stummschalten"
+        complete: "Benutzer stummgeschaltet"
+      suspend_user:
+        title: "Benutzer sperren"
+        complete: "Benutzer gesperrt"
       delete_user:
+        title: "Benutzer löschen"
+        complete: "Benutzer gelöscht"
         reason: "Gelöscht via Warteschlange zur Überprüfung"
-        complete: "Benutzer gelöscht."
+      delete_and_block_user:
+        complete: "Benutzer gelöscht und gesperrt"
   email_style:
     html_missing_placeholder: "Die HTML-Vorlage muss %{placeholder} beinhalten"
   notification_level:

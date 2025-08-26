@@ -33,7 +33,6 @@ sk:
         %{logs}
         ````
   site_settings:
-    events_max_rows: "Maximálny počet riadkov textu na udalosť v Kalendári."
     map_events_to_color: "Priraďte farbu každej značke alebo kategórii."
     map_events_title: "Prepíše „Udalosti“ v názve bočného panela „Nadchádzajúce udalosti“ pre každú kategóriu."
     calendar_enabled: "Povoľte plugin discourse-calendar. Týmto sa pridá podpora pre značku [calendar][/calendar] v prvom príspevku témy."

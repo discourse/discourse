@@ -588,7 +588,6 @@ tr_TR:
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
       configuration:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
-        invalid_config: "Geçersiz bir seçenek seçtiniz."
         choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
     llm_models:
       missing_provider_param: "%{param} boş olamaz"

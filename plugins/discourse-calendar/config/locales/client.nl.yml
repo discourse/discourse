@@ -314,7 +314,7 @@ nl:
         month: "Maand"
         week: "Week"
         day: "Dag"
-        list: "Lijst"
+        year: "Jaar"
     group_timezones:
       search: "Zoeken..."
       group_availability: "Beschikbaarheid %{group}"

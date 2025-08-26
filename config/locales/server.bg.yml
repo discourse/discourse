@@ -1712,8 +1712,12 @@ bg:
           complete: "Потребителят е изтрит."
       reject:
         title: "Отхвърли"
+      silence_user:
+        title: "Заглушаване на потребителя"
+      suspend_user:
+        title: "Спиране на потребителя"
       delete_user:
-        complete: "Потребителят е изтрит."
+        complete: "Потребителят е изтрит"
   fallback_username: "потребител"
   form_templates:
     errors:

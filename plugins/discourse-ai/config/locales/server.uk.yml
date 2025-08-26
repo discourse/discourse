@@ -612,8 +612,8 @@ uk:
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
       configuration:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
-        invalid_config: "Ви вибрали недійсний варіант."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."
+        model_test_failed: "Нам не вдалося створити тестове вбудовування з цією моделлю. Перевірте, чи правильно налаштовано."
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
       bedrock_invalid_url: "Будь ласка, заповніть усі поля, щоб використовувати цю модель."

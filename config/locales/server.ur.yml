@@ -3674,9 +3674,11 @@ ur:
           description: "اِس صارف کو حذف کر دیا جائے گا، اور ہم اِس کے IP اور ایمَیل ایڈریسوں کو بلاک کردیں گے۔"
       reject:
         title: "مسترد کریں"
+      no_action_user:
+        title: "کوئی کارروائی نہیں"
       delete_user:
+        complete: "صارف مٹادیا گیا"
         reason: "بذریعہ نظر ثانی قطار کے حذف کر دیا گیا"
-        complete: "صارف مٹادیا گیا."
   email_style:
     html_missing_placeholder: "HTML ٹَیمپلیٹ میں %{placeholder} کا شامل ہونا لاذمی ہے۔"
   notification_level:

@@ -314,7 +314,7 @@ cs:
         month: "Měsíc"
         week: "Týden"
         day: "Den"
-        list: "Seznam"
+        year: "Rok"
     group_timezones:
       search: "Hledat…"
       group_availability: "Dostupnost %{group}"
