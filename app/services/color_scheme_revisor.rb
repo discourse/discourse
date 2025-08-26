@@ -28,11 +28,7 @@ class ColorSchemeRevisor
           if existing = @color_scheme.colors_by_name[c[:name]]
             existing.update(c)
           elsif !update_existing_colors_only
-            @color_scheme.color_scheme_colors << ColorSchemeColor.new(
-              name: c[:name],
-              hex: c[:hex],
-              dark_hex: c[:dark_hex],
-            )
+            @color_scheme.color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex])
           end
         end
         @color_scheme.clear_colors_cache

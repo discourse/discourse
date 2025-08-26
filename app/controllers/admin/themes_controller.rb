@@ -176,7 +176,6 @@ class Admin::ThemesController < Admin::AdminController
       ColorScheme
         .strict_loading
         .all
-        .without_theme_owned_palettes
         .includes(
           :theme,
           :base_scheme,
@@ -400,20 +399,6 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
 
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
-  end
-
-  def change_colors
-    raise Discourse::InvalidAccess if params[:id].to_i.negative?
-    theme = Theme.find_by(id: params[:id], component: false)
-    raise Discourse::NotFound if !theme
-
-    palette = theme.find_or_create_owned_color_palette
-
-    colors = params.permit(colors: %i[name hex dark_hex])
-
-    ColorSchemeRevisor.revise_existing_colors_only(palette, colors)
-
-    render_serialized(palette, ColorSchemeSerializer, root: false)
   end
 
   private
