@@ -58,7 +58,7 @@ export default function deprecated(msg, options = {}) {
     throw msg;
   }
 
-  if (DeprecationWorkflow.shouldSilence(id)) {
+  if (!DeprecationWorkflow.shouldSilence(id)) {
     console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
   }
 }
