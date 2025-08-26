@@ -24,7 +24,7 @@ export default class PostEventInviteesModal extends Component {
 
   constructor() {
     super(...arguments);
-    this._fetchInvitees();
+    this.fetchInvitees();
   }
 
   get hasSuggestedUsers() {
@@ -46,13 +46,13 @@ export default class PostEventInviteesModal extends Component {
   @action
   toggleType(type) {
     this.type = type;
-    this._fetchInvitees(this.filter);
+    this.fetchInvitees(this.filter);
   }
 
   @debounce(250)
   onFilterChanged(event) {
     this.filter = event.target.value;
-    this._fetchInvitees(this.filter);
+    this.fetchInvitees(this.filter);
   }
 
   @action
@@ -75,7 +75,7 @@ export default class PostEventInviteesModal extends Component {
     this.inviteesList.add(invitee);
   }
 
-  async _fetchInvitees(filter) {
+  async fetchInvitees(filter) {
     try {
       this.isLoading = true;
 
@@ -114,6 +114,7 @@ export default class PostEventInviteesModal extends Component {
               {{#each this.inviteesList.invitees as |invitee|}}
                 <li class="invitee">
                   <User @user={{invitee.user}} />
+
                   {{#if @model.event.canActOnDiscoursePostEvent}}
                     <DButton
                       class="remove-invitee"
@@ -132,14 +133,17 @@ export default class PostEventInviteesModal extends Component {
                 {{#each this.inviteesList.suggestedUsers as |user|}}
                   <li class="invitee">
                     <User @user={{user}} />
-                    <DButton
-                      class="add-invitee"
-                      @icon="plus"
-                      @action={{fn this.addInvitee user}}
-                      title={{i18n
-                        "discourse_post_event.invitees_modal.add_invitee"
-                      }}
-                    />
+
+                    {{#if @model.event.canActOnDiscoursePostEvent}}
+                      <DButton
+                        class="add-invitee"
+                        @icon="plus"
+                        @action={{fn this.addInvitee user}}
+                        title={{i18n
+                          "discourse_post_event.invitees_modal.add_invitee"
+                        }}
+                      />
+                    {{/if}}
                   </li>
                 {{/each}}
               </ul>
