@@ -67,37 +67,5 @@ RSpec.describe ColorSchemeRevisor do
       ColorSchemeRevisor.revise(color_scheme, { user_selectable: true })
       expect(color_scheme.reload.user_selectable).to eq(true)
     end
-
-    it "can set a light color scheme as default on the theme" do
-      Theme.find_default.update!(color_scheme_id: nil)
-
-      ColorSchemeRevisor.revise(color_scheme, { default_light_on_theme: true })
-
-      expect(Theme.find_default.color_scheme_id).to eq(color_scheme.id)
-    end
-
-    it "can set a dark color scheme as default on the theme" do
-      Theme.find_default.update!(dark_color_scheme_id: nil)
-
-      ColorSchemeRevisor.revise(dark_color_scheme, { default_dark_on_theme: true })
-
-      expect(Theme.find_default.dark_color_scheme_id).to eq(dark_color_scheme.id)
-    end
-
-    it "can unset a light color scheme as default on the theme" do
-      Theme.find_default.update!(color_scheme_id: color_scheme.id)
-
-      ColorSchemeRevisor.revise(color_scheme, { default_light_on_theme: false })
-
-      expect(Theme.find_default.color_scheme_id).to be_nil
-    end
-
-    it "can unset a dark color scheme as default on the theme" do
-      Theme.find_default.update!(dark_color_scheme_id: dark_color_scheme.id)
-
-      ColorSchemeRevisor.revise(dark_color_scheme, { default_dark_on_theme: false })
-
-      expect(Theme.find_default.dark_color_scheme_id).to be_nil
-    end
   end
 end
