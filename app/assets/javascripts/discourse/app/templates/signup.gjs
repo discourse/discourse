@@ -107,6 +107,13 @@ export default RouteTemplate(
                       {{/if}}
                     </span>
                   {{/if}}
+
+                  <PluginOutlet
+                    @name="create-account-after-email"
+                    @outletArgs={{lazyHash
+                      accountEmail=@controller.accountEmail
+                    }}
+                  />
                 </div>
 
                 <div class="input-group create-account__username">
@@ -139,6 +146,13 @@ export default RouteTemplate(
                       id="username-validation"
                     />
                   {{/if}}
+
+                  <PluginOutlet
+                    @name="create-account-after-username"
+                    @outletArgs={{lazyHash
+                      accountUsername=@controller.accountUsername
+                    }}
+                  />
                 </div>
 
                 {{#if
@@ -270,6 +284,10 @@ export default RouteTemplate(
                     @nameDisabled={{@controller.nameDisabled}}
                     @onFocusIn={{@controller.scrollInputIntoView}}
                     class="input-group create-account__fullname"
+                  />
+                  <PluginOutlet
+                    @name="create-account-after-fullname"
+                    @outletArgs={{lazyHash accountName=@controller.accountName}}
                   />
                 {{/if}}
 
