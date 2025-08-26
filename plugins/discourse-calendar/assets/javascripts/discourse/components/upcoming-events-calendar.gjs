@@ -18,6 +18,7 @@ export default class UpcomingEventsCalendar extends Component {
   @service siteSettings;
 
   _isInitializing = true;
+  _isViewChanging = false;
 
   get customButtons() {
     return {
@@ -148,6 +149,7 @@ export default class UpcomingEventsCalendar extends Component {
 
     // For view changes, always preserve the current URL parameters
     if (isViewChanged) {
+      this._isViewChanging = true;
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
@@ -155,6 +157,12 @@ export default class UpcomingEventsCalendar extends Component {
         currentMonth,
         currentDay
       );
+      return;
+    }
+
+    // Skip navigation logic immediately after a view change
+    if (this._isViewChanging) {
+      this._isViewChanging = false;
       return;
     }
 
@@ -248,21 +256,22 @@ export default class UpcomingEventsCalendar extends Component {
         };
       }
     } else {
-      // FORCE week/day views to use current URL day - this is the fix for view switching
-      const urlDay = parseInt(currentParams.day, 10);
-      if (urlDay && urlDay > 0 && urlDay <= 31) {
+      // For view changes, preserve the current date from URL
+      if (isViewChanged) {
         return {
           year: currentYear,
           month: currentMonth,
-          day: urlDay,
+          day: currentDay,
         };
       }
 
-      // If no URL day, still try to use current day from URL params
+      // For navigation (next/prev/today), calculate based on the calendar view's current date
+      const viewDate = moment(calendarView.currentStart);
+
       return {
-        year: currentYear,
-        month: currentMonth,
-        day: currentDay,
+        year: viewDate.year(),
+        month: viewDate.month() + 1,
+        day: viewDate.date(),
       };
     }
   }
