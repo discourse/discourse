@@ -33,9 +33,60 @@ import ItemViewsCell from "./item/views-cell";
 export default class TopicList extends Component {
   @service currentUser;
   @service topicTrackingState;
+  @service siteSettings;
 
   @cached
   get columns() {
+    if (this.siteSettings.topic_list_design === "topic_table") {
+      return this.topicTableColumns;
+    } else if (this.siteSettings.topic_list_design === "topic_cards") {
+      return this.topicCardColumns;
+    }
+  }
+
+  get showHeader() {
+    if (this.siteSettings.topic_list_design === "topic_table") {
+      return true;
+    }
+
+    return false;
+  }
+
+  @cached
+  get topicCardColumns() {
+    const defaultColumns = new DAG({
+      // Allow customizations to replace just a header cell or just an item cell
+      onReplaceItem(_, newValue, oldValue) {
+        newValue.header ??= oldValue.header;
+        newValue.item ??= oldValue.item;
+      },
+    });
+
+    defaultColumns.add("topic", {
+      header: HeaderTopicCell,
+      item: ItemTopicCell,
+    });
+
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
+
+    return applyMutableValueTransformer(
+      "topic-list-columns",
+      defaultColumns,
+      context
+    ).resolve();
+  }
+
+  @cached
+  get topicTableColumns() {
     const defaultColumns = new DAG({
       // Allow customizations to replace just a header cell or just an item cell
       onReplaceItem(_, newValue, oldValue) {
@@ -192,28 +243,31 @@ export default class TopicList extends Component {
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
-      <thead class="topic-list-header">
-        <Header
-          @columns={{this.columns}}
-          @canBulkSelect={{@canBulkSelect}}
-          @toggleInTitle={{this.toggleInTitle}}
-          @category={{@category}}
-          @hideCategory={{@hideCategory}}
-          @order={{@order}}
-          @changeSort={{@changeSort}}
-          @ascending={{@ascending}}
-          @sortable={{@changeSort}}
-          @listTitle={{or @listTitle "topic.title"}}
-          @bulkSelectHelper={{@bulkSelectHelper}}
-          @bulkSelectEnabled={{this.bulkSelectEnabled}}
-          @canDoBulkActions={{this.canDoBulkActions}}
-          @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-          @newListSubset={{@newListSubset}}
-          @newRepliesCount={{@newRepliesCount}}
-          @newTopicsCount={{@newTopicsCount}}
-          @changeNewListSubset={{@changeNewListSubset}}
-        />
-      </thead>
+
+      {{#if this.showHeader}}
+        <thead class="topic-list-header">
+          <Header
+            @columns={{this.columns}}
+            @canBulkSelect={{@canBulkSelect}}
+            @toggleInTitle={{this.toggleInTitle}}
+            @category={{@category}}
+            @hideCategory={{@hideCategory}}
+            @order={{@order}}
+            @changeSort={{@changeSort}}
+            @ascending={{@ascending}}
+            @sortable={{@changeSort}}
+            @listTitle={{or @listTitle "topic.title"}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
+            @bulkSelectEnabled={{this.bulkSelectEnabled}}
+            @canDoBulkActions={{this.canDoBulkActions}}
+            @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
+            @newListSubset={{@newListSubset}}
+            @newRepliesCount={{@newRepliesCount}}
+            @newTopicsCount={{@newTopicsCount}}
+            @changeNewListSubset={{@changeNewListSubset}}
+          />
+        </thead>
+      {{/if}}
 
       <PluginOutlet
         @name="before-topic-list-body"
