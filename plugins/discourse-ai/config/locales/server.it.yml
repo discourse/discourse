@@ -588,7 +588,6 @@ it:
       cannot_edit_builtin: "Non è possibile modificare un modello incorporato."
       configuration:
         disable_embeddings: "Devi prima disabilitare \"integrazioni ia abilitate\"."
-        invalid_config: "Hai selezionato un'opzione non valida."
         choose_model: "Imposta prima \"ai embeddings selected model\"."
     llm_models:
       missing_provider_param: "%{param} non può essere vuoto"

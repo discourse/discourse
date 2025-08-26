@@ -13,6 +13,7 @@ pl_PL:
     discourse_reactions_desaturated_reaction_panel: "Zmniejsza szum wizualny reakcji, wyświetlając je w stanie odbarwionym aż do momentu najechania kursorem."
     discourse_reactions_excluded_from_like: "Reakcje, które nie liczą się jako polubienie. Wszelkie reakcje, których nie ma na tej liście, będą liczone jako polubienie w przypadku odznak, zgłaszania i innych celów."
     discourse_reactions_like_sync_enabled: "Jeśli ta opcja jest włączona, w historycznych reakcjach zostaną utworzone odpowiadające im rekordy polubień, z wyjątkiem reakcji określonych w `discourse_reactions_excluded_from_like`. Synchronizacja będzie odbywać się regularnie w tle, a także po zmianie `discourse_reactions_excluded_from_like`."
+    discourse_reactions_experimental_allow_any_emoji: "EKSPERYMENTALNE: jeśli ta opcja jest włączona, dodany zostanie przycisk umożliwiający użytkownikom wybór dowolnych emoji w selektorze reakcji. Członkowie będą mogli wybierać dowolne emoji, w tym niestandardowe, do reakcji, więc włączaj tę opcję ostrożnie."
     errors:
       invalid_excluded_emoji: "Nie można wykluczyć emotikonów, które nie znajdują się w „reakcjach z włączonymi reakcjami Discourse” i nie można wykluczyć emotikonów używanych w „reakcjach Discourse na polubienie”."
   badges:

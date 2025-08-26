@@ -314,7 +314,7 @@ ja:
         month: "今月"
         week: "今週"
         day: "日"
-        list: "リスト"
+        year: "今年"
     group_timezones:
       search: "検索..."
       group_availability: "%{group} の空き状況"

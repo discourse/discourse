@@ -5298,9 +5298,20 @@ tr_TR:
       approve_and_unhide:
         title: "Gönderiyi onayla ve Gizlemesini kaldır"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
+      no_action_user:
+        title: "Eylem yok"
+      silence_user:
+        title: "Kullanıcıyı sustur"
+        complete: "Kullanıcı susturuldu"
+      suspend_user:
+        title: "Kullanıcıyı askıya al"
+        complete: "Kullanıcı askıya alındı"
       delete_user:
+        title: "Kullanıcı sil"
+        complete: "Kullanıcı silindi"
         reason: "İnceleme kuyruğu aracılığıyla silindi"
-        complete: "Kullanıcı silindi."
+      delete_and_block_user:
+        complete: "Kullanıcı silindi ve engellendi"
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermeli"
   notification_level:

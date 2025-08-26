@@ -33,7 +33,6 @@ fi:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Tekstirivien enimmäismäärä tapahtumaa kohden kalenterissa."
     map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
     map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
     calendar_enabled: "Ota discourse-calendar-lisäosa käyttöön. Tämä lisää tuen [calendar][/calendar]-tunnisteelle ketjun ensimmäisessä viestissä."

@@ -635,7 +635,6 @@ ar:
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
-        invalid_config: "لقد اخترت خيارًا غير صالح."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"

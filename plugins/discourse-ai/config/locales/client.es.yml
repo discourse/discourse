@@ -262,7 +262,7 @@ es:
           short_text_translator: "Traductor de textos cortos"
         spam:
           name: "Spam"
-          description: "Identifica el spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
+          description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
           inspect_posts: "Inspeccionar publicaciones"
         automation_reports:
           name: "Informes automatizados"
@@ -473,7 +473,7 @@ es:
           show_indexing_options: "Mostrar opciones de carga"
           hide_indexing_options: "Ocultar opciones de carga"
         uploads:
-          title: "Subidas"
+          title: "Subidos"
           description: "PDF (.pdf), texto sin formato (.txt) o markdown (.md)"
           description_with_images: "Texto sin formato (.txt), markdown (.md), PDF (.pdf) o imagen (.png, .jpeg)"
           button: "Añadir archivos"
@@ -683,7 +683,7 @@ es:
           discard: "Descartar"
           changes: "Ediciones sugeridas"
           custom_prompt:
-            title: "Instruccón personalizada"
+            title: "Instrucción personalizada"
             placeholder: "Introduce una instrucción personalizada..."
             submit: "Enviar instrucción"
           translate_prompt: "Traducir a %{language}"
@@ -696,7 +696,7 @@ es:
           copied: "¡Copiado!"
           cancel: "Cancelar"
           insert_footnote: "Añadir nota al pie de página"
-          footnote_disabled: "Inserción automática desactivada, pulsa el botón copiar y edítala manualmente"
+          footnote_disabled: "Inserción automática desactivada, haz clic en el botón copiar y edítalo manualmente"
           footnote_credits: "Explicación por IA"
         fast_edit:
           suggest_button: "Sugerir edición"

@@ -5523,9 +5523,20 @@ he:
       approve_and_unhide:
         title: "אישור והצגת הפוסט"
         complete: "הפוסט אושר והוצג מחדש"
+      no_action_user:
+        title: "אין פעולה"
+      silence_user:
+        title: "השתקת משתמש"
+        complete: "משתמש הושתק"
+      suspend_user:
+        title: "השעיית משתמש"
+        complete: "משתמש הושעה"
       delete_user:
+        title: "מחיקת משתמש"
+        complete: "משתמש נמחק"
         reason: "למחוק דרך תור סקירה"
-        complete: "משתמש נמחק."
+      delete_and_block_user:
+        complete: "המשתמש נמחק ונחסם"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   notification_level:

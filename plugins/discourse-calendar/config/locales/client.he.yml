@@ -314,7 +314,7 @@ he:
         month: "חודש"
         week: "שבוע"
         day: "יום"
-        list: "רשימה"
+        year: "שנה"
     group_timezones:
       search: "חיפוש…"
       group_availability: "זמינות %{group}"

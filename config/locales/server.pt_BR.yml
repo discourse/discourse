@@ -5321,9 +5321,15 @@ pt_BR:
       approve_and_unhide:
         title: "Aprovar e revelar postagem."
         complete: "Postagem aprovada e revelada"
+      no_action_user:
+        title: "Sem ação"
+      silence_user:
+        title: "Silenciar usuário(a)"
+      suspend_user:
+        title: "Suspender usuário(a)"
       delete_user:
+        title: "Excluir usuário(a)"
         reason: "Excluído(a) via fila de revisão"
-        complete: "Usuário(a) excluído(a)."
   email_style:
     html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"
   notification_level:

@@ -1422,11 +1422,6 @@ th:
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
       help: "ช่วยเหลือการจัดรูปแบบ"
-      collapse: "ย่อหน้าเขียนกระทู้"
-      open: "เปิดหน้าเขียนกระทู้"
-      abandon: "ปิดหน้าเขียนกระทู้และละทิ้งแบบร่าง"
-      enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
-      exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
@@ -2947,9 +2942,6 @@ th:
           disable: "ปิดใช้งาน"
           add: "เพิ่ม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
-          settings: "การตั้งค่า"
-          colors: "สี"
-          colors_title: "สี"
           scss:
             text: "CSS"
           footer:

@@ -20,6 +20,7 @@ be:
         month: "месяц"
         week: "тыдзень"
         day: "дзень"
+        year: "год"
     discourse_post_event:
       upcoming_events:
         status: "Статус"

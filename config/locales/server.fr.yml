@@ -5346,9 +5346,20 @@ fr:
       approve_and_unhide:
         title: "Approuver et afficher la publication"
         complete: "Publication approuvée et visible"
+      no_action_user:
+        title: "Aucune action"
+      silence_user:
+        title: "Désactiver l'utilisateur"
+        complete: "Utilisateur mis en sourdine"
+      suspend_user:
+        title: "Suspendre l'utilisateur"
+        complete: "Utilisateur suspendu"
       delete_user:
+        title: "Supprimer l'utilisateur"
+        complete: "Utilisateur supprimé"
         reason: "Supprimé via la file des messages en attente d'examen"
-        complete: "Utilisateur supprimé."
+      delete_and_block_user:
+        complete: "Utilisateur supprimé et bloqué"
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"
   notification_level:

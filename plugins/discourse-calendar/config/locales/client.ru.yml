@@ -314,7 +314,7 @@ ru:
         month: "За месяц"
         week: "За неделю"
         day: "Дата"
-        list: "Список"
+        year: "За год"
     group_timezones:
       search: "Поиск…"
       group_availability: "доступность %{group}"
