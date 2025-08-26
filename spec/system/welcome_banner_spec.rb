@@ -218,7 +218,6 @@ describe "Welcome banner", type: :system do
 
         it "should NOT show on" do
           visit "/login"
-          # pause_test
           expect(banner).to be_hidden
 
           visit "/signup"
@@ -236,7 +235,6 @@ describe "Welcome banner", type: :system do
 
           visit "/admin"
           expect(banner).to be_hidden
-          # pause_test
         end
       end
 
