@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { getURLWithCDN } from "discourse/lib/get-url";
 import { isImage } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
 
@@ -19,10 +18,6 @@ export default class ChatComposerUpload extends Component {
       : this.args.upload.fileName;
   }
 
-  get previewImageSrc() {
-    return getURLWithCDN(this.args.upload?.short_path);
-  }
-
   <template>
     {{#if @upload}}
       <div
@@ -35,7 +30,7 @@ export default class ChatComposerUpload extends Component {
         <div class="preview">
           {{#if this.isImage}}
             {{#if @isDone}}
-              <img class="preview-img" src={{this.previewImageSrc}} />
+              <img class="preview-img" src={{@upload.short_path}} />
             {{else}}
               {{icon "far-image"}}
             {{/if}}
