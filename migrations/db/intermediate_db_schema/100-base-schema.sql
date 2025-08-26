@@ -2,6 +2,15 @@
 -- update the "config/intermediate_db.yml" configuration file and then run
 -- `bin/cli schema generate` to regenerate this file.
 
+CREATE TABLE badge_groupings
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    description TEXT,
+    name        TEXT     NOT NULL,
+    position    INTEGER  NOT NULL
+);
+
 CREATE TABLE badges
 (
     original_id         NUMERIC  NOT NULL PRIMARY KEY,
