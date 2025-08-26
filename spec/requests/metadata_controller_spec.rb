@@ -205,4 +205,36 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "#discourse_id_challenge" do
+    context "when challenge token is present in Redis" do
+      let(:token) { SecureRandom.hex(16) }
+
+      before { Discourse.redis.setex("discourse_id_challenge_token", 600, token) }
+      after { Discourse.redis.del("discourse_id_challenge_token") }
+
+      it "returns the challenge token and domain" do
+        get "/.well-known/discourse-id-challenge"
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("application/json")
+        expect(response.headers["Cache-Control"]).to eq("max-age=300, private")
+
+        json = response.parsed_body
+        expect(json["token"]).to eq(token)
+        expect(json["domain"]).to eq(Discourse.current_hostname)
+      end
+    end
+
+    context "when no challenge token is present" do
+      before { Discourse.redis.del("discourse_id_challenge_token") }
+
+      it "returns 404" do
+        get "/.well-known/discourse-id-challenge"
+
+        expect(response.status).to eq(404)
+        expect(response.cache_control).to eq({})
+      end
+    end
+  end
 end

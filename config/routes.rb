@@ -1626,6 +1626,7 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
     # Apple accepts either of these paths for the apple-app-site-association file
     # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false
