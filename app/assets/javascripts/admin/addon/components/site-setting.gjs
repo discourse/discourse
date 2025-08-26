@@ -124,7 +124,18 @@ export default class SiteSettingComponent extends Component {
   }
 
   get overridden() {
-    return this.setting.default !== this.buffered.get("value");
+    if (
+      this.setting.json_schema ||
+      this.setting.schema ||
+      this.setting.objects_schema
+    ) {
+      return !deepEqual(this.setting.default, this.buffered.get("value"));
+    } else {
+      return (
+        this.setting.default?.toString() !==
+        this.buffered.get("value")?.toString()
+      );
+    }
   }
 
   get displayDescription() {
@@ -143,7 +154,16 @@ export default class SiteSettingComponent extends Component {
       settingVal = "";
     }
 
-    const dirty = !deepEqual(bufferVal, settingVal);
+    let dirty;
+    if (
+      this.setting.json_schema ||
+      this.setting.schema ||
+      this.setting.objects_schema
+    ) {
+      dirty = !deepEqual(bufferVal, settingVal);
+    } else {
+      dirty = bufferVal.toString() !== settingVal.toString();
+    }
 
     if (dirty) {
       this.siteSettingChangeTracker.add(this.setting);
