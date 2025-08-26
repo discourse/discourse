@@ -99,6 +99,20 @@ describe "Upcoming Events", type: :system do
   end
 
   describe "event filtering" do
+    it "loads the correct range of dates", time: Time.utc(2025, 9, 1, 12, 0) do
+      post =
+        PostCreator.create!(
+          admin,
+          title: "going to the zoo",
+          raw:
+            "[event start=\"2025-09-07 18:30\" status=\"public\" timezone=\"Europe/Prague\" end=\"2025-09-07 21:00\"]\n[/event]",
+        )
+
+      visit("/upcoming-events/week/2025/9/1")
+
+      upcoming_events.expect_event_visible("zoo")
+    end
+
     it "shows only events the user is attending when filtered",
        time: Time.utc(2025, 6, 2, 19, 00) do
       attending_event =
