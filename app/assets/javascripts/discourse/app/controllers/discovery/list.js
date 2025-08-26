@@ -92,21 +92,23 @@ export default class DiscoveryListController extends Controller {
 
   get createTopicTargetCategory() {
     const { category } = this.model;
-    let subcategory;
 
-    if (
-      !category?.canCreateTopic &&
-      this.siteSettings.default_subcategory_on_read_only_category
-    ) {
-      subcategory = category?.subcategoryWithCreateTopicPermission;
+    if (category?.canCreateTopic) {
+      return category;
     }
 
-    return subcategory ?? category;
+    return this.subcategoryTopic ?? category;
+  }
+
+  get subcategoryTopic() {
+    if (this.siteSettings.default_subcategory_on_read_only_category) {
+      return this.model.category?.subcategoryWithCreateTopicPermission;
+    }
   }
 
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
-    return this.model.category && !this.createTopicTargetCategory;
+    return !this.model.category?.canCreateTopic && !this.subcategoryTopic;
   }
 
   get resolvedAscending() {

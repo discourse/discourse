@@ -127,8 +127,7 @@ export default class CategoryChooser extends ComboBoxComponent {
   @computed(
     "selectKit.filter",
     "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId",
-    "selectKit.options.readOnlyCategoryId"
+    "selectKit.options.prioritizedCategoryId"
   )
   get content() {
     if (!this.selectKit.filter) {
