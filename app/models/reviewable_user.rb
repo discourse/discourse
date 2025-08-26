@@ -13,10 +13,17 @@ class ReviewableUser < Reviewable
 
   def build_actions(actions, guardian, args)
     return unless pending?
+    super
+  end
 
+  def build_legacy_combined_actions(actions, guardian, args)
     build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
 
     delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
+  end
+
+  def build_new_separated_actions(actions, guardian, args)
+    build_legacy_combined_actions(actions, guardian, args)
   end
 
   def perform_approve_user(performed_by, args)

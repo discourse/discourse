@@ -95,7 +95,7 @@ export default class CampaignBanner extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-    if (this.isSidebar && this.shouldShow && !this.site.mobileView) {
+    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
       document.body.classList.add(SIDEBAR_BODY_CLASS);
     } else {
       document.body.classList.remove(SIDEBAR_BODY_CLASS);

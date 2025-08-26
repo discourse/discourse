@@ -2860,7 +2860,6 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
-          default: "Halisi"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari."

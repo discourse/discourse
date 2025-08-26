@@ -1,59 +1,54 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import discourseComputed from "discourse/lib/decorators";
+import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
-@tagName("")
 export default class ComposerToggles extends Component {
-  @discourseComputed("composeState")
-  toggleTitle(composeState) {
-    return composeState === "draft" || composeState === "saving"
-      ? "composer.abandon"
-      : "composer.collapse";
+  @service site;
+
+  get additionalClasses() {
+    return applyValueTransformer("composer-toggles-class", "");
   }
 
-  @discourseComputed("showToolbar")
-  toggleToolbarTitle(showToolbar) {
-    return showToolbar ? "composer.hide_toolbar" : "composer.show_toolbar";
+  get showCollapseButton() {
+    return (
+      this.args.composeState !== "draft" && this.args.composeState !== "saving"
+    );
   }
 
-  @discourseComputed("composeState")
-  fullscreenTitle(composeState) {
-    return composeState === "draft"
+  get toggleToolbarTitle() {
+    return this.args.showToolbar
+      ? "composer.hide_toolbar"
+      : "composer.show_toolbar";
+  }
+
+  get fullscreenTitle() {
+    return this.args.composeState === "draft"
       ? "composer.open"
-      : composeState === "fullscreen"
+      : this.args.composeState === "fullscreen"
         ? "composer.exit_fullscreen"
         : "composer.enter_fullscreen";
   }
 
-  @discourseComputed("composeState")
-  toggleIcon(composeState) {
-    return composeState === "draft" || composeState === "saving"
-      ? "xmark"
-      : "angles-down";
-  }
-
-  @discourseComputed("composeState")
-  fullscreenIcon(composeState) {
-    return composeState === "draft"
+  get fullscreenIcon() {
+    return this.args.composeState === "draft"
       ? "angles-up"
-      : composeState === "fullscreen"
+      : this.args.composeState === "fullscreen"
         ? "discourse-compress"
         : "discourse-expand";
   }
 
-  @discourseComputed("disableTextarea")
-  showFullScreenButton(disableTextarea) {
+  get showFullScreenButton() {
     if (this.site.mobileView) {
       return false;
     }
-    return !disableTextarea;
+    return !this.args.disableTextarea;
   }
 
   <template>
-    <div class="composer-controls">
+    <div class={{concatClass "composer-controls" this.additionalClasses}}>
       <span>
         <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
       </span>
@@ -61,7 +56,7 @@ export default class ComposerToggles extends Component {
       {{#if this.site.mobileView}}
         <DButton
           @icon="bars"
-          @action={{this.toggleToolbar}}
+          @action={{@toggleToolbar}}
           @title={{this.toggleToolbarTitle}}
           @preventFocus={{true}}
           class="btn-transparent toggle-toolbar btn-mini-toggle"
@@ -71,18 +66,29 @@ export default class ComposerToggles extends Component {
       {{#if this.showFullScreenButton}}
         <DButton
           @icon={{this.fullscreenIcon}}
-          @action={{this.toggleFullscreen}}
+          @action={{@toggleFullscreen}}
           @title={{this.fullscreenTitle}}
           class="btn-transparent toggle-fullscreen btn-mini-toggle"
         />
       {{/if}}
 
-      <DButton
-        @icon={{this.toggleIcon}}
-        @action={{this.toggleComposer}}
-        @title={{this.toggleTitle}}
-        class="btn-transparent toggler toggle-minimize btn-mini-toggle"
-      />
+      {{#if this.showCollapseButton}}
+        <DButton
+          @icon="angles-down"
+          @action={{@toggleComposer}}
+          @title="composer.collapse"
+          class="btn-transparent toggler toggle-minimize btn-mini-toggle"
+        />
+      {{/if}}
+
+      {{#if @saveAndClose}}
+        <DButton
+          @icon="xmark"
+          @action={{@saveAndClose}}
+          @title="composer.save_and_close"
+          class="btn-transparent toggler toggle-save-and-close btn-mini-toggle"
+        />
+      {{/if}}
     </div>
   </template>
 }

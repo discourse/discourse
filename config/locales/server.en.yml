@@ -1671,7 +1671,9 @@ en:
       labels:
         provider: Login provider
         no_accounts: "No associated accounts"
-        total_users: "Total number of members"
+        discourse_connect: "SSO via Discourse Connect"
+        no_sso_accounts: "Accounts without an SSO record"
+        total_users: "Total active user accounts"
       description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
@@ -2916,6 +2918,7 @@ en:
       in_new: "Show topics that are new or have new replies"
       in_new_replies: "Show topics with new replies"
       in_new_topics: "Show new topics"
+      in_unseen: "Show topics you haven't seen"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -2941,6 +2944,7 @@ en:
       users: "Filter topics by participants"
       users_any: "Show topics with any of the specified users (comma-separated)"
       users_all: "Show topics with all of the specified users (plus-separated)"
+      exclude_users: "Exclude topics with specific users"
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
@@ -5840,9 +5844,32 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
+      # New separated user actions
+      user_actions:
+        bundle_title: "What do you want to do with the user?"
+      no_action_user:
+        title: "No action"
+        description: "Take no action against the user"
+        complete: "No action taken against user"
+      silence_user:
+        title: "Silence user"
+        description: "Prevent the user from posting"
+        complete: "User silenced"
+        reason: "User silenced via review queue"
+      suspend_user:
+        title: "Suspend user"
+        description: "Suspend the user account"
+        complete: "User suspended"
+        reason: "User suspended via review queue"
       delete_user:
+        title: "Delete user"
+        description: "Delete this user from the forum"
+        complete: "User deleted"
         reason: "Deleted via review queue"
-        complete: "User deleted."
+      delete_and_block_user:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
@@ -5894,3 +5921,6 @@ en:
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
       invalid_tag_group: "has invalid tag group: %{tag_group_name}"
+
+  discourse_id:
+    already_registered: "This site is already registered with Discourse ID"

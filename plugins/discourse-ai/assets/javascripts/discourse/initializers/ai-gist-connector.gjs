@@ -1,10 +1,10 @@
+import Component from "@glimmer/component";
 import { ajax } from "discourse/lib/ajax";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
 import AiTopicGist from "../components/ai-topic-gist";
 
 export default apiInitializer((api) => {
-  const site = api.container.lookup("service:site");
   const settings = api.container.lookup("service:site-settings");
   const MAX_ALLOWED_GISTS_REGENERATE = 30;
 
@@ -87,15 +87,26 @@ export default apiInitializer((api) => {
   });
 
   if (settings.discourse_ai_enabled && settings.ai_summarization_enabled) {
-    const gistTemplate = <template>
-      <AiTopicGist @topic={{@outletArgs.topic}} />
-    </template>;
+    const OUTLETS = {
+      mobile: "topic-list-before-category",
+      desktop: "topic-list-topic-cell-link-bottom-line__before",
+    };
 
-    const outlet = site.mobileView
-      ? "topic-list-before-category"
-      : "topic-list-topic-cell-link-bottom-line__before";
+    function renderGistInOutlet(outletName, shouldRenderFn) {
+      api.renderInOutlet(
+        outletName,
+        class extends Component {
+          static shouldRender(args, context) {
+            return shouldRenderFn(context);
+          }
 
-    api.renderInOutlet(outlet, gistTemplate);
+          <template><AiTopicGist @topic={{@topic}} /></template>
+        }
+      );
+    }
+
+    renderGistInOutlet(OUTLETS.mobile, (context) => context.site.mobileView);
+    renderGistInOutlet(OUTLETS.desktop, (context) => context.site.desktopView);
 
     api.addTopicAdminMenuButton((topic) => {
       if (!settings.ai_summary_gists_enabled) {

@@ -16,7 +16,7 @@ export default class SelectKitCollection extends Component {
   @service site;
 
   bodyScrollLock = modifier((element) => {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 

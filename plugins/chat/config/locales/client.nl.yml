@@ -318,7 +318,7 @@ nl:
       browse:
         back: "Terug"
         title: Kanalen
-        filter_all: Alle
+        filter_all: Alles
         filter_open: Open
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
@@ -338,7 +338,7 @@ nl:
         description: Beschrijving
       channel_info:
         back_to_all_channels: "Alle kanalen"
-        back_to_channel: "Vorige"
+        back_to_channel: "Terug"
         tabs:
           members: Leden
           settings: Instellingen
@@ -510,7 +510,7 @@ nl:
         title: "Kanalen"
         aria_label: "Wisselen naar kanalenlijst"
       incoming_webhooks:
-        back: "Vorige"
+        back: "Terug"
         channel_placeholder: "Selecteer een kanaal"
         channel: "Kanaal"
         confirm_destroy: "Weet je zeker dat je deze inkomende webhook wilt verwijderen? Dit kan niet ongedaan worden gemaakt."

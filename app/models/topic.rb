@@ -709,6 +709,7 @@ class Topic < ActiveRecord::Base
   MAX_SIMILAR_BODY_LENGTH = 200
   SIMILAR_TOPIC_SEARCH_LIMIT = 10
   SIMILAR_TOPIC_LIMIT = 3
+  SIMILAR_TOPIC_MAX_BLURB_LENGTH = 500
 
   def self.similar_to(title, raw, user = nil)
     return [] if title.blank?
@@ -748,18 +749,66 @@ class Topic < ActiveRecord::Base
       #{excluded_category_ids_sql}
       UNION
       #{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql}
-      SQL
+    SQL
 
     candidates =
       Topic
         .visible
         .listable_topics
         .secured(guardian)
-        .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
         .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
-        .where("search_data @@ #{tsquery}")
         .where("c.topic_id IS NULL")
         .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
+
+    plugin_candidate_ids = []
+    plugin_candidate_ids =
+      DiscoursePluginRegistry.apply_modifier(
+        :similar_topic_candidate_ids,
+        plugin_candidate_ids,
+        title:,
+        raw:,
+        guardian:,
+        candidates:,
+      )
+
+    blurb_sql = "LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb"
+    select_fragment = ->(similarity_expr) do
+      DB.sql_fragment(
+        "topics.*, #{similarity_expr} AS similarity, #{blurb_sql}",
+        title: title,
+        raw: raw,
+      )
+    end
+
+    if plugin_candidate_ids.present? && plugin_candidate_ids.length > 0
+      ids = plugin_candidate_ids.map(&:to_i)
+      candidate_ids =
+        candidates
+          .where(id: ids)
+          .order("array_position(ARRAY[#{ids.join(",")}]::int[], topics.id)")
+          .limit(SIMILAR_TOPIC_LIMIT)
+          .pluck(:id)
+
+      if candidate_ids.present? && candidate_ids.length > 0
+        rank_array_sql = "ARRAY[#{candidate_ids.map(&:to_i).join(",")}]"
+        return(
+          Topic
+            .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
+            .where(id: candidate_ids)
+            .select(
+              select_fragment.call(
+                "(array_length(#{rank_array_sql}, 1) - array_position(#{rank_array_sql}, topics.id) + 1)",
+              ),
+            )
+            .order("similarity DESC")
+        )
+      end
+    end
+
+    candidates =
+      candidates
+        .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
+        .where("search_data @@ #{tsquery}")
         .order("ts_rank(search_data, #{tsquery}) DESC")
         .limit(SIMILAR_TOPIC_SEARCH_LIMIT)
 
@@ -776,23 +825,17 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb",
-          title: title,
-          raw: raw,
-        ),
+        select_fragment.call("similarity(topics.title, :title) + similarity(p.raw, :raw)"),
       ).where(
         "similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2",
         title: title,
         raw: raw,
       )
     else
-      similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb",
-          title: title,
-        ),
-      ).where("similarity(topics.title, :title) > 0.2", title: title)
+      similars.select(select_fragment.call("similarity(topics.title, :title)")).where(
+        "similarity(topics.title, :title) > 0.2",
+        title: title,
+      )
     end
   end
 

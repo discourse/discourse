@@ -66,9 +66,7 @@ class ChatSetupInit {
           class: "chat-emoji-btn",
           icon: "face-smile",
           position: "dropdown",
-          get displayed() {
-            return owner.lookup("service:site").mobileView;
-          },
+          displayed: () => owner.lookup("service:site").mobileView,
           action(context) {
             const didSelectEmoji = (emoji) => {
               const composer = owner.lookup(`service:chat-${context}-composer`);

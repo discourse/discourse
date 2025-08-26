@@ -109,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.24.0] - 2024-01-08
 
-- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. 
+- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet.
 
 ## [1.23.0] - 2024-01-03
 
@@ -154,7 +154,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
+- Added `rrule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
 
 ## [1.15.0] - 2023-10-18
 

@@ -6502,7 +6502,7 @@ it:
           extra_files_upload: "Esporta il tema per visualizzare questi file."
           extra_files_remote: "Esporta il tema o consulta l'archivio git per visualizzare questi file."
           preview: "Anteprima"
-          default: "Predefinito"
+          default: "Tema predefinito"
           settings_editor: "Editor delle impostazioni"
           show_advanced: "Mostra avanzato"
           is_default: "Il tema è abilitato per impostazione predefinita"

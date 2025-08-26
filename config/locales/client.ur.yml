@@ -4995,7 +4995,7 @@ ur:
               content: "فِلٹر"
               title: "زمرہ، دہجی، یا دیگر معیار کے لحاظ سے موضوعات کو چھانے"
             topics:
-              content: "ٹاپکس"
+              content: "موضوعات"
               title: "تمام موضوعات"
             faq:
               content: "عمومی سوالات"
@@ -5502,6 +5502,7 @@ ur:
           header_description: "ان ای میلز کے لیے ترتیبات بنائیں جو آپ کے اراکین کو بھیجی جاتی ہیں۔"
           sub_pages:
             server_settings:
+              title: "سرور کی ترتیبات"
               header_description: "ان ای میلز کے لیے ترتیبات بنائیں جو آپ کے اراکین کو بھیجی جاتی ہیں۔"
             preview_summary:
               header_description: "غیر فعال صارفین کو بھیجی گئی سمری ای میلز کے مواد کا جائزہ لیں"
@@ -6200,7 +6201,6 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
-          default: "ڈِیفالٹ"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
           user_selectable_badge_label: "صارف کے قابل انتخاب"
@@ -6363,6 +6363,7 @@ ur:
             name: "ہیڈر بنیادی"
           highlight:
             name: "اجاگر کریں"
+            description: "نمایاں کردہ لڑیاں یا موضوعات"
           highlight-high:
             name: "ہائی لائٹ-اعلیٰ"
           highlight-medium:
@@ -6608,7 +6609,7 @@ ur:
           searches: "سرچز"
           click_through_rate: "CTR"
           types:
-            all_search_types: "تمام سرچ ٹاپکس"
+            all_search_types: "تلاش کی تمام اقسام"
             header: "ہَیڈر"
             click_through_only: "تمام (صرف کلِک تھرُو)"
       watched_words:
@@ -6633,6 +6634,7 @@ ur:
         action_descriptions:
           flag: "ایسی لڑیوں کی جن میں یہ الفاظ ہوں، لیکن نگرانوں کے جائزے کے لیے انہیں نامناسب کے طور پر نشاندہ کریں، کی اجازت دیں۔"
           replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں."
+          tag: "اگر پہلی لڑی میں کوئی مخصوص لفظ ہو تو خودکار طور پر موضوعات کو ٹیگ کریں۔"
           link: "پوسٹس میں الفاظ کو لنکس سے بدلیں."
         form:
           replace_label: "متبادل"
@@ -6795,6 +6797,7 @@ ur:
         activity: سرگرمی
         like_count: لائیکس دیے / ملے
         last_100_days: "پچھلے 100 دنوں میں"
+        private_topics_count: ذاتی پیغامات
         posts_read_count: پڑھی گئیں پوسٹس
         post_count: بنائی گئیں پوسٹس
         second_factor_enabled: دو عنصری توثیق فعال ہے
@@ -6909,6 +6912,7 @@ ur:
           username: "صارف نام"
           trust_level: "اعتماد کی سطح"
           read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+          topics_entered: "درج کردہ موضوعات"
           posts: "پوسٹس"
         tl3_requirements:
           title: "اعتماد کی سطح 3 کے تقاضے"
@@ -6918,7 +6922,7 @@ ur:
           value_heading: "وَیلِیو"
           requirement_heading: "ضروریات"
           days: "دن"
-          topics_replied_to: "جن ٹاپکس کا جواب دیا گیا"
+          topics_replied_to: "موضوعات کا جواب دیا"
           topics_viewed: "دیکھے گئے موضوعات"
           topics_viewed_all_time: "دیکھ لیے گئے ٹاپک (تمام وقت)"
           posts_read: "پڑھی گئیں پوسٹس"
@@ -7166,6 +7170,7 @@ ur:
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
         edit: "ترمیم کریں"
+        posts_and_topics: "لڑیوں اور موضوعات کی ترتیب"
         crawlers_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
         embed_by_username: "ٹاپک کی تخلیق کیلئے صارف نام"
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
@@ -7176,10 +7181,12 @@ ur:
         blocked_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
         allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "محفوظ کریں"
+        posts_and_topics_settings_saved: "لڑیوں اور موضوعات کی ترتیبات محفوظ ہوئی"
         host_form:
           save: "محفوظ کریں"
         nav:
           settings: "ترتیبات"
+          posts_and_topics: "لڑیاں اور موضوعات"
           crawlers: "کرالرز"
       permalink:
         title: "دائمی لِنکس"

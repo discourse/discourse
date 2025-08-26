@@ -391,7 +391,17 @@ ar:
       poll:
         instructions: |-
           هل تعلم أنه يمكنك إضافة استطلاع رأي إلى أي منشور؟ جرّب استخدام أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرر لإنشاء استطلاع رأي.
-        not_found: "عذرًا! لم يكن هناك أي استطلاع رأي في ردك.\n \nاستخدم أيقونة <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png\" width=\"16\" height=\"16\"> في المحرِّر، أو انسخ هذا الاستطلاع والصقه في ردك التالي:\n\n```text\n[poll]\n* :cat:\n* :dog:\n[/poll]\n```"
+        not_found: |-
+          عذرًا! لم يكن هناك أي استطلاع رأي في ردك.
+
+          استخدم أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرِّر، أو انسخ هذا الاستطلاع والصقه في ردك التالي:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           مرحبًا، استطلاع رائع! كيف كان أدائي في تعليمك؟
 

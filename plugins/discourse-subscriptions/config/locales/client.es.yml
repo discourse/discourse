@@ -93,7 +93,7 @@ es:
         payments:
           id: ID de pago
           amount: Cantidad
-          created_at: Creada
+          created_at: Creado
         payments_help: No hay pagos
         plans:
           rate: Tarifa
@@ -107,7 +107,7 @@ es:
           update_card:
             heading: "Tarjeta de actualización de la suscripción: %{sub_id}"
             single: "Actualizar"
-          created_at: Creada
+          created_at: Creado
           cancel: cancelar
           cancelled: cancelada
           operations:
@@ -459,7 +459,7 @@ es:
             group: Grupo de usuarios
             group_help: Este es el grupo de usuarios en Discourse al que se añadirá el cliente cuando se cree la suscripción.
             active: Activo
-            created_at: Creada
+            created_at: Creado
             recurring: '¿Plan recurrente?'
         coupons:
           title: Cupones
@@ -479,6 +479,6 @@ es:
             product: Producto
             plan: Plan
             status: Estado
-            created_at: Creada
+            created_at: Creado
         ask_refund: '¿Reembolsar el último pago realizado por el cliente?'
         canceled: "La suscripción está cancelada."

@@ -4677,7 +4677,7 @@ ro:
           desktop: "Desktop"
           mobile: "Mobil"
           preview: "Previzualizează"
-          default: "Implicit"
+          default: "Temă implicită"
           is_default: "Tema este activată implicit"
           user_selectable: "Tema poate fi aleasă de către utilizatori"
           user_selectable_badge_label: "Selectabilă de către utilizator"
