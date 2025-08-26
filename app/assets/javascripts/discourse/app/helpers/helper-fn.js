@@ -9,7 +9,7 @@ import { bind } from "discourse/lib/decorators";
  * Whenever any autotracked state is changed, the cleanup function will be run, and your function
  * will be re-evaluated.
  *
- * @param {(args: object, on: { cleanup: () => void } ) => any} fn - The helper function.
+ * @returns {typeof Helper} - A Helper subclass with cleanup logic.
  */
 export default function helperFn(callback) {
   return class extends Helper {

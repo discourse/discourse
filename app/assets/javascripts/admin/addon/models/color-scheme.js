@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
+import { NativeArray } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
@@ -60,7 +60,7 @@ export default class ColorScheme extends EmberObject {
   init() {
     super.init(...arguments);
 
-    const colors = A(this.colors ?? []);
+    const colors = NativeArray(this.colors ?? []);
     this.colors = colors.map((c) => {
       return ColorSchemeColor.create(c);
     });
@@ -111,7 +111,7 @@ export default class ColorScheme extends EmberObject {
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
-      colors: A(),
+      colors: NativeArray(),
     });
     this.colors.forEach((c) => {
       newScheme.colors.pushObject(
@@ -213,6 +213,7 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
+  /** @returns {any} */
   destroy() {
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });

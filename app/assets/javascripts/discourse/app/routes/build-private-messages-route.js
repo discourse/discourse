@@ -13,6 +13,7 @@ export const INBOX_FILTER = "inbox";
 export const ARCHIVE_FILTER = "archive";
 
 // A helper to build a user topic list route
+/** @returns {any} */
 export default (inboxType, path, filter) => {
   return class BuildPrivateMessagesRoute extends UserTopicListRoute {
     userActionType = UserAction.TYPES.messages_received;

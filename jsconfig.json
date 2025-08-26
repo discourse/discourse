@@ -6,6 +6,12 @@
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "noEmitOnError": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "types",
     "paths": {
       "discourse/*": [
         "./app/assets/javascripts/discourse/app/*"
@@ -308,9 +314,9 @@
   ],
   "glint": {
     "environment": [
-      "ember-loose",
       "ember-template-imports"
     ],
     "checkStandaloneTemplates": false
   }
+  
 }

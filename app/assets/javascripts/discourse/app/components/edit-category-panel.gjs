@@ -18,6 +18,7 @@ export default class EditCategoryPanel extends Component {
   </template>
 }
 
+/** @returns { any } */
 export function buildCategoryPanel(tab) {
   @classNameBindings(
     ":edit-category-tab",
