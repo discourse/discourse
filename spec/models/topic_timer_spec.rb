@@ -215,4 +215,17 @@ RSpec.describe TopicTimer, type: :model do
       expect(topic_timer.runnable?).to eq(true)
     end
   end
+
+  describe "single table inheritance" do
+    it "is valid with a type of TopicTimer" do
+      topic_timer = Fabricate(:topic_timer)
+      expect(topic_timer.type).to eq("TopicTimer")
+    end
+
+    it "will raise an error if constructed with invalid type" do
+      expect do Fabricate(:topic_timer, type: "FooBar") end.to raise_error(
+        ActiveRecord::SubclassNotFound,
+      )
+    end
+  end
 end
