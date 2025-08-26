@@ -101,6 +101,11 @@ schema:
         exclude:
           - "id"
     tag_groups: {}
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
     tags:
       columns:
         exclude:
@@ -355,7 +360,6 @@ schema:
         - "stylesheet_cache"
         - "summary_sections"
         - "tag_search_data"
-        - "tag_users"
         - "tags_web_hooks"
         - "theme_fields"
         - "theme_modifier_sets"

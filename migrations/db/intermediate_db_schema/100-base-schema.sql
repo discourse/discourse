@@ -174,6 +174,15 @@ CREATE TABLE tag_groups
     parent_tag_id NUMERIC
 );
 
+CREATE TABLE tag_users
+(
+    tag_id             NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    created_at         DATETIME,
+    notification_level INTEGER  NOT NULL,
+    PRIMARY KEY (tag_id, user_id)
+);
+
 CREATE TABLE tags
 (
     original_id NUMERIC  NOT NULL PRIMARY KEY,
