@@ -15,17 +15,8 @@ export default class DeprecationCounter {
   }
 
   shouldCount(id) {
-    const handlers = DeprecationWorkflow.find(id)?.handler?.split("|");
-
     const isSilenced = isDeprecationSilenced(id);
-    const hasSilence = handlers?.includes("silence") ?? false;
-    const hasCounter = handlers?.includes("counter") ?? false;
-
-    // Increment when the id is not silenced and either:
-    // - no handlers are configured
-    // - the handler "silence" is not included
-    // - explicitly includes the handler "counter"
-    return !isSilenced && (!handlers || !hasSilence || hasCounter);
+    return !isSilenced && DeprecationWorkflow.shouldCount(id);
   }
 
   @bind

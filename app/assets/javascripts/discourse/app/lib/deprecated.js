@@ -48,17 +48,17 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  const matchedWorkflow = DeprecationWorkflow.find(id);
-
   if (
     raiseError ||
-    matchedWorkflow?.handler?.split("|").includes("throw") ||
-    (!matchedWorkflow && globalThis.EmberENV?.RAISE_ON_DEPRECATION)
+    DeprecationWorkflow.shouldThrow(
+      id,
+      globalThis.EmberENV?.RAISE_ON_DEPRECATION
+    )
   ) {
     throw msg;
   }
 
-  if (!matchedWorkflow?.handler?.split("|").includes("silence")) {
+  if (DeprecationWorkflow.shouldSilence(id)) {
     console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
   }
 }

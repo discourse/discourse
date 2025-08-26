@@ -71,9 +71,7 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const matchingConfig = DeprecationWorkflow.find(opts.id);
-
-    if (matchingConfig?.handler?.split("|").includes("silence")) {
+    if (DeprecationWorkflow.shouldSilence(opts.id)) {
       return;
     }
 
