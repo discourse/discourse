@@ -35,8 +35,8 @@ export default class UpcomingEventsBaseRoute extends DiscourseRoute {
       const day = parseInt(params.day, 10);
 
       const date = moment.utc({ year, month, day });
-      after = date.clone().startOf("week").toISOString();
-      before = date.clone().endOf("week").toISOString();
+      after = date.clone().startOf("isoWeek").toISOString();
+      before = date.clone().endOf("isoWeek").toISOString();
       initialDate = moment.utc({ year, month, day }).format("YYYY-MM-DD");
     } else if (params.view === "day") {
       const year = parseInt(params.year, 10);
