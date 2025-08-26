@@ -1,3 +1,7 @@
+/**
+ * Valid environment names for deprecation workflows.
+ * @type {string[]}
+ */
 const VALID_ENVS = [
   "development",
   "qunit-test",
@@ -7,17 +11,34 @@ const VALID_ENVS = [
   "unset",
 ];
 
-const VALID_HANDLERS = ["silence", "log", "counter", "throw"];
-const VALID_EMBER_CLI_WOPKFLOW_HANDLERS = ["silence", "log", "throw"];
+/**
+ * Valid handler types specifically for Ember CLI workflows.
+ * @type {string[]}
+ */
+const VALID_EMBER_CLI_WORKFLOW_HANDLERS = ["silence", "log", "throw"];
 
+/**
+ * Valid handler types for deprecation workflows.
+ * @type {string[]}
+ */
+const VALID_HANDLERS = [...VALID_EMBER_CLI_WORKFLOW_HANDLERS, "counter"];
+
+/**
+ * Handles deprecation workflows in Discourse.
+ * @class
+ */
 export class DiscourseDeprecationWorkflow {
-  // the environment is set only in the `discourse-bootstrap` initializer and `discourse/lib/environment`
-  // is not available for code running in MiniRacer. This reference is initialized in the app bootstrap, in case it's
-  // missing, we'll just use the deprecations that don't have any environment set
   #environment;
   #workflows;
   #activeWorkflows;
 
+  /**
+   * Creates a new DiscourseDeprecationWorkflow instance.
+   * @param {Object[]} workflows - Array of workflow configurations
+   * @param {(string|string[])} workflows[].handler - Handler type(s) for the workflow
+   * @param {(string|RegExp)} workflows[].matchId - ID or pattern to match deprecations
+   * @param {(string|string[])} [workflows[].env] - Environment(s) where the workflow applies
+   */
   constructor(workflows) {
     workflows.forEach((workflow) => {
       // validate the deprecation handlers
@@ -75,10 +96,18 @@ export class DiscourseDeprecationWorkflow {
     this.#updateActiveWorkflows();
   }
 
+  /**
+   * Gets the list of active workflows.
+   * @return {Object[]} Array of active workflow configurations
+   */
   get list() {
     return this.#activeWorkflows;
   }
 
+  /**
+   * Gets Ember-specific workflows formatted for Ember CLI.
+   * @return {Object[]} Array of formatted Ember workflow configurations
+   */
   get emberWorkflowList() {
     return this.#activeWorkflows
       .flatMap((workflow) => {
@@ -89,25 +118,44 @@ export class DiscourseDeprecationWorkflow {
         }));
       })
       .filter((workflow) =>
-        VALID_EMBER_CLI_WOPKFLOW_HANDLERS.includes(workflow.handler)
+        VALID_EMBER_CLI_WORKFLOW_HANDLERS.includes(workflow.handler)
       );
   }
 
+  /**
+   * Sets the current environment and updates active workflows.
+   * @param {Object} environment - Environment object
+   */
   setEnvironment(environment) {
     this.#environment = environment;
     this.#updateActiveWorkflows();
   }
 
+  /**
+   * Checks if a deprecation should be logged.
+   * @param {string} deprecationId - ID of the deprecation
+   * @return {boolean} True if deprecation should be logged
+   */
   shouldLog(deprecationId) {
     const workflow = this.#find(deprecationId);
     return !workflow || workflow.handler.includes("log");
   }
 
+  /**
+   * Checks if a deprecation should be silenced.
+   * @param {string} deprecationId - ID of the deprecation
+   * @return {boolean} True if deprecation should be silenced
+   */
   shouldSilence(deprecationId) {
     const workflow = this.#find(deprecationId);
     return !!workflow?.handler?.includes("silence");
   }
 
+  /**
+   * Checks if a deprecation should be counted.
+   * @param {string} deprecationId - ID of the deprecation
+   * @return {boolean} True if deprecation should be counted
+   */
   shouldCount(deprecationId) {
     const workflow = this.#find(deprecationId);
     if (!workflow) {
@@ -120,6 +168,12 @@ export class DiscourseDeprecationWorkflow {
     return !silenced || count;
   }
 
+  /**
+   * Checks if a deprecation should throw an error.
+   * @param {string} deprecationId - ID of the deprecation
+   * @param {boolean} [includeUnhandled=false] - Whether to throw for unhandled deprecations
+   * @return {boolean} True if deprecation should throw
+   */
   shouldThrow(deprecationId, includeUnhandled = false) {
     const workflow = this.#find(deprecationId);
     return (
@@ -127,6 +181,12 @@ export class DiscourseDeprecationWorkflow {
     );
   }
 
+  /**
+   * Finds the workflow matching a deprecation ID.
+   * @param {string} deprecationId - ID of the deprecation
+   * @return {Object|undefined} Matching workflow configuration if found
+   * @private
+   */
   #find(deprecationId) {
     return this.#activeWorkflows.find((workflow) => {
       if (workflow.matchId instanceof RegExp) {
@@ -137,6 +197,10 @@ export class DiscourseDeprecationWorkflow {
     });
   }
 
+  /**
+   * Updates the list of active workflows based on current environment.
+   * @private
+   */
   #updateActiveWorkflows() {
     const environment = this.#environment;
 
@@ -168,6 +232,15 @@ export class DiscourseDeprecationWorkflow {
   }
 }
 
+/**
+ * Singleton DiscourseDeprecationWorkflow instance containing the current deprecation handling rules
+ *
+ * Each workflow config item should have:
+ * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", and/or "counter"
+ * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
+ * @property {(string|string[])} [env] - Optional environment(s): "development", "qunit-test", "rails-test", "test", "production", "unset"
+ *
+ */
 const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
