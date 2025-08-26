@@ -199,7 +199,8 @@ export default class CardContentsBase extends Component {
       if (this.site.desktopView) {
         this._menuInstance = await this.menu.show(target, {
           content: this.element,
-          autoUpdate: false,
+          autoUpdate: this.cardTarget.dataset["autoUpdateCard"] === "true",
+          hide: true,
           identifier: "usercard",
           padding: {
             top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
