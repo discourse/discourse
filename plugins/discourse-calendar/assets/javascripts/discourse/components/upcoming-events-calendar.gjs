@@ -175,6 +175,7 @@ export default class UpcomingEventsCalendar extends Component {
       info.view,
       currentYear,
       currentMonth,
+      currentDay,
       isViewChanged
     );
 
@@ -209,6 +210,7 @@ export default class UpcomingEventsCalendar extends Component {
     calendarView,
     currentYear,
     currentMonth,
+    currentDay,
     isViewChanged = false
   ) {
     const viewStart = moment(calendarView.currentStart);
@@ -217,10 +219,6 @@ export default class UpcomingEventsCalendar extends Component {
 
     // For view changes, preserve the current date from URL
     if (isViewChanged) {
-      console.log(
-        "VIEW CHANGE DETECTED - preserving day:",
-        parseInt(currentParams.day, 10)
-      );
       return {
         year: currentYear,
         month: currentMonth,
