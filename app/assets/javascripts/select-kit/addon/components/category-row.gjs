@@ -10,10 +10,13 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import Category from "discourse/models/category";
+import { i18n } from "discourse-i18n";
 
 export default class CategoryRow extends Component {
   @service site;
   @service siteSettings;
+
+  readOnlyDesc = i18n("category_row.read_only_description");
 
   get isNone() {
     return this.rowValue === this.args.selectKit?.noneItem;
@@ -90,7 +93,7 @@ export default class CategoryRow extends Component {
 
   get title() {
     if (this.category) {
-      return this.categoryName;
+      return this.isReadOnly ? this.readOnlyDesc : this.categoryName;
     }
   }
 

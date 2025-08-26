@@ -2818,6 +2818,7 @@ en:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
       read_only: "read-only"
+      read_only_description: "This category is read-only so you cannot choose it for this topic"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
