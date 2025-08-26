@@ -13,7 +13,7 @@ import escapeRegExp from "discourse/lib/escape-regexp";
  * EmberArray, or TrackedArray alternatives.
  **/
 
-const DEPRECATION_ID_PREFIX = "discourse.ember.native-array-extensions";
+const DEPRECATION_ID_PREFIX = "discourse.native-array-extensions";
 const SILENCED_ARRAY_DEPRECATIONS = new RegExp(
   `^${escapeRegExp(DEPRECATION_ID_PREFIX)}\..+$`
 );
