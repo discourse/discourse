@@ -13,7 +13,7 @@
     "@babel/core": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
     "@babel/standalone": "^7.28.3",
-    "@csstools/postcss-light-dark-function": "^2.0.9",
+    "@csstools/postcss-light-dark-function": "^2.0.10",
     "@rollup/browser": "^4.48.1",
     "@rollup/plugin-babel": "^6.0.4",
     "abort-controller": "^3.0.0",
