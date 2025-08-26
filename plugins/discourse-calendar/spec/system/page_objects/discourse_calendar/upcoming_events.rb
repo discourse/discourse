@@ -28,6 +28,10 @@ module PageObjects
           find(".fc-timeGridDay-button").click
         end
 
+        def open_week_view
+          find(".fc-timeGridWeek-button").click
+        end
+
         def open_mine_events
           find(".fc-mineEvents-button").click
         end

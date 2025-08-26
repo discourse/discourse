@@ -146,6 +146,18 @@ export default class UpcomingEventsCalendar extends Component {
 
     const isViewChanged = currentParams.view !== view;
 
+    // For view changes, always preserve the current URL parameters
+    if (isViewChanged) {
+      this.router.replaceWith(
+        this.router.currentRouteName,
+        view,
+        currentYear,
+        currentMonth,
+        currentDay
+      );
+      return;
+    }
+
     const {
       year: urlYear,
       month: urlMonth,
@@ -167,20 +179,8 @@ export default class UpcomingEventsCalendar extends Component {
         currentMonth !== urlMonth ||
         currentDay !== urlDay);
 
-    // Prevent URL changes during calendar initialization, but allow view changes
+    // Prevent URL changes during calendar initialization
     if (this._isInitializing) {
-      // Allow view changes even during initialization
-      if (isViewChanged) {
-        this.router.replaceWith(
-          this.router.currentRouteName,
-          view,
-          urlYear,
-          urlMonth,
-          urlDay
-        );
-      }
-
-      // Mark initialization as complete after initial setup
       this._isInitializing = false;
       return;
     }
@@ -209,6 +209,10 @@ export default class UpcomingEventsCalendar extends Component {
 
     // For view changes, preserve the current date from URL
     if (isViewChanged) {
+      console.log(
+        "VIEW CHANGE DETECTED - preserving day:",
+        parseInt(currentParams.day, 10)
+      );
       return {
         year: currentYear,
         month: currentMonth,
@@ -244,10 +248,21 @@ export default class UpcomingEventsCalendar extends Component {
         };
       }
     } else {
+      // FORCE week/day views to use current URL day - this is the fix for view switching
+      const urlDay = parseInt(currentParams.day, 10);
+      if (urlDay && urlDay > 0 && urlDay <= 31) {
+        return {
+          year: currentYear,
+          month: currentMonth,
+          day: urlDay,
+        };
+      }
+
+      // If no URL day, still try to use current day from URL params
       return {
-        year: viewStart.year(),
-        month: viewStart.month() + 1,
-        day: viewStart.date(),
+        year: currentYear,
+        month: currentMonth,
+        day: currentDay,
       };
     }
   }

@@ -261,11 +261,12 @@ describe "Upcoming Events", type: :system do
 
   describe "switching from month to week view" do
     it "keeps the same day" do
-      visit("/upcoming-events/month/2025/8/21")
+      visit("/upcoming-events/month/2025/9/16")
 
-      upcoming_events.open_day_view
+      upcoming_events.open_week_view
 
-      expect(page).to have_current_path("/upcoming-events/day/2025/8/21")
+      expect(page).to have_content("Sep 15 – 21, 2025")
+      expect(page).to have_current_path("/upcoming-events/week/2025/9/16")
     end
   end
 end
