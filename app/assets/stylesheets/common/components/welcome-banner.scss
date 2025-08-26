@@ -32,8 +32,6 @@
       background-position: center;
       background-repeat: no-repeat;
       margin-bottom: var(--space-2);
-      text-shadow: var(--secondary) var(--space-half) var(--space-half)
-        var(--space);
     }
 
     @include viewport.until(md) {
