@@ -250,12 +250,12 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   },
   {
     handler: ["silence", "counter"],
-    matchId: /^discourse\.ember\.native-array-extensions\..+$/,
+    matchId: /^discourse\.native-array-extensions\..+$/,
     env: ["test"],
   },
   {
     handler: "silence",
-    matchId: /^discourse\.ember\.native-array-extensions\..+$/,
+    matchId: /^discourse\.native-array-extensions\..+$/,
     env: ["development", "production"],
   },
 ]);
