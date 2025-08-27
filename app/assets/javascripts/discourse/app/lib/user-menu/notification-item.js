@@ -70,7 +70,7 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
   get avatarTemplate() {
     const acting_user_avatar = this.notification.acting_user_avatar_template;
     return applyValueTransformer(
-      "notification-acting-user-avatar",
+      "user-menu-notification-item-acting-user-avatar",
       acting_user_avatar,
       { notification: this.notification }
     );

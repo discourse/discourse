@@ -92,27 +92,16 @@ acceptance("User Notifications", function (needs) {
     );
   });
 
-  test("notification-label transformer can customize notification labels", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer("notification-label", () => {
-        return "Custom Label";
-      });
-    });
-
-    await visit("/u/eviltrout/notifications");
-
-    assert
-      .dom(".user-notifications-list .notification:first-child")
-      .includesText("Custom Label", "custom label is displayed");
-  });
-
-  test("notification-acting-user-avatar transformer can customize avatars in user menu", async function (assert) {
+  test("user-menu-notification-item-acting-user-avatar transformer can customize avatars in user menu", async function (assert) {
     this.siteSettings.show_user_menu_avatars = true;
 
     withPluginApi((api) => {
-      api.registerValueTransformer("notification-acting-user-avatar", () => {
-        return "/custom-avatar.png";
-      });
+      api.registerValueTransformer(
+        "user-menu-notification-item-acting-user-avatar",
+        () => {
+          return "/custom-avatar.png";
+        }
+      );
     });
 
     await visit("/");

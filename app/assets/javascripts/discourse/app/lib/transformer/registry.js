@@ -45,8 +45,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "move-to-topic-move-options",
   "navigation-bar-dropdown-icon",
   "navigation-bar-dropdown-mode",
-  "notification-acting-user-avatar",
-  "notification-label",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
   "post-article-class",
@@ -80,4 +78,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-mobile-layout",
   "topic-list-item-style",
   "user-field-components",
+  "user-menu-notification-item-acting-user-avatar",
 ]);
