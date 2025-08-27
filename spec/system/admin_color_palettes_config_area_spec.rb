@@ -38,6 +38,8 @@ describe "Admin Color Palettes Config Area Page", type: :system do
     config_area.visit
 
     config_area.create_button.click
+    create_color_palette_modal.base_dropdown.expand
+    expect(page).to have_css(".color-palette-picker-row")
     create_color_palette_modal.base_dropdown.select_row_by_name("A Test Palette 2")
 
     create_color_palette_modal.create_button.click
