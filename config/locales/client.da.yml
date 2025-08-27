@@ -794,7 +794,10 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
+        note_added: "Moderator note"
       notes:
+        add_note_button: "Tilføj note"
+        placeholder: "Skriv din note her..."
         chars_remaining: "%{count} tegn tilbage"
         delete_note: "Slet denne note"
         delete: "Slet"
@@ -802,7 +805,9 @@ da:
       posted_in: "Skrevet i"
       review_user: "Bruger"
       copy_link: "Kopiér link"
+      view_source: "Vis kilde"
       insights:
+        title: "Indsigter"
         user_activity: "Brugeraktivitet"
         activities:
           new_account: "ny konto"
@@ -1212,6 +1217,9 @@ da:
       topic_stat_sentence_month:
         one: "%{count} nyt emne den sidste måned."
         other: "%{count} nye emner i den sidste måned."
+      n_more:
+        one: "Kategorier (%{count} mere)…"
+        other: "Kategorier (%{count} mere)…"
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -1234,6 +1242,7 @@ da:
     user_fields:
       none: "(vælg en indstilling)"
       required: 'Indtast venligst en værdi for "%{name}"'
+      required_checkbox: 'Feltet "%{name}" er påkrævet'
       same_as_password: "Din adgangskode bør ikke gentages i andre felter"
       optional: (valgfri)
     user:
