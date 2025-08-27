@@ -235,6 +235,8 @@ export class DiscourseDeprecationWorkflow {
 /**
  * Singleton DiscourseDeprecationWorkflow instance containing the current deprecation handling rules
  *
+ * IMPORTANT: The first match wins, so the order of the workflows is relevant.
+ *
  * Each workflow config item should have:
  * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", and/or "counter"
  * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
