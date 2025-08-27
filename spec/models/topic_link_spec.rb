@@ -584,4 +584,12 @@ RSpec.describe TopicLink do
       expect { TopicLink.extract_from(post) }.to_not raise_error
     end
   end
+
+  it "extract_from performs well" do
+    raw = "[a](#{"/a" * 25_000})"
+    post = Fabricate.build(:post, user:, raw:)
+    post.cooked = post.cook(raw)
+
+    expect { Timeout.timeout(2) { TopicLink.extract_from(post) } }.not_to raise_error
+  end
 end

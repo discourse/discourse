@@ -1,0 +1,14 @@
+.ace-wrapper .grippie {
+  background: var(--primary-low);
+  border-top: 1px solid var(--primary-400);
+
+  &::before {
+    border-top: 3px double var(--primary-medium);
+  }
+}
+
+.ace-wrapper {
+  border: 1px solid var(--primary-400);
+  border-radius: var(--d-input-border-radius);
+  overflow: hidden;
+}

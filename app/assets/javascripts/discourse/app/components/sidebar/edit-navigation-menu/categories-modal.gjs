@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
+import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -107,10 +108,10 @@ function findPartialCategories(categories) {
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
-  @service site;
   @service siteSettings;
 
   @tracked initialLoad = true;
+  @tracked filtered = false;
   @tracked fetchedCategoriesGroupings = [];
   @tracked
   selectedCategoryIds = new TrackedSet([
@@ -199,10 +200,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       categories = [...this.fetchedCategories.slice(index), ...categories];
     }
 
-    this.partialCategoryInfos = new Map([
-      ...this.partialCategoryInfos,
-      ...findPartialCategories(categories),
-    ]);
+    // Recalculate the partialCategoryInfos using the full set of categories
+    // to properly identify categories that now have exactly 5 subcategories
+    // after loading more via the intersection observer
+    this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
 
     this.recomputeGroupings();
   }
@@ -223,10 +224,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         ...this.fetchedCategories.slice(index),
       ];
 
-      this.partialCategoryInfos = new Map([
-        ...this.partialCategoryInfos,
-        ...findPartialCategories(subcategories),
-      ]);
+      // Recalculate partial categories based on the full set of categories
+      // to ensure we properly identify categories with exactly 5 subcategories
+      this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
 
       this.partialCategoryInfos.set(id, {
         offset: offset + subcategories.length,
@@ -258,6 +258,8 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @serialized
   async performSearch() {
+    this.filtered = false;
+
     const requestedFilter = this.selectedFilter;
     const requestedMode = this.selectedMode;
     const selectedCategoriesNeedsUpdate =
@@ -317,9 +319,11 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       this.lastPage = false;
       this.initialLoad = false;
       this.loadAnotherPage = false;
+      this.filtered = true;
     }
   }
 
+  @action
   async loadMore() {
     this.loadAnotherPage = true;
     this.debouncedSendRequest();
@@ -427,7 +431,12 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       @closeModal={{@closeModal}}
       class="sidebar__edit-navigation-menu__categories-modal"
     >
-      <form class="sidebar-categories-form">
+      <form
+        class={{concatClass
+          "sidebar-categories-form"
+          (if this.filtered "--filtered")
+        }}
+      >
         {{#if this.initialLoad}}
           <div class="sidebar-categories-form__loading">
             {{loadingSpinner size="small"}}
@@ -494,7 +503,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                           <DButton
                             @label="sidebar.categories_form_modal.show_more"
                             @action={{fn this.loadSubcategories c.id c.offset}}
-                            class="btn-flat"
+                            class="sidebar-categories-form__show-more-btn btn-flat"
                           />
                         </div>
                       </div>

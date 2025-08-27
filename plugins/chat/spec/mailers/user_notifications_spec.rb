@@ -2,17 +2,17 @@
 
 describe UserNotifications do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
-  fab!(:other) { Fabricate(:user) }
-  fab!(:another) { Fabricate(:user) }
-  fab!(:someone) { Fabricate(:user) }
+  fab!(:other, :user)
+  fab!(:another, :user)
+  fab!(:someone, :user)
   fab!(:group) { Fabricate(:group, users: [user, other]) }
 
-  fab!(:followed_channel) { Fabricate(:category_channel) }
-  fab!(:followed_channel_2) { Fabricate(:category_channel) }
-  fab!(:followed_channel_3) { Fabricate(:category_channel) }
-  fab!(:non_followed_channel) { Fabricate(:category_channel) }
-  fab!(:muted_channel) { Fabricate(:category_channel) }
-  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:followed_channel, :category_channel)
+  fab!(:followed_channel_2, :category_channel)
+  fab!(:followed_channel_3, :category_channel)
+  fab!(:non_followed_channel, :category_channel)
+  fab!(:muted_channel, :category_channel)
+  fab!(:unseen_channel, :category_channel)
   fab!(:private_channel) { Fabricate(:private_category_channel, group:) }
   fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
   fab!(:direct_message_2) { Fabricate(:direct_message_channel, users: [user, another]) }

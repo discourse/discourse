@@ -6,6 +6,11 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 @disableImplicitInjections
 export default class UserStatusService extends Service {
   @service currentUser;
+  @service siteSettings;
+
+  get isEnabled() {
+    return this.siteSettings.enable_user_status;
+  }
 
   async set(status, pauseNotifications) {
     await ajax({

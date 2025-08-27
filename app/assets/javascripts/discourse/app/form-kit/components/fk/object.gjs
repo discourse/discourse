@@ -9,65 +9,55 @@ export default class FKObject extends Component {
   }
 
   get name() {
-    return this.args.parentName
-      ? `${this.args.parentName}.${this.args.name}`
-      : this.args.name;
-  }
-
-  get keys() {
-    return Object.keys(this.objectData).map((name) => {
-      return { name };
-    });
-  }
-
-  entryData(name) {
-    return this.objectData[name];
+    return this.args.name
+      ? `${this.args.parentName ? this.args.parentName + "." : ""}${
+          this.args.name
+        }`
+      : this.args.parentName;
   }
 
   <template>
-    <div class="form-kit__object">
-      {{#each this.keys key="name" as |key|}}
-        {{yield
-          (hash
-            Field=(component
-              FKField
-              errors=@errors
-              addError=@addError
-              data=@data
-              set=@set
-              registerField=@registerField
-              unregisterField=@unregisterField
-              triggerRevalidationFor=@triggerRevalidationFor
-              parentName=this.name
-            )
-            Object=(component
-              FKObject
-              errors=@errors
-              addError=@addError
-              data=@data
-              set=@set
-              registerField=@registerField
-              unregisterField=@unregisterField
-              triggerRevalidationFor=@triggerRevalidationFor
-              parentName=this.name
-            )
-            Collection=(component
-              FKCollection
-              errors=@errors
-              addError=@addError
-              data=@data
-              set=@set
-              registerField=@registerField
-              unregisterField=@unregisterField
-              triggerRevalidationFor=@triggerRevalidationFor
-              parentName=this.name
-              remove=@remove
-            )
+    <div class="form-kit__object" ...attributes>
+      {{yield
+        (hash
+          Field=(component
+            FKField
+            errors=@errors
+            addError=@addError
+            data=@data
+            set=@set
+            registerField=@registerField
+            unregisterField=@unregisterField
+            triggerRevalidationFor=@triggerRevalidationFor
+            parentName=this.name
           )
-          key.name
-          (this.entryData key.name)
-        }}
-      {{/each}}
+          Object=(component
+            FKObject
+            errors=@errors
+            addError=@addError
+            data=@data
+            set=@set
+            registerField=@registerField
+            unregisterField=@unregisterField
+            triggerRevalidationFor=@triggerRevalidationFor
+            parentName=this.name
+            remove=@remove
+          )
+          Collection=(component
+            FKCollection
+            errors=@errors
+            addError=@addError
+            data=@data
+            set=@set
+            registerField=@registerField
+            unregisterField=@unregisterField
+            triggerRevalidationFor=@triggerRevalidationFor
+            parentName=this.name
+            remove=@remove
+          )
+        )
+        this.objectData
+      }}
     </div>
   </template>
 }

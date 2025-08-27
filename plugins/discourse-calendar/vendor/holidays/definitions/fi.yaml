@@ -1,0 +1,234 @@
+# Finnish holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2010-12-28.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Finland
+---
+months:
+  0:
+  - name: Pitkäperjantai
+    regions: [fi]
+    function: easter(year)
+    function_modifier: -2
+  - name: Pääsiäispäivä
+    regions: [fi]
+    function: easter(year)
+  - name: 2. Pääsiäispäivä
+    regions: [fi]
+    function: easter(year)
+    function_modifier: 1
+  - name: Helatorstai # Ascension Day
+    regions: [fi]
+    function: easter(year)
+    function_modifier: 39
+  - name: Helluntaipäivä # Whitsunday
+    regions: [fi]
+    function: easter(year)
+    function_modifier: 49
+  - name: Pyhäinpäivä # All Saint's Day
+    regions: [fi]
+    function: fi_pyhainpaiva(year)
+  1:
+  - name: Uudenvuodenpäivä
+    regions: [fi]
+    mday: 1
+  - name: Loppiainen
+    regions: [fi]
+    mday: 6
+  5:
+  - name: Vappu
+    regions: [fi]
+    mday: 1
+  6:
+  - name: Juhannusaatto
+    regions: [fi]
+    function: fi_juhannusaatto(year)
+  - name: Juhannuspäivä
+    regions: [fi]
+    function: fi_juhannuspaiva(year)
+  12:
+  - name: Itsenäisyyspäivä
+    regions: [fi]
+    mday: 6
+  - name: Jouluaatto
+    regions: [fi]
+    mday: 24
+  - name: Joulupäivä
+    regions: [fi]
+    mday: 25
+  - name: Tapaninpäivä
+    regions: [fi]
+    mday: 26
+
+methods:
+  fi_juhannusaatto:
+    # Finland: Mid-summer eve (Friday between June 19–25)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,6,19)
+      if date.wday > 5 #if 19.6 is saturday
+        date += 6
+      else
+        date += (5 - date.wday)
+      end
+      date
+  fi_juhannuspaiva:
+    # Finland: Mid-summer (Saturday between June 20–26)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,6,20)
+      date += (6 - date.wday)
+      date
+  fi_pyhainpaiva:
+    # Finland: All Saint's Day (Saturday between Oct 31 and Nov 6)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,10,31)
+      date += (6 - date.wday)
+      date
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Uudenvuodenpäivä"
+  - given:
+      date: '2008-01-06'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Loppiainen"
+  - given:
+      date: '2008-03-21'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pitkäperjantai"
+  - given:
+      date: '2008-03-23'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pääsiäispäivä"
+  - given:
+      date: '2008-03-24'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "2. Pääsiäispäivä"
+  - given:
+      date: '2008-05-01'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Helatorstai"
+  - given:
+      date: '2008-05-11'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Helluntaipäivä"
+  - given:
+      date: '2009-06-19'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannusaatto"
+  - given:
+      date: '2010-06-25'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannusaatto"
+  - given:
+      date: '2011-06-24'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannusaatto"
+  - given:
+      date: '2012-06-22'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannusaatto"
+  - given:
+      date: '2013-06-21'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannusaatto"
+  - given:
+      date: '2005-06-25'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannuspäivä"
+  - given:
+      date: '2006-06-24'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannuspäivä"
+  - given:
+      date: '2007-06-23'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannuspäivä"
+  - given:
+      date: '2008-06-21'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Juhannuspäivä"
+  - given:
+      date: '2005-11-05'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pyhäinpäivä"
+  - given:
+      date: '2006-11-04'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pyhäinpäivä"
+  - given:
+      date: '2007-11-03'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pyhäinpäivä"
+  - given:
+      date: '2008-11-01'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Pyhäinpäivä"
+  - given:
+      date: '2008-12-06'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Itsenäisyyspäivä"
+  - given:
+      date: '2008-12-24'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Jouluaatto"
+  - given:
+      date: '2008-12-25'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Joulupäivä"
+  - given:
+      date: '2008-12-26'
+      regions: ["fi"]
+      options: ["informal"]
+    expect:
+      name: "Tapaninpäivä"

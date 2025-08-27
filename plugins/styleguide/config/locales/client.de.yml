@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          styleguide: "Discourse Styleguide"
+          styleguide: "Discourse – Styleguide"
   js:
     styleguide:
       title: "Styleguide"
@@ -30,6 +30,8 @@ de:
           title: "Datum/Uhrzeit"
         menus:
           title: "Menüs"
+        multi_select:
+          title: "Mehrfachauswahl"
         toasts:
           title: "Toasts"
         font_scale:
@@ -87,8 +89,8 @@ de:
           title: "Themenübersicht"
         site_header:
           title: "Seitenkopf"
-        suggested_topics:
-          title: "Vorgeschlagene Themen"
+        more_topics:
+          title: "Weitere Themen"
         post_menu:
           title: "Beitrag-Aktionen"
         modal:

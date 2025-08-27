@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  js:
+    category:
+      sort_options:
+        votes: "Votos"
+    topic_voting:
+      title: "Votação do tópico"
+      reached_limit: "Você está sem votos, remova um voto existente!"
+      list_votes: "Mostrar seus votos"
+      votes_nav_help: "tópicos com a maioria dos votos"
+      voted: "Você votou neste tópico"
+      allow_topic_voting: "Permitir que usuários(as) votem em tópicos desta categoria"
+      vote_title: "Votar"
+      vote_title_plural: "Votos"
+      voted_title: "Votou"
+      voting_closed_title: "Fechados"
+      voting_limit: "Limite"
+      votes_left:
+        one: "Você tem %{count} voto restante, veja <a href='%{path}'>seus votos</a>."
+        other: "Você tem %{count} votos restantes, veja <a href='%{path}'>seus votos</a>."
+      votes_left_button_title:
+        one: "Você tem %{count} voto restante."
+        other: "Você tem %{count} votos restantes."
+      votes:
+        one: "%{count} voto"
+        other: "%{count} votos"
+      anonymous_button:
+        one: "Votar"
+        other: "Votos"
+      remove_vote: "Remover voto"
+      no_votes_title_self: "Você ainda não votou em nenhum tópico"
+      no_votes_title_others: "%{username} ainda não votou em nenhum tópico"
+    filters:
+      votes:
+        title: "Votos"
+        help: "tópicos com a maioria dos votos"
+      my_votes:
+        title: "Meus votos"
+        help: "tópicos em que você votou"
+    search:
+      most_votes: "Mais votados"
+      advanced:
+        vote:
+          count:
+            label: "Contagem mínima de votos"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Evento de votação no tópico"
+          topic_upvote: "Quando um(a) usuário(a) votar em um tópico"
+          topic_unvote: "Quando um(a) usuário(a) cancelar o voto em um tópico"

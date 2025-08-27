@@ -57,7 +57,7 @@ export default class AccountController extends Controller {
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
-      this.model,
+      this.model.id,
       this.canModeratorsViewEmails,
       this.currentUser
     ).canCheckEmails;
@@ -87,16 +87,12 @@ export default class AccountController extends Controller {
 
   @discourseComputed("model.associated_accounts.[]")
   authProviders(accounts) {
-    const allMethods = findAll();
-
-    const result = allMethods.map((method) => {
-      return {
+    return findAll()
+      .map((method) => ({
         method,
-        account: accounts.find((account) => account.name === method.name), // Will be undefined if no account
-      };
-    });
-
-    return result.filter((value) => value.account || value.method.can_connect);
+        account: accounts.find(({ name }) => name === method.name),
+      }))
+      .filter((value) => value.account || value.method.can_connect);
   }
 
   @discourseComputed(

@@ -4,23 +4,25 @@ import hbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-link-arrow", {
   tagName: "div.post-link-arrow",
 
   template: hbs`
-      <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply"}} aria-label={{i18n
-        "topic.jump_reply_aria" username=attrs.name
-      }}>
+    <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply"}} aria-label={{i18n
+      "topic.jump_reply_aria" username=attrs.name
+    }}>
       {{#if attrs.above}}
         {{d-icon "arrow-up"}}
       {{else}}
         {{d-icon "arrow-down"}}
       {{/if}}
       {{i18n "topic.jump_reply_button"}}
-      </a>
+    </a>
   `,
 });
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("embedded-post", {
   tagName: "div.reply",
   buildKey: (attrs) => `embedded-post-${attrs.id}`,
@@ -57,6 +59,7 @@ export default createWidget("embedded-post", {
   },
 
   init() {
+    // TODO (glimmer-post-stream): How does this fit into the Glimmer lifecycle?
     this.postContentsDestroyCallbacks = [];
   },
 

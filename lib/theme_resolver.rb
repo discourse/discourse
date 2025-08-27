@@ -26,8 +26,7 @@ module ThemeResolver
       theme_id = ids.first if guardian.allow_themes?(ids)
     end
 
-    if theme_id.blank? && SiteSetting.default_theme_id != -1 &&
-         guardian.allow_themes?([SiteSetting.default_theme_id])
+    if theme_id.blank? && guardian.allow_themes?([SiteSetting.default_theme_id])
       theme_id = SiteSetting.default_theme_id
     end
 

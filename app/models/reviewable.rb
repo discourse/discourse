@@ -33,6 +33,7 @@ class Reviewable < ActiveRecord::Base
 
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
+  has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -75,6 +76,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.types
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
+  end
+
+  def self.scrubbable_types
+    [ReviewableUser]
   end
 
   def self.sti_names
@@ -350,7 +355,8 @@ class Reviewable < ActiveRecord::Base
     valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
 
     # Ensure the user has access to the action
-    actions = actions_for(args[:guardian] || Guardian.new(performed_by), args)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+    actions = actions_for(guardian, args)
     raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
@@ -379,6 +385,8 @@ class Reviewable < ActiveRecord::Base
         updated_reviewable_ids: result.remove_reviewable_ids,
       )
     end
+
+    notify_users(result, guardian)
 
     result
   end
@@ -421,13 +429,16 @@ class Reviewable < ActiveRecord::Base
 
     if preload
       result =
-        result.includes(
-          { created_by: :user_stat },
-          :topic,
-          :target,
-          :target_created_by,
-          :reviewable_histories,
-        ).includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+        result
+          .includes(
+            { created_by: :user_stat },
+            :topic,
+            :target,
+            :target_created_by,
+            :reviewable_histories,
+          )
+          .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+          .includes(reviewable_notes: { user: :user_stat })
     end
     return result if user.admin?
 
@@ -620,11 +631,24 @@ class Reviewable < ActiveRecord::Base
     @@serializers[type] ||= lookup_serializer_for(type)
   end
 
+  # @TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated, it now lives in ReviewableActionBuilder.
   def create_result(status, transition_to = nil)
     result = PerformResult.new(self, status)
     result.transition_to = transition_to
     yield result if block_given?
     result
+  end
+
+  def notify_users(result, guardian)
+    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
+
+    if SiteSetting.enable_category_group_moderation? && category
+      group_ids.merge(category.moderating_group_ids)
+    end
+
+    data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
+
+    MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
   end
 
   def self.scores_with_topics
@@ -717,6 +741,7 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
+  # TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated.
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(

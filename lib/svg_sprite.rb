@@ -1,15 +1,15 @@
 # frozen_string_literal: true
-require_relative "deprecated_icon_handler"
-
 module SvgSprite
   SVG_ICONS =
     Set.new(
       %w[
         a
         address-book
+        address-card
         align-left
         anchor
         angle-down
+        angle-left
         angle-right
         angle-up
         angles-down
@@ -64,9 +64,11 @@ module SvgSprite
         circle-minus
         circle-plus
         circle-question
+        circle-user
         circle-xmark
         clock
         clock-rotate-left
+        cloud-arrow-down
         cloud-arrow-up
         code
         comment
@@ -90,8 +92,16 @@ module SvgSprite
         discourse-other-tab
         discourse-sidebar
         discourse-sparkles
+        discourse-table
+        discourse-text
         discourse-threads
+        discourse-add-translation
         download
+        discourse-h1
+        discourse-h2
+        discourse-h3
+        discourse-h4
+        discourse-h5
         earth-americas
         ellipsis
         ellipsis-vertical
@@ -153,6 +163,7 @@ module SvgSprite
         flask
         folder
         folder-open
+        font
         forward
         forward-fast
         forward-step
@@ -196,6 +207,7 @@ module SvgSprite
         palette
         paper-plane
         pause
+        pen
         pencil
         play
         plug
@@ -212,6 +224,7 @@ module SvgSprite
         robot
         rocket
         rotate
+        screwdriver-wrench
         scroll
         share
         shield-halved
@@ -246,6 +259,7 @@ module SvgSprite
         up-right-from-square
         upload
         user
+        user-check
         user-gear
         user-group
         user-pen
@@ -259,8 +273,6 @@ module SvgSprite
         xmark
       ],
     )
-
-  CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
@@ -289,9 +301,13 @@ module SvgSprite
       .to_h
   end
 
+  def self.core_svgs_files
+    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+  end
+
   def self.core_svgs
     @core_svgs ||=
-      CORE_SVG_SPRITES.reduce({}) do |symbols, path|
+      core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
   end
@@ -323,7 +339,7 @@ module SvgSprite
       cache
         .defer_get_set_bulk(
           Theme.transform_ids(theme_id),
-          lambda { |theme_id| "theme_svg_sprites_#{theme_id}" },
+          lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
         ) do |theme_ids|
           theme_field_uploads =
             ThemeField.where(
@@ -343,12 +359,15 @@ module SvgSprite
           end
 
           theme_sprites
-            .map do |(theme_id, upload_id, sprite)|
+            .map do |(_theme_id, upload_id, sprite)|
               begin
-                [theme_id, symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false)]
+                [
+                  _theme_id,
+                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
+                ]
               rescue => e
                 Rails.logger.warn(
-                  "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+                  "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
                 )
               end
             end
@@ -379,7 +398,7 @@ module SvgSprite
         .merge(theme_icons(theme_id))
         .merge(custom_icons(theme_id))
         .delete_if { |i| i.blank? || i.include?("/") }
-        .map! { |i| process(i.dup) }
+        .map!(&:strip)
         .merge(SVG_ICONS)
         .sort
     end
@@ -425,9 +444,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.search(searched_icon)
-    searched_icon = process(searched_icon.dup)
-
-    svgs_for(SiteSetting.default_theme_id)[searched_icon] || false
+    svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
   end
 
   def self.icon_picker_search(keyword, only_available = false)
@@ -472,7 +489,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
-      SiteSetting.settings_hash.select do |key, value|
+      SiteSetting.settings_hash.each do |key, value|
         site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
       end
 
@@ -518,10 +535,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
     custom_svgs(theme_id).keys
-  end
-
-  def self.process(icon_name)
-    DeprecatedIconHandler.convert_icon(icon_name.strip)
   end
 
   def self.get_set_cache(key, &block)

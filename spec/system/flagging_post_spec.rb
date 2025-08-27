@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Flagging post", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:first_post) { Fabricate(:post, topic: topic) }
@@ -53,6 +53,27 @@ describe "Flagging post", type: :system do
       flag_modal.confirm_flag
 
       expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+    end
+  end
+
+  describe "As send a message to user" do
+    before do
+      SiteSetting.allow_user_locale = true
+      current_user.update!(locale: "en_GB")
+      sign_in(current_user)
+    end
+
+    it do
+      topic_page.visit_topic(topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.click_post_action_button(post_to_flag, :flag)
+      flag_modal.choose_type(:notify_user)
+
+      flag_modal.fill_message("This looks totally illegal to me.")
+
+      flag_modal.confirm_flag
+
+      expect(page).to have_content(I18n.t("js.post.actions.by_you.notify_user"))
     end
   end
 

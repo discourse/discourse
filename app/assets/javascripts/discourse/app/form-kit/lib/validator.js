@@ -145,4 +145,52 @@ export default class Validator {
       return i18n("form_kit.errors.required");
     }
   }
+
+  startsWithValidator(value, rule, type) {
+    let error = false;
+
+    if (isBlank(value)) {
+      return;
+    }
+
+    switch (type) {
+      case "input":
+      case "input-text":
+      case "text":
+        if (!value.startsWith(rule.prefix)) {
+          error = true;
+        }
+        break;
+    }
+
+    if (error) {
+      return i18n("form_kit.errors.starts_with", {
+        prefix: rule.prefix,
+      });
+    }
+  }
+
+  endsWithValidator(value, rule, type) {
+    let error = false;
+
+    if (isBlank(value)) {
+      return;
+    }
+
+    switch (type) {
+      case "input":
+      case "input-text":
+      case "text":
+        if (!value.endsWith(rule.suffix)) {
+          error = true;
+        }
+        break;
+    }
+
+    if (error) {
+      return i18n("form_kit.errors.ends_with", {
+        suffix: rule.suffix,
+      });
+    }
+  }
 }

@@ -10,7 +10,8 @@ RSpec.describe SiteSetting::Update do
 
     fab!(:admin)
     let(:params) { { settings: } }
-    let(:settings) { { setting_name => new_value } }
+    let(:settings) { [{ setting_name: setting_name, value: new_value, backfill: backfill }] }
+    let(:backfill) { false }
     let(:options) { { allow_changing_hidden: } }
     let(:dependencies) { { guardian: } }
     let(:setting_name) { :title }
@@ -28,6 +29,33 @@ RSpec.describe SiteSetting::Update do
       let(:guardian) { Guardian.new }
 
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
+    end
+
+    context "when trying to change a deprecated setting" do
+      let(:hard_deprecated_setting) { ["suggested_topics", "new_suggested_topics", false, "3.3"] }
+
+      let(:soft_deprecated_setting) do
+        ["suggested_topics", "suggested_topics_unread_max_days_old", true, "3.3"]
+      end
+
+      let(:setting_name) { :suggested_topics }
+      let(:new_value) { 3 }
+
+      context "when trying to change a hard deprecated setting" do
+        it "does not pass" do
+          stub_const(SiteSettings::DeprecatedSettings, "SETTINGS", [hard_deprecated_setting]) do
+            is_expected.to fail_a_policy(:settings_are_not_deprecated)
+          end
+        end
+      end
+
+      context "when trying to change a soft deprecated (renamed) setting" do
+        it "updates the new setting" do
+          stub_const(SiteSettings::DeprecatedSettings, "SETTINGS", [soft_deprecated_setting]) do
+            expect { result }.to change { SiteSetting.suggested_topics_unread_max_days_old }.to(3)
+          end
+        end
+      end
     end
 
     context "when the user changes a hidden setting" do
@@ -87,12 +115,33 @@ RSpec.describe SiteSetting::Update do
     end
 
     context "when one setting is having invalid value" do
-      let(:settings) { { title: "hello this is title", default_categories_watching: "999999" } }
+      let(:settings) do
+        [
+          { setting_name: "title", value: "hello this is title" },
+          { setting_name: "default_categories_watching", value: "999999" },
+        ]
+      end
 
       it { is_expected.to fail_a_policy(:values_are_valid) }
 
       it "does not update valid setting" do
         expect { result }.not_to change { SiteSetting.title }
+      end
+    end
+
+    context "when backfill is requested" do
+      let(:settings) do
+        [
+          { setting_name: "default_hide_profile", value: true, backfill: true },
+          { setting_name: "default_hide_presence", value: true, backfill: false },
+          { setting_name: "title", value: true, backfill: true },
+        ]
+      end
+
+      it "calls the relevant class for backfill" do
+        SiteSettingUpdateExistingUsers.expects(:call).once.with("default_hide_profile", true, false)
+
+        result
       end
     end
   end

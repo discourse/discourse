@@ -315,45 +315,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
-    "new-reply": |
-      歡迎來到 %{site_name} &mdash; — **感謝你的參與！**
-
-      - 務必尊重所有社群成員。
-
-      - 您的回應是否改善了討論？
-
-      - 歡迎有建設性的評論，但論述時請針對*觀點*，而別針對個人。
-
-      [請查看我們的社群守則](%{base_path}/guidelines)以進一步了解。此訊息面板只會在您發表 %{education_posts_text} 時顯示。
-    avatar: |
-      ### 來個大頭貼吧！
-
-      你剛參與了幾個討論話題及回覆，不過你的個人頭像不像你一般獨一無二
-      - 因為只有一個字！
-
-      **[造訪個人檔案](%{profile_path})** 並上傳代表你的頭像吧！
-
-      當每個人都有獨特的頭像時，大家能更容易的關注討論內容，以及找到對話中有趣的使用者！
-    sequential_replies: |
-      ### 請考慮在單一貼文中回覆多則貼文
-
-      與其發好幾篇回應，來回覆各則貼文，不如在同一篇貼文中包含各則貼文的摘錄，並使用 @使用者名稱 來回應。
-
-      你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
-
-      對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    too_many_replies: |
-      ### 你的回應數量已經達到本主題的回覆上限
-
-      非常抱歉，新使用者有只能回覆同一話題 %{newuser_max_replies_per_topic} 次的臨時限制。
-
-      除了繼續回覆外，請考慮修改你先前的回應，或參與其他話題。
-    reviving_old_topic: |
-      ### 重新開啟這個話題？
-
-      這個話題的最後一個回覆距離今天已有 **%{time_ago}**。你的回覆將讓話題重新出現在列表頂端，並通知原先參與話題討論的人。
-
-      你確定要開啟這個老話題嗎？
   activerecord:
     attributes:
       category:
@@ -1134,7 +1095,7 @@ zh_TW:
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
-    email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
@@ -1208,7 +1169,6 @@ zh_TW:
     enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
     enable_backups: "允許管理員建立備份"
-    automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
@@ -1253,7 +1213,6 @@ zh_TW:
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
     s3_cdn_url: "使用者 S3 資料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改變該設置後你必須重制所有老貼文。"
     avatar_sizes: "自動生成的頭像大小列表。"
-    external_system_avatars_url: "外部系統頭像服務的 URL 地址。可選參數是 {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "設定分類顏色的十六進制色彩值列表。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
     png_to_jpg_quality: "轉換後的JPG文件品質（1是最低品質，99是最佳品質，100是禁用）。"
@@ -1304,7 +1263,6 @@ zh_TW:
     email_time_window_mins: "等待多少 (n) 分鐘才給使用者發送通知電子郵件，好讓他們有機會自己來編輯和完善他們的貼文。"
     personal_email_time_window_seconds: "在送出任何私人訊息通知 email 之前，等待 (n) 秒，給使用者編輯與確認內容的機會。"
     email_posts_context: "在通知電郵中包含的作為上下文的回覆數量。"
-    flush_timings_secs: "刷新時間資料的頻率，以秒為單位"
     title_max_word_length: "在主題的標題中，允許的詞語長度的最大字元數。"
     title_min_entropy: "在主題的標題中，允許的最低熵值（單字）。"
     body_min_entropy: "在一個貼文內文中，允許的最低熵值（單字）。"
@@ -1313,7 +1271,6 @@ zh_TW:
     min_title_similar_length: "開始檢查相似主題的貼文標題的最少長度。"
     category_colors: "設定分類顏色的十六進制色彩值列表。"
     dark_mode_none: "無"
-    max_similar_results: "當使用者撰寫新主題時，顯示多少類似主題給使用者。比較根據標題和內容進行。"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
     topic_views_heat_low: "多少次瀏覽後，該視圖將稍稍高亮。"
     topic_views_heat_medium: "多少次瀏覽後，該視圖將明顯高亮。"
@@ -1418,11 +1375,9 @@ zh_TW:
     clean_up_inactive_users_after_days: "刪除尚未認證電子郵件的使用者（沒有發表任何討論主題、信任級別為0）之前的天數。要禁用自動刪除，請設定為0。"
     allowed_user_website_domains: "使用者網站要屬於這些域名中。用 | 分割。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
-    sequential_replies_threshold: "在被提醒回覆了太多連續的回覆前，使用者在主題中可以連續回覆的貼文的數量。"
     get_a_room_threshold: "在收到警告之前，使用者必須向同一主題中的同一個人發佈的討論話題數。"
     enable_mobile_theme: "為移動設備啟用移動友好的主題，但也能切換回完整站點。如果你想要使用自定義的響應式主題請禁用它。"
     dominating_topic_minimum_percent: "使用者在主題中的貼文占到多少百分比時使得使用者主導話題。"
-    disable_avatar_education_message: "禁用更改頭像操作的教育消息。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     header_dropdown_category_count: "在下拉式功能表中可以顯示多少類別"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
@@ -1435,7 +1390,6 @@ zh_TW:
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
-    warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
     embed_support_markdown: "支持嵌入式討論話題的Markdown格式"
     allowed_embed_selectors: "在 embeds 頁面允許 CSS 元素以逗號分隔清單"
     allowed_href_schemes: "除了 http 和 https 外允許的連結協議。"
@@ -2548,7 +2502,6 @@ zh_TW:
     latte: "棕色"
     summer: "夏季"
     dark_rose: "暗紅"
-    default_theme_name: "預設"
     light_theme_name: "輕亮"
     dark_theme_name: "黑暗"
     neutral_theme_name: "中性"
@@ -2803,10 +2756,6 @@ zh_TW:
         連續 365 天訪問論壇會被授予該勳章。天啊，整整一年了！
     badge_title_metadata: "%{display_name}徽章在%{site_title}"
   admin_login:
-    success: "已發送郵件"
-    errors:
-      unknown_email_address: "未知的郵件地址"
-      invalid_token: "token 無效"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
   performance_report:
@@ -2874,6 +2823,11 @@ zh_TW:
                 label: "最新版本"
               hot:
                 label: "熱門"
+      branding:
+        title: "網站標誌"
+        fields:
+          logo:
+            label: "主要標誌"
       corporate:
         fields:
           governing_law:
@@ -2940,7 +2894,7 @@ zh_TW:
         description: "同意檢舉並禁止使用者發文"
       agree_and_restore:
         description: "將話題變更為對所有人顯示。"
-      delete_single:
+      delete:
         title: "刪除"
       delete_and_ignore_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
@@ -2950,18 +2904,28 @@ zh_TW:
         description: "將話題變更為對所有人顯示。"
       disagree:
         title: "否"
+        complete: "檢舉已忽略."
       ignore:
         title: "忽略"
+        complete: "檢舉已忽略."
       ignore_and_do_nothing:
         title: "不做任何動作"
+        complete: "檢舉已忽略."
       approve:
         title: "批准"
+        complete: "帖文已批准."
       approve_post:
         title: "批准貼文"
+        complete: "帖文已批准."
+      approve_post_closed:
+        title: "批准貼文"
+        complete: "帖文已批准."
       reject_post:
         title: "否決貼文"
+        complete: "貼文被拒絕."
       approve_user:
         title: "批准使用者"
+        complete: "使用者已核准."
       reject_user:
         delete:
           title: "刪除使用者"
@@ -2971,7 +2935,12 @@ zh_TW:
           description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       reject:
         title: "拒絕"
+      no_action_user:
+        title: "沒有動作"
+      silence_user:
+        title: "使用者靜音"
       delete_user:
+        title: "刪除使用者"
         reason: "透過排隊中的審核刪除"
   fallback_username: "使用者"
   activemodel:

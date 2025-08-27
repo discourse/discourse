@@ -7,12 +7,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { emojiSearch } from "pretty-text/emoji";
+import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -44,10 +45,10 @@ const tonableEmojiTitle = (emoji, diversity) => {
 
 const tonableEmojiUrl = (emoji, scale) => {
   if (!emoji.tonable || scale === 1) {
-    return emoji.url;
+    return emojiUrlFor(emoji.name);
   }
 
-  return emoji.url.split(".png")[0] + `/${scale}.png`;
+  return emojiUrlFor(`${emoji.name}:t${scale}`);
 };
 
 export default class EmojiPicker extends Component {
@@ -147,6 +148,8 @@ export default class EmojiPicker extends Component {
   @action
   didInputFilter(value) {
     this.isFiltering = true;
+    this.term = value;
+
     if (!value?.length) {
       cancel(this.debouncedFilterHandler);
       this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
@@ -180,7 +183,7 @@ export default class EmojiPicker extends Component {
       this.filteredEmojis = results.map((emoji) => {
         return {
           name: emoji,
-          url: emojiUrlFor(emoji),
+          tonable: isSkinTonableEmoji(emoji),
         };
       });
 
@@ -450,7 +453,7 @@ export default class EmojiPicker extends Component {
       <div class="emoji-picker__filter-container">
         <PluginOutlet
           @name="emoji-picker-filter-container"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             term=this.term
             focusFilter=this.focusFilter
             registerFilterInput=this.registerFilterInput
@@ -460,7 +463,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <FilterInput
-            {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
+            {{didInsert this.focusFilter}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
@@ -502,7 +505,10 @@ export default class EmojiPicker extends Component {
                     width="18"
                     height="18"
                     class="emoji"
-                    src={{get emojis "0.url"}}
+                    src={{tonableEmojiUrl
+                      (get emojis "0")
+                      this.emojiStore.diversity
+                    }}
                   />
                 {{/if}}
               </DButton>

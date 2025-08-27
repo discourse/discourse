@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseRedis do
   it "ignore_readonly returns nil from a pure exception" do
-    result = DiscourseRedis.ignore_readonly { raise Redis::CommandError.new("READONLY") }
+    result = DiscourseRedis.ignore_readonly { raise Redis::ReadOnlyError }
     expect(result).to eq(nil)
   end
 
@@ -53,7 +53,7 @@ RSpec.describe DiscourseRedis do
       end
 
       it "should noop pipelined commands against a readonly redis" do
-        redis.without_namespace.expects(:pipelined).raises(Redis::CommandError.new("READONLY"))
+        redis.without_namespace.expects(:pipelined).raises(Redis::ReadOnlyError)
 
         set, incr = nil
 
@@ -69,7 +69,7 @@ RSpec.describe DiscourseRedis do
       end
 
       it "should noop multi commands against a readonly redis" do
-        redis.without_namespace.expects(:multi).raises(Redis::CommandError.new("READONLY"))
+        redis.without_namespace.expects(:multi).raises(Redis::ReadOnlyError)
 
         val =
           redis.multi do |transaction|
@@ -153,7 +153,7 @@ RSpec.describe DiscourseRedis do
       it "should noop a readonly redis" do
         expect(Discourse.recently_readonly?).to eq(false)
 
-        redis.without_namespace.expects(:set).raises(Redis::CommandError.new("READONLY"))
+        redis.without_namespace.expects(:set).raises(Redis::ReadOnlyError)
 
         redis.set("key", 1)
 

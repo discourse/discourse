@@ -68,7 +68,7 @@ module Middleware
             body = response.body
             body = [body] if String === body
             rack_response = [response.status, response.headers, body]
-            app = lambda { |env| rack_response }
+            app = lambda { |_| rack_response }
             EXCEPTION_RESPONSE_MIDDLEWARES.each { |middleware| app = middleware.new(app) }
             return app.call(env)
           end

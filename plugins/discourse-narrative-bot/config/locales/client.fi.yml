@@ -10,3 +10,8 @@ fi:
       welcome_post_type:
         new_user_track: "Aloita alkeiskurssi kaikkien uusien käyttäjien kanssa"
         welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pika-aloitusopas palstan käyttöön"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

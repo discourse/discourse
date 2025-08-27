@@ -27,6 +27,24 @@ class Report
     storage_stats: :storage_stats,
   }
 
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+
+  HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
+    consolidated_page_views_browser_detection
+    page_view_anon_reqs
+    page_view_logged_in_reqs
+  ]
+
+  COLORS = {
+    turquoise: "#1EB8D1",
+    lime: "#9BC53D",
+    purple: "#721D8D",
+    magenta: "#E84A5F",
+    brown: "#8A6916",
+    yellow: "#FFCD56",
+  }
+
+  include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
@@ -467,14 +485,7 @@ class Report
   end
 
   def colors
-    {
-      turquoise: "#1EB8D1",
-      lime: "#9BC53D",
-      purple: "#721D8D",
-      magenta: "#E84A5F",
-      brown: "#8A6916",
-      yellow: "#FFCD56",
-    }
+    COLORS
   end
 
   private

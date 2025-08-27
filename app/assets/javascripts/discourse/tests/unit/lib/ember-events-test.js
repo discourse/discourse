@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-classes */
+/* eslint-disable ember/no-classic-classes, ember/no-classic-components */
 
 import GlimmerComponent from "@glimmer/component";
 import ClassicComponent, { setComponentTemplate } from "@ember/component";

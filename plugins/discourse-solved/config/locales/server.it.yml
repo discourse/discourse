@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  accepted_answer: "Risposta accettata"
+  site_settings:
+    solved_enabled: "Attiva il plugin 'solved', che consente agli autenti di selezionare soluzioni negli argomenti"
+    allow_solved_on_all_topics: "Consenti agli utenti di selezionare soluzioni su tutti gli argomenti (se l'opzione è deselezionata, le soluzioni possono essere abilitate per categoria o etichetta)"
+    accept_all_solutions_trust_level: "Livello di attendibilità minimo richiesto per poter accettare soluzioni su qualsiasi argomento (anche quando non si è l'autore dell'argomento stesso)"
+    accept_all_solutions_allowed_groups: "Gruppi a cui è consentito accettare soluzioni su qualsiasi argomento (anche quando non OP). Sono sempre ammessi amministratori e moderatori."
+    empty_box_on_unsolved: "Mostra una casella vuota accanto agli argomenti non risolti"
+    solved_quote_length: "Numero di caratteri da citare quando si visualizza la soluzione sotto il primo messaggio"
+    solved_topics_auto_close_hours: "Chiudi automaticamente l'argomento (n) ore dopo l'ultima risposta una volta che l'argomento è stato contrassegnato come risolto. Impostare a 0 per disabilitare la chiusura automatica."
+    show_filter_by_solved_status: "Mostra un menu a discesa per filtrare un elenco di argomenti in base allo stato risolto."
+    notify_on_staff_accept_solved: "Invia una notifica al creatore dell'argomento quando un messaggio viene contrassegnato come soluzione da uno staff."
+    ignore_solved_topics_in_assigned_reminder: "Evita che i promemoria per le assegnazioni includano argomenti risolti. Rilevante solo quando si utilizza il plug-in discourse-assign."
+    assignment_status_on_solve: "Quando un argomento viene risolto, aggiorna tutte le assegnazioni a questo stato"
+    assignment_status_on_unsolve: "Quando la risoluzione di un argomento viene annullata, aggiorna tutte le assegnazioni a questo stato"
+    disable_solved_education_message: "Disabilita il messaggio formativo per gli argomenti risolti."
+    accept_solutions_topic_author: "Consenti all'autore dell'argomento di accettare una soluzione."
+    solved_add_schema_markup: "Aggiungi il markup dello schema QAPage all'HTML."
+    enable_solved_tags: "Etichette che consentiranno agli utenti di selezionare soluzioni."
+    prioritize_solved_topics_in_search: "Dai la priorità agli argomenti risolti nei risultati di ricerca."
+    show_who_marked_solved: "Mostra chi ha contrassegnato l'argomento come risolto. Indicato nel primo messaggio dell'argomento. Il messaggio di risposta viene indicato come suggerimento."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Soluzioni accettate"
+      xaxis: "Giorno"
+      yaxis: "Totali"
+  solved:
+    no_solutions:
+      self: "Non hai ancora soluzioni accettate."
+      others: "Nessuna soluzione accettata."
+    filter:
+      description:
+        solved: "Filtra gli argomenti che sono stati risolti"
+        unsolved: "Filtra gli argomenti che non sono stati risolti"
+  badges:
+    solved_1:
+      name: "Risolto!"
+      description: "Avere una risposta contrassegnata come Soluzione"
+      long_description: "Questo distintivo viene assegnato per avere una risposta contrassegnata come Soluzione a un argomento. :white_check_mark: Ottimo lavoro. :+1:"
+    solved_2:
+      name: "Consulente"
+      description: "Avere 10 risposte contrassegnate come Soluzioni"
+      long_description: "Questo distintivo viene assegnato se 10 delle tue risposte sono contrassegnate come soluzioni agli argomenti. :white_check_mark: Sei una vera risorsa per gli altri membri della community."
+    solved_3:
+      name: "Saputello"
+      description: "Avere 50 risposte contrassegnate come Soluzioni"
+      long_description: "Questo distintivo viene assegnato se 50 delle tue risposte sono contrassegnate come soluzioni agli argomenti. :white_check_mark: Sai davvero il fatto tuo. :clap:"
+    solved_4:
+      name: "Risolutore di problemi"
+      description: "Avere 150 risposte contrassegnate come Soluzioni"
+      long_description: "Questo distintivo viene assegnato se 150 delle tue risposte sono contrassegnate come soluzioni agli argomenti. :white_check_mark: Ottimo lavoro. :slightly_smiling_face: Sei ufficialmente un Risolutore di problemi. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Prima soluzione accettata
+        doc: Si attiva quando la soluzione di un utente è accettata per la prima volta.
+  education:
+    topic_is_solved: |
+      ### Questo argomento è stato risolto
+
+      Rispondi qui solo se:
+
+      - Hai ulteriori dettagli
+
+      - La soluzione non funziona per te
+
+      Se hai un problema non collegato a questo, [inizia un nuovo argomento](%{base_url}/new- argomento).

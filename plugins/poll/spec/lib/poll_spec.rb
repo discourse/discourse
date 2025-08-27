@@ -2,7 +2,7 @@
 
 RSpec.describe DiscoursePoll::Poll do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
 
   fab!(:post_with_regular_poll) { Fabricate(:post, raw: <<~RAW) }
       [poll]

@@ -23,13 +23,11 @@ acceptance("Auth Complete", function (needs) {
 
     assert.strictEqual(
       currentRouteName(),
-      "discovery.latest",
-      "it stays on the homepage"
+      "signup",
+      "it goes to the signup page"
     );
 
-    assert
-      .dom(".d-modal.create-account")
-      .exists("it shows the registration modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
   });
 
   test("when login required", async function (assert) {
@@ -38,17 +36,15 @@ acceptance("Auth Complete", function (needs) {
 
     assert.strictEqual(
       currentRouteName(),
-      "login",
-      "it redirects to the login page"
+      "signup",
+      "it redirects to the signup page"
     );
 
-    assert
-      .dom(".d-modal.create-account")
-      .exists("it shows the registration modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
   });
 
   test("Callback added using addBeforeAuthCompleteCallback", async function (assert) {
-    withPluginApi("1.11.0", (api) => {
+    withPluginApi((api) => {
       api.addBeforeAuthCompleteCallback(() => {
         api.container
           .lookup("service:router")
@@ -64,9 +60,5 @@ acceptance("Auth Complete", function (needs) {
       "discovery.categories",
       "The function added via API was run and it transitioned to 'discovery.categories' route"
     );
-
-    assert
-      .dom(".d-modal.create-account")
-      .doesNotExist("registration modal is not shown");
   });
 });

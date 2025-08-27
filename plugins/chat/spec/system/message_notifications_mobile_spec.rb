@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -21,9 +21,9 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
     context "when on homepage" do
       context "with public channel" do
-        fab!(:channel_1) { Fabricate(:category_channel) }
-        fab!(:channel_2) { Fabricate(:category_channel) }
-        fab!(:user_1) { Fabricate(:user) }
+        fab!(:channel_1, :category_channel)
+        fab!(:channel_2, :category_channel)
+        fab!(:user_1, :user)
 
         before { channel_1.add(user_1) }
 
@@ -129,9 +129,9 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
       end
 
       context "with dm channel" do
-        fab!(:current_user) { Fabricate(:admin) }
-        fab!(:user_1) { Fabricate(:user) }
-        fab!(:user_2) { Fabricate(:user) }
+        fab!(:current_user, :admin)
+        fab!(:user_1, :user)
+        fab!(:user_2, :user)
 
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
         fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
@@ -210,9 +210,9 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
       end
 
       context "with dm and public channel" do
-        fab!(:current_user) { Fabricate(:admin) }
-        fab!(:user_1) { Fabricate(:user) }
-        fab!(:channel_1) { Fabricate(:category_channel) }
+        fab!(:current_user, :admin)
+        fab!(:user_1, :user)
+        fab!(:channel_1, :category_channel)
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
 
         before do

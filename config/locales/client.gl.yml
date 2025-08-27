@@ -157,6 +157,10 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "Dámoslle a benvida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -308,9 +312,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      abandon:
-        yes_value: "Desbotar"
-        no_value: "Retomar a edición"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -330,7 +331,7 @@ gl:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
     preview: "visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     save: "Gardar cambios"
     saved: "Gardado!"
     upload: "Cargar"
@@ -424,6 +425,10 @@ gl:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Razón"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Razón..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (%{count} alertas en total)"
@@ -514,6 +519,15 @@ gl:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      notes:
+        delete: "Eliminar"
+      review_user: "Usuario"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicación"
+            other: "%{count} publicacións"
+        visibility: "Visibilidade"
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a súa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Teña paciencia."
@@ -982,11 +996,13 @@ gl:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
-        disable_dark_scheme: "O mesmo que o normal"
         undo: "Restabelecer"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(predeterminado do sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Escuro"
+        picker:
+          active: "Activo"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
@@ -1005,6 +1021,8 @@ gl:
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "
+      silenced_permanently: "Este usuario está silenciado."
+      silenced_reason: "Motivo: "
       github_profile: "Github"
       email_activity_summary: "Resumo da actividade"
       mailing_list_mode:
@@ -1383,7 +1401,8 @@ gl:
         reinvited: "Convite reenviado"
         removed: "Retirado"
         user: "Usuario convidado"
-        none: "Non hai convites que amosar."
+        none:
+          title: "Non hai convites que amosar."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros %{count} convites."
@@ -1416,6 +1435,7 @@ gl:
           expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
+          description: "Descrición"
           add_to_groups: "Engadir aos grupos"
           expires_after: "Caduca tras"
           send_invite_email: "Gardar e enviar mensaxe de correo"
@@ -1491,7 +1511,6 @@ gl:
         title: "Rexistro de enderezos IP"
       avatar:
         title: "Imaxe do perfil"
-        header_title: "perfil, mensaxes, marcadores e preferencias"
         name_and_description: "%{name} %{description}"
         edit: "Editar a imaxe do perfil"
       title:
@@ -1672,8 +1691,6 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1707,6 +1724,8 @@ gl:
     full_name_requirement:
       required_at_signup: "Obrigatorio"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Páxina de inicio"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1773,7 +1792,6 @@ gl:
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
       toggle_whisper: "Trocar rumor"
-      toggle_unlisted: "Trocar fóra da lista"
       posting_not_on_topic: "A que tema quere responder?"
       saved_local_draft_tip: "gardado localmente"
       drafts_offline: "borradores sen conexión"
@@ -1809,6 +1827,7 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
+      discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1828,11 +1847,11 @@ gl:
       italic_label: "C"
       italic_title: "Recalque"
       italic_text: "texto recalcado"
-      link_title: "Hiperligazón"
+      link_title: "Ligazón"
       link_description: "introducir a descrición da ligazón aquí"
-      link_dialog_title: "Inserir hiperligazón"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Pegue un URL ou escriba para buscar temas"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Actualizar"
+      link_optional_text: "Texto"
       blockquote_title: "Cita"
       blockquote_text: "Citación"
       code_title: "Texto preformatado"
@@ -1840,18 +1859,8 @@ gl:
       paste_code_text: "escriba un título ou pégueo aquí"
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
-      olist_title: "Listaxe numerada"
-      ulist_title: "Listaxe con símbolos"
       list_item: "Elemento da listaxe"
-      toggle_direction: "Trocar dirección"
       help: "Axuda para a edición con Markdown"
-      collapse: "minimizar o panel de composición"
-      open: "abrir o panel de composición"
-      abandon: "pechar o panel de composición e desbotar o borrador"
-      enter_fullscreen: "abrir o panel de composición en pantalla completa"
-      exit_fullscreen: "saír do panel de composición en pantalla completa"
-      show_toolbar: "amosar a barra de ferramentas de composición"
-      hide_toolbar: "agochar a barra de ferramentas de composición"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -1982,8 +1991,8 @@ gl:
         votes_released: "O voto foi liberado"
         admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
+      delete: "Eliminar"
       uploading: "Cargando"
-      select_file: "Seleccionar ficheiro"
       default_image_alt_text: imaxe
     search:
       sort_by: "Ordenar por"
@@ -2132,8 +2141,6 @@ gl:
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
-        educate:
-          new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -2573,6 +2580,13 @@ gl:
         other: "Vendo %{count} respostas a"
       in_reply_to: "Cargar a publicación pai"
       view_all_posts: "Ver todas as publicacións"
+      localizations:
+        table:
+          actions: "Accións"
+          edit: "Editar"
+          delete: "Eliminar"
+        post_language_selector:
+          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2741,8 +2755,12 @@ gl:
       general: "Xeral"
       settings: "Configuración"
       tags: "Etiquetas"
-      tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
-      tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
+      localization:
+        name: "Nome"
+        description: "Descrición"
+        remove: "Retirar"
+      tags_allowed_tags_new_category: "Restrinxir estas etiquetas a esta categoría:"
+      tags_allowed_tag_groups_new_category: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
       tags_tab_description: "As etiquetas e os grupos de etiquetas anteriores só estarán dispoñíbeis nesta categoría e outras que as inclúan. Non poderán usarse noutras categorías."
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
@@ -2763,9 +2781,13 @@ gl:
       description: "Descrición"
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
-      badge_colors: "Cores das insignias"
-      background_color: "Cor do fondo"
-      foreground_color: "Cor do primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Dúas palabras como máximo"
       color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
@@ -3014,7 +3036,6 @@ gl:
         topics: "Temas"
         replies: "Réplicas"
       posted:
-        title: "As miñas publicacións"
         help: "temas nos que publicou"
       bookmarks:
         title: "Marcadores"
@@ -3349,6 +3370,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
             faq:
@@ -3359,13 +3382,11 @@ gl:
               content: "Grupos"
             users:
               content: "Usuarios"
-            my_posts:
-              content: "As miñas publicacións"
             review:
               content: "Revisar"
             invite:
               content: "Convidar"
-      filter: "Filtrar..."
+      search: "Buscar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -3391,12 +3412,20 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    filter:
+      description:
+        yesterday: "Onte"
+    discovery:
+      headings:
+        multi_tag:
+          default: "Temas etiquetados %{tags}"
+        categories: "Todas as categorías"
   admin_js:
     settings: "Configuración"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3431,24 +3460,27 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        branding:
-          title: "Logo"
-          logo:
-            form:
-              mobile: "Móbil"
-              email: "Enderezo de correo"
-              manifest_screenshots:
-                description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
-              opengraph_image:
-                description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+        logo:
+          form:
+            mobile: "Móbil"
+            email: "Enderezo de correo"
+            manifest_screenshots:
+              description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
+            opengraph_image:
+              description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+        fonts:
+          title: "Tipos de letra"
+          form:
+            heading_font:
+              title: "Tipo de letra de título"
+          backfill_modal:
+            modal_yes: "Si"
         navigation:
           title: "Navegación"
         notifications:
           title: "Notificacións"
         onebox:
           title: "Onebox"
-        other:
-          title: "Outro"
         search_everything:
           title: "Buscar"
         security:
@@ -3487,6 +3519,8 @@ gl:
               header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
             templates:
               title: "Modelos"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviada"
             skipped:
@@ -3513,6 +3547,8 @@ gl:
           title: "Enganches de web (webhooks)"
         embedding:
           title: "Incorporando"
+      theme_site_settings:
+        default_value: "Predeterminado"
       search:
         title: "Buscar"
         result_types:
@@ -3790,10 +3826,44 @@ gl:
             failed: "Fallou"
       home:
         title: "Inicio"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Copias de seguranza"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Insignias"
+          notifications: "Notificacións"
+          permalinks: "Ligazóns permanentes"
+          users: "Usuarios"
+          groups: "Grupos"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
+      appearance:
+        title: "Aparencia"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes_and_components:
+            keywords: "extensión"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparencia"
+      security:
+        title: "Seguranza"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -3817,12 +3887,37 @@ gl:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+            install: "Instalar"
+          components:
+            title: "Compoñentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Activado?"
+            by_author: "De %{name}"
+            learn_more: "Saber máis"
+            edit: "Editar"
+            preview: "Visualizar"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Eliminar"
+            filter_by_all: "Todas"
+            delete_confirm: 'Confirma a eliminación de «%{name}»?'
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          copy_to_clipboard: "Copiar ao portapapeis"
+          copied_to_clipboard: "Copiado ao portapapeis"
+          copy_to_clipboard_error: "Produciuse un erro ao copiar os datos ao portapapeis"
+          delete: "Eliminar"
+          colors:
+            title: "Cores"
       plugins:
         title: "Complementos"
         name: "Nome"
@@ -3835,6 +3930,11 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        filters:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restabelecer"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3929,6 +4029,7 @@ gl:
           theme: "Tema"
           component: "Compoñente"
           components: "Compoñentes"
+          filter_all: "Todas"
           theme_name: "Nome do tema"
           component_name: "Nome do compoñente"
           themes_intro: "Seleccione un tema existente ou instale un novo para comezar"
@@ -3958,7 +4059,7 @@ gl:
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
-          color_scheme_select: "Seleccione as cores que quere utilizar no tema"
+          color_scheme_select: "Seleccione as cores que quere utilizar no tema."
           custom_sections: "Seccións personalizadas:"
           theme_components: "Compoñentes do tema"
           add_all_themes: "Engadir todos os temas"
@@ -4025,14 +4126,10 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          update_to_latest: "Actualizar o tema"
-          check_for_updates: "Buscar actualizacións"
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"
-          theme_settings: "Configuración do tema"
           no_settings: "Este tema non ten axustes."
-          theme_translations: "Traducións do tema"
           empty: "Sen elementos"
           commits_behind:
             one: "O tema está %{count} commit por atrás!"
@@ -4066,48 +4163,46 @@ gl:
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
-          schema:
-            fields:
-              required: "*obrigatorio"
-              number:
-                too_small: "debe ser igual ou maior que %{count}"
-                too_large: "debe ser igual ou menor que %{count}"
+        schema:
+          fields:
+            required: "*obrigatorio"
+            number:
+              too_small: "debe ser igual ou maior que %{count}"
+              too_large: "debe ser igual ou menor que %{count}"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
+          light: "claro"
+          dark: "escuro"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todas"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Eliminar esta paleta de cores?"
           undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
           revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"
-            description: "Principalmente texto, iconas e bordos."
           primary-medium:
             name: "primario-medio"
           primary-low-mid:
             name: "primario-baixo-medio"
           secondary:
             name: "secundario"
-            description: "Cor principal do fondo e cor do texto dalgúns botóns."
           tertiary:
             name: "terciario"
-            description: "Ligazóns, algúns botóns, notificacións e cor de realce."
           quaternary:
             name: "cuaternario"
           header_background:
             name: "fondo da cabeceira"
-            description: "Cor do fondo na cabeceira do sitio."
           header_primary:
             name: "cabeceira primaria"
-            description: "Texto e iconas na cabeceira do sitio."
           highlight:
             name: "realce"
-            description: "Cor do fondo dos elementos realzados da páxina, como publicacións e temas."
           highlight-high:
             name: "realzado-alto"
           highlight-medium:
@@ -4116,13 +4211,10 @@ gl:
             name: "realzado-baixo"
           danger:
             name: "perigo"
-            description: "Cor de realce para accións como eliminar publicacións e temas."
           success:
             name: "correcto"
-            description: "Usado para indicar que unha acción se realizou correctamente."
           love:
             name: "amor"
-            description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
           editor:
@@ -4526,7 +4618,6 @@ gl:
         activity: Actividade
         like_count: Valoracións dadas / recibidas
         last_100_days: "nos últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicacións lidas
         post_count: Publicacións creadas
         second_factor_enabled: Activada a autenticación de dobre factor

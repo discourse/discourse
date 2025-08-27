@@ -3,7 +3,7 @@
 RSpec.describe ExportCsvController do
   context "while logged in as normal user" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     before { sign_in(user) }
 
     describe "#export_entity" do

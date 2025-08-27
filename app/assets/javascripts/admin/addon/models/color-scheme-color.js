@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -5,11 +6,27 @@ import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
+  @tracked hex;
+
+  @tracked originalHex;
+
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
+
+  init(object) {
+    super.init(...arguments);
+    this.originalHex = object.hex;
+  }
+
+  discardColorChange() {
+    this.hex = this.originalHex;
+  }
+
   @on("init")
   startTrackingChanges() {
-    this.set("originals", { hex: this.hex || "FFFFFF" });
+    this.set("originals", {
+      hex: this.hex || "FFFFFF",
+    });
 
     // force changed property to be recalculated
     this.notifyPropertyChange("hex");
@@ -24,13 +41,15 @@ export default class ColorSchemeColor extends EmberObject {
     if (hex !== this.originals.hex) {
       return true;
     }
-
     return false;
   }
 
   // Whether the saved value is different than Discourse's default color scheme.
   @discourseComputed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
+    if (!defaultHex) {
+      return false;
+    }
     return this.originals.hex !== defaultHex;
   }
 
@@ -46,20 +65,14 @@ export default class ColorSchemeColor extends EmberObject {
 
   @discourseComputed("name")
   translatedName(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.name`);
-    } else {
-      return name;
-    }
+    return i18n(`admin.customize.colors.${name}.name`, { defaultValue: name });
   }
 
   @discourseComputed("name")
   description(name) {
-    if (!this.is_advanced) {
-      return i18n(`admin.customize.colors.${name}.description`);
-    } else {
-      return "";
-    }
+    return i18n(`admin.customize.colors.${name}.description`, {
+      defaultValue: "",
+    });
   }
 
   /**

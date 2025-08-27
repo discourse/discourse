@@ -18,6 +18,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import CategoryDropHeader from "./category-drop/category-drop-header";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
@@ -39,15 +40,17 @@ const MORE_COLLECTION = "MORE_COLLECTION";
   countSubcategories: false,
   autoInsertNoneItem: false,
   displayCategoryDescription: "displayCategoryDescription",
-  headerComponent: "category-drop/category-drop-header",
+  headerComponent: CategoryDropHeader,
   parentCategory: false,
   allowUncategorized: "allowUncategorized",
+  shouldDisplayIcon: "shouldDisplayIcon",
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("category.id") value;
   @readOnly("categoriesWithShortcuts.[]") content;
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
+  @readOnly("selectKit.options.shouldDisplayIcon") shouldDisplayIcon;
   @setting("allow_uncategorized_topics") allowUncategorized;
 
   noCategoriesLabel = i18n("categories.no_subcategories");

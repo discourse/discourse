@@ -25,7 +25,7 @@ export default class SidebarState extends Service {
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
-  @tracked isForcingAdminSidebar = false;
+  @tracked isForcingSidebar = false;
 
   panels = panels;
   activeExpandedSections = new TrackedSet();
@@ -130,17 +130,6 @@ export default class SidebarState extends Service {
 
   get showMainPanel() {
     return this.currentPanelKey === MAIN_PANEL;
-  }
-
-  get currentUserUsingAdminSidebar() {
-    return this.currentUser?.use_admin_sidebar;
-  }
-
-  get adminSidebarAllowedWithLegacyNavigationMenu() {
-    return (
-      this.currentUserUsingAdminSidebar &&
-      this.siteSettings.navigation_menu === "header dropdown"
-    );
   }
 
   get sanitizedFilter() {

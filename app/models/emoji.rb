@@ -2,7 +2,7 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "13"
+  EMOJI_VERSION = "14"
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
@@ -275,7 +275,7 @@ class Emoji
           # special cased as we prefer to keep these as symbols
           next if name == "registered"
           next if name == "copyright"
-          next if name == "tm"
+          next if name == "trade_mark"
           next if name == "left_right_arrow"
 
           code = replacement_code(e["code"])

@@ -21,29 +21,23 @@ export function listColorSchemes(site, options = {}) {
       results.push({
         name: s.name,
         id: s.id,
+        theme_id: s.theme_id,
+        colors: s.colors,
+        is_dark: s.is_dark,
       });
     }
   });
 
-  if (options.darkOnly) {
-    const defaultDarkColorScheme = site.get("default_dark_color_scheme");
-    if (defaultDarkColorScheme) {
-      const existing = schemes.findBy("id", defaultDarkColorScheme.id);
-      if (!existing) {
-        results.unshift({
-          id: defaultDarkColorScheme.id,
-          name: `${defaultDarkColorScheme.name} ${i18n(
-            "user.color_schemes.default_dark_scheme"
-          )}`,
-        });
-      }
-    }
+  const defaultLightColorScheme = site.get("default_light_color_scheme");
+  const defaultDarkColorScheme = site.get("default_dark_color_scheme");
 
-    results.unshift({
-      id: -1,
-      name: i18n("user.color_schemes.disable_dark_scheme"),
-    });
-  }
+  results.unshift({
+    id: -1,
+    name: `${i18n("user.color_schemes.default_description")}`,
+    colors: options.darkOnly
+      ? defaultDarkColorScheme?.colors || []
+      : defaultLightColorScheme?.colors || [],
+  });
 
   return results.length === 0 ? null : results;
 }

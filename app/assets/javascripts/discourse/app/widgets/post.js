@@ -3,10 +3,10 @@ import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import PostMetaDataLanguage from "discourse/components/post/meta-data/language";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
-import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
@@ -17,7 +17,6 @@ import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import {
@@ -30,7 +29,9 @@ import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
@@ -43,19 +44,6 @@ function transformWithCallbacks(post, topicUrl, store) {
 
   return transformed;
 }
-
-let postMenuWidgetExtensionsAdded = null;
-let postMenuConsoleWarningLogged = false;
-
-registerDeprecationHandler((_, opts) => {
-  if (opts?.id === "discourse.post-menu-widget-overrides") {
-    if (!postMenuWidgetExtensionsAdded) {
-      postMenuWidgetExtensionsAdded = new Set();
-    }
-
-    postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
-  }
-});
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -96,6 +84,7 @@ export function avatarImg(wanted, attrs) {
   return h("img", properties);
 }
 
+// glimmer-post-stream: has glimmer version
 export function avatarFor(wanted, attrs, linkAttrs) {
   const attributes = {
     href: attrs.url,
@@ -126,6 +115,7 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("select-post", {
   tagName: "div.select-posts",
 
@@ -169,6 +159,7 @@ createWidget("select-post", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
@@ -179,7 +170,7 @@ createWidget("reply-to-tab", {
 
   buildAttributes(attrs) {
     let result = {
-      tabindex: "0",
+      href: "",
     };
 
     if (!attrs.mobileView) {
@@ -210,7 +201,8 @@ createWidget("reply-to-tab", {
     ];
   },
 
-  click() {
+  click(event) {
+    event.preventDefault();
     this.state.loading = true;
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
@@ -282,12 +274,14 @@ createWidget("post-avatar", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
   template: widgetHbs`{{d-icon "lock"}}`,
   title: () => i18n("post.locked"),
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-email-indicator", {
   tagName: "div.post-info.via-email",
 
@@ -321,6 +315,7 @@ function showReplyTab(attrs, siteSettings) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
@@ -381,6 +376,10 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
+    if (attrs.language && attrs.is_localized) {
+      postInfo.push(this.attach("post-language", attrs));
+    }
+
     postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
@@ -406,6 +405,7 @@ createWidget("post-meta-data", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("expand-hidden", {
   tagName: "a.expand-hidden",
 
@@ -418,6 +418,7 @@ createWidget("expand-hidden", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
@@ -452,6 +453,19 @@ createWidget("post-date", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
+createWidget("post-language", {
+  html(attrs) {
+    return [
+      new RenderGlimmer(this, "div", PostMetaDataLanguage, {
+        language: attrs.language,
+        localization_outdated: attrs.localization_outdated,
+      }),
+    ];
+  },
+});
+
+// glimmer-post-stream: has glimmer version
 createWidget("expand-post-button", {
   tagName: "button.btn.expand-post",
   buildKey: (attrs) => `expand-post-button-${attrs.id}`,
@@ -474,6 +488,7 @@ createWidget("expand-post-button", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-group-request", {
   buildKey: (attrs) => `post-group-request-${attrs.id}`,
 
@@ -490,6 +505,7 @@ createWidget("post-group-request", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
@@ -549,36 +565,45 @@ createWidget("post-contents", {
       },
     };
 
-    if (
-      this.siteSettings.glimmer_post_menu_mode === "enabled" ||
-      (this.siteSettings.glimmer_post_menu_mode === "auto" &&
-        !postMenuWidgetExtensionsAdded)
-    ) {
-      if (!postMenuConsoleWarningLogged) {
-        postMenuConsoleWarningLogged = true;
-
-        if (!isTesting()) {
-          // eslint-disable-next-line no-console
-          console.log("✅  Using the new 'glimmer' post menu!");
-        }
-
-        if (postMenuWidgetExtensionsAdded) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            [
-              "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
-                "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
-              ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-              // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
-            ].join("\n- ")
-          );
-        }
-      }
-
-      const filteredRepliesView =
-        this.siteSettings.enable_filtered_replies_view;
-      result.push(
-        this.attach("glimmer-post-menu", {
+    const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
+    result.push(
+      // TODO (glimmer-post-stream):
+      //  Once this widget shim is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+      new RenderGlimmer(
+        this,
+        "section.post-menu-area.clearfix",
+        hbs`
+          <Post::Menu
+            @canCreatePost={{@data.canCreatePost}}
+            @filteredRepliesView={{@data.filteredRepliesView}}
+            @nextPost={{@data.nextPost}}
+            @post={{@data.post}}
+            @prevPost={{@data.prevPost}}
+            @repliesShown={{@data.repliesShown}}
+            @showReadIndicator={{@data.showReadIndicator}}
+            @changeNotice={{@data.changeNotice}}
+            @changePostOwner={{@data.changePostOwner}}
+            @copyLink={{@data.copyLink}}
+            @deletePost={{@data.deletePost}}
+            @editPost={{@data.editPost}}
+            @grantBadge={{@data.grantBadge}}
+            @lockPost={{@data.lockPost}}
+            @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+            @rebakePost={{@data.rebakePost}}
+            @recoverPost={{@data.recoverPost}}
+            @replyToPost={{@data.replyToPost}}
+            @share={{@data.share}}
+            @showFlags={{@data.showFlags}}
+            @showLogin={{@data.showLogin}}
+            @showPagePublish={{@data.showPagePublish}}
+            @toggleLike={{@data.toggleLike}}
+            @togglePostType={{@data.togglePostType}}
+            @toggleReplies={{@data.toggleReplies}}
+            @toggleWiki={{@data.toggleWiki}}
+            @unhidePost={{@data.unhidePost}}
+            @unlockPost={{@data.unlockPost}}
+          />`,
+        {
           canCreatePost: attrs.canCreatePost,
           filteredRepliesView,
           nextPost: attrs.nextPost,
@@ -593,6 +618,7 @@ createWidget("post-contents", {
           copyLink: () => this.sendWidgetAction("copyLink"),
           deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
           editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
+          expandHidden: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
           grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
           lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
           permanentlyDeletePost: () =>
@@ -612,27 +638,9 @@ createWidget("post-contents", {
           toggleWiki: () => this.sendWidgetAction("toggleWiki"), // this action comes from the post stream
           unhidePost: () => this.sendWidgetAction("unhidePost"), // this action comes from the post stream
           unlockPost: () => this.sendWidgetAction("unlockPost"), // this action comes from the post stream
-        })
-      );
-    } else {
-      if (
-        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
-        postMenuWidgetExtensionsAdded &&
-        !postMenuConsoleWarningLogged
-      ) {
-        postMenuConsoleWarningLogged = true;
-        // eslint-disable-next-line no-console
-        console.warn(
-          [
-            "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
-            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-            // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
-          ].join("\n- ")
-        );
-      }
-
-      result.push(this.attach("post-menu", attrs, extraState));
-    }
+        }
+      )
+    );
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
@@ -786,6 +794,7 @@ createWidget("post-contents", {
   },
 
   init() {
+    // TODO (glimmer-post-stream): How does this fit into the Glimmer lifecycle?
     this.postContentsDestroyCallbacks = [];
   },
 
@@ -794,6 +803,7 @@ createWidget("post-contents", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-notice", {
   tagName: "div.post-notice",
 
@@ -860,23 +870,26 @@ createWidget("post-notice", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
   html(attrs, state) {
+    const post = this.findAncestorModel();
     const postContents = this.attach("post-contents", attrs);
     let result = [this.attach("post-meta-data", attrs)];
     result = result.concat(
       applyDecorators(this, "after-meta-data", attrs, state)
     );
     result.push(postContents);
-    result.push(this.attach("actions-summary", attrs));
+    result.push(this.attach("actions-summary", { post }));
     result.push(this.attach("post-links", attrs));
 
     return result;
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-article", {
   tagName: "article.boxed.onscreen-post",
   buildKey: (attrs) => `post-article-${attrs.id}`,
@@ -1061,22 +1074,29 @@ createWidget("post-article", {
   },
 });
 
-let addPostClassesCallbacks = null;
+const addPostClassesCallbacks = [];
 
 export function addPostClassesCallback(callback) {
-  addPostClassesCallbacks = addPostClassesCallbacks || [];
   addPostClassesCallbacks.push(callback);
 }
 
+// only for testing purposes
+export function resetPostClassesCallback() {
+  addPostClassesCallbacks.length = 0;
+}
+
+// glimmer-post-stream: has glimmer version
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
   services: ["dialog", "user-tips"],
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
+    const heightStyle = attrs.height
       ? { style: `min-height: ${attrs.height}px` }
       : undefined;
+
+    return { "data-post-number": attrs.post_number, ...heightStyle };
   },
 
   buildId(attrs) {
@@ -1089,6 +1109,9 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
+    if (!attrs.mobileView) {
+      classNames.push("sticky-avatar");
+    }
     if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }
@@ -1180,3 +1203,49 @@ export default createWidget("post", {
     }
   },
 });
+
+// TODO (glimmer-post-stream): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+registerWidgetShim(
+  "glimmer-post",
+  "div",
+  hbs`
+    <Post
+      @canCreatePost={{@data.canCreatePost}}
+      @cancelFilter={{@data.cancelFilter}}
+      @changeNotice={{@data.changeNotice}}
+      @changePostOwner={{@data.changePostOwner}}
+      @deletePost={{@data.deletePost}}
+      @editPost={{@data.editPost}}
+      @expandHidden={{@expandHidden}}
+      @filteringRepliesToPostNumber={{@data.filteringRepliesToPostNumber}}
+      @grantBadge={{@data.grantBadge}}
+      @lockPost={{@data.lockPost}}
+      @multiSelect={{@data.multiSelect}}
+      @nextPost={{@data.nextPost}}
+      @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+      @post={{@data.post}}
+      @prevPost={{@data.prevPost}}
+      @rebakePost={{@data.rebakePost}}
+      @recoverPost={{@data.recoverPost}}
+      @replyToPost={{@data.replyToPost}}
+      @selectBelow={{@data.selectBelow}}
+      @selectReplies={{@data.selectReplies}}
+      @selected={{@data.selected}}
+      @showFlags={{@data.showFlags}}
+      @showHistory={{@data.showHistory}}
+      @showInvite={{@data.showInvite}}
+      @showLogin={{@data.showLogin}}
+      @showPagePublish={{@data.showPagePublish}}
+      @showRawEmail={{@data.showRawEmail}}
+      @showReadIndicator={{@data.showReadIndicator}}
+      @togglePostSelection={{@data.togglePostSelection}}
+      @togglePostType={{@data.togglePostType}}
+      @toggleReplies={{@toggleReplies}}
+      @toggleReplyAbove={{@data.toggleReplyAbove}}
+      @toggleWiki={{@data.toggleWiki}}
+      @topicPageQueryParams={{@data.topicPageQueryParams}}
+      @unhidePost={{@data.unhidePost}}
+      @unlockPost={{@data.unlockPost}}
+      @updateTopicPageQueryParams={{@data.updateTopicPageQueryParams}}
+    />`
+);

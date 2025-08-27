@@ -5,6 +5,78 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
   needs.user();
+  needs.pretender((server, helper) => {
+    const themes = [
+      {
+        id: 42,
+        name: "discourse-incomplete-theme",
+        created_at: "2022-01-01T12:00:00.000Z",
+        updated_at: "2022-01-01T12:00:00.000Z",
+        component: false,
+        color_scheme: null,
+        user_selectable: false,
+        remote_theme_id: 42,
+        supported: true,
+        description: null,
+        enabled: true,
+        child_themes: [],
+        remote_theme: {
+          id: 42,
+          remote_url: "git@github.com:discourse/discourse-incomplete-theme.git",
+          remote_version: null,
+          local_version: null,
+          commits_behind: null,
+          branch: null,
+          remote_updated_at: null,
+          updated_at: "2022-01-01T12:00:00.000Z",
+          last_error_text: null,
+          is_git: true,
+          license_url: null,
+          about_url: null,
+          authors: null,
+          theme_version: null,
+          minimum_discourse_version: null,
+          maximum_discourse_version: null,
+        },
+      },
+      {
+        id: 43,
+        name: "Graceful",
+        created_at: "2022-01-01T12:00:00.000Z",
+        updated_at: "2022-01-01T12:00:00.000Z",
+        component: false,
+        color_scheme: null,
+        user_selectable: false,
+        remote_theme_id: 43,
+        supported: true,
+        description: null,
+        enabled: true,
+        child_themes: [],
+        remote_theme: {
+          id: 43,
+          remote_url: "https://github.com/discourse/graceful",
+          remote_version: null,
+          local_version: null,
+          commits_behind: null,
+          branch: null,
+          remote_updated_at: null,
+          updated_at: "2022-01-01T12:00:00.000Z",
+          last_error_text: null,
+          is_git: true,
+          license_url: null,
+          about_url: null,
+          authors: null,
+          theme_version: null,
+          minimum_discourse_version: null,
+          maximum_discourse_version: null,
+        },
+      },
+    ];
+
+    server.get("/admin/config/customize/themes", () => {
+      return helper.response(200, { themes });
+    });
+  });
 
   test("closing the modal resets the modal inputs", async function (assert) {
     const urlInput = ".install-theme-content .repo input";
@@ -12,9 +84,9 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     const publicKey = ".install-theme-content .public-key textarea";
 
     const themeUrl = "git@github.com:discourse/discourse.git";
-    await visit("/admin/customize/themes");
+    await visit("/admin/config/customize/themes");
 
-    await click(".create-actions .btn-primary");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
@@ -25,7 +97,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await click(".d-modal__footer .d-modal-cancel");
 
-    await click(".create-actions .btn-primary");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await click(".install-theme-content .inputs .advanced-repo");
     assert.dom(urlInput).hasValue("", "url input is reset");
@@ -42,7 +114,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       "discourse@discourse.git.backlog.com:/TEST_THEME/test-theme.git";
     await visit("/admin/customize/themes");
 
-    await click(".create-actions .btn-primary");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
@@ -74,21 +146,23 @@ acceptance("Admin - Themes - Install modal", function (needs) {
   });
 
   test("modal can be auto-opened with the right query params", async function (assert) {
-    await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
+    await visit(
+      "/admin/config/customize/themes?repoUrl=testUrl&repoName=testName"
+    );
     assert.dom(".admin-install-theme-modal").exists("modal is visible");
     assert.dom(".install-theme code").hasText("testUrl", "repo url is visible");
 
     await click(".d-modal-cancel");
     assert.strictEqual(
       currentURL(),
-      "/admin/customize/themes",
+      "/admin/config/customize/themes",
       "query params are cleared after dismissing the modal"
     );
   });
 
   test("installed themes are matched with the popular list by URL", async function (assert) {
-    await visit("/admin/customize/themes");
-    await click(".create-actions .btn-primary");
+    await visit("/admin/config/customize/themes");
+    await click(".d-page-subheader__actions .btn-primary");
 
     assert
       .dom(

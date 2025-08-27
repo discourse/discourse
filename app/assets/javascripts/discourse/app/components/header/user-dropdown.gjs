@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -10,8 +9,6 @@ import { i18n } from "discourse-i18n";
 import Notifications from "./user-dropdown/notifications";
 
 export default class UserDropdown extends Component {
-  @service currentUser;
-
   @action
   click(e) {
     if (wantsNewWindow(e)) {
@@ -35,19 +32,17 @@ export default class UserDropdown extends Component {
       }}
     >
       <PluginOutlet @name="user-dropdown-button__before" />
-      <button
+      <DButton
         id="toggle-current-user"
         class="icon btn-flat"
         aria-haspopup="true"
         aria-expanded={{@active}}
-        aria-label={{i18n
-          "user.account_possessive"
-          name=(or this.currentUser.name this.currentUser.username)
-        }}
+        aria-label={{i18n "user.avatar.header_title"}}
+        title={{i18n "user.avatar.header_title"}}
         {{on "click" this.click}}
       >
         <Notifications @active={{@active}} />
-      </button>
+      </DButton>
       <PluginOutlet @name="user-dropdown-button__after" />
     </li>
   </template>

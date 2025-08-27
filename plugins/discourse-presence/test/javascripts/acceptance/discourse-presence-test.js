@@ -11,6 +11,11 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {
   needs.user({ whisperer: true });
+  needs.pretender((server, helper) => {
+    server.get("/drafts/topic_280.json", function () {
+      return helper.response(200, { draft: null });
+    });
+  });
 
   test("Doesn't break topic creation", async function (assert) {
     await visit("/");
@@ -75,13 +80,9 @@ acceptance("Discourse Presence Plugin", function (needs) {
       "publishes reply presence when typing"
     );
 
-    const menu = selectKit(".toolbar-popup-menu-options");
+    const menu = selectKit(".composer-actions");
     await menu.expand();
-    await menu.selectRowByName("toggle-whisper");
-
-    assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
-      .exists("sets the post type to whisper");
+    await menu.selectRowByValue("toggle_whisper");
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/reply/280"),
@@ -107,13 +108,13 @@ acceptance("Discourse Presence Plugin", function (needs) {
   test("Uses the edit channel for editing", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
 
     assert
       .dom(".d-editor-input")
       .hasValue(
-        document.querySelector(".topic-post:nth-of-type(1) .cooked > p")
+        document.querySelector(".topic-post[data-post-number='1'] .cooked > p")
           .innerText,
         "composer has contents of post to be edited"
       );

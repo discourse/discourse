@@ -12,11 +12,12 @@ describe "New Category", type: :system do
     category_page.find(".edit-category-tab-general input.category-name").fill_in(
       with: "New Category",
     )
+
     category_page.find(".edit-category-nav .edit-category-tags a").click
     category_page.find(".edit-category-tab-tags #category-minimum-tags").click
     category_page.save_settings
 
-    expect(page).to have_current_path("/c/new-category/edit/general")
+    try_until_success { expect(page).to have_current_path("/c/new-category/edit/general") }
 
     category_page.find(".edit-category-nav .edit-category-tags a").click
     expect(category_page.find(".edit-category-tab-tags #category-minimum-tags").value).to eq("0")

@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { includes } from "truth-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import includes from "truth-helpers/helpers/includes";
 
 module("Addons | truth-helpers | Integration | includes", function (hooks) {
   setupRenderingTest(hooks);

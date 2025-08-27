@@ -62,7 +62,8 @@ function loadNext(ajax) {
 
   let timeoutMs = 150;
   let removeLoading = true;
-  const { url, refresh, elem, categoryId, topicId } = loadingQueue.shift();
+  const { url, refresh, elem, categoryId, topicId, onResolve } =
+    loadingQueue.shift();
 
   // Retrieve the onebox
   return ajax("/onebox", {
@@ -78,6 +79,7 @@ function loadNext(ajax) {
       (template) => {
         const node = domFromString(template)[0];
         setLocalCache(normalize(url), node);
+        onResolve?.(template);
         elem.replaceWith(node);
         applySquareGenericOnebox(node);
       },
@@ -110,6 +112,7 @@ export function load({
   refresh = true,
   offline = false,
   synchronous = false,
+  onResolve,
 }) {
   // If the onebox has loaded or is loading, return
 
@@ -128,6 +131,7 @@ export function load({
     // If we have it in our cache, return it.
     const cached = lookupCache(url);
     if (cached) {
+      onResolve?.(cached);
       return cached;
     }
 
@@ -146,7 +150,7 @@ export function load({
   elem.classList.add(LOADING_ONEBOX_CSS_CLASS);
 
   // Add to the loading queue
-  loadingQueue.push({ url, refresh, elem, categoryId, topicId });
+  loadingQueue.push({ url, refresh, elem, categoryId, topicId, onResolve });
 
   // Load next url in queue
   if (synchronous) {

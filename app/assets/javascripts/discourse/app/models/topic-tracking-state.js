@@ -545,18 +545,15 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   getSubCategoryIds(categoryId) {
-    const result = [categoryId];
-    const categories = Category.list();
-
-    for (let i = 0; i < result.length; ++i) {
-      for (let j = 0; j < categories.length; ++j) {
-        if (result[i] === categories[j].parent_category_id) {
-          result[result.length] = categories[j].id;
-        }
-      }
+    if (!categoryId) {
+      return [];
     }
 
-    return new Set(result);
+    const descendants = Category.findById(categoryId).descendants.map(
+      (c) => c.id
+    );
+
+    return new Set([categoryId, ...descendants]);
   }
 
   countCategoryByState({

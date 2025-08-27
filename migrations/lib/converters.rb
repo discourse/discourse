@@ -39,6 +39,9 @@ module Migrations
     end
 
     def self.default_settings_path(converter_name)
+      local_settings_path = File.join(path_of(converter_name), "settings.local.yml")
+      return local_settings_path if File.exist?(local_settings_path)
+
       File.join(path_of(converter_name), "settings.yml")
     end
   end

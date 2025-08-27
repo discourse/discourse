@@ -7,9 +7,13 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 // TODO: Consolidate these tests into a single acceptance test once the Glimmer
 // header is the default.
 
-acceptance("Header API - anonymous", function () {
+acceptance("Header API - anonymous", function (needs) {
+  needs.settings({
+    enable_welcome_banner: false,
+  });
+
   test("can add buttons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerButtons.add(
         "test",
         <template>
@@ -23,7 +27,7 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("buttons are positioned to the left of the auth buttons by default", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerButtons.add(
         "test",
         <template>
@@ -43,7 +47,7 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("can add icons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerIcons.add(
         "test",
         <template>
@@ -57,7 +61,7 @@ acceptance("Header API - anonymous", function () {
   });
 
   test("icons are positioned to the left of search icon by default", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerIcons.add(
         "test",
         <template>
@@ -81,7 +85,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   needs.user({ groups: AUTO_GROUPS.everyone });
 
   test("can add buttons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerButtons.add(
         "test",
         <template>
@@ -95,7 +99,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("buttons can be repositioned", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerButtons.add(
         "test1",
         <template>
@@ -123,7 +127,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("can add icons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerIcons.add(
         "test",
         <template>
@@ -137,7 +141,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
   });
 
   test("icons can be repositioned", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
+    withPluginApi((api) => {
       api.headerIcons.add(
         "test1",
         <template>

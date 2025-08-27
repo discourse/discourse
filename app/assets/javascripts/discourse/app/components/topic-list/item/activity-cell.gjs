@@ -1,9 +1,9 @@
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 const ActivityCell = <template>
   <td
@@ -12,12 +12,13 @@ const ActivityCell = <template>
       "activity num topic-list-data"
       (coldAgeClass @topic.createdAt startDate=@topic.bumpedAt class="")
     }}
+    ...attributes
   >
     <a href={{@topic.lastPostUrl}} class="post-activity">
       {{~! no whitespace ~}}
       <PluginOutlet
         @name="topic-list-before-relative-date"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       />
       {{~formatDate @topic.bumpedAt format="tiny" noTitle="true"~}}
     </a>

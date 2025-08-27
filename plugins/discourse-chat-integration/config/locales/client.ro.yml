@@ -1,0 +1,184 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integrări pentru discuții"
+  js:
+    chat_integration:
+      menu_title: "Integrări pentru discuții"
+      settings: "Setări"
+      no_providers: "Trebuie să activezi niște furnizori în setările modulului"
+      channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Dă clic pe pictogramele de eroare pentru a afla mai multe."
+      channel_exception: "A apărut o eroare necunoscută atunci când un mesaj a fost trimis ultima dată pe acest canal."
+      group_mention_template: "Mențiuni despre: @%{name}"
+      group_message_template: "Mesaje către: @%{name}"
+      choose_group: "(selectează un grup)"
+      all_categories: "(toate categoriile)"
+      all_tags: "(toate etichetele)"
+      create_rule: "Creează regulă"
+      create_channel: "Creează canal"
+      delete_channel: "Șterge"
+      test_channel: "Test"
+      edit_channel: "Editează"
+      channel_delete_confirm: "Sigur vrei să ștergi acest canal? Toate regulile asociate vor fi șterse."
+      test_modal:
+        title: "Trimite un mesaj de test"
+        topic: "Subiect"
+        send: "Trimite un mesaj de test"
+        close: "Închide"
+        error: "O eroare necunoscută a apărut atunci când mesajul era în curs de trimitere. Verifică jurnalele site-ului pentru mai multe informații."
+        success: "Mesajul a fost trimis cu succes"
+      type:
+        normal: Normal
+        group_message: Mesaj de grup
+        group_mention: Mențiune de grup
+      filter:
+        mute: 'Silențios'
+        follow: 'Doar prima postare'
+        watch: 'Toate postările și răspunsurile'
+        thread: 'Toate postările cu răspunsuri grupate în fire de discuție'
+      rule_table:
+        filter: "Filtru"
+        category: "Categorie"
+        tags: "Etichete"
+        edit_rule: "Editează"
+        delete_rule: "Șterge"
+      edit_channel_modal:
+        title: "Editează canal"
+        save: "Salvează canal"
+        cancel: "Anulează"
+        provider: "Furnizor"
+        channel_validation:
+          ok: "Corect"
+          fail: "Format incorect"
+      edit_rule_modal:
+        title: Editează regulă
+        save: Salvează regulă
+        cancel: Anulează
+        provider: Furnizor
+        type: Tip
+        channel: Canal
+        filter: Filtru
+        category: Categorie
+        group: Grup
+        tags: Etichete
+        instructions:
+          type: "Schimbă tipul pentru a declanșa notificări pentru mesajele sau mențiunile de grup"
+          filter: "Nivel de notificare. Dezactivarea sunetului are prioritate față de alte reguli de potrivire"
+          category: "Această regulă se va aplica doar subiectelor din categoria specificată"
+          group: "Această regulă se va aplica postărilor care fac referire la acest grup"
+          tags: "Dacă este specificată, această regulă se va aplica doar subiectelor care au cel puțin una dintre aceste etichete"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canal
+              help: "de ex. #canal, @utilizator."
+          errors:
+            action_prohibited: "Botul nu are permisiunea de a posta pe canalul respectiv"
+            channel_not_found: "Canalul specificat nu există pe Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Telegram."
+            chat_id:
+              title: ID discuție
+              help: Un număr dat de bot sau un identificator de canal de difuzare sub forma @numecanal
+          errors:
+            channel_not_found: "Canalul specificat nu există pe Telegram"
+            forbidden: "Botul nu are permisiunea de a posta pe canalul respectiv"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Discord."
+            webhook_url:
+              title: URL cârlig web
+              help: URL-ul cârligului web creat în setările serverului Discord
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Guilded"
+            webhook_url:
+              title: URL cârlig web
+              help: URL-ul cârligului web creat în setările serverului Guilded
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canal
+              help: "de ex. #canal, @utilizator."
+          errors:
+            channel_not_found: "Canalul specificat nu există pe Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Matrix."
+            room_id:
+              title: "ID cameră"
+          errors:
+            unknown_token: "Jetonul de acces nu este valid"
+            unknown_room: "ID-ul camerei nu este valid"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Flux"
+              help: "Numele fluxului Zulip către care ar trebui trimis mesajul. De exemplu „general”"
+            subject:
+              title: "Subiect"
+        rocketchat:
+          param:
+            identifier:
+              title: Canal
+              help: "de ex. #canal, @utilizator."
+        gitter:
+          param:
+            name:
+              title: "Nume"
+        teams:
+          param:
+            name:
+              title: "Nume"
+        powerautomate:
+          param:
+            name:
+              title: "Nume"
+        webex:
+          param:
+            name:
+              title: "Nume"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "Nume"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Mesaj
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Furnizor

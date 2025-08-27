@@ -55,7 +55,7 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
 
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "all";
-    this.siteSettings.allow_anonymous_posting = true;
+    this.siteSettings.allow_anonymous_mode = true;
 
     await catchAbortedTransition();
 

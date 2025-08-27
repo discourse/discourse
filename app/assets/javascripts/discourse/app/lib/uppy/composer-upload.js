@@ -44,7 +44,6 @@ export default class UppyComposerUpload {
   editorInputClass = ".d-editor-input";
   mobileFileUploaderId = "mobile-file-upload";
   fileUploadElementId;
-  editorClass = ".d-editor";
 
   composerEventPrefix;
   composerModel;
@@ -108,7 +107,9 @@ export default class UppyComposerUpload {
       this.fileInputEventListener
     );
 
-    this.#editorEl?.removeEventListener("paste", this._pasteEventListener);
+    this.#editorEl?.removeEventListener("paste", this._pasteEventListener, {
+      capture: true,
+    });
 
     this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
@@ -134,7 +135,7 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
-    this.#editorEl = element.querySelector(this.editorClass);
+    this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
     this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
@@ -147,7 +148,9 @@ export default class UppyComposerUpload {
       this.#fileInputEl,
       this._addFiles
     );
-    this.#editorEl.addEventListener("paste", this._pasteEventListener);
+    this.#editorEl.addEventListener("paste", this._pasteEventListener, {
+      capture: true,
+    });
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
@@ -365,14 +368,17 @@ export default class UppyComposerUpload {
           getUploadMarkdown(upload)
         );
 
-        // Only remove in progress after async resolvers finish:
-        this.#removeInProgressUpload(file.id);
         cacheShortUploadUrl(upload.short_url, upload);
 
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
           file,
           upload.url,
+
+          // This callback is fired even if the thumbnail callnot be generated,
+          // e.g. if video_thumbnails_enabled is false or if the file is not a video.
           () => {
+            this.#removeInProgressUpload(file.id);
+
             this.placeholderHandler.success(file, markdown);
 
             this.appEvents.trigger(
@@ -478,7 +484,7 @@ export default class UppyComposerUpload {
           optionsResolverFn({
             composerModel: this.composerModel,
             capabilities: this.capabilities,
-            isMobileDevice: this.site.isMobileDevice,
+            isMobileDevice: this.capabilities.isMobileDevice,
           })
         );
       });
@@ -626,14 +632,18 @@ export default class UppyComposerUpload {
     const uploadingText = i18n("uploading_filename", {
       filename: "%placeholder%",
     });
-    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+    const uploadingTextMatch = uploadingText.match(
+      /^.*(?=: %placeholder%\s?…)/
+    );
 
     if (!uploadingTextMatch || !uploadingTextMatch[0]) {
       return;
     }
 
     const uploadingImagePattern = new RegExp(
-      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "\\[" +
+        uploadingTextMatch[0].trim() +
+        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
       "g"
     );
 
@@ -647,7 +657,9 @@ export default class UppyComposerUpload {
       imagePlaceholder = imagePlaceholder.trim();
 
       const filenamePattern = new RegExp(
-        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
+        "\\[" +
+          uploadingTextMatch[0].trim() +
+          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
       );
 
       const filenameMatch = imagePlaceholder.match(filenamePattern);

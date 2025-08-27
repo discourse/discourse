@@ -70,7 +70,7 @@ export default class SwipeModifier extends Modifier {
       lockBody,
     }
   ) {
-    if (enabled === false || !this.site.mobileView) {
+    if (enabled === false || this.site.desktopView) {
       this.enabled = enabled;
       return;
     }

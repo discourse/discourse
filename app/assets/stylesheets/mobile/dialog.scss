@@ -1,6 +1,0 @@
-.dialog-container {
-  // fixes modal placement on Android when keyboard is visible
-  html.keyboard-visible:not(.ios-device) & {
-    height: calc(100% - env(keyboard-inset-height));
-  }
-}

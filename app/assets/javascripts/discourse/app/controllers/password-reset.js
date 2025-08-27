@@ -30,6 +30,7 @@ export default class PasswordResetController extends Controller {
   redirected = false;
   maskPassword = true;
   passwordValidationHelper = new PasswordValidationHelper(this);
+  isLoading = false;
 
   lockImageUrl = getURL("/images/lock.svg");
 
@@ -93,6 +94,8 @@ export default class PasswordResetController extends Controller {
   @action
   async submit() {
     try {
+      this.set("isLoading", true);
+
       const result = await ajax({
         url: userPath(`password-reset/${this.get("model.token")}.json`),
         type: "PUT",
@@ -149,6 +152,8 @@ export default class PasswordResetController extends Controller {
       } else {
         throw new Error(e);
       }
+    } finally {
+      this.set("isLoading", false);
     }
   }
 

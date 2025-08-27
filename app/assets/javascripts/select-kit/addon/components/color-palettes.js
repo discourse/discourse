@@ -1,6 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import ColorPalettesRow from "./color-palettes/color-palettes-row";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("color-palettes")
@@ -10,6 +11,6 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 @pluginApiIdentifiers(["color-palettes"])
 export default class ColorPalettes extends ComboBoxComponent {
   modifyComponentForRow() {
-    return "color-palettes/color-palettes-row";
+    return ColorPalettesRow;
   }
 }

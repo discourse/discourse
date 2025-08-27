@@ -16,7 +16,6 @@ import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
-  @service menu;
   @service site;
 
   menuInstance = new DMenuInstance(getOwner(this), {
@@ -64,10 +63,6 @@ export default class DMenu extends Component {
     }
   }
 
-  get menuId() {
-    return `d-menu-${this.menuInstance.id}`;
-  }
-
   get options() {
     return this.menuInstance?.options ?? {};
   }
@@ -75,6 +70,7 @@ export default class DMenu extends Component {
   get componentArgs() {
     return {
       close: this.menuInstance.close,
+      show: this.menuInstance.show,
       data: this.options.data,
     };
   }
@@ -131,6 +127,7 @@ export default class DMenu extends Component {
       data-trigger
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
+      @componentArgs={{this.componentArgs}}
       ...attributes
     >
       {{#if (has-block "trigger")}}

@@ -68,9 +68,13 @@ cs:
           fields:
             restricted_tags:
               label: Štítky
-            restricted_category:
+            restricted_categories:
               label: Kategorie
           created: Vytvořený
+          with_images: Obrázky
+          with_links: Odkazy
+          with_code: Kód
+          with_uploads: Nahrané soubory
         category_created_edited:
           fields:
             restricted_category:
@@ -153,7 +157,5 @@ cs:
             label: Verze
           status:
             label: Stav
-          enabled:
-            label: Zapnuto
           disabled:
             label: Vypnuto

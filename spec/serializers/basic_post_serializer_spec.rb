@@ -2,8 +2,8 @@
 
 RSpec.describe BasicPostSerializer do
   describe "#name" do
-    let(:user) { Fabricate.build(:user) }
-    let(:post) { Fabricate.build(:post, user: user, cooked: "Hur dur I am a cooked raw") }
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user, cooked: "Hur dur I am a cooked raw") }
     let(:serializer) { BasicPostSerializer.new(post, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
 
@@ -22,15 +22,13 @@ RSpec.describe BasicPostSerializer do
         expect(json[:cooked]).to eq(post.cooked)
       end
 
-      it "returns the modified cooked when register modified" do
-        plugin = Plugin::Instance.new
-        modifier = :basic_post_serializer_cooked
-        proc = Proc.new { "X" }
-        DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+      it "returns the localized cooked" do
+        SiteSetting.content_localization_enabled = true
+        Fabricate(:post_localization, post: post, cooked: "X", locale: "ja")
+        I18n.locale = "ja"
+        post.update!(locale: "en")
 
         expect(json[:cooked]).to eq("X")
-      ensure
-        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
       end
     end
   end

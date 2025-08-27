@@ -1,0 +1,29 @@
+.user-color-palette-menu {
+  &__item .btn-icon-text.btn-flat {
+    background-color: var(--d-content-background);
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  &__item .btn-icon-text.btn-flat:hover {
+    background-color: var(--d-selected);
+    box-shadow: none;
+    color: var(--primary);
+  }
+
+  &__item .btn-icon-text.btn-flat:hover svg {
+    color: var(--icon-color);
+  }
+
+  &__item .btn-icon-text.btn-flat svg {
+    color: var(--icon-color);
+  }
+
+  &__item-choice.active.btn-icon-text.btn-flat {
+    background-color: var(--d-selected);
+  }
+}
+
+.user-color-palette-content .fk-d-menu__inner-content {
+  border: none;
+}

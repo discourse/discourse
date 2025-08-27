@@ -38,6 +38,6 @@ export default class ChannelHashtagType extends HashtagTypeBase {
   }
 
   isLoaded(id) {
-    return !this.site.lazy_load_categories || super.isLoaded(id);
+    return super.isLoaded(id);
   }
 }

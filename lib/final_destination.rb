@@ -37,7 +37,7 @@ class FinalDestination
   end
 
   DEFAULT_USER_AGENT =
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
 
   attr_reader :status, :cookie, :status_code, :content_type, :ignored
 
@@ -236,11 +236,6 @@ class FinalDestination
       end
     end
 
-    if Oneboxer.cached_response_body_exists?(@uri.to_s)
-      @status = :resolved
-      return @uri
-    end
-
     headers = request_headers
     middlewares = Excon.defaults[:middlewares].dup
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
@@ -294,13 +289,6 @@ class FinalDestination
 
     case response.status
     when 200
-      # Cache body of successful `get` requests
-      if @http_verb == :get
-        if Oneboxer.cache_response_body?(@uri)
-          Oneboxer.cache_response_body(@uri.to_s, response_body)
-        end
-      end
-
       if @follow_canonical
         next_url = fetch_canonical_url(response_body)
 

@@ -17,11 +17,11 @@ module Onebox
     #
     # Note that the size of the response body is capped at `Onebox.options.max_download_kb`. When the limit has been reached,
     # this method will return the response body that has been downloaded up to the limit.
-    def self.fetch_html_doc(url, headers = nil, body_cacher = nil)
+    def self.fetch_html_doc(url, headers = nil)
       response =
         (
           begin
-            fetch_response(url, headers:, body_cacher:, raise_error_when_response_too_large: false)
+            fetch_response(url, headers:, raise_error_when_response_too_large: false)
           rescue StandardError
             nil
           end
@@ -50,12 +50,7 @@ module Onebox
             response =
               (
                 begin
-                  fetch_response(
-                    uri.to_s,
-                    headers:,
-                    body_cacher:,
-                    raise_error_when_response_too_large: false,
-                  )
+                  fetch_response(uri.to_s, headers:, raise_error_when_response_too_large: false)
                 rescue StandardError
                   nil
                 end
@@ -73,7 +68,6 @@ module Onebox
       redirect_limit: 5,
       domain: nil,
       headers: nil,
-      body_cacher: nil,
       raise_error_when_response_too_large: true,
       allow_cross_domain_cookies: false
     )
@@ -84,13 +78,6 @@ module Onebox
 
       uri = Addressable::URI.parse(location)
       uri = Addressable::URI.join(domain, uri) if !uri.host
-
-      use_body_cacher = body_cacher && body_cacher.respond_to?("fetch_cached_response_body")
-      if use_body_cacher
-        response_body = body_cacher.fetch_cached_response_body(uri.to_s)
-
-        return response_body if response_body.present?
-      end
 
       result = StringIO.new
       FinalDestination::HTTP.start(
@@ -144,10 +131,6 @@ module Onebox
             end
 
             raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
-          end
-
-          if use_body_cacher && body_cacher.cache_response_body?(uri)
-            body_cacher.cache_response_body(uri.to_s, result.string)
           end
 
           return result.string

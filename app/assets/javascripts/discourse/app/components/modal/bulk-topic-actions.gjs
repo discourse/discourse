@@ -27,8 +27,8 @@ export function addBulkDropdownAction(name, customAction) {
 }
 
 export default class BulkTopicActions extends Component {
-  @service router;
   @service toasts;
+
   @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
@@ -37,7 +37,7 @@ export default class BulkTopicActions extends Component {
   @tracked isSilent = false;
   @tracked closeNote = null;
 
-  notificationLevelId = null;
+  @tracked notificationLevelId = null;
 
   constructor() {
     super(...arguments);
@@ -87,9 +87,7 @@ export default class BulkTopicActions extends Component {
     const options = {};
 
     if (this.isSilent) {
-      const newType =
-        operation.type === "close" ? "silent_close" : operation.type;
-      operation.type = newType;
+      operation.silent = true;
     }
 
     if (this.isCloseAction && this.closeNote) {
@@ -150,14 +148,22 @@ export default class BulkTopicActions extends Component {
         break;
       case "archive_messages":
       case "move_messages_to_inbox":
+        let params = { type: this.model.action };
+
         let userPrivateMessages = getOwner(this).lookup(
           "controller:user-private-messages"
         );
 
-        let params = { type: this.model.action };
-
         if (userPrivateMessages.isGroup) {
           params.group = userPrivateMessages.groupFilter;
+        }
+
+        let groupPrivateMessages = getOwner(this).lookup(
+          "controller:group-messages"
+        );
+
+        if (groupPrivateMessages.isGroup) {
+          params.group = groupPrivateMessages.model.name;
         }
 
         this.performAndRefresh(params);
@@ -220,12 +226,12 @@ export default class BulkTopicActions extends Component {
     this.loading = false;
     if (this.errors) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("generic_error") },
       });
     } else {
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("topics.bulk.completed") },
       });
     }
@@ -316,6 +322,14 @@ export default class BulkTopicActions extends Component {
 
   get showSoleCategoryTip() {
     return this.soleCategory && this.isTagAction;
+  }
+
+  get disabledSubmit() {
+    if (this.isNotificationAction) {
+      return !this.notificationLevelId || this.loading;
+    }
+
+    return this.loading;
   }
 
   @action
@@ -440,7 +454,7 @@ export default class BulkTopicActions extends Component {
         />
         <DButton
           @action={{this.performAction}}
-          @disabled={{this.loading}}
+          @disabled={{this.disabledSubmit}}
           @icon="check"
           @label="topics.bulk.confirm"
           id="bulk-topics-confirm"

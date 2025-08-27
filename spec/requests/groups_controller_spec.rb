@@ -2,8 +2,8 @@
 
 RSpec.describe GroupsController do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:other_user, :user)
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin)
@@ -451,45 +451,49 @@ RSpec.describe GroupsController do
   end
 
   describe "#show" do
-    it "ensures the group can be seen" do
-      sign_in(user)
-      group.update!(visibility_level: Group.visibility_levels[:owners])
+    shared_examples "group show behavior" do |path_prefix, param|
+      it "ensures the group can be seen" do
+        sign_in(user)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
-      get "/groups/#{group.name}.json"
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
-      expect(response.status).to eq(404)
-    end
+        expect(response.status).to eq(404)
+      end
 
-    it "returns the right response" do
-      sign_in(user)
-      mod_group = Group.find(moderator_group_id)
-      get "/groups/#{group.name}.json"
-
-      expect(response.status).to eq(200)
-
-      body = response.parsed_body
-
-      expect(body["group"]["id"]).to eq(group.id)
-      expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
-      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
-    end
-
-    context "as an admin" do
       it "returns the right response" do
-        sign_in(admin)
-        get "/groups/#{group.name}.json"
+        sign_in(user)
+        mod_group = Group.find(moderator_group_id)
+
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
         expect(response.status).to eq(200)
 
         body = response.parsed_body
 
         expect(body["group"]["id"]).to eq(group.id)
+        expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+      end
 
-        groups = Group::AUTO_GROUPS.keys
-        groups.delete(:everyone)
-        groups.push(group.name)
+      context "as an admin" do
+        it "returns the right response" do
+          sign_in(admin)
 
-        expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+          get "#{path_prefix}/#{group.public_send(param)}.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body["group"]["id"]).to eq(group.id)
+
+          groups = Group::AUTO_GROUPS.keys
+          groups.delete(:everyone)
+          groups.push(group.name)
+
+          expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+        end
       end
     end
 
@@ -503,7 +507,6 @@ RSpec.describe GroupsController do
       expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
       expect(response.body).to have_tag(:meta, with: { property: "og:title", content: group.name })
 
-      # note this uses an excerpt so it strips html
       expect(response.body).to have_tag(
         :meta,
         with: {
@@ -513,16 +516,24 @@ RSpec.describe GroupsController do
       )
     end
 
-    describe "when viewing activity filters" do
-      it "should return the right response" do
-        get "/groups/#{group.name}/activity/posts.json"
+    describe "when accessing by name" do
+      include_examples "group show behavior", "/groups", :name
 
-        expect(response.status).to eq(200)
+      describe "when viewing activity filters" do
+        it "should return the right response" do
+          get "/groups/#{group.name}/activity/posts.json"
 
-        body = response.parsed_body["group"]
+          expect(response.status).to eq(200)
 
-        expect(body["id"]).to eq(group.id)
+          body = response.parsed_body["group"]
+
+          expect(body["id"]).to eq(group.id)
+        end
       end
+    end
+
+    describe "when accessing by id" do
+      include_examples "group show behavior", "/groups/by-id", :id
     end
   end
 
@@ -1636,7 +1647,7 @@ RSpec.describe GroupsController do
       end
 
       context "when is able to add several members to a group" do
-        fab!(:user1) { Fabricate(:user) }
+        fab!(:user1, :user)
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
@@ -2166,7 +2177,7 @@ RSpec.describe GroupsController do
 
       describe "#remove_members" do
         context "when is able to remove several members from a group" do
-          fab!(:user1) { Fabricate(:user) }
+          fab!(:user1, :user)
           fab!(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
@@ -2487,7 +2498,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#request_membership" do
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "requires the user to log in" do
       post "/groups/#{group.name}/request_membership.json"
@@ -2641,6 +2652,19 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+
+        get "/groups/search.json?include_everyone=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *automatic_ids,
+        )
       end
     end
 

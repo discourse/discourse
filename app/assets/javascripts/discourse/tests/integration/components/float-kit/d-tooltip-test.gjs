@@ -7,6 +7,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
 import DTooltip from "float-kit/components/d-tooltip";
@@ -320,7 +321,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("a tooltip is triggered/untriggered by click on mobile", async function (assert) {
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(
       <template><DTooltip @inline={{true}} @label="label" /></template>

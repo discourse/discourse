@@ -343,19 +343,6 @@ nb_NO:
 
           Merk at når du svarer på et emne, eller les et emne i mer enn noen få minutter, det blir automatisk satt til et varslingsnivå for 'sporing'. Du kan endre dette i [dine brukerinnstillinger](%{base_uri}/my/preferanser).
       poll:
-        instructions: |-
-          Visste du at du enkelt kan legge til en avstemning i et innlegg? Prøv å trykke på <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjulet i redigeringsverktøyet og **lag en avstemning**.
-        not_found: |-
-          Oops! Det var ingen avstemning i svaret ditt.
-
-          Bruk <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjul symbolet i redigeringsverkøyet, eller kopier og lim inn denne avstemningen i det neste svaret ditt:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hei, fin avstemning! Hvordan gjorde jeg det i opplæringsprosessen?
 
@@ -364,20 +351,6 @@ nb_NO:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Av og til kan du ønske å **skjule detaljer** i svarene dine:
-
-          - Når du diskuterer handlingen i en film eller TV-serie som noen ville ansett som en spoiler.
-
-          - Når innlegget ditt trenger å inneholde masse detaljert informasjon som kanskje kan være overveldende hvis alt blir presantert på en gang.
-
-          [details=Se hordan dette fungerer!]
-          1. Velg <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjulet i redigeringsverktøyet.
-          2. Velg "Skjul detaljer".
-          3. Bytt ut teksten i sammendraget med innholdet du ønsker.
-          [/details]
-
-          Klarer du å bruke <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjulet i redigeringsverktøyet for å legge til en detaljeboks i det neste svaret ditt?
         not_found: |-
           Strever du med å lage en detaljeboks? Prøv å inkludere den følgende teksten i det neste svaret ditt:
 

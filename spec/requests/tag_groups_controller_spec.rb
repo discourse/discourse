@@ -51,7 +51,18 @@ RSpec.describe TagGroupsController do
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/tag_groups/filter/search.json",
-                       SiteSetting.max_tag_search_results
+                       described_class::MAX_TAG_GROUPS_SEARCH_RESULTS
+    end
+
+    it "doesn't error when the max_tag_search_results setting is lowered from its default" do
+      tag_group = tag_group_with_permission(everyone, readonly)
+
+      SiteSetting.max_tag_search_results = 4
+
+      get "/tag_groups/filter/search.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["results"].size).to eq(1)
+      expect(response.parsed_body["results"].first["name"]).to eq(tag_group.name)
     end
 
     context "for anons" do
@@ -151,8 +162,8 @@ RSpec.describe TagGroupsController do
   describe "#create" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before { sign_in(admin) }
 
@@ -181,8 +192,8 @@ RSpec.describe TagGroupsController do
   describe "#delete" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }
@@ -208,9 +219,9 @@ RSpec.describe TagGroupsController do
   describe "#update" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }

@@ -6,8 +6,8 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
   fab!(:original_message) do
     Fabricate(
       :chat_message,
@@ -64,6 +64,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.message_thread_indicator(original_message).click
+      expect(thread_page).to be_open
       thread_page.send_message("reply to message")
 
       expect(thread_page.messages).to have_message(text: message_1.message)
@@ -88,10 +89,8 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
         text: original_message.excerpt,
       )
 
-      channel_page.fill_composer("reply to message")
-      channel_page.click_send_message
-
-      expect(channel_page.messages).to have_message(text: "reply to message")
+      text = channel_page.send_message("this is a test message")
+      expect(channel_page.messages).to have_message(text:)
     end
   end
 end

@@ -4,7 +4,7 @@ RSpec.describe Chat::Thread do
   before { SiteSetting.chat_enabled = true }
 
   describe ".ensure_consistency!" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_3) { Fabricate(:chat_thread, channel: channel) }
@@ -64,7 +64,7 @@ RSpec.describe Chat::Thread do
   end
 
   describe ".clear_caches" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
 
@@ -101,7 +101,7 @@ RSpec.describe Chat::Thread do
   end
 
   describe ".grouped_messages" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
 
@@ -204,7 +204,7 @@ RSpec.describe Chat::Thread do
   end
 
   describe "#latest_not_deleted_message_id" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
     fab!(:old_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
@@ -233,7 +233,7 @@ RSpec.describe Chat::Thread do
   end
 
   describe "custom fields" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
     it "allows create and save" do

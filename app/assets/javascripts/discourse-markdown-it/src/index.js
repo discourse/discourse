@@ -12,8 +12,12 @@ export default class DiscourseMarkdownIt {
     return this.withFeatures(DEFAULT_FEATURES);
   }
 
-  static withCustomFeatures(features) {
-    return this.withFeatures([...DEFAULT_FEATURES, ...features]);
+  static withCustomFeatures(features, omitFromDefault) {
+    const omitIds = new Set(omitFromDefault);
+    return this.withFeatures([
+      ...DEFAULT_FEATURES.filter((f) => !omitIds.has(f.id)),
+      ...features,
+    ]);
   }
 
   static withFeatures(features) {
@@ -51,6 +55,12 @@ export default class DiscourseMarkdownIt {
   }
 
   cook(raw) {
+    if (raw === undefined || raw === null) {
+      return "";
+    }
+
+    raw = raw.toString();
+
     if (!raw || raw.length === 0) {
       return "";
     }

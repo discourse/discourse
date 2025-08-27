@@ -9,9 +9,9 @@ RSpec.describe Chat::RemoveUserFromChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:acting_user) { Fabricate(:admin) }
+    fab!(:acting_user, :admin)
     fab!(:user)
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
 
     let(:guardian) { Guardian.new(acting_user) }
     let(:params) { { channel_id: channel.id, user_id: user.id } }
@@ -111,7 +111,7 @@ RSpec.describe Chat::RemoveUserFromChannel do
     end
 
     context "when user is not an admin" do
-      fab!(:acting_user) { Fabricate(:user) }
+      fab!(:acting_user, :user)
 
       it { is_expected.to fail_a_policy(:can_remove_users_from_channel) }
     end

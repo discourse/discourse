@@ -1,6 +1,8 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { getOwner } from "@ember/owner";
 import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
@@ -17,11 +19,18 @@ import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
+import { normalize } from "select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
-} from "select-kit/mixins/plugin-api";
-import UtilsMixin from "select-kit/mixins/utils";
+} from "select-kit/lib/plugin-api";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+import ErrorsCollection from "./select-kit/errors-collection";
+import SelectKitCollection from "./select-kit/select-kit-collection";
+import SelectKitFilter from "./select-kit/select-kit-filter";
+import SelectKitRow from "./select-kit/select-kit-row";
+import SelectedChoice from "./selected-choice";
+import SelectedName from "./selected-name";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -63,6 +72,26 @@ export function pluginApiIdentifiers(identifiers) {
   return function (target) {
     concatProtoProperty(target, "pluginApiIdentifiers", identifiers);
   };
+}
+
+export function resolveComponent(context, component) {
+  const owner = getOwner(context);
+
+  if (typeof component === "string") {
+    deprecated(
+      `[${component}] SelectKit components should be imported and passed by reference, not as a string`,
+      {
+        id: "discourse.select-kit-resolved-components",
+      }
+    );
+    const result = owner.resolveRegistration(`component:${component}`);
+    if (!result) {
+      throw new Error(`Component not found: ${component}`);
+    }
+    return result;
+  }
+
+  return component;
 }
 
 // Decorator which converts a field into a prototype property.
@@ -107,9 +136,9 @@ function protoProp(prototype, key, descriptor) {
   limitMatches: null,
   placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
   verticalOffset: 3,
-  filterComponent: "select-kit/select-kit-filter",
-  selectedNameComponent: "selected-name",
-  selectedChoiceComponent: "selected-choice",
+  filterComponent: SelectKitFilter,
+  selectedNameComponent: SelectedName,
+  selectedChoiceComponent: SelectedChoice,
   castInteger: false,
   focusAfterOnChange: true,
   triggerOnChangeOnTab: true,
@@ -123,7 +152,8 @@ function protoProp(prototype, key, descriptor) {
   formName: null,
 })
 @pluginApiIdentifiers(["select-kit"])
-export default class SelectKit extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKit extends Component {
   @service appEvents;
 
   singleSelect = false;
@@ -222,7 +252,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
 
   _modifyComponentForRowWrapper(collection, item) {
     let component = this.modifyComponentForRow(collection, item);
-    return component || "select-kit/select-kit-row";
+    return component || SelectKitRow;
   }
 
   modifyComponentForRow() {}
@@ -252,10 +282,10 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     if (!component) {
       switch (identifier) {
         case ERRORS_COLLECTION:
-          component = "select-kit/errors-collection";
+          component = ErrorsCollection;
           break;
         default:
-          component = "select-kit/select-kit-collection";
+          component = SelectKitCollection;
           break;
       }
     }
@@ -624,9 +654,9 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
       }
     }
 
-    const action = get(this, actionName);
-    if (boundaryAction && action) {
-      boundaryAction = action.call(this, ...params);
+    const theAction = get(this, actionName);
+    if (boundaryAction && theAction) {
+      boundaryAction = theAction.call(this, ...params);
     }
 
     return boundaryAction;
@@ -1269,6 +1299,10 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
         this.set(to, this.get(from));
       }
     });
+  }
+
+  _normalize(input) {
+    return normalize(input);
   }
 }
 

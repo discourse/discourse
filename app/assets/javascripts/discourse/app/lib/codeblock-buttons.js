@@ -5,7 +5,6 @@ import { bind } from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
-import Mobile from "discourse/lib/mobile";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -32,9 +31,13 @@ import { i18n } from "discourse-i18n";
 // Make sure to run .cleanup() on the instance once you are done to
 // remove click events.
 export default class CodeblockButtons {
+  #site;
+
   constructor(opts = {}) {
     this._codeblockButtonClickHandlers = {};
     this._fadeCopyCodeblocksRunners = {};
+    this.#site = opts.site;
+
     opts = Object.assign(
       {
         showFullscreen: true,
@@ -106,6 +109,8 @@ export default class CodeblockButtons {
     codeBlocks.forEach((codeBlock) => {
       const wrapperEl = document.createElement("div");
       wrapperEl.classList.add("codeblock-button-wrapper");
+
+      codeBlock.parentElement.classList.add("codeblock-buttons");
       codeBlock.before(wrapperEl);
 
       if (this.showCopy) {
@@ -119,7 +124,7 @@ export default class CodeblockButtons {
         }px`;
       }
 
-      if (this.showFullscreen && !Mobile.isMobileDevice) {
+      if (this.#site?.desktopView && this.showFullscreen) {
         const fullscreenButton = document.createElement("button");
         fullscreenButton.classList.add(
           "btn",
@@ -131,8 +136,6 @@ export default class CodeblockButtons {
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);
       }
-
-      codeBlock.parentElement.classList.add("codeblock-buttons");
     });
   }
 

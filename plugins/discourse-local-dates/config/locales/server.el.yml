@@ -8,4 +8,3 @@ el:
   site_settings:
     discourse_local_dates_default_formats: "Συχνά χρησιμοποιούμενες μορφές ώρας-ημερομηνίας, δείτε: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>μορφή συμβολοσειράς momentjs</a>"
     discourse_local_dates_default_timezones: "Η προεπιλεγμένη λίστα των ζωνών ώρας, πρέπει να είναι έγκυρη <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>ΖΩ</a>"
-    discourse_local_dates_email_format: "Μορφή που χρησιμοποιείται για την εμφάνιση ημερομηνίας σε emails"

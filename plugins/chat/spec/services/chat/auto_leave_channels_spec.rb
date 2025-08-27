@@ -19,8 +19,8 @@ RSpec.describe Chat::AutoLeaveChannels do
       before { SiteSetting.chat_enabled = true }
 
       context "when users are not allowed to chat" do
-        fab!(:uccm_1) { Fabricate(:user_chat_channel_membership) }
-        fab!(:uccm_2) { Fabricate(:user_chat_channel_membership_for_dm) }
+        fab!(:uccm_1, :user_chat_channel_membership)
+        fab!(:uccm_2, :user_chat_channel_membership_for_dm)
 
         it "removes all their memberships" do
           expect { result }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(0)
@@ -49,7 +49,7 @@ RSpec.describe Chat::AutoLeaveChannels do
       end
 
       context "when everyone is allowed to chat" do
-        fab!(:uccm) { Fabricate(:user_chat_channel_membership) }
+        fab!(:uccm, :user_chat_channel_membership)
 
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
 

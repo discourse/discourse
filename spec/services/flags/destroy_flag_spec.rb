@@ -8,7 +8,7 @@ RSpec.describe(Flags::DestroyFlag) do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:flag)
 
     let(:params) { { id: flag_id } }
@@ -44,7 +44,7 @@ RSpec.describe(Flags::DestroyFlag) do
     end
 
     context "when user is not allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end
@@ -60,8 +60,7 @@ RSpec.describe(Flags::DestroyFlag) do
         expect { result }.to change { UserHistory.count }.by(1)
         expect(UserHistory.last).to have_attributes(
           custom_type: "delete_flag",
-          details:
-            "name: offtopic\ndescription: \napplies_to: [\"Post\", \"Chat::Message\"]\nenabled: true",
+          details: "name: offtopic\ndescription: \napplies_to: [\"Post\"]\nenabled: true",
         )
       end
     end

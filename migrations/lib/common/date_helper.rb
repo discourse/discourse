@@ -2,21 +2,16 @@
 
 module Migrations
   module DateHelper
-    # based on code from https://gist.github.com/emmahsax/af285a4b71d8506a1625a3e591dc993b
-    def self.human_readable_time(secs)
-      return "< 1 second" if secs < 1
+    def self.human_readable_time(seconds)
+      hours, remainder = seconds.divmod(3600)
+      minutes, seconds = remainder.divmod(60)
+      format("%02d:%02d:%02d", hours, minutes, seconds)
+    end
 
-      [[60, :seconds], [60, :minutes], [24, :hours], [Float::INFINITY, :days]].map do |count, name|
-          next if secs <= 0
-
-          secs, number = secs.divmod(count)
-          unless number.to_i == 0
-            "#{number.to_i} #{number == 1 ? name.to_s.delete_suffix("s") : name}"
-          end
-        end
-        .compact
-        .reverse
-        .join(", ")
+    def self.track_time
+      start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      yield
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
     end
   end
 end

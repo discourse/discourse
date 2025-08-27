@@ -18,7 +18,7 @@ RSpec.describe StaffActionLogger do
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
-    fab!(:deleted_user) { Fabricate(:user) }
+    fab!(:deleted_user, :user)
 
     it "raises an error when user is nil" do
       expect { logger.log_user_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -50,7 +50,7 @@ RSpec.describe StaffActionLogger do
   describe "log_post_deletion" do
     subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
 
-    fab!(:deleted_post) { Fabricate(:post) }
+    fab!(:deleted_post, :post)
 
     it "raises an error when post is nil" do
       expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -536,7 +536,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_category_deletion" do
-    fab!(:parent_category) { Fabricate(:category) }
+    fab!(:parent_category, :category)
     fab!(:category) { Fabricate(:category, parent_category: parent_category) }
 
     it "raises an error when category is missing" do
@@ -637,7 +637,7 @@ RSpec.describe StaffActionLogger do
       described_class.new(admin).log_check_personal_message(personal_message)
     end
 
-    fab!(:personal_message) { Fabricate(:private_message_topic) }
+    fab!(:personal_message, :private_message_topic)
 
     it "raises an error when topic is nil" do
       expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -655,7 +655,7 @@ RSpec.describe StaffActionLogger do
   describe "log_post_approved" do
     subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
 
-    fab!(:approved_post) { Fabricate(:post) }
+    fab!(:approved_post, :post)
 
     it "raises an error when post is nil" do
       expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -675,7 +675,7 @@ RSpec.describe StaffActionLogger do
       described_class.new(admin).log_post_rejected(reviewable, DateTime.now)
     end
 
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable, :reviewable_queued_post)
 
     it "raises an error when reviewable not supplied" do
       expect { logger.log_post_rejected(nil, DateTime.now) }.to raise_error(

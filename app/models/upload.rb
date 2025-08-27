@@ -23,6 +23,8 @@ class Upload < ActiveRecord::Base
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
   has_many :optimized_images, dependent: :destroy
+  has_many :optimized_videos, dependent: :destroy
+  has_many :optimized_video_uploads, through: :optimized_videos, source: :optimized_upload
   has_many :user_uploads, dependent: :destroy
   has_many :upload_references, dependent: :destroy
   has_many :posts, through: :upload_references, source: :target, source_type: "Post"
@@ -493,15 +495,8 @@ class Upload < ActiveRecord::Base
     secure_status_did_change = self.secure? != mark_secure
     self.update(secure_params(mark_secure, reason, source))
 
-    if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
-      begin
-        Discourse.store.update_upload_ACL(self)
-      rescue Aws::S3::Errors::NotImplemented => err
-        Discourse.warn_exception(
-          err,
-          message: "The file store object storage provider does not support setting ACLs",
-        )
-      end
+    if secure_status_did_change && Discourse.store.external?
+      Discourse.store.update_upload_access_control(self)
     end
 
     secure_status_did_change
@@ -681,7 +676,7 @@ end
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  sha1                         :string(40)
-#  origin                       :string(1000)
+#  origin                       :string(2000)
 #  retain_hours                 :integer
 #  extension                    :string(10)
 #  thumbnail_width              :integer

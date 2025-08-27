@@ -149,14 +149,7 @@ class UploadRecovery
         if key.include?(tombstone_prefix)
           old_key = key
           key = key.sub(tombstone_prefix, "")
-
-          Discourse.store.s3_helper.copy(
-            old_key,
-            key,
-            options: {
-              acl: SiteSetting.s3_use_acls ? "public-read" : nil,
-            },
-          )
+          Discourse.store.copy_file(source: old_key, destination: key, secure: false)
         end
 
         next if upload_exists

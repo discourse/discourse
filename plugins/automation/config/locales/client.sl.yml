@@ -58,9 +58,13 @@ sl:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
+            restricted_categories:
+              label: Kategorije
           created: Ustvarjeno
+          with_images: Slike
+          with_links: Povezave
+          with_code: Koda
+          with_uploads: Prenosi
         category_created_edited:
           fields:
             restricted_category:
@@ -133,7 +137,5 @@ sl:
             label: Verzija
           status:
             label: Stanje
-          enabled:
-            label: Vključeno
           disabled:
             label: Onemogočeno

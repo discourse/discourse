@@ -44,7 +44,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n(
             "admin.config_areas.about.toasts.general_settings_saved"

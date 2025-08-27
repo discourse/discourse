@@ -1,6 +1,5 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import Handlebars from "handlebars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import {
@@ -37,12 +36,6 @@ module("Unit | Utilities", function (hooks) {
       escapeExpression(">"),
       "&gt;",
       "escapes unsafe characters"
-    );
-
-    assert.strictEqual(
-      escapeExpression(new Handlebars.SafeString("&gt;")),
-      "&gt;",
-      "does not double-escape safe strings"
     );
 
     assert.strictEqual(

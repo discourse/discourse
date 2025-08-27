@@ -27,13 +27,9 @@ class DiscourseRedis
 
   def self.ignore_readonly
     yield
-  rescue Redis::CommandError => ex
-    if ex.message =~ /READONLY/
-      Discourse.received_redis_readonly!
-      nil
-    else
-      raise ex
-    end
+  rescue Redis::ReadOnlyError
+    Discourse.received_redis_readonly!
+    nil
   end
 
   # prefix the key with the namespace
@@ -214,7 +210,7 @@ class DiscourseRedis
   end
 
   def reconnect
-    @redis._client.reconnect
+    @redis.close
   end
 
   def namespace_key(key)

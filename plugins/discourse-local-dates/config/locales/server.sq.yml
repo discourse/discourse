@@ -7,4 +7,3 @@
 sq:
   site_settings:
     discourse_local_dates_default_formats: "Formatet e kohës së datës të përdorura shpesh, shih tek: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formati i vargut momentjs</a>"
-    discourse_local_dates_email_format: "Formati i përdorur për të shfaqur një datë në email"

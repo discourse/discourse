@@ -1,8 +1,9 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
-import { helperContext, registerRawHelper } from "discourse/lib/helpers";
+import { helperContext } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -48,12 +49,24 @@ export function categoryBadgeHTML(category, opts) {
     return "";
   }
 
+  if (!opts.styleType) {
+    opts.styleType = category.style_type || "square";
+
+    if (opts.styleType === "icon") {
+      opts.icon = opts.icon || category.icon;
+    } else if (opts.styleType === "emoji") {
+      opts.emoji = opts.emoji || category.emoji;
+    }
+  }
+
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
     const { ancestors, ...otherOpts } = opts;
     return [category, ...ancestors]
       .reverse()
-      .map((c) => categoryBadgeHTML(c, otherOpts))
+      .map((c) => {
+        return categoryBadgeHTML(c, { ...otherOpts, styleType: null });
+      })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
@@ -98,12 +111,20 @@ export function categoryLinkHTML(category, options) {
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
     }
+    if (options.styleType) {
+      categoryOptions.styleType = options.styleType;
+    }
+    if (options.icon) {
+      categoryOptions.icon = options.icon;
+    }
+    if (options.emoji) {
+      categoryOptions.emoji = options.emoji;
+    }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
 
 export default categoryLinkHTML;
-registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${i18n(
@@ -151,6 +172,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
+  if (opts.styleType) {
+    classNames += ` --style-${opts.styleType}`;
+  }
+
   html += `<span
     ${dataAttributes}
     data-drop-close="true"
@@ -162,6 +187,14 @@ export function defaultCategoryLinkRenderer(category, opts) {
     }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
+
+  if (opts.styleType === "icon" && opts.icon) {
+    html += iconHTML(opts.icon);
+  }
+
+  if (opts.styleType === "emoji" && opts.emoji) {
+    html += replaceEmoji(`:${opts.emoji}:`);
+  }
 
   // not ideal as we have to call it manually and we pass a fake category object
   // but there's not way around it for now
@@ -176,7 +209,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (restricted) {
-    html += iconHTML("lock");
+    html += iconHTML("category.restricted");
   }
   _extraIconRenderers.forEach((renderer) => {
     const iconName = renderer(category);

@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
   needs.settings({
-    available_locales: JSON.stringify([{ name: "English", value: "en" }]),
+    available_locales: [{ name: "English", value: "en" }],
     default_locale: "en",
   });
 
@@ -61,5 +61,19 @@ acceptance("Admin - Site Texts", function (needs) {
 
     assert.dom(".saved").doesNotExist();
     assert.dom(".revert-site-text").doesNotExist();
+  });
+
+  test("save button disabled state", async function (assert) {
+    await visit("/admin/customize/site_texts");
+
+    await click('[data-site-text-id="site.test"] .site-text-edit');
+
+    await click(".go-back");
+
+    await click('[data-site-text-id="site.overridden"] .site-text-edit');
+    assert.dom(".save-changes").hasAttribute("disabled");
+
+    await fillIn(".site-text-value", "Some new value");
+    assert.dom(".save-changes").doesNotHaveAttribute("disabled");
   });
 });

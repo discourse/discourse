@@ -14,9 +14,10 @@ RSpec.describe ApplicationController do
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
 
-    it "should redirect to login normally" do
+    it "should not redirect to login" do
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should redirect to SSO if enabled" do
@@ -27,10 +28,11 @@ RSpec.describe ApplicationController do
     end
 
     it "should redirect to authenticator if only one, and local logins disabled" do
-      # Local logins and google enabled, direct to login UI
+      # Local logins and google enabled, show login UI
       SiteSetting.enable_google_oauth2_logins = true
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
 
       # Only google enabled, login immediately
       SiteSetting.enable_local_logins = false
@@ -40,7 +42,8 @@ RSpec.describe ApplicationController do
       # Google and GitHub enabled, direct to login UI
       SiteSetting.enable_github_logins = true
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should not redirect to SSO when auth_immediately is disabled" do
@@ -49,7 +52,8 @@ RSpec.describe ApplicationController do
       SiteSetting.enable_discourse_connect = true
 
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should not redirect to authenticator when auth_immediately is disabled" do
@@ -58,7 +62,8 @@ RSpec.describe ApplicationController do
       SiteSetting.enable_local_logins = false
 
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     context "with omniauth in test mode" do
@@ -180,7 +185,7 @@ RSpec.describe ApplicationController do
 
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       sign_in(user)
 
@@ -305,13 +310,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "invalid request params" do
-    before do
-      @old_logger = Rails.logger
-      @logs = StringIO.new
-      Rails.logger = Logger.new(@logs)
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @old_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "should not raise a 500 (nor should it log a warning) for bad params" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
@@ -321,20 +324,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
 
-      log = @logs.string
-
-      if (log.include? "exception app middleware")
-        # heisentest diagnostics
-        puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITTENT TEST FAIL"
-        puts log
-        puts ">> action_dispatch.exception"
-        ex = request.env["action_dispatch.exception"]
-        puts ">> exception class: #{ex.class} : #{ex}"
-      end
-
-      expect(log).not_to include("exception app middleware")
-
+      expect(fake_logger.warnings.length).to eq(0)
       expect(response.status).to eq(400)
     end
   end
@@ -345,7 +335,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].first).to include(
-        "param is missing or the value is empty: term",
+        "param is missing or the value is empty or invalid: term",
       )
     end
   end
@@ -464,6 +454,28 @@ RSpec.describe ApplicationController do
           expect(fake_logger.fatals.length).to eq(0)
           expect(fake_logger.errors.length).to eq(0)
           expect(fake_logger.warnings.length).to eq(0)
+        end
+
+        it "should render category badges with correct style classes on 404 page" do
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+
+          square_cat = Fabricate(:category, style_type: :square)
+          icon_cat = Fabricate(:category, style_type: :icon, icon: "user")
+          emoji_cat = Fabricate(:category, style_type: :emoji, emoji: "smile")
+
+          Fabricate(:topic, title: "Square Category Topic", category: square_cat)
+          Fabricate(:topic, title: "Icon Category Topic", category: icon_cat)
+          Fabricate(:topic, title: "Emoji Category Topic", category: emoji_cat)
+
+          get "/t/nope-nope/99999999"
+          expect(response.status).to eq(404)
+
+          expect(response.body).to include("badge-category --style-square")
+          expect(response.body).to include("badge-category --style-icon")
+          expect(response.body).to include("badge-category --style-emoji")
+
+          expect(response.body).to include('<svg id="user"')
+          expect(response.body).to include('class="emoji"')
         end
       end
 
@@ -616,7 +628,7 @@ RSpec.describe ApplicationController do
 
     describe "when `cross_origin_opener_unsafe_none_groups` site setting has been set" do
       fab!(:group)
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before do
         SiteSetting.cross_origin_opener_policy_header = "same-origin"
@@ -674,13 +686,19 @@ RSpec.describe ApplicationController do
     end
 
     context "with color schemes" do
-      let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+      let!(:light_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+      end
+      let!(:dark_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
 
       before do
-        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
         SiteSetting.interface_color_selector = "sidebar_footer"
-        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+        Theme.find_default.update!(
+          color_scheme_id: light_scheme.id,
+          dark_color_scheme_id: dark_scheme.id,
+        )
       end
 
       context "when light mode is forced" do
@@ -1089,11 +1107,13 @@ RSpec.describe ApplicationController do
       { HTTP_ACCEPT_LANGUAGE: locale }
     end
 
-    def locale_scripts(body)
+    def main_locale_scripts(body)
       Nokogiri::HTML5
         .parse(body)
-        .css('script[src*="assets/locales/"]')
-        .map { |script| script.attributes["src"].value }
+        .css('script[src*="extra-locales/"]')
+        .filter_map do |script|
+          script.attributes["src"].to_s[%r{extra-locales/[^/]+/([^/]+)/main.js}, 1]
+        end
     end
 
     context "with allow_user_locale disabled" do
@@ -1107,7 +1127,7 @@ RSpec.describe ApplicationController do
           it "uses the default locale" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("en")
           end
         end
 
@@ -1118,7 +1138,7 @@ RSpec.describe ApplicationController do
 
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("en")
           end
         end
       end
@@ -1136,13 +1156,13 @@ RSpec.describe ApplicationController do
           it "uses the locale from the headers" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
 
           it "doesn't leak after requests" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
           end
         end
@@ -1155,7 +1175,7 @@ RSpec.describe ApplicationController do
           it "uses the user's preferred locale" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
 
           it "serves a 404 page in the preferred locale" do
@@ -1168,7 +1188,7 @@ RSpec.describe ApplicationController do
           it "serves a RenderEmpty page in the preferred locale" do
             get "/u/#{user.username}/preferences/interface"
             expect(response.status).to eq(200)
-            expect(response.body).to have_tag("script", with: { src: "/assets/locales/fr.js" })
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
         end
       end
@@ -1181,7 +1201,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: headers("zh-CN")
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
         end
       end
 
@@ -1192,7 +1212,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: headers("")
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end
@@ -1209,7 +1229,7 @@ RSpec.describe ApplicationController do
           it "uses the locale from the cookie" do
             get "/latest", headers: { Cookie: "locale=es" }
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
         end
@@ -1218,7 +1238,7 @@ RSpec.describe ApplicationController do
           it "returns the locale and region separated by an underscore" do
             get "/latest", headers: { Cookie: "locale=zh-CN" }
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
         end
       end
@@ -1230,7 +1250,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end
@@ -1245,18 +1265,18 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
-            get "/latest?lang=es"
+            get "/latest?tl=es"
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
         end
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/latest?lang=zh-CN"
+            get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
         end
       end
@@ -1268,7 +1288,7 @@ RSpec.describe ApplicationController do
 
           get "/latest"
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end
@@ -1512,6 +1532,7 @@ RSpec.describe ApplicationController do
             "isStaffWritesOnly",
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "themeSiteSettingOverrides",
           ],
         )
       end
@@ -1537,6 +1558,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
           ],
@@ -1545,7 +1567,7 @@ RSpec.describe ApplicationController do
     end
 
     context "when user is admin" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       before { sign_in(user) }
 
@@ -1564,6 +1586,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
@@ -1627,10 +1650,10 @@ RSpec.describe ApplicationController do
   end
 
   describe "color definition stylesheets" do
-    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
     before do
-      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 
@@ -1640,7 +1663,7 @@ RSpec.describe ApplicationController do
       it "includes stylesheet links in the header" do
         get "/"
 
-        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_light-default")
         expect(response.headers["Link"]).to include("color_definitions_dark")
       end
     end

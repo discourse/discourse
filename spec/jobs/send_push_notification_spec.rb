@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::SendPushNotification do
   fab!(:user)
-  fab!(:subscription) { Fabricate(:push_subscription) }
+  fab!(:subscription, :push_subscription)
   let(:payload) { { notification_type: 1, excerpt: "Hello you" } }
 
   before do
@@ -17,6 +17,18 @@ RSpec.describe Jobs::SendPushNotification do
       PushNotificationPusher.expects(:push).with(user, payload).never
 
       Jobs::SendPushNotification.new.execute(user_id: user, payload: payload)
+    end
+
+    it "bypasses the online window when bypass_time_window is passed in" do
+      user.update!(last_seen_at: 2.minutes.ago)
+
+      PushNotificationPusher.expects(:push).with(user, payload)
+
+      Jobs::SendPushNotification.new.execute(
+        user_id: user,
+        bypass_time_window: true,
+        payload: payload,
+      )
     end
 
     it "sends push notification when user is offline" do

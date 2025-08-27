@@ -346,15 +346,9 @@ ko:
         reply: |-
           멋진 일! 나는 때때로 약간 대화가 가능하기 때문에이 주제를 무시하지 않기를 바랍니다. : grin :. 주제에 응답하거나 몇 분 이상 주제를 읽으면 자동으로 &#39;추적&#39;알림 레벨로 설정됩니다. [사용자 환경 설정] (%{base_uri} / my / preferences)에서이를 변경할 수 있습니다.
       poll:
-        instructions: |-
-          모든 게시물에 설문 조사를 추가 할 수 있다는 것을 알고 있습니까? 를 사용해보십시오 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 설문 조사를 작성하여 설문 조사를 작성합니다 **.
-        not_found: |-
-          으악! 답장에 설문 조사가 없습니다. 사용 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 편집기에서 톱니 바퀴 아이콘을 클릭하거나 다음 응답에이 설문 조사를 복사하여 붙여 넣으십시오.```text [poll] * : cat : * : dog : [/ poll]```
         reply: |-
           여보세요, 여론 조사! 내가 당신을 가르치는 데 어떻게 했습니까? [폴] * : +1 : * : -1 : [/ 폴]
       details:
-        instructions: |-
-          때로는 답글에서 ** 세부 사항 숨기기 **를 원할 수도 있습니다.-스포일러로 간주되는 영화 또는 TV 프로그램의 플롯 포인트를 논의 할 때. -게시물에 한 번에 읽을 때 압도적 일 수있는 많은 옵션 세부 정보가 필요한 경우. [details = 작동 방식을 보려면 이것을 선택하십시오!] 1. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 에디터에서 기어. 2. &quot;세부 정보 숨기기&quot;를 선택하십시오. 3. 세부 사항 요약을 편집하고 컨텐츠를 추가하십시오. [/ 세부 사항] <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 다음 답변에 세부 정보 섹션을 추가하려면 편집기를 사용하십시오.
         not_found: |-
           세부 사항 위젯을 작성하는 데 문제가 있습니까? 다음 답장에 다음 내용을 포함시켜보십시오.
         reply: |-

@@ -1,4 +1,4 @@
-import { and, eq } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import Section from "./section";
 import SectionLink from "./section-link";
 
@@ -19,6 +19,12 @@ const SidebarApiSection = <template>
       @expandWhenActive={{@expandWhenActive}}
       @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
     >
+      {{#if
+        (and @section.emptyStateComponent (not @section.filteredLinks.length))
+      }}
+        <@section.emptyStateComponent />
+      {{/if}}
+
       {{#each @section.filteredLinks key="name" as |link|}}
         <SectionLink
           @linkName={{link.name}}

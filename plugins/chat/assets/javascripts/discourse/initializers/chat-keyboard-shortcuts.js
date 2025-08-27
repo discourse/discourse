@@ -23,6 +23,9 @@ export default {
       "service:chat-channels-manager"
     );
     const openQuickChannelSelector = (e) => {
+      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       modal.show(ChatModalNewMessage);
@@ -135,7 +138,7 @@ export default {
       }
     };
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
         openQuickChannelSelector,

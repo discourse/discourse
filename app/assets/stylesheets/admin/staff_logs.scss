@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for /admin/logs
 .log-details-modal {
   pre {
@@ -10,7 +12,7 @@
   width: 100%;
   word-wrap: break-word;
 
-  @media screen and (min-width: 550px) and (max-width: 767px) {
+  @media screen and (width >= 550px) and (width <= 767px) {
     table.staff-logs tr {
       display: grid;
       grid-template-rows: auto auto;
@@ -54,7 +56,7 @@
     }
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     table.staff-logs tr {
       grid-template-columns: 1fr 1fr 0.5fr;
 
@@ -136,15 +138,47 @@
 
 .staff-action-logs-controls {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.5em;
+  justify-content: space-between;
   margin: 0 0 1em 0;
 
-  .select-kit {
-    margin: 0 0.5em;
+  // for too small screen, we want it to also wrap
+  @media (width <= 400px) {
+    flex-wrap: wrap;
   }
 
-  button {
-    margin-left: auto;
+  .staff-action-logs-controls__left {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    // we want to put it in one line
+    .date-filter-container .d-date-time-input-range {
+      display: flex;
+      gap: 0.5em;
+
+      .from {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #staff-action-logs-action-filter {
+    // unset the global width of .admin-container .select-kit, so we can shrink it by flex
+    width: unset;
+    flex: 1 0 120px;
+    max-width: 400px;
+  }
+
+  .action-filter-container {
+    flex: 0 1 380px;
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
   }
 
   a.filter {
@@ -171,11 +205,11 @@
       width: 140px;
     }
 
-    @media screen and (min-width: 900px) {
+    @media screen and (width >= 900px) {
       margin-left: auto;
     }
 
-    @media screen and (max-width: 899px) {
+    @media screen and (width <= 899px) {
       margin-top: 1em;
     }
   }
@@ -196,13 +230,13 @@ table.screened-ip-addresses {
   }
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (width >= 550px) {
   table.screened-ip-addresses tr {
     grid-template-columns: repeat(5, 1fr) auto;
   }
 }
 
-@media screen and (max-width: 549px) {
+@media screen and (width <= 549px) {
   table.screened-ip-addresses tr {
     td.actions {
       grid-row: 3;
@@ -233,7 +267,7 @@ table.screened-ip-addresses {
 
 // Screened URLs
 
-@include breakpoint(tablet) {
+@include viewport.until(md) {
   .screened-urls {
     td.domain {
       grid-column-start: 1;
@@ -248,12 +282,12 @@ table.screened-ip-addresses {
   td.ip_address {
     word-wrap: break-word;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       max-width: 20vw;
     }
   }
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     td.email {
       grid-column-start: 1;
       grid-column-end: 3;
@@ -387,7 +421,7 @@ table.search-logs-list {
     width: 60%;
     word-wrap: break-word;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (width <= 767px) {
       width: 100%;
     }
   }
@@ -397,7 +431,7 @@ table.search-logs-list {
     text-align: center;
   }
 
-  @media screen and (min-width: 550px) {
+  @media screen and (width >= 550px) {
     tr {
       td.term {
         grid-column-start: span 3;
@@ -405,7 +439,7 @@ table.search-logs-list {
     }
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     tr {
       td.term {
         grid-column-start: 1;

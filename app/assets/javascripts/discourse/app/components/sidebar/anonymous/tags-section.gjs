@@ -8,7 +8,6 @@ import Section from "../section";
 import SectionLink from "../section-link";
 
 export default class SidebarAnonymousTagsSection extends Component {
-  @service router;
   @service topicTrackingState;
   @service site;
 

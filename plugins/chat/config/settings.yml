@@ -145,3 +145,6 @@ chat:
       - channels
       - direct_messages
       - my_threads
+  allow_chat_in_anonymous_mode:
+    default: false
+    validator: "Chat::AllowChatInAnonymousModeValidator"

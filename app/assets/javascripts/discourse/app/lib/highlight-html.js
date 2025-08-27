@@ -17,7 +17,14 @@ function highlight(node, pattern, nodeName, className) {
   }
 
   if (node.nodeType === Node.TEXT_NODE) {
-    const match = node.data.match(pattern);
+    let match;
+    try {
+      match = node.data.match(pattern);
+    } catch {
+      // If the regex is too large, it will throw an error.
+      // In this case, we just return the original node without highlighting.
+      return 0;
+    }
 
     if (!match) {
       return 0;
@@ -25,9 +32,10 @@ function highlight(node, pattern, nodeName, className) {
 
     const element = document.createElement(nodeName);
     element.className = className;
-    element.innerText = match[0];
-    const matchNode = node.splitText(match.index);
-    matchNode.splitText(match[0].length);
+    element.innerText = match[2];
+
+    const matchNode = node.splitText(match.index + match[1].length);
+    matchNode.splitText(match[2].length);
     matchNode.parentNode.replaceChild(element, matchNode);
     return 1;
   }
@@ -51,7 +59,7 @@ export default function (node, words, opts = {}) {
     return node;
   }
 
-  const pattern = `(${words.join(" ")})`;
+  const pattern = `(\\W|^)(${words.join(" ")})(\\W|$)`;
   let flag;
 
   if (!settings.matchCase) {

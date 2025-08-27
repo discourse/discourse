@@ -110,7 +110,7 @@ table.jexcel > tbody > tr.selected > td:first-child {
   border: 1px solid var(--jexcel_border_color);
   background: var(--jexcel_menu_background);
   color: var(--jexcel_menu_color);
-  box-shadow: 0 12px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 12px rgb(0, 0, 0, 0.15);
 }
 
 .jcontextmenu > div a {

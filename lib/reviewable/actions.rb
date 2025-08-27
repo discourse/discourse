@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
       {
         approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
         reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
-        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete_single.title"),
+        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete.title"),
       }
     end
 
@@ -44,7 +44,8 @@ class Reviewable < ActiveRecord::Base
                     :confirm_message,
                     :client_action,
                     :require_reject_reason,
-                    :custom_modal
+                    :custom_modal,
+                    :completed_message
 
       def initialize(id, icon = nil, button_class = nil, label = nil)
         super(id)

@@ -7,15 +7,15 @@ RSpec.describe UserMerger do
   fab!(:source_user) do
     Fabricate(:user, username: "alice1", email: "alice@work.com", refresh_auto_groups: true)
   end
-  fab!(:walter) { Fabricate(:walter_white) }
+  fab!(:walter, :walter_white)
   fab!(:coding_horror)
 
-  fab!(:p1) { Fabricate(:post) }
-  fab!(:p2) { Fabricate(:post) }
-  fab!(:p3) { Fabricate(:post) }
-  fab!(:p4) { Fabricate(:post) }
-  fab!(:p5) { Fabricate(:post) }
-  fab!(:p6) { Fabricate(:post) }
+  fab!(:p1, :post)
+  fab!(:p2, :post)
+  fab!(:p3, :post)
+  fab!(:p4, :post)
+  fab!(:p5, :post)
+  fab!(:p6, :post)
 
   def merge_users!(source = nil, target = nil)
     source ||= source_user

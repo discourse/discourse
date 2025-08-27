@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "Styleguide Smoke Test", type: :system do
   fab!(:admin)
 
@@ -32,6 +30,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
+      { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
@@ -50,7 +49,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
-      { href: "/organisms/suggested-topics", title: "Suggested Topics" },
+      { href: "/organisms/more-topics", title: "More Topics" },
       { href: "/organisms/user-about", title: "User About Box" },
     ],
   }

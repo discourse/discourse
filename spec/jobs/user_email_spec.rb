@@ -488,7 +488,7 @@ RSpec.describe Jobs::UserEmail do
             )
           end
           fab!(:moderator)
-          fab!(:regular_user) { Fabricate(:user) }
+          fab!(:regular_user, :user)
 
           context "when this is not a group PM" do
             let(:post) { Fabricate(:private_message_post, user: user, recipient: suspended) }
@@ -564,7 +564,7 @@ RSpec.describe Jobs::UserEmail do
       end
 
       context "when user is anonymous" do
-        before { SiteSetting.allow_anonymous_posting = true }
+        before { SiteSetting.allow_anonymous_mode = true }
 
         it "doesn't send email for a pm from a regular user" do
           Jobs::UserEmail.new.execute(
@@ -940,7 +940,7 @@ RSpec.describe Jobs::UserEmail do
       end
 
       context "when user is anonymous" do
-        before { SiteSetting.allow_anonymous_posting = true }
+        before { SiteSetting.allow_anonymous_mode = true }
 
         it "doesn't send email for a pm from a regular user" do
           Jobs::UserEmail.new.execute(

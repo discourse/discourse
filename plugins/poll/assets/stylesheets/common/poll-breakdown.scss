@@ -43,7 +43,7 @@
 
 .poll-breakdown-option-color {
   align-self: end;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgb(0, 0, 0, 0.15);
   grid-column: 1;
   height: 0.6rem;
   justify-self: center;
@@ -69,7 +69,7 @@
 
 .poll-breakdown-body-header {
   align-items: center;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   display: flex;
   flex: 0 0 auto;
   padding-bottom: 0.5rem;

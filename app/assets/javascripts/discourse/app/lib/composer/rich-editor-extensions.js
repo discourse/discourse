@@ -6,11 +6,25 @@
  * @property {number} topicId
  * @property {number} categoryId
  * @property {import("discourse/models/session").default} session
+ * @property {import("float-kit/services/menu").default} menu
+ * @property {import("discourse/services/capabilities").default} capabilities
+ * @property {import("discourse/services/modal").default} modal
+ * @property {import("float-kit/services/toasts").default} toasts
+ * @property {import("discourse/models/site").default} site
+ * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} replaceToolbar
+ * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} addGlimmerNodeView
+ * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} removeGlimmerNodeView
+ */
+
+/**
+ * @typedef {Object} MarkdownConversionHelpers
+ * @property {(markdown: string) => import("prosemirror-model").Node} convertFromMarkdown
+ * @property {(doc: import("prosemirror-model").Node) => string} convertToMarkdown
  */
 
 /**
  * @typedef PluginParams
- * @property {typeof import("discourse/static/prosemirror/lib/plugin-utils")} utils
+ * @property {typeof import("discourse/static/prosemirror/lib/plugin-utils") & MarkdownConversionHelpers} utils
  * @property {typeof import('prosemirror-model')} pmModel
  * @property {typeof import('prosemirror-view')} pmView
  * @property {typeof import('prosemirror-state')} pmState
@@ -53,6 +67,9 @@
 /** @typedef {((params: PluginParams) => KeymapSpec)} RichKeymapFn */
 /** @typedef {KeymapSpec | RichKeymapFn} RichKeymap */
 
+// @ts-ignore MarkSerializerSpec not currently exported
+/** @typedef {import('prosemirror-markdown').MarkSerializerSpec} MarkSerializerSpec */
+
 /**
  * @typedef {Object} RichEditorExtension
  * @property {Record<string, import('prosemirror-model').NodeSpec>} [nodeSpec]
@@ -64,10 +81,9 @@
  * @property {RichInputRule | Array<RichInputRule>} [inputRules]
  *   ProseMirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
  *   can be a function returning an array or an array of input rules
- * @property {Record<string, SerializeNodeFn>} [serializeNode]
+ * @property {(params: PluginParams) => Record<string, SerializeNodeFn> | Record<string, SerializeNodeFn>} [serializeNode]
  *   Node serialization definition
- * @ts-ignore MarkSerializerSpec not currently exported
- * @property {Record<string, import('prosemirror-markdown').MarkSerializerSpec>} [serializeMark]
+ * @property {(params: PluginParams) => Record<string, MarkSerializerSpec> | Record<string, MarkSerializerSpec>} [serializeMark]
  *   Mark serialization definition
  * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
@@ -77,6 +93,8 @@
  *    ProseMirror node views
  * @property {RichKeymap} [keymap]
  *   Additional keymap definitions
+ * @property {(params: PluginParams) => Record<string, import('prosemirror-state').Command>} [commands]
+ *   Command definitions that will be available on view.state.commands
  */
 
 /** @type {RichEditorExtension[]} */

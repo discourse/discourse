@@ -15,7 +15,7 @@ export default class AdminSiteTextEditRoute extends Route {
   }
 
   setupController(controller, siteText) {
-    const locales = JSON.parse(this.siteSettings.available_locales);
+    const locales = this.siteSettings.available_locales;
 
     const localeFullName = locales.find((locale) => {
       return locale.value === controller.locale;

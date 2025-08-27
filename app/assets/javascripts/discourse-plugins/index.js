@@ -6,7 +6,6 @@ const Funnel = require("broccoli-funnel");
 const mergeTrees = require("broccoli-merge-trees");
 const fs = require("fs");
 const concat = require("broccoli-concat");
-const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 
@@ -15,19 +14,6 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.endsWith(".raw.hbs")) {
-        relativePath = relativePath.replace(".raw.hbs", ".hbr");
-      }
-
-      if (relativePath.endsWith(".hbr")) {
-        if (relativePath.includes("/templates/")) {
-          relativePath = relativePath.replace("/templates/", "/raw-templates/");
-        } else if (relativePath.includes("/connectors/")) {
-          relativePath = relativePath.replace(
-            "/connectors/",
-            "/raw-templates/connectors/"
-          );
-        }
       }
 
       return relativePath;
@@ -92,6 +78,20 @@ function parsePluginName(pluginRbPath) {
   );
 }
 
+function getTestRequiredPlugins(aboutJsonPath) {
+  if (fs.existsSync(aboutJsonPath)) {
+    const aboutJson = JSON.parse(fs.readFileSync(aboutJsonPath, "utf8"));
+    const requiredPlugins = aboutJson.tests?.requiredPlugins || [];
+    return requiredPlugins.map((plugin) =>
+      plugin
+        .split("/")
+        .at(-1)
+        .replace(/\.git$/, "")
+    );
+  }
+  return [];
+}
+
 module.exports = {
   name: require("./package").name,
 
@@ -139,6 +139,9 @@ module.exports = {
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
       const hasConfig = fs.existsSync(configDirectory);
+      const testRequiredPlugins = getTestRequiredPlugins(
+        path.resolve(root, directoryName, "about.json")
+      );
       return {
         pluginName,
         directoryName,
@@ -150,6 +153,7 @@ module.exports = {
         hasAdminJs,
         hasTests,
         hasConfig,
+        testRequiredPlugins,
       };
     });
   },
@@ -200,8 +204,6 @@ module.exports = {
     tree = fixLegacyExtensions(tree);
     tree = unColocateConnectors(tree);
     tree = namespaceModules(tree, pluginName);
-
-    tree = RawHandlebarsCompiler(tree);
 
     const colocateBase = `discourse/plugins/${pluginName}`;
     tree = new DiscoursePluginColocatedTemplateProcessor(
@@ -295,12 +297,21 @@ module.exports = {
       }
     }
 
-    return scripts
+    const scriptTags = scripts
       .map(
         ({ src, name }) =>
           `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
       )
       .join("\n");
+
+    const requiredPluginInfos = {};
+    for (const { pluginName, testRequiredPlugins } of pluginInfos) {
+      requiredPluginInfos[pluginName] = testRequiredPlugins;
+    }
+
+    const requiredPluginInfoTag = `<script type="application/json" id="discourse-required-plugin-info">${JSON.stringify(requiredPluginInfos)}</script>`;
+
+    return `${scriptTags}\n${requiredPluginInfoTag}`;
   },
 
   pluginTestScriptTags(config) {

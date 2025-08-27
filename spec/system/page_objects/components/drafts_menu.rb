@@ -13,8 +13,12 @@ module PageObjects
         has_no_css?(MENU_SELECTOR + "-trigger")
       end
 
+      def enabled?
+        has_no_css?(MENU_SELECTOR + "-trigger[disabled]")
+      end
+
       def disabled?
-        find(MENU_SELECTOR + "-trigger")["disabled"]
+        has_css?(MENU_SELECTOR + "-trigger[disabled]")
       end
 
       def open?

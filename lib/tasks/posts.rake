@@ -57,7 +57,7 @@ end
 
 desc "Rebake all posts with a quote using a letter_avatar"
 task "posts:fix_letter_avatars" => :environment do
-  next unless SiteSetting.external_system_avatars_enabled
+  next if SiteSetting.external_system_avatars_url.blank?
 
   search =
     Post.where("user_id <> -1").where(

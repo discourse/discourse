@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
@@ -16,10 +16,12 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
-  @service sidebarState;
+  @service router;
+  @service navigationMenu;
+  @service search;
 
   get sidebarIcon() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       return "discourse-sidebar";
     }
 
@@ -39,25 +41,43 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    const hideForRoutes = [
+      "signup",
+      "login",
+      "invites.show",
+      "activate-account",
+    ];
+
+    if (
+      this.site.mobileView ||
+      this.args.narrowDesktop ||
+      hideForRoutes.some((name) => name === this.router.currentRouteName) ||
+      this.search.welcomeBannerSearchInViewport
+    ) {
       return false;
     }
 
-    return (
-      this.siteSettings.search_experience === "search_field" &&
-      !this.args.topicInfoVisible
-    );
+    if (
+      this.search.searchExperience === "search_field" &&
+      !this.args.topicInfoVisible &&
+      !this.search.welcomeBannerSearchInViewport
+    ) {
+      return true;
+    }
   }
 
   <template>
     <div class="contents">
       <PluginOutlet
         @name="header-contents__before"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           topicInfo=@topicInfo
           topicInfoVisible=@topicInfoVisible
+          toggleNavigationMenu=@toggleNavigationMenu
+          showSidebar=@showSidebar
+          sidebarIcon=this.sidebarIcon
         }}
-        @deprecatedArgs={{hash
+        @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -105,11 +125,11 @@ export default class Contents extends Component {
       <div class="before-header-panel-outlet">
         <PluginOutlet
           @name="before-header-panel"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             topicInfo=@topicInfo
             topicInfoVisible=@topicInfoVisible
           }}
-          @deprecatedArgs={{hash
+          @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -125,11 +145,11 @@ export default class Contents extends Component {
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             topicInfo=@topicInfo
             topicInfoVisible=@topicInfoVisible
           }}
-          @deprecatedArgs={{hash
+          @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -143,11 +163,11 @@ export default class Contents extends Component {
       </div>
       <PluginOutlet
         @name="header-contents__after"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           topicInfo=@topicInfo
           topicInfoVisible=@topicInfoVisible
         }}
-        @deprecatedArgs={{hash
+        @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"

@@ -8,10 +8,11 @@ export default class AdminEmbeddingIndexController extends Controller {
   @service router;
   @service site;
   @controller adminEmbedding;
+
   @alias("adminEmbedding.embedding") embedding;
 
   get showEmbeddingCode() {
-    return !this.site.isMobileDevice;
+    return this.site.desktopView;
   }
 
   @discourseComputed("embedding.base_url")

@@ -178,6 +178,17 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
+  def account_deleted(email, reviewable)
+    post_action_type_id =
+      reviewable.reviewable_scores.first&.reviewable_score_type ||
+        PostActionTypeView.new.types[:spam]
+    build_email(
+      email,
+      template: "user_notifications.account_deleted",
+      flag_reason: I18n.t("flag_reasons.#{PostActionTypeView.new.types[post_action_type_id]}"),
+    )
+  end
+
   def account_suspended(user, opts = nil)
     opts ||= {}
 
@@ -382,6 +393,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
     opts[:show_tags_in_subject] = true
+
     notification_email(user, opts)
   end
 
@@ -550,6 +562,9 @@ class UserNotifications < ActionMailer::Base
       user: user,
     }
 
+    email_options =
+      DiscoursePluginRegistry.apply_modifier(:user_notification_email_options, email_options)
+
     if group_id = notification_data[:group_id]
       email_options[:group_name] = Group.find_by(id: group_id)&.name
     end
@@ -695,6 +710,7 @@ class UserNotifications < ActionMailer::Base
           (SiteSetting.max_emails_per_day_per_user - 1)
 
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
+
       if SiteSetting.private_email?
         message = I18n.t("system_messages.contents_hidden")
       else

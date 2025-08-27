@@ -8,9 +8,9 @@ RSpec.describe "Outgoing chat webhooks" do
   end
 
   describe "chat messages" do
-    fab!(:web_hook) { Fabricate(:outgoing_chat_message_web_hook) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:web_hook, :outgoing_chat_message_web_hook)
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     let(:message_content) { "This is a test message" }
     let(:new_message_content) { "This is the edited message" }
     let(:job_args) do

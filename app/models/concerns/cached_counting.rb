@@ -73,7 +73,7 @@ module CachedCounting
       iterations += 1
     end
   rescue => ex
-    if Redis::CommandError === ex && ex.message =~ /READONLY/
+    if Redis::ReadOnlyError === ex
       # do not warn for Redis readonly mode
     elsif PG::ReadOnlySqlTransaction === ex
       # do not warn for PG readonly mode

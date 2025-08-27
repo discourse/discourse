@@ -3,7 +3,7 @@
 describe "Admin Badges Grouping Modal", type: :system do
   before { SiteSetting.enable_badges = true }
 
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   let(:badges_page) { PageObjects::Pages::AdminBadges.new }
   let(:badges_groupings_page) { PageObjects::Pages::AdminBadgesGroupings.new }

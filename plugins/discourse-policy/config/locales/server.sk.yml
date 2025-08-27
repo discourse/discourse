@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    policy_enabled: "Povoliť pravidlá?"
+    policy_restrict_to_staff_posts: "Zásady sa môžu zobrazovať iba na pracovných miestach personálu"
+    policy_easy_revoke: "Súčasne zobraziť tlačidlá prijať a zrušiť"
+  discourse_policy:
+    errors:
+      user_missing: "Používateľ neexistuje v skupine"
+      group_not_found: "Skupina sa nenašla pre danú politiku"
+      no_policy: "Neexistujú žiadne pravidlá pre príspevky"
+      staff_only: "Pravidlá sa môžu vzťahovať iba na pracovné miesta personálu"
+    error:
+      no_permission: "Nie je povolené"
+  reports:
+    unaccepted-policies:
+      title: Neprijaté pravidlá
+      labels:
+        topic_id: ID témy
+        user_id: ID používateľa
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Pravidlá vyžadujú vašu kontrolu: %{topic_title}"
+      visit_topic: "Navštíviť tému"
+      visit_link_to_respond: "%{visit_topic_link} na odpoveď."
+      unsubscribe: "Zmeňte %{email_preferences_link}alebo %{unsubscribe_link} pre odhlásenie."
+      your_policy_email_settings: "preferencia frekvencie e-mailov o pravidlách"
+  unsubscribe:
+    policy_emails:
+      select_title: "Nastaviť frekvenciu e-mailov s upozorneniami na pravidlá na:"
+      never: Nikdy
+      when_away: Len keď je preč
+      always: Vždy

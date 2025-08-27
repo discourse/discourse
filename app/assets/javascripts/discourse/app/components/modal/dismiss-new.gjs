@@ -6,9 +6,6 @@ import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import { i18n } from "discourse-i18n";
 
-const REPLIES_SUBSET = "replies";
-const TOPICS_SUBSET = "topics";
-
 export default class DismissNew extends Component {
   @tracked untrack = false;
   @tracked dismissTopics = true;
@@ -44,19 +41,11 @@ export default class DismissNew extends Component {
   }
 
   get showDismissNewTopics() {
-    if (this.partialDismiss) {
-      return this.countNewTopics > 0;
-    }
-
-    return this.subset === TOPICS_SUBSET || !this.subset;
+    return this.partialDismiss ? this.countNewTopics > 0 : true;
   }
 
   get showDismissNewReplies() {
-    if (this.partialDismiss) {
-      return this.countNewReplies > 0;
-    }
-
-    return this.subset === REPLIES_SUBSET || !this.subset;
+    return this.partialDismiss ? this.countNewReplies > 0 : true;
   }
 
   get countNewTopics() {

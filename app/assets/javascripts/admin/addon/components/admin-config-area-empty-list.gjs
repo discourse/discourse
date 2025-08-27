@@ -26,8 +26,10 @@ export default class AdminConfigAreaEmptyList extends Component {
           }}
           @action={{@ctaAction}}
           @route={{@ctaRoute}}
+          @routeModels={{@ctaRouteModels}}
         />
       {{/if}}
+      {{yield}}
     </div>
   </template>
 }

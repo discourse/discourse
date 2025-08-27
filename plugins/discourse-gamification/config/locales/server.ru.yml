@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    discourse_gamification_enabled: "Включить плагин геймификации"
+    like_received_score_value: "Баллы, начисляемые за получение симпатии"
+    like_given_score_value: "Баллы, начисляемые за выражение симпатии"
+    solution_score_value: "Баллы, начисляемые за сообщение, получившее статус 'Вопрос решён'"
+    user_invited_score_value: "Баллы, начисляемые за принятые приглашения"
+    time_read_score_value: "Баллы, начисляемые за каждый час, поведённый за чтением форума"
+    post_read_score_value: "Баллы, начисляемые за каждые сто сообщений, прочитанных пользователем"
+    topic_created_score_value: "Баллы, начисляемые за создание темы"
+    post_created_score_value: "Баллы, начисляемые за создание сообщения"
+    flag_created_score_value: "Баллы, начисляемые за жалобу, принятую персоналом форума"
+    day_visited_score_value: "Баллы, начисляемые за каждый день посещения форума"
+    scorable_categories: "Список разделов, в которых начисляются баллы. Оставьте этот список пустым, если баллы должны начисляться во всех разделах"
+    reaction_received_score_value: "Баллы, начисляемые за получение реакции"
+    reaction_given_score_value: "Баллы, начисляемые за каждую поставленную реакцию"
+    chat_reaction_received_score_value: "Баллы, начисляемые за получение реакции на сообщение в чате"
+    chat_reaction_given_score_value: "Баллы, начисляемые за каждую поставленную реакцию на сообщение в чате"
+    chat_message_created_score_value: "Баллы, начисляемые за каждое отправленное в чат сообщение"
+    score_ranking_strategy: "Стратегия ранжирования позиций в таблице лидеров"
+  score: "Репутация"
+  default_leaderboard_name: "Глобальная таблица лидеров"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Вы пересчитали баллы максимальное количество раз. Повторить попытку можно будет через %{time_left}."
+  errors:
+    leaderboard_positions_not_ready: "Мы создаем вашу таблицу лидеров. Повторите попытку через несколько минут."

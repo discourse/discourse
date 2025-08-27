@@ -18,7 +18,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").exists("displays the trash icon");
 
     assert
@@ -37,7 +37,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
@@ -56,7 +56,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
@@ -108,5 +108,60 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
     assert
       .dom("#uploader1 .uploaded-image-preview")
       .hasNoClass("uppy-is-drag-over");
+  });
+
+  test("accepts only images when allowVideo is unset", async function (assert) {
+    await render(
+      <template>
+        <UppyImageUploader @type="composer" @id="uploader-without-video" />
+      </template>
+    );
+
+    assert
+      .dom("#uploader-without-video__input")
+      .hasAttribute(
+        "accept",
+        "image/*",
+        "only accepts images when allowVideo is false"
+      );
+  });
+
+  test("accepts images and videos when allowVideo is true", async function (assert) {
+    await render(
+      <template>
+        <UppyImageUploader
+          @type="composer"
+          @id="uploader-with-video"
+          @allowVideo={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#uploader-with-video__input")
+      .hasAttribute(
+        "accept",
+        "image/*,video/*",
+        "accepts videos when allowVideo is true"
+      );
+  });
+
+  test("with video and allowVideo=true", async function (assert) {
+    await render(
+      <template>
+        <UppyImageUploader
+          @type="composer"
+          @id="uploader"
+          @imageUrl="/images/video.mp4"
+          @allowVideo={{true}}
+        />
+      </template>
+    );
+
+    assert.dom("video").exists("displays the video element");
+    assert.dom(".meta").exists("displays the file metadata");
+    assert
+      .dom(".expand-overlay")
+      .doesNotExist("does not display the lightbox button");
   });
 });

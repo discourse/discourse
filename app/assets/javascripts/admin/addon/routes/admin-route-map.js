@@ -28,14 +28,23 @@ export default function () {
     );
 
     this.route(
-      "adminEmail",
-      { path: "/email", resetNamespace: true },
+      "adminEmailLogs",
+      { path: "/email-logs", resetNamespace: true },
       function () {
-        this.route("sent");
+        this.route("sent", { path: "/" });
         this.route("skipped");
         this.route("bounced");
         this.route("received");
         this.route("rejected");
+      }
+    );
+
+    this.route(
+      "adminEmail",
+      { path: "/email", resetNamespace: true },
+      function () {
+        this.route("settings", { path: "/" });
+        this.route("serverSettings", { path: "/server-settings" });
         this.route("previewDigest", { path: "/preview-digest" });
         this.route("advancedTest", { path: "/advanced-test" });
         this.route(
@@ -52,9 +61,8 @@ export default function () {
       "adminCustomize",
       { path: "/customize", resetNamespace: true },
       function () {
-        this.route("colors", function () {
-          this.route("show", { path: "/:scheme_id" });
-        });
+        this.route("colors");
+        this.route("colors-show", { path: "/colors/:scheme_id" });
         this.route(
           "adminCustomizeThemes",
           { path: "/:type", resetNamespace: true },
@@ -121,6 +129,7 @@ export default function () {
         "adminApiKeys",
         { path: "/keys", resetNamespace: true },
         function () {
+          this.route("settings");
           this.route("show", { path: "/:api_key_id" });
           this.route("new");
         }
@@ -152,6 +161,7 @@ export default function () {
       function () {
         this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
+        this.route("dashboardSettings", { path: "dashboard-settings" });
       }
     );
 
@@ -178,6 +188,7 @@ export default function () {
       "adminUsers",
       { path: "/users", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route(
           "adminUser",
           { path: "/:user_id/:username", resetNamespace: true },
@@ -201,8 +212,17 @@ export default function () {
       "adminBadges",
       { path: "/badges", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route("award", { path: "/award/:badge_id" });
         this.route("show", { path: "/:badge_id" });
+      }
+    );
+
+    this.route(
+      "adminGroups",
+      { path: "/groups", resetNamespace: true },
+      function () {
+        this.route("settings");
       }
     );
 
@@ -227,6 +247,13 @@ export default function () {
             });
           }
         );
+        this.route("content", function () {
+          this.route("categoriesAndTags", { path: "/" });
+          this.route("settings");
+          this.route("sharing");
+          this.route("postsAndTopics", { path: "/posts-and-topics" });
+          this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
+        });
         this.route("localization", function () {
           this.route("settings", {
             path: "/",
@@ -262,6 +289,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("interface", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route(
           "groupPermissions",
           { path: "/group-permissions" },
@@ -271,14 +303,35 @@ export default function () {
             });
           }
         );
+        this.route("userDefaults", { path: "user-defaults" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("siteAdmin", { path: "/site-admin" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",
           });
         });
-        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+        this.route("customize", function () {
           this.route("themes");
+          this.route("components");
+          this.route("themeSiteSettings", { path: "/theme-site-settings" });
         });
+        this.route(
+          "adminAnalytics",
+          { path: "/analytics-and-seo", resetNamespace: true },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
         this.route(
           "adminPermalinks",
           { path: "/permalinks", resetNamespace: true },
@@ -310,13 +363,8 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("fonts", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("logo", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("branding");
+        this.route("logo");
+        this.route("fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -332,12 +380,21 @@ export default function () {
         this.route("spam", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("user-api", function () {
-          this.route("settings", { path: "/" });
-        });
+
+        this.route(
+          "colorPalettes",
+          {
+            path: "/colors",
+          },
+          function () {
+            this.route("show", {
+              path: "/:palette_id",
+            });
+          }
+        );
       }
     );
-
+    this.route("schema", { path: "schema/:setting_name" });
     this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },

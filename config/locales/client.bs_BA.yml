@@ -176,6 +176,10 @@ bs_BA:
     software_update_prompt:
       dismiss: "Odpusti"
     back_button: "Prethodno"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -323,8 +327,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      abandon:
-        yes_value: "Odbaci"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -350,7 +352,7 @@ bs_BA:
       few: "Pogledaj %{count} nove teme"
       other: "Pogledaj %{count} novih tema"
     preview: "predprikaz"
-    cancel: "otkaži"
+    cancel: "Odustani"
     save: "Spremiti promjene"
     saved: "Spremljeno!"
     upload: "Učitaj"
@@ -445,6 +447,10 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
         reject_reason: "Reason"
+        scrubbed_reason: "Reason"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Odustani"
       user_percentage:
         agreed:
           one: "%{count}% slaže"
@@ -537,6 +543,16 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      notes:
+        delete: "Delete"
+      review_user: "User"
+      insights:
+        activities:
+          posts:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
+        visibility: "Vidljivost"
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo za strpljenje."
@@ -951,7 +967,8 @@ bs_BA:
       color_scheme: "Paleta boja"
       color_schemes:
         undo: "Resetovati"
-        regular: "Redovne"
+        picker:
+          active: "Active"
       dark_mode: "Tamni način"
       text_size_default_on_all_devices: "Učinite ovo standardnom veličinom teksta na svim mojim uređajima"
       allow_private_messages: "Dozvoli drugim korisnicima da mi šalju privatne poruke"
@@ -970,6 +987,8 @@ bs_BA:
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "
+      silenced_permanently: "Ovaj korisnik je ušutkan."
+      silenced_reason: "Razlog: "
       github_profile: "GitHub"
       email_activity_summary: "Sažetak aktivnosti"
       mailing_list_mode:
@@ -1307,7 +1326,8 @@ bs_BA:
         remove: "Ukloni"
         reinvited: "Pozivnica ponovo poslata"
         user: "Pozvan korisnik"
-        none: "Nema pozivnica za prikazati"
+        none:
+          title: "Nema pozivnica za prikazati"
         truncated:
           one: "Prikaz prve pozivnice."
           few: "Prikaz prvih %{count} pozivnica."
@@ -1332,6 +1352,7 @@ bs_BA:
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
         invite:
+          description: "Opis"
           cancel: "Odustani"
         bulk_invite:
           text: "Skupna pozivnica"
@@ -1404,7 +1425,6 @@ bs_BA:
         title: "IP Adresa prilikom registracije"
       avatar:
         title: "Profilna slika"
-        header_title: "profil, poruke, zabilješke i postavke"
       title:
         title: "Naslov"
         none: "(ništa)"
@@ -1572,8 +1592,6 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1662,8 +1680,7 @@ bs_BA:
       whisper: "šapat"
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
-      toggle_whisper: " Prekidač za Šapat"
-      toggle_unlisted: "Prekidač za Listan"
+      toggle_whisper: "Uključi Šapat"
       posting_not_on_topic: "Na koju temu želite da odgovorite?"
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "skicirano lokalno"
@@ -1684,6 +1701,7 @@ bs_BA:
       create_whisper: "Šapat"
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
+      discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "zašto pravite izmjenu?"
@@ -1705,8 +1723,8 @@ bs_BA:
       italic_text: "ukošen tekst"
       link_title: "Link"
       link_description: "ubaci opis linka"
-      link_dialog_title: "Unesi Link"
-      link_optional_text: "naslov neobavezan"
+      link_dialog_action: "Unesi"
+      link_optional_text: "Poruka"
       blockquote_title: "Citiranje"
       blockquote_text: "Citiranje"
       code_title: "Formatiran Tekst"
@@ -1714,16 +1732,8 @@ bs_BA:
       paste_code_text: "ukucaj ili zalijepi kod ovdje"
       upload_title: "Učitavanje"
       upload_description: "unesi opis učitanog"
-      olist_title: "Numerisana lista"
-      ulist_title: "Obična lista"
       list_item: "Listaj predmet"
-      toggle_direction: "Prekidač smijera"
       help: "Pomoć za Markdown"
-      collapse: "smanji panel za sastavljanje teksta"
-      open: "otvorite panel za kompozitor"
-      abandon: "zatvori panel za sastav teksta i odkaži skicu teksta"
-      enter_fullscreen: "unesite fullscreen composer"
-      exit_fullscreen: "izlaz iz fullscreen kompozitora"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
@@ -1837,8 +1847,8 @@ bs_BA:
         liked_consolidated: "novi lajkovi"
         post_approved: "post odobreno"
     upload_selector:
+      delete: "Delete"
       uploading: "Učitavam"
-      select_file: "Izaberi fajl"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"
@@ -2356,6 +2366,13 @@ bs_BA:
         one: "Objava se sviđa %{count} osobi."
         few: "%{count} se sviđa objava."
         other: "%{count} se sviđa objava."
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Edit"
+          delete: "Delete"
+        post_language_selector:
+          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2495,8 +2512,12 @@ bs_BA:
       general: "General"
       settings: "Postavke"
       tags: "Oznake"
-      tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
-      tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
+      tags_allowed_tags_new_category: "Ograničite ove oznake na ovu kategoriju:"
+      tags_allowed_tag_groups_new_category: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
       allow_global_tags_label: "Takođe dozvolite druge oznake"
@@ -2515,9 +2536,13 @@ bs_BA:
       description: "Description"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
+      background_color: "Color"
+      styles:
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          icon: "Icon"
+          emoji: "Emoji"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
@@ -2753,7 +2778,6 @@ bs_BA:
         topics: "Topics"
         replies: "Odgovori"
       posted:
-        title: "Moje objave"
         help: "teme u kojima imate postove"
       bookmarks:
         title: "Zabilješke"
@@ -3086,6 +3110,8 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
+            filter:
+              content: "Filter"
             topics:
               content: "Topics"
             faq:
@@ -3096,13 +3122,11 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
-            my_posts:
-              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
               content: "Invite"
-      filter: "Filter..."
+      search: "Pretraži"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3123,12 +3147,18 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    filter:
+      description:
+        yesterday: "Yesterday"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtriraj izvještaje
+      filter_reports: "Filtriraj izvještaje..."
       tags:
         remove_muted_tags_from_latest:
           always: "uvijek"
@@ -3163,20 +3193,19 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        branding:
-          title: "Branding"
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "Email"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
         onebox:
           title: "Onebox"
-        other:
-          title: "Other"
         search_everything:
           title: "Pretraži"
         security:
@@ -3214,6 +3243,8 @@ bs_BA:
               header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:
@@ -3239,6 +3270,8 @@ bs_BA:
           title: "Webhooks"
         embedding:
           title: "Embedding"
+      theme_site_settings:
+        default_value: "Uobičajen"
       search:
         title: "Pretraži"
         result_types:
@@ -3489,10 +3522,42 @@ bs_BA:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Bedž"
+          notifications: "Obavijest"
+          permalinks: "Permalink-ovi"
+          users: "Korisnici"
+          groups: "Groups"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderacija"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        sidebar_link:
+          appearance: "Izgled"
+      security:
+        title: "Security"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          extra_groups:
+            groups: "Groups"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3515,12 +3580,37 @@ bs_BA:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Customize"
+          install: "Instaliraj"
           themes:
             title: "Teme"
+            install: "Instaliraj"
+          components:
+            title: "Komponenti"
+            install: "Instaliraj"
+            name: "Ime"
+            enabled: "Omogućen?"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Edit"
+            preview: "Pregled"
+            export: "Izvoz"
+            convert: "Pretvoriti"
+            delete: "Delete"
+            filter_by_all: "All"
+            delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
         user_fields:
           type: "Tip"
           delete: "Delete"
+        color_palettes:
+          palette_name: "Ime"
+          copy_to_clipboard: "Kopirati u clipboard"
+          copied_to_clipboard: "Kopirano u međuspremnik"
+          copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
+          delete: "Delete"
+          colors:
+            title: "Colors"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -3533,6 +3623,11 @@ bs_BA:
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        filters:
+          all: "Sve"
+          enabled: "Omogućen"
+          disabled: "Neomogućen"
+          reset: "Resetovati"
       backups:
         title: "Backups"
         menu:
@@ -3627,6 +3722,7 @@ bs_BA:
           theme: "Izgled"
           component: "Komponenta"
           components: "Komponenti"
+          filter_all: "Sve"
           theme_name: "Ime teme"
           component_name: "Naziv komponenta"
           themes_intro: "Izaberite postojeću temu ili instalirajte novu da biste započeli"
@@ -3651,7 +3747,7 @@ bs_BA:
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
-          color_scheme_select: "Izaberite boje koje će se koristiti po temi"
+          color_scheme_select: "Izaberite boje koje će se koristiti po temi."
           custom_sections: "Prilagođeni odjeljci:"
           theme_components: "Komponente teme"
           convert: "Pretvoriti"
@@ -3706,13 +3802,9 @@ bs_BA:
             error: "Ova tema je automatski onemogućena jer nije kompatibilna sa ovom verzijom Diskursa."
             minimum: "Potrebna je diskursna verzija %{version} ili iznad."
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
-          update_to_latest: "Ažuriraj na zadnje"
-          check_for_updates: "Potražite ažuriranja"
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
-          theme_settings: "Postavke teme"
           no_settings: "Ova tema nema podešavanja."
-          theme_translations: "Theme Translations"
           empty: "Nema stavki"
           commits_behind:
             one: "Tema je %{count} početi iza sebe!"
@@ -3731,50 +3823,43 @@ bs_BA:
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
-          schema:
-            fields:
-              required: "*required"
+        schema:
+          fields:
+            required: "*required"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Colors"
+          edit: "Izmijeni"
+          filters:
+            all: "Sve"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
           copy_name_prefix: "Copy of"
-          delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati nazad"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Vrati nazad"
           revert_title: "Vrati boju na standardnu boju Discourse palete."
           primary:
             name: "primary"
-            description: "Most text, icons, and borders."
           secondary:
             name: "secondary"
-            description: "The main background color, and text color of some buttons."
           tertiary:
             name: "tertiary"
-            description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
           header_background:
             name: "header background"
-            description: "Background color of the site's header."
           header_primary:
             name: "header primary"
-            description: "Text and icons in the site's header."
           highlight:
             name: "highlight"
-            description: "The background color of highlighted elements on the page, such as posts and topics."
           danger:
             name: "danger"
-            description: "Highlight color for actions like deleting posts and topics."
           success:
             name: "success"
-            description: "Used to indicate an action was successful."
           love:
             name: "love"
-            description: "The like button's color."
           selected:
             name: "označeno"
         robots:
@@ -4134,7 +4219,6 @@ bs_BA:
         activity: Activity
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
-        private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
         topics_entered: Topics Viewed

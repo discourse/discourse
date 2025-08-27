@@ -1,3 +1,4 @@
+import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 
 const PostersCell = <template>
@@ -6,17 +7,18 @@ const PostersCell = <template>
       {{#if poster.moreCount}}
         <a class="posters-more-count">{{poster.moreCount}}</a>
       {{else}}
-        <a
-          href={{poster.user.path}}
-          data-user-card={{poster.user.username}}
+        <UserLink
+          @username={{poster.user.username}}
+          @href={{poster.user.path}}
           class={{poster.extraClasses}}
-        >{{avatar
+        >
+          {{avatar
             poster
             avatarTemplatePath="user.avatar_template"
             usernamePath="user.username"
             namePath="user.name"
             imageSize="small"
-          }}</a>
+          }}</UserLink>
       {{/if}}
     {{/each}}
   </td>

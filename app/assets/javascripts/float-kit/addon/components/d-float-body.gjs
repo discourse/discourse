@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn, hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import TrapTab from "discourse/modifiers/trap-tab";
@@ -9,7 +10,6 @@ import DFloatPortal from "float-kit/components/d-float-portal";
 import { getScrollParent } from "float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
-import and from "truth-helpers/helpers/and";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {

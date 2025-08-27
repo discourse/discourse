@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/api"
+
 module Jobs
   def self.queued
     Sidekiq::Stats.new.enqueued
@@ -475,7 +477,7 @@ module Jobs
     Sidekiq::ScheduledSet.new.select do |scheduled_job|
       if scheduled_job.klass.to_s == job_class
         matched = true
-        job_params = scheduled_job.item["args"][0].with_indifferent_access
+        job_params = scheduled_job.args[0].with_indifferent_access
         opts.each do |key, value|
           if job_params[key] != value
             matched = false

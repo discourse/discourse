@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import noop from "discourse/helpers/noop";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | d-modal", function (hooks) {
@@ -72,7 +73,7 @@ module("Integration | Component | d-modal", function (hooks) {
 
     assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
 
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(
       <template>

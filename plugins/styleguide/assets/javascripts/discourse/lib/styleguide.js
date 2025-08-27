@@ -15,6 +15,7 @@ import charCounter from "../components/sections/molecules/char-counter";
 import emptyState from "../components/sections/molecules/empty-state";
 import footerMessage from "../components/sections/molecules/footer-message";
 import menus from "../components/sections/molecules/menus";
+import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
@@ -32,9 +33,9 @@ import topicList from "../components/sections/organisms/04-topic-list";
 import basicTopicList from "../components/sections/organisms/basic-topic-list";
 import categoriesList from "../components/sections/organisms/categories-list";
 import modal from "../components/sections/organisms/modal";
+import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
-import suggestedTopics from "../components/sections/organisms/suggested-topics";
 import userAbout from "../components/sections/organisms/user-about";
 import bem from "../components/sections/syntax/00-bem";
 
@@ -75,6 +76,7 @@ const SECTIONS = [
   { component: postMenu, category: "molecules", id: "post-menu" },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
+  { component: multiselect, category: "molecules", id: "multi-select" },
   { component: toasts, category: "molecules", id: "toasts" },
   { component: signupCta, category: "molecules", id: "signup-cta" },
   { component: topicListItem, category: "molecules", id: "topic-list-item" },
@@ -104,7 +106,7 @@ const SECTIONS = [
   { component: modal, category: "organisms", id: "modal" },
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
-  { component: suggestedTopics, category: "organisms", id: "suggested-topics" },
+  { component: moreTopics, category: "organisms", id: "more-topics" },
   { component: userAbout, category: "organisms", id: "user-about" },
 ];
 

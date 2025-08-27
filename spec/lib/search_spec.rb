@@ -101,7 +101,7 @@ RSpec.describe Search do
     before { SiteSetting.tagging_enabled = true }
 
     context "with staff tags" do
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -208,7 +208,7 @@ RSpec.describe Search do
 
   describe "users" do
     fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before do
       SearchIndexer.enable
@@ -1913,6 +1913,22 @@ RSpec.describe Search do
       expect(Search.execute("test after:jan").posts).to contain_exactly(post_1, post_2)
     end
 
+    it "supports before/after filters and is not affected by the `search_recent_regular_posts_offset_post_id` site setting" do
+      post_1 = Fabricate(:post, created_at: Time.zone.parse("2000-06-24"), like_count: 15)
+      post_2 = Fabricate(:post, created_at: Time.zone.parse("2000-06-26"), like_count: 5)
+
+      SiteSetting.search_recent_regular_posts_offset_post_id = post_2.id
+      # Disable pagination as we are only concerned about the posts returned in the first page.
+      SiteSetting.search_page_size = 1
+
+      expect(
+        Search
+          .execute("after:2000-01-01 before:2001-01-01 order:likes", search_type: :full_page)
+          .posts
+          .map(&:id),
+      ).to contain_exactly(post_1.id)
+    end
+
     it "supports in:first, user:, @username" do
       post_1 = Fabricate(:post, raw: "hi this is a test 123 123", topic: topic)
       post_2 = Fabricate(:post, raw: "boom boom shake the room test", topic: topic)
@@ -1944,8 +1960,8 @@ RSpec.describe Search do
     context "when searching for posts made by users of a group" do
       fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
       fab!(:user)
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
       fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }
       fab!(:group_2) { Fabricate(:group).tap { |g| g.add(user_2) } }
       let!(:post) { Fabricate(:post, raw: "hi this is a test 123 123", topic: topic, user: user) }
@@ -2990,7 +3006,6 @@ RSpec.describe Search do
 
   context "when max_duplicate_search_index_terms limits duplication" do
     before { SearchIndexer.enable }
-
     after { SearchIndexer.disable }
 
     it "correctly ranks topics" do
@@ -3033,5 +3048,122 @@ RSpec.describe Search do
       expect(sql).to include("ORDER BY posts.created_at DESC")
       expect(sql).to match(/where.*topics.closed/i)
     end
+  end
+
+  describe "bot search" do
+    fab!(:bot)
+    fab!(:bot_topic) { Fabricate(:topic, title: "this is a topic by a bot") }
+    fab!(:bot_post) do
+      Fabricate(:post, user: bot, topic: bot_topic, raw: "this is a regular post by a bot")
+    end
+
+    fab!(:human_post) { Fabricate(:post, topic: topic, raw: "this is a regular post not by a bot") }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(bot_post, force: true)
+      SearchIndexer.index(human_post, force: true)
+    end
+
+    it "works as expected" do
+      # include bot posts by default
+      results = Search.execute("bot", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(bot_post, human_post)
+
+      # bots only
+      results = Search.execute("bot in:bot", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(bot_post)
+
+      # allows searching for human only
+      results = Search.execute("bot in:human", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(human_post)
+    end
+  end
+
+  describe "whisper search" do
+    fab!(:topic2, :topic)
+    fab!(:user)
+    fab!(:whisperer, :user)
+    fab!(:whisperers_group, :group)
+    fab!(:regular_post) do
+      Fabricate(:post, topic: topic, raw: "this is a regular post with whisper content")
+    end
+    fab!(:whisper_post) do
+      Fabricate(
+        :post,
+        topic: topic2,
+        raw: "this is a whisper post",
+        post_type: Post.types[:whisper],
+      )
+    end
+
+    before do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
+      whisperers_group.add(whisperer)
+      SearchIndexer.enable
+      [regular_post, whisper_post].each { |post| SearchIndexer.index(post, force: true) }
+    end
+
+    it "works as expected" do
+      # note this is simple enough, saving up on all the reindexing over and over
+      # by running in a big batch
+
+      # anon
+      results = Search.execute("whisper", guardian: Guardian.new(user))
+      expect(results.posts).to contain_exactly(regular_post)
+
+      # staff
+      results = Search.execute("whisper", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post, whisper_post)
+
+      # whisperer
+      results = Search.execute("whisper", guardian: Guardian.new(whisperer))
+      expect(results.posts).to contain_exactly(regular_post, whisper_post)
+
+      # in:whispers
+      results = Search.execute("whisper in:whispers", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(whisper_post)
+
+      results = Search.execute("whisper in:whispers", guardian: Guardian.new(user))
+      expect(results.posts).to be_empty
+
+      # in:regular
+      results = Search.execute("whisper in:regular", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post)
+
+      results = Search.execute("content in:regular", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post)
+    end
+  end
+
+  it "orders posts by the timestamp of the user's last visit to each topic" do
+    user = Fabricate(:user)
+
+    post2 = nil
+    freeze_time 2.hours.ago do
+      post2 = Fabricate(:post, raw: "Read order term")
+      TopicUser.update_last_read(user, post2.topic.id, post2.post_number, 1, 0)
+    end
+
+    post1 = nil
+    freeze_time 1.hour.ago do
+      post1 = Fabricate(:post, raw: "Read order term")
+      TopicUser.update_last_read(user, post1.topic.id, post1.post_number, 1, 0)
+    end
+
+    _unread_post = Fabricate(:post, raw: "Read order term")
+
+    result = Search.execute("Read order term order:read", guardian: Guardian.new(user))
+    expect(result.posts.map(&:id)).to eq([post1.id, post2.id])
+
+    result = Search.execute("Read order term r", guardian: Guardian.new(user))
+
+    # also allow for the r shortcul like we have l
+    expect(result.posts.map(&:id)).to eq([post1.id, post2.id])
+
+    result = Search.execute("Read order term r", guardian: Guardian.new)
+
+    # no op on anon - all included
+    expect(result.posts.map(&:id).length).to eq(3)
   end
 end

@@ -1,0 +1,3 @@
+intermediate_db: /shared/import/intermediate.db
+mappings_db: /shared/import/mappings.db
+uploads_db: /shared/import/uploads.db

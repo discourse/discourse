@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    discourse_policy:
+      title: "Käytäntö"
+      accepted_tooltip: "Käyttäjät, jotka ovat hyväksyneet tämän käytännön"
+      not_accepted_tooltip: "Käyttäjät, jotka eivät ole hyväksyneet tätä käytäntöä"
+      accept_policy: "Hyväksy käytäntö"
+      revoke_policy: "Peru käytäntö"
+      edit_reason: "Käytäntöasetuksia on muutettu"
+      no_possible_users: "Tällä käytännöllä ei ole mahdollisia käyttäjiä"
+      accept_policy_template: "Hyväksyn tämän käytännön"
+      builder:
+        title: Käytäntö
+        attach: Luo käytäntö
+        save: Tallenna muutokset
+        insert: Lisää
+        errors:
+          group: Ryhmä on pakollinen
+          version: Versio on pakollinen
+        groups:
+          label: Ryhmät
+          description: Tähän käytäntöön liittyvät ryhmät
+        version:
+          label: Versio
+          description: Käytännön versio, version korotus pakottaa ihmiset hyväksymään sen uudelleen
+        renew:
+          label: Uudista
+          description: Uudista käytäntö x päivän välein
+        renew-start:
+          label: Uudistamisen aloitus
+          description: Milloin käytäntö tulisi uudistaa
+        reminder:
+          label: Muistutus
+          description: Kuinka usein muistutus käytännön hyväksymisestä tulisi lähettää
+          no_reminder: (Ei muistutusta)
+        accept:
+          label: Hyväksy
+          description: Hyväksymispainikkeessa käytettävä teksti
+        revoke:
+          label: Peru
+          description: Perumispainikkeessa käytettävä teksti
+        private:
+          label: Yksityinen?
+          description: Pidä käytännön tila yksityisenä järjestelmänvalvojille
+        send-email:
+          label: Lähetetäänkö sähköposti?
+          description: Ilmoita käyttäjille uudesta käytännöstä sähköpostitse
+        add-users-to-group:
+          label: Lisää käyttäjiä ryhmään
+          description: Lisää käyttäjät seuraavaan ryhmään, kun he hyväksyvät tämän käytännön
+      preferences:
+        title: Käytännöt
+        policy_emails:
+          always_description: Lähetämme sinulle sähköpostin vain, jos olet valinnut vastaanottavasi sähköposteja uusista aktiviteeteista.
+          away_description: Lähetämme sinulle sähköpostin vain, jos emme ole nähneet sinua viimeisten 10 minuutin aikana käytännön tilan muuttuessa, ja jos olet valinnut vastaanottavasi sähköposteja uusista aktiviteeteista.
+          label: Lähetä minulle sähköposti, kun käytäntö tarvitsee tarkistustani
+          email_frequency_options:
+            never: Ei koskaan
+            when_away: Vain poissa ollessa
+            always: Aina

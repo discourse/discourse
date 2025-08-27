@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -24,17 +26,29 @@
 
 .topic-list {
   @extend .topic-list-icons;
-  margin: 0 0 10px;
+  margin: var(--d-topic-list-margin-y) var(--d-topic-list-margin-x)
+    var(--d-topic-list-margin-bottom);
+
+  .topic-list-header {
+    font-size: var(--d-topic-list-header-font-size);
+  }
+
+  .topic-list-header .topic-list-data {
+    padding: var(--d-topic-list-header-data-padding-y)
+      var(--d-topic-list-header-data-padding-x);
+    color: var(--d-topic-list-header-text-color);
+  }
 
   .topic-list-data {
-    padding: 0.8em 0.33em;
+    padding: var(--d-topic-list-data-padding-y)
+      var(--d-topic-list-data-padding-x);
 
     &:first-of-type {
-      padding-left: 0.67em;
+      padding-inline-start: var(--d-topic-list-data-padding-inline-start);
     }
 
     &:last-of-type {
-      padding-right: 0.67em;
+      padding-inline-end: var(--d-topic-list-data-padding-inline-end);
     }
 
     th & {
@@ -44,7 +58,8 @@
 
   button.bulk-select {
     padding: 0;
-    margin-right: 0.5em;
+    border: 0;
+    margin-right: var(--space-2);
     line-height: var(--line-height-large);
   }
 
@@ -54,7 +69,7 @@
 
     label {
       margin: 0;
-      padding: 0.8em 0.67em 1.1em 0.67em;
+      padding: var(--space-3) var(--space-2);
       cursor: pointer;
     }
 
@@ -67,8 +82,8 @@
     background: none;
     border: none;
     line-height: var(--line-height-large);
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
     position: relative;
 
     &.active {
@@ -83,6 +98,11 @@
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 146px;
+
+    img.avatar {
+      height: var(--d-topic-list-avatar-size);
+      width: var(--d-topic-list-avatar-size);
+    }
 
     > a {
       float: left;
@@ -101,27 +121,27 @@
     }
   }
 
-  .topic-list-data.posters {
+  td.topic-list-data.posters {
     height: $td-posters-height;
   }
 
   .posters a:first-child .avatar.latest:not(.single) {
-    box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
-    border: 1px solid rgba(var(--tertiary-rgb), 0.5);
+    box-shadow: 0 0 3px 1px rgb(var(--tertiary-rgb), 0.35);
+    border: 1px solid rgb(var(--tertiary-rgb), 0.5);
     position: relative;
     left: -2px;
   }
 
   .likes {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .views {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .posts {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .post-actions {
@@ -161,19 +181,10 @@
 }
 
 .topic-list-bottom {
-  margin: 1.25em 0;
+  margin: var(--space-5) 0;
 
   .dismiss-container-bottom {
     float: right;
-  }
-
-  .--no-topics-education + & {
-    margin: 0;
-
-    .footer-message {
-      overflow-wrap: break-word;
-      padding-top: 4em;
-    }
   }
 }
 
@@ -192,7 +203,7 @@
 
 #list-area {
   h2 {
-    margin: 20px 0 10px;
+    margin: var(--space-5) 0 var(--space-3);
   }
 
   .show-more {
@@ -203,8 +214,8 @@
 
     .alert {
       margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-      gap: 0.65em;
+      padding: var(--space-4) var(--space-8) var(--space-4) var(--space-3);
+      gap: var(--space-3);
       align-items: center;
 
       &.loading {
@@ -220,7 +231,7 @@
   margin-left: -5px;
 
   .btn {
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
   }
 }
 
@@ -237,15 +248,11 @@
   }
 }
 
-.category-logo.aspect-image {
-  float: left;
-  margin: 0.33em 2em 2em 0;
-}
-
 /* Tablet (portrait) ----------- */
 
 // These styles kick in a little earlier when the sidebar appears
 
+/* stylelint-disable-next-line discourse/no-breakpoint-mixin */
 @include breakpoint(medium, $sidebar: true) {
   .topic-list {
     // suppress views column
@@ -285,11 +292,11 @@
   }
 }
 
-@include breakpoint(medium) {
+@include viewport.until(lg) {
   .nav-pills {
     > li > a {
       font-size: var(--font-0);
-      padding: 0.45em 0.67em;
+      padding: var(--space-2) var(--space-3);
     }
   }
 
@@ -306,4 +313,13 @@
 
 .container.list-container {
   position: relative;
+  padding: 0 var(--list-container-padding-x);
+}
+
+.container.list-container.--categories {
+  padding: 0 var(--list-container-categories-padding-x);
+}
+
+.container.list-container.--topic-list {
+  padding: 0 var(--list-container-topiclist-padding-x);
 }

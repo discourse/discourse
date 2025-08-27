@@ -4,7 +4,7 @@ class SiteSetting::Policy::SettingsAreUnshadowedGlobally < Service::PolicyBase
   delegate :options, :params, to: :context
 
   def call
-    @hidden_settings = params.settings.keys.select(&method(:validate_setting))
+    @hidden_settings = params.settings.map(&:name).select(&method(:validate_setting))
     @hidden_settings.empty?
   end
 

@@ -62,9 +62,13 @@ hr:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
+            restricted_categories:
+              label: Kategorije
           created: Stvoreno
+          with_images: Slike
+          with_links: Linkovi
+          with_code: Šifra
+          with_uploads: Prijenosi
         category_created_edited:
           fields:
             restricted_category:
@@ -138,7 +142,5 @@ hr:
             label: Inačica
           status:
             label: Statust
-          enabled:
-            label: Omogućeno
           disabled:
             label: Onemogućeno

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse 样式指南"
   js:
     styleguide:
       title: "样式指南"
@@ -25,6 +30,8 @@ zh_CN:
           title: "日期/时间输入"
         menus:
           title: "菜单"
+        multi_select:
+          title: "多选"
         toasts:
           title: "消息框"
         font_scale:
@@ -82,8 +89,8 @@ zh_CN:
           title: "话题图"
         site_header:
           title: "网站标头"
-        suggested_topics:
-          title: "建议的话题"
+        more_topics:
+          title: "更多话题"
         post_menu:
           title: "帖子菜单"
         modal:

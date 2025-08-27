@@ -27,7 +27,7 @@ html.footer-nav-visible {
 }
 
 .footer-nav {
-  background-color: rgba(var(--header_background-rgb), 0.9);
+  background-color: rgb(var(--header_background-rgb), 0.9);
   box-shadow: var(--shadow-footer-nav);
   height: var(--footer-nav-height);
   position: fixed;
@@ -72,7 +72,7 @@ html.footer-nav-visible {
 
 @supports (backdrop-filter: blur(10px)) {
   html:not(.footer-nav-ipad) .footer-nav {
-    background-color: rgba(var(--header_background-rgb), 0.7);
+    background-color: rgb(var(--header_background-rgb), 0.7);
     backdrop-filter: blur(20px);
   }
 }

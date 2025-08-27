@@ -8,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -23,6 +24,7 @@ import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
+import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
 import Parser from "../core/parser";
@@ -50,6 +52,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
+ * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
  */
 
 /**
@@ -57,23 +60,39 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {ProsemirrorEditorArgs} Args
  */
 
+/** @typedef {import("../lib/glimmer-node-view").default} GlimmerNodeView */
+
 /**
  * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
   @service session;
   @service dialog;
+  @service menu;
+  @service capabilities;
+  @service modal;
+  @service toasts;
+  @service site;
+  @service siteSettings;
+  @service appEvents;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
+  /** @type {TrackedArray<GlimmerNodeView>} */
+  glimmerNodeViews = new TrackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
 
+  /** @type {import("discourse/lib/composer/rich-editor-extensions").PluginParams} */
   get pluginParams() {
     return {
-      utils,
+      utils: {
+        ...utils,
+        convertFromMarkdown: this.convertFromMarkdown,
+        convertToMarkdown: this.convertToMarkdown,
+      },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
@@ -86,6 +105,20 @@ export default class ProsemirrorEditor extends Component {
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
         session: this.session,
+        menu: this.menu,
+        capabilities: this.capabilities,
+        modal: this.modal,
+        toasts: this.toasts,
+        site: this.site,
+        siteSettings: this.siteSettings,
+        appEvents: this.appEvents,
+        replaceToolbar: this.args.replaceToolbar,
+        addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
+        removeGlimmerNodeView: (nodeView) =>
+          this.glimmerNodeViews.splice(
+            this.glimmerNodeViews.indexOf(nodeView),
+            1
+          ),
       }),
     };
   }
@@ -107,7 +140,7 @@ export default class ProsemirrorEditor extends Component {
         .split("+")
         .map((word) => replacements[word] ?? word)
         .join("-");
-      result[pmKey] = value;
+      result[pmKey] = () => !(value() ?? false);
     }
     return result;
   }
@@ -126,11 +159,10 @@ export default class ProsemirrorEditor extends Component {
     const params = this.pluginParams;
 
     const plugins = [
-      buildInputRules(this.extensions, this.schema, this.args.includeDefault),
+      buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
           this.extensions,
-          this.schema,
           this.keymapFromArgs,
           params,
           this.args.includeDefault
@@ -143,25 +175,31 @@ export default class ProsemirrorEditor extends Component {
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
-    this.parser = new Parser(this.extensions, this.args.includeDefault);
-    this.serializer = new Serializer(this.extensions, this.args.includeDefault);
+    this.parser = new Parser(this.extensions, params, this.args.includeDefault);
+    this.serializer = new Serializer(
+      this.extensions,
+      params,
+      this.args.includeDefault
+    );
 
     const state = EditorState.create({ schema: this.schema, plugins });
 
     this.view = new EditorView(container, {
       state,
-      nodeViews: extractNodeViews(this.extensions),
-      attributes: { class: this.args.class },
+      nodeViews: extractNodeViews(this.extensions, params),
+      attributes: { class: this.args.class ?? "" },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
 
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
-          const value = this.serializer.convert(this.view.state.doc);
+          const value = this.convertToMarkdown(this.view.state.doc);
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }
+
+        this.textManipulation.updateState();
       },
       handleDOMEvents: {
         focus: () => {
@@ -186,12 +224,16 @@ export default class ProsemirrorEditor extends Component {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
-      convertToMarkdown: this.serializer.convert.bind(this.serializer),
+      convertToMarkdown: this.convertToMarkdown,
+      commands: buildCommands(this.extensions, params, this.view),
+      customState: buildCustomState(this.extensions, params),
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
 
     this.convertFromValue();
+
+    this.textManipulation.updateState();
   }
 
   @bind
@@ -206,19 +248,27 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromValue() {
+    const value = this.args.value ?? "";
+
     // Ignore the markdown we just serialized
-    if (this.args.value === this.#lastSerialized) {
+    if (value === this.#lastSerialized) {
       return;
     }
 
-    const doc = this.convertFromMarkdown(this.args.value);
+    const doc = this.convertFromMarkdown(value);
 
     const tr = this.view.state.tr;
     tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
       "addToHistory",
       false
     );
+
     this.view.updateState(this.view.state.apply(tr));
+  }
+
+  @bind
+  convertToMarkdown(doc) {
+    return this.serializer.convert(doc);
   }
 
   @action
@@ -243,7 +293,17 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
-    >
-    </div>
+    ></div>
+    {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
+      {{#in-element nodeView.dom insertBefore=null}}
+        <nodeView.component
+          @node={{nodeView.node}}
+          @view={{nodeView.view}}
+          @getPos={{nodeView.getPos}}
+          @dom={{nodeView.dom}}
+          @onSetup={{nodeView.setComponentInstance}}
+        />
+      {{/in-element}}
+    {{/each}}
   </template>
 }

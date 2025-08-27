@@ -220,21 +220,18 @@ sr:
       dismiss: "Одбаци"
     bootstrap_mode: "Prvi koraci"
     back_button: "Nazad"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Подразумевано"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
       only_admins: "(ova poruka je prikazana samo sajt administratorima)"
     broken_decorator_alert: "Objava se možda neće prikazivati korektno zato što jedna od post dekoratora na vašem sajtu je imala grešku."
     broken_page_change_alert: "onPageChange izvršitelj je prijavio grešku. Proverite pretražvačke razvnojne alate za više informacija."
     broken_plugin_alert: "Izazvano od plugina '%{name}'"
     broken_transformer_alert: "Desila se greška. Vaš sajt možda ne radi kako treba."
-    critical_deprecation:
-      notice: "<b>[Admin Obaveštenje]</b> Jedna od vaših vizuelnih tema ili pluginova se mora unaprediti zbog kompatibilnost sa nadolazećim osnovnim Discourse promenama."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovana vizuelna tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovani dodatak: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азија-Пацифик (Токио)"
@@ -501,10 +498,6 @@ sr:
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
-      abandon:
-        confirm: "Već imate nacrt. Šta želite da uradite sa njim?"
-        yes_value: "Odbaci"
-        no_value: "Nastavi sa uređivanjem"
       dropdown:
         title: "Otvorite meni najnovijih nacrta"
         untitled: "Neimenovan nacrt"
@@ -538,7 +531,7 @@ sr:
       few: "Pogledajte %{count} nove teme"
       other: "Pogledajte %{count} novih tema"
     preview: "prikaži"
-    cancel: "otkaži"
+    cancel: "Odustani"
     deleting: "Brisanje…"
     save: "Sačuvaj izmene"
     saving: "Snimanje…"
@@ -661,6 +654,9 @@ sr:
         name: "Ime foruma"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          cancel_button: "Odustani"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (od zadnjeg markiranja)"
@@ -776,6 +772,15 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+      notes:
+        delete: "Obriši"
+      review_user: "Korisnik"
+      insights:
+        activities:
+          posts:
+            one: "%{count} poruka"
+            few: "%{count} poruka"
+            other: "%{count} poruka"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -1217,18 +1222,15 @@ sr:
         description: "Preskoči savete i značke za novog korisnika"
       reset_seen_user_tips: "Prikaži korisničke savete ponovo"
       theme_default_on_all_devices: "Postavi za podrazumevanu vizuelnu temu na svim mojim uređajima"
-      color_scheme_default_on_all_devices: "Postavi kao podrazumevanu paletu boja na svim mojim uređajima"
       color_scheme: "Paleta Boja"
       color_schemes:
         default_description: "Podrzumevane vrednosti vizuelne teme"
-        disable_dark_scheme: "Kao i regularno"
         dark_instructions: "Možete pregledati paletu boja tamnog režima tako što ćete uključiti tamni mod na vašem uređaju."
         undo: "Reset"
-        regular: "Stalni član"
         dark: "Tamni mod"
-        default_dark_scheme: "(podrazumevana vrednost sajta)"
+        picker:
+          active: "Aktivni"
       dark_mode: "Tamni Mod"
-      dark_mode_enable: "Uključi automatsku paletu boja za tamni mod"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       experimental_sidebar:
@@ -1244,6 +1246,7 @@ sr:
       admin_tooltip: "Ovaj korisnik je administrator"
       suspended_notice: "Ovaj korisnik je suspendovan do %{date}."
       suspended_reason: "Razlog:"
+      silenced_reason: "Razlog:"
       email_activity_summary: "Sažetak aktivnosti"
       watched_tags: "Pregledano"
       tracked_tags: "Praćeno"
@@ -1498,6 +1501,7 @@ sr:
           create_link_to_invite: "Napravite link koji se može deliti da biste odmah odobrili pristup ovoj zajednici."
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Sakrij napredne opcije"
+          description: "Opis"
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
@@ -1604,6 +1608,8 @@ sr:
         fixed: "Učitaj stranicu"
     modal:
       close: "zatvori"
+    multi_select:
+      search: "Pretraži"
     form_kit:
       optional: opciono
       errors:
@@ -1702,8 +1708,6 @@ sr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
       instagram:
         title: "Prijavite se s Instagramom"
         sr_title: "Prijavite se s Instagramom"
@@ -1756,6 +1760,7 @@ sr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
+      discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1771,11 +1776,7 @@ sr:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "italic tekst"
-      link_title: "Hiperlink"
       link_description: "Unesite opis linka ovde"
-      link_dialog_title: "Ubacite Hiperlink"
-      link_optional_text: "neobavezan naslov"
-      link_url_placeholder: "Zalepite URL ili tip za pretraživanje tema"
       blockquote_title: "izdvojeni citat"
       blockquote_text: "izdvojeni citat"
       code_title: "Pred-formatirani tekst"
@@ -1783,12 +1784,8 @@ sr:
       paste_code_text: "unesi ili nalepi kod ovde"
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
-      olist_title: "Brojčani popis"
-      ulist_title: "Tačkasti popis"
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
-      collapse: "smanji panel za sastavljanje teksta"
-      hide_toolbar: "sakrij alatku za pisanje"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -1813,9 +1810,8 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
+      delete: "Obriši"
       uploading: "Učitavanje"
-      processing: "Obrada uploada"
-      select_file: "Odaberi datoteku"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"
@@ -2107,6 +2103,13 @@ sr:
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
       unread: "Poruka je nepročitana"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Izmeni"
+          delete: "Obriši"
+        post_language_selector:
+          none: "Ništa"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2176,6 +2179,10 @@ sr:
       view: "Prikaži Teme u Kategoriji"
       general: "Opšti"
       settings: "Podešavanje"
+      localization:
+        name: "Ime foruma"
+        description: "Opis"
+        remove: "Ukloni"
       tags_placeholder: "(Opciono) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
@@ -2191,9 +2198,13 @@ sr:
       description: "Opis"
       logo: "Logo Kategorije "
       background_image: "Pozadinska Slika Kategorije"
-      badge_colors: "Boje značke"
-      background_color: "Pozadinska boja"
-      foreground_color: "Istaknuta boja."
+      background_color: "Boja"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Jedna ili dve reči maksimalno"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
@@ -2359,7 +2370,6 @@ sr:
         topics: "Teme"
         replies: "Odgovori"
       posted:
-        title: "Moje poruke"
         help: "teme u kojima si pisao poruke"
       bookmarks:
         title: "Markiraj"
@@ -2566,6 +2576,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            filter:
+              content: "Filter"
             topics:
               content: "Teme"
             faq:
@@ -2576,11 +2588,10 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
-            my_posts:
-              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"
+      search: "Pretraži"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -2598,6 +2609,12 @@ sr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    filter:
+      description:
+        yesterday: "Juče"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
   admin_js:
     settings: "Podešavanja"
     admin:
@@ -2625,18 +2642,18 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        branding:
-          logo:
-            form:
-              email: "Email"
+        logo:
+          form:
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obaveštenja"
         onebox:
           title: "Onebox"
-        other:
-          title: "Ostalo"
         search_everything:
           title: "Pretraži"
         security:
@@ -2658,7 +2675,7 @@ sr:
           title: "Značke"
         emoji:
           title: "Emoji"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Poslato"
@@ -2679,6 +2696,8 @@ sr:
               header_description: "URL-ovi s ove liste su korišteni u porukama korisnika koji su identifikovani kao nepoželjni"
         embedding:
           title: "Ugrađivanje"
+      theme_site_settings:
+        default_value: "Подразумевано"
       search:
         title: "Pretraži"
       dashboard:
@@ -2791,9 +2810,32 @@ sr:
             failed: "Neuspešno"
       home:
         title: "Home"
+      account:
+        sidebar_link:
+          backups: "Sigurnosne kopije"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obaveštenja"
+          users: "Korisnici"
+          groups: "Grupe"
+          legal: "Legalno"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      security:
+        title: "Sigurnost"
+      section_landing_pages:
+        account:
+          backups:
+            title: "Sigurnosne kopije"
       config_areas:
         about:
           company_name: "Ime foruma"
+          extra_groups:
+            groups: "Grupe"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -2815,9 +2857,25 @@ sr:
         embeddable_host:
           edit: "Izmeni"
           delete: "Obriši"
+        themes_and_components:
+          breadcrumb_title: "Prilagođavanje"
+          components:
+            name: "Ime foruma"
+            enabled: "Omgućeno"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Izmeni"
+            export: "Izvoz"
+            delete: "Obriši"
+            filter_by_all: "sve"
         user_fields:
           type: "Tip"
           delete: "Obriši"
+        color_palettes:
+          palette_name: "Ime foruma"
+          delete: "Obriši"
+          colors:
+            title: "Boje"
       plugins:
         title: "Dodaci"
         name: "Ime foruma"
@@ -2826,6 +2884,11 @@ sr:
         change_settings_short: "Podešavanje"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        filters:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Isključeno"
+          reset: "Reset"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -2891,6 +2954,7 @@ sr:
         component:
           all_filter: "sve"
         theme:
+          filter_all: "Sve"
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
@@ -2913,44 +2977,38 @@ sr:
             text: "Footer"
           all_filter: "sve"
           active_filter: "Aktivno"
-          schema:
-            fields:
-              required: "*potrebno"
+        schema:
+          fields:
+            required: "*potrebno"
         colors:
           title: "Boje"
+          edit: "Izmeni"
+          filters:
+            all: "Sve"
           copy_name_prefix: "Kopija od"
           undo: "Vrati na prethodno"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."
           revert: "Vrati nazad"
           primary:
             name: "primarna"
-            description: "Većina teksta, ikonica i granica."
           secondary:
             name: "sekundarna"
-            description: "Glavna pozadinska boja, i boja teksta na nekim dugmićima."
           tertiary:
             name: "tercijarna"
-            description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
           header_background:
             name: "Pozadina headera"
-            description: "Pozadinska boja headera stranice."
           header_primary:
             name: "header primarna"
-            description: "Tekst i ikonice u headeru."
           highlight:
             name: "naglasak"
-            description: "Pozadinska boja naglašenih elemenata na stranici, kao što su poruke i teme."
           danger:
             name: "opasnost"
-            description: "Boja naglaska za akcije kao što su brisanje teme ili poruka."
           success:
             name: "uspešno"
-            description: "Koristi se da pokaže da je neka akcija bila uspešna."
           love:
             name: "lajk"
-            description: "Boja dugmeta za lajk"
         email_style:
           css: "CSS"
       email:
@@ -3149,7 +3207,6 @@ sr:
         activity: Aktivnost
         like_count: Like-ovi Dati / Primljeni
         last_100_days: "U zadnjih 100 dana"
-        private_topics_count: Privatne Teme
         posts_read_count: Poruka Pročitano
         post_count: Poruka Otvoreno
         topics_entered: Tema Pregledano

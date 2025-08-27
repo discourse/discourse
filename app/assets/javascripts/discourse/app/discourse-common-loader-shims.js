@@ -24,7 +24,7 @@ loaderShim("discourse-common/helpers/fa-icon", () =>
   importSync("discourse/helpers/fa-icon")
 );
 loaderShim("discourse-common/helpers/get-url", () =>
-  importSync("discourse/helpers/get-url")
+  importSync("discourse/lib/get-url")
 );
 loaderShim("discourse-common/helpers/html-safe", () =>
   importSync("discourse/helpers/html-safe")
@@ -83,15 +83,6 @@ loaderShim("discourse-common/lib/object", () =>
 );
 loaderShim("discourse-common/lib/popular-themes", () =>
   importSync("discourse/lib/popular-themes")
-);
-loaderShim("discourse-common/lib/raw-handlebars-helpers", () =>
-  importSync("discourse/lib/raw-handlebars-helpers")
-);
-loaderShim("discourse-common/lib/raw-handlebars", () =>
-  importSync("discourse/lib/raw-handlebars")
-);
-loaderShim("discourse-common/lib/raw-templates", () =>
-  importSync("discourse/lib/raw-templates")
 );
 loaderShim("discourse-common/lib/suffix-trie", () =>
   importSync("discourse/lib/suffix-trie")

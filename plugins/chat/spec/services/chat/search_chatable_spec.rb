@@ -9,7 +9,7 @@ RSpec.describe Chat::SearchChatable do
     fab!(:charlie) { Fabricate(:user, username: "charlie-user") }
     fab!(:alain) { Fabricate(:user, username: "alain-user") }
     fab!(:group_1) { Fabricate(:group, name: "awesome-group") }
-    fab!(:group_2) { Fabricate(:group) }
+    fab!(:group_2, :group)
     fab!(:channel_1) { Fabricate(:chat_channel, name: "bob-channel") }
     fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, sam]) }
     fab!(:channel_3) { Fabricate(:direct_message_channel, users: [current_user, sam, charlie]) }

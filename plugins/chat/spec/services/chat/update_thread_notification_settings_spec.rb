@@ -13,7 +13,7 @@ RSpec.describe Chat::UpdateThreadNotificationSettings do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:private_channel) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }

@@ -1,0 +1,150 @@
+nav.post-controls .actions button.cancel-streaming {
+  display: none;
+}
+
+.ai-bot-chat {
+  #reply-control {
+    .user-selector,
+    .title-and-category,
+    #private-message-users {
+      display: none;
+    }
+  }
+
+  .persona-llm-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .select-kit.single-select.dropdown-select-box ul.select-kit-collection {
+      max-height: 200px;
+    }
+    margin-bottom: 1em;
+  }
+}
+
+.ai-bot-pm {
+  .gpt-persona {
+    margin-bottom: 5px;
+  }
+
+  #reply-control .composer-fields {
+    .mini-tag-chooser,
+    .add-warning {
+      display: none;
+    }
+  }
+}
+
+.ai-bot-chat-warning {
+  color: var(--tertiary);
+  background-color: var(--tertiary-low);
+  border-top: 1px solid var(--tertiary-medium);
+  opacity: 0.75;
+
+  .d-icon {
+    color: var(--tertiary);
+  }
+  margin: 0;
+  padding: 4px 10px;
+  width: calc(100% - 20px);
+}
+
+article.streaming nav.post-controls .actions button.cancel-streaming {
+  display: inline-block;
+}
+
+.ai-bot-available-bot-options {
+  padding: 0.5em;
+
+  .ai-bot-available-bot-content {
+    color: var(--primary-high);
+    display: flex;
+    width: 100%;
+    min-width: 320px;
+    padding: 0.5em;
+
+    .d-button-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+}
+
+.topic-body .persona-flair {
+  order: 2;
+  font-size: var(--font-down-1);
+}
+
+details.ai-quote {
+  > summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span:first-child {
+      margin-right: auto;
+    }
+
+    span:nth-child(2) {
+      font-size: var(--font-down-2);
+      background: var(--primary-medium);
+      padding: 2px 6px 0;
+      color: var(--secondary);
+    }
+  }
+}
+
+.ai-share-modal {
+  .d-modal__footer {
+    position: relative;
+    padding: 10px 20px 25px;
+
+    .btn-primary {
+      margin-left: auto;
+    }
+  }
+
+  &__just-copied {
+    position: absolute;
+    font-size: var(--font-down-1);
+    right: 20px;
+    bottom: 5px;
+    color: var(--success);
+  }
+}
+
+span.onebox-ai-llm-title {
+  font-weight: bold;
+}
+
+.d-modal.ai-debug-modal {
+  --modal-max-width: 99%;
+
+  ul {
+    padding-left: 1em;
+  }
+
+  li {
+    margin-bottom: 0.2em;
+  }
+
+  li > ul {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+}
+
+.ai-debug-modal__tokens__count {
+  display: block;
+}
+
+.d-modal ul.ai-debug-modal__nav {
+  margin: 0 0 1em;
+  padding: 0;
+  border-bottom: none;
+}

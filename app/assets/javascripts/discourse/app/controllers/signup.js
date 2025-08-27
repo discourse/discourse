@@ -16,16 +16,14 @@ import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default class SignupPageController extends Controller.extend(
-  UserFieldsValidation
-) {
+export default class SignupPageController extends Controller {
   @service site;
   @service siteSettings;
   @service login;
@@ -37,17 +35,35 @@ export default class SignupPageController extends Controller.extend(
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
-  userFields = null;
   maskPassword = true;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
-  usernameValidationHelper = new UsernameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper({
+    getAccountEmail: () => this.accountEmail,
+    getAccountUsername: () => this.accountUsername,
+    getPrefilledUsername: () => this.prefilledUsername,
+    getAuthOptionsUsername: () => this.authOptions?.username,
+    getForceValidationReason: () => this.forceValidationReason,
+    siteSettings: this.siteSettings,
+    isInvalid: () => this.isDestroying || this.isDestroyed,
+    updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
+    updateUsernames: (username) => {
+      this.accountUsername = username;
+      this.prefilledUsername = username;
+    },
+  });
   passwordValidationHelper = new PasswordValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () => this.site.get("user_fields"),
+    getAccountPassword: () => this.accountPassword,
+    showValidationOnInit: false,
+  });
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -61,6 +77,16 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  @dependentKeyCompat
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
+  }
+
+  @dependentKeyCompat
+  get userFieldsValidation() {
+    return this.userFieldsValidationHelper.userFieldsValidation;
   }
 
   @dependentKeyCompat
@@ -140,9 +166,13 @@ export default class SignupPageController extends Controller.extend(
     return authOptions && !canEditUsername;
   }
 
-  @discourseComputed("authOptions", "authOptions.can_edit_name")
-  nameDisabled(authOptions, canEditName) {
-    return authOptions && !canEditName;
+  @discourseComputed(
+    "authOptions",
+    "authOptions.can_edit_name",
+    "authOptions.name"
+  )
+  nameDisabled(authOptions, canEditName, name) {
+    return authOptions && !canEditName && name && name.length > 0;
   }
 
   @discourseComputed
@@ -174,11 +204,10 @@ export default class SignupPageController extends Controller.extend(
     return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
-  @discourseComputed("usernameValidation.reason")
-  showUsernameInstructions(usernameValidationReason) {
+  get showUsernameInstructions() {
     return (
       this.siteSettings.show_signup_form_username_instructions &&
-      !usernameValidationReason
+      !this.usernameValidation.reason
     );
   }
 
@@ -342,7 +371,7 @@ export default class SignupPageController extends Controller.extend(
       // then look for a registered username that matches the email.
       discourseDebounce(
         this,
-        this.usernameValidationHelper.fetchExistingUsername,
+        () => this.usernameValidationHelper.fetchExistingUsername(),
         500
       );
     }
@@ -352,6 +381,16 @@ export default class SignupPageController extends Controller.extend(
   @discourseComputed
   hasAtLeastOneLoginButton() {
     return findAll().length > 0;
+  }
+
+  @discourseComputed("authOptions", "hasAtLeastOneLoginButton")
+  showRightSide(authOptions, hasAtLeastOneLoginButton) {
+    return !authOptions && hasAtLeastOneLoginButton;
+  }
+
+  @discourseComputed("authOptions")
+  progressBarStep(authOptions) {
+    return authOptions ? "activate" : "signup";
   }
 
   fetchConfirmationValue() {
@@ -412,18 +451,10 @@ export default class SignupPageController extends Controller.extend(
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const destinationUrl = this.authOptions?.destination_url;
-
-    if (!isEmpty(destinationUrl)) {
-      cookie("destination_url", destinationUrl, { path: "/" });
-    }
-
     // Add the userFields to the data
     if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
-      this.userFields.forEach(
-        (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
-      );
+      this.userFields.forEach((f) => (attrs.userFields[f.field.id] = f.value));
     }
 
     this.set("formSubmitted", true);
@@ -439,29 +470,31 @@ export default class SignupPageController extends Controller.extend(
           this._challengeExpiry = 1;
 
           // Trigger the browser's password manager using the hidden static login form:
-          const hiddenLoginForm = document.querySelector("#hidden-login-form");
-          if (hiddenLoginForm) {
-            hiddenLoginForm.querySelector("input[name=username]").value =
-              attrs.accountUsername;
-            hiddenLoginForm.querySelector("input[name=password]").value =
-              attrs.accountPassword;
-            hiddenLoginForm.querySelector("input[name=redirect]").value =
-              userPath("account-created");
-            hiddenLoginForm.submit();
+          const _form = document.getElementById("hidden-login-form");
+          if (_form) {
+            const set = (key, value) => {
+              _form.querySelector(`input[name=${key}]`).value = value;
+            };
+
+            set("username", this.accountUsername);
+            set("password", this.accountPassword);
+
+            let { destination_url } = this.authOptions || {};
+
+            if (destination_url && destination_url !== "/signup") {
+              set("redirect", destination_url);
+            } else {
+              set("redirect", userPath("account-created"));
+            }
+
+            _form.submit();
           }
+
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
             this.isDeveloper = true;
-          }
-          if (
-            result.errors &&
-            result.errors.email &&
-            result.errors.email.length > 0 &&
-            result.values
-          ) {
-            this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
             this.passwordValidationHelper.rejectedPasswords.push(
@@ -514,6 +547,7 @@ export default class SignupPageController extends Controller.extend(
   createAccount() {
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
+    this.userFieldsValidationHelper.validationVisible = true;
     this.set("emailValidationVisible", true);
 
     const validation = [
@@ -540,6 +574,7 @@ export default class SignupPageController extends Controller.extend(
       return;
     }
 
+    this.userFieldsValidationHelper.validationVisible = false;
     this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }

@@ -173,10 +173,6 @@ module SiteSettings::Validations
     end
   end
 
-  def validate_s3_use_acls(new_val)
-    validate_error :s3_use_acls_requirements if new_val == "f" && SiteSetting.secure_uploads
-  end
-
   def validate_enable_page_publishing(new_val)
     validate_error :page_publishing_requirements if new_val == "t" && SiteSetting.secure_uploads?
   end
@@ -275,6 +271,13 @@ module SiteSettings::Validations
     end
 
     validate_error :tl0_and_anonymous_flag
+  end
+
+  def validate_allow_likes_in_anonymous_mode(new_val)
+    return if new_val == "f"
+    return if SiteSetting.allow_anonymous_mode
+
+    validate_error :allow_likes_in_anonymous_mode_without_anonymous_mode_enabled
   end
 
   private

@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -20,6 +20,14 @@ acceptance("User Preferences - Security", function (needs) {
     });
 
     server.post("/session/forgot_password.json", () => {
+      return helper.response({ success: "Ok" });
+    });
+
+    server.post("/u/confirm-session.json", () => {
+      return helper.response({ success: "Ok" });
+    });
+
+    server.put("/u/eviltrout/remove-password", () => {
       return helper.response({ success: "Ok" });
     });
   });
@@ -219,5 +227,63 @@ acceptance("User Preferences - Security", function (needs) {
     assert
       .dom(".passkey-options-dropdown")
       .doesNotExist("does not show passkey options dropdown");
+  });
+
+  test("Remove Password availability", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+    await visit("/u/eviltrout/preferences/security");
+    // eviltrout starts with an entry in associated_accounts, can remove password
+    assert
+      .dom("#remove-password-link")
+      .exists("shows for user with associated account");
+
+    updateCurrentUser({
+      associated_accounts: null,
+    });
+
+    assert
+      .dom("#remove-password-link")
+      .doesNotExist(
+        "does not show for user with no associated account and no passkeys"
+      );
+
+    updateCurrentUser({
+      user_passkeys: [
+        {
+          id: 1,
+          name: "Password Manager",
+          last_used: "2023-10-09T20:03:20.986Z",
+          created_at: "2023-10-09T20:01:37.578Z",
+        },
+      ],
+    });
+    assert.dom("#remove-password-link").exists("shows for user with passkey");
+  });
+
+  test("Removing User Password", async function (assert) {
+    await visit("/u/eviltrout/preferences/security");
+    // eviltrout starts with an entry in associated_accounts, can remove password
+
+    await click("#remove-password-link");
+    assert
+      .dom(".dialog-body .confirm-session")
+      .exists(
+        "displays a dialog to confirm the user's identity before deleting password"
+      );
+    await fillIn(".confirm-session #password", "correct");
+    await click(".confirm-session .btn-primary");
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.change_password.remove_detail"));
+    await click(".dialog-footer .btn-danger");
+    assert
+      .dom("#remove-password-link")
+      .doesNotExist("hides remove password button once password is removed");
+    assert
+      .dom("#change-password-button")
+      .hasText(
+        i18n("user.change_password.set_password"),
+        "shows set password instead of change after password removed"
+      );
   });
 });

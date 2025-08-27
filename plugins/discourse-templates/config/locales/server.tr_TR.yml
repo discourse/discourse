@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    discourse_templates_enabled: "Aşağıda belirtilen kategoride görüntüleme erişimine sahip kullanıcıların mevcut şablonları kullanmasına izin verin"
+    discourse_templates_categories: "Şablonların alınacağı kategoriler"
+    discourse_templates_enable_private_templates: "Özel şablonların kullanımını etkinleştirir"
+    discourse_templates_groups_allowed_private_templates: "Grupların özel şablonları kullanmasına izin verilir. Personel üyelerine her zaman izin verilir."
+    discourse_templates_private_templates_tags: "Bir kişisel mesajı özel şablon olarak tanımlayan etiketler"
+  default_category_template:
+    name: Şablonlar
+    description: |
+      Bu kategori şablonları saklamak için kullanılır.
+
+      Şablonlar, kullanıcıların sık tekrarlanan kullanımlar için içerik depolamasına olanak tanır.
+
+      Bu kategorideki her konu farklı bir şablonu temsil eder. Her konunun **ilk gönderisi** şablon için model olarak kullanılır.
+
+      Bu kategoriye erişimi olan her kullanıcının şablon kullanmasına izin verileceğini unutmayın.

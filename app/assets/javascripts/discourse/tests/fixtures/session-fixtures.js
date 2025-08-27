@@ -44,11 +44,13 @@ export default {
         external_links_in_new_tab: false,
         enable_quoting: true,
         enable_smart_lists: true,
+        enable_markdown_monospace_font: false,
         dynamic_favicon: true,
         title_count_mode: "notifications",
         timezone: "Australia/Brisbane",
         skip_new_user_tips: false,
         should_be_redirected_to_top: false,
+        composition_mode: 0,
       },
       sidebar_sections: [
         {
@@ -91,7 +93,7 @@ export default {
             },
             {
               id: 333,
-              name: "My Posts",
+              name: "My posts",
               value: "/my/activity",
               icon: "user",
               external: false,

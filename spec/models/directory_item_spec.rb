@@ -186,7 +186,7 @@ RSpec.describe DirectoryItem do
       fab!(:group) { Fabricate(:group, users: [user]) }
 
       before do
-        SiteSetting.allow_anonymous_posting = true
+        SiteSetting.allow_anonymous_mode = true
         SiteSetting.anonymous_posting_allowed_groups = group.id.to_s
       end
 

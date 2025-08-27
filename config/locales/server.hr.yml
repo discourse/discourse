@@ -43,7 +43,7 @@ hr:
   views: "pregledi"
   loading: "Učitavanje"
   powered_by_html: 'Pogonjeno <a href="https://www.discourse.org">Discourse</a> platformom, preporučen pregled uz omogućen JavaScript'
-  sign_up: "Učlani se"
+  sign_up: "Registriraj se"
   log_in: "Prijava"
   submit: "Pošalji"
   purge_reason: "Automatski izbrisao kao napušteni, deaktivirani račun."
@@ -416,6 +416,8 @@ hr:
       trust_level_2: "razina_povjerenja_2"
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
+    default_descriptions:
+      moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
   education:
     until_posts:
       one: "%{count} objava"
@@ -489,6 +491,7 @@ hr:
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
   category:
     topic_prefix: "O %{category} kategoriji"
+    post_template: "%{replace_paragraph}\n\nKoristite sljedeće odlomke za dulji opis ili za postavljanje smjernica ili pravila kategorije:\n\n- Zašto bi ljudi trebali koristiti ovu kategoriju? Čemu služi?\n\n- Po čemu se točno ovo razlikuje od ostalih kategorija koje već imamo?\n\n- Što bi teme u ovoj kategoriji općenito trebale sadržavati?\n\n- Trebamo li ovu kategoriju? Možemo li se spojiti s drugom kategorijom ili potkategorijom?\n"
     errors:
       not_found: "Kategorija nije pronađena!"
       uncategorized_parent: "Nekategorizirano ne može imati nadkategoriju"
@@ -724,6 +727,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
+      description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
+      short_description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
       email_title: 'Vaša objava u "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -1269,7 +1274,6 @@ hr:
     s3_region: "Naziv regije Amazon S3 koji će se koristiti za učitavanje slika i sigurnosnih kopija."
     s3_cdn_url: "CDN URL koji se koristi za sva s3 sredstva (na primjer: https://cdn.somewhere.com). UPOZORENJE: nakon promjene ove postavke morate ponovno ispeći sve stare objave."
     avatar_sizes: "Popis automatski generiranih veličina avatara."
-    external_system_avatars_url: "URL usluge avatara vanjskog sustava. Dopuštene zamjene su {username} {first_letter} {color} {size}"
     external_emoji_url: "URL vanjske usluge za emoji slike. Ostavite prazno za onemogućavanje."
     use_site_small_logo_as_system_avatar: "Koristite mali logo stranice umjesto avatara korisnika sustava. Zahtijeva da logo bude prisutan."
     restrict_letter_avatar_colors: "Popis 6-znamenkastih heksadecimalnih vrijednosti boja koje će se koristiti za pozadinu avatara slova."
@@ -1304,7 +1308,6 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
     dark_mode_none: "ništa"
-    max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
     title_remove_extraneous_space: "Uklonite početne razmake ispred interpunkcijskih znakova na kraju."
@@ -2248,8 +2251,6 @@ hr:
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
-  color_schemes:
-    default_theme_name: "Zadano"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -2387,21 +2388,43 @@ hr:
     actions:
       agree:
         title: "Da"
-      delete_single:
-        title: "Pobriši"
+      delete:
+        title: "Izbriši"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
+        complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
+        complete: "Zastava zanemarena."
       ignore_and_do_nothing:
         title: "Ne radi ništa"
+        complete: "Zastava zanemarena."
       approve:
         title: "Odobri"
+        complete: "Objava odobrena."
+      approve_post:
+        complete: "Objava odobrena."
+      approve_post_closed:
+        complete: "Objava odobrena."
+      reject_post:
+        complete: "Objava je odbijena."
+      approve_user:
+        complete: "Korisnik odobren."
       reject_user:
         delete:
           title: "Obriši korisnika"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      no_action_user:
+        title: "Nema akcije"
+      delete_user:
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   activemodel:
     errors:

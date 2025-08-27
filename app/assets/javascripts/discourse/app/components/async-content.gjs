@@ -61,11 +61,6 @@ export default class AsyncContent extends Component {
     return new TrackedAsyncData(value);
   }
 
-  get errorMessage() {
-    const errorInfo = extractErrorInfo(this.data.error);
-    return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
-  }
-
   get errorMode() {
     return this.args.errorMode ?? DEFAULT_ERROR_MODE;
   }
@@ -115,12 +110,27 @@ export default class AsyncContent extends Component {
       {{/if}}
     {{else if this.data.isRejected}}
       {{#if (has-block "error")}}
-        {{yield this.data.error to="error"}}
+        {{yield
+          this.data.error
+          (component AsyncContentInlineError error=this.data.error)
+          to="error"
+        }}
       {{else if (eq this.errorMode "flash")}}
-        <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+        <AsyncContentInlineError @error={{this.data.error}} />
       {{else if (eq this.errorMode "popup")}}
         {{popupAjaxError this.data.error}}
       {{/if}}
     {{/if}}
+  </template>
+}
+
+class AsyncContentInlineError extends Component {
+  get errorMessage() {
+    const errorInfo = extractErrorInfo(this.args.error);
+    return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
+  }
+
+  <template>
+    <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
   </template>
 }

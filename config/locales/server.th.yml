@@ -462,8 +462,6 @@ th:
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
-  color_schemes:
-    default_theme_name: "ค่าเริ่มต้น"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
@@ -541,8 +539,13 @@ th:
     actions:
       agree:
         title: "ใช่"
-      delete_single:
+      delete:
         title: "ลบ"
+        complete: "โพสต์ถูกลบ."
+      delete_and_ignore:
+        complete: "โพสต์ถูกลบ."
+      delete_and_agree:
+        complete: "โพสต์ถูกลบ."
       disagree:
         title: "ไม่ใช่"
       ignore:
@@ -552,8 +555,11 @@ th:
       reject_user:
         delete:
           title: "ลบผู้ใช้"
+          complete: "ผู้ใช้ถูกลบ."
       reject:
         title: "ละทิ้ง"
+      delete_user:
+        complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"
   activemodel:
     errors:

@@ -1,0 +1,73 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    category:
+      sort_options:
+        votes: "الأصوات"
+    topic_voting:
+      title: "التصويت على الموضوع"
+      reached_limit: "لم يعُد بإمكانك التصويت الآن، يُرجى إزالة صوت حالي!"
+      list_votes: "قائمة بأصواتك"
+      votes_nav_help: "الموضوعات الأكثر تصويتًا"
+      voted: "لقد صوَّت على هذا الموضوع"
+      allow_topic_voting: "السماح للمستخدمين بالتصويت على الموضوعات في هذه الفئة"
+      vote_title: "تصويت"
+      vote_title_plural: "الأصوات"
+      voted_title: "تم التصويت"
+      voting_closed_title: "مغلق"
+      voting_limit: "الحد"
+      votes_left:
+        zero: "متبقٍ لديك %{count} من الأصوات، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+        one: "متبقٍ لديك صوت واحد %{count}، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+        two: "متبقٍ لديك صوتان %{count}، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+        few: "متبقٍ لديك %{count} أصوات، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+        many: "متبقٍ لديك %{count} صوتًا، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+        other: "متبقٍ لديك %{count} صوت، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
+      votes_left_button_title:
+        zero: "لديك %{count} من الأصوات متبقية."
+        one: "لديك صوت واحد (%{count}) متبقٍ."
+        two: "لديك صوتان (%{count}) متبقيان."
+        few: "لديك %{count} أصوات متبقية."
+        many: "لديك %{count} صوتًا متبقيًا."
+        other: "لديك %{count} صوت متبقٍ."
+      votes:
+        zero: "%{count} من الأصوات"
+        one: "صوت واحد %{count}"
+        two: "صوتان %{count}"
+        few: "%{count} أصوات"
+        many: "%{count} صوتًا"
+        other: "%{count} صوت"
+      anonymous_button:
+        zero: "أصوات"
+        one: "صوت واحد"
+        two: "صوتان"
+        few: "أصوات"
+        many: "صوتًا"
+        other: "صوت"
+      remove_vote: "إزالة الصوت"
+      no_votes_title_self: "لم تصوِّت لأي موضوع حتى الآن"
+      no_votes_title_others: "لم يصوِّت %{username} لأي موضوع حتى الآن"
+    filters:
+      votes:
+        title: "الأصوات"
+        help: "الموضوعات الأكثر تصويتًا"
+      my_votes:
+        title: "أصواتي"
+        help: "الموضوعات التي صوَّت عليها"
+    search:
+      most_votes: "معظم الأصوات"
+      advanced:
+        vote:
+          count:
+            label: "أقل عدد من الأصوات"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "حدث التصويت على موضوع"
+          topic_upvote: "عندما يقوم المستخدم بالتصويت على موضوع"
+          topic_unvote: "عندما يقوم المستخدم بإلغاء التصويت على موضوع"

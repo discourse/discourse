@@ -210,7 +210,11 @@ module SeedData
 
       if !skip_changed || unchanged?(post)
         if post.trashed?
-          PostDestroyer.new(Discourse.system_user, post).recover
+          PostDestroyer.new(
+            Discourse.system_user,
+            post,
+            context: I18n.t("staff_action_logs.seed_data_topic_updated"),
+          ).recover
           post.reload
         end
 
@@ -226,7 +230,13 @@ module SeedData
       post = find_post(site_setting_name)
       return if !post
 
-      PostDestroyer.new(Discourse.system_user, post).destroy if !skip_changed || unchanged?(post)
+      if !skip_changed || unchanged?(post)
+        PostDestroyer.new(
+          Discourse.system_user,
+          post,
+          context: I18n.t("staff_action_logs.seed_data_topic_deleted"),
+        ).destroy
+      end
     end
 
     def find_post(site_setting_name, deleted: false)

@@ -1,14 +1,21 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
+import I18n from "discourse-i18n";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module(
   "Integration | Component | Widget | post-small-action",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.glimmer_post_stream_mode = "disabled";
+    });
 
     test("does not have delete/edit/recover buttons by default", async function (assert) {
       const self = this;
@@ -109,46 +116,80 @@ module(
         .exists("adds the recover small action button");
     });
 
-    test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
-      try {
-        const self = this;
+    test("`addGroupPostSmallActionCode` plugin api", async function (assert) {
+      const self = this;
 
-        withPluginApi("1.6.0", (api) => {
+      withPluginApi((api) => {
+        api.addGroupPostSmallActionCode("some_code");
+      });
+
+      this.set("args", {
+        id: 123,
+        actionCode: "some_code",
+        actionCodeWho: "somegroup",
+      });
+
+      I18n.translations[I18n.locale].js.action_codes = {
+        some_code: "Some %{who} Code Action",
+      };
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
+      assert
+        .dom(".small-action")
+        .hasText(
+          "Some @somegroup Code Action",
+          "the action code text was rendered correctly"
+        );
+      assert
+        .dom("a.mention-group")
+        .hasAttribute(
+          "href",
+          "/g/somegroup",
+          "the group mention link has the correct href"
+        );
+    });
+
+    test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
+      const self = this;
+
+      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+        withPluginApi((api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
             if (postAttrs.canRecover) {
               return ["abcde"];
             }
           });
         });
+      });
 
-        this.set("args", { id: 123, canRecover: false });
+      this.set("args", { id: 123, canRecover: false });
 
-        await render(
-          <template>
-            <MountWidget @widget="post-small-action" @args={{self.args}} />
-          </template>
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
+
+      assert
+        .dom(".abcde")
+        .doesNotExist(
+          "custom CSS class is not added when condition is not met"
         );
 
-        assert
-          .dom(".abcde")
-          .doesNotExist(
-            "custom CSS class is not added when condition is not met"
-          );
+      this.set("args", { id: 123, canRecover: true });
 
-        this.set("args", { id: 123, canRecover: true });
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
-        await render(
-          <template>
-            <MountWidget @widget="post-small-action" @args={{self.args}} />
-          </template>
-        );
-
-        assert
-          .dom(".abcde")
-          .exists("adds custom CSS class as registered from the plugin API");
-      } finally {
-        resetPostSmallActionClassesCallbacks();
-      }
+      assert
+        .dom(".abcde")
+        .exists("adds custom CSS class as registered from the plugin API");
     });
   }
 );

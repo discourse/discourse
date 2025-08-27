@@ -180,6 +180,30 @@ module("Integration | Component | DPageHeader", function (hooks) {
     await click(".edit-groupings-btn");
     assert.true(actionCalled);
   });
+  test("renders disabled action buttons in yielded <:actions>", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              @disabled={{true}}
+              class="new-badge"
+            />
+          </:actions>
+        </DPageHeader>
+      </template>
+    );
+
+    assert
+      .dom(
+        ".d-page-header__actions .d-page-action-button.new-badge.btn.btn-small.btn-primary"
+      )
+      .hasAttribute("disabled");
+  });
 
   test("@headerActionComponent is rendered with actions arg", async function (assert) {
     await render(

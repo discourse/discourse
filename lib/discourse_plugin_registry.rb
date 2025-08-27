@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require_relative "deprecated_icon_handler"
-#
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
@@ -91,6 +89,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :topic_thumbnail_sizes
   define_filtered_register :topic_preloader_associations
+  define_filtered_register :category_list_topics_preloader_associations
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
@@ -157,8 +156,7 @@ class DiscoursePluginRegistry
   end
 
   def self.register_svg_icon(icon)
-    DeprecatedIconHandler.convert_icon(icon) if Rails.env.test?
-    self.svg_icons << icon
+    self.svg_icons << icon.strip
   end
 
   def register_css(filename, plugin_directory_name)
@@ -168,6 +166,12 @@ class DiscoursePluginRegistry
 
   def self.register_locale(locale, options = {})
     self.locales[locale] = options
+  end
+
+  def self.unregister_locale(locale)
+    raise "unregister_locale can only be used in tests" if !Rails.env.test?
+
+    self.locales.delete(locale)
   end
 
   def register_archetype(name, options = {})
@@ -243,8 +247,9 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "vendor/assets/javascripts/moment.js",
-    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
+    "moment.js" => "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+    "moment-timezone.js" =>
+      "app/assets/javascripts/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)

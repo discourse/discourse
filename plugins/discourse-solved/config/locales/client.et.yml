@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "aktsepteeritud"
+    solved:
+      title: "Lahendatud"
+      has_no_accepted_answer: "Sellel teemal pole lahendust"
+      accepted_answer: "Lahendus"
+      solution: "Lahendus"
+      solution_summary:
+        one: "lahendus"
+        other: "lahendused"
+      accepted_answer_post_number: "postitus %{post_number}"
+      topic_status_filter:
+        all: "kõik"
+        solved: "lahendatud"
+    topic_statuses:
+      solved:
+        help: "ellel teemal on lahendus"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Usaldustase

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Quoting chat message transcripts", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:admin)
-  fab!(:chat_channel_1) { Fabricate(:chat_channel) }
+  fab!(:chat_channel_1, :chat_channel)
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -41,7 +41,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     before { cdp.allow_clipboard }
 
     context "when quoting a single message into a topic" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
       it "quotes the message" do
@@ -62,30 +62,28 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     end
 
     context "when quoting multiple messages into a topic" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
       it "quotes the messages" do
         chat_page.visit_channel(chat_channel_1)
-
         clip_text = copy_messages_to_clipboard([message_1, message_2])
         topic_page.visit_topic_and_open_composer(post_1.topic)
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-        within(".d-editor-preview") { expect(page).to have_css(".chat-transcript", count: 2) }
 
+        expect(page).to have_css(".d-editor-preview .chat-transcript", count: 2)
         expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
 
         topic_page.send_reply
 
         selector = topic_page.post_by_number_selector(2)
-        expect(page).to have_css(selector)
-        within(selector) { expect(page).to have_css(".chat-transcript", count: 2) }
+        expect(page).to have_css("#{selector} .chat-transcript", count: 2)
       end
     end
 
     context "when quoting a message containing a onebox" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
       before do

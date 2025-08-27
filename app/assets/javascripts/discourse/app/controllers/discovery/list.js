@@ -154,7 +154,7 @@ export default class DiscoveryListController extends Controller {
     this.modal.show(DismissNew, {
       model: {
         selectedTopics: this.bulkSelectHelper.selected,
-        subset: this.model.listParams?.subset,
+        subset: this.model.list?.listParams?.subset,
         dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
           this.callResetNew(dismissPosts, dismissTopics, untrack);
         },

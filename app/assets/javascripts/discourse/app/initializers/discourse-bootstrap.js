@@ -1,5 +1,3 @@
-import { DEBUG } from "@glimmer/env";
-import { _backburner } from "@ember/runloop";
 import RSVP from "rsvp";
 import {
   isDevelopment,
@@ -18,10 +16,6 @@ import I18n from "discourse-i18n";
 export default {
   // The very first initializer to run
   initialize(app) {
-    if (DEBUG) {
-      _backburner.ASYNC_STACKS = true;
-    }
-
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
 
@@ -83,9 +77,8 @@ export default {
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
-    session.userColorSchemeId =
-      parseInt(setupData.userColorSchemeId, 10) || null;
-    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
+    session.userColorSchemeId = parseInt(setupData.userColorSchemeId, 10);
+    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10);
 
     let iconList = setupData.svgIconList;
     if (isDevelopment() && iconList) {

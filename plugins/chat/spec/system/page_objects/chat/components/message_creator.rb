@@ -45,19 +45,19 @@ module PageObjects
         end
 
         def arrow_left_shortcut
-          input.send_keys(:arrow_left)
+          input.send_keys(:left)
         end
 
         def arrow_right_shortcut
-          input.send_keys(:arrow_right)
+          input.send_keys(:right)
         end
 
         def arrow_down_shortcut
-          input.send_keys(:arrow_down)
+          input.send_keys(:down)
         end
 
         def arrow_up_shortcut
-          input.send_keys(:arrow_up)
+          input.send_keys(:up)
         end
 
         def listing?(chatable, **args)

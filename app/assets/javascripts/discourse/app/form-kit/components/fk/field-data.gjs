@@ -68,6 +68,8 @@ export default class FKFieldData extends Component {
     if (this.args.onSet) {
       await this.args.onSet(value, {
         set: this.args.set,
+        name: this.name,
+        parentName: this.args.parentName,
         index: this.args.collectionIndex,
       });
     } else {
@@ -167,21 +169,21 @@ export default class FKFieldData extends Component {
    * @throws {Error} If `name` is not a string or contains invalid characters.
    */
   get name() {
-    if (typeof this.args.name !== "string") {
-      throw new Error(
-        "@name is required and must be a string on `<form.Field />`."
-      );
+    if (!this.args.name && this.args.parentName) {
+      return this.args.parentName;
     }
 
-    if (this.args.name.includes(".") || this.args.name.includes("-")) {
+    const name = this.args.name.toString();
+
+    if (name?.includes(".") || name?.includes("-")) {
       throw new Error("@name can't include `.` or `-`.");
     }
 
     if (this.args.parentName) {
-      return `${this.args.parentName}.${this.args.name}`;
+      return `${this.args.parentName}.${name}`;
     }
 
-    return this.args.name;
+    return name;
   }
 
   /**

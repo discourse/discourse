@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    enable_discourse_github_plugin: "Povolit discourse-github plugin"
+    github_linkback_enabled: "Propojit GitHub issues a diskuse na fóru"
+    github_linkback_projects: "Seznam projektů, které chcete propojit"
+    github_linkback_access_token: 'Platný přístupový token pro uživatele, který bude zveřejňovat zpětný odkaz a počítat commity/příspěvky pro udělování odznaků. Pokyny k získání tokenu naleznete <a href="https://meta.discourse.org/t/99895">zde</a>.'
+    github_linkback_maximum_links: "Maximální počet zpětných odkazů, které lze vytvořit z jednoho příspěvku. Když příspěvek obsahuje více odkazů, žádný se nevytvoří."
+    github_permalinks_enabled: "Povolení přepisování trvalých odkazů GitHubu"
+    github_permalinks_exclude: "Název souboru nebo adresáře, který má být vyloučen z přepisování trvalých odkazů. Zadejte pouze název souboru nebo celou cestu: user/repository/optional-directory/filename."
+    github_badges_enabled: "Povolit odznaky GitHub"
+    github_badges_repos: "Adresy URL repozitářů GitHub pro vyhledávání příspěvků a commitů."
+    github_silver_badge_min_commits: "Minimální počet commitů pro stříbrný odznak"
+    github_gold_badge_min_commits: "Minimální počet commitů pro zlatý odznak"
+    errors:
+      invalid_badge_repo: "Musíte zadat adresu URL GitHubu nebo název úložiště ve formátu github_user/repository_name"
+      invalid_github_linkback_access_token: "Musíte poskytnout platný přístupový token pro zpětné odkazy GitHub, který má přístup k repozitářům odznaků, které jste poskytli."
+  github_linkback:
+    commit_template: |
+      Tento commit byl zmíněn na **%{title}**. Mohou tam být relevantní podrobnosti:
+
+      %{post_url}
+    pr_template: |
+      Tento pull request byl zmíněn na **%{title}**. Možná tam existují relevantní podrobnosti:
+
+      %{post_url}
+    issue_template: |
+      Tento problém byl zmíněn na **%{title}**. Tam mohou být relevantní podrobnosti:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Pro plugin discourse-github je vyžadována akce"
+      repository_identifier_invalid_pm: |
+        Repozitář zadaný v pluginu discourse-github je neplatný:
+        %{repo_name}
+
+        Měl by být zadán jako `user/repo`.
+
+        Odznaky nebudou uděleny, dokud nebude název opraven v
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">nastavení webu discourse-github</a>
+        a nebude znovu zapnuto „github_badges_enabled“.
+      repository_not_found_pm_title: "Pro plugin discourse-github je vyžadována akce"
+      repository_not_found_pm: |
+        Repozitář uvedený v pluginu discourse-github vrátil chybu "Not Found"
+        : %{repo_name}
+
+        odznaky nebudou uděleny, dokud nebude název opraven v
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">nastavení webu discourse-github</a>
+        a nebude znovu zapnuto "github_badges_enabled".
+      invalid_octokit_credentials_pm_title: "Pro plugin discourse-github je vyžadována akce"
+      invalid_octokit_credentials_pm: "Pověření GitHub poskytnutá pluginu discourse-github jsou neplatná. Nastavení \"github badges enabled\" \nbylo deaktivováno a commity již nebudou interpretovány, dokud nebude problém vyřešen.\n\nZkontrolujte nastavení webu „github linkback access token“, abyste se ujistili, že token je správný a má oprávnění ke všem úložištím\nprostřednictvím\n<a href=\"%{base_path}/admin/site_settings/category/plugins?filter=GitHub\">nastavení webu discourse-github</a>.\n"

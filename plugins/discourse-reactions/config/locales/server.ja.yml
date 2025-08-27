@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    discourse_reactions_like_icon: "メインのリアクションボタンに使用するアイコンを定義します。これは絵文字名ではなく、<a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> アイコン名です。"
+    discourse_reactions_reaction_for_like: "「いいね！」操作に関連付けられたリアクションを定義します。この設定を変更しても、過去の「いいね！」の記録は変更されません。この設定を絶対に変更しないことを<strong>強くお勧めします</strong>。"
+    discourse_reactions_enabled: "discourse-reactions プラグインを有効にします。"
+    discourse_reactions_enabled_reactions: "有効なリアクションのリストを定義します。ここではすべての絵文字を使用できます。"
+    discourse_reactions_desaturated_reaction_panel: "ホバーされるまで彩度を下げて表示することで、リアクションの視覚的な煩わしさを低減します。"
+    discourse_reactions_excluded_from_like: "「いいね！」としてカウントされないリアクション。このリストに含まれないリアクションは、バッジ、レポート作成、およびその他の目的で「いいね！」としてカウントされます。"
+    discourse_reactions_like_sync_enabled: "これが有効である場合、`discourse_reactions_excluded_from_like` で定義されたリアクションを除き、過去のリアクションにはそれに一致する「いいね！」レコードが作成されます。この同期はバックグラウンドで定期的に処理されます。また、`discourse_reactions_excluded_from_like` を変更した場合にも処理されます。"
+    errors:
+      invalid_excluded_emoji: "「Discourse リアクション対応リアクション」含まれない絵文字を除外できません。また、「「いいね！」に対する Discourse リアクション」に使用される絵文字は除外できません。"
+  badges:
+    first_reaction:
+      name: 最初のリアクション
+      description: 投稿に反応しました
+      long_description: |
+        このバッジは、初めて投稿に反応したときに付与されます。投稿へのリアクションは、コミュニティメンバーが投稿した内容が面白い、役に立つ、かっこいい、楽しいなどの感想を仲間に伝えるのに最適な方法です。あなたのリアクションを共有しましょう！
+  reports:
+    reactions:
+      title: "リアクション"
+      description: "直近のリアクションをリストします。"
+      labels:
+        day: "日"

@@ -3,14 +3,31 @@ import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
+import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+import {
+  createWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
+} from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
+
+export let havePostStreamWidgetExtensions = null;
+
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === POST_STREAM_DEPRECATION_OPTIONS.id) {
+    if (!havePostStreamWidgetExtensions) {
+      havePostStreamWidgetExtensions = new Set();
+    }
+
+    havePostStreamWidgetExtensions.add(consolePrefix().slice(1, -1));
+  }
+});
 
 let transformCallbacks = null;
 
@@ -71,6 +88,7 @@ addWidgetCleanCallback("post-stream", () => {
   _heights = {};
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("posts-filtered-notice", {
   buildKey: (attrs) => `posts-filtered-notice-${attrs.id}`,
 
@@ -153,6 +171,7 @@ createWidget("posts-filtered-notice", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("filter-jump-to-post", {
   tagName: "a.filtered-jump-to-post",
   buildKey: (attrs) => `jump-to-post-${attrs.id}`,
@@ -169,6 +188,7 @@ createWidget("filter-jump-to-post", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("filter-show-all", {
   tagName: "button.filtered-replies-show-all",
   buildKey: (attrs) => `filtered-show-all-${attrs.id}`,
@@ -191,7 +211,7 @@ createWidget("filter-show-all", {
 });
 
 export default createWidget("post-stream", {
-  tagName: "div.post-stream",
+  tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
     const posts = attrs.posts || [];
@@ -261,9 +281,8 @@ export default createWidget("post-stream", {
           result.push(
             new RenderGlimmer(
               this,
-              "div.time-gap.small-action",
-              hbs`
-                <TimeGap @daysSince={{@data.daysSince}} />`,
+              "div.time-gap",
+              hbs`<Post::TimeGap @daysSince={{@data.daysSince}} />`,
               { daysSince }
             )
           );
@@ -282,9 +301,6 @@ export default createWidget("post-stream", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        // The following properties will have to be untangled from the transformed model when
-        // converting this widget to a Glimmer component:
-        // canCreatePost, showReadIndicator, prevPost, nextPost
         result.push(this.attach("post", transformed, { model: post }));
       }
 

@@ -130,7 +130,18 @@ class UserSummary
 
   class CategoryWithCounts < OpenStruct
     include ActiveModel::SerializerSupport
-    KEYS = %i[id name color text_color slug read_restricted parent_category_id]
+    KEYS = %i[
+      id
+      name
+      color
+      text_color
+      style_type
+      icon
+      emoji
+      slug
+      read_restricted
+      parent_category_id
+    ]
   end
 
   def top_categories
@@ -142,7 +153,18 @@ class UserSummary
       .where(
         id: post_count_query.order("count(*) DESC").limit(MAX_SUMMARY_RESULTS).pluck("category_id"),
       )
-      .pluck(:id, :name, :color, :text_color, :slug, :read_restricted, :parent_category_id)
+      .pluck(
+        :id,
+        :name,
+        :color,
+        :text_color,
+        :style_type,
+        :icon,
+        :emoji,
+        :slug,
+        :read_restricted,
+        :parent_category_id,
+      )
       .each do |c|
         top_categories[c[0].to_i] = CategoryWithCounts.new(
           Hash[CategoryWithCounts::KEYS.zip(c)].merge(topic_count: 0, post_count: 0),

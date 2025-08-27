@@ -190,9 +190,12 @@ bg:
       dismiss: "Отмени"
     bootstrap_mode: "Първи стъпки"
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Добре дошли в %{site_name}!"
+      search: "Търсене"
     themes:
       default_description: "По подразбиране"
-      broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
       error_caused_by: "Причинено от '%{name}'. <a target='blank' href='%{path}'>Щракнете тук</a> за да актуализирате, преконфигурирате или деактивирате."
       only_admins: "(това съобщение се показва само на администраторите на сайта)"
     broken_decorator_alert: "Публикациите може да не се показват правилно, тъй като един от декораторите на съдържанието на публикациите на вашия сайт сигнализира за грешка."
@@ -360,10 +363,6 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
-      abandon:
-        confirm: "Вече имате чернова за тази тема. Какво бихте искали да направите с нея?"
-        yes_value: "Отхвърляне"
-        no_value: "Възобновете редактирането"
     topic_count_all:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
@@ -383,7 +382,7 @@ bg:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
     preview: "преглед"
-    cancel: "прекрати"
+    cancel: "Прекрати"
     deleting: "Изтриване…"
     save: "Запазете промените"
     saving: "Запазване…"
@@ -491,6 +490,10 @@ bg:
         name: "Име"
         fields: "Полета"
         reject_reason: "Причина"
+        scrubbed_reason: "Причина"
+        scrub_record:
+          reason_placeholder: "Причина..."
+          cancel_button: "Прекрати"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (от последния флаг)"
@@ -600,6 +603,15 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+      notes:
+        delete: "Изтрий"
+      review_user: "Потребител"
+      insights:
+        activities:
+          posts:
+            one: "%{count} публикация"
+            other: "%{count} публикации"
+        visibility: "Видимост"
       approval:
         title: "Публикацията изисква одобрение"
         description: "Ние получихме вашата публикация, но тя трябва да бъде одобрена от модератора преди да бъде показана. Моля, проявете търпение."
@@ -1131,11 +1143,10 @@ bg:
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
       color_schemes:
         default_description: "Темата по подразбиране"
-        disable_dark_scheme: "Същото като обикновения"
         undo: "Нулиране"
-        regular: "Редовен"
         dark: "Тъмен режим"
-        default_dark_scheme: "(сайт по подразбиране)"
+        picker:
+          active: "Активни"
       dark_mode: "Тъмен режим"
       text_size_default_on_all_devices: "Направете това размерът на текста по подразбиране на всички мои устройства"
       allow_private_messages: "Позволете на други потребители да ми изпращат лични съобщения"
@@ -1158,6 +1169,8 @@ bg:
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"
+      silenced_permanently: "Този потребител е заглушен."
+      silenced_reason: "Причина:"
       github_profile: "GitHub"
       email_activity_summary: "Сумарна активност"
       mailing_list_mode:
@@ -1578,7 +1591,8 @@ bg:
         reinvited: "Поканата е изпратена отново"
         removed: "Премахнато"
         user: "Поканени потребители"
-        none: "Няма покани за показване."
+        none:
+          title: "Няма покани за показване."
         truncated:
           one: "Показване на първата покана."
           other: "Показване на пъврите %{count} покани."
@@ -1612,6 +1626,7 @@ bg:
           expired_at_time: "Изтекъл на %{time}"
           show_advanced: "Показване на разширени опции"
           hide_advanced: "Скриване на разширените опции"
+          description: "Описание"
           restrict: "Ограничаване до"
           restrict_email: "Ограничете до имейл"
           restrict_domain: "Ограничаване до домейн"
@@ -1695,7 +1710,6 @@ bg:
         title: "IP адрес при регистрацията."
       avatar:
         title: "Аватар"
-        header_title: "профил, съобщения, отметки и предпочитания"
         name_and_description: "%{name} - %{description}"
         edit: "Редактиране на профилната снимка"
       title:
@@ -1930,10 +1944,6 @@ bg:
         name: "Google"
         title: "Влезте с Google"
         sr_title: "Влезте с Google"
-      twitter:
-        name: "Twitter"
-        title: "Влезте с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
         title: "Влезте с Instagram"
@@ -1978,6 +1988,8 @@ bg:
     full_name_requirement:
       required_at_signup: "Задъжителни"
       optional_at_signup: "По избор"
+    welcome_banner_page_visibility:
+      homepage: "Начална страница"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2048,8 +2060,7 @@ bg:
       whisper: "шепот"
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
-      toggle_whisper: "Включи шепот"
-      toggle_unlisted: "Превключване на неизброени"
+      toggle_whisper: "Превключете шепот"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
       saved_local_draft_tip: "запазено локално"
       drafts_offline: "чернови офлайн"
@@ -2090,6 +2101,7 @@ bg:
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
       title: "Или натиснете %{modifier}Enter"
+      discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "защо редактирате ?"
@@ -2112,11 +2124,9 @@ bg:
       italic_label: "АЗ"
       italic_title: "Италик"
       italic_text: "Подчертан текст"
-      link_title: "Хипервръзка"
       link_description: "добави описание на връзката тук"
-      link_dialog_title: "Добави хипервръзка"
-      link_optional_text: "заглавие по избор"
-      link_url_placeholder: "Поставете URL или въведете, за да търсите теми"
+      link_edit_action: "Актуализация"
+      link_optional_text: "Текст"
       blockquote_title: "Текстов блок"
       blockquote_text: "Текстов блок"
       code_title: "Форматиран текст"
@@ -2124,18 +2134,8 @@ bg:
       paste_code_text: "въведете или поставете кода тук"
       upload_title: "Качване"
       upload_description: "причина за качването"
-      olist_title: "Номериран списък"
-      ulist_title: "Списък с водещи символи"
       list_item: "Списък"
-      toggle_direction: "Превключване на посоката"
       help: "Помощ с Markdown"
-      collapse: "минимизирайте панела на композитора"
-      open: "отворете панела на композитора"
-      abandon: "затворете композитора и изхвърлете черновата"
-      enter_fullscreen: "Отворете композитор в пълен екранен"
-      exit_fullscreen: "излезте от композитора на цял екран"
-      show_toolbar: "показване на лентата с инструменти на композитора"
-      hide_toolbar: "скриване на лентата с инструменти на композитора"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
@@ -2251,9 +2251,8 @@ bg:
         reaction: "нова реакция"
         votes_released: "Гласуването беше публикувано"
     upload_selector:
+      delete: "Изтрий"
       uploading: "Качване "
-      processing: "Обработка на качване"
-      select_file: "Избери файл"
       default_image_alt_text: изображение
     search:
       sort_by: "Сортирай по"
@@ -2800,6 +2799,13 @@ bg:
         other: "Преглед на %{count} отговора на"
       in_reply_to: "Заредете родителска публикация"
       view_all_posts: "Вижте всички публикации"
+      localizations:
+        table:
+          actions: "Действия"
+          edit: "Редактирай"
+          delete: "Изтрий"
+        post_language_selector:
+          none: "Без"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -2924,6 +2930,10 @@ bg:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Етикети"
+      localization:
+        name: "Име"
+        description: "Описание"
+        remove: "Премахване"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:
         delete: "Изтрий"
@@ -2940,9 +2950,13 @@ bg:
       description: "Описание"
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
-      badge_colors: "Цветове на значките"
-      background_color: "Цвят на фона"
-      foreground_color: "Цвят на преден план"
+      background_color: "Цвят"
+      styles:
+        icon: "Икона"
+        emoji: "Емотикони"
+        options:
+          icon: "Икона"
+          emoji: "Емотикони"
       name_placeholder: "Максимум една или две думи"
       color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
@@ -3143,7 +3157,6 @@ bg:
         topics: "Теми"
         replies: "Отговори"
       posted:
-        title: "Моите публикации"
         help: "теми в които сте публикували"
       bookmarks:
         title: "Отметки"
@@ -3387,6 +3400,8 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
+            filter:
+              content: "Филтър"
             topics:
               content: "Теми"
             faq:
@@ -3397,12 +3412,11 @@ bg:
               content: "Групи"
             users:
               content: "Потребители"
-            my_posts:
-              content: "Моите публикации"
             review:
               content: "Преглед"
             invite:
               content: "Покана"
+      search: "Търсене"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3425,6 +3439,12 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    filter:
+      description:
+        yesterday: "Вчера"
+    discovery:
+      headings:
+        categories: "Всички категории"
   admin_js:
     settings: "Настройки"
     admin:
@@ -3454,19 +3474,19 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
-        branding:
-          logo:
-            form:
-              mobile: "Мобилен"
-              email: "Имейл "
+        logo:
+          form:
+            mobile: "Мобилен"
+            email: "Имейл "
+        fonts:
+          backfill_modal:
+            modal_yes: "Да"
         navigation:
           title: "Навигация"
         notifications:
           title: "Известия"
         onebox:
           title: "Onebox"
-        other:
-          title: "Други"
         search_everything:
           title: "Търсене"
         security:
@@ -3496,6 +3516,8 @@ bg:
               header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
             templates:
               title: "Шаблони"
+        email_logs:
+          sub_pages:
             sent:
               title: "Изпрати"
             skipped:
@@ -3515,6 +3537,8 @@ bg:
               header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
         embedding:
           title: "Ембедване"
+      theme_site_settings:
+        default_value: "По подразбиране"
       search:
         title: "Търсене"
       dashboard:
@@ -3644,9 +3668,35 @@ bg:
             failed: "Провалени"
       home:
         title: "Начало"
+      account:
+        title: "Профил"
+        sidebar_link:
+          backups: "Бекъпи"
+      community:
+        title: "Общност "
+        sidebar_link:
+          badges: "Значки"
+          notifications: "Известия"
+          permalinks: "Постоянни адреси"
+          users: "Потребители"
+          groups: "Групи"
+          legal: "Правни"
+      appearance:
+        sidebar_link:
+          emoji: "Емотикони"
+          navigation: "Навигация"
+      security:
+        title: "Сигурност"
+      section_landing_pages:
+        account:
+          title: "Профил"
+          backups:
+            title: "Бекъпи"
       config_areas:
         about:
           company_name: "Име"
+          extra_groups:
+            groups: "Групи"
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
@@ -3669,9 +3719,29 @@ bg:
         embeddable_host:
           edit: "Редактирай"
           delete: "Изтрий"
+        themes_and_components:
+          breadcrumb_title: "Персонализация"
+          components:
+            name: "Име"
+            enabled: "Да е включен?"
+            by_author: "От %{name}"
+            learn_more: "Научете повече"
+            edit: "Редактирай"
+            preview: "Преглед"
+            export: "Експорт "
+            delete: "Изтрий"
+            filter_by_all: "Всички"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
+        color_palettes:
+          palette_name: "Име"
+          copy_to_clipboard: "Копиране в клипборда"
+          copied_to_clipboard: "Копирано в клипборда"
+          copy_to_clipboard_error: "Грешка при копирането на данни в клипборда"
+          delete: "Изтрий"
+          colors:
+            title: "Цветове"
       plugins:
         title: "Приставки"
         name: "Име"
@@ -3684,6 +3754,11 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
+        filters:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          reset: "Нулиране"
       navigation_menu:
         sidebar: "Странична лента"
       backups:
@@ -3769,6 +3844,7 @@ bg:
           disabled_filter: "Деактивирани"
         theme:
           theme: "Тема"
+          filter_all: "Всички"
           customize_desc: "Персонализация:"
           create: "Създай"
           create_type: "Тип"
@@ -3796,47 +3872,41 @@ bg:
             text: "ембеднато CSS"
           all_filter: "Всички"
           active_filter: "Активни"
-          schema:
-            fields:
-              required: "*задъжителни"
-              number:
-                too_small: "трябва да бъде по-голямо или равно на %{count}"
-                too_large: "трябва да бъде по-малко или равно на %{count}"
+        schema:
+          fields:
+            required: "*задъжителни"
+            number:
+              too_small: "трябва да бъде по-голямо или равно на %{count}"
+              too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
+          edit: "Редактирай"
+          filters:
+            all: "Всички"
           copy_name_prefix: "Копие на"
           undo: "Отмени"
           undo_title: "Върнете промените направени на този цвят до последно запазените."
           revert: "Върни"
           primary:
             name: "главен"
-            description: "Повече от текстовете, икони и граници "
           secondary:
             name: "второстепенен"
-            description: "Основен цвят на фона и цвят на някой бутони."
           tertiary:
             name: "трети"
-            description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
           header_background:
             name: "Фон на хедъра"
-            description: "Цвят на фона на хедъра на сайта."
           header_primary:
             name: "главен хедър"
-            description: "Текстове и икони в хедъра на сайта."
           highlight:
             name: "подчертаване"
-            description: "Фонов цвят на подчертани елементи на страницата, като публикации и теми."
           danger:
             name: "опасност"
-            description: "Цвят за подчертаване на действия, като изтриване на темата."
           success:
             name: "успех"
-            description: "Използва се за индикация при успешно действие."
           love:
             name: "любов"
-            description: "Цвят на бутона харесвам. "
           selected:
             name: "избрани"
         email_style:
@@ -4139,7 +4209,6 @@ bg:
         activity: Активност
         like_count: Харесвания Дадени / Получени
         last_100_days: "В последните 100 дни "
-        private_topics_count: Частни теми
         posts_read_count: Прочетени публикации
         post_count: Създадени публикации
         topics_entered: Прегледани теми

@@ -1,0 +1,77 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Solucionado no Discourse"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "aceito"
+    solutions: "Soluções"
+    solved:
+      title: "Resolvido"
+      allow_accepted_answers: "Permitir que o(a) proprietário(a) do tópico e a equipe marquem uma resposta como a solução"
+      solved_topics_auto_close_hours: "Fechar tópico automaticamente (n) horas após a última resposta quando o tópico tiver sido marcado como resolvido."
+      accept_answer: "Selecione se esta resposta resolve o problema"
+      accepted_description: "Esta é a solução aceita para este tópico"
+      has_no_accepted_answer: "Este tópico não tem solução"
+      unaccept_answer: "Desmarque se esta resposta não resolve mais o problema"
+      accepted_answer: "Solução"
+      solution: "Solução"
+      solution_summary:
+        one: "solução"
+        other: "soluções"
+      accepted_answer_post_number: "postagem %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "tudo"
+        solved: "solucionados"
+        unsolved: "não solucionados"
+      no_solved_topics_title: "Você ainda não solucionou nenhum tópico"
+      no_solved_topics_title_others: "%{username} ainda não respondeu a nenhum tópico"
+      no_solved_topics_body: "Quando você fornecer uma resposta útil a um tópico, ela poderá ser selecionada como uma solução pelo(a) proprietário(a) ou equipe do tópico."
+      no_answer:
+        title: Sua pergunta foi respondida?
+        description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."
+      notification:
+        title: "sua postagem foi marcada como uma solução"
+    topic_statuses:
+      solved:
+        help: "Este tópico tem uma solução"
+    search:
+      advanced:
+        statuses:
+          solved: "foram solucionados"
+          unsolved: "não foram solucionados"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Evento solucionado"
+          accepted_solution: "Quando um(a) usuário(a) marca uma postagem como resposta aceita"
+          unaccepted_solution: "Quando um(a) usuário(a) marca uma postagem como resposta não aceita"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Aceitar/não aceitar uma solução.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Qualquer
+          fields:
+            maximum_trust_level:
+              label: Nível de confiança
+              description: Os(as) usuários(as) com este nível de confiança ativarão esta automação

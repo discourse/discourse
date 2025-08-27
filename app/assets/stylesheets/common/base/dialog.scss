@@ -10,6 +10,11 @@
 .dialog-container {
   z-index: z("modal", "dialog");
   display: flex;
+
+  // fixes modal placement on Android when keyboard is visible
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+  }
 }
 
 /**
@@ -28,7 +33,7 @@
 }
 
 .dialog-overlay {
-  background: rgba(var(--always-black-rgb), 0.65);
+  background: rgb(var(--always-black-rgb), 0.65);
   animation: fade-in 250ms both;
 
   @media (prefers-reduced-motion) {
@@ -60,7 +65,7 @@
 .dialog-header {
   display: flex;
   padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   align-items: center;
 
   h3 {
@@ -84,7 +89,7 @@
   flex-wrap: wrap;
   align-items: center;
   padding: 14px 15px 10px;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 
   --btn-bottom-margin: 0.3em;
 

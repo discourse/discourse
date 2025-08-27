@@ -30,10 +30,12 @@ he:
     chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     chat_preferred_index: "לשונית מועדפת בעת טעינת ‎/chat."
+    allow_chat_in_anonymous_mode: "יש להפעיל את ההגדרה הזאת כדי לאפשר למשתמשים שגולשים באתר שלך באלמוניות להשתמש בצ׳אט. ההגדרה הזאת דורשת שההגדרה `allow anonymous mode` (לאפשר מצב אלמוני) תהיה פעילה."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
+      allow_chat_in_anonymous_mode_invalid: "ההגדרה הזאת דורשת את הפעלת ההגדרה ‚לאפשר מצב אלמוני’ תחילה."
   system_messages:
     private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:

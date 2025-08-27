@@ -14,7 +14,7 @@ module PageObjects
         self
       end
 
-      def open_flag_menu(key)
+      def toggle_flag_menu(key)
         find(".#{key} .flag-menu-trigger").click
         self
       end
@@ -44,7 +44,7 @@ module PageObjects
       end
 
       def has_flags?(*flags)
-        all(".admin-flag-item__name").map(&:text) == flags
+        expect(all(".admin-flag-item__name").map(&:text)).to eq(flags)
       end
 
       def has_add_flag_button_enabled?
@@ -52,7 +52,7 @@ module PageObjects
       end
 
       def has_add_flag_button_disabled?
-        has_no_css?(".admin-flags__header-add-flag[disabled]")
+        has_css?(".admin-flags__header-add-flag[disabled]")
       end
 
       def has_flag?(flag)
@@ -72,14 +72,14 @@ module PageObjects
       end
 
       def move_down(key)
-        open_flag_menu(key)
+        toggle_flag_menu(key)
         find(".admin-flag-item__move-down").click
         has_closed_flag_menu?
         self
       end
 
       def move_up(key)
-        open_flag_menu(key)
+        toggle_flag_menu(key)
         find(".admin-flag-item__move-up").click
         has_closed_flag_menu?
         self

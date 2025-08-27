@@ -11,22 +11,37 @@ import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import DiscourseURL from "discourse/lib/url";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
 
-export default class InvitesShowController extends Controller.extend(
-  UserFieldsValidation
-) {
+export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
   @tracked isDeveloper;
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
-  usernameValidationHelper = new UsernameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper({
+    getAccountEmail: () => this.accountEmail,
+    getAccountUsername: () => this.accountUsername,
+    getPrefilledUsername: () => this.prefilledUsername,
+    getAuthOptionsUsername: () => this.authOptions?.username,
+    getForceValidationReason: () => this.forceValidationReason,
+    siteSettings: this.siteSettings,
+    isInvalid: () => this.isDestroying || this.isDestroyed,
+    updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
+    updateUsernames: (username) => {
+      this.accountUsername = username;
+      this.prefilledUsername = username;
+    },
+  });
   passwordValidationHelper = new PasswordValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () => this.site.get("user_fields"),
+    getAccountPassword: () => this.accountPassword,
+  });
   successMessage = null;
   @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;
@@ -41,10 +56,18 @@ export default class InvitesShowController extends Controller.extend(
   @alias("model.different_external_email") differentExternalEmail;
   @not("externalAuthsOnly") passwordRequired;
   errorMessage = null;
-  userFields = null;
   authOptions = null;
   rejectedEmails = [];
   maskPassword = true;
+
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
+  }
+
+  @dependentKeyCompat
+  get userFieldsValidation() {
+    return this.userFieldsValidationHelper.userFieldsValidation;
+  }
 
   @action
   setAccountUsername(event) {
@@ -320,11 +343,10 @@ export default class InvitesShowController extends Controller.extend(
 
   @action
   submit() {
-    const userFields = this.userFields;
     let userCustomFields = {};
-    if (!isEmpty(userFields)) {
-      userFields.forEach(function (f) {
-        userCustomFields[f.get("field.id")] = f.get("value");
+    if (!isEmpty(this.userFields)) {
+      this.userFields.forEach(function (f) {
+        userCustomFields[f.field.id] = f.value;
       });
     }
 

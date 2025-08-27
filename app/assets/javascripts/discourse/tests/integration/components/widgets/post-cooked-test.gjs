@@ -6,6 +6,7 @@ import DecoratorHelper from "discourse/widgets/decorator-helper";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | post-cooked", function (hooks) {
   setupRenderingTest(hooks);
 

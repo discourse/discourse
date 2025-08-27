@@ -4,16 +4,23 @@ module DiscourseAutomation
   class Field < ActiveRecord::Base
     self.table_name = "discourse_automation_fields"
 
-    belongs_to :automation, class_name: "DiscourseAutomation::Automation"
+    belongs_to :automation,
+               class_name: "DiscourseAutomation::Automation",
+               foreign_key: :automation_id,
+               inverse_of: :fields
 
     around_save :on_update_callback
 
     def on_update_callback
+      automation.fields.reload
+
       previous_fields = automation.serialized_fields
 
       automation.reset!
 
       yield
+
+      automation.fields.reload
 
       automation&.triggerable&.on_update&.call(
         automation,
@@ -94,7 +101,7 @@ module DiscourseAutomation
       },
       "choices" => {
         "value" => {
-          "type" => %w[string integer null],
+          "type" => %w[string integer null array],
         },
       },
       "tags" => {
@@ -250,3 +257,17 @@ module DiscourseAutomation
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_automation_fields
+#
+#  id            :bigint           not null, primary key
+#  automation_id :bigint           not null
+#  metadata      :jsonb            not null
+#  component     :string           not null
+#  name          :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  target        :string
+#

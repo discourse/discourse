@@ -1,0 +1,65 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    category:
+      sort_options:
+        votes: "Голоса"
+    topic_voting:
+      title: "Голосование по теме"
+      reached_limit: "У вас закончились голоса. Удалите часть голосов."
+      list_votes: "Показать ваши голоса"
+      votes_nav_help: "Темы с наибольшим количеством голосов"
+      voted: "Вы голосовали по этой теме"
+      allow_topic_voting: "Разрешить пользователям голосовать по темам в этой категории"
+      vote_title: "Проголосовать"
+      vote_title_plural: "Голоса"
+      voted_title: "Проголосовало"
+      voting_closed_title: "Закрытое"
+      voting_limit: "Лимит"
+      votes_left:
+        one: "У вас остался %{count} голос, см. <a href='%{path}'>ваши голоса</a>."
+        few: "У вас осталось %{count} голоса, см. <a href='%{path}'>ваши голоса</a>."
+        many: "У вас осталось %{count} голосов, см. <a href='%{path}'>ваши голоса</a>."
+        other: "У вас осталось %{count} голоса, см. <a href='%{path}'>ваши голоса</a>."
+      votes_left_button_title:
+        one: "У вас остался %{count} голос."
+        few: "У вас осталось %{count} голоса."
+        many: "У вас осталось %{count} голосов."
+        other: "У вас осталось %{count} голоса."
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голоса"
+        many: "%{count} голосов"
+        other: "%{count} голоса"
+      anonymous_button:
+        one: "Голос"
+        few: "Голоса"
+        many: "Голоса"
+        other: "Голоса"
+      remove_vote: "Удалить голос"
+      no_votes_title_self: "Вы ещё не проголосовали ни за одну тему"
+      no_votes_title_others: "Пользователь %{username} ещё не проголосовал ни за одну тему"
+    filters:
+      votes:
+        title: "Голоса"
+        help: "Темы с наибольшим количеством голосов"
+      my_votes:
+        title: "Мои голоса"
+        help: "Темы, в которых вы проголосовали"
+    search:
+      most_votes: "Большинство голосов"
+      advanced:
+        vote:
+          count:
+            label: "Минимальное количество голосов"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Событие голосования по теме"
+          topic_upvote: "Когда пользователь голосует за тему"
+          topic_unvote: "Когда пользователь отменяет голосование по теме"

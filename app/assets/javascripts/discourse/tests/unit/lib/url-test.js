@@ -87,6 +87,31 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(DiscourseURL.isInternal("#foo"), "anchor URLs are internal");
   });
 
+  test("isInternalTopic", function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
+    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
+    assert.false(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/categories")
+    );
+  });
+
+  test("isInternalTopic on subfolder install", function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com/forum");
+
+    assert.true(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
+    );
+    assert.false(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/admin")
+    );
+    assert.false(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/t/something")
+    );
+  });
+
   test("userPath", function (assert) {
     assert.strictEqual(userPath(), "/u");
     assert.strictEqual(userPath("eviltrout"), "/u/eviltrout");

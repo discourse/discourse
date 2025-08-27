@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { i18n } from "discourse-i18n";
+
 export const DEFAULT_PERIOD = "yearly";
 
 export default class AdminSearchLogsIndexController extends Controller {

@@ -9,7 +9,13 @@ class PostDestroyer
     Post
       .where(deleted_at: nil, hidden: true)
       .where("hidden_at < ?", 30.days.ago)
-      .find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+      .find_each do |post|
+        PostDestroyer.new(
+          Discourse.system_user,
+          post,
+          context: "Automatically destroyed hidden posts",
+        ).destroy
+      end
   end
 
   def self.destroy_stubs
@@ -57,11 +63,19 @@ class PostDestroyer
     @post = post
     @topic = post.topic || Topic.with_deleted.find_by(id: @post.topic_id)
     @opts = opts
+
+    if user == Discourse.system_user && opts[:context].blank?
+      Discourse.deprecate(<<~WARNING, drop_from: "3.6.0", output_in_test: true)
+        Using PostDestroyer as system user without providing a context will be an error in future versions.
+      WARNING
+    end
   end
 
   def destroy
     delete_removed_posts_after =
       @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
+
+    should_reset_bumped_at = @post.is_last_reply? && !@post.whisper?
 
     if delete_removed_posts_after < 1 || post_is_reviewable? ||
          Guardian.new(@user).can_moderate_topic?(@topic) || permanent?
@@ -85,7 +99,7 @@ class PostDestroyer
       UserActionManager.topic_destroyed(@topic)
       DiscourseEvent.trigger(:topic_destroyed, @topic, @user)
       if WebHook.active_web_hooks(:topic_destroyed).exists?
-        topic_view = TopicView.new(@topic.id, Discourse.system_user, skip_staff_action: true)
+        topic_view = TopicView.new(@topic, Discourse.system_user, skip_staff_action: true)
         topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
         WebHook.enqueue_topic_hooks(:topic_destroyed, @topic, topic_payload)
       end
@@ -93,6 +107,8 @@ class PostDestroyer
         Discourse.clear_urls!
       end
     end
+
+    @topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def recover
@@ -166,7 +182,7 @@ class PostDestroyer
     # All posts in the topic must be force deleted if the first is force
     # deleted (except @post which is destroyed by current instance).
     if @topic && @post.is_first_post? && permanent?
-      @topic.ordered_posts.with_deleted.reverse_order.find_each do |post|
+      @topic.posts.with_deleted.find_each do |post|
         PostDestroyer.new(@user, post, @opts).destroy if post.id != @post.id
       end
     end

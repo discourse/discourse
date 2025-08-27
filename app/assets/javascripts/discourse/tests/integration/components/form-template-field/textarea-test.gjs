@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FormTextarea from "discourse/components/form-template-field/textarea";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
@@ -9,7 +10,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders a textarea input", async function (assert) {
-      await render(<template><FormTextarea /></template>);
+      await render(<template><FormTextarea @onChange={{noop}} /></template>);
 
       assert
         .dom(".form-template-field__textarea")
@@ -26,7 +27,9 @@ module(
       this.set("attributes", attributes);
 
       await render(
-        <template><FormTextarea @attributes={{self.attributes}} /></template>
+        <template>
+          <FormTextarea @attributes={{self.attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert
@@ -48,7 +51,9 @@ module(
       this.set("attributes", attributes);
 
       await render(
-        <template><FormTextarea @attributes={{self.attributes}} /></template>
+        <template>
+          <FormTextarea @attributes={{self.attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert.dom(".form-template-field__label").doesNotExist();

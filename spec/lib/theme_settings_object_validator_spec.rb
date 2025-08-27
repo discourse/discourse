@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ThemeSettingsObjectValidator do
+RSpec.describe SchemaSettingsObjectValidator do
   describe ".validate_objects" do
     it "should return the right array of humanized error messages for objects that are invalid" do
       schema = {
@@ -713,9 +713,9 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for tag properties" do
-      fab!(:tag_1) { Fabricate(:tag) }
-      fab!(:tag_2) { Fabricate(:tag) }
-      fab!(:tag_3) { Fabricate(:tag) }
+      fab!(:tag_1, :tag)
+      fab!(:tag_2, :tag)
+      fab!(:tag_3, :tag)
 
       it "should not return any error message when the value of the property is an array of valid tag names" do
         schema = { name: "section", properties: { tags_property: { type: "tags" } } }
@@ -1074,8 +1074,8 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for categories properties" do
-      fab!(:category_1) { Fabricate(:category) }
-      fab!(:category_2) { Fabricate(:category) }
+      fab!(:category_1, :category)
+      fab!(:category_2, :category)
 
       it "should not return any error message when the value of the property is an array of valid category ids" do
         schema = { name: "section", properties: { category_property: { type: "categories" } } }

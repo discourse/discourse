@@ -45,9 +45,12 @@ sq:
           fields:
             restricted_tags:
               label: Etiketat
-            restricted_category:
-              label: Kategori
+            restricted_categories:
+              label: Categories
           created: Krijuar
+          with_images: Imazhet
+          with_links: Lidhjet
+          with_code: Kodi
         category_created_edited:
           fields:
             restricted_category:
@@ -117,5 +120,3 @@ sq:
             label: Trigger
           version:
             label: Versioni
-          enabled:
-            label: Aktivizuar

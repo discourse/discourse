@@ -6,9 +6,9 @@ require "net/imap"
 RSpec.describe ProblemCheck::GroupEmailCredentials do
   subject(:check) { described_class.new }
 
-  fab!(:group1) { Fabricate(:group) }
-  fab!(:group2) { Fabricate(:smtp_group) }
-  fab!(:group3) { Fabricate(:imap_group) }
+  fab!(:group1, :group)
+  fab!(:group2, :smtp_group)
+  fab!(:group3, :imap_group)
 
   describe "#call" do
     it "does nothing if SMTP is disabled for the site" do
@@ -41,7 +41,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_email_credentials",
+            identifier: :group_email_credentials,
             target: group2.id,
             priority: "high",
             message:
@@ -66,7 +66,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_email_credentials",
+            identifier: :group_email_credentials,
             target: group3.id,
             priority: "high",
             message:

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
@@ -9,18 +10,18 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 
-const DEFAULT_SELECTOR = "#main-outlet";
+const DEFAULT_SELECTORS = ["#main-outlet", "#d-menu-portals"];
 const AVATAR_OVERFLOW_SIZE = 44;
 const MOBILE_SCROLL_EVENT = "scroll.mobile-card-cloak";
 
-let _cardClickListenerSelectors = [DEFAULT_SELECTOR];
+let _cardClickListenerSelectors = [...DEFAULT_SELECTORS];
 
 export function addCardClickListenerSelector(selector) {
   _cardClickListenerSelectors.push(selector);
 }
 
 export function resetCardClickListenerSelector() {
-  _cardClickListenerSelectors = [DEFAULT_SELECTOR];
+  _cardClickListenerSelectors = [...DEFAULT_SELECTORS];
 }
 
 export default class CardContentsBase extends Component {
@@ -145,7 +146,7 @@ export default class CardContentsBase extends Component {
 
     // Mention click
     this._showCardOnClick(event, this.mentionSelector, (el) =>
-      el.innerText.replace(/^@/, "")
+      el.innerText.trim().replace(/^@/, "")
     );
   }
 

@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 export default class UserInvitedShowController extends Controller {
   @service dialog;
   @service modal;
+  @service toasts;
 
   user = null;
   model = null;
@@ -21,8 +22,8 @@ export default class UserInvitedShowController extends Controller {
   invitesCount = null;
   canLoadMore = true;
   invitesLoading = false;
+  hasLoadedInitialInvites = false;
   reinvitedAll = false;
-  removedAll = false;
   searchTerm = "";
 
   @equal("filter", "redeemed") inviteRedeemed;
@@ -50,13 +51,9 @@ export default class UserInvitedShowController extends Controller {
     });
   }
 
-  @discourseComputed("filter")
-  showBulkActionButtons(filter) {
-    return (
-      filter === "pending" &&
-      this.model.invites.length > 0 &&
-      this.currentUser.staff
-    );
+  @discourseComputed("model")
+  showBulkActionButtons(model) {
+    return model.invites.length > 0 && this.currentUser.staff;
   }
 
   @discourseComputed("invitesCount", "filter")
@@ -80,9 +77,13 @@ export default class UserInvitedShowController extends Controller {
   }
 
   @action
-  destroyInvite(invite) {
-    invite.destroy();
-    this.model.invites.removeObject(invite);
+  async destroyInvite(invite) {
+    try {
+      await invite.destroy();
+      this.model.invites.removeObject(invite);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -90,9 +91,11 @@ export default class UserInvitedShowController extends Controller {
     this.dialog.deleteConfirm({
       message: i18n("user.invited.remove_all_confirm"),
       didConfirm: () => {
-        return Invite.destroyAllExpired()
+        return Invite.destroyAllExpired(this.user)
           .then(() => {
-            this.set("removedAll", true);
+            this.toasts.success({
+              data: { message: i18n("user.invited.removed_all") },
+            });
             this.send("triggerRefresh");
           })
           .catch(popupAjaxError);
@@ -129,16 +132,20 @@ export default class UserInvitedShowController extends Controller {
         this.filter,
         this.searchTerm,
         model.invites.length
-      ).then((invite_model) => {
-        this.set("invitesLoading", false);
-        model.invites.pushObjects(invite_model.invites);
-        if (
-          invite_model.invites.length === 0 ||
-          invite_model.invites.length < this.siteSettings.invites_per_page
-        ) {
-          this.set("canLoadMore", false);
-        }
-      });
+      )
+        .then((invite_model) => {
+          this.set("invitesLoading", false);
+          model.invites.pushObjects(invite_model.invites);
+          if (
+            invite_model.invites.length === 0 ||
+            invite_model.invites.length < this.siteSettings.invites_per_page
+          ) {
+            this.set("canLoadMore", false);
+          }
+        })
+        .finally(() => {
+          this.set("hasLoadedInitialInvites", true);
+        });
     }
   }
 }

@@ -30,6 +30,8 @@ he:
           title: "קלטי תאריך/שעה"
         menus:
           title: "תפריטים"
+        multi_select:
+          title: "בחירה במרוכז"
         toasts:
           title: "חלוניות מידע"
         font_scale:
@@ -87,8 +89,8 @@ he:
           title: "מפת נושאים"
         site_header:
           title: "כותרת האתר"
-        suggested_topics:
-          title: "נושאים מוצעים"
+        more_topics:
+          title: "נושאים נוספים"
         post_menu:
           title: "תפריט פוסט"
         modal:

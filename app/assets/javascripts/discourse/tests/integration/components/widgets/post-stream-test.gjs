@@ -6,35 +6,29 @@ import DButton from "discourse/components/d-button";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
     this.set("posts", attrs.posts.call(this));
 
     await render(
-      hbs`
-        <MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
+      hbs`<MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
     );
 
     attrs.test.call(this, assert);
   });
 }
 
-["enabled", "disabled"].forEach((postMenuMode) => {
+["enabled", "disabled"].forEach((postStreamMode) => {
   let lastTransformedPost = null;
 
   module(
-    `Integration | Component | Widget | post-stream (glimmer_post_menu_mode = ${postMenuMode})`,
+    `Integration | Component | Widget | post-stream (glimmer_post_stream_mode = ${postStreamMode})`,
     function (hooks) {
       setupRenderingTest(hooks);
 
       hooks.beforeEach(function () {
-        this.siteSettings.glimmer_post_menu_mode = postMenuMode;
-      });
-
-      hooks.afterEach(function () {
-        resetPostMenuExtraButtons();
+        this.siteSettings.glimmer_post_stream_mode = postStreamMode;
       });
 
       const CustomPostMenuButton = <template>
@@ -48,7 +42,7 @@ function postStreamTest(name, attrs) {
 
       postStreamTest("extensibility", {
         posts() {
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.registerValueTransformer(
               "post-menu-buttons",
               ({ value: dag, context: { post, firstButtonKey } }) => {
@@ -101,7 +95,7 @@ function postStreamTest(name, attrs) {
           assert.dom(".post-stream").exists({ count: 1 });
           assert.dom(".topic-post").exists({ count: 1 }, "renders all posts");
           assert
-            .dom(".topic-post:nth-of-type(1) button.hot-coffee")
+            .dom(".topic-post[data-post-number='1'] button.hot-coffee")
             .exists("it transforms posts");
           assert.strictEqual(
             lastTransformedPost.topic.id,
@@ -126,6 +120,7 @@ function postStreamTest(name, attrs) {
               topic,
               id: 1,
               post_number: 1,
+              username: "eviltrout",
               user_id: 123,
               primary_group_name: "trout",
               avatar_template: "/images/avatar.png",
@@ -165,31 +160,31 @@ function postStreamTest(name, attrs) {
           ];
         },
 
-        test(assert) {
+        async test(assert) {
           assert.dom(".post-stream").exists({ count: 1 });
           assert.dom(".topic-post").exists({ count: 6 }, "renders all posts");
 
           // look for special class bindings
           assert
-            .dom(".topic-post:nth-of-type(1).topic-owner")
+            .dom(".topic-post[data-post-number='1'].topic-owner")
             .exists({ count: 1 }, "applies the topic owner class");
           assert
-            .dom(".topic-post:nth-of-type(1).group-trout")
+            .dom(".topic-post[data-post-number='1'].group-trout")
             .exists({ count: 1 }, "applies the primary group class");
           assert
-            .dom(".topic-post:nth-of-type(1).regular")
+            .dom(".topic-post[data-post-number='1'].regular")
             .exists({ count: 1 }, "applies the regular class");
           assert
-            .dom(".topic-post:nth-of-type(2).moderator")
+            .dom(".topic-post[data-post-number='2'].moderator")
             .exists({ count: 1 }, "applies the moderator class");
           assert
-            .dom(".topic-post:nth-of-type(3).post-hidden")
+            .dom(".topic-post[data-post-number='3'].post-hidden")
             .exists({ count: 1 }, "applies the hidden class");
           assert
-            .dom(".topic-post:nth-of-type(4).whisper")
+            .dom(".topic-post[data-post-number='4'].whisper")
             .exists({ count: 1 }, "applies the whisper class");
           assert
-            .dom(".topic-post:nth-of-type(5).wiki")
+            .dom(".topic-post[data-post-number='5'].wiki")
             .exists({ count: 1 }, "applies the wiki class");
 
           // it renders an article for the body with appropriate attributes

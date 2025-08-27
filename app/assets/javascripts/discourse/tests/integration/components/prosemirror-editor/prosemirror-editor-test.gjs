@@ -12,17 +12,34 @@ import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 module("Integration | Component | prosemirror-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    clearRichEditorExtensions();
-  });
-
-  hooks.afterEach(function () {
-    resetRichEditorExtensions();
-  });
+  hooks.beforeEach(() => clearRichEditorExtensions());
+  hooks.afterEach(() => resetRichEditorExtensions());
 
   test("renders the editor", async function (assert) {
     await render(<template><ProsemirrorEditor /></template>);
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+  });
+
+  test("renders the editor with a null initial value", async function (assert) {
+    await render(<template><ProsemirrorEditor @value={{null}} /></template>);
+    assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+  });
+
+  test("renders the editor with a markdown initial value", async function (assert) {
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @value="the **chickens** have come home to roost _bobby boucher_!"
+        />
+      </template>
+    );
+    assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+    assert
+      .dom(".ProseMirror em")
+      .exists("it renders the italic markdown as HTML");
+    assert
+      .dom(".ProseMirror strong")
+      .exists("it renders the strong markdown as HTML");
   });
 
   test("renders the editor with minimum extensions", async function (assert) {
@@ -45,7 +62,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   test("supports registered nodeSpec/parser/serializer", async function (assert) {
     this.siteSettings.rich_editor = true;
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       // Multiple parsers can be registered for the same node type
       api.registerRichEditorExtension({
         parse: { wrap_open() {}, wrap_close() {} },
@@ -99,7 +116,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   test("supports registered markSpec/parser/serializer", async function (assert) {
     this.siteSettings.rich_editor = true;
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension({
         // just for testing purpose - our actual hashtag is a node, not a mark
         markSpec: {
@@ -138,7 +155,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
 
     const state = {};
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension({
         nodeViews: {
           paragraph: class CustomNodeView {
@@ -168,7 +185,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
 
     const state = {};
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       // plugins can be an array
       api.registerRichEditorExtension({
         plugins: [

@@ -21,6 +21,13 @@ export default function lightbox(images) {
         elementParse: (item) => {
           item.src = item.el[0].dataset.largeSrc || item.el[0].src;
         },
+        open: function () {
+          this.touchActionValue = document.body.style.touchAction;
+          document.body.style.touchAction = "";
+        },
+        close: function () {
+          document.body.style.touchAction = this.touchActionValue;
+        },
       },
     });
   });

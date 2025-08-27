@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Invite users to channel", type: :system do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:user_1, :user)
+  fab!(:channel_1, :category_channel)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }

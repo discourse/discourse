@@ -64,6 +64,43 @@ module PageObjects
         def toggle_section(name)
           find("[data-section-name='admin-#{name.to_s.downcase}']").click
         end
+
+        def click_back_to_forum
+          page.find(".sidebar-sections__back-to-forum").click
+          self
+        end
+
+        def click_search_input
+          page.find(".sidebar-search__input").click
+        end
+
+        def my_messages
+          I18n.t("js.sidebar.sections.community.links.my_messages.content")
+        end
+
+        def my_messages_link_css
+          ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']"
+        end
+
+        def has_my_messages_link?(text = my_messages)
+          page.has_css?(my_messages_link_css, text:)
+        end
+
+        def has_no_my_messages_link?(text = my_messages)
+          page.has_no_css?(my_messages_link_css, text:)
+        end
+
+        def has_my_messages_link_with_unread_icon?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_without_unread_icon?
+          page.has_no_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_with_unread_count?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
+        end
       end
     end
   end

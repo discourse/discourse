@@ -1,8 +1,11 @@
+import { hasInternalComponentManager } from "@glimmer/manager";
 import { h } from "virtual-dom";
+import deprecated from "discourse/lib/deprecated";
 import Connector from "discourse/widgets/connector";
 import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 class DecoratorHelper {
   constructor(widget, attrs, state) {
@@ -42,6 +45,10 @@ class DecoratorHelper {
     return this.widget.attach(name, attrs, state);
   }
 
+  get model() {
+    return this.widget.findAncestorModel();
+  }
+
   /**
    * Returns the model associated with this widget. When decorating
    * posts this will normally be the post.
@@ -54,7 +61,7 @@ class DecoratorHelper {
    * ```
    **/
   getModel() {
-    return this.widget.findAncestorModel();
+    return this.model;
   }
 
   /**
@@ -112,18 +119,16 @@ class DecoratorHelper {
    * Returns an element containing a rendered glimmer template. For full usage instructions,
    * see `widgets/render-glimmer.js`.
    *
+   * DEPRECATION NOTICES:
+   * - using a string describing a new wrapper element as the `targetElement` parameter is deprecated.
+   *   Use an existing HTML element instead.
+   * - using a template compiled via `ember-cli-htmlbars` as the `component` parameter is deprecated.
+   *   You should provide a component instead.
+   *
    * Example usage in a `.gjs` file:
    *
    * ```
    * api.decorateCookedElement((cooked, helper) => {
-   *   const iconName = "user-plus";
-   *   // Generate a new element with glimmer rendered inside
-   *   const glimmerElement = helper.renderGlimmer(
-   *     "div.my-wrapper-class",
-   *     <template><DButton @icon={{iconName}} @translatedLabel="Hello world from Glimmer Component" /></template>
-   *   );
-   *   cooked.appendChild(glimmerElement);
-   *
    *   // Or append to an existing element
    *   helper.renderGlimmer(
    *     cooked.querySelector(".some-container"),
@@ -133,15 +138,32 @@ class DecoratorHelper {
    * ```
    *
    */
-  renderGlimmer(renderInto, template, data) {
+  renderGlimmer(targetElement, component, data) {
+    // Ideally we should throw an error here, but we can't for now to prevent existing incompatible customizations from
+    // crashing the app. Instead, we will log a deprecation warning while we're in the process of migrating to the new
+    // Glimmer Post Stream API.
+    if (!(targetElement instanceof Element)) {
+      deprecated(
+        "The `targetElement` parameter provided to `helper.renderGlimmer` is invalid. It must be an existing HTML element. Using a string to describe a new wrapper element is deprecated.",
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    }
+
+    if (!hasInternalComponentManager(component)) {
+      deprecated(
+        "The `component` parameter provided to `helper.renderGlimmer` is invalid. It must be a valid Glimmer component. Using a template compiled via `ember-cli-htmlbars` is deprecated. Use the <template>...</template> syntax or replace it with a proper component.",
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    }
+
     if (!this.widget.postContentsDestroyCallbacks) {
       throw "renderGlimmer can only be used in the context of a post";
     }
 
     const renderGlimmer = new RenderGlimmer(
       this.widget,
-      renderInto,
-      template,
+      targetElement,
+      component,
       data
     );
     renderGlimmer.init();
@@ -151,6 +173,7 @@ class DecoratorHelper {
     return renderGlimmer.element;
   }
 }
+
 DecoratorHelper.prototype.h = h;
 
 export default DecoratorHelper;

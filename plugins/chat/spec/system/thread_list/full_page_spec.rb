@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Thread list in side panel | full page", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -11,6 +11,7 @@ describe "Thread list in side panel | full page", type: :system do
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -50,9 +51,12 @@ describe "Thread list in side panel | full page", type: :system do
         chat_page.visit_channel(channel)
         channel_page.reply_to(thread_om)
         thread_page.send_message
+
         expect(channel_page).to have_thread_indicator(thread_om)
+
         thread_page.close
         channel_page.open_thread_list
+
         expect(page).to have_css(
           thread_list_page.item_by_id_selector(thread_om.reload.thread_id),
           count: 1,

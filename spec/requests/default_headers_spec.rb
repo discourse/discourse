@@ -52,13 +52,11 @@ RSpec.describe Middleware::DefaultHeaders do
   end
 
   context "when a rescued exception is raised" do
-    before do
-      @old_logger = Rails.logger
-      @logs = StringIO.new
-      Rails.logger = Logger.new(@logs)
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @old_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "adds default headers to the response" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
@@ -66,9 +64,7 @@ RSpec.describe Middleware::DefaultHeaders do
 
       get "/latest", params: { test: bad_str }
 
-      log = @logs.string
-      expect(log).not_to include("exception app middleware")
-
+      expect(fake_logger.warnings.length).to eq(0)
       expect(response.status).to eq(400)
       expect(response.headers).to have_key("Cross-Origin-Opener-Policy")
       expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin-allow-popups")

@@ -1,0 +1,6 @@
+en:
+  discourse_subscriptions:
+    customer_not_found: Customer not found
+    card:
+      declined: Card Declined
+      invalid: Card Invalid

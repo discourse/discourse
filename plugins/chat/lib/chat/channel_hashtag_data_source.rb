@@ -14,12 +14,17 @@ module Chat
       "channel"
     end
 
+    def self.style_type
+      "icon"
+    end
+
     def self.channel_to_hashtag_item(guardian, channel)
       HashtagAutocompleteService::HashtagItem.new.tap do |item|
         item.text = channel.title
         item.description = channel.description
         item.slug = channel.slug
         item.icon = icon
+        item.style_type = style_type
         item.colors = [channel.category.color] if channel.category_channel?
         item.relative_url = channel.relative_url
         item.type = "channel"

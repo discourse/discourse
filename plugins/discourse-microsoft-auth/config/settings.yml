@@ -1,0 +1,15 @@
+plugins:
+  microsoft_auth_enabled:
+    client: true
+    default: false
+  microsoft_auth_client_id:
+    client: false
+    default: ""
+  microsoft_auth_client_secret:
+    client: false
+    default: ""
+  microsoft_auth_email_verified:
+    default: false
+  microsoft_auth_tenant_id:
+    client: false
+    default: "common"

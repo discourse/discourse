@@ -15,7 +15,7 @@ module("Unit | Utility | sanitizer", function (hooks) {
     const engine = build({
       siteSettings: {
         allowed_iframes:
-          "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?",
+          "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://www.example.com/*/preview/",
       },
     });
     const cooked = (input, expected, text) =>
@@ -75,6 +75,30 @@ module("Unit | Utility | sanitizer", function (hooks) {
       '<iframe width="425" height="350" frameborder="0" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik"></iframe>',
       '<iframe width="425" height="350" frameborder="0" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik"></iframe>',
       "allows iframe to OpenStreetMap"
+    );
+
+    cooked(
+      '<iframe src="https://www.example.com/wild/preview/card"></iframe>',
+      '<iframe src="https://www.example.com/wild/preview/card"></iframe>',
+      "allows iframe to example.com matching wild card"
+    );
+
+    cooked(
+      '<iframe src="https://www.example.com/wild/not/card"></iframe>',
+      "",
+      "disallows iframe to example.com not matching wild card"
+    );
+
+    cooked(
+      '<iframe src="https://www.example.com/wild/not/card#/preview"></iframe>',
+      "",
+      "disallows iframe to example.com not matching wild card"
+    );
+
+    cooked(
+      '<iframe src="https://www.example.com/wild/not/card?foo=/preview"></iframe>',
+      "",
+      "disallows iframe to example.com not matching wild card"
     );
 
     cooked(

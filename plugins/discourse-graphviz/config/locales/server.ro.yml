@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    discourse_graphviz_enabled: "Activează modulul Graphviz"
+    graphviz_default_svg: "Implicit se folosește randarea SVG în loc de randarea imaginii, poate fi personalizată pentru fiecare grafic cu elementul `svg=true|false`."

@@ -24,19 +24,6 @@ hr:
 
           Imajte na umu da kada odgovarate na temu ili čitate temu dulje od nekoliko minuta, ona se automatski postavlja na razinu obavijesti "praćenja". To možete promijeniti u [vašim korisničkim postavkama](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Jeste li znali da svakoj objavi možete dodati anketu? Pokušajte upotrijebiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanik u uređivaču da **izradite anketu**.
-        not_found: |-
-          Ups! U vašem odgovoru nije bilo ankete.
-
-          Koristite ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanika u uređivaču ili kopirajte i zalijepite ovu anketu u svoj sljedeći odgovor:
-
-          ```tekst
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hej, dobra anketa! Kako sam te podučio?
 
@@ -45,20 +32,6 @@ hr:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Ponekad ćete možda poželjeti **sakriti detalje** u svojim odgovorima:
-
-          - Kada raspravljate o točkama zapleta filma ili TV emisije koje bi se smatrale spojlerom.
-
-          - Kada vaš post treba puno neobaveznih detalja koji mogu biti neodoljivi kada ih pročitate odjednom.
-
-          [details=Odaberite ovo da vidite kako radi!]
-          1. Odaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> stupnja prijenosa u uređivaču.
-          2. Odaberite "Sakrij pojedinosti".
-          3. Uredite sažetak pojedinosti i dodajte svoj sadržaj.
-          [/details]
-
-          Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanika u uređivaču da dodate odjeljak s detaljima u svoj sljedeći odgovor?
         not_found: |-
           Imate problema s kreiranjem widgeta s detaljima? Pokušajte uključiti sljedeće u svoj sljedeći odgovor:
 

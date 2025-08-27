@@ -49,7 +49,7 @@ module BackupRestore
 
       @system.listen_for_shutdown_signal
 
-      @tmp_directory, db_dump_path = @backup_file_handler.decompress
+      @filename, @tmp_directory, db_dump_path = @backup_file_handler.decompress
       validate_backup_metadata
 
       @system.enable_readonly_mode

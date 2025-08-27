@@ -1,12 +1,10 @@
-.header-search--visible,
+@use "lib/viewport";
+
+.header-search--enabled,
 .search-header--visible {
   .panel .header-dropdown-toggle.search-dropdown,
   .panel .search-menu {
     display: none;
-  }
-
-  .before-header-panel-outlet {
-    flex: 0.25 0.25 auto;
   }
 
   a.search-link {
@@ -33,15 +31,21 @@
     flex-grow: 1;
   }
 
+  &.welcome-banner--enabled {
+    .floating-search-input {
+      @include float-up;
+    }
+  }
+
   .floating-search-input {
-    width: 60%;
+    width: 100%;
+    max-width: 550px; // half of default d-max-width
 
     .search-banner {
       height: 100%;
 
       &-inner.wrap {
         height: 100%;
-        width: 100%;
         padding: 0;
 
         .search-menu {
@@ -50,12 +54,12 @@
           margin: 0 auto;
           position: relative;
 
-          @media screen and (max-width: 1025px) {
+          @include viewport.until(lg) {
             width: 80%;
           }
 
-          @media screen and (max-width: 768px) {
-            width: 95%;
+          @include viewport.until(md) {
+            width: 90%;
           }
 
           // Hide search-icon when search-context is present
@@ -63,7 +67,7 @@
             display: none;
           }
 
-          .search-input .search-context ~ #search-term {
+          .search-input .search-context ~ .search-term__input {
             padding-left: 0.5em;
           }
 
@@ -84,10 +88,9 @@
 
           .search-icon {
             background: transparent;
-            padding: 0.25em;
             pointer-events: none;
             color: var(--header_primary-medium);
-            margin-left: 0.3em;
+            margin-left: calc(1rem - 0.65em);
             height: 100%;
             position: absolute;
             z-index: 2;
@@ -95,14 +98,17 @@
 
           .search-menu-panel {
             padding: 0;
+            border: 1px solid var(--content-border-color);
+            border-radius: var(--d-border-radius);
+            max-height: calc(100vh - var(--header-offset));
           }
 
           .search-input {
             display: flex;
-            padding: 0 0 0 1.5em;
+            padding: 0 0 0 2em;
             border-radius: var(--d-input-border-radius);
 
-            #search-term {
+            .search-term__input {
               height: 100%;
               width: 100%;
               margin: 0;
@@ -120,10 +126,7 @@
               display: none;
             }
             background: var(--secondary);
-            border: 1px solid var(--primary-low);
-            padding: 0.5em;
             position: relative;
-            box-shadow: var(--shadow-header);
             box-sizing: border-box;
             width: 100%;
 

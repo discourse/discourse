@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Τοπικές Ημερομηνίες Discourse"
   js:
     discourse_local_dates:
       relative_dates:

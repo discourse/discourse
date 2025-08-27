@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  accepted_answer: "پاسخ پذیرفته شد"
+  site_settings:
+    prioritize_solved_topics_in_search: "اولویت‌بندی موضوعات حل شده در نتایج جستجو"
+  reports:
+    accepted_solutions:
+      title: "راه حل مورد قبول"
+      xaxis: "روز"
+      yaxis: "مجموع"
+  solved:
+    no_solutions:
+      others: "هیچ راه حل پذیرفته ای وجود ندارد"
+    filter:
+      description:
+        solved: "فیلتر کردن موضوعاتی که حل شده‌اند"
+        unsolved: "فیلتر کردن موضوعاتی که حل نشده‌اند"
+  badges:
+    solved_1:
+      name: "حل شده!"
+      description: "یک پاسخ به عنوان راه حل علامت گذاری شده است"

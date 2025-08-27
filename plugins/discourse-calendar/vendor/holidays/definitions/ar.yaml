@@ -1,0 +1,202 @@
+# Argentinian holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2016-02-26.
+#
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Argentina
+# - http://servicios.lanacion.com.ar/feriados/2016
+---
+months:
+  0:
+  - name: Viernes Santo
+    regions: [ar]
+    function: easter(year)
+    function_modifier: -2
+  - name: Carnaval Lunes
+    regions: [ar]
+    function: easter(year)
+    function_modifier: -48
+  - name: Carnaval Martes
+    regions: [ar]
+    function: easter(year)
+    function_modifier: -47
+  1:
+  - name: Año Nuevo
+    regions: [ar]
+    mday: 1
+  3:
+  - name: Día Nacional de la Memoria por la Verdad y la Justicia
+    regions: [ar]
+    mday: 24
+  4:
+  - name: Día del Veterano y de los Caídos en la Guerra de Malvinas
+    regions: [ar]
+    mday: 2
+  5:
+  - name: Día del Trabajador
+    regions: [ar]
+    mday: 1
+  - name: Día de la Revolución de Mayo
+    regions: [ar]
+    mday: 25
+  6:
+  - name: Día de la Bandera
+    regions: [ar]
+    mday: 20
+  7:
+  - name: Feriado puente turístico
+    regions: [ar]
+    mday: 8
+  - name: Día de la Independencia
+    regions: [ar]
+    mday: 9
+  8:
+  - name: Paso a la Inmortalidad del General José de San Martín
+    regions: [ar]
+    mday: 17
+  10:
+  - name: Día del Respeto a la Diversidad Cultural
+    regions: [ar]
+    mday: 12
+  11:
+  - name: Día de la Soberanía Nacional
+    regions: [ar]
+    mday: 20
+  12:
+  - name: Inmaculada Concepción de María
+    regions: [ar]
+    mday: 8
+  - name: Feriado puente turístico
+    regions: [ar]
+    mday: 9
+  - name: Navidad
+    regions: [ar]
+    mday: 25
+
+tests:
+  - given:
+      date: '2016-01-01'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Año Nuevo'
+  - given:
+      date: '2016-02-08'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Lunes'
+  - given:
+      date: '2016-02-09'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Martes'
+  - given:
+      date: '2017-02-27'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Lunes'
+  - given:
+      date: '2017-02-28'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Martes'
+  - given:
+      date: '2018-02-12'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Lunes'
+  - given:
+      date: '2018-02-13'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Carnaval Martes'
+  - given:
+      date: '2016-03-24'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día Nacional de la Memoria por la Verdad y la Justicia'
+  - given:
+      date: '2016-03-25'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Viernes Santo'
+  - given:
+      date: '2016-04-02'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día del Veterano y de los Caídos en la Guerra de Malvinas'
+  - given:
+      date: '2016-05-01'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día del Trabajador'
+  - given:
+      date: '2016-05-25'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día de la Revolución de Mayo'
+  - given:
+      date: '2016-06-20'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día de la Bandera'
+  - given:
+      date: '2016-07-08'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Feriado puente turístico'
+  - given:
+      date: '2016-07-09'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día de la Independencia'
+  - given:
+      date: '2016-08-17'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Paso a la Inmortalidad del General José de San Martín'
+  - given:
+      date: '2016-10-12'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día del Respeto a la Diversidad Cultural'
+  - given:
+      date: '2016-11-20'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Día de la Soberanía Nacional'
+  - given:
+      date: '2016-12-08'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Inmaculada Concepción de María'
+  - given:
+      date: '2016-12-09'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Feriado puente turístico'
+  - given:
+      date: '2016-12-25'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Navidad'

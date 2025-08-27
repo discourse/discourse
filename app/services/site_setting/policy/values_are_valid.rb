@@ -15,10 +15,9 @@ class SiteSetting::Policy::ValuesAreValid < Service::PolicyBase
   private
 
   def validate_setting(setting)
-    setting_name, setting_value = setting
-    setting_type = SiteSetting.type_supervisor.get_type(setting_name)
+    setting_type = SiteSetting.type_supervisor.get_type(setting.name)
     begin
-      SiteSetting.type_supervisor.validate_value(setting_name, setting_type, setting_value)
+      SiteSetting.type_supervisor.validate_value(setting.name, setting_type, setting.value)
       nil
     rescue Discourse::InvalidParameters => e
       e.message

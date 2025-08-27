@@ -98,7 +98,7 @@ module(
         .field("foo")
         .hasNoValue(
           NO_VALUE_OPTION,
-          "it doesn’t have the none when value is present"
+          "doesn't have the none when value is present"
         );
 
       await render(
@@ -152,7 +152,7 @@ module(
         .field("foo")
         .hasNoValue(
           NO_VALUE_OPTION,
-          "it doesn’t have the none for an optional field when value is present and includeNone is false"
+          "doesn't have the none for an optional field when value is present and includeNone is false"
         );
     });
   }

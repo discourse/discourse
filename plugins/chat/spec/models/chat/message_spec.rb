@@ -131,6 +131,36 @@ describe Chat::Message do
         )
       end
     end
+
+    context "with watched words" do
+      fab!(:watched_word) do
+        Fabricate(:watched_word, word: "badword", action: WatchedWord.actions[:block])
+      end
+
+      let(:text) { "this message contains badword and should be blocked" }
+
+      it "validates watched words for regular users" do
+        regular_user = Fabricate(:user)
+        message =
+          Chat::Message.new(
+            chat_channel: Fabricate(:chat_channel),
+            user: regular_user,
+            message: text,
+          )
+
+        expect(message).not_to be_valid
+      end
+
+      it "skips watched words validation for bot users" do
+        bot_user = Fabricate(:user, id: -999)
+        message =
+          Chat::Message.new(chat_channel: Fabricate(:chat_channel), user: bot_user, message: text)
+
+        message.validate_message
+
+        expect(message).to be_valid
+      end
+    end
   end
 
   describe ".in_thread?" do
@@ -168,6 +198,34 @@ describe Chat::Message do
   end
 
   describe ".cook" do
+    context "with enable_emoji_shortcuts site setting" do
+      context "when enabled" do
+        before { SiteSetting.enable_emoji_shortcuts = true }
+
+        it "converts emoji shortcuts to emoji" do
+          cooked = described_class.cook <<~MD
+            emoji shortcut :)
+          MD
+
+          expected =
+            "<p>emoji shortcut <img src=\"/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":slight_smile:\" class=\"emoji\" alt=\":slight_smile:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>"
+          expect(cooked).to match(expected)
+        end
+      end
+
+      context "when disabled" do
+        before { SiteSetting.enable_emoji_shortcuts = false }
+
+        it "does not convert emoji shortcuts" do
+          cooked = described_class.cook <<~MD
+            emoji shortcut :)
+          MD
+
+          expect(cooked).to match("<p>emoji shortcut :)</p>")
+        end
+      end
+    end
+
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")
 
@@ -300,7 +358,7 @@ describe Chat::Message do
     it "supports quote bbcode" do
       topic = Fabricate(:topic, title: "Some quotable topic")
       post = Fabricate(:post, topic: topic)
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       avatar_src =
         "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 
@@ -322,7 +380,7 @@ describe Chat::Message do
       COOKED
     end
 
-    it "supports chat quote bbcode" do
+    it "supports chat transcripts" do
       chat_channel = Fabricate(:category_channel, name: "testchannel")
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")
@@ -355,7 +413,7 @@ describe Chat::Message do
         )
 
       expect(cooked).to eq(<<~COOKED.chomp)
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-chained="true" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}" data-multiquote="true">
         <div class="chat-transcript-meta">
         Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
@@ -369,7 +427,7 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
@@ -744,10 +802,10 @@ describe Chat::Message do
 
   describe "#upsert_mentions" do
     context "with direct mentions" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
-      fab!(:user3) { Fabricate(:user) }
-      fab!(:user4) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
+      fab!(:user3, :user)
+      fab!(:user4, :user)
       fab!(:message) do
         Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
       end

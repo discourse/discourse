@@ -91,13 +91,6 @@ html {
     }
   }
 
-  .menu-panel .panel-body-bottom .btn:hover,
-  .menu-panel .panel-body-bottom .btn:focus {
-    .d-icon {
-      color: var(--primary);
-    }
-  }
-
   .d-header-icons .d-icon,
   .header-sidebar-toggle button .d-icon {
     color: var(--primary-low-mid);
@@ -224,7 +217,6 @@ html {
   }
 
   // Categories
-  .list-cell,
   .table-heading,
   .category-list td,
   .category-list th {

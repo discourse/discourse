@@ -1,21 +1,30 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
+import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
-import { TextSelection } from "prosemirror-state";
+import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
+import escapeRegExp from "discourse/lib/escape-regexp";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
  * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
  * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").ToolbarState} ToolbarState
  */
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
+  @service siteSettings;
+
   allowPreview = false;
 
   /** @type {import("prosemirror-model").Schema} */
@@ -26,15 +35,29 @@ export default class ProsemirrorTextManipulation {
   placeholder;
   /** @type {AutocompleteHandler} */
   autocompleteHandler;
+  /** @type {ToolbarState} */
+  state = new TrackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
 
-  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
+  constructor(
+    owner,
+    {
+      schema,
+      view,
+      convertFromMarkdown,
+      convertToMarkdown,
+      commands,
+      customState,
+    }
+  ) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.commands = commands;
+    this.customState = customState;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -71,16 +94,32 @@ export default class ProsemirrorTextManipulation {
 
   putCursorAtEnd() {
     this.focus();
-    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
+
+    next(() => {
+      this.view.dispatch(
+        this.view.state.tr
+          .setSelection(Selection.atEnd(this.view.state.doc))
+          .scrollIntoView()
+      );
+    });
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    $(this.view.dom).autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.floatkit_autocomplete_composer) {
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwner(this),
+        this.view.dom,
+        this.autocompleteHandler,
+        options
+      );
+    } else {
+      // @ts-ignore
+      $(this.view.dom).autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 
   applySurroundSelection(head, tail, exampleKey) {
@@ -103,8 +142,18 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const text = head + i18n(`composer.${exampleKey}`) + tail;
-    const doc = this.convertFromMarkdown(text);
+    const { state } = this.view;
+    const { from, to, empty } = state.selection;
+
+    let text;
+    if (empty) {
+      text = i18n(`composer.${exampleKey}`);
+    } else {
+      const selectedFragment = state.doc.slice(from, to).content;
+      text = this.convertToMarkdown(selectedFragment);
+    }
+
+    const doc = this.convertFromMarkdown(head + text + tail);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
@@ -129,9 +178,10 @@ export default class ProsemirrorTextManipulation {
 
   insertBlock(block) {
     const doc = this.convertFromMarkdown(block);
-    const node = doc.content.firstChild;
 
-    const tr = this.view.state.tr.replaceSelectionWith(node);
+    const tr = this.view.state.tr.replaceSelection(
+      new Slice(doc.content, 0, 0)
+    );
     if (!tr.selection.$from.nodeAfter) {
       tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
     }
@@ -172,6 +222,17 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
+  applyHeading(_selection, level) {
+    let command;
+    if (level === 0) {
+      command = setBlockType(this.schema.nodes.paragraph);
+    } else {
+      command = setBlockType(this.schema.nodes.heading, { level });
+    }
+    command?.(this.view.state, this.view.dispatch);
+    this.focus();
+  }
+
   formatCode() {
     let command;
 
@@ -191,13 +252,28 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
-  @bind
   emojiSelected(code) {
+    let index = 0;
+
+    const value = this.autocompleteHandler.getValue();
+    const match = value.match(/\B:(\w*)$/);
+    if (match) {
+      index = value.length - match.index;
+    }
+
+    const { from, to } = this.view.state.selection;
+
     this.view.dispatch(
       this.view.state.tr
-        .replaceSelectionWith(this.schema.nodes.emoji.create({ code }))
+        .replaceRangeWith(
+          from - index,
+          to,
+          this.schema.nodes.emoji.create({ code })
+        )
         .insertText(" ")
     );
+
+    next(() => this.focus());
   }
 
   @bind
@@ -261,7 +337,7 @@ export default class ProsemirrorTextManipulation {
 
     const markdown = this.convertToMarkdown(this.view.state.doc);
 
-    const regex = opts.regex || new RegExp(oldValue, "g");
+    const regex = opts.regex || new RegExp(escapeRegExp(oldValue), "g");
     const index = opts.index || 0;
     let matchCount = 0;
 
@@ -307,6 +383,32 @@ export default class ProsemirrorTextManipulation {
   toggleDirection() {
     this.view.dom.dir = this.view.dom.dir === "rtl" ? "ltr" : "rtl";
   }
+
+  /**
+   * Updates the toolbar state object based on the current editor active states
+   */
+  updateState() {
+    const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
+      isNodeActive(this.view.state, this.schema.nodes.heading, {
+        level: headingLevel,
+      })
+    );
+
+    Object.assign(this.state, {
+      inBold: hasMark(this.view.state, this.schema.marks.strong),
+      inItalic: hasMark(this.view.state, this.schema.marks.em),
+      inLink: hasMark(this.view.state, this.schema.marks.link),
+      inCode: hasMark(this.view.state, this.schema.marks.code),
+      inBulletList: inNode(this.view.state, this.schema.nodes.bullet_list),
+      inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
+      inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
+      inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+      inHeading: !!activeHeadingLevel,
+      inHeadingLevel: activeHeadingLevel,
+      inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      ...this.customState(this.view.state),
+    });
+  }
 }
 
 /** @implements {AutocompleteHandler} */
@@ -336,8 +438,6 @@ class ProsemirrorAutocompleteHandler {
 
   /**
    * Replaces the term between start-end in the currently selected text block
-   *
-   * It uses input rules to convert it to a node if possible
    *
    * @param {number} start
    * @param {number} end
@@ -389,10 +489,17 @@ class ProsemirrorAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return (
-      this.view.state.selection.$from.parent.type ===
-      this.schema.nodes.code_block
-    );
+    const { schema, view } = this;
+    const { selection } = view.state;
+
+    const isInCodeBlock =
+      selection.$from.parent.type === schema.nodes.code_block;
+
+    const hasCodeMark = selection.$from
+      .marks()
+      .some((mark) => mark.type === schema.marks.code);
+
+    return isInCodeBlock || hasCodeMark;
   }
 }
 
@@ -418,7 +525,7 @@ class ProsemirrorPlaceholderHandler {
       alt: i18n("uploading_filename", { filename: file.name }),
       title: file.id,
       width: 120,
-      "data-placeholder": true,
+      placeholder: true,
     });
 
     this.view.dispatch(
@@ -432,14 +539,12 @@ class ProsemirrorPlaceholderHandler {
   }
 
   progress() {}
+
   progressComplete() {}
 
   cancelAll() {
     this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"]
-      ) {
+      if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
     });
@@ -449,8 +554,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
@@ -463,8 +568,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         nodeToReplace = { node, pos };
         return false;

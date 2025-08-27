@@ -17,8 +17,7 @@ module PageObjects
 
         def open_thread(thread)
           item_by_id(thread.id).click
-          has_css?(".chat-thread.loading")
-          has_no_css?(".chat-thread.loading")
+          has_css?(".chat-thread.--loaded")
         end
 
         def has_thread?(thread)

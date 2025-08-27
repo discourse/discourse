@@ -1,7 +1,0 @@
-<{{view.tagName}} class='num posts-map posts {{view.likesHeat}} topic-list-data'>
-  <button class="btn-link posts-map badge-posts {{view.likesHeat}}" title="{{view.title}}" aria-label="{{view.title}}">
-    {{raw-plugin-outlet name="topic-list-before-reply-count"}}
-    {{plugin-outlet name="topic-list-before-reply-count" outletArgs=(raw-hash topic=topic)}}
-    {{number topic.replyCount noTitle="true"}}
-  </button>
-</{{view.tagName}}>

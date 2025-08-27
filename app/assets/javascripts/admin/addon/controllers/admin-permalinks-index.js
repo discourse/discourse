@@ -35,7 +35,7 @@ export default class AdminPermalinksIndexController extends Controller {
     let linkElement = document.querySelector(`#admin-permalink-${pl.id}`);
     clipboardCopy(linkElement.textContent);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: {
         message: i18n("admin.permalink.copy_success"),
       },
@@ -44,8 +44,8 @@ export default class AdminPermalinksIndexController extends Controller {
 
   @action
   destroyRecord(permalink) {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.permalink.delete_confirm"),
+    this.dialog.deleteConfirm({
+      title: i18n("admin.permalink.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.store.destroyRecord("permalink", permalink);

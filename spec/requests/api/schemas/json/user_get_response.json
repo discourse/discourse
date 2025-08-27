@@ -717,6 +717,9 @@
             "enable_smart_lists": {
               "type": "boolean"
             },
+            "enable_markdown_monospace_font": {
+              "type": "boolean"
+            },
             "enable_defer": {
               "type": "boolean"
             },
@@ -815,6 +818,12 @@
             },
             "topics_unread_when_closed": {
               "type": "boolean"
+            },
+            "composition_mode": {
+              "type": "integer"
+            },
+            "interface_color_mode": {
+              "type": "integer"
             }
           },
           "required": [
@@ -830,6 +839,7 @@
             "dynamic_favicon",
             "enable_quoting",
             "enable_smart_lists",
+            "enable_markdown_monospace_font",
             "enable_defer",
             "digest_after_minutes",
             "automatically_unpin_topics",
@@ -853,7 +863,8 @@
             "title_count_mode",
             "timezone",
             "skip_new_user_tips",
-            "topics_unread_when_closed"
+            "topics_unread_when_closed",
+            "interface_color_mode"
           ]
         }
       },

@@ -2,10 +2,10 @@
 
 RSpec.describe Jobs::Chat::UpdateChannelUserCount do
   fab!(:channel) { Fabricate(:category_channel, user_count: 0, user_count_stale: true) }
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
-  fab!(:user4) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
+  fab!(:user4, :user)
   fab!(:membership1) do
     Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user1)
   end

@@ -1,0 +1,190 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Assign"
+  js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
+    action_codes:
+      assigned: "Assigned %{who} %{when}"
+      assigned_group: "Assigned %{who} %{when}"
+      assigned_to_post: "Assigned %{who} to <a href='%{path}'>post</a> %{when}"
+      assigned_group_to_post: "Assigned %{who} to <a href='%{path}'>post</a> %{when}"
+      unassigned: "Unassigned %{who} %{when}"
+      unassigned_group: "Unassigned %{who} %{when}"
+      unassigned_from_post: "Unassigned %{who} from <a href='%{path}'>post</a> %{when}"
+      unassigned_group_from_post: "Unassigned %{who} from <a href='%{path}'>post</a> %{when}"
+      reassigned: "Reassigned %{who} %{when}"
+      reassigned_group: "Reassigned %{who} %{when}"
+      details_change: "Changed assignment details for %{who} %{when}"
+      note_change: "Changed assignment note for %{who} %{when}"
+      status_change: "Changed assignment status for %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
+      cant_act: "You cannot act on flags that have been assigned to other users"
+      cant_act_unclaimed: "You must claim this topic before acting on flags."
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
+      assigned: "Assigned"
+      group_everyone: "Everyone"
+      assigned_to: "Assigned to"
+      assigned_topic_to: "Assigned topic to <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Assigned #%{post_number} to %{username}"
+      # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
+      assign_post_to_multiple: "#%{post_number} to %{username}"
+      assigned_to_w_ellipsis: "Assigned to..."
+      unassign:
+        title: "Unassign"
+        title_w_ellipsis: "Unassign..."
+        help: "Unassign %{username} from Topic"
+      assign:
+        title: "Assign"
+        help: "Assign Topic to User"
+      assign_post:
+        title: "Assign Post"
+      unassign_post:
+        title: "Unassign from Post"
+        help: "Unassign %{username} from Post"
+      reassign:
+        title: "Edit"
+        title_w_ellipsis: "Edit assignment..."
+        to_self: "Reassign to me"
+        to_self_help: "Reassign Topic to me"
+        help: "Edit assignment details"
+      reassign_modal:
+        title: "Reassign Topic"
+      topic_level_menu:
+        edit_assignments: "Edit assignments..."
+        reassign_topic_to_me: "Reassign topic to me"
+        unassign_with_ellipsis: "Unassign..."
+        unassign_from_post: "Unassign @%{assignee} from #%{post_number}"
+        unassign_from_post_help: "Unassign @%{assignee} from post #%{post_number}"
+        unassign_from_topic: "Unassign @%{username} from topic"
+      assign_modal:
+        title: "Assign Topic"
+        reassign_title: "Reassign Topic"
+        assign: "Assign"
+        assignee_label: Assignee
+        assignment_label: Assignment
+        choose_assignee: Choose a user to assign.
+        edit_assignments_title: "Edit Assignments"
+        note_label: Note
+        optional_label: "(optional)"
+        status_label: Status
+        suggestions: suggestions
+      assign_post_modal:
+        title: "Assign Post"
+      claim:
+        title: "claim"
+        help: "Assign topic to yourself"
+      assign_mailer:
+        never: "Never"
+        different_users: "Only if assigner and assignee are different users"
+        always: "Always"
+      reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
+        never: "Never"
+        daily: "Daily"
+        weekly: "Weekly"
+        monthly: "Monthly"
+        quarterly: "Quarterly"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assign"
+              assignable_levels:
+                title: "Who can assign this group"
+    user:
+      notification_level_when_assigned:
+        label: "When assigned"
+        watch_topic: "Watch topic"
+        track_topic: "Track topic"
+        do_nothing: "Do nothing"
+      messages:
+        assigned_title: "Assigned (%{count})"
+        assigned: "Assigned"
+      no_assignments_title: "You don’t have any assignments yet"
+      no_assignments_body: >
+        Your assigned topics and messages will be listed here. You will also receive a periodic reminder notification of your assignments, which you can adjust in your <a href='%{preferencesUrl}'>user preferences</a>.
+        <br><br>
+        To assign a topic or message to yourself or to someone else, look for the %{icon} assign button at the bottom.
+      dismiss_assigned_tooltip: "Mark all unread assign notifications as read"
+      assigned_to_group:
+        post: "post assigned to %{group_name}"
+        topic: "topic assigned to %{group_name}"
+      assigned_to_you:
+        post: "post assigned to you"
+        topic: "topic assigned to you"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Assign Events"
+          assigned: "When an user assigns a topic"
+          unassigned: "When an user unassigns a topic"
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Post template
+              description: If filled, a post with this template will be created and a user assigned to it instead of the topic.
+            assignees_group:
+              label: Assignees Group
+            minimum_time_between_assignments:
+              label: Minimum hours between assignments
+            min_recently_assigned_days:
+              label: Min recently assigned days
+              description: Defaults to 14 days.
+            skip_new_users_for_days:
+              label: Skip new users for days
+              description: Defaults to 0 days (users can be assigned immediately after signing up).
+            max_recently_assigned_days:
+              label: Max recently assigned days
+              description: First attempt to exclude users assigned in the last `n` days. If no user left, fallbacks to `min_recently_assigned_days`. Defaults to 180 days.
+            assigned_topic:
+              label: Assigned Topic ID
+            in_working_hours:
+              label: Users in working hours
+    notification_reason:
+      user: "You will see a count of new replies because this topic was assigned to you."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} assigned you"
+      titles:
+        assigned: "Assigned"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Are you sure? You have %{count} unread assign notification."
+            other: "Are you sure? You have %{count} unread assign notifications."
+    user_menu:
+      view_all_assigned: "view all assigned"
+      tabs:
+        assign_list: "Assign list"
+        assign_list_with_unread:
+          one: "Assign list - %{count} unread assignment"
+          other: "Assign list - %{count} unread assignments"
+    edit_assignments_modal:
+      title: "Edit assignments"
+      topic: "Topic"
+      post: "Post"

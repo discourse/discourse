@@ -16,6 +16,7 @@ class Stylesheet::Manager::ScssChecker
     @themes_with_scss ||=
       begin
         theme_target = @target.to_sym
+        theme_target = :common if theme_target == :common_theme || theme_target == :embedded_theme
         theme_target = :mobile if theme_target == :mobile_theme
         theme_target = :desktop if theme_target == :desktop_theme
         name = @target == :embedded_theme ? :embedded_scss : :scss
@@ -24,12 +25,7 @@ class Stylesheet::Manager::ScssChecker
           Theme
             .where(id: @theme_ids)
             .left_joins(:theme_fields)
-            .where(
-              theme_fields: {
-                target_id: [Theme.targets[theme_target], Theme.targets[:common]],
-                name: name,
-              },
-            )
+            .where(theme_fields: { target_id: Theme.targets[theme_target], name: name })
             .group(:id)
             .size
 

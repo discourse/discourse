@@ -1,7 +1,13 @@
+@use "lib/viewport";
+
 .admin-plugins.automation {
   .automations {
     .relative-date {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
+    }
+
+    &__stats {
+      font-size: var(--font-down-1);
     }
 
     td[role="button"] {
@@ -19,39 +25,33 @@
 
   .d-admin-table.automations {
     .d-admin-row__content {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(5, auto);
       }
     }
 
-    .d-admin-row__overview {
-      @include breakpoint("tablet") {
+    .d-admin-row__name {
+      @include viewport.until(md) {
         order: 1;
       }
     }
 
-    .d-admin-row__detail.automations__status {
-      @include breakpoint("tablet") {
+    .d-admin-row__detail.automations__runs {
+      @include viewport.until(md) {
         order: 2; // move below the name to avoid empty spacing
       }
     }
 
-    .d-admin-row__detail.automations__script {
-      @include breakpoint("tablet") {
+    .d-admin-row__detail.automations__updated-by {
+      @include viewport.until(md) {
         order: 3;
       }
     }
 
-    .d-admin-row__detail.automations__version {
-      @include breakpoint("tablet") {
-        order: 4;
-      }
-    }
-
-    .d-admin-row__detail.automations__updated-by {
-      @include breakpoint("tablet") {
+    .d-admin-row__detail.automations__enabled {
+      @include viewport.until(md) {
         order: 5;
       }
     }
@@ -63,7 +63,7 @@
       gap: 0.5em;
       justify-content: flex-end;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 6;
       }
     }
@@ -135,6 +135,16 @@
 }
 
 .discourse-automation-form {
+  .automation-enabled-card {
+    margin-bottom: 1em;
+  }
+
+  .enabled-toggle-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
   .scriptables,
   .triggerables {
     .select-kit-body {
@@ -213,7 +223,7 @@
     .title {
       padding-bottom: 0.5em;
       margin-bottom: 1em;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     .input-large,
@@ -267,7 +277,11 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding: 1em;
+      gap: 1em;
+
+      label {
+        margin: 0;
+      }
 
       .ember-checkbox {
         margin: 0 0 0 1em;

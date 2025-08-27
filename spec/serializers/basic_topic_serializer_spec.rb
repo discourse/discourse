@@ -11,15 +11,14 @@ describe BasicTopicSerializer do
     end
 
     it "returns the fancy title with a modifier" do
-      plugin = Plugin::Instance.new
-      modifier = :topic_serializer_fancy_title
-      proc = Proc.new { "X" }
-      DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+      SiteSetting.content_localization_enabled = true
+      Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
+      I18n.locale = "ja"
+      topic.update!(locale: "en")
+
       json = BasicTopicSerializer.new(topic).as_json
 
       expect(json[:basic_topic][:fancy_title]).to eq("X")
-    ensure
-      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
   end
 end

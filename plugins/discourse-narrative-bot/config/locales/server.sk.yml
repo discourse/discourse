@@ -402,11 +402,11 @@ sk:
           Upozorňujeme, že keď odpoviete na tému alebo si tému prečítate dlhšie ako niekoľko minút, automaticky sa nastaví na úroveň upozornenia „sledovanie“. Môžete to zmeniť v [vašich používateľských preferenciách](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          Vedeli ste, že ku každému príspevku môžete pridať anketu? Skúste použiť ozubené koliesko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore na **vytvorenie ankety**.
+          Vedeli ste, že môžete pridať anketu k akémukoľvek príspevku? Skúste použiť ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editore a **vyrobiť anketu**.
         not_found: |-
           Ups! Vo vašej odpovedi nebola žiadna anketa.
 
-          Použite ikonu ozubeného kolesa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore alebo skopírujte a vložte túto anketu do ďalšej odpovede:
+          Použite ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editore alebo skopírujte a vložte túto anketu do ďalšej odpovede:
 
           ```text
           [poll]
@@ -423,19 +423,19 @@ sk:
           [/anketa]
       details:
         instructions: |-
-          Niekedy možno budete chcieť vo svojich odpovediach **skryť podrobnosti**:
+          Niekedy môžete chcieť vo svojich odpovediach **skryť podrobnosti**:
 
-          – Keď diskutujete o zápletkách filmu alebo televíznej relácie, ktoré by sa považovali za spoiler.
+          - Keď diskutujete o dejových bodoch filmu alebo seriálu, ktoré by sa považovali za spoiler.
 
-          – Keď váš príspevok potrebuje veľa voliteľných podrobností, ktoré môžu byť pri prečítaní naraz zdrvujúce.
+          - Keď váš príspevok potrebuje veľa nepovinných podrobností, ktoré môžu byť pri čítaní naraz ohromujúce.
 
-          [detaily=Vyberte toto, aby ste videli, ako to funguje!]
-          1. Vyberte v editore prevod <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> .
-          2. Zvoľte „Skryť podrobnosti“.
+          [details=Vyberte túto možnosť, aby ste videli, ako to funguje!]
+          1. V editore vyberte ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+          2. Vyberte možnosť "Skryť podrobnosti".
           3. Upravte súhrn podrobností a pridajte svoj obsah.
           [/details]
 
-          Môžete použiť ozubené koliesko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore na pridanie sekcie podrobností do vašej ďalšej odpovede?
+          Môžete použiť ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editore na pridanie časti s podrobnosťami do ďalšej odpovede?
         not_found: |-
           Máte problémy s vytvorením widgetu s podrobnosťami? Skúste do svojej ďalšej odpovede zahrnúť nasledujúce údaje:
 

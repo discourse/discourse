@@ -362,19 +362,6 @@ pt:
 
           Observe que quando você responde a um tópico ou lê um tópico por mais de alguns minutos, ele é automaticamente definido para um nível de notificação de 'rastreamento'. Você pode alterar isso nas [suas preferências de usuário](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Você sabia que você pode adicionar uma enquete a qualquer publicação? Tente usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem do editor para **montar uma enquete**.
-        not_found: |-
-          Opa! Não houve enquete em sua resposta.
-
-          Use o ícone de <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor, ou copie e cole esta enquete em sua próxima resposta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Ei, boa enquete! Como eu me saí ensinando você?
 
@@ -383,20 +370,6 @@ pt:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Às vezes você pode querer **ocultar detalhes** em suas respostas:
-
-          - Quando você está discutindo os pontos de um filme ou de um programa de TV que poderiam ser considerados como spoiler.
-
-          - Quando sua postagem precisa de muitos detalhes opcionais que podem ser implacantes quando lidos de uma só vez.
-
-          [Details=Selecione isso para ver como funciona!]
-          1. Selecione a engrenagem <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor.
-          2. Selecione “Ocultar Detalhes”.
-          3. Edite o resumo dos detalhes e adicione seu conteúdo.
-          [/details]
-
-          Você poderia usar a engrenagem <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor para adicionar uma seção de detalhes à sua próxima resposta?
         not_found: |-
           Está tendo dificuldades em criar um widget de detalhes? Tente incluir o seguinte em sua próxima resposta:
 

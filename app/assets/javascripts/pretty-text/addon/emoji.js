@@ -242,7 +242,24 @@ export function emojiSearch(term, options) {
   }
 }
 
+/**
+ * Returns true if the given emoji term is skin tonable.
+ *
+ * A skin tonable emoji is one that can be suffixed with a tone modifier (e.g. :t1:, :t2:, etc.)
+ * to change the skin tone of the emoji.
+ *
+ * If the emoji already has a tone modifier, it is not considered skin tonable.
+ *
+ * @param {string} term The emoji term to check, with or without colons or tone modifiers.
+ * @returns {boolean} True if the emoji is skin tonable, false otherwise.
+ */
 export function isSkinTonableEmoji(term) {
+  // Check if the emoji term already has a tone modifier
+  if (/:t[1-6]:?$/.test(term)) {
+    return false;
+  }
+
+  // Extract the base emoji from any wrapping colons or whitespace
   const match = term.split(":").filter(Boolean)[0];
   if (match) {
     return tonableEmojis.includes(match);

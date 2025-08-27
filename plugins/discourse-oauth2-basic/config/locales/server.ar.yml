@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  login:
+    authenticator_error_fetch_user_details: "تعذَّر استرداد تفاصيل المستخدم الخاصة بك. هل لديك حساب نشط؟"
+  site_settings:
+    oauth2_enabled: "تم تفعيل مصادقة OAuth2 المخصَّصة"
+    oauth2_client_id: "مُعرِّف العميل لمصادقة OAuth2 المخصَّصة"
+    oauth2_client_secret: "سر العميل لمصادقة OAuth2 المخصَّصة"
+    oauth2_authorize_url: "عنوان URL للمصادقة لمصادقة OAuth2"
+    oauth2_authorize_signup_url: 'عنوان URL للمصادقة البديلة (اختياري) المستخدم عند استخدام الزر "تسجيل"'
+    oauth2_token_url: "عنوان URL للرمز المميَّز لمصادقة OAuth2"
+    oauth2_token_url_method: "الطريقة المستخدمة لجلب عنوان URL للرمز المميَّز"
+    oauth2_callback_user_id_path: "المسار في استجابة الرمز المميَّز لمُعرِّف المستخدم. على سبيل المثال: params.info.uuid"
+    oauth2_callback_user_info_paths: "المسارات في استجابة الرمز المميَّز لخصائص المستخدم الأخرى. الخصائص المدعومة هي name وusername وemail وemail_verified وavatar. التنسيق هو property:path، على سبيل المثال: name:params.info.name"
+    oauth2_fetch_user_details: "جلب ملف JSON للمستخدم لمصادقة OAuth2"
+    oauth2_user_json_url: "عنوان URL لجلب ملف JSON للمستخدم لمصادقة OAuth2 (لاحظ أننا استبدلنا :id بالمُعرِّف الذي تم إرجاعه من قِبل استدعاء OAuth و:token بمُعرِّف الرمز المميَّز)"
+    oauth2_user_json_url_method: "الطريقة المستخدمة لجلب عنوان URL لملف JSON"
+    oauth2_json_user_id_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى مُعرِّف المستخدم. على سبيل المثال: user.id"
+    oauth2_json_username_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2. على سبيل المثال: user.username"
+    oauth2_json_name_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى اسم المستخدم الكامل. على سبيل المثال: user.name.full"
+    oauth2_json_email_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى البريد الإلكتروني للمستخدم. على سبيل المثال: user.email"
+    oauth2_json_email_verified_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى حالة التحقُّق من البريد الإلكتروني للمستخدم. على سبيل المثال: user.email.verified. يجب إيقاف oauth2_email_verified لهذا الإعداد ليحظى بأي تأثير"
+    oauth2_json_avatar_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى الصورة الرمزية للمستخدم. على سبيل المثال: user.avatar_url"
+    oauth2_email_verified: "تحقَّق من هذا إذا كان موقع OAuth2 قد تحقَّق من البريد الإلكتروني"
+    oauth2_overrides_email: "استبدال البريد الإلكتروني لـ Discourse بالبريد الإلكتروني البعيد في كل عملية تسجيل دخول. يعمل بإعداد `auth_overrides_email` نفسه، لكنه خاص بعمليات تسجيل الدخول من خلال OAuth2."
+    oauth2_send_auth_header: "إرسال بيانات اعتماد العميل في رأس مصادقة HTTP"
+    oauth2_send_auth_body: "إرسال بيانات اعتماد العميل في نص الطلب"
+    oauth2_debug_auth: "تضمين معلومات تصحيح الأخطاء المنسَّقة في سجلاتك"
+    oauth2_authorize_options: "طلب الخيارات التالية عند المصادقة"
+    oauth2_scope: "طلب هذا المجال عند المصادقة"
+    oauth2_button_title: "نص زر OAuth2"
+    oauth2_allow_association_change: السماح للمستخدمين بإلغاء ربط حسابات Discourse الخاصة بهم وإعادة ربطها من مقدِّم خدمة OAuth2
+    oauth2_disable_csrf: "إيقاف فحص CSRF"
+    errors:
+      oauth2_fetch_user_details: "يجب أن يكون oauth2_callback_user_id_path موجودًا لإيقاف oauth2_fetch_user_details"

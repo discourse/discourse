@@ -37,7 +37,9 @@ RSpec.describe PrettyText::Helpers do
           text: "somecooltag",
           description: "Coolest things ever",
           colors: nil,
+          emoji: nil,
           icon: "tag",
+          style_type: "icon",
           id: tag.id,
           slug: "somecooltag",
           ref: "somecooltag::tag",
@@ -55,8 +57,10 @@ RSpec.describe PrettyText::Helpers do
           relative_url: category.url,
           text: "Some Awesome Category",
           description: "Really great stuff here",
-          colors: [category.color],
+          style_type: "square",
+          emoji: nil,
           icon: "folder",
+          colors: [category.color],
           id: category.id,
           slug: "someawesomecategory",
           ref: "someawesomecategory::category",
@@ -74,6 +78,8 @@ RSpec.describe PrettyText::Helpers do
           text: "Some Awesome Category",
           description: "Really great stuff here",
           colors: [category.color],
+          style_type: "square",
+          emoji: nil,
           icon: "folder",
           id: category.id,
           slug: "someawesomecategory",
@@ -90,7 +96,9 @@ RSpec.describe PrettyText::Helpers do
           text: "somecooltag",
           description: "Coolest things ever",
           colors: nil,
+          emoji: nil,
           icon: "tag",
+          style_type: "icon",
           id: tag.id,
           slug: "somecooltag",
           ref: "somecooltag",
@@ -105,6 +113,8 @@ RSpec.describe PrettyText::Helpers do
           text: "Some Awesome Category",
           description: "Really great stuff here",
           colors: [category.color],
+          style_type: "square",
+          emoji: nil,
           icon: "folder",
           id: category.id,
           slug: "someawesomecategory",
@@ -128,8 +138,10 @@ RSpec.describe PrettyText::Helpers do
           relative_url: private_category.url,
           text: "Manager Hideout",
           description: nil,
-          colors: [private_category.color],
+          style_type: "square",
+          emoji: nil,
           icon: "folder",
+          colors: [private_category.color],
           id: private_category.id,
           slug: "secretcategory",
           ref: "secretcategory",
@@ -153,6 +165,28 @@ RSpec.describe PrettyText::Helpers do
       guardian_system = Guardian.new(Discourse.system_user)
       Guardian.expects(:new).with(Discourse.system_user).returns(guardian_system)
       PrettyText::Helpers.hashtag_lookup("somecooltag", nil, %w[category tag])
+    end
+
+    it "falls back to system user when cooking_user is deleted" do
+      user.destroy
+
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag]),
+      ).to eq(
+        {
+          relative_url: tag.url,
+          text: "somecooltag",
+          description: "Coolest things ever",
+          colors: nil,
+          emoji: nil,
+          icon: "tag",
+          style_type: "icon",
+          id: tag.id,
+          slug: "somecooltag",
+          ref: "somecooltag::tag",
+          type: "tag",
+        },
+      )
     end
   end
 end

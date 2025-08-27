@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelThreadsController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:public_channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
   before do
@@ -42,7 +42,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
 
       context "when the channel_id does not match the thread id" do
-        fab!(:other_channel) { Fabricate(:chat_channel) }
+        fab!(:other_channel, :chat_channel)
 
         it "returns 404" do
           get "/chat/api/channels/#{other_channel.id}/threads/#{thread.id}"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsMembershipsController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel_1) do
     Fabricate(:direct_message_channel, group: true, users: [current_user, other_user])
   end
@@ -29,7 +29,10 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
     end
 
     context "when users can't be added" do
-      before { channel_1.chatable.update(group: false) }
+      before do
+        channel_1.chatable.update(group: false)
+        channel_1.update(messages_count: 1)
+      end
 
       it "returns a 422" do
         post "/chat/api/channels/#{channel_1.id}/memberships",

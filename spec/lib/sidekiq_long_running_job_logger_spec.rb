@@ -20,24 +20,26 @@ RSpec.describe SidekiqLongRunningJobLogger do
           [
             "#{hostname}:1234",
             "some_sidekiq_id",
-            {
-              "run_at" => (Time.now - (60 * (stuck_sidekiq_job_minutes + 1))).to_i,
-              "payload" => {
-                "jid" => "job_1",
-                "class" => "TestWorker",
+            Sidekiq::Work.new(
+              "#{hostname}:1234",
+              "some_sidekiq_id",
+              {
+                "run_at" => (Time.now - (60 * (stuck_sidekiq_job_minutes + 1))).to_i,
+                "payload" => Sidekiq.dump_json({ "jid" => "job_1", "class" => "TestWorker" }),
               },
-            },
+            ),
           ],
           [
             "#{hostname}:1234",
             "some_other_sidekiq_id",
-            {
-              "run_at" => Time.now.to_i,
-              "payload" => {
-                "jid" => "job_2",
-                "class" => "AnotherWorker",
+            Sidekiq::Work.new(
+              "#{hostname}:1234",
+              "some_other_sidekiq_id",
+              {
+                "run_at" => Time.now.to_i,
+                "payload" => Sidekiq.dump_json({ "jid" => "job_2", "class" => "AnotherWorker" }),
               },
-            },
+            ),
           ],
         ],
       )

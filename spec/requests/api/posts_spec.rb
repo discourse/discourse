@@ -199,6 +199,11 @@ RSpec.describe "posts" do
                        reviewable_score_pending_count: {
                          type: :integer,
                        },
+                       post_localizations: {
+                         type: :array,
+                         items: {
+                         },
+                       },
                      },
                    },
                  },

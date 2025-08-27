@@ -24,6 +24,7 @@ import { fileToImageData } from "discourse/lib/media-optimization-utils";
 export default class MediaOptimizationWorkerService extends Service {
   @service appEvents;
   @service siteSettings;
+  @service capabilities;
 
   worker = null;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
@@ -64,7 +65,7 @@ export default class MediaOptimizationWorkerService extends Service {
 
       let imageData;
       try {
-        imageData = await fileToImageData(file.data);
+        imageData = await fileToImageData(file.data, this.capabilities.isIOS);
       } catch (error) {
         this.logIfDebug(error);
         return resolve();

@@ -1,14 +1,13 @@
 import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
 import discourseLater from "discourse/lib/later";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -21,7 +20,6 @@ import { escapeExpression } from "discourse/lib/utilities";
  *   Site.hashtag_configurations.
  * @param {$Element} $textarea - jQuery element to use for the autocompletion
  *   plugin to attach to, this is what will watch for the # matcher when the user is typing.
- * @param {Hash} siteSettings - The clientside site settings.
  * @param {Function} autocompleteOptions - Options to pass to the jQuery plugin. Must at least include:
  *
  *  - afterComplete - Called with the selected autocomplete option once it is selected.
@@ -34,29 +32,26 @@ import { escapeExpression } from "discourse/lib/utilities";
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
   $textarea,
-  siteSettings,
   autocompleteOptions = {}
 ) {
   $textarea.autocomplete(
     hashtagAutocompleteOptions(
       contextualHashtagConfiguration,
-      siteSettings,
       autocompleteOptions
     )
   );
 }
 
-export async function hashtagTriggerRule(textarea, { inCodeBlock }) {
+export async function hashtagTriggerRule({ inCodeBlock }) {
   return !(await inCodeBlock());
 }
 
 export function hashtagAutocompleteOptions(
   contextualHashtagConfiguration,
-  siteSettings,
   autocompleteOptions
 ) {
   return {
-    template: findRawTemplate("hashtag-autocomplete"),
+    template: renderHashtagAutocomplete,
     key: "#",
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
@@ -65,10 +60,9 @@ export function hashtagAutocompleteOptions(
       if (term.match(/\s/)) {
         return null;
       }
-      return _searchGeneric(term, siteSettings, contextualHashtagConfiguration);
+      return _searchGeneric(term, contextualHashtagConfiguration);
     },
-    triggerRule: async (textarea, opts) =>
-      await hashtagTriggerRule(textarea, opts),
+    triggerRule: async (_, opts) => await hashtagTriggerRule(opts),
     ...autocompleteOptions,
   };
 }
@@ -86,7 +80,7 @@ function _updateSearchCache(term, results) {
 // Note that the search term is _not_ required here, and we follow special
 // logic similar to @mentions when there is no search term, to show some
 // useful default categories, tags, etc.
-function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
+function _searchGeneric(term, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
     currentSearch = null;
@@ -127,13 +121,27 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
 
-        const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML({
+        let opts = {
           preloaded: true,
           colors: result.colors,
           icon: result.icon,
           id: result.id,
-        });
+        };
+
+        if (result.style_type) {
+          opts.style_type = result.style_type;
+        }
+
+        if (result.icon) {
+          opts.icon = result.icon;
+        }
+
+        if (result.emoji) {
+          opts.emoji = result.emoji;
+        }
+
+        const hashtagType = getHashtagTypeClassesNew()[result.type];
+        result.icon = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })
@@ -141,4 +149,34 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
+}
+
+function renderOption(option) {
+  const metaText = option.secondary_text
+    ? `<span class="hashtag-autocomplete__meta-text">(${escapeExpression(option.secondary_text)})</span>`
+    : "";
+
+  return `
+    <li class="hashtag-autocomplete__option">
+      <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href>
+        ${option.icon}
+        <span class="hashtag-autocomplete__text">
+          ${option.text}
+          ${metaText}
+        </span>
+      </a>
+    </li>
+  `;
+}
+
+export default function renderHashtagAutocomplete({ options }) {
+  return `
+    <div class="autocomplete hashtag-autocomplete">
+      <div class="hashtag-autocomplete__fadeout">
+        <ul>
+          ${options.map(renderOption).join("")}
+        </ul>
+      </div>
+    </div>
+  `;
 }

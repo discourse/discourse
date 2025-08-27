@@ -1,11 +1,9 @@
-import { helperContext, registerRawHelper } from "discourse/lib/helpers";
+import { helperContext } from "discourse/lib/helpers";
 
 function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch
   return dt.getTime() / 86400000;
 }
-
-registerRawHelper("cold-age-class", coldAgeClass);
 
 export default function coldAgeClass(dt, params = {}) {
   let className = params["class"] || "age";

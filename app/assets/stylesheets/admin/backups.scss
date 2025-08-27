@@ -1,16 +1,19 @@
+@use "lib/viewport";
+
 // Styles for /admin/backups
 .admin-backups {
   .before-backup-list-outlet {
     margin-top: 1em;
   }
 
-  .d-admin-table {
-    .backup-size {
-      text-align: right;
+  .d-table {
+    .d-table__cell.--overview {
+      max-width: 65%;
+      text-wrap: balance;
     }
 
-    .backup-filename {
-      text-wrap: balance;
+    .backup-size {
+      text-align: right;
     }
   }
 }
@@ -30,11 +33,12 @@
   margin-left: auto;
   margin-top: 1em;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     margin: 1.25em 0 0;
   }
 }
 
 label.admin-backups-upload {
   font-weight: 400;
+  position: relative;
 }

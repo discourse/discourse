@@ -10,6 +10,7 @@ import DAFieldLabel from "./da-field-label";
 
 export default class GroupField extends BaseField {
   @service store;
+
   @tracked allCustomFields = [];
 
   <template>

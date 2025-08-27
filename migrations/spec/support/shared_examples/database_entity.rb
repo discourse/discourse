@@ -5,7 +5,7 @@ RSpec.shared_examples "a database entity" do
     expect(subject).to have_constant(:SQL)
   end
 
-  it "responds to .create!" do
-    expect(subject).to respond_to(:create!)
+  it "responds to .create" do
+    expect(subject).to respond_to(:create)
   end
 end

@@ -44,7 +44,7 @@ export default class DModal extends Component {
   });
 
   setupModalBody = modifierFn((el) => {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 
@@ -110,6 +110,10 @@ export default class DModal extends Component {
 
   get autofocus() {
     return this.args.autofocus ?? true;
+  }
+
+  get mobileDismissable() {
+    return this.site.mobileView && this.dismissable;
   }
 
   shouldTriggerClickOnEnter(event) {
@@ -193,6 +197,15 @@ export default class DModal extends Component {
       this.animating = false;
     }
 
+    if (this.site.desktopView) {
+      try {
+        this.animating = true;
+        await this.#animatePopOff();
+      } finally {
+        this.animating = false;
+      }
+    }
+
     this.args.closeModal({ initiatedBy });
   }
 
@@ -264,6 +277,33 @@ export default class DModal extends Component {
     ).finished;
   }
 
+  async #animatePopOff() {
+    const backdrop = this.wrapperElement.nextElementSibling;
+
+    if (!backdrop) {
+      return;
+    }
+
+    await Promise.all([
+      this.modalContainer.animate(
+        [
+          { transform: "scale(1)", opacity: 1, offset: 0 },
+          { transform: "scale(0)", opacity: 0, offset: 1 },
+        ],
+        {
+          fill: "forwards",
+          duration: getMaxAnimationTimeMs(300),
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        }
+      ).finished,
+      backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
+        fill: "forwards",
+        duration: getMaxAnimationTimeMs(300),
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+      }).finished,
+    ]);
+  }
+
   <template>
     {{! template-lint-disable no-invalid-interactive }}
 
@@ -272,7 +312,9 @@ export default class DModal extends Component {
       @inline={{@inline}}
       @append={{true}}
     >
-      {{htmlClass "modal-open"}}
+      {{#unless @inline}}
+        {{htmlClass "modal-open"}}
+      {{/unless}}
       <this.dynamicElement
         class={{concatClass
           "modal"
@@ -304,7 +346,14 @@ export default class DModal extends Component {
             )
           }}
             <div
-              class={{concatClass "d-modal__header" @headerClass}}
+              class={{concatClass
+                "d-modal__header"
+                (if
+                  (and this.mobileDismissable (has-block "headerPrimaryAction"))
+                  "--has-primary-action"
+                )
+                @headerClass
+              }}
               {{swipe
                 onDidSwipe=this.handleSwipe
                 onDidEndSwipe=this.handleSwipeEnded
@@ -314,11 +363,7 @@ export default class DModal extends Component {
               {{yield to="headerAboveTitle"}}
 
               {{#if
-                (and
-                  this.site.mobileView
-                  this.dismissable
-                  (has-block "headerPrimaryAction")
-                )
+                (and this.mobileDismissable (has-block "headerPrimaryAction"))
               }}
                 <div class="d-modal__dismiss-action">
                   <DButton

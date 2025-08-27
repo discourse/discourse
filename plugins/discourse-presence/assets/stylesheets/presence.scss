@@ -1,14 +1,15 @@
 .topic-above-footer-buttons-outlet.presence {
-  min-height: 2.5em; // height of the avatars, prevents layout shift
+  // slightly larger than avatars to prevent layout shift
+  min-height: calc(var(--avatar-min-height) + 1px);
+  padding: var(--space-2) var(--space-2) var(--space-2) 0;
   margin: var(--below-topic-margin) 0;
 }
 
 .presence-users {
-  background-color: var(--secondary);
+  // ideally you don't want to add padding or margin here,
+  // because you may cause a layout shift on presence appearance
   color: var(--primary-medium);
   display: flex;
-  padding: 0.5em;
-  padding-left: 0;
   border-radius: var(--d-border-radius);
 
   span.presence-text {
@@ -76,7 +77,7 @@
 
 // When topic progress is visible in the posts grid area and is sticky,
 // adjust positioning so presence is on the same line
-@media screen and (max-width: 924px) {
+@media screen and (width <= 924px) {
   body:has(.topic-navigation.with-topic-progress)
     .topic-above-footer-buttons-outlet.presence {
     margin-top: -3.2em;

@@ -5,18 +5,32 @@ module DiscourseAutomation
     requires_plugin DiscourseAutomation::PLUGIN_NAME
 
     def index
-      automations = DiscourseAutomation::Automation.order(:name).all
+      automations =
+        DiscourseAutomation::Automation
+          .strict_loading
+          .includes(:fields, :pending_automations, :last_updated_by)
+          .order(:name)
+          .limit(500)
+          .all
       serializer =
         ActiveModel::ArraySerializer.new(
           automations,
           each_serializer: DiscourseAutomation::AutomationSerializer,
           root: "automations",
+          scope: {
+            stats: DiscourseAutomation::Stat.fetch_period_summaries,
+          },
         ).as_json
       render_json_dump(serializer)
     end
 
     def show
-      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation =
+        DiscourseAutomation::Automation.includes(
+          :fields,
+          :pending_automations,
+          :last_updated_by,
+        ).find(params[:id])
       render_serialized_automation(automation)
     end
 
@@ -40,7 +54,11 @@ module DiscourseAutomation
     def update
       params.require(:automation)
 
-      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation =
+        DiscourseAutomation::Automation.includes(:fields, :pending_automations).find(params[:id])
+
+      automation.perform_required_fields_validation = true
+
       if automation.scriptable.forced_triggerable
         params[:trigger] = automation.scriptable.forced_triggerable[:triggerable].to_s
       end
@@ -50,31 +68,35 @@ module DiscourseAutomation
           last_updated_by_id: current_user.id,
         )
 
-      if automation.trigger != params[:automation][:trigger]
+      if attributes.key?(:trigger) && automation.trigger != params[:automation][:trigger]
         params[:automation][:fields] = []
         attributes[:enabled] = false
         automation.fields.destroy_all
       end
 
-      if automation.script != params[:automation][:script]
-        attributes[:trigger] = nil
-        params[:automation][:fields] = []
-        attributes[:enabled] = false
-        automation.fields.destroy_all
-        automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
-      else
-        Array(params[:automation][:fields])
-          .reject(&:empty?)
-          .each do |field|
-            automation.upsert_field!(
-              field[:name],
-              field[:component],
-              field[:metadata],
-              target: field[:target],
-            )
-          end
+      if attributes.key?(:script)
+        if automation.script != params[:automation][:script]
+          attributes[:trigger] = nil
+          params[:automation][:fields] = []
+          attributes[:enabled] = false
+          automation.fields.destroy_all
+          automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
+        else
+          Array(params[:automation][:fields])
+            .reject(&:empty?)
+            .each do |field|
+              automation.upsert_field!(
+                field[:name],
+                field[:component],
+                field[:metadata],
+                target: field[:target],
+              )
+            end
 
-        automation.tap { |r| r.assign_attributes(attributes) }.save!
+          automation.update!(attributes)
+        end
+      else
+        automation.update!(attributes)
       end
 
       render_serialized_automation(automation)

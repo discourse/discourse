@@ -177,14 +177,14 @@ RSpec.describe ExtraLocalesController do
     it "doesn't call bundle_js more than once for the same locale and bundle" do
       locale = :de
       ExtraLocalesController.expects(:bundle_js).with("admin", locale:).returns("admin_js DE").once
-      expected_hash_de = Digest::SHA1.hexdigest("admin_js DE")
+      expected_hash_de = Digest::SHA1.hexdigest("#{described_class::CACHE_VERSION}|admin_js DE")
 
       expect(ExtraLocalesController.bundle_js_hash("admin", locale:)).to eq(expected_hash_de)
       expect(ExtraLocalesController.bundle_js_hash("admin", locale:)).to eq(expected_hash_de)
 
       locale = :fr
       ExtraLocalesController.expects(:bundle_js).with("admin", locale:).returns("admin_js FR").once
-      expected_hash_fr = Digest::SHA1.hexdigest("admin_js FR")
+      expected_hash_fr = Digest::SHA1.hexdigest("#{described_class::CACHE_VERSION}|admin_js FR")
 
       expect(ExtraLocalesController.bundle_js_hash("admin", locale:)).to eq(expected_hash_fr)
       expect(ExtraLocalesController.bundle_js_hash("admin", locale:)).to eq(expected_hash_fr)
@@ -197,7 +197,7 @@ RSpec.describe ExtraLocalesController do
         .with("wizard", locale:)
         .returns("wizard_js DE")
         .once
-      expected_hash_de = Digest::SHA1.hexdigest("wizard_js DE")
+      expected_hash_de = Digest::SHA1.hexdigest("#{described_class::CACHE_VERSION}|wizard_js DE")
 
       expect(ExtraLocalesController.bundle_js_hash("wizard", locale:)).to eq(expected_hash_de)
       expect(ExtraLocalesController.bundle_js_hash("wizard", locale:)).to eq(expected_hash_de)
@@ -230,7 +230,7 @@ RSpec.describe ExtraLocalesController do
 
     it "returns both JS and its hash for a given bundle" do
       expect(described_class.bundle_js_with_hash("admin", locale: :en)).to eq(
-        ["JS", Digest::SHA1.hexdigest("JS")],
+        ["JS", Digest::SHA1.hexdigest("#{described_class::CACHE_VERSION}|JS")],
       )
     end
   end

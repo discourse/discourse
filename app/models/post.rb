@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
+  include Localizable
 
   self.ignored_columns = [
     "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
@@ -552,6 +553,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def is_last_reply?
+    topic.try(:highest_post_number) == post_number && post_number != 1
+  end
+
   def is_category_description?
     topic.present? && topic.is_category_topic? && is_first_post?
   end
@@ -623,6 +628,7 @@ class Post < ActiveRecord::Base
       )
 
     hiding_again = hidden_at.present?
+    should_reset_bumped_at = is_last_reply? && !whisper?
 
     Post.transaction do
       self.skip_validation = true
@@ -633,7 +639,7 @@ class Post < ActiveRecord::Base
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      if !any_visible_posts_in_topic
+      if is_first_post? || !any_visible_posts_in_topic
         self.topic.update_status(
           "visible",
           false,
@@ -673,6 +679,8 @@ class Post < ActiveRecord::Base
         message_options: options,
       )
     end
+
+    topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def unhide!
@@ -696,6 +704,8 @@ class Post < ActiveRecord::Base
         )
         should_update_user_stat = false
       end
+
+      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
@@ -851,6 +861,7 @@ class Post < ActiveRecord::Base
 
     edit_reason = I18n.t("change_owner.post_revision_text", locale: SiteSetting.default_locale)
 
+    old_user = user
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
@@ -859,7 +870,10 @@ class Post < ActiveRecord::Base
       skip_validations: true,
     )
 
-    topic.update_columns(last_post_user_id: new_user.id) if post_number == topic.highest_post_number
+    result = topic.update_columns(last_post_user_id: new_user.id) if post_number ==
+      topic.highest_post_number
+    DiscourseEvent.trigger(:post_owner_changed, self, old_user, new_user)
+    result
   end
 
   before_create { PostCreator.before_create_tasks(self) }
@@ -882,6 +896,8 @@ class Post < ActiveRecord::Base
       self.baked_at = Time.zone.now
       self.baked_version = BAKED_VERSION
     end
+
+    self.locale = nil if locale.blank?
   end
 
   def advance_draft_sequence
@@ -1154,6 +1170,7 @@ class Post < ActiveRecord::Base
         "track/@src",
         "video/@poster",
         "div/@data-video-src",
+        "div/@data-original-video-src",
       )
 
     links =
@@ -1317,6 +1334,14 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def has_localization?(locale = I18n.locale)
+    get_localization(locale).present?
+  end
+
+  def in_user_locale?
+    LocaleNormalizer.is_same?(locale, I18n.locale)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1398,6 +1423,7 @@ end
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #  outbound_message_id     :string
+#  locale                  :string(20)
 #
 # Indexes
 #
@@ -1405,9 +1431,13 @@ end
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
+#  index_posts_on_last_editor_id                          (last_editor_id) WHERE (last_editor_id IS NOT NULL)
+#  index_posts_on_locked_by_id                            (locked_by_id) WHERE (locked_by_id IS NOT NULL)
+#  index_posts_on_reply_to_user_id                        (reply_to_user_id) WHERE (reply_to_user_id IS NOT NULL)
 #  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE

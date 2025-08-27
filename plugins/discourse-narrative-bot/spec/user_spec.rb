@@ -16,6 +16,7 @@ RSpec.describe User do
     stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
+    SiteSetting.disable_discourse_narrative_bot_welcome_post = false
   end
 
   describe "when a user is created" do
@@ -114,7 +115,7 @@ RSpec.describe User do
     end
 
     context "when user is anonymous?" do
-      before { SiteSetting.allow_anonymous_posting = true }
+      before { SiteSetting.allow_anonymous_mode = true }
 
       it "should initiate bot for real user only" do
         user = Fabricate(:user, trust_level: 1)

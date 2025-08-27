@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
-import { cancel, scheduleOnce } from "@ember/runloop";
+import { getOwner } from "@ember/owner";
+import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -15,16 +16,15 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { isTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -46,6 +46,8 @@ import Composer, {
   SAVE_LABELS,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import PostLocalization from "discourse/models/post-localization";
+import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -80,12 +82,6 @@ async function loadDraft(store, opts = {}) {
 
 const _composerSaveErrorCallbacks = [];
 
-let _checkDraftPopup = !isTesting();
-
-export function toggleCheckDraftPopup(enabled) {
-  _checkDraftPopup = enabled;
-}
-
 export function clearComposerSaveErrorCallback() {
   _composerSaveErrorCallbacks.length = 0;
 }
@@ -107,13 +103,10 @@ export default class ComposerService extends Service {
   @service site;
   @service siteSettings;
   @service store;
+  @service toasts;
 
-  @tracked
-  showPreview = this.site.mobileView
-    ? false
-    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
-
-  @tracked allowPreview = true;
+  @tracked allowPreview = false;
+  @tracked selectedTranslationLocale = null;
   checkedMessages = false;
   messageCount = null;
   showEditReason = false;
@@ -131,7 +124,6 @@ export default class ComposerService extends Service {
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
-  @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
   @alias("site.categoriesList") categories;
   @alias("topicController.model") topicModel;
   @reads("currentUser.staff") isStaffUser;
@@ -139,12 +131,32 @@ export default class ComposerService extends Service {
   @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
   @or("replyingToWhisper", "model.whisper") isWhispering;
 
+  @tracked _showPreview;
+
+  get showPreview() {
+    return (
+      this._showPreview ??
+      (this.site.mobileView
+        ? false
+        : (this.keyValueStore.get("composer.showPreview") || "true") === "true")
+    );
+  }
+
+  set showPreview(value) {
+    this._showPreview = value;
+  }
+
   get topicController() {
-    return getOwnerWithFallback(this).lookup("controller:topic");
+    return getOwner(this).lookup("controller:topic");
   }
 
   get isPreviewVisible() {
     return this.showPreview && this.allowPreview;
+  }
+
+  @observes("showPreview", "allowPreview")
+  previewVisibilityChanged() {
+    this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
   }
 
   get isOpen() {
@@ -196,6 +208,22 @@ export default class ComposerService extends Service {
       !this.get("model.replyingToTopic") &&
       !this.get("model.editingPost")
     );
+  }
+
+  get replyingToUserId() {
+    if (this.get("model.editingPost")) {
+      const user = this.get("model.post.reply_to_user");
+      if (user) {
+        return user.id;
+      }
+    }
+
+    const user = this.get("model.post.user");
+    if (user) {
+      return user.id;
+    }
+
+    return this.get("model.topic.user_id");
   }
 
   get formTemplateInitialValues() {
@@ -257,10 +285,7 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
-    const storedVal = keyValueStore.get("toolbar-enabled");
+    const storedVal = this.keyValueStore.get("toolbar-enabled");
     if (this._toolbarEnabled === undefined && storedVal === undefined) {
       // iPhone 6 is 375, anything narrower and toolbar should
       // be default disabled.
@@ -272,11 +297,8 @@ export default class ComposerService extends Service {
   }
 
   set showToolbar(val) {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
     this._toolbarEnabled = val;
-    keyValueStore.set({
+    this.keyValueStore.set({
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });
@@ -397,11 +419,10 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
+          name: "quote",
+          action: this.importQuote,
+          icon: "far-comment",
+          label: "composer.quote_post_title",
         })
       );
 
@@ -433,16 +454,6 @@ export default class ComposerService extends Service {
           })
         );
       }
-
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
 
       options.push(
         this._setupPopupMenuOption({
@@ -598,7 +609,9 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    document.querySelector("textarea.d-editor-input")?.focus();
+    next(() =>
+      document.querySelector(".d-editor-container .d-editor-input")?.focus()
+    );
 
     if (insertText) {
       this.model.appendText(insertText, null, { new_line: true });
@@ -636,6 +649,12 @@ export default class ComposerService extends Service {
   @action
   removeFullScreenExitPrompt() {
     this.set("model.showFullScreenExitPrompt", false);
+  }
+
+  @action
+  async saveAndClose(event) {
+    event?.preventDefault();
+    await this.saveAndCloseComposer();
   }
 
   @action
@@ -810,11 +829,6 @@ export default class ComposerService extends Service {
   }
 
   @action
-  toggleInvisible() {
-    this.toggleProperty("model.unlistTopic");
-  }
-
-  @action
   toggleToolbar() {
     this.toggleProperty("showToolbar");
   }
@@ -826,13 +840,7 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (
-      isEmpty(composer?.reply) &&
-      isEmpty(composer?.title) &&
-      !this.hasFormTemplate
-    ) {
-      this.close();
-    } else if (composer?.viewOpenOrFullscreen) {
+    if (composer?.viewOpenOrFullscreen) {
       this.shrink();
     } else {
       await this.cancelComposer();
@@ -1023,6 +1031,10 @@ export default class ComposerService extends Service {
       return;
     }
 
+    if (this.model.action === Composer.ADD_TRANSLATION) {
+      return this.saveTranslation();
+    }
+
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
       this.set("model.isWarning", false);
@@ -1174,6 +1186,7 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh");
             return result;
           });
@@ -1181,6 +1194,7 @@ export default class ComposerService extends Service {
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10),
           });
@@ -1188,11 +1202,14 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
         } else {
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh");
         }
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("composer:created-post");
+          this.appEvents.trigger("composer:created-post", {
+            postId: result.responseJson.post.id,
+          });
           this.appEvents.trigger(
             "post:highlight",
             result.payload.post_number,
@@ -1254,12 +1271,51 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:posted", staged);
 
     this.messageBus.pause();
     promise.finally(() => this.messageBus.resume());
 
     return promise;
+  }
+
+  async saveTranslation() {
+    this.set("model.loading", true);
+
+    this.set("lastValidatedAt", Date.now());
+    this.appEvents.trigger("composer-service:last-validated-at-updated", {
+      model: this.model,
+    });
+
+    try {
+      await PostLocalization.createOrUpdate(
+        this.model.post.id,
+        this.selectedTranslationLocale,
+        this.model.reply
+      );
+
+      if (this.model.post.firstPost) {
+        await TopicLocalization.createOrUpdate(
+          this.model.post.topic_id,
+          this.selectedTranslationLocale,
+          this.model.title
+        );
+      }
+
+      this.close();
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("post.localizations.success"),
+        },
+      });
+      this.selectedTranslationLocale = null;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.set("model.loading", false);
+    }
   }
 
   @action
@@ -1280,7 +1336,7 @@ export default class ComposerService extends Service {
 
    @method open
    @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage, addTranslation
    @param {String} opts.draftKey
    @param {Post} [opts.post] The post we're replying to
    @param {Topic} [opts.topic] The topic we're replying to
@@ -1293,6 +1349,8 @@ export default class ComposerService extends Service {
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
+   @param {String} [opts.hijackPreview] Option to hijack the preview with a custom component, you must pass { component: CustomPreviewComponent, model: { ... } }
+   @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    **/
   async open(opts = {}) {
     if (!opts.draftKey) {
@@ -1320,6 +1378,14 @@ export default class ComposerService extends Service {
     this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     this.set("skipFormTemplate", !!opts.skipFormTemplate);
+
+    if (opts.hijackPreview) {
+      this.set("hijackPreview", opts.hijackPreview);
+    }
+
+    if (opts.selectedTranslationLocale) {
+      this.selectedTranslationLocale = opts.selectedTranslationLocale;
+    }
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
@@ -1376,8 +1442,10 @@ export default class ComposerService extends Service {
           }
         }
 
-        await this.cancelComposer(opts);
-        await this.open(opts);
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
         return;
       }
 
@@ -1386,18 +1454,6 @@ export default class ComposerService extends Service {
       }
 
       await this._setModel(composerModel, opts);
-
-      // otherwise, do the draft check async
-      if (!opts.draft) {
-        let data = await Draft.get(opts.draftKey);
-        data = await this.confirmDraftAbandon(data);
-
-        if (data.draft) {
-          opts.draft = data.draft;
-          opts.draftSequence = data.draft_sequence;
-          await this.open(opts);
-        }
-      }
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
@@ -1416,6 +1472,7 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
+      locale: null,
     });
   }
 
@@ -1458,6 +1515,7 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
+      locale: this._initialLocale(opts),
     });
 
     if (!this.model.targetRecipients) {
@@ -1548,57 +1606,13 @@ export default class ComposerService extends Service {
     this.appEvents.trigger("draft:destroyed", key);
   }
 
-  confirmDraftAbandon(data) {
-    if (!data.draft) {
-      return data;
-    }
-
-    // do not show abandon dialog if old draft is clean
-    const draft = JSON.parse(data.draft);
-    if (draft.reply === draft.originalText) {
-      data.draft = null;
-      return data;
-    }
-
-    if (!_checkDraftPopup) {
-      data.draft = null;
-      return data;
-    }
-
-    return new Promise((resolve) => {
-      this.dialog.alert({
-        message: i18n("drafts.abandon.confirm"),
-        buttons: [
-          {
-            label: i18n("drafts.abandon.yes_value"),
-            class: "btn-danger",
-            icon: "trash-can",
-            action: () => {
-              this.destroyDraft(data.draft_sequence).finally(() => {
-                data.draft = null;
-                resolve(data);
-              });
-            },
-          },
-          {
-            label: i18n("drafts.abandon.no_value"),
-            class: "btn-resume-editing",
-            action: () => resolve(data),
-          },
-        ],
-      });
-    });
-  }
-
   cancelComposer(opts = {}) {
     this.skipAutoSave = true;
 
-    if (this._saveDraftDebounce) {
-      cancel(this._saveDraftDebounce);
-    }
+    cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
-      if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
+      if (this.get("model.anyDirty")) {
         const overridesDraft =
           this.model.composeState === Composer.OPEN &&
           this.model.draftKey === opts.draftKey &&
@@ -1615,7 +1629,7 @@ export default class ComposerService extends Service {
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
-                  resolve();
+                  resolve(true);
                 });
             },
             onSaveDraft: () => {
@@ -1623,8 +1637,9 @@ export default class ComposerService extends Service {
               this.model.clearState();
               this.close();
               this.appEvents.trigger("composer:cancelled");
-              return resolve();
+              return resolve(true);
             },
+            onKeepEditing: () => resolve(false),
           },
         });
       } else {
@@ -1644,6 +1659,23 @@ export default class ComposerService extends Service {
     });
   }
 
+  saveAndCloseComposer() {
+    // Always save the draft if the user had typed something
+    // or had started setting up a title/tags/category
+    if (this.model.anyDirty) {
+      this.skipAutoSave = true;
+      this._saveDraft(true);
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      this.skipAutoSave = false;
+      return true;
+    } else {
+      // Otherwise just close the composer and discard any empty draft
+      return this.cancelComposer();
+    }
+  }
+
   unshrink() {
     this.model.set("composeState", Composer.OPEN);
     document.documentElement.style.setProperty(
@@ -1653,18 +1685,12 @@ export default class ComposerService extends Service {
   }
 
   shrink() {
-    if (
-      this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
-      this.hasFormTemplate
-    ) {
-      this.collapse();
-    } else {
-      this.close();
-    }
+    this.collapse();
   }
 
-  _saveDraft() {
+  _saveDraft(showToast = false) {
+    cancel(this._saveDraftDebounce);
+
     if (!this.model) {
       return;
     }
@@ -1681,10 +1707,22 @@ export default class ComposerService extends Service {
         }
       }
 
-      this._saveDraftPromise = this.model.saveDraft().finally(() => {
-        this._lastDraftSaved = Date.now();
-        this._saveDraftPromise = null;
-      });
+      this._saveDraftPromise = this.model
+        .saveDraft()
+        .then(() => {
+          if (showToast) {
+            this.toasts.success({
+              duration: "short",
+              data: {
+                message: i18n("composer.draft_saved"),
+              },
+            });
+          }
+        })
+        .finally(() => {
+          this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
+        });
     }
   }
 
@@ -1798,6 +1836,19 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  _initialLocale(opts) {
+    if (opts?.locale) {
+      return opts.locale;
+    }
+
+    // inherit post locale when editing, not when replying
+    if (opts?.post?.locale && opts.action === Composer.EDIT) {
+      return opts.post.locale;
+    }
+
+    return "";
   }
 }
 

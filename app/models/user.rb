@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  self.ignored_columns = [
-    :salt, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_hash, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_algorithm, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   include Searchable
   include Roleable
   include HasCustomFields
@@ -73,7 +66,10 @@ class User < ActiveRecord::Base
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
-  has_one :anonymous_user_master, class_name: "AnonymousUser", dependent: :destroy
+  has_one :anonymous_user_master,
+          class_name: "AnonymousUser",
+          dependent: :destroy,
+          strict_loading: false
   has_one :anonymous_user_shadow,
           ->(record) { where(active: true) },
           foreign_key: :master_user_id,
@@ -260,6 +256,9 @@ class User < ActiveRecord::Base
 
   # Information if user was authenticated with OAuth
   attr_accessor :authenticated_with_oauth
+
+  # Flag used when admin is impersonating a user
+  attr_accessor :is_impersonating
 
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
@@ -930,6 +929,12 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def remove_password
+    raise Discourse::InvalidAccess if associated_accounts.blank? && passkey_credential_ids.blank?
+
+    user_password.destroy if user_password
+  end
+
   def password
     "" # so that validator doesn't complain that a password attribute doesn't exist
   end
@@ -994,11 +999,12 @@ class User < ActiveRecord::Base
   end
 
   def new_user_posting_on_first_day?
-    !staff? && trust_level < TrustLevel[2] &&
-      (
-        trust_level == TrustLevel[0] || self.first_post_created_at.nil? ||
-          self.first_post_created_at >= 24.hours.ago
-      )
+    return false if staff?
+    return false if trust_level >= TrustLevel[2]
+    if self.first_post_created_at.present? && self.first_post_created_at <= 24.hours.ago
+      return false
+    end
+    true
   end
 
   def new_user?
@@ -1182,7 +1188,7 @@ class User < ActiveRecord::Base
     normalized_username = normalize_username(username)
 
     # TODO it may be worth caching this in a distributed cache, should be benched
-    if SiteSetting.external_system_avatars_enabled
+    if SiteSetting.external_system_avatars_url.present?
       url = SiteSetting.external_system_avatars_url.dup
       url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
       url.gsub! "{color}", letter_avatar_color(normalized_username)
@@ -1310,6 +1316,10 @@ class User < ActiveRecord::Base
     !!(suspended_till && suspended_till > Time.zone.now)
   end
 
+  def silenced_till
+    main_user_record[:silenced_till]
+  end
+
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
   end
@@ -1319,7 +1329,7 @@ class User < ActiveRecord::Base
   end
 
   def silence_reason
-    silenced_record.try(:details) if silenced?
+    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
   end
 
   def silenced_at
@@ -1335,12 +1345,14 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    suspend_record.try(:details) if suspended?
+    text = suspend_record.try(:details) if suspended?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
   end
 
   def suspend_reason
     if details = full_suspend_reason
-      return details.split("\n")[0]
+      return details.split("<br>")[0]
     end
 
     nil
@@ -1569,9 +1581,25 @@ class User < ActiveRecord::Base
   USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
-    field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
+    fields =
+      if field_ids.nil?
+        @all_user_field_types ||= UserField.pluck(:id, :field_type)
+      else
+        UserField.where(id: field_ids).pluck(:id, :field_type)
+      end
 
-    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
+    fields
+      .map do |fid, ftype|
+        value =
+          if ftype == "confirm"
+            !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          else
+            custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+          end
+
+        [fid.to_s, value]
+      end
+      .to_h
   end
 
   def validatable_user_fields_values
@@ -1618,6 +1646,10 @@ class User < ActiveRecord::Base
       .count
   end
 
+  def number_of_silencings
+    UserHistory.for(self, :silence_user).count
+  end
+
   def number_of_suspensions
     UserHistory.for(self, :suspend_user).count
   end
@@ -1636,7 +1668,7 @@ class User < ActiveRecord::Base
   end
 
   def anonymous?
-    SiteSetting.allow_anonymous_posting && trust_level >= 1 && !!anonymous_user_master
+    SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
   def is_singular_admin?
@@ -2138,6 +2170,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def main_user_record
+    anonymous? ? master_user : self
+  end
 
   def set_default_sidebar_section_links(update: false)
     return if staged? || bot?

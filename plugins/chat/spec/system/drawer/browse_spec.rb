@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Drawer - Browse", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:channel_1, :chat_channel)
 
   before do
     chat_system_bootstrap

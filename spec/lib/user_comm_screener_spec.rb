@@ -23,7 +23,7 @@ RSpec.describe UserCommScreener do
   end
   fab!(:target_user4) { Fabricate(:user, username: "janescreen") }
   fab!(:target_user5) { Fabricate(:user, username: "maryscreen") }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   it "allows initializing the class with both an acting_user_id and an acting_user" do
     acting_user = Fabricate(:user)
@@ -45,7 +45,7 @@ RSpec.describe UserCommScreener do
   end
 
   context "when the actor is not staff" do
-    fab!(:acting_user) { Fabricate(:user) }
+    fab!(:acting_user, :user)
     fab!(:muted_user) { Fabricate(:muted_user, user: target_user1, muted_user: acting_user) }
     fab!(:ignored_user) do
       Fabricate(
@@ -133,7 +133,7 @@ RSpec.describe UserCommScreener do
   end
 
   context "when the actor is staff" do
-    fab!(:acting_user) { Fabricate(:admin) }
+    fab!(:acting_user, :admin)
     fab!(:muted_user) { Fabricate(:muted_user, user: target_user1, muted_user: acting_user) }
     fab!(:ignored_user) do
       Fabricate(
@@ -209,7 +209,7 @@ RSpec.describe UserCommScreener do
   end
 
   describe "actor preferences" do
-    fab!(:acting_user) { Fabricate(:user) }
+    fab!(:acting_user, :user)
     fab!(:muted_user) { Fabricate(:muted_user, user: acting_user, muted_user: target_user1) }
     fab!(:ignored_user) do
       Fabricate(

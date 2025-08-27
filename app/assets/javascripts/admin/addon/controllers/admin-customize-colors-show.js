@@ -8,6 +8,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminCustomizeColorsShowController extends Controller {
   @service dialog;
   @service router;
+
   onlyOverridden = false;
 
   @computed("model.colors.[]", "onlyOverridden")
@@ -59,7 +60,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
     );
     newColorScheme.save().then(() => {
       this.allColors.pushObject(newColorScheme);
-      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors-show", newColorScheme);
     });
   }
 
@@ -69,14 +70,15 @@ export default class AdminCustomizeColorsShowController extends Controller {
   }
 
   @action
-  applyUserSelectable() {
-    this.model.updateUserSelectable(this.get("model.user_selectable"));
+  applyUserSelectable(value) {
+    this.model.set("user_selectable", value);
+    this.model.updateUserSelectable(value);
   }
 
   @action
   destroy() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.customize.colors.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.colors.delete_confirm"),
       didConfirm: () => {
         return this.model.destroy().then(() => {
           this.allColors.removeObject(this.model);

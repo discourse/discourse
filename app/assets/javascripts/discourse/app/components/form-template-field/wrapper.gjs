@@ -2,12 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import Yaml from "js-yaml";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
 import DropdownField from "./dropdown";
 import InputField from "./input";
 import MultiSelectField from "./multi-select";
+import TagChooserField from "./tag-chooser";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
 
@@ -18,10 +21,14 @@ const FormTemplateField = <template>
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @onChange={{@onChange}}
   />
 </template>;
 
 export default class FormTemplateFieldWrapper extends Component {
+  @service composer;
+  @service siteSettings;
+
   @tracked error = null;
   @tracked parsedTemplate = null;
 
@@ -33,6 +40,7 @@ export default class FormTemplateFieldWrapper extends Component {
     dropdown: DropdownField,
     "multi-select": MultiSelectField,
     textarea: TextareaField,
+    "tag-chooser": TagChooserField,
     upload: UploadField,
   };
 
@@ -46,12 +54,18 @@ export default class FormTemplateFieldWrapper extends Component {
     } else if (this.args.id) {
       this._fetchTemplate(this.args.id);
     }
+
+    next(this, () => {
+      this.composer.set(
+        "allowPreview",
+        this.siteSettings.show_preview_for_form_templates
+      );
+    });
   }
 
   _loadTemplate(templateContent) {
     try {
       this.parsedTemplate = Yaml.load(templateContent);
-
       this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {
       this.error = e;
@@ -73,6 +87,11 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._loadTemplate(templateContent);
   }
 
+  // child components expect an onChange function
+  get onChange() {
+    return this.args.onChange || (() => {});
+  }
+
   <template>
     {{#if this.parsedTemplate}}
       <div
@@ -84,6 +103,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @component={{get this.fieldTypes content.type}}
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
+            @onChange={{this.onChange}}
           />
         {{/each}}
       </div>

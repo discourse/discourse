@@ -17,6 +17,7 @@ module Chat
               :user_email,
               type: "chat_summary",
               user_id: user.id,
+              to_address: user.email,
               force_respect_seen_recently: true,
             )
           end

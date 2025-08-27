@@ -3,6 +3,8 @@
 module Jobs
   class BackfillBadge < ::Jobs::Base
     sidekiq_options queue: "low"
+    # The queries executed by this job can be expensive so limit the concurrency to 1 per cluster
+    cluster_concurrency 1
 
     def execute(args)
       return unless SiteSetting.enable_badges

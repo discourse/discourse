@@ -218,8 +218,8 @@ RSpec.describe UserStat do
   describe ".update_distinct_badge_count" do
     fab!(:user)
     let(:stat) { user.user_stat }
-    fab!(:badge1) { Fabricate(:badge) }
-    fab!(:badge2) { Fabricate(:badge) }
+    fab!(:badge1, :badge)
+    fab!(:badge2, :badge)
 
     it "updates counts correctly" do
       expect(stat.reload.distinct_badge_count).to eq(0)

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "ยอมรับแล้ว"
+    solved:
+      title: "แก้ไขแล้ว"
+      allow_accepted_answers: "อนุญาตให้เจ้าของกระทู้และทีมงานทำเครื่องหมายการตอบกลับว่าเป็นวิธีแก้ปัญหา"
+      accept_answer: "เลือกถ้าการตอบกลับนี้ช่วยแก้ปัญหาได้"
+      accepted_description: "นี่เป็นวิธีแก้ปัญหาที่ได้รับการยอมรับสำหรับหัวข้อนี้"
+      has_no_accepted_answer: "หัวข้อนี้ไม่มีวิธีแก้ปัญหา"
+      unaccept_answer: "ยกเลิกการเลือกหากการตอบกลับนี้ไม่สามารถแก้ปัญหาได้อีกต่อไป"
+      accepted_answer: "วิธีแก้ปัญหา"
+      solution: "วิธีแก้ปัญหา"
+      solution_summary:
+        other: "การแก้ปัญหา"
+      accepted_answer_post_number: "โพสต์ %{post_number}"
+      topic_status_filter:
+        all: "ทั้งหมด"
+        solved: "แก้ไขแล้ว"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: ระดับความไว้ใจ

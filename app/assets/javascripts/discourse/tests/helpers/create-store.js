@@ -16,6 +16,7 @@ class CatAdapter extends RestAdapter {
 class CachedCatAdapter extends RestAdapter {
   primaryKey = "cat_id";
   cache = true;
+
   apiNameFor() {
     return "cat";
   }

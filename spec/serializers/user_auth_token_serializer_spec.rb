@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAuthTokenSerializer do
-  fab!(:user) { Fabricate(:moderator) }
+  fab!(:user, :moderator)
   let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: "2a02:ea00::", staff: true) }
 
   before(:each) { DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb")) }

@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { hash } from "@ember/helper";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -47,6 +48,73 @@ module(
       );
 
       assert.dom(".form-kit__control-textarea").hasAttribute("disabled");
+    });
+
+    test("dynamically updates textarea value", async function (assert) {
+      let formApi;
+      const registerApi = (api) => (formApi = api);
+
+      await render(
+        <template>
+          <Form
+            @data={{hash content="initial value"}}
+            @onRegisterApi={{registerApi}}
+            as |form|
+          >
+            <form.Field @name="content" @title="Content" as |field|>
+              <field.Textarea />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("content").hasValue("initial value");
+      assert.dom(".form-kit__control-textarea").hasValue("initial value");
+
+      // Dynamically update the value through the form API
+      formApi.set("content", "updated value");
+      await settled();
+
+      assert.form().field("content").hasValue("updated value");
+      assert.dom(".form-kit__control-textarea").hasValue("updated value");
+
+      // Update to empty string
+      formApi.set("content", "");
+      await settled();
+
+      assert.form().field("content").hasValue("");
+      assert.dom(".form-kit__control-textarea").hasValue("");
+
+      // Update to another value
+      formApi.set("content", "final value");
+      await settled();
+
+      assert.form().field("content").hasValue("final value");
+      assert.dom(".form-kit__control-textarea").hasValue("final value");
+    });
+
+    test("Ctrl/Cmd + Enter submits the form", async function (assert) {
+      let data = { foo: null };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Textarea />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await formKit().field("foo").fillIn("bar");
+      await formKit().field("foo").triggerEvent("keydown", {
+        key: "Enter",
+        ctrlKey: true,
+      });
+      await settled();
+
+      assert.deepEqual(data, { foo: "bar" });
     });
   }
 );

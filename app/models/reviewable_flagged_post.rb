@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableFlaggedPost < Reviewable
+  include ReviewableActionBuilder
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed
@@ -12,6 +14,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       ignore_and_do_nothing: :ignore,
+      delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
     }
   end
 
@@ -44,7 +47,12 @@ class ReviewableFlaggedPost < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
     return if post.blank?
+    super
+  end
 
+  # TODO (reviewable-refresh): Remove legacy method once new UI fully deployed
+  def build_legacy_combined_actions(actions, guardian, args)
+    # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
@@ -140,6 +148,11 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
+  # TODO (reviewable-refresh): Merge into build_actions post rollout.
+  def build_new_separated_actions(actions, guardian, args)
+    build_user_actions_bundle(actions, guardian)
+  end
+
   def perform_ignore(performed_by, args)
     perform_ignore_and_do_nothing(performed_by, args)
   end
@@ -171,9 +184,7 @@ class ReviewableFlaggedPost < Reviewable
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
 
-    create_result(:success, :ignored) do |result|
-      result.update_flag_stats = { status: :ignored, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :ignored, actions.map(&:user_id), false)
   end
 
   def perform_agree_and_keep(performed_by, args)
@@ -181,20 +192,12 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_options = delete_opts
-
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+    super
     agree(performed_by, args)
   end
 
-  def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts
-
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+  def perform_delete_and_block_user(performed_by, args)
+    super
     agree(performed_by, args)
   end
 
@@ -248,9 +251,7 @@ class ReviewableFlaggedPost < Reviewable
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
 
-    create_result(:success, :rejected) do |result|
-      result.update_flag_stats = { status: :disagreed, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :rejected, actions.map(&:user_id), false)
   end
 
   def perform_delete_and_ignore(performed_by, args)
@@ -310,36 +311,13 @@ class ReviewableFlaggedPost < Reviewable
       yield(actions.first) if block_given?
     end
 
-    create_result(:success, :approved) do |result|
-      result.update_flag_stats = { status: :agreed, user_ids: actions.map(&:user_id) }
-      result.recalculate_score = true
-    end
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "#{prefix}.title"
-      action.description = "#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
-    end
+    create_result(:success, :approved, actions.map(&:user_id), false)
   end
 
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
+    ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
 
     user_ids = User.staff.pluck(:id)
@@ -357,22 +335,12 @@ class ReviewableFlaggedPost < Reviewable
       user_ids.uniq!
     end
 
-    data = { topic_id: topic.id }
+    data = { topic_id: topic.id, automatic: false }
 
     MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end
 
   private
-
-  def delete_opts
-    {
-      delete_posts: true,
-      prepare_for_destroy: true,
-      block_urls: true,
-      delete_as_spammer: true,
-      context: "review",
-    }
-  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable: self)

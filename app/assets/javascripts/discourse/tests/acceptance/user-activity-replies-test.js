@@ -20,14 +20,14 @@ acceptance("User Activity / Replies - empty state", function (needs) {
   test("When looking at own replies page", async function (assert) {
     await visit(`/u/${currentUser}/activity/replies`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(i18n("user_activity.no_replies_title"));
   });
 
   test("When looking at another user's replies page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/replies`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(
         i18n("user_activity.no_replies_title_others", { username: anotherUser })
       );

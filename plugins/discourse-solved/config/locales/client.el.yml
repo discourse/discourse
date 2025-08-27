@@ -1,0 +1,64 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "αποδεκτό"
+    solutions: "Λύσεις"
+    solved:
+      title: "Λύθηκε"
+      allow_accepted_answers: "Επιτρέψτε στον κάτοχο και το προσωπικό να επισημάνει μια απάντηση ως λύση"
+      solved_topics_auto_close_hours: "Αυτόματο κλείσιμο θέματος (n) ώρες μετά την τελευταία απάντηση μόλις το θέμα επισημανθεί ως επιλυμένο."
+      accept_answer: "Επιλέξτε αν αυτή η απάντηση λύνει το πρόβλημα"
+      accepted_description: "Αυτή είναι η αποδεκτή λύση σε αυτό το θέμα"
+      has_no_accepted_answer: "Αυτό το θέμα δεν έχει καμία λύση"
+      unaccept_answer: "Απενεργοποιήστε την επιλογή αν αυτή η απάντηση δεν λύνει πλέον το πρόβλημα"
+      accepted_answer: "Λύση"
+      solution: "Λύση"
+      solution_summary:
+        one: "λύση"
+        other: "λύση"
+      accepted_answer_post_number: "ανάρτηση %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "όλα"
+        solved: "λύθηκε"
+        unsolved: "άλυτο"
+      no_solved_topics_title: "Δεν έχετε λύσει κανένα θέμα ακόμα"
+      no_solved_topics_title_others: "Ο χρήστης %{username} δεν έχει λύσει κανένα θέμα ακόμα"
+      no_answer:
+        title: Έχει απαντηθεί η ερώτηση σας;
+        description: "Επισημάνετε την απάντηση και βοηθήστε άλλους χρησιμοποιώντας το κουμπί λύσης κάτω από τη σωστή απάντηση."
+      notification:
+        title: "η ανάρτηση σας επισημάνθηκε ως λύση"
+    topic_statuses:
+      solved:
+        help: "Αυτό το θέμα έχει λύση"
+    search:
+      advanced:
+        statuses:
+          solved: "έχουν επιλυθεί"
+          unsolved: "δεν έχουν επιλυθεί"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Επιλύθηκε γεγονός"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Αποδοχή/Απόρριψη μίας λύσης.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            any: Οποιοδήποτε
+          fields:
+            maximum_trust_level:
+              label: Επίπεδο Εμπιστοσύνης

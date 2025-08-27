@@ -1,0 +1,22 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS Polling"
+  js:
+    rss_polling:
+      title: RSS Polling
+
+    admin:
+      rss_polling:
+        feed: Feed Settings
+        discourse: Discourse Settings
+        author: Author
+        feed_url: URL
+        discourse_category: Category
+        discourse_tags: Tags
+        feed_category_filter: Category Filter
+        documentation: RSS Polling configuration documentation
+        destroy_feed:
+          confirm: "Are you sure you want to delete this feed?"

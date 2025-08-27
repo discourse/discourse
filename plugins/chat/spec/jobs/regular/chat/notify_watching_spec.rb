@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::Chat::NotifyWatching do
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
   fab!(:group)
   let(:except_user_ids) { [] }
 
@@ -28,7 +28,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
   end
 
   context "for a category channel" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:membership1) do
       Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel)
     end

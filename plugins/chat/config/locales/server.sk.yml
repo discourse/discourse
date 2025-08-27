@@ -30,10 +30,12 @@ sk:
     chat_editing_grace_period_max_diff_low_trust: "Maximálny počet zmien znakov povolených v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe sa zobrazí značka (upravená) (úroveň dôveryhodnosti 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximálny počet zmien znakov povolený v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe (úroveň dôveryhodnosti 2 a vyššie) sa zobrazí značka (upravená)."
     chat_preferred_index: "Preferovaná karta pri načítaní /chat."
+    allow_chat_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť používať chat. Toto nastavenie vyžaduje, aby bolo povolené nastavenie `povoliť anonymný režim`."
     errors:
       chat_default_channel: "Predvolený chatovací kanál musí byť verejný kanál."
       direct_message_enabled_groups_invalid: "Pre toto nastavenie musíte zadať aspoň jednu skupinu. Ak nechcete, aby niekto okrem personálu posielal priame správy, vyberte skupinu zamestnancov."
       chat_upload_not_allowed_secure_uploads: "Nahrávanie četu nie je povolené, keď je povolené nastavenie lokality zabezpečeného nahrávania."
+      allow_chat_in_anonymous_mode_invalid: "Toto nastavenie vyžaduje, aby bolo najprv povolené nastavenie \"povoliť anonymný režim\"."
   system_messages:
     private_channel_title: "Kanál %{id}"
     chat_channel_archive_complete:

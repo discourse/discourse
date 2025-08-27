@@ -1,0 +1,139 @@
+# South African holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2008-11-29.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_South_Africa
+# - http://www.info.gov.za/aboutsa/holidays.htm
+---
+months:
+  0:
+  - name: Good Friday
+    regions: [za]
+    function: easter(year)
+    function_modifier: -2
+  - name: Family Day
+    regions: [za]
+    function: easter(year)
+    function_modifier: 1
+  1:
+  - name: New Year's Day
+    regions: [za]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  3:
+  - name: Human Rights Day
+    regions: [za]
+    mday: 21
+    observed: to_monday_if_sunday(date)
+  4:
+  - name: Freedom Day
+    regions: [za]
+    mday: 27
+    observed: to_monday_if_sunday(date)
+  5:
+  - name: Workers Day
+    regions: [za]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  6:
+  - name: Youth Day
+    regions: [za]
+    mday: 16
+    observed: to_monday_if_sunday(date)
+  8:
+  - name: National Women's Day
+    regions: [za]
+    mday: 9
+    observed: to_monday_if_sunday(date)
+  9:
+  - name: Heritage Day
+    regions: [za]
+    mday: 24
+    observed: to_monday_if_sunday(date)
+  12:
+  - name: Day of Reconciliation
+    regions: [za]
+    mday: 16
+    observed: to_monday_if_sunday(date)
+  - name: Christmas Day
+    regions: [za]
+    mday: 25
+    observed: to_monday_if_sunday(date)
+  - name: Day of Goodwill
+    regions: [za]
+    mday: 26
+    observed: to_weekday_if_boxing_weekend(date)
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2007-03-21'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Human Rights Day"
+  - given:
+      date: '2007-04-06'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Good Friday"
+  - given:
+      date: '2007-04-09'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Family Day"
+  - given:
+      date: '2007-04-27'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Freedom Day"
+  - given:
+      date: '2007-05-01'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Workers Day"
+  - given:
+      date: '2007-06-16'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Youth Day"
+  - given:
+      date: '2007-08-09'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "National Women's Day"
+  - given:
+      date: '2007-09-24'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Heritage Day"
+  - given:
+      date: '2007-12-16'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Day of Reconciliation"
+  - given:
+      date: '2007-12-25'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2007-12-26'
+      regions: ["za"]
+      options: ["informal"]
+    expect:
+      name: "Day of Goodwill"

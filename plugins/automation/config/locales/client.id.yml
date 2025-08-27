@@ -44,9 +44,11 @@ id:
           fields:
             restricted_tags:
               label: Label
-            restricted_category:
+            restricted_categories:
               label: Kategori
           created: Dibuat
+          with_links: Tautan
+          with_code: Kode
         pm_created:
           fields:
             restricted_user:
@@ -86,7 +88,5 @@ id:
             label: Nama
           status:
             label: Status
-          enabled:
-            label: Diaktifkan
           disabled:
             label: Dinonaktifkan

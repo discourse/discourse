@@ -61,4 +61,16 @@ describe "Discovery list", type: :system do
       expect(page).to have_no_css("button.bulk-select")
     end
   end
+
+  it "doesn't preserve query parameters when navigating" do
+    category = Fabricate(:category)
+    topics.each { |t| t.update(category_id: category.id) }
+    topics.last.update(closed: true)
+
+    visit "/latest?status=closed"
+    expect(discovery.topic_list).to have_topics(count: 1)
+    discovery.category_drop.select_row_by_value(category.id)
+    expect(discovery.topic_list).to have_topics(count: 10)
+    expect(page).to have_current_path("/c/#{category.slug}/#{category.id}")
+  end
 end

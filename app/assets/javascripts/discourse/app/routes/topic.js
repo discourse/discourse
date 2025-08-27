@@ -48,10 +48,6 @@ export default class TopicRoute extends DiscourseRoute {
     };
   }
 
-  redirect() {
-    return this.redirectIfLoginRequired();
-  }
-
   titleToken() {
     const model = this.modelFor("topic");
     if (model) {
@@ -313,7 +309,7 @@ export default class TopicRoute extends DiscourseRoute {
   _replaceUnlessScrolling(url, topicId) {
     const { currentRouteName } = this.router;
 
-    const stillOnTopicRoute = currentRouteName.split(".")[0] === "topic";
+    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
     if (!stillOnTopicRoute) {
       return;
     }

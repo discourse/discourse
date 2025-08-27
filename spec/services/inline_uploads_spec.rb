@@ -5,8 +5,8 @@ RSpec.describe InlineUploads do
   describe ".process" do
     context "with local uploads" do
       fab!(:upload)
-      fab!(:upload2) { Fabricate(:upload) }
-      fab!(:upload3) { Fabricate(:upload) }
+      fab!(:upload2, :upload)
+      fab!(:upload3, :upload)
 
       it "should not correct existing inline uploads" do
         md = <<~MD
@@ -710,6 +710,35 @@ RSpec.describe InlineUploads do
       InlineUploads.match_md_inline_img(md, external_src: true) { |_match, src| url = src }
 
       expect(url).to eq("https://some-site.com/a_test?q=1&b=hello%20there")
+    end
+  end
+
+  describe ".replace_hotlinked_image_urls" do
+    context "when raw has an image URL" do
+      fab!(:image_upload)
+      it "replaces URL with image markdown and uses filename as alt" do
+        origin = "http://foo.bar/#{image_upload.original_filename}"
+        raw =
+          InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
+            expect(match_src).to eq(origin)
+            image_upload
+          end
+
+        expect(raw).to eq("look at this:\n![logo](#{image_upload.short_url})")
+      end
+    end
+    context "when raw has an image URL with a square bracket in filename" do
+      let!(:image_upload) { Fabricate(:image_upload, original_filename: "image]1.jpg") }
+      it "does not make broken markdown" do
+        origin = "http://foo.bar/#{image_upload.original_filename}"
+        raw =
+          InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
+            expect(match_src).to eq(origin)
+            image_upload
+          end
+
+        expect(raw).to eq("look at this:\n![image1](#{image_upload.short_url})")
+      end
     end
   end
 end

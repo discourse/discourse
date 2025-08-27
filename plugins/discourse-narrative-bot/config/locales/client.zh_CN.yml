@@ -10,3 +10,8 @@ zh_CN:
       welcome_post_type:
         new_user_track: "为所有新用户启动新用户教程"
         welcome_message: "向所有新用户发送带有快速入门指南的欢迎消息。"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:message_1) { Fabricate(:chat_message) }
+  fab!(:current_user, :user)
+  fab!(:message_1, :chat_message)
 
   let(:params) { { flag_type_id: ::ReviewableScore.types[:off_topic] } }
 

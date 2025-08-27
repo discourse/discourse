@@ -2,21 +2,29 @@
 
 module ReadOnlyMixin
   module ClassMethods
+    def actions_allowed_in_readonly_mode
+      @actions_allowed_in_readonly_mode ||= []
+    end
+
     def actions_allowed_in_staff_writes_only_mode
       @actions_allowed_in_staff_writes_only_mode ||= []
+    end
+
+    def allow_in_readonly_mode(*actions)
+      actions_allowed_in_readonly_mode.concat(actions.map(&:to_sym))
     end
 
     def allow_in_staff_writes_only_mode(*actions)
       actions_allowed_in_staff_writes_only_mode.concat(actions.map(&:to_sym))
     end
 
-    def allowed_in_staff_writes_only_mode?(action_name)
-      actions_allowed_in_staff_writes_only_mode.include?(action_name.to_sym)
+    def allowed_in_readonly_mode?(action)
+      actions_allowed_in_readonly_mode.include?(action.to_sym)
     end
-  end
 
-  def staff_writes_only_mode?
-    @staff_writes_only_mode
+    def allowed_in_staff_writes_only_mode?(action)
+      actions_allowed_in_staff_writes_only_mode.include?(action.to_sym)
+    end
   end
 
   def check_readonly_mode
@@ -32,18 +40,12 @@ module ReadOnlyMixin
     end
   end
 
-  def get_or_check_readonly_mode
-    check_readonly_mode if @readonly_mode.nil?
-    @readonly_mode
-  end
-
-  def get_or_check_staff_writes_only_mode
-    check_readonly_mode if @staff_writes_only_mode.nil?
-    @staff_writes_only_mode
-  end
-
   def add_readonly_header
     response.headers["Discourse-Readonly"] = "true" if @readonly_mode
+  end
+
+  def allowed_in_readonly_mode?
+    self.class.allowed_in_readonly_mode?(action_name)
   end
 
   def allowed_in_staff_writes_only_mode?
@@ -51,15 +53,12 @@ module ReadOnlyMixin
   end
 
   def block_if_readonly_mode
-    return if request.fullpath.start_with?(path "/admin/backups")
-    return if request.fullpath.start_with?(path "/categories/search")
     return if request.get? || request.head?
-
-    if @staff_writes_only_mode
-      raise Discourse::ReadOnly.new if !current_user&.staff? && !allowed_in_staff_writes_only_mode?
-    elsif @readonly_mode
-      raise Discourse::ReadOnly.new
+    if @staff_writes_only_mode && (allowed_in_staff_writes_only_mode? || current_user&.staff?)
+      return
     end
+    return if !@readonly_mode || allowed_in_readonly_mode?
+    raise Discourse::ReadOnly
   end
 
   def self.included(base)

@@ -136,7 +136,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel: -1,
+  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [
@@ -186,6 +186,13 @@ fetch(`${target}/about.json`).catch(() => {
   );
 });
 
+const pluginTestPages = process.env.PLUGIN_TARGETS;
+if (pluginTestPages) {
+  module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
+    return `tests/index.html?hidepassed&target=${plugin}`;
+  });
+}
+
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {
@@ -216,9 +223,6 @@ if (themeTestPages) {
 } else {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
-    "/assets/locales/*.js": {
-      target,
-    },
     "/assets/plugins/*_extra.js": {
       target,
     },

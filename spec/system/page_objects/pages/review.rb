@@ -71,8 +71,34 @@ module PageObjects
         )
       end
 
-      def has_error_dialog_visible?
-        page.has_css?(".dialog-container .dialog-content")
+      def has_scrub_button?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".scrub-rejected-user button") }
+      end
+
+      def has_no_scrub_button?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".scrub-rejected-user button") }
+      end
+
+      def click_scrub_button(reviewable)
+        within(reviewable_by_id(reviewable.id)) { find(".scrub-rejected-user button").click }
+      end
+
+      def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".reviewable-user-details.scrubbed-by .value", text: scrubbed_by)
+        end
+      end
+
+      def has_reviewable_with_scrubbed_reason?(reviewable, scrubbed_reason)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".reviewable-user-details.scrubbed-reason .value", text: scrubbed_reason)
+        end
+      end
+
+      def has_reviewable_with_scrubbed_at?(reviewable, scrubbed_at)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".reviewable-user-details.scrubbed-at .value", text: scrubbed_at)
+        end
       end
 
       def has_no_error_dialog_visible?
@@ -110,6 +136,22 @@ module PageObjects
           text:
             I18n.t("js.review.unknown.reviewable_unknown_source", reviewableType: reviewable_type),
         )
+      end
+
+      def click_claim_reviewable
+        find(".reviewable-claimed-topic .claim").click
+      end
+
+      def click_unclaim_reviewable
+        find(".reviewable-claimed-topic .unclaim").click
+      end
+
+      def flag_reason_component
+        PageObjects::Components::Review::FlagReason.new
+      end
+
+      def topic_link_component
+        PageObjects::Components::Review::TopicLink.new
       end
 
       private

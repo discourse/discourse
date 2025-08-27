@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Przewodnik po stylach Discourse"
   js:
     styleguide:
       title: "Przewodnik po stylach"
@@ -25,6 +30,8 @@ pl_PL:
           title: "Data/czas"
         menus:
           title: "Menu"
+        multi_select:
+          title: "Wybór wielokrotny"
         toasts:
           title: "Komunikaty podpowiedzi"
         font_scale:
@@ -76,12 +83,14 @@ pl_PL:
           title: "Wpis"
         post_list:
           title: "Lista postów"
+          empty_example: "<PostList /> pusty stan"
+          populated_example: "<PostList /> stan wypełniony"
         topic_map:
           title: "Mapa tematu"
         site_header:
           title: "Nagłówek witryny"
-        suggested_topics:
-          title: "Sugerowane tematy"
+        more_topics:
+          title: "Więcej tematów"
         post_menu:
           title: "Menu postu"
         modal:

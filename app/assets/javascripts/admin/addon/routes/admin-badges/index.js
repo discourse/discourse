@@ -1,8 +1,10 @@
 import Route from "@ember/routing/route";
-import { emojiUrlFor } from "discourse/lib/text";
+import { service } from "@ember/service";
 
 export default class AdminBadgesIndexRoute extends Route {
-  setupController(controller) {
-    controller.badgeIntroEmoji = emojiUrlFor("woman_student:t4");
+  @service adminBadges;
+
+  async model() {
+    await this.adminBadges.fetchBadges();
   }
 }

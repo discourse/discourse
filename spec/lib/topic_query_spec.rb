@@ -16,7 +16,7 @@ RSpec.describe TopicQuery do
   fab!(:creator) { Fabricate(:user, refresh_auto_groups: true) }
   let(:topic_query) { TopicQuery.new(user) }
 
-  fab!(:tl4_user) { Fabricate(:trust_level_4) }
+  fab!(:tl4_user, :trust_level_4)
   fab!(:moderator)
   fab!(:admin)
 
@@ -505,7 +505,7 @@ RSpec.describe TopicQuery do
 
   describe "tag filter" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
     fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
     before { SiteSetting.tagging_enabled = true }
@@ -515,7 +515,7 @@ RSpec.describe TopicQuery do
       fab!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
-      fab!(:no_tags_topic) { Fabricate(:topic) }
+      fab!(:no_tags_topic, :topic)
       fab!(:tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [other_tag.name])
       end
@@ -737,7 +737,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "mute_all_categories_by_default" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     fab!(:topic) { Fabricate(:topic, category: category) }
 
     before { SiteSetting.mute_all_categories_by_default = true }
@@ -1110,9 +1110,9 @@ RSpec.describe TopicQuery do
   end
 
   describe "categorized" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     let(:topic_category) { category.topic }
-    fab!(:topic_no_cat) { Fabricate(:topic) }
+    fab!(:topic_no_cat, :topic)
     fab!(:topic_in_cat1) do
       Fabricate(:topic, category: category, bumped_at: 10.minutes.ago, created_at: 10.minutes.ago)
     end
@@ -1305,17 +1305,22 @@ RSpec.describe TopicQuery do
 
     context "when preloading associations" do
       it "preloads associations" do
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          :first_post,
-          Plugin::Instance.new,
-        )
+        plugin = Plugin::Instance.new
+        plugin.register_topic_preloader_associations(:topic_embed)
+        plugin.register_topic_preloader_associations({ first_post: [:uploads] })
+        plugin.register_topic_preloader_associations(:user_warning) { true }
+        plugin.register_topic_preloader_associations(:linked_topic) { false }
 
         topic = Fabricate(:topic)
         Fabricate(:post, topic: topic)
 
         new_topic = topic_query.list_new.topics.first
         expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
-        expect(new_topic.association(:first_post).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:topic_embed).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:first_post).loaded?).to eq(true) # Nested preloaded association
+        expect(new_topic.first_post.association(:uploads).loaded?).to eq(true) # Nested preloaded association
+        expect(new_topic.association(:user_warning).loaded?).to eq(true) # Conditionally loaded
+        expect(new_topic.association(:linked_topic).loaded?).to eq(false) # Failed condition
         expect(new_topic.association(:user).loaded?).to eq(false) # Testing the negative
 
         DiscoursePluginRegistry.reset_register!(:topic_preloader_associations)
@@ -1612,7 +1617,7 @@ RSpec.describe TopicQuery do
 
       context "when there are new topics for user" do
         fab!(:category)
-        fab!(:category2) { Fabricate(:category) }
+        fab!(:category2, :category)
 
         fab!(:topic_in_category_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category:).tap do |t|
@@ -1923,7 +1928,7 @@ RSpec.describe TopicQuery do
       user
     end
 
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user3, :user)
 
     fab!(:private_category) { Fabricate(:private_category_with_definition, group: group) }
 
@@ -1959,8 +1964,8 @@ RSpec.describe TopicQuery do
   end
 
   describe "shared drafts" do
-    fab!(:category) { Fabricate(:category_with_definition) }
-    fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
+    fab!(:shared_drafts_category, :category_with_definition)
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
     fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
     fab!(:admin)
@@ -2228,7 +2233,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "show_category_definitions_in_topic_lists setting" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
     fab!(:subcategory_regular_topic) { Fabricate(:topic, category: subcategory) }
 
@@ -2364,6 +2369,43 @@ RSpec.describe TopicQuery do
           topic_in_muted_category_and_watched_tag.id,
         )
       end
+    end
+  end
+
+  describe "content_localization enabled" do
+    fab!(:user)
+    fab!(:topics) { Fabricate.times(3, :topic) }
+    fab!(:topic_localization1) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[0],
+        locale: "fr",
+        title: "Bonjour",
+        fancy_title: "Bonjour",
+      )
+    end
+    fab!(:topic_localization2) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[1],
+        locale: "es",
+        title: "Hola",
+        fancy_title: "Hola",
+      )
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "doesn't generate N+1 queries when accessing a localization's fancy_title" do
+      topic_query = TopicQuery.new(user)
+      topic_list = topic_query.list_latest
+
+      expect(topic_list.topics.first.association(:localizations).loaded?).to eq(true)
+
+      queries =
+        track_sql_queries { topic_list.topics.each { |topic| topic.get_localization&.fancy_title } }
+
+      expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
     end
   end
 end

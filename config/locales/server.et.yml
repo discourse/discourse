@@ -881,7 +881,6 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Vaikimisi"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1009,7 +1008,6 @@ et:
     first_reply_by_email:
       name: Esimene vastamine meiliga
   admin_login:
-    success: "Kiri saadetud"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
   tags:
@@ -1084,8 +1082,13 @@ et:
     actions:
       agree:
         title: "Jah"
-      delete_single:
+      delete:
         title: "Kustuta"
+        complete: "Postitus kustutatud."
+      delete_and_ignore:
+        complete: "Postitus kustutatud."
+      delete_and_agree:
+        complete: "Postitus kustutatud."
       disagree:
         title: "Ei"
       ignore:
@@ -1099,8 +1102,13 @@ et:
       reject_user:
         delete:
           title: "Kustuta kasutaja"
+          complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      no_action_user:
+        title: "Tegevust pole"
+      delete_user:
+        complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"
   activemodel:
     errors:

@@ -404,54 +404,6 @@ gl:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicacións"
-    "new-topic": |
-      Dámoslle a benvida a %{site_name} &mdash; , **grazas por comezar unha nova conversa!**
-
-      - Soa ben o seu título, se o le en voz alta? Resume ben o contido?
-
-      - A quen lle interesaría ler isto? Por que é importante? Que tipo de respostas busca?
-
-      - Inclúa palabras de uso frecuente no seu tema para facilitar que poida ser *atopado*. Para agrupalo con outros temas relacionados, seleccione unha categoría (ou etiqueta).
-
-      Para saber máis, [visite as normas da nosa comunidade](%{base_path}/guidelines). Este panel só lle aparecerá na primeira conversa %{education_posts_text}.
-    "new-reply": |
-      Dámoslle a benvida a %{site_name} &mdash; **grazas por contribuír!**
-
-      - Sexa amábel cos outros membros da comunidade.
-
-      - A súa resposta mellora a conversa?
-
-      - A crítica construtiva é benvida pero critique as *ideas*, non as persoas.
-
-      Para saber máis, [consulte as nosas normas da comunidade] (%{base_path}/guidelines). Este panel só lle aparecerá nas súas primeiras conversas %{education_posts_text}.
-    avatar: |
-      ### E se lle engade unha imaxe á súa conta?
-
-      Xa publicou uns cantos temas e respostas, mais a súa imaxe de perfil non é única coma vostede; é simplemente unha letra.
-
-      Pensou en **[visitar o seu perfil de usuario](%{profile_path})** e subir unha imaxe que o represente?
-
-      É máis fácil seguir debates e atopar xente interesante nas conversas cando cadaquén ten unha imaxe de perfil individualizada!
-    sequential_replies: |
-      ### Valore a posibilidade de responder varias publicacións a un tempo
-
-      No canto de publicar varias respostas seguidas nun mesmo tema, pense na opción de dar unha única resposta que inclúa citas de respostas anteriores ou mencións a outros @usuarios.
-
-      Pode editar a súa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
-
-      É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
-    too_many_replies: |
-      ### Alcanzou o límite de respostas para este tema.
-
-      Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{newuser_max_replies_per_topic} respostas no mesmo tema.
-
-      No canto de engadir unha outra resposta, pense na posibilidade de editar algunhas das anteriores ou visitar outros temas.
-    reviving_old_topic: |
-      ### Quere revivir este tema?
-
-      A última resposta que ten é de hai **%{time_ago}**. A súa resposta fará que se sitúe na parte superior da listaxe e suporá que os usuarios involucrados na conversa reciban unha notificación.
-
-      Confirma que quere continuar con esta antiga conversa?
   activerecord:
     attributes:
       category:
@@ -1319,7 +1271,7 @@ gl:
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
-    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
@@ -1432,7 +1384,6 @@ gl:
     discord_client_id: 'ID de cliente de Discord (necesita unha? Visite <a href="https://discordapp.com/developers/applications/me">o portal de programadores de Discord</a>)'
     discord_trusted_guilds: 'Só lles permite aos membros destes colectivos de Discord iniciar sesión a través de Discord. Utilice o identificador numérico para o colectivo. Para saber máis, consulte as instrucións <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Déixeo en branco para permitirllo a calquera colectivo.'
     enable_backups: "Permitir que os administradores creen copias de seguranza do foro"
-    automatic_backups_enabled: "Executar copias de seguranza automáticas segundo se defina en Frecuencia das copias de seguranza"
     s3_backup_bucket: "O contedor remoto para facer copias de seguranza. AVISO: Asegúrese de que se trata dun contedor privado."
     s3_endpoint: "O punto final pódese modificar para facer unha copia de seguranza nun servizo compatíbel con S3 como DigitalOcean Spaces ou Minio. AVISO: Déixeo en branco se usa AWS S3."
     s3_configure_tombstone_policy: "Activar a política de eliminación automática para cargas tombstone. IMPORTANTE: se está desactivado, non se reclamará ningún espazo despois de eliminar as cargas."
@@ -1484,7 +1435,6 @@ gl:
     s3_region: "O nome de rexión de Amazon S3 que utilizará para subir imaxes e copias de seguranza."
     s3_cdn_url: "O URL de CDN que se utilizará para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: despois de cambiar este axuste debe volver reconstruír todas as publicacións antigas."
     avatar_sizes: "Listaxe de tamaños dos avatares xerados automaticamente."
-    external_system_avatars_url: "Enderezo URL do servizo externo de avatares. As substitucións permitidas son {username} {first_letter} {color} {size}"
     external_emoji_url: "URL do servizo externo de imaxes emoticonas. Déixeo en branco para desactivalo."
     use_site_small_logo_as_system_avatar: "Utilice o pequeno logotipo do sitio no canto do avatar de usuario do sistema. Require que estea presente o logotipo."
     restrict_letter_avatar_colors: "Unha listaxe de valores hexadecimais das cores permitidas para os fondos dos avatares de letras."
@@ -1545,7 +1495,6 @@ gl:
     email_time_window_mins: "Agardar (n) minutos antes de enviar correos electrónicos a modo de notificación para darlles aos usuarios a posibilidade de editaren e remataren as súas publicacións."
     personal_email_time_window_seconds: "Agardar (n) minutos antes de enviar correos electrónicos a modo de mensaxe persoal para darlles aos usuarios a posibilidade de editaren e remataren as súas publicacións."
     email_posts_context: "Número de respostas previas que se inclúen como contexto nos correos electrónicos das notificacións."
-    flush_timings_secs: "Frecuencia en segundos con que se sincronizan os datos co servidor."
     title_max_word_length: "Extensión máxima permitida dunha palabra, en caracteres, no título dun tema."
     title_min_entropy: "A entropía mínima (caracteres únicos) que se require para o título do tema."
     body_min_entropy: "A entropía mínima (caracteres únicos) que se require para o corpo dunha publicación."
@@ -1555,7 +1504,6 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
     dark_mode_none: "Ningún"
-    max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros frecuentes no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
     title_remove_extraneous_space: "Retirar os espazos en branco diante da puntuación final."
@@ -1690,11 +1638,9 @@ gl:
     max_notifications_per_user: "Número máximo de notificacións por usuario. Se se supera este número, as notificacións antigas eliminaranse. Aplicación semanal. Estabelecer en 0 para desactivalo"
     allowed_user_website_domains: "O sitio web do usuario verificarase respecto destes dominios. Listaxe separada por barras verticais."
     allow_profile_backgrounds: "Permitir que os usuarios suban fondos de perfil."
-    sequential_replies_threshold: "Número de publicacións seguidas que un usuario ten que facer nun tema antes de que se lle lembre que son demasiadas repostas consecutivas."
     get_a_room_threshold: "Número de publicacións que un usuario debe facerlle á mesma persoa e no mesmo tema antes de recibir unha advertencia."
     enable_mobile_theme: "Os dispositivos móbiles utilizan un tema adaptado para móbiles, coa posibilidade de trocar o sitio completo. Desactíveo se quere utilizar unha folla de estilo personalizada que sexa completamente adaptábel."
     dominating_topic_minimum_percent: "Que porcentaxe de publicacións ten que facer un usuario nun tema antes de recordarlle que está sendo acaparado nese tema."
-    disable_avatar_education_message: "Desactiva a mensaxe educativa para cambiar o avatar."
     suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listaxes de temas."
     header_dropdown_category_count: "Número de categorías que se poden amosar no menú despregable da cabeceira."
     permalink_normalizations: "Aplica a seguinte expresión regular antes de que coincidan con ligazóns permanentes, como por exemplo: /(topic.*)\\?.*/\\1 eliminará as cadeas de consulta das rutas temáticas. O formato é regex+string use \\1 etc. para acceder ás capturas"
@@ -1712,7 +1658,6 @@ gl:
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
-    warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
@@ -1966,11 +1911,6 @@ gl:
     errors: "%{errors}"
     not_available: "Non dispoñíbel. Tentar %{suggestion}?"
     something_already_taken: "Algo foi mal, quizais o nome de usuario ou o correo electrónico xa están rexistrados. Probe coa ligazón de Esquecín o contrasinal."
-    omniauth_error:
-      generic: "Sentímolo, produciuse un erro ao autorizar a súa conta. Ténteo de novo."
-      csrf_detected: "Esgotouse o tempo de autorización ou cambiou de navegador. Ténteo de novo."
-      request_error: "Produciuse un erro ao comezar coa autorización. Ténteo de novo."
-      invalid_iat: "Non se puido verificar o token de autorización por mor de diferenzas no horario do servidor. Ténteo de novo."
     omniauth_error_unknown: "Produciuse un erro ao procesar o seu rexistro. Ténteo de novo, por favor."
     omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"
@@ -3193,7 +3133,6 @@ gl:
     wcag_theme_name: "WCAG Claro"
     wcag_dark: "WCAG Escuro"
     wcag_dark_theme_name: "WCAG Escuro"
-    default_theme_name: "Predeterminado"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
@@ -3461,10 +3400,6 @@ gl:
         Esta insignia concédese por nos visitar durante 365 días consecutivos. Un ano enteiriño!
     badge_title_metadata: "%{display_name} insignia en %{site_title}"
   admin_login:
-    success: "Correo electrónico enviado"
-    errors:
-      unknown_email_address: "Enderezo de correo electrónico descoñecido."
-      invalid_token: "Token non válido."
     email_input: "Correo electrónico do administrador"
     submit_button: "Enviar correo electrónico"
   performance_report:
@@ -3616,10 +3551,15 @@ gl:
         description: "De acordo con esta denuncia e silenciar o usuario."
       agree_and_restore:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      delete_single:
+      delete:
         title: "Eliminar"
+        complete: "Publicación eliminada."
+      delete_and_ignore:
+        complete: "Publicación eliminada."
       delete_and_ignore_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
+      delete_and_agree:
+        complete: "Publicación eliminada."
       delete_and_agree_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       disagree_and_restore:
@@ -3634,7 +3574,9 @@ gl:
         title: "Aprobar"
       approve_post:
         title: "Aprobar publicación"
-        confirm_closed: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
+      approve_post_closed:
+        title: "Aprobar publicación"
+        confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
       reject_post:
         title: "Rexeitar a publicación"
       approve_user:
@@ -3643,12 +3585,16 @@ gl:
         delete:
           title: "Eliminar usuario"
           description: "O usuario será eliminado do foro."
+          complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       reject:
         title: "Rexeitar"
+      no_action_user:
+        title: "Sen acción"
       delete_user:
+        complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"
   email_style:
     html_missing_placeholder: "O modelo HTML debe incluír %{placeholder}"

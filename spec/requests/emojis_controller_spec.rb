@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmojisController do
-  fab!(:user_1) { Fabricate(:user) }
+  fab!(:user_1, :user)
 
   before { sign_in(user_1) }
 

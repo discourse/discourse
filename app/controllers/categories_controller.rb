@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
+
   skip_before_action :check_xhr,
                      only: %i[
                        index
@@ -27,6 +28,9 @@ class CategoriesController < ApplicationController
                        redirect
                      ]
   skip_before_action :verify_authenticity_token, only: %i[search]
+
+  # The front-end is POSTing data to this endpoint, but we're not modifying anything
+  allow_in_readonly_mode :search
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
@@ -177,8 +181,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in].blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -539,6 +543,10 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
+        if SiteSetting.content_localization_enabled?
+          conditional_param_keys << { category_localizations: %i[id locale name description] }
+        end
+
         result =
           params.permit(
             *required_param_keys,
@@ -546,6 +554,9 @@ class CategoriesController < ApplicationController
             :name,
             :color,
             :text_color,
+            :style_type,
+            :emoji,
+            :icon,
             :email_in,
             :email_in_allow_strangers,
             :mailinglist_mirror,
@@ -583,7 +594,8 @@ class CategoriesController < ApplicationController
               require_reply_approval
               require_topic_approval
             ],
-            custom_fields: [custom_field_params],
+            custom_fields: {
+            },
             permissions: [*p.try(:keys)],
             allowed_tags: [],
             allowed_tag_groups: [],
@@ -597,13 +609,6 @@ class CategoriesController < ApplicationController
 
         result
       end
-  end
-
-  def custom_field_params
-    keys = params[:custom_fields].try(:keys)
-    return if keys.blank?
-
-    keys.map { |key| params[:custom_fields][key].is_a?(Array) ? { key => [] } : key }
   end
 
   def fetch_category

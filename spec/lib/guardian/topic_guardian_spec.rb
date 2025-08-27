@@ -3,8 +3,8 @@
 RSpec.describe TopicGuardian do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:tl3_user) { Fabricate(:trust_level_3) }
-  fab!(:tl4_user) { Fabricate(:trust_level_4) }
+  fab!(:tl3_user, :trust_level_3)
+  fab!(:tl4_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:group)
@@ -169,6 +169,82 @@ RSpec.describe TopicGuardian do
         Fabricate(:shared_draft, topic: topic)
 
         expect(Guardian.new(tl2_user).can_edit_topic?(topic)).to eq(false)
+      end
+    end
+  end
+
+  describe "#can_delete_topic?" do
+    it "returns false for an unauthenticated user" do
+      expect(Guardian.new.can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns false for a regular user" do
+      expect(Guardian.new(Fabricate(:user)).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns true for a moderator" do
+      expect(Guardian.new(moderator).can_delete_topic?(topic)).to be_truthy
+    end
+
+    it "returns true for an admin" do
+      expect(Guardian.new(admin).can_delete_topic?(topic)).to be_truthy
+    end
+
+    it "returns false for static doc topics" do
+      tos_topic = Fabricate(:topic, user: Discourse.system_user)
+      SiteSetting.tos_topic_id = tos_topic.id
+      expect(Guardian.new(admin).can_delete_topic?(tos_topic)).to be_falsey
+    end
+
+    it "returns false when topic is trashed" do
+      topic.stubs(:trashed?).returns(true)
+      expect(Guardian.new(admin).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns false when topic is category topic" do
+      topic.stubs(:is_category_topic?).returns(true)
+      expect(Guardian.new(admin).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns true for own topic with no replies" do
+      topic.update_attribute(:posts_count, 1)
+      topic.update_attribute(:created_at, Time.zone.now)
+      expect(Guardian.new(topic.user).can_delete_topic?(topic)).to be_truthy
+    end
+
+    it "returns false for own topic with replies" do
+      topic.update!(posts_count: 2, created_at: Time.zone.now)
+      expect(Guardian.new(topic.user).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns false for own topic within cooldown period" do
+      topic.update!(posts_count: 1, created_at: 48.hours.ago)
+      expect(Guardian.new(topic.user).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns true for user in allowed groups" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      expect(Guardian.new(tl4_user).can_delete_topic?(topic)).to be_truthy
+    end
+
+    it "returns false for user not in allowed groups" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      expect(Guardian.new(tl3_user).can_delete_topic?(topic)).to be_falsey
+    end
+
+    context "when category group moderation is enabled" do
+      fab!(:group_user)
+
+      before { SiteSetting.enable_category_group_moderation = true }
+
+      it "returns false if user is not a member of the appropriate group" do
+        expect(Guardian.new(group_user.user).can_delete_topic?(topic)).to be_falsey
+      end
+
+      it "returns true if user is a member of the appropriate group" do
+        Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
+
+        expect(Guardian.new(group_user.user).can_delete_topic?(topic)).to be_truthy
       end
     end
   end

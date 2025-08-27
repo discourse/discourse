@@ -11,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";
+import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -583,7 +584,7 @@ third line`
   });
 
   testCase(
-    `bullet button with no selection`,
+    "unordered list button with no selection",
     async function (assert, textarea) {
       const example = i18n("composer.list_item");
 
@@ -597,23 +598,26 @@ third line`
     }
   );
 
-  testCase(`bullet button with a selection`, async function (assert, textarea) {
-    textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
+  testCase(
+    "unordered list button with a selection",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
 
-    await click(`button.bullet`);
-    assert.strictEqual(this.value, `hello\n\n* world\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 14);
+      await click(`button.bullet`);
+      assert.strictEqual(this.value, `hello\n\n* world\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 14);
 
-    await click(`button.bullet`);
-    assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 12);
-  });
+      await click(`button.bullet`);
+      assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 12);
+    }
+  );
 
   testCase(
-    `bullet button with a multiple line selection`,
+    "unordered list button with a multiple line selection",
     async function (assert, textarea) {
       this.set("value", "* Hello\n\nWorld\n\nEvil");
 
@@ -632,54 +636,63 @@ third line`
     }
   );
 
-  testCase(`list button with no selection`, async function (assert, textarea) {
-    const example = i18n("composer.list_item");
+  testCase(
+    "ordered list button with no selection",
+    async function (assert, textarea) {
+      const example = i18n("composer.list_item");
 
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
-    assert.strictEqual(textarea.selectionStart, 14);
-    assert.strictEqual(textarea.selectionEnd, 17 + example.length);
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
+      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionEnd, 17 + example.length);
 
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello world.\n\n${example}`);
-    assert.strictEqual(textarea.selectionStart, 14);
-    assert.strictEqual(textarea.selectionEnd, 14 + example.length);
-  });
-
-  testCase(`list button with a selection`, async function (assert, textarea) {
-    textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello\n\n1. world\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 15);
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 12);
-  });
-
-  testCase(`list button with line sequence`, async function (assert, textarea) {
-    this.set("value", "Hello\n\nWorld\n\nEvil");
-
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 18;
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, "1. Hello\n\n2. World\n\n3. Evil");
-    assert.strictEqual(textarea.selectionStart, 0);
-    assert.strictEqual(textarea.selectionEnd, 27);
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
-    assert.strictEqual(textarea.selectionStart, 0);
-    assert.strictEqual(textarea.selectionEnd, 18);
-  });
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello world.\n\n${example}`);
+      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionEnd, 14 + example.length);
+    }
+  );
 
   testCase(
-    "list button does not reset undo history",
+    "ordered list button with a selection",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello\n\n1. world\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 15);
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 12);
+    }
+  );
+
+  testCase(
+    "ordered list button with line sequence",
+    async function (assert, textarea) {
+      this.set("value", "Hello\n\nWorld\n\nEvil");
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 18;
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, "1. Hello\n\n2. World\n\n3. Evil");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 27);
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 18);
+    }
+  );
+
+  testCase(
+    "ordered list button does not reset undo history",
     async function (assert, textarea) {
       this.set("value", "existing");
       textarea.selectionStart = 0;
@@ -691,6 +704,86 @@ third line`
       document.execCommand("undo");
 
       assert.strictEqual(this.value, "existing");
+    }
+  );
+
+  testCase(
+    "heading button with no selection",
+    async function (assert, textarea) {
+      this.set("value", "");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 0;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-2"]');
+
+      assert.strictEqual(
+        this.value,
+        "## Heading",
+        "it adds a placeholder and selects it"
+      );
+      assert.strictEqual(textarea.selectionStart, 3);
+      assert.strictEqual(textarea.selectionEnd, 10);
+    }
+  );
+
+  testCase(
+    "heading button with a selection",
+    async function (assert, textarea) {
+      this.set("value", "Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 11;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-2"]');
+
+      assert.strictEqual(
+        this.value,
+        "## Hello world",
+        "it applies heading 2 and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 3);
+      assert.strictEqual(textarea.selectionEnd, 14);
+    }
+  );
+
+  testCase(
+    "heading button with a selection and existing heading",
+    async function (assert, textarea) {
+      this.set("value", "## Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 14;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-4"]');
+
+      assert.strictEqual(
+        this.value,
+        "#### Hello world",
+        "it applies heading 4 and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 5);
+      assert.strictEqual(textarea.selectionEnd, 16);
+    }
+  );
+
+  testCase(
+    "heading button with a selection and existing heading converting to paragraph",
+    async function (assert, textarea) {
+      this.set("value", "## Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 14;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-paragraph"]');
+
+      assert.strictEqual(
+        this.value,
+        "Hello world",
+        "it applies paragraph and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 11);
     }
   );
 
@@ -712,7 +805,7 @@ third line`
   test("toolbar event supports replaceText", async function (assert) {
     const self = this;
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "replace-text",
@@ -783,7 +876,7 @@ third line`
   });
 
   test("Toolbar buttons are only rendered when condition is met", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "shown",
@@ -809,15 +902,36 @@ third line`
     assert.dom(".d-editor-button-bar button.not-shown").doesNotExist();
   });
 
-  test("toolbar buttons tabindex", async function (assert) {
-    await render(<template><DEditor /></template>);
-    const buttons = queryAll(".d-editor-button-bar .btn");
+  testCase(
+    "toolbar buttons tabindex when not using rich_editor",
+    async function (assert) {
+      this.siteSettings.rich_editor = false;
+      await render(<template><DEditor /></template>);
+      const buttons = queryAll(".d-editor-button-bar .btn");
 
-    assert
-      .dom(buttons[0])
-      .hasAttribute("tabindex", "0", "it makes the first button focusable");
-    assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
-  });
+      assert
+        .dom(buttons[0])
+        .hasAttribute("tabindex", "0", "it makes the first button focusable");
+      assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
+    }
+  );
+
+  testCase(
+    "toolbar buttons tabindex when using rich_editor",
+    async function (assert) {
+      this.siteSettings.rich_editor = true;
+      await render(<template><DEditor /></template>);
+      const buttons = queryAll(".d-editor-button-bar .btn");
+
+      assert
+        .dom(buttons[0])
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "it does not make the first button focusable"
+        );
+    }
+  );
 
   testCase("replace-text event by default", async function (assert) {
     this.set("value", "red green blue");
@@ -1120,7 +1234,7 @@ third line`
       assert.strictEqual(
         this.value,
         initialValue + "",
-        "it doesn’t continue the list"
+        "doesn't continue the list"
       );
     },
     { enable_smart_lists: true }
@@ -1313,4 +1427,86 @@ third line`
       });
     }
   })();
+
+  test("toolbar instance replacement", async function (assert) {
+    const self = this;
+
+    const customToolbar = new ToolbarBase({
+      siteSettings: this.siteSettings,
+      capabilities: this.capabilities,
+      showLink: true,
+    });
+    customToolbar.addButton({
+      id: "custom-toolbar-button",
+      icon: "plus",
+      title: "Custom Toolbar Button",
+    });
+
+    withPluginApi((api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-toolbar",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context.replaceToolbar(customToolbar);
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    this.value = "hello";
+
+    await render(<template><DEditor @value={{self.value}} /></template>);
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+
+    await click("button.replace-toolbar");
+
+    assert
+      .dom(
+        ".d-editor-button-bar.--replaced-toolbar button.custom-toolbar-button"
+      )
+      .exists("It should show the custom toolbar button");
+
+    // Back button
+    await click(".d-editor-button-bar__back");
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+  });
+});
+
+module("Integration | Component | d-editor | rich editor", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("replaceText escapes markdown symbols that could be regexp symbols", async function (assert) {
+    this.siteSettings.rich_editor = true;
+
+    const initialValue = "Hello\n\n* world\n* am am here $";
+
+    withPluginApi((api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-text",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context
+              .newToolbarEvent()
+              .replaceText(initialValue, "goodbye");
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    await render(<template><DEditor @value={{initialValue}} /></template>);
+    await click(".composer-toggle-switch");
+    await click("button.replace-text");
+
+    assert.dom(".ProseMirror p").hasText("goodbye");
+  });
 });

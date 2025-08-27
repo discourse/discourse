@@ -31,9 +31,6 @@ class RemoteTheme < ActiveRecord::Base
   MAX_ASSET_FILE_SIZE = 8.megabytes
   MAX_THEME_FILE_COUNT = 1024
   MAX_THEME_SIZE = 256.megabytes
-  MAX_THEME_SCREENSHOT_FILE_SIZE = 1.megabyte
-  MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160] # 4K resolution
-  THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpg .jpeg .gif .png].freeze
 
   has_one :theme, autosave: false
   scope :joined_remotes,
@@ -85,11 +82,12 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  # This is only used in the development and test environment and is currently not supported for other environments
-  if Rails.env.test? || Rails.env.development?
-    def self.import_theme_from_directory(directory)
-      update_theme(ThemeStore::DirectoryImporter.new(directory), update_components: "none")
-    end
+  def self.import_theme_from_directory(directory, theme_id: nil)
+    update_theme(
+      ThemeStore::DirectoryImporter.new(directory),
+      update_components: "none",
+      theme_id: theme_id,
+    )
   end
 
   def self.update_theme(
@@ -106,7 +104,13 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
+      theme =
+        Theme.new(
+          id: theme_id,
+          user_id: user&.id || -1,
+          name: theme_info["name"],
+          auto_update: false,
+        )
       existing = false
     end
 
@@ -253,7 +257,7 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = create_upload(path, relative_path)
+        upload = RemoteTheme.create_upload(theme: theme, path: path, relative_path: relative_path)
         if !upload.errors.empty?
           raise ImportError,
                 I18n.t(
@@ -272,65 +276,15 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    # TODO (martin): Until we are ready to roll this out more
-    # widely, let's avoid doing this work for most sites.
-    if SiteSetting.theme_download_screenshots
-      theme_info["screenshots"] = Array.wrap(theme_info["screenshots"]).take(2)
-      theme_info["screenshots"].each_with_index do |relative_path, idx|
-        if path = importer.real_path(relative_path)
-          if !THEME_SCREENSHOT_ALLOWED_FILE_TYPES.include?(File.extname(path))
-            raise ImportError,
-                  I18n.t(
-                    "themes.import_error.screenshot_invalid_type",
-                    file_name: File.basename(path),
-                    accepted_formats: THEME_SCREENSHOT_ALLOWED_FILE_TYPES.join(","),
-                  )
-          end
-
-          if File.size(path) > MAX_THEME_SCREENSHOT_FILE_SIZE
-            raise ImportError,
-                  I18n.t(
-                    "themes.import_error.screenshot_invalid_size",
-                    file_name: File.basename(path),
-                    max_size:
-                      ActiveSupport::NumberHelper.number_to_human_size(
-                        MAX_THEME_SCREENSHOT_FILE_SIZE,
-                      ),
-                  )
-          end
-
-          screenshot_width, screenshot_height = FastImage.size(path)
-          if (screenshot_width.nil? || screenshot_height.nil?) ||
-               screenshot_width > MAX_THEME_SCREENSHOT_DIMENSIONS[0] ||
-               screenshot_height > MAX_THEME_SCREENSHOT_DIMENSIONS[1]
-            raise ImportError,
-                  I18n.t(
-                    "themes.import_error.screenshot_invalid_dimensions",
-                    file_name: File.basename(path),
-                    width: screenshot_width.to_i,
-                    height: screenshot_height.to_i,
-                    max_width: MAX_THEME_SCREENSHOT_DIMENSIONS[0],
-                    max_height: MAX_THEME_SCREENSHOT_DIMENSIONS[1],
-                  )
-          end
-
-          upload = create_upload(path, relative_path)
-          if !upload.errors.empty?
-            raise ImportError,
-                  I18n.t(
-                    "themes.import_error.screenshot",
-                    errors: upload.errors.full_messages.join(","),
-                  )
-          end
-
-          updated_fields << theme.set_field(
-            target: :common,
-            name: "screenshot_#{idx + 1}",
-            type: :theme_screenshot_upload_var,
-            upload_id: upload.id,
-          )
-        end
-      end
+    begin
+      updated_fields.concat(
+        ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
+          theme_info["screenshots"],
+          importer,
+        ),
+      )
+    rescue ThemeScreenshotsHandler::ThemeScreenshotError => err
+      raise ImportError, err.message
     end
 
     # Update all theme attributes if this is just a placeholder
@@ -432,6 +386,8 @@ class RemoteTheme < ActiveRecord::Base
         raise ActiveRecord::Rollback if !theme.save
       end
 
+      create_theme_site_settings(theme, theme_info["theme_site_settings"])
+
       theme.migrate_settings(start_transaction: false) if run_migrations
     end
 
@@ -503,6 +459,37 @@ class RemoteTheme < ActiveRecord::Base
     theme.color_scheme = ordered_schemes.first if theme.new_record?
   end
 
+  def create_theme_site_settings(theme, theme_site_settings)
+    theme_site_settings ||= {}
+
+    existing_theme_site_settings =
+      theme.theme_site_settings.where(name: theme_site_settings.keys).to_a
+    theme_site_settings.each do |setting, value|
+      next if !SiteSetting.themeable[setting.to_sym]
+
+      # If there is an existing theme site setting, then don't touch it,
+      # we don't want to mess with site owner's changes.
+      existing_theme_site_setting =
+        existing_theme_site_settings.find do |theme_site_setting|
+          theme_site_setting.name == setting
+        end
+      next if existing_theme_site_setting.present?
+
+      # The manager handles creating the theme site setting record
+      # if it does not exist.
+      Themes::ThemeSiteSettingManager.call(
+        params: {
+          theme_id: theme.id,
+          name: setting,
+          value: value,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
+    end
+
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+  end
+
   def github_diff_link
     if github_repo_url.present? && local_version != remote_version
       "#{github_repo_url.gsub(/\.git\z/, "")}/compare/#{local_version}...#{remote_version}"
@@ -523,7 +510,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_url.present?
   end
 
-  def create_upload(path, relative_path)
+  def self.create_upload(theme:, path:, relative_path:, skip_validations: false)
     new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
 
     # OptimizedImage has strict file name restrictions, so rename temporarily
@@ -533,6 +520,7 @@ class RemoteTheme < ActiveRecord::Base
       File.open(new_path),
       File.basename(relative_path),
       for_theme: true,
+      skip_validations: skip_validations,
     ).create_for(theme.user_id)
   end
 end

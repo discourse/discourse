@@ -47,7 +47,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       modal = sidebar.click_edit_categories_button
 
       expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
-      try_until_success { expect(modal).to have_focus_on_filter_input }
+      expect(modal).to have_focus_on_filter_input
       expect(modal).to have_parent_category_color(category)
       expect(modal).to have_category_description_excerpt(category)
       expect(modal).to have_parent_category_color(category2)
@@ -195,6 +195,83 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(modal).to have_categories(
       [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
     )
+  end
+
+  context "when loading more subcategories via scrolling" do
+    fab!(:parent_category) { Fabricate(:category, name: "parent category") }
+
+    # Create 4 subcategories initially (under the threshold of 5)
+    fab!(:subcategory1) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 1")
+    end
+
+    fab!(:subcategory2) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 2")
+    end
+
+    fab!(:subcategory3) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 3")
+    end
+
+    fab!(:subcategory4) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 4")
+    end
+
+    # Create additional subcategories that will be loaded via intersection observer
+    fab!(:subcategory5) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 5")
+    end
+
+    fab!(:subcategory6) do
+      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 6")
+    end
+
+    before_all do
+      Jobs.with_immediate_jobs do
+        SearchIndexer.with_indexing do
+          parent_category.index_search
+          subcategory1.index_search
+          subcategory2.index_search
+          subcategory3.index_search
+          subcategory4.index_search
+          subcategory5.index_search
+          subcategory6.index_search
+        end
+      end
+    end
+
+    # Test stub to force pagination in the category search
+    around(:each) do |example|
+      stub_const(Object, :CategoriesController, CategoriesController.clone) do
+        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
+      end
+    end
+
+    it "shows the 'Show more' link after loading additional subcategories via intersection observer" do
+      visit "/latest"
+
+      modal = sidebar.click_edit_categories_button
+
+      expect(modal).to have_category_row(parent_category)
+      expect(modal).to have_category_row(subcategory1)
+      expect(modal).to have_category_row(subcategory2)
+      expect(modal).to have_category_row(subcategory3)
+      expect(modal).to have_category_row(subcategory4)
+
+      expect(modal).to have_no_show_more_button
+
+      modal.scroll_to_category(subcategory4)
+
+      expect(modal).to have_category_row(subcategory5)
+
+      expect(modal).to have_show_more_button
+
+      # We need to briefly wait for things to settle, otherwise clicking the button doesn't work.
+      wait_for_timeout(200)
+      modal.click_show_more_button
+
+      expect(page).to have_content(subcategory6.name)
+    end
   end
 
   context "when there are more categories than the page limit" do

@@ -17,8 +17,8 @@ const extension = {
       },
     },
   },
-  inputRules: ({ schema, markInputRule }) =>
-    markInputRule(/~~([^~]+)~~$/, schema.marks.strikethrough),
+  inputRules: ({ schema, utils }) =>
+    utils.markInputRule(/~~([^~]+)~~$/, schema.marks.strikethrough),
   parse: {
     s: { mark: "strikethrough" },
     bbcode_s: { mark: "strikethrough" },

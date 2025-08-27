@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def has_highlighted_topic?(topic)
-        page.has_css?("#{topic_list_item_class(topic)}.highlighted")
+        page.has_css?("#{topic_list_item_class(topic)}[data-test-was-highlighted]")
       end
 
       def has_topic_checkbox?(topic)
@@ -71,11 +71,11 @@ module PageObjects
       end
 
       def visit_topic_last_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.post-activity").native.send_keys(:return)
+        find("#{topic_list_item_class(topic)} a.post-activity").send_keys(:return)
       end
 
       def visit_topic_first_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.badge-posts").native.send_keys(:return)
+        find("#{topic_list_item_class(topic)} a.badge-posts").send_keys(:return)
       end
 
       def topic_list_item_class(topic)
@@ -93,7 +93,7 @@ module PageObjects
       private
 
       def topic_list_item_closed(topic)
-        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.d-icon-lock"
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-topic.closed']"
       end
 
       def topic_list_item_unread_badge(topic)

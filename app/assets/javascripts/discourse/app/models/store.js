@@ -1,4 +1,5 @@
 import deprecated from "discourse/lib/deprecated";
+
 export { default, flushMap } from "discourse/services/store";
 
 deprecated(

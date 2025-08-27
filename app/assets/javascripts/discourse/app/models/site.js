@@ -1,13 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
@@ -15,6 +17,7 @@ import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
+import { havePostStreamWidgetExtensions } from "discourse/widgets/post-stream";
 
 @singleton
 export default class Site extends RestModel {
@@ -79,6 +82,8 @@ export default class Site extends RestModel {
   }
 
   @service siteSettings;
+  @service currentUser;
+  @service capabilities;
 
   @tracked categories;
 
@@ -86,7 +91,8 @@ export default class Site extends RestModel {
 
   @sort("categories", "topicCountDesc") categoriesByCount;
 
-  #glimmerTopicDecision;
+  #glimmerPostStreamEnabled;
+  #siteInitialized = false;
 
   init() {
     super.init(...arguments);
@@ -95,55 +101,144 @@ export default class Site extends RestModel {
     this.categories = this.categories || [];
   }
 
-  get useGlimmerTopicList() {
-    if (this.#glimmerTopicDecision !== undefined) {
-      // Caches the decision after the first call, and avoids re-printing the same message
-      return this.#glimmerTopicDecision;
-    }
+  @dependentKeyCompat
+  get desktopView() {
+    return !this.mobileView;
+  }
 
-    let decision;
+  @dependentKeyCompat
+  get mobileView() {
+    this.#siteInitialized ||= getOwnerWithFallback(this).lookup(
+      "-application-instance:main"
+    )?._booted;
 
-    const { needsHbrTopicList } = require("discourse/lib/raw-templates");
-
-    /* eslint-disable no-console */
-    const settingValue = this.siteSettings.glimmer_topic_list_mode;
-    if (settingValue === "enabled") {
-      if (needsHbrTopicList()) {
-        console.log(
-          "⚠️  Using the new 'glimmer' topic list, even though some themes/plugins are not ready"
+    if (!this.#siteInitialized) {
+      if (isTesting() || isRailsTesting()) {
+        throw new Error(
+          "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase. " +
+            "Move these checks to a component, transformer, or API callback that executes during page rendering."
         );
-      } else {
-        console.log("✅  Using the new 'glimmer' topic list");
       }
 
-      decision = true;
-    } else if (settingValue === "disabled") {
-      decision = false;
-    } else {
-      // auto
-      if (needsHbrTopicList()) {
-        console.log(
-          "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' topic-list. Falling back to old implementation."
-        );
-        decision = false;
-      } else {
-        if (!isTesting() && !isRailsTesting()) {
-          console.log("✅  Using the new 'glimmer' topic list");
+      deprecated(
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase is deprecated. " +
+          "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
+          "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+          "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
+          " rendering.",
+        {
+          since: "3.5.0.beta9-dev",
+          id: "discourse.static-viewport-initialization",
+          url: "https://meta.discourse.org/t/367810",
         }
-        decision = true;
+      );
+    }
+
+    if (this.siteSettings.viewport_based_mobile_mode) {
+      return withSilencedDeprecations(
+        "discourse.static-viewport-initialization",
+        () => !this.capabilities.viewport.sm
+      );
+    } else {
+      return Mobile.mobileView;
+    }
+  }
+
+  @dependentKeyCompat
+  get isMobileDevice() {
+    deprecated(
+      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
+        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
+      {
+        id: "discourse.site.is-mobile-device",
+        since: "3.5.0.beta9-dev",
+        url: "https://meta.discourse.org/t/367810",
+      }
+    );
+
+    return this.mobileView;
+  }
+
+  get useGlimmerPostStream() {
+    if (this.#glimmerPostStreamEnabled !== undefined) {
+      // Use cached value after the first call to prevent duplicate messages in the console
+      return this.#glimmerPostStreamEnabled;
+    }
+
+    let enabled;
+
+    /* eslint-disable no-console */
+    let settingValue = this.siteSettings.deactivate_widgets_rendering
+      ? "enabled" // if widgets rendering is deactivated, we always use the glimmer post stream
+      : this.siteSettings.glimmer_post_stream_mode;
+    if (
+      settingValue === "disabled" &&
+      this.currentUser?.use_glimmer_post_stream_mode_auto_mode
+    ) {
+      settingValue = "auto";
+    }
+
+    if (settingValue === "disabled") {
+      enabled = false;
+    } else {
+      if (settingValue === "enabled") {
+        if (havePostStreamWidgetExtensions) {
+          console.log(
+            [
+              "⚠️  Using the new 'glimmer' post stream, even though some themes/plugins are not ready.\n" +
+                "The following plugins and/or themes are using deprecated APIs and may have broken customizations: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
+          );
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+        }
+
+        enabled = true;
+      } else {
+        // auto
+        if (havePostStreamWidgetExtensions) {
+          console.warn(
+            [
+              "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' post stream. Falling back to the old implementation.\n" +
+                "The following plugins and/or themes are using deprecated APIs: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
+          );
+          enabled = false;
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+
+          enabled = true;
+        }
       }
     }
     /* eslint-enable no-console */
 
-    this.#glimmerTopicDecision = decision;
+    this.#glimmerPostStreamEnabled = enabled;
 
-    return decision;
+    return enabled;
   }
 
   @computed("categories.[]")
   get categoriesById() {
     const map = new Map();
     this.categories.forEach((c) => map.set(c.id, c));
+    return map;
+  }
+
+  @computed("categories.@each.parent_category_id")
+  get categoriesByParentId() {
+    const map = new Map();
+    for (const category of this.categories) {
+      const siblings = map.get(category.parent_category_id) || [];
+      siblings.push(category);
+      map.set(category.parent_category_id, siblings);
+    }
     return map;
   }
 

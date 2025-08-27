@@ -1,7 +1,7 @@
 import { Promise } from "rsvp";
 import { bind } from "discourse/lib/decorators";
+import { HUGE_FILE_THRESHOLD_BYTES } from "discourse/lib/uppy/uppy-upload";
 import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
-import { HUGE_FILE_THRESHOLD_BYTES } from "discourse/mixins/uppy-upload";
 
 export default class UppyChecksum extends UploadPreProcessorPlugin {
   static pluginId = "uppy-checksum";

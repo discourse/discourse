@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    discourse_templates_enabled: "以下に指定されたカテゴリの表示アクセス権を持つユーザーに、利用可能なテンプレートの使用を許可する"
+    discourse_templates_categories: "テンプレートを取得するカテゴリ"
+    discourse_templates_enable_private_templates: "プライベートテンプレートの使用を有効にします"
+    discourse_templates_groups_allowed_private_templates: "プライベートテンプレートの使用が許可されたグループ。スタッフメンバーは常に許可されます。"
+    discourse_templates_private_templates_tags: "個人メッセージをプライベートテンプレートとして識別するタグ"
+  default_category_template:
+    name: テンプレート
+    description: |
+      このカテゴリはテンプレートの保存に使用されます。
+
+      テンプレートを使うと、ユーザーは頻繁に繰り返し使用するコンテンツを保存できます。
+
+      このカテゴリの各トピックは、異なるテンプレートです。各トピックの**最初の投稿**はテンプレートのモデルとして使用されます。
+
+      このカテゴリにアクセスできるすべてのユーザーは、テンプレートを使用できることに注意してください。

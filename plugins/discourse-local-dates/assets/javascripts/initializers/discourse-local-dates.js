@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -142,6 +143,8 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  api.registerRichEditorExtension(richEditorExtension);
+
   const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
   const defaultTitle = i18n("discourse_local_dates.default_title", {
@@ -159,25 +162,23 @@ function initializeDiscourseLocalDates(api) {
     });
   });
 
-  api.onToolbarCreate((toolbar) => {
-    toolbar.addButton({
-      title: "discourse_local_dates.title",
-      id: "local-dates",
-      group: "extras",
-      icon: "calendar-days",
-      perform: (event) =>
-        modal.show(LocalDatesCreateModal, {
-          model: { insertDate: (markup) => event.addText(markup) },
-        }),
-      shortcut: "Shift+.",
-      shortcutAction: (event) => {
-        const timezone = api.getCurrentUser().user_option.timezone;
-        const time = moment().format("HH:mm:ss");
-        const date = moment().format("YYYY-MM-DD");
+  api.addComposerToolbarPopupMenuOption({
+    name: "local-dates",
+    label: "discourse_local_dates.title",
+    icon: "far-clock",
+    action: (event) =>
+      modal.show(LocalDatesCreateModal, {
+        model: { insertDate: (markup) => event.addText(markup) },
+      }),
+    shortcut: "Shift+.",
+    alwaysShowShortcut: true,
+    shortcutAction: (event) => {
+      const timezone = api.getCurrentUser().user_option.timezone;
+      const time = moment().format("HH:mm:ss");
+      const date = moment().format("YYYY-MM-DD");
 
-        event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
-      },
-    });
+      event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+    },
   });
 
   addTextDecorateCallback(
@@ -344,7 +345,7 @@ class LocalDatesInit {
     window.addEventListener("click", this.showDatePopover, { passive: true });
 
     if (this.siteSettings.discourse_local_dates_enabled) {
-      withPluginApi("0.8.8", initializeDiscourseLocalDates);
+      withPluginApi(initializeDiscourseLocalDates);
     }
   }
 

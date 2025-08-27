@@ -13,6 +13,7 @@ RSpec.describe Reviewable, type: :model do
 
     it { is_expected.to have_many(:reviewable_scores).dependent(:destroy) }
     it { is_expected.to have_many(:reviewable_histories).dependent(:destroy) }
+    it { is_expected.to have_many(:reviewable_notes).dependent(:destroy) }
 
     it "can create a reviewable object" do
       expect(reviewable).to be_present
@@ -468,27 +469,62 @@ RSpec.describe Reviewable, type: :model do
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
 
-      expect do reviewable.perform(moderator, :approve_post) end.to change {
-        Jobs::NotifyReviewable.jobs.size
-      }.by(1)
+      perform_result = nil
+      messages =
+        MessageBus.track_publish("/reviewable_action") do
+          expect { perform_result = reviewable.perform(moderator, :approve_post) }.to change {
+            Jobs::NotifyReviewable.jobs.size
+          }.by(1)
+        end
 
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
       expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data).to eq(
+        {
+          success: true,
+          transition_to: :approved,
+          transition_to_id: 1,
+          created_post_id: perform_result.created_post.id,
+          created_post_topic_id: perform_result.created_post_topic.id,
+          remove_reviewable_ids: [reviewable.id],
+          version: 1,
+          reviewable_count: 0,
+          unseen_reviewable_count: 0,
+        },
+      )
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
 
-      expect do reviewable.perform(moderator, :reject_post) end.to change {
-        Jobs::NotifyReviewable.jobs.size
-      }.by(1)
+      messages =
+        MessageBus.track_publish("/reviewable_action") do
+          expect { reviewable.perform(moderator, :reject_post) }.to change {
+            Jobs::NotifyReviewable.jobs.size
+          }.by(1)
+        end
 
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
       expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data).to eq(
+        {
+          success: true,
+          transition_to: :rejected,
+          transition_to_id: 2,
+          remove_reviewable_ids: [reviewable.id],
+          version: 1,
+          reviewable_count: 0,
+          unseen_reviewable_count: 0,
+        },
+      )
     end
 
     it "triggers a notification on approve -> reject to update status" do
@@ -714,7 +750,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "#actions_for" do
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable, :reviewable_queued_post)
     fab!(:user)
 
     it "gets the bundles and actions for a reviewable" do

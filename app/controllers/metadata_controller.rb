@@ -29,6 +29,15 @@ class MetadataController < ApplicationController
     render plain: SiteSetting.app_association_ios, content_type: "application/json"
   end
 
+  def discourse_id_challenge
+    token = Discourse.redis.get("discourse_id_challenge_token")
+    raise Discourse::NotFound if token.blank?
+
+    expires_in 5.minutes
+
+    render json: { token:, domain: Discourse.current_hostname }
+  end
+
   private
 
   def default_manifest
@@ -59,8 +68,9 @@ class MetadataController < ApplicationController
         method: "GET",
         enctype: "application/x-www-form-urlencoded",
         params: {
-          title: "title",
           text: "body",
+          title: "title",
+          url: "title",
         },
       },
       shortcuts: [

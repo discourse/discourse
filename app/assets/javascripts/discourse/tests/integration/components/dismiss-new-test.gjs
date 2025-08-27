@@ -77,7 +77,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       );
   });
 
-  test("no selected topics with topics subset", async function (assert) {
+  test("selected replies unchecked with topics subset", async function (assert) {
     const self = this;
 
     this.model.subset = "topics";
@@ -86,13 +86,13 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
     );
 
-    assert.dom(".dismiss-posts").doesNotExist();
+    assert.dom(".dismiss-posts").isNotChecked();
     assert
       .dom(".dismiss-topics")
       .hasText(i18n("topics.bulk.dismiss_new_modal.topics"));
   });
 
-  test("no selected topics with replies subset", async function (assert) {
+  test("selected topics unchecked with replies subset", async function (assert) {
     const self = this;
 
     this.model.subset = "replies";
@@ -101,7 +101,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
     );
 
-    assert.dom(".dismiss-topics").doesNotExist();
+    assert.dom(".dismiss-topics").isNotChecked();
     assert
       .dom(".dismiss-posts")
       .hasText(i18n("topics.bulk.dismiss_new_modal.replies"));

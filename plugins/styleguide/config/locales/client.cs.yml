@@ -30,6 +30,8 @@ cs:
           title: "Vstupy data/času"
         menus:
           title: "Menu"
+        multi_select:
+          title: "Vícenásobný výběr"
         toasts:
           title: "Přípitky"
         font_scale:
@@ -87,8 +89,8 @@ cs:
           title: "Mapa tématu"
         site_header:
           title: "Záhlaví webu"
-        suggested_topics:
-          title: "Doporučená témata"
+        more_topics:
+          title: "Více témat"
         post_menu:
           title: "Nabídka příspěvku"
         modal:

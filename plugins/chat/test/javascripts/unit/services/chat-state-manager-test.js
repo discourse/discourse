@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import Site from "discourse/models/site";
+import { forceMobile } from "discourse/lib/mobile";
 import {
   addChatDrawerStateCallback,
   resetChatDrawerStateCallbacks,
@@ -33,7 +33,7 @@ module(
       assert.false(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
-      Site.currentProp("mobileView", true);
+      forceMobile();
 
       assert.true(this.subject.isFullPagePreferred);
     });
@@ -48,6 +48,18 @@ module(
       this.subject.prefersDrawer();
 
       assert.true(this.subject.isDrawerPreferred);
+    });
+
+    test("hasNoPreferredMode", async function (assert) {
+      assert.true(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersFullPage();
+
+      assert.false(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersDrawer();
+
+      assert.false(this.subject.hasNoPreferredMode);
     });
 
     test("lastKnownChatURL", function (assert) {
