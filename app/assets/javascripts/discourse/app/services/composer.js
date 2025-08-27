@@ -1707,9 +1707,21 @@ export default class ComposerService extends Service {
         }
       }
 
+      const savedDraftKey = this.model.draftKey;
+      const savedPostId = this.model.post?.id;
+      const savedTopicId = this.model.topic?.id;
+      const savedAction = this.model.action;
+
       this._saveDraftPromise = this.model
         .saveDraft()
         .then(() => {
+          // Notify listeners that a draft was saved, include targeting info
+          this.appEvents.trigger("draft:saved", {
+            draftKey: savedDraftKey,
+            postId: savedPostId,
+            topicId: savedTopicId,
+            action: savedAction,
+          });
           if (showToast) {
             this.toasts.success({
               duration: "short",

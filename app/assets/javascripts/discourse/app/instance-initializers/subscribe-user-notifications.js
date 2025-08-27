@@ -8,6 +8,10 @@ import {
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
+import {
+  setDraftDestroyed,
+  setDraftSaved,
+} from "discourse/lib/draft-state-cache";
 import { isTesting } from "discourse/lib/environment";
 import {
   isPushNotificationsEnabled,
@@ -219,6 +223,19 @@ class SubscribeUserNotificationsInit {
 
   @bind
   onUserDrafts(data) {
+    // Update draft store first so components reading it see the latest
+    const changed = data?.changed;
+    if (changed?.draft_key) {
+      if (changed.event === "saved") {
+        setDraftSaved(changed.draft_key, {
+          postId: changed.post_id,
+          action: changed.action,
+        });
+      } else if (changed.event === "destroyed") {
+        setDraftDestroyed(changed.draft_key);
+      }
+    }
+
     this.currentUser.updateDraftProperties(data);
   }
 

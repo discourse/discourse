@@ -99,6 +99,31 @@ class Draft < ActiveRecord::Base
       target_id: draft_id,
     )
 
+    # Publish draft change to MessageBus for this user (without exposing full content)
+    begin
+      payload =
+        begin
+          JSON.parse(data)
+        rescue StandardError
+          {}
+        end
+      MessageBus.publish(
+        "/user-drafts/#{user.id}",
+        {
+          changed: {
+            event: "saved",
+            draft_key: key,
+            sequence: sequence,
+            post_id: payload["postId"],
+            action: payload["action"],
+          },
+        },
+        user_ids: [user.id],
+      )
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to publish draft saved event")
+    end
+
     sequence
   end
 
@@ -143,6 +168,17 @@ class Draft < ActiveRecord::Base
 
     # corrupt data is not a reason not to leave data
     Draft.where(user_id: user.id, draft_key: key).destroy_all
+
+    # Publish destroyed event
+    begin
+      MessageBus.publish(
+        "/user-drafts/#{user.id}",
+        { changed: { event: "destroyed", draft_key: key, sequence: sequence } },
+        user_ids: [user.id],
+      )
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to publish draft destroyed event")
+    end
   end
 
   def display_user
