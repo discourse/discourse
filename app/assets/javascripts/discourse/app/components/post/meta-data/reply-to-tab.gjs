@@ -48,7 +48,7 @@ export default class PostMetaDataReplyToTab extends Component {
         {{icon "share"}}
       {{/if}}
       <PluginOutlet
-        @name="reply-to-tab-info"
+        @name="post-meta-data-reply-to-tab-info"
         @outletArgs={{lazyHash post=@post}}
       >
         {{avatar @post.reply_to_user imageSize="small"}}
