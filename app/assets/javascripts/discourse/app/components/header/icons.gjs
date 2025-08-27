@@ -68,11 +68,18 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
-    return (
-      !this.currentUser &&
-      this.siteSettings.content_localization_anon_language_switcher &&
-      this.siteSettings.content_localization_supported_locales
-    );
+    const has_locales =
+      !!this.siteSettings.content_localization_supported_locales;
+    switch (this.siteSettings.content_localization_language_switcher) {
+      case "none":
+        return false;
+      case "anonymous":
+        return !this.currentUser && has_locales;
+      case "all":
+        return has_locales;
+      default:
+        return false;
+    }
   }
 
   @action

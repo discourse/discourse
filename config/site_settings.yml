@@ -1654,8 +1654,13 @@ content_localization:
     default: 10
     type: integer
     hidden: true
-  content_localization_anon_language_switcher:
-    default: false
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
     client: true
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
