@@ -368,7 +368,7 @@ es:
           all: "Aplicar a todas las respuestas"
           replies:
             one: "Aplicar solo a la primera respuesta"
-            other: "Aplicar a las primeras %{count}} respuestas"
+            other: "Aplicar a las primeras %{count} respuestas"
         back: "Atrás"
         name: "Nombre"
         edit: "Editar"

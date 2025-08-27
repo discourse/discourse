@@ -142,43 +142,97 @@ ro:
               help: "Numele fluxului Zulip către care ar trebui trimis mesajul. De exemplu „general”"
             subject:
               title: "Subiect"
+          errors:
+            does_not_exist: "Acel flux nu există pe Zulip"
         rocketchat:
+          title: "Rocket.Chat"
           param:
             identifier:
               title: Canal
               help: "de ex. #canal, @utilizator."
+          errors:
+            invalid_channel: "Acel canal nu există pe Rocket Chat"
         gitter:
+          title: "Gitter"
           param:
             name:
               title: "Nume"
+              help: "Numele unei camere Gitter, de ex. gitterHQ/servicii."
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi o nouă integrare într-o cameră Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Jeton Flow"
+              help: "Jetonul Flow furnizat după crearea unei surse pentru un flux în care vrei să trimiți mesaje."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Nume instanță GroupMe"
+              help: "Numele instanței Groupme așa cum este listată în setările site-ului. Folosește „toate” pentru a trimite la toate instanțele."
+          errors:
+            not_found: "Calea pe care ai încercat să postezi mesajul tău nu a fost găsită. Verifică ID-ul botului în setările site-ului."
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "Nume"
+              help: "Un nume de canal Teams, de ex. discourse"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_channel: "Acel canal nu există pe Microsoft Teams"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru canal (afișat doar în interfața de administrare Discourse)"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_webhook: "Acea adresă URL pentru cârligul web nu este validă."
         webex:
+          title: "Webex Teams"
           param:
             name:
               title: "Nume"
+              help: "Un nume de spațiu Webex, de ex. discourse"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_channel: "Acel canal nu există pe Webex"
         google:
           title: "Google Chat"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru canal (afișat doar în interfața de administrare Discourse)"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web"
     discourse_automation:
       scriptables:
         send_slack_message:
+          title: Trimite mesaj Slack
           fields:
             message:
               label: Mesaj
+              description: >-
+                Folosește ${TOPIC} pentru numele subiectului, ${URL} pentru URL-ul utilizat, ${REMOVED_TAGS} pentru etichetele eliminate, ${ADDED_TAGS} pentru etichetele adăugate, ${ADDED_AND_REMOVED} pentru textul implicit. Disponibil doar dacă declanșatorul este setat la Etichete subiect modificate.
             url:
               label: URL
             channel:
               label: Canal
         send_chat_integration_message:
           fields:
+            channel_name:
+              label: Nume canal
             provider:
               label: Furnizor

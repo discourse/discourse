@@ -14,7 +14,7 @@ ro:
     user_silenced: "%{username} a suspendat acest cont până pe %{silenced_till}. Motiv: %{reason}"
   reports:
     user_notes:
-      title: "Note despre utilizator"
+      title: "Note utilizator"
       description: "Listează cele mai recente note despre utilizatori."
       labels:
         user: Utilizator

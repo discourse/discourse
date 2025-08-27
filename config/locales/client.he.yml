@@ -354,6 +354,9 @@ he:
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
       search: "חיפוש"
+    impersonation:
+      notice: "בחירת להתחקות אחר %{username}"
+      stop: "הפסקת התחזות"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא עובד עקב שגיאות ערכת עיצוב / רכיב. במסוף הדפדפן יופיעו פרטים נוספים על הנושא."
@@ -3031,7 +3034,9 @@ he:
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
       title: "או ללחוץ %{modifier}Enter"
+      save_and_close: "שמירה וסגירה"
       discard: "להשליך"
+      draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
@@ -6141,6 +6146,7 @@ he:
           only_experiments: "להציג יכולות ניסיוניות בלבד"
           experiment_enabled: "הפעלת את היכולת הניסיונית."
           experiment_disabled: "השבתת את היכולת הניסיונית."
+          feature_enabled: "הפעלת את היכולת."
           feature_disabled: "השבתת את היכולת."
           toggled_too_fast: "החלפת את מצב המתג מהר מדי. נא לחכות כמה שניות בטרם החלפת המצב שוב."
           experiment_tooltip:
@@ -7081,6 +7087,7 @@ he:
           set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
           setting_was_saved: "הגדרת ערכת העיצוב נשמרה"
           install_success: "%{theme} הותקנה בהצלחה!"
+          delete_success: "%{theme} נמחקה בהצלחה!"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
             one: "%{count} נבחרו"
@@ -7268,8 +7275,10 @@ he:
           dark: "כהה"
           title: "צבעים"
           edit: "עריכה"
+          view: "תצוגה"
           set_default_light: "הגדרה כערכת צבעים בהירה בערכת העיצוב של ברירת המחדל (%{theme})"
           set_default_dark: "הגדרה כערכת צבעים כהה בערכת העיצוב של ברירת המחדל (%{theme})"
+          set_default_success: "%{schemeName} הוגדרה כערכת ברירת מחדל עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
           filters:
@@ -7279,7 +7288,12 @@ he:
             from_theme: "מערכת עיצוב"
             no_results: "לא נמצאו ערכות צבעים"
           default_light_badge:
+            text: "בהיר כברירת מחדל"
+            title: "ערכת צבעים בהירה כברירת מחדל"
             reset: "איפוס מסננים"
+          default_dark_badge:
+            text: "כהה כברירת מחדל"
+            title: "ערכת צבעים כהה כברירת מחדל"
           system_palette: "זאת ערכת צבעים מובנית, אי אפשר לערוך או למחוק אותה."
           back_to_colors: "חזרה לערכות צבעים"
           long_title: "ערכות צבעים"
@@ -8341,6 +8355,9 @@ he:
           block_common_passwords:
             prompt: "פעולה זו תשנה את מדיניות הסיסמאות שלך. היא תשפיע על כל המשתמשים שישנו את הסיסמה שלהם מעתה ואילך. להמשיך?"
             confirm: "כן, לעדכן את מדיניות הסיסמאות"
+        job_status:
+          completed: "העדכון הושלם"
+          enqueued: "מתבצע עדכון"
       badges:
         status: מצב
         title: עיטורים
