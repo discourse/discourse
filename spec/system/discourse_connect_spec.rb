@@ -167,6 +167,7 @@ describe "Discourse Connect", type: :system do
       expect(page).to have_current_path(
         /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
         url: true,
+        ignore_query: false,
       )
     end
   end
