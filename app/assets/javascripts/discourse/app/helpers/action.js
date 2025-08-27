@@ -8,6 +8,7 @@ import {
 import { get } from "@ember/-internals/metal";
 import { flaggedInstrument } from "@ember/instrumentation";
 import { join } from "@ember/runloop";
+import deprecated from "discourse/lib/deprecated";
 
 function NOOP(args) {
   return args;
@@ -85,8 +86,13 @@ function invokeRef(value) {
 
 // a port of ember's builtin action helper
 export default setInternalHelperManager(({ named, positional }) => {
-  // TODO: deprecation
-  // `Usage of the \`(action)\` helper is deprecated. Migrate to native functions and function invocation.`
+  deprecated(
+    `Usage of the \`(action)\` helper is deprecated. Migrate to native functions and function invocation.`,
+    {
+      id: "discourse.template-action",
+      url: "https://deprecations.emberjs.com/id/template-action",
+    }
+  );
 
   let [context, action, ...restArgs] = positional;
 
