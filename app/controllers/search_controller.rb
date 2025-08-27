@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
   after_action :add_noindex_header
@@ -32,24 +33,6 @@ class SearchController < ApplicationController
     raise Discourse::InvalidParameters if page && (!page.is_a?(String) || page.to_i.to_s != page)
     if page && page.to_i > PAGE_LIMIT
       raise Discourse::InvalidParameters.new("page parameter must not be greater than 10")
-    end
-
-    if use_crawler_layout?
-      crawler_html = <<~HTML
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta name='robots' content='noindex'>
-            </head>
-            <body>
-              <p><em>*waves hand*</em> This is not the content you are looking for</p>
-            </body>
-          </html>
-        HTML
-
-      response.headers["X-Robots-Tag"] = "noindex"
-
-      return(render html: crawler_html.html_safe, layout: false, content_type: "text/html")
     end
 
     discourse_expires_in 1.minute
@@ -228,6 +211,26 @@ class SearchController < ApplicationController
       return e
     end
     false
+  end
+
+  def block_crawler
+    if use_crawler_layout?
+      crawler_html = <<~HTML
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta name='robots' content='noindex'>
+            </head>
+            <body>
+              <p><em>*waves hand*</em> This is not the content you are looking for</p>
+            </body>
+          </html>
+        HTML
+
+      response.headers["X-Robots-Tag"] = "noindex"
+
+      render html: crawler_html.html_safe, layout: false, content_type: "text/html"
+    end
   end
 
   def cancel_overloaded_search
