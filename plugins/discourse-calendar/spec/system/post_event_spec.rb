@@ -195,9 +195,9 @@ describe "Post event", type: :system do
     post =
       PostCreator.create!(
         admin,
-        title: "Test future recurring event",
+        title: "An expired recurring event",
         raw:
-          "[event start='2025-01-01 10:00' recurrenceUntil='2020-12-31 10:00:00 UTC' recurrence='every_week']\n[/event]",
+          "[event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']\n[/event]",
       )
 
     visit(post.topic.url)
