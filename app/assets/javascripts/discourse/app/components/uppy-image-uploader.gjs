@@ -18,7 +18,7 @@ import { authorizesOneOrMoreExtensions, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
-// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo
+// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo, previewSize
 export default class UppyImageUploader extends Component {
   @service currentUser;
   @service siteSettings;
@@ -108,12 +108,18 @@ export default class UppyImageUploader extends Component {
     return getURLWithCDN(this.args.imageUrl);
   }
 
+  get previewSize() {
+    return this.args.previewSize ?? "contain";
+  }
+
   get backgroundStyle() {
     // Only apply background style for images, not videos
     if (this.isVideoFile) {
       return htmlSafe("");
     }
-    return htmlSafe(`background-image: url(${this.imageCdnUrl})`);
+    return htmlSafe(
+      `background-image: url(${this.imageCdnUrl}); background-size: ${this.previewSize}`
+    );
   }
 
   get imageBaseName() {
