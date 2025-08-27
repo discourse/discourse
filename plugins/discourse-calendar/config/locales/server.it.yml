@@ -26,7 +26,6 @@ it:
       subject_template: "Invito collettivo elaborato con errori"
       text_body_template: "Il tuo file di invito collettivo è stato elaborato, %{processed} inviti creati con %{failed} errori. \n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
   site_settings:
-    events_max_rows: "Numero massimo di righe di testo per evento nel calendario."
     map_events_to_color: "Assegna un colore a ciascuna etichetta o categoria."
     map_events_title: "Sovrascrive \"Eventi\" nel titolo della barra laterale \"Prossimi eventi\" per categoria."
     calendar_enabled: "Abilita il plugin del calendario di discourse. Questo permetterà di supportare un tag [calendar][/calendar] nel primo messaggio di un argomento."

@@ -612,8 +612,8 @@ pl_PL:
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
       configuration:
         disable_embeddings: "Najpierw musisz wyłączyć opcję „włączone osadzanie sztucznej inteligencji”."
-        invalid_config: "Wybrałeś nieprawidłową opcję."
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
+        model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."

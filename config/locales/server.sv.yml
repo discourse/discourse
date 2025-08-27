@@ -4395,9 +4395,15 @@ sv:
         title: "Behåll inlägg raderat"
       approve_and_restore:
         title: "Godkänn och återställ inlägg"
+      no_action_user:
+        title: "Ingen åtgärd"
+      silence_user:
+        title: "Tysta användare"
+      suspend_user:
+        title: "Stäng av användare"
       delete_user:
+        complete: "Användare raderad"
         reason: "Raderad via granskningskön"
-        complete: "Användare raderad."
   email_style:
     html_missing_placeholder: "Html-mallen måste omfatta %{placeholder}"
   notification_level:

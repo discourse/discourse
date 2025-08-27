@@ -5333,9 +5333,20 @@ nl:
       approve_and_unhide:
         title: "Bericht goedkeuren en zichtbaar maken"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
+      no_action_user:
+        title: "Geen actie"
+      silence_user:
+        title: "Gebruiker dempen"
+        complete: "Gebruiker gedempt"
+      suspend_user:
+        title: "Gebruiker schorsen"
+        complete: "Gebruiker geschorst"
       delete_user:
+        title: "Gebruiker verwijderen"
+        complete: "Gebruiker verwijderd"
         reason: "Verwijderd via wachtrij voor beoordeling"
-        complete: "Gebruiker verwijderd."
+      delete_and_block_user:
+        complete: "Gebruiker verwijderd en geblokkeerd"
   email_style:
     html_missing_placeholder: "De HTML-sjabloon moet %{placeholder} bevatten"
   notification_level:

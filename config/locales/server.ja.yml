@@ -5202,9 +5202,16 @@ ja:
       approve_and_unhide:
         title: "投稿を承認して非表示を解除"
         complete: "投稿を承認して非表示状態を解除しました"
+      no_action_user:
+        title: "未対応"
+      silence_user:
+        title: "ユーザーを投稿禁止にする"
+      suspend_user:
+        title: "ユーザーを凍結する"
       delete_user:
+        title: "ユーザーを削除"
+        complete: "削除されたユーザー"
         reason: "レビューキューを介して削除されました"
-        complete: "ユーザーは削除されました。"
   email_style:
     html_missing_placeholder: "html テンプレートには %{placeholder} が含まれている必要があります。"
   notification_level:

@@ -595,7 +595,6 @@ he:
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
-        invalid_config: "בחרת אפשרות שגויה."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."
     llm_models:
       missing_provider_param: "%{param} לא יכול להישאר ריק"

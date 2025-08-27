@@ -314,7 +314,7 @@ pl_PL:
         month: "Miesiąc"
         week: "Tydzień"
         day: "Dzień"
-        list: "Lista"
+        year: "Rok"
     group_timezones:
       search: "Wyszukiwanie..."
       group_availability: "Dostępność %{group}"

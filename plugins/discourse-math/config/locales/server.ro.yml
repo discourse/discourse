@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ro:
+  site_settings:
+    discourse_math_enabled: "Activează modulul Discourse Math (va adăuga procesare specială la blocuri $ și $$)"
+    discourse_math_provider: "Furnizor de randare matematică implicit"
+    discourse_math_zoom_on_hover: "Mărește la 200% la trecere peste (numai MathJax)"
+    discourse_math_enable_accessibility: "Activează funcționalitățile de accesibilitate (doar pentru MathJax)"
+    discourse_math_enable_asciimath: "Activează asciimath (va adăuga procesare specială la intrare delimitată de %) (doar MathJax)"

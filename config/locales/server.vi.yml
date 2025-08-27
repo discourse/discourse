@@ -2184,8 +2184,10 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      no_action_user:
+        title: "Không có hành động"
       delete_user:
-        complete: "Người dùng đã bị xóa."
+        complete: "Người dùng đã bị xóa"
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

@@ -31,7 +31,7 @@ export default class UpcomingEventsList extends Component {
 
   @tracked isLoading = true;
   @tracked hasError = false;
-  @tracked eventsByMonth = {};
+  @tracked eventsByMonth = new Map();
 
   timeFormat = this.args.params?.timeFormat ?? DEFAULT_TIME_FORMAT;
   count = this.args.params?.count ?? DEFAULT_COUNT;
@@ -60,7 +60,7 @@ export default class UpcomingEventsList extends Component {
     return (
       !this.isLoading &&
       !this.hasError &&
-      Object.keys(this.eventsByMonth).length === 0
+      Array.from(this.eventsByMonth.values()).length === 0
     );
   }
 
@@ -132,7 +132,7 @@ export default class UpcomingEventsList extends Component {
   }
 
   groupByMonthAndDay(data) {
-    return data.reduce((result, item) => {
+    let events = data.reduce((result, item) => {
       const startDate = moment(item.starts_at);
       const endDate = item.ends_at ? moment(item.ends_at) : null;
       const today = moment();
@@ -152,6 +152,22 @@ export default class UpcomingEventsList extends Component {
 
       return result;
     }, {});
+
+    const sortedMonths = new Map(
+      Object.entries(events).sort(([a], [b]) => a.localeCompare(b))
+    );
+
+    const fullySorted = new Map();
+    for (const [month, days] of sortedMonths) {
+      const sortedDays = new Map(
+        Object.entries(days).sort(
+          ([a], [b]) => parseInt(a, 10) - parseInt(b, 10)
+        )
+      );
+      fullySorted.set(month, sortedDays);
+    }
+
+    return fullySorted;
   }
 
   <template>

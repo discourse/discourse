@@ -580,7 +580,7 @@ sr:
       reject:
         title: "Odbij"
       delete_user:
-        complete: "Korisnik izbrisan."
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   time:
     <<: *datetime_formats

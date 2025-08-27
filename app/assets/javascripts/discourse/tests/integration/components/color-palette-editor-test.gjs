@@ -364,8 +364,17 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       },
     ].map((data) => ColorSchemeColor.create(data));
 
+    const onColorChange = (color, value) => {
+      color.hex = value;
+    };
+
     await render(
-      <template><ColorPaletteEditor @colors={{colors}} /></template>
+      <template>
+        <ColorPaletteEditor
+          @colors={{colors}}
+          @onColorChange={{onColorChange}}
+        />
+      </template>
     );
 
     const textInput = this.subject.color("primary").textInput();
@@ -377,10 +386,6 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     });
     validPasteEvent.clipboardData.setData("text", "123abc");
     textInput.dispatchEvent(validPasteEvent);
-    assert.false(
-      validPasteEvent.defaultPrevented,
-      "valid hex color paste is not prevented"
-    );
     assert.strictEqual(
       toastService.activeToasts.length,
       0,

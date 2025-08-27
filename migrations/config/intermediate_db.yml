@@ -15,6 +15,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
+    badge_groupings: {}
     categories:
       columns:
         add:
@@ -86,6 +87,22 @@ schema:
           - "title"
           - "visibility_level"
     muted_users:
+      columns:
+        exclude:
+          - "id"
+    tag_group_memberships:
+      primary_key_column_names: [ "tag_group_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
+    tag_group_permissions:
+      primary_key_column_names: [ "tag_group_id", "group_id", "permission_type" ]
+      columns:
+        exclude:
+          - "id"
+    tag_groups: {}
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
       columns:
         exclude:
           - "id"
@@ -170,7 +187,6 @@ schema:
         - "backup_draft_posts"
         - "backup_draft_topics"
         - "backup_metadata"
-        - "badge_groupings"
         - "badge_types"
         - "bookmarks"
         - "calendar_events"
@@ -343,13 +359,8 @@ schema:
         - "skipped_email_logs"
         - "stylesheet_cache"
         - "summary_sections"
-        - "tag_group_memberships"
-        - "tag_group_permissions"
-        - "tag_groups"
         - "tag_search_data"
-        - "tag_users"
         - "tags_web_hooks"
-        - "theme_color_schemes"
         - "theme_fields"
         - "theme_modifier_sets"
         - "theme_settings"

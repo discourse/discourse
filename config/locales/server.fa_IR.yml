@@ -2910,8 +2910,13 @@ fa_IR:
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      no_action_user:
+        title: "هیچ اقدامی"
+      suspend_user:
+        title: "کاربر تعلیق شده"
       delete_user:
-        complete: "کاربر حذف شده."
+        title: "حذف کاربر"
+        complete: "کاربر حذف شده"
   fallback_username: "کاربران"
   user_status:
     errors:

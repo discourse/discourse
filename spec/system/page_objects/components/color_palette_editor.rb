@@ -15,6 +15,12 @@ module PageObjects
         )
       end
 
+      def input_for_hex(name)
+        component.find(
+          ".color-palette-editor__colors-item[data-color-name=\"#{name}\"] input[type=\"text\"]",
+        )
+      end
+
       def get_color_value(name)
         input_for_color(name).value
       end

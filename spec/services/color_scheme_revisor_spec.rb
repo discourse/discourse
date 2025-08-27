@@ -10,6 +10,7 @@ RSpec.describe ColorSchemeRevisor do
       color_scheme_colors: [color],
     )
   end
+  let(:dark_color_scheme) { ColorScheme.find_by(name: "Dark") }
   let(:valid_params) { { name: color_scheme.name, colors: nil } }
 
   describe "revise" do

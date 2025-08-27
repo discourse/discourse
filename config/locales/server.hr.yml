@@ -2421,8 +2421,10 @@ hr:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      no_action_user:
+        title: "Nema akcije"
       delete_user:
-        complete: "Korisnik izbrisan."
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   activemodel:
     errors:

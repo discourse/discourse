@@ -33,7 +33,6 @@ zh_CN:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "日历中每个活动的最大文本行数。"
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
     calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
