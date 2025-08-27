@@ -106,9 +106,7 @@ module Migrations::Importer::Steps
         default_value: DEFAULT_FIELD_TYPE,
       )
 
-      if !@needs_required_fields_version_bump && row[:requirement] == REQUIRED_FOR_ALL
-        @needs_required_fields_version_bump = true
-      end
+      @needs_required_fields_version_bump ||= row[:requirement] == REQUIRED_FOR_ALL
 
       super
     end
