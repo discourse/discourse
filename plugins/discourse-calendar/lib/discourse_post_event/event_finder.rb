@@ -154,7 +154,6 @@ SQL
             end
           )
 
-        # Combine both conditions
         full_condition = "(#{recurring_condition}) OR (#{non_recurring_condition})"
         all_values = recurring_values + non_recurring_values
 
