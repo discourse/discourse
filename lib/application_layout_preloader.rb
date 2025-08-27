@@ -86,6 +86,7 @@ class ApplicationLayoutPreloader
 
     @preloaded["topicTrackingStates"] = MultiJson.dump(hash[:data])
     @preloaded["topicTrackingStateMeta"] = MultiJson.dump(hash[:meta])
+    @preloaded["upcomingChanges"] = upcoming_changes
 
     if @guardian.is_admin?
       # This is used in the wizard so we can preload fonts using the FontMap JS API.
@@ -145,5 +146,20 @@ class ApplicationLayoutPreloader
   def custom_emoji
     serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
     MultiJson.dump(serializer)
+  end
+
+  def upcoming_changes
+    MultiJson.dump(
+      UpcomingChange
+        .all
+        .each_with_object({}) do |change, acc|
+          if change.plugin_identifier.present?
+            # TODO (martin) Handle plugin upcoming changes
+          else
+            acc[:core] ||= {}
+            acc[:core][change.identifier.to_sym] = change.enabled?
+          end
+        end,
+    )
   end
 end

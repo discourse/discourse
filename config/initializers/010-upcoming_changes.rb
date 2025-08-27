@@ -3,7 +3,8 @@
 Rails.application.config.to_prepare do
   RailsMultisite::ConnectionManagement.safe_each_connection do
     # load the core upcopming changes
-    changes = YAML.load_file("config/upcoming_changes.yml", aliases: true)
+    changes = YAML.load_file("config/upcoming_changes.yml")
+    changes = {} if !changes
 
     # HACK: This is all WIP, just getting something basic working for now
     changes.each do |change_identifier, change|

@@ -68,6 +68,7 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service modal;
   @service menu;
+  @service upcomingChanges;
 
   @optionalService composerPresenceManager;
 
@@ -698,6 +699,9 @@ export default class ChatComposer extends Component {
   }
 
   <template>
+    {{#if this.upcomingChanges.core.site_setting_formkit}}
+      Hello
+    {{/if}}
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
 
