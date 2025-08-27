@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          poll: "Discourse Umfrage"
+          poll: "Discourse – Umfrage"
   js:
     poll:
       voters:

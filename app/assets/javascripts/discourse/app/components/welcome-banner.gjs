@@ -9,6 +9,8 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { sanitize } from "discourse/lib/text";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
@@ -49,11 +51,25 @@ export default class WelcomeBanner extends Component {
   });
 
   get displayForRoute() {
-    return this.siteSettings.top_menu
-      .split("|")
-      .any(
-        (menuItem) => `discovery.${menuItem}` === this.router.currentRouteName
-      );
+    switch (this.siteSettings.welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return this.siteSettings.top_menu
+          .split("|")
+          .any(
+            (menuItem) =>
+              `discovery.${menuItem}` === this.router.currentRouteName
+          );
+      case "homepage":
+        return (
+          this.router.currentRouteName === `discovery.${defaultHomepage()}`
+        );
+      case "discovery":
+        return this.router.currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return true;
+      default:
+        return false;
+    }
   }
 
   get headerText() {
@@ -64,9 +80,8 @@ export default class WelcomeBanner extends Component {
     }
 
     return i18n("welcome_banner.header.logged_in_members", {
-      preferred_display_name: prioritizeNameFallback(
-        this.currentUser.name,
-        this.currentUser.username
+      preferred_display_name: sanitize(
+        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
       ),
     });
   }
@@ -91,14 +106,35 @@ export default class WelcomeBanner extends Component {
   }
 
   get locationClass() {
-    return `--${dasherize(this.siteSettings.welcome_banner_location)}`;
+    return `--location-${dasherize(this.siteSettings.welcome_banner_location)}`;
+  }
+
+  get bgImgClass() {
+    if (this.siteSettings.welcome_banner_image) {
+      return `--with-bg-img`;
+    }
+  }
+
+  get bgImgStyle() {
+    if (this.siteSettings.welcome_banner_image) {
+      return htmlSafe(
+        `background-image: url(${escapeExpression(
+          this.siteSettings.welcome_banner_image
+        )})`
+      );
+    }
   }
 
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        class={{concatClass "welcome-banner" this.locationClass}}
+        style={{if this.bgImgStyle this.bgImgStyle}}
+        class={{concatClass
+          "welcome-banner"
+          this.locationClass
+          this.bgImgClass
+        }}
         {{this.checkViewport}}
         {{this.handleKeyboardShortcut}}
       >
@@ -123,6 +159,7 @@ export default class WelcomeBanner extends Component {
               <SearchMenu
                 @location="welcome-banner"
                 @searchInputId="welcome-banner-search-input"
+                @placeholder={{i18n "welcome_banner.search"}}
               />
             </div>
             <PluginOutlet @name="welcome-banner-below-input" />

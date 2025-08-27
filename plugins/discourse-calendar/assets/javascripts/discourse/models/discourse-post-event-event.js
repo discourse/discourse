@@ -24,6 +24,7 @@ export default class DiscoursePostEventEvent {
   }
 
   @tracked title;
+  @tracked rrule;
   @tracked name;
   @tracked categoryId;
   @tracked startsAt;
@@ -46,7 +47,6 @@ export default class DiscoursePostEventEvent {
   @tracked isStandalone;
   @tracked recurrenceUntil;
   @tracked recurrence;
-  @tracked recurrenceRule;
   @tracked customFields;
   @tracked channel;
 
@@ -58,9 +58,9 @@ export default class DiscoursePostEventEvent {
 
   constructor(args = {}) {
     this.id = args.id;
+    this.rrule = args.rrule;
     this.name = args.name;
     this.categoryId = args.category_id;
-    this.upcomingDates = args.upcoming_dates;
     this.startsAt = args.starts_at;
     this.endsAt = args.ends_at;
     this.rawInvitees = args.raw_invitees;
@@ -78,7 +78,6 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = args.is_standalone;
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
-    this.recurrenceRule = args.recurrence_rule;
     this.recurrence = args.recurrence;
     this.recurrenceUntil = args.recurrence_until;
     this.canUpdateAttendance = args.can_update_attendance;
@@ -161,7 +160,7 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = event.isStandalone;
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
-    this.recurrenceRule = event.recurrenceRule;
+    this.rrule = event.rrule;
     this.recurrence = event.recurrence;
     this.recurrenceUntil = event.recurrenceUntil;
     this.canUpdateAttendance = event.canUpdateAttendance;

@@ -39,6 +39,7 @@ ja:
       date: "日付"
       add_to_calendar: "Google カレンダーに追加"
       toggle_timezone_offset_title: "タイムゾーンオフセットの切り替え"
+      local_time: "現地時間"
       region:
         title: "地域"
         none: "なし"
@@ -313,7 +314,7 @@ ja:
         month: "今月"
         week: "今週"
         day: "日"
-        list: "リスト"
+        year: "今年"
     group_timezones:
       search: "検索..."
       group_availability: "%{group} の空き状況"
@@ -323,10 +324,8 @@ ja:
         after_event_reminder: "イベントは終了しました"
         ongoing_event_reminder: "イベントは進行中です"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} はあなたの出席を自動的に設定して %{description} に招待しました"
-        before_event_reminder_html: "イベントが間もなく開始します: %{description}"
-        after_event_reminder_html: "イベントは終了しました: %{description}"
-        ongoing_event_reminder_html: "イベントは進行中です: %{description}"
+        invite_user_predefined_attendance_notification: "%{username} はあなたの出席を自動的に設定して %{eventName} に招待しました"
+        an_event: "イベント"
       edit_reason: "イベントが更新されました"
       edit_reason_closed: "イベント終了"
       edit_reason_opened: "イベント開始"
@@ -374,6 +373,8 @@ ja:
         creator: "作成者"
         status: "ステータス"
         starts_at: "開始時刻"
+        all_events: "すべてのイベント"
+        my_events: "イベント"
       upcoming_events_list:
         title: "今後のイベント"
         empty: "今後のイベントはありません"
@@ -431,6 +432,9 @@ ja:
         update: "保存"
         attach: "イベントを作成"
         add_reminder: "リマインダーを追加"
+        show_local_time:
+          label: "現地時間を表示"
+          description: "日付と時刻は %{timezone} で表示されます。イベントの開催場所でこれを使用すると、時刻はその場所のタイムゾーンで表示されます。"
         timezone:
           label: タイムゾーン
           remove_timezone: タイムゾーンなし (UTC)
@@ -447,6 +451,8 @@ ja:
           periods:
             before: "前"
             after: "後"
+        recurrence_until:
+          label: "終了 (含む)"
         recurrence:
           label: "繰り返し"
           none: "繰り返しなし"
@@ -459,13 +465,18 @@ ja:
         minimal:
           label: "ミニマルイベント"
           checkbox_label: "参加/不参加ボタンと招待者のステータスを非表示にする"
+        allow_chat:
+          label: "チャットの統合"
+          checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"
         url:
           label: "URL"
           placeholder: "オプション"
         location:
           label: "場所"
+          placeholder: "場所、リンクなどを追加します。"
         description:
           label: "説明"
+          placeholder: "イベントについてもう少し詳しく伝えましょう。改行やリンクがサポートされています。"
         name:
           label: "イベント名"
           placeholder: "オプション、デフォルトはトピックタイトル"

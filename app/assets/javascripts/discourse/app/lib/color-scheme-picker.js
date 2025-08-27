@@ -29,36 +29,15 @@ export function listColorSchemes(site, options = {}) {
   });
 
   const defaultLightColorScheme = site.get("default_light_color_scheme");
-  if (defaultLightColorScheme && !options.darkOnly) {
-    const existing = schemes.findBy("id", defaultLightColorScheme.id);
-    if (!existing) {
-      results.unshift({
-        id: defaultLightColorScheme.id,
-        name: `${i18n("user.color_schemes.default_description")}`,
-        theme_id: defaultLightColorScheme.theme_id,
-        colors: defaultLightColorScheme.colors,
-      });
-    }
-  }
-  if (options.darkOnly) {
-    const defaultDarkColorScheme = site.get("default_dark_color_scheme");
-    if (defaultDarkColorScheme) {
-      const existing = schemes.findBy("id", defaultDarkColorScheme.id);
-      if (!existing) {
-        results.unshift({
-          id: defaultDarkColorScheme.id,
-          name: `${i18n("user.color_schemes.default_description")}`,
-          theme_id: defaultDarkColorScheme.theme_id,
-          colors: defaultDarkColorScheme.colors,
-        });
-      }
-    } else {
-      results.unshift({
-        id: -1,
-        name: `${i18n("user.color_schemes.default_description")}`,
-      });
-    }
-  }
+  const defaultDarkColorScheme = site.get("default_dark_color_scheme");
+
+  results.unshift({
+    id: -1,
+    name: `${i18n("user.color_schemes.default_description")}`,
+    colors: options.darkOnly
+      ? defaultDarkColorScheme?.colors || []
+      : defaultLightColorScheme?.colors || [],
+  });
 
   return results.length === 0 ? null : results;
 }

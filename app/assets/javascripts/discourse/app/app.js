@@ -1,3 +1,4 @@
+import "./array-shim";
 import "./setup-deprecation-workflow";
 import "decorator-transforms/globals";
 import "./loader-shims";

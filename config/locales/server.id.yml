@@ -1841,7 +1841,7 @@ id:
       agree_and_edit:
         title: "Setuju dan Edit Post"
         description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
-      delete_single:
+      delete:
         title: "Hapus"
         complete: "Pos dihapus."
       delete_and_ignore:
@@ -1877,6 +1877,8 @@ id:
         complete: "Post disetujui."
       approve_post:
         complete: "Post disetujui."
+      approve_post_closed:
+        complete: "Post disetujui."
       reject_post:
         complete: "Post ditolak."
       approve_user:
@@ -1887,8 +1889,14 @@ id:
           complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      no_action_user:
+        title: "Tidak ada tindakan"
+      silence_user:
+        title: "Senyapkan pengguna"
+      suspend_user:
+        title: "Tangguhkan pengguna"
       delete_user:
-        complete: "Pengguna dihapus."
+        complete: "Pengguna dihapus"
   fallback_username: "pengguna"
   form_templates:
     errors:

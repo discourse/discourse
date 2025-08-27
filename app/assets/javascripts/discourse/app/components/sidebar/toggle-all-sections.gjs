@@ -6,7 +6,6 @@ import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 
 export default class ToggleAllSections extends Component {
   @service sidebarState;
-  @service keyValueStore;
 
   get collapsableSections() {
     return this.args.sections.filter(

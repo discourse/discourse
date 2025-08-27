@@ -8,7 +8,6 @@ import { i18n } from "discourse-i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 
 export default class AdminPluginConfigPage extends Component {
-  @service currentUser;
   @service adminPluginNavManager;
 
   get actionsOutletName() {

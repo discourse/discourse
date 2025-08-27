@@ -9,9 +9,16 @@ nl:
     ai:
       flag_types:
         review: "Bericht toevoegen aan beoordelingswachtrij"
+        review_hide: "Bericht toevoegen aan beoordelingswachtrij en bericht verbergen"
         spam: "Als spam markeren en bericht verbergen"
         spam_silence: "Als spam markeren, bericht verbergen en gebruiker dempen"
     scriptables:
+      llm_tool_triage:
+        title: Berichten triageren met AI-tool
+        description: "Triageer berichten met behulp van aangepaste logica in een AI-tool"
+      llm_persona_triage:
+        title: Berichten triageren met AI-persona
+        description: "Reageer op berichten met een specifieke AI-persona"
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
@@ -23,7 +30,9 @@ nl:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
   site_settings:
-    discourse_ai_enabled: "Schakel de Discours-AI-plug-in in."
+    discourse_ai_enabled: "Schakel de Discourse-AI-plug-in in."
+    ai_default_llm_model: "Het standaard LLM-model om te gebruiken voor alle AI-functies"
+    ai_artifact_security: "Het AI-artefactsysteem genereert IFRAME's met uitvoerbare code. De modus Strikt forceert een extra klik om code uit te voeren. De modus Soepel voert code direct uit. De modus Hybride stelt de gebruiker in staat om data-ai-artifact-autorun op te geven voor directe weergave. De modus Uitgeschakeld schakelt het artefactsysteem uit."
     ai_toxicity_enabled: "Schakel de toxiciteitsmodule in."
     ai_toxicity_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de toxiciteitsmodule"
     ai_toxicity_inference_service_api_key: "API-sleutel voor de toxiciteits-API"
@@ -45,12 +54,16 @@ nl:
     ai_nsfw_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de NVWW-module"
     ai_nsfw_inference_service_api_key: "API-sleutel voor de NVWW-API"
     ai_nsfw_flag_automatically: "Markeer automatisch NVWW-berichten die boven de geconfigureerde drempels komen."
-    ai_nsfw_flag_threshold_general: "Algemene drempel voor een afbeelding om als NSFW te worden beschouwd."
-    ai_nsfw_flag_threshold_drawings: "Drempel voor een tekening om als NSFW te worden beschouwd."
-    ai_nsfw_flag_threshold_hentai: "Drempelwaarde voor een als hentai geclassificeerde afbeelding om als NSFW te worden beschouwd."
-    ai_nsfw_flag_threshold_porn: "Drempelwaarde voor een als porno geclassificeerde afbeelding om als NSFW te worden beschouwd."
-    ai_nsfw_flag_threshold_sexy: "Drempelwaarde voor een als sexy geclassificeerde afbeelding om als NSFW te worden beschouwd."
+    ai_nsfw_flag_threshold_general: "Algemene drempel voor een afbeelding om als NVVW te worden beschouwd."
+    ai_nsfw_flag_threshold_drawings: "Drempel voor een tekening om als NVVW te worden beschouwd."
+    ai_nsfw_flag_threshold_hentai: "Drempelwaarde voor een als hentai geclassificeerde afbeelding om als NVVW te worden beschouwd."
+    ai_nsfw_flag_threshold_porn: "Drempelwaarde voor een als porno geclassificeerde afbeelding om als NVVW te worden beschouwd."
+    ai_nsfw_flag_threshold_sexy: "Drempelwaarde voor een als sexy geclassificeerde afbeelding om als NVVW te worden beschouwd."
     ai_nsfw_models: "Te gebruiken modellen voor NVWW-inferentie."
+    ai_spam_detection_enabled: "Schakel de AI-spamdetectiemodule in"
+    ai_openai_api_key: "API-sleutel voor OpenAI-API. ALLEEN gebruikt voor het creëren en bewerken van afbeeldingen. Gebruik voor GPT het tabblad LLM-configuratie"
+    ai_openai_image_generation_url: "URL voor OpenAI-API voor afbeeldingsgeneratie"
+    ai_openai_image_edit_url: "URL voor OpenAI-API voor afbeeldingsbewerking"
     ai_helper_enabled: "Schakel de AI-helper in."
     composer_ai_helper_allowed_groups: "Gebruikers in deze groepen zien de AI-hulpknop in de editor."
     ai_helper_allowed_in_pm: "Schakel de AI-hulp van de editor in in PB's."
@@ -68,11 +81,14 @@ nl:
     ai_embeddings_semantic_related_topics: "Maximaal aantal topics om weer te geven in de sectie met gerelateerde topics."
     ai_embeddings_backfill_batch_size: "Aantal insluitingen dat elke 15 minuten moet worden aangevuld."
     ai_embeddings_semantic_search_enabled: "Schakel semantisch zoeken op volledige pagina's in."
+    ai_embeddings_semantic_search_use_hyde: "Gebruik HyDE voor semantisch zoeken op volledige pagina's. Gebruikt een LLM om een hypothetisch bericht te creëren op basis van de zoekterm van de gebruiker om zo matches te vinden."
     ai_embeddings_semantic_quick_search_enabled: "Schakel de semantische zoekoptie in de zoekmenupop-up in."
     ai_embeddings_semantic_related_include_closed_topics: "Neem gesloten topics op in semantische zoekresultaten"
     ai_embeddings_semantic_search_hyde_model: "Gebruikt model voor het uitbreiden van trefwoorden om betere resultaten te krijgen bij semantisch zoeken"
     ai_embeddings_per_post_enabled: Insluitingen genereren voor elk bericht
+    ai_summarization_enabled: "Schakel de samenvattingsfunctie in"
     ai_summarization_model: "Te gebruiken model voor samenvattingen"
+    ai_summarization_persona: "Persona om te gebruiken voor de samenvattingsfunctie"
     ai_custom_summarization_allowed_groups: "Groepen die nieuwe samenvattingen mogen maken."
     ai_pm_summarization_allowed_groups: "Groepen mogen samenvattingen maken en bekijken in PB's."
     ai_summary_gists_enabled: "Genereer automatisch korte samenvattingen van de nieuwste reacties in topics"
@@ -90,11 +106,26 @@ nl:
     ai_stability_api_url: "URL voor de stability.ai-API"
     ai_google_custom_search_api_key: "API-sleutel voor de Google Custom Search-API zie: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX voor Google Custom Search-API"
+    ai_discord_search_enabled: "Schakelt de Discord-zoekfunctie in"
+    ai_discord_app_id: "De ID van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
+    ai_discord_app_public_key: "De openbare sleutel van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
+    ai_discord_search_mode: "Selecteer de zoekmodus die je wilt gebruiken voor de Discord-zoekfunctie"
+    ai_discord_search_persona: "De persona om te gebruiken voor de Discord-zoekfunctie"
+    ai_discord_allowed_guilds: "Discord-gilden (servers) waar de bot mag zoeken"
+    ai_bot_enable_dedicated_ux: "Sta dit toe voor een botinterface op het volledig scherm, in plaats van een PB"
+    ai_translation_enabled: "Schakelt de AI-vertaalfunctie in"
+    ai_translation_model: "Het model om te gebruiken voor vertaling. Dit model moet vertaling ondersteunen. Persona's kunnen deze instelling overschrijven."
+    ai_translation_backfill_limit_to_public_content: "Als dit is ingeschakeld, wordt alleen content in openbare categorieën vertaald. Als dit is uitgeschakeld, wordt ook content in groeps-PB's en privécategorieën vertaald."
+    ai_translation_max_post_length: "De maximale lengte van een te vertalen bericht. Berichten langer dan dit worden niet vertaald."
+    ai_translation_backfill_max_age_days: "De maximale leeftijd van een bericht en topic dat vertaald moet worden. Berichten en topics die ouder zijn dan dit worden niet vertaald. 0 schakelt het vertalen van eerdere berichten uit, maar niet van nieuwe berichten."
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
       flagged_by_nsfw: De AI-plug-in heeft dit gemarkeerd na classificatie van ten minste één van de bijgevoegde afbeeldingen als NVWW.
   reports:
+    sentiment_analysis:
+      title: "Sentimentanalyse"
+      description: "Dit rapport biedt een sentimentanalyse voor berichten, gegroepeerd op categorie, met positieve, negatieve en neutrale scores voor elk bericht en elke categorie."
     overall_sentiment:
       title: "Algemeen sentiment"
       description: 'De grafiek vergelijkt het aantal berichten dat als positief of negatief is geclassificeerd. Deze worden berekend wanneer positieve of negatieve scores groter zijn dan de ingestelde drempelscore. Dit betekent dat neutrale berichten niet worden weergegeven. Persoonlijke berichten (PB''s) zijn ook uitgesloten. Geclassificeerd met "cardiffnlp/twitter-roberta-base-sentiment-latest".'
@@ -186,8 +217,16 @@ nl:
       description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Je kunt maximaal %{count} sleutel hebben in het artefact."
+          other: "Je kunt maximaal %{count} sleutels hebben in het artefact."
+      link: "Weergeven in nieuw tabblad"
+      copy_embed: "Insluiting kopiëren"
       view_source: "Bron weergeven"
       view_changes: "Wijzigingen weergeven"
+      change_description: "Beschrijving wijzigen"
+      copied: "Gekopieerd naar klembord"
     unknown_model: "Onbekend AI-model"
     tools:
       custom_name: "%{name} (aangepast)"
@@ -202,6 +241,8 @@ nl:
           name: "Flux-afbeeldingsgenerator (Together.ai)"
         empty_tool:
           name: "Vanaf blanco beginnen..."
+      name:
+        characters: "mag alleen cijfers, letters en onderstrepingstekens bevatten"
     ai_helper:
       errors:
         completion_request_failed: "Er is iets misgegaan bij het geven van suggesties. Probeer het opnieuw."
@@ -237,13 +278,17 @@ nl:
       invalid_error_type: "Ongeldig fouttype opgegeven"
       unexpected: "Er is een onverwachte fout opgetreden"
       bot_user_update_failed: "Bijwerken van gebruiker voor spamscanbot mislukt"
+      configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
+      logging_subject: "Spamdetectie"
     ai_bot:
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
+      thinking: "Denken..."
       personas:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
         cannot_delete_system_persona: "Systeempersona's kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit"
         cannot_edit_system_persona: "Systeempersona's kunnen alleen worden hernoemd. Je kunt tools of systeemprompts niet bewerken. Je kunt ze wel uitschakelen en een kopie maken"
+        cannot_have_duplicate_tools: "Mag geen dubbele tools hebben"
         github_helper:
           name: "GitHub Helper"
           description: "AI-bot gespecialiseerd in het assisteren bij GitHub-gerelateerde taken en vragen"
@@ -253,12 +298,21 @@ nl:
         artist:
           name: Artiest
           description: "AI-bot gespecialiseerd in het genereren van afbeeldingen"
+        designer:
+          name: Ontwerper
+          description: "AI-bot gespecialiseerd in het genereren en bewerken van afbeeldingen"
+        forum_researcher:
+          name: Forumonderzoeker
+          description: "AI-bot gespecialiseerd in diepgaand onderzoek voor het forum"
         sql_helper:
           name: SQL-helper
           description: "AI-bot gespecialiseerd in het helpen opstellen van SQL-query's in dit Discourse-exemplaar"
         settings_explorer:
           name: Instellingenverkenner
           description: "AI-bot gespecialiseerd in het verkennen van Discourse-site-instellingen"
+        researcher:
+          name: Webonderzoeker
+          description: "AI-bot met Google-toegang die webpagina's kan doorzoeken en lezen"
         creative:
           name: Creatief
           description: "AI-bot zonder externe integraties, gespecialiseerd in creatieve taken"
@@ -271,17 +325,103 @@ nl:
         web_artifact_creator:
           name: "Webartefactmaker"
           description: "AI-bot gespecialiseerd in het maken van interactieve webartefacten"
+        summarizer:
+          name: "Samenvatter"
+          description: "Standaardpersona die AI-samenvattingen te ondersteunen"
+        short_summarizer:
+          name: "Samenvatter (korte vorm)"
+          description: "Standaardpersona die korte AI-samenvattingen voor items in topiclijsten ondersteunt"
+        concept_finder:
+          name: "Conceptzoeker"
+          description: "AI-bot gespecialiseerd in het identificeren van concepten en thema's in content"
+        concept_matcher:
+          name: "Conceptmatcher"
+          description: "AI-bot gespecialiseerd in het matchen van content met bestaande concepten"
+        concept_deduplicator:
+          name: "Conceptdeduplicator"
+          description: "AI-bot gespecialiseerd in het dedupliceren van concepten"
         custom_prompt:
           name: "Aangepaste prompt"
+          description: "Standaardpersona die de aangepaste promptfunctie van de Helper ondersteunt"
         smart_dates:
           name: "Slimme datums"
+          description: "Standaardpersona die de slimme datumfunctie van de Helper ondersteunt"
+        markdown_table_generator:
+          name: "Markdown-tabelgenerator"
+          description: "Standaardpersona die de Markdown-tabelfunctie van de Helper ondersteunt"
+        post_illustrator:
+          name: "Berichtillustrator"
+          description: "Genereert StableDiffusion-prompts om de berichtillustratiefunctie van de Helper te activeren"
+        proofreader:
+          name: "Proeflezer"
+          description: "Standaardpersona die de proefleesfunctie van de Helper ondersteunt"
+        titles_generator:
+          name: "Titelgenerator"
+          description: "Standaardpersona die de Helper-functie voor het voorstellen van topictitels ondersteunt"
+        tutor:
+          name: "Mentor"
+          description: "Standaardpersona die de uitlegfunctie van de Helper ondersteunt"
+        translator:
+          name: "Vertaler"
+          description: "Standaardpersona die de vertaalfunctie van de Helper ondersteunt"
+        image_captioner:
+          name: "Afbeeldingsbijschriften"
+          description: "Standaardpersona die de Helper-functie voor afbeeldingsbijschriften ondersteunt"
+        locale_detector:
+          name: "Taaldetector"
+          description: "Ondersteunt de vertaalfunctie door de taal van een bepaalde tekst (berichten, titels enz.) te detecteren."
+        post_raw_translator:
+          name: "Berichtvertaler"
+          description: "Ondersteunt de vertaalfunctie door berichten te vertalen die Discourse Markdown bevatten"
+        topic_title_translator:
+          name: "Topictitelvertaler"
+          description: "Ondersteunt de vertaalfunctie door topictitels te vertalen"
+        short_text_translator:
+          name: "Kortetekstvertaler"
+          description: "Ondersteunt de vertaalfunctie als een generieke tekstvertaler, gebruikt voor korte teksten zoals categorienamen of tags"
+        spam_detector:
+          name: "Spamdetector"
+          description: "Standaardpersona die onze spamdetectiefunctie ondersteunt"
+        content_creator:
+          name: "Contentmaker"
+          description: "Standaardpersona die de HyDE-zoekfunctie ondersteunt"
+        report_runner:
+          name: "Rapportenuitvoerder"
+          description: "Standaardpersona gebruikt in het rapportautomatiseringsscript"
       topic_not_found: "Samenvatting niet beschikbaar, topic niet gevonden!"
       summarizing: "Topic samenvatten"
       searching: "Zoeken naar: '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Taalmodel voor gebruik in onderzoek (standaard de LLM van de huidige persona)"
+          max_tokens_per_batch:
+            name: "Maximaal aantal tokens per batch"
+            description: "Maximaal aantal tokens dat voor elke batch in het onderzoek mag worden gebruikt"
+          max_tokens_per_post:
+            name: "Maximaal aantal tokens per bericht"
+            description: "Maximaal aantal tokens dat voor elk bericht in het onderzoek mag worden gebruikt"
           max_results:
             name: "Maximaal aantal resultaten"
+            description: "Maximaal aantal resultaten om op te nemen in een filter"
+          include_private:
+            name: "Inclusief privé"
+            description: "Privétopics opnemen in de filters"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Taalmodel voor gebruik bij het maken van artefacten"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Taalmodel voor gebruik bij het bewerken van artefacten"
+          update_algorithm:
+            name: "Updatealgoritme"
+            description: "Vraag de LLM om volledig te vervangen, of gebruik diff om bij te werken"
+          do_not_echo_artifact:
+            name: "Artefact niet echoën"
+            description: "Beperkt de kosten, maar vermindert de effectiviteit van artefactupdates"
         google:
           base_query:
             name: "Basiszoekquery"
@@ -301,6 +441,7 @@ nl:
             name: "Basiszoekquery"
             description: "Basisquery om te gebruiken bij het zoeken. Voorbeeld: '#urgent' voegt '#urgent' toe aan de zoekquery en neemt alleen topics mee met de categorie of tag 'urgent'."
       tool_summary:
+        read_artifact: "Lees een webartefact"
         update_artifact: "Werk een webartefact bij"
         create_artifact: "Webartefact maken"
         web_browser: "Web surfen"
@@ -323,7 +464,12 @@ nl:
         dall_e: "Afbeelding genereren"
         search_meta_discourse: "Zoeken in Meta Discourse"
         javascript_evaluator: "JavaScript evalueren"
+        create_image: "Afbeelding maken"
+        edit_image: "Afbeelding bewerken"
+        researcher: "Onderzoeken"
+        researcher_dry_run: "Onderzoek voorbereiden"
       tool_help:
+        read_artifact: "Webartefact lezen met behulp van de AI-bot"
         update_artifact: "Werk een webartefact bij met behulp van de AI-bot"
         create_artifact: "Maak een webartefact met behulp van de AI-bot"
         web_browser: "Webpagina bekijken met behulp van de AI-bot"
@@ -338,6 +484,8 @@ nl:
         time: "Zoek de tijd in verschillende tijdzones"
         summary: "Vat een topic samen"
         image: "Afbeelding genereren met Stable Diffusion"
+        create_image: "Afbeelding genereren met behulp van het Open AI GPT-afbeeldingsmodel"
+        edit_image: "Afbeelding bewerken met behulp van het Open AI GPT-afbeeldingsmodel"
         google: "Query zoeken op Google"
         read: "Openbaar topic op forum lezen"
         setting_context: "Site-instellingscontext opzoeken"
@@ -346,8 +494,11 @@ nl:
         dall_e: "Afbeelding genereren met DALL-E 3"
         search_meta_discourse: "Zoeken in Meta Discourse"
         javascript_evaluator: "JavaScript evalueren"
+        researcher: "Foruminformatie onderzoeken met behulp van de AI-bot"
       tool_description:
+        read_artifact: "Webartefact lezen met behulp van de AI-bot"
         update_artifact: "Webartefact bijgewerkt met behulp van de AI-bot"
+        create_artifact: "Webartefact gemaakt: %{name} - %{specification}"
         web_browser: "Lezen: <a href='%{url}'>%{url}</a>"
         github_search_files: "Gezocht naar '%{keywords}' in %{repo}/%{branch}"
         github_search_code: "Gezocht naar '%{query}' in %{repo}"
@@ -378,9 +529,19 @@ nl:
           other: "%{count} <a href='%{url}'>resultaten</a> gevonden voor '%{query}'"
         setting_context: "Context lezen voor: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Voorgestelde doelen: %{goals}\n\n%{count} bericht gevonden dat overeenkomt met '%{filter}'"
+          other: "Voorgestelde doelen: %{goals}\n\n%{count} berichten gevonden die overeenkomen met '%{filter}'"
+        researcher:
+          one: "Onderzoeken: %{goals}\n\n%{count} bericht gevonden dat overeenkomt met '%{filter}'"
+          other: "Onderzoeken: %{goals}\n\n%{count} berichten gevonden die overeenkomen met '%{filter}'"
         search_settings:
           one: "%{count} resultaat gevonden voor '%{query}'"
           other: "%{count} resultaten gevonden voor '%{query}'"
+      discoveries:
+        continue_conversation:
+          title: "Ontdekkingsgesprek: zoek naar %{query}"
+          raw: "Tijdens het zoeken naar %{query} heb je me de volgende informatie laten zien:\n\n%{context}\n\nLaten we het gesprek voortzetten."
     summarization:
       configuration_hint:
         one: "Configureer eerst de instelling '%{setting}'."
@@ -404,9 +565,12 @@ nl:
           neutral: "Neutraal"
     llm:
       configuration:
+        create_llm: "Je moet een LLM instellen voordat je deze functie inschakelt"
+        disable_modules_first: "Je moet deze modules eerst uitschakelen: %{settings}"
         set_llm_first: "Stel eerst %{setting} in"
         model_unreachable: "We konden geen antwoord krijgen van dit model. Controleer eerst je instellingen."
         invalid_seeded_model: "Je kunt dit model niet gebruiken met deze functie"
+        invalid_persona_response_format: "De geselecteerde persona moet een responsindeling hebben met een booleaans veld genaamd \"spam\""
         must_select_model: "Je moet eerst een LLM selecteren"
       endpoints:
         not_configured: "%{display_name} (niet geconfigureerd)"
@@ -417,6 +581,8 @@ nl:
         one: "We kunnen dit model niet verwijderen omdat %{settings} het gebruikt. Werk de instelling bij en probeer het opnieuw."
         other: "We kunnen dit model niet verwijderen omdat %{settings} het gebruiken. Werk de instellingen bij en probeer het opnieuw."
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
+    personas:
+      malformed_examples: "De gegeven voorbeelden hebben een onjuiste indeling."
     embeddings:
       delete_failed: "Dit model is momenteel in gebruik. Werk eerst 'ai embeddings selected model' bij."
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
@@ -428,6 +594,7 @@ nl:
       bedrock_invalid_url: "Vul alle velden in om dit model te gebruiken."
     ai_staff_action_logger:
       updated: "bijgewerkt"
+      set: "instellen"
       removed: "verwijderd"
     errors:
       quota_exceeded: "Je hebt het quotum voor dit model overschreden. Probeer het opnieuw over %{relative_time}."
@@ -441,3 +608,10 @@ nl:
       no_default_llm: Er moet een default_llm zijn gedefinieerd voor de persona.
       user_not_allowed: De gebruiker mag niet deelnemen aan het topic.
       prompt_message_length: Het bericht %{idx} is langer dan de limiet van 1000 tekens.
+      persona_already_exists: Persona met de naam %{name} bestaat al.
+      custom_tool_exists:
+        one: "Aangepaste tool met de naam %{names} bestaat al."
+        other: "Aangepaste tools met de namen %{names} bestaan al."
+  dashboard:
+    problem:
+      ai_llm_status: "Het LLM-model %{model_name} ondervindt problemen. Controleer de <a href='%{url}'>configuratiepagina van het model</a>."

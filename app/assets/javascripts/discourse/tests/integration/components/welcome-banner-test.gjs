@@ -18,11 +18,11 @@ module(
     test("applies the welcome_banner_location CSS class", async function (assert) {
       this.siteSettings.welcome_banner_location = "above_topic_content";
       await render(<template><WelcomeBanner /></template>);
-      assert.dom(".welcome-banner.--above-topic-content").exists();
+      assert.dom(".welcome-banner.--location-above-topic-content").exists();
 
       this.siteSettings.welcome_banner_location = "below_site_header";
       await render(<template><WelcomeBanner /></template>);
-      assert.dom(".welcome-banner.--below-site-header").exists();
+      assert.dom(".welcome-banner.--location-below-site-header").exists();
     });
 
     test("shows the logged in user message with the user's username", async function (assert) {
@@ -48,6 +48,29 @@ module(
         }),
         "banner contains the correct message for logged in users with username"
       );
+
+      this.currentUser.name = "<input type='text'></input>Robin Ward";
+      await render(<template><WelcomeBanner /></template>);
+
+      assert.dom(".welcome-banner").containsText(
+        i18n("welcome_banner.header.logged_in_members", {
+          preferred_display_name: "Robin Ward",
+        }),
+        "banner contains the correct message for logged in users with username"
+      );
+      assert.dom(".welcome-banner .welcome-banner__title input").doesNotExist();
+    });
+
+    test("uses the welcome_banner.search translation for placeholder", async function (assert) {
+      await render(<template><WelcomeBanner /></template>);
+
+      assert
+        .dom("#welcome-banner-search-input")
+        .hasAttribute(
+          "placeholder",
+          i18n("welcome_banner.search"),
+          "search input uses the welcome_banner.search translation as placeholder"
+        );
     });
   }
 );

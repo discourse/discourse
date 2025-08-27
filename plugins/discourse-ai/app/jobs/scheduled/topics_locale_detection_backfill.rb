@@ -12,26 +12,12 @@ module Jobs
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
 
       topics =
-        Topic
-          .where(locale: nil, deleted_at: nil)
-          .where("topics.user_id > 0")
-          .where("topics.created_at > ?", SiteSetting.ai_translation_backfill_max_age_days.days.ago)
+        DiscourseAi::Translation::TopicCandidates
+          .get()
+          .where(locale: nil)
+          .order(updated_at: :desc)
+          .limit(limit)
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        topics =
-          topics.where(category_id: Category.where(read_restricted: false).select(:id)).where(
-            "archetype != ?",
-            Archetype.private_message,
-          )
-      else
-        topics =
-          topics.where(
-            "archetype != ? OR EXISTS (SELECT 1 FROM topic_allowed_groups WHERE topic_id = topics.id)",
-            Archetype.private_message,
-          )
-      end
-
-      topics = topics.order(updated_at: :desc).limit(limit)
       return if topics.empty?
 
       topics.each do |topic|

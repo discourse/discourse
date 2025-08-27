@@ -437,6 +437,26 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("facebook")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
+
+      context "with a suspended user" do
+        before do
+          user.suspended_till = 2.years.from_now
+          user.suspended_at = Time.now
+          user.save!
+        end
+
+        it "shows suspended message" do
+          mock_facebook_auth
+          visit("/")
+
+          signup_page.open.click_social_button("facebook")
+
+          expect(page).to have_css(
+            ".alert-error",
+            text: I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
+          )
+        end
+      end
     end
 
     context "with Google" do

@@ -24,6 +24,7 @@ pt:
         month: "Mês"
         week: "Semana"
         day: "Dia"
+        year: "Ano"
     group_timezones:
       search: "Pesquisar..."
     discourse_post_event:

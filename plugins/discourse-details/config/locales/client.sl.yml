@@ -6,8 +6,6 @@
 
 sl:
   js:
-    details:
-      title: Skrij podrobnosti
     composer:
       details_title: Povzetek
       details_text: "To besedilo bo skrito, dokler ga bralec ne razširi"

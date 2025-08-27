@@ -44,6 +44,20 @@ module DiscourseSolved
       plugin.register_custom_filter_by_status("solved", &solved_callback)
       plugin.register_custom_filter_by_status("unsolved", &unsolved_callback)
 
+      plugin.register_modifier(:topics_filter_options) do |results, guardian|
+        results << {
+          name: "status:solved",
+          description: I18n.t("solved.filter.description.solved"),
+          type: "text",
+        }
+        results << {
+          name: "status:unsolved",
+          description: I18n.t("solved.filter.description.unsolved"),
+          type: "text",
+        }
+        results
+      end
+
       plugin.register_search_advanced_filter(/status:solved/, &solved_callback)
       plugin.register_search_advanced_filter(/status:unsolved/, &unsolved_callback)
 

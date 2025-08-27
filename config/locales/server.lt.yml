@@ -2626,7 +2626,7 @@ lt:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      delete_single:
+      delete:
         title: "Pašalinti"
         complete: "Įrašas ištrintas."
       delete_and_ignore:
@@ -2649,6 +2649,9 @@ lt:
         title: "Patvirtinti"
       approve_post:
         title: "Patvirtinti įrašą"
+      approve_post_closed:
+        title: "Patvirtinti įrašą"
+        complete: "Įrašas patvirtintas."
       reject_post:
         title: "Atmesti įrašą"
       approve_user:
@@ -2670,8 +2673,10 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_user:
+        title: "Jokių veiksmų"
       delete_user:
-        complete: "Naudotojas ištrintas."
+        complete: "Naudotojas ištrintas"
   create_linked_topic:
     post_raw: "Tęsiant diskusiją nuo %{parent_url}.\n\nAnkstesnės diskusijos:\n\n%{previous_topics}"
     small_action_post_raw: "Tęsti diskusiją %{new_title}."

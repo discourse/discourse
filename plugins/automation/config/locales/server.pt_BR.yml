@@ -9,8 +9,15 @@ pt_BR:
     discourse_automation_enabled: "Ativar plugin discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "O script não pode ficar em branco"
+          trigger_blank: "O acionador não pode ficar em branco"
+          script_missing_required_fields: "Script ausente nos campos obrigatórios: %{fields}"
+          trigger_missing_required_fields: "Acionador ausente dos campos obrigatórios: %{fields}"
       fields:
         required_field: O campo `%{name}` deve ser preenchido em `%{target}:%{target_name}`.
+        invalid_field: O componente do campo "%{component}" não pode ser usado em "%{target}:%{target_name}".
         invalid_metadata: Os dados para `%{field}` são inválidos ou o componente `%{component}` é desconhecido.
     triggerables:
       errors:

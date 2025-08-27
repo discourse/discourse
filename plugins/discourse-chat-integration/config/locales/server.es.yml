@@ -61,6 +61,9 @@ es:
     chat_integration_webex_excerpt_length: "Longitud del extracto de la publicación de Webex Team"
     chat_integration_google_enabled: "Habilitar el proveedor de integración de chat «Google Chat»"
     chat_integration_google_excerpt_length: "Longitud del extracto de la publicación de Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "Algunos canales de integración de chat tienen errores. Visita <a href='%{base_path}/admin/plugins/chat-integration'>la sección de integración de chat</a> para saber más."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -96,24 +99,24 @@ es:
           error: "Lo sentimos, se produjo un error al eliminar esa regla. Ejecuta `/discourse status` para obtener una lista de reglas."
         not_found:
           tag: "La etiqueta *%{name}* no se encuentra."
-          category: "No se puede encontrar la categoría *%{name} Categorías disponibles: *%{list}*"
+          category: "No se puede encontrar la categoría *%{name}*. Categorías disponibles: *%{list}*."
         help: |
-          *Nueva regla:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          *Nueva regla:* «/discourse [thread|watch|follow|mute] [category] [tag:name]»
           (debes especificar un tipo de regla y al menos una categoría o etiqueta)
           - *thread*: notifica a este canal los nuevos temas, las respuestas al hilo si es posible
-          - *watch*: notificar a este canal los nuevos temas y las nuevas respuestas
-          - *follow*: notificar a este canal los nuevos temas
-          - *mute*: bloquear las notificaciones a este canal
+          - *watch*: notifica a este canal los nuevos temas y las nuevas respuestas
+          - *follow*: notifica a este canal los nuevos temas
+          - *mute*: bloquea las notificaciones a este canal
 
-          *Eliminar regla:* `/discourse remove [rule number]`
-          (`[rule number]` se puede encontrar ejecutando `/discourse status`)
+          *Eliminar regla:* «/discourse remove [rule number]»
+          («[rule number]» se puede encontrar ejecutando «/discourse status»)
 
-          *Lista de reglas:* `/discourse status`
+          *Lista de reglas:* «/discourse status»
 
-          *[Experimental] Transcripción de la publicación:* `/discourse post [n]`
-          Crea un tema borrador en discourse que contenga los últimos `n` mensajes de este canal
+          *[Experimental] Transcripción de la publicación:* «/discourse post [n]»
+          Crea un tema borrador en Discourse que contenga las últimas publicaciones «n» de este canal
 
-          *Ayuda:* `/discourse help`
+          *Ayuda:* «/discourse help»
         transcript:
           modal_title: "Crear transcripción"
           modal_description: "Todos los mensajes del hilo se agruparán en una única publicación del foro. Se te dará la oportunidad de editar la transcripción antes de publicarla."
@@ -167,7 +170,7 @@ es:
           (debes especificar un tipo de regla y al menos una categoría o etiqueta)
           - <b>watch</b>: notifica a este canal en cada nuevo tema y respuesta
           - <b>follow</b>: notifica a este canal en cada nuevo tema
-          - <b>mute</b>: bloquear notificaciones a este canal
+          - <b>mute</b>: bloquea notificaciones a este canal
 
           <b>Eliminar regla:</b> <code>/remove [rule number]</code>
           (el <code>[rule number]</code> puede encontrarse ejecutando <code>/status</code>)
@@ -197,18 +200,18 @@ es:
           tag: "La etiqueta *%{name}* no se encuentra."
           category: "No se puede encontrar la categoría *%{name} Categorías disponibles: *%{list}*"
         help: |
-          *Nueva regla:* `/discourse [watch|follow|mute] [category] [tag:name]`
+          *Nueva regla:* «/discourse [watch|follow|mute] [category] [tag:name]»
           (debes especificar un tipo de regla y al menos una categoría o etiqueta)
           - *watch*: notifica a este canal en cada nuevo tema y respuesta
           - *follow*: notifica a este canal en cada nuevo tema
-          - *mute*: bloquear notificaciones a este canal
+          - *mute*: bloquea notificaciones a este canal
 
-          *Eliminar regla:* `/discourse remove [rule number]`
-          (el `[rule number]` puede encontrarse ejecutando `/discourse status`)
+          *Eliminar regla:* «/discourse remove [rule number]»
+          (el «[rule number]» puede encontrarse ejecutando «/discourse status»)
 
-          *Lista de reglas:* `/discourse status`
+          *Lista de reglas:* «/discourse status»
 
-          *Ayuda:* `/discourse help`
+          *Ayuda:* «/discourse help»
       matrix:
         text_message: "%{user} publicó en %{title} - %{post_url}"
         formatted_message: |

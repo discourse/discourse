@@ -38,7 +38,7 @@ zh_CN:
         reminder:
           label: 提醒
           description: 发送接受策略提醒通知的频率
-          no_reminder: (无提醒)
+          no_reminder: '（无提醒）'
         accept:
           label: 接受
           description: 接受按钮上使用的文本
@@ -53,7 +53,7 @@ zh_CN:
           description: 通过电子邮件通知用户新策略
         add-users-to-group:
           label: 将用户添加到群组
-          description: 当用户接受此策略时，将其添加到以下组中
+          description: 当用户接受此政策时，将其添加到以下组中
       preferences:
         title: 策略
         policy_emails:
@@ -61,6 +61,6 @@ zh_CN:
           away_description: 仅当我们在策略状态发生更改的 10 分钟内没有看到您，并且您还选择了接收新的活动电子邮件时，我们才会给您发送电子邮件。
           label: 当策略需要我审核时给我发送电子邮件
           email_frequency_options:
-            never: 永不
+            never: 从不
             when_away: 仅在离开时
             always: 始终

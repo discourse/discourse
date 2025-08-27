@@ -20,7 +20,10 @@ RSpec.describe SiteSettings::DbProvider do
     expect(provider.all.length).to eq(0)
     expect(provider.find("test")).to eq(nil)
 
+    SiteSetting.expects(:notify_changed!).at_least_once
+
     provider.save("test", "one", 1)
+
     found = provider.find("test")
 
     expect_same_setting(found, setting.new("test", "one", 1))

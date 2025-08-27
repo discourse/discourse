@@ -131,7 +131,6 @@ sk:
               help: "Názov, ktorý opisuje kanál. Nepoužíva sa pre pripojenie k Matrixu."
             room_id:
               title: "ID miestnosti"
-              help: "„Súkromný identifikátor“ miestnosti. Mal by vyzerať nejako takto !abcdefg:matrix.org"
           errors:
             unknown_token: "Prístupový token je neplatný"
             unknown_room: "ID miestnosti je neplatné"

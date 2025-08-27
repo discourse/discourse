@@ -39,4 +39,63 @@ describe DiscourseAi::Embeddings::EntryPoint do
       end
     end
   end
+
+  describe "similar_topic_candidate_ids modifier" do
+    # The Distance gap to target increases for each element of topics.
+    def seed_embeddings(topics)
+      schema = DiscourseAi::Embeddings::Schema.for(Topic)
+      base_value = 1
+
+      topics.each_with_index do |t, idx|
+        base_value -= 0.01
+        schema.store(t, [base_value] * embedding_definition.dimensions, "digest")
+      end
+    end
+
+    def stub_query_embedding(query)
+      embedding = [1] * embedding_definition.dimensions
+
+      EmbeddingsGenerationStubs.hugging_face_service(query, embedding)
+    end
+
+    fab!(:category)
+    fab!(:normal_topic_1) { Fabricate(:topic, category: category) }
+    fab!(:normal_topic_2) { Fabricate(:topic, category: category) }
+    fab!(:private_topic) { Fabricate(:private_message_topic) }
+
+    let(:query) { "title\n\nraw" }
+
+    fab!(:embedding_definition)
+
+    before do
+      [normal_topic_1, normal_topic_2, private_topic].each_with_index do |t, idx|
+        Fabricate(
+          :post,
+          topic: t,
+          user: t.user,
+          post_number: 1,
+          raw: "This is a post with raw ##{idx + 1}",
+        )
+      end
+
+      seed_embeddings([normal_topic_1, private_topic])
+      stub_query_embedding(query)
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+    end
+
+    it "appends topic IDs" do
+      similar_topics = Topic.similar_to("title", "raw")
+
+      expect(similar_topics.map(&:id)).to contain_exactly(normal_topic_1.id)
+    end
+
+    it "does nothing if embeddings is not enabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      similar_topics = Topic.similar_to("title", "raw")
+
+      expect(similar_topics.map(&:id)).to be_empty
+    end
+  end
 end

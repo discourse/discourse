@@ -8,7 +8,7 @@ de:
   discourse_automation:
     ai:
       flag_types:
-        review: "Beitrag zur Überprüfungswarteschlange hinzufügen"
+        review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
@@ -73,7 +73,7 @@ de:
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_illustrate_post_model: "Modell, das für die Funktion „Beitrag illustrieren“ des Composer-KI-Helfers verwendet wird"
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
-    post_ai_helper_allowed_groups: "Nutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
+    post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
     ai_helper_image_caption_model: "Wähle das Modell aus, das für die Erstellung von Bildbeschriftungen verwendet werden soll"
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
@@ -81,6 +81,7 @@ de:
     ai_embeddings_semantic_related_topics: "Maximale Anzahl der Themen, die im Abschnitt für verwandte Themen angezeigt werden sollen."
     ai_embeddings_backfill_batch_size: "Anzahl der Einbettungen, die alle 15 Minuten aufgefüllt werden."
     ai_embeddings_semantic_search_enabled: "Aktiviere die semantische Ganzseitensuche."
+    ai_embeddings_semantic_search_use_hyde: "Verwende HyDE für die semantische Ganzseitensuche. Verwendet ein LLM, um einen hypothetischen Beitrag aus dem Suchbegriff des Benutzers zu erstellen, der bei der Suche nach Treffern hilft."
     ai_embeddings_semantic_quick_search_enabled: "Aktiviere die semantische Suchoption im Such-Menü-Pop-up."
     ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
     ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"
@@ -220,7 +221,7 @@ de:
         max_keys_exceeded:
           one: "Du kannst nur %{count} Schlüssel im Artefakt haben."
           other: "Du kannst nur %{count} Schlüssel im Artefakt haben."
-      link: "In neuem Tab anzeigen"
+      link: "In neuer Registerkarte anzeigen"
       copy_embed: "Einbettung kopieren"
       view_source: "Quelle anzeigen"
       view_changes: "Änderungen anzeigen"
@@ -282,7 +283,7 @@ de:
     ai_bot:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
-      thinking: "Ich denke..."
+      thinking: "Ich denke …"
       personas:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
@@ -587,7 +588,6 @@ de:
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
-        invalid_config: "Du hast eine ungültige Option ausgewählt."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"

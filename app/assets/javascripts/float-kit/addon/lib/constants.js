@@ -16,6 +16,7 @@ export const FLOAT_UI_PLACEMENTS = [
 export const VISIBILITY_OPTIMIZERS = {
   FLIP: "flip",
   AUTO_PLACEMENT: "autoPlacement",
+  NONE: "none",
 };
 
 export const TOOLTIP = {
@@ -84,6 +85,8 @@ export const MENU = {
     contentClass: null,
     class: null,
     updateOnScroll: true,
+    matchTriggerMinWidth: false,
+    matchTriggerWidth: false,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

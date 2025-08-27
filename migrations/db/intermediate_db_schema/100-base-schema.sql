@@ -2,6 +2,15 @@
 -- update the "config/intermediate_db.yml" configuration file and then run
 -- `bin/cli schema generate` to regenerate this file.
 
+CREATE TABLE badge_groupings
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    description TEXT,
+    name        TEXT     NOT NULL,
+    position    INTEGER  NOT NULL
+);
+
 CREATE TABLE badges
 (
     original_id         NUMERIC  NOT NULL PRIMARY KEY,
@@ -139,6 +148,49 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE tag_group_memberships
+(
+    tag_group_id NUMERIC  NOT NULL,
+    tag_id       NUMERIC  NOT NULL,
+    created_at   DATETIME,
+    PRIMARY KEY (tag_group_id, tag_id)
+);
+
+CREATE TABLE tag_group_permissions
+(
+    group_id        NUMERIC  NOT NULL,
+    permission_type INTEGER,
+    tag_group_id    NUMERIC  NOT NULL,
+    created_at      DATETIME,
+    PRIMARY KEY (tag_group_id, group_id, permission_type)
+);
+
+CREATE TABLE tag_groups
+(
+    original_id   NUMERIC  NOT NULL PRIMARY KEY,
+    created_at    DATETIME,
+    name          TEXT     NOT NULL,
+    one_per_topic BOOLEAN,
+    parent_tag_id NUMERIC
+);
+
+CREATE TABLE tag_users
+(
+    tag_id             NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    created_at         DATETIME,
+    notification_level INTEGER  NOT NULL,
+    PRIMARY KEY (tag_id, user_id)
+);
+
+CREATE TABLE tags
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    description TEXT,
+    name        TEXT     NOT NULL
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -146,6 +198,31 @@ CREATE TABLE user_emails
     created_at DATETIME,
     "primary"  BOOLEAN,
     PRIMARY KEY (user_id, email)
+);
+
+CREATE TABLE user_field_options
+(
+    user_field_id NUMERIC  NOT NULL,
+    value         TEXT     NOT NULL,
+    created_at    DATETIME,
+    PRIMARY KEY (user_field_id, value)
+);
+
+CREATE TABLE user_fields
+(
+    original_id       NUMERIC  NOT NULL PRIMARY KEY,
+    created_at        DATETIME,
+    description       TEXT     NOT NULL,
+    editable          BOOLEAN,
+    external_name     TEXT,
+    external_type     TEXT,
+    field_type_enum   INTEGER  NOT NULL,
+    name              TEXT     NOT NULL,
+    position          INTEGER,
+    requirement       INTEGER,
+    searchable        BOOLEAN,
+    show_on_profile   BOOLEAN,
+    show_on_user_card BOOLEAN
 );
 
 CREATE TABLE user_options

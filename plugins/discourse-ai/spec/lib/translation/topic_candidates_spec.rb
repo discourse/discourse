@@ -52,28 +52,28 @@ describe DiscourseAi::Translation::TopicCandidates do
   end
 
   describe ".get_completion_per_locale" do
-    context "when (scenario A) percentage determined by topic's locale" do
-      it "returns 100% completion if all topics are in the locale" do
+    context "when (scenario A) 'done' determined by topic's locale" do
+      it "returns total = done if all topics are in the locale" do
         locale = "pt_BR"
         Fabricate(:topic, locale:)
         Topic.update_all(locale: locale)
         Fabricate(:topic, locale: "pt")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1.0)
+        expect(completion).to eq({ done: 2, total: 2 })
       end
 
-      it "returns X% completion if some topics are in the locale" do
+      it "returns correct done and total if some topics are in the locale" do
         locale = "es"
         Fabricate(:topic, locale:)
         Fabricate(:topic, locale: "not_es")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1 / Topic.count.to_f)
+        expect(completion).to eq({ done: 1, total: 2 })
       end
     end
 
-    context "when (scenario B) percentage determined by topic localizations" do
+    context "when (scenario B) 'done' determined by topic localizations" do
       it "returns 100% completion if all topics have a localization in the locale" do
         locale = "pt_BR"
         Fabricate(:topic)
@@ -81,20 +81,20 @@ describe DiscourseAi::Translation::TopicCandidates do
         Fabricate(:topic_localization, locale: "pt")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1.0)
+        expect(completion).to eq({ done: Topic.count, total: Topic.count })
       end
 
-      it "returns X% completion if some topics have a localization in the locale" do
+      it "returns correct done and total if some topics have a localization in the locale" do
         locale = "es"
         Fabricate(:topic_localization, locale:)
         Fabricate(:topic_localization, locale: "not_es")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq(1 / Topic.count.to_f)
+        expect(completion).to eq({ done: 1, total: Topic.count })
       end
     end
 
-    it "returns the correct percentage based on (scenario A & B) `topic.locale` and `TopicLocalization` in the specified locale" do
+    it "returns the correct done and total based on (scenario A & B) `topic.locale` and `TopicLocalization` in the specified locale" do
       locale = "es"
 
       # translated candidates
@@ -113,24 +113,24 @@ describe DiscourseAi::Translation::TopicCandidates do
       completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
       translated_candidates = 2 # topic1 + topic2
       total_candidates = Topic.count - 1 # excluding the bot topic
-      expect(completion).to eq(translated_candidates / total_candidates.to_f)
+      expect(completion).to eq({ done: 2, total: 3 })
     end
 
-    it "does not exceed 100% completion when topic.locale and topic_localization both exist" do
+    it "does not allow done to exceed total when topic.locale and topic_localization both exist" do
       locale = "es"
       topic = Fabricate(:topic, locale:)
       Fabricate(:topic_localization, topic:, locale:)
 
       completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-      expect(completion).to be(1.0)
+      expect(completion).to eq({ done: 1, total: 1 })
     end
 
-    it "returns 100% if no topics" do
+    it "returns nil - nil for done and total if no topics" do
       SiteSetting.ai_translation_backfill_max_age_days = 0
       SiteSetting.ai_translation_backfill_limit_to_public_content = false
 
       completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale("es")
-      expect(completion).to eq(1.0)
+      expect(completion).to eq({ done: 0, total: 0 })
     end
   end
 end

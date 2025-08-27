@@ -66,7 +66,7 @@ describe "Post event", type: :system do
       time = Time.now.strftime("%Y-%m-%d %H:%M")
 
       EXPECTED_BBCODE = <<~EVENT
-        [event start="#{time}" status="public" timezone="Europe/Paris" allowedGroups="trust_level_0"]
+        [event start="#{time}" status="public" timezone="Europe/Paris"]
         foo
         bar
         [/event]
@@ -207,7 +207,7 @@ describe "Post event", type: :system do
     find(".d-modal .btn-primary").click
     composer.submit
 
-    expect(page).to have_css(".discourse-post-event.is-loaded")
+    expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
 

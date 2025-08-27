@@ -147,6 +147,13 @@ export default RouteTemplate(
       </div>
     {{/if}}
 
+    <span>
+      <PluginOutlet
+        @name="user-preferences-account-after-email"
+        @outletArgs={{lazyHash email=@controller.model.email}}
+      />
+    </span>
+
     {{#if @controller.canUpdateAssociatedAccounts}}
       <div
         class="control-group pref-associated-accounts"
@@ -288,6 +295,11 @@ export default RouteTemplate(
         <div class="instructions">
           {{@controller.nameInstructions}}
         </div>
+
+        <PluginOutlet
+          @name="user-preferences-account-after-name"
+          @outletArgs={{lazyHash name=@controller.model.name}}
+        />
       </div>
     {{/if}}
 

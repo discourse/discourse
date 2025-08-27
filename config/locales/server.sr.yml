@@ -548,7 +548,7 @@ sr:
     actions:
       agree:
         title: "Da"
-      delete_single:
+      delete:
         title: "Obriši"
         complete: "Post izbrisan."
       delete_and_ignore:
@@ -567,6 +567,8 @@ sr:
         complete: "Post odobren."
       approve_post:
         complete: "Post odobren."
+      approve_post_closed:
+        complete: "Post odobren."
       reject_post:
         complete: "Post odbijen."
       approve_user:
@@ -578,7 +580,7 @@ sr:
       reject:
         title: "Odbij"
       delete_user:
-        complete: "Korisnik izbrisan."
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   time:
     <<: *datetime_formats

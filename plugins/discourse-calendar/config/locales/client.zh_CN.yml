@@ -39,6 +39,7 @@ zh_CN:
       date: "日期"
       add_to_calendar: "添加到 Google 日历"
       toggle_timezone_offset_title: "切换时区偏移"
+      local_time: "当地时间"
       region:
         title: "区域"
         none: "无"
@@ -313,7 +314,7 @@ zh_CN:
         month: "月"
         week: "周"
         day: "天"
-        list: "列表"
+        year: "年"
     group_timezones:
       search: "搜索…"
       group_availability: "%{group} 可用性"
@@ -323,10 +324,8 @@ zh_CN:
         after_event_reminder: "活动已结束"
         ongoing_event_reminder: "活动正在进行"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} 已自动设置您的出席并邀请您加入“%{description}”"
-        before_event_reminder_html: "活动即将开始 – %{description}"
-        after_event_reminder_html: "活动已结束 – %{description}"
-        ongoing_event_reminder_html: "活动正在进行 – %{description}"
+        invite_user_predefined_attendance_notification: "%{username} 已自动设置您的出席并邀请您加入“%{eventName}”"
+        an_event: "一项活动"
       edit_reason: "活动已更新"
       edit_reason_closed: "活动已关闭"
       edit_reason_opened: "活动已开放"
@@ -374,6 +373,8 @@ zh_CN:
         creator: "创建者"
         status: "状态"
         starts_at: "开始时间"
+        all_events: "所有活动"
+        my_events: "我的活动"
       upcoming_events_list:
         title: "近期活动"
         empty: "无近期活动"
@@ -431,6 +432,9 @@ zh_CN:
         update: "保存"
         attach: "创建活动"
         add_reminder: "添加提醒"
+        show_local_time:
+          label: "显示当地时间"
+          description: "日期和时间将使用以下时区显示：%{timezone}。将此时区用于在特定地点发生的活动，以便时间可以反映出活动发生地的时区。"
         timezone:
           label: 时区
           remove_timezone: 无时区 (UTC)
@@ -447,6 +451,8 @@ zh_CN:
           periods:
             before: "提前"
             after: "推后"
+        recurrence_until:
+          label: "直到（包含）"
         recurrence:
           label: "重复"
           none: "不重复"
@@ -459,13 +465,18 @@ zh_CN:
         minimal:
           label: "最低限度活动"
           checkbox_label: "隐藏“参加/不参加”按钮和受邀者状态"
+        allow_chat:
+          label: "聊天集成"
+          checkbox_label: "创建和管理活动特定的聊天频道"
         url:
           label: "URL"
           placeholder: "可选"
         location:
           label: "地点"
+          placeholder: "添加地点、链接或其他内容。"
         description:
           label: "描述"
+          placeholder: "向人们详细介绍您的活动。支持换行和链接。"
         name:
           label: "活动名称"
           placeholder: "可选，默认为话题标题"

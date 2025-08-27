@@ -12,6 +12,8 @@ cs:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Toto hlasování je dynamické. Možnosti lze upravit po odeslání."
       voters:
         one: "hlasující"
         few: "hlasující"
@@ -164,6 +166,8 @@ cs:
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval
+        poll_dynamic:
+          label: Povolit možnosti úprav po odeslání hlasu (dynamické hlasování)
         poll_title:
           label: Název (nepovinný)
         poll_options:

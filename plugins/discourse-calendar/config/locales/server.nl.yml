@@ -33,7 +33,6 @@ nl:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maximaal aantal tekstrijen per evenement in de agenda."
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
     calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."

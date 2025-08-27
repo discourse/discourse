@@ -39,6 +39,7 @@ ar:
       date: "التاريخ"
       add_to_calendar: "الإضافة إلى تقويم Google"
       toggle_timezone_offset_title: "تبديل إزاحة المنطقة الزمنية"
+      local_time: "التوقيت المحلي"
       region:
         title: "المنطقة"
         none: "لا يوجد"
@@ -247,7 +248,7 @@ ar:
           sk: "سلوفاكيا"
           th: "تايلاند"
           tn: "تونس"
-          tr: "ديك رومي"
+          tr: "تركيا"
           ua: "أوكرانيا"
           us_ak: "الولايات المتحدة (us_ak)"
           us_al: "الولايات المتحدة (us_al)"
@@ -313,7 +314,7 @@ ar:
         month: "الشهر"
         week: "الأسبوع"
         day: "اليوم"
-        list: "إدراج"
+        year: "العام"
     group_timezones:
       search: "بحث..."
       group_availability: "توافر %{group}"
@@ -323,10 +324,8 @@ ar:
         after_event_reminder: "هناك حدث انتهى"
         ongoing_event_reminder: "هناك حدث جارٍ"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{description}"
-        before_event_reminder_html: "هناك حدث على وشك البدء %{description}"
-        after_event_reminder_html: "انتهى حدث %{description}"
-        ongoing_event_reminder_html: "هناك حدث جارٍ %{description}"
+        invite_user_predefined_attendance_notification: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{eventName}"
+        an_event: "حدث"
       edit_reason: "تم تحديث الحدث"
       edit_reason_closed: "تم إغلاق الحدث"
       edit_reason_opened: "تم فتح الحدث"
@@ -337,12 +336,12 @@ ar:
       show_all: "عرض الكل"
       show_participants: "إظهار المشاركين"
       participants:
-        zero: "شارك مستخدمَين (%{count})."
+        zero: "شارك %{count} من المستخدمين."
         one: "شارك مستخدم واحد (%{count})."
-        two: "شارك مستخدمَين (%{count})."
-        few: "شارك مستخدمَين (%{count})."
-        many: "شارك مستخدمَين (%{count})."
-        other: "شارك مستخدمَين (%{count})."
+        two: "شارك مستخدمان (%{count})."
+        few: "شارك %{count} مستخدمين."
+        many: "شارك %{count} مستخدمًا."
+        other: "شارك %{count} مستخدم."
       invite: "إرسال إشعار إلى المستخدم"
       add_to_calendar: "إضافة إلى التقويم"
       send_pm_to_creator: "إرسال رسالة خاصة إلى %{username}"
@@ -379,6 +378,8 @@ ar:
         creator: "المنشئ"
         status: "الحالة"
         starts_at: "يبدأ في"
+        all_events: "كل الأحداث"
+        my_events: "أحداثي"
       upcoming_events_list:
         title: "الأحداث القادمة"
         empty: "لا توجد أحداث قادمة"
@@ -402,33 +403,33 @@ ar:
             not_going: "لست ذاهبًا"
             interested: "مهتم"
             going_count:
-              zero: "%{count} مدعوًا ذاهبًا"
-              one: "%{count} مدعوًا ذاهبًا"
-              two: "مدعوان (%{count}) ذاهبان"
-              few: "%{count} مدعوين ذاهبين"
-              many: "%{count} مدعوًا ذاهبًا"
-              other: "%{count} مدعوًا ذاهبًا"
+              zero: "%{count} ذاهبون"
+              one: "%{count} ذاهب"
+              two: "%{count} ذاهبان"
+              few: "%{count} ذاهبون"
+              many: "%{count} ذاهبون"
+              other: "%{count} ذاهبون"
             not_going_count:
-              zero: "%{count} مدعوًا غير ذاهب"
-              one: "%{count} مدعوًا غير ذاهب"
-              two: "مدعوان (%{count}) غير ذاهبَين"
-              few: "%{count} مدعوين غير ذاهبين"
-              many: "%{count} مدعوًا غير ذاهب"
-              other: "%{count} مدعوًا غير ذاهب"
+              zero: "%{count} غير ذاهبين"
+              one: "%{count} غير ذاهب"
+              two: "%{count} غير ذاهبَين"
+              few: "%{count} غير ذاهبين"
+              many: "%{count} غير ذاهبين"
+              other: "%{count} غير ذاهبين"
             interested_count:
-              zero: "%{count} مدعوًا مهتمًا"
-              one: "%{count} مدعوًا مهتمًا"
-              two: "مدعوان (%{count}) مهتمان"
-              few: "%{count} مدعوين مهتمين"
-              many: "%{count} مدعوًا مهتمًا"
-              other: "%{count} مدعوًا مهتمًا"
+              zero: "%{count} مهتمون"
+              one: "%{count} مهتم"
+              two: "%{count} مهتمان"
+              few: "%{count} مهتمون"
+              many: "%{count} مهتمون"
+              other: "%{count} مهتمون"
             invited_count:
-              zero: "%{count} مستخدمًا تمت دعوته"
+              zero: "%{count} من المستخدمين تمت دعوتهم"
               one: "مستخدم واحد (%{count}) تمت دعوته"
               two: "مستخدمان (%{count}) تمت دعوتهما"
               few: "%{count} مستخدمين تمت دعوتهم"
-              many: "%{count} مستخدمًا تمت دعوته"
-              other: "%{count} مستخدمًا تمت دعوته"
+              many: "%{count} مستخدمًا تمت دعوتهم"
+              other: "%{count} مستخدم تمت دعوتهم"
         event:
           expired: "انتهى"
           closed: "مغلق"
@@ -456,6 +457,9 @@ ar:
         update: "حفظ"
         attach: "إنشاء حدث"
         add_reminder: "إضافة تذكير"
+        show_local_time:
+          label: "عرض التوقيت المحلي"
+          description: "ستُعرض التواريخ والأوقات وفقًا للمنطقة الزمنية: %{timezone}. يُستحسن استخدام هذا الإعداد للأحداث المقامة في موقع محدد، لضمان تطابق الأوقات مع المنطقة الزمنية لمكان الحدث."
         timezone:
           label: المنطقة الزمنية
           remove_timezone: لا توجد منطقة زمنية (UTC)
@@ -472,6 +476,8 @@ ar:
           periods:
             before: "قبل"
             after: "بعد"
+        recurrence_until:
+          label: "حتى (شامل)"
         recurrence:
           label: "التكرار"
           none: "بلا تكرار"
@@ -484,13 +490,18 @@ ar:
         minimal:
           label: "حدث صغير"
           checkbox_label: "إخفاء زرَّي ذاهب/غير ذاهب وحالة المدعوين"
+        allow_chat:
+          label: "تكامل الدردشة"
+          checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
         url:
           label: "عنوان URL"
           placeholder: "اختياري"
         location:
           label: "الموقع الجغرافي"
+          placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
         description:
           label: "الوصف"
+          placeholder: "قدّم للجمهور مزيدًا من المعلومات حول حدثك. يدعم النص الأسطر الجديدة والروابط."
         name:
           label: "اسم الحدث"
           placeholder: "اختياري، الإعدادات الافتراضية لعنوان الموضوع"

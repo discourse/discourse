@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
-  self.ignored_columns = [
-    :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   attr_accessor :acting_user
   attr_accessor :acting_username
 

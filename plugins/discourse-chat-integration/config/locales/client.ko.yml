@@ -127,7 +127,6 @@ ko:
               help: "채널을 설명하는 이름입니다. Matrix에 연결하는 데 사용되지 않습니다."
             room_id:
               title: "방 ID"
-              help: "회의실의 &#39;개인 식별자&#39;입니다. ! abcdefg : matrix.org와 같은 형식이어야합니다."
           errors:
             unknown_token: "액세스 토큰이 유효하지 않습니다"
             unknown_room: "방 ID가 잘못되었습니다"

@@ -115,7 +115,7 @@ tr_TR:
         assigned: "Atandı"
       no_assignments_title: "Henüz atamanız yok"
       no_assignments_body: >
-        Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca, atamalarınızla ilgili periyodik bir anımsatma bildirimi alırsınız; bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
+        Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca atamalarınızla ilgili periyodik bir anımsatıcı bildirimi alırsınız ve bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
       dismiss_assigned_tooltip: "Okunmamış tüm atama bildirimlerini okundu olarak işaretle"
       assigned_to_group:
         post: "gönderi %{group_name} adlı gruba atandı"

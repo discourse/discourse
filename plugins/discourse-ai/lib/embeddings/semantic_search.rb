@@ -106,6 +106,26 @@ module DiscourseAi
         guardian.filter_allowed_categories(query_filter_results)
       end
 
+      def similar_topic_ids_to(query, candidates:)
+        # NOTE: candidates may be a very large relation, be deliberate that only first is selected
+        return [] if candidates.limit(1).empty?
+
+        over_selection_limit = ::Topic::SIMILAR_TOPIC_LIMIT * OVER_SELECTION_FACTOR
+        asymmetric = true
+        search_embedding = vector.vector_from(query, asymmetric)
+
+        schema = DiscourseAi::Embeddings::Schema.for(Topic)
+
+        candidate_topic_ids =
+          schema.asymmetric_similarity_search(
+            search_embedding,
+            limit: over_selection_limit,
+            offset: 0,
+          ).map(&:topic_id)
+
+        candidates.where(id: candidate_topic_ids).pluck(:id)
+      end
+
       def quick_search(query)
         max_semantic_results_per_page = 100
         search = Search.new(query, { guardian: guardian })

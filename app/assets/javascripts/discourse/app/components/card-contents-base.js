@@ -10,18 +10,18 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 
-const DEFAULT_SELECTOR = "#main-outlet";
+const DEFAULT_SELECTORS = ["#main-outlet", "#d-menu-portals"];
 const AVATAR_OVERFLOW_SIZE = 44;
 const MOBILE_SCROLL_EVENT = "scroll.mobile-card-cloak";
 
-let _cardClickListenerSelectors = [DEFAULT_SELECTOR];
+let _cardClickListenerSelectors = [...DEFAULT_SELECTORS];
 
 export function addCardClickListenerSelector(selector) {
   _cardClickListenerSelectors.push(selector);
 }
 
 export function resetCardClickListenerSelector() {
-  _cardClickListenerSelectors = [DEFAULT_SELECTOR];
+  _cardClickListenerSelectors = [...DEFAULT_SELECTORS];
 }
 
 export default class CardContentsBase extends Component {
@@ -194,12 +194,17 @@ export default class CardContentsBase extends Component {
     return this._show(target.innerText.replace(/^@/, ""), target, event);
   }
 
+  get autoUpdateCard() {
+    return this.cardTarget.dataset["autoUpdateCard"] === "true";
+  }
+
   _positionCard(target) {
     schedule("afterRender", async () => {
       if (this.site.desktopView) {
         this._menuInstance = await this.menu.show(target, {
           content: this.element,
-          autoUpdate: false,
+          autoUpdate: this.autoUpdateCard,
+          hide: this.autoUpdateCard,
           identifier: "usercard",
           padding: {
             top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),

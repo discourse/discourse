@@ -39,6 +39,7 @@ es:
       date: "Fecha"
       add_to_calendar: "Añadir a Google Calendar"
       toggle_timezone_offset_title: "Alternar el desfase de zona horaria"
+      local_time: "Hora local"
       region:
         title: "Región"
         none: "Ninguna"
@@ -313,7 +314,7 @@ es:
         month: "Mes"
         week: "Semana"
         day: "Día"
-        list: "Lista"
+        year: "Año"
     group_timezones:
       search: "Buscar..."
       group_availability: "Disponibilidad de %{group}"
@@ -323,10 +324,8 @@ es:
         after_event_reminder: "Un evento ha terminado"
         ongoing_event_reminder: "Un evento está en curso"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} ha establecido automáticamente tu asistencia y te ha invitado a %{description}"
-        before_event_reminder_html: "Un evento está a punto de comenzar %{description}"
-        after_event_reminder_html: "Un evento ha finalizado %{description}"
-        ongoing_event_reminder_html: "Hay un evento en curso %{description}"
+        invite_user_predefined_attendance_notification: "%{username} ha establecido automáticamente tu asistencia y te ha invitado a %{eventName}"
+        an_event: "un evento"
       edit_reason: "Evento actualizado"
       edit_reason_closed: "Evento cerrado"
       edit_reason_opened: "Evento abierto"
@@ -375,6 +374,8 @@ es:
         creator: "Creador"
         status: "Estado"
         starts_at: "Comienza el"
+        all_events: "Todos los eventos"
+        my_events: "Mis eventos"
       upcoming_events_list:
         title: "Próximos eventos"
         empty: "No hay eventos próximos"
@@ -398,13 +399,13 @@ es:
             not_going: "No asistiré"
             interested: "Estoy interesado"
             going_count:
-              one: "%{count} asistirán"
+              one: "%{count} asistirá"
               other: "%{count} asistirán"
             not_going_count:
-              one: "%{count} no asistirán"
+              one: "%{count} no asistirá"
               other: "%{count} no asistirán"
             interested_count:
-              one: "%{count} interesados"
+              one: "%{count} interesado"
               other: "%{count} interesados"
             invited_count:
               one: "%{count} usuario invitado"
@@ -436,6 +437,9 @@ es:
         update: "Guardar"
         attach: "Crear evento"
         add_reminder: "Añadir recordatorio"
+        show_local_time:
+          label: "Mostrar hora local"
+          description: "Las fechas y horas se mostrarán con %{timezone}. Úsalo para eventos en una ubicación, de modo que las horas reflejen la zona horaria en la que se realiza el evento."
         timezone:
           label: Zona horaria
           remove_timezone: Sin zona horaria (UTC)
@@ -452,6 +456,8 @@ es:
           periods:
             before: "antes de"
             after: "después de"
+        recurrence_until:
+          label: "Hasta (inclusive)"
         recurrence:
           label: "Periodicidad"
           none: "Sin repetición"
@@ -464,13 +470,18 @@ es:
         minimal:
           label: "Evento mínimo"
           checkbox_label: "Ocultar los botones Asistiré/No asistiré y el estado de los invitados"
+        allow_chat:
+          label: "Integración de chat"
+          checkbox_label: "Crea y gestiona un canal de chat específico para cada evento"
         url:
           label: "URL"
           placeholder: "Opcional"
         location:
           label: "Ubicación"
+          placeholder: "Añade una ubicación, enlace o cualquier cosa."
         description:
           label: "Descripción"
+          placeholder: "Cuéntale a la gente un poco más sobre tu evento. Se admiten nuevas líneas y enlaces."
         name:
           label: "Nombre del evento"
           placeholder: "Opcional, por defecto es el título del tema"

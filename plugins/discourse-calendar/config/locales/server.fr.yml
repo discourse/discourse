@@ -33,7 +33,6 @@ fr:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Nombre maximal de lignes de texte par événement dans le calendrier."
     map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
     map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
     calendar_enabled: "Activer l'extension discourse-calendar. Ceci ajoutera la prise en charge de l'étiquette [calendar][/calendar] dans le premier message d'un sujet."

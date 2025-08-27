@@ -138,7 +138,5 @@ ca:
             label: Versió
           status:
             label: Estat
-          enabled:
-            label: Activat
           disabled:
             label: Desactivat

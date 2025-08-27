@@ -3,7 +3,10 @@
 RSpec.describe "Discobot welcome post" do
   let(:user) { Fabricate(:user) }
 
-  before { SiteSetting.discourse_narrative_bot_enabled = true }
+  before do
+    SiteSetting.discourse_narrative_bot_enabled = true
+    SiteSetting.disable_discourse_narrative_bot_welcome_post = false
+  end
 
   context "when discourse_narrative_bot_welcome_post_delay is 0" do
     it "should not delay the welcome post" do

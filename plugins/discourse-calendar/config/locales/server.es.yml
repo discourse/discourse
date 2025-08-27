@@ -33,7 +33,6 @@ es:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Máximo de filas de texto por evento en el Calendario."
     map_events_to_color: "Asigna un color a cada etiqueta o categoría."
     map_events_title: "Reemplaza «Eventos» en el título de la barra lateral «Próximos eventos» por categoría."
     calendar_enabled: "Habilitar el complemento de calendario de Discourse. Esto añadirá soporte para una etiqueta [calendar][/calendar] en la primera entrada de un tema."

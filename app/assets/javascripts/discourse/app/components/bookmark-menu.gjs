@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
@@ -20,7 +20,6 @@ export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
   @service toasts;
-  @service site;
 
   @tracked quicksaved = false;
 
@@ -232,7 +231,7 @@ export default class BookmarkMenu extends Component {
   }
 
   async _openBookmarkModal() {
-    this.dMenu.close();
+    await this.dMenu.close();
 
     try {
       const closeData = await this.modal.show(BookmarkModal, {
@@ -257,7 +256,6 @@ export default class BookmarkMenu extends Component {
       {{didInsert this.setReminderShortcuts}}
       ...attributes
       @identifier="bookmark-menu"
-      @triggers={{array "click"}}
       class={{this.buttonClasses}}
       @title={{this.buttonTitle}}
       @label={{this.buttonLabel}}

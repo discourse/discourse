@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import TextField from "discourse/components/text-field";
@@ -8,6 +9,8 @@ import { i18n } from "discourse-i18n";
 export default class SearchTextField extends TextField {
   autocomplete = "off";
   enterkeyhint = "search";
+  autocapitalize = "none";
+  autocorrect = "off";
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {
@@ -16,9 +19,9 @@ export default class SearchTextField extends TextField {
 
   @on("didInsertElement")
   becomeFocused() {
-    const $searchInput = $(this.element);
-    applySearchAutocomplete($searchInput, this.siteSettings);
+    applySearchAutocomplete(this.element, this.siteSettings, getOwner(this));
 
+    const $searchInput = $(this.element);
     if (!this.hasAutofocus) {
       return;
     }

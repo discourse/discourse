@@ -29,6 +29,7 @@ tr_TR:
         auto_resolution: "<h2>Otomatik Varlık Çözünürlüğü</h2> <p>Sorgunuz bir varlık kimliği döndürdüğünde, Veri Gezgini bunu otomatik olarak varlık adı ve sorgu sonuçlarındaki diğer yararlı bilgilerle değiştirebilir. Otomatik çözümleme <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> ve <i><b>badge_id</b></i> için kullanılabilir. Bunu denemek için şu sorguyu çalıştırın:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Özel Parametreler Oluşturma</h2> <p>Sorgularınıza özel parametreler oluşturmak için şunu sorgunuzun en üstüne koyun ve formatı izleyin:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Not: [params] ile başlayan ilk satır, önündeki iki tire ve bildirmek istediğiniz her özel parametre ile birlikte gereklidir.</i></p>"
         default_values: "<h3>Varsayılan Değerler</h3> <p>Parametreleri varsayılan değerlerle ya da varsayılan değerler olmadan bildirebilirsiniz. Varsayılan değerler, sorgu düzenleyicisinin altında, ihtiyaçlarınıza göre düzenleyebileceğiniz bir metin alanında görünür. Varsayılan değerler olmadan bildirilen parametreler yine bir metin alanı oluşturur, ancak boş olacak ve kırmızı renkle vurgulanır.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Veri Türleri</h3> <p>İşte kullanabileceğiniz yaygın veri türleri:</p> <ul> <li><b>tam sayı</b> - imzalı dört baytlık tam sayı</li> <li><b>metin</b> - değişken uzunluklu karakter dizesi</li> <li><b>boolean</b> - true/false</li> <li><b>tarih</b> - takvim tarihi (yıl, ay, gün)</li> </ul> <p>Veri türleri hakkında daha fazla bilgi için <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>bu web sitesini</a> ziyaret edin.</p>"
       schema:
         title: "Veritabanı Şeması"
         filter: "Ara..."
@@ -101,6 +102,8 @@ tr_TR:
               label: Sonuç yoksa kişisel mesaj göndermeyi atlayın
             attach_csv:
               label: CSV dosyasını kişisel mesaja ekleyin
+            users_from_group:
+              label: Her grup üyesine ayrı ayrı kişisel mesaj gönderin
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

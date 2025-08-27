@@ -24,8 +24,8 @@ sw:
           title: "Vipima Mda vya Mada"
         post:
           title: "Ujumbe"
-        suggested_topics:
-          title: "Mada Zilizopendekezwa"
+        more_topics:
+          title: "Mada Zingine"
         tooltips:
           description: "Elezo"
           header: "Kichwa"

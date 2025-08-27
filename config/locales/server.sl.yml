@@ -1983,7 +1983,7 @@ sl:
         description: "Potrdi prijavo in utišaj uporabnika"
       agree_and_restore:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      delete_single:
+      delete:
         title: "Izbriši"
         complete: "Prispevek izbrisan."
       delete_and_ignore:
@@ -2008,6 +2008,9 @@ sl:
       approve_post:
         title: "Odobri prispevek"
         complete: "Objava odobrena."
+      approve_post_closed:
+        title: "Odobri prispevek"
+        complete: "Objava odobrena."
       reject_post:
         title: "Zavrni prispevek"
         complete: "Objava zavrnjena."
@@ -2024,8 +2027,8 @@ sl:
       reject:
         title: "Zavrni"
       delete_user:
+        complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"
-        complete: "Uporabnik izbrisan."
   fallback_username: "uporabnik"
   activemodel:
     errors:

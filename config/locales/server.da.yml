@@ -187,6 +187,9 @@ da:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
       invalid_category_id: "Du angav en kategori, der ikke findes"
+      invalid_choice:
+        one: "'%{name}' er et ugyldigt valg."
+        other: "'%{name}' er ugyldige valg."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       default_tags_already_selected: "Du kan ikke vælge et mærke, der bruges i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere overførsler til S3 med mindre du har angivet 's3_upload_bucket'."
@@ -576,6 +579,9 @@ da:
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
     by_type:
       first_day_replies_per_day: "Vi sætter pris på din entusiasme, bliv ved med det! Når det er sagt, så har du af hensyn til vores fællesskab nået det maksimale antal svar, som en ny bruger kan oprette på sin første dag. Vent venligst %{time_left} og du vil kunne oprette flere svar."
+      create_topic: "Du opretter emner lidt for hurtigt. Vent venligst %{time_left} før du prøver igen."
+      create_post: "Du svarer lidt for hurtigt. Vent venligst %{time_left} før du prøver igen."
+      topics_per_day: "Du har nået det maksimale antal nye emner pr. dag. Du kan oprette flere nye emner om %{time_left}."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -3231,11 +3237,9 @@ da:
         title: "Ja"
       agree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
-      delete_single:
+      delete:
         title: "Slet"
         complete: "Indlæg slettet."
-      delete:
-        title: "Slet…"
       delete_and_ignore:
         complete: "Indlæg slettet."
       delete_and_ignore_replies:
@@ -3261,6 +3265,9 @@ da:
       approve_post:
         title: "Godkend Indlæg"
         complete: "Indlæg godkendt."
+      approve_post_closed:
+        title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
@@ -3279,9 +3286,12 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_user:
+        title: "Ingen handling"
       delete_user:
+        title: "Slet bruger"
+        complete: "Bruger slettet"
         reason: "Slettet via gennemgangskø"
-        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

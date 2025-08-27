@@ -13,12 +13,16 @@ nl:
             delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
-      back: Vorige
+      table_title: Automatiseringen
+      create: Automatisering toevoegen
+      update: Automatisering bijwerken
+      back: Terug
       edit: Bewerken
       select_script: Selecteer een script
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
+      no_automation_yet: Er zijn momenteel geen automatiseringen geconfigureerd.
       filter_placeholder: Filter op naam of beschrijving...
       edit_automation:
         trigger_section:
@@ -163,8 +167,22 @@ nl:
               description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
             restricted_categories:
               label: Categorieën
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht tot deze categorieën behoort
+            exclude_subcategories:
+              label: Subcategorieën uitsluiten
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht precies in de hierboven opgegeven categorieën valt
+            restricted_archetype:
+              label: Topictype
+              description: Optioneel, sta toe dat alleen op topics of persoonlijke berichten wordt getriggerd
+            restricted_groups:
+              label: Beperkte groepen
+              description: Optioneel, wordt alleen getriggerd als de gebruiker van het bericht tot een van deze groepen behoort
             restricted_inbox_groups:
+              label: Beperkte inboxgroepen
               description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
+            excluded_groups:
+              label: Uitgesloten groepen
+              description: Optioneel, sla de trigger over als de gebruiker van het bericht tot een van deze groepen behoort
             ignore_automated:
               label: Geautomatiseerd negeren
               description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op berichten die via e-mail zijn gemaakt
@@ -177,8 +195,14 @@ nl:
             skip_via_email:
               label: "Via e-mail overslaan"
               description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
+            post_features:
+              label: Berichtkenmerken
+              description: "Optioneel, beperk de triggering tot alleen berichten met deze kenmerken"
           created: Gemaakt
           edited: Bewerkt
+          topics: Alle topics
+          personal_messages: Persoonlijke berichten
+          public_topics: Openbare topics (alle beveiligde categorieën uitsluiten)
           with_images: Afbeeldingen
           with_links: Links
           with_code: Code
@@ -383,6 +407,7 @@ nl:
               label: PB's
             sender:
               label: PB-afzender
+              description: "Zorg dat de afzender de juiste rechten heeft om PB's naar de ontvanger te sturen"
         close_topic:
           fields:
             topic:
@@ -406,6 +431,11 @@ nl:
           name:
             label: Trigger
         automation:
+          runs_today: "%{count} vandaag"
+          runs_this_week: "%{count} deze week"
+          runs_this_month: "%{count} deze maand"
+          runs:
+            label: Uitvoeringen
           name:
             label: Naam
           trigger:
@@ -417,12 +447,15 @@ nl:
           status:
             label: Status
           enabled:
-            label: Ingeschakeld
+            label: "Automatisering inschakelen"
           disabled:
             label: Uitgeschakeld
           placeholders:
             label: Tijdelijke aanduidingen
           last_updated_at:
             label: Laatst bijgewerkt
+          last_run:
+            label: Laatste uitvoering
           last_updated_by:
             label: Bijgewerkt door
+          enable_toggle_disabled: "Je kunt deze automatisering inschakelen nadat alle vereiste velden zijn ingevuld."

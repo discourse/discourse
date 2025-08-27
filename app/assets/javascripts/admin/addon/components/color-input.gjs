@@ -59,6 +59,19 @@ export default class ColorInput extends Component {
     this.set("hexValue", event.target.value.replace("#", ""));
   }
 
+  @action
+  handlePaste(event) {
+    event.preventDefault();
+    const colorCode = event.clipboardData.getData("text/plain") ?? "";
+
+    this.set("hexValue", colorCode.replace(/^#/, ""));
+  }
+
+  @action
+  handleBlur() {
+    this.onBlur?.(this.normalize(this.hexValue));
+  }
+
   @observes("hexValue", "brightnessValue", "valid")
   hexValueChanged() {
     const hex = this.hexValue;
@@ -83,6 +96,8 @@ export default class ColorInput extends Component {
       @input={{this.onHexInput}}
       class="hex-input"
       aria-labelledby={{this.ariaLabelledby}}
+      {{on "blur" this.handleBlur}}
+      {{on "paste" this.handlePaste}}
     />
     <input
       class="picker"

@@ -686,8 +686,12 @@ RSpec.describe ApplicationController do
     end
 
     context "with color schemes" do
-      let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+      let!(:light_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+      end
+      let!(:dark_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
 
       before do
         SiteSetting.interface_color_selector = "sidebar_footer"
@@ -1261,7 +1265,7 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
-            get "/latest?lang=es"
+            get "/latest?tl=es"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
@@ -1270,7 +1274,7 @@ RSpec.describe ApplicationController do
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/latest?lang=zh-CN"
+            get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
@@ -1646,7 +1650,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "color definition stylesheets" do
-    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
     before do
       Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
@@ -1659,7 +1663,7 @@ RSpec.describe ApplicationController do
       it "includes stylesheet links in the header" do
         get "/"
 
-        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_light-default")
         expect(response.headers["Link"]).to include("color_definitions_dark")
       end
     end

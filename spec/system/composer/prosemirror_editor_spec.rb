@@ -281,6 +281,52 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<http://example.com>")
     end
+
+    it "supports [quote] to create a quote block" do
+      open_composer
+      composer.type_content("[quote]")
+
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote]\n\n[/quote]\n\n")
+    end
+
+    it "supports [quote=\"username\"] to create a quote block with attribution" do
+      open_composer
+      composer.type_content("[quote=\"johndoe\"]")
+
+      expect(rich).to have_css("aside.quote[data-username='johndoe'] .title", text: "johndoe:")
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote=\"johndoe\"]\n\n[/quote]\n\n")
+    end
+
+    it "supports [quote=\"username, post:1, topic:123\"] to create a quote block with full attribution" do
+      open_composer
+      composer.type_content("[quote=\"johndoe, post:1, topic:123\"]")
+
+      expect(rich).to have_css(
+        "aside.quote[data-username='johndoe'][data-post='1'][data-topic='123'] .title",
+        text: "johndoe:",
+      )
+      expect(rich).to have_css("aside.quote blockquote")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[quote=\"johndoe, post:1, topic:123\"]\n\n[/quote]\n\n")
+    end
+
+    it "doesn't trigger quote input rule in the middle of text" do
+      open_composer
+      composer.type_content("This [quote] should not trigger")
+
+      expect(rich).to have_no_css("aside.quote")
+      expect(rich).to have_content("This [quote] should not trigger")
+    end
   end
 
   context "with oneboxing" do
@@ -554,6 +600,16 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("hr")
     end
 
+    it "creates hard break when pressing Enter after double space at end of line" do
+      open_composer
+      composer.type_content("Line with double space  ")
+      composer.send_keys(:enter)
+      composer.type_content("Next line")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("Line with double space\nNext line")
+    end
+
     it "supports Backspace to reset a heading" do
       open_composer
       composer.type_content("# With text")
@@ -607,9 +663,34 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(nil)
       expect(rich).to have_css("blockquote", text: "This is a test")
     end
+
+    it "adds a new paragraph when ENTER is pressed after an image" do
+      open_composer
+      composer.type_content("![image](https://example.com/image.png)")
+      composer.send_keys(:right, :enter)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("\n![image](https://example.com/image.png)\n\nThis is a test")
+    end
   end
 
   describe "pasting content" do
+    it "creates a mention when pasting an HTML anchor with class mention" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = %(<a href="/u/#{current_user.username}" class="mention">@#{current_user.username}</a>)
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_css("a.mention", text: current_user.username)
+      expect(rich).to have_css("a.mention[data-name='#{current_user.username}']")
+      expect(rich).to have_no_css("a.mention[href]")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("@#{current_user.username}")
+    end
+
     it "does not freeze the editor when pasting markdown code blocks without a language" do
       with_logs do |logger|
         open_composer
@@ -714,7 +795,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
-    it "should correctly merge text with link marks created from parsing" do
+    it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
 
@@ -726,6 +807,21 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
+    end
+
+    it "parses html inline tags from pasted HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>", html: true)
+
+      expect(rich).to have_css("mark", text: "mark")
+      expect(rich).to have_css("ins", text: "words")
+      expect(rich).to have_css("kbd", text: "ctrl")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
   end
 
@@ -1517,6 +1613,32 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value(markdown + "\n\nThis is a test")
+    end
+
+    # TODO: Failing often https://github.com/discourse/discourse/actions/runs/16891573420/job/47852388890
+    xit "lifts the first paragraph out of the quote with Backspace" do
+      open_composer
+
+      composer.type_content("[quote]Text")
+      expect(rich).to have_css("aside.quote blockquote p", text: "Text")
+
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_no_css("aside.quote")
+      expect(rich).to have_css("p", text: "Text")
+    end
+
+    it "breaks out of the quote with a double Enter" do
+      open_composer
+
+      composer.type_content("[quote]Inside")
+      composer.send_keys(:enter)
+      composer.send_keys(:enter)
+      composer.type_content("Outside")
+
+      expect(rich).to have_css("aside.quote blockquote p", text: "Inside")
+      expect(rich).to have_css("aside.quote + p", text: "Outside")
     end
   end
 end

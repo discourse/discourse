@@ -27,13 +27,12 @@ pt_BR:
       text_body_template: |
         Seu arquivo de convites em massa para usuários(as) foi processado, %{processed} convites foram enviados por e-mail com %{failed} erro(s).
 
-        Aqui está o registro:
+        Confira o registro:
 
         ``` texto
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Máximo de linhas de texto por evento no Calendário."
     map_events_to_color: "Atribua uma cor a cada etiqueta ou categoria."
     map_events_title: "Substitui \"Eventos\" no título da barra lateral \"Próximos eventos\" por categoria."
     calendar_enabled: "Ativar o plugin discourse-calendar. Isso adicionará suporte a uma tag [calendar][/calendar] na primeira postagem de um tópico."

@@ -1,15 +1,14 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
-  @service menu;
 
   @resettableTracked filterQueryString = this.args.queryString;
 
@@ -22,12 +21,22 @@ export default class DiscoveryFilterNavigation extends Component {
     }
   }
 
+  get showBulkSelectInNavControls() {
+    const enableOnDesktop = applyValueTransformer(
+      "bulk-select-in-nav-controls",
+      false,
+      { site: this.site }
+    );
+
+    return this.site.mobileView || (enableOnDesktop && this.args.canBulkSelect);
+  }
+
   <template>
     {{bodyClass "navigation-filter"}}
 
     <section class="navigation-container">
       <div class="topic-query-filter">
-        {{#if (and this.site.mobileView @canBulkSelect)}}
+        {{#if this.showBulkSelectInNavControls}}
           <div class="topic-query-filter__bulk-action-btn">
             <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
           </div>
