@@ -17,6 +17,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(group_id:, permission_type:, tag_group_id:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
