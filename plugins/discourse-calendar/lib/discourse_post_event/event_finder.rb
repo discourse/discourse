@@ -74,15 +74,13 @@ module DiscoursePostEvent
       # If no user, can only see non-private events
       return events.where.not(status: private_status) if user.nil?
 
-      events.where(<<~SQL, private_status, private_status, user.id)
-  discourse_post_event_events.status != ? OR (
-    discourse_post_event_events.status = ? AND EXISTS (
-      SELECT 1 FROM discourse_post_event_invitees dpei
-      WHERE dpei.post_id = discourse_post_event_events.id
-      AND dpei.user_id = ?
-    )
-  )
-SQL
+      # User can see private events if they are invited to them
+      events.where(
+        "discourse_post_event_events.status != ? OR (discourse_post_event_events.status = ? AND EXISTS (SELECT 1 FROM discourse_post_event_invitees WHERE post_id = discourse_post_event_events.id AND user_id = ?))",
+        private_status,
+        private_status,
+        user.id,
+      )
     end
 
     def self.filter_by_dates(events, params)
@@ -92,76 +90,47 @@ SQL
       after_date = params[:after]&.to_datetime
       end_date = params[:end_date]&.to_datetime
 
-      # For recurring events
-      if before_date || after_date || end_date
-        recurring_conditions = []
-        recurring_values = []
+      recurring_scope = build_recurring_date_scope(after_date, before_date, end_date)
+      non_recurring_scope = build_non_recurring_date_scope(after_date, before_date, end_date)
 
-        if after_date
-          # For recurring events: original start date OR recurrence_until should be >= after_date
-          # This means either the event starts after the date, or it recurs until after the date
-          recurring_conditions << "(discourse_post_event_events.original_starts_at >= ? OR discourse_post_event_events.recurrence_until IS NULL OR discourse_post_event_events.recurrence_until >= ?)"
-          recurring_values += [after_date, after_date]
-        end
+      # Apply the combined scope using OR logic
+      events.merge(recurring_scope.or(non_recurring_scope))
+    end
 
-        if before_date
-          # For recurring events: original start date should be < before_date
-          # We want events that start before the end of our range
-          recurring_conditions << "discourse_post_event_events.original_starts_at < ?"
-          recurring_values << before_date
-        end
+    private
 
-        if end_date
-          # For recurring events: start date should be before or equal to end_date
-          recurring_conditions << "discourse_post_event_events.original_starts_at <= ?"
-          recurring_values << end_date
-        end
+    def self.build_recurring_date_scope(after_date, before_date, end_date)
+      scope = DiscoursePostEvent::Event.where.not(recurrence: nil)
 
-        recurring_condition =
-          (
-            if recurring_conditions.any?
-              "(discourse_post_event_events.recurrence IS NOT NULL AND (#{recurring_conditions.join(" AND ")}))"
-            else
-              "1=0"
-            end
+      if after_date
+        # For recurring events: original start date OR recurrence_until should be >= after_date
+        scope =
+          scope.where(
+            "original_starts_at >= ? OR recurrence_until IS NULL OR recurrence_until >= ?",
+            after_date,
+            after_date,
           )
-
-        # For non-recurring events - check event_dates
-        non_recurring_conditions = []
-        non_recurring_values = []
-
-        if after_date
-          non_recurring_conditions << "latest_event_dates.starts_at >= ?"
-          non_recurring_values << after_date
-        end
-
-        if before_date
-          non_recurring_conditions << "latest_event_dates.starts_at < ?"
-          non_recurring_values << before_date
-        end
-
-        if end_date
-          non_recurring_conditions << "latest_event_dates.starts_at <= ?"
-          non_recurring_values << end_date
-        end
-
-        non_recurring_condition =
-          (
-            if non_recurring_conditions.any?
-              "(discourse_post_event_events.recurrence IS NULL AND (#{non_recurring_conditions.join(" AND ")}))"
-            else
-              "1=0"
-            end
-          )
-
-        # Combine both conditions
-        full_condition = "(#{recurring_condition}) OR (#{non_recurring_condition})"
-        all_values = recurring_values + non_recurring_values
-
-        events.where(full_condition, *all_values)
-      else
-        events
       end
+
+      if before_date
+        # For recurring events: original start date should be < before_date
+        scope = scope.where("original_starts_at < ?", before_date)
+      end
+
+      if end_date
+        # For recurring events: start date should be before or equal to end_date
+        scope = scope.where("original_starts_at <= ?", end_date)
+      end
+
+      scope
+    end
+
+    def self.build_non_recurring_date_scope(after_date, before_date, end_date)
+      scope = DiscoursePostEvent::Event.where(recurrence: nil)
+      scope = scope.where("latest_event_dates.starts_at >= ?", after_date) if after_date
+      scope = scope.where("latest_event_dates.starts_at < ?", before_date) if before_date
+      scope = scope.where("latest_event_dates.starts_at <= ?", end_date) if end_date
+      scope
     end
 
     def self.filter_by_category(events, params)
