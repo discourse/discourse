@@ -43,7 +43,7 @@ export default class LoginMethod extends EmberObject {
 
   @discourseComputed
   icon() {
-    return this.icon_override || i18n(`login.${this.name}.icon`);
+    return this.icon_override || "user";
   }
 
   @discourseComputed
