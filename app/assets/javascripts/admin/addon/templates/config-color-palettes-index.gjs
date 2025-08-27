@@ -37,6 +37,7 @@ export default RouteTemplate(
           @outletArgs={{lazyHash actions=actions controller=@controller}}
         >
           <actions.Primary
+            class="create-new-palette"
             @label="admin.customize.new"
             @action={{@controller.newColorScheme}}
             @icon="plus"
