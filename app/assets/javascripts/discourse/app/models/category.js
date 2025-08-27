@@ -51,9 +51,9 @@ export default class Category extends RestModel {
   static findUncategorized() {
     _uncategorized =
       _uncategorized ||
-      Category.list().findBy(
-        "id",
-        Site.currentProp("uncategorized_category_id")
+      Category.list().find(
+        (category) =>
+          category.id === Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   }

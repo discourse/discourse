@@ -24,7 +24,9 @@ export default class AdminWatchedWordsActionController extends Controller {
   showWordsList;
 
   findAction(actionName) {
-    return (this.adminWatchedWords.model || []).findBy("nameKey", actionName);
+    return (this.adminWatchedWords.model || []).find(
+      (item) => item.nameKey === actionName
+    );
   }
 
   @discourseComputed("actionNameKey", "adminWatchedWords.model")
