@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class FooString extends Component {
@@ -37,7 +38,12 @@ module("Integration | Helper | action", function (hooks) {
       assert.strictEqual(value, 123);
     };
 
-    await render(hbs`<Foo @callback={{this.callback}} />`);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`<Foo @callback={{this.callback}} />`);
+      }
+    );
 
     await click("button");
     assert.verifySteps(["called"]);
@@ -46,7 +52,13 @@ module("Integration | Helper | action", function (hooks) {
   test("reference argument", async function (assert) {
     this.registry.register("component:foo", FooReference);
     this.callback = () => assert.step("called");
-    await render(hbs`<Foo @callback={{this.callback}} />`);
+
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`<Foo @callback={{this.callback}} />`);
+      }
+    );
 
     await click("button");
     assert.verifySteps(["called"]);
