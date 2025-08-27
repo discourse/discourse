@@ -9,6 +9,9 @@ describe "Composer - ProseMirror editor", type: :system do
     )
   end
   fab!(:tag)
+  fab!(:category_with_emoji) do
+    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
+  end
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -645,6 +648,33 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("ol li", text: "Item 2Item 3")
     end
 
+    it "supports hashtag decoration when pressing return" do
+      open_composer
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:enter)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
+
+    it "supports hashtag decoration when backspacing to combine paragraphs" do
+      open_composer
+
+      composer.type_content("some text ")
+      composer.send_keys(:enter)
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
+
     it "supports Ctrl + M to toggle between rich and markdown editors" do
       open_composer
 
@@ -1062,8 +1092,8 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "with mentions" do
-    fab!(:post)
-    fab!(:topic) { post.topic }
+    fab!(:topic) { Fabricate(:topic, category: category_with_emoji) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
     fab!(:mixed_case_group) do
       Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
