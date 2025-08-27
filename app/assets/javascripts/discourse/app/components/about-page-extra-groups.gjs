@@ -8,7 +8,6 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import { ajax } from "discourse/lib/ajax";
 
 export default class AboutPageExtraGroups extends Component {
-  @service store;
   @service site;
   @service siteSettings;
 

@@ -38,6 +38,8 @@
 }
 
 .sidebar-section-wrapper {
+  --d-sidebar-section-border-color: var(--d-sidebar-border-color);
+
   @include viewport.from(xl) {
     padding-block: 0.45em;
   }
@@ -90,4 +92,16 @@
       z-index: z("modal", "overlay");
     }
   }
+}
+
+.sidebar-theme-toggle__wrapper {
+  order: -1;
+
+  .d-icon-paintbrush {
+    display: none;
+  }
+}
+
+.sidebar-theme-toggle-dropdown.select-kit.combo-box .select-kit-header {
+  padding-left: 1em;
 }

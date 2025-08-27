@@ -31,11 +31,13 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
           `/tags/intersection/${this.mainTag}/${remainingTags.join("/")}`
         );
       } else {
-        DiscourseURL.routeTo("/tags");
+        DiscourseURL.routeTo(`/tag/${this.mainTag}`);
       }
     } else {
       if (tags.length >= 2) {
         DiscourseURL.routeTo(`/tags/intersection/${tags.join("/")}`);
+      } else if (tags.length === 1) {
+        DiscourseURL.routeTo(`/tag/${tags[0]}`);
       } else {
         DiscourseURL.routeTo("/tags");
       }

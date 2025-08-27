@@ -41,6 +41,41 @@ module DiscourseAi
           end
         end
       end
+
+      def regen_gist
+        raise Discourse::InvalidAccess if !guardian.can_request_gists?
+
+        topics = []
+
+        if params[:topic_ids].present?
+          topic_ids =
+            params[:topic_ids].is_a?(String) ? params[:topic_ids].split(",") : params[:topic_ids]
+          topics = Topic.where(id: topic_ids)
+        elsif params[:topic_id].present?
+          topics = [Topic.find(params[:topic_id])]
+        else
+          raise Discourse::InvalidParameters.new(:topic_id)
+        end
+
+        if current_user && topics.size >= 1
+          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+        end
+
+        if topics.size > TopicQuery::DEFAULT_PER_PAGE_COUNT
+          raise Discourse::InvalidParameters.new(:topic_ids)
+        end
+
+        topics.each do |topic|
+          guardian.ensure_can_see!(topic)
+
+          summarizer = DiscourseAi::Summarization.topic_gist(topic)
+          summarizer.delete_cached_summaries! if summarizer.present?
+
+          Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
+        end
+
+        render json: success_json
+      end
     end
   end
 end

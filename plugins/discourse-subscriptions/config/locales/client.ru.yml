@@ -79,7 +79,7 @@ ru:
         select: Выберите тарифный план
         interval:
           adverb:
-            day: За день
+            day: Ежедневно
             week: За неделю
             month: За месяц
             year: За год
@@ -93,7 +93,7 @@ ru:
         payments:
           id: Идентификатор платежа
           amount: Количество
-          created_at: Создан
+          created_at: Создано
         payments_help: Платежи отсутствуют
         plans:
           rate: Ставка
@@ -107,7 +107,7 @@ ru:
           update_card:
             heading: "Обновить карту для подписки: %{sub_id}"
             single: "Обновить"
-          created_at: Создан
+          created_at: Создано
           cancel: Отмена
           cancelled: отменён
           operations:
@@ -434,7 +434,7 @@ ru:
             repurchase_help: Разрешить многократную покупку продукта и связанных с ним тарифных планов
             active: Активна
             active_help: Отключите эту настройку, пока ваш продукт не будет готов для потребителей.
-            created_at: Создан
+            created_at: Создано
             updated_at: Обновлена
           product_help: Прежде чем клиенты смогут подписаться на ваш сайт, вам нужно создать хотя бы один продукт и соответствующий тарифный план.
         plans:
@@ -459,7 +459,7 @@ ru:
             group: Группа пользователей
             group_help: Это группа пользователей, к которой добавляется клиент при создании подписки.
             active: Активна
-            created_at: Создан
+            created_at: Создано
             recurring: Повторяющийся план?
         coupons:
           title: Купоны
@@ -479,6 +479,6 @@ ru:
             product: Товар
             plan: План
             status: Статус
-            created_at: Создан
+            created_at: Создано
         ask_refund: Вернуть последний платеж клиента?
         canceled: "Подписка отменена."

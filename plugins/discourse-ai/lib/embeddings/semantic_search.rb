@@ -49,11 +49,13 @@ module DiscourseAi
           .fetch(embedding_key, expires_in: 1.week) { vector.vector_from(hypothetical_post) }
       end
 
-      def embedding(search_term)
+      def embedding(search_term, asymmetric: false)
         digest = OpenSSL::Digest::SHA1.hexdigest(search_term)
         embedding_key = build_embedding_key(digest, "", SiteSetting.ai_embeddings_selected_model)
 
-        Discourse.cache.fetch(embedding_key, expires_in: 1.week) { vector.vector_from(search_term) }
+        Discourse
+          .cache
+          .fetch(embedding_key, expires_in: 1.week) { vector.vector_from(search_term, asymmetric) }
       end
 
       # this ensures the candidate topics are over selected
@@ -73,8 +75,11 @@ module DiscourseAi
         end
 
         search_embedding = nil
-        search_embedding = hyde_embedding(search_term) if hyde
-        search_embedding = embedding(search_term) if search_embedding.blank?
+        if hyde
+          search_embedding = hyde_embedding(search_term)
+        else
+          search_embedding = embedding(search_term, asymmetric: true)
+        end
 
         over_selection_limit = limit * OVER_SELECTION_FACTOR
 
@@ -101,6 +106,25 @@ module DiscourseAi
         guardian.filter_allowed_categories(query_filter_results)
       end
 
+      def similar_topic_ids_to(query, candidates:)
+        return [] if candidates.blank?
+
+        over_selection_limit = ::Topic::SIMILAR_TOPIC_LIMIT * OVER_SELECTION_FACTOR
+        asymmetric = true
+        search_embedding = vector.vector_from(query, asymmetric)
+
+        schema = DiscourseAi::Embeddings::Schema.for(Topic)
+
+        candidate_topic_ids =
+          schema.asymmetric_similarity_search(
+            search_embedding,
+            limit: over_selection_limit,
+            offset: 0,
+          ).map(&:topic_id)
+
+        candidates.where(id: candidate_topic_ids).pluck(:id)
+      end
+
       def quick_search(query)
         max_semantic_results_per_page = 100
         search = Search.new(query, { guardian: guardian })
@@ -120,7 +144,7 @@ module DiscourseAi
           Discourse
             .cache
             .fetch(embedding_key, expires_in: 1.week) do
-              vector.vector_from(search_term, asymetric: true)
+              vector.vector_from(search_term, asymmetric: true)
             end
 
         candidate_post_ids =
@@ -201,15 +225,11 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. SiteSetting.ai_default_llm_id (or newest LLM if not set)
+      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
       def find_ai_hyde_model(persona_klass)
         model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
-        if model_id.present?
-          LlmModel.find_by(id: model_id)
-        else
-          LlmModel.last
-        end
+        model_id.present? ? LlmModel.find_by(id: model_id) : LlmModel.last
       end
 
       def self.find_ai_hyde_model_id

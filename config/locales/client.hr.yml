@@ -166,6 +166,105 @@ hr:
       placeholder: datum
       from_placeholder: "od datuma"
       to_placeholder: "do danas"
+    languages:
+      ar:
+        name: arapski
+      be:
+        name: bjeloruski
+      bg:
+        name: bugarski
+      bs_BA:
+        name: bosanski
+      ca:
+        name: katalonski
+      cs:
+        name: češki
+      da:
+        name: danski
+      de:
+        name: njemački
+      el:
+        name: grčki
+      en:
+        name: engleski (US)
+      en_GB:
+        name: engleski (UK)
+      es:
+        name: španjolski
+      et:
+        name: estonski
+      fa_IR:
+        name: perzijski
+      fi:
+        name: finski
+      fr:
+        name: francuski
+      gl:
+        name: galicijski
+      he:
+        name: hebrejski
+      hr:
+        name: hrvatski
+      hu:
+        name: mađarski
+      hy:
+        name: armenski
+      id:
+        name: indonežanski
+      it:
+        name: talijanski
+      ja:
+        name: japanski
+      ko:
+        name: korejski
+      lt:
+        name: litvanski
+      lv:
+        name: letonski
+      nb_NO:
+        name: norveški bokmal
+      nl:
+        name: nizozemski
+      pl_PL:
+        name: poljski
+      pt:
+        name: portugalskicomposer
+      pt_BR:
+        name: portugalski
+      ro:
+        name: rumunjski
+      ru:
+        name: ruski
+      sk:
+        name: slovački
+      sl:
+        name: slovenski
+      sq:
+        name: albanski
+      sr:
+        name: srpski
+      sv:
+        name: švedski
+      sw:
+        name: svahili
+      te:
+        name: telugu
+      th:
+        name: tajlandski
+      tr_TR:
+        name: turski
+      ug:
+        name: ujgurski
+      uk:
+        name: ukrajinski
+      ur:
+        name: urdu
+      vi:
+        name: vijetnamski
+      zh_TW:
+        name: kineski
+      zh_CN:
+        name: kineski pojednostavljeni
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "objava #%{postNumber} od @%{username}"
@@ -227,14 +326,24 @@ hr:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
         anonymous_members: "Dobrodošli na %{site_name}"
       search: "Pretraživanje"
+    impersonation:
+      notice: "Lažno se predstavljaš kao %{username}"
+      stop: "Prestani se lažno predstavljati"
     themes:
       default_description: "Zadano"
+      broken_theme_alert: "Vaša web stranica možda neće raditi jer tema/komponenta ima pogreške. Provjerite konzolu preglednika za više informacija."
       error_caused_by: "Uzrokuje '%{name}'. <a target='blank' href='%{path}'>Kliknite ovdje</a> za ažuriranje, ponovnu konfiguraciju ili onemogućivanje."
       only_admins: "(ova se poruka prikazuje samo administratorima stranice)"
     broken_decorator_alert: "Postovi se možda neće ispravno prikazati jer je jedan od dekoratora sadržaja postova na vašoj web-lokaciji pokrenuo pogrešku."
     broken_page_change_alert: "Upravljač OnPageChange pokrenuo je pogrešku. Provjerite alate preglednika za programere za više informacija."
     broken_plugin_alert: "Uzrokovano dodatkom '%{name}'"
     broken_transformer_alert: "Došlo je do pogreške. Vaša stranica možda neće raditi ispravno."
+    critical_deprecation:
+      notice: "<b>[Obavijest administratora]</b> %{source} sadrži kod koji treba ažurirati. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>saznajte više</em></a>)"
+      theme_source: "Tema <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Dodatak '%{name}'"
+      unknown_source: "Jedna od vaših tema ili dodataka"
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokyo)"
@@ -1431,27 +1540,30 @@ hr:
         description: "Preskoči savjete i značke novog korisnika"
       reset_seen_user_tips: "Ponovno prikaži savjete za korisnike"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
+      color_scheme_default_on_all_devices: "Postavite zadanu paletu boja i način rada na svim mojim uređajima"
       color_scheme: "Paleta boja"
       color_schemes:
         default_description: "Zadana tema"
-        disable_dark_scheme: "Isto kao obična tema"
         dark_instructions: "Paletu boja tamnog načina rada možete pregledati uključivanjem/isključivanjem tamnog načina rada na uređaju."
         undo: "Resetirati"
-        regular: "Stalni član"
+        regular: "Svijetla tema"
         dark: "Tamni način rada"
-        default_dark_scheme: "(zadana web lokacija)"
+        interface_mode: "Modus"
+        interface_mode_instructions: "'Automatski' koristi postavke vašeg sustava za svijetlu ili tamnu temu."
         interface_modes:
           auto: "Auto"
           light: "Svijetlo"
           dark: "Tamno"
+        picker:
+          active: "Aktivno"
       dark_mode: "Tamni način rada"
-      dark_mode_enable: "Omogućite automatsku paletu boja tamnog načina rada"
       text_size_default_on_all_devices: "Postavi ovu veličinu teksta kao zadanu na svim mojim uređajima"
       allow_private_messages: "Dopustite drugim korisnicima da mi šalju osobne poruke"
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenoj teksta"
       enable_smart_lists: "Omogući pametne popise prilikom pisanja u editoru"
       enable_defer: "Omogući označavanje tema kao nepročitanih"
+      enable_markdown_monospace_font: "Koristi monospace font u Markdown načinu rada editora"
       experimental_sidebar:
         enable: "Omogući bočnu traku"
         options: "Mogućnosti"
@@ -1469,6 +1581,7 @@ hr:
       suspended_notice: "Ovaj korisnik je suspendiran do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendiran."
       suspended_reason: "Razlog:"
+      silenced_notice: "Ovaj korisnik je utišan do %{date}."
       silenced_permanently: "Ovaj korisnik je ušutkan."
       silenced_reason: "Razlog:"
       github_profile: "GitHub"
@@ -1544,6 +1657,10 @@ hr:
           one: '<span class="%{className}">%{count}</span> izbrisana objava'
           few: '<span class="%{className}">%{count}</span> izbrisanih objava'
           other: '<span class="%{className}">%{count}</span> izbrisane objave'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> utišan'
+          few: '<span class="%{className}">%{count}</span> utišano'
+          other: '<span class="%{className}">%{count}</span> utišani'
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspenzija'
           few: '<span class="%{className}">%{count}</span> suspenzija'
@@ -2012,6 +2129,10 @@ hr:
         user: "Pozvani Korisnici"
         none:
           title: "Nema poziva za prikaz."
+          cta: "Izradite poveznicu za poziv"
+          tip:
+            prefix: "Također možete poslati masovne pozivnice putem"
+            action: "učitavanje CSV datoteke"
         truncated:
           one: "Prikazuje se prva pozivnica."
           few: "Prikazuje se prvih %{count} pozivnica."
@@ -2597,7 +2718,19 @@ hr:
       disabled: "Ne prikazivati"
       sidebar_footer: "Prikaz u podnožju bočne trake"
       header: "Prikaz u zaglavlju"
+    welcome_banner_location:
+      above_topic_content: "Sadržaj iznad teme"
+      below_site_header: "Ispod zaglavlja stranice"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Stranice glavnog izbornika"
+      homepage: "Početna stranica"
+      discovery: "Otkriće"
+      all_pages: "Sve stranice"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Rich tekst"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2678,6 +2811,9 @@ hr:
       confirm_publish: "Jeste li sigurni da želite objaviti ovaj nacrt?"
       publishing: "Objavljivanje teme…"
     composer:
+      autocomplete:
+        username_missing: "Odabranom rezultatu automatskog dovršavanja nedostaje korisničko ime."
+        name_missing: "Odabranom rezultatu automatskog dovršavanja nedostaje ime."
       emoji: "Emoji :)"
       more_emoji: "više…"
       options: "Mogućnosti"
@@ -2685,7 +2821,7 @@ hr:
       unlist: "nenavedeno"
       add_warning: "Ovo je službeno upozorenje."
       toggle_whisper: "Uključi šapat"
-      insert_table: "Umetni tablicu"
+      insert_table: "Umetnite tablicu"
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "spašeno lokalno"
       similar_topics: "Vaša tema je slična…"
@@ -2771,6 +2907,8 @@ hr:
       remove_featured_link: "Ukloni vezu iz teme."
       reply_placeholder: "Tipkajte ovdje. Za formatiranje koristite Markdown, BBCode ili HTML. Povucite ili zalijepite slike."
       reply_placeholder_no_images: "Tipkajte ovdje. Za formatiranje koristite Markdown, BBCode ili HTML."
+      reply_placeholder_rte: "Upišite ovdje. Za oblikovanje koristite alatnu traku ili Markdown. Povucite ili zalijepite slike."
+      reply_placeholder_rte_no_images: "Upišite ovdje. Za oblikovanje koristite alatnu traku ili Markdown."
       reply_placeholder_choose_category: "Odaberite kategoriju prije upisivanja ovdje."
       view_new_post: "Pogledajte svoj novi članak."
       saving: "Spremanje"
@@ -2788,6 +2926,11 @@ hr:
       italic_label: "I"
       italic_title: "Naglasak"
       italic_text: "naglašen tekst"
+      heading_title: "Naslovi"
+      heading_level_n: "Naslov %{levelNumber}"
+      heading_level_n_title: "Naslov %{levelNumber}"
+      heading_level_paragraph: "Odlomak"
+      heading_level_paragraph_title: "Odlomak"
       link_title: "Veza"
       link_description: "ovdje unesite opis poveznice"
       link_dialog_title: "Umetnite poveznicu"
@@ -2800,15 +2943,16 @@ hr:
       link_url_placeholder: "Zalijepite poveznicu ili pretražite teme"
       blockquote_title: "\"Blockquote\" izdvojeni citat"
       blockquote_text: "\"Blockquote\" izdvojeni citat"
+      heading_text: "Naslov"
       code_title: "Pred-formatirani text"
       code_text: "uvuci pred-formatirani text za 4 mjesta"
       paste_code_text: "upišite ili zalijepite kod ovdje"
       upload_title: "Učitaj"
       upload_description: "ovdje unesite opise stvari koju učitavate"
-      olist_title: "Brojčani popis"
-      ulist_title: "Točkani popis"
+      olist_title: "Numerirani popis"
+      ulist_title: "Popis s grafičkim oznakama"
       list_item: "Predmet popisa"
-      toggle_direction: "Uključi smjer"
+      toggle_direction: "Uključi/isključi smjer"
       help: "Markdown pomoć pri izmjenama"
       collapse: "minimizirajte skladateljsku ploču"
       open: "otvorite ploču skladatelja"
@@ -2859,6 +3003,9 @@ hr:
         toggle_topic_bump:
           label: "Uključi kvrga teme"
           desc: "Odgovorite bez promjene zadnjeg datuma odgovora"
+        toggle_unlisted:
+          label: Uključi/isključi nenavedeno
+          desc: Neobjavljene teme dostupne članovima samo putem izravne poveznice
       reload: "Ponovno učitaj"
       ignore: "Zanemari"
       image_alt_text:
@@ -2866,6 +3013,9 @@ hr:
         title: "Dodaj opis slike"
       image_toolbar:
         alt_text: "Dodaj opis slike"
+        zoom_out: "Smanjite veličinu slike"
+        zoom_in: "Povećajte veličinu slike"
+        remove: "Uklonite sliku"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike
@@ -3314,6 +3464,9 @@ hr:
         filter: "Nema tema."
         education:
           topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
+          unread: "Ništa nije ostalo nepročitano... impresivno!"
+          new_new: "Trenutno ništa nova... provjerite uskoro!"
+          new: "Trenutno ništa nova... provjerite uskoro!"
       bottom:
         latest: "Nema više najnovijih tema."
         posted: "Nema više objavljenih članaka."
@@ -3936,6 +4089,10 @@ hr:
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
           none: "Ništa"
+        edit_warning:
+          message: "Ovo je prevedena objava.<br><br> Želite li urediti izvornu objavu u %{language} ili urediti ovaj specifični prijevod?"
+          action_original: "Uredite originalnu objavu"
+          action_translation: "Uredite ovaj prijevod"
       errors:
         create: "Žao nam je, dogodila se greška u stvaranju tvoje objave. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška u izmjenjivanju tvoje objave. Molimo pokušajte ponovo."
@@ -4070,6 +4227,9 @@ hr:
           few: "Jeste li sigurni da želite spojiti %{count} postova?"
           other: "Jeste li sigurni da želite spojiti ovih %{count} objava?"
       revisions:
+        locale:
+          no_locale_set: "Nije postavljen jezik"
+          locale_removed: "Jezik uklonjen"
         controls:
           first: "Prva revizija"
           previous: "Prethodna revizija"
@@ -4163,8 +4323,10 @@ hr:
         add: "Dodavanje novog lokalnog podešavanja"
         remove: "Ukloni"
         hint: "Trenutno nema lokalizacija za ovu kategoriju. Kliknite \"Dodavanje novog lokalnog podešavanja\" u nastavku, kako biste započeli dodavanje lokalizacija."
-      tags_allowed_tags: "Ograniči ove oznake na ovu kategoriju:"
-      tags_allowed_tag_groups: "Ograniči ove grupe oznaka na ovu kategoriju:"
+      tags_allowed_tags: "Ograničite ove oznake na kategoriju '%{categoryName}':"
+      tags_allowed_tags_new_category: "Ograniči ove oznake na ovu kategoriju:"
+      tags_allowed_tag_groups: "Ograničite ove grupe oznaka na kategoriju '%{categoryName}':"
+      tags_allowed_tag_groups_new_category: "Ograniči ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Izborno) popis dopuštenih oznaka"
       tags_tab_description: "Oznake i grupe oznaka koje su gore navedene bit će dostupne samo u ovoj kategoriji i ostalim kategorijama koje ih također navode. Oni neće biti dostupni za upotrebu u drugim kategorijama."
       tag_groups_placeholder: "(Izborno) popis dopuštenih grupa oznaka"
@@ -4533,12 +4695,18 @@ hr:
           other: "Novih (%{count})"
         help: "teme stvorene u zadnjih par dana"
         all: "Sve"
+        all_tooltip: "Sve nove teme i teme na koje je odgovoreno u posljednjih nekoliko dana"
         all_with_count: "Sve (%{count})"
+        new_topics_tooltip: "Nove teme"
         topics: "Tema"
         topics_with_count: "Teme (%{count})"
+        new_replies_tooltip: "Novi odgovori"
         replies: "Odgovori"
         replies_with_count: "Odgovori (%{count})"
+      new_new:
+        help: "teme kreirane ili na koje je odgovoreno u posljednjih nekoliko dana"
       posted:
+        title: "Moje objave"
         help: "teme u kojima si objavljivao"
       bookmarks:
         title: "Zabilješke"
@@ -4591,6 +4759,7 @@ hr:
     cannot_render_video: Ovaj videozapis nije moguće prikazati jer vaš preglednik ne podržava kodek.
     invalid_video_url: Ovaj videozapis ne može se reproducirati jer URL nije valjan ili nije dostupan.
     keyboard_shortcuts_help:
+      search_placeholder: "Pretraživanje prečaca prema opisu ili kombinaciji tipki"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
@@ -4639,8 +4808,23 @@ hr:
       composing:
         title: "Sastavljanje"
         return: "%{shortcut} Povratak skladatelju"
+        minimize: "%{shortcut} Minimizirajte editor"
+        create_or_reply: "%{shortcut} Kreirajte temu ili objavite odgovor"
         fullscreen: "%{shortcut} Kompozitor preko cijelog zaslona"
         insert_current_time: "%{shortcut} Umetnite trenutno vrijeme"
+        bold: "%{shortcut} Podebljano"
+        italic: "%{shortcut} Kurziv"
+        link: "%{shortcut} Umetnite poveznicu"
+        preformatted: "%{shortcut} Unaprijed formatirani tekst"
+        paragraph: "%{shortcut} Odlomak"
+        heading_1: "%{shortcut} Naslov 1"
+        heading_2: "%{shortcut} Naslov 2"
+        heading_3: "%{shortcut} Naslov 3"
+        heading_4: "%{shortcut} Naslov 4"
+        toggle_direction: "%{shortcut} Promijenite smjer teksta"
+        ordered_list: "%{shortcut} Uređeni popis"
+        unordered_list: "%{shortcut} Neuređeni popis"
+        blockquote: "%{shortcut} Blok citat"
       bookmarks:
         title: "Označavanje"
         enter: "%{shortcut} Spremi i zatvori"
@@ -5064,6 +5248,7 @@ hr:
               title: "Sve značke dostupne za osvajanje"
             filter:
               content: "Filter"
+              title: "Filtrirajte teme prema kategoriji, oznaci ili drugim kriterijima"
             topics:
               content: "Tema"
               title: "Sve teme"
@@ -5080,6 +5265,8 @@ hr:
               content: "Korisnici"
               title: "Popis svih korisnika"
             my_posts:
+              content: "Moje objave"
+              content_drafts: "Moji nacrti"
               title: "Moja nedavna aktivnost vezana uz temu"
               title_drafts: "Moje neobjavljene skice"
               draft_count:
@@ -5097,6 +5284,7 @@ hr:
               content: "Pozovite"
               title: "Pozovite nove članove"
             my_messages:
+              content: "Moje poruke"
               title: "Moje osobne poruke"
         global_section: "Globalni odjeljak, vidljiv svima"
       panels:
@@ -5221,8 +5409,12 @@ hr:
     powered_by_discourse: "Pokreće Discourse"
     safari_15_warning: "Vaš preglednik uskoro neće biti kompatibilan s ovom zajednicom. Kako biste ovdje nastavili sudjelovati, nadogradite preglednik ili <a href='%{url}'>saznajte više</a>."
     filter:
+      placeholder: "Filtrirajte teme prema kategoriji, oznaci ili drugim kriterijima"
       description:
         yesterday: "Jučer"
+        last_week: "Prošli tjedan"
+        last_month: "Prošli mjesec"
+        last_year: "Prošla godina"
     discovery:
       headings:
         all:
@@ -5289,13 +5481,18 @@ hr:
             bookmarks: "Teme u %{category} bez oznaka koje ste označili"
             default: "%{filter} teme u %{category} bez oznaka"
         categories: "Sve kategorije"
+    content_localization:
+      toggle_localized:
+        translated: "Stranica je strojno prevedena. Kliknite kako biste vidjeli izvornik."
+        not_translated: "Stranica nije prevedena. Kliknite za prijevod."
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
     admin:
       title: "Administrator"
       moderator: "Moderator"
-      filter_reports: Filtrirajte izvješća
+      filter_reports: "Filtrirajte izvješća..."
+      filter_reports_no_results: "Nijedno izvješće ne odgovara vašem filtru"
       tags:
         remove_muted_tags_from_latest:
           always: "uvijek"
@@ -5321,19 +5518,52 @@ hr:
           title: "Sigurnost"
         plugins:
           title: "Dodaci"
+        advanced:
+          title: "Napredno"
       config:
+        about:
+          title: "O vašoj web stranici"
+          header_description: "Ovdje navedite informacije o ovoj stranici i svom timu kako bi ljudi mogli saznati o čemu se radi u vašoj zajednici, tko stoji iza nje i kako vas kontaktirati u slučaju problema. Prikazano na stranici <a href='%{basePath}/about'>O nama</a>vaše stranice."
         developer:
           title: "Programer"
+          header_description: "Postavke programera za kontrolu ograničenja brzine, množitelja i proračuna, sigurnog načina rada i drugih naprednih značajki"
+        experimental:
+          title: "Eksperimentalno"
+          header_description: "Uključite ili isključite eksperimentalne značajke za svoju web stranicu, većinu njih možete kontrolirati na grupnoj osnovi"
         emojis:
           title: "Emoji"
+          header_description: "Dodajte nove emotikone koji će biti svima dostupni. Odaberite više datoteka za izradu emotikona koristeći njihove nazive datoteka. Odabrana grupa koristit će se za sve datoteke koje se dodaju istovremeno."
         flags:
           title: "Moderiranje"
+          header_description: "Sustav označavanja u Discourseu pomaže vama i vašem moderatorskom timu da upravljate sadržajem i ponašanjem korisnika, održavajući vašu zajednicu pristojnom i zdravom. Zadane postavke prikladne su za većinu zajednica i ne morate ih mijenjati. Međutim, ako vaša web stranica ima posebne zahtjeve, možete onemogućiti oznake koje vam nisu potrebne i dodati vlastite prilagođene oznake."
+          keywords: "označi|pregledaj|neželjena pošta|ilegalno"
         files:
           title: "Datoteke"
+          header_description: "Postavke koje kontroliraju ograničenja veličine i vrste datoteka, veličine i izvore avatara, pohranu datoteka, kvalitetu i kompresiju slike i još mnogo toga"
         legal:
           title: "Legalno"
+          header_description: "Konfigurirajte pravne postavke, kao što su uvjeti pružanja usluge, pravila o privatnosti, kontaktni podaci i razmatranja specifična za EU"
+        theme_site_settings:
+          title: "Postavke stranice teme"
+          header_description: "Prikazuje sve postavke teme web stranice i teme koje ih trenutno nadjačavaju"
+        localization:
+          title: "Lokalizacija"
+          header_description: "Konfigurirajte jezik sučelja svoje zajednice i ostale opcije lokalizacije za svoje članove"
+          keywords: "lokacija|jezik|vremenska zona|unicode|ltr"
+        login_and_authentication:
+          title: "Prijava i autentifikacija"
+          header_description: "Konfigurirajte način na koji se korisnici prijavljuju i autentificiraju, tajne i ključeve, pružatelje usluga OAuth2 i još mnogo toga"
         logo:
+          title: "Logo"
+          header_description: "Konfigurirajte logotipe i ikone koje se koriste na vašoj web stranici"
           form:
+            saved: "Postavke logotipa su spremljene."
+            logo:
+              title: "Primarni logotip"
+              description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
+              help_text: "Preporučena veličina je 600 x 80 piksela."
+            logo_dark:
+              required: "Koristiti drugačiji logotip za tamni način rada?"
             mobile: "Mobilni"
             email: "E-mail"
         fonts:
@@ -5959,6 +6189,7 @@ hr:
           theme: "Tema"
           component: "Komponenta"
           components: "Komponente"
+          filter_all: "Sve"
           theme_name: "Naziv teme"
           component_name: "Naziv komponente"
           themes_intro: "Odaberite postojeću temu ili instalirajte novu da biste započeli"
@@ -5983,13 +6214,12 @@ hr:
           extra_files_upload: "Izvezite temu za pregled ovih datoteka."
           extra_files_remote: "Izvezite temu ili provjerite git spremište za pregled ovih datoteka."
           preview: "Pregled"
-          default: "Aktivno"
           is_default: "Tema je omogućena prema zadanim postavkama"
           user_selectable: "Temu mogu odabrati korisnici"
           auto_update: "Automatsko ažuriranje kada se diskurs ažurira"
           color_scheme: "Paleta boja"
           default_light_scheme: "Svjetlo (zadano)"
-          color_scheme_select: "Odaberite boje koje će se koristiti po temi"
+          color_scheme_select: "Odaberite boje koje će se koristiti po temi."
           custom_sections: "Prilagođeni odjeljci:"
           theme_components: "Komponente teme"
           add_all_themes: "Dodajte sve teme"
@@ -6118,12 +6348,12 @@ hr:
           select_base:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
+          light: "svijetlo"
+          dark: "tamno"
           title: "Boje"
           edit: "Uredi"
           filters:
             all: "Sve"
-          active_badge:
-            text: "Aktivno"
           about: "Izmijenite boje koje koriste vaše teme. Za početak izradite novu paletu boja."
           copy_name_prefix: "Kopija"
           undo: "Vrati na prethodno"

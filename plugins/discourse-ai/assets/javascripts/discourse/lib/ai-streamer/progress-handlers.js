@@ -111,7 +111,7 @@ export async function applyProgress(status, updater) {
 
   if (status.done) {
     if (status.cooked) {
-      await updater.setCooked(status.cooked);
+      await updater.setCooked(status.cooked, true);
     }
     updater.streaming = false;
   }

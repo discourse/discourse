@@ -2,8 +2,6 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import UserLink from "discourse/components/user-link";
@@ -15,7 +13,7 @@ import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    <div class="show-current-style">
+    <div class="show-current-style admin-customize-themes-show">
       <div class="back-to-themes-and-components">
         <LinkTo
           @route={{if
@@ -43,7 +41,7 @@ export default RouteTemplate(
         />
       </span>
 
-      <div class="title">
+      <div class="title admin-customize-themes-show__title">
         {{#if @controller.editingName}}
           <div class="container-edit-title">
             <TextField @value={{@controller.model.name}} @autofocus="true" />
@@ -248,27 +246,6 @@ export default RouteTemplate(
           <div class="alert alert-info system-theme-info">
             {{i18n "admin.customize.theme.built_in_description"}}
           </div>
-        {{/if}}
-
-        {{#if @controller.siteSettings.use_overhauled_theme_color_palette}}
-          {{#unless @controller.model.component}}
-            <DPageHeader>
-              <:tabs>
-                <NavItem
-                  class="admin-customize-theme-tabs__settings"
-                  @route="adminCustomizeThemes.show.index"
-                  @routeParam={{@controller.model.id}}
-                  @label="admin.customize.theme.settings"
-                />
-                <NavItem
-                  class="admin-customize-theme-tabs__colors"
-                  @route="adminCustomizeThemes.show.colors"
-                  @routeParam={{@controller.model.id}}
-                  @label="admin.customize.theme.colors"
-                />
-              </:tabs>
-            </DPageHeader>
-          {{/unless}}
         {{/if}}
 
         {{outlet}}

@@ -1082,7 +1082,7 @@ et:
     actions:
       agree:
         title: "Jah"
-      delete_single:
+      delete:
         title: "Kustuta"
         complete: "Postitus kustutatud."
       delete_and_ignore:

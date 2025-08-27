@@ -23,7 +23,7 @@ export default RouteTemplate(
     <div class="admin-config-page__main-area">
       <AdminAreaSettings
         @showBreadcrumb={{false}}
-        @categories="experimental"
+        @area="experimental"
         @path="/admin/config/experimental"
         @filter={{@controller.filter}}
         @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}

@@ -145,7 +145,5 @@ nb_NO:
             label: Versjon
           status:
             label: Status
-          enabled:
-            label: Aktivert
           disabled:
             label: Deaktivert

@@ -11,11 +11,23 @@ ur:
     emotion_neutral:
       title: "\U0001F610 نیوٹرل"
   discourse_ai:
+    spam_detection:
+      bot_user_update_failed: "اسپام اسکیننگ بوٹ صارف کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      tool_options:
+        update_artifact:
+          editor_llm:
+            name: "ایل ایل ایم"
+          update_algorithm:
+            name: "الگورتھم کو اپ ڈیٹ کریں"
+            description: "ایل ایل ایم کو مکمل طور پر تبدیل کرنے کے لئے کہیں، یا اپ ڈیٹ کرنے کے لئے ڈِیف استعمال کریں"
       tool_summary:
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
+        read: "موضوع پڑھیں"
+      tool_description:
+        time: "%{timezone} میں وقت %{time} ہے"
     sentiment:
       reports:
         post_emotion:

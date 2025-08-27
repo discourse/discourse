@@ -30,6 +30,7 @@ export default class AdminUserIndexController extends Controller {
   userTitleValue = null;
   ssoExternalEmail = null;
   ssoLastPayload = null;
+  isLoading = false;
 
   @setting("enable_badges") showBadges;
   @setting("moderators_view_emails") canModeratorsViewEmails;
@@ -172,6 +173,8 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   impersonate() {
+    this.set("isLoading", true);
+
     return this.model
       .impersonate()
       .then(() => DiscourseURL.redirectTo("/"))
@@ -181,6 +184,8 @@ export default class AdminUserIndexController extends Controller {
         } else {
           this.dialog.alert(i18n("admin.impersonate.invalid"));
         }
+
+        this.set("isLoading", false);
       });
   }
 

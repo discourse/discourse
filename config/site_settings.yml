@@ -367,11 +367,6 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
-  default_dark_mode_color_scheme_id:
-    default: -1
-    type: enum
-    enum: "ColorSchemeSetting"
-    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -494,7 +489,7 @@ basic:
     area: "analytics"
   enable_user_tips:
     client: true
-    default: true
+    default: false
     refresh: true
     area: "users"
   page_loading_indicator:
@@ -570,6 +565,14 @@ basic:
     default: "disabled"
     area: "interface"
   floatkit_autocomplete_composer:
+    client: true
+    default: true
+    area: "interface"
+  floatkit_autocomplete_input_fields:
+    client: true
+    default: true
+    area: "interface"
+  floatkit_autocomplete_chat_composer:
     client: true
     default: true
     area: "interface"
@@ -1655,6 +1658,9 @@ content_localization:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  content_localization_crawler_param:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -2586,6 +2592,9 @@ security:
   moderators_view_emails:
     client: true
     default: false
+  moderators_view_ips:
+    default: true
+    client: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
@@ -3123,10 +3132,8 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:
@@ -3641,11 +3648,6 @@ uncategorized:
     default: false
     area: "users"
 
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
-
   splash_screen:
     default: true
     area: "interface"
@@ -3670,10 +3672,22 @@ uncategorized:
     themeable: true
     area: "interface"
 
+  welcome_banner_image:
+    client: true
+    default: ""
+    type: upload
+    area: "interface"
+
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
     default: "above_topic_content"
+    area: "interface"
+
+  welcome_banner_page_visibility:
+    client: true
+    enum: "WelcomeBannerPageVisibility"
+    default: "top_menu_pages"
     area: "interface"
 
 user_preferences:
@@ -3826,6 +3840,9 @@ user_preferences:
     default: 1
     enum: "CompositionModeSiteSetting"
     area: "posts_and_topics|user_defaults"
+  default_other_enable_markdown_monospace_font:
+    default: true
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -3932,6 +3949,13 @@ tags:
     hidden: true
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
+  edit_tags_allowed_groups:
+    default: "1|2" # auto group admins, moderators
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -4057,20 +4081,33 @@ experimental:
   experimental_auto_grid_images:
     default: false
     client: true
+    area: "experimental"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
+    area: "experimental"
   experimental_form_templates:
     client: true
     default: false
+    area: "experimental"
+  experimental_impersonation:
+    default: false
+    hidden: true
+    area: "experimental"
+  experimental_impersonation_time_limit_minutes:
+    default: 15
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
+    area: "experimental"
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -4078,7 +4115,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-    area: "group_permissions|navigation"
+    area: "group_permissions|navigation|experimental"
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list
@@ -4086,6 +4123,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "experimental"
   glimmer_post_stream_mode:
     client: true
     type: enum
@@ -4094,32 +4132,26 @@ experimental:
       - auto
       - enabled
     default: "auto"
+    area: "experimental"
   deactivate_widgets_rendering:
     client: true
     default: false
+    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
+    area: "experimental"
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+    area: "experimental"
   lazy_load_categories_groups:
     default: ""
     type: group_list
     list_type: compact
-    area: "group_permissions"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
+    area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
-  experimental_sidebar_messages_count_enabled_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    area: "experimental"

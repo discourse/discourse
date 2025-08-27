@@ -149,4 +149,40 @@ RSpec.describe UserCardSerializer do
       )
     end
   end
+
+  describe "#user_fields" do
+    fab!(:user)
+
+    it "includes the user field" do
+      user_field = Fabricate(:user_field, show_on_profile: true, show_on_user_card: true)
+      user.set_user_field(user_field.id, "foo")
+
+      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+      json = serializer.as_json
+
+      expect(json[:user_fields]).to_not be_nil
+      expect(json[:user_fields][user_field.id.to_s]).to eq("foo")
+    end
+
+    it "converts confirm fields to boolean" do
+      user_field =
+        Fabricate(
+          :user_field,
+          field_type: "confirm",
+          show_on_profile: true,
+          show_on_user_card: true,
+        )
+
+      test_values = { "true" => true, "T" => true, "1" => true, "false" => false, "lol" => false }
+
+      test_values.each do |value, expected|
+        user.set_user_field(user_field.id, value)
+        serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+        json = serializer.as_json
+
+        expect(json[:user_fields]).to_not be_nil
+        expect(json[:user_fields][user_field.id.to_s]).to eq(expected)
+      end
+    end
+  end
 end

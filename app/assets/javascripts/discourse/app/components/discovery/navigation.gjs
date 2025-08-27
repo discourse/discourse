@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
 import DNavigation from "discourse/components/d-navigation";
@@ -9,8 +10,8 @@ import AccessibleDiscoveryHeading from "discourse/components/discovery/accessibl
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
@@ -70,6 +71,13 @@ export default class DiscoveryNavigation extends Component {
     this.modal.show(ReorderCategories);
   }
 
+  get headingClasses() {
+    return concatClass(
+      "category-heading",
+      this.args.category?.uploaded_logo?.url ? "--has-logo" : null
+    );
+  }
+
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
@@ -89,21 +97,28 @@ export default class DiscoveryNavigation extends Component {
         @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
-      <section class="category-heading">
+      <section class={{this.headingClasses}}>
         {{#if @category.uploaded_logo.url}}
-          <CategoryLogo @category={{@category}} />
+          <CategoryLogo
+            @category={{@category}}
+            class="category-heading__logo"
+          />
           {{#if @category.description}}
-            <p>{{dirSpan @category.description htmlSafe="true"}}</p>
+            <div class="category-heading__content">
+              {{categoryBadge @category class="category-heading__badge"}}
+              <p class="category-heading__description">
+                {{htmlSafe @category.description}}
+              </p>
+            </div>
           {{/if}}
         {{/if}}
 
-        <span>
-          <PluginOutlet
-            @name="category-heading"
-            @connectorTagName="div"
-            @outletArgs={{lazyHash category=@category tag=@tag}}
-          />
-        </span>
+        <PluginOutlet
+          @name="category-heading"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash category=@category tag=@tag}}
+        />
+
       </section>
     {{/if}}
 

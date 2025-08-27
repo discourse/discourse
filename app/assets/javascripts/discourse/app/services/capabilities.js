@@ -1,3 +1,7 @@
+import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import Mobile from "discourse/lib/mobile";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
@@ -5,16 +9,9 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 const ua = navigator.userAgent;
 
-// Values match those in viewport.scss
-const breakpointQueries = {
-  sm: new TrackedMediaQuery("(min-width: 40rem)"),
-  md: new TrackedMediaQuery("(min-width: 48rem)"),
-  lg: new TrackedMediaQuery("(min-width: 64rem)"),
-  xl: new TrackedMediaQuery("(min-width: 80rem)"),
-  "2xl": new TrackedMediaQuery("(min-width: 96rem)"),
-};
-
 const anyPointerCourseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
+
+let siteInitialized = false;
 
 class Capabilities {
   isAndroid = ua.includes("Android");
@@ -48,23 +45,69 @@ class Capabilities {
     window.location.search.includes("discourse_app=1");
   isAppWebview = window.ReactNativeWebView !== undefined;
 
-  viewport = {
-    get sm() {
-      return breakpointQueries.sm.matches;
-    },
-    get md() {
-      return breakpointQueries.md.matches;
-    },
-    get lg() {
-      return breakpointQueries.lg.matches;
-    },
-    get xl() {
-      return breakpointQueries.xl.matches;
-    },
-    get "2xl"() {
-      return breakpointQueries["2xl"].matches;
-    },
-  };
+  /**
+   * Defines the responsive viewport breakpoints and their media queries.
+   * Reduces the breakpoint entries into viewport properties that can be accessed
+   * to check if each breakpoint matches the current viewport size.
+   *
+   * @type {Object.<string, boolean>}
+   * @property {boolean} sm - True if viewport width is at least 40rem
+   * @property {boolean} md - True if viewport width is at least 48rem
+   * @property {boolean} lg - True if viewport width is at least 64rem
+   * @property {boolean} xl - True if viewport width is at least 80rem
+   * @property {boolean} 2xl - True if viewport width is at least 96rem
+   * @throws {Error} If accessed during initialization in test environment
+   * @deprecated Using viewport properties during initialization is forbidden
+   */
+  viewport = Array.from(
+    // Values match those in viewport.scss
+    Object.entries({
+      sm: new TrackedMediaQuery("(min-width: 40rem)"),
+      md: new TrackedMediaQuery("(min-width: 48rem)"),
+      lg: new TrackedMediaQuery("(min-width: 64rem)"),
+      xl: new TrackedMediaQuery("(min-width: 80rem)"),
+      "2xl": new TrackedMediaQuery("(min-width: 96rem)"),
+    })
+  ).reduce((obj, [key, breakpointQuery]) => {
+    Object.defineProperty(obj, key, {
+      get() {
+        siteInitialized ||= getOwnerWithFallback(this).lookup(
+          "-application-instance:main"
+        )?._booted;
+
+        if (!siteInitialized) {
+          if (isTesting() || isRailsTesting()) {
+            throw new Error(
+              `Accessing \`capabilities.viewport.${key}\` during the site initialization phase. Move these checks ` +
+                `to a component, transformer, or API callback that executes during page rendering.`
+            );
+          }
+
+          deprecated(
+            `Accessing \`capabilities.viewport.${key}\` during the site initialization phase is not recommended. ` +
+              `Using these values during initialization can lead to errors and inconsistencies when the browser ` +
+              `window is resized. Please move these checks to a component, transformer, or API callback that ` +
+              `executes during page rendering.`,
+            {
+              id: "discourse.static-viewport-initialization",
+              url: "https://meta.discourse.org/t/367810",
+            }
+          );
+        }
+
+        return breakpointQuery.matches;
+      },
+    });
+
+    return obj;
+  }, {});
+
+  #isMobileDevice =
+    Mobile.mobileForced || (ua.includes("Mobile") && !ua.includes("iPad"));
+
+  get isMobileDevice() {
+    return this.#isMobileDevice;
+  }
 
   get touch() {
     return anyPointerCourseQuery.matches;

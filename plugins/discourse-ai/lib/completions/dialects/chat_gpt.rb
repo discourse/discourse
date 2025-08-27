@@ -69,7 +69,10 @@ module DiscourseAi
         # developer messages are preferred on recent reasoning models
         def supports_developer_messages?
           !legacy_reasoning_model? && llm_model.provider == "open_ai" &&
-            (llm_model.name.start_with?("o1") || llm_model.name.start_with?("o3"))
+            (
+              llm_model.name.start_with?("o1") || llm_model.name.start_with?("o3") ||
+                llm_model.name.start_with?("gpt-5")
+            )
         end
 
         def legacy_reasoning_model?

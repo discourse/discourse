@@ -81,6 +81,7 @@ en:
     ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
     ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
     ai_embeddings_semantic_search_enabled: "Enable full-page semantic search."
+    ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
@@ -607,8 +608,8 @@ en:
       cannot_edit_builtin: "You can't edit a built-in model."
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
-        invalid_config: "You selected a invalid option."
         choose_model: "Set 'ai embeddings selected model' first."
+        model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"

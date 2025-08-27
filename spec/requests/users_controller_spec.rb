@@ -178,14 +178,27 @@ RSpec.describe UsersController do
     end
 
     context "when cookies contains a destination URL" do
-      it "should redirect to the URL" do
-        destination_url = "http://thisisasite.com/somepath"
-        cookies[:destination_url] = destination_url
+      context "when the destination URL has a query" do
+        it "should redirect to the URL and preserve the query" do
+          destination_url = "http://thisisasite.com/somepath?latest=1"
+          cookies[:destination_url] = destination_url
 
-        put "/u/activate-account/#{email_token.token}"
+          put "/u/activate-account/#{email_token.token}"
 
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["redirect_to"]).to eq(destination_url)
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(destination_url)
+        end
+      end
+      context "when destination URL doesn't have a query" do
+        it "should redirect to the URL" do
+          destination_url = "http://thisisasite.com/somepath"
+          cookies[:destination_url] = destination_url
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(destination_url)
+        end
       end
     end
 
@@ -7212,8 +7225,10 @@ RSpec.describe UsersController do
 
     after { DiscoursePluginRegistry.reset! }
 
-    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
-    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
+    fab!(:topic)
+    fab!(:post)
+    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
+    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
     let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
     let(:bookmark4) { Fabricate(:bookmark) }
 
@@ -7313,6 +7328,45 @@ RSpec.describe UsersController do
       include_examples "invalid limit params",
                        "/u/someusername/bookmarks.json",
                        described_class::BOOKMARKS_LIMIT
+    end
+
+    describe "when a notification topic has localizations" do
+      fab!(:jap_user) { Fabricate(:user, locale: "ja") }
+      fab!(:topic_localization_es) do
+        Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Hola Mundo")
+      end
+      fab!(:topic_localization_ja) do
+        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
+      end
+
+      before do
+        topic.update(locale: "en")
+        user1.update(locale: "ja")
+      end
+
+      it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        sign_in(user1)
+
+        get "/u/#{user1.username}/bookmarks.json"
+        expect(response.status).to eq(200)
+        response_bookmarks = response.parsed_body["user_bookmark_list"]["bookmarks"]
+        expect(response_bookmarks.map { |b| b["fancy_title"] }).to include(
+          topic_localization_ja.fancy_title,
+        )
+      end
+
+      it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
+        SiteSetting.content_localization_enabled = false
+        SiteSetting.allow_user_locale = true
+        sign_in(user1)
+
+        get "/u/#{user1.username}/bookmarks.json"
+        expect(response.status).to eq(200)
+        response_bookmarks = response.parsed_body["user_bookmark_list"]["bookmarks"]
+        expect(response_bookmarks.map { |b| b["fancy_title"] }).to include(topic.fancy_title)
+      end
     end
   end
 

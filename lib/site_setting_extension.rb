@@ -85,6 +85,11 @@ module SiteSettingExtension
     @theme_site_settings[provider.current_site] ||= {}
   end
 
+  def humanized_names(name)
+    @humanized_names ||= {}
+    @humanized_names[name] ||= humanized_name(name)
+  end
+
   def defaults
     @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
@@ -153,6 +158,22 @@ module SiteSettingExtension
       end
   end
 
+  def settings_hash
+    result = {}
+
+    defaults.all.keys.each do |s|
+      next if themeable[s]
+
+      result[s] = if deprecated_settings.include?(s.to_s)
+        public_send(s, warn: false).to_s
+      else
+        public_send(s).to_s
+      end
+    end
+
+    result
+  end
+
   def deprecated_settings
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
@@ -177,11 +198,11 @@ module SiteSettingExtension
   end
 
   def setting_metadata_hash(setting)
-    setting_hash = {
+    {
       setting:,
       default: SiteSetting.defaults[setting],
       description: SiteSetting.description(setting),
-      humanized_name: SiteSetting.humanized_name(setting),
+      humanized_name: humanized_names(setting),
     }.merge(type_supervisor.type_hash(setting))
   end
 
@@ -269,7 +290,7 @@ module SiteSettingExtension
   )
     locale_setting_hash = {
       setting: "default_locale",
-      humanized_name: humanized_name("default_locale"),
+      humanized_name: humanized_names("default_locale"),
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       description: description("default_locale"),
@@ -335,7 +356,7 @@ module SiteSettingExtension
 
         opts = {
           setting: s,
-          humanized_name: humanized_name(s),
+          humanized_name: humanized_names(s),
           description: description(s),
           keywords: keywords(s),
           category: categories[s],
@@ -433,6 +454,7 @@ module SiteSettingExtension
 
         theme_site_setting_changes, theme_site_setting_deletions =
           diff_hash(new_theme_site_settings, theme_site_settings)
+
         theme_site_setting_changes.each do |theme_id, settings|
           theme_site_settings[theme_id] ||= {}
           theme_site_settings[theme_id].merge!(settings)
@@ -447,11 +469,13 @@ module SiteSettingExtension
     end
   end
 
+  SITE_SETTINGS_CHANNEL = "/site_settings"
+
   def ensure_listen_for_changes
     return if @listen_for_changes == false
 
     unless @subscribed
-      MessageBus.subscribe("/site_settings") do |message|
+      MessageBus.subscribe(SITE_SETTINGS_CHANNEL) do |message|
         process_message(message) if message.data["process"] != process_id
       end
 
@@ -599,6 +623,7 @@ module SiteSettingExtension
     theme_site_settings[theme_id][name] = val
 
     notify_clients!(name, theme_id: theme_id) if client_settings.include?(name)
+    notify_changed!
 
     clear_cache!(expire_theme_site_setting_cache: true)
 

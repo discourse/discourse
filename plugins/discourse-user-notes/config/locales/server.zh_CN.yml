@@ -7,6 +7,7 @@
 zh_CN:
   site_settings:
     user_notes_enabled: "允许管理人员将备注附加到用户"
+    user_notes_icon_placement: "在帖子中放置用户备注指示图标"
     user_notes_moderators_delete: "允许版主删除用户备注"
   user_notes:
     official_warning: "收到来自 @%{username} 的正式警告 – %{warning_link}"

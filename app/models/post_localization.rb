@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostLocalization < ActiveRecord::Base
+  include LocaleMatchable
+
   belongs_to :post
 
   validates :post_version, presence: true

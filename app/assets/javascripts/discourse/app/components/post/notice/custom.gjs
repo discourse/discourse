@@ -28,7 +28,7 @@ export default class PostNoticeCustom extends Component {
 
   <template>
     {{icon "user-shield"}}
-    <div class="post-notice-message test" {{this.registerCreatedByLink}}>
+    <div class="post-notice-message" {{this.registerCreatedByLink}}>
       {{htmlSafe @notice.cooked}}
       {{#if this.createdByName}}
         {{htmlSafe

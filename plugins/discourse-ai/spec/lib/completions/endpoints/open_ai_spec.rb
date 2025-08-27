@@ -738,6 +738,39 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
         end
       end
 
+      it "supports gpt-5, remaps max_tokens, passes reasoning effort, and uses developer message" do
+        model.update!(name: "gpt-5")
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            "You are a bot",
+            messages: [type: :user, content: "hello"],
+          )
+        dialect = compliance.dialect(prompt: prompt)
+
+        body_parsed = nil
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+          body:
+            proc do |body|
+              body_parsed = JSON.parse(body)
+              true
+            end,
+        ).to_return(status: 200, body: { choices: [{ message: { content: "ok" } }] }.to_json)
+
+        endpoint.perform_completion!(
+          dialect,
+          user,
+          { max_tokens: 321, reasoning: { effort: "low" } },
+        )
+
+        expect(body_parsed["model"]).to eq("gpt-5")
+        expect(body_parsed["max_completion_tokens"]).to eq(321)
+        expect(body_parsed["max_tokens"]).to be_nil
+        expect(body_parsed["reasoning"]).to eq({ "effort" => "low" })
+        expect(body_parsed["messages"].first["role"]).to eq("developer")
+        expect(body_parsed["messages"].first["content"]).to eq("You are a bot")
+      end
+
       context "with tools" do
         it "returns a function invocation" do
           compliance.streaming_mode_tools(open_ai_mock)
@@ -960,6 +993,63 @@ TEXT
           end
         end
       end
+    end
+  end
+
+  describe "reasoning effort payload format" do
+    let(:prompt) { compliance.generic_prompt }
+    let(:dialect) { compliance.dialect(prompt: prompt) }
+
+    it "uses reasoning object format for responses API" do
+      model.update!(provider_params: { enable_responses_api: true, reasoning_effort: "minimal" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning]).to eq({ effort: "minimal" })
+      expect(parsed_body).not_to have_key(:reasoning_effort)
+    end
+
+    it "uses reasoning_effort field for standard API" do
+      model.update!(provider_params: { reasoning_effort: "low" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+      expect(parsed_body).not_to have_key(:reasoning)
+    end
+
+    it "omits reasoning parameters when not configured" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:reasoning)
+      expect(parsed_body).not_to have_key(:reasoning_effort)
     end
   end
 end

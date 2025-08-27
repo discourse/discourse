@@ -117,6 +117,7 @@ export default {
               metaKey: event.metaKey,
               shiftKey: event.shiftKey,
               button: event.button,
+              which: event.which,
               bubbles: true,
               cancelable: true,
             })

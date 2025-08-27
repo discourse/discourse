@@ -24,6 +24,7 @@ import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
+import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
 import Parser from "../core/parser";
@@ -73,6 +74,7 @@ export default class ProsemirrorEditor extends Component {
   @service toasts;
   @service site;
   @service siteSettings;
+  @service appEvents;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -109,6 +111,7 @@ export default class ProsemirrorEditor extends Component {
         toasts: this.toasts,
         site: this.site,
         siteSettings: this.siteSettings,
+        appEvents: this.appEvents,
         replaceToolbar: this.args.replaceToolbar,
         addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
         removeGlimmerNodeView: (nodeView) =>
@@ -172,14 +175,10 @@ export default class ProsemirrorEditor extends Component {
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
-    this.parser = new Parser(
-      this.extensions,
-      this.pluginParams,
-      this.args.includeDefault
-    );
+    this.parser = new Parser(this.extensions, params, this.args.includeDefault);
     this.serializer = new Serializer(
       this.extensions,
-      this.pluginParams,
+      params,
       this.args.includeDefault
     );
 
@@ -187,7 +186,7 @@ export default class ProsemirrorEditor extends Component {
 
     this.view = new EditorView(container, {
       state,
-      nodeViews: extractNodeViews(this.extensions, this.pluginParams),
+      nodeViews: extractNodeViews(this.extensions, params),
       attributes: { class: this.args.class ?? "" },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
@@ -226,6 +225,8 @@ export default class ProsemirrorEditor extends Component {
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
+      commands: buildCommands(this.extensions, params, this.view),
+      customState: buildCustomState(this.extensions, params),
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
@@ -261,6 +262,7 @@ export default class ProsemirrorEditor extends Component {
       "addToHistory",
       false
     );
+
     this.view.updateState(this.view.state.apply(tr));
   }
 

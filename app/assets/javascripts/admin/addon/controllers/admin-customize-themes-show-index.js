@@ -27,6 +27,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service router;
   @service siteSettings;
   @service modal;
+  @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
 
@@ -39,7 +40,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("allThemes", "component", false) availableParentThemes;
   @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
   @mapBy("availableParentThemes", "name") availableThemesNames;
-  @mapBy("availableActiveParentThemes", "name") availableActiveThemesNames;
   @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
   @mapBy("availableChildThemes", "name") availableComponentsNames;
   @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
@@ -80,9 +80,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @discourseComputed("colorSchemeId", "model.color_scheme_id")
-  colorSchemeChanged(colorSchemeId, existingId) {
+  lightColorSchemeChanged(colorSchemeId, existingId) {
     colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
+
     return colorSchemeId !== existingId;
+  }
+
+  @discourseComputed("darkColorSchemeId", "model.dark_color_scheme_id")
+  darkColorSchemeChanged(darkColorSchemeId, existingId) {
+    darkColorSchemeId =
+      darkColorSchemeId === null ? null : parseInt(darkColorSchemeId, 10);
+    return darkColorSchemeId !== existingId;
   }
 
   @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
@@ -107,7 +115,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       choices: this.availableThemesNames,
       default: this.parentThemesNames.join("|"),
       value: this.parentThemesNames.join("|"),
-      defaultValues: this.availableActiveThemesNames.join("|"),
+      defaultValues: this.availableThemesNames.join("|"),
       allThemes: this.allThemes,
       setDefaultValuesLabel: i18n("admin.customize.theme.add_all_themes"),
     });
@@ -145,11 +153,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   convertKey(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}`;
-  }
-
-  @discourseComputed("model.component")
-  convertIcon(component) {
-    return component ? "cube" : "";
   }
 
   @discourseComputed("model.component")
@@ -307,18 +310,33 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  cancelChangeScheme() {
+  cancelChangeLightScheme() {
     this.set("colorSchemeId", this.get("model.color_scheme_id"));
   }
 
   @action
-  changeScheme() {
+  cancelChangeDarkScheme() {
+    this.set("darkColorSchemeId", this.get("model.dark_color_scheme_id"));
+  }
+
+  @action
+  changeLightScheme() {
     let schemeId = this.colorSchemeId;
     this.set(
       "model.color_scheme_id",
       schemeId === null ? null : parseInt(schemeId, 10)
     );
     this.model.saveChanges("color_scheme_id");
+  }
+
+  @action
+  changeDarkScheme() {
+    let schemeId = this.darkColorSchemeId;
+    this.set(
+      "model.dark_color_scheme_id",
+      schemeId === null ? null : parseInt(schemeId, 10)
+    );
+    this.model.saveChanges("dark_color_scheme_id");
   }
 
   @action
@@ -334,26 +352,29 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  applyDefault() {
-    const model = this.model;
-    model.saveChanges("default").then(() => {
-      if (model.get("default")) {
-        this.allThemes.forEach((theme) => {
-          if (theme !== model && theme.get("default")) {
-            theme.set("default", false);
-          }
-        });
-      }
-    });
+  async applyDefault(value) {
+    this.model.set("default", value);
+
+    await this.model.saveChanges("default");
+
+    if (this.model.get("default")) {
+      this.allThemes.forEach((theme) => {
+        if (theme !== this.model && theme.get("default")) {
+          theme.set("default", false);
+        }
+      });
+    }
   }
 
   @action
-  applyUserSelectable() {
+  applyUserSelectable(value) {
+    this.model.set("user_selectable", value);
     this.model.saveChanges("user_selectable");
   }
 
   @action
-  applyAutoUpdateable() {
+  applyAutoUpdateable(value) {
+    this.model.set("auto_update", value);
     this.model.saveChanges("auto_update");
   }
 
@@ -388,6 +409,16 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
+
+          this.toasts.success({
+            data: {
+              message: i18n("admin.customize.theme.delete_success", {
+                theme: model.name,
+              }),
+            },
+            duration: "short",
+          });
+
           this.router.transitionTo("adminConfig.customize.themes");
         });
       },
@@ -438,10 +469,5 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     this.model
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
-  }
-
-  @action
-  editColorScheme() {
-    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 }

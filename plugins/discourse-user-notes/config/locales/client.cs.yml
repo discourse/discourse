@@ -7,4 +7,11 @@
 cs:
   js:
     user_notes:
+      title: "Poznámky k uživateli"
+      attach: "Přidat poznámku k uživateli"
+      attach_note_description: "Přidejte poznámku o tomto uživateli. Tato poznámka bude viditelná pouze pro členy redakce."
+      remove: "Odstranit poznámku k uživateli"
+      show: "Poznámky k uživatelům (%{count})"
+      delete_confirm: "Opravdu chcete odstranit tuto poznámku k uživateli?"
       show_post: "Zobrazit příspěvek"
+      copy_reviewable_note: "Zkopírovat poznámku do uživatelského profilu?"

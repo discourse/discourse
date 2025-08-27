@@ -15,7 +15,7 @@
       <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
       <% @recent.each do |t| %>
         <div class='not-found-topic'>
-          <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
+          <%= link_to emoji_codes_to_img(t.fancy_title), t.relative_url %><%= category_badge(t.category) %>
         </div>
       <% end %>
       <a href="<%= path "/latest" %>" class="btn btn-default"><%= t 'page_not_found.see_more' %>&hellip;</a>

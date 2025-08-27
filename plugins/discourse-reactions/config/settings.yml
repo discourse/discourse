@@ -23,3 +23,7 @@ discourse_reactions:
     validator: "ReactionsExcludedFromLikeSiteSettingValidator"
   discourse_reactions_like_sync_enabled:
     default: true
+  discourse_reactions_experimental_allow_any_emoji:
+    default: false
+    client: true
+    area: "experimental"

@@ -44,6 +44,7 @@ class Report
     yellow: "#FFCD56",
   }
 
+  include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews

@@ -9,9 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import ColorPaletteEditor, {
-  LIGHT,
-} from "admin/components/color-palette-editor";
+import ColorPaletteEditor from "admin/components/color-palette-editor";
 
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
@@ -19,7 +17,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   @service dialog;
 
   @tracked editingName = false;
-  @tracked editorMode = LIGHT;
   @tracked saving = false;
   @tracked hasChangedName = false;
   @tracked hasChangedUserSelectable = false;
@@ -56,14 +53,8 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  onLightColorChange(color, value) {
+  onColorChange(color, value) {
     color.hex = value;
-    this.hasChangedColors = true;
-  }
-
-  @action
-  onDarkColorChange(color, value) {
-    color.dark_hex = value;
     this.hasChangedColors = true;
   }
 
@@ -119,11 +110,6 @@ export default class AdminConfigAreasColorPalette extends Component {
     } finally {
       this.saveNameOnly = false;
     }
-  }
-
-  @action
-  onEditorTabSwitch(newMode) {
-    this.editorMode = newMode;
   }
 
   @action
@@ -200,33 +186,16 @@ export default class AdminConfigAreasColorPalette extends Component {
       return;
     }
 
-    const tags = document.querySelectorAll(`link[data-scheme-id="${id}"]`);
+    const tag = document.querySelector(`link[data-scheme-id="${id}"]`);
 
-    if (tags.length === 0) {
+    if (!tag) {
       return;
     }
 
-    let darkTag;
-    let lightTag;
-    for (const tag of tags) {
-      if (tag.classList.contains("dark-scheme")) {
-        darkTag = tag;
-      } else if (tag.classList.contains("light-scheme")) {
-        lightTag = tag;
-      }
-    }
-
     try {
-      const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
-        data: {
-          include_dark_scheme: !!darkTag,
-        },
-      });
-      if (data?.new_href && lightTag) {
-        lightTag.href = data.new_href;
-      }
-      if (data?.new_dark_href && darkTag) {
-        darkTag.href = data.new_dark_href;
+      const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
+      if (data?.new_href) {
+        tag.href = data.new_href;
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -327,11 +296,8 @@ export default class AdminConfigAreasColorPalette extends Component {
             >
               <field.Custom>
                 <ColorPaletteEditor
-                  @initialMode={{this.editorMode}}
                   @colors={{transientData.colors}}
-                  @onLightColorChange={{this.onLightColorChange}}
-                  @onDarkColorChange={{this.onDarkColorChange}}
-                  @onTabSwitch={{this.onEditorTabSwitch}}
+                  @onColorChange={{this.onColorChange}}
                 />
               </field.Custom>
             </form.Field>

@@ -467,6 +467,15 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each, type: :system) do |example|
+      if example.metadata[:time]
+        freeze_time(example.metadata[:time])
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.clock.set_fixed_time(example.metadata[:time])
+        end
+      end
+    end
+
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
 import DatePicker from "discourse/components/date-picker";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
@@ -11,8 +10,6 @@ import Row from "discourse/plugins/styleguide/discourse/components/styleguide/co
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class StyleguideCalendarDateTimeInput extends Component {
-  @service currentUser;
-
   @tracked dateFormat = "YYYY-MM-DD";
   @tracked timeFormat = "HH:mm:ss";
   @tracked date = null;

@@ -1046,11 +1046,10 @@ id:
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_schemes:
         default_description: "Default tema"
-        disable_dark_scheme: "Sama seperti reguler"
         undo: "Reset"
-        regular: "Umum"
         dark: "Mode gelap"
-        default_dark_scheme: "(bawaan situs)"
+        picker:
+          active: "Aktif"
       dark_mode: "Mode Gelap"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
@@ -2308,7 +2307,7 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      filter_reports: Filter laporan
+      filter_reports: "Filter laporan..."
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2572,13 +2571,13 @@ id:
           disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
+          filter_all: "Semua"
           customize_desc: "Sesuaikan:"
           create: "Buat"
           create_type: "Tipe"
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2607,8 +2606,6 @@ id:
           edit: "Ubah"
           filters:
             all: "Semua"
-          active_badge:
-            text: "Aktif"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:

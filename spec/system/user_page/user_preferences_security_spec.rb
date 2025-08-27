@@ -70,8 +70,6 @@ describe "User preferences | Security", type: :system do
         hasResidentKey: true,
         isUserVerified: true,
       ) do
-        add_cookie(name: "destination_url", value: "/new")
-
         user_preferences_security_page.visit(user)
 
         find(".pref-passkeys__add .btn").click
@@ -104,6 +102,12 @@ describe "User preferences | Security", type: :system do
 
         user_menu.sign_out
 
+        # ensures /hot isn't the homepage (otherwise the test below is pointless)
+        expect(SiteSetting.top_menu_items.first).not_to eq("hot")
+
+        # visit /hot to ensure we have a destination_url cookie set
+        visit("/hot")
+
         # login with the key we just created
         # this triggers the conditional UI for passkeys
         # which uses the virtual authenticator
@@ -112,7 +116,7 @@ describe "User preferences | Security", type: :system do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
 
         # ensures that we are redirected to the destination_url cookie
-        expect(page.driver.current_url).to include("/new")
+        expect(page.driver.current_url).to include("/hot")
       end
     end
   end

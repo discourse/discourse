@@ -75,7 +75,7 @@ RSpec.describe DiscourseJsProcessor do
     JS
 
     result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
-    expect(result).to include("static #_ = (() => dt7948.n")
+    expect(result).to include("dt7948.n(")
   end
 
   describe "Transpiler#terser" do
@@ -151,7 +151,7 @@ RSpec.describe DiscourseJsProcessor do
           { "discourse/initializers/foo.js" => script },
           {},
         )
-      expect(result["code"]).to include("() => dt7948.n")
+      expect(result["code"]).to include("dt7948.n")
     end
 
     it "supports object literal decorators without errors" do

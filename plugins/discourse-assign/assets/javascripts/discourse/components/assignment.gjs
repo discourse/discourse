@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { TextArea } from "@ember/legacy-built-in-components";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { not } from "truth-helpers";
+import TextArea from "discourse/components/textarea";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-import AssigneeChooser from "./assignee-chooser";
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default class Assignment extends Component {
   @service siteSettings;
@@ -74,7 +74,7 @@ export default class Assignment extends Component {
         {{if this.showAssigneeIeEmptyError 'assignee-error'}}"
     >
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-      <AssigneeChooser
+      <EmailGroupUserChooser
         autocomplete="off"
         @id="assignee-chooser"
         @value={{this.assignee}}

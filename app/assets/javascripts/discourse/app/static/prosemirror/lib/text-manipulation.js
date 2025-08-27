@@ -7,7 +7,7 @@ import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
-import { TextSelection } from "prosemirror-state";
+import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
@@ -40,12 +40,24 @@ export default class ProsemirrorTextManipulation {
   convertFromMarkdown;
   convertToMarkdown;
 
-  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
+  constructor(
+    owner,
+    {
+      schema,
+      view,
+      convertFromMarkdown,
+      convertToMarkdown,
+      commands,
+      customState,
+    }
+  ) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.commands = commands;
+    this.customState = customState;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -82,7 +94,14 @@ export default class ProsemirrorTextManipulation {
 
   putCursorAtEnd() {
     this.focus();
-    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
+
+    next(() => {
+      this.view.dispatch(
+        this.view.state.tr
+          .setSelection(Selection.atEnd(this.view.state.doc))
+          .scrollIntoView()
+      );
+    });
   }
 
   autocomplete(options) {
@@ -387,6 +406,7 @@ export default class ProsemirrorTextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      ...this.customState(this.view.state),
     });
   }
 }

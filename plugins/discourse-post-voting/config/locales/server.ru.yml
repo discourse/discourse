@@ -25,7 +25,7 @@ ru:
         one: "%{count} ответ"
         few: "%{count} ответа"
         many: "%{count} ответов"
-        other: "%{count} ответов"
+        other: "%{count} ответа"
   site_settings:
     qa_tags: "Теги для переключения темы в формат «Голосование по сообщениям»"
     post_voting_enabled: "Включить плагин «Голосование по публикациям»"
@@ -34,6 +34,7 @@ ru:
     post_voting_comment_limit_per_post: "Максимальное количество комментариев к каждой публикации"
     min_trust_to_flag_posts_voting_comments: "Минимальный уровень доверия для жалобы на комментарий в режиме «Голосование по публикациям»"
     flag_posts_voting_comments_allowed_groups: "Группам разрешено жаловаться на комментарии в режиме «Голосование по публикациям»"
+    post_voting_comment_enabled: "Включить комментарии к публикациям в темах с голосованием за публикации"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -62,6 +63,7 @@ ru:
         limit_exceeded: "Достигнут лимит комментариев на одно сообщение: %{limit}."
         perform: "На комментарий к публикации с голосованием поступило достаточно много жалоб, чтобы заморозить пользователя."
         auto_silence_from_flags: "Автоматическая заморозка из-за жалобы."
+        disabled: "Комментирование публикации запрещено."
       reviewables:
         comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
         actions:

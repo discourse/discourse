@@ -43,14 +43,14 @@ describe RRuleConfigurator do
     context "with every_two_weeks recurrence" do
       it "generates the correct rule" do
         rule = RRuleConfigurator.rule(recurrence: "every_two_weeks", starts_at: time)
-        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=2;")
+        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=2")
       end
     end
 
     context "with every_four_weeks recurrence" do
       it "generates the correct rule" do
         rule = RRuleConfigurator.rule(recurrence: "every_four_weeks", starts_at: time)
-        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=4;")
+        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=4")
       end
     end
 

@@ -773,18 +773,6 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .light-color-scheme {
-      @include inactiveMode;
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .dark-color-scheme {
-      @include inactiveMode;
-    }
-  }
-
   .undo-preview {
     margin: 1em 0;
   }
@@ -1182,25 +1170,29 @@
 }
 
 // Due to special login animations, the order here needs to be changed
-.control-group[data-setting-name="user-user-fields"]
-  .user-field.text
-  .controls {
-  display: flex;
-  flex-direction: column;
+.control-group[data-setting-name="user-user-fields"] {
+  .user-field.text,
+  .user-field.textarea {
+    .controls {
+      display: flex;
+      flex-direction: column;
 
-  .control-label.alt-placeholder {
-    order: 1;
-  }
+      .control-label.alt-placeholder {
+        order: 1;
+      }
 
-  .ember-text-field {
-    order: 2;
-  }
+      .ember-text-field,
+      .ember-text-area {
+        order: 2;
+      }
 
-  .tip {
-    order: 3;
-  }
+      .tip {
+        order: 3;
+      }
 
-  .instructions {
-    order: 4;
+      .instructions {
+        order: 4;
+      }
+    }
   }
 }

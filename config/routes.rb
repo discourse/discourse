@@ -99,6 +99,9 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    delete "admin/impersonate" => "admin/impersonate#destroy",
+           :constraints => ImpersonatorConstraint.new
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
@@ -251,7 +254,6 @@ Discourse::Application.routes.draw do
           put "setting" => "themes#update_single_setting"
           put "site-setting" => "themes#update_theme_site_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
-          put "change-colors" => "themes#change_colors"
         end
 
         collection do
@@ -272,7 +274,6 @@ Discourse::Application.routes.draw do
         get "components/:id" => "themes#index"
         get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
-        get "themes/:id/colors" => "themes#index"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
 
@@ -438,7 +439,6 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
-        get "theme-site-settings" => "theme_site_settings#index"
         get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
@@ -458,6 +458,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end
       end
@@ -1625,6 +1626,7 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
     # Apple accepts either of these paths for the apple-app-site-association file
     # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false

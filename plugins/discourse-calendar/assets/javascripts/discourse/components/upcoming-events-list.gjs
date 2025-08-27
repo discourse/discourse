@@ -47,6 +47,11 @@ export default class UpcomingEventsList extends Component {
     this.appEvents.on("page:changed", this, this.updateEventsList);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("page:changed", this, this.updateEventsList);
+  }
+
   get categoryId() {
     return this.router.currentRoute.attributes?.category?.id;
   }

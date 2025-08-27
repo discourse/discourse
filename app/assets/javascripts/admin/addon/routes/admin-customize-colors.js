@@ -1,21 +1,29 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { hash } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import ColorScheme from "admin/models/color-scheme";
+import Theme from "admin/models/theme";
 
 export default class AdminCustomizeColorsRoute extends Route {
   @service store;
 
-  model() {
-    return hash({
-      colorSchemes: ColorScheme.findAll(),
-      themes: this.store.findAll("theme"),
-    });
+  async model() {
+    return await ajax("/admin/config/colors");
   }
 
   setupController(controller, model) {
     super.setupController(controller, model);
-    controller.set("model", model.colorSchemes);
-    controller.set("defaultTheme", model.themes.findBy("default", true));
+    const defaultTheme = model.extras.default_theme
+      ? Theme.create(model.extras.default_theme)
+      : null;
+    controller.set(
+      "model",
+      model.palettes.map((palette) => ColorScheme.create(palette))
+    );
+    controller.set("defaultTheme", defaultTheme);
+
+    if (defaultTheme) {
+      controller._captureInitialState();
+    }
   }
 }

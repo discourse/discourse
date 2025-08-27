@@ -6,4 +6,7 @@
 
 fr:
   site_settings:
+    rss_polling_enabled: "[Sondage RSS] Activer l'importation de publications intégrées à partir de plusieurs flux RSS"
     rss_polling_frequency: "[RSS Polling] Fréquence de rafraichissement du flux (en minutes)"
+    rss_polling_use_pubdate: "[Sondage RSS] Définissez la date de création du sujet sur la date de publication indiquée dans le flux RSS"
+    rss_polling_update_tags: "[Sondage RSS] Mettez à jour les étiquettes d'un sujet lorsqu'un sujet est mis à jour. La désactivation de cette option supprime les balises initiales, mais désactive les modifications ultérieures des étiquettes."
