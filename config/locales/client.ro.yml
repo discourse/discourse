@@ -4551,6 +4551,8 @@ ro:
             title: "Opțiuni de culoare"
             toggle: "Selectabil de către utilizator"
             toggle_description: "Paleta de culori poate fi selectată de utilizatori"
+            toggle_default_light_on_theme: "Paleta de culori este paleta deschisă implicită în tema implicită (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta de culori este paleta închisă implicită în tema implicită (%{themeName})"
           colors:
             title: "Culori"
           save_changes: "Salvează modificări"
@@ -5088,6 +5090,7 @@ ro:
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
         invalid: "Ne pare rău, nu poți prelua acest rol."
+        error: "Hopa. A apărut o eroare neașteptată."
       users:
         title: "Utilizatori"
         description: "Vizualizare și gestionare utilizatorii."

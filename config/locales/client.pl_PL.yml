@@ -6892,6 +6892,8 @@ pl_PL:
             title: "Opcje kolorów"
             toggle: "Możliwe do wyboru przez użytkownika"
             toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
+            toggle_default_light_on_theme: "Paleta kolorów to domyślna jasna paleta w domyślnym motywie (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta kolorów to domyślna ciemna paleta w domyślnym motywie (%{themeName})"
           colors:
             title: "Kolory"
           save_changes: "Zapisz zmiany"
@@ -7838,6 +7840,7 @@ pl_PL:
         help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."
         not_found: "Wskazany użytkownik nie został znaleziony."
         invalid: "Przepraszamy, nie możesz zalogować się jako ten użytkownik."
+        error: "Ups. Wystąpił nieoczekiwany błąd."
       users:
         title: "Użytkownicy"
         description: "Przeglądaj i zarządzaj użytkownikami."
