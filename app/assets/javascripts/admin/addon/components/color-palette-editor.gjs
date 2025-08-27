@@ -103,12 +103,16 @@ const Picker = class extends Component {
 
   @action
   onTextPaste(event) {
-    const content = (event.clipboardData || window.clipboardData).getData(
-      "text"
-    );
+    event.preventDefault();
 
-    if (!this.isValidHex(content)) {
-      event.preventDefault();
+    const content = (event.clipboardData || window.clipboardData)
+      .getData("text")
+      .trim()
+      .replace(/^#/, "");
+
+    if (this.isValidHex(content)) {
+      this.args.onChange(this.ensureSixDigitsHex(content));
+    } else {
       this.toasts.error({
         data: {
           message: i18n(
@@ -116,7 +120,6 @@ const Picker = class extends Component {
           ),
         },
       });
-      return;
     }
   }
 
