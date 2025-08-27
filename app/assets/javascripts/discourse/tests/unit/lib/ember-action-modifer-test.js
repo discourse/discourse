@@ -5,6 +5,7 @@ import { click, doubleClick, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { setupRenderingTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 
 module("Unit | Lib | ember-action-modifier", function (hooks) {
   setupRenderingTest(hooks);
@@ -17,9 +18,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action this.onChildClick}} />
-    `);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
+          <button id="childButton" {{action this.onChildClick}} />
+        `);
+      }
+    );
 
     await click("#childButton");
 
@@ -34,9 +40,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
-      <button id="childButton" {{action 'onChildClick'}} />
-    `);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
+          <button id="childButton" {{action 'onChildClick'}} />
+        `);
+      }
+    );
 
     await click("#childButton");
 
@@ -51,9 +62,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
-    await render(hbs`
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
       <button id="childButton" {{action 'onChildClick'}} />
     `);
+      }
+    );
 
     await click("#childButton", { ctrlKey: true });
 
@@ -68,9 +84,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       dblClicked: undefined,
     });
 
-    await render(hbs`
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
       <button id="childButton" {{action this.onDblClick on='dblclick'}} />
     `);
+      }
+    );
 
     await doubleClick("#childButton");
 
@@ -146,9 +167,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
-      await render(hbs`
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
         <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
       `);
+        }
+      );
 
       assert.strictEqual(this.oneClicked, undefined);
 
@@ -172,9 +198,14 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
-      `);
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
+            <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
+          `);
+        }
+      );
 
       assert.strictEqual(this.oneClicked, undefined);
 

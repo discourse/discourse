@@ -2935,7 +2935,12 @@ zh_TW:
           description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       reject:
         title: "拒絕"
+      no_action_user:
+        title: "沒有動作"
+      silence_user:
+        title: "使用者靜音"
       delete_user:
+        title: "刪除使用者"
         reason: "透過排隊中的審核刪除"
   fallback_username: "使用者"
   activemodel:

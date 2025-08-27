@@ -1717,6 +1717,7 @@ he:
       labels:
         provider: ספק כניסה
         no_accounts: "אין חשבונות משויכים"
+        discourse_connect: "כניסה אחודה (SSO) דרך Discourse Connect"
   dashboard:
     problem:
       twitter_login: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
@@ -2764,6 +2765,7 @@ he:
       in_normal: "הצגת נושאים עם רמת התראות רגילה"
       in_new_replies: "הצגת נושאים עם תגובות חדשות"
       in_new_topics: "הצגת נושאים חדשים"
+      in_unseen: "הצגת נושאים שלא ראית"
       order_activity: "סידור לפי תאריך פעילות אחרונה (חדש בהתחלה)"
       order_activity_asc: "סידור לפי תאריך פעילות אחרונה (הישנה בהתחלה)"
       order_category: "סידור לפי שם קטגוריה (ת-א)"
@@ -2784,6 +2786,7 @@ he:
       order_views_asc: "סידור לפי מונה צפיות (הכי מעט בהתחלה)"
       order_read: "סידור לפי מתי שקראת לאחרונה (האחרונים בהתחלה)"
       order_read_asc: "סידור לפי מתי שקראת לאחרונה (הישנים בהתחלה)"
+      exclude_users: "החרגת נושאים עם משתמשים מסוימים"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
@@ -5523,9 +5526,20 @@ he:
       approve_and_unhide:
         title: "אישור והצגת הפוסט"
         complete: "הפוסט אושר והוצג מחדש"
+      no_action_user:
+        title: "אין פעולה"
+      silence_user:
+        title: "השתקת משתמש"
+        complete: "משתמש הושתק"
+      suspend_user:
+        title: "השעיית משתמש"
+        complete: "משתמש הושעה"
       delete_user:
+        title: "מחיקת משתמש"
+        complete: "משתמש נמחק"
         reason: "למחוק דרך תור סקירה"
-        complete: "משתמש נמחק."
+      delete_and_block_user:
+        complete: "המשתמש נמחק ונחסם"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   notification_level:

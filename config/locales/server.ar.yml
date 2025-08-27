@@ -5779,9 +5779,20 @@ ar:
       approve_and_unhide:
         title: "الموافقة على المنشور وإظهاره"
         complete: "تمت الموافقة على المنشور وإظهاره"
+      no_action_user:
+        title: "التي لم يتم اتخاذ إجراء بشأنها"
+      silence_user:
+        title: "كتم المستخدم"
+        complete: "تم كتم صوت المستخدم"
+      suspend_user:
+        title: "تعليق المستخدم"
+        complete: "تم تعليق المستخدم"
       delete_user:
+        title: "حذف المستخدم"
+        complete: "تم حذف المستخدم"
         reason: "تم الحذف من خلال قائمة انتظار المراجعة"
-        complete: "تم حذف المستخدم."
+      delete_and_block_user:
+        complete: "تم حذف المستخدم وحظره"
   email_style:
     html_missing_placeholder: "يجب أن يشتمل قالب html على %{placeholder}"
   notification_level:

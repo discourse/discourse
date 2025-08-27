@@ -5,7 +5,6 @@
 
 export const PLUGIN_API_VERSION = "2.1.1";
 
-import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -27,7 +26,6 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -700,49 +698,28 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    const site = this._lookupContainer("service:site");
-    const loc = site && site.mobileView ? "before" : "after";
+    this.registerValueTransformer(
+      "poster-name-icons",
+      ({ value, context: { post } }) => {
+        // `cb` is called with the post's user custom fields and post attributes
+        // and should return an array of icon definitions.
+        const definitions = makeArray(cb(post.user_custom_fields || {}, post));
 
-    const IconsComponent = class extends Component {
-      get definitions() {
-        return makeArray(
-          cb(
-            this.args.outletArgs.post.user_custom_fields || {},
-            this.args.outletArgs.post
-          )
-        );
+        return makeArray(value).concat(definitions).filter(Boolean);
       }
-
-      <template>
-        {{#each this.definitions as |definition|}}
-          <PostMetaDataPosterNameIcon
-            @className={{definition.className}}
-            @emoji={{definition.emoji}}
-            @emojiTitle={{definition.emojiTitle}}
-            @icon={{definition.icon}}
-            @text={{definition.text}}
-            @title={{definition.title}}
-            @url={{definition.url}}
-          />
-        {{/each}}
-      </template>
-    };
-
-    if (loc === "after") {
-      this.renderAfterWrapperOutlet(
-        "post-meta-data-poster-name",
-        IconsComponent
-      );
-    } else {
-      this.renderBeforeWrapperOutlet(
-        "post-meta-data-poster-name",
-        IconsComponent
-      );
-    }
+    );
 
     // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-      decorateWidget(`poster-name:${loc}`, (dec) => {
+      const decoratorFor = (view) => (dec) => {
+        const currentView = this.container.lookup("service:site").mobileView
+          ? "mobile"
+          : "desktop";
+
+        if (view !== currentView) {
+          return;
+        }
+
         const attrs = dec.attrs;
         let results = cb(attrs.userCustomFields || {}, attrs);
 
@@ -788,7 +765,10 @@ class PluginApi {
             );
           });
         }
-      });
+      };
+
+      decorateWidget(`poster-name:before`, decoratorFor("mobile"));
+      decorateWidget(`poster-name:after`, decoratorFor("desktop"));
     });
   }
 
@@ -2150,13 +2130,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
@@ -2474,7 +2457,7 @@ class PluginApi {
    *       endsAt: "2021-10-12T16:00:00.000Z",
    *     },
    *   ],
-   *   { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
+   *   { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
    * );
    * ```
    */

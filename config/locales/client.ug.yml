@@ -1454,12 +1454,15 @@ ug:
         description: "يېڭى ئىشلەتكۈچى باشلاش كۆرسەتمىسى ۋە تارتۇقتىن ئاتلايدۇ"
       reset_seen_user_tips: "ئىشلەتكۈچى كۆرسەتمىسىنى قايتا كۆرسەت"
       theme_default_on_all_devices: "ھەممە ئۈسكۈنىلىرىمدە بۇ ئۆرنەكنى كۆڭۈلدىكىگە تەڭشەيدۇ"
+      color_scheme_default_on_all_devices: "ھەممە ئۈسكۈنىلىرىمدە كۆڭۈلدىكى رەڭ تاختىسى ۋە ھالەتكە تەڭشەيدۇ"
       color_scheme: "رەڭ تاختا"
       color_schemes:
         default_description: "كۆڭۈلدىكى ئۆرنەك"
         dark_instructions: "ئۈسكۈنىڭىزنىڭ قاراڭغۇ ھالىتىنى ئۆزگەرتىش ئارقىلىق قاراڭغۇ ھالەتتىكى رەڭ تاختىسىنى ئالدىن كۆزىتەلەيسىز."
         undo: "ئەسلىگە قايتۇر"
+        regular: "يورۇق ھالەت"
         dark: "قاراڭغۇ ھالەت"
+        interface_mode: "ھالەت"
         interface_modes:
           auto: "ئاپتوماتىك"
           light: "يورۇق"
@@ -1473,6 +1476,7 @@ ug:
       enable_quoting: "يورۇتۇلغان تېكىستنىڭ نەقىللىق جاۋاب بېرىشىنى قوزغىتىدۇ"
       enable_smart_lists: "تەھرىرلىگۈچتە يازغاندا ئەقلىي تىزىمنى قوزغىتىدۇ"
       enable_defer: "تېمىغا ئوقۇلمىدى بەلگىسى سېلىشنى قوزغىتىدۇ"
+      enable_markdown_monospace_font: "تەھرىرلىگۈچتىكى Markdown ھالىتىدە تەڭ كەڭلىكتىكى خەت نۇسخسىنى ئىشلىتىدۇ"
       experimental_sidebar:
         enable: "يانبالداقنى قوزغات"
         options: "تاللانما"
@@ -2591,9 +2595,16 @@ ug:
     welcome_banner_location:
       above_topic_content: "تېما مەزمۇنىنىڭ ئۈستىدە"
       below_site_header: "بېكەت بەت قېشىنىڭ ئاستىدا"
+    welcome_banner_page_visibility:
+      top_menu_pages: "چوققا تىزىملىك بېتى"
+      homepage: "باش بەت"
+      discovery: "بايقاش"
+      all_pages: "ھەممە بەت"
     composition_mode:
+      markdown: "Markdown"
       rich: "مول تېكىست"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2669,6 +2680,9 @@ ug:
       confirm_publish: "بۇ دەسلەپكى نۇسخىنى راستىنلا تارقىتامسىز؟"
       publishing: "تېما ئېلان قىلىۋاتىدۇ…"
     composer:
+      autocomplete:
+        username_missing: "تاللانغان ئۆزلۈكىدىن تولۇقلاش نەتىجىسىدە ئىشلەتكۈچى ئاتى كەم."
+        name_missing: "تاللانغان ئۆزلۈكىدىن تولۇقلاش نەتىجىسىدە ئاتى كەم."
       emoji: "چىراي ئىپادە :)"
       more_emoji: "تېخىمۇ كۆپ…"
       options: "تاللانما"
@@ -2676,6 +2690,7 @@ ug:
       unlist: "تىزىلمىدى"
       add_warning: "بۇ رەسمىي ئاگاھلاندۇرۇش."
       toggle_whisper: "پىچىر ئالماشتۇر"
+      insert_table: "جەدۋەل قىستۇر"
       posting_not_on_topic: "سىز قايسى تېمىغا جاۋاب بەرمەكچى؟"
       saved_local_draft_tip: "يەرلىككە ساقلاندى"
       similar_topics: "تېمىڭىزغا ئوخشايدىغىنى…"
@@ -2744,6 +2759,9 @@ ug:
       create_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا قۇر"
       edit_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا تەھرىر"
       title: "ياكى %{modifier}Enter بېسىلىدۇ"
+      save_and_close: "ساقلا ۋە ياپ"
+      discard: "تاشلىۋەت"
+      draft_saved: "دەسلەپكى نۇسخا ساقلاندى"
       users_placeholder: "ئىشلەتكۈچى ياكى گۇرۇپپا قوش"
       title_placeholder: "قىسقا بىر جۈملە بىلەن سۆھبەت مەزمۇنىنى ئىپادىلەشكە توغرا كەلسە ئۇ نېمە؟"
       title_or_link_placeholder: "بۇ جايغا ماۋزۇ كىرگۈزۈلىدۇ ياكى ئۇلانما چاپلىنىدۇ"
@@ -2794,7 +2812,10 @@ ug:
       paste_code_text: "بۇ جايغا كود كىرگۈزۈلىدۇ ياكى چاپلىنىدۇ"
       upload_title: "يۈكلە"
       upload_description: "بۇ جايغا يۈكلەش چۈشەندۈرۈشى كىرگۈزۈلىدۇ"
+      olist_title: "نومۇرلۇق تىزىم"
+      ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
+      toggle_direction: "يۆنىلىش ئالماشتۇر"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
@@ -5612,6 +5633,8 @@ ug:
             title_enabled: "تەجرىبە ئىقتىدارىنى تاقايدۇ"
             content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
           feature_tooltip:
+            title_disabled: "بۇ ئىقتىدارنى سىناڭ"
+            title_enabled: "ئىقتىدارنى تاقايدۇ"
             content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
         last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
@@ -6497,6 +6520,7 @@ ug:
           color_scheme: "رەڭ تاختا"
           default_light_scheme: "سۇس (كۆڭۈلدىكى)"
           color_scheme_select: "ئۆرنەكتە ئىشلەتكەن رەڭنى تاللايدۇ."
+          edit_colors: "رەڭ تەھرىر"
           custom_sections: "ئىختىيارى بۆلەك:"
           theme_components: "ئۆرنەك بۆلىكى"
           add_all_themes: "ھەممە ئۆرنەكنى قوش"
@@ -6508,10 +6532,12 @@ ug:
           convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا بۆلەككە ئايلاندۇرامسىز؟"
           convert_theme_tooltip: "بۇ ئۆرنەكنى بۆلەككە ئايلاندۇرىدۇ"
           inactive_themes: "ئاكتىپسىز ئۆرنەك:"
+          set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
           default_theme: "كۆڭۈلدىكى ئۆرنەك"
           set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
           setting_was_saved: "ئۆرنەك تەڭشىكى ساقلانغان"
           install_success: "%{theme} مۇۋەپپەقىيەتلىك ئورنىتىلدى!"
+          delete_success: "%{theme} مۇۋەپپەقىيەتلىك ئۆچۈرۈلدى!"
           inactive_components: "ئىشلىتىلمىگەن بۆلەك:"
           selected:
             one: "%{count} تاللاندى"
@@ -6605,15 +6631,6 @@ ug:
           repo_unreachable: "بۇ ئۆرنەكنىڭ Git خەزىنە ئامبىرى بىلەن ئالاقىلىشالمىدى. خاتالىق ئۇچۇرى:"
           built_in_description: "بۇ ئۆرنەك ئالدىن ئورنىتىلغان بولۇپ، ئۆچۈرگىلى ياكى خاسلاشتۇرغىلى بولمايدۇ."
           imported_from_archive: "بۇ ئۆرنەك .zip ھۆججەتتىن ئەكىرىلگەن"
-          settings: "تەڭشەك"
-          colors: "رەڭ"
-          unsaved_colors:
-            one: "سىز %{count} رەڭنى ساقلىمىدىڭىز"
-            other: "سىز %{count} رەڭنى ساقلىمىدىڭىز"
-          unsaved_colors_leave_route_confirmation: "سىز تېخى رەڭ تاختا ئۆزگىرىشىنى ساقلىمىدىڭىز. راستتىنلا ئايرىلامسىز؟"
-          save_colors: "رەڭ ساقلا"
-          discard_colors: "تاشلىۋەت"
-          colors_title: "رەڭ"
           scss:
             text: "CSS"
             title: "SCSS گىرامماتىكىسىنى قوللايدىغان ئىختىيارى CSS قائىدىلىرى"
@@ -6693,15 +6710,22 @@ ug:
           dark: "قاراڭغۇ"
           title: "رەڭ"
           edit: "تەھرىر"
+          view: "كۆرۈنۈش"
           saved_refreshing: "ساقلاندى! رەڭنى يېڭىلاۋاتىدۇ…"
           from_theme: "ئۆرنەك ئورنى: %{name}"
           filters:
+            search_placeholder: "رەڭ تاختىسى ياكى ئۆرنەك ئىسمى بويىچە سۈزىدۇ"
             all: "ھەممىسى"
             user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
             from_theme: "ئۆرنەكتىن"
             no_results: "ھېچقانداق رەڭ تاختىسى تېپىلمىدى"
           default_light_badge:
+            text: "كۆڭۈلدىكى يورۇق"
+            title: "كۆڭۈلدىكى يورۇق رەڭ تاختا"
             reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
+          default_dark_badge:
+            text: "كۆڭۈلدىكى قاراڭغۇ"
+            title: "كۆڭۈلدىكى قاراڭغۇ رەڭ تاختا"
           system_palette: "بۇ ئىچىدىكى رەڭ تاختىسى، ئۇنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ."
           back_to_colors: "رەڭ تاختىسىغا قايتىدۇ"
           long_title: "رەڭ تاختا"
@@ -6903,6 +6927,7 @@ ug:
           modal_title: "تەپسىلاتى"
           no_previous: "ئالدىنقى قىممىتى يوق."
           deleted: "يېڭى قىممەت يوق. خاتىرە ئۆچۈرۈلگەن."
+          filter_date_time: "چېسلا ۋە ۋاقىت سۈزگۈچ"
           actions:
             permanently_delete_post_revisions: "يازما تۈزىتىلمىسىنى مەڭگۈلۈك ئۆچۈرىدۇ."
             delete_user: "ئىشلەتكۈچى ئۆچۈر"
@@ -7596,6 +7621,7 @@ ug:
           disabled: "ئىزدەلمەس"
         field_types:
           text: "تېكىست"
+          textarea: "تېكىست رايونى"
           confirm: "جەزملەش"
           dropdown: "تارتما تىزىملىك"
           multiselect: "كۆپ تاللاش"
@@ -7735,6 +7761,9 @@ ug:
           block_common_passwords:
             prompt: "ئىم تۈزۈمىنى ئۆزگەرتمەكچى بولۇۋاتىسىز. بۇ ھازىردىن باشلاپ ئىم ئۆزگەرتىدىغان ئىشلەتكۈچىلەرگە تەسىر كۆرسىتىدۇ. راستتىنلا داۋاملاشتۇرامسىز؟"
             confirm: "ھەئە، ئىم تۈزۈمىنى يېڭىلا"
+        job_status:
+          completed: "يېڭىلاش تامام"
+          enqueued: "يېڭىلاش داۋاملىشىۋاتىدۇ"
       badges:
         status: ھالەت
         title: تارتۇق

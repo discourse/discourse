@@ -484,7 +484,7 @@ export default class UppyComposerUpload {
           optionsResolverFn({
             composerModel: this.composerModel,
             capabilities: this.capabilities,
-            isMobileDevice: this.site.isMobileDevice,
+            isMobileDevice: this.capabilities.isMobileDevice,
           })
         );
       });

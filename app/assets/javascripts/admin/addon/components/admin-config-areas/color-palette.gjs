@@ -15,20 +15,31 @@ export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
   @service router;
   @service dialog;
+  @service site;
 
   @tracked editingName = false;
   @tracked saving = false;
   @tracked hasChangedName = false;
   @tracked hasChangedUserSelectable = false;
+  @tracked hasChangedDefaultLightOnTheme = false;
+  @tracked hasChangedDefaultDarkOnTheme = false;
   @tracked hasChangedColors = false;
+  @tracked lightColorSchemeId = this.defaultTheme.color_scheme_id;
+  @tracked darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
 
   saveNameOnly = false;
   fkApi;
+
+  get defaultTheme() {
+    return this.site.user_themes.find((theme) => theme.default);
+  }
 
   get hasUnsavedChanges() {
     return (
       this.hasChangedName ||
       this.hasChangedUserSelectable ||
+      this.hasChangedDefaultLightOnTheme ||
+      this.hasChangedDefaultDarkOnTheme ||
       this.hasChangedColors
     );
   }
@@ -38,6 +49,10 @@ export default class AdminConfigAreasColorPalette extends Component {
     return {
       name: this.args.colorPalette.name,
       user_selectable: this.args.colorPalette.user_selectable,
+      default_light_on_theme:
+        this.lightColorSchemeId === this.args.colorPalette.id,
+      default_dark_on_theme:
+        this.darkColorSchemeId === this.args.colorPalette.id,
       colors: this.args.colorPalette.colors,
     };
   }
@@ -65,6 +80,23 @@ export default class AdminConfigAreasColorPalette extends Component {
 
     if (!this.saveNameOnly) {
       this.args.colorPalette.user_selectable = data.user_selectable;
+
+      if (this.hasChangedDefaultLightOnTheme) {
+        this.args.colorPalette.default_light_on_theme =
+          data.default_light_on_theme;
+        this.defaultTheme.color_scheme_id = data.default_light_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.lightColorSchemeId = this.defaultTheme.color_scheme_id;
+      }
+      if (this.hasChangedDefaultDarkOnTheme) {
+        this.args.colorPalette.default_dark_on_theme =
+          data.default_dark_on_theme;
+        this.defaultTheme.dark_color_scheme_id = data.default_dark_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
+      }
     }
 
     try {
@@ -84,6 +116,8 @@ export default class AdminConfigAreasColorPalette extends Component {
 
       if (!this.saveNameOnly) {
         this.hasChangedUserSelectable = false;
+        this.hasChangedDefaultLightOnTheme = false;
+        this.hasChangedDefaultDarkOnTheme = false;
 
         if (this.hasChangedColors) {
           await this.applyColorChangesIfPossible();
@@ -174,6 +208,18 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
+  handleDefaultLightOnThemeChange(value, { set }) {
+    set("default_light_on_theme", value);
+    this.hasChangedDefaultLightOnTheme = true;
+  }
+
+  @action
+  handleDefaultDarkOnThemeChange(value, { set }) {
+    set("default_dark_on_theme", value);
+    this.hasChangedDefaultDarkOnTheme = true;
+  }
+
+  @action
   handleUserSelectableChange(value, { set }) {
     set("user_selectable", value);
     this.hasChangedUserSelectable = true;
@@ -186,33 +232,16 @@ export default class AdminConfigAreasColorPalette extends Component {
       return;
     }
 
-    const tags = document.querySelectorAll(`link[data-scheme-id="${id}"]`);
+    const tag = document.querySelector(`link[data-scheme-id="${id}"]`);
 
-    if (tags.length === 0) {
+    if (!tag) {
       return;
     }
 
-    let darkTag;
-    let lightTag;
-    for (const tag of tags) {
-      if (tag.classList.contains("dark-scheme")) {
-        darkTag = tag;
-      } else if (tag.classList.contains("light-scheme")) {
-        lightTag = tag;
-      }
-    }
-
     try {
-      const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
-        data: {
-          include_dark_scheme: !!darkTag,
-        },
-      });
-      if (data?.new_href && lightTag) {
-        lightTag.href = data.new_href;
-      }
-      if (data?.new_dark_href && darkTag) {
-        darkTag.href = data.new_dark_href;
+      const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
+      if (data?.new_href) {
+        tag.href = data.new_href;
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -279,67 +308,107 @@ export default class AdminConfigAreasColorPalette extends Component {
             />
           </div>
         </div>
-        <AdminConfigAreaCard
-          @heading="admin.config_areas.color_palettes.color_options.title"
-        >
-          <:content>
-            <form.Field
-              @name="user_selectable"
-              @title={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle"
-              }}
-              @showTitle={{false}}
-              @description={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle_description"
-              }}
-              @format="full"
-              @onSet={{this.handleUserSelectableChange}}
-              as |field|
-            >
-              <field.Toggle />
-            </form.Field>
-          </:content>
-        </AdminConfigAreaCard>
-        <AdminConfigAreaCard
-          @heading="admin.config_areas.color_palettes.colors.title"
-        >
-          <:content>
-            <form.Field
-              @name="colors"
-              @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
-              @showTitle={{false}}
-              @format="full"
-              as |field|
-            >
-              <field.Custom>
-                <ColorPaletteEditor
-                  @colors={{transientData.colors}}
-                  @onColorChange={{this.onColorChange}}
+        <div class="admin-config-color-palettes__sections">
+          <AdminConfigAreaCard
+            @heading="admin.config_areas.color_palettes.color_options.title"
+          >
+            <:content>
+              <form.Row>
+                <form.Field
+                  @name="default_light_on_theme"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
+                    themeName=this.defaultTheme.name
+                  }}
+                  @format="full"
+                  @onSet={{this.handleDefaultLightOnThemeChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+              <form.Row>
+                <form.Field
+                  @name="default_dark_on_theme"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
+                    themeName=this.defaultTheme.name
+                  }}
+                  @format="full"
+                  @onSet={{this.handleDefaultDarkOnThemeChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+              <form.Row>
+                <form.Field
+                  @name="user_selectable"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_description"
+                  }}
+                  @format="full"
+                  @onSet={{this.handleUserSelectableChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+            </:content>
+          </AdminConfigAreaCard>
+          <AdminConfigAreaCard
+            @heading="admin.config_areas.color_palettes.colors.title"
+          >
+            <:content>
+              <form.Field
+                @name="colors"
+                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
+                @showTitle={{false}}
+                @format="full"
+                as |field|
+              >
+                <field.Custom>
+                  <ColorPaletteEditor
+                    @colors={{transientData.colors}}
+                    @onColorChange={{this.onColorChange}}
+                  />
+                </field.Custom>
+              </form.Field>
+            </:content>
+          </AdminConfigAreaCard>
+          <AdminConfigAreaCard>
+            <:content>
+              <div class="admin-config-color-palettes__save-card">
+                {{#if this.hasUnsavedChanges}}
+                  <span class="admin-config-color-palettes__unsaved-changes">
+                    {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
+                  </span>
+                {{/if}}
+                <DButton
+                  class="copy-to-clipboard"
+                  @label="admin.config_areas.color_palettes.copy_to_clipboard"
+                  @action={{this.copyToClipboard}}
                 />
-              </field.Custom>
-            </form.Field>
-          </:content>
-        </AdminConfigAreaCard>
-        <AdminConfigAreaCard>
-          <:content>
-            <div class="admin-config-color-palettes__save-card">
-              {{#if this.hasUnsavedChanges}}
-                <span class="admin-config-color-palettes__unsaved-changes">
-                  {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
-                </span>
-              {{/if}}
-              <DButton
-                class="copy-to-clipboard"
-                @label="admin.config_areas.color_palettes.copy_to_clipboard"
-                @action={{this.copyToClipboard}}
-              />
-              <form.Submit
-                @isLoading={{this.saving}}
-                @label="admin.config_areas.color_palettes.save_changes"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
+                <form.Submit
+                  @isLoading={{this.saving}}
+                  @label="admin.config_areas.color_palettes.save_changes"
+                />
+              </div>
+            </:content>
+          </AdminConfigAreaCard>
+        </div>
       </div>
     </Form>
   </template>

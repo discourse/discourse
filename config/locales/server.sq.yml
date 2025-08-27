@@ -1442,7 +1442,7 @@ sq:
       reject:
         title: "Refuzo"
       delete_user:
-        complete: "Përdoruesi u fshi."
+        complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"
   activemodel:
     errors:

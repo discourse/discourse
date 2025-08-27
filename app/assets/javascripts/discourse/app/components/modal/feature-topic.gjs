@@ -251,7 +251,7 @@ export default class FeatureTopic extends Component {
               <p>
                 {{i18n "topic.feature_topic.pin_note"}}
               </p>
-              {{#if this.site.isMobileDevice}}
+              {{#if this.site.mobileView}}
                 <p>
                   {{htmlSafe this.pinMessage}}
                 </p>
@@ -325,7 +325,7 @@ export default class FeatureTopic extends Component {
                 <p>
                   {{i18n "topic.feature_topic.global_pin_note"}}
                 </p>
-                {{#if this.site.isMobileDevice}}
+                {{#if this.site.mobileView}}
                   <p>
                     {{i18n "topic.feature_topic.pin_globally"}}
                   </p>

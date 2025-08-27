@@ -105,11 +105,6 @@ export default class ComposerService extends Service {
   @service store;
   @service toasts;
 
-  @tracked
-  showPreview = this.site.mobileView
-    ? false
-    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
-
   @tracked allowPreview = false;
   @tracked selectedTranslationLocale = null;
   checkedMessages = false;
@@ -135,6 +130,21 @@ export default class ComposerService extends Service {
   @reads("currentUser.whisperer") whisperer;
   @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
   @or("replyingToWhisper", "model.whisper") isWhispering;
+
+  @tracked _showPreview;
+
+  get showPreview() {
+    return (
+      this._showPreview ??
+      (this.site.mobileView
+        ? false
+        : (this.keyValueStore.get("composer.showPreview") || "true") === "true")
+    );
+  }
+
+  set showPreview(value) {
+    this._showPreview = value;
+  }
 
   get topicController() {
     return getOwner(this).lookup("controller:topic");
@@ -1697,18 +1707,22 @@ export default class ComposerService extends Service {
         }
       }
 
-      this._saveDraftPromise = this.model.saveDraft().finally(() => {
-        if (showToast) {
-          this.toasts.success({
-            duration: "short",
-            data: {
-              message: i18n("composer.draft_saved"),
-            },
-          });
-        }
-        this._lastDraftSaved = Date.now();
-        this._saveDraftPromise = null;
-      });
+      this._saveDraftPromise = this.model
+        .saveDraft()
+        .then(() => {
+          if (showToast) {
+            this.toasts.success({
+              duration: "short",
+              data: {
+                message: i18n("composer.draft_saved"),
+              },
+            });
+          }
+        })
+        .finally(() => {
+          this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
+        });
     }
   }
 

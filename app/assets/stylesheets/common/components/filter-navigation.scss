@@ -1,5 +1,11 @@
+@use "lib/viewport";
+
 .fk-d-menu[data-identifier="filter-navigation-menu-list"] {
   max-height: 300px;
+
+  @include viewport.until(md) {
+    -webkit-text-size-adjust: 100%; /* stylelint-disable-line */
+  }
 
   .fk-d-menu__inner-content,
   .dropdown-menu {

@@ -21,7 +21,7 @@ describe "Composer - Drafts", type: :system do
       composer.close
 
       expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
-      expect(Draft.where(user: current_user).count).to eq(1)
+      try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
     end
 
     context "when only a title and category is specified" do
@@ -37,7 +37,22 @@ describe "Composer - Drafts", type: :system do
         composer.close
 
         expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
-        expect(Draft.where(user: current_user).count).to eq(1)
+
+        try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
+      end
+    end
+
+    context "when only title is specified and it is too short" do
+      it "does not save the draft or show a toast" do
+        visit "/new-topic"
+
+        expect(composer).to be_opened
+        composer.fill_title("test")
+        composer.close
+        expect(composer).to be_closed
+
+        expect(toasts).to have_no_message
+        expect(Draft.where(user: current_user).count).to eq(0)
       end
     end
   end
@@ -94,7 +109,7 @@ describe "Composer - Drafts", type: :system do
         expect(discard_draft_modal).to be_closed
         expect(composer).to be_closed
 
-        expect(Draft.where(user: current_user).count).to eq(1)
+        try_until_success { expect(Draft.where(user: current_user).count).to eq(1) }
       end
     end
   end

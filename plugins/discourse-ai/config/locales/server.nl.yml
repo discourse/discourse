@@ -588,7 +588,6 @@ nl:
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
       configuration:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
-        invalid_config: "Je hebt een ongeldige optie geselecteerd."
         choose_model: "Stel eerst 'ai embeddings selected model' in."
     llm_models:
       missing_provider_param: "%{param} mag niet leeg zijn"

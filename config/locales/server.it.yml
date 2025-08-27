@@ -4932,9 +4932,20 @@ it:
       approve_and_unhide:
         title: "Approva e mostra il messaggio"
         complete: "Messaggio approvato e reso visibile"
+      no_action_user:
+        title: "Nessuna azione"
+      silence_user:
+        title: "Silenzia utente"
+        complete: "Utente silenziato"
+      suspend_user:
+        title: "Sospendi utente"
+        complete: "Utente sospeso"
       delete_user:
+        title: "Elimina utente"
+        complete: "Utente eliminato"
         reason: "Eliminato tramite la coda di revisione"
-        complete: "Utente eliminato."
+      delete_and_block_user:
+        complete: "Utente eliminato e bloccato"
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"
   notification_level:

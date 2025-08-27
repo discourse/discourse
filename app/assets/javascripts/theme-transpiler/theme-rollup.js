@@ -4,13 +4,14 @@ import { babel, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
 import { memfs } from "memfs";
+import transformActionSyntax from "discourse-plugins/transform-action-syntax";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
+import { precompile } from "./node_modules/ember-source/dist/ember-template-compiler";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExtensionSearch from "./rollup-plugins/discourse-extension-search";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
@@ -72,6 +73,7 @@ globalThis.rollup = function (modules, opts) {
                   isTheme: true,
                 }).plugin,
                 buildEmberTemplateManipulatorPlugin(opts.themeId),
+                transformActionSyntax,
               ],
             },
           ],
