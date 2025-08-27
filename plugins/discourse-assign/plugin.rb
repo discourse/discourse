@@ -376,18 +376,24 @@ after_initialize do
   add_to_class(:topic_query, :group_topics_assigned_results) do |group|
     list = default_results(include_all_pms: true)
 
-    topic_ids_sql = +<<~SQL
-      SELECT topic_id FROM assignments
-      WHERE (
-        assigned_to_id = :group_id AND assigned_to_type = 'Group' AND active
-      )
-    SQL
+    assignee_condition = "(a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')"
+    if @options[:filter] != :direct
+      assignee_condition +=
+        " OR (a.assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND a.assigned_to_type = 'User')"
+    end
 
-    topic_ids_sql << <<~SQL if @options[:filter] != :direct
-        OR (
-          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User' AND active
+    topic_ids_sql = <<~SQL
+      SELECT a.topic_id FROM assignments a
+      LEFT JOIN topics t ON t.id = a.topic_id
+      LEFT JOIN posts p ON p.id = a.target_id AND a.target_type = 'Post'
+      WHERE a.active
+        AND t.deleted_at IS NULL
+        AND (
+          a.target_type = 'Topic' OR
+          (a.target_type = 'Post' AND p.deleted_at IS NULL AND p.deleted_by_id IS NULL AND p.user_deleted = false)
         )
-      SQL
+        AND (#{assignee_condition})
+    SQL
 
     sql = "topics.id IN (#{topic_ids_sql})"
 
