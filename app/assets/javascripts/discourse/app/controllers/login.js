@@ -260,7 +260,10 @@ export default class LoginPageController extends Controller {
           set("password", this.loginPassword);
 
           const destinationUrl = cookie("destination_url");
-          if (destinationUrl) {
+          if (result.redirect_url) {
+            window.location.href = result.redirect_url;
+            return;
+          } else if (destinationUrl) {
             removeCookie("destination_url");
             set("redirect", destinationUrl);
           } else {

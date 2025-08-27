@@ -7,15 +7,6 @@ describe "Discourse Connect", type: :system do
   let(:sso_port) { 9876 }
   let(:sso_url) { "http://localhost:#{sso_port}/sso" }
 
-  fab!(:user)
-  fab!(:private_group) { Fabricate(:group, users: [user]) }
-  fab!(:private_category) { Fabricate(:private_category, group: private_group) }
-  fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-  fab!(:private_post) { Fabricate(:post, topic: private_topic) }
-
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic:) }
-
   before do
     setup_test_sso_server
     configure_discourse_connect
@@ -41,109 +32,157 @@ describe "Discourse Connect", type: :system do
       expect(page).to have_css(".login-page")
     end
   end
+  context "when using vanilla DiscourseConnect " do
+    fab!(:user)
+    fab!(:private_group) { Fabricate(:group, users: [user]) }
+    fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+    fab!(:private_post) { Fabricate(:post, topic: private_topic) }
 
-  context "when login_required is false" do
-    before { SiteSetting.login_required = false }
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic:) }
+    context "when login_required is false" do
+      before { SiteSetting.login_required = false }
 
-    context "when auth_immediately is false" do
-      before { SiteSetting.auth_immediately = false }
+      context "when auth_immediately is false" do
+        before { SiteSetting.auth_immediately = false }
 
-      context "when visiting /" do
-        before { visit "/" }
-        it_behaves_like "shows the homepage"
-      end
-
-      context "when visiting / and clicking the login button" do
-        before do
-          visit "/"
-          find(".login-button").click
+        context "when visiting /" do
+          before { visit "/" }
+          it_behaves_like "shows the homepage"
         end
 
-        it_behaves_like "redirects to SSO"
+        context "when visiting / and clicking the login button" do
+          before do
+            visit "/"
+            find(".login-button").click
+          end
+
+          it_behaves_like "redirects to SSO"
+        end
+
+        context "when visiting /login" do
+          before { visit "/login" }
+          it_behaves_like "redirects to SSO"
+        end
       end
 
-      context "when visiting /login" do
-        before { visit "/login" }
-        it_behaves_like "redirects to SSO"
+      context "when auth_immediately is true" do
+        before { SiteSetting.auth_immediately = true }
+
+        context "when visiting /" do
+          before { visit "/" }
+          it_behaves_like "shows the homepage"
+        end
+
+        context "when visiting / and clicking the login button" do
+          before do
+            visit "/"
+            find(".login-button").click
+          end
+
+          it_behaves_like "redirects to SSO"
+        end
+
+        context "when visiting /login" do
+          before { visit "/login" }
+          it_behaves_like "redirects to SSO"
+        end
+
+        it "redirects the user back to the landing URL" do
+          visit private_topic.url
+
+          find(".login-button").click
+
+          wait_for { has_css?("#current-user") }
+
+          expect(page).to have_current_path(private_topic.relative_url)
+        end
       end
     end
 
-    context "when auth_immediately is true" do
-      before { SiteSetting.auth_immediately = true }
+    context "when login_required is true" do
+      before { SiteSetting.login_required = true }
 
-      context "when visiting /" do
-        before { visit "/" }
-        it_behaves_like "shows the homepage"
-      end
+      context "when auth_immediately is false" do
+        before { SiteSetting.auth_immediately = false }
 
-      context "when visiting / and clicking the login button" do
-        before do
-          visit "/"
-          find(".login-button").click
+        context "when visiting /" do
+          before { visit "/" }
+          it_behaves_like "shows the login splash"
         end
 
-        it_behaves_like "redirects to SSO"
+        context "when visiting / and clicking the login button" do
+          before do
+            visit "/"
+            find(".login-button").click
+          end
+
+          it_behaves_like "redirects to SSO"
+        end
+
+        context "when visiting /login" do
+          before { visit "/login" }
+          it_behaves_like "redirects to SSO"
+        end
       end
 
-      context "when visiting /login" do
-        before { visit "/login" }
-        it_behaves_like "redirects to SSO"
-      end
+      context "when auth_immediately is true" do
+        before { SiteSetting.auth_immediately = true }
 
-      it "redirects the user back to the landing URL" do
-        visit private_topic.url
+        context "when visiting /" do
+          before { visit "/" }
+          it_behaves_like "redirects to SSO"
+        end
 
-        find(".login-button").click
-
-        wait_for { has_css?("#current-user") }
-
-        expect(page).to have_current_path(private_topic.relative_url)
+        context "when visiting /login" do
+          before { visit "/login" }
+          it_behaves_like "redirects to SSO"
+        end
       end
     end
   end
 
-  context "when login_required is true" do
-    before { SiteSetting.login_required = true }
-
-    context "when auth_immediately is false" do
-      before { SiteSetting.auth_immediately = false }
-
-      context "when visiting /" do
-        before { visit "/" }
-        it_behaves_like "shows the login splash"
-      end
-
-      context "when visiting / and clicking the login button" do
-        before do
-          visit "/"
-          find(".login-button").click
-        end
-
-        it_behaves_like "redirects to SSO"
-      end
-
-      context "when visiting /login" do
-        before { visit "/login" }
-        it_behaves_like "redirects to SSO"
-      end
+  context "when using DiscourseConnect provider" do
+    fab!(:user_1) { Fabricate(:user, username: "john", password: "supersecurepassword") }
+    let(:login_form) { PageObjects::Pages::Login.new }
+    before do
+      SiteSetting.enable_discourse_connect_provider = true
+      SiteSetting.discourse_connect_provider_secrets = "localhost|Test"
+      SiteSetting.enable_discourse_connect = false
+      Jobs.run_immediately!
     end
 
-    context "when auth_immediately is true" do
-      before { SiteSetting.auth_immediately = true }
+    it "redirects back to the return_sso_url after successful login" do
+      return_url = "http://localhost:4000/test/url"
+      sso, sig = build_sso_payload(return_url)
+      EmailToken.confirm(Fabricate(:email_token, user: user_1).token)
 
-      context "when visiting /" do
-        before { visit "/" }
-        it_behaves_like "redirects to SSO"
-      end
+      visit "/"
+      visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
+      expect(page).to have_current_path("/login")
 
-      context "when visiting /login" do
-        before { visit "/login" }
-        it_behaves_like "redirects to SSO"
-      end
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_current_path(
+        /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
+        url: true,
+      )
     end
   end
 
   private
+
+  def build_sso_payload(return_url)
+    secret = SiteSetting.discourse_connect_provider_secrets.split("|")[1]
+    nonce = SecureRandom.hex
+
+    payload = "nonce=#{CGI.escape(nonce)}&return_sso_url=#{CGI.escape(return_url)}"
+    sso = Base64.strict_encode64(payload)
+    sig = OpenSSL::HMAC.hexdigest("sha256", secret, sso)
+
+    [sso, sig]
+  end
 
   def setup_test_sso_server
     @server =
