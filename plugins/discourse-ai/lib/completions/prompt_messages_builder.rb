@@ -113,17 +113,18 @@ module DiscourseAi
               "users.username",
               "post_custom_prompts.custom_prompt",
               "(
-                  SELECT array_agg(ref.upload_id)
+                  SELECT array_agg(json_build_object('id', ref.upload_id, 'sha', u.sha1))
                   FROM upload_references ref
+                  JOIN uploads u ON u.id = ref.upload_id
                   WHERE ref.target_type = 'Post' AND ref.target_id = posts.id
-               ) as upload_ids",
+               ) as uploads",
               "posts.created_at",
             )
 
         builder = new
         builder.topic = post.topic
 
-        context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
+        context.reverse_each do |raw, username, custom_prompt, uploads, created_at|
           custom_prompt_translation =
             Proc.new do |message|
               # We can't keep backwards-compatibility for stored functions.
@@ -152,8 +153,13 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            if upload_ids.present? && context[:type] == :user && include_uploads
+            upload_ids = uploads&.map { |u| u["id"] }
+            if upload_ids.present? && include_uploads
               context[:upload_ids] = upload_ids.compact
+              context[:content] = strip_upload_markers(
+                context[:content],
+                uploads&.map { |u| u["sha"] },
+              )
             end
             context[:created_at] = created_at
 
@@ -167,6 +173,16 @@ module DiscourseAi
       def initialize
         @raw_messages = []
         @timestamps = {}
+      end
+
+      def self.strip_upload_markers(markdown, upload_shas)
+        return markdown if markdown.blank? || upload_shas.blank?
+        base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set
+        markdown.gsub(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}) do
+          alt = Regexp.last_match(1)
+          b62 = Regexp.last_match(2)
+          base62_set.include?(b62) ? alt : Regexp.last_match(0)
+        end
       end
 
       def set_chat_context_posts(post_ids, guardian, include_uploads:)
