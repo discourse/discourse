@@ -88,7 +88,7 @@ export default class EmailLogsList extends Component {
   }
 
   @action
-  loadLogs(loadMore = false) {
+  async loadLogs(loadMore = false) {
     if ((loadMore && this.loading) || (loadMore && this.model?.allLoaded)) {
       return;
     }
@@ -99,21 +99,25 @@ export default class EmailLogsList extends Component {
       this.model.set("allLoaded", false);
     }
 
-    return this.sourceModel
-      .findAll(this.filterArgs, loadMore ? this.model?.length : null)
-      .then((logs) => {
-        if (this.model && loadMore) {
-          this.model.addObjects(logs);
-          if (logs.length < 50) {
-            this.model.set("allLoaded", true);
-          }
-        } else {
-          this.model = logs;
-          this.model.set("allLoaded", logs.length < 50);
-          this.loadMoreEnabled = true;
+    try {
+      const logs = await this.sourceModel.findAll(
+        this.filterArgs,
+        loadMore ? this.model?.length : null
+      );
+
+      if (this.model && loadMore) {
+        this.model.addObjects(logs);
+        if (logs.length < 50) {
+          this.model.set("allLoaded", true);
         }
-      })
-      .finally(() => (this.loading = false));
+      } else {
+        this.model = logs;
+        this.model.set("allLoaded", logs.length < 50);
+        this.loadMoreEnabled = true;
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
