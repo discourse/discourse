@@ -9,7 +9,7 @@ module Jobs
         TopicPublisher.new(topic, Discourse.system_user, topic_timer.category_id).publish!
       end
 
-      Topic.find(topic.id).inherit_auto_close_from_category
+      Topic.find(topic.id).inherit_topic_timer_from_category
     end
   end
 end

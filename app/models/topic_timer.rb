@@ -1,27 +1,26 @@
 # frozen_string_literal: true
 
-class TopicTimer < ActiveRecord::Base
-  MAX_DURATION_MINUTES = 20.years.to_i / 60
-
-  include Trashable
-
+class TopicTimer < BaseTimer
   belongs_to :user
-  belongs_to :topic
+  belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
 
   validates :user_id, presence: true
-  validates :topic_id, presence: true
+  validates :timerable_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-  validates :status_type, uniqueness: { scope: %i[topic_id deleted_at] }, if: :public_type?
-  validates :status_type, uniqueness: { scope: %i[topic_id deleted_at user_id] }, if: :private_type?
+  validates :status_type, uniqueness: { scope: %i[timerable_id deleted_at] }, if: :public_type?
+  validates :status_type,
+            uniqueness: {
+              scope: %i[timerable_id deleted_at user_id],
+            },
+            if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :executed_at_in_future?
-  validate :duration_in_range?
 
   scope :scheduled_bump_topics,
-        -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
+        -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:timerable_id) }
   scope :pending_timers,
         ->(before_time = Time.now.utc) do
           where("execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
@@ -51,71 +50,10 @@ class TopicTimer < ActiveRecord::Base
     end
   end
 
-  def status_type_name
-    self.class.types[status_type]
-  end
-
-  def enqueue_typed_job(time: nil)
-    self.send("schedule_auto_#{status_type_name}_job")
-  end
-
-  def self.type_job_map
-    {
-      close: :close_topic,
-      open: :open_topic,
-      publish_to_category: :publish_topic_to_category,
-      delete: :delete_topic,
-      reminder: :topic_reminder,
-      bump: :bump_topic,
-      delete_replies: :delete_replies,
-      silent_close: :close_topic,
-      clear_slow_mode: :clear_slow_mode,
-    }
-  end
-
-  def self.types
-    @types ||=
-      Enum.new(
-        close: 1,
-        open: 2,
-        publish_to_category: 3,
-        delete: 4,
-        reminder: 5,
-        bump: 6,
-        delete_replies: 7,
-        silent_close: 8,
-        clear_slow_mode: 9,
-      )
-  end
-
-  def self.public_types
-    @_public_types ||= types.except(:reminder, :clear_slow_mode)
-  end
-
-  def self.private_types
-    @_private_types ||= types.only(:reminder, :clear_slow_mode)
-  end
-
-  def self.destructive_types
-    @_destructive_types ||= types.only(:delete, :delete_replies)
-  end
-
-  def public_type?
-    !!self.class.public_types[self.status_type]
-  end
-
-  def private_type?
-    !!self.class.private_types[self.status_type]
-  end
-
   def runnable?
     return false if deleted_at.present?
     return false if execute_at > Time.zone.now
     true
-  end
-
-  def publishing_to_category?
-    self.status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
   private

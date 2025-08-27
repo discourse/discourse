@@ -9,7 +9,7 @@ module Jobs
         topic_timer.destroy!
         topic.reload
 
-        topic.inherit_auto_close_from_category(timer_type: :close)
+        topic.inherit_topic_timer_from_category(timer_type: :close)
 
         return
       end
@@ -29,7 +29,7 @@ module Jobs
         topic.update_status("autoclosed", false, user)
       end
 
-      topic.inherit_auto_close_from_category(timer_type: :close)
+      topic.inherit_topic_timer_from_category(timer_type: :close)
 
       MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
