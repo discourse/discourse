@@ -4090,9 +4090,16 @@ cs:
         title: "Ponechat příspěvek smazaný"
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+      no_action_user:
+        title: "Bez akce"
+      silence_user:
+        title: "Ztišit uživatele"
+      suspend_user:
+        title: "Pozastavit uživatele"
       delete_user:
+        title: "Smazat uživatele"
+        complete: "Uživatel smazán"
         reason: "Smazáno prostřednictvím fronty revizí"
-        complete: "Uživatel smazán."
   email_style:
     html_missing_placeholder: "Šablona html musí obsahovat %{placeholder}"
   notification_level:

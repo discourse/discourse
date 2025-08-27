@@ -293,6 +293,7 @@ module SiteSettingExtension
       humanized_name: humanized_names("default_locale"),
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
+      primary_area: "localization",
       description: description("default_locale"),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,

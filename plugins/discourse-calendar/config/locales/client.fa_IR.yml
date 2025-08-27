@@ -310,7 +310,7 @@ fa_IR:
         month: "ماه"
         week: "هفته"
         day: "روز"
-        list: "فهرست"
+        year: "سال"
     group_timezones:
       search: "جستجو..."
     discourse_post_event:

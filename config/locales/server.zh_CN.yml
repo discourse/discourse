@@ -2553,6 +2553,7 @@ zh_CN:
       in_new: "显示新话题或有新回复的话题"
       in_new_replies: "显示有新回复的话题"
       in_new_topics: "显示新话题"
+      in_unseen: "显示您未看过的话题"
       order_activity: "按最新活动排序（最新的活动优先）"
       order_activity_asc: "按最新活动排序（最早的活动优先）"
       order_category: "按类别名称排序 (Z-A)"
@@ -2573,6 +2574,7 @@ zh_CN:
       order_views_asc: "按浏览量排序（数量最少的优先）"
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
+      exclude_users: "排除特定用户的话题"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"
@@ -5216,9 +5218,15 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      no_action_user:
+        title: "无行动"
+      silence_user:
+        title: "禁言用户"
+      suspend_user:
+        title: "封禁用户"
       delete_user:
+        title: "删除用户"
         reason: "已通过审核队列删除"
-        complete: "用户已被删除。"
   email_style:
     html_missing_placeholder: "HTML 模板必须包含 %{placeholder}"
   notification_level:

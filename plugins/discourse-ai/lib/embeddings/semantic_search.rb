@@ -107,7 +107,8 @@ module DiscourseAi
       end
 
       def similar_topic_ids_to(query, candidates:)
-        return [] if candidates.blank?
+        # NOTE: candidates may be a very large relation, be deliberate that only first is selected
+        return [] if candidates.limit(1).empty?
 
         over_selection_limit = ::Topic::SIMILAR_TOPIC_LIMIT * OVER_SELECTION_FACTOR
         asymmetric = true

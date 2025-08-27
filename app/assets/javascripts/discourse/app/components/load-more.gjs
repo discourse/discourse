@@ -63,7 +63,10 @@ export default class LoadMore extends Component {
   root = this.args.root || null;
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.0;
-  enabled = this.args.enabled ?? true;
+
+  get enabled() {
+    return this.args.enabled ?? true;
+  }
 
   @action
   onIntersection(entry) {

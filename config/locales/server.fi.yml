@@ -5242,9 +5242,20 @@ fi:
       approve_and_unhide:
         title: "Hyväksy ja näytä viesti"
         complete: "Viesti hyväksytty ja näkyvissä"
+      no_action_user:
+        title: "Ei toimintaa"
+      silence_user:
+        title: "Hiljennä käyttäjä"
+        complete: "Käyttäjä hiljennetty"
+      suspend_user:
+        title: "Jäädytä käyttäjä"
+        complete: "Käyttäjä hyllytty"
       delete_user:
+        title: "Poista käyttäjä"
+        complete: "Käyttäjä poistettu"
         reason: "Poistettiin tarkastusjonon kautta"
-        complete: "Käyttäjä poistettu."
+      delete_and_block_user:
+        complete: "Käyttäjä poistettu ja estetty"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:

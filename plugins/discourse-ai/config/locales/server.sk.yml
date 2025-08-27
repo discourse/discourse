@@ -609,7 +609,6 @@ sk:
       cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
       configuration:
         disable_embeddings: "Najprv musíte vypnúť možnosť „povolené vkladanie AI“."
-        invalid_config: "Vybrali ste neplatnú možnosť."
         choose_model: "Najprv nastavte „vybraný model pre vloženie AI“."
     llm_models:
       missing_provider_param: "%{param} nemôže byť prázdne"

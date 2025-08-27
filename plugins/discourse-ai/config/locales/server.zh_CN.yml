@@ -576,7 +576,6 @@ zh_CN:
       cannot_edit_builtin: "您无法编辑内置模型。"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
-        invalid_config: "您选择了无效的选项。"
         choose_model: "首先设置 'ai embeddings selected model'。"
     llm_models:
       missing_provider_param: "%{param}不能为空"

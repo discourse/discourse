@@ -557,7 +557,7 @@ lv:
       reject:
         title: "Noraidīt"
       delete_user:
-        complete: "Lietotājs dzēsts."
+        complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"
   activemodel:
     errors:

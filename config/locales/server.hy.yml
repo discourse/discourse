@@ -2877,8 +2877,10 @@ hy:
           complete: "Օգտատերը ջնջված է."
       reject:
         title: "Մերժել"
+      no_action_user:
+        title: "Առանց գործողության"
       delete_user:
-        complete: "Օգտատերը ջնջված է."
+        complete: "Օգտատերը ջնջված է"
   fallback_username: "օգտատեր"
   activemodel:
     errors:

@@ -2441,7 +2441,7 @@ el:
       reject:
         title: "Απόρριψη"
       delete_user:
-        complete: "Ο χρήστης διαγράφηκε."
+        complete: "Ο χρήστης διαγράφηκε"
   fallback_username: "χρήστης"
   activemodel:
     errors:

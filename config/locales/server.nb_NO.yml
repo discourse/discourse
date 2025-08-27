@@ -1366,8 +1366,10 @@ nb_NO:
           complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      no_action_user:
+        title: "Ingen handling"
       delete_user:
-        complete: "Bruker slettet."
+        complete: "Bruker slettet"
   fallback_username: "bruker"
   activemodel:
     errors:

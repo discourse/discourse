@@ -2027,8 +2027,8 @@ sl:
       reject:
         title: "Zavrni"
       delete_user:
+        complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"
-        complete: "Uporabnik izbrisan."
   fallback_username: "uporabnik"
   activemodel:
     errors:

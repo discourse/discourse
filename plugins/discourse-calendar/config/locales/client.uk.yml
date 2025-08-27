@@ -314,7 +314,7 @@ uk:
         month: "Місяць"
         week: "Тиждень"
         day: "День"
-        list: "Список"
+        year: "Рік"
     group_timezones:
       search: "Пошук…"
       group_availability: "%{group} доступність"

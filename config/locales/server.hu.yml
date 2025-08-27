@@ -5174,9 +5174,20 @@ hu:
       approve_and_unhide:
         title: "Bejegyzés jóváhagyása és felfedése"
         complete: "Bejegyzés jóváhagyva és felfedve"
+      no_action_user:
+        title: "Nincs művelet"
+      silence_user:
+        title: "Felhasználó némítása"
+        complete: "Felhasználó elnémítva"
+      suspend_user:
+        title: "Felhasználó felfüggesztése"
+        complete: "Felhasználó felfüggesztve"
       delete_user:
+        title: "Felhasználó törlése"
+        complete: "Felhasználó törölve"
         reason: "Törölve az ellenőrzési soron keresztül"
-        complete: "Felhasználó törölve."
+      delete_and_block_user:
+        complete: "Felhasználó törölve és letiltva"
   email_style:
     html_missing_placeholder: "A html sablonnak tartalmaznia kell %{placeholder} értéket"
   notification_level:

@@ -2126,8 +2126,10 @@ pt:
           complete: "Usuário eliminado."
       reject:
         title: "Rejeitar"
+      silence_user:
+        title: "Silenciar utilizador"
       delete_user:
-        complete: "Usuário eliminado."
+        complete: "Usuário eliminado"
   fallback_username: "utilizador"
   activemodel:
     errors:

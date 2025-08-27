@@ -148,6 +148,44 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to be_present
       end
+
+      it "can set a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: nil, dark_color_scheme_id: nil)
+        params = valid_params
+
+        params[:color_scheme][:default_light_on_theme] = true
+        params[:color_scheme][:default_dark_on_theme] = true
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
+
+      it "can unset a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+        params = valid_params
+
+        params[:color_scheme][:default_light_on_theme] = false
+        params[:color_scheme][:default_dark_on_theme] = false
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to be_nil
+        expect(default_theme.dark_color_scheme_id).to be_nil
+      end
+
+      it "does not change color schame default when params are not present" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
     end
 
     shared_examples "color scheme update not allowed" do

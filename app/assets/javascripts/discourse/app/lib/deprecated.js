@@ -1,7 +1,7 @@
-import DEPRECATION_WORKFLOW from "../deprecation-workflow";
+import DeprecationWorkflow from "../deprecation-workflow";
 
 const handlers = [];
-const disabledDeprecations = new Set();
+const disabledDeprecations = [];
 
 let emberDeprecationSilencer;
 
@@ -19,7 +19,7 @@ let emberDeprecationSilencer;
 export default function deprecated(msg, options = {}) {
   const { id, since, dropFrom, url, raiseError, source } = options;
 
-  if (id && disabledDeprecations.has(id)) {
+  if (isDeprecationSilenced(id)) {
     return;
   }
 
@@ -48,17 +48,17 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  const matchedWorkflow = DEPRECATION_WORKFLOW.find((w) => w.matchId === id);
-
   if (
     raiseError ||
-    matchedWorkflow?.handler === "throw" ||
-    (!matchedWorkflow && globalThis.EmberENV?.RAISE_ON_DEPRECATION)
+    DeprecationWorkflow.shouldThrow(
+      id,
+      globalThis.EmberENV?.RAISE_ON_DEPRECATION
+    )
   ) {
     throw msg;
   }
 
-  if (matchedWorkflow?.handler !== "silence") {
+  if (!DeprecationWorkflow.shouldSilence(id)) {
     console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
   }
 }
@@ -73,14 +73,14 @@ export function registerDeprecationHandler(callback) {
 
 /**
  * Silence one or more deprecations while running `callback`
- * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
+ * @param {(string|RegExp|Array<string|RegExp>)} deprecationIds A single id, regex pattern, or an array containing a mix of ids and regex patterns to silence
  * @param {function} callback The function to call while deprecations are silenced.
  */
 export function withSilencedDeprecations(deprecationIds, callback) {
   ensureEmberDeprecationSilencer();
   const idArray = [].concat(deprecationIds);
   try {
-    idArray.forEach((id) => disabledDeprecations.add(id));
+    idArray.forEach((id) => disabledDeprecations.push(id));
     const result = callback();
     if (result instanceof Promise) {
       throw new Error(
@@ -89,24 +89,24 @@ export function withSilencedDeprecations(deprecationIds, callback) {
     }
     return result;
   } finally {
-    idArray.forEach((id) => disabledDeprecations.delete(id));
+    idArray.forEach(() => disabledDeprecations.pop());
   }
 }
 
 /**
  * Silence one or more deprecations while running an async `callback`
  * @async
- * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
+ * @param {(string|RegExp|Array<string|RegExp>)} deprecationIds A single id, regex pattern, or an array containing a mix of ids and regex patterns to silence
  * @param {function} callback The asynchronous function to call while deprecations are silenced.
  */
 export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
   ensureEmberDeprecationSilencer();
   const idArray = [].concat(deprecationIds);
   try {
-    idArray.forEach((id) => disabledDeprecations.add(id));
+    idArray.forEach((id) => disabledDeprecations.push(id));
     return await callback();
   } finally {
-    idArray.forEach((id) => disabledDeprecations.delete(id));
+    idArray.forEach(() => disabledDeprecations.pop());
   }
 }
 
@@ -116,7 +116,17 @@ export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
  * @returns {boolean} True if the deprecation is silenced, false otherwise
  */
 export function isDeprecationSilenced(id) {
-  return id && disabledDeprecations.has(id);
+  return (
+    id &&
+    disabledDeprecations.length &&
+    disabledDeprecations.find((disabledId) => {
+      if (disabledId instanceof RegExp) {
+        return disabledId.test(id);
+      }
+
+      return disabledId === id;
+    })
+  );
 }
 
 function ensureEmberDeprecationSilencer() {
@@ -125,9 +135,7 @@ function ensureEmberDeprecationSilencer() {
   }
 
   emberDeprecationSilencer = (message, options, next) => {
-    if (options?.id && disabledDeprecations.has(options.id)) {
-      return;
-    } else {
+    if (!isDeprecationSilenced(options?.id)) {
       next(message, options);
     }
   };

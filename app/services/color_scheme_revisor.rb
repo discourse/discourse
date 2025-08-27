@@ -20,6 +20,7 @@ class ColorSchemeRevisor
       @color_scheme.user_selectable = @params[:user_selectable] if @params.has_key?(
         :user_selectable,
       )
+
       @color_scheme.base_scheme_id = @params[:base_scheme_id] if @params.has_key?(:base_scheme_id)
       has_colors = @params[:colors]
 

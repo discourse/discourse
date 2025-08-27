@@ -607,7 +607,6 @@ ru:
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
-        invalid_config: "Вы выбрали неверный вариант."
         choose_model: "Сначала задайте 'ai embeddings selected model'."
     llm_models:
       missing_provider_param: "Параметр %{param} не может быть пустым"

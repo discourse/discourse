@@ -5559,9 +5559,20 @@ ru:
       approve_and_unhide:
         title: "Одобрить и показать публикацию"
         complete: "Публикация одобрена и показана"
+      no_action_user:
+        title: "Нет действий"
+      silence_user:
+        title: "Заморозка пользователя"
+        complete: "Пользователь заморожен"
+      suspend_user:
+        title: "Заблокировать пользователя"
+        complete: "Пользователь заблокирован"
       delete_user:
+        title: "Удалить пользователя"
+        complete: "Пользователь удален"
         reason: "Удалено после проверки"
-        complete: "Пользователь удален."
+      delete_and_block_user:
+        complete: "Пользователь удален и заблокирован"
   email_style:
     html_missing_placeholder: "HTML-шаблон должен содержать %{placeholder}"
   notification_level:
