@@ -596,7 +596,7 @@ export default {
       const topicController = getOwner(this).lookup("controller:topic");
       const post = topicController
         .get("model.postStream.posts")
-        .findBy("id", selectedPostId);
+        .find((p) => p.id === selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
 

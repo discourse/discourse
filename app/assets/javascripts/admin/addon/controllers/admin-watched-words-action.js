@@ -65,7 +65,7 @@ export default class AdminWatchedWordsActionController extends Controller {
           continue;
         }
 
-        const match = otherAction.words.findBy("id", arg.id);
+        const match = otherAction.words.find((w) => w.id === arg.id);
         if (match) {
           otherAction.words.removeObject(match);
           break;
