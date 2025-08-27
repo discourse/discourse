@@ -1,5 +1,5 @@
-import "./array-shim";
 import "./setup-deprecation-workflow";
+import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";

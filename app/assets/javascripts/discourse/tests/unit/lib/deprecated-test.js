@@ -20,7 +20,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     this.warnStub = Sinon.stub(console, "warn");
     this.counterStub = Sinon.stub(
       DeprecationCounter.prototype,
-      "incrementDeprecation"
+      "incrementCount"
     );
   });
 
@@ -43,12 +43,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.(unknown)"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -69,12 +69,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -100,12 +100,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -121,12 +121,12 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.strictEqual(
       this.counterStub.callCount,
       1,
-      "incrementDeprecation was called once"
+      "incrementCount was called once"
     );
     assert.deepEqual(
       this.counterStub.args[0],
       ["discourse.my_deprecation_id"],
-      "incrementDeprecation is called with the correct arguments"
+      "incrementCount is called with the correct arguments"
     );
   });
 
@@ -189,6 +189,43 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
   });
 
+  test("can use Regex to silence deprecations", function (assert) {
+    withSilencedDeprecations(/discourse\..+/, () => {
+      deprecated("message", { id: "discourse.one" });
+      deprecated("message", { id: "discourse.two" });
+    });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+
+    withSilencedDeprecations(
+      [/.+method.+/, /.+property/, "discourse.other-deprecation"],
+      () => {
+        deprecated("message", { id: "discourse.array-method1" });
+        deprecated("message", { id: "discourse.array-method2" });
+        deprecated("message", { id: "discourse.array-property" });
+        deprecated("message", { id: "discourse.other-deprecation" });
+      }
+    );
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+  });
+
   test("can silence deprecations with async callback in tests", async function (assert) {
     await withSilencedDeprecationsAsync("discourse.one", async () => {
       await Promise.resolve();
@@ -218,6 +255,45 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
   });
 
+  test("can use Regex to silence deprecations with async callbacks", async function (assert) {
+    await withSilencedDeprecationsAsync(/discourse\..+/, async () => {
+      await Promise.resolve();
+      deprecated("message", { id: "discourse.one" });
+      deprecated("message", { id: "discourse.two" });
+    });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+
+    await withSilencedDeprecationsAsync(
+      [/.+method.+/, /.+property/, "discourse.other-deprecation"],
+      async () => {
+        await Promise.resolve();
+        deprecated("message", { id: "discourse.array-method1" });
+        deprecated("message", { id: "discourse.array-method2" });
+        deprecated("message", { id: "discourse.array-property" });
+        deprecated("message", { id: "discourse.other-deprecation" });
+      }
+    );
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+  });
+
   test("can silence Ember deprecations", function (assert) {
     withSilencedDeprecations("fake-ember-deprecation", () => {
       emberDeprecate("fake ember deprecation message", false, {
@@ -227,6 +303,42 @@ module("Unit | Utility | deprecated", function (hooks) {
         until: "v999",
       });
     });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+  });
+
+  test("can use Regex to silence Ember deprecations", function (assert) {
+    withSilencedDeprecations(
+      [/.+-deprecation.+/, "fake-ember-property"],
+      () => {
+        emberDeprecate("fake ember deprecation message", false, {
+          id: "fake-ember-deprecation1",
+          for: "not-ember-source",
+          since: "v0",
+          until: "v999",
+        });
+        emberDeprecate("fake ember deprecation message", false, {
+          id: "fake-ember-deprecation2",
+          for: "not-ember-source",
+          since: "v0",
+          until: "v999",
+        });
+        emberDeprecate("fake ember deprecation message", false, {
+          id: "fake-ember-property",
+          for: "not-ember-source",
+          since: "v0",
+          until: "v999",
+        });
+      }
+    );
     assert.strictEqual(
       this.warnStub.callCount,
       0,
