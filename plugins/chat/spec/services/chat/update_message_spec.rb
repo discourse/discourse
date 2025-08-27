@@ -628,6 +628,12 @@ RSpec.describe Chat::UpdateMessage do
     describe "uploads" do
       fab!(:upload1) { Fabricate(:upload, user: user1) }
       fab!(:upload2) { Fabricate(:upload, user: user1) }
+      fab!(:upload3) { Fabricate(:upload, user: user3) }
+
+      fab!(:user_upload1) { Fabricate(:user_upload, upload: upload1, user: user1) }
+      fab!(:user_upload2) { Fabricate(:user_upload, upload: upload2, user: user1) }
+      fab!(:user_upload3) { Fabricate(:user_upload, upload: upload3, user: user3) }
+      fab!(:user_upload3_for_user1) { Fabricate(:user_upload, upload: upload3, user: user1) }
 
       it "does nothing if the passed in upload_ids match the existing upload_ids" do
         chat_message =
@@ -789,6 +795,20 @@ RSpec.describe Chat::UpdateMessage do
           },
         )
         expect(chat_message.reload.message).to eq(new_message)
+      end
+
+      it "adds upload even if created by another user" do
+        chat_message = create_chat_message(user1, "something", public_chat_channel)
+        expect {
+          described_class.call(
+            guardian: guardian,
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload3.id],
+            },
+          )
+        }.to change { UploadReference.where(target: chat_message).count }.by(1)
       end
     end
 

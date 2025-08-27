@@ -41,21 +41,26 @@ RSpec.describe Chat::CreateMessage do
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
     fab!(:upload) { Fabricate(:upload, user: user) }
+    fab!(:user_upload) { Fabricate(:user_upload, upload:, user:) }
     fab!(:draft) { Fabricate(:chat_draft, user: user, chat_channel: channel) }
+
+    fab!(:another_upload) { Fabricate(:upload, user: other_user) }
+    fab!(:another_user_upload) { Fabricate(:user_upload, upload: another_upload, user:) }
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
     let(:context_topic_id) { nil }
     let(:context_post_ids) { nil }
+    let(:upload_ids) { [upload.id] }
     let(:blocks) { nil }
     let(:params) do
       {
         chat_channel_id: channel.id,
         message: content,
-        upload_ids: [upload.id],
-        context_topic_id: context_topic_id,
-        context_post_ids: context_post_ids,
-        blocks: blocks,
+        upload_ids:,
+        context_topic_id:,
+        context_post_ids:,
+        blocks:,
       }
     end
     let(:options) { { enforce_membership: false, force_thread: false } }
@@ -512,6 +517,14 @@ RSpec.describe Chat::CreateMessage do
                         instance_of(Chat::Message),
                       )
                       result
+                    end
+
+                    context "when upload was created by another user" do
+                      let(:upload_ids) { [upload.id, another_upload.id] }
+
+                      it "attaches the upload created by the other user" do
+                        expect(message.uploads).to contain_exactly(upload, another_upload)
+                      end
                     end
 
                     context "when client_created_at is provided" do

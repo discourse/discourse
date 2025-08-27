@@ -120,3 +120,8 @@ Fabricator(:optimized_video_upload, from: :upload) do
     sequence(:url) { |n| "//bucket.s3.region.amazonaws.com/original/1X/#{attrs[:sha1]}.mp4" }
   end
 end
+
+Fabricator(:user_upload) do
+  upload
+  user
+end
