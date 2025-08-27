@@ -34,8 +34,7 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("page parameter must not be greater than 10")
     end
 
-    if request.user_agent &&
-         CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
+    if use_crawler_layout?
       crawler_html = <<~HTML
           <!DOCTYPE html>
           <html>
