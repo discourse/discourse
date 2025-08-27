@@ -7,6 +7,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { setupRenderingTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 
 // Configure test-local Classic and Glimmer components that
 // will be immune from upgrades to actual Discourse components.
@@ -210,11 +211,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick}} />
-        </ExampleClassicButton>
-      `);
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
+            <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
+              <button id="childButton" {{action this.onChildClick}} />
+            </ExampleClassicButton>
+          `);
+        }
+      );
 
       await click("#childButton");
 
@@ -232,11 +238,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick bubbles=false}} />
-        </ExampleClassicButton>
-      `);
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
+            <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
+              <button id="childButton" {{action this.onChildClick bubbles=false}} />
+            </ExampleClassicButton>
+          `);
+        }
+      );
 
       await click("#childButton");
 
@@ -256,11 +267,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick}} />
-        </ExampleGlimmerButton>
-      `);
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
+            <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
+              <button id="childButton" {{action this.onChildClick}} />
+            </ExampleGlimmerButton>
+          `);
+        }
+      );
 
       await click("#childButton");
 
@@ -278,11 +294,16 @@ module("Unit | Lib | ember-events", function (hooks) {
         childClicked: undefined,
       });
 
-      await render(hbs`
-        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-          <button id="childButton" {{action this.onChildClick bubbles=false}} />
-        </ExampleGlimmerButton>
-      `);
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(hbs`
+            <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
+              <button id="childButton" {{action this.onChildClick bubbles=false}} />
+            </ExampleGlimmerButton>
+          `);
+        }
+      );
 
       await click("#childButton");
 

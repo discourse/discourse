@@ -251,6 +251,10 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
   {
+    handler: "silence",
+    matchId: "deprecate-import-meta-from-ember",
+  },
+  {
     handler: ["silence", "counter"],
     matchId: /^discourse\.native-array-extensions\..+$/,
     env: ["test"],

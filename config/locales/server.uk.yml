@@ -5545,9 +5545,20 @@ uk:
       approve_and_unhide:
         title: "Схвалити та показати публікацію"
         complete: "Публікація схвалена та розблокована"
+      no_action_user:
+        title: "Немає дій"
+      silence_user:
+        title: "Заблокувати користувача"
+        complete: "Користувач заблокований"
+      suspend_user:
+        title: "Призупинити користувача"
+        complete: "Користувача призупинено"
       delete_user:
+        title: "Видалити користувача"
+        complete: "Користувача вилучено"
         reason: "Видалено за допомоги черги рецензування"
-        complete: "Користувача вилучено."
+      delete_and_block_user:
+        complete: "Користувача видалено та заблоковано"
   email_style:
     html_missing_placeholder: "Шаблон html повинен містити %{placeholder}"
   notification_level:

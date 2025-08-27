@@ -25,7 +25,7 @@ es:
         flagged_post: |
           <div>Respuesta del modelo:</div>
           <p>%%LLM_RESPONSE%%</p>
-          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%"></a>.</b>
+          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a></b>
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -588,7 +588,6 @@ es:
       cannot_edit_builtin: "No puedes editar un modelo integrado."
       configuration:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
-        invalid_config: "Has seleccionado una opción no válida."
         choose_model: "Establece primero «ai embeddings selected model»."
     llm_models:
       missing_provider_param: "%{param} no puede estar en blanco"

@@ -39,6 +39,14 @@ module PageObjects
         form.field("user_selectable")
       end
 
+      def default_light_on_theme_field
+        form.field("default_light_on_theme")
+      end
+
+      def default_dark_on_theme_field
+        form.field("default_dark_on_theme")
+      end
+
       def color_palette_editor
         PageObjects::Components::ColorPaletteEditor.new(
           form.field("colors").component.find(".color-palette-editor"),

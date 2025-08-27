@@ -20,7 +20,6 @@ module DiscoursePostEvent
     attributes :post
     attributes :raw_invitees
     attributes :recurrence
-    attributes :recurrence_rule
     attributes :recurrence_until
     attributes :reminders
     attributes :sample_invitees
@@ -36,6 +35,7 @@ module DiscoursePostEvent
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :channel
+    attributes :rrule
 
     def channel
       ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
@@ -141,16 +141,22 @@ module DiscoursePostEvent
       object.url.present?
     end
 
-    def include_recurrence_rule?
+    def include_rrule?
       object.recurring?
     end
 
-    def recurrence_rule
-      RRuleConfigurator.rule(
+    def rrule
+      RRuleGenerator.generate_string(
+        starts_at: object.original_starts_at.in_time_zone(object.timezone),
+        timezone: object.timezone,
         recurrence: object.recurrence,
-        starts_at: object.starts_at.in_time_zone(object.timezone),
         recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
+        dtstart: object.original_starts_at.in_time_zone(object.timezone),
       )
+    end
+
+    def ends_at
+      object.ends_at || object.starts_at + 1.hour
     end
   end
 end

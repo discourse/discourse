@@ -26,6 +26,10 @@ module PageObjects
       def has_error?(message)
         has_css?(".fk-d-default-toast.-error", text: message)
       end
+
+      def has_no_message?
+        has_no_css?(".fk-d-default-toast__message")
+      end
     end
   end
 end

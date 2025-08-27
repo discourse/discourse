@@ -24,6 +24,7 @@ ur:
         month: "مہینہ"
         week: "ہفتہ"
         day: "دن"
+        year: "سال"
     group_timezones:
       search: "تلاش کریں..."
       group_availability: "%{group} دستیابی"

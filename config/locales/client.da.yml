@@ -797,7 +797,10 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
+        note_added: "Moderator note"
       notes:
+        add_note_button: "Tilføj note"
+        placeholder: "Skriv din note her..."
         chars_remaining: "%{count} tegn tilbage"
         delete_note: "Slet denne note"
         delete: "Slet"
@@ -805,7 +808,9 @@ da:
       posted_in: "Skrevet i"
       review_user: "Bruger"
       copy_link: "Kopiér link"
+      view_source: "Vis kilde"
       insights:
+        title: "Indsigter"
         user_activity: "Brugeraktivitet"
         activities:
           new_account: "ny konto"
@@ -1215,6 +1220,9 @@ da:
       topic_stat_sentence_month:
         one: "%{count} nyt emne den sidste måned."
         other: "%{count} nye emner i den sidste måned."
+      n_more:
+        one: "Kategorier (%{count} mere)…"
+        other: "Kategorier (%{count} mere)…"
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -1237,6 +1245,7 @@ da:
     user_fields:
       none: "(vælg en indstilling)"
       required: 'Indtast venligst en værdi for "%{name}"'
+      required_checkbox: 'Feltet "%{name}" er påkrævet'
       same_as_password: "Din adgangskode bør ikke gentages i andre felter"
       optional: (valgfri)
     user:
@@ -2349,6 +2358,7 @@ da:
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
       title: "Eller tryk på %{modifier}Enter"
+      discard: "Kassér"
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
@@ -2395,11 +2405,6 @@ da:
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
       help: "Hjælp til Markdown-redigering"
-      collapse: "minimer forfatter panelet"
-      open: "åbn forfatter panelet"
-      abandon: "luk forfatter og kassér kladde"
-      enter_fullscreen: "gå i 'fullscreen composer'"
-      exit_fullscreen: "gå ud af 'fullscreen composer'"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
@@ -5225,11 +5230,6 @@ da:
           remote_theme_edits: "Hvis du vil redigere dette tema, skal du <a href='%{repoURL}' target='_blank'>indsende en ændring på dets arkiv (repository)</a>"
           repo_unreachable: "Kunne ikke kontakte Git-repository for dette tema. Fejl besked:"
           imported_from_archive: "Dette tema blev importeret fra en .zip-fil"
-          settings: "Indstillinger"
-          colors: "Farver"
-          save_colors: "Gem farver"
-          discard_colors: "Kassér"
-          colors_title: "Farver"
           scss:
             text: "CSS"
           after_header:

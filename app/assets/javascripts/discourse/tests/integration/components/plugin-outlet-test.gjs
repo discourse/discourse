@@ -123,7 +123,12 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   });
 
   test("Renders a template into the outlet", async function (assert) {
-    await render(hbs`<PluginOutlet @name="test-name" />`);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`<PluginOutlet @name="test-name" />`);
+      }
+    );
 
     assert
       .dom(".hello-username")
@@ -389,12 +394,17 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 
   test("Reevaluates shouldRender for argument changes", async function (assert) {
     this.set("shouldDisplay", false);
-    await render(hbs`
-      <PluginOutlet
-        @name="test-name"
-        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
-      />
-    `);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
+          />
+        `);
+      }
+    );
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
@@ -405,7 +415,12 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   });
 
   test("Reevaluates shouldRender for other autotracked changes", async function (assert) {
-    await render(hbs`<PluginOutlet @name="test-name" />`);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`<PluginOutlet @name="test-name" />`);
+      }
+    );
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
@@ -416,7 +431,12 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   });
 
   test("shouldRender receives an owner argument", async function (assert) {
-    await render(hbs`<PluginOutlet @name="test-name" />`);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`<PluginOutlet @name="test-name" />`);
+      }
+    );
     assert
       .dom(".conditional-render")
       .doesNotExist("doesn't render conditional outlet");
@@ -428,12 +448,17 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 
   test("Other outlets are not re-rendered", async function (assert) {
     this.set("shouldDisplay", false);
-    await render(hbs`
-      <PluginOutlet
-        @name="test-name"
-        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
-      />
-    `);
+    await withSilencedDeprecationsAsync(
+      "discourse.template-action",
+      async () => {
+        await render(hbs`
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
+          />
+        `);
+      }
+    );
 
     find(".hello-username").someUniqueProperty = true;
 
@@ -462,15 +487,20 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("deprecated parameters with default message", async function (assert) {
-      await render(
-        <template>
-          <PluginOutlet
-            @name="test-name"
-            @deprecatedArgs={{lazyHash
-              shouldDisplay=(deprecatedOutletArgument value=true)
-            }}
-          />
-        </template>
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @deprecatedArgs={{lazyHash
+                  shouldDisplay=(deprecatedOutletArgument value=true)
+                }}
+              />
+            </template>
+          );
+        }
       );
 
       // deprecated argument still works
@@ -490,21 +520,26 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("deprecated parameters with custom deprecation data", async function (assert) {
-      await render(
-        <template>
-          <PluginOutlet
-            @name="test-name"
-            @deprecatedArgs={{lazyHash
-              shouldDisplay=(deprecatedOutletArgument
-                value=true
-                message="The 'shouldDisplay' is deprecated on this test"
-                id="discourse.plugin-connector.deprecated-arg.test"
-                since="3.3.0.beta4-dev"
-                dropFrom="3.4.0"
-              )
-            }}
-          />
-        </template>
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @deprecatedArgs={{lazyHash
+                  shouldDisplay=(deprecatedOutletArgument
+                    value=true
+                    message="The 'shouldDisplay' is deprecated on this test"
+                    id="discourse.plugin-connector.deprecated-arg.test"
+                    since="3.3.0.beta4-dev"
+                    dropFrom="3.4.0"
+                  )
+                }}
+              />
+            </template>
+          );
+        }
       );
 
       // deprecated argument still works
@@ -553,18 +588,23 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         },
       };
 
-      await render(
-        <template>
-          <PluginOutlet
-            @name="test-name"
-            @deprecatedArgs={{lazyHash
-              shouldDisplay=(deprecatedOutletArgument
-                value=deprecatedData.display
-                silence="discourse.deprecation-that-should-not-be-logged"
-              )
-            }}
-          />
-        </template>
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @deprecatedArgs={{lazyHash
+                  shouldDisplay=(deprecatedOutletArgument
+                    value=deprecatedData.display
+                    silence="discourse.deprecation-that-should-not-be-logged"
+                  )
+                }}
+              />
+            </template>
+          );
+        }
       );
 
       // deprecated argument still works
@@ -594,16 +634,21 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("unused arguments", async function (assert) {
-      await render(
-        <template>
-          <PluginOutlet
-            @name="test-name"
-            @outletArgs={{lazyHash shouldDisplay=true}}
-            @deprecatedArgs={{lazyHash
-              argNotUsed=(deprecatedOutletArgument value=true)
-            }}
-          />
-        </template>
+      await withSilencedDeprecationsAsync(
+        "discourse.template-action",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{lazyHash shouldDisplay=true}}
+                @deprecatedArgs={{lazyHash
+                  argNotUsed=(deprecatedOutletArgument value=true)
+                }}
+              />
+            </template>
+          );
+        }
       );
 
       // deprecated argument still works

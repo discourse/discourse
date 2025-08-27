@@ -5,12 +5,12 @@ module ::DiscourseDataExplorer
     requires_plugin PLUGIN_NAME
 
     before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
-    before_action :set_query, only: %i[group_reports_show group_reports_run show update]
+    before_action :set_query, only: %i[group_reports_show group_reports_run show update public_run]
     before_action :ensure_admin
 
-    skip_before_action :check_xhr, only: %i[show group_reports_run run]
+    skip_before_action :check_xhr, only: %i[show group_reports_run run public_run]
     skip_before_action :ensure_admin,
-                       only: %i[group_reports_index group_reports_show group_reports_run]
+                       only: %i[group_reports_index group_reports_show group_reports_run public_run]
 
     def index
       queries = Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
@@ -79,6 +79,13 @@ module ::DiscourseDataExplorer
       if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
         return raise Discourse::NotFound
       end
+
+      run
+    end
+
+    # Public GET endpoint to run a query by ID for users with access
+    def public_run
+      return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
 
       run
     end

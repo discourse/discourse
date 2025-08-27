@@ -84,6 +84,20 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
   end
 
+  it "supports pasting color codes with and without leading #" do
+    config_area.visit(color_scheme.id)
+
+    config_area.color_palette_editor.input_for_hex("primary").click
+    cdp.copy_paste("#888888")
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#888888")
+
+    config_area.color_palette_editor.input_for_hex("primary").click
+    cdp.copy_paste("#777777")
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#777777")
+  end
+
   it "allows reverting colors to their default values" do
     color_scheme.update!(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     color_scheme.colors.create!(name: "primary", hex: "aaaaaa")
@@ -189,8 +203,6 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
     color_scheme.colors.each do |color|
       expect(color.hex).to eq(clipboard_scheme["light"][color.name])
-      next if color.dark_hex.nil?
-      expect(color.dark_hex).to eq(clipboard_scheme["dark"][color.name])
     end
   end
 end

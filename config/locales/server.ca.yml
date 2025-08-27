@@ -2888,9 +2888,11 @@ ca:
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       reject:
         title: "Rebutja"
+      no_action_user:
+        title: "Cap acció"
       delete_user:
+        complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"
-        complete: "Usuari suprimit."
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:

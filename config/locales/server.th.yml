@@ -559,7 +559,7 @@ th:
       reject:
         title: "ละทิ้ง"
       delete_user:
-        complete: "ผู้ใช้ถูกลบ."
+        complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"
   activemodel:
     errors:

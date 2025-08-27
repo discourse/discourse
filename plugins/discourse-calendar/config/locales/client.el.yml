@@ -162,6 +162,7 @@ el:
         month: "Μήνας"
         week: "Εβδομάδα"
         day: "Ημέρα"
+        year: "Χρόνος"
     group_timezones:
       search: "Αναζήτηση..."
     discourse_post_event:

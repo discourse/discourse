@@ -1654,8 +1654,13 @@ content_localization:
     default: 10
     type: integer
     hidden: true
-  content_localization_anon_language_switcher:
-    default: false
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
     client: true
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
@@ -4150,11 +4155,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
-    area: "experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list

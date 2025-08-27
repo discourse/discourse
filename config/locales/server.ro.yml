@@ -919,6 +919,11 @@ ro:
         logged_in_views: Autentificați
         anon_views: Anonimi
         total_views: Total
+    associated_accounts_by_provider:
+      labels:
+        discourse_connect: "SSO prin Discourse Connect"
+        no_sso_accounts: "Conturi fără o înregistrare SSO"
+        total_users: "Total conturi de utilizator active"
   dashboard:
     problem:
       twitter_login: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
@@ -1282,6 +1287,8 @@ ro:
     floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
+    experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
+    experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
@@ -1388,6 +1395,7 @@ ro:
       in_muted: "Arată subiecte silențioase"
       in_normal: "Arată subiectele cu nivel normal de notificare"
       in_watching_first_post: "Arată subiectele pe care le urmărești pentru prima postare"
+      in_unseen: "Arată subiectele pe care nu le-ai văzut"
       order_activity: "Sortează după ultima activitate (cele mai noi)"
       order_activity_asc: "Sortează după ultima activitate (cele mai vechi)"
       order_category: "Sortează după numele categoriei (Z-A)"
@@ -1408,6 +1416,7 @@ ro:
       order_views_asc: "Sortează după numărul de vizualizări (primele cu cele mai puține)"
       order_read: "Sortează după data la care ai citit ultima dată (primele cea mai recentă dată)"
       order_read_asc: "Sortează după data la care ai citit ultima dată (primele cea mai veche dată)"
+      exclude_users: "Exclude subiectele cu anumiți utilizatori"
   discourse_connect:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
@@ -2349,8 +2358,30 @@ ro:
       approve_and_unhide:
         title: "Aprobă și reafișează postarea"
         complete: "Postare aprobată și afișată"
+      user_actions:
+        bundle_title: "Ce vrei să faci cu utilizatorul?"
+      no_action_user:
+        title: "Nicio acțiune"
+        description: "Nu lua nicio măsură împotriva utilizatorului"
+        complete: "Nicio măsură luată împotriva utilizatorului"
+      silence_user:
+        title: "Redu la tăcere utilizatorul"
+        description: "Împiedică utilizatorul să posteze"
+        complete: "Utilizatorul a fost redus la tăcere"
+        reason: "Utilizator redus la tăcere prin coada de examinare"
+      suspend_user:
+        title: "Suspendă utilizatorul"
+        description: "Suspendă contul de utilizator"
+        complete: "Utilizatorul a fost suspendat"
+        reason: "Utilizator suspendat prin coada de examinare"
       delete_user:
-        complete: "Utilizatorul a fost șters."
+        title: "Șterge utilizator"
+        description: "Șterge acest utilizator din forum"
+        complete: "Utilizatorul a fost șters"
+      delete_and_block_user:
+        title: "Șterge și blochează"
+        description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
+        complete: "Utilizatorul a fost șters și blocat"
   fallback_username: "utilizator"
   form_templates:
     errors:

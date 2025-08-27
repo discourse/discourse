@@ -33,7 +33,6 @@ pl_PL:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maksymalna liczba wierszy tekstu na wydarzenie w kalendarzu."
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."

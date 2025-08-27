@@ -588,7 +588,6 @@ de:
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
-        invalid_config: "Du hast eine ungültige Option ausgewählt."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
