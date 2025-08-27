@@ -9,8 +9,8 @@ import escapeRegExp from "discourse/lib/escape-regexp";
  *
  * It adds deprecation warnings for each method to help identify and track their usage in the codebase.
  *
- * This allows existing code to continue working while providing guidance for migration to native array methods,
- * EmberArray, or TrackedArray alternatives.
+ * This allows existing code to continue working while providing guidance for migration to native array methods or
+ * TrackedArray alternatives.
  **/
 
 const DEPRECATION_ID_PREFIX = "discourse.native-array-extensions";
@@ -30,7 +30,7 @@ function warn(name, kind = "method") {
     kind === "method" ? `array.${name}` : `array["${name}"] ${kind}`;
 
   deprecated(
-    `The ${qualifiedName} is a deprecated Ember native array extension. Use native array methods, an EmberArray, or a TrackedArray instead.`,
+    `The ${qualifiedName} is a deprecated Ember native array extension. Use native array methods or a TrackedArray instead.`,
     {
       id: `${DEPRECATION_ID_PREFIX}.${name}`,
       since: DEPRECATION_SINCE,
