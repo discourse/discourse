@@ -11,6 +11,7 @@ import { modifier } from "ember-modifier";
 import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
@@ -108,8 +109,8 @@ export default class UppyImageUploader extends Component {
     return getURLWithCDN(this.args.imageUrl);
   }
 
-  get previewSize() {
-    return this.args.previewSize ?? "contain";
+  get previewSizeClass() {
+    return this.args.previewSize === "cover" ? "--bg-size-cover" : "";
   }
 
   get backgroundStyle() {
@@ -117,9 +118,7 @@ export default class UppyImageUploader extends Component {
     if (this.isVideoFile) {
       return htmlSafe("");
     }
-    return htmlSafe(
-      `background-image: url(${this.imageCdnUrl}); background-size: ${this.previewSize}`
-    );
+    return htmlSafe(`background-image: url(${this.imageCdnUrl})`);
   }
 
   get imageBaseName() {
@@ -175,7 +174,10 @@ export default class UppyImageUploader extends Component {
       ...attributes
     >
       <div
-        class="uploaded-image-preview input-xxlarge"
+        class={{concatClass
+          "uploaded-image-preview input-xxlarge"
+          this.previewSizeClass
+        }}
         style={{this.backgroundStyle}}
       >
         {{#if this.showingPlaceholder}}
