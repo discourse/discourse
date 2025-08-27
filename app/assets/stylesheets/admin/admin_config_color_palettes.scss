@@ -57,6 +57,12 @@
       margin-bottom: 1em;
     }
 
+    &__sections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
     &__logo-and-fonts-hint {
       display: flex;
       justify-content: space-between;
@@ -69,6 +75,7 @@
     }
 
     &__save-card {
+      margin-top: -0.5rem;
       display: flex;
       justify-content: flex-end;
       gap: 1em;

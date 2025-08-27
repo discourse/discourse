@@ -308,105 +308,107 @@ export default class AdminConfigAreasColorPalette extends Component {
             />
           </div>
         </div>
-        <AdminConfigAreaCard
-          @heading="admin.config_areas.color_palettes.color_options.title"
-        >
-          <:content>
-            <form.Row>
+        <div class="admin-config-color-palettes__sections">
+          <AdminConfigAreaCard
+            @heading="admin.config_areas.color_palettes.color_options.title"
+          >
+            <:content>
+              <form.Row>
+                <form.Field
+                  @name="default_light_on_theme"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
+                    themeName=this.defaultTheme.name
+                  }}
+                  @format="full"
+                  @onSet={{this.handleDefaultLightOnThemeChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+              <form.Row>
+                <form.Field
+                  @name="default_dark_on_theme"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
+                    themeName=this.defaultTheme.name
+                  }}
+                  @format="full"
+                  @onSet={{this.handleDefaultDarkOnThemeChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+              <form.Row>
+                <form.Field
+                  @name="user_selectable"
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
+                  @showTitle={{false}}
+                  @description={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle_description"
+                  }}
+                  @format="full"
+                  @onSet={{this.handleUserSelectableChange}}
+                  as |field|
+                >
+                  <field.Toggle />
+                </form.Field>
+              </form.Row>
+            </:content>
+          </AdminConfigAreaCard>
+          <AdminConfigAreaCard
+            @heading="admin.config_areas.color_palettes.colors.title"
+          >
+            <:content>
               <form.Field
-                @name="default_light_on_theme"
-                @title={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle"
-                }}
+                @name="colors"
+                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
                 @showTitle={{false}}
-                @description={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
-                  themeName=this.defaultTheme.name
-                }}
                 @format="full"
-                @onSet={{this.handleDefaultLightOnThemeChange}}
                 as |field|
               >
-                <field.Toggle />
+                <field.Custom>
+                  <ColorPaletteEditor
+                    @colors={{transientData.colors}}
+                    @onColorChange={{this.onColorChange}}
+                  />
+                </field.Custom>
               </form.Field>
-            </form.Row>
-            <form.Row>
-              <form.Field
-                @name="default_dark_on_theme"
-                @title={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle"
-                }}
-                @showTitle={{false}}
-                @description={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
-                  themeName=this.defaultTheme.name
-                }}
-                @format="full"
-                @onSet={{this.handleDefaultDarkOnThemeChange}}
-                as |field|
-              >
-                <field.Toggle />
-              </form.Field>
-            </form.Row>
-            <form.Row>
-              <form.Field
-                @name="user_selectable"
-                @title={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle"
-                }}
-                @showTitle={{false}}
-                @description={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle_description"
-                }}
-                @format="full"
-                @onSet={{this.handleUserSelectableChange}}
-                as |field|
-              >
-                <field.Toggle />
-              </form.Field>
-            </form.Row>
-          </:content>
-        </AdminConfigAreaCard>
-        <AdminConfigAreaCard
-          @heading="admin.config_areas.color_palettes.colors.title"
-        >
-          <:content>
-            <form.Field
-              @name="colors"
-              @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
-              @showTitle={{false}}
-              @format="full"
-              as |field|
-            >
-              <field.Custom>
-                <ColorPaletteEditor
-                  @colors={{transientData.colors}}
-                  @onColorChange={{this.onColorChange}}
+            </:content>
+          </AdminConfigAreaCard>
+          <AdminConfigAreaCard>
+            <:content>
+              <div class="admin-config-color-palettes__save-card">
+                {{#if this.hasUnsavedChanges}}
+                  <span class="admin-config-color-palettes__unsaved-changes">
+                    {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
+                  </span>
+                {{/if}}
+                <DButton
+                  class="copy-to-clipboard"
+                  @label="admin.config_areas.color_palettes.copy_to_clipboard"
+                  @action={{this.copyToClipboard}}
                 />
-              </field.Custom>
-            </form.Field>
-          </:content>
-        </AdminConfigAreaCard>
-        <AdminConfigAreaCard>
-          <:content>
-            <div class="admin-config-color-palettes__save-card">
-              {{#if this.hasUnsavedChanges}}
-                <span class="admin-config-color-palettes__unsaved-changes">
-                  {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
-                </span>
-              {{/if}}
-              <DButton
-                class="copy-to-clipboard"
-                @label="admin.config_areas.color_palettes.copy_to_clipboard"
-                @action={{this.copyToClipboard}}
-              />
-              <form.Submit
-                @isLoading={{this.saving}}
-                @label="admin.config_areas.color_palettes.save_changes"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
+                <form.Submit
+                  @isLoading={{this.saving}}
+                  @label="admin.config_areas.color_palettes.save_changes"
+                />
+              </div>
+            </:content>
+          </AdminConfigAreaCard>
+        </div>
       </div>
     </Form>
   </template>
