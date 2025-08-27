@@ -88,11 +88,11 @@ export default class extends DiscourseRoute {
 
     if (!sub) {
       category = this.site.categories.find(
-        (c) => c.type === main.toLowerCase()
+        (c) => c[type] === main.toLowerCase()
       );
     } else {
       const { categories } = this.site;
-      const parent = categories.find((c) => c.type === main.toLowerCase());
+      const parent = categories.find((c) => c[type] === main.toLowerCase());
 
       if (parent) {
         category = categories.find((item) => {
