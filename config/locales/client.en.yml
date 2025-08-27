@@ -7668,6 +7668,7 @@ en:
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "That user can't be found."
         invalid: "Sorry, you may not impersonate that user."
+        error: "Oops. An unexpected error occurred."
 
       users:
         title: "Users"
