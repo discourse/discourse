@@ -50,13 +50,13 @@ describe "Admin Color Palettes Config Area Page", type: :system do
     Theme.find_default.update!(color_scheme: palette_1)
 
     edit_config_area.visit(palette_1.id)
-    page.has_text?(
+    expect(page).to have_text(
       I18n.t(
         "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
         themeName: "Foundation",
       ),
     )
-    page.has_text?(
+    expect(page).to have_text(
       I18n.t(
         "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
         themeName: "Foundation",
