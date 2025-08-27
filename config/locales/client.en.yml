@@ -6723,6 +6723,8 @@ en:
             title: "Color options"
             toggle: "User selectable"
             toggle_description: "Color palette can be selected by users"
+            toggle_default_light_on_theme: "Color palette is the default light palette on default theme (%{themeName})"
+            toggle_default_dark_on_theme: "Color palette is the default dark palette on default theme (%{themeName})"
           colors:
             title: "Colors"
           save_changes: "Save changes"

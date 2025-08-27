@@ -15,20 +15,31 @@ export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
   @service router;
   @service dialog;
+  @service site;
 
   @tracked editingName = false;
   @tracked saving = false;
   @tracked hasChangedName = false;
   @tracked hasChangedUserSelectable = false;
+  @tracked hasChangedDefaultLightOnTheme = false;
+  @tracked hasChangedDefaultDarkOnTheme = false;
   @tracked hasChangedColors = false;
+  @tracked lightColorSchemeId = this.defaultTheme.color_scheme_id;
+  @tracked darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
 
   saveNameOnly = false;
   fkApi;
+
+  get defaultTheme() {
+    return this.site.user_themes.find((theme) => theme.default);
+  }
 
   get hasUnsavedChanges() {
     return (
       this.hasChangedName ||
       this.hasChangedUserSelectable ||
+      this.hasChangedDefaultLightOnTheme ||
+      this.hasChangedDefaultDarkOnTheme ||
       this.hasChangedColors
     );
   }
@@ -38,6 +49,10 @@ export default class AdminConfigAreasColorPalette extends Component {
     return {
       name: this.args.colorPalette.name,
       user_selectable: this.args.colorPalette.user_selectable,
+      default_light_on_theme:
+        this.lightColorSchemeId === this.args.colorPalette.id,
+      default_dark_on_theme:
+        this.darkColorSchemeId === this.args.colorPalette.id,
       colors: this.args.colorPalette.colors,
     };
   }
@@ -65,6 +80,23 @@ export default class AdminConfigAreasColorPalette extends Component {
 
     if (!this.saveNameOnly) {
       this.args.colorPalette.user_selectable = data.user_selectable;
+
+      if (this.hasChangedDefaultLightOnTheme) {
+        this.args.colorPalette.default_light_on_theme =
+          data.default_light_on_theme;
+        this.defaultTheme.color_scheme_id = data.default_light_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.lightColorSchemeId = this.defaultTheme.color_scheme_id;
+      }
+      if (this.hasChangedDefaultDarkOnTheme) {
+        this.args.colorPalette.default_dark_on_theme =
+          data.default_dark_on_theme;
+        this.defaultTheme.dark_color_scheme_id = data.default_dark_on_theme
+          ? this.args.colorPalette.id
+          : null;
+        this.darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
+      }
     }
 
     try {
@@ -84,6 +116,8 @@ export default class AdminConfigAreasColorPalette extends Component {
 
       if (!this.saveNameOnly) {
         this.hasChangedUserSelectable = false;
+        this.hasChangedDefaultLightOnTheme = false;
+        this.hasChangedDefaultDarkOnTheme = false;
 
         if (this.hasChangedColors) {
           await this.applyColorChangesIfPossible();
@@ -171,6 +205,18 @@ export default class AdminConfigAreasColorPalette extends Component {
   handleNameChange(value, { set }) {
     set("name", value);
     this.hasChangedName = true;
+  }
+
+  @action
+  handleDefaultLightOnThemeChange(value, { set }) {
+    set("default_light_on_theme", value);
+    this.hasChangedDefaultLightOnTheme = true;
+  }
+
+  @action
+  handleDefaultDarkOnThemeChange(value, { set }) {
+    set("default_dark_on_theme", value);
+    this.hasChangedDefaultDarkOnTheme = true;
   }
 
   @action
@@ -266,21 +312,59 @@ export default class AdminConfigAreasColorPalette extends Component {
           @heading="admin.config_areas.color_palettes.color_options.title"
         >
           <:content>
-            <form.Field
-              @name="user_selectable"
-              @title={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle"
-              }}
-              @showTitle={{false}}
-              @description={{i18n
-                "admin.config_areas.color_palettes.color_options.toggle_description"
-              }}
-              @format="full"
-              @onSet={{this.handleUserSelectableChange}}
-              as |field|
-            >
-              <field.Toggle />
-            </form.Field>
+            <form.Row>
+              <form.Field
+                @name="default_light_on_theme"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
+                  themeName=this.defaultTheme.name
+                }}
+                @format="full"
+                @onSet={{this.handleDefaultLightOnThemeChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
+            <form.Row>
+              <form.Field
+                @name="default_dark_on_theme"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
+                  themeName=this.defaultTheme.name
+                }}
+                @format="full"
+                @onSet={{this.handleDefaultDarkOnThemeChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
+            <form.Row>
+              <form.Field
+                @name="user_selectable"
+                @title={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle"
+                }}
+                @showTitle={{false}}
+                @description={{i18n
+                  "admin.config_areas.color_palettes.color_options.toggle_description"
+                }}
+                @format="full"
+                @onSet={{this.handleUserSelectableChange}}
+                as |field|
+              >
+                <field.Toggle />
+              </form.Field>
+            </form.Row>
           </:content>
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
