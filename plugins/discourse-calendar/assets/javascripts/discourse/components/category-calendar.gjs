@@ -26,10 +26,6 @@ export default class CategoryCalendar extends Component {
         include_subcategories: true,
       };
 
-      if (this.siteSettings.include_expired_events_on_calendar) {
-        params.include_expired = true;
-      }
-
       return await this.discoursePostEventApi.events(params);
     } catch (error) {
       popupAjaxError(error);

@@ -6,9 +6,10 @@ module DiscoursePostEvent
       guardian = Guardian.new(user)
 
       build_base_query(guardian, user)
-        .then { |query| apply_filters(query, params, guardian, user) }
-        .then { |query| apply_date_filters(query, params) }
-        .then { |query| apply_category_filters(query, params) }
+        .then { |query| filter_by_post_id(query, params) }
+        .then { |query| filter_by_attending_user(query, params, guardian, user) }
+        .then { |query| filter_by_dates(query, params) }
+        .then { |query| filter_by_category(query, params) }
         .then { |query| apply_ordering(query) }
         .then { |query| apply_limit(query, params) }
     end
@@ -26,7 +27,9 @@ module DiscoursePostEvent
         .merge(topics.or(pms))
         .joins(latest_event_date_join)
         .select("discourse_post_event_events.*, latest_event_dates.starts_at")
-        .where("latest_event_dates.starts_at IS NOT NULL")
+        .where(
+          "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL)",
+        )
         .distinct
     end
 
@@ -41,18 +44,6 @@ module DiscoursePostEvent
           ORDER BY event_id, finished_at DESC NULLS FIRST, starts_at DESC
         ) latest_event_dates ON latest_event_dates.event_id = discourse_post_event_events.id
       SQL
-    end
-
-    def self.apply_filters(events, params, guardian, user)
-      events
-        .then { |query| filter_by_expiration(query, params) }
-        .then { |query| filter_by_post_id(query, params) }
-        .then { |query| filter_by_attending_user(query, params, guardian, user) }
-    end
-
-    def self.filter_by_expiration(events, params)
-      return events if params[:include_expired].to_s == "true"
-      events.where("latest_event_dates.finished_at IS NULL")
     end
 
     def self.filter_by_post_id(events, params)
@@ -94,39 +85,86 @@ module DiscoursePostEvent
 SQL
     end
 
-    def self.apply_date_filters(events, params)
-      events
-        .then { |query| apply_before_date_filter(query, params) }
-        .then { |query| apply_after_date_filter(query, params) }
-        .then { |query| apply_end_date_filter(query, params) }
+    def self.filter_by_dates(events, params)
+      return events if params[:before].blank? && params[:after].blank? && params[:end_date].blank?
+
+      before_date = params[:before]&.to_datetime
+      after_date = params[:after]&.to_datetime
+      end_date = params[:end_date]&.to_datetime
+
+      # For recurring events
+      if before_date || after_date || end_date
+        recurring_conditions = []
+        recurring_values = []
+
+        if after_date
+          # For recurring events: original start date OR recurrence_until should be >= after_date
+          # This means either the event starts after the date, or it recurs until after the date
+          recurring_conditions << "(discourse_post_event_events.original_starts_at >= ? OR discourse_post_event_events.recurrence_until IS NULL OR discourse_post_event_events.recurrence_until >= ?)"
+          recurring_values += [after_date, after_date]
+        end
+
+        if before_date
+          # For recurring events: original start date should be < before_date
+          # We want events that start before the end of our range
+          recurring_conditions << "discourse_post_event_events.original_starts_at < ?"
+          recurring_values << before_date
+        end
+
+        if end_date
+          # For recurring events: start date should be before or equal to end_date
+          recurring_conditions << "discourse_post_event_events.original_starts_at <= ?"
+          recurring_values << end_date
+        end
+
+        recurring_condition =
+          (
+            if recurring_conditions.any?
+              "(discourse_post_event_events.recurrence IS NOT NULL AND (#{recurring_conditions.join(" AND ")}))"
+            else
+              "1=0"
+            end
+          )
+
+        # For non-recurring events - check event_dates
+        non_recurring_conditions = []
+        non_recurring_values = []
+
+        if after_date
+          non_recurring_conditions << "latest_event_dates.starts_at >= ?"
+          non_recurring_values << after_date
+        end
+
+        if before_date
+          non_recurring_conditions << "latest_event_dates.starts_at < ?"
+          non_recurring_values << before_date
+        end
+
+        if end_date
+          non_recurring_conditions << "latest_event_dates.starts_at <= ?"
+          non_recurring_values << end_date
+        end
+
+        non_recurring_condition =
+          (
+            if non_recurring_conditions.any?
+              "(discourse_post_event_events.recurrence IS NULL AND (#{non_recurring_conditions.join(" AND ")}))"
+            else
+              "1=0"
+            end
+          )
+
+        # Combine both conditions
+        full_condition = "(#{recurring_condition}) OR (#{non_recurring_condition})"
+        all_values = recurring_values + non_recurring_values
+
+        events.where(full_condition, *all_values)
+      else
+        events
+      end
     end
 
-    def self.apply_before_date_filter(events, params)
-      return events if params[:before].blank?
-
-      before_date = params[:before].to_datetime
-      events.where("discourse_post_event_events.original_starts_at < ?", before_date)
-    end
-
-    def self.apply_after_date_filter(events, params)
-      return events if params[:after].blank?
-
-      after_date = params[:after].to_datetime
-      events.where(
-        "(discourse_post_event_events.recurrence_until IS NULL OR " \
-          "discourse_post_event_events.recurrence_until >= ?)",
-        after_date,
-      )
-    end
-
-    def self.apply_end_date_filter(events, params)
-      return events if params[:end_date].blank?
-
-      end_date = params[:end_date].to_datetime
-      events.where("discourse_post_event_events.original_starts_at <= ?", end_date)
-    end
-
-    def self.apply_category_filters(events, params)
+    def self.filter_by_category(events, params)
       return events if params[:category_id].blank?
 
       category_id = params[:category_id].to_i

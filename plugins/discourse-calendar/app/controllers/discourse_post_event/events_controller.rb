@@ -120,7 +120,6 @@ module DiscoursePostEvent
         :post_id,
         :category_id,
         :include_subcategories,
-        :include_expired,
         :limit,
         :before,
         :attending_user,

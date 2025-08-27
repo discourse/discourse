@@ -534,4 +534,90 @@ describe DiscoursePostEvent::Event do
       end
     end
   end
+
+  describe "#starts_at and #ends_at for expired recurring events" do
+    context "when recurring event has expired (past recurrence_until)" do
+      let(:expired_recurring_event) do
+        event =
+          Fabricate(
+            :event,
+            recurrence: "every_week",
+            recurrence_until: Time.current - 1.day,
+            original_starts_at: Time.current - 1.week,
+            original_ends_at: Time.current - 1.week + 2.hours,
+          )
+        event
+      end
+
+      it "returns nil for starts_at since no future dates can be computed" do
+        expect(expired_recurring_event.starts_at).to be_nil
+      end
+
+      it "returns nil for ends_at since no future dates can be computed" do
+        expect(expired_recurring_event.ends_at).to be_nil
+      end
+
+      it "serializer handles nil starts_at correctly" do
+        serializer =
+          DiscoursePostEvent::EventSerializer.new(
+            expired_recurring_event,
+            scope: Guardian.new,
+            root: false,
+          )
+        json = JSON.parse(serializer.to_json)
+        # Should not crash and should return nil for starts_at and ends_at
+        expect(json["starts_at"]).to be_nil
+        expect(json["ends_at"]).to be_nil
+      end
+
+      it "basic serializer handles expired recurring events correctly" do
+        serializer =
+          DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
+        json = JSON.parse(serializer.to_json)
+        # Should not crash and for recurring events should still return original_starts_at
+        # (BasicEventSerializer uses original_starts_at for recurring events, not starts_at)
+        expect(json["starts_at"]).not_to be_nil # This shows original_starts_at
+        expect(json["ends_at"]).to be_nil # This should be nil since no future end date
+      end
+    end
+
+    context "when recurring event has no recurrence_until (endless)" do
+      let(:endless_recurring_event) do
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          recurrence_until: nil,
+          original_starts_at: Time.current - 1.week,
+          original_ends_at: Time.current - 1.week + 2.hours,
+        )
+      end
+
+      it "still returns starts_at from event_dates" do
+        expect(endless_recurring_event.starts_at).not_to be_nil
+      end
+
+      it "still returns ends_at from event_dates" do
+        expect(endless_recurring_event.starts_at).not_to be_nil
+      end
+    end
+
+    context "when non-recurring event" do
+      let(:non_recurring_event) do
+        Fabricate(
+          :event,
+          recurrence: nil,
+          original_starts_at: Time.current - 1.week,
+          original_ends_at: Time.current - 1.week + 2.hours,
+        )
+      end
+
+      it "still returns starts_at from event_dates regardless of when it was" do
+        expect(non_recurring_event.starts_at).not_to be_nil
+      end
+
+      it "still returns ends_at from event_dates regardless of when it was" do
+        expect(non_recurring_event.ends_at).not_to be_nil
+      end
+    end
+  end
 end

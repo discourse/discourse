@@ -122,6 +122,10 @@ export default class DiscoursePostEventDates extends Component {
 
   @action
   async computeDates(element) {
+    if (this.args.expiredAndRecurring) {
+      return;
+    }
+
     if (this.siteSettings.discourse_local_dates_enabled) {
       const result = await cook(this.datesBBCode.join("<span> → </span>"));
       this.htmlDates = htmlSafe(result.toString());
@@ -155,6 +159,12 @@ export default class DiscoursePostEventDates extends Component {
       class="event__section event-dates"
       {{didInsert this.computeDates}}
     >
-      {{icon "clock"}}{{this.htmlDates}}</section>
+      {{icon "clock"}}
+      {{#if @expiredAndRecurring}}
+        -
+      {{else}}
+        {{this.htmlDates}}
+      {{/if}}
+    </section>
   </template>
 }

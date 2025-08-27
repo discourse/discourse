@@ -191,6 +191,23 @@ describe "Post event", type: :system do
     expect(page).to have_no_css(".send-pm-to-creator")
   end
 
+  it "shows '-' for expired recurring events instead of dates" do
+    post =
+      PostCreator.create!(
+        admin,
+        title: "Test future recurring event",
+        raw:
+          "[event start='2025-01-01 10:00' recurrenceUntil='2020-12-31 10:00:00 UTC' recurrence='every_week']\n[/event]",
+      )
+
+    visit(post.topic.url)
+
+    expect(page).to have_css(".discourse-post-event")
+    expect(page).to have_css(".event-date .month", text: "-")
+    expect(page).to have_css(".event-date .day", text: "-")
+    expect(page).to have_css(".event-dates", text: "-")
+  end
+
   it "persists changes" do
     visit "/new-topic"
     composer.fill_title("Test event with updates")

@@ -53,7 +53,7 @@ module DiscoursePostEvent
       if object.recurring?
         object.original_starts_at
       else
-        object.starts_at.in_time_zone(object.timezone)
+        object.starts_at&.in_time_zone(object.timezone)
       end
     end
 
@@ -62,19 +62,24 @@ module DiscoursePostEvent
         if object.recurring?
           object.ends_at
         else
-          object.ends_at.in_time_zone(object.timezone)
+          object.ends_at&.in_time_zone(object.timezone)
         end
       else
+        # For recurring events, if no ends_at and the event has expired (starts_at is nil),
+        # don't calculate a default end time
+        return nil if object.recurring? && object.starts_at.nil?
+
         # Use consistent timezone as starts_at for calculation
         base_starts_at =
           (
             if object.recurring?
               object.original_starts_at
             else
-              object.starts_at.in_time_zone(object.timezone)
+              object.starts_at&.in_time_zone(object.timezone)
             end
           )
-        (base_starts_at + 1.hour)
+        # Return nil if base_starts_at is nil (expired recurring event)
+        base_starts_at ? (base_starts_at + 1.hour) : nil
       end
     end
   end
