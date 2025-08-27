@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 
 export default class ColorSchemeSelectBase extends Component {
   @tracked selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.id;
@@ -24,13 +24,11 @@ export default class ColorSchemeSelectBase extends Component {
     >
       <:body>
         {{i18n "admin.customize.colors.select_base.description"}}
-        <ComboBox
-          class="select-base-palette"
+        <ColorPalettePicker
           @content={{@model.colorSchemes}}
           @value={{this.selectedBaseThemeId}}
-          @nameProperty="name"
-          @valueProperty="id"
           @onChange={{fn (mut this.selectedBaseThemeId)}}
+          class="select-base-palette"
         />
       </:body>
       <:footer>
