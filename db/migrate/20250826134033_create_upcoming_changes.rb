@@ -9,6 +9,7 @@ class CreateUpcomingChanges < ActiveRecord::Migration[8.0]
       t.integer :status, null: false, default: 0
       t.integer :risk_level, null: false, default: 0
       t.integer :change_type, null: false, default: 0
+      t.string :promote_at_version, null: true
       t.string :plugin_identifier, null: true, index: true
       t.integer :meta_topic_id, null: true
 

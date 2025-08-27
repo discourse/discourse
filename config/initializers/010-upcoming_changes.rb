@@ -36,5 +36,8 @@ Rails.application.config.to_prepare do
     end
 
     # TODO: load the plugin upcoming changes
+
+    # Get rid of any old upcoming changes that are no longer defined.
+    UpcomingChange.where.not(identifier: changes.keys).destroy_all
   end
 end
