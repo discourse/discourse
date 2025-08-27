@@ -6147,6 +6147,7 @@ he:
           only_experiments: "להציג יכולות ניסיוניות בלבד"
           experiment_enabled: "הפעלת את היכולת הניסיונית."
           experiment_disabled: "השבתת את היכולת הניסיונית."
+          feature_enabled: "הפעלת את היכולת."
           feature_disabled: "השבתת את היכולת."
           toggled_too_fast: "החלפת את מצב המתג מהר מדי. נא לחכות כמה שניות בטרם החלפת המצב שוב."
           experiment_tooltip:
@@ -7084,6 +7085,7 @@ he:
           set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
           setting_was_saved: "הגדרת ערכת העיצוב נשמרה"
           install_success: "%{theme} הותקנה בהצלחה!"
+          delete_success: "%{theme} נמחקה בהצלחה!"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
             one: "%{count} נבחרו"
@@ -7282,8 +7284,10 @@ he:
           dark: "כהה"
           title: "צבעים"
           edit: "עריכה"
+          view: "תצוגה"
           set_default_light: "הגדרה כערכת צבעים בהירה בערכת העיצוב של ברירת המחדל (%{theme})"
           set_default_dark: "הגדרה כערכת צבעים כהה בערכת העיצוב של ברירת המחדל (%{theme})"
+          set_default_success: "%{schemeName} הוגדרה כערכת ברירת מחדל עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
           filters:
@@ -7293,7 +7297,11 @@ he:
             from_theme: "מערכת עיצוב"
             no_results: "לא נמצאו ערכות צבעים"
           default_light_badge:
+            text: "בהיר כברירת מחדל"
+            title: "ערכת צבעים בהירה כברירת מחדל"
             reset: "איפוס מסננים"
+          default_dark_badge:
+            text: "כהה כברירת מחדל"
           system_palette: "זאת ערכת צבעים מובנית, אי אפשר לערוך או למחוק אותה."
           back_to_colors: "חזרה לערכות צבעים"
           long_title: "ערכות צבעים"

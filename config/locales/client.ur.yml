@@ -969,12 +969,12 @@ ur:
       likes_given: "دیا گیا"
       likes_received: "موصول ہوا"
       topics_entered: "دیکھ لیا"
-      topics_entered_long: "دیکھے گئے موضوعات"
+      topics_entered_long: "موضوعات دیکھے"
       time_read: "وقت جو پڑھنے میں لگا"
       topic_count: "موضوعات"
-      topic_count_long: "بنائے گئے موضوعات"
+      topic_count_long: "موضوعات بنائے"
       post_count: "جوابات"
-      post_count_long: "پوسٹ کیے گئے جوابات"
+      post_count_long: "جوابات پوسٹ کیے"
       no_results:
         body: "کمیونٹی ممبران کی ایک فہرست جو ان کی سرگرمی دکھا رہے ہیں یہاں دکھائی جائے گی۔ ابھی کے لیے فہرست خالی ہے کیونکہ آپ کی کمیونٹی ابھی بھی بالکل نئی ہے!"
         extra_body: "منتظمین اور نگران، <a href='%{basePath}/admin/users/'>ناظم صارفین</a>میں صارفین کو دیکھ اور ان کا نظم کر سکتے ہیں۔"
@@ -982,8 +982,8 @@ ur:
       days_visited: "زائرین کی تعداد"
       days_visited_long: "زیارت کے دن"
       posts_read: "پڑھ لیا گیا"
-      posts_read_long: "پڑھی گئیں پوسٹس"
-      last_updated: "آخری دفعہ اپ ڈیٹ:"
+      posts_read_long: "لڑیاں پڑھیں"
+      last_updated: "آخری اپ ڈیٹ:"
       total_rows:
         one: "%{count} صارف"
         other: "%{count} صارفین"
@@ -1042,7 +1042,7 @@ ur:
           enable_imap: "IMAP فعال کریں"
           test_settings: "ترتیبات کو ٹیسٹ کریں"
           save_settings: "ترتیبات کو محفوظ کریں"
-          last_updated: "آخری دفعہ اپ ڈیٹ:"
+          last_updated: "آخری اپ ڈیٹ:"
           last_updated_by: "تک"
           settings_required: "تمام ترتیبات درکار ہیں، براہ کرم توثیق سے پہلے تمام فیلڈز کو پُر کریں۔"
           smtp_settings_valid: "SMTP ترتیبات درست ہیں۔"
@@ -1262,7 +1262,7 @@ ur:
       "12": "بھیجی گئی اشیاء"
       "13": "اِن باکس"
       "14": "زیرِاِلتوَاء"
-      "15": "ڈرافٹس"
+      "15": "مسودات"
       "17": "لنکس"
     categories:
       categories_label: "اقسام"
@@ -1320,7 +1320,7 @@ ur:
         other: "%{count} حذف کریں"
       username: "صارف کا نام"
       trust_level: "اعتماد کی سطح"
-      read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+      read_time: "پڑھنے کا وقت"
       topics_entered: "درج کردہ موضوعات"
       post_count: "پوسٹ`"
       confirm_delete_other_accounts: "کیا آپ واقعی یہ اکاؤنٹس مٹانا چاہتے ہیں؟"
@@ -1830,7 +1830,7 @@ ur:
         instructions: "اس موضوع کا ایک رابطہ آپ کے صارف کارڈ اور پروفائل پر ہوگا۔"
       email:
         title: "اِی میل"
-        primary: "بنیادی ایمیل"
+        primary: "بنیادی ای میل"
         secondary: "ثانوی ای میلز"
         primary_label: "بنیادی"
         unconfirmed_label: "غیر مصدقہ"
@@ -2032,8 +2032,8 @@ ur:
         redeemed: "دعوتیں جِن سے فائدہ اٹھا لیا گیا ہے"
         redeemed_at: "فائدہ اٹھا لیا گیا"
         pending: "زیرِاِلتوَاء دعوتیں"
-        topics_entered: "دیکھے گئے موضوعات"
-        posts_read_count: "پڑھی گئیں پوسٹس"
+        topics_entered: "موضوعات دیکھے"
+        posts_read_count: "لڑیاں پڑھیں"
         expired: "اِس دعوت کی میعاد ختم ہو چکی ہے۔"
         remove_all: "میعاد ختم ہونے والے دعوت نامے کو ہٹا دیں"
         removed_all: "تمام میعاد ختم ہوئی دعوتیں منسوخ کر دی گئیں!"
@@ -2041,7 +2041,7 @@ ur:
         reinvite_all: "تمام دعوتیں دوبارہ بھیجیں"
         reinvite_all_confirm: "کیا آپ واقعی تمام دعوتیں دوبارہ بھیجنا چاہتے ہیں؟"
         reinvited_all: "تمام دعوت نامے بھیجے گئے!"
-        time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+        time_read: "پڑھنے کا وقت"
         days_visited: "دورہ کیے گئے دن"
         account_age_days: "دنوں میں اکاؤنٹ کی عمر"
         create: "دعوت دیں"
@@ -2136,12 +2136,12 @@ ur:
       summary:
         title: "خلاصہ"
         stats: "اعدادوشمار"
-        time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+        time_read: "پڑھنے کا وقت"
         time_read_title: "%{duration} (ہر وقت)"
-        recent_time_read: "پڑھنے کیلئے اِستعمال ہونے والا حالیہ وقت"
+        recent_time_read: "حالیہ پڑھنے کا وقت"
         recent_time_read_title: "%{duration} (گزشتہ 60 دنوں میں)"
         topic_count:
-          one: "موضوع بن گیا"
+          one: "موضوع بنایا"
           other: "موضوعات بن گئے"
         post_count:
           one: "بنائی گئی پوسٹ"
@@ -2156,10 +2156,10 @@ ur:
           one: "دن جس میں دورہ کیا گیا"
           other: "دن جن میں دورہ کیا گیا"
         topics_entered:
-          one: "دیکھا گیا موضوع"
+          one: "موضوع دیکھا"
           other: "دیکھے گئے موضوعات"
         posts_read:
-          one: "پڑھی گئی پوسٹ"
+          one: "لڑی پڑھی"
           other: "پڑھی گئیں پوسٹس"
         bookmark_count:
           one: "بُک مارک"
@@ -2673,10 +2673,10 @@ ur:
       dark_tone: سیاہ جِلد رنگ
       default: اپنی مرضی کے اِیمَوجی
     shared_drafts:
-      title: "مشترکہ ڈرافٹس"
+      title: "مشترکہ مسودات"
       notice: "یہ عنوان صرف ان لوگوں کے لئے مرئی ہے جو مشترکہ مسودے شائع کرسکتے ہیں۔"
       destination_category: "مطلوبہ زُمرَہ"
-      publish: "مشترکہ ڈرافٹس شائع کریں"
+      publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
     composer:
@@ -2694,7 +2694,7 @@ ur:
       posting_not_on_topic: "کون سے موضوع کا آپ جواب دینا چاہتے ہیں؟"
       saved_local_draft_tip: "مقامی طور پر محفوظ کر لیا گیا"
       similar_topics: "آپ کا موضوع سے ملتا جلتا ہے۔۔۔"
-      drafts_offline: "ڈرافٹس آف لائن"
+      drafts_offline: "آف لائن مسودات"
       edit_conflict: "ترامیم میں تصادم"
       esc: "esc"
       esc_label: "پیغام مسترد"
@@ -2998,7 +2998,7 @@ ur:
         linked: "لنک کردہ"
         bookmark_reminder: "بک مارک یاد دہانی"
         bookmark_reminder_with_name: "بک مارک یاد دہانی - %{name}"
-        granted_badge: "تمغہ عطا کیا"
+        granted_badge: "تمغہ دیا"
         invited_to_topic: "موضوع کیلئے دعوت دی گئی"
         group_mentioned: "گروپ کا ذکر کیا گیا"
         group_message_summary: "نئے گروپ پیغامات"
@@ -3550,7 +3550,7 @@ ur:
           "2_8_stale": "آپ کو نئے جوابات کی گنتی نظر آئے گی کیونکہ آپ ماضی میں اس زمرے سے باخبر رہتے تھے۔"
           "2_4": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ نے اِس ٹاپک پر ایک جواب پوسٹ کیا۔"
           "2_2": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس ٹاپک کو ٹرَیک کر رہے ہیں۔"
-          "2": 'آپ کو نئے جوابات کی گنتی نظر آئے گی کیونکہ آپ <a href="%{basePath}/u/%{username}/preferences/notifications">کو یہ موضوع</a> پڑھتے ہیں۔'
+          "2": 'آپ کو نئے جوابات کی گنتی نظر آئے گی کیونکہ آپ نے<a href="%{basePath}/u/%{username}/preferences/notifications">یہ موضوع</a> پڑھا۔'
           "1_2": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "1": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "0_7": "آپ اِس زمرہ میں تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
@@ -4470,7 +4470,7 @@ ur:
         replies: "جوابات"
         replies_with_count: "جوابات (%{count})"
       new_new:
-        help: "بنائے اور جواب دیے گئے پچھلے کچھ دنوں میں موضوعات"
+        help: "پچھلے کچھ دنوں میں بنائے اور جواب دیے گئے موضوعات"
       posted:
         title: "میری لڑیاں"
         help: "ٹاپک جن میں آپ نے پوسٹ کیا ہے"
@@ -4545,7 +4545,7 @@ ur:
         bookmarks: "%{shortcut} بک مارکس"
         profile: "%{shortcut} پروفائل"
         messages: "%{shortcut} پیغامات"
-        drafts: "%{shortcut} ڈرافٹس"
+        drafts: "%{shortcut} مسودات"
         next: "%{shortcut} اگلا موضوع"
         previous: "%{shortcut} پچھلا موضوع"
       navigation:
@@ -5491,7 +5491,7 @@ ur:
           header_description: "تھیمز اور اجزاء کے ساتھ اپنی ڈسکورس سائٹ کو اپنی ضروریات کے مطابق بنائیں"
           keywords: "تھیم|جزو|توسیع|تصرفات"
         site_admin:
-          title: "سائٹ ایڈمن"
+          title: "سائٹ منتظم"
           header_description: "اپنی سائٹ کے انتظام سے متعلق مختلف ترتیبات کا تعین کریں"
           keywords: "دریافت کریں | بوٹسٹریپ | ایپس"
         site_texts:
@@ -5607,7 +5607,7 @@ ur:
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
         moderators: "نگران:"
-        admins: "ایڈمن:"
+        admins: "منتظمین:"
         silenced: "خاموش:"
         suspended: "معطل کردہ:"
         private_messages_short: "پغم"
@@ -5718,7 +5718,7 @@ ur:
               members: "گروپ کے مالکان، ممبران اورنگران"
               staff: "گروپ کے مالکان اور نگران"
               owners: "گروپ مالکان"
-              description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
+              description: "منتظمین تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
               title: "اس گروپ کے اراکین کو کون دیکھ سکتا ہے؟"
               description: "منتظمین تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔ صلاحیتی پہچان تمام صارفین کو نظر آتی ہے۔"
@@ -5930,7 +5930,7 @@ ur:
       community:
         title: "کمیونٹی"
         sidebar_link:
-          badges: "بَیج"
+          badges: "تمغات"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
           users: "صارفین"
@@ -6500,8 +6500,8 @@ ur:
             unsuspend_user: "صارف کی معطلی ختم کریں"
             removed_suspend_user: "صارف معطل (ہٹا دیا)"
             removed_unsuspend_user: "صارف غیر معطل (ہٹا دیا)"
-            grant_badge: "بَیج دیں"
-            revoke_badge: "بَیج منسوخ کریں"
+            grant_badge: "تمغہ دیں"
+            revoke_badge: "تمغہ منسوخ کریں"
             check_email: "اِیمیل چیک کریں"
             delete_topic: "موضوع حذف کریں"
             recover_topic: "ٹاپک غیر حذف کریں"
@@ -6519,7 +6519,7 @@ ur:
             grant_admin: "اَیڈمِن عطا کریں"
             revoke_admin: "اَیڈمِن منسوخ کریں"
             grant_moderation: "ماڈرَیشَن عطا کریں"
-            revoke_moderation: "ماڈرَیشَن منسوخ کریں"
+            revoke_moderation: "نگرانی منسوخ کریں"
             backup_create: "بیک اَپ بنائیں"
             deleted_tag: "مٹایا گیا ٹیگ"
             deleted_unused_tags: "حذف کردہ غیر استعمال شدہ ٹیگز"
@@ -6542,9 +6542,9 @@ ur:
             topic_published: "ٹاپک شائع کر دیا گیا"
             post_approved: "منظورشدہ پوسٹ"
             post_rejected: "مسترد کردہ پوسٹ"
-            create_badge: "تخلیق کردہ بَیج"
-            change_badge: "تبدیل کردہ بَیج"
-            delete_badge: "حذف کردہ بَیج"
+            create_badge: "تمغہ بنائیں"
+            change_badge: "تمغہ بدلیں"
+            delete_badge: "تمغہ مٹائیں"
             merge_user: "ضم صارف"
             entity_export: "چیز برآمد"
             change_name: "نام تبدیل"
@@ -6693,10 +6693,10 @@ ur:
       users:
         title: "صارفین"
         create: "ایڈمِن صارف شامل کریں"
-        last_emailed: "جِسے آخری دفع اِی میل کی گئی"
+        last_emailed: "آخری ای میل"
         not_found: "معذرت، وہ صارف نام ہمارے سِسٹم میں موجود نہیں ہے۔"
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
-        active: "فعال کردہ"
+        active: "فعال"
         status: "سٹیٹس"
         bulk_actions:
           delete:
@@ -6706,12 +6706,14 @@ ur:
         nav:
           new: "نیا"
           active: "فعال"
-          staff: "سٹاف"
+          staff: "عملہ"
           suspended: "معطل کردہ"
-          silenced: "خاموش کیو ہوئے"
+          silenced: "خاموش"
           staged: "سٹَیجڈ"
         approved: "منظورشدہ؟"
         titles:
+          active: "فعال صارفین"
+          new: "نئے صارفین"
           pending: "صارفین زیرِ ریویو"
           newuser: "اعتماد کی سطح 0 پہ صارفین (نئے صارف)"
           basic: "اعتماد کی سطح 1 پہ صارفین (بنیادی صارف)"
@@ -6771,11 +6773,11 @@ ur:
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"
-        moderator: "ماڈریٹر؟"
-        admin: "ایڈمن؟"
+        moderator: "نگران؟"
+        admin: "منتظم؟"
         suspended: "معطل کردہ؟"
         staged: "سٹَیجڈ؟"
-        show_admin_profile: "ایڈمن"
+        show_admin_profile: "منتظم"
         show_public_profile: "پبلک پروفائل دکھائیں"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
@@ -6785,7 +6787,7 @@ ur:
         grant_admin: "اَیڈمِن عطا کریں"
         grant_admin_success: "نئے منتظم کی تصدیق ہوئی۔"
         grant_admin_confirm: "نئے ایڈمِنِسٹریٹر کی توثیق کیلئے ہم نے آپ کو ایک ای میل بھیجی ہے۔ براہ مہربانی اسے کھولیں اور ہدایات پر عمل کریں۔"
-        revoke_moderation: "ماڈرَیشَن منسوخ کریں"
+        revoke_moderation: "نگرانی منسوخ کریں"
         grant_moderation: "ماڈرَیشَن عطا کریں"
         unsuspend: "معطلی ختم کریں"
         suspend: "معطل کریں"
@@ -6798,10 +6800,10 @@ ur:
         like_count: لائیکس دیے / ملے
         last_100_days: "پچھلے 100 دنوں میں"
         private_topics_count: ذاتی پیغامات
-        posts_read_count: پڑھی گئیں پوسٹس
+        posts_read_count: لڑیاں پڑھیں
         post_count: بنائی گئیں پوسٹس
         second_factor_enabled: دو عنصری توثیق فعال ہے
-        topics_entered: دیکھ لیے گئے ٹاپک
+        topics_entered: موضوعات دیکھے
         flags_given_count: فلَیگز دیے گئے
         flags_received_count: فلَیگز ملے
         warnings_received_count: انتباہات ملیں
@@ -6812,7 +6814,7 @@ ur:
         approved_by: "کی طرف سے منظور کیا گیا"
         approve_success: "صارف منظور کر لیا گیا اور ایکٹیویشن ہدایات کے ساتھ اِیمیل بھیج دی گئی۔"
         approve_bulk_success: "کامیابی! تمام منتخب صارفین کو منظوری دے دی اور مطلع کر دیا گیا ہے۔"
-        time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+        time_read: "پڑھنے کا وقت"
         post_edits_count: "پوسٹ ترامیم"
         anonymize: "صارف گمنام بنائیں"
         disable_second_factor_confirm: "کیا آپ واقعی اس اکاؤنٹ کے لیے دو عنصری توثیق کو غیر فعال کرنا چاہتے ہیں؟"
@@ -6841,7 +6843,7 @@ ur:
             description: |
               <p>براہ کرم <b>@%{username}کے</b> مواد کے لیے ایک نیا مالک منتخب کریں۔</p>
 
-              <p> <b>@%{username}</b> کے ذریعہ بنائے گئے تمام موضوعات، پوسٹس، پیغامات اور دیگر مواد کو منتقل کر دیا جائے گا۔</p>
+              <p> <b>@%{username}</b> کے بنائے گئے تمام موضوعات، لڑیاں، پیغامات اور دیگر مواد کو منتقل کر دیا جائے گا۔</p>
             target_username_placeholder: "نئے مالک کا صارف نام"
             transfer_and_delete: "منتقلی اور حذف کریں @%{username}"
             cancel: "منسوخ"
@@ -6886,8 +6888,8 @@ ur:
         bounce_score: "بائونس سکور"
         reset_bounce_score:
           label: "رِی سَیٹ"
-          title: "بائونس سکور واپس 0 پر رِی سَیٹ کریں"
-        visit_profile: "اِس صارف کے پروفائل میں ترمیم کرنے کیلئے <a href='%{url}'>اِس کے ترجیحات پَیج</a> پر جائیں"
+          title: "باؤنس سکور کو واپس 0 پر سیٹ کریں"
+        visit_profile: "اِس صارف کi پروفائل میں ترمیم کرنے کے لیے اس کی<a href='%{url}'> ترجیحات کے صفحہ</a> پر جائیں"
         deactivate_explanation: "ایک غیر فعال صارف کو اپنا اِیمیل دوبارہ تصدیق کرنا ضروری ہے۔"
         suspended_explanation: "کوئی معطل صارف لاگ اِن نہیں کر سکتا۔"
         silence_explanation: "ایک خاموش کیا ہوا صارف پوسٹ شائع یا ٹاپک شروع نہیں کر سکتا۔"
@@ -6905,13 +6907,13 @@ ur:
         trust_level_unlocked_tip: "اعتماد کی سطح غیر مقفل ہے، سسٹم صارف کو فروغ یا تنزلی کر سکتا ہے۔"
         lock_trust_level: "اعتماد کی سطح بند"
         unlock_trust_level: "اعتماد کی سطح کھولیں"
-        silenced_count: "خاموش کیو ہوئے"
+        silenced_count: "خاموش"
         suspended_count: "معطل کردہ"
         last_six_months: "گزشتہ 6 ماہ"
         other_matches_list:
           username: "صارف نام"
           trust_level: "اعتماد کی سطح"
-          read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+          read_time: "پڑھنے کا وقت"
           topics_entered: "درج کردہ موضوعات"
           posts: "پوسٹس"
         tl3_requirements:
@@ -6923,10 +6925,10 @@ ur:
           requirement_heading: "ضروریات"
           days: "دن"
           topics_replied_to: "موضوعات کا جواب دیا"
-          topics_viewed: "دیکھے گئے موضوعات"
+          topics_viewed: "موضوعات دیکھے"
           topics_viewed_all_time: "دیکھ لیے گئے ٹاپک (تمام وقت)"
-          posts_read: "پڑھی گئیں پوسٹس"
-          posts_read_all_time: "پڑھی گئیں پوسٹس (تمام وقت)"
+          posts_read: "لڑیاں پڑھیں"
+          posts_read_all_time: "لڑیاں پڑھیں (تمام وقت)"
           flagged_posts: "نشان زدہ پوسٹ"
           flagged_by_users: "نشان زدہ کرنے والے صارفین"
           likes_given: "لائیکس دیے گئے"
@@ -7068,39 +7070,39 @@ ur:
             prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام صارفین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
       badges:
         status: سٹیٹس
-        title: بَیج
+        title: تمغات
         page_description: تمغات صارفین کو ان کی سرگرمیوں، شراکتوں اور کامیابیوں کے لیے انعام دیتے ہیں تاکہ کمیونٹی کے اندر مثبت رویے اور مشغولیت کی شناخت، توثیق اور حوصلہ افزائی کی جا سکے۔
-        new_badge: نیا بَیج
+        new_badge: نیا تمغہ
         new: نیا
         name: نام
-        badge: بَیج
+        badge: تمغہ
         display_name: ڈِسپلے نام
         description: تفصیل
         badge_type: تمغہ کی قسم
         badge_grouping: گروپ
         badge_groupings:
-          modal_title: بَیجوں کے گروپ
+          modal_title: تمغات کے گروپ
         granted_by: کی طرف سے عطا کیا گیا
         granted_at: جس وقت پر عطا کیا گیا
         reason_help: (کسی پوسٹ یا ٹاپک کا ایک لنک)
         save: محفوظ کریں
         delete: حذف کریں
-        delete_confirm: کیا آپ واقعی اِس بَیج کو حذف کرنا چاہتے ہیں؟
+        delete_confirm: کیا آپ واقعی اس تمغہ کو حذف کرنا چاہتے ہیں؟
         revoke: منسوخ کریں
         reason: وجہ
         expand: کھولیں &hellip;
-        revoke_confirm: کیا آپ واقعی اُس بَیج کو منسوخ کرنا چاہتے ہیں؟
-        edit_badges: بَیجوں میں ترمیم کریں
-        grant_badge: بَیج دیں
-        granted_badges: دیے گئے بَیجز
+        revoke_confirm: کیا آپ واقعی اس تمغہ کو منسوخ کرنا چاہتے ہیں؟
+        edit_badges: تمغوں میں ترمیم کریں
+        grant_badge: تمغہ دیں
+        granted_badges: دیے گئے تمغے
         grant: عطا کریں
-        no_user_badges: "%{name} کو کوئی بَیج عطا نہیں کیا گیا ہے۔"
-        no_badges: عطا کیے جانے کیلئے کوئی بَیج موجود نہیں ہیں۔
-        none_selected: "شروع کرنے کے لئے ایک بَیج منتخب کریں"
-        allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
+        no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
+        no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
+        none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری
-        listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
+        listable: عوامی تمغوں کے صفحہ پر تمغہ دکھائیں
         show_in_post_header: جس پوسٹ کے لیے اسے دیا گیا تھا اس پر تمغہ دکھائیں۔
         show_in_post_header_disabled: '''عوامی تمغات کے صفحہ پر تمغہ دکھائیں'' اور ''تمغہ کے صفحہ پر تمغہ دینے والی لڑی دکھائیں'' دونوں کو فعال کرنے کی ضرورت ہے۔'
         disabled: غیر فعال
@@ -7112,10 +7114,10 @@ ur:
         select_an_icon: "ایک آئکن منتخب کریں"
         upload_an_image: "تصویر اپ لوڈ کریں"
         read_only_setting_help: "متن میں ترمیم"
-        query: بَیج قُوَیری (SQL)
+        query: تمغہ کا استفسار (SQL)
         target_posts: ھدف پوسٹس کو قُوَیری کریں
         auto_revoke: روزانہ رَیوَوکَیشَن قُوَیری چلائیں
-        show_posts: بَیج صفحے پر بَیج دینے والی پوسٹ دکھائیں
+        show_posts: تمغوں کے صفحے پر تمغہ دینے والی لڑی دکھائیں
         trigger: محرکات
         trigger_type:
           none: "روزانہ اَپ ڈَیٹ کریں"
@@ -7124,18 +7126,18 @@ ur:
           trust_level_change: "جب صارف اعتماد کی سطح کو تبدیل کرتا ہے"
           user_change: "جب ایک صارف ترمیم یا تخلیق کیا جاتا ہے۔"
         preview:
-          link_text: "دیے گئے بَیجز کا مشاہدہ کریں"
+          link_text: "دیے گئے تمغوں کا مشاہدہ کریں"
           plan_text: "قُوَیری پلان کا ساتھ مشاہدہ کریں"
-          modal_title: "بَیج قُوَیری کا مشاہدہ کریں"
+          modal_title: "تمغہ کے سوال کا پیش نظارہ"
           sql_error_header: "قُوَیری کے ساتھ ایک خرابی کا سامنا کرنا پڑا۔"
-          error_help: "بَیج قُوَیریوں کے ساتھ مدد کیلئے مندرجہ ذیل لنکس ملاحظہ کریں۔"
+          error_help: "تمغوں کے سوالات میں مدد کے لیے درج ذیل رابطے دیکھیں۔"
           bad_count_warning:
             header: "انتباہ!"
-            text: "کچھ گرانٹ سامپل لاپتہ ہیں۔ یہ اُس وقت ہوتا ہے جب بَیج قُوَیری وہ صارف IDs یا پوسٹ IDs واپس بھیجتا ہے جو موجود نہیں ہوتیں۔ یہ بعد میں غیر متوقع نتائج کا سبب بن سکتا ہے - آپ اپنی قُوَیری کو دوبارہ چیک کرلیں۔"
-          no_grant_count: "کوئی بَیج تفویض کرنے کیلئے موجود نہیں۔"
+            text: "گرانٹ کے نمونے غائب ہیں۔ ایسا تب ہوتا ہے جب تمغہ کا استفسار صارف IDs یا پوسٹ IDs کو لوٹاتا ہے جو موجود نہیں ہیں۔ یہ بعد میں غیر متوقع نتائج کا سبب بن سکتا ہے - براہ کرم اپنے استفسار کو دوبارہ چیک کریں۔"
+          no_grant_count: "تفویض کرنے کے لیے کوئی تمغے موجود نہیں۔"
           grant_count:
-            one: "تفویض کرنے کیلئے <b>%{count}</b> بَیج موجود ہے۔"
-            other: "تفویض کرنے کیلئے <b>%{count}</b> بَیج موجود ہیں۔"
+            one: "تفویض کرنے کیلئے <b>%{count}</b> تمغہ موجود ہے۔"
+            other: "تفویض کرنے کیلئے <b>%{count}</b> تمغے موجود ہیں۔"
           sample: "نمونہ:"
           grant:
             with: <span class="username">%{username}</span>
@@ -7236,7 +7238,7 @@ ur:
         add_user: "شامل کریں"
         none_added: "آپ نے کسی بھی سٹاف کو مدعو نہیں کیا۔ کیا آپ واقعی آگے جانا چاہتے ہیں؟"
         roles:
-          admin: "ایڈمن"
+          admin: "منتظم"
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       homepage_choices:

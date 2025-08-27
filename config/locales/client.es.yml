@@ -5169,7 +5169,7 @@ es:
           top: "Temas destacados en %{category}"
           new: "Temas nuevos en %{category}"
           unread: "Temas sin leer en %{category}"
-          unseen: "Temas sin leer en %{category}"
+          unseen: "Temas sin ver en %{category}"
           hot: "Temas candentes en %{category}"
           posted: "Temas en %{category} en los que has publicado"
           bookmarks: "Temas en %{category} que has añadido a marcadores"
@@ -5202,7 +5202,7 @@ es:
             top: "Temas destacados sin etiquetas"
             new: "Temas nuevos sin etiquetas"
             unread: "Temas sin leer sin etiquetas"
-            unseen: "Temas sin leer sin etiquetas"
+            unseen: "Temas sin ver sin etiquetas"
             hot: "Temas candentes sin etiquetas"
             posted: "Temas sin etiquetas en los que has publicado"
             bookmarks: "Temas sin etiquetas que has añadido a marcadores"
@@ -5478,7 +5478,7 @@ es:
           title: "Emoji"
           header_description: "Añade nuevos emojis que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
         themes:
-          title: "Tema"
+          title: "Temas"
           header_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end"
         components:
           title: "Componentes"
@@ -5561,7 +5561,7 @@ es:
           keywords: "token|ámbito"
         webhooks:
           title: "Webhooks"
-          header_description: "Los webhooks permiten a Discourse notificar a servicios externos cuando suceden ciertos eventos en tu sitio. Cuando se active el webhook, se enviará una petición POST a las URL proporcionadas."
+          header_description: "Los webhooks permiten a Discourse notificar a servicios externos cuando suceden ciertos eventos en tu sitio. Cuando se active el webhook, se enviará una solicitud POST a las URL proporcionadas."
           keywords: "evento|carga|url"
         embedding:
           title: "Incrustado"
@@ -6251,7 +6251,7 @@ es:
           breadcrumb_title: "Personalizar"
           install: "Instalar"
           themes:
-            title: "Tema"
+            title: "Temas"
             description: 'Temas para todo el sitio que cambian la apariencia general de tu sitio para todos los usuarios. ¿Quieres comprobar qué ajustes del sitio anulan tus temas? <a href="%{themeSiteSettingsUrl}">Ver la configuración del tema del sitio</a>'
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
