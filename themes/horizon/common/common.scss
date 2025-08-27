@@ -19,3 +19,7 @@
 @import "topic";
 @import "topic-cards";
 @import "variables";
+
+:root {
+  --d-nav-pill-border-radius: 0;
+}

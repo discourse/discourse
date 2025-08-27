@@ -15,3 +15,17 @@
     }
   }
 }
+
+.b-header {
+  .nav-pills > li > a:hover {
+    .discourse-no-touch & {
+      color: var(--secondary);
+    }
+  }
+
+  .nav-pills > li > a:hover::after {
+    .discourse-no-touch & {
+      background: var(--secondary);
+    }
+  }
+}
