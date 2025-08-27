@@ -1,0 +1,17 @@
+@use "lib/viewport";
+
+.custom-homepage-columns {
+  .header-wrapper {
+    @include viewport.from(lg) {
+      margin-bottom: 1.25em;
+    }
+  }
+
+  .topic-list .topic-list-item {
+    height: auto;
+
+    &:nth-child(odd) {
+      background: var(--topic-list-item-background-color);
+    }
+  }
+}
