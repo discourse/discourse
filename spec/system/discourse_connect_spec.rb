@@ -150,11 +150,12 @@ describe "Discourse Connect", type: :system do
       SiteSetting.enable_discourse_connect_provider = true
       SiteSetting.discourse_connect_provider_secrets = "localhost|Test"
       SiteSetting.enable_discourse_connect = false
+
       Jobs.run_immediately!
     end
 
     it "redirects back to the return_sso_url after successful login" do
-      return_url = "http://localhost:4000/test/url"
+      return_url = "http://localhost:#{sso_port}/test/url"
       sso, sig = build_sso_payload(return_url)
       EmailToken.confirm(Fabricate(:email_token, user: user_1).token)
 
