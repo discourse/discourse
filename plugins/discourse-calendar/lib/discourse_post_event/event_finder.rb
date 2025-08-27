@@ -84,14 +84,13 @@ module DiscoursePostEvent
     end
 
     def self.filter_by_dates(events, params)
-      return events if params[:before].blank? && params[:after].blank? && params[:end_date].blank?
+      return events if params[:before].blank? && params[:after].blank?
 
       before_date = params[:before]&.to_datetime
       after_date = params[:after]&.to_datetime
-      end_date = params[:end_date]&.to_datetime
 
-      recurring_scope = build_recurring_date_scope(after_date, before_date, end_date)
-      non_recurring_scope = build_non_recurring_date_scope(after_date, before_date, end_date)
+      recurring_scope = build_recurring_date_scope(after_date, before_date)
+      non_recurring_scope = build_non_recurring_date_scope(after_date, before_date)
 
       # Apply the combined scope using OR logic
       events.merge(recurring_scope.or(non_recurring_scope))
@@ -99,7 +98,7 @@ module DiscoursePostEvent
 
     private
 
-    def self.build_recurring_date_scope(after_date, before_date, end_date)
+    def self.build_recurring_date_scope(after_date, before_date)
       scope = DiscoursePostEvent::Event.where.not(recurrence: nil)
 
       if after_date
@@ -117,19 +116,13 @@ module DiscoursePostEvent
         scope = scope.where("original_starts_at < ?", before_date)
       end
 
-      if end_date
-        # For recurring events: start date should be before or equal to end_date
-        scope = scope.where("original_starts_at <= ?", end_date)
-      end
-
       scope
     end
 
-    def self.build_non_recurring_date_scope(after_date, before_date, end_date)
+    def self.build_non_recurring_date_scope(after_date, before_date)
       scope = DiscoursePostEvent::Event.where(recurrence: nil)
       scope = scope.where("latest_event_dates.starts_at >= ?", after_date) if after_date
       scope = scope.where("latest_event_dates.starts_at < ?", before_date) if before_date
-      scope = scope.where("latest_event_dates.starts_at <= ?", end_date) if end_date
       scope
     end
 
