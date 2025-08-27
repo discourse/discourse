@@ -15,8 +15,7 @@ export default class DeprecationCounter {
   }
 
   shouldCount(id) {
-    const isSilenced = isDeprecationSilenced(id);
-    return !isSilenced && DeprecationWorkflow.shouldCount(id);
+    return !isDeprecationSilenced(id) && DeprecationWorkflow.shouldCount(id);
   }
 
   @bind
