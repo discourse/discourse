@@ -18,7 +18,7 @@ export default RouteTemplate(
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
-          @path="/admin/customize/colors"
+          @path="/admin/config/colors"
           @label={{i18n "admin.config.color_palettes.title"}}
         />
       </:breadcrumbs>

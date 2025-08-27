@@ -233,7 +233,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_color_palettes",
-        route: "adminCustomize.colors",
+        route: "adminConfig.colorPalettes",
         label: "admin.config.color_palettes.title",
         description: "admin.config.color_palettes.header_description",
         icon: "palette",

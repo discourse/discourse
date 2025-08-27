@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -177,8 +179,6 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
     });
     await copy.save();
-    await this.router.replaceWith("adminConfig.colorPalettes");
-    await this.router.refresh();
     await this.router.replaceWith("adminConfig.colorPalettes.show", copy);
     this.toasts.success({
       data: {
@@ -196,7 +196,6 @@ export default class AdminConfigAreasColorPalette extends Component {
       didConfirm: async () => {
         await this.args.colorPalette.destroy();
         await this.router.replaceWith("adminConfig.colorPalettes");
-        await this.router.refresh();
       },
     });
   }
@@ -250,14 +249,20 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   <template>
-    <Form
-      data-palette-id={{@colorPalette.id}}
-      @data={{this.data}}
-      @onSubmit={{this.handleSubmit}}
-      @onRegisterApi={{this.onRegisterApi}}
-      as |form transientData|
-    >
-      <div>
+    <div class="admin-config-area__primary-content">
+      <div class="admin-config-color-palettes__back">
+        <LinkTo @route="adminConfig.colorPalettes">
+          {{icon "angle-left"}}
+          {{i18n "admin.customize.colors.back_to_colors"}}
+        </LinkTo>
+      </div>
+      <Form
+        data-palette-id={{@colorPalette.id}}
+        @data={{this.data}}
+        @onSubmit={{this.handleSubmit}}
+        @onRegisterApi={{this.onRegisterApi}}
+        as |form transientData|
+      >
         <div class="admin-config-color-palettes__top-controls">
           {{#if this.editingName}}
             <form.Field
@@ -409,7 +414,7 @@ export default class AdminConfigAreasColorPalette extends Component {
             </:content>
           </AdminConfigAreaCard>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </div>
   </template>
 }

@@ -54,12 +54,13 @@
     &__top-controls {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 1em;
+      width: 100%;
     }
 
     &__sections {
       display: flex;
       flex-direction: column;
+      width: 100%;
       gap: var(--space-4);
     }
 
