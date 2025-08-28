@@ -124,18 +124,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get overridden() {
-    if (
-      this.setting.json_schema ||
-      this.setting.schema ||
-      this.setting.objects_schema
-    ) {
-      return !deepEqual(this.setting.default, this.buffered.get("value"));
-    } else {
-      return (
-        this.setting.default?.toString() !==
-        this.buffered.get("value")?.toString()
-      );
-    }
+    return !this.#valuesEqual(this.setting.default, this.buffered.get("value"));
   }
 
   get displayDescription() {
@@ -154,16 +143,7 @@ export default class SiteSettingComponent extends Component {
       settingVal = "";
     }
 
-    let dirty;
-    if (
-      this.setting.json_schema ||
-      this.setting.schema ||
-      this.setting.objects_schema
-    ) {
-      dirty = !deepEqual(bufferVal, settingVal);
-    } else {
-      dirty = bufferVal.toString() !== settingVal.toString();
-    }
+    const dirty = !this.#valuesEqual(bufferVal, settingVal);
 
     if (dirty) {
       this.siteSettingChangeTracker.add(this.setting);
@@ -388,6 +368,18 @@ export default class SiteSettingComponent extends Component {
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
       updateExistingUsers: this.setting.updateExistingUsers,
     });
+  }
+
+  #valuesEqual(a, b) {
+    if (
+      this.setting.json_schema ||
+      this.setting.schema ||
+      this.setting.objects_schema
+    ) {
+      return deepEqual(a, b);
+    } else {
+      return a?.toString() === b?.toString();
+    }
   }
 
   <template>
