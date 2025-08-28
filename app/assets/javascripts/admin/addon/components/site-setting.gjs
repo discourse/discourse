@@ -124,7 +124,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get overridden() {
-    return this.setting.default !== this.buffered.get("value");
+    return !this.#valuesEqual(this.setting.default, this.buffered.get("value"));
   }
 
   get displayDescription() {
@@ -143,7 +143,7 @@ export default class SiteSettingComponent extends Component {
       settingVal = "";
     }
 
-    const dirty = !deepEqual(bufferVal, settingVal);
+    const dirty = !this.#valuesEqual(bufferVal, settingVal);
 
     if (dirty) {
       this.siteSettingChangeTracker.add(this.setting);
@@ -368,6 +368,18 @@ export default class SiteSettingComponent extends Component {
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
       updateExistingUsers: this.setting.updateExistingUsers,
     });
+  }
+
+  #valuesEqual(a, b) {
+    if (
+      this.setting.json_schema ||
+      this.setting.schema ||
+      this.setting.objects_schema
+    ) {
+      return deepEqual(a, b);
+    } else {
+      return a?.toString() === b?.toString();
+    }
   }
 
   <template>

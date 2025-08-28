@@ -313,6 +313,49 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
     assert.dom(".desc.site-setting").doesNotExist();
   });
+
+  test("doesn't display the save/cancel buttons when the selected value is returned to the current value", async function (assert) {
+    const setting = SiteSetting.create({
+      setting: "some_enum",
+      value: "2",
+      default: "1",
+      type: "enum",
+      valid_values: [
+        { name: "Option 1", value: 1 },
+        { name: "Option 2", value: 2 },
+      ],
+    });
+
+    await render(
+      <template><SiteSettingComponent @setting={{setting}} /></template>
+    );
+
+    const selector = selectKit(".select-kit");
+
+    await selector.expand();
+    await selector.selectRowByValue("1");
+
+    assert
+      .dom(".setting-controls__ok")
+      .exists("the save button is shown after changing the value");
+    assert
+      .dom(".setting-controls__cancel")
+      .exists("the cancel button is shown after changing the value");
+
+    await selector.expand();
+    await selector.selectRowByValue("2");
+
+    assert
+      .dom(".setting-controls__ok")
+      .doesNotExist(
+        "the save button is not shown after changing the value back to the original"
+      );
+    assert
+      .dom(".setting-controls__cancel")
+      .doesNotExist(
+        "the cancel button is not shown after changing the value back to the original"
+      );
+  });
 });
 
 module(
