@@ -2,9 +2,9 @@ export function rovingButtonBar(event, containerClass = null) {
   let target = event.target;
   let siblingFinder;
 
-  if (event.code === "ArrowRight") {
+  if (event.code === "ArrowRight" || event.keyCode === 39) {
     siblingFinder = "nextElementSibling";
-  } else if (event.code === "ArrowLeft") {
+  } else if (event.code === "ArrowLeft" || event.keyCode === 37) {
     siblingFinder = "previousElementSibling";
   } else {
     return false;
@@ -38,9 +38,16 @@ export function rovingButtonBar(event, containerClass = null) {
 }
 
 function isActionable(element) {
+  if (!element) {
+    return false;
+  }
+
   return (
     element.disabled !== true &&
-    (element.tagName === "BUTTON" || element.tagName === "A") &&
+    (element.tagName === "BUTTON" ||
+      element.tagName === "A" ||
+      element.getAttribute("role") === "switch" ||
+      element.getAttribute("role") === "button") &&
     !element.classList.contains("select-kit") &&
     !element.classList.contains("hidden")
   );

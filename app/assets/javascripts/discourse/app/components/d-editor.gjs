@@ -773,8 +773,8 @@ export default class DEditor extends Component {
                   @preventFocus={{true}}
                   @disabled={{@disableSubmit}}
                   @state={{this.isRichEditorEnabled}}
+                  @onKeydown={{this.rovingButtonBar}}
                   {{on "click" this.toggleRichEditor}}
-                  {{on "keydown" this.rovingButtonBar}}
                 />
               {{/if}}
 
