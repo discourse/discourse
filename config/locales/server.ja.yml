@@ -2406,7 +2406,6 @@ ja:
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
     content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
     content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"
-    content_localization_anon_language_switcher: "ログインしていないサイト訪問者が Discourse の翻訳バージョンとユーザー貢献コンテンツを切り替えられる言語切り替え機能を有効にする。'content localization supported locales' に定義された言語リストに依存します"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"
@@ -2475,7 +2474,6 @@ ja:
       invalid_uncategorized_category_setting: '「未分類トピックを許可」が有効でない場合、「未分類」カテゴリを選択できません。'
       invalid_search_ranking_weights: "search_ranking_weights サイト設定の値が無効です。例: '{0.1,0.2,0.3,1.0}'。各重みの最大値は 1.0 であることに注意してください。"
       content_localization_locale_limit: "サポートされているロケールの数は %{max} 以下である必要があります。"
-      content_localization_anon_language_switcher_requirements: "言語切り替え機能には、`set locale from cookie` サイト設定が有効であり、`content localization supported locales` に少なくとも 1 つの言語が含まれている必要があります。"
       mediaconvert_role_arn_required: "AWS MediaConvert を使って動画変換を行う場合、AWS IAM ロールの ARN が必要です。"
       s3_credentials_required_for_video_conversion: "動画変換には S3 資格情報が必要です。S3 アクセスキーを構成するか、IAM プロファイルを有効にしてください。"
     keywords:

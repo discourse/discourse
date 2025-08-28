@@ -2482,7 +2482,6 @@ fr:
     content_localization_enabled: "Affiche le contenu localisé pour les utilisateurs en fonction de leur navigateur ou de leurs préférences linguistiques. Ce contenu peut inclure des catégories, des étiquettes, des publications et des sujets. Les paramètres régionaux pris en charge sont définis dans « Paramètres régionaux pris en charge pour la localisation du contenu »."
     content_localization_supported_locales: "Liste des langues prises en charge dans lesquelles le contenu utilisateur peut être traduit. Nécessite que « la localisation du contenu soit activée »."
     content_localization_allowed_groups: "Groupes autorisés à mettre à jour le contenu localisé. Nécessite que « la localisation du contenu soit activée »."
-    content_localization_anon_language_switcher: "Activez le sélecteur de langue qui permet aux visiteurs du site qui ne sont pas connectés de basculer entre les versions traduites de Discourse et le contenu fourni par les utilisateurs. Dépend de la liste des langues définie dans « Localisations locales prises en charge par la localisation de contenu »"
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
       invalid_email: "Adresse e-mail invalide."
@@ -2554,7 +2553,6 @@ fr:
       invalid_uncategorized_category_setting: 'La catégorie « Sans catégorie » ne peut pas être sélectionnée si « Autoriser les sujets sans catégorie » n''est pas activé.'
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
       content_localization_locale_limit: "Le nombre de paramètres régionaux pris en charge ne peut pas dépasser %{max}."
-      content_localization_anon_language_switcher_requirements: "Le sélecteur de langue nécessite que le paramètre de site « définir les paramètres régionaux à partir du cookie » soit activé, et que les « paramètres régionaux pris en charge par la localisation du contenu » aient au moins une langue."
       mediaconvert_role_arn_required: "Le rôle ARN IAM AWS est requis lors de l'utilisation d'AWS MediaConvert pour la conversion vidéo."
       s3_credentials_required_for_video_conversion: "Les identifiants S3 sont requis pour la conversion vidéo. Veuillez configurer les clés d'accès S3 ou activer le profil IAM."
     keywords:

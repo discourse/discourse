@@ -243,7 +243,7 @@ ja:
           proofread: テキストの校正
           title_suggestions: "タイトルの提案"
           explain: "説明"
-          illustrate_post: "投稿のイラスト作成"
+          illustrate_post: "イラスト投稿"
           smart_dates: "スマート日付"
           translate: "翻訳"
           markdown_tables: "Markdown テーブルの生成"
@@ -301,7 +301,7 @@ ja:
         enable: "有効化"
         spam_tip: "AI 迷惑検出機能は、公開トピックのすべての新規ユーザーによる最初の 3 件の投稿をスキャンします。レビューを行うために通報し、迷惑の可能性がある場合はユーザーをブロックします。"
         settings_saved: "設定が保存されました"
-        spam_description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで検査できるように通報します"
+        spam_description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
         no_llms: "使用できる LLM はありません"
         test_button: "テスト..."
         save_button: "変更を保存"

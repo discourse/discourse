@@ -807,6 +807,7 @@ da:
       new_topic_label: "Nyt emne"
       posted_in: "Skrevet i"
       review_user: "Bruger"
+      need_help: "Brug for hjælp?"
       copy_link: "Kopiér link"
       view_source: "Vis kilde"
       insights:
@@ -1086,6 +1087,7 @@ da:
         group_type: "Gruppe type"
         is_group_user: "Bruger"
         is_group_owner: "Ejer"
+        search_results: "Søgeresultater vises nedenfor."
       title:
         one: "Gruppe"
         other: "grupper"
@@ -1163,6 +1165,9 @@ da:
         image: "Overfør et billede"
       default_notifications:
         modal_title: "Bruger standard notifikationer"
+        modal_description:
+          one: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende bruger."
+          other: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
         modal_yes: "Ja"
         modal_no: "Nej, anvend kun ændringer fremadrettet"
     user_action_groups:
@@ -1245,6 +1250,7 @@ da:
     user_fields:
       none: "(vælg en indstilling)"
       required: 'Indtast venligst en værdi for "%{name}"'
+      required_select: 'Vælg venligst en værdi for "%{name}"'
       required_checkbox: 'Feltet "%{name}" er påkrævet'
       same_as_password: "Din adgangskode bør ikke gentages i andre felter"
       optional: (valgfri)
@@ -1256,7 +1262,11 @@ da:
       edit: "Redigér indstillinger"
       download_archive:
         title: "Eksporter dine data"
+        description: "Download et arkiv over din kontoaktivitet og præferencer."
         button_text: "Anmod om arkiv"
+        confirm: "Vil du virkelig downloade et arkiv over din kontoaktivitet og indstillinger?"
+        success: "Vi er begyndt at indsamle dit arkiv, du vil modtage en besked, når processen er færdig."
+        rate_limit_error: "Kontoarkiver kan downloades én gang om dagen, prøv venligst igen i morgen."
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -1275,13 +1285,16 @@ da:
         ignore_duration_time_frame_required: "Vælg en tidsramme"
         ignore_no_users: "Du har ingen ignorerede brugere."
         ignore_option: "Ignoreret"
+        ignore_option_title: "Du vil ikke modtage nogen notifikationer relateret til denne bruger og alt deres indhold vil blive skjult."
         add_ignored_user: "Tilføj…"
         mute_option: "Stille!"
+        mute_option_title: "Du vil ikke modtage nogen notifikationer, personlige beskeder eller direkte chatbeskeder fra denne bruger."
         normal_option: "Normal"
         normal_option_title: "Du vil blive underrettet, hvis denne bruger svarer dig, citerer dig eller nævner dig."
       notification_schedule:
         title: "Tidsplan for notifikation"
         label: "Aktiver brugerdefineret meddelelsesplan"
+        tip: "Uden for disse timer vil dine notifikationer blive sat på pause."
         midnight: "Midnat"
         none: "Ingen"
         monday: "Mandag"
@@ -1297,6 +1310,8 @@ da:
       read_help: "Nyligt læste emner"
       preferences:
         title: "Indstillinger"
+        profile:
+          enforced_required_fields: "Du er forpligtet til at give yderligere oplysninger, før du fortsætter med at bruge denne hjemmeside."
       feature_topic_on_profile:
         open_search: "Vælg et nyt emne"
         title: "Vælg et emne"
@@ -1335,6 +1350,7 @@ da:
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
       dismiss_bookmarks_tooltip: "Marker alle ulæste bogmærkepåmindelser som læst"
       dismiss_messages_tooltip: "Marker alle ulæste personlige beskedunderretninger som læst"
+      no_likes_title: "Du har ikke modtaget nogen \"Synes godt om\" endnu"
       no_messages_title: "Du har ingen meddelelser"
       no_messages_body: >
         Har du brug for at have en direkte personlig samtale med nogen, uden for det normale samtale flow? Send dem en besked ved at vælge deres avatar og bruge %{icon} meddelelsesknappen.<br><br> Hvis du har brug for hjælp, kan du <a href='%{aboutUrl}'>sende en besked til en medarbejder</a>.
@@ -2323,6 +2339,8 @@ da:
       ok_proceed: "Ok, fortsæt"
       translations:
         title: "Oversætter indlæg"
+        select: "Vælg oversættelse"
+        save: "Gem oversættelse"
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
         other: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} brugere. Ingen bliver underrettet."
@@ -2358,7 +2376,9 @@ da:
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
       title: "Eller tryk på %{modifier}Enter"
+      save_and_close: "Gem og luk"
       discard: "Kassér"
+      draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
@@ -2382,6 +2402,11 @@ da:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv skrift"
+      heading_title: "Overskrifter"
+      heading_level_n: "Overskrift %{levelNumber}"
+      heading_level_n_title: "Overskrift %{levelNumber}"
+      heading_level_paragraph: "Afsnit"
+      heading_level_paragraph_title: "Afsnit"
       link_title: "Link"
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
@@ -2598,6 +2623,7 @@ da:
       in_messages: "i beskeder"
       in_topics_posts: "i alle emner og indlæg"
       enter_hint: "eller tryk på Enter"
+      mobile_enter_hint: "eller tryk på Søg"
       in_posts_by: "i indlæg af %{username}"
       recent: "Seneste Søgninger"
       clear_recent: "Ryd Seneste Søgninger"
@@ -3606,6 +3632,7 @@ da:
         illegal: "Det er ulovligt"
       custom_placeholder_notify_user: "Vær præcis, vær kontruktiv og vær altid venlig."
       custom_placeholder_notify_moderators: "Lad os vide præcis hvad du er bekymret over og giv relevante links og eksempler hvor det er muligt."
+      notify_moderators_textarea_label: "Besked til moderatorerne"
       custom_message:
         at_least:
           one: "indtast mindst %{count} tegn"
@@ -3965,6 +3992,7 @@ da:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
       edit_tag: "Rediger mærke navn og beskrivelse"
+      description: "Beskrivelse (maks. 1000 tegn)"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -4086,6 +4114,8 @@ da:
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
     no_group_messages_title: "Ingen gruppemeddelelser fundet"
     topic_entrance:
+      sr_jump_top_button: "Gå til første indlæg - %{date}"
+      sr_jump_bottom_button: "Gå til sidste indlæg - %{date}"
       jump_top_button_title: "Hop til det første indlæg"
       jump_bottom_button_title: "Hop til det sidste indlæg"
     fullscreen_table:
@@ -4141,6 +4171,9 @@ da:
             label: "Sektionens titel"
             validation:
               blank: "Titlen må ikke være tom"
+              maximum:
+                one: "Titlen skal være kortere end %{count} tegn"
+                other: "Titlen skal være kortere end %{count} tegn"
         about:
           header_link_text: "Om"
         messages:
@@ -4158,20 +4191,25 @@ da:
           none: "Du har ikke tilføjet nogen mærker."
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Tags"
+          header_action_title: "Rediger dine sidepanel mærker"
           configure_defaults: "Konfigurer standardindstillinger"
         categories:
           none: "Du har ikke tilføjet nogen kategorier."
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Kategorier"
+          header_action_title: "Rediger dine sidepanel kategorier"
           configure_defaults: "Konfigurer standardindstillinger"
         community:
           edit_section:
+            sidebar: "Tilpas denne sektion"
             header_dropdown: "Tilpasning"
           links:
             about:
               content: "Om"
+              title: "Flere detaljer om dette websted"
             admin:
               content: "Admin"
+              title: "Webstedsindstillinger og rapporter"
             badges:
               content: "Emblemer"
             filter:
@@ -4275,6 +4313,10 @@ da:
         last_year: "Sidste år"
     discovery:
       headings:
+        category:
+          new: "Nye emner i %{category}"
+          unread: "Ulæste emner i %{category}"
+          unseen: "Usete emner i %{category}"
         multi_tag:
           default: "Emner tagget %{tags}"
         categories: "Alle kategorier"
@@ -4337,9 +4379,12 @@ da:
             logo:
               title: "Primært logo"
             logo_dark:
+              required: "Brug et andet logo til mørk tilstand?"
               title: "Primært logo mørkt"
             large_icon:
               help_text: "Anbefalet størrelse er 512 x 512 pixels."
+            favicon:
+              title: "Favicon"
             logo_small_dark:
               title: "Lille, mørkt logo"
             mobile: "Mobil"
@@ -4374,6 +4419,8 @@ da:
           title: "Tillidsniveauer"
         user_api:
           title: "Bruger API"
+        group_permissions:
+          title: "Gruppetilladelser"
         dashboard:
           title: "Dashboard"
         users:
