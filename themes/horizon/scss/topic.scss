@@ -59,6 +59,11 @@ body:not(.d-toc-installed) {
       grid-template-columns: auto auto;
     }
   }
+
+  .topic-navigation-popup {
+    min-width: 250px;
+    right: 0;
+  }
 }
 
 .container.posts {
