@@ -33,6 +33,47 @@ describe RRuleGenerator do
     end
   end
 
+  context "when showLocalTime is enabled" do
+    it "generates floating time RRule without timezone" do
+      timezone = "Europe/Prague"
+      time = Time.utc(2020, 1, 25, 15, 36)
+
+      rrule_string =
+        RRuleGenerator.generate_string(
+          starts_at: time,
+          timezone: timezone,
+          recurrence: "every_week",
+          dtstart: time,
+          show_local_time: true,
+        )
+
+      expect(rrule_string).to include("DTSTART:20200125T153600")
+      expect(rrule_string).not_to include("TZID=Europe/Prague")
+      expect(rrule_string).to include(
+        "RRULE:FREQ=WEEKLY;BYDAY=SA;BYHOUR=15;BYMINUTE=36;INTERVAL=1;WKST=MO",
+      )
+    end
+
+    it "generates timezone-specific RRule when showLocalTime is disabled" do
+      timezone = "Europe/Prague"
+      time = Time.utc(2020, 1, 25, 15, 36)
+
+      rrule_string =
+        RRuleGenerator.generate_string(
+          starts_at: time,
+          timezone: timezone,
+          recurrence: "every_week",
+          dtstart: time,
+          show_local_time: false,
+        )
+
+      expect(rrule_string).to include("DTSTART;TZID=Europe/Prague:20200125T153600")
+      expect(rrule_string).to include(
+        "RRULE:FREQ=WEEKLY;BYDAY=SA;BYHOUR=15;BYMINUTE=36;INTERVAL=1;WKST=MO",
+      )
+    end
+  end
+
   describe "every day" do
     context "when a rule and time are given" do
       it "generates the rule" do

@@ -15,13 +15,22 @@ export default class DiscoursePostEventDates extends Component {
   @tracked htmlDates = "";
 
   get startsAt() {
-    return moment(this.args.event.startsAt).tz(this.timezone);
+    if (this.args.event.showLocalTime) {
+      return moment(this.args.event.startsAt);
+    } else {
+      return moment(this.args.event.startsAt).tz(this.timezone);
+    }
   }
 
   get endsAt() {
-    return (
-      this.args.event.endsAt && moment(this.args.event.endsAt).tz(this.timezone)
-    );
+    if (this.args.event.showLocalTime) {
+      return this.args.event.endsAt && moment(this.args.event.endsAt);
+    } else {
+      return (
+        this.args.event.endsAt &&
+        moment(this.args.event.endsAt).tz(this.timezone)
+      );
+    }
   }
 
   get timezone() {

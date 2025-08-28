@@ -461,12 +461,16 @@ module DiscoursePostEvent
     end
 
     def calculate_next_recurring_date
+      rrule_timezone = show_local_time ? "UTC" : timezone
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+
       RRuleGenerator.generate(
-        starts_at: original_starts_at.in_time_zone(timezone),
-        timezone: timezone,
+        starts_at: timezone_starts_at,
+        timezone: rrule_timezone,
         recurrence: recurrence,
-        recurrence_until: recurrence_until,
-        dtstart: original_starts_at.in_time_zone(timezone),
+        recurrence_until: timezone_recurrence_until,
+        dtstart: timezone_starts_at,
       ).first
     end
 
