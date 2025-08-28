@@ -440,6 +440,7 @@ Discourse::Application.routes.draw do
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
+        get "upcoming-changes" => "upcoming_changes#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
