@@ -2,6 +2,7 @@
 The following definition files are included in this installation:
 
 * generated_definitions/REGIONS
+* generated_definitions/ae
 * generated_definitions/ar
 * generated_definitions/at
 * generated_definitions/au
@@ -84,3 +85,4 @@ The following definition files are included in this installation:
 * generated_definitions/ve
 * generated_definitions/vi
 * generated_definitions/za
+* generated_definitions/zw
