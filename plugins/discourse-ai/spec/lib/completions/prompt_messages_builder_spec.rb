@@ -548,7 +548,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       UploadReference.create!(target: post1, upload: image_upload1)
 
-      upload2_markdown = "![test2|658x372](#{image_upload2.short_url})"
+      long_title = "A" * 40
+      upload2_markdown = "![#{long_title}|658x372](#{image_upload2.short_url})"
 
       freeze_time 1.month.from_now
 
@@ -581,10 +582,11 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
         { upload_id: image_upload2.id },
       )
 
-      # Ensure timestamps and surrounding text are still present
-      expect(content.join).to include("This is the original test1 I just added")
-      expect(content.join).to include("(1 month ago)")
-      expect(content.join).to include("different image test2 I just added")
+      text = content.select { |c| c.is_a?(String) }.join(" ")
+
+      expect(text).to include("This is the original")
+      expect(text).to include("(1 month ago)")
+      expect(text).to include("#{long_title}")
     end
 
     it "only include regular posts" do
