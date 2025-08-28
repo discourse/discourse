@@ -54,7 +54,7 @@ describe RRuleGenerator do
       )
     end
 
-    it "generates timezone-specific RRule when showLocalTime is disabled" do
+    it "generates timezone-specific RRule when show_local_time is disabled" do
       timezone = "Europe/Prague"
       time = Time.utc(2020, 1, 25, 15, 36)
 
