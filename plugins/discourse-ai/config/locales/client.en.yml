@@ -643,6 +643,7 @@ en:
           google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
           google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
+          google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
           open_ai-o3: "OpenAI's most capable reasoning model"
           open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
           open_ai-gpt-5: "OpenAI's flagship model. It is well suited for problem solving across domains"
