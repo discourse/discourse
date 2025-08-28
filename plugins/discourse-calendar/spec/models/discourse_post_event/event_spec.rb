@@ -434,7 +434,7 @@ describe DiscoursePostEvent::Event do
       end
     end
 
-    context "recurring events" do
+    context "with recurring events" do
       context "with recurrence_until set" do
         context "when current date is before recurrence_until" do
           it "is not expired" do
