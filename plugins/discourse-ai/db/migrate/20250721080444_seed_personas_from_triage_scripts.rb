@@ -35,6 +35,10 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
                 "Unnamed triage automation script ID #{field["automation_id"]}"
               end
             )
+
+          # Persona's name field cannot be longer than 100 chars.
+          name = name.truncate(99)
+
           temp = field["temperature"]
 
           # Extract the model ID from the setting value (e.g., "custom:-5" -> "-5")
@@ -75,6 +79,8 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
           end
         end
         .compact
+
+    return if new_fields.empty?
 
     DB.exec <<~SQL
       INSERT INTO discourse_automation_fields (automation_id, name, metadata, component, target, created_at, updated_at)

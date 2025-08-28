@@ -278,10 +278,10 @@ class Site
   end
 
   def self.full_name_required_for_signup
-    SiteSetting.enable_names && SiteSetting.full_name_requirement == "required_at_signup"
+    SiteSetting.full_name_requirement == "required_at_signup"
   end
 
   def self.full_name_visible_in_signup
-    SiteSetting.enable_names && SiteSetting.full_name_requirement != "hidden_at_signup"
+    SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 end

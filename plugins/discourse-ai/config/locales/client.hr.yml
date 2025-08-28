@@ -57,6 +57,8 @@ hr:
           name: "Nepoželjno"
       modals:
         select_option: "Odaberi opciju..."
+      translations:
+        title: "Prijevodi"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Zadnjih 7 dana"

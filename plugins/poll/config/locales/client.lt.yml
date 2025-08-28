@@ -64,7 +64,6 @@ lt:
       error_while_fetching_voters: "Atsiprašome, rodant rinkėjus įvyko klaida."
       error_while_exporting_results: "Apgailestaujame, eksportuojant apklausos rezultatus įvyko klaida."
       ui_builder:
-        title: Kurti apklausą
         insert: Įterpti apklausą
         help:
           options_min_count: Įveskite bent 1 parinktį.

@@ -12,6 +12,8 @@ module DiscourseAi
       BOT = "bot"
       SPAM = "spam"
       EMBEDDINGS = "embeddings"
+      AUTOMATION_REPORTS = "automation_reports"
+      AUTOMATION_TRIAGE = "automation_triage"
 
       NAMES = [
         SUMMARIZATION,
@@ -23,6 +25,8 @@ module DiscourseAi
         BOT,
         SPAM,
         EMBEDDINGS,
+        AUTOMATION_REPORTS,
+        AUTOMATION_TRIAGE,
       ].freeze
 
       SUMMARIZATION_ID = 1
@@ -34,10 +38,12 @@ module DiscourseAi
       BOT_ID = 7
       SPAM_ID = 8
       EMBEDDINGS_ID = 9
+      AUTOMATION_REPORTS_ID = 10
+      AUTOMATION_TRIAGE_ID = 11
 
       class << self
         def all
-          [
+          base_modules = [
             new(
               SUMMARIZATION_ID,
               SUMMARIZATION,
@@ -95,6 +101,36 @@ module DiscourseAi
               extra_check: -> { SiteSetting.ai_embeddings_semantic_search_enabled },
             ),
           ]
+
+          if SiteSetting.discourse_automation_enabled
+            base_modules << new(
+              AUTOMATION_REPORTS_ID,
+              AUTOMATION_REPORTS,
+              enabled_by_setting: "discourse_automation_enabled",
+              features: DiscourseAi::Configuration::Feature.ai_automation_report_scripts,
+              extra_check: -> { has_scripts?(["llm_report"]) },
+            )
+            base_modules << new(
+              AUTOMATION_TRIAGE_ID,
+              AUTOMATION_TRIAGE,
+              enabled_by_setting: "discourse_automation_enabled",
+              features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
+              extra_check: -> { has_scripts?(%w[llm_triage llm_persona_triage]) },
+            )
+          end
+
+          base_modules
+        end
+
+        # Private
+        def has_scripts?(script_names)
+          DB
+            .query_single(
+              "SELECT COUNT(*) FROM discourse_automation_automations WHERE script IN (:names) and enabled",
+              names: script_names,
+            )
+            .first
+            .to_i > 0
         end
 
         def find_by(id:)

@@ -24,7 +24,6 @@ import GroupChooser from "select-kit/components/group-chooser";
 import TopicChooser from "select-kit/components/topic-chooser";
 
 export default class CreateInvite extends Component {
-  @service capabilities;
   @service currentUser;
   @service siteSettings;
   @service site;

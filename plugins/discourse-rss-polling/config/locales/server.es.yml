@@ -6,4 +6,7 @@
 
 es:
   site_settings:
+    rss_polling_enabled: "[RSS Polling] Activa la importación de publicaciones incrustadas desde varias fuentes RSS"
     rss_polling_frequency: "[RSS Polling] Frecuencia del feed de la encuesta (en minutos)"
+    rss_polling_use_pubdate: "[RSS Polling] Establece la fecha de creación del tema en la fecha de publicación (pubDate) que se encuentra en el feed RSS"
+    rss_polling_update_tags: "[RSS Polling] Actualiza las etiquetas de un tema al actualizar el tema. Si se desactiva esta opción, se eliminarán las etiquetas iniciales, pero se desactivarán los cambios posteriores en las etiquetas."

@@ -7,7 +7,7 @@
 ro:
   site_settings:
     sign_in_with_apple_enabled: 'Activezi autentificarea cu Apple?'
-    apple_client_id: "(Autentificare cu Apple) „Identificatorul serviciului” Apple din consola de dezvoltator. În mod normal, un șir de nume de domeniu în mod inversat (de ex. com.exemple.auth) (Autentificare cu Apple)"
+    apple_client_id: "(Autentificare cu Apple) „Identificatorul serviciului” Apple din consola de dezvoltator. În mod normal, un șir de nume de domeniu în mod inversat (de ex. com.exemple.auth)"
     apple_team_id: '(Autentificare cu Apple) ID-ul echipei Apple (10 caractere)'
     apple_key_id: '(Autentificare cu Apple) ID-ul cheii Apple (10 caractere)'
     apple_pem: '(Autentificare cu Apple) Conținutul fișierului Apple Pem. Include liniile BEGIN și END'

@@ -6,6 +6,7 @@
 
 nl:
   site_settings:
+    openid_connect_enabled: Schakel OpenID Connect-verificatie in. Pas de gebruikersinterfacetekst <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>hier</a> aan
     openid_connect_discovery_document: "URL van OpenID Connect-detectiedocument. Normaal gesproken te vinden op 'https://jouw.domein/.well-known/openid-configuration'"
     openid_connect_client_id: "OpenID Connect-client-ID"
     openid_connect_client_secret: "OpenID Connect-clientgeheim"

@@ -60,6 +60,8 @@ es:
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
+    too_many_urls: "No se pueden incluir más de 10 URL en una única solicitud de onebox."
+    concurrency_not_allowed: "No se permiten solicitudes simultáneas de inline-oneboxing. Envía una sola solicitud a la vez."
   components:
     enabled_filter: "Activado"
     disabled_filter: "Desactivado"
@@ -72,6 +74,7 @@ es:
     bad_color_scheme: "No se puede actualizar el tema, paleta de colores no válida"
     other_error: "Algo salió mal al actualizar el tema"
     ember_selector_error: "Lo sentimos. No se permite usar selectores #ember o .ember-view, porque los nombres se generan dinámicamente al ejecutarse y cambiarán con el tiempo, lo que hará que se rompa el CSS en el futuro. Prueba con otro selector."
+    setting_not_themeable: "El ajuste «%{name}» no se puede tematizar."
     import_error:
       generic: Ha ocurrido un error al importar el tema
       upload: "Error al crear el recurso: %{name}. %{errors}"
@@ -256,11 +259,13 @@ es:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} no es un idioma local válido"
       too_long_validation:
         one: "Está limitado a %{count} carácter; ingresaste %{length}."
         other: "Está limitado a %{count} caracteres; ingresaste %{length}."
       invalid_boolean: "Booleano no válido."
       taken: "ya ha sido escogido"
+      reserved: "El nombre de grupo %{name} está reservado, elige un nombre diferente"
       accepted: debe ser aceptado
       blank: no puede dejarse en blanco
       present: debe dejarse en blanco
@@ -284,6 +289,7 @@ es:
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
       not_an_integer: debe ser un valor entero
+      must_all_be_positive: todo debe ser positivo
       odd: debe ser impar
       record_invalid: ! "La validación falló: %{errors}"
       max_emojis: "no puede tener más de %{max_emojis_count} emojis"
@@ -314,6 +320,10 @@ es:
     site_settings:
       invalid_site_setting: "No existe ningún ajuste llamado «%{name}»."
       invalid_category_id: "Especificaste una categoría que no existe"
+      site_settings_are_deprecated: "Los siguientes ajustes están obsoletos: %{old_names}. Use %{new_names} en su lugar."
+      site_settings_are_hidden: "No tienes permiso para cambiar los ajustes ocultos: %{setting_names}"
+      site_settings_are_shadowed_globally: "No puedes cambiar esos ajustes porque están configurados globalmente: %{setting_names}"
+      site_settings_are_unconfigurable: "No tienes permiso para cambiar los ajustes no configurables: %{setting_names}"
       invalid_choice:
         one: "«%{name}» es una opción no válida."
         other: "«%{name}» son opciones no válidas."
@@ -336,6 +346,7 @@ es:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
       x_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
       tl0_and_anonymous_flag: "Debes proporcionar el «site contact email» (correo electrónico de contacto del sitio) o la «email address to report illegal content» (dirección de correo electrónico para denunciar contenido ilegal) para los usuarios anónimos."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Este ajuste requiere que primero se active el ajuste «allow anonymous mode»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -570,6 +581,7 @@ es:
         one: "'%{username}' ya es miembro de este grupo."
         other: "Los siguientes usuarios ya son miembros de éste grupo: %{username}"
       invalid_domain: "«%{domain}» no es un dominio válido."
+      too_many_domains: "Demasiados dominios. Máximo: %{max}."
       invalid_incoming_email: "«%{email}» no es una dirección de correo electrónico válida."
       email_already_used_in_group: "«%{email}» ya está siendo utilizado por el grupo «%{group_name}»."
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
@@ -579,6 +591,9 @@ es:
         one: "Se puede añadir un máximo de %{count} usuario a la vez"
         other: "Se puede añadir un máximo de %{count} usuarios a la vez"
       usernames_or_emails_required: "Debe haber nombres de usuario o correos electrónicos"
+      counting_too_many_email_domains:
+        one: "Se puede contar un máximo de %{count} dominio de correo electrónico a la vez"
+        other: "Se puede contar un máximo de %{count} dominios de correo electrónico a la vez"
       no_invites_with_discourse_connect: "Solo puedes invitar a usuarios ya registrados cuando DiscourseConnect está activado"
       no_invites_without_local_logins: "Solo puedes invitar usuarios ya registrados cuando los inicios de sesión locales están desactivados"
     default_names:
@@ -610,9 +625,25 @@ es:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicaciones"
+    "new-topic": |
+      ¡Gracias por contribuir a %{site_name}!
+
+      Antes de publicar, selecciona una categoría o etiqueta para agrupar este tema con discusiones relacionadas para que otras personas puedan encontrarlo fácilmente.
+
+      Para obtener más consejos y sugerencias sobre cómo participar en nuestra comunidad, [consulta nuestras directrices de la comunidad](%{base_path}/directrices).
+    "new-reply": |
+      ¡Gracias por contribuir a %{site_name}!
+
+      Recuerda que todos somos personas. Por favor, sé amable con los demás miembros de la comunidad.
+
+      Para obtener más consejos y sugerencias sobre cómo participar en nuestra comunidad, [consulta nuestras directrices de la comunidad](%{base_path}/directrices).
+    dominating_topic: '¡Has publicado mucho en este tema! Considera dar a los demás la oportunidad de participar.'
     get_a_room:
       one: Has respondido a @%{reply_username} una vez, ¿sabías que podrías enviarle un mensaje privado en su lugar?
       other: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje rivado directamente?
+    dont_feed_the_trolls: Esta publicación se ha denunciado para que la revise un moderador. Responder a contenido negativo puede fomentar un comentario aún más negativo. ¿Seguro que quieres continuar?
+    too_many_replies: |
+      Los nuevos usuarios tienen un límite temporal de %{newuser_max_replies_per_topic} respuestas en el mismo tema. Considera visitar otros temas para seguir conociendo la comunidad.
   activerecord:
     attributes:
       category:
@@ -720,6 +751,9 @@ es:
           attributes:
             linkable_type:
               invalid: "no es válido"
+        api_key:
+          base:
+            at_least_one_granular_scope: "se debe seleccionar al menos uno"
       <<: *errors
   uncategorized_category_name: "Sin categoría"
   general_category_name: "General"
@@ -1533,6 +1567,12 @@ es:
         anon_views: Anónimas
         total_views: Total
       description: "Los 100 temas más vistos en un intervalo de fechas, combinando las visualizaciones conectadas y anónimas. Se puede filtrar por categoría."
+    associated_accounts_by_provider:
+      title: "Cuentas asociadas por método de inicio de sesión"
+      labels:
+        provider: Proveedor de inicio de sesión
+        no_accounts: "No hay cuentas asociadas"
+      description: "Muestra el número de cuentas asociadas agrupadas por proveedor de inicio de sesión. Solo se aplica cuando los métodos de inicio de sesión con red social están activados."
   dashboard:
     problem:
       twitter_login: 'Parece que el inicio de sesión en X (Twitter) no funciona en este momento. Comprueba las credenciales en <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">los Ajustes del sitio</a>.'
@@ -1577,11 +1617,13 @@ es:
     delete_old_hidden_posts: "Eliminar automaticamente cualquier publicación que se mantenga oculta por mas de 30 días."
     default_locale: "El idioma por defecto de esta instancia de Discourse. Puedes reemplazar el texto de las categorías y temas generados por el sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
+    set_locale_from_accept_language_header: "Establecer el idioma de la interfaz para usuarios anónimos desde los encabezados de idioma del navegador web"
     set_locale_from_cookie: "Permite configurar la configuración regional de un usuario anónimo a través de la cookie de navegador «locale»."
-    set_locale_from_param: "Permite configurar la configuración regional de un usuario anónimo a través del parámetro de URL 'lang', por ejemplo, ?lang=es"
+    set_locale_from_param: "Permite configurar la configuración regional de un usuario anónimo a través del parámetro de URL «lang», por ejemplo, ?tl=es"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda"
     min_post_length: "Longitud mínima permitida de la publicación en caracteres (excluyendo mensajes personales)"
     min_first_post_length: "Longitud mínima permitida de la primera publicación (cuerpo del tema) (excluidos los mensajes personales)"
+    prevent_uploads_only_posts: "No tengas en cuenta el código markdown subido al comprobar la longitud mínima de la publicación"
     min_personal_message_post_length: "Longitud mínima permitida en caracteres para las publicaciones (tanto para el primer mensaje como para las respuestas)"
     max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
     topic_featured_link_enabled: "Permite a los usuarios asociar un enlace de función a sus temas. Cuando está activado, los temas pueden tener un enlace destacado adjunto, que es visible públicamente y puede editarse si el usuario tiene permisos suficientes. El enlace de característica puede mejorar la comprensibilidad de un tema proporcionando contenido adicional relacionado."
@@ -1601,6 +1643,7 @@ es:
     search_query_log_max_retention_days: "Tiempo máximo que se mantienen las consultas de búsqueda, en días."
     search_ignore_accents: "Los acentos en las consultas de búsqueda no se tienen en cuenta si esta opción está activada, lo que permite a los usuarios encontrar resultados aunque no introduzcan los acentos correctos."
     search_default_sort_order: "Orden de clasificación por defecto para la búsqueda de página completa"
+    search_experience: "La posición y apariencia por defecto de la búsqueda en dispositivos de escritorio"
     category_search_priority_low_weight: "Peso aplicado para la ordenación de categorías con prioridad baja."
     category_search_priority_high_weight: "Peso aplicado para la ordenación de categorías con prioridad alta."
     default_composer_category: "La categoría utilizada para rellenar el desplegable de categorías al crear un nuevo tema."
@@ -1666,7 +1709,7 @@ es:
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
     apple_touch_icon: "Icono utilizado para los dispositivos táctiles de Apple. No se recomienda un fondo transparente. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
-    x_summary_large_image: "\"Imagen grande de resumen\" de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg, mientras no sea un .svg"
+    x_summary_large_image: "«Imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de correos electrónicos separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
@@ -1738,6 +1781,7 @@ es:
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
+    allowed_iframes: "Una lista de prefijos de URL de iframe src que Discourse puede permitir de forma segura en las publicaciones. * se puede usar para que coincida con cualquier número de caracteres que no sean /."
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
@@ -1771,6 +1815,7 @@ es:
     redirect_users_to_top_page: "Redirigir automáticamente a los usuarios nuevos y ausentes durante mucho tiempo a la página superior. Solo se aplica cuando «arriba» está presente en el ajuste del sitio «menú superior»."
     top_page_default_timeframe: "Periodo de tiempo predeterminado de la página principal para usuarios anónimos (se ajusta automáticamente para usuarios conectados en función de su última visita)."
     moderators_view_emails: "Permitir a los moderadores ver las direcciones de correo electrónico de los usuarios."
+    moderators_view_ips: "Permitir a los moderadores ver las direcciones IP de los usuarios."
     prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
     enable_rich_text_paste: "Activa la conversión automática de HTML a Markdown al pegar texto en el compositor."
     send_old_credential_reminder_days: "Recordar credenciales antiguas después de días"
@@ -1804,6 +1849,7 @@ es:
     block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
     auth_skip_create_confirm: Al registrarse a través de autenticación externa, omitir la ventana de creación de cuenta. Funciona mejor si los ajustes auth_overrides_email, auth_overrides_username y auth_overrides_name están activados.
     auth_immediately: "Redireccionar automáticamente al sistema de inicio de sesión externo sin interacción del usuario. Solo funciona cuando el ajuste login_required está activado, y solo hay un método de autenticación externo."
+    auth_require_interaction: "Requiere interacción del usuario antes de redirigir a un sistema de inicio de sesión externo a través de «/auth/*». Se trata de una defensa exhaustiva contra ataques de inicio de sesión CSRF. Desactiva esta opción solo si confías plenamente en todos los métodos de autenticación habilitados y están protegidos contra CSRF."
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
@@ -1826,6 +1872,7 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión en un clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
+    enable_discourse_id: "Activa la autenticación mediante Discourse ID, un servicio de inicio de sesión único que permite que los usuarios inicien sesión en varios sitios de Discourse con una única cuenta. Proveedores de inicio de sesión con red social comunes, como Google, Facebook y X son compatibles sin necesidad de configuración adicional. Consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para más detalles."
     enable_google_oauth2_logins: "Activa la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
     google_oauth2_client_id: "El ID de cliente único proporcionado por tu aplicación de Google, utilizado para el proceso de autenticación."
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
@@ -1855,12 +1902,12 @@ es:
     allow_restore: "Activar la restauración. ¡Esto puede sobrescribir TODOS los datos! Déjalo desactivado en todo momento, y actívalo solo para restaurar una copia de seguridad."
     maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán. Las copias de seguridad más antiguas se eliminan automáticamente"
     remove_older_backups: "Eliminar las copias de seguridad anteriores al número de días especificado. Dejar en blanco para desactivar."
-    automatic_backups_enabled: "Ejecutar respaldos automáticos definidos por la opción de frecuencia de respaldos"
-    backup_frequency: "Especifica el intervalo, en días, con el que se crean las copias de seguridad automáticas del sitio. Si se establece en 7, por ejemplo, se generará una nueva copia de seguridad cada semana. La activación de este ajuste depende de «automatic_backups_enabled»."
+    backup_frequency: "Especifica el intervalo, en días, con el que se crean las copias de seguridad automáticas del sitio. Si se establece en 7, por ejemplo, se generará una nueva copia de seguridad cada semana. Establécelo en 0 para desactivarlo."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
+    s3_use_acls: "AWS recomienda no usar ACL en los buckets S3; desmarca esta opción si quieres configurar políticas de permisos en los «s3_upload_bucket» y «s3_backup_bucket» configurados."
     enable_direct_s3_uploads: "Permite la carga directa multiparte a Amazon S3, consulta https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 para más detalles."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."
@@ -1913,6 +1960,7 @@ es:
     s3_use_cdn_url_for_all_uploads: "Utiliza la URL CDN para todos los archivos subidos a s3 en lugar de solo para las imágenes."
     avatar_sizes: "Lista de tamaños de los avatares generados automáticamente."
     external_system_avatars_enabled: "Activa el uso de un servicio externo para generar los avatares del sistema. Cuando esta opción está activada, los avatares de usuario, en lugar de producirse dentro del sistema de Discourse, son generados y proporcionados por un servicio externo definido por la opción «external_system_avatars_url»."
+    external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Las sustituciones permitidas son {username} {first_letter} {color} {size}. Déjalo en blanco para desactivarlo."
     external_emoji_url: "URL del servicio externo para imágenes de emoji. Dejar en blanco para desactivar."
     use_site_small_logo_as_system_avatar: "Usar el logo pequeño del sitio como avatar del usuario del sistema. El logo debe haber sido cargado previamente."
     restrict_letter_avatar_colors: "Una lista de códigos de color hexadecimales de 6 dígitos usados para los fondos de los avatares de letras."
@@ -1930,6 +1978,9 @@ es:
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
     composer_media_optimization_image_encode_quality: "Calidad de codificación JPG utilizada en el proceso de recodificación."
+    video_conversion_enabled: "Habilita la conversión de vídeo para los archivos de vídeo subidos. Esto permite convertir los vídeos a formatos compatibles con la web."
+    video_conversion_service: "El servicio de conversión de vídeo que se utilizará para procesar los vídeos subidos."
+    mediaconvert_role_arn: "ARN de función de AWS IAM para el servicio MediaConvert. Obligatorio para usar AWS MediaConvert para la conversión de vídeo."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
@@ -2016,7 +2067,6 @@ es:
     desktop_category_page_style: "Este ajuste determina la disposición visual de la página /categorías en el escritorio. Incluye opciones como mostrar subcategorías con temas destacados, mostrar los temas más recientes o presentar los temas principales. El estilo elegido influirá en la forma en que los usuarios interactúan y navegan por las categorías del sitio."
     mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categories en móviles."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
-    default_dark_mode_color_scheme_id: "La paleta de colores utilizada en modo oscuro."
     dark_mode_none: "Ninguno"
     max_image_size_kb: "El tamaño máximo de subida de imágenes. Esto debe configurarse también en nginx (client_max_body_size) / apache o proxy. Las imágenes mayores que este tamaño y menores que client_max_body_size se redimensionarán al subirlas."
     max_attachment_size_kb: "El tamaño máximo de subida de archivos adjuntos. Esto debe configurarse también en nginx (client_max_body_size) / apache o proxy."
@@ -2067,6 +2117,7 @@ es:
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
     reviewable_low_priority_threshold: "El filtro de prioridades oculta elementos a revisar que no lleguen a esta puntuación, salvo que se use el filtro «(cualquiera)»."
     high_trust_flaggers_auto_hide_posts: "Las publicaciones de los usuarios nuevos se esconden automáticamente tras ser marcadas como spam por un usuario con NC3 o superior"
+    allow_all_users_to_flag_illegal_content: "Los usuarios anónimos verán información que les indica que deben enviar un correo electrónico a los administradores para denunciar contenido ilegal. Este ajuste tiene prioridad sobre «grupos que pueden denunciar publicaciones»."
     email_address_to_report_illegal_content: "Si se deja en blanco, se utilizará el correo electrónico de administrador del sitio predeterminado."
     cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder denunciar de nuevo una publicación."
     slow_mode_prevents_editing: "¿El «Modo lento» evita la edición después de edit_grace_period?"
@@ -2171,7 +2222,8 @@ es:
     enable_group_directory: "Proporcionar un directorio de grupos que se pueda navegar"
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
-    allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear mensajes o temas en todo el sitio. Véase también «allow_anonymous_likes»."
+    allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear publicaciones o temas en todo el sitio. Véase también «allow_anonymous_likes»."
+    allow_likes_in_anonymous_mode: "Activa esta opción para permitir que los usuarios que navegan por tu sitio de forma anónima puedan dar «me gusta» a tus publicaciones. Cuando está activada, los usuarios pueden optar por ocultar su identidad al dar «me gusta» a entradas o temas en todo el sitio. Consulta también «allow_anonymous_mode»."
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_posting_allowed_groups: "Grupos que pueden permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
@@ -2182,6 +2234,7 @@ es:
     delete_associated_accounts_on_password_reset: "Elimina la cuenta asociada al usuario cuando este cambie la contraseña."
     allow_featured_topic_on_user_profiles: "Permitir a los usuarios destacar un enlace a un tema en su tarjeta de usuario y perfil."
     show_inactive_accounts: "Permitir a usuarios con una sesión iniciada visualizar perfiles de cuentas inactivas."
+    hide_silencing_reasons: "No mostrar las razones de silenciamiento públicamente en el perfil de usuario."
     hide_suspension_reasons: "No mostrar laa razones de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Registrar los mensajes personales vistos por el administrador para otros usuarios/grupos."
     ignored_users_count_message_threshold: "Notificar a los moderadores si un usuario en particular es ignorado este número de veces por otros usuarios."
@@ -2219,8 +2272,10 @@ es:
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Las denuncias serán ignoradas. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
     penalty_step_hours: "Tiempo de sanción por defecto al silenciar o suspender usuarios (en horas). El primer valor se usará para la primera sanción, el segundo para la segunda, y así sucesivamente."
     penalty_include_post_message: "Incluir automáticamente el mensaje ofensivo en la plantilla del mensaje de correo electrónico al silenciar o suspender a un usuario"
+    svg_icon_subset: "Añade iconos FontAwesome adicionales que quieras incluir en tus activos. Utiliza el prefijo «fa-» para iconos sólidos, «far-» para iconos normales y «fab-» para iconos de marca."
     max_prints_per_hour_per_user: "Número máximo de impresiones de páginas /print (establecer en 0 para desactivar la impresión)"
     full_name_requirement: "Haz que el campo del nombre completo sea obligatorio, opcional u opcional pero oculto en el formulario de registro."
+    interface_color_selector: "Configura dónde está disponible el selector de modo claro/oscuro para el color de la interfaz."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
@@ -2300,6 +2355,7 @@ es:
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_smart_lists: "Activar por defecto las listas inteligentes al escribir en el compositor."
     default_other_enable_defer: "Activar la funcionalidad de temas diferidos por defecto."
+    default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."
     default_other_like_notification_frequency: "Establece la frecuencia con la que los usuarios reciben notificaciones de «Me gusta» por defecto. Los usuarios que no hayan personalizado sus ajustes de notificaciones seguirán este comportamiento por defecto."
@@ -2340,6 +2396,7 @@ es:
     tagging_enabled: "¿Activar etiquetas en los temas? Consulta la <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Guía de administración de etiquetas en Meta</a> para obtener más información."
     min_trust_to_create_tag: "El nivel de confianza mínimo requerido para crear una etiqueta."
     create_tag_allowed_groups: "Grupos que pueden crear etiquetas. Los administradores y moderadores siempre pueden crear etiquetas."
+    edit_tags_allowed_groups: "Grupos que pueden editar etiquetas, descripciones de etiquetas y sinónimos de etiquetas."
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."
     enable_max_tags_per_email_subject: "Utiliza max_tags_per_email_subject al generar el asunto de un correo electrónico"
     max_tags_per_email_subject: "El máximo de etiquetas que puede haber en el asunto de un correo electrónico"
@@ -2378,6 +2435,7 @@ es:
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
     dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
+    gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     gravatar_login_url: "URL relativa a «gravatar_base_url», que proporciona al usuario el acceso al servicio Gravatar."
@@ -2385,22 +2443,46 @@ es:
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos solo o a todos los usuarios. "
     create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
+    use_email_for_username_and_name_suggestions: "Usa la primera parte de las direcciones de correo electrónico para sugerencias de nombre de usuario y nombre. Advertencia: Esto puede facilitar que los delincuentes descubran la dirección de correo electrónico completa de tus miembros (porque muchas personas usan servicios de correo electrónico comunes como «gmail.com»)."
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     show_bottom_topic_map: "Muestra el mapa del tema en la parte inferior del mismo cuando tiene 10 respuestas o más."
     show_topic_map_in_topics_without_replies: "Muestra el mapa del tema incluso aunque el tema no tenga respuestas."
+    enable_welcome_banner: "Muestra un banner en las páginas de la lista de temas principales para dar la bienvenida a los miembros y permitirles buscar contenido en el sitio."
+    welcome_banner_image: "Configura una imagen para que se muestre en el fondo del banner de bienvenida."
+    welcome_banner_location: "Determina en qué parte de la página aparecerá el banner de bienvenida."
+    welcome_banner_page_visibility: "Determina en qué páginas aparecerá el banner de bienvenida."
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
+    glimmer_post_stream_mode: "Controla si se utiliza la nueva implementación de flujo de publicaciones «glimmer». «auto» se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
+    glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación de flujo de publicaciones «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
+    deactivate_widgets_rendering: "Desactiva el motor de renderizado de widgets heredados. Esto desactivará todos los widgets que no se hayan actualizado para los componentes Glimmer y forzará la activación incondicional del flujo de publicaciones Glimmer sin importar el valor del ajuste «glimmer_post_stream_mode». Este ajuste no se recomienda para sitios de producción, ya que puede dañar los temas y plugins existentes."
+    floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
+    floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
+    floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
+    show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
+    experimental_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     about_page_hidden_groups: "No mostrar a los miembros de determinados grupos en la página /about."
+    about_page_extra_groups: "Grupos que se mostrarán en la página Acerca de, debajo de los moderadores."
+    about_page_extra_groups_initial_members: "Número de miembros a ampliar en cada grupo en la página Acerca de."
+    about_page_extra_groups_show_description: "Si se incluirán las descripciones del grupo en la página Acerca de."
+    about_page_extra_groups_order: "Ordenación de los grupos adicionales en la página Acerca de."
     adobe_analytics_tags_url: "URL de las etiquetas de Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
+    rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
+    default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
+    viewport_based_mobile_mode: "EXPERIMENTAL: Desactiva los modos móvil/escritorio basados en agente de usuario y usa el ancho de la ventana gráfica en su lugar."
+    reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
+    content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
+    content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
+    content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2422,6 +2504,7 @@ es:
         one: "No debe tener más de %{count} carácter."
         other: "No debe tener más de %{count} caracteres."
       invalid_json: "JSON no válido."
+      invalid_object: "Objeto no válido."
       invalid_reply_by_email_address: "El valor debe contener «%{reply_key}» y debe ser diferente al correo electrónico de notificación."
       invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener «%{reply_key}» y deben ser diferentes al correo electrónico de notificación"
       invalid_domain_hostname: "No debe incluir los caracteres * ni ?"
@@ -2443,8 +2526,10 @@ es:
       discourse_connect_url_is_empty: "Debes rellenar «discourse connect url» antes de activar este ajuste."
       enable_local_logins_disabled: "Primero debes activar «activar inicio de sesión local» antes de activar esta configuración."
       min_username_length_exists: "No puede establecer la longitud de usuario mínima por encima del nombre de usuario más corto (%{username})"
+      min_group_name_length_exists: "No puedes establecer la longitud de nombre de usuario mínima por encima del nombre de grupo más corto (%{group_name})"
       min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
       max_username_length_exists: "No puedes establecer la longitud de usuario máxima por debajo del nombre de usuario más largo (%{username})."
+      max_group_name_length_exists: "No puedes establecer la longitud de nombre usuario máxima por debajo del nombre de grupo más largo (%{group_name})."
       max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
       invalid_hex_value: "Los colores debe ser códigos hexadecimalesde 6 dígitos."
       empty_selectable_avatars: "Debes subir al menos dos avatares seleccionables antes de activar esta configuración."
@@ -2460,6 +2545,7 @@ es:
         other: "La lista debe contener exactamente %{count} valores."
       markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Debes configurar todos los ajustes de «google oauth2 hd» antes de activar este ajuste."
+      discourse_id_credentials: "Debes configurar las credenciales de Discourse ID («discourse_id_client_id» y «discourse_id_client_secret») antes de activar este ajuste."
       linkedin_oidc_credentials: "Debes configurar las credenciales OIDC de LinkedIn («linkedin_oidc_client_id» y «linkedin_oidc_client_secret») antes de activar este ajuste."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
@@ -2467,10 +2553,14 @@ es:
       delete_rejected_email_after_days: "Esta configuración no puede ser menor que la configuración delete_email_logs_after_days o mayor que %{max}"
       invalid_uncategorized_category_setting: 'No se puede seleccionar la categoría «Sin categoría» si no está activada la opción «Permitir temas sin categorizar».'
       invalid_search_ranking_weights: "El valor no es válido para la configuración del sitio search_ranking_weights. Por ejemplo: «{0.1,0.2,0.3,1.0}». Ten en cuenta que el valor máximo para cada peso es 1,0."
+      content_localization_locale_limit: "La cantidad de idiomas locales compatibles no puede ser superior a %{max}."
+      mediaconvert_role_arn_required: "ARN de función de AWS IAM es obligatorio para usar MediaConvert para la conversión de vídeo."
+      s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:
       clean_up_inactive_users_after_days: "desactivado|inactivo|no activado"
       navigation_menu: "barra lateral|menú desplegable de encabezado"
       purge_unactivated_users_grace_period_days: "desactivado|inactivo|no activado"
+      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -2485,6 +2575,81 @@ es:
     results_page: "Resultados de búsqueda para «%{term}»"
     audio: "[audio]"
     video: "[video]"
+  filter:
+    description:
+      status: "Filtrar temas por estado"
+      in: "Filtrar temas por listas personales"
+      order: "Ordenar temas por un campo específico"
+      category: "Mostrar temas en una categoría específica"
+      category_any: "Mostrar temas en cualquiera de las categorías especificadas (separadas por comas)"
+      exclude_category: "Excluir temas de una categoría específica"
+      category_without_subcategories: "Mostrar temas solo en la categoría principal, excluyendo subcategorías"
+      exclude_category_without_subcategories: "Excluir temas solo de la categoría principal, no de las subcategorías"
+      tag: "Mostrar temas con una etiqueta específica"
+      tags_any: "Mostrar temas con cualquiera de las etiquetas especificadas (separadas por comas)"
+      tags_all: "Mostrar temas con todas las etiquetas especificadas (separadas por comas)"
+      exclude_tag: "Excluir temas con una etiqueta específica"
+      exclude_tags_any: "Excluir temas con cualquiera de las etiquetas especificadas (separadas por comas)"
+      exclude_tags_all: "Excluir temas con todas las etiquetas especificadas (separadas por comas)"
+      tags_alias: "Alias para el filtro «etiqueta:»"
+      tag_group: "Mostrar temas con etiquetas de un grupo de etiquetas específico"
+      exclude_tag_group: "Excluir temas con etiquetas de un grupo de etiquetas específico"
+      activity_before: "Mostrar temas con última actividad antes de una fecha (AAAA-MM-DD o hace días)"
+      activity_after: "Mostrar temas con última actividad después de una fecha (AAAA-MM-DD o hace días)"
+      created_before: "Mostrar temas creados antes de una fecha (AAAA-MM-DD o hace días)"
+      created_after: "Mostrar temas creados después de una fecha (AAAA-MM-DD o hace días)"
+      created_by: "Mostrar temas creados por un usuario específico"
+      created_by_user: "Mostrar temas creados por nombre de usuario (sin @)"
+      created_by_multiple: "Mostrar temas creados por cualquiera de los usuarios especificados (separados por comas)"
+      latest_post_before: "Mostrar temas con última publicación antes de una fecha (AAAA-MM-DD o hace días)"
+      latest_post_after: "Mostrar temas con última publicación después de una fecha (AAAA-MM-DD o hace días)"
+      likes_min: "Mostrar temas con al menos esta cantidad de «me gusta»"
+      likes_max: "Mostrar temas con como máximo esta cantidad de «me gusta»"
+      likes_op_min: "Mostrar temas en los que la primera publicación tenga al menos esta cantidad de «me gusta»"
+      likes_op_max: "Mostrar temas en los que la primera publicación tenga como máximo esta cantidad de «me gusta»"
+      posts_min: "Mostrar temas con al menos esta cantidad de publicaciones"
+      posts_max: "Mostrar temas con como máximo esta cantidad de publicaciones"
+      posters_min: "Mostrar temas con al menos esta cantidad de participantes"
+      posters_max: "Mostrar temas con como máximo esta cantidad de participantes"
+      views_min: "Mostrar temas con al menos esta cantidad de visualizaciones"
+      views_max: "Mostrar temas con como máximo esta cantidad de visualizaciones"
+      status_open: "Mostrar temas abiertos (no cerrados ni archivados)"
+      status_closed: "Mostrar temas cerrados"
+      status_archived: "Mostrar temas archivados"
+      status_listed: "Mostrar temas listados (visibles)"
+      status_unlisted: "Mostrar temas no listados (ocultos)"
+      status_deleted: "Mostrar temas eliminados (si tienes permiso)"
+      status_public: "Mostrar temas en categorías públicas"
+      in_pinned: "Mostrar temas anclados"
+      in_bookmarked: "Mostrar temas que has añadido a marcadores"
+      in_watching: "Mostrar temas que estás viendo"
+      in_tracking: "Mostrar temas que estás siguiendo"
+      in_muted: "Mostrar temas silenciados"
+      in_normal: "Mostrar temas con nivel de notificación normal"
+      in_watching_first_post: "Mostrar temas que estás viendo para la primera publicación"
+      in_new: "Mostrar temas que son nuevos o tienen respuestas nuevas"
+      in_new_replies: "Mostrar temas con respuestas nuevas"
+      in_new_topics: "Mostrar temas nuevos"
+      order_activity: "Ordenar por actividad (más reciente primero)"
+      order_activity_asc: "Ordenar por actividad (más antigua primero)"
+      order_category: "Ordenar por nombre de categoría (Z-A)"
+      order_category_asc: "Ordenar por nombre de categoría (A-Z)"
+      order_created: "Ordenar por fecha de creación (más reciente primero)"
+      order_created_asc: "Ordenar por fecha de creación (más antigua primero)"
+      order_latest_post: "Ordenar por fecha de publicación (más reciente primero)"
+      order_latest_post_asc: "Ordenar por fecha de publicación (más antigua primero)"
+      order_likes: "Ordenar por número de «me gusta» (de mayor a menor)"
+      order_likes_asc: "Ordenar por número de «me gusta» (de menor a mayor)"
+      order_likes_op: "Ordenar por «me gusta» en la primera publicación (de mayor a menor)"
+      order_likes_op_asc: "Ordenar por «me gusta» en la primera publicación (de menor a mayor)"
+      order_posters: "Ordenar por número de participantes (de mayor a menor)"
+      order_posters_asc: "Ordenar por número de participantes (de menor a mayor)"
+      order_title: "Ordenar por título (Z-A)"
+      order_title_asc: "Ordenar por título (A-Z)"
+      order_views: "Ordenar por número de visualizaciones (de mayor a menor)"
+      order_views_asc: "Ordenar por número de visualizaciones (de menor a mayor)"
+      order_read: "Ordenar por fecha de última lectura (más reciente primero)"
+      order_read_asc: "Ordenar por fecha de última lectura (más antigua primero)"
   discourse_connect:
     login_error: "Error al iniciar sesión"
     not_found: "No se ha podido encontrar tu cuenta. Contacta con la administración del sitio."
@@ -2608,6 +2773,12 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el correo electrónico ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
+    omniauth_error:
+      generic_without_provider: "Lo sentimos, se ha producido un error al intentar autorizar tu cuenta con tu servicio de inicio de sesión. Inténtalo de nuevo."
+      generic_with_provider: "Lo sentimos, se ha producido un error al intentar autorizar tu cuenta con %{provider}. Inténtalo de nuevo."
+      csrf_detected: "Lo sentimos, se ha agotado el tiempo de autorización o has cambiado de navegador. Inténtalo de nuevo."
+      request_error: "Lo sentimos, se ha producido un error al iniciar la autorización. Inténtalo de nuevo."
+      invalid_iat: "Lo sentimos, no hemos podido verificar el token de autorización debido a las diferencias de horario del servidor. Inténtalo de nuevo."
     omniauth_error_unknown: "Ha ocurrido un error al procesar tu inicio de sesión. Inténtalo de nuevo."
     omniauth_confirm_title: "Inicia sesión a través de %{provider}"
     omniauth_confirm_button: "Continuar"
@@ -2701,6 +2872,7 @@ es:
       inactive_user: "Usuario inactivo"
       reviewable_reject_auto: "Manejar automáticamente los revisables en cola"
       reviewable_reject: "Usuario revisable rechazado"
+      reviewable_details_scrubbed: "Detalles de usuario borrados por %{staff}\n\nMotivo: %{reason}\n\nMarca de tiempo: %{timestamp}"
     email_in_spam_header: "El primer correo electrónico del usuario se marcó como spam."
     already_silenced: "El usuario ya fue silenciado por %{staff} %{time_ago}."
     already_suspended: "El usuario ya fue suspendido por %{staff} %{time_ago}."
@@ -2708,6 +2880,7 @@ es:
       one: "El usuario %{username} tiene %{count} publicación en un tema público o en un mensaje personal, por lo que no se pueden eliminar."
       other: "El usuario %{username} tiene %{count} publicaciones en un tema público o en un mensaje personal, por lo que no se pueden eliminar."
     cannot_bulk_delete: "No se pueden eliminar uno o más usuarios porque son administradores, tienen demasiadas publicaciones o tienen una publicación muy antigua."
+    cannot_remove_all_auth: "Debes tener al menos una cuenta asociada, una clave de acceso o una contraseña."
   unsubscribe_mailer:
     title: "Darse de baja de los correos"
     subject_template: "Confirma que no quieres recibir más correos electrónicos de %{site_title}"
@@ -3552,10 +3725,15 @@ es:
     in_reply_to: "En respuesta a"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo electrónico para publicar."
     reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
+    reply_by_email_button_only: "[Visita el tema](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Visita el mensaje](%{base_url}%{url})"
     only_reply_by_email: "Responde a este correo electrónico para comentar."
     only_reply_by_email_pm: "Responde a este correo electrónico para contestar a %{participants}."
+    only_reply_by_email_pm_button_only: "[Visita el mensaje](%{base_url}%{url})"
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder a %{participants}."
+    visit_link_to_respond_button_only: "[Visita el tema](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Visita el mensaje](%{base_url}%{url})"
     reply_above_line: "## Escribe tu respuesta sobre esta línea. ##"
     posted_by: "Publicado por %{username} el %{post_date}"
     pm_participants: "Participantes: %{participants}"
@@ -3817,6 +3995,17 @@ es:
         Tu cuenta ha sido silenciada en el foro.
 
         Motivo: %{reason}
+    account_deleted:
+      title: "Cuenta eliminada"
+      subject_template: "[%{email_prefix}] Tu cuenta se ha eliminado"
+      text_body_template: |
+        Hola:
+
+        Este es un mensaje automático de [%{site_name}](%{base_url}) para informarte de que un miembro del equipo ha eliminado la cuenta de usuario asociada a esta dirección de correo electrónico.
+
+        %{flag_reason}
+
+        Revisa nuestras [directrices de la comunidad](%{base_url}/guidelines) para obtener más detalles.
     account_exists:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
@@ -4039,6 +4228,8 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
+  login_required:
+    welcome_message: "# Te damos la bienvenida a %{title}"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4064,6 +4255,7 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
+      larger_than_x_megapixels: "Lo sentimos, la imagen con nombre de archivo %{original_filename} es demasiado grande (la dimensión máxima es %{max_image_megapixels} megapíxeles), cambia su tamaño e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"
@@ -4744,6 +4936,7 @@ es:
         Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Guau, un año entero!
     badge_title_metadata: "%{display_name} medalla en %{site_title}"
   admin_login:
+    acknowledgement: "Si existe una cuenta de administrador con la dirección de correo electrónico %{email}, recibirás un correo con un enlace para iniciar sesión."
     email_input: "Correo electrónico de administrador"
     submit_button: "Enviar correo electrónico"
     safe_mode: "Modo seguro: desactivar todos los temas y plugins al iniciar sesión"
@@ -4974,6 +5167,15 @@ es:
       revoked: Revocada
       restored: Restaurada
     bulk_user_delete: "eliminado en una operación de eliminación en bloque"
+    cli_bulk_post_delete: "Eliminado en lote de la tarea rake"
+    api_post_delete: "Eliminado mediante API"
+    reminder_deleted: "Reemplazado por un recordatorio nuevo"
+    user_associated_posts_deleted: "El usuario ha sido destruido"
+    imap_email_deleted: "El correo electrónico se ha eliminado del servidor IMAP"
+    imap_email_marked_as_spam: "El correo electrónico se ha movido a la carpeta de correo no deseado del servidor IMAP"
+    auto_deleted_hidden_posts: "Publicaciones ocultas destruidas automáticamente"
+    seed_data_topic_updated: "Tema de datos de semillas actualizado"
+    seed_data_topic_deleted: "Tema de datos de semillas eliminado"
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
     already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
@@ -4997,6 +5199,9 @@ es:
       new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
       fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
       auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
+      watched_word:
+        one: "Esta publicación incluía una palabra vigilada. La palabra es: %{words}. Consulta los %{link} para obtener más información."
+        other: "Esta publicación incluía palabras vigiladas. Las palabras son: %{words}. Consulta los %{link} para obtener más información."
       staged: "El personal debe aprobar los nuevos temas y publicaciones de usuarios temporales. Ver %{link}."
       category: "El personal debe aprobar manualmente las publicaciones en esta categoría. Ver %{link}."
       must_approve_users: "El personal debe aprobar todos los usuarios nuevos. Ver %{link}."
@@ -5007,36 +5212,44 @@ es:
       contains_media: "Esta publicación incluye archivos multimedia incrustados. Ver %{link}."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
       links:
+        watched_word: ajustes de palabras vigiladas
         category: ajustes de la categoría
+      no_context:
+        watched_word: "Esta publicación incluía una palabra vigilada. Consulta los %{link} para obtener más información."
     actions:
       agree:
         title: "Sí"
       agree_and_keep:
         title: "Mantener publicación"
         description: "Aceptar la denuncia, pero mantener esta publicación sin cambios."
+        complete: "La publicación se ha mantenido sin cambios."
       agree_and_keep_hidden:
         title: "Mantener la publicación oculta"
         description: "Aceptar la denuncia y mantener la publicación oculta."
+        complete: "La publicación se ha mantenido oculta."
       agree_and_suspend:
         title: "Suspender al usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
+        complete: "Usuario suspendido."
       agree_and_silence:
         title: "Silenciar al usuario"
         description: "Estar de acuerdo con la denuncia y silenciar al usuario."
+        complete: "Usuario silenciado."
       agree_and_restore:
         title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
+        complete: "Publicación restaurada."
       agree_and_hide:
         title: "Ocultar publicación"
         description: "Aceptar la denuncia y ocultar esta entrada + enviar automáticamente al usuario un mensaje instándole a editarla."
+        complete: "Publicación oculta, se ha notificado al usuario."
       agree_and_edit:
         title: "Aceptar y editar la publicación"
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
-      delete_single:
+        complete: "Denuncia reconocida, ahora puedes editar la publicación."
+      delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
-      delete:
-        title: "Eliminar…"
       delete_and_ignore:
         title: "Ignorar la denuncia y eliminar la publicación"
         description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
@@ -5045,6 +5258,7 @@ es:
         title: "Ignorar la denuncia, eliminar la publicación y las respuestas"
         description: "Ignorar la denuncia quitándola de la cola, eliminar la publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
+        complete: "Publicación y respuestas eliminadas."
       delete_and_agree:
         title: "Eliminar publicación"
         description: "Aceptar la denuncia y eliminar esta publicación; si es la primera publicación, eliminar también el tema."
@@ -5053,16 +5267,20 @@ es:
         title: "Eliminar publicación y respuestas"
         description: "Aceptar la denuncia y eliminar esta publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema."
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
+        complete: "Publicación y respuestas eliminadas."
       disagree_and_restore:
         title: "No, restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
+        complete: "Publicación restaurada."
       disagree:
         title: "No"
         complete: "Denuncia ignorada."
       discard_post:
         title: "Descartar publicación"
+        complete: "Publicación descartada."
       revise_and_reject_post:
         title: "Revisar publicación..."
+        complete: "Publicación rechazada pendiente de revisión."
       ignore:
         title: "Ignorar"
         complete: "Denuncia ignorada."
@@ -5075,7 +5293,10 @@ es:
         complete: "Publicación aprobada."
       approve_post:
         title: "Aprobar publicación"
-        confirm_closed: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
+        complete: "Publicación aprobada."
+      approve_post_closed:
+        title: "Aprobar publicación"
+        confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
         complete: "Publicación aprobada."
       reject_post:
         title: "Rechazar publicación"
@@ -5092,22 +5313,42 @@ es:
         block:
           title: "Eliminar y bloquear usuario"
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
+          complete: "Usuario eliminado y bloqueado."
       reject:
         title: "Rechazar"
         bundle_title: "Rechazar…"
       reject_and_suspend:
         title: "Rechazar y suspender usuario"
+        complete: "Publicación rechazada y usuario suspendido."
       reject_and_silence:
         title: "Rechazar y silenciar al usuario"
+        complete: "Publicación rechazada y usuario silenciado."
       reject_and_delete:
         title: "Rechazar y eliminar la publicación"
+        complete: "Publicación rechazada y eliminada."
       reject_and_keep_deleted:
         title: "Mantener publicación eliminada"
+        complete: "La publicación se ha rechazado y se ha mantenido eliminada."
       approve_and_restore:
         title: "Aprobar y restaurar publicación"
+        complete: "Publicación aprobada y restaurada."
+      approve_and_unhide:
+        title: "Aprobar y dejar de ocultar publicación"
+        complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
+      no_action_user:
+        title: "Ninguna acción"
+      silence_user:
+        title: "Silenciar al usuario"
+        complete: "Usuario silenciado"
+      suspend_user:
+        title: "Suspender al usuario"
+        complete: "Usuario suspendido"
       delete_user:
+        title: "Eliminar usuario"
+        complete: "Usuario eliminado"
         reason: "Eliminado a través de la cola de revisiones"
-        complete: "Usuario eliminado."
+      delete_and_block_user:
+        complete: "Usuario eliminado y bloqueado"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
   notification_level:
@@ -5150,6 +5391,7 @@ es:
       duplicate_ids: "tiene identificadores duplicados"
       reserved_id: "tiene una palabra clave reservada como id: %{id}"
       unsafe_description: "tiene una descripción HTML no segura"
+      invalid_tag_group: "tiene un grupo de etiquetas no válido: %{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

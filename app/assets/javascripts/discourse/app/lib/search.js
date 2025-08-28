@@ -1,19 +1,22 @@
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import getURL from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import categoryTagAutocomplete from "./autocomplete/category-tag";
 import userAutocomplete from "./autocomplete/user";
@@ -26,6 +29,7 @@ const logSearchLinkClickedCallbacks = [];
 export function addLogSearchLinkClickedCallbacks(fn) {
   logSearchLinkClickedCallbacks.push(fn);
 }
+
 export function resetLogSearchLinkClickedCallbacks() {
   logSearchLinkClickedCallbacks.clear();
 }
@@ -223,30 +227,73 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
   }
 }
 
-export function applySearchAutocomplete($input, siteSettings) {
-  $input.autocomplete(
-    deepMerge({
-      template: categoryTagAutocomplete,
-      key: "#",
-      width: "100%",
-      treatAsTextarea: true,
-      autoSelectFirstSuggestion: false,
-      transformComplete: (obj) => obj.text,
-      dataSource: (term) => searchCategoryTag(term, siteSettings),
-    })
-  );
+export function applySearchAutocomplete(inputElement, siteSettings, owner) {
+  if (!siteSettings.floatkit_autocomplete_input_fields) {
+    const $input = $(inputElement);
 
-  if (siteSettings.enable_mentions) {
     $input.autocomplete(
       deepMerge({
-        template: userAutocomplete,
-        key: "@",
+        template: categoryTagAutocomplete,
+        key: "#",
         width: "100%",
         treatAsTextarea: true,
         autoSelectFirstSuggestion: false,
-        transformComplete: (v) => v.username || v.name,
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        transformComplete: (obj) => obj.text,
+        dataSource: (term) => searchCategoryTag(term, siteSettings),
       })
+    );
+
+    if (siteSettings.enable_mentions) {
+      $input.autocomplete(
+        deepMerge({
+          template: userAutocomplete,
+          key: "@",
+          width: "100%",
+          treatAsTextarea: true,
+          autoSelectFirstSuggestion: false,
+          transformComplete: (v) => {
+            validateSearchResult(v);
+            return v.username || v.name;
+          },
+          dataSource: (term) => userSearch({ term, includeGroups: true }),
+        })
+      );
+    }
+    return;
+  }
+
+  const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
+  DAutocompleteModifier.setupAutocomplete(
+    owner,
+    inputElement,
+    autocompleteHandler,
+    {
+      template: categoryTagAutocomplete,
+      key: "#",
+      autoSelectFirstSuggestion: false,
+      transformComplete: (obj) => obj.text,
+      dataSource: (term) => searchCategoryTag(term, siteSettings),
+      fixedTextareaPosition: true,
+      offset: 2,
+    }
+  );
+  if (siteSettings.enable_mentions) {
+    DAutocompleteModifier.setupAutocomplete(
+      owner,
+      inputElement,
+      autocompleteHandler,
+      {
+        template: userAutocomplete,
+        key: "@",
+        autoSelectFirstSuggestion: false,
+        transformComplete: (v) => {
+          validateSearchResult(v);
+          return v.username || v.name;
+        },
+        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        fixedTextareaPosition: true,
+        offset: 2,
+      }
     );
   }
 }

@@ -15,8 +15,8 @@ import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat
 
 @classNames("chat-composer-uploads")
 export default class ChatComposerUploads extends Component {
+  @service capabilities;
   @service mediaOptimizationWorker;
-  @service chatStateManager;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",
@@ -28,7 +28,7 @@ export default class ChatComposerUploads extends Component {
         this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
           optimizeFn: (data, opts) =>
             this.mediaOptimizationWorker.optimizeImage(data, opts),
-          runParallel: !this.site.isMobileDevice,
+          runParallel: !this.capabilities.isMobileDevice,
         });
       }
 

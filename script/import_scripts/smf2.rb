@@ -306,7 +306,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     last_post_id = -1
     total =
       query(
-        "SELECT COUNT(*) count FROM smf_personal_messages WHERE deleted_by_sender = 0",
+        "SELECT COUNT(*) count FROM {prefix}personal_messages WHERE deleted_by_sender = 0",
         as: :single,
       )
 
@@ -317,8 +317,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
              , msgtime
              , subject
              , body
-             , (SELECT GROUP_CONCAT(id_member) FROM smf_pm_recipients r WHERE r.id_pm = pm.id_pm) recipients
-          FROM smf_personal_messages pm
+             , (SELECT GROUP_CONCAT(id_member) FROM {prefix}pm_recipients r WHERE r.id_pm = pm.id_pm) recipients
+          FROM {prefix}personal_messages pm
          WHERE deleted_by_sender = 0
            AND id_pm > #{last_post_id}
          ORDER BY id_pm
@@ -897,8 +897,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
       ser.scan(/i:(\d+);s:\d+:\"(.*?)\";/).each { |nv| board_slugs[nv[0].to_i] = nv[1] }
       topic_urls = query(<<-SQL, as: :array)
         SELECT t.id_first_msg, t.id_board,u.pretty_url
-        FROM smf_topics t
-        LEFT JOIN smf_pretty_topic_urls u ON u.id_topic = t.id_topic ;
+        FROM {prefix}topics t
+        LEFT JOIN {prefix}pretty_topic_urls u ON u.id_topic = t.id_topic ;
       SQL
       topic_urls.each do |url|
         t = topic_lookup_from_imported_post_id(url[:id_first_msg])

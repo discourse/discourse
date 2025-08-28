@@ -16,6 +16,10 @@
     }
   }
 
+  .inline-footnote {
+    display: inline-block;
+  }
+
   // This is hack to work with lazy-loading, we will trick the browser
   // to believe the image is in the DOM and can be loaded
   .footnotes-list,

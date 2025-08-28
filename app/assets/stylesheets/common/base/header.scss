@@ -292,6 +292,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -521,5 +522,18 @@ $mobile-avatar-height: 1.532em;
     .d-header-icons {
       display: none;
     }
+  }
+}
+
+.impersonation-notice {
+  background-color: var(--header_background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+
+  button {
+    margin-left: 10px;
   }
 }

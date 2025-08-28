@@ -117,6 +117,7 @@ module PageObjects
 
       def visit
         page.visit("/admin/config/customize/components")
+        self
       end
 
       def component(id)
@@ -185,6 +186,10 @@ module PageObjects
             "admin_js.admin.config_areas.themes_and_components.components.no_components_found",
           ),
         )
+      end
+
+      def click_install_button
+        PageObjects::Components::AdminCustomizeThemeInstallButton.new.click
       end
     end
   end

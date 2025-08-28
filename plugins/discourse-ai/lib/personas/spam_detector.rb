@@ -46,11 +46,12 @@ module DiscourseAi
 
           Format your response as a JSON object with a one key named "spam", which is a boolean that indicates if a post is spam or legitimate.
           Your output should be in the following format:
-            <output>
-              {"spam": xx}
-            </output>
+
+          {"spam": xx}
 
           Where xx is true if the post is spam, or false if it's legitimate.
+          reply with valid JSON only
+
         PROMPT
       end
 

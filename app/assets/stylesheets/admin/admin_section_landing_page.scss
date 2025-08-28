@@ -14,13 +14,16 @@
     grid-row: span 2;
     gap: 0;
     margin-bottom: 2em;
+    padding: var(--space-4);
+    color: var(--primary);
 
     @include viewport.from(sm) {
       margin-bottom: 2em;
     }
 
-    &.-has-icon {
+    &.--has-icon {
       grid-template-columns: 1fr 8fr;
+      gap: 0 var(--space-4);
 
       .admin-section-landing-item__buttons {
         grid-column: 2;

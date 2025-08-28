@@ -23,6 +23,9 @@ en:
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
+      llm_tagger:
+        title: Tag topics using AI
+        description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
     ai_default_llm_model: "The default LLM model to use for all AI features"
@@ -608,8 +611,8 @@ en:
       cannot_edit_builtin: "You can't edit a built-in model."
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
-        invalid_config: "You selected a invalid option."
         choose_model: "Set 'ai embeddings selected model' first."
+        model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"

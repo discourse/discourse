@@ -61,6 +61,9 @@ ru:
     chat_integration_webex_excerpt_length: "Размер сообщения в Webex Teams"
     chat_integration_google_enabled: "Включить провайдера для чат-интеграции c Google Chat"
     chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "В некоторых каналах интеграции чата обнаружены ошибки. Перейдите в <a href='%{base_path}/admin/plugins/chat-integration'>раздел интеграции чата</a>, чтобы узнать подробности."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -82,9 +85,9 @@ ru:
         status:
           header: |
             *Правила для этого канала*
-            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
+            (если публикация соответствует нескольким правилам, то выполняется самое верхнее правило)
           no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
-          rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
+          rule_string: "*%{index})* *%{filter} *публикации в разделе *%{category}*"
           rule_string_tags_suffix: " с тегами: *%{tags}*"
         parse_error: "Непонятно. Для получения инструкций запустите `/discourse help`."
         create:
@@ -110,8 +113,8 @@ ru:
 
           *Вывести правила:* `/discourse status`
 
-          *[Экспериментальная функция] Содержимое записи:* `/discourse post [n]`
-          Создать черновик темы на Discourse с последними `n` сообщениями в этом канале.
+          *[Экспериментальная функция] Содержимое публикации:* `/discourse post [n]`
+          Создать черновик темы на Discourse с последними публикациями в количестве `n` в этом канале.
 
           *Справка:* `/discourse help`
         transcript:
@@ -181,7 +184,7 @@ ru:
         status:
           header: |
             *Правила для этого канала*
-            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
+            (если публикация соответствует нескольким правилам, то выполняется самое верхнее правило)
           no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
           rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
           rule_string_tags_suffix: " с тегами: *%{tags}*"
@@ -212,12 +215,16 @@ ru:
       matrix:
         text_message: "%{user} размещено в %{title} - %{post_url}"
         formatted_message: |
-          <b>%{user}</b> разместил(а) запись <b><a href='%{post_url}'>%{title}</a></b>
+          <b>%{user}</b> разместил(-а) публикацию <b><a href='%{post_url}'>%{title}</a></b>
           <blockquote>
           %{excerpt}
           </blockquote>
       zulip:
-        message: "**%{user}** опубликовано в **[%{title}] (%{post_url})**\n~~~ цитата \n%{excerpt}\n~~~\n"
+        message: |
+          **%{user}** разместил(-а) публикацию в теме **[%{title}] (%{post_url})**
+          ~~~quote
+          %{excerpt}
+          ~~~
       flowdock:
         message_title: "отправлено"
       google:

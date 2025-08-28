@@ -475,24 +475,23 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
-export function translateModKey(string) {
+export function translateModKey(string, separator = " ") {
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string
-      .toLowerCase()
-      .replace("shift", "\u21E7")
-      .replace("meta", "\u2318")
-      .replace("alt", "\u2325")
-      .replace("ctrl", "\u2303")
-      .replace(/\+/g, "");
+      .replace(/shift/i, "\u21E7")
+      .replace(/meta/i, "\u2318")
+      .replace(/alt/i, "\u2325")
+      .replace(/ctrl/i, "\u2303")
+      .replace(/\+/g, separator);
   } else {
     string = string
-      .toLowerCase()
-      .replace("shift", i18n("shortcut_modifier_key.shift"))
-      .replace("ctrl", i18n("shortcut_modifier_key.ctrl"))
-      .replace("meta", i18n("shortcut_modifier_key.ctrl"))
-      .replace("alt", i18n("shortcut_modifier_key.alt"));
+      .replace(/shift/i, "\u21E7")
+      .replace(/ctrl/i, i18n("shortcut_modifier_key.ctrl"))
+      .replace(/meta/i, i18n("shortcut_modifier_key.ctrl"))
+      .replace(/alt/i, i18n("shortcut_modifier_key.alt"))
+      .replace(/\+/g, separator);
   }
 
   return string;

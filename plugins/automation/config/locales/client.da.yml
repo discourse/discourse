@@ -6,8 +6,16 @@
 
 da:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: slet automatisering
     discourse_automation:
       title: Automatisering
+      table_title: Automatiseringer
+      create: Tilføj automatisering
+      update: Opdater automatisering
       back: Tilbage
       edit: Rediger
       select_script: Vælg et script
@@ -133,12 +141,26 @@ da:
               label: Mærker
             restricted_categories:
               label: Kategorier
+            first_post_only:
+              label: Kun første indlæg
+            first_topic_only:
+              label: Kun første emne
           created: Oprettet
           edited: Redigeret
+          topics: Alle Emner
+          personal_messages: Personlige Beskeder
           with_images: Billeder
           with_links: Links
           with_code: Kode
           with_uploads: Overførsler
+        user_updated:
+          fields:
+            custom_fields:
+              label: Brugerdefinerede felter
+            once_per_user:
+              label: Én gang pr. bruger
+            new_users_only:
+              label: Kun nye brugere
         category_created_edited:
           fields:
             restricted_category:
@@ -168,6 +190,8 @@ da:
           fields:
             once:
               label: En Gang
+            answering_user:
+              label: Svarende bruger
         auto_tag_topic:
           fields:
             tags:
@@ -204,8 +228,11 @@ da:
               label: Gruppe
             badge:
               label: Emblem
+              description: Vælg emblem
         suspend_user_by_email:
           fields:
+            reason:
+              label: Årsag (standard)
             actor:
               label: Bruger
         pin_topic:
@@ -220,6 +247,8 @@ da:
           fields:
             topic_id:
               label: Emne ID
+            banner_until:
+              label: Gør til banner indtil
             user:
               label: Bruger
               description: "Brugeren, der opretter banneret (standard: system)"
@@ -242,6 +271,7 @@ da:
             user:
               label: Bruger
               description: "Brugeren, der lukker emnet (standard: system)"
+      unnamed_automation: "Unavngiven automatisering"
       models:
         script:
           name:
@@ -250,6 +280,11 @@ da:
           name:
             label: Udløser
         automation:
+          runs_today: "%{count} i dag"
+          runs_this_week: "%{count} denne uge"
+          runs_this_month: "%{count} denne måned"
+          runs:
+            label: Kørsler
           name:
             label: Navn
           trigger:
@@ -261,12 +296,14 @@ da:
           status:
             label: Status
           enabled:
-            label: Aktiveret
+            label: "Aktiver automatisering"
           disabled:
             label: Deaktiveret
           placeholders:
             label: Pladsholdere
           last_updated_at:
             label: Sidst opdateret
+          last_run:
+            label: Sidste kørsel
           last_updated_by:
             label: Opdateret af

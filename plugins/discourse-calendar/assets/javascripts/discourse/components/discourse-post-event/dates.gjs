@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
@@ -102,7 +102,7 @@ export default class DiscoursePostEventDates extends Component {
       time: date.format("HH:mm"),
       format,
       timezone: this.timezone,
-      hideTimezone: this.args.event.showLocalTime,
+      postId: this.args.event.id,
     };
 
     if (this.args.event.showLocalTime) {
@@ -122,21 +122,27 @@ export default class DiscoursePostEventDates extends Component {
 
   @action
   async computeDates(element) {
+    if (this.args.expiredAndRecurring) {
+      return;
+    }
+
     if (this.siteSettings.discourse_local_dates_enabled) {
       const result = await cook(this.datesBBCode.join("<span> → </span>"));
       this.htmlDates = htmlSafe(result.toString());
 
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+        schedule("afterRender", () => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
 
-        applyLocalDates(
-          element.querySelectorAll(
-            `[data-post-id="${this.args.event.id}"] .discourse-local-date`
-          ),
-          this.siteSettings
-        );
+          applyLocalDates(
+            element.querySelectorAll(
+              `[data-post-id="${this.args.event.id}"].discourse-local-date`
+            ),
+            this.siteSettings
+          );
+        });
       });
     } else {
       let dates = `${this.startsAt.format(this.startsAtFormat)}`;
@@ -148,7 +154,17 @@ export default class DiscoursePostEventDates extends Component {
   }
 
   <template>
-    <section class="event__section event-dates" {{didInsert this.computeDates}}>
-      {{icon "clock"}}{{this.htmlDates}}</section>
+    <section
+      data-event-id={{@event.id}}
+      class="event__section event-dates"
+      {{didInsert this.computeDates}}
+    >
+      {{icon "clock"}}
+      {{#if @expiredAndRecurring}}
+        -
+      {{else}}
+        {{this.htmlDates}}
+      {{/if}}
+    </section>
   </template>
 }

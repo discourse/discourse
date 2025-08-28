@@ -9,21 +9,30 @@ tr_TR:
     ai:
       flag_types:
         review: "Gönderiyi inceleme kuyruğuna ekleyin"
+        review_hide: "Gönderiyi inceleme kuyruğuna ekleyin ve gönderiyi gizleyin"
         spam: "Spam olarak işaretleyin ve gönderiyi gizleyin"
         spam_silence: "Spam olarak işaretleyin, gönderiyi gizleyin ve kullanıcıyı susturun"
     scriptables:
+      llm_tool_triage:
+        title: YZ Aracını kullanarak gönderileri sınıflandırın
+        description: "YZ aracında özel mantık kullanarak gönderileri sınıflandırın"
+      llm_persona_triage:
+        title: YZ Kişiliğini kullanarak gönderileri sınıflandırın
+        description: "Gönderilere belirli bir YZ kişiliği kullanarak yanıt verin"
       llm_triage:
-        title: AI kullanarak gönderileri triyajla
-        description: "Büyük bir dil modeli kullanarak gönderileri triyajla"
+        title: YZ kullanarak gönderileri sınıflandırın
+        description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         flagged_post: |
           <div>Modelden gelen yanıt:</div>
           <p>%%LLM_RESPONSE%%</p>
           <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> kuralı ile tetiklenir.</b>
       llm_report:
-        title: AI kullanarak periyodik raporla
+        title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
   site_settings:
     discourse_ai_enabled: "Discourse YZ eklentisini etkinleştirin."
+    ai_default_llm_model: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli"
+    ai_artifact_security: "YZ artifact sistemi, çalıştırılabilir kod içeren IFRAME'ler üretir. Katı mod, kodu çalıştırmak için fazladan bir tıklama gerektirir. Gevşek mod, kodu hemen çalıştırır. Karma mod, kullanıcının veri-yz-artifact-otomatik çalıştırmayı hemen göstermesine olanak tanır. Devre dışı mod, artifact sistemini devre dışı bırakır."
     ai_toxicity_enabled: "Toksiklik modülünü etkinleştirin."
     ai_toxicity_inference_service_api_endpoint: "API'nin toksiklik modülü için çalıştığı URL"
     ai_toxicity_inference_service_api_key: "Toksiklik API'si için API anahtarı"
@@ -51,50 +60,72 @@ tr_TR:
     ai_nsfw_flag_threshold_porn: "Porno olarak sınıflandırılan bir görüntünün NSFW olarak değerlendirilmesi için eşik."
     ai_nsfw_flag_threshold_sexy: "Seksi olarak sınıflandırılan bir görüntünün NSFW olarak değerlendirilmesi için eşik."
     ai_nsfw_models: "NSFW çıkarımı için kullanılacak modeller."
+    ai_spam_detection_enabled: "YZ spam algılama modülünü etkinleştirin"
+    ai_openai_api_key: "OpenAI API'si için API anahtarı. SADECE görüntü oluşturma ve düzenleme için kullanılır. GPT için LLM yapılandırma sekmesini kullanın"
+    ai_openai_image_generation_url: "OpenAI görüntü oluşturma API'si için URL"
+    ai_openai_image_edit_url: "OpenAI görüntü düzenleme API'si için URL"
     ai_helper_enabled: "YZ yardımcısını etkinleştirin."
     composer_ai_helper_allowed_groups: "Bu gruplardaki kullanıcılar, bestecide YZ yardımcı düğmesini görür."
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_model: "YZ yardımcı için kullanılacak model."
-    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar AI yardımcısında özel istem seçeneğini görürler."
-    ai_helper_automatic_chat_thread_title_delay: "AI yardımcısının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
+    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar YZ yardımcıda özel istem seçeneğini görürler."
+    ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
-    ai_helper_illustrate_post_model: "Besteci AI yardımcısının gönderiyi çizme özelliği için kullanılacak model"
-    ai_helper_enabled_features: "YZ yardımcısında etkinleştirilecek özellikleri seçin."
-    post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcısı özelliklerine erişmesine izin verilen kullanıcı grupları"
+    ai_helper_illustrate_post_model: "Besteci YZ yardımcının gönderiyi çizme özelliği için kullanılacak model"
+    ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
+    post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
     ai_helper_image_caption_model: "Görüntü alt yazıları oluşturmak için kullanılacak modeli seçin"
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
-    ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Arama'yı kullanın."
+    ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
     ai_embeddings_semantic_related_topics: "İlgili konu bölümünde gösterilecek maksimum konu sayısı."
     ai_embeddings_backfill_batch_size: "Her 15 dakikada bir geri doldurulacak gömme sayısı."
     ai_embeddings_semantic_search_enabled: "Tam sayfa semantik aramayı etkinleştirin."
+    ai_embeddings_semantic_search_use_hyde: "Anlamsal tam sayfa arama için HyDE'ı kullanın. Eşleşmelere yardımcı olmak için kullanıcı arama teriminden varsayımsal bir gönderi oluşturmak için bir LLM kullanır."
     ai_embeddings_semantic_quick_search_enabled: "Arama menüsü açılır penceresinde semantik arama seçeneğini etkinleştirin."
     ai_embeddings_semantic_related_include_closed_topics: "Kapalı konuları semantik arama sonuçlarına dâhil edin"
     ai_embeddings_semantic_search_hyde_model: "Anlamsal arama sırasında daha iyi sonuçlar elde etmek için anahtar kelimeleri genişletmek üzere kullanılan model"
     ai_embeddings_per_post_enabled: Her gönderi için yerleştirmeler oluşturun
+    ai_summarization_enabled: "Özetleme özelliğini etkinleştirin"
     ai_summarization_model: "Özetleme için kullanılacak model"
+    ai_summarization_persona: "Özetleme özelliği için kullanılacak kişilik"
     ai_custom_summarization_allowed_groups: "Grupların yeni özetler oluşturmasına izin verilir."
     ai_pm_summarization_allowed_groups: "Kişisel mesajlarda özet oluşturma ve görüntüleme yetkisi olan gruplar."
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
     ai_summary_gists_allowed_groups: "Popüler konular listesindeki özetleri görme yetkisine sahip gruplar."
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
-    ai_bot_enabled: "YZ Botu modülünü etkinleştirin."
-    ai_bot_enable_chat_warning: "Kişisel mesaj sohbeti başlatıldığında bir uyarı görüntüleyin. Çeviri dizesi düzenlenerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
+    ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
+    ai_bot_enable_chat_warning: "Kişisel mesaj sohbeti başlatıldığında bir uyarı gösterin. Çeviri dizesi düzenlenerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "GPT Botunun Kişisel Mesaja erişimi olduğunda, bu grupların üyelerine yanıt verir."
-    ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ isteğini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
+    ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ talebini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
     ai_bot_public_sharing_allowed_groups: "Bu grupların, herkese açık benzersiz bir bağlantı aracılığıyla YZ kişisel mesajlarını herkese açık şekilde paylaşmasına izin verin. Not: Siteniz giriş yapılmasını gerektiriyorsa paylaşımlar da giriş yapılmasını gerektirir."
-    ai_bot_add_to_header: "Bir YZ Botu ile bir kişisel mesaj başlatmak için başlıkta bir düğme gösterin"
+    ai_bot_add_to_header: "YZ Bot ile bir kişisel mesaj başlatmak için başlıkta bir düğme gösterin"
     ai_bot_github_access_token: "GitHub AI araçlarıyla kullanım için GitHub erişim token'ı (arama desteği için gereklidir)"
     ai_stability_api_key: "stability.ai API'si için API anahtarı"
     ai_stability_engine: "stability.ai API'si için kullanılacak görüntü oluşturma motoru"
     ai_stability_api_url: "stability.ai API'si için URL"
     ai_google_custom_search_api_key: "Google Özel Arama API'sı için API anahtarı bkz.: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google Özel Arama API'sı için CX"
+    ai_discord_search_enabled: "Discord arama özelliğini etkinleştirir"
+    ai_discord_app_id: "Discord aramasını bağlamak istediğiniz Discord uygulamasının kimliği"
+    ai_discord_app_public_key: "Discord aramasını bağlamak istediğiniz Discord uygulamasının herkese açık anahtarı"
+    ai_discord_search_mode: "Discord araması için kullanılacak arama modunu seçin"
+    ai_discord_search_persona: "Discord araması için kullanılacak kişilik."
+    ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
+    ai_bot_enable_dedicated_ux: "Kişisel mesaj yerine tam ekran bot arayüzüne izin verin"
+    ai_translation_enabled: "YZ çeviri özelliğini etkinleştirir"
+    ai_translation_model: "Çeviri için kullanılacak model. Bu modelin çeviriyi desteklemesi gerekir. Kişilikler bu ayarı geçersiz kılabilir."
+    ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
+    ai_translation_max_post_length: "Çevrilecek gönderinin maksimum uzunluğu. Bu uzunluktan daha uzun gönderiler çevrilmez."
+    ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
   reviewables:
     reasons:
       flagged_by_toxicity: YZ eklentisi, toksik olarak sınıflandırdıktan sonra buna bayrak ekledi.
       flagged_by_nsfw: YZ eklentisi, eklenen resimlerden en az birini NSFW olarak sınıflandırdıktan sonra buna bayrak ekledi.
   reports:
+    sentiment_analysis:
+      title: "Duyarlılık analizi"
+      description: "Bu rapor, her gönderi ve kategori için olumlu, olumsuz ve nötr puanlarla kategoriye göre gruplandırılmış gönderiler için duygu analizi sağlar."
     overall_sentiment:
       title: "Genel duyarlılık"
       description: 'Grafik, olumlu veya olumsuz olarak sınıflandırılan gönderilerin sayısını karşılaştırır. Bunlar, pozitif veya negatif puanlar belirlenen eşik puanından fazla olduğunda hesaplanır. Bu, nötr gönderilerin gösterilmediği anlamına gelir. Kişisel mesajlar da hariç tutulmuştur. "cardiffnlp/twitter-roberta-base-sentiment-latest" ile sınıflandırılır'
@@ -186,8 +217,16 @@ tr_TR:
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla şaşırma duygusu ile sınıflandırılan gönderiler."
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Artifact'te yalnızca %{count} anahtarınız olabilir."
+          other: "Artifact'te yalnızca %{count} anahtarınız olabilir."
+      link: "Yeni sekmede göster"
+      copy_embed: "Yerleştirmeyi kopyala"
       view_source: "Kaynağı görüntüle"
       view_changes: "Değişiklikleri görüntüle"
+      change_description: "Açıklamayı değiştir"
+      copied: "Panoya kopyalandı"
     unknown_model: "Bilinmeyen YZ modeli"
     tools:
       custom_name: "%{name} (özel)"
@@ -202,6 +241,8 @@ tr_TR:
           name: "Flux görüntü oluşturucu (Together.ai)"
         empty_tool:
           name: "Boştan başla..."
+      name:
+        characters: "yalnızca rakam, harf ve alt çizgi içermeli"
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."
@@ -212,14 +253,14 @@ tr_TR:
         markdown_table: Markdown tablosu oluştur
         custom_prompt: "Özel İstem"
         explain: "Açıkla"
-        illustrate_post: "Gönderiyi göster"
+        illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
       painter:
         attribution:
           stable_diffusion_xl: "Stable Diffusion XL'den görüntü"
           dall_e_3: "DALL-E 3'den görüntü"
       image_caption:
-        attribution: "AI tarafından altyazılı"
+        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"
@@ -237,51 +278,150 @@ tr_TR:
       invalid_error_type: "Geçersiz hata türü sağlandı"
       unexpected: "Beklenmeyen bir hata oluştu"
       bot_user_update_failed: "İstenmeyen içerik tarama botu kullanıcısı güncellenemedi"
+      configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
+      logging_subject: "Spam tespiti"
     ai_bot:
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
-      default_pm_prefix: "[Adsız YZ botu kişisel mesajı]"
+      default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
+      thinking: "Düşünüyorum..."
       personas:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_persona: "Sistem kişilikleri silinemez, lütfen bunun yerine devre dışı bırakın"
         cannot_edit_system_persona: "Sistem kişileri yalnızca yeniden adlandırılabilir, araçları veya sistem istemini düzenleyemezsiniz, bunun yerine devre dışı bırakıp bir kopyasını oluşturabilirsiniz"
+        cannot_have_duplicate_tools: "Eş kopya araçlara sahip olunamaz"
         github_helper:
           name: "GitHub Yardımcısı"
-          description: "GitHub ile ilgili görevlere ve sorulara yardımcı olma konusunda uzmanlaşmış YZ Botu"
+          description: "GitHub ile ilgili görevlere ve sorulara yardımcı olma konusunda uzmanlaşmış YZ Bot"
         general:
           name: Forum Yardımcısı
-          description: "Çeşitli görevleri yerine getirebilen genel amaçlı AI Botu"
+          description: "Çeşitli görevleri yerine getirebilen genel amaçlı YZ Bot"
         artist:
           name: Sanatçı
-          description: "Görsel üretme konusunda uzmanlaşmış AI Bot"
+          description: "Görsel üretme konusunda uzmanlaşmış YZ Bot"
+        designer:
+          name: Tasarımcı
+          description: "Görüntü oluşturma ve düzenleme konusunda uzmanlaşmış YZ Bot"
+        forum_researcher:
+          name: Forum Araştırmacısı
+          description: "Forum için derin araştırmalara odaklanan YZ Bot"
         sql_helper:
           name: SQL Yardımcısı
-          description: "Bu Discourse örneğinde SQL sorguları oluşturmaya yardımcı olma konusunda uzmanlaşmış AI Bot"
+          description: "Bu Discourse örneğinde SQL sorguları oluşturmaya yardımcı olma konusunda uzmanlaşmış YZ Bot"
         settings_explorer:
           name: Ayarlar Gezgini
-          description: "Discourse site ayarlarını keşfetmeye yardımcı olma konusunda uzmanlaşmış AI Bot"
+          description: "Discourse site ayarlarını keşfetmeye yardımcı olma konusunda uzmanlaşmış YZ Bot"
+        researcher:
+          name: Web Araştırmacısı
+          description: "Web sayfalarını hem arayabilen hem de okuyabilen Google erişimli YZ Bot"
         creative:
           name: Yaratıcı
-          description: "Yaratıcı görevlerde uzmanlaşmış, harici entegrasyonları olmayan AI Bot"
+          description: "Yaratıcı görevlerde uzmanlaşmış, harici entegrasyonları olmayan YZ Bot"
         dall_e3:
           name: "DALL-E 3"
-          description: "DALL-E 3 kullanarak görüntü üretme konusunda uzmanlaşmış AI Bot"
+          description: "DALL-E 3 kullanarak görüntü üretme konusunda uzmanlaşmış YZ Bot"
         discourse_helper:
           name: "Discourse Yardımcısı"
-          description: "Discourse ile ilgili görevlere yardımcı olma konusunda uzmanlaşmış YZ Botu"
+          description: "Discourse ile ilgili görevlere yardımcı olma konusunda uzmanlaşmış YZ Bot"
         web_artifact_creator:
           name: "Web Artifact'i Oluşturucu"
-          description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Botu"
+          description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Bot"
+        summarizer:
+          name: "Özetleyici"
+          description: "YZ özetlerini desteklemek için kullanılan varsayılan kişilik"
+        short_summarizer:
+          name: "Özetleyici (kısa form)"
+          description: "Konu listelerinin ögeleri için YZ kısa özetlerini güçlendirmek üzere kullanılan varsayılan kişilik"
+        concept_finder:
+          name: "Konsept Bulucu"
+          description: "İçerikteki kavram ve temaları belirleme konusunda uzmanlaşmış YZ Botu"
+        concept_matcher:
+          name: "Konsept Eşleştirici"
+          description: "Mevcut konseptlerle içerik eşleştirme konusunda uzmanlaşmış YZ Botu"
+        concept_deduplicator:
+          name: "Kavram Tekilleştirici"
+          description: "Kavramların tekilleştirilmesini önleme konusunda uzmanlaşmış YZ Botu"
         custom_prompt:
           name: "Özel istem"
+          description: "Yardımcının özel istem özelliğini destekleyen varsayılan kişilik"
         smart_dates:
           name: "Akıllı tarihler"
+          description: "Yardımcının akıllı tarihler özelliğini destekleyen varsayılan kişilik"
+        markdown_table_generator:
+          name: "Markdown tablo oluşturucu"
+          description: "Yardımcının Markdown tablosu oluşturma özelliğini destekleyen varsayılan kişilik"
+        post_illustrator:
+          name: "Gönderi illüstratörü"
+          description: "Yardımcının resimli gönderi özelliğini desteklemek için StableDiffusion istemleri üretir"
+        proofreader:
+          name: "Düzeltmen"
+          description: "Yardımcının metni düzeltme özelliğini destekleyen varsayılan kişilik"
+        titles_generator:
+          name: "Başlık oluşturucu"
+          description: "Yardımcının konu başlığı önerme özelliğini destekleyen varsayılan kişilik"
+        tutor:
+          name: "Öğretmen"
+          description: "Yardımcının açıklama özelliğini destekleyen varsayılan kişilik"
+        translator:
+          name: "Çevirmen"
+          description: "Yardımcının çevirmen özelliğini destekleyen varsayılan kişilik"
+        image_captioner:
+          name: "Görüntü yazıları"
+          description: "Yardımcının görüntü yazısı özelliğini destekleyen varsayılan kişilik"
+        locale_detector:
+          name: "Yerel ayar dedektörü"
+          description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."
+        post_raw_translator:
+          name: "Gönderi çevirmeni"
+          description: "Discourse Markdown içeren gönderileri çevirerek çeviri özelliğini destekler"
+        topic_title_translator:
+          name: "Konu başlığı çevirmeni"
+          description: "Konu başlıklarını çevirerek çeviri özelliğini destekler"
+        short_text_translator:
+          name: "Kısa metin çevirmeni"
+          description: "Kategori adları veya etiketler gibi kısa metinler için kullanılan genel bir metin çevirmeni olarak çeviri özelliğini destekler"
+        spam_detector:
+          name: "Spam dedektörü"
+          description: "Spam algılama özelliğimizi destekleyen varsayılan kişilik"
+        content_creator:
+          name: "İçerik oluşturucu"
+          description: "HyDE aramasını destekleyen varsayılan kişilik"
+        report_runner:
+          name: "Rapor çalıştırıcı"
+          description: "Rapor otomasyon komut dosyasında kullanılan varsayılan kişilik"
       topic_not_found: "Özet mevcut değil, konu bulunamadı!"
       summarizing: "Konu özetleniyor"
-      searching: "Aranıyor: '%{query}'"
+      searching: "Aranıyor: \"%{query}\""
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Araştırma için kullanılacak dil modeli (varsayılan olarak mevcut kişiliğin LLM'i)"
+          max_tokens_per_batch:
+            name: "Seri başına maksimum token sayısı"
+            description: "Araştırmada her seri için kullanılacak maksimum token sayısı"
+          max_tokens_per_post:
+            name: "Gönderi başına maksimum token sayısı"
+            description: "Araştırmada her gönderi için kullanılacak maksimum token sayısı"
           max_results:
             name: "Maksimum sonuç sayısı"
+            description: "Bir filtreye dâhil edilecek maksimum sonuç sayısı"
+          include_private:
+            name: "Özel olanları dâhil et"
+            description: "Filtrelere özel konuları dâhil et"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Artifact oluşturmak için kullanılacak dil modeli"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Artifact düzenlemek için kullanılacak dil modeli"
+          update_algorithm:
+            name: "Algoritmayı güncelle"
+            description: "LLM'den tam olarak değiştirmesini isteyin veya güncellemek için diff'i kullanın"
+          do_not_echo_artifact:
+            name: "Artifact'i Yankı Yapmayın"
+            description: "Maliyetleri sınırlar ancak Artifact güncellemelerinin etkinliği azalır"
         google:
           base_query:
             name: "Temel Arama Sorgusu"
@@ -296,18 +436,19 @@ tr_TR:
             description: "Kullanıcının erişebildiği tüm konuları arama sonuçlarına dâhil et (varsayılan olarak yalnızca herkese açık konular dâhil edilir)"
           max_results:
             name: "Maksimum sonuç sayısı"
-            description: "Aramaya dahil edilecek maksimum sonuç sayısı; boşsa varsayılan kurallar kullanılır ve kullanılan modele bağlı olarak sayım ölçeklendirilir. En yüksek değer 100'dür."
+            description: "Aramaya dâhil edilecek maksimum sonuç sayısı; boşsa varsayılan kurallar kullanılır ve kullanılan modele bağlı olarak sayım ölçeklendirilir. En yüksek değer 100'dür."
           base_query:
             name: "Temel Arama Sorgusu"
             description: "Arama yaparken kullanılacak temel sorgu. Örnek: \"#acil\" arama sorgusuna \"#acil\" iadesini ekler ve yalnızca acil kategorisine veya etiketine sahip konuları içerir."
       tool_summary:
+        read_artifact: "Web artifact'i oku"
         update_artifact: "Web artifact'i güncelle"
         create_artifact: "Web artifact'i oluştur"
         web_browser: "Web'de gezinin"
         github_search_files: "GitHub arama dosyaları"
         github_search_code: "GitHub kodu arama"
         github_file_content: "GitHub dosya içeriği"
-        github_pull_request_diff: "GitHub çekme isteği farkı"
+        github_pull_request_diff: "GitHub çekme talebi farkı"
         random_picker: "Rastgele Seçici"
         categories: "Kategorileri listele"
         search: "Ara"
@@ -323,14 +464,19 @@ tr_TR:
         dall_e: "Görüntü oluştur"
         search_meta_discourse: "Meta Discourse'ta arama yapın"
         javascript_evaluator: "JavaScript'i değerlendirin"
+        create_image: "Görüntü oluşturma"
+        edit_image: "Görüntü düzenleme"
+        researcher: "Araştırma"
+        researcher_dry_run: "Araştırma hazırlama"
       tool_help:
+        read_artifact: "YZ Botunu kullanarak bir web artifact'ini okuyun"
         update_artifact: "YZ Botunu kullanarak bir web artifact'i güncelle"
         create_artifact: "YZ Botunu kullanarak bir web artifact'i oluştur"
         web_browser: "YZ Botunu kullanarak web sayfasına göz atın"
         github_search_code: "GitHub deposunda kod arayın"
         github_search_files: "GitHub deposunda dosya arayın"
         github_file_content: "Bir GitHub deposundan dosyaların içeriğini alın"
-        github_pull_request_diff: "GitHub çekme isteği farkını alın"
+        github_pull_request_diff: "GitHub çekme talebi farkını alın"
         random_picker: "Rastgele bir sayı veya listenin rastgele bir ögesini seçin"
         categories: "Forumdaki herkese açık tüm kategorileri listeleyin"
         search: "Forumdaki tüm herkese açık konuları arayın"
@@ -338,6 +484,8 @@ tr_TR:
         time: "Çeşitli saat dilimlerinde zamanı bulun"
         summary: "Bir konuyu özetleyin"
         image: "Stable Diffusion kullanarak görüntü oluşturun"
+        create_image: "Open AI GPT görüntü modelini kullanarak görüntü oluşturun"
+        edit_image: "Open AI GPT görüntü modelini kullanarak görüntü düzenleyin"
         google: "Bir sorgu için Google'da arama yapın"
         read: "Forumdaki herkese açık konuyu okuyun"
         setting_context: "Site ayarı bağlamına bak"
@@ -346,8 +494,11 @@ tr_TR:
         dall_e: "DALL-E 3 kullanarak görüntü oluşturun"
         search_meta_discourse: "Meta Discourse'ta arama yapın"
         javascript_evaluator: "JavaScript'i değerlendirin"
+        researcher: "YZ Botunu kullanarak forum bilgilerini araştırın"
       tool_description:
+        read_artifact: "YZ Botunu kullanarak bir web artifact'ini okuyun"
         update_artifact: "YZ Botunu kullanarak bir web artifact'i güncellendi"
+        create_artifact: "Bir web artifact'i oluşturuldu: %{name} - %{specification}"
         web_browser: "Okunuyor: <a href='%{url}'>%{url}</a>"
         github_search_files: "%{repo}/%{branch} içinde \"%{keywords}\" arandı"
         github_search_code: "%{repo} içinde \"%{query}\" arandı"
@@ -378,9 +529,19 @@ tr_TR:
           other: "\"%{query}\" için %{count} <a href='%{url}'>sonuç</a> bulundu"
         setting_context: "Şunun için bağlam okunuyor: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Önerilen hedefler: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
+          other: "Önerilen hedefler: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
+        researcher:
+          one: "Araştırılıyor: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
+          other: "Araştırılıyor: %{goals}\n\n\"%{filter}\" ile eşleşen %{count} gönderi bulundu"
         search_settings:
-          one: "'%{query}' için %{count} sonuç bulundu"
-          other: "'%{query}' için %{count} sonuç bulundu"
+          one: "\"%{query}\" için %{count} sonuç bulundu"
+          other: "\"%{query}\" için %{count} sonuç bulundu"
+      discoveries:
+        continue_conversation:
+          title: "Keşif konuşması: %{query} için arama yapın"
+          raw: "%{query} aramamda bana şu bilgiyi gösterdiniz:\n\n%{context}\n\nKonuşmaya devam edelim."
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -392,7 +553,7 @@ tr_TR:
         overall_sentiment: "Genel duygu (Olumlu - Olumsuz)"
         post_emotion:
           sadness: "Üzüntü \U0001F622"
-          surprise: "Sürpriz \U0001F631"
+          surprise: "Şaşırma \U0001F631"
           neutral: "Nötr \U0001F610"
           fear: "Korku \U0001F628"
           anger: "Öfke \U0001F621"
@@ -404,9 +565,12 @@ tr_TR:
           neutral: "Nötr"
     llm:
       configuration:
+        create_llm: "Bu özelliği etkinleştirmeden önce bir LLM kurmanız gerekiyor"
+        disable_modules_first: "Öncelikle şu modülleri devre dışı bırakmalısınız: %{settings}"
         set_llm_first: "Önce %{setting} ayarlanmalı"
         model_unreachable: "Bu modelden yanıt alamadık. Önce ayarlarınızı kontrol edin."
         invalid_seeded_model: "Bu modeli bu özellikle kullanamazsınız"
+        invalid_persona_response_format: "Seçilen kişiliğin \"spam\" adlı bir Boole alan adına sahip bir yanıt biçimine sahip olması gerekiyor"
         must_select_model: "Öncelikle bir LLM seçmelisiniz"
       endpoints:
         not_configured: "%{display_name} (yapılandırılmadı)"
@@ -417,18 +581,20 @@ tr_TR:
         one: "%{settings} kullandığı için bu modeli silemedik. Ayarı güncelleyin ve tekrar deneyin."
         other: "%{settings} kullandığı için bu modeli silemedik. Ayarları güncelleyip tekrar deneyin."
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
+    personas:
+      malformed_examples: "Verilen örneklerin formatı yanlış."
     embeddings:
-      delete_failed: "Bu model şu anda kullanımda. Öncelikle `ai embeddings selected model`i güncelleyin."
+      delete_failed: "Bu model şu anda kullanımda. Öncelikle `ai embeddings selected model`ı güncelleyin."
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
       configuration:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
-        invalid_config: "Geçersiz bir seçenek seçtiniz."
-        choose_model: "Önce 'ai embeddings selected model'i ayarlayın."
+        choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
     llm_models:
       missing_provider_param: "%{param} boş olamaz"
       bedrock_invalid_url: "Bu modeli kullanmak için lütfen tüm alanları doldurun."
     ai_staff_action_logger:
       updated: "güncellendi"
+      set: "ayarla"
       removed: "kaldırıldı"
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
@@ -442,3 +608,10 @@ tr_TR:
       no_default_llm: Kişiliğin tanımlanmış bir default_llm'si olmalıdır.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
       prompt_message_length: '%{idx} mesajı 1000 karakter limitinin üzerinde.'
+      persona_already_exists: '%{name} adlı bir kişilik zaten mevcut.'
+      custom_tool_exists:
+        one: "%{names} adlı bir özel araç zaten mevcut."
+        other: "%{names} adlı özel araçlar zaten mevcut."
+  dashboard:
+    problem:
+      ai_llm_status: "LLM modeli: %{model_name} sorunlarla karşılaşıyor. Lütfen <a href='%{url}'>modelin yapılandırma sayfasını</a> kontrol edin."

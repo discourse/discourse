@@ -467,6 +467,15 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each, type: :system) do |example|
+      if example.metadata[:time]
+        freeze_time(example.metadata[:time])
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.clock.set_fixed_time(example.metadata[:time])
+        end
+      end
+    end
+
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
@@ -495,7 +504,9 @@ RSpec.configure do |config|
     # instead of 2**31-1 so that the values are easier to read.
     DB
       .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
+      .each do |row|
+        DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
+      end
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!

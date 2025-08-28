@@ -61,6 +61,9 @@ zh_CN:
     chat_integration_webex_excerpt_length: "Webex Team 帖子摘要长度"
     chat_integration_google_enabled: "启用 Google Chat 聊天集成提供程序"
     chat_integration_google_excerpt_length: "Google Chat 帖子摘要长度"
+  dashboard:
+    problem:
+      channel_errors: "某些聊天集成频道存在错误。请访问<a href='%{base_path}/admin/plugins/chat-integration'>聊天集成</a>部分了解更多信息。"
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -82,7 +85,7 @@ zh_CN:
         status:
           header: |
             *此频道的规则*
-            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+            （如果多条规则与一个帖子匹配，将执行最顶端的规则）
           no_rules: "此频道没有设置任何规则。运行 `/discourse help` 获取说明。"
           rule_string: "*%{index})* *%{filter}**%{category}*中的帖子"
           rule_string_tags_suffix: "包括标签：*%{tags}*"
@@ -100,7 +103,7 @@ zh_CN:
         help: |
           *新建规则*：`/discourse [thread|watch|follow|mute] [category] [tag:name]`
           （您必须指定规则类型和至少一个类别或标签）
-          - *thread* – 在此频道有新话题和线索回复（如可能）时通知
+          - *thread* – 在此频道有新话题和对话回复（如可能）时通知
           - *watch* – 在此频道有新话题和新回复时通知
           - *follow* – 在此频道有新话题时通知
           - *mute* – 屏蔽此频道的通知
@@ -111,7 +114,7 @@ zh_CN:
           *列出规则*：`/discourse status`
 
           *[实验性] 发布语音稿*：`/discourse post [n]`
-          创建关于包含此频道中最近的 `n` 个帖子的 Discourse 的话题草稿
+          创建关于包含此频道中最近 `n` 个帖子的 Discourse 的话题草稿
 
           *帮助*：`/discourse help`
         transcript:
@@ -147,7 +150,7 @@ zh_CN:
         status:
           header: |
             <b>此频道的规则</b>
-            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+            （如果多条规则与一个帖子匹配，将执行最顶端的规则）
           no_rules: "此频道没有设置任何规则。运行 <code>/help</code> 获取说明。"
           rule_string: "<b>%{index})</b> <b>%{filter}</b><b>%{category}</b>中的帖子"
           rule_string_tags_suffix: "包括标签：<b>%{tags}</b>"
@@ -181,7 +184,7 @@ zh_CN:
         status:
           header: |
             *此频道的规则*
-            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+            （如果多条规则与一个帖子匹配，将执行最顶端的规则）
           no_rules: "此频道没有设置任何规则。运行 `/discourse help` 获取说明。"
           rule_string: "*%{index})* *%{filter}**%{category}*中的帖子"
           rule_string_tags_suffix: "包括标签：*%{tags}*"

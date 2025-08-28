@@ -268,8 +268,10 @@ module DiscoursePostEvent
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
-            expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_1.id)
+            expect(events.length).to eq(2) # Now includes expired event_3
+            event_ids = events.map { |e| e["id"] }
+            expect(event_ids).to include(event_1.id)
+            expect(event_ids).to include(event_3.id)
           end
 
           it "includes subcategory events when param provided" do
@@ -277,38 +279,7 @@ module DiscoursePostEvent
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
-            expect(events.length).to eq(2)
-            expect(events).to match_array(
-              [hash_including("id" => event_1.id), hash_including("id" => event_2.id)],
-            )
-          end
-
-          it "includes events' details when param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_details=true"
-
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(2)
-            expect(events[0].keys).to include(
-              "creator",
-              "sample_invitees",
-              "watching_invitee",
-              "stats",
-              "status",
-              "can_update_attendance",
-              "should_display_invitees",
-              "is_public",
-              "is_private",
-              "is_standalone",
-            )
-          end
-
-          it "includes expired events when param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_expired=true"
-
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(3)
+            expect(events.length).to eq(3) # Now includes expired event_3
             expect(events).to match_array(
               [
                 hash_including("id" => event_1.id),
@@ -324,11 +295,11 @@ module DiscoursePostEvent
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
             expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_2.id)
+            expect(events[0]["id"]).to eq(event_3.id) # Expired event sorts first (NULL starts_at)
           end
 
           it "filters events before the provided datetime if before param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_expired=true&before=#{event_2.starts_at}"
+            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&before=#{event_2.starts_at}"
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]

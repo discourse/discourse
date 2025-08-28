@@ -66,7 +66,7 @@ describe "Post event", type: :system do
       time = Time.now.strftime("%Y-%m-%d %H:%M")
 
       EXPECTED_BBCODE = <<~EVENT
-        [event start="#{time}" status="public" timezone="Europe/Paris" allowedGroups="trust_level_0"]
+        [event start="#{time}" status="public" timezone="Europe/Paris"]
         foo
         bar
         [/event]
@@ -191,6 +191,23 @@ describe "Post event", type: :system do
     expect(page).to have_no_css(".send-pm-to-creator")
   end
 
+  it "shows '-' for expired recurring events instead of dates" do
+    post =
+      PostCreator.create!(
+        admin,
+        title: "An expired recurring event",
+        raw:
+          "[event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']\n[/event]",
+      )
+
+    visit(post.topic.url)
+
+    expect(page).to have_css(".discourse-post-event")
+    expect(page).to have_css(".event-date .month", text: "-")
+    expect(page).to have_css(".event-date .day", text: "-")
+    expect(page).to have_css(".event-dates", text: "-")
+  end
+
   it "persists changes" do
     visit "/new-topic"
     composer.fill_title("Test event with updates")
@@ -207,7 +224,7 @@ describe "Post event", type: :system do
     find(".d-modal .btn-primary").click
     composer.submit
 
-    expect(page).to have_css(".discourse-post-event.is-loaded")
+    expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
 

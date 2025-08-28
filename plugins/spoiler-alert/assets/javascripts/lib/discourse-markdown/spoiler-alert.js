@@ -1,26 +1,6 @@
-const CONTAINS_BLOCK_REGEX = /\n|<img|!\[[^\]]*\][(\[]/;
+export function setup(helper) {
+  helper.allowList(["span.spoiler", "div.spoiler"]);
 
-function insertSpoiler(_, spoiler) {
-  const element = CONTAINS_BLOCK_REGEX.test(spoiler) ? "div" : "span";
-  return `<${element} class='spoiler'>${spoiler}</${element}>`;
-}
-
-function replaceSpoilers(text) {
-  text ||= "";
-  let previousText;
-
-  do {
-    previousText = text;
-    text = text.replace(
-      /\[spoiler\]((?:(?!\[spoiler\]|\[\/spoiler\])[\S\s])*)\[\/spoiler\]/gi,
-      insertSpoiler
-    );
-  } while (text !== previousText);
-
-  return text;
-}
-
-function setupMarkdownIt(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.features["spoiler-alert"] = !!siteSettings.spoiler_enabled;
   });
@@ -36,14 +16,4 @@ function setupMarkdownIt(helper) {
       wrap: "div.spoiler",
     });
   });
-}
-
-export function setup(helper) {
-  helper.allowList(["span.spoiler", "div.spoiler"]);
-
-  if (helper.markdownIt) {
-    setupMarkdownIt(helper);
-  } else {
-    helper.addPreProcessor(replaceSpoilers);
-  }
 }

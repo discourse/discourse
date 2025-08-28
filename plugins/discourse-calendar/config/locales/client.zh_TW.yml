@@ -23,6 +23,7 @@ zh_TW:
         month: "月"
         week: "週"
         day: "天"
+        year: "年"
     group_timezones:
       search: "搜尋..."
     discourse_post_event:

@@ -60,6 +60,8 @@ ja:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
+    too_many_urls: "1 つのリクエストで 10 個以上の URL をワンボックスにインライン化できません。"
+    concurrency_not_allowed: "インラインワンボックスリクエストを同時に送信できません。リクエストを 1 つずつ送信してください。"
   components:
     enabled_filter: "有効"
     disabled_filter: "無効"
@@ -72,6 +74,7 @@ ja:
     bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
     other_error: "テーマの更新中に問題が発生しました"
     ember_selector_error: "#ember または .ember-view CSS セレクタは使用できません。これらの名前はランタイムに動的に生成されるため、時間の経過とともに変化し、最終的には CSS が破損するためです。別のセレクタを試してください。"
+    setting_not_themeable: "設定「%{name}」はテーマ設定できません。"
     import_error:
       generic: テーマをインポート中にエラーが発生しました
       upload: "アップロードアセットの作成中にエラーが発生しました: %{name}。%{errors}"
@@ -236,10 +239,12 @@ ja:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} は有効なロケールではありません"
       too_long_validation:
         other: "は、最大 %{count} 文字に制限されていますが、%{length} 文字が入力されました。"
       invalid_boolean: "無効なブール値。"
       taken: "はすでに使用されています"
+      reserved: "%{name} グループ名は予約されているため、別の名前を選択してください"
       accepted: に同意する必要があります
       blank: を入力してください
       present: は入力しないでください
@@ -263,6 +268,7 @@ ja:
       less_than_or_equal_to: は %{count} 以下の値である必要があります
       not_a_number: は数値ではありません
       not_an_integer: は整数である必要があります
+      must_all_be_positive: すべて正の値である必要があります
       odd: は奇数である必要があります
       record_invalid: ! "検証に失敗しました: %{errors}"
       max_emojis: "%{max_emojis_count} 個以上の絵文字を使用できません"
@@ -288,6 +294,10 @@ ja:
     site_settings:
       invalid_site_setting: "'%{name}' という名前の設定は存在しません"
       invalid_category_id: "存在しないカテゴリを指定しました"
+      site_settings_are_deprecated: "次の設定は廃止されました: %{old_names}。代わりに %{new_names} を使用してください"
+      site_settings_are_hidden: "次の非表示の設定を変更する権限がありません: %{setting_names}"
+      site_settings_are_shadowed_globally: "次の設定はグローバルに構成されているため、変更できません: %{setting_names}"
+      site_settings_are_unconfigurable: "次の構成不可能な設定を変更する権限がありません: %{setting_names}"
       invalid_choice:
         other: "'%{name}' は無効な選択です。"
       default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"
@@ -307,8 +317,9 @@ ja:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "ユーザーエージェントは、正当なユーザーを誤ってレート制限しないように、3 文字以上である必要があります。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
-      x_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
+      x_summary_large_image_no_svg: "twitter:image メタデータに使用される X の要約画像に .svg 画像を使用できません。"
       tl0_and_anonymous_flag: "匿名ユーザーの場合は、'site contact email' または 'email address to report illegal content' のいずれかが指定されている必要があります。"
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "この設定では、先に 'allow anonymous mode' 設定が有効になっている必要があります。"
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
     onebox:
       invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
@@ -526,6 +537,7 @@ ja:
       member_already_exist:
         other: "次のユーザーはすでにこのグループのメンバーです: %{username}"
       invalid_domain: "'%{domain}' は有効なドメインではありません。"
+      too_many_domains: "ドメインが多すぎます。最大 %{max} 個です。"
       invalid_incoming_email: "%{email} は有効なメールアドレスではありません。"
       email_already_used_in_group: "'%{email}' はすでに '%{group_name}' グループに使われています。"
       email_already_used_in_category: "'%{email}' はすでに '%{category_name}' カテゴリに使われています。"
@@ -534,6 +546,8 @@ ja:
       adding_too_many_users:
         other: "最大 %{count} 人のユーザーを一度に追加できます"
       usernames_or_emails_required: "ユーザー名またはメールアドレスが必要です"
+      counting_too_many_email_domains:
+        other: "一度に最大 %{count} 個のメールドメインをカウントできます。"
       no_invites_with_discourse_connect: "DiscourseConnect が有効である場合にのみ、登録済みユーザーを招待できます"
       no_invites_without_local_logins: "ローカルログインが無効である場合にのみ、登録済みユーザーを招待できます"
     default_names:
@@ -564,8 +578,24 @@ ja:
   education:
     until_posts:
       other: "投稿 %{count} 件"
+    "new-topic": |
+      %{site_name} に貢献していただきありがとうございます！
+
+      投稿前にカテゴリまたはタグを選択してください。このトピックを関連するディスカッションとグループ化することで、他のユーザーが見つけやすくなります。
+
+      コミュニティーへの参加に関するその他のヒントやアドバスについては、[コミュニティーガイドラインをご確認ください](%{base_path}/guidelines)。
+    "new-reply": |
+      %{site_name} に貢献していただきありがとうございます！
+
+      私たちはみんな実在する人間であることを覚えておきましょう。他のコミュニティーメンバーに親切に対応してください。
+
+      コミュニティーへの参加に関するその他のヒントやアドバイスについては、[コミュニティーガイドラインをご確認ください](%{base_path}/guidelines)。
+    dominating_topic: このトピックにたくさん投稿していますね！他のメンバーにも参加する機会をぜひ与えましょう。
     get_a_room:
       other: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
+    dont_feed_the_trolls: この投稿はモデレーターの要注意として通報されました。否定的なコンテンツに返信すると、さらに否定的な行動を促す可能性があります。続行してもよろしいですか？
+    too_many_replies: |
+      新規ユーザーによる同じトピックへの返信は一時的に %{newuser_max_replies_per_topic} 件に制限されています。コミュニティーの理解を深めるために、ぜひ他のトピックも閲覧しましょう。
   activerecord:
     attributes:
       category:
@@ -672,6 +702,9 @@ ja:
           attributes:
             linkable_type:
               invalid: "は有効ではありあません"
+        api_key:
+          base:
+            at_least_one_granular_scope: "1 つ以上選択する必要があります"
       <<: *errors
   uncategorized_category_name: "未分類"
   general_category_name: "一般"
@@ -1459,6 +1492,12 @@ ja:
         anon_views: 匿名ユーザー
         total_views: 合計
       description: "ログイン中と匿名のビュー数を合わせた、日付範囲内での最も閲覧されたトピック上位 100。カテゴリ別にフィルタリングできます。"
+    associated_accounts_by_provider:
+      title: "ログイン方法別の関連アカウント"
+      labels:
+        provider: ログインプロバイダー
+        no_accounts: "関連アカウントはありません"
+      description: "ログインプロバイダーでグループ化された関連アカウントの数を表示します。ソーシャルログインが有効になっている場合にのみ適用有れます。"
   dashboard:
     problem:
       twitter_login: 'X ログインは現在動作していないようです。<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">サイト設定</a>で資格情報を確認してください。'
@@ -1502,10 +1541,13 @@ ja:
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
     default_locale: "この Discourse インスタンスのデフォルトの言語。システム生成カテゴリとトピックのテキストは、<a href='%{base_path}/admin/customize/site_texts' target='_blank'>カスタマイズ/テキスト</a>で置き換えることができます。"
     allow_user_locale: "ユーザーが独自の言語インターフェース設定を選択することを許可する"
+    set_locale_from_accept_language_header: "ウェブブラウザの言語ヘッダーから匿名ユーザーのインターフェース言語を設定する"
     set_locale_from_cookie: "ブラウザの「locale」Cookieを通じて匿名ユーザーのロケールを設定できるようにします"
-    set_locale_from_param: "「lang」URL パラメーターを通じて匿名ユーザーのロケールを設定できるようにします (例: ?lang=es)"
+    set_locale_from_param: "「tl」URL パラメーター (例: ?tl=es) を通じて匿名ユーザーのロケールを設定できるようにします"
+    support_mixed_text_direction: "左から右および右から左の混在するテキスト方向をサポートする"
     min_post_length: "投稿の最低許容文字数 (個人メッセージを除く)"
     min_first_post_length: "最初の投稿 (トピック本文) の最低許容長さ (個人メッセージを除く)"
+    prevent_uploads_only_posts: "投稿の最小長さをチェックするときに、Markdown コードのアップロードをカウントしない"
     min_personal_message_post_length: "メッセージの投稿に許可される最低文字数 (最初の投稿と返信の両方)"
     max_post_length: "投稿の最大文字数"
     topic_featured_link_enabled: "ユーザーが機能リンクをトピックに関連付けることを許可します。オンの場合、トピックにハイライトされたリンクを添付できるため、公開され、十分な権限を持つユーザーは編集できます。機能リンクは関連する追加コンテンツを提供することで、トピックの理解度を高めることができます。"
@@ -1525,6 +1567,7 @@ ja:
     search_query_log_max_retention_days: "検索クエリを保持する最大日数。"
     search_ignore_accents: "この設定が有効である場合、検索クエリ内のアクセント記号は無視されるため、正しいアクセントを入力しない場合でも結果を見つけることができます。"
     search_default_sort_order: "全ページ検索のデフォルトの並べ替え順"
+    search_experience: "デスクトップデバイスでの検索のデフォルトの位置と外観"
     category_search_priority_low_weight: "カテゴリの検索優先度が低いランキングに適用される重み。"
     category_search_priority_high_weight: "カテゴリの検索優先度が高いランキングに適用される重み。"
     default_composer_category: "新しいトピックを作成するときに、カテゴリのドロップダウン項目を設定するために使用されるカテゴリです。"
@@ -1572,6 +1615,7 @@ ja:
     block_onebox_on_redirect: "リダイレクトページにつながる URL のワンボックス化を防止します。この構成により、別の宛先にリダイレクトする URL のビジュアルカード (ワンボックス) を作成できなくなるため、リダイレクトされないダイレクト URL がワンボックスに優先されます。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "allowed_inline_onebox_domains サイト設定を無視し、すべてのドメインでインワインのワンボックスを許可します。"
+    onebox_locale: "ワンボックスプロバイダーに送信されるロケール。空白の場合、デフォルトのロケールが使用されます。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
     max_oneboxes_per_post: "1 つの投稿に含められるワンボックスの最大数を設定します。ワンボックスは投稿内でリンクされたコンテンツのプレビューを表示します。"
     facebook_app_access_token: "Facebook アプリ ID とシークレットから生成されるトークン。Instagram ワンボックスを生成するために使用されます。"
@@ -1661,6 +1705,7 @@ ja:
     blocked_ip_blocks: "Discourse によって決してクロールされない非公開 IP ブロックリスト"
     allowed_internal_hosts: "Discourse がワンボックスやその他の目的で安全にクロールできる内部ホストのリスト"
     allowed_onebox_iframes: "ワンボックス埋め込みを介して許可される iframe src ドメインのリスト。`*` はすべてのデフォルトのワンボックスエンジンを許可します。"
+    allowed_iframes: "Discourse が投稿で安全に許可できる iframe src URL プレフィックスのリスト。* 「/」以外の任意の数の文字と一致させるために使用できます。"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     slow_down_crawler_user_agents: '"slow down crawler rate" 設定の構成のとおりに速度の制限が必要なウェブクローラーのユーザーエージェント。各値の長さは 3 文字以上です。'
@@ -1694,6 +1739,7 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長期間不在のユーザーを自動的にトップページにリダイレクトします。'トップメニュー' サイト設定に 'トップ' が存在する場合にのみ適用されます。"
     top_page_default_timeframe: "匿名ユーザーのデフォルトのトップページ期間 (ログインユーザーの場合は最終アクセスに基づいて自動的に調整されます)。"
     moderators_view_emails: "モデレーターによるユーザーのメールアドレスの閲覧を許可します。"
+    moderators_view_ips: "モデレーターによるユーザーの IP アドレスの閲覧を許可します。"
     prioritize_username_in_ux: "ユーザーページ、ユーザーカード、および投稿の最初にユーザー名を表示する (無効にすると先に名前が表示されます)"
     enable_rich_text_paste: "テキストをコンポーザーに貼り付ける際に、HTML からマークダウンへの自動変換を有効にする。"
     send_old_credential_reminder_days: "日数後に古い資格情報についてリマインダーする"
@@ -1718,6 +1764,8 @@ ja:
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_username_length: "ユーザー名の最低文字数。警告: 既存のユーザーまたはグループがこれより短い名前を使用している場合は、サイトが機能しなくなります！"
     max_username_length: "ユーザー名の最大文字数。警告: 既存のユーザーまたはグループがこれより長い名前を使用している場合は、サイトが機能しなくなります！"
+    unicode_usernames: "ユーザー名とグループ名に Unicode 文字と数字を使用することを許可する"
+    allowed_unicode_username_characters: "ユーザー名に一部の Unicode 文字のみを許可する正規表現。ASCII 文字と数字は常に許可されているため、ホワイトリストに含める必要はありません"
     reserved_usernames: "登録が許可されていないユーザー名。ワイルドカード記号 * は任意の文字に 0 回以上一致させるために使用できます。"
     min_password_length: "サイトのユーザーパスワードに必要な最低文字数を定義します。値が小さすぎると、未承認の第三者にパスワードを推測されやすくなり、セキュリティが損なわれる可能性があります。値が大きすぎると、ユーザーがパスワードを思い出しにくくなる可能性があります。"
     min_admin_password_length: "管理者ユーザーのパスワードの最低の長さを指定します。すべての管理者パスワードが特定の長さ要件を満たすことでセキュリティを強化できます。この設定は、管理者アカウントを潜在的な不正アクセスから保護するために不可欠です。"
@@ -1725,6 +1773,7 @@ ja:
     block_common_passwords: "最もよく使われている 10,000 個のパスワードを許可しない"
     auth_skip_create_confirm: 外部認証を介して登録する場合、アカウントの作成ポップアップを省略する。auth_overrides_email、auth_overrides_username、および auth_overrides_name と共に使用するのが最適です。
     auth_immediately: "ユーザーの操作なしで外部ログインシステムに自動的にリダイレクトする。これは、login_required が true であり、外部認証方法が 1 つしかない場合にのみ有効です。"
+    auth_require_interaction: "`/auth/*` 経由で外部ログインシステムにリダイレクトする前に、ユーザーの操作を必要とする。これは、「ログイン CSRF」攻撃に対する多層防御です。すべての有効な認証方法がログイン CSRF から保護されていると完全に信頼できる場合にのみ、この設定を無効にしてください。"
     enable_discourse_connect: "DiscourseConnect (旧 'Discourse SSO') を介したサインオンを有効にする (警告: ユーザーのメールアドレスは外部サイトで *検証される必要があります*！)"
     verbose_discourse_connect_logging: "詳細な DiscourseConnect 関連診断を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     enable_discourse_connect_provider: "DiscourseConnect (旧 'Discourse SSO') プロバイダープロトコルを /session/sso_provider エンドポイントに実装する。discourse_connect_provider_secrets を設定する必要があります"
@@ -1747,6 +1796,7 @@ ja:
     enable_local_logins_via_email: "メールで送信されるワンクリックログインリンクをユーザーがリクエストすることを許可する。"
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
     enable_signup_cta: "匿名のリピートユーザーにアカウント登録を促す通知を表示する。"
+    enable_discourse_id: "Discourse ID による認証を有効にします。これは、ユーザーが 1 つのアカウントで複数の Discourse サイトにログインできるようにするシングルサインオンサービスです。Google、Facebook、X などの一般的なソーシャルログインプロバイダーは、追加構成なしでサポートされています。詳細は、<a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> をご覧ください。"
     enable_google_oauth2_logins: "Google OAuth2 認証を有効にする。これは、Google が現在サポートしている認証方法です。キーとシークレットが必要です。「<a href='https://meta.discourse.org/t/15858' target='_blank'>Discourse 用に Google ログインを構成する</a>」をご覧ください。"
     google_oauth2_client_id: "認証プロセスに使用される Google アプリケーション提供の一意のクライアント ID。"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"
@@ -1776,12 +1826,12 @@ ja:
     allow_restore: "復元を許可。サイトの全データが置き換えられます！バックアップを復元する予定がない場合は無効のままにしてください"
     maximum_backups: "保存するバックアップの最大量。古いバックアップは自動的に削除されます"
     remove_older_backups: "指定された日数より古いバックアップを削除します。無効にするには空白のままにします。"
-    automatic_backups_enabled: "バックアップ頻度の定義に従って自動バックアップを実行する"
-    backup_frequency: "サイトの自動バックアップが作成される間隔を日数で指定します。例えば 7 に設定すると、新しいバックアップは毎週生成されます。この設定の有効化は `automatic_backups_enabled` に依存します。"
+    backup_frequency: "サイトの自動バックアップが作成される間隔を日数で指定します。例えば 7 に設定すると、新しいバックアップは毎週生成されます。無効にするには 0 に設定します。"
     s3_backup_bucket: "バックアップを保持するリモートバケット。警告: 必ずプライベートバケットになっていることを確認してください"
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
+    s3_use_acls: "AWS では、S3 バケットで ACL を使用しないことを推奨しています。構成済みの `s3_upload_bucket` および `s3_backup_bucket` で権限ポリシーを構成する場合にのみ、このオプションをオフにしてください。"
     enable_direct_s3_uploads: "Amazon S3 への直接のマルチ―パートアップロードを許可します。詳細については、https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 をご覧ください。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
@@ -1834,6 +1884,7 @@ ja:
     s3_use_cdn_url_for_all_uploads: "画像のみでなく、S3 にアップロードされたすべてのファイルに CDN URL を使用します。"
     avatar_sizes: "自動生成されたアバターのサイズのリスト"
     external_system_avatars_enabled: "システムアバターを生成するための外部サービスの使用を有効にします。この設定が有効な場合、ユーザーアバターは Discourse システム内ではなく、`external_system_avatars_url` 設定に定義されている外部サービスによって生成され、提供されます。"
+    external_system_avatars_url: "外部システムアバターサービスの URL。許可されている置換は、{username} {first_letter} {color} {size} です。無効にするには空白にします。"
     external_emoji_url: "絵文字画像の外部サービスの URL。無効にするには空のままにします。"
     use_site_small_logo_as_system_avatar: "システムユーザーのアバターの代わりにサイトの small logo を使用する。ロゴが存在する必要があります。"
     restrict_letter_avatar_colors: "文字アバターの背景に使用される 6 桁の 16 進数の色値のリスト。"
@@ -1851,6 +1902,9 @@ ja:
     composer_media_optimization_image_resize_dimensions_threshold: "クライアント側のサイズ変更をトリガーする画像の最小幅"
     composer_media_optimization_image_resize_width_target: "幅が `composer_media_optimization_image_dimensions_resize_threshold` より大きい画像はこの花にサイズ変更されます。`composer_media_optimization_image_dimensions_resize_threshold` 以上 (>=) である必要があります。"
     composer_media_optimization_image_encode_quality: "再エンコード処理で使用される JPG エンコード品質。"
+    video_conversion_enabled: "アップロードした動画ファイルの動画変換を有効にします。これにより、動画をウェブ互換形式に変換できます。"
+    video_conversion_service: "アップロードした動画の処理に使用する動画変換サービス。"
+    mediaconvert_role_arn: "MediaConvert サービスの AWS IAM ロールの ARN。動画変換に AWS MediaConvert を使用する場合に必要です。"
     min_ratio_to_crop: "高さのある画像のトリミングに使用される比率。幅 ÷ 高さの結果を入力します。"
     simultaneous_uploads: "コンポーザーにドラッグアンドドロップできるファイルの最大数"
     default_invitee_trust_level: "招待したユーザーのデフォルトの信頼レベル (0～4)。"
@@ -1937,7 +1991,6 @@ ja:
     desktop_category_page_style: "この設定により、デスクトップ上の /categories ページの視覚的なレイアウトが決定します。注目のトピックを含むサブカテゴリの表示、最新のトピックの表示、トップトピックの紹介などのオプションが含まれます。スタイルの選択は、ユーザーがサイトのカテゴリをどのように操作して移動するかに影響します。"
     mobile_category_page_style: "この設定によって、モバイル上の /categories ページの視覚的なレイアウトが決まります。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
-    default_dark_mode_color_scheme_id: "ダークモードで使用される色パレット。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
     max_attachment_size_kb: "添付ファイルの最大アップロードサイズ。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"
@@ -1988,6 +2041,7 @@ ja:
     reviewable_default_visibility: "レビュー待ち項目がこの優先度を満たさない場合、それを表示しない"
     reviewable_low_priority_threshold: "優先度フィルターは、'(すべて)' フィルターが使用されていない限り、このスコアを満たさないレビュー待ち項目を非表示にする。"
     high_trust_flaggers_auto_hide_posts: "新しいユーザーの投稿は、TL3 以上のユーザーが迷惑として通報した後、自動的に非表示になる"
+    allow_all_users_to_flag_illegal_content: "匿名ユーザーには、違法コンテンツを管理者にメールで報告する必要があるという情報が表示されます。この設定は 'flag post allowed groups' より優先されます。"
     email_address_to_report_illegal_content: "空白のままにすると、デフォルトのサイト管理者のメールアドレスが使用されます。"
     cooldown_hours_until_reflag: "ユーザーが投稿をもう一度通報できるまでの時間"
     slow_mode_prevents_editing: "editing_grace_period の後、'低速モード' で編集を防止するかどうか"
@@ -2093,6 +2147,7 @@ ja:
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
     group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_mode: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
+    allow_likes_in_anonymous_mode: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示にすることを選択できます。`allow_anonymous_mode` も参照してください。"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -2103,6 +2158,7 @@ ja:
     delete_associated_accounts_on_password_reset: "ユーザーがパスワードを変更すると、ユーザーに関連付けられたアカウントを削除します。"
     allow_featured_topic_on_user_profiles: "ユーザーがトピックへのリンクをユーザーカードとプロファイルに掲載することを許可する。"
     show_inactive_accounts: "ログインユーザーが非アクティブアカウントのプロファイルを閲覧することを許可する。"
+    hide_silencing_reasons: "ユーザープロファイルに投稿禁止理由を公開しない。"
     hide_suspension_reasons: "ユーザープロファイルに凍結理由を公開しない。"
     log_personal_messages_views: "管理者による他のユーザー/グループの個人メッセージビューをログに記録する。"
     ignored_users_count_message_threshold: "特定のユーザーがこの数のユーザーに無視された場合、モデレーターに通知する。"
@@ -2140,8 +2196,10 @@ ja:
     auto_handle_queued_age: "この日数後に、レビュー待ちのレコードを自動的に処理する。通報は無視されます。キューに入れられた投稿とユーザーは拒否されます。0 に設定するとこの機能は無効になります。"
     penalty_step_hours: "ユーザーの投稿禁止または凍結に使用されるデフォルトのペナルティ (時間)。最初の違反はデフォルトで最初の値になり、2 番目の違反はデフォルトで 2 番目の値になります。"
     penalty_include_post_message: "ユーザーを投稿禁止または凍結する際に、メールメッセージのテンプレートに問題のある投稿メッセージを自動的に含めます。"
+    svg_icon_subset: "アセットに含める追加の FontAwesome アイコンを追加する。ソリッドアイコンにはプレフィックスを使用しません。通常のアイコンには 'far-'、ブランドアイコンには 'fab-' のプレフィックスを使用します。"
     max_prints_per_hour_per_user: "/print ページの最大インプレッション数 (0 に設定すると出力が無効になります)"
     full_name_requirement: "登録フォームのフルネームフィールドを必須、オプション、またはオプションで非表示にします。"
+    interface_color_selector: "インターフェースの色のライト/ダークモードのセレクターが表示される場所を構成します。"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
@@ -2221,6 +2279,7 @@ ja:
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
     default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
+    default_other_enable_markdown_monospace_font: "作成ツールの Markdown モードでは、デフォルトで等幅フォントを使用する。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
     default_other_like_notification_frequency: "ユーザーが「いいね！」の通知をデフォルトで受信する頻度を設定します。通知設定をカスタマイズしていないユーザーには、このデフォルトの動作が適用されます。"
@@ -2261,6 +2320,7 @@ ja:
     tagging_enabled: "トピックでタグを有効にしますか？詳細については、「<a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta のタグに関する管理者ガイド</a>」をご覧ください。"
     min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
     create_tag_allowed_groups: "タグを作成できるグループ。管理者とモデレーターはタグをいつでも作成できます。"
+    edit_tags_allowed_groups: "タグ、タグの説明、およびタグの同義語を編集できるグループ。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"
     enable_max_tags_per_email_subject: "メールの件名を生成する際に、max_tags_per_email_subjec を使用する"
     max_tags_per_email_subject: "メールの件名に使用できる最大タグ数"
@@ -2299,6 +2359,7 @@ ja:
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
     dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
     dashboard_general_tab_activity_metrics: "アクティビティメトリクスとして一般タブに表示されるレポートを選択します。"
+    gravatar_enabled: "ユーザーアバターに <a href='https://gravatar.com/'>Gravatar</a> サービスを使用する。これにより、ユーザーはアバターを Gravatar に切り替えられなくなりますが、すでに使用しているユーザーには影響しません。"
     gravatar_name: "Gravatar サービスプロバイダーの名前を指定します。この名前は通常、Gravatar アバターをサイトに提供するソースを特定するために使用されます。"
     gravatar_base_url: "Gravatar プロバイダーの API にアクセスするための URL を指定します。この設定は、メールアドレスをアバター画像が保存されている Gravatar URL に変換するために重要です。"
     gravatar_login_url: "`gravatar_base_url` に相対する URL。ユーザーに Gravatar サービスへのログインを提供します。"
@@ -2306,22 +2367,45 @@ ja:
     share_quote_visibility: "引用の共有ボタンをいつ表示するかを決定する: 表示しない、匿名ユーザーのみ、またはすべてのユーザー。 "
     create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
+    use_email_for_username_and_name_suggestions: "ユーザー名と名前の提案にメールアドレスの最初の部分を使用する。警告: 悪意のあるアクターがメンバーのメールアドレスを検出しやすくなります (多数のユーザーが「gmail.com」などの一般的なメールプロバイダーを使用しているため)。"
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     show_bottom_topic_map: "トピックに 10 件以上の返信がある場合、トピックの下にトピックマップを表示します。"
     show_topic_map_in_topics_without_replies: "トピックに返信がない場合でもトピックマップを表示します。"
+    enable_welcome_banner: "メインのトピックリストページに、メンバーを歓迎してサイトコンテンツの検索を可能にするバナーを表示する"
+    welcome_banner_image: "ウェルカムバナーの背景に表示する画像を設定します。"
+    welcome_banner_location: "ウェルカムバナーが表示されるページ内の場所を決定します。"
+    welcome_banner_page_visibility: "ウェルカムバナーが表示されるページを決定します。"
     splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
+    glimmer_post_stream_mode: "新しい 'glimmer' 投稿ストリームの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    glimmer_post_stream_mode_auto_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿ストリームの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    deactivate_widgets_rendering: "既存のウィジェットレンダリングエンジンを無効にする。これにより、Glimmer コンポーネントに更新sレ邸内すべてのウィジェットが無効になります。また、`glimmer_post_stream_mode` の設定値に関係なく、Glimmer 投稿ストリームが無条件で適用されます。この設定は、既存のテーマとプラグインの動作に支障をきたす可能性があるため、本番環境には推奨されていません。"
+    floatkit_autocomplete_composer: "作成ツールで Floatkit ベースの自動補完メニューを有効にする。これは、現在の jQuery ベースの自動補完メニューに置き換わる UI 拡張機能です。"
+    floatkit_autocomplete_chat_composer: "チャット作成ツールで Floatkit ベースの自動補完メニューを有効にする。これは、現在の jQuery ベースの自動補完メニューに置き換わる UI 拡張機能です。"
     experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
+    show_preview_for_form_templates: "フォームテンプレート機能のプレビューを有効にする"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
+    experimental_auto_grid_images: "作成ツールに 3 つ以上の画像がアップロードされると、画像を自動的に [grid] タグで囲みます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     about_page_hidden_groups: "/about ページに特定のグループのメンバーを表示しない。"
+    about_page_extra_groups: "モデレーターの下の情報ページに表示されるグループ。"
+    about_page_extra_groups_initial_members: "情報ページに展開表示される各グループのメンバーの数。"
+    about_page_extra_groups_show_description: "グループの説明を情報ページに含めるかどうかを決定します。"
+    about_page_extra_groups_order: "情報ページの追加グループの順序。"
     adobe_analytics_tags_url: "Adobe Analytics タグの URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
+    rich_editor: "作成ツールでリッチエディターを有効にして、すべてのユーザーがより直感的で使いやすく作成できるように、現在の Markdown モードと新しいリッチテキストエディターを切り替えられるようにする。"
+    default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
+    viewport_based_mobile_mode: "実験的: ユーザーエージェントベースのモバイル/デスクトップモードを無効にし、代わりにビューポートの幅を使用する。"
+    reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
+    content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
+    content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
+    content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"
@@ -2341,6 +2425,7 @@ ja:
       invalid_string_max:
         other: "は %{count} 文字以下である必要があります。"
       invalid_json: "無効な JSON。"
+      invalid_object: "無効なオブジェクトです。"
       invalid_reply_by_email_address: "値に '%{reply_key}' を含める必要があり、通知メールとは異なる必要があります。"
       invalid_alternative_reply_by_email_addresses: "すべての値には '%{reply_key}' が含まれている必要があり、通知メールとは異なるものである必要があります。"
       invalid_domain_hostname: "* または ? 文字は使用できません。"
@@ -2362,8 +2447,10 @@ ja:
       discourse_connect_url_is_empty: "この設定を有効にする前に 'discourse connect url' を設定する必要があります。"
       enable_local_logins_disabled: "この設定を有効にする前に 'enable local logins' を有効にする必要があります。"
       min_username_length_exists: "最も短いユーザー名 (%{username}) を超える最小のユーザー名の長さを設定することはできません。"
+      min_group_name_length_exists: "ユーザー名の最低文字数は、最も短いグループ名 (%{group_name}) より多い文字数に設定できません。"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
       max_username_length_exists: "最も長いユーザー名 (%{username}) を下回る最大のユーザー名の長さを設定することはできません。"
+      max_group_name_length_exists: "ユーザー名の最大文字数は、最も長いグループ名 (%{group_name}) より少ない文字数に設定できません。"
       max_username_length_range: "最大値を最小値よりも小さくすることはできません。"
       invalid_hex_value: "色値は 6 桁の 16 進数コードである必要があります。"
       empty_selectable_avatars: "この設定を有効にする前に、少なくとも 2 つの選択可能なアバターをアップロードする必要があります。"
@@ -2378,6 +2465,7 @@ ja:
         other: "リストには正確に %{count} 個の値が含まれている必要があります。"
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
+      discourse_id_credentials: "この設定を有効にする前に、Discourse ID 資格情報 ('discourse_id_client_id' と 'discourse_id_client_secret') を構成する必要があります。"
       linkedin_oidc_credentials: "この設定を有効にする前に、LinkedIn OIDC 資格情報 ('linkedin_oidc_client_id' および 'linkedin_oidc_client_secret') を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
@@ -2385,10 +2473,14 @@ ja:
       delete_rejected_email_after_days: "この設定は delete_email_logs_after_days 設定より小さいか %{max} より大きく設定することはできません。"
       invalid_uncategorized_category_setting: '「未分類トピックを許可」が有効でない場合、「未分類」カテゴリを選択できません。'
       invalid_search_ranking_weights: "search_ranking_weights サイト設定の値が無効です。例: '{0.1,0.2,0.3,1.0}'。各重みの最大値は 1.0 であることに注意してください。"
+      content_localization_locale_limit: "サポートされているロケールの数は %{max} 以下である必要があります。"
+      mediaconvert_role_arn_required: "AWS MediaConvert を使って動画変換を行う場合、AWS IAM ロールの ARN が必要です。"
+      s3_credentials_required_for_video_conversion: "動画変換には S3 資格情報が必要です。S3 アクセスキーを構成するか、IAM プロファイルを有効にしてください。"
     keywords:
       clean_up_inactive_users_after_days: "有効化解除|非アクティブ|未有効化"
       navigation_menu: "サイドバー|ヘッダードロップダウン"
       purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
+      default_composition_mode: "rte|リッチテキスト|作成ツール|markdown|リッチエディター"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2403,6 +2495,81 @@ ja:
     results_page: "'%{term}' の検索結果"
     audio: "[audio]"
     video: "[video]"
+  filter:
+    description:
+      status: "ステータスでトピックを絞り込みます"
+      in: "個人リストでトピックを絞り込みます"
+      order: "特定のフィールドでトピックを並べ替えます"
+      category: "特定のカテゴリのトピックを表示します"
+      category_any: "指定されたカテゴリのトピックを表示します (カンマ区切り)"
+      exclude_category: "特定のカテゴリからトピックを除外します"
+      category_without_subcategories: "サブカテゴリを除く親カテゴリのみのトピックを表示します"
+      exclude_category_without_subcategories: "サブカテゴリではなく親カテゴリのトピックのみを除外します"
+      tag: "特定のタグのトピックを表示します"
+      tags_any: "指定されたタグのいずれかが付いたトピックを表示します (カンマ区切り)"
+      tags_all: "指定されたすべてのタグが付いたトピックを表示します (プラス区切り)"
+      exclude_tag: "特定のタグが付いたトピックを除外します"
+      exclude_tags_any: "指定されたタグのいずれかが付いたトピックを除外します (カンマ区切り)"
+      exclude_tags_all: "指定されたすべてのタグが付いたトピックを除外します (プラス区切り)"
+      tags_alias: "'tag:' フィルタのエイリアス"
+      tag_group: "特定のタググループのタグが付いたトピックを表示します"
+      exclude_tag_group: "特定のタググループのタグが付いたトピックを除外します"
+      activity_before: "日付より前に最終アクティビティがあるトピックを表示します (YYYY-MM-DD または数日前)"
+      activity_after: "日付より後に最終アクティビティがあるトピックを表示します (YYYY-MM-DD または数日前)"
+      created_before: "日付より前に作成されたトピックを表示します (YYYY-MM-DD または数日前)"
+      created_after: "日付より後に作成されたトピックを表示します (YYYY-MM-DD または数日前)"
+      created_by: "特定のユーザーが作成したトピックを表示します"
+      created_by_user: "ユーザー名が作成したトピックを表示します (@ を使用しない)"
+      created_by_multiple: "いずれかの特定のユーザーが作成したトピックを表示します (カンマ区切り)"
+      latest_post_before: "日付より前に最終投稿があるトピックを表示します (YYYY-MM-DD または数日前)"
+      latest_post_after: "日付より後に最終投稿があるトピックを表示します (YYYY-MM-DD または数日前)"
+      likes_min: "指定した数以上の「いいね！」があるトピックを表示します"
+      likes_max: "指定した数以下の「いいね！」があるトピックを表示します"
+      likes_op_min: "最初の投稿に指定した数以上の「いいね！」があるトピックを表示します"
+      likes_op_max: "最初の投稿に指定した数以下の「いいね！」があるトピックを表示します"
+      posts_min: "指定した数以上の投稿があるトピックを表示します"
+      posts_max: "指定した数以下の投稿があるトピックを表示します"
+      posters_min: "指定した数以上の参加者がいるトピックを表示します"
+      posters_max: "指定した数以下の参加者がいるトピックを表示します"
+      views_min: "指定した数以上のビューがあるトピックを表示します"
+      views_max: "指定した数以下のビューがあるトピックを表示します"
+      status_open: "オープン中のトピックを表示します (クローズまたはアーカイブされていないトピック)"
+      status_closed: "クローズしたトピックを表示します"
+      status_archived: "アーカイブされたトピックを表示します"
+      status_listed: "公開中 (表示) のトピックを表示します"
+      status_unlisted: "非公開 (非表示) のトピックを表示します"
+      status_deleted: "削除されたトピックを表示します (その権限がある場合)"
+      status_public: "公開カテゴリのトピックを表示します"
+      in_pinned: "固定されたトピックを表示します"
+      in_bookmarked: "ブックマークしたトピックを表示します"
+      in_watching: "ウォッチしているトピックを表示します"
+      in_tracking: "追跡しているトピックを表示します"
+      in_muted: "ミュートされたトピックを表示する"
+      in_normal: "通常の通知レベルのトピックを表示します"
+      in_watching_first_post: "最初の投稿をウォッチしているトピックを表示します"
+      in_new: "新規または新しい返信のあるトピックを表示します"
+      in_new_replies: "新しい返信のあるトピックを表示します"
+      in_new_topics: "新規トピックを表示します"
+      order_activity: "最終アクティビティで並べ替えます (新しい順)"
+      order_activity_asc: "最終アクティビティで並べ替えます (古い順)"
+      order_category: "カテゴリ名で並べ替えます (Z～A)"
+      order_category_asc: "カテゴリ名で並べ替えます (A～Z)"
+      order_created: "作成日で並べ替えます (新しい順)"
+      order_created_asc: "作成日で並べ替えます (古い順)"
+      order_latest_post: "最終投稿日で並べ替えます (新しい順)"
+      order_latest_post_asc: "最終投稿日で並べ替えます (古い順)"
+      order_likes: "「いいね！」数で並べ替えます (多い順)"
+      order_likes_asc: "「いいね！」数で並べ替えます (少ない順)"
+      order_likes_op: "最初の投稿の「いいね！」で並べ替えます (多い順)"
+      order_likes_op_asc: "最初の投稿の「いいね！」で並べ替えます (少ない順)"
+      order_posters: "参加者数で並べ替えます (多い順)"
+      order_posters_asc: "参加者数で並べ替えます (少ない順)"
+      order_title: "タイトルで並べ替えます (Z～A)"
+      order_title_asc: "タイトルで並べ替えます (A～Z)"
+      order_views: "ビュー数で並べ替えます (多い順)"
+      order_views_asc: "ビュー数で並べ替えます (少ない順)"
+      order_read: "最後に読んだ順で並べ替えます (新しい順)"
+      order_read_asc: "最後に読んだ順で並べ替えます (古い順)"
   discourse_connect:
     login_error: "ログインエラー"
     not_found: "あなたのアカウントが見つかりませんでした。サイトの管理者にお問い合わせください。"
@@ -2507,6 +2674,12 @@ ja:
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
+    omniauth_error:
+      generic_without_provider: "ログインサービスでアカウントを認証する際にエラーが発生しました。もう一度お試しください。"
+      generic_with_provider: "%{provider} でアカウントを認証する際にエラーが発生しました。もう一度お試しください。"
+      csrf_detected: "認証がタイムアウトしたか、ブラウザを切り替えました。もう一度お試しください。"
+      request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
+      invalid_iat: "サーバークロックの差により認証トークンを検証できませんでした。もう一度お試しください。"
     omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
     omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
@@ -2597,12 +2770,14 @@ ja:
       inactive_user: "非アクティブユーザー"
       reviewable_reject_auto: "キューにあるレビュー待機項目の自動処理"
       reviewable_reject: "レビュー待ちユーザーを拒否"
+      reviewable_details_scrubbed: "%{staff} によりユーザー情報が削除されました\n\n理由: %{reason}\n\nタイムスタンプ: %{timestamp}"
     email_in_spam_header: "ユーザーの最初のメールは迷惑として通報されました"
     already_silenced: "ユーザーは %{staff} によって %{time_ago}に投稿禁止にされています。"
     already_suspended: "ユーザーは %{staff} によって %{time_ago}に凍結されています。"
     cannot_delete_has_posts:
       other: "ユーザー %{username} には公開トピックまたは個人メッセージに %{count} 件の投稿があるため、削除できません。"
     cannot_bulk_delete: "1 人以上のユーザーは、管理者であるため、投稿数が多すぎるため、または非常に古い投稿があるため、削除できません。"
+    cannot_remove_all_auth: "関連アカウント、パスキー、またはパスワードが 1 つ以上設定されている必要があります。"
   unsubscribe_mailer:
     title: "購読解除メーラー"
     subject_template: "今後 %{site_title} からの更新メールの受信を希望しないことを確認してください"
@@ -3435,10 +3610,15 @@ ja:
     in_reply_to: "返信:"
     reply_by_email: "返信するには、[トピックにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
     reply_by_email_pm: "%{participants} に返答するには、[メッセージにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
+    reply_by_email_button_only: "[トピックにアクセス](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[メッセージにアクセス](%{base_url}%{url})"
     only_reply_by_email: "返答するにはこのメールに返信してください。"
     only_reply_by_email_pm: "%{participants} に返答するには、このメールに返信してください。"
+    only_reply_by_email_pm_button_only: "[メッセージにアクセス](%{base_url}%{url})"
     visit_link_to_respond: "返信するには[トピックにアクセス](%{base_url}%{url})してください。"
     visit_link_to_respond_pm: "%{participants} に返答するには、[メッセージにアクセス](%{base_url}%{url})してください。"
+    visit_link_to_respond_button_only: "[トピックにアクセス](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[メッセージにアクセス](%{base_url}%{url})"
     reply_above_line: "## このラインより上に返信を入力してください。 ##"
     posted_by: "%{post_date} に %{username} が投稿"
     pm_participants: "参加者: %{participants}"
@@ -3699,6 +3879,17 @@ ja:
         あなたはフォーラムから投稿禁止にされました。
 
         理由 - %{reason}
+    account_deleted:
+      title: "アカウントが削除されました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは削除されました"
+      text_body_template: |
+        こんにちは。
+
+        これは [%{site_name}](%{base_url}) からの自動メッセージです。このメールアドレスに関連付けられているユーザーアカウントがスタッフメンバーにより削除されたことをお知らせします。
+
+        %{flag_reason}
+
+        詳細は、[コミュニティーガイドライン](%{base_url}/guidelines)をご確認ください。
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"
@@ -3912,6 +4103,8 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
+  login_required:
+    welcome_message: "# %{title}へようこそ"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -3937,6 +4130,7 @@ ja:
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
       too_large_humanized: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size} です)。サイズを変更してもう一度お試しください。"
+      larger_than_x_megapixels: "ファイル名 %{original_filename} の画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
     placeholders:
       too_large: "(%{max_size_kb}KB を超える画像)"
@@ -4616,6 +4810,7 @@ ja:
         このバッジは、365 日間連続でアクセスしたときに付与されます。なんと、丸 1 年間です！
     badge_title_metadata: "%{site_title} の %{display_name} バッジ"
   admin_login:
+    acknowledgement: "メールアドレス %{email} の管理者アカウントが存在する場合、ログイン用リンクが記載されたメールが届きます。"
     email_input: "管理者メール"
     submit_button: "メールを送信"
     safe_mode: "セーフモード: ログイン時にすべてのテーマ/プラグインを無効にする"
@@ -4838,6 +5033,15 @@ ja:
       revoked: 取り消し済み
       restored: 復元済み
     bulk_user_delete: "一括削除操作で削除されました"
+    cli_bulk_post_delete: "rake タスクから一括削除されました"
+    api_post_delete: "API で削除されました"
+    reminder_deleted: "新しいリマインダーに置き換えられました"
+    user_associated_posts_deleted: "ユーザーは破棄されました"
+    imap_email_deleted: "メールは IMAP サーバー上で削除されました"
+    imap_email_marked_as_spam: "メールは IMAP サーバー上で迷惑メールに移動されました"
+    auto_deleted_hidden_posts: "非表示の投稿は自動的に破棄されました"
+    seed_data_topic_updated: "シードデータのトピックが更新されました"
+    seed_data_topic_deleted: "シードデータのトピックが削除されました"
   reviewables:
     already_handled: "その投稿をすでにレビューし、再通報の必要はないと判断しました。"
     already_handled_and_user_not_exist: "誰かがすでにレビュー済みで、そのユーザーはもう存在しません。"
@@ -4861,6 +5065,8 @@ ja:
       new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。%{link} をご覧ください。"
       fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。%{link} をご覧ください。"
       auto_silence_regex: "最初の投稿が %{link} 設定に一致する新規ユーザー。"
+      watched_word:
+        other: "この投稿にはウォッチ語が含まれていました。通報された語: %{words}。%{link} をご覧ください。"
       staged: "ステージングユーザーの新しいトピックと投稿はスタッフによる承認が必要です。%{link} をご覧ください。"
       category: "このカテゴリの投稿には、スタッフによる手動の承認が必要です。%{link} をご覧ください。"
       must_approve_users: "すべての新しいユーザーは、スタッフによる承認が必要です。%{link} をご覧ください。"
@@ -4871,107 +5077,139 @@ ja:
       contains_media: "この投稿には埋め込みメディアが含まれています。%{link} をご覧ください。"
       queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
       links:
+        watched_word: ウォッチ語の設定
         category: カテゴリ設定
+      no_context:
+        watched_word: "この投稿にはウォッチ語が含まれていました。%{link} をご覧ください。"
     actions:
       agree:
         title: "はい"
       agree_and_keep:
         title: "投稿を維持する"
         description: "通報に同意しますが、この投稿をそのままにします。"
+        complete: "投稿は変更されませんでした。"
       agree_and_keep_hidden:
         title: "投稿を非表示のままにする"
         description: "通報に同意し、投稿を非表示のままにします。"
+        complete: "投稿は非表示のままです。"
       agree_and_suspend:
         title: "ユーザーを凍結する"
         description: "通報に合意し、ユーザーを凍結します。"
+        complete: "ユーザーを凍結しました。"
       agree_and_silence:
         title: "ユーザーを投稿禁止にする"
         description: "通報に同意し、ユーザーを投稿禁止にします。"
+        complete: "ユーザーを投稿禁止にしました。"
       agree_and_restore:
         title: "投稿を復元する"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
+        complete: "投稿を復元しました。"
       agree_and_hide:
         title: "投稿を非表示にする"
         description: "通報に同意し、この投稿を非表示にします。さらに、ユーザーに編集を求めるメッセージを自動送信します。"
+        complete: "投稿は非表示になり、ユーザーに通知されました。"
       agree_and_edit:
         title: "同意して投稿を編集"
         description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
-      delete_single:
-        title: "削除"
-        complete: "削除された投稿."
+        complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
-        title: "削除…"
+        title: "削除"
+        complete: "投稿は削除されました。"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
-        complete: "削除された投稿."
+        complete: "投稿は削除されました。"
       delete_and_ignore_replies:
         title: "通報を無視し、投稿と返信を削除する"
         description: "通報をキューから削除して通報を無視し、投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
         confirm: "投稿への返信も削除してよろしいですか？"
+        complete: "投稿と返信を削除しました。"
       delete_and_agree:
         title: "投稿を削除する"
         description: "通報に同意し、この投稿を削除します。最初の投稿である場合は、トピックも削除します。"
-        complete: "削除された投稿."
+        complete: "投稿は削除されました。"
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
         confirm: "投稿への返信も削除してよろしいですか？"
+        complete: "投稿と返信を削除しました。"
       disagree_and_restore:
         title: "いいえ。投稿を復元する"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
+        complete: "投稿を復元しました。"
       disagree:
         title: "いいえ"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       discard_post:
         title: "投稿を破棄"
+        complete: "投稿を破棄しました。"
       revise_and_reject_post:
         title: "投稿を修正..."
+        complete: "投稿を修正待ちで拒否しました。"
       ignore:
         title: "無視"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       ignore_and_do_nothing:
         title: "何もしない"
         description: "何もアクションを起こさずにキューから通報を削除して、通報を無視します。非表示の投稿は非表示のままになり、自動ツールによって処理されます。"
-        complete: "通報が無視されました."
+        complete: "通報は無視されました。"
       approve:
         title: "承認"
-        complete: "投稿が承認されました."
+        complete: "投稿は承認されました。"
       approve_post:
         title: "投稿の承認"
-        confirm_closed: "このトピックはクローズされました。それでも投稿を作成しますか？"
-        complete: "投稿が承認されました."
+        complete: "投稿は承認されました。"
+      approve_post_closed:
+        title: "投稿の承認"
+        confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"
+        complete: "投稿は承認されました。"
       reject_post:
         title: "投稿の拒否"
-        complete: "投稿が拒否されました."
+        complete: "投稿は拒否されました。"
       approve_user:
         title: "ユーザーの承認"
-        complete: "ユーザーが承認されました."
+        complete: "ユーザーは承認されました。"
       reject_user:
         title: "ユーザーを削除…"
         delete:
           title: "ユーザーの削除"
           description: "ユーザーはフォーラムから削除されます。"
-          complete: "削除されたユーザー."
+          complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
+          complete: "ユーザーを削除してブロックしました。"
       reject:
         title: "却下"
         bundle_title: "拒否…"
       reject_and_suspend:
         title: "ユーザーの拒否と凍結"
+        complete: "投稿を拒否し、ユーザーを凍結しました。"
       reject_and_silence:
         title: "ユーザーの拒否と投稿禁止"
+        complete: "投稿を拒否し、ユーザーを投稿禁止にしました。"
       reject_and_delete:
         title: "投稿の拒否と削除"
+        complete: "投稿を拒否し、削除しました。"
       reject_and_keep_deleted:
         title: "投稿を削除されたままにする"
+        complete: "投稿を拒否し、削除のままにしました。"
       approve_and_restore:
         title: "投稿の承認と復元"
+        complete: "投稿を承認して復元しました。"
+      approve_and_unhide:
+        title: "投稿を承認して非表示を解除"
+        complete: "投稿を承認して非表示状態を解除しました"
+      no_action_user:
+        title: "未対応"
+      silence_user:
+        title: "ユーザーを投稿禁止にする"
+      suspend_user:
+        title: "ユーザーを凍結する"
       delete_user:
+        title: "ユーザーを削除"
+        complete: "削除されたユーザー"
         reason: "レビューキューを介して削除されました"
-        complete: "削除されたユーザー."
   email_style:
     html_missing_placeholder: "html テンプレートには %{placeholder} が含まれている必要があります。"
   notification_level:
@@ -5013,6 +5251,7 @@ ja:
       duplicate_ids: "の ID が重複しています"
       reserved_id: "には ID: %{id} として予約されたキーワードがあります"
       unsafe_description: "には安全でない HTML 記述が含まれます"
+      invalid_tag_group: "には無効なタググループがあります: %{tag_group_name}"
   activemodel:
     errors:
       <<: *errors

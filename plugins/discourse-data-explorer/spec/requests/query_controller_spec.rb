@@ -571,5 +571,35 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(404)
       end
     end
+
+    describe "GET /data-explorer/queries/:id/run.json (public_run)" do
+      it "runs the query for a user with access" do
+        group.add(user)
+        query = make_query("SELECT 1828 as value", { name: "B" }, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["columns"]).to eq(["value"])
+        expect(response.parsed_body["rows"]).to eq([[1828]])
+      end
+
+      it "returns 404 when the user does not have access" do
+        # query restricted to another group, user is not a member
+        other_group = Fabricate(:group)
+        query = make_query("SELECT 1 as value", {}, [other_group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when the query is hidden" do
+        group.add(user)
+        query = make_query("SELECT 1 as value", { hidden: true }, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(404)
+      end
+    end
   end
 end

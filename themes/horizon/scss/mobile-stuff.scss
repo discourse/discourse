@@ -109,8 +109,6 @@
 
   #topic-title {
     @include viewport.until(sm) {
-      padding-inline: var(--spacing-inline-s) !important;
-
       .title-wrapper {
         gap: var(--spacing-block-s);
       }
@@ -163,8 +161,6 @@
 
   .container.posts {
     @include viewport.until(sm) {
-      padding-inline: var(--spacing-inline-xs) !important;
-
       .main-avatar .avatar {
         width: 40px;
         height: 40px;

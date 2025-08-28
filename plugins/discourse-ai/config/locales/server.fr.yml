@@ -9,9 +9,16 @@ fr:
     ai:
       flag_types:
         review: "Ajouter une publication à la file d'attente de révision"
-        spam: "Signaler comme spam et masquer la publication"
-        spam_silence: "Signaler comme spam, masquer la publication et désactiver l'utilisateur"
+        review_hide: "Ajouter une publication à la file d'attente de révision et masquer la publication"
+        spam: "Signaler comme contenu indésirable et masquer la publication"
+        spam_silence: "Signaler comme contenu indésirable, masquer la publication et désactiver l'utilisateur"
     scriptables:
+      llm_tool_triage:
+        title: Triez les publications à l'aide de l'outil d'IA
+        description: "Triez les publications à l'aide d'une logique personnalisée dans un outil d'IA"
+      llm_persona_triage:
+        title: Triez les publications à l'aide d'un personnage IA
+        description: "Répondez aux publications à l'aide d'un personnage IA spécifique"
       llm_triage:
         title: Trier les publications à l'aide de l'IA
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
@@ -24,9 +31,11 @@ fr:
         description: "Rapport périodique basé sur un grand modèle linguistique"
   site_settings:
     discourse_ai_enabled: "Activez l'extension IA de Discourse."
+    ai_default_llm_model: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA"
+    ai_artifact_security: "Le système d'artefacts d'IA génère des iFrames avec du code exécutable. Le mode strict force un clic supplémentaire pour exécuter le code. Le mode Lax exécute le code immédiatement. Le mode hybride permet à l'utilisateur de fournir des data-ai-artifact-autorun à afficher immédiatement. Le mode désactivé désactive le système d'artefacts."
     ai_toxicity_enabled: "Activez le module de toxicité."
     ai_toxicity_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de toxicité"
-    ai_toxicity_inference_service_api_key: "Clé API pour l'API de toxicité"
+    ai_toxicity_inference_service_api_key: "Clé d'API pour l'API de toxicité"
     ai_toxicity_inference_service_api_model: "Modèle à utiliser pour l'inférence. Le modèle multilingue fonctionne avec l'italien, le français, le russe, le portugais, l'espagnol et le turc."
     ai_toxicity_flag_automatically: "Signalez automatiquement les publications et les messages de conversation qui dépassent les seuils configurés."
     ai_toxicity_flag_threshold_toxicity: "Toxicité : commentaire grossier, irrespectueux ou déraisonnable susceptible de vous inciter à quitter une discussion ou à renoncer à partager votre point de vue"
@@ -36,14 +45,14 @@ fr:
     ai_toxicity_flag_threshold_insult: "Insulte"
     ai_toxicity_flag_threshold_threat: "Menace"
     ai_toxicity_flag_threshold_sexual_explicit: "Sexualité explicite"
-    ai_toxicity_groups_bypass: "Les utilisateurs de ces groupes ne verront pas leurs messages classés par le module de toxicité."
+    ai_toxicity_groups_bypass: "Les utilisateurs de ces groupes ne verront pas leurs publications classées par le module de toxicité."
     ai_sentiment_enabled: "Activez le module de sentiment."
     ai_sentiment_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de sentiment"
-    ai_sentiment_inference_service_api_key: "Clé API pour l'API de sentiment"
+    ai_sentiment_inference_service_api_key: "Clé d'API pour l'API de sentiment"
     ai_sentiment_models: "Modèles à utiliser pour l'inférence. Le sentiment classe les publications dans la plage positif/neutre/négatif. Les émotions se classent dans la plage colère/dégoût/peur/joie/neutre/tristesse/surprise."
     ai_nsfw_detection_enabled: "Activez le module NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adresse URL où l'API s'exécute pour le module NSFW"
-    ai_nsfw_inference_service_api_key: "Clé API pour l'API NSFW"
+    ai_nsfw_inference_service_api_key: "Clé d'API pour l'API NSFW"
     ai_nsfw_flag_automatically: "Signalez automatiquement les publications NSFW qui dépassent les seuils configurés."
     ai_nsfw_flag_threshold_general: "Seuil général pour qu'une image soit considérée comme NSFW."
     ai_nsfw_flag_threshold_drawings: "Seuil pour qu'un dessin soit considéré comme NSFW."
@@ -51,14 +60,18 @@ fr:
     ai_nsfw_flag_threshold_porn: "Seuil pour qu'une image classée comme pornographique soit considérée comme NSFW."
     ai_nsfw_flag_threshold_sexy: "Seuil pour qu'une image classée comme sexy soit considérée comme NSFW."
     ai_nsfw_models: "Modèles à utiliser pour l'inférence NSFW."
+    ai_spam_detection_enabled: "Activez le module de détection de contenu indésirable par IA"
+    ai_openai_api_key: "Clé d'API pour l'API OpenAI. Utilisé UNIQUEMENT pour la création et la modification d'images. Pour GPT, utilisez l'onglet de configuration LLM"
+    ai_openai_image_generation_url: "URL pour l'API de génération d'images OpenAI"
+    ai_openai_image_edit_url: "URL pour l'API d'édition d'images OpenAI"
     ai_helper_enabled: "Activer l'assistant IA."
-    composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans le compositeur."
-    ai_helper_allowed_in_pm: "Activez l'assistant IA du compositeur dans les messages privés."
+    composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans l'éditeur."
+    ai_helper_allowed_in_pm: "Activez l'assistant IA de l'éditeur dans les messages privés."
     ai_helper_model: "Modèle à utiliser pour l'assistant IA."
     ai_helper_custom_prompts_allowed_groups: "Les utilisateurs de ces groupes verront l'option d'invite personnalisée dans l'assistant IA."
     ai_helper_automatic_chat_thread_title_delay: "Délai en minutes avant que l'assistant IA définisse automatiquement le titre du fil de discussion."
     ai_helper_automatic_chat_thread_title: "Définissez automatiquement les titres des fils de discussion en fonction du contenu du fil."
-    ai_helper_illustrate_post_model: "Modèle à utiliser pour la fonction d'illustration de publication de l'assistant IA du compositeur"
+    ai_helper_illustrate_post_model: "Modèle à utiliser pour la fonction d'illustration de publication de l'assistant IA de l'éditeur"
     ai_helper_enabled_features: "Sélectionnez les fonctionnalités à activer dans l’assistant IA."
     post_ai_helper_allowed_groups: "Les groupes d'utilisateurs autorisés à accéder aux fonctionnalités d'AI Helper dans les publications"
     ai_helper_image_caption_model: "Sélectionnez le modèle à utiliser pour générer des légendes d'images"
@@ -68,13 +81,16 @@ fr:
     ai_embeddings_semantic_related_topics: "Nombre maximal de sujets à afficher dans la section des sujets connexes."
     ai_embeddings_backfill_batch_size: "Nombre d'intégrations à remplir toutes les 15 minutes."
     ai_embeddings_semantic_search_enabled: "Activez la recherche sémantique en pleine page."
+    ai_embeddings_semantic_search_use_hyde: "Utilisez HyDE pour effectuer une recherche sémantique sur toute la page. Utilise un LLM pour créer une publication hypothétique à partir du terme de recherche de l'utilisateur afin de faciliter les correspondances."
     ai_embeddings_semantic_quick_search_enabled: "Activez l'option de recherche sémantique dans la fenêtre contextuelle du menu de recherche."
     ai_embeddings_semantic_related_include_closed_topics: "Inclure des sujets fermés dans les résultats de recherche sémantique"
     ai_embeddings_semantic_search_hyde_model: "Modèle utilisé pour développer des mots-clés afin d'obtenir de meilleurs résultats lors d'une recherche sémantique"
     ai_embeddings_per_post_enabled: Générer des intégrations pour chaque publication
+    ai_summarization_enabled: "Activer la fonction de synthèse"
     ai_summarization_model: "Modèle à utiliser pour les résumés"
+    ai_summarization_persona: "Personnage à utiliser pour la fonction de synthèse"
     ai_custom_summarization_allowed_groups: "Les groupes autorisés à utiliser la création de nouveaux résumés."
-    ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MD."
+    ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
     ai_summary_gists_allowed_groups: "Les groupes sont autorisés à voir l'essentiel dans la liste des sujets d'actualité."
     ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
@@ -82,22 +98,37 @@ fr:
     ai_bot_enable_chat_warning: "Afficher un avertissement lorsque le chat MP est lancé. Peut être remplacé en modifiant la chaîne de traduction : discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
-    ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages personnels de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
+    ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
     ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer une conversation avec un robot IA"
     ai_bot_github_access_token: "Jeton d'accès GitHub à utiliser avec les outils GitHub AI (requis pour la prise en charge de la recherche)"
-    ai_stability_api_key: "Clé API pour l'API stable.ai"
+    ai_stability_api_key: "Clé d'API pour l'API stable.ai"
     ai_stability_engine: "Moteur de génération d'images à utiliser pour l'API stability.ai"
     ai_stability_api_url: "Adresse URL de l'API stability.ai"
-    ai_google_custom_search_api_key: "Clé API pour l'API Google Custom Search, voir : https://developers.google.com/custom-search"
+    ai_google_custom_search_api_key: "Clé d'API pour l'API Google Custom Search, voir : https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX pour l'API de recherche personnalisée Google"
+    ai_discord_search_enabled: "Active la fonction de recherche Discord"
+    ai_discord_app_id: "L'identifiant de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
+    ai_discord_app_public_key: "La clé publique de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
+    ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
+    ai_discord_search_persona: "Le personnage à utiliser pour la recherche sur Discord."
+    ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
+    ai_bot_enable_dedicated_ux: "Autoriser une interface de robot en plein écran, au lieu d'un PM"
+    ai_translation_enabled: "Active la fonction de traduction par IA"
+    ai_translation_model: "Le modèle à utiliser pour la traduction. Ce modèle doit prendre en charge la traduction. Les personnages peuvent modifier ce paramètre."
+    ai_translation_backfill_limit_to_public_content: "Lorsque cette option est activée, seul le contenu des catégories publiques sera traduit. Lorsque cette option est désactivée, le contenu des MP de groupe et des catégories privées sera également envoyé pour traduction."
+    ai_translation_max_post_length: "Longueur maximale des publications à traduire. Les publications plus longues ne seront pas traduites."
+    ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
       flagged_by_nsfw: L'extension IA l'a signalé après avoir classé au moins une des images jointes comme NSFW.
   reports:
+    sentiment_analysis:
+      title: "Analyse du sentiment"
+      description: "Ce rapport fournit une analyse du sentiment pour les publications, regroupées par catégorie, avec des scores positifs, négatifs et neutres pour chaque publication et catégorie."
     overall_sentiment:
       title: "Sentiment général"
-      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages directs (MD) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
+      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages privés (MP) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
@@ -186,8 +217,16 @@ fr:
       description: "Publications classées selon l'émotion de surprise via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Vous ne pouvez avoir que %{count} clé dans l'artefact."
+          other: "Vous ne pouvez avoir que %{count} clés dans l'artefact."
+      link: "Afficher dans un nouvel onglet"
+      copy_embed: "Copier l'intégration"
       view_source: "Voir la source"
       view_changes: "Afficher les modifications"
+      change_description: "Modifier la description"
+      copied: "Copié dans le presse-papiers"
     unknown_model: "Modèle d'IA inconnu"
     tools:
       custom_name: "%{name} (personnalisé)"
@@ -202,13 +241,15 @@ fr:
           name: "Générateur d'images de flux (Together.ai)"
         empty_tool:
           name: "Repartir de zéro..."
+      name:
+        characters: "doit uniquement inclure des chiffres, des lettres et des traits de soulignement"
     ai_helper:
       errors:
         completion_request_failed: "Une erreur s'est produite lors de la tentative de fournir des suggestions. Veuillez réessayer."
       prompts:
         translate: Traduire en %{language}
         generate_titles: Suggérer des titres de sujets
-        proofread: Relisez le texte
+        proofread: Relire le texte
         markdown_table: Générer un tableau Markdown
         custom_prompt: "Invite personnalisée"
         explain: "Expliquer"
@@ -227,61 +268,160 @@ fr:
       title: "%{title} - Conversation IA - %{site_name}"
       errors:
         not_allowed: "Vous n'avez pas l'autorisation de partager ce sujet"
-        other_people_in_pm: "Les messages personnels avec d'autres humains ne peuvent pas être partagés publiquement"
-        other_content_in_pm: "Les messages personnels contenant des messages d'autres personnes ne peuvent pas être partagés publiquement"
+        other_people_in_pm: "Les messages privés avec d'autres humains ne peuvent pas être partagés publiquement"
+        other_content_in_pm: "Les messages privés contenant des messages d'autres personnes ne peuvent pas être partagés publiquement"
         failed_to_share: "Échec du partage de la conversation"
         conversation_deleted: "Partage de conversation supprimé avec succès"
     spam_detection:
-      flag_reason: "Signalé comme spam par <a href='%{url}'>Discourse AI</a>"
+      flag_reason: "Signalé comme contenu indésirable par <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Utilisateur mis en sourdine automatiquement par <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Le type d'erreur fourni n'est pas valide"
       unexpected: "Une erreur inattendue s'est produite"
-      bot_user_update_failed: "Échec de la mise à jour de l'utilisateur du robot d'analyse anti-spam"
+      bot_user_update_failed: "Échec de la mise à jour de l'utilisateur du robot de détection des contenus indésirables"
+      configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
+      logging_subject: "Détection des contenus indésirables"
     ai_bot:
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
-      default_pm_prefix: "[MD de robot IA sans titre]"
+      default_pm_prefix: "[MP de robot IA sans titre]"
+      thinking: "Réflexion..."
       personas:
-        default_llm_required: "Le modèle LLM par défaut est requis avant d'activer Chat"
-        cannot_delete_system_persona: "Les personnages système ne peuvent pas être supprimés, veuillez plutôt les désactiver"
+        default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
+        cannot_delete_system_persona: "Les personnages du système ne peuvent pas être supprimés. Veuillez plutôt les désactiver"
         cannot_edit_system_persona: "Les personnages du système peuvent uniquement être renommés, vous ne pouvez pas modifier les outils ou l'invite du système, mais seulement les désactiver et en faire une copie"
+        cannot_have_duplicate_tools: "Impossible d'avoir des outils en double"
         github_helper:
           name: "Assistant GitHub"
           description: "Robot IA spécialisé dans l'assistance aux tâches et questions liées à GitHub"
         general:
           name: Assistant du forum
-          description: "Bot IA à usage général capable d'effectuer diverses tâches"
+          description: "Robot IA à usage général capable d'effectuer diverses tâches"
         artist:
           name: Artiste
-          description: "Bot IA spécialisé dans la génération d'images"
+          description: "Robot IA spécialisé dans la génération d'images"
+        designer:
+          name: Concepteur
+          description: "Robot IA spécialisé dans la génération et l'édition d'images"
+        forum_researcher:
+          name: Chercheur du forum
+          description: "Robot IA spécialisé dans la recherche approfondie dans le forum"
         sql_helper:
           name: Assistant SQL
-          description: "Bot IA spécialisé dans l'aide à la création de requêtes SQL sur cette instance Discourse"
+          description: "Robot IA spécialisé dans l'aide à la création de requêtes SQL sur cette instance Discourse"
         settings_explorer:
           name: Explorateur de paramètres
-          description: "Bot IA spécialisé dans l'aide à l'exploration des paramètres du site Discourse"
+          description: "Robot IA spécialisé dans l'aide à l'exploration des paramètres du site Discourse"
+        researcher:
+          name: Chercheur Web
+          description: "Robot IA avec accès à Google qui peut à la fois rechercher et lire des pages Web"
         creative:
           name: Créatif
-          description: "Bot IA sans intégration externe spécialisé dans les tâches créatives"
+          description: "Robot IA sans intégration externe spécialisé dans les tâches créatives"
         dall_e3:
           name: "DALL-E 3"
-          description: "Bot IA spécialisé dans la génération d'images utilisant DALL-E 3"
+          description: "Robot IA spécialisé dans la génération d'images utilisant DALL-E 3"
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
         web_artifact_creator:
           name: "Créateur d'artefacts Web"
           description: "Robot IA spécialisé dans la création d'artefacts Web interactifs"
+        summarizer:
+          name: "Agent de synthèse"
+          description: "Personnage par défaut utilisé pour alimenter les résumés par l'IA"
+        short_summarizer:
+          name: "Agent de synthèse (forme courte)"
+          description: "Personnage par défaut utilisé pour générer des résumés courts basés sur l'IA pour les éléments des listes de sujets"
+        concept_finder:
+          name: "Chercheur de concepts"
+          description: "Robot IA spécialisé dans l'identification de concepts et de thèmes dans le contenu"
+        concept_matcher:
+          name: "Analyseur de concepts"
+          description: "Robot IA spécialisé dans la mise en correspondance du contenu avec les concepts existants"
+        concept_deduplicator:
+          name: "Duplicateur de concepts"
+          description: "Robot IA spécialisé dans la déduplication de concepts"
         custom_prompt:
           name: "Invite personnalisée"
+          description: "Personnage par défaut qui alimente la fonction d'invite personnalisée de l'assistant"
         smart_dates:
           name: "Dates intelligentes"
+          description: "Personnage par défaut qui alimente la fonction de dates intelligentes de l'assistant"
+        markdown_table_generator:
+          name: "Générateur de tableaux Markdown"
+          description: "Personnage par défaut qui alimente la fonction de génération de tableau Markdown de l'assistant"
+        post_illustrator:
+          name: "Illustrateur de publications"
+          description: "Génère des invites StableDiffusion pour alimenter la fonction d'illustration des publications de l'assistant"
+        proofreader:
+          name: "Relecteur"
+          description: "Personnage par défaut qui alimente la fonction de relecture de texte de l'assistant"
+        titles_generator:
+          name: "Générateur de titres"
+          description: "Personnage par défaut qui alimente la fonctionnalité de suggestion de titres de sujets par l'assistant"
+        tutor:
+          name: "Tuteur"
+          description: "Personnage par défaut qui alimente la fonction d'explication de l'assistant"
+        translator:
+          name: "Traducteur"
+          description: "Personnage par défaut qui alimente la fonction de traduction de l'assistant"
+        image_captioner:
+          name: "Légendes des images"
+          description: "Personnage par défaut qui alimente la fonction de légende d'image de l'assistant"
+        locale_detector:
+          name: "Détecteur de paramètre régional"
+          description: "Active la fonction de traduction en détectant les paramètres régionaux d'un texte donné (publications, titres, etc.)"
+        post_raw_translator:
+          name: "Traducteur de publications"
+          description: "Renforce la fonction de traduction en traduisant les publications articles contenant Discourse Markdown"
+        topic_title_translator:
+          name: "Traducteur de titre de sujet"
+          description: "Active la fonction de traduction en traduisant les titres des sujets"
+        short_text_translator:
+          name: "Traducteur de textes courts"
+          description: "Alimente la fonction de traduction en tant que traducteur de texte générique, utilisé pour les textes courts tels que les noms de catégories ou les étiquettes"
+        spam_detector:
+          name: "Détecteur de contenus indésirables"
+          description: "Personnage par défaut qui alimente notre fonction de détection des contenus indésirables"
+        content_creator:
+          name: "Créateur de contenu"
+          description: "Personnage par défaut à l'origine de la recherche HyDE"
+        report_runner:
+          name: "Exécuteur de rapports"
+          description: "Personnage par défaut utilisé dans le script d'automatisation des rapports"
       topic_not_found: "Résumé indisponible, sujet introuvable !"
       summarizing: "Synthèse du sujet"
       searching: "Recherche de : '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM "
+            description: "Modèle linguistique à utiliser pour la recherche (par défaut, LLM du personnage actuel)"
+          max_tokens_per_batch:
+            name: "Nombre maximal de jetons par lot"
+            description: "Nombre maximal de jetons à utiliser pour chaque lot dans la recherche"
+          max_tokens_per_post:
+            name: "Nombre maximal de jetons par publication"
+            description: "Nombre maximal de jetons à utiliser pour chaque publication dans la recherche"
           max_results:
             name: "Nombre maximal de résultats"
+            description: "Nombre maximal de résultats à inclure dans un filtre"
+          include_private:
+            name: "Inclure le contenu privé"
+            description: "Inclure les sujets privés dans les filtres"
+        create_artifact:
+          creator_llm:
+            name: "LLM "
+            description: "Modèle linguistique à utiliser pour la création d'artefacts"
+        update_artifact:
+          editor_llm:
+            name: "LLM "
+            description: "Modèle linguistique à utiliser pour les modifications d'artefacts"
+          update_algorithm:
+            name: "Algorithme de mise à jour"
+            description: "Demandez au LLM de le remplacer complètement ou utilisez diff pour mettre à jour"
+          do_not_echo_artifact:
+            name: "Ne pas réémettre l'artefact"
+            description: "Limitera les coûts, mais l'efficacité des mises à jour des artefacts sera réduite"
         google:
           base_query:
             name: "Requête de recherche de base"
@@ -301,6 +441,7 @@ fr:
             name: "Requête de recherche de base"
             description: "Requête de base à utiliser lors de la recherche. Exemple : « #urgent » ajoutera « #urgent » à la requête de recherche et inclura uniquement les sujets avec la catégorie ou l'étiquette correspondante."
       tool_summary:
+        read_artifact: "Lire un artefact Web"
         update_artifact: "Mettre à jour un artefact Web"
         create_artifact: "Créer un artefact Web"
         web_browser: "Parcourir le Web"
@@ -321,9 +462,14 @@ fr:
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Recherche des paramètres du site"
         dall_e: "Générer une image"
-        search_meta_discourse: "Méta-recherche Discourse"
+        search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
+        create_image: "Création d'image"
+        edit_image: "Édition d'image"
+        researcher: "Recherche"
+        researcher_dry_run: "Préparation de la recherche"
       tool_help:
+        read_artifact: "Lire un artefact Web à l'aide du robot IA"
         update_artifact: "Mettre à jour un artefact Web à l'aide du robot IA"
         create_artifact: "Créer un artefact Web à l'aide du robot IA"
         web_browser: "Parcourir la page Web à l'aide du robot IA"
@@ -338,16 +484,21 @@ fr:
         time: "Trouver l'heure dans différents fuseaux horaires"
         summary: "Résumer un sujet"
         image: "Générer une image à l'aide de Stable Diffusion"
+        create_image: "Générer une image à l'aide du modèle d'image OpenAI GPT"
+        edit_image: "Modifier l'image à l'aide du modèle d'image OpenAI GPT"
         google: "Rechercher une requête sur Google"
         read: "Lire le sujet public sur le forum"
         setting_context: "Rechercher le contexte de configuration du site"
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Paramètres du site de recherche"
         dall_e: "Générer une image à l'aide de DALL-E 3"
-        search_meta_discourse: "Méta-recherche Discourse"
+        search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
+        researcher: "Rechercher des informations sur le forum à l'aide du robot IA"
       tool_description:
+        read_artifact: "Lire un artefact Web à l'aide du robot IA"
         update_artifact: "Mise à jour d'un artefact Web à l'aide du robot IA"
+        create_artifact: "Création d'un artefact Web : %{name} - %{specification}"
         web_browser: "Lecture : <a href='%{url}'>%{url}</a>"
         github_search_files: "Recherche de « %{keywords} » dans %{repo}/%{branch}"
         github_search_code: "Recherche de « %{query} » dans %{repo}"
@@ -378,9 +529,19 @@ fr:
           other: "%{count} <a href='%{url}'>résultats</a> trouvés pour « %{query} »"
         setting_context: "Contexte de lecture pour : %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Objectifs proposés : %{goals}\n\n %{count} publication trouvée correspondant à « %{filter} »"
+          other: "Objectifs proposés : %{goals}\n\n %{count} publications trouvées correspondant à « %{filter} »"
+        researcher:
+          one: "Recherche : %{goals}\n\n %{count} publication trouvée correspondant à « %{filter} »"
+          other: "Recherche : %{goals}\n\n %{count} publications trouvées correspondant à « %{filter} »"
         search_settings:
           one: "%{count} résultat trouvé pour « %{query} »"
           other: "%{count} résultats trouvés pour « %{query} »"
+      discoveries:
+        continue_conversation:
+          title: "Conversation de découverte : recherchez %{query}"
+          raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
     summarization:
       configuration_hint:
         one: "Configurez d'abord le paramètre « %{setting} »."
@@ -404,9 +565,12 @@ fr:
           neutral: "Neutre"
     llm:
       configuration:
+        create_llm: "Vous devez configurer un LLM avant d'activer cette fonctionnalité"
+        disable_modules_first: "Vous devez d'abord désactiver ces modules : %{settings}"
         set_llm_first: "Réglez %{setting} en premier"
         model_unreachable: "Nous n'avons pas pu obtenir de réponse de ce modèle. Vérifiez d'abord vos paramètres."
         invalid_seeded_model: "Vous ne pouvez pas utiliser ce modèle avec cette fonctionnalité"
+        invalid_persona_response_format: "Le personnage sélectionné doit avoir un format de réponse avec un champ booléen intitulé « spam »"
         must_select_model: "Vous devez d'abord sélectionner un LLM"
       endpoints:
         not_configured: "%{display_name} (non configuré)"
@@ -417,6 +581,8 @@ fr:
         one: "Nous n'avons pas pu supprimer ce modèle, car %{settings} l'utilise. Mettez à jour le paramètre et réessayez."
         other: "Nous n'avons pas pu supprimer ce modèle, car %{settings} l'utilisent. Mettez à jour les paramètres et réessayez."
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
+    personas:
+      malformed_examples: "Les exemples donnés ont un format incorrect."
     embeddings:
       delete_failed: "Ce modèle est actuellement utilisé. Mettez d'abord à jour `ai embeddings selected model`."
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
@@ -427,7 +593,8 @@ fr:
       missing_provider_param: "%{param} ne peut pas être vide"
       bedrock_invalid_url: "Veuillez remplir tous les champs pour utiliser ce modèle."
     ai_staff_action_logger:
-      updated: "modification"
+      updated: "mis à jour"
+      set: "défini"
       removed: "supprimé"
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
@@ -441,3 +608,10 @@ fr:
       no_default_llm: Le personnage doit avoir un default_llm défini.
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
+      persona_already_exists: Le personnage portant le nom %{name} existe déjà.
+      custom_tool_exists:
+        one: "L'outil personnalisé portant le nom %{names} existe déjà."
+        other: "Des outils personnalisés portant le nom %{names} existent déjà."
+  dashboard:
+    problem:
+      ai_llm_status: "Le modèle LLM : %{model_name} rencontre des problèmes. Veuillez consulter la <a href='%{url}'>page de configuration du modèle</a>."

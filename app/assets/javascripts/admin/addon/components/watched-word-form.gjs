@@ -3,7 +3,6 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { empty, equal } from "@ember/object/computed";
-import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -19,8 +18,6 @@ import WatchedWords from "select-kit/components/watched-words";
 @tagName("form")
 @classNames("watched-word-form")
 export default class WatchedWordForm extends Component {
-  @service dialog;
-
   formSubmitted = false;
   actionKey = null;
   showMessage = false;

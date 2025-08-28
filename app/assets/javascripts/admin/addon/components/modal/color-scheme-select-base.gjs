@@ -5,11 +5,10 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 
 export default class ColorSchemeSelectBase extends Component {
-  @tracked
-  selectedBaseThemeId = this.args.model.baseColorSchemes?.[0]?.base_scheme_id;
+  @tracked selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.id;
 
   @action
   selectBase() {
@@ -25,12 +24,11 @@ export default class ColorSchemeSelectBase extends Component {
     >
       <:body>
         {{i18n "admin.customize.colors.select_base.description"}}
-        <ComboBox
-          class="select-base-palette"
-          @content={{@model.baseColorSchemes}}
+        <ColorPalettePicker
+          @content={{@model.colorSchemes}}
           @value={{this.selectedBaseThemeId}}
           @onChange={{fn (mut this.selectedBaseThemeId)}}
-          @valueProperty="base_scheme_id"
+          class="select-base-palette"
         />
       </:body>
       <:footer>

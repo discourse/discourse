@@ -6,4 +6,7 @@
 
 nl:
   site_settings:
+    rss_polling_enabled: "[RSS-polling] Schakel het importeren van ingesloten berichten uit meerdere RSS-feeds in"
     rss_polling_frequency: "[RSS Polling] Hoe vaak feed verversen (in minuten)"
+    rss_polling_use_pubdate: "[RSS-polling] Stel de datum van het aanmaken van topics in op de pubDate die in de RSS-feed is gevonden"
+    rss_polling_update_tags: "[RSS Polling] Werk topictags bij wanneer een topic wordt bijgewerkt. Als je dit uitschakelt, worden de initiële tags opgehaald, maar zijn verdere tagwijzigingen niet mogelijk."

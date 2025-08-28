@@ -26,10 +26,7 @@ module ApplicationHelper
       EmberENV: {
         FEATURES: {
         },
-        EXTEND_PROTOTYPES: {
-          Date: false,
-          String: false,
-        },
+        EXTEND_PROTOTYPES: false,
       },
       APP: {
         name: "discourse",
@@ -566,29 +563,30 @@ module ApplicationHelper
     @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
   end
 
+  def user_scheme_id
+    return @user_scheme_id if defined?(@user_scheme_id)
+    scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
-      return custom_user_scheme_id
-    end
-
+    return user_scheme_id if user_scheme_id
     return if theme_id.blank?
 
-    if SiteSetting.use_overhauled_theme_color_palette
-      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
-    end
-    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
+    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
+  end
+
+  def user_dark_scheme_id
+    return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
+    scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
   end
 
   def dark_scheme_id
-    if SiteSetting.use_overhauled_theme_color_palette
-      scheme_id
-    else
-      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-        (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
-    end
+    user_dark_scheme_id ||
+      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
   end
 
   def current_homepage
@@ -679,7 +677,6 @@ module ApplicationHelper
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        dark: SiteSetting.use_overhauled_theme_color_palette,
         fallback_to_base: false,
       )
     end
@@ -697,7 +694,6 @@ module ApplicationHelper
       dark_href =
         stylesheet_manager.color_scheme_stylesheet_link_tag_href(
           dark_scheme_id,
-          dark: SiteSetting.use_overhauled_theme_color_palette,
           fallback_to_base: false,
         )
     end
@@ -781,11 +777,7 @@ module ApplicationHelper
   end
 
   def dark_color_hex_for_name(name)
-    ColorScheme.hex_for_name(
-      name,
-      dark_scheme_id,
-      dark: SiteSetting.use_overhauled_theme_color_palette,
-    )
+    ColorScheme.hex_for_name(name, dark_scheme_id)
   end
 
   def dark_elements_media_query
@@ -832,8 +824,8 @@ module ApplicationHelper
       svg_sprite_path: SvgSprite.path(theme_id),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
-      user_color_scheme_id: scheme_id,
-      user_dark_scheme_id: dark_scheme_id,
+      user_color_scheme_id: user_scheme_id || -1,
+      user_dark_scheme_id: user_dark_scheme_id || -1,
     }
 
     if Rails.env.development?

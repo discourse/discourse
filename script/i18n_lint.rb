@@ -38,6 +38,8 @@ class LocaleFileValidator
       "The following keys use {{key}} instead of %{key} for interpolation keys:",
     wrong_pluralization_keys:
       "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
+    invalid_file_format:
+      "The file is not a valid YAML format or does not contain a valid locale structure.",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
   }.merge(
@@ -72,6 +74,9 @@ class LocaleFileValidator
     validate_content(yaml)
 
     @errors.any? { |_, value| value.any? }
+  rescue StandardError => e
+    @errors[:invalid_file_format] = ["Failed to parse #{@filename}: #{e.message}"]
+    true
   end
 
   def print_errors
@@ -128,6 +133,10 @@ class LocaleFileValidator
   end
 
   def validate_pluralizations(yaml)
+    if !yaml.is_a?(Hash)
+      @errors[:wrong_pluralization_keys] << ["Root of the locale file must be a hash"]
+      return
+    end
     each_pluralization(yaml) do |key, hash|
       # ignore errors from some ActiveRecord messages
       next if key.include?("messages.restrict_dependent_destroy")

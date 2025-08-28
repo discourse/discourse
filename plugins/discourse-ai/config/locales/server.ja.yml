@@ -8,10 +8,17 @@ ja:
   discourse_automation:
     ai:
       flag_types:
-        review: "レビューキューに投稿を追加"
-        spam: "迷惑として通報して投稿を非表示"
+        review: "レビューキューに投稿を追加する"
+        review_hide: "投稿をレビューキューに追加して非表示にする"
+        spam: "迷惑として通報して投稿を非表示にする"
         spam_silence: "迷惑として通報し、投稿を非表示にしてユーザーを投稿禁止にする"
     scriptables:
+      llm_tool_triage:
+        title: AI ツールを使った投稿のトリアージ
+        description: "AI ツールのカスタムロジックを使って投稿をトリアージします"
+      llm_persona_triage:
+        title: AI ペルソナを使った投稿のトリアージ
+        description: "特定の AI ペルソナを使って投稿に返信します"
       llm_triage:
         title: AI を使った投稿のトリアージ
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
@@ -24,13 +31,15 @@ ja:
         description: "大規模言語モデルに基づく定期レポート"
   site_settings:
     discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
+    ai_default_llm_model: "すべての AI 機能に使用するデフォルトの LLM モデル"
+    ai_artifact_security: "AI アーティファクトシステムは、実行可能なコードを含む IFRAME を生成します。厳格モードでは、コードを実行するためのクリックが追加で必要となります。ハイブリッドモードでは、ユーザーが data-ai-artifact-autorun を指定するとすぐに表示することができます。無効モードでは、アーティファクトシステムが無効になります。"
     ai_toxicity_enabled: "毒コメントモジュールを有効にします。"
     ai_toxicity_inference_service_api_endpoint: "毒コメントモジュールの API が実行している URL"
     ai_toxicity_inference_service_api_key: "毒コメント API の API キー"
     ai_toxicity_inference_service_api_model: "推論に使用するモデル。多言語モデルは、イタリア語、フランス語、ロシア語、ポルトガル語、スペイン語、およびトルコ語で動作します。"
     ai_toxicity_flag_automatically: "構成されたしきい値を超える投稿 / チャットメッセージを自動的に通報します。"
-    ai_toxicity_flag_threshold_toxicity: "毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性がある程度ある、失礼、無礼、または不合理なコメント"
-    ai_toxicity_flag_threshold_severe_toxicity: "深刻な毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性が高い、非常に憎しみに満ちた、攻撃的、または無礼なコメント"
+    ai_toxicity_flag_threshold_toxicity: "毒コメント: ディスカッションからの退出や意見の共有の断念をある程度強要している可能性のある、失礼、無礼、または不合理なコメント"
+    ai_toxicity_flag_threshold_severe_toxicity: "深刻な毒コメント: ディスカッションからの退出や意見の共有の断念をかなり強要している可能性のある、非常に憎しみに満ちた、攻撃的、または無礼なコメント"
     ai_toxicity_flag_threshold_obscene: "わいせつ"
     ai_toxicity_flag_threshold_identity_attack: "アイデンティティ攻撃"
     ai_toxicity_flag_threshold_insult: "侮辱"
@@ -51,6 +60,10 @@ ja:
     ai_nsfw_flag_threshold_porn: "ポルノとして分類された画像が NSFW として見なされるためのしきい値。"
     ai_nsfw_flag_threshold_sexy: "官能的として分類された画像が NSFW として見なされるためのしきい値。"
     ai_nsfw_models: "NSFW 推論に使用するモデル。"
+    ai_spam_detection_enabled: "AI 迷惑行為検出モジュールを有効にする"
+    ai_openai_api_key: "OpenAI API の API キー。画像の作成と編集のみに使用されます。GPT の場合は、LLM 構成タブを使用します"
+    ai_openai_image_generation_url: "OpenAI 画像生成 API の URL"
+    ai_openai_image_edit_url: "OpenAI 画像編集 API の URL"
     ai_helper_enabled: "AI ヘルパーを有効にします。"
     composer_ai_helper_allowed_groups: "これらのグループのユーザーの作成ツールには、AI ヘルパーボタンが表示されます。"
     ai_helper_allowed_in_pm: "PM で作成ツールの AI ヘルパーを有効にします。"
@@ -67,20 +80,25 @@ ja:
     ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"
     ai_embeddings_semantic_related_topics: "関連トピックセクションに表示する最大トピック数。"
     ai_embeddings_backfill_batch_size: "15 分ごとにバックフィルする埋め込みの数。"
-    ai_embeddings_semantic_search_enabled: "全ページのセマンティック検索を有効にします。"
-    ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にします。"
+    ai_embeddings_semantic_search_enabled: "全ページのセマンティック検索を有効にする。"
+    ai_embeddings_semantic_search_use_hyde: "セマンティック前ページ検索に HyDE を使用する。LLM を使って、ユーザーの検索語句から仮定される投稿を作成し、一致検索を支援します。"
+    ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にする。"
     ai_embeddings_semantic_related_include_closed_topics: "閉鎖トピックをセマンティック検索結果に含める"
     ai_embeddings_semantic_search_hyde_model: "セマンティック検索中に得られる結果を改善するためにキーワードの拡張に使用されるモデル"
     ai_embeddings_per_post_enabled: 各投稿の埋め込みを生成する
+    ai_summarization_enabled: "要約機能を有効にする"
+    ai_summarization_model: "要約に使用するモデル"
+    ai_summarization_persona: "要約機能に使用するペルソナ"
     ai_custom_summarization_allowed_groups: "新しい要約の作成に使用できるグループ。"
     ai_pm_summarization_allowed_groups: "PM での要約の作成と表示が許可されたグループ。"
+    ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
     ai_summary_gists_allowed_groups: "ホットなトピックリストで gist の表示が許可されたグループ。"
     ai_summary_backfill_maximum_topics_per_hour: "1 時間あたりにバックフィルするトピック要約の数。"
     ai_bot_enabled: "AI ボットモジュールを有効にします。"
     ai_bot_enable_chat_warning: "PM チャットが開始されたら警告を表示する。翻訳文字列の discourse_ai.ai_bot.pm_warning を編集して上書き可能"
     ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
-    ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可します。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
+    ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
     ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
     ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
     ai_stability_api_key: "stability.ai API の API キー"
@@ -88,11 +106,26 @@ ja:
     ai_stability_api_url: "stability.ai API の URL"
     ai_google_custom_search_api_key: "Google カスタム検索 API の API キーは https://developers.google.com/custom-search を参照してください"
     ai_google_custom_search_cx: "Google カスタム検索 API の CX"
+    ai_discord_search_enabled: "Discord 検索機能を有効にします"
+    ai_discord_app_id: "Discord 検索を接続する Discord アプリケーションの ID"
+    ai_discord_app_public_key: "Discord 検索を接続する Discord アプリケーションの公開鍵"
+    ai_discord_search_mode: "Discord 検索に使用する検索モードを選択する"
+    ai_discord_search_persona: "Discord 検索に使用するペルソナ。"
+    ai_discord_allowed_guilds: "ボットが検索できる Discord ギルド (サーバー)"
+    ai_bot_enable_dedicated_ux: "PM の代わりに、全画面表示のボットインターフェースを許可する"
+    ai_translation_enabled: "AI 翻訳機能を有効にします"
+    ai_translation_model: "翻訳に使用するモデル。このモデルは翻訳をサポートしている必要があります。ペルソナはこの設定を上書きできます。"
+    ai_translation_backfill_limit_to_public_content: "有効にすると、公開カテゴリのコンテンツのみが翻訳されます。無効にすると、グループ PM と非公開カテゴリのコンテンツも翻訳対象として送信されます。"
+    ai_translation_max_post_length: "翻訳する投稿の最大長。これより長い投稿は翻訳されません。"
+    ai_translation_backfill_max_age_days: "翻訳する投稿とトピックの最大経過日数。これより古い投稿とトピックは翻訳されません。0 にするとバックファイルは無効になりますが、新しい投稿の翻訳は無効になりません。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。
       flagged_by_nsfw: AI プラグインは、添付画像の少なくとも 1 つを NSFW として分類した後に通報しました。
   reports:
+    sentiment_analysis:
+      title: "センチメント分析"
+      description: "このレポートでは、カテゴリ別にグループ化された投稿のセンチメント分析が得られます、投稿とカテゴリごとに、肯定的、否定的、中立的のスコアが表示されます。"
     overall_sentiment:
       title: "全体的なセンチメント"
       description: 'チャートは肯定的または否定的のいずれかに分類された投稿の数を比較しています。これらは、肯定的または否定的なスコアが既定のしきい値スコアを超えた場合に計算されます。つまり、中立的な投稿は表示されません。個人メッセージ (PM) も除外されます。"cardiffnlp/twitter-roberta-base-sentiment-latest" で分類されています。'
@@ -184,8 +217,15 @@ ja:
       description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「驚き」の感情で分類された投稿。"
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          other: "アーティファクトには %{count} 個のキーのみを含められます。"
+      link: "新しいタブで表示"
+      copy_embed: "埋め込みをコピー"
       view_source: "ソースを表示"
       view_changes: "変更を表示"
+      change_description: "説明を変更"
+      copied: "クリップボードにコピーしました"
     unknown_model: "不明な AI モデル"
     tools:
       custom_name: "%{name} (カスタム)"
@@ -195,18 +235,20 @@ ja:
         exchange_rate:
           name: "為替レート"
         stock_quote:
-          name: "下部か (AlphaVantage)"
+          name: "株価 (AlphaVantage)"
         image_generation:
           name: "Flux 画像ジェネレーター (Together.ai)"
         empty_tool:
           name: "空白から始める..."
+      name:
+        characters: "には数字、文字、およびアンダースコアのみを含める必要があります"
     ai_helper:
       errors:
         completion_request_failed: "提案しようとしたときに問題が発生しました。もう一度お試しください。"
       prompts:
         translate: '%{language} に翻訳する'
         generate_titles: トピックのタイトルを提案
-        proofread: テキストを構成
+        proofread: テキストを校正
         markdown_table: Markdown テーブルを生成
         custom_prompt: "カスタムプロンプト"
         explain: "説明"
@@ -235,13 +277,17 @@ ja:
       invalid_error_type: "無効なエラータイプが指定されました"
       unexpected: "予期しないエラーが発生しました"
       bot_user_update_failed: "迷惑スキャンボットユーザーの更新に失敗しました"
+      configuration_missing: "AI 迷惑行為検出の構成が見つかりません。有効にする前に、「管理者」>「プラグイン」>「Discourse AI」>「迷惑行為」で構成を追加してください。"
+      logging_subject: "迷惑行為の検出"
     ai_bot:
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
+      thinking: "考えています..."
       personas:
         default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
         cannot_delete_system_persona: "システムペルソナは削除できません。代わりに無効にしてください"
         cannot_edit_system_persona: "システムペルソナは名前変更のみ可能です。ツールまたはシステムプロンプトは編集できません。代わりに無効にするかコピーを作成してください"
+        cannot_have_duplicate_tools: "重複するツールは使用できません"
         github_helper:
           name: "GitHub ヘルパー"
           description: "GitHub 関連タスクと質問の支援を専門とする AI ボット"
@@ -251,12 +297,21 @@ ja:
         artist:
           name: アーティスト
           description: "画像の生成を専門とする AI ボット"
+        designer:
+          name: デザイナー
+          description: "画像の生成と編集を専門とする AI ボット"
+        forum_researcher:
+          name: フォーラム調査ツール
+          description: "フォーラムの詳細な調査を専門とする AI ボット"
         sql_helper:
           name: SQL ヘルパー
           description: "この Discourse インスタンスでの SQL クエリの作成支援を専門とする AI ボット"
         settings_explorer:
           name: 設定エクスプローラー
           description: "Discourse のサイト設定のナビ支援を専門とする AI ボット"
+        researcher:
+          name: ウェブ調査ツール
+          description: "ウェブページの検索と読み取りを行える Google アクセス機能付きの AI ボット"
         creative:
           name: クリエイティブ
           description: "外部統合のないクリエイティブ系タスクを専門とする AI ボット"
@@ -269,24 +324,110 @@ ja:
         web_artifact_creator:
           name: "ウェブアーティファクトクリエーター"
           description: "インタラクティブなウェブアーティファクトの作成に特化した AI ボット"
+        summarizer:
+          name: "要約ツール"
+          description: "AI 要約を強化するために使用されるデフォルトのペルソナ"
+        short_summarizer:
+          name: "要約ツール (簡易)"
+          description: "AI でトピックリストの項目の簡単な要約を作成するために使用されるデフォルトのペルソナ"
+        concept_finder:
+          name: "概念検索ツール"
+          description: "コンテンツ内の概念とテーマの識別を専門とする AI ボット"
+        concept_matcher:
+          name: "概念照合ツール"
+          description: "既存の概念に対するコンテンツの照合を専門とする AI ボット"
+        concept_deduplicator:
+          name: "概念の重複排除ツール"
+          description: "概念の重複排除を専門とする AI ボット"
         custom_prompt:
           name: "カスタムプロンプト"
+          description: "ヘルパーのカスタムプロンプト機能を強化するデフォルトのペルソナ"
         smart_dates:
           name: "スマート日付"
+          description: "ヘルパーのスマート日時機能を強化するデフォルトのペルソナ"
+        markdown_table_generator:
+          name: "Markdown テーブルジェネレーター"
+          description: "ヘルパーの Markdown テーブルの生成機能を強化するデフォルトのペルソナ"
+        post_illustrator:
+          name: "イラスト投稿ツール"
+          description: "ヘルパーのイラスト投稿機能を強化する StableDiffusion プロンプトを生成しあｍす"
+        proofreader:
+          name: "校正ツール"
+          description: "ヘルパーのテキストの校正機能を強化するデフォルトのペルソナ"
+        titles_generator:
+          name: "タイトルジェネレーター"
+          description: "ヘルパーのトピックタイトルの提案機能を強化するデフォルトのペルソナ"
+        tutor:
+          name: "学習アシスタント"
+          description: "ヘルパーの説明機能を強化するデフォルトのペルソナ"
+        translator:
+          name: "翻訳ツール"
+          description: "ヘルパーの翻訳機能を強化するデフォルトのペルソナ"
+        image_captioner:
+          name: "画像キャプション"
+          description: "ヘルパーの画像キャプション機能を強化するデフォルトのペルソナ"
+        locale_detector:
+          name: "ロケール検出ツール"
+          description: "特定のテキスト (投稿、タイトルなど) のロケールを検出して翻訳機能を強化します"
+        post_raw_translator:
+          name: "投稿翻訳ツール"
+          description: "Discourse Markdown を含む投稿を翻訳する翻訳機能を強化します"
+        topic_title_translator:
+          name: "トピックタイトルの翻訳ツール"
+          description: "トピックタイトルを翻訳する翻訳機能を強化します"
+        short_text_translator:
+          name: "短いテキストの翻訳ツール"
+          description: "一般的なテキスト翻訳ツールとして翻訳機能を強化します。カテゴリ名やタグなどの短いテキストに使用されます"
+        spam_detector:
+          name: "迷惑行為検出ツール"
+          description: "迷惑行為の検出機能を強化するデフォルトのペルソナ"
+        content_creator:
+          name: "コンテンツ作成ツール"
+          description: "HyDE 検索を強化するデフォルトのペルソナ"
+        report_runner:
+          name: "レポートランナー"
+          description: "レポートの自動化スクリプトで使用されるデフォルトのペルソナ"
       topic_not_found: "要約がありません。トピックが見つかりません！"
       summarizing: "トピックの要約を生成中"
       searching: "検索中: '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "調査に使用する言語モデル (デフォルトは現在のペルソナの LLM)"
+          max_tokens_per_batch:
+            name: "バッチあたりの最大トークン数"
+            description: "調査の各バッチで使用するトークンの最大数"
+          max_tokens_per_post:
+            name: "投稿あたりの最大トークン数"
+            description: "投稿の各バッチで使用するトークンの最大数"
           max_results:
             name: "結果の最大件数"
+            description: "フィルタに含める結果の最大数"
+          include_private:
+            name: "非公開を含める"
+            description: "フィルタに非公開のトピックを含めます"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "アーティファクトの作成に使用する言語モデル"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "アーティファクトの編集に使用する言語モデル"
+          update_algorithm:
+            name: "アルゴリズムを更新"
+            description: "完全に置き換えるか、差分を使用して更新するよう LLM に要求します"
+          do_not_echo_artifact:
+            name: "アーティファクトをエコーしない"
+            description: "コストは制限されますが、アーティファクトの更新の有効性は低下します"
         google:
           base_query:
             name: "ベース検索クエリ"
             description: "検索時に使用する基本クエリ。例: 「site:example.com」には example.com からの結果のみが含まれ、「before:2022-01-01」には 2021 年以前の結果のみが含まれます。このテキストは検索クエリの先頭に追加されます。"
         read:
           read_private:
-            name: "非公開を読む"
+            name: "非公開を読み取る"
             description: "ユーザーがアクセスできるすべてのトピックへのアクセスを許可します (デフォルトでは公開トピックのみが含まれます)"
         search:
           search_private:
@@ -299,8 +440,9 @@ ja:
             name: "ベース検索クエリ"
             description: "検索時に使用するベースクエリ。例: '#urgent' は検索クエリの先頭に '#urgent' を追加し、緊急のカテゴリまたはタグを持つトピックのみが含まれます。"
       tool_summary:
-        update_artifact: "ウェブアーティファクトの更新"
-        create_artifact: "ウェブアーティファクトを作成します"
+        read_artifact: "ウェブアーティファクトを読み取る"
+        update_artifact: "ウェブアーティファクトを更新"
+        create_artifact: "ウェブアーティファクトを作成"
         web_browser: "ウェブを閲覧"
         github_search_files: "GitHub 検索ファイル"
         github_search_code: "GitHub コード検索"
@@ -314,44 +456,54 @@ ja:
         summarize: "要約"
         image: "画像を生成"
         google: "Google で検索"
-        read: "トピックを読む"
-        setting_context: "サイト設定のコンテキストを検索します"
-        schema: "データベーススキーマを検索します"
+        read: "トピックを読み取る"
+        setting_context: "サイト設定のコンテキストを検索"
+        schema: "データベーススキーマを検索"
         search_settings: "サイト設定を検索中"
         dall_e: "画像を生成"
-        search_meta_discourse: "Discrouse Meta を検索"
+        search_meta_discourse: "Discourse Meta を検索"
         javascript_evaluator: "JavaScript を評価"
+        create_image: "画像の作成"
+        edit_image: "画像の編集"
+        researcher: "調査"
+        researcher_dry_run: "調査の準備"
       tool_help:
-        update_artifact: "AI ボットを使ってウェブアーティファクトを更新します"
-        create_artifact: "AI ボットを使用してウェブアーティファクトを作成します"
+        read_artifact: "AI ボットを使用してウェブアーティファクトを読み取る"
+        update_artifact: "AI ボットを使ってウェブアーティファクトを更新する"
+        create_artifact: "AI ボットを使用してウェブアーティファクトを作成する"
         web_browser: "AI ボットを使ってウェブページを閲覧する"
         github_search_code: "GitHub リポジトリでコードを検索する"
         github_search_files: "GitHub リポジトリでファイルを検索する"
         github_file_content: "GitHub リポジトリからファイルのコンテンツを取得する"
         github_pull_request_diff: "GitHub プルリクエストの差分を取得する"
         random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
-        categories: "フォーラムのすべての公開カテゴリをリストします"
-        search: "フォーラムのすべての公開トピックを検索します"
-        tags: "フォーラムのすべてのタグをリストします"
-        time: "様々なタイムゾーンの時間を調べます"
-        summary: "トピックを要約します"
-        image: "Stable Diffusion を使って画像を生成します"
-        google: "Googleでクエリを検索します"
-        read: "フォーラムの公開トピックを読み取ります"
-        setting_context: "サイト設定のコンテキストを検索します"
-        schema: "データベーススキーマを検索します"
-        search_settings: "サイト設定を検索します"
-        dall_e: "DALL-E 3 を使って画像を生成します"
-        search_meta_discourse: "Discrouse Meta を検索"
-        javascript_evaluator: "JavaScript を評価"
+        categories: "フォーラムのすべての公開カテゴリをリストする"
+        search: "フォーラムのすべての公開トピックを検索する"
+        tags: "フォーラムのすべてのタグをリストする"
+        time: "様々なタイムゾーンの時間を調べる"
+        summary: "トピックを要約する"
+        image: "Stable Diffusion を使って画像を生成する"
+        create_image: "OpenAI GPT 画像モデルを使用して画像を生成する"
+        edit_image: "OpenAI GPT 画像モデルを使用して画像を編集する"
+        google: "Googleでクエリを検索する"
+        read: "フォーラムの公開トピックを読み取る"
+        setting_context: "サイト設定のコンテキストを検索する"
+        schema: "データベーススキーマを検索する"
+        search_settings: "サイト設定を検索する"
+        dall_e: "DALL-E 3 を使って画像を生成する"
+        search_meta_discourse: "Discourse Meta を検索する"
+        javascript_evaluator: "JavaScript を評価する"
+        researcher: "AI ボットを使用してフォーラム情報を調査する"
       tool_description:
+        read_artifact: "AI ボットを使用してウェブアーティファクトを読み取る"
         update_artifact: "AI ボットを使ってウェブアーティファクトを更新しました"
+        create_artifact: "ウェブアーティファクトを生成しました: %{name} - %{specification}"
         web_browser: "読み取り中: <a href='%{url}'>%{url}</a>"
         github_search_files: "%{repo}/%{branch} で「%{keywords}」を検索しました"
         github_search_code: "%{repo} で「%{query}」を検索しました"
         github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
         github_file_content: "%{repo_name}@%{branch} から %{file_paths} のコンテンツを取得しました"
-        random_picker: "%{options} から選択。選択: %{result}"
+        random_picker: "%{options} から選択中。選択: %{result}"
         read: "読み取り中: <a href='%{url}'>%{title}</a>"
         time: "%{timezone} の時刻は %{time} です"
         summarize: "<a href='%{url}'>%{title}</a> の要約"
@@ -371,8 +523,16 @@ ja:
           other: "「%{query}」の<a href='%{url}'>結果</a>が %{count} 件見つかりました"
         setting_context: "コンテキストを読み取り中: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          other: "提案された目標: %{goals}\n\n「%{filter}」に一致する投稿が %{count} 件見つかりました"
+        researcher:
+          other: "調査: %{goals}\n\n「%{filter}」に一致する投稿が %{count} 件見つかりました"
         search_settings:
           other: "「%{query}」の結果が %{count} 件見つかりました"
+      discoveries:
+        continue_conversation:
+          title: "発見の会話: %{query} を検索"
+          raw: "%{query} の検索において、次の情報を提供してくれました:\n\n%{context}\n\n会話を続けましょう。"
     summarization:
       configuration_hint:
         other: "先に次の設定を構成します: %{settings}"
@@ -380,7 +540,7 @@ ja:
         no_targets: "選択された期間中にメッセージはありませんでした。"
     sentiment:
       reports:
-        overall_sentiment: "全体的なセンチメント (肯定的 - 否定的)"
+        overall_sentiment: "全体的なセンチメント (ポジティブ - ネガティブ)"
         post_emotion:
           sadness: "悲しみ \U0001F622"
           surprise: "驚き \U0001F631"
@@ -395,9 +555,12 @@ ja:
           neutral: "ニュートラル"
     llm:
       configuration:
+        create_llm: "この機能を有効にする前に LLM を設定する必要があります"
+        disable_modules_first: "先に次のモジュールを無効にする必要があります: %{settings}"
         set_llm_first: "先に %{setting} を設定します"
         model_unreachable: "このモデルから応答を得られませんでした。まず設定を確認してください。"
         invalid_seeded_model: "この機能ではこのモデルを使用できません"
+        invalid_persona_response_format: "選択されたペルソナには、ブールフィール名「迷惑」を含む応答形式が必要です"
         must_select_model: "先に LLM を選択する必要があります"
       endpoints:
         not_configured: "%{display_name} (未構成)"
@@ -406,17 +569,20 @@ ja:
       delete_failed:
         other: "%{settings} が使用中であるため、このモデルを削除できませんでした。設定を更新してもう一度お試しください。"
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
+    personas:
+      malformed_examples: "示された例の形式が誤っています。"
     embeddings:
       delete_failed: "このモデルは使用中です。先に `ai embeddings selected model` を更新してください。"
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
       configuration:
-        disable_embeddings: "まず「AI 埋め込み対応」を無効にしてください。"
-        choose_model: "先に「AI 埋め込みに選択されたモデル」を設定してください。"
+        disable_embeddings: "先に 'ai embeddings enabled' を無効にしてください。"
+        choose_model: "先に 'ai embeddings selected model' を設定してください。"
     llm_models:
       missing_provider_param: "%{param} は空白にできません"
       bedrock_invalid_url: "このモデルを使用するには、すべてのフィールドに入力してください。"
     ai_staff_action_logger:
       updated: "更新"
+      set: "設定"
       removed: "削除"
     errors:
       quota_exceeded: "このモデルの使用量制限を超過しました。%{relative_time}後にもう一度お試しください。"
@@ -430,3 +596,9 @@ ja:
       no_default_llm: ペルソナには default_llm が定義されている必要があります。
       user_not_allowed: ユーザーはトピックに参加できません。
       prompt_message_length: メッセージ %{idx} は 1000 文字の上限を超えています。
+      persona_already_exists: '%{name} という名前のペルソナはすでに存在します。'
+      custom_tool_exists:
+        other: "%{names} という名前のカスタムツールはすでに存在します。"
+  dashboard:
+    problem:
+      ai_llm_status: "LLM モデル: %{model_name} に問題が発生しています。<a href='%{url}'>モデルの構成ページ</a>を確認してください。"

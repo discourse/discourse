@@ -20,8 +20,6 @@ import { i18n } from "discourse-i18n";
 export default class UserStreamComponent extends Component {
   @service dialog;
   @service composer;
-  @service appEvents;
-  @service currentUser;
   @service router;
 
   get filterClassName() {

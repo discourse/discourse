@@ -22,6 +22,10 @@ class AppleAuthenticator < ::Auth::ManagedAuthenticator
     SiteSetting.sign_in_with_apple_enabled?
   end
 
+  def provider_url
+    "https://account.apple.com"
+  end
+
   def fetch_jwks(options)
     Discourse
       .cache

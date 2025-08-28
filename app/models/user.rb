@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  self.ignored_columns = [
-    :salt, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_hash, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_algorithm, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   include Searchable
   include Roleable
   include HasCustomFields
@@ -263,6 +256,9 @@ class User < ActiveRecord::Base
 
   # Information if user was authenticated with OAuth
   attr_accessor :authenticated_with_oauth
+
+  # Flag used when admin is impersonating a user
+  attr_accessor :is_impersonating
 
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
@@ -1585,9 +1581,25 @@ class User < ActiveRecord::Base
   USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
-    field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
+    fields =
+      if field_ids.nil?
+        @all_user_field_types ||= UserField.pluck(:id, :field_type)
+      else
+        UserField.where(id: field_ids).pluck(:id, :field_type)
+      end
 
-    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
+    fields
+      .map do |fid, ftype|
+        value =
+          if ftype == "confirm"
+            !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          else
+            custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+          end
+
+        [fid.to_s, value]
+      end
+      .to_h
   end
 
   def validatable_user_fields_values

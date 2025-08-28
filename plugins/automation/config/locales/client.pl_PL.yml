@@ -449,7 +449,7 @@ pl_PL:
           status:
             label: Status
           enabled:
-            label: Włączona
+            label: "Włącz automatyzację"
           disabled:
             label: Wyłączone
           placeholders:
@@ -460,3 +460,4 @@ pl_PL:
             label: Ostatnie uruchomienie
           last_updated_by:
             label: Zaktualizowany przez
+          enable_toggle_disabled: "Możesz włączyć tę automatyzację po uzupełnieniu wszystkich wymaganych pól."

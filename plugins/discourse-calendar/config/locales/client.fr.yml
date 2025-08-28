@@ -39,9 +39,10 @@ fr:
       date: "Date"
       add_to_calendar: "Ajouter à Google Calendar"
       toggle_timezone_offset_title: "Activer/désactiver le décalage horaire"
+      local_time: "Heure locale"
       region:
         title: "Région"
-        none: "Jamais"
+        none: "Aucune"
         use_current_region: "Utiliser la région actuelle"
         names:
           ae: "Émirats arabes unis"
@@ -178,7 +179,7 @@ fr:
           hu: "Hongrie"
           id: "Indonésie"
           ie: "Irlande"
-          im: "île de Man"
+          im: "Île de Man"
           in: "Inde"
           in_gj: "Inde (in_gj)"
           in_mh: "Inde (in_mh)"
@@ -313,7 +314,7 @@ fr:
         month: "Mois"
         week: "Semaine"
         day: "Jour"
-        list: "Liste"
+        year: "Année"
     group_timezones:
       search: "Recherche…"
       group_availability: "disponibilité de %{group}"
@@ -323,10 +324,8 @@ fr:
         after_event_reminder: "Un événement est terminé"
         ongoing_event_reminder: "Un événement est en cours"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} a automatiquement défini votre participation et vous a invité(e) à rejoindre %{description}"
-        before_event_reminder_html: "Un événement est sur le point de commencer %{description}"
-        after_event_reminder_html: "Un événement s'est terminé %{description}"
-        ongoing_event_reminder_html: "Un événement est en cours %{description}"
+        invite_user_predefined_attendance_notification: "%{username} a automatiquement défini votre participation et vous a invité(e) à rejoindre %{eventName}"
+        an_event: "un événement"
       edit_reason: "Événement mis à jour"
       edit_reason_closed: "Événement fermé"
       edit_reason_opened: "Événement ouvert"
@@ -341,7 +340,7 @@ fr:
         other: "%{count} utilisateurs ont participé."
       invite: "Notifier l'utilisateur"
       add_to_calendar: "Ajouter au calendrier"
-      send_pm_to_creator: "Envoyer un MD à %{username}"
+      send_pm_to_creator: "Envoyer un MP à %{username}"
       leave: "Quitter l'événement"
       edit_event: "Modifier l'événement"
       export_event: "Exporter l'événement"
@@ -375,6 +374,8 @@ fr:
         creator: "Créateur"
         status: "Statut"
         starts_at: "Commence à"
+        all_events: "Tous les événements"
+        my_events: "Mes événements"
       upcoming_events_list:
         title: "Événements à venir"
         empty: "Aucun événement à venir"
@@ -398,19 +399,19 @@ fr:
             not_going: "Ne participera pas"
             interested: "Intéressé(e)"
             going_count:
-              one: "%{count} utilisateurs participeront"
+              one: "%{count} utilisateur participera"
               other: "%{count} utilisateurs participeront"
             not_going_count:
-              one: "%{count} utilisateurs ne participeront pas"
+              one: "%{count} utilisateur ne participera pas"
               other: "%{count} utilisateurs ne participeront pas"
             interested_count:
-              one: "%{count} utilisateurs sont intéressés"
+              one: "%{count} utilisateur est intéressé"
               other: "%{count} utilisateurs sont intéressés"
             invited_count:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expirées"
+          expired: "Expiré"
           closed: "Fermé"
           status:
             standalone:
@@ -436,6 +437,9 @@ fr:
         update: "Enregistrer"
         attach: "Créer un événement"
         add_reminder: "Ajouter un rappel"
+        show_local_time:
+          label: "Afficher l'heure locale"
+          description: "Les dates et heures seront affichées avec : %{timezone}. Utilisez cette option pour les événements se déroulant à un endroit précis, afin que les heures reflètent le fuseau horaire du lieu où l'événement a lieu."
         timezone:
           label: Fuseau horaire
           remove_timezone: Pas de fuseau horaire (UTC)
@@ -452,6 +456,8 @@ fr:
           periods:
             before: "avant"
             after: "après"
+        recurrence_until:
+          label: "Jusqu'à (inclus)"
         recurrence:
           label: "Périodicité"
           none: "Pas de périodicité"
@@ -464,13 +470,18 @@ fr:
         minimal:
           label: "Événement minimal"
           checkbox_label: "Masquer les boutons Participera/Ne participera pas et le statut des invités"
+        allow_chat:
+          label: "Intégrations de la messagerie instantanée"
+          checkbox_label: "Créez et gérez un canal de discussion spécifique à un événement"
         url:
           label: "URL"
           placeholder: "Facultatif"
         location:
-          label: "Localisation"
+          label: "Emplacement"
+          placeholder: "Ajoutez un lieu, un lien ou autre."
         description:
           label: "Description"
+          placeholder: "Donnez aux participants quelques informations supplémentaires sur votre événement. Les retours à la ligne et les liens sont pris en charge."
         name:
           label: "Nom de l'événement"
           placeholder: "Facultatif, par défaut le titre du sujet"

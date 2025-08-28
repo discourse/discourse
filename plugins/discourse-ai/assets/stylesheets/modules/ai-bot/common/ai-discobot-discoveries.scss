@@ -114,10 +114,6 @@
   width: 1.15em;
 }
 
-.ai-discobot-discoveries {
-  padding-top: 0.5em;
-}
-
 @include viewport.from(lg) {
   .search-menu .menu-panel:has(.ai-search-discoveries__discoveries-title) {
     width: 80vw;
@@ -153,6 +149,7 @@
     .ai-search-discoveries {
       font-size: var(--font-0);
       color: var(--primary-high);
+      padding-top: 0.5em;
       padding-right: 0.5em;
     }
 

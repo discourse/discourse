@@ -1,4 +1,5 @@
 import "./setup-deprecation-workflow";
+import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";
@@ -37,7 +38,7 @@ async function loadThemeFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
-      error
+      String(error)
     );
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
