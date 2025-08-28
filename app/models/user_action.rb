@@ -201,7 +201,7 @@ class UserAction < ActiveRecord::Base
     end
 
     # The weird thing is that target_post_id can be null, so it makes everything
-    #  ever so more complex. Should we allow this, not sure.
+    # ever so more complex. Should we allow this, not sure.
     builder = DB.build <<~SQL
       SELECT
         a.id,
@@ -221,7 +221,17 @@ class UserAction < ActiveRecord::Base
         pc.value AS action_code_who,
         pc2.value AS action_code_path,
         p.edit_reason,
-        t.category_id
+        t.category_id,
+        array_agg(
+          tags.name
+          ORDER BY
+            CASE
+              WHEN :is_staff OR :include_secure_categories
+              THEN tags.staff_topic_count
+              ELSE tags.public_topic_count
+            END DESC,
+            tags.name ASC
+        ) FILTER (WHERE tags.name IS NOT NULL) AS topic_tags
       FROM user_actions as a
       JOIN topics t on t.id = a.target_topic_id
       LEFT JOIN posts p on p.id = a.target_post_id
@@ -230,10 +240,18 @@ class UserAction < ActiveRecord::Base
       JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
       JOIN users au on au.id = a.user_id
       LEFT JOIN categories c on c.id = t.category_id
+      LEFT JOIN topic_tags tt ON tt.topic_id = t.id
+      LEFT JOIN tags ON tags.id = tt.tag_id
       LEFT JOIN post_custom_fields pc ON pc.post_id = a.target_post_id AND pc.name = 'action_code_who'
       LEFT JOIN post_custom_fields pc2 ON pc2.post_id = a.target_post_id AND pc2.name = 'action_code_path'
       /*left_join*/
       /*where*/
+      GROUP BY a.id, t.title, a.action_type, a.created_at, t.id, t.closed, t.archived,
+               a.user_id, au.name, au.username, p.post_number, p.id, p.reply_to_post_number,
+               pu.username, pu.name, pu.id, pu.uploaded_avatar_id, u.id, u.name,
+               #{acting_cols.map { |col| col.split(" AS ").first.sub("u.", "u.") }.join(", ")},
+               p.cooked, p2.cooked, p.deleted_at, p2.deleted_at, t.deleted_at,
+               p.hidden, p.post_type, p.action_code, pc.value, pc2.value, p.edit_reason, t.category_id
       /*order_by*/
       /*offset*/
       /*limit*/
@@ -265,7 +283,10 @@ class UserAction < ActiveRecord::Base
 
     DiscoursePluginRegistry.apply_modifier(:user_action_stream_builder, builder)
 
-    builder.query
+    builder.query(
+      is_staff: !!guardian&.is_staff?,
+      include_secure_categories: SiteSetting.include_secure_categories_in_tag_counts,
+    )
   end
 
   def self.log_action!(hash)

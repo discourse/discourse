@@ -7,6 +7,7 @@ import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
+import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
@@ -85,6 +86,12 @@ export default class PostListItemDetails extends Component {
         {{#if @post.category}}
           <span class="category stream-post-category">
             {{categoryLink @post.category}}
+          </span>
+        {{/if}}
+
+        {{#if @post.tags.length}}
+          <span>
+            {{discourseTags @post}}
           </span>
         {{/if}}
 
