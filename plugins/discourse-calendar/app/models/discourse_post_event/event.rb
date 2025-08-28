@@ -419,7 +419,7 @@ module DiscoursePostEvent
     end
 
     def rrule_timezone
-      show_local_time ? "UTC" : object.timezone
+      show_local_time ? "UTC" : timezone
     end
 
     private
