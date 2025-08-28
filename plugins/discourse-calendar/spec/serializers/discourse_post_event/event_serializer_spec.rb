@@ -35,7 +35,13 @@ describe DiscoursePostEvent::EventSerializer do
 
       it "returns the correct stats" do
         json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
-        expect(json[:event][:stats]).to eq(going: 1, interested: 0, invited: 2, not_going: 0)
+        expect(json[:event][:stats]).to eq(
+          going: 1,
+          interested: 0,
+          invited: 2,
+          not_going: 0,
+          capacity: nil,
+        )
       end
     end
   end
