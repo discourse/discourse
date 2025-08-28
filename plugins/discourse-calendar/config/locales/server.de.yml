@@ -33,7 +33,6 @@ de:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maximale Textzeilen pro Ereignis im Kalender."
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
     calendar_enabled: "Aktiviere das discourse-calendar-Plug-in. Dadurch wird Unterstützung für einen [calendar][/calendar]-Tag im ersten Beitrag eines Themas hinzugefügt."

@@ -181,7 +181,6 @@ jobs:
         run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
       - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |

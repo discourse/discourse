@@ -285,6 +285,7 @@ sl:
         month: "Mesec"
         week: "Teden"
         day: "Dan"
+        year: "Leto"
     group_timezones:
       search: "Išči..."
       group_availability: "Razpoložljivost %{group}"

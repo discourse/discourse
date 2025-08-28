@@ -314,7 +314,7 @@ ar:
         month: "الشهر"
         week: "الأسبوع"
         day: "اليوم"
-        list: "إدراج"
+        year: "العام"
     group_timezones:
       search: "بحث..."
       group_availability: "توافر %{group}"

@@ -6723,6 +6723,8 @@ en:
             title: "Color options"
             toggle: "User selectable"
             toggle_description: "Color palette can be selected by users"
+            toggle_default_light_on_theme: "Color palette is the default light palette on default theme (%{themeName})"
+            toggle_default_dark_on_theme: "Color palette is the default dark palette on default theme (%{themeName})"
           colors:
             title: "Colors"
           save_changes: "Save changes"
@@ -7666,6 +7668,7 @@ en:
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "That user can't be found."
         invalid: "Sorry, you may not impersonate that user."
+        error: "Oops. An unexpected error occurred."
 
       users:
         title: "Users"

@@ -3233,9 +3233,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          settings: "Seaded"
-          colors: "Värvid"
-          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:

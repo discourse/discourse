@@ -3,6 +3,7 @@
 @import "chat";
 @import "categories-view";
 @import "color-choice";
+@import "compatibility";
 @import "composer";
 @import "composer-peek-mode";
 @import "header";
@@ -18,3 +19,7 @@
 @import "topic";
 @import "topic-cards";
 @import "variables";
+
+:root {
+  --d-nav-pill-border-radius: 0;
+}

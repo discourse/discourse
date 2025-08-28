@@ -185,15 +185,52 @@ describe "Welcome banner", type: :system do
     context "with interface page visibility setting" do
       before { current_user.update!(admin: true) }
 
-      it "should show on all pages" do
-        SiteSetting.welcome_banner_page_visibility = "all_pages"
+      context "when show on all pages" do
+        fab!(:invite)
+        let(:inactive_user_email_token) do
+          Fabricate(:email_token, user: Fabricate(:user, active: false))
+        end
+        let(:password_reset_email_token) do
+          current_user.email_tokens.create!(
+            email: current_user.email,
+            scope: EmailToken.scopes[:password_reset],
+          )
+        end
 
-        visit "/"
-        expect(banner).to be_visible
-        sign_in(current_user)
-        %W[/ /u/#{current_user.username}/preferences/emails /my/messages].each do |path|
-          visit path
+        before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
+
+        it "should show on" do
+          sign_in(current_user)
+
+          visit "/"
           expect(banner).to be_visible
+
+          visit "/u/#{current_user.username}/preferences/emails"
+          expect(banner).to be_visible
+
+          visit "/my/messages"
+          expect(banner).to be_visible
+        end
+
+        it "should NOT show on" do
+          visit "/login"
+          expect(banner).to be_hidden
+
+          visit "/signup"
+          expect(banner).to be_hidden
+
+          visit "/invites/#{invite.invite_key}"
+          expect(banner).to be_hidden
+
+          visit "/u/activate-account/#{inactive_user_email_token}"
+          expect(banner).to be_hidden
+
+          sign_in(current_user)
+          visit "/u/password-reset/#{password_reset_email_token}"
+          expect(banner).to be_hidden
+
+          visit "/admin"
+          expect(banner).to be_hidden
         end
       end
 

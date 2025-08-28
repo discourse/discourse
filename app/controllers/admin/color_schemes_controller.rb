@@ -20,6 +20,7 @@ class Admin::ColorSchemesController < Admin::AdminController
 
   def update
     color_scheme = ColorSchemeRevisor.revise(@color_scheme, color_scheme_params)
+    update_theme_default_scheme!
     if color_scheme.valid?
       render json: color_scheme, root: false
     else
@@ -39,8 +40,36 @@ class Admin::ColorSchemesController < Admin::AdminController
   end
 
   def color_scheme_params
-    params.permit(color_scheme: [:base_scheme_id, :name, :user_selectable, colors: %i[name hex]])[
+    params.permit(
+      color_scheme: [
+        :base_scheme_id,
+        :name,
+        :user_selectable,
+        :default_light_on_theme,
+        :default_dark_on_theme,
+        colors: %i[name hex],
+      ],
+    )[
       :color_scheme
     ]
+  end
+
+  def update_theme_default_scheme!
+    update_opts = {}
+    if color_scheme_params.has_key?(:default_light_on_theme)
+      update_opts[:color_scheme_id] = if color_scheme_params[:default_light_on_theme] != "false"
+        @color_scheme.id
+      else
+        nil
+      end
+    end
+    if color_scheme_params.has_key?(:default_dark_on_theme)
+      update_opts[:dark_color_scheme_id] = if color_scheme_params[:default_dark_on_theme] != "false"
+        @color_scheme.id
+      else
+        nil
+      end
+    end
+    Theme.find_default.update!(update_opts)
   end
 end

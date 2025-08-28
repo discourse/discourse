@@ -156,7 +156,7 @@ module DiscoursePostEvent
     end
 
     def ends_at
-      object.ends_at || object.starts_at + 1.hour
+      object.ends_at || (object.starts_at ? object.starts_at + 1.hour : nil)
     end
   end
 end

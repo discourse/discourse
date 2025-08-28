@@ -37,13 +37,16 @@ module DiscoursePostEvent
     def rrule
       return nil unless include_rrule?
 
-      # Use UTC for RRULE to avoid timezone compatibility issues with FullCalendar
+      # Use the original event time (same as the frontend display) for rrule generation
+      timezone_starts_at = object.original_starts_at.in_time_zone(object.timezone)
+      timezone_recurrence_until = object.recurrence_until&.in_time_zone(object.timezone)
+
       RRuleGenerator.generate_string(
-        starts_at: object.original_starts_at,
-        timezone: "UTC",
+        starts_at: timezone_starts_at,
+        timezone: object.timezone,
         recurrence: object.recurrence,
-        recurrence_until: object.recurrence_until,
-        dtstart: object.original_starts_at,
+        recurrence_until: timezone_recurrence_until,
+        dtstart: timezone_starts_at,
       )
     end
 
@@ -51,30 +54,22 @@ module DiscoursePostEvent
       # For recurring events, use UTC to match RRULE
       # For non-recurring events, use the event's timezone
       if object.recurring?
-        object.original_starts_at
+        object.original_starts_at&.in_time_zone(object.timezone)
       else
-        object.starts_at.in_time_zone(object.timezone)
+        object.starts_at&.in_time_zone(object.timezone)
       end
     end
 
     def ends_at
-      if object.ends_at
-        if object.recurring?
-          object.ends_at
-        else
-          object.ends_at.in_time_zone(object.timezone)
-        end
-      else
-        # Use consistent timezone as starts_at for calculation
-        base_starts_at =
+      if object.recurring?
+        object.original_ends_at&.in_time_zone(object.timezone) ||
           (
-            if object.recurring?
-              object.original_starts_at
-            else
-              object.starts_at.in_time_zone(object.timezone)
-            end
+            object.original_starts_at &&
+              object.original_starts_at.in_time_zone(object.timezone) + 1.hour
           )
-        (base_starts_at + 1.hour)
+      else
+        base_starts_at = object.starts_at&.in_time_zone(object.timezone)
+        base_starts_at ? (base_starts_at + 1.hour) : nil
       end
     end
   end

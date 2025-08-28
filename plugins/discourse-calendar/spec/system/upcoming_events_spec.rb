@@ -99,6 +99,20 @@ describe "Upcoming Events", type: :system do
   end
 
   describe "event filtering" do
+    it "loads the correct range of dates", time: Time.utc(2025, 9, 1, 12, 0) do
+      post =
+        PostCreator.create!(
+          admin,
+          title: "going to the zoo",
+          raw:
+            "[event start=\"2025-09-07 18:30\" status=\"public\" timezone=\"Europe/Prague\" end=\"2025-09-07 21:00\"]\n[/event]",
+        )
+
+      visit("/upcoming-events/week/2025/9/1")
+
+      upcoming_events.expect_event_visible("zoo")
+    end
+
     it "shows only events the user is attending when filtered",
        time: Time.utc(2025, 6, 2, 19, 00) do
       attending_event =
@@ -156,6 +170,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.next
 
+          expect(page).to have_content("September 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/9/1")
         end
 
@@ -164,6 +179,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.next
 
+          expect(page).to have_content("Aug 11 – 17, 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
         end
 
@@ -173,6 +189,7 @@ describe "Upcoming Events", type: :system do
 
             upcoming_events.next
 
+            expect(page).to have_content("August 5, 2025")
             upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/8/5")
           end
 
@@ -181,6 +198,7 @@ describe "Upcoming Events", type: :system do
 
             upcoming_events.next
 
+            expect(page).to have_content("Aug 11 – 17, 2025")
             upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
           end
         end
@@ -192,6 +210,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.prev
 
+          expect(page).to have_content("July 31, 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
         end
 
@@ -200,6 +219,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.prev
 
+          expect(page).to have_content("July 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
         end
 
@@ -208,6 +228,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.prev
 
+          expect(page).to have_content("Jul 28 – Aug 3, 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
         end
 
@@ -217,6 +238,7 @@ describe "Upcoming Events", type: :system do
 
             upcoming_events.prev
 
+            expect(page).to have_content("July 31, 2025")
             upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
           end
 
@@ -225,6 +247,7 @@ describe "Upcoming Events", type: :system do
 
             upcoming_events.prev
 
+            expect(page).to have_content("July 2025")
             upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
           end
 
@@ -233,6 +256,7 @@ describe "Upcoming Events", type: :system do
 
             upcoming_events.prev
 
+            expect(page).to have_content("Jul 28 – Aug 3, 2025")
             upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
           end
         end

@@ -2481,7 +2481,6 @@ fi:
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
     content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
     content_localization_allowed_groups: "Ryhmät, jotka voivat päivittää lokalisoitua sisältöä. Edellyttää \"content localization enabled\" -asetusta."
-    content_localization_anon_language_switcher: "Ota käyttöön kielivalitsin, jolla sivuston kävijät, jotka eivät ole kirjautuneet sisään, voivat vaihtaa Discoursen käännettyjen versioiden ja käyttäjien tuottaman sisällön välillä. Riippuu \"content localization supported locales\" -asetuksessa määritetyistä kielistä."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2553,7 +2552,6 @@ fi:
       invalid_uncategorized_category_setting: 'Luokittelemattomat-aluetta ei voi valita, jos "allow uncategorized topics" ei ole käytössä.'
       invalid_search_ranking_weights: "Arvo on virheellinen search_ranking_weights-sivustoasetukselle. Esimerkki: '{0.1,0.2,0.3,1.0}'. Huomaa, että kunkin painon enimmäisarvo on 1.0."
       content_localization_locale_limit: "Tuettujen kielialueiden määrä ei voi olla yli %{max}."
-      content_localization_anon_language_switcher_requirements: "Kielivalitsin edellyttää, että \"set locale from cookie\" -sivustoasetus on käytössä ja että \"content localization supported locales\" -asetuksessa on vähintään yksi kieli."
       mediaconvert_role_arn_required: "AWS:n IAM-roolin ARN on pakollinen käytettäessä MediaConvertia videoiden muuntamiseen."
       s3_credentials_required_for_video_conversion: "Videomuunnokseen vaaditaan S3-tunnistetiedot. Määritä S3-käyttöoikeusavaimet tai ota IAM-profiili käyttöön."
     keywords:
@@ -5242,9 +5240,20 @@ fi:
       approve_and_unhide:
         title: "Hyväksy ja näytä viesti"
         complete: "Viesti hyväksytty ja näkyvissä"
+      no_action_user:
+        title: "Ei toimintaa"
+      silence_user:
+        title: "Hiljennä käyttäjä"
+        complete: "Käyttäjä hiljennetty"
+      suspend_user:
+        title: "Jäädytä käyttäjä"
+        complete: "Käyttäjä hyllytty"
       delete_user:
+        title: "Poista käyttäjä"
+        complete: "Käyttäjä poistettu"
         reason: "Poistettiin tarkastusjonon kautta"
-        complete: "Käyttäjä poistettu."
+      delete_and_block_user:
+        complete: "Käyttäjä poistettu ja estetty"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:

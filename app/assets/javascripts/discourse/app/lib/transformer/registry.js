@@ -79,4 +79,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-mobile-layout",
   "topic-list-item-style",
   "user-field-components",
+  "user-menu-notification-item-acting-user-avatar",
 ]);

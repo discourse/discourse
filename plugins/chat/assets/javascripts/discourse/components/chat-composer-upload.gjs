@@ -20,7 +20,7 @@ export default class ChatComposerUpload extends Component {
   }
 
   get previewImageSrc() {
-    return getURLWithCDN(this.args.upload?.short_path);
+    return getURLWithCDN(this.args.upload?.url);
   }
 
   <template>

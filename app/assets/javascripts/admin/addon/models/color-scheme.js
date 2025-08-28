@@ -158,6 +158,8 @@ export default class ColorScheme extends EmberObject {
 
       if (!opts?.saveNameOnly) {
         data.user_selectable = this.user_selectable;
+        data.default_light_on_theme = this.default_light_on_theme;
+        data.default_dark_on_theme = this.default_dark_on_theme;
         data.base_scheme_id = this.base_scheme_id;
         data.colors = [];
         this.colors.forEach((c) => {

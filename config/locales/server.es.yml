@@ -346,7 +346,7 @@ es:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
       x_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
       tl0_and_anonymous_flag: "Debes proporcionar el «site contact email» (correo electrónico de contacto del sitio) o la «email address to report illegal content» (dirección de correo electrónico para denunciar contenido ilegal) para los usuarios anónimos."
-      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Este ajuste requiere que primero se active el ajuste «permitir modo anónimo»."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Este ajuste requiere que primero se active el ajuste «allow anonymous mode»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -2483,7 +2483,6 @@ es:
     content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
     content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
     content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
-    content_localization_anon_language_switcher: "Activa el selector de idiomas, que permite que los visitantes del sitio que no hayan iniciado sesión puedan cambiar entre versiones traducidas de Discourse y contenido aportado por los usuarios. Depende de la lista de idiomas configurados en «idiomas compatibles con la localización de contenido»."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2555,7 +2554,6 @@ es:
       invalid_uncategorized_category_setting: 'No se puede seleccionar la categoría «Sin categoría» si no está activada la opción «Permitir temas sin categorizar».'
       invalid_search_ranking_weights: "El valor no es válido para la configuración del sitio search_ranking_weights. Por ejemplo: «{0.1,0.2,0.3,1.0}». Ten en cuenta que el valor máximo para cada peso es 1,0."
       content_localization_locale_limit: "La cantidad de idiomas locales compatibles no puede ser superior a %{max}."
-      content_localization_anon_language_switcher_requirements: "El selector de idioma requiere que el ajuste del sitio «set locale from cookie» esté activado y que la opción «content localization supported locales» tenga al menos un idioma."
       mediaconvert_role_arn_required: "ARN de función de AWS IAM es obligatorio para usar MediaConvert para la conversión de vídeo."
       s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:
@@ -5337,9 +5335,20 @@ es:
       approve_and_unhide:
         title: "Aprobar y dejar de ocultar publicación"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
+      no_action_user:
+        title: "Ninguna acción"
+      silence_user:
+        title: "Silenciar al usuario"
+        complete: "Usuario silenciado"
+      suspend_user:
+        title: "Suspender al usuario"
+        complete: "Usuario suspendido"
       delete_user:
+        title: "Eliminar usuario"
+        complete: "Usuario eliminado"
         reason: "Eliminado a través de la cola de revisiones"
-        complete: "Usuario eliminado."
+      delete_and_block_user:
+        complete: "Usuario eliminado y bloqueado"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
   notification_level:

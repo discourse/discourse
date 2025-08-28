@@ -144,12 +144,11 @@ export default class UpcomingEventsCalendar extends Component {
     const currentYear = parseInt(currentParams.year, 10);
     const currentMonth = parseInt(currentParams.month, 10);
     const currentDay = parseInt(currentParams.day, 10);
-
     const isViewChanged = currentParams.view !== view;
 
-    // For view changes, always preserve the current URL parameters
     if (isViewChanged) {
       this._isViewChanging = true;
+
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
@@ -160,17 +159,12 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    // Skip navigation logic immediately after a view change
     if (this._isViewChanging) {
       this._isViewChanging = false;
       return;
     }
 
-    const {
-      year: urlYear,
-      month: urlMonth,
-      day: urlDay,
-    } = this.#calculateUrlParams(
+    const calculatedParams = this.#calculateUrlParams(
       view,
       info.view,
       currentYear,
@@ -178,6 +172,8 @@ export default class UpcomingEventsCalendar extends Component {
       currentDay,
       isViewChanged
     );
+
+    const { year: urlYear, month: urlMonth, day: urlDay } = calculatedParams;
 
     const isMonthChanged =
       view === "month" &&
@@ -194,7 +190,9 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    if (isViewChanged || isMonthChanged || isDayChanged) {
+    const shouldNavigate = isViewChanged || isMonthChanged || isDayChanged;
+
+    if (shouldNavigate) {
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
@@ -217,60 +215,62 @@ export default class UpcomingEventsCalendar extends Component {
     const viewEnd = moment(calendarView.currentEnd);
     const currentParams = this.router.currentRoute.params;
 
-    // For view changes, preserve the current date from URL
     if (isViewChanged) {
-      return {
+      const result = {
         year: currentYear,
         month: currentMonth,
         day: parseInt(currentParams.day, 10),
       };
+      return result;
     }
 
     if (view === "month") {
-      const startYear = viewStart.year();
-      const startMonth = viewStart.month() + 1;
+      const viewMiddleForMonth = moment(
+        (viewStart.valueOf() + viewEnd.valueOf()) / 2
+      );
+      const startYear = viewMiddleForMonth.year();
+      const startMonth = viewMiddleForMonth.month() + 1;
+      const isSequential = this.#isSequentialMonthNavigation(
+        currentYear,
+        currentMonth,
+        startYear,
+        startMonth
+      );
+      const isTodayNav = this.#isTodayNavigation(
+        currentParams,
+        startYear,
+        startMonth
+      );
 
-      if (
-        this.#isSequentialMonthNavigation(
-          currentYear,
-          currentMonth,
-          startYear,
-          startMonth
-        )
-      ) {
+      if (isSequential) {
         return { year: startYear, month: startMonth, day: 1 };
-      } else if (
-        this.#isTodayNavigation(currentParams, startYear, startMonth)
-      ) {
-        return { year: startYear, month: startMonth, day: moment().date() };
-      } else {
-        const viewMiddle = moment(
-          (viewStart.valueOf() + viewEnd.valueOf()) / 2
-        );
+      } else if (isTodayNav) {
         return {
-          year: viewMiddle.year(),
-          month: viewMiddle.month() + 1,
-          day: viewMiddle.date(),
+          year: startYear,
+          month: startMonth,
+          day: moment().date(),
+        };
+      } else {
+        return {
+          year: viewMiddleForMonth.year(),
+          month: viewMiddleForMonth.month() + 1,
+          day: viewMiddleForMonth.date(),
         };
       }
     } else {
-      // For view changes, preserve the current date from URL
-      if (isViewChanged) {
-        return {
-          year: currentYear,
-          month: currentMonth,
-          day: currentDay,
-        };
+      let viewDate;
+      if (view === "week") {
+        viewDate = moment(viewStart).startOf("isoWeek");
+      } else {
+        viewDate = moment(viewStart);
       }
 
-      // For navigation (next/prev/today), calculate based on the calendar view's current date
-      const viewDate = moment(calendarView.currentStart);
-
-      return {
+      const result = {
         year: viewDate.year(),
         month: viewDate.month() + 1,
         day: viewDate.date(),
       };
+      return result;
     }
   }
 

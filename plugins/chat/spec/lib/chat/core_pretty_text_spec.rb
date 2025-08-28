@@ -97,4 +97,16 @@ RSpec.describe PrettyText do
       "<div class=\"chat-transcript-messages\">\n<p>original message</p></div>",
     )
   end
+
+  it "converts HTML entities" do
+    cooked = PrettyText.cook("The micro sign: &#181;")
+    expect(cooked).to include("The micro sign: µ")
+
+    cooked = PrettyText.cook("Copyright &#169; symbol")
+    expect(cooked).to include("Copyright © symbol")
+
+    # not converted for security reasons
+    cooked = PrettyText.cook("Less than &#60; and greater than &#62;")
+    expect(cooked).to include("Less than &lt; and greater than &gt;")
+  end
 end

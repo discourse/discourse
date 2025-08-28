@@ -314,7 +314,7 @@ tr_TR:
         month: "Ay"
         week: "Hafta"
         day: "Gün"
-        list: "Liste"
+        year: "Yıl"
     group_timezones:
       search: "Ara..."
       group_availability: "%{group} uygunluğu"

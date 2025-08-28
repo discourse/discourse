@@ -21,9 +21,9 @@ class ZwDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Africa Day", (Holidays.on(Date.civil(2023, 5, 25), [:zw])[0] || {})[:name]
 
-    assert_equal "Heroes' Day", (Holidays.on(Date.civil(2023, 8, 8), [:zw])[0] || {})[:name]
+    assert_equal "Heroes' Day", (Holidays.on(Date.civil(2025, 8, 11), [:zw])[0] || {})[:name]
 
-    assert_equal "Defence Forces Day", (Holidays.on(Date.civil(2023, 8, 9), [:zw])[0] || {})[:name]
+    assert_equal "Defence Forces Day", (Holidays.on(Date.civil(2025, 8, 12), [:zw])[0] || {})[:name]
 
     assert_equal "Unity Day", (Holidays.on(Date.civil(2023, 12, 22), [:zw])[0] || {})[:name]
 

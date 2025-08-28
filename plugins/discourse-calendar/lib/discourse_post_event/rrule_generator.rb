@@ -15,7 +15,7 @@ class RRuleGenerator
     rrule = set_mandatory_options(rrule, starts_at)
 
     ::RRule::Rule
-      .new(stringify(rrule), dtstart: starts_at, tzid: timezone, dtstart:)
+      .new(stringify(rrule), dtstart: starts_at, tzid: timezone)
       .between(Time.current, Time.current + 14.months)
       .first(RRuleConfigurator.how_many_recurring_events(recurrence:, max_years:))
   end
@@ -30,19 +30,14 @@ class RRuleGenerator
   )
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
     rrule = set_mandatory_options(rrule, starts_at)
+    rrule_line = "RRULE:#{stringify(rrule)}"
 
-    # Format as multi-line RFC 5545 format for FullCalendar
-    # Include timezone information in DTSTART to ensure proper interpretation
     if dtstart
       if timezone == "UTC"
         dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
       else
         dtstart_line = "DTSTART;TZID=#{timezone}:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
       end
-    end
-    rrule_line = "RRULE:#{stringify(rrule)}"
-
-    if dtstart_line
       "#{dtstart_line}\n#{rrule_line}"
     else
       rrule_line
@@ -65,6 +60,7 @@ class RRuleGenerator
   end
 
   def self.set_mandatory_options(rrule, time)
+    # Use local time for BYHOUR/BYMINUTE to match the timezone-specific DTSTART
     rrule["BYHOUR"] = time.strftime("%H")
     rrule["BYMINUTE"] = time.strftime("%M")
     rrule["INTERVAL"] ||= 1

@@ -302,6 +302,7 @@ sv:
         month: "Månad"
         week: "Vecka"
         day: "Dag"
+        year: "År"
     group_timezones:
       search: "Sök..."
       group_availability: "%{group}-tillgänglighet"

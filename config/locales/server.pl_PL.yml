@@ -2379,7 +2379,7 @@ pl_PL:
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_mode: "Włącz opcję przełączania użytkowników na tryb anonimowy podczas publikowania. Po włączeniu tej opcji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas tworzenia postów lub tematów w całej witrynie. Zobacz także `allow anonymous likes`."
     allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają Twoją witrynę anonimowo, polubienie postów. Po aktywacji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas polubienia postów lub tematów w całej witrynie. Zobacz także `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
+    anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny, aby aktywować anonimowe wpisy"
     anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
     hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
@@ -2640,7 +2640,7 @@ pl_PL:
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
-    content_localization_anon_language_switcher: "Włącz przełącznik języka, który umożliwia odwiedzającym witrynę, którzy nie są zalogowani, przełączanie się między przetłumaczonymi wersjami Discourse i treściami dodanymi przez użytkowników. Zależy od listy języków zdefiniowanych w 'content locationization supported locales'"
+    content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2718,7 +2718,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_anon_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienie witryny `ustaw ustawienia regionalne na podstawie pliku cookie` było włączone, a w ustawieniach `obsługiwanych lokalizacji treści` był ustawiony co najmniej jeden język."
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienia witryny „ustaw ustawienia regionalne na podstawie pliku cookie” i „zezwalaj na ustawienia regionalne użytkownika” były włączone, a opcja „ustawienia regionalne obsługiwane przez lokalizację treści” wymagała ustawienia co najmniej jednego języka."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       s3_credentials_required_for_video_conversion: "Do konwersji wideo wymagane są dane uwierzytelniające S3. Skonfiguruj klucze dostępu S3 lub włącz profil IAM."
     keywords:
@@ -2795,6 +2795,7 @@ pl_PL:
       in_new: "Pokaż tematy, które są nowe lub mają nowe odpowiedzi"
       in_new_replies: "Pokaż tematy z nowymi odpowiedziami"
       in_new_topics: "Pokaż nowe tematy"
+      in_unseen: "Pokaż tematy, których nie widziałeś"
       order_activity: "Sortuj według ostatniej aktywności (od najnowszych)"
       order_activity_asc: "Sortuj według ostatniej aktywności (najstarsze na początku)"
       order_category: "Sortuj według nazwy kategorii (Z-A)"
@@ -2820,6 +2821,7 @@ pl_PL:
       users: "Filtruj tematy według uczestników"
       users_any: "Pokaż tematy z dowolnymi określonymi użytkownikami (rozdzielone przecinkami)"
       users_all: "Pokaż tematy ze wszystkimi określonymi użytkownikami (rozdzielonymi znakiem plus)"
+      exclude_users: "Wyklucz tematy z określonymi użytkownikami"
       group: "Filtruj tematy według grup"
       groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
       groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
@@ -5581,9 +5583,31 @@ pl_PL:
       approve_and_unhide:
         title: "Zatwierdź i pokaż post"
         complete: "Post zatwierdzony i nieukryty"
+      user_actions:
+        bundle_title: "Co chcesz zrobić z użytkownikiem?"
+      no_action_user:
+        title: "Brak akcji"
+        description: "Nie podejmuj żadnych działań wobec użytkownika"
+        complete: "Nie podjęto żadnych działań wobec użytkownika"
+      silence_user:
+        title: "Wycisz użytkownika"
+        description: "Zablokuj użytkownikowi możliwość tworzenia wpisów"
+        complete: "Użytkownik wyciszony"
+        reason: "Użytkownik uciszony przez kolejkę recenzji"
+      suspend_user:
+        title: "Zawieś użytkownika"
+        description: "Zawieś konto użytkownika"
+        complete: "Użytkownik zawieszony"
+        reason: "Użytkownik zawieszony przez kolejkę recenzji"
       delete_user:
+        title: "Usuń użytkownika"
+        description: "Usuń tego użytkownika z forum"
+        complete: "Użytkownik usunięty"
         reason: "Skasowano z poziomu kolejki moderacji"
-        complete: "Użytkownik usunięty."
+      delete_and_block_user:
+        title: "Usuń i zablokuj"
+        description: "Usuń użytkownika i zablokuj jego adres IP / adres e-mail"
+        complete: "Użytkownik usunięty i zablokowany"
   email_style:
     html_missing_placeholder: "Szablon HTML musi zawierać %{placeholder}"
   notification_level:
@@ -5629,6 +5653,8 @@ pl_PL:
       reserved_id: "ma zastrzeżone słowo kluczowe jako id: %{id}"
       unsafe_description: "zawiera niebezpieczny opis HTML"
       invalid_tag_group: "ma nieprawidłową grupę tagów: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Ta witryna jest już zarejestrowana w Discourse ID"
   activemodel:
     errors:
       <<: *errors

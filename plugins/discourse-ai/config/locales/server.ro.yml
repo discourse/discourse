@@ -22,5 +22,8 @@ ro:
     llm:
       configuration:
         disable_modules_first: "Mai întâi trebuie să dezactivezi aceste module: %{settings}"
+    embeddings:
+      configuration:
+        model_test_failed: "Nu am reușit să generăm un test încorporat cu acest model. Asigură-te că este configurat corect."
     ai_staff_action_logger:
       updated: "actualizat"

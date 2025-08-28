@@ -23,6 +23,7 @@ hr:
         month: "Mjesec"
         week: "Tjedan"
         day: "Dan"
+        year: "Godina"
     group_timezones:
       search: "Pretraži..."
     discourse_post_event:

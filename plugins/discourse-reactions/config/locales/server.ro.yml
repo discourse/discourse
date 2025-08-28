@@ -13,6 +13,7 @@ ro:
     discourse_reactions_desaturated_reaction_panel: "Reduce zgomotul vizual al reacțiilor afișându-le nesaturate până la trecerea cu mausul peste."
     discourse_reactions_excluded_from_like: "Reacții care nu se iau în considerare ca o apreciere. Toate reacțiile care nu se regăsesc în această listă se vor contoriza ca o apreciere pentru insigne, raportare și alte scopuri."
     discourse_reactions_like_sync_enabled: "Dacă această opțiune este activată, reacțiile istorice vor avea înregistrările lor de aprecieri create, cu excepția acelor reacții definite în `discourse_reactions_excluded_from_like`. Această sincronizare va avea loc în mod regulat în fundal și, de asemenea, atunci când modifici `discourse_reactions_excluded_from_like`."
+    discourse_reactions_experimental_allow_any_emoji: "EXPERIMENTAL: Dacă acest lucru este activat, va adăuga un buton care va permite utilizatorilor să selecteze orice emoji în selectorul de reacții. Membrilor li se va permite să aleagă orice emoji, inclusiv emoji personalizate, pentru reacții, așa că activează cu prudență."
     errors:
       invalid_excluded_emoji: "Nu poți exclude emoticon-urile care nu se regăsesc în „reacțiile activate din discourse reactions” și nu poți exclude emoticon-urile utilizate pentru „reacția de apreciere din discourse reactions”."
   badges:

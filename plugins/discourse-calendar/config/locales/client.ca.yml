@@ -23,6 +23,7 @@ ca:
         month: "Mes"
         week: "Setmana"
         day: "Dia"
+        year: "Any"
     group_timezones:
       search: "Cerca..."
     discourse_post_event:
