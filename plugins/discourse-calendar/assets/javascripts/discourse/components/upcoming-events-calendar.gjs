@@ -146,9 +146,9 @@ export default class UpcomingEventsCalendar extends Component {
     const currentDay = parseInt(currentParams.day, 10);
     const isViewChanged = currentParams.view !== view;
 
-    // For view changes, always preserve the current URL parameters
     if (isViewChanged) {
       this._isViewChanging = true;
+
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
@@ -159,7 +159,6 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    // Skip navigation logic immediately after a view change
     if (this._isViewChanging) {
       this._isViewChanging = false;
       return;
@@ -191,7 +190,9 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    if (isViewChanged || isMonthChanged || isDayChanged) {
+    const shouldNavigate = isViewChanged || isMonthChanged || isDayChanged;
+
+    if (shouldNavigate) {
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
@@ -229,14 +230,12 @@ export default class UpcomingEventsCalendar extends Component {
       );
       const startYear = viewMiddleForMonth.year();
       const startMonth = viewMiddleForMonth.month() + 1;
-
       const isSequential = this.#isSequentialMonthNavigation(
         currentYear,
         currentMonth,
         startYear,
         startMonth
       );
-
       const isTodayNav = this.#isTodayNavigation(
         currentParams,
         startYear,
@@ -259,22 +258,20 @@ export default class UpcomingEventsCalendar extends Component {
         };
       }
     } else {
-      if (isViewChanged) {
-        return {
-          year: currentYear,
-          month: currentMonth,
-          day: currentDay,
-        };
+      let viewDate;
+      if (view === "week") {
+        const utcDate = moment(viewStart).utc().add(1, "day");
+        const actualWeekStart = moment(utcDate.format("YYYY-MM-DD"));
+        viewDate = actualWeekStart.startOf("isoWeek");
+      } else {
+        const utcDate = moment(viewStart).utc().add(1, "day");
+        viewDate = moment(utcDate.format("YYYY-MM-DD"));
       }
 
-      const viewMiddleForWeek = moment(
-        (viewStart.valueOf() + viewEnd.valueOf()) / 2
-      );
-
       return {
-        year: viewMiddleForWeek.year(),
-        month: viewMiddleForWeek.month() + 1,
-        day: viewMiddleForWeek.date(),
+        year: viewDate.year(),
+        month: viewDate.month() + 1,
+        day: viewDate.date(),
       };
     }
   }

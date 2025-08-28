@@ -433,6 +433,71 @@ describe DiscoursePostEvent::Event do
         end
       end
     end
+
+    context "recurring events" do
+      context "with recurrence_until set" do
+        context "when current date is before recurrence_until" do
+          it "is not expired" do
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: DateTime.parse("2020-05-01 00:00"),
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(false)
+          end
+        end
+
+        context "when current date is after recurrence_until" do
+          it "is expired" do
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: DateTime.parse("2020-04-23 00:00"),
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(true)
+          end
+        end
+
+        context "when current date equals recurrence_until" do
+          it "is not expired" do
+            current_time = DateTime.parse("2020-04-24 14:10")
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: current_time,
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(false)
+          end
+        end
+      end
+
+      context "without recurrence_until set" do
+        it "never expires" do
+          post_event =
+            DiscoursePostEvent::Event.create!(
+              original_starts_at: DateTime.parse("2020-04-22 14:05"),
+              original_ends_at: DateTime.parse("2020-04-22 15:05"),
+              recurrence: "FREQ=WEEKLY",
+              recurrence_until: nil,
+              post: first_post,
+            )
+
+          expect(post_event.expired?).to be(false)
+        end
+      end
+    end
   end
 
   describe "#update_with_params!" do

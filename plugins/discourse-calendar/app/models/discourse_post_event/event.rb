@@ -97,36 +97,35 @@ module DiscoursePostEvent
     end
 
     def expired?
+      if recurring?
+        return false if recurrence_until.nil?
+        return Time.current > recurrence_until
+      end
+
       return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
     end
 
     def starts_at
-      # For recurring events that have expired (past recurrence_until), return nil
-      # since no future dates can be computed
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+      return original_starts_at if recurring?
 
-      # Try to get from event_dates first (for computed recurring dates or explicit dates)
       from_event_dates =
         event_dates.pending.order(:starts_at).last&.starts_at ||
           event_dates.order(:updated_at, :id).last&.starts_at
 
-      # For non-recurring events, fall back to original_starts_at if no event_dates
-      from_event_dates || (recurring? ? nil : original_starts_at)
+      from_event_dates || original_starts_at
     end
 
     def ends_at
-      # For recurring events that have expired (past recurrence_until), return nil
-      # since no future dates can be computed
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+      return original_ends_at if recurring?
 
-      # Try to get from event_dates first (for computed recurring dates or explicit dates)
       from_event_dates =
         event_dates.pending.order(:starts_at).last&.ends_at ||
           event_dates.order(:updated_at, :id).last&.ends_at
 
-      # For non-recurring events, fall back to original_ends_at if no event_dates
-      from_event_dates || (recurring? ? nil : original_ends_at)
+      from_event_dates || original_ends_at
     end
 
     def on_going_event_invitees
