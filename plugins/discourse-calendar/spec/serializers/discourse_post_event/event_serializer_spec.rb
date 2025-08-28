@@ -55,12 +55,13 @@ describe DiscoursePostEvent::EventSerializer do
           :event,
           post: post_with_duration,
           original_starts_at: "2022-01-15 10:00:00 UTC",
-          original_ends_at: "2022-01-15 11:30:00 UTC"
+          original_ends_at: "2022-01-15 11:30:00 UTC",
         )
       end
 
       it "includes duration in serialized output" do
-        json = DiscoursePostEvent::EventSerializer.new(event_with_duration, scope: Guardian.new).as_json
+        json =
+          DiscoursePostEvent::EventSerializer.new(event_with_duration, scope: Guardian.new).as_json
         expect(json[:event][:duration]).to eq("01:30:00")
       end
     end
@@ -72,7 +73,7 @@ describe DiscoursePostEvent::EventSerializer do
           :event,
           post: post_no_end,
           original_starts_at: "2022-01-15 10:00:00 UTC",
-          original_ends_at: nil
+          original_ends_at: nil,
         )
       end
 
