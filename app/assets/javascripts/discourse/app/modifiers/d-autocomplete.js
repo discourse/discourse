@@ -109,22 +109,16 @@ export default class DAutocompleteModifier extends Modifier {
 
   @action
   async handleKeyDown(event) {
-    // Handle navigation when autocomplete is open OR hidden for space
-    if (this.expanded || this.pendingSpaceSearch) {
+    // Handle navigation when autocomplete is open
+    if (this.expanded) {
       switch (event.key) {
         case "ArrowUp":
         case "ArrowDown":
-          if (this.expanded) {
-            event.preventDefault();
-            await this.moveSelection(event.key === "ArrowUp" ? -1 : 1);
-          }
+          event.preventDefault();
+          await this.moveSelection(event.key === "ArrowUp" ? -1 : 1);
           break;
         case "Enter":
         case "Tab":
-          // If hidden for space, don't complete - let normal text input happen
-          if (this.pendingSpaceSearch) {
-            return; // Allow normal enter/tab behavior
-          }
           event.preventDefault();
           event.stopImmediatePropagation();
           if (this.selectedIndex >= 0) {
