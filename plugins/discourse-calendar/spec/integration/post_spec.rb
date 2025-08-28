@@ -815,7 +815,6 @@ describe Post do
       expect(post.event.show_local_time).to eq(true)
       expect(post.event.original_starts_at).to eq_time(expected_datetime)
 
-      # Test serializer output
       serializer =
         DiscoursePostEvent::BasicEventSerializer.new(post.event, scope: Guardian.new(user))
       serialized = serializer.as_json
