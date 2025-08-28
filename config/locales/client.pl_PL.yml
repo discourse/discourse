@@ -354,6 +354,9 @@ pl_PL:
         logged_in_members: "Witaj z powrotem, %{preferred_display_name}!"
         anonymous_members: "Witaj na %{site_name}!"
       search: "Szukaj"
+    impersonation:
+      notice: "Podszywasz się pod %{username}"
+      stop: "Przestań się podszywać"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja witryna może nie działać, ponieważ motyw/komponent zawiera błędy. Sprawdź konsolę przeglądarki, aby uzyskać więcej informacji."

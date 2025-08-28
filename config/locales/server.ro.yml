@@ -1282,6 +1282,8 @@ ro:
     floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
+    experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
+    experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."

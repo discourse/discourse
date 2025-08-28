@@ -354,6 +354,9 @@ he:
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
       search: "חיפוש"
+    impersonation:
+      notice: "בחירת להתחקות אחר %{username}"
+      stop: "הפסקת התחזות"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא עובד עקב שגיאות ערכת עיצוב / רכיב. במסוף הדפדפן יופיעו פרטים נוספים על הנושא."

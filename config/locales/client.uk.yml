@@ -354,6 +354,9 @@ uk:
         logged_in_members: "З поверненням, %{preferred_display_name}!"
         anonymous_members: "Ласкаво просимо до сайту %{site_name}!"
       search: "Пошук"
+    impersonation:
+      notice: "Ви видаєте себе за %{username}"
+      stop: "Припиніть видавати себе за іншу особу"
     themes:
       default_description: "Типово"
       broken_theme_alert: "Ваш сайт може не працювати через помилки в темі/компоненті. Перегляньте консоль браузера для отримання додаткової інформації."

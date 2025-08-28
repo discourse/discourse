@@ -45,6 +45,9 @@ ug:
         must_select_model: "ئالدى بىلەن LLM نى تاللىشىڭىز كېرەك"
       endpoints:
         not_configured: "%{display_name} (سەپلەنمىگەن)"
+    embeddings:
+      configuration:
+        invalid_config: "ئىناۋەتسىز تاللانمىدىن بىرنى تاللىدىڭىز."
     ai_staff_action_logger:
       updated: "يېڭىلاندى"
       removed: "چىقىرىۋېتىلدى"

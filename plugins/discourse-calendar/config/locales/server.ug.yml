@@ -9,6 +9,8 @@ ug:
     currently_away:
       labels:
         username: ئىشلەتكۈچى ئاتى
+  site_settings:
+    events_max_rows: "يىلنامىدىكى ھەر بىر پائالىيەت تېكىستىنىڭ ئەڭ كۆپ قۇر سانى."
   discourse_post_event:
     errors:
       bulk_invite:

@@ -23,6 +23,7 @@ ug:
         month: "ئاي"
         week: "ھەپتە"
         day: "كۈن"
+        list: "تىزىم"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
