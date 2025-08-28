@@ -47,5 +47,40 @@ describe DiscoursePostEvent::EventSerializer do
       json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
       expect(json[:event][:category_id]).to eq(category.id)
     end
+
+    context "when event has duration" do
+      fab!(:post_with_duration) { Fabricate(:post, topic: topic) }
+      fab!(:event_with_duration) do
+        Fabricate(
+          :event,
+          post: post_with_duration,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: "2022-01-15 11:30:00 UTC",
+        )
+      end
+
+      it "includes duration in serialized output" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(event_with_duration, scope: Guardian.new).as_json
+        expect(json[:event][:duration]).to eq("01:30:00")
+      end
+    end
+
+    context "when event has no end time" do
+      fab!(:post_no_end) { Fabricate(:post, topic: topic) }
+      fab!(:event_no_end) do
+        Fabricate(
+          :event,
+          post: post_no_end,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: nil,
+        )
+      end
+
+      it "does not include duration in serialized output" do
+        json = DiscoursePostEvent::EventSerializer.new(event_no_end, scope: Guardian.new).as_json
+        expect(json[:event]).not_to have_key(:duration)
+      end
+    end
   end
 end
