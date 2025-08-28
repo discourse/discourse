@@ -22,6 +22,15 @@ Fabricator(:upload) do
   end
 
   extension "png"
+
+  transient :uploaders
+
+  after_create do |upload, transients|
+    UserUpload.find_or_create_by!(upload:, user: upload.user)
+    transients[:uploaders]&.each do |uploader|
+      UserUpload.find_or_create_by!(upload:, user: uploader)
+    end
+  end
 end
 
 Fabricator(:large_image_upload, from: :upload) do

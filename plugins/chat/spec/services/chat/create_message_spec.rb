@@ -41,11 +41,7 @@ RSpec.describe Chat::CreateMessage do
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
     fab!(:upload) { Fabricate(:upload, user: user) }
-    fab!(:user_upload) { Fabricate(:user_upload, upload:, user:) }
     fab!(:draft) { Fabricate(:chat_draft, user: user, chat_channel: channel) }
-
-    fab!(:another_upload) { Fabricate(:upload, user: other_user) }
-    fab!(:another_user_upload) { Fabricate(:user_upload, upload: another_upload, user:) }
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
@@ -520,6 +516,10 @@ RSpec.describe Chat::CreateMessage do
                     end
 
                     context "when upload was created by another user" do
+                      fab!(:another_upload) do
+                        Fabricate(:upload, user: other_user, uploaders: [user])
+                      end
+
                       let(:upload_ids) { [upload.id, another_upload.id] }
 
                       it "attaches the upload created by the other user" do
