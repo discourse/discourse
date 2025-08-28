@@ -25,6 +25,9 @@ module Discourse
 
   def self.has_needed_version?(current, needed)
     Gem::Version.new(current) >= Gem::Version.new(needed)
+  rescue ArgumentError => e
+    Rails.logger.error(e.message)
+    false
   end
 
   # lookup an external resource (theme/plugin)'s best compatible version
