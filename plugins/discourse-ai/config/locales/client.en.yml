@@ -177,6 +177,35 @@ en:
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
+        llm_tagger:
+          tag_mode:
+            manual: "Use specific tag list (configured below)"
+            discover: "Let AI discover and use any site tags"
+          fields:
+            tagger_persona:
+              label: "AI Persona"
+              description: "The AI persona to use for analyzing and tagging posts"
+            tag_mode:
+              label: "Tag Selection Mode"
+              description: "Choose how the AI selects tags"
+            available_tags:
+              label: "Available Tags"
+              description: "Tags that the AI can choose from (only used in manual mode)"
+            confidence_threshold:
+              label: "Confidence Threshold"
+              description: "Minimum confidence level (0.0-1.0) required to apply suggested tags"
+            max_tags_per_post:
+              label: "Maximum Tags Per Post"
+              description: "Maximum number of tags that can be applied to a single post"
+            max_post_tokens:
+              label: "Maximum Post Tokens"
+              description: "Maximum number of tokens from the post content to analyze"
+            allow_restricted_tags:
+              label: "Allow Restricted Tags"
+              description: "Allow AI to suggest and apply tags with restricted permissions or visibility."
+            max_posts_for_context:
+              label: "Maximum Posts for Context"
+              description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
 
     discourse_ai:
       title: "AI"
