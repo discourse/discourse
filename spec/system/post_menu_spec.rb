@@ -473,7 +473,7 @@ describe "Post menu", type: :system do
       expect(topic_page).to have_no_post_action_button(post2, :like_count)
     end
 
-    it "Shows the users who liked when clicking on the like count" do
+    it "shows the users who liked when clicking on the like count" do
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 
