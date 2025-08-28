@@ -171,7 +171,8 @@ module DiscourseUpdates
         begin
           valid_version =
             item["discourse_version"].nil? ||
-              Discourse.has_needed_version?(current_version, item["discourse_version"])
+              Discourse.has_needed_version?(current_version, item["discourse_version"]) ||
+              GitUtils.has_commit?(item["discourse_version"])
 
           valid_plugin_name =
             item["plugin_name"].blank? || Discourse.plugins_by_name[item["plugin_name"]].present?
