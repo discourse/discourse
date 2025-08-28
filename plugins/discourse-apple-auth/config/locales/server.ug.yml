@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    apple_client_id: "( Apple ئارقىلىق تىزىمغا كىرىدۇ) ئىجادىيەت تىزگىن تاختىسىدىكى Apple «مۇلازىمەت پەرقلەندۈرگۈچ». ئادەتتە ئەكسى دائىرە ئىسمى ئۇسلۇبىدىكى ھەرپ تىزىقى (مەسىلەن، com.example.auth) ( Apple ئارقىلىق تىزىمغا كىرىدۇ)"

@@ -67,6 +67,8 @@ ug:
           param:
             name:
               title: "ئىسمى"
+            room_id:
+              help: "ئۆينىڭ «شەخسى پەرقلەندۈرگۈچىسى». قارىماققا !abcdefg:matrix.org دەك كۆرۈنىدۇ"
         zulip:
           param:
             subject:

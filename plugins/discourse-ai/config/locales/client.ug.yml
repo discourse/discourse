@@ -138,6 +138,9 @@ ug:
         usage:
           ai_summarization: "خۇلاسە"
           ai_spam: "ئەخلەت خەت"
+        model_description:
+          open_ai-o3: "Open AI نىڭ ئەڭ كۈچلۈك تەپەككۈر ئەندىزىسى"
+          open_ai-gpt-5: "Open AI نىڭ بايراقداق ئەندىزىسى. ساھە ھالقىغان مەسىلىلەرنى ھەل قىلىشقا ماس كېلىدۇ"
         next:
           title: "كېيىنكى"
         tests:

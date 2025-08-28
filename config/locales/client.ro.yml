@@ -326,6 +326,9 @@ ro:
         logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search: "Caută"
+    impersonation:
+      notice: "Preia identitatea utilizatorului %{username}"
+      stop: "Oprește preluarea identității"
     themes:
       default_description: "Implicit"
       broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau o componentă are erori. Vezi consola navigatorului pentru mai multe informații."

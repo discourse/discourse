@@ -326,6 +326,9 @@ hr:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
         anonymous_members: "Dobrodošli na %{site_name}"
       search: "Pretraživanje"
+    impersonation:
+      notice: "Lažno se predstavljaš kao %{username}"
+      stop: "Prestani se lažno predstavljati"
     themes:
       default_description: "Zadano"
       broken_theme_alert: "Vaša web stranica možda neće raditi jer tema/komponenta ima pogreške. Provjerite konzolu preglednika za više informacija."

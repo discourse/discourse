@@ -92,7 +92,7 @@ ja:
         always: "常時"
       reminders_frequency:
         description: "割り当てられたトピックのリマインダーを受け取る頻度"
-        never: "割り当てない"
+        never: "送信しない"
         daily: "毎日"
         weekly: "毎週"
         monthly: "毎月"

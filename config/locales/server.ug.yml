@@ -1570,6 +1570,7 @@ ug:
       labels:
         provider: تىزىمغا كىرىشنى تەمىنلىگۈچى
         no_accounts: "مۇناسىۋەتلىك ھېسابات يوق"
+        total_users: "جەمئى ئەزا سانى"
   dashboard:
     problem:
       twitter_login: 'Twitter ئارقىلىق تىزىمغا كىرىش ھازىر ئىشلىمەيدىغاندەك قىلىدۇ. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">بېكەت تەڭشىكى</a> دىن سالاھىيەت كىملىكىنى تەكشۈرۈڭ.'
