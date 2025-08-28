@@ -2,7 +2,7 @@
 
 describe "Post stream", type: :system do
   fab!(:user)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   %w[enabled disabled].each do |value|
     before { SiteSetting.glimmer_post_stream_mode = value }
@@ -158,6 +158,66 @@ describe "Post stream", type: :system do
       expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='true']")
       blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
       expect(blockquote).to have_content(first_post.raw)
+    end
+  end
+
+  context "when resizing" do
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:composer) { PageObjects::Components::Composer.new }
+
+    before do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.glimmer_post_stream_mode = "enabled"
+      SiteSetting.viewport_based_mobile_mode = true
+
+      sign_in(admin)
+    end
+
+    it "re-renders grids" do
+      topic = Fabricate(:topic, user: admin)
+      post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          raw:
+            "[grid]\n
+![IMG_1599|690x460](upload://tx95d4DWDiEbpsowPEl6RTZPPEu.jpeg)\n
+![IMG_1601|690x460](upload://6nZCZVmmNWu9d5ufqK5rUBAtFAo.jpeg)\n
+![IMG_1602|690x460](upload://3ZN84BTriC3AjVjZMJyN09fAUwM.jpeg)\n
+![IMG_1603|690x460](upload://lUGlFTjKQMygDB2X2EwOlsqaSkt.jpeg)\n
+![IMG_1605|690x460](upload://zxnnd2ICDeFGZTdEX3coCT3uugi.jpeg)\n
+![IMG_1627|690x460](upload://oGH7CrLoX92XlyLB7GTH8YXsUJf.jpeg)\n
+![IMG_1628|690x460](upload://mWQ8el6r7uSpUBBroygjOku8tob.jpeg)\n
+![IMG_1629|690x460](upload://bngQMNcngWDBeItw7uPANyb5eyf.jpeg)\n
+![IMG_1631|690x460](upload://jEutl8G7zOHrGEnFmezUuvGQkUd.jpeg)\n
+![IMG_1633|690x460](upload://zVkRX81QrHdE6R6LgXn0V7P3aqJ.jpeg)\n
+![IMG_1638|690x460](upload://aQFN1SLZM93cOWwRHW4TtISuQib.jpeg)\n
+![IMG_1639|690x460](upload://toPBGNI9h0oJo1am7Prl2U7X376.jpeg)\n
+[/grid]",
+        )
+
+      topic_page.visit_topic(post.topic)
+
+      post_stream = find(".post-stream")
+      expect(post_stream).to have_css(
+        "[data-post-number='1'] .cooked .d-image-grid[data-columns='3']",
+      )
+      expect(post_stream).to have_no_css(
+        "[data-post-number='1'] .cooked .d-image-grid[data-columns='2']",
+      )
+
+      # ensure the grid was changed from three columns to two
+      resize_window(width: 360) do
+        try_until_success do
+          expect(post_stream).to have_no_css(
+            "[data-post-number='1'] .cooked .d-image-grid[data-columns='3']",
+          )
+          expect(post_stream).to have_css(
+            "[data-post-number='1'] .cooked .d-image-grid[data-columns='2']",
+          )
+        end
+      end
     end
   end
 end

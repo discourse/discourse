@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -29,7 +30,9 @@ const POST_COOKED_DECORATORS = [
 
 export default class PostCookedHtml extends Component {
   @service appEvents;
+  @service capabilities;
   @service currentUser;
+  @service site;
 
   #pendingDecoratorCleanup = [];
   #decoratorState = this.args.decoratorState || new TrackedMap();
@@ -184,10 +187,20 @@ export default class PostCookedHtml extends Component {
     <DecoratedHtml
       @className={{this.className}}
       @decorate={{this.decorate}}
+      {{! The DecoratedHtml component executes decorator functions in an untracked context, meaning changes to tracked
+          properties won't automatically trigger re-renders. To ensure specific properties are tracked and the cooked
+          content updates when they change, declare them as decorator arguments below. }}
       @decorateArgs={{lazyHash
         highlightTerm=this.highlightTerm
         isIgnored=this.isIgnored
         ignoredUsers=this.ignoredUsers
+        mobileView=this.site.mobileView
+        desktopView=this.site.desktopView
+        viewportSm=this.capabilities.viewport.sm
+        viewportMd=this.capabilities.viewport.md
+        viewportLg=this.capabilities.viewport.lg
+        viewportXl=this.capabilities.viewport.xl
+        viewport2xl=(get this.capabilities.viewport "2xl")
       }}
       @html={{htmlSafe this.cooked}}
       @model={{@post}}
