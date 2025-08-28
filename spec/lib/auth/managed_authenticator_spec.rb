@@ -242,9 +242,12 @@ RSpec.describe Auth::ManagedAuthenticator do
               hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
             )
         }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+      end
 
+      it "ensures avatar is overriden when using auth_overrides_avatar" do
         # User already has profile picture and settings dictate we must override it, schedule
         SiteSettings.auth_overrides_avatar = true
+        
         user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
         user.save!
         expect {

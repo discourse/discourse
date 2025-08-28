@@ -199,7 +199,7 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(422)
       end
 
-      it "ensures auth_overrides_avatar is not enabled when uploading an avatar" do
+      it "ensures uploads fail when auth_overrides_avatar is enabled" do
         SiteSetting.auth_overrides_avatar = true
         post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq(422)
