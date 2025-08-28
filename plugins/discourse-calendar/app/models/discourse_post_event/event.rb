@@ -78,7 +78,7 @@ module DiscoursePostEvent
     def set_topic_bump
       date = nil
 
-      return if reminders.blank?
+      return if reminders.blank? || starts_at.nil?
       reminders
         .split(",")
         .each do |reminder|
@@ -97,20 +97,37 @@ module DiscoursePostEvent
     end
 
     def expired?
+      if recurring?
+        return false if recurrence_until.nil?
+        return Time.current > recurrence_until
+      end
+
+      return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
     end
 
     def starts_at
-      event_dates.pending.order(:starts_at).last&.starts_at ||
-        event_dates.order(:updated_at, :id).last&.starts_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      from_event_dates =
+        event_dates.pending.order(:starts_at).last&.starts_at ||
+          event_dates.order(:updated_at, :id).last&.starts_at
+
+      from_event_dates || original_starts_at
     end
 
     def ends_at
-      event_dates.pending.order(:starts_at).last&.ends_at ||
-        event_dates.order(:updated_at, :id).last&.ends_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      from_event_dates =
+        event_dates.pending.order(:starts_at).last&.ends_at ||
+          event_dates.order(:updated_at, :id).last&.ends_at
+
+      from_event_dates || original_ends_at
     end
 
     def on_going_event_invitees
+      return [] if self.starts_at.nil? # Can't determine ongoing status without start time
       return [] if !self.ends_at && self.starts_at < Time.now
 
       if self.ends_at
@@ -194,7 +211,7 @@ module DiscoursePostEvent
     end
 
     def create_notification!(user, post, predefined_attendance: false)
-      return if post.event.starts_at < Time.current
+      return if post.event.starts_at.nil? || post.event.starts_at < Time.current
 
       message =
         if predefined_attendance
@@ -220,7 +237,7 @@ module DiscoursePostEvent
     end
 
     def ongoing?
-      return false if self.closed || self.expired?
+      return false if self.closed || self.expired? || self.starts_at.nil?
       finishes_at = self.ends_at || self.starts_at.end_of_day
       (self.starts_at..finishes_at).cover?(Time.now)
     end

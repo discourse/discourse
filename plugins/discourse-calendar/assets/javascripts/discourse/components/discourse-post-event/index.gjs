@@ -93,6 +93,10 @@ export default class DiscoursePostEvent extends Component {
     return this.event.watchingInvitee?.status;
   }
 
+  get expiredAndRecurring() {
+    return this.event.isExpired && this.event.recurrence;
+  }
+
   @bind
   async loadEvent() {
     if (this.event) {
@@ -118,8 +122,20 @@ export default class DiscoursePostEvent extends Component {
             {{#if event}}
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
-                  <div class="month">{{this.startsAtMonth}}</div>
-                  <div class="day">{{this.startsAtDay}}</div>
+                  <div class="month">
+                    {{#if this.expiredAndRecurring}}
+                      -
+                    {{else}}
+                      {{this.startsAtMonth}}
+                    {{/if}}
+                  </div>
+                  <div class="day">
+                    {{#if this.expiredAndRecurring}}
+                      -
+                    {{else}}
+                      {{this.startsAtDay}}
+                    {{/if}}
+                  </div>
                 </div>
                 <div class="event-info">
                   <span class="name">
@@ -174,13 +190,20 @@ export default class DiscoursePostEvent extends Component {
                     Description description=event.description
                   )
                   Location=(component Location location=event.location)
-                  Dates=(component Dates event=event)
+                  Dates=(component
+                    Dates
+                    event=event
+                    expiredAndRecurring=this.expiredAndRecurring
+                  )
                   Invitees=(component Invitees event=event)
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
                 }}
               >
-                <Dates @event={{event}} />
+                <Dates
+                  @event={{event}}
+                  @expiredAndRecurring={{this.expiredAndRecurring}}
+                />
                 <Location @location={{event.location}} />
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
