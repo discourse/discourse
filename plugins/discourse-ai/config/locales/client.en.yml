@@ -193,7 +193,7 @@ en:
               description: "Tags that the AI can choose from (only used in manual mode)"
             confidence_threshold:
               label: "Confidence Threshold"
-              description: "Minimum confidence level (0.0-1.0) required to apply suggested tags"
+              description: "Minimum confidence percentage (0-100) required to apply suggested tags"
             max_tags_per_post:
               label: "Maximum Tags Per Post"
               description: "Maximum number of tags that can be applied to a single post"

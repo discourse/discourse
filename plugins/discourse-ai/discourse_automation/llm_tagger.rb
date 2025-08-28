@@ -40,7 +40,7 @@ if defined?(DiscourseAutomation)
     # Available tags only used when tag_mode is "manual"
     field :available_tags, component: :tags, required: false
 
-    field :confidence_threshold, component: :text, default: "0.7"
+    field :confidence_threshold, component: :text, default: "70"
 
     field :max_tags_per_post, component: :text, default: "3"
 
@@ -73,7 +73,7 @@ if defined?(DiscourseAutomation)
       allow_restricted_tags = fields.dig("allow_restricted_tags", "value") || false
       max_posts_for_context = fields.dig("max_posts_for_context", "value").to_i
 
-      confidence_threshold = 0.7 if confidence_threshold <= 0
+      confidence_threshold = 70 if confidence_threshold <= 0
       max_tags = 3 if max_tags <= 0
       max_post_tokens = 4000 if max_post_tokens <= 0
       max_posts_for_context = 5 if max_posts_for_context <= 0

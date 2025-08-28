@@ -27,14 +27,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     end
 
     it "processes a post and applies appropriate tags" do
-      mock_response = { "tags" => ["bug"], "confidence" => 0.9 }.to_json
+      mock_response = { "tags" => ["bug"], "confidence" => 90 }.to_json
 
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
           tagger_persona_id: ai_persona.id,
           available_tags: available_tags,
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 3,
           max_post_tokens: 4000,
           allow_restricted_tags: false,
@@ -46,14 +46,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     end
 
     it "respects confidence threshold" do
-      mock_response = { "tags" => ["bug"], "confidence" => 0.5 }.to_json
+      mock_response = { "tags" => ["bug"], "confidence" => 50 }.to_json
 
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
           tagger_persona_id: ai_persona.id,
           available_tags: available_tags,
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 3,
           max_post_tokens: 4000,
           allow_restricted_tags: false,
@@ -65,14 +65,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     end
 
     it "filters out invalid tags" do
-      mock_response = { "tags" => %w[bug invalid_tag], "confidence" => 0.9 }.to_json
+      mock_response = { "tags" => %w[bug invalid_tag], "confidence" => 90 }.to_json
 
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
           tagger_persona_id: ai_persona.id,
           available_tags: available_tags,
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 3,
           max_post_tokens: 4000,
           allow_restricted_tags: false,
@@ -86,14 +86,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     end
 
     it "respects max tags limit" do
-      mock_response = { "tags" => %w[bug feature question extra], "confidence" => 0.9 }.to_json
+      mock_response = { "tags" => %w[bug feature question extra], "confidence" => 90 }.to_json
 
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
           tagger_persona_id: ai_persona.id,
           available_tags: available_tags,
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 2,
           max_post_tokens: 4000,
         )
@@ -110,7 +110,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           post: post,
           tagger_persona_id: ai_persona.id,
           available_tags: available_tags,
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 3,
           max_post_tokens: 4000,
           allow_restricted_tags: false,
@@ -124,7 +124,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
 
     describe "discover mode" do
       it "processes a post using discover mode with all site tags" do
-        mock_response = { "tags" => ["feature"], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => ["feature"], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
@@ -132,7 +132,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             tagger_persona_id: ai_persona.id,
             tag_mode: "discover",
             available_tags: [],
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
@@ -146,7 +146,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         # Create an additional tag that's not in manual list
         Fabricate(:tag, name: "discovery", public_topic_count: 2)
 
-        mock_response = { "tags" => ["discovery"], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => ["discovery"], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
@@ -154,7 +154,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             tagger_persona_id: ai_persona.id,
             tag_mode: "discover",
             available_tags: %w[bug feature], # discovery tag not in this list
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
@@ -165,7 +165,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       end
 
       it "filters out invalid tags in discover mode" do
-        mock_response = { "tags" => %w[feature nonexistent_tag], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => %w[feature nonexistent_tag], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
@@ -173,7 +173,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             tagger_persona_id: ai_persona.id,
             tag_mode: "discover",
             available_tags: [],
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
@@ -189,7 +189,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         allow(Rails.cache).to receive(:fetch).and_raise(StandardError.new("Cache error"))
         allow(Rails.logger).to receive(:warn)
 
-        mock_response = { "tags" => ["bug"], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => ["bug"], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
@@ -197,7 +197,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             tagger_persona_id: ai_persona.id,
             tag_mode: "discover",
             available_tags: [],
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
@@ -224,7 +224,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         end
 
         it "excludes restricted tags when allow_restricted_tags is false" do
-          mock_response = { "tags" => ["restricted"], "confidence" => 0.8 }.to_json
+          mock_response = { "tags" => ["restricted"], "confidence" => 80 }.to_json
 
           DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
             described_class.handle(
@@ -232,7 +232,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
               tagger_persona_id: ai_persona.id,
               tag_mode: "discover",
               available_tags: [],
-              confidence_threshold: 0.7,
+              confidence_threshold: 70,
               max_tags: 3,
               max_post_tokens: 4000,
               allow_restricted_tags: false,
@@ -243,7 +243,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         end
 
         it "includes restricted tags when allow_restricted_tags is true" do
-          mock_response = { "tags" => ["restricted"], "confidence" => 0.8 }.to_json
+          mock_response = { "tags" => ["restricted"], "confidence" => 80 }.to_json
 
           DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
             described_class.handle(
@@ -251,7 +251,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
               tagger_persona_id: ai_persona.id,
               tag_mode: "discover",
               available_tags: [],
-              confidence_threshold: 0.7,
+              confidence_threshold: 70,
               max_tags: 3,
               max_post_tokens: 4000,
               allow_restricted_tags: true,
@@ -266,14 +266,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
 
     describe "tag mode selection" do
       it "uses manual mode by default" do
-        mock_response = { "tags" => ["bug"], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => ["bug"], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
             tagger_persona_id: ai_persona.id,
             available_tags: available_tags,
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
           )
@@ -288,7 +288,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           tagger_persona_id: ai_persona.id,
           tag_mode: "manual",
           available_tags: [],
-          confidence_threshold: 0.7,
+          confidence_threshold: 70,
           max_tags: 3,
           max_post_tokens: 4000,
           allow_restricted_tags: false,
@@ -320,14 +320,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       end
 
       it "includes multiple posts for context when max_posts_for_context > 1" do
-        mock_response = { "tags" => %w[bug feature], "confidence" => 0.9 }.to_json
+        mock_response = { "tags" => %w[bug feature], "confidence" => 90 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
             tagger_persona_id: ai_persona.id,
             available_tags: available_tags,
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
@@ -339,14 +339,14 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       end
 
       it "limits context to max_posts_for_context setting" do
-        mock_response = { "tags" => ["question"], "confidence" => 0.8 }.to_json
+        mock_response = { "tags" => ["question"], "confidence" => 80 }.to_json
 
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
             tagger_persona_id: ai_persona.id,
             available_tags: available_tags,
-            confidence_threshold: 0.7,
+            confidence_threshold: 70,
             max_tags: 3,
             max_post_tokens: 4000,
             allow_restricted_tags: false,
