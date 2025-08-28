@@ -90,7 +90,7 @@ module DiscourseAi
         begin
           response = JSON.parse(result)
           suggested_tags = response["tags"] || []
-          confidence = response["confidence"] || 0.0
+          confidence = response["confidence"] || 0
 
           return if confidence < confidence_threshold
 
