@@ -2640,7 +2640,7 @@ pl_PL:
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
-    content_localization_anon_language_switcher: "Włącz przełącznik języka, który umożliwia odwiedzającym witrynę, którzy nie są zalogowani, przełączanie się między przetłumaczonymi wersjami Discourse i treściami dodanymi przez użytkowników. Zależy od listy języków zdefiniowanych w 'content locationization supported locales'"
+    content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2718,7 +2718,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_anon_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienie witryny `ustaw ustawienia regionalne na podstawie pliku cookie` było włączone, a w ustawieniach `obsługiwanych lokalizacji treści` był ustawiony co najmniej jeden język."
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienia witryny „ustaw ustawienia regionalne na podstawie pliku cookie” i „zezwalaj na ustawienia regionalne użytkownika” były włączone, a opcja „ustawienia regionalne obsługiwane przez lokalizację treści” wymagała ustawienia co najmniej jednego języka."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       s3_credentials_required_for_video_conversion: "Do konwersji wideo wymagane są dane uwierzytelniające S3. Skonfiguruj klucze dostępu S3 lub włącz profil IAM."
     keywords:

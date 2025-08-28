@@ -32,7 +32,7 @@ ja:
   site_settings:
     discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
     ai_default_llm_model: "すべての AI 機能に使用するデフォルトの LLM モデル"
-    ai_artifact_security: "AI アーティファクトシステムは、実行可能なコードを含む IRAME を生成します。厳格モードでは、コードを実行するためのクリックが追加で必要となります。ハイブリッドモードでは、ユーザーが data-ai-artifact-autorun を指定するとすぐに表示することができます。無効モードでは、アーティファクトシステムが無効になります。"
+    ai_artifact_security: "AI アーティファクトシステムは、実行可能なコードを含む IFRAME を生成します。厳格モードでは、コードを実行するためのクリックが追加で必要となります。ハイブリッドモードでは、ユーザーが data-ai-artifact-autorun を指定するとすぐに表示することができます。無効モードでは、アーティファクトシステムが無効になります。"
     ai_toxicity_enabled: "毒コメントモジュールを有効にします。"
     ai_toxicity_inference_service_api_endpoint: "毒コメントモジュールの API が実行している URL"
     ai_toxicity_inference_service_api_key: "毒コメント API の API キー"
@@ -461,7 +461,7 @@ ja:
         schema: "データベーススキーマを検索"
         search_settings: "サイト設定を検索中"
         dall_e: "画像を生成"
-        search_meta_discourse: "Discrouse Meta を検索"
+        search_meta_discourse: "Discourse Meta を検索"
         javascript_evaluator: "JavaScript を評価"
         create_image: "画像の作成"
         edit_image: "画像の編集"
@@ -491,7 +491,7 @@ ja:
         schema: "データベーススキーマを検索する"
         search_settings: "サイト設定を検索する"
         dall_e: "DALL-E 3 を使って画像を生成する"
-        search_meta_discourse: "Discrouse Meta を検索する"
+        search_meta_discourse: "Discourse Meta を検索する"
         javascript_evaluator: "JavaScript を評価する"
         researcher: "AI ボットを使用してフォーラム情報を調査する"
       tool_description:
