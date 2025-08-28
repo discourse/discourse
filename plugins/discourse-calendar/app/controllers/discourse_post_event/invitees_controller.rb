@@ -50,19 +50,28 @@ module DiscoursePostEvent
     end
 
     def update
-      invitee = Invitee.find_by(id: params[:invitee_id], post_id: params[:event_id])
-      guardian.ensure_can_act_on_invitee!(invitee)
-      begin
-        invitee.update_attendance!(invitee_params[:status])
-        render json: InviteeSerializer.new(invitee)
-      rescue Discourse::InvalidParameters => e
-        if e.param == :max_attendees
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          invitee_id: params[:invitee_id],
+          event_id: params[:event_id],
+          status: invitee_params[:status]
+        },
+        guardian: guardian
+      ) do
+        on_success do |updated_invitee:|
+          render json: InviteeSerializer.new(updated_invitee)
+        end
+        on_failure { render(json: failed_json, status: 422) }
+        on_model_not_found(:invitee) { raise Discourse::NotFound }
+        on_model_not_found(:updated_invitee) do
           render_json_error(
             I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
             422,
           )
-        else
-          raise
+        end
+        on_failed_policy(:can_act_on_invitee) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
         end
       end
     end
