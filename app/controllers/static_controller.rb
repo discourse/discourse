@@ -153,7 +153,7 @@ class StaticController < ApplicationController
     destination = extract_redirect_param
 
     allow_other_hosts = false
-    if cookies[:sso_redirect_url]
+    if cookies.delete(:sso_payload)
       destination = cookies[:sso_redirect_url]
       allow_other_hosts = true
     end

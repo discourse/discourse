@@ -811,7 +811,7 @@ class SessionController < ApplicationController
     user.update_timezone_if_missing(params[:timezone])
     log_on_user(user)
 
-    if payload = cookies.delete(:sso_payload)
+    if payload = cookies[:sso_payload]
       confirmed_2fa_during_login =
         passkey_login ||
           (
