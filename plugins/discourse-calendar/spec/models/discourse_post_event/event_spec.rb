@@ -639,10 +639,14 @@ describe DiscoursePostEvent::Event do
         serializer =
           DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
         json = JSON.parse(serializer.to_json)
-        # Should not crash and for recurring events should still return original_starts_at
-        # (BasicEventSerializer uses original_starts_at for recurring events, not starts_at)
-        expect(json["starts_at"]).not_to be_nil # This shows original_starts_at
-        expect(json["ends_at"]).to be_nil # This should be nil since no future end date
+
+        expected_starts_at =
+          expired_recurring_event.original_starts_at.in_time_zone(expired_recurring_event.timezone)
+        expected_ends_at =
+          expired_recurring_event.original_ends_at.in_time_zone(expired_recurring_event.timezone)
+
+        expect(json["starts_at"]).to eq(expected_starts_at.iso8601(3))
+        expect(json["ends_at"]).to eq(expected_ends_at.iso8601(3))
       end
     end
 

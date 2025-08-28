@@ -78,7 +78,7 @@ describe RRuleConfigurator do
       it "adds the UNTIL parameter to the rule" do
         recurrence_until = Time.utc(2021, 8, 12, 16, 32)
         rule = RRuleConfigurator.rule(recurrence: "every_day", starts_at: time, recurrence_until:)
-        expect(rule).to eq("FREQ=DAILY;UNTIL=20210812T163200Z")
+        expect(rule).to eq("FREQ=DAILY;UNTIL=20210812T163200")
       end
     end
   end
