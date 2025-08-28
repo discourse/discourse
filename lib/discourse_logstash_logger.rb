@@ -44,6 +44,7 @@ class DiscourseLogstashLogger < Logger
     HTTP_REFERER
     HTTP_X_FORWARDED_FOR
     HTTP_X_REAL_IP
+    HTTP_ACCEPT_LANGUAGE
   ]
 
   # :nodoc:
