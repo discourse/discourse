@@ -35,7 +35,6 @@ export default class LikedUsersList extends Component {
           id: this.args.post.id,
           post_action_type_id: LIKE_ACTION,
         })
-        .then((result) => result);
 
       this.likedUsers = users;
     } finally {
