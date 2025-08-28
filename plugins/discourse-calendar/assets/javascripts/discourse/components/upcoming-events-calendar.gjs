@@ -260,19 +260,17 @@ export default class UpcomingEventsCalendar extends Component {
     } else {
       let viewDate;
       if (view === "week") {
-        const utcDate = moment(viewStart).utc().add(1, "day");
-        const actualWeekStart = moment(utcDate.format("YYYY-MM-DD"));
-        viewDate = actualWeekStart.startOf("isoWeek");
+        viewDate = moment(viewStart).startOf("isoWeek");
       } else {
-        const utcDate = moment(viewStart).utc().add(1, "day");
-        viewDate = moment(utcDate.format("YYYY-MM-DD"));
+        viewDate = moment(viewStart);
       }
 
-      return {
+      const result = {
         year: viewDate.year(),
         month: viewDate.month() + 1,
         day: viewDate.date(),
       };
+      return result;
     }
   }
 
