@@ -36,6 +36,19 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(page).to have_current_path("/admin/config/customize/themes")
   end
 
+  it "allows to delete not system and not default theme" do
+    theme.set_default!
+    config_area.visit
+
+    expect(config_area).to have_disabled_delete_button(theme)
+
+    expect(config_area).to have_disabled_delete_button(horizon_theme)
+
+    expect(config_area).to have_themes(["First theme", "Horizon", "Foundation", "Second theme"])
+    config_area.delete_theme(theme_2)
+    expect(config_area).to have_no_theme("Second theme")
+  end
+
   it "allows to mark theme as default" do
     config_area.visit
     expect(config_area).to have_default_badge(foundation_theme)

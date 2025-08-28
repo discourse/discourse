@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -20,6 +21,7 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
   @service toasts;
+  @service dialog;
 
   @tracked isUpdating = false;
 
@@ -38,6 +40,10 @@ export default class ThemeCard extends Component {
 
   get themePreviewUrl() {
     return `/admin/themes/${this.args.theme.id}/preview`;
+  }
+
+  get destroyDisabled() {
+    return this.args.theme.default || this.args.theme.system;
   }
 
   @action
@@ -129,6 +135,32 @@ export default class ThemeCard extends Component {
       .finally(() => {
         this.isUpdating = false;
       });
+  }
+
+  @action
+  destroyTheme() {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.delete_confirm", {
+        theme_name: this.args.theme.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await this.args.theme.destroyRecord();
+          this.args.allThemes.removeObject(this.args.theme);
+
+          this.toasts.success({
+            data: {
+              message: i18n("admin.customize.theme.delete_success", {
+                theme: this.args.theme.name,
+              }),
+            },
+            duration: "short",
+          });
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
   }
 
   <template>
@@ -259,6 +291,17 @@ export default class ThemeCard extends Component {
                         class="btn btn-transparent theme-card__button preview"
                       >{{icon "eye"}}
                         {{i18n "admin.customize.theme.preview"}}</a>
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        @action={{this.destroyTheme}}
+                        @label="admin.customize.delete"
+                        @icon="trash-can"
+                        class={{concatClass
+                          "theme-card__button btn-danger btn-transparent delete"
+                          (if this.destroyDisabled "disabled")
+                        }}
+                      />
                     </dropdown.item>
                   </DropdownMenu>
                 </:content>
