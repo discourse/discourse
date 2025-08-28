@@ -407,6 +407,17 @@ module DiscoursePostEvent
       [next_starts_at, next_ends_at]
     end
 
+    def duration
+      return nil unless starts_at && ends_at
+
+      duration_seconds = (ends_at - starts_at).to_i
+      hours = (duration_seconds / 3600)
+      minutes = ((duration_seconds % 3600) / 60)
+      seconds = (duration_seconds % 60)
+
+      sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+    end
+
     private
 
     def dates_changed?

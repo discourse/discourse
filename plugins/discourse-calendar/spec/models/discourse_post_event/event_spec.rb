@@ -500,6 +500,45 @@ describe DiscoursePostEvent::Event do
     end
   end
 
+  describe "#duration" do
+    let!(:post_1) { Fabricate(:post) }
+
+    context "when event has both starts_at and ends_at" do
+      it "returns duration in HH:MM:SS format" do
+        event = DiscoursePostEvent::Event.create!(
+          id: post_1.id,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: "2022-01-15 11:30:00 UTC"
+        )
+
+        expect(event.duration).to eq("01:30:00")
+      end
+    end
+
+    context "when event only has starts_at" do
+      it "returns nil" do
+        event = DiscoursePostEvent::Event.create!(
+          id: post_1.id,
+          original_starts_at: "2022-01-15 10:00:00 UTC"
+        )
+
+        expect(event.duration).to be_nil
+      end
+    end
+
+    context "when event spans multiple days" do
+      it "returns correct duration" do
+        event = DiscoursePostEvent::Event.create!(
+          id: post_1.id,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: "2022-01-16 12:30:00 UTC"
+        )
+
+        expect(event.duration).to eq("26:30:00")
+      end
+    end
+  end
+
   describe "#update_with_params!" do
     let!(:post_1) { Fabricate(:post) }
     let!(:user_1) { Fabricate(:user) }

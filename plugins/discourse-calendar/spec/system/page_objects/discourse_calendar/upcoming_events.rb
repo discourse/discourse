@@ -115,6 +115,23 @@ module PageObjects
         def expect_event_at_position(title, row:, col:)
           expect(self).to have_event_at_position(title, row: row, col: col)
         end
+
+        def find_event_by_title(title)
+          find(".fc-event", text: title)
+        end
+
+        def get_event_height(title)
+          find_event_by_title(title).native.bounding_box["height"]
+        end
+
+        def find_all_events_by_title(title)
+          all(".fc-event", text: title)
+        end
+
+        def has_event_height?(title, expected_height)
+          height = get_event_height(title)
+          height >= expected_height - 1 && height <= expected_height + 1
+        end
       end
     end
   end

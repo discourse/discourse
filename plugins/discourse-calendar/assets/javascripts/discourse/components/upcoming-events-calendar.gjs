@@ -95,6 +95,7 @@ export default class UpcomingEventsCalendar extends Component {
         rrule: event.rrule,
         start: startsAt,
         end: endsAt || startsAt,
+        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,

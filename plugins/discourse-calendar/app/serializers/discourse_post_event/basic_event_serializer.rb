@@ -12,7 +12,8 @@ module DiscoursePostEvent
                :rrule,
                :show_local_time,
                :timezone,
-               :post
+               :post,
+               :duration
 
     def category_id
       object.post.topic.category_id
@@ -68,9 +69,21 @@ module DiscoursePostEvent
               object.original_starts_at.in_time_zone(object.timezone) + 1.hour
           )
       else
-        base_starts_at = object.starts_at&.in_time_zone(object.timezone)
-        base_starts_at ? (base_starts_at + 1.hour) : nil
+        if object.ends_at
+          object.ends_at&.in_time_zone(object.timezone)
+        else
+          base_starts_at = object.starts_at&.in_time_zone(object.timezone)
+          base_starts_at ? (base_starts_at + 1.hour) : nil
+        end
       end
+    end
+
+    def duration
+      object.duration
+    end
+
+    def include_duration?
+      object.duration.present?
     end
   end
 end

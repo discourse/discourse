@@ -137,6 +137,7 @@ export default class CategoryCalendar extends Component {
         display: "list-item",
         rrule: event.rrule,
         end: endsAt || startsAt,
+        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,

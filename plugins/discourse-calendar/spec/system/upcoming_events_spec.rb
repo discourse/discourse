@@ -261,6 +261,60 @@ describe "Upcoming Events", type: :system do
           end
         end
       end
+
+      describe "event duration display" do
+        context "with recurring event" do
+          it "displays longer events with appropriate visual height in time grid view",
+             time: Time.utc(2025, 6, 2, 19, 00) do
+            short_event_post =
+              PostCreator.create!(
+                admin,
+                title: "Short meeting",
+                raw:
+                  "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+              )
+
+            long_event_post =
+              PostCreator.create!(
+                admin,
+                title: "Long workshop",
+                raw:
+                  "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+              )
+
+            upcoming_events.visit
+            visit("/upcoming-events/week/2025/6/2")
+
+            expect(upcoming_events).to have_event_height("Short meeting", 47)
+            expect(upcoming_events).to have_event_height("Long workshop", 143)
+          end
+        end
+
+        context "with non recurring event" do
+          it "displays longer events with appropriate visual height in time grid view",
+             time: Time.utc(2025, 6, 2, 19, 00) do
+            short_event_post =
+              PostCreator.create!(
+                admin,
+                title: "Short meeting",
+                raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+              )
+
+            long_event_post =
+              PostCreator.create!(
+                admin,
+                title: "Long workshop",
+                raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+              )
+
+            upcoming_events.visit
+            visit("/upcoming-events/week/2025/6/2")
+
+            expect(upcoming_events).to have_event_height("Short meeting", 47)
+            expect(upcoming_events).to have_event_height("Long workshop", 143)
+          end
+        end
+      end
     end
 
     describe "view switching" do

@@ -7,6 +7,7 @@ module DiscoursePostEvent
     attributes :category_id
     attributes :creator
     attributes :custom_fields
+    attributes :duration
     attributes :ends_at
     attributes :id
     attributes :is_closed
@@ -153,6 +154,14 @@ module DiscoursePostEvent
         recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
         dtstart: object.original_starts_at.in_time_zone(object.timezone),
       )
+    end
+
+    def duration
+      object.duration
+    end
+
+    def include_duration?
+      object.duration.present?
     end
 
     def ends_at
