@@ -37,6 +37,8 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           confidence_threshold: 0.7,
           max_tags: 3,
           max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
         )
       end
 
@@ -54,6 +56,8 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           confidence_threshold: 0.7,
           max_tags: 3,
           max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
         )
       end
 
@@ -71,6 +75,8 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           confidence_threshold: 0.7,
           max_tags: 3,
           max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
         )
       end
 
@@ -107,6 +113,8 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           confidence_threshold: 0.7,
           max_tags: 3,
           max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
         )
       end
 
@@ -127,6 +135,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             confidence_threshold: 0.7,
             max_tags: 3,
             max_post_tokens: 4000,
+            allow_restricted_tags: false,
           )
         end
 
@@ -148,6 +157,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             confidence_threshold: 0.7,
             max_tags: 3,
             max_post_tokens: 4000,
+            allow_restricted_tags: false,
           )
         end
 
@@ -166,6 +176,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             confidence_threshold: 0.7,
             max_tags: 3,
             max_post_tokens: 4000,
+            allow_restricted_tags: false,
           )
         end
 
@@ -189,11 +200,67 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
             confidence_threshold: 0.7,
             max_tags: 3,
             max_post_tokens: 4000,
+            allow_restricted_tags: false,
           )
         end
 
         expect(Rails.logger).to have_received(:warn).with(/Cache failed.*using direct query/)
         expect(topic.reload.tags.map(&:name)).to include("bug")
+      end
+
+      context "with restricted tags" do
+        fab!(:staff_group) { Group.find(Group::AUTO_GROUPS[:staff]) }
+        fab!(:restricted_tag_group) { Fabricate(:tag_group, name: "Staff Only Tags") }
+        fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+
+        before do
+          restricted_tag_group.tags = [restricted_tag]
+          restricted_tag_group.save!
+
+          restricted_tag_group.permissions = [
+            [staff_group, TagGroupPermission.permission_types[:full]],
+          ]
+          restricted_tag_group.save!
+        end
+
+        it "excludes restricted tags when allow_restricted_tags is false" do
+          mock_response = { "tags" => ["restricted"], "confidence" => 0.8 }.to_json
+
+          DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+            described_class.handle(
+              post: post,
+              tagger_persona_id: ai_persona.id,
+              tag_mode: "discover",
+              available_tags: [],
+              confidence_threshold: 0.7,
+              max_tags: 3,
+              max_post_tokens: 4000,
+              allow_restricted_tags: false,
+            )
+          end
+
+          expect(topic.reload.tags.map(&:name)).not_to include("restricted")
+        end
+
+        it "includes restricted tags when allow_restricted_tags is true" do
+          mock_response = { "tags" => ["restricted"], "confidence" => 0.8 }.to_json
+
+          DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+            described_class.handle(
+              post: post,
+              tagger_persona_id: ai_persona.id,
+              tag_mode: "discover",
+              available_tags: [],
+              confidence_threshold: 0.7,
+              max_tags: 3,
+              max_post_tokens: 4000,
+              allow_restricted_tags: true,
+              max_posts_for_context: 5,
+            )
+          end
+
+          expect(topic.reload.tags.map(&:name)).to include("restricted")
+        end
       end
     end
 
@@ -224,9 +291,70 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           confidence_threshold: 0.7,
           max_tags: 3,
           max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
         )
 
         expect(topic.reload.tags).to be_empty
+      end
+    end
+
+    describe "multi-post context" do
+      let!(:reply_post1) do
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          post_number: 2,
+          raw: "This is about features and performance",
+        )
+      end
+      let!(:reply_post2) do
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          post_number: 3,
+          raw: "Definitely a bug report here",
+        )
+      end
+
+      it "includes multiple posts for context when max_posts_for_context > 1" do
+        mock_response = { "tags" => %w[bug feature], "confidence" => 0.9 }.to_json
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+          described_class.handle(
+            post: post,
+            tagger_persona_id: ai_persona.id,
+            available_tags: available_tags,
+            confidence_threshold: 0.7,
+            max_tags: 3,
+            max_post_tokens: 4000,
+            allow_restricted_tags: false,
+            max_posts_for_context: 3,
+          )
+        end
+
+        expect(topic.reload.tags.map(&:name)).to include("bug", "feature")
+      end
+
+      it "limits context to max_posts_for_context setting" do
+        mock_response = { "tags" => ["question"], "confidence" => 0.8 }.to_json
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+          described_class.handle(
+            post: post,
+            tagger_persona_id: ai_persona.id,
+            available_tags: available_tags,
+            confidence_threshold: 0.7,
+            max_tags: 3,
+            max_post_tokens: 4000,
+            allow_restricted_tags: false,
+            max_posts_for_context: 1,
+          )
+        end
+
+        expect(topic.reload.tags.map(&:name)).to include("question")
       end
     end
   end

@@ -200,6 +200,12 @@ en:
             max_post_tokens:
               label: "Maximum Post Tokens"
               description: "Maximum number of tokens from the post content to analyze"
+            allow_restricted_tags:
+              label: "Allow Restricted Tags"
+              description: "Allow AI to suggest and apply tags with restricted permissions or visibility."
+            max_posts_for_context:
+              label: "Maximum Posts for Context"
+              description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
 
     discourse_ai:
       title: "AI"

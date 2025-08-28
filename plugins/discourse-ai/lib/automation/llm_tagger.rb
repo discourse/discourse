@@ -11,6 +11,8 @@ module DiscourseAi
         confidence_threshold:,
         max_tags:,
         max_post_tokens:,
+        allow_restricted_tags: false,
+        max_posts_for_context: 5,
         automation: nil
       )
         # Skip if manual mode but no tags provided
@@ -21,14 +23,18 @@ module DiscourseAi
         return if model_id.blank?
         model = LlmModel.find(model_id)
 
+        topic_posts = post.topic.posts.order(:post_number).limit(max_posts_for_context)
+        posts_content = topic_posts.map { |p| "Post #{p.post_number}: #{p.raw}" }.join("\n\n")
+
         if tag_mode == "manual"
           # Manual mode: provide specific tag list in prompt
           available_tags_text = "Available tags: #{available_tags.join(", ")}\n\n"
-          input = "#{available_tags_text}Post to analyze:\ntitle: #{post.topic.title}\n#{post.raw}"
+          input =
+            "#{available_tags_text}Topic to analyze:\ntitle: #{post.topic.title}\n\n#{posts_content}"
         else
           # Discover mode: instruct AI to use list_tags tool
           input =
-            "Post to analyze:\ntitle: #{post.topic.title}\n#{post.raw}\n\nUse the list_tags tool to see available tags, then suggest appropriate ones."
+            "Topic to analyze:\ntitle: #{post.topic.title}\n\n#{posts_content}\n\nUse the list_tags tool to see available tags, then suggest appropriate ones."
         end
 
         if max_post_tokens.present?
@@ -40,9 +46,10 @@ module DiscourseAi
             )
         end
 
-        if post.upload_ids.present?
+        all_upload_ids = topic_posts.flat_map(&:upload_ids).compact.uniq
+        if all_upload_ids.present?
           input = [input]
-          input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input.concat(all_upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot =
@@ -69,9 +76,7 @@ module DiscourseAi
           },
         }
 
-        if persona_response_format.present? && !Rails.env.test?
-          llm_args[:response_format] = persona_response_format
-        end
+        llm_args[:response_format] = persona_response_format if persona_response_format.present?
 
         result = +""
         bot.reply(bot_ctx, llm_args: llm_args) do |partial, _, type|
@@ -93,16 +98,44 @@ module DiscourseAi
             # Manual mode: validate against configured tag list
             valid_tags = suggested_tags.select { |tag| available_tags.include?(tag) }
           else
-            # Discover mode: validate against all existing site tags (with safe caching)
+            # Discover mode: validate against site tags (with safe caching)
+            cache_key =
+              (
+                if allow_restricted_tags
+                  "discourse_ai_all_tag_names"
+                else
+                  "discourse_ai_visible_tag_names"
+                end
+              )
             all_site_tags =
               begin
                 Rails
                   .cache
-                  .fetch("discourse_ai_all_tag_names", expires_in: 30.minutes) { Tag.pluck(:name) }
+                  .fetch(cache_key, expires_in: 30.minutes) do
+                    if allow_restricted_tags
+                      Tag.order(public_topic_count: :desc).limit(300).pluck(:name)
+                    else
+                      # Use anonymous user guardian to respect tag restrictions
+                      DiscourseTagging
+                        .visible_tags(Guardian.new)
+                        .order(public_topic_count: :desc)
+                        .limit(300)
+                        .pluck(:name)
+                    end
+                  end
               rescue => e
                 # Fallback to direct query if cache fails
                 Rails.logger.warn("llm_tagger: Cache failed (#{e.message}), using direct query")
-                Tag.pluck(:name)
+                if allow_restricted_tags
+                  Tag.order(public_topic_count: :desc).limit(300).pluck(:name)
+                else
+                  # Use anonymous user guardian to respect tag restrictions
+                  DiscourseTagging
+                    .visible_tags(Guardian.new)
+                    .order(public_topic_count: :desc)
+                    .limit(300)
+                    .pluck(:name)
+                end
               end
             valid_tags = suggested_tags.select { |tag| all_site_tags.include?(tag) }
           end
@@ -113,25 +146,16 @@ module DiscourseAi
             site_max_tags = SiteSetting.max_tags_per_topic
             available_slots = site_max_tags - existing_tag_count
 
-            Rails.logger.info(
-              "llm_tagger: Topic #{post.topic.id} has #{existing_tag_count}/#{site_max_tags} tags, " \
-                "#{available_slots} slots available. Suggested tags: #{valid_tags.inspect}",
-            )
-
             if available_slots > 0
               # Only take as many tags as we have slots for
               tags_to_add = valid_tags.first(available_slots)
               apply_tags_to_topic(post.topic, tags_to_add)
 
-              Rails.logger.info(
+              Rails.logger.debug(
                 "llm_tagger: Applied tags #{tags_to_add.inspect} to topic #{post.topic.id} " \
-                  "with confidence #{confidence}. Had #{available_slots} slots available.",
+                  "with confidence #{confidence}",
               )
             else
-              Rails.logger.info(
-                "llm_tagger: Skipped tagging topic #{post.topic.id} - already at max tags " \
-                  "(#{existing_tag_count}/#{site_max_tags})",
-              )
             end
           end
         rescue JSON::ParserError => e

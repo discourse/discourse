@@ -24,7 +24,7 @@ en:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
       llm_tagger:
-        title: Tag posts using AI
+        title: Tag topics using AI
         description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
