@@ -18,6 +18,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(original_id:, created_at: nil, name:, one_per_topic: nil, parent_tag_id: nil)
       ::Migrations::Database::IntermediateDB.insert(

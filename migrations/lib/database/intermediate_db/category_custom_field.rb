@@ -16,6 +16,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(category_id:, name:, value: nil)
       ::Migrations::Database::IntermediateDB.insert(SQL, category_id, name, value)
