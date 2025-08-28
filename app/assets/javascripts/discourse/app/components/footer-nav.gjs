@@ -14,6 +14,15 @@ export default class FooterNav extends Component {
   @service composer;
   @service modal;
   @service historyStore;
+  @service router;
+
+  EXCLUDE_IN_ROUTES = [
+    "activate-account",
+    "invites.show",
+    "login",
+    "password-reset",
+    "signup",
+  ];
 
   _modalOn() {
     postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
@@ -65,12 +74,15 @@ export default class FooterNav extends Component {
   }
 
   get isVisible() {
+    const { currentRouteName } = this.router;
+
     return (
       [UNSCROLLED, SCROLLED_UP].includes(
         this.scrollDirection.lastScrollDirection
       ) &&
       !this.composer.isOpen &&
-      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward)
+      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward) &&
+      !this.EXCLUDE_IN_ROUTES.includes(currentRouteName)
     );
   }
 
