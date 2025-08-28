@@ -38,13 +38,12 @@ module DiscoursePostEvent
     def rrule
       return nil unless include_rrule?
 
-      rrule_timezone = object.show_local_time ? "UTC" : object.timezone
       timezone_starts_at = object.original_starts_at.in_time_zone(object.timezone)
       timezone_recurrence_until = object.recurrence_until&.in_time_zone(object.timezone)
 
       RRuleGenerator.generate_string(
         starts_at: timezone_starts_at,
-        timezone: rrule_timezone,
+        timezone: object.rrule_timezone,
         recurrence: object.recurrence,
         recurrence_until: timezone_recurrence_until,
         dtstart: timezone_starts_at,

@@ -418,6 +418,10 @@ module DiscoursePostEvent
       sprintf("%02d:%02d:%02d", hours, minutes, seconds)
     end
 
+    def rrule_timezone
+      show_local_time ? "UTC" : object.timezone
+    end
+
     private
 
     def dates_changed?
@@ -461,7 +465,6 @@ module DiscoursePostEvent
     end
 
     def calculate_next_recurring_date
-      rrule_timezone = show_local_time ? "UTC" : timezone
       timezone_starts_at = original_starts_at.in_time_zone(timezone)
       timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
 
