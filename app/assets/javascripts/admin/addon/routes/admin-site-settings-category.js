@@ -5,9 +5,8 @@ export default class AdminSiteSettingsCategoryRoute extends DiscourseRoute {
   @service router;
 
   model(params) {
-    return this.modelFor("adminSiteSettings").filteredSettings.findBy(
-      "nameKey",
-      params.category_id
+    return this.modelFor("adminSiteSettings").filteredSettings.find(
+      (setting) => setting.nameKey === params.category_id
     )?.siteSettings;
   }
 

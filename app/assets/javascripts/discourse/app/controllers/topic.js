@@ -299,9 +299,8 @@ export default class TopicController extends Controller {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy(
-      "bookmarkable_type",
-      "Topic"
+    const forTopicBookmark = this.model.bookmarks.find(
+      (b) => b.bookmarkable_type === "Topic"
     );
     if (
       forTopicBookmark?.auto_delete_preference ===
@@ -1512,7 +1511,7 @@ export default class TopicController extends Controller {
       this.model.set("bookmarks", []);
     }
 
-    const bookmark = this.model.bookmarks.findBy("id", data.id);
+    const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
       this.model.bookmarks.pushObject(Bookmark.create(data));
     } else {
@@ -1532,9 +1531,8 @@ export default class TopicController extends Controller {
     }
 
     if (this.model.bookmarkCount === 1) {
-      const topicBookmark = this.model.bookmarks.findBy(
-        "bookmarkable_type",
-        "Topic"
+      const topicBookmark = this.model.bookmarks.find(
+        (b) => b.bookmarkable_type === "Topic"
       );
       if (topicBookmark) {
         return this._modifyTopicBookmark(topicBookmark);

@@ -33,9 +33,8 @@ export default class SingleSelect extends SelectKitComponent {
           : this.value;
 
       if (this.selectKit.valueProperty) {
-        content = (this.content || []).findBy(
-          this.selectKit.valueProperty,
-          value
+        content = (this.content || []).find(
+          (item) => item[this.selectKit.valueProperty] === value
         );
 
         return this.selectKit.modifySelection(
