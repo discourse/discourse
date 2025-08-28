@@ -4,9 +4,9 @@ module DiscoursePostEvent
   # Service responsible for updating an invitee's attendance status.
   #
   # @example
-  #  DiscoursePostEvent::UpdateInvitee.call(guardian: guardian, params: { invitee_id: 1, event_id: 2, status: "going" })
+  #  DiscoursePostEvent::UpdateAttendance.call(guardian: guardian, params: { invitee_id: 1, event_id: 2, status: "going" })
   #
-  class UpdateInvitee
+  class UpdateAttendance
     include Service::Base
 
     # @!method self.call(guardian:, params:)

@@ -50,17 +50,15 @@ module DiscoursePostEvent
     end
 
     def update
-      DiscoursePostEvent::UpdateInvitee.call(
+      DiscoursePostEvent::UpdateAttendance.call(
         params: {
           invitee_id: params[:invitee_id],
           event_id: params[:event_id],
-          status: invitee_params[:status]
+          status: invitee_params[:status],
         },
-        guardian: guardian
+        guardian: guardian,
       ) do
-        on_success do |updated_invitee:|
-          render json: InviteeSerializer.new(updated_invitee)
-        end
+        on_success { |updated_invitee:| render json: InviteeSerializer.new(updated_invitee) }
         on_failure { render(json: failed_json, status: 422) }
         on_model_not_found(:invitee) { raise Discourse::NotFound }
         on_model_not_found(:updated_invitee) do

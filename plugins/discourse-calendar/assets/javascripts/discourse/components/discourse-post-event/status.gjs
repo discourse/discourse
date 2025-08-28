@@ -82,7 +82,6 @@ export default class DiscoursePostEventStatus extends Component {
         postId: this.args.event.id,
       });
     } catch (e) {
-      // in case of 422 full, backend returns error string, let popup handle
       popupAjaxError(e);
     }
   }

@@ -37,7 +37,7 @@ describe DiscoursePostEvent::Invitee do
     context "when user updates their own attendance" do
       it "successfully updates the status" do
         expect {
-          DiscoursePostEvent::UpdateInvitee.call(
+          DiscoursePostEvent::UpdateAttendance.call(
             guardian: Guardian.new(user_1),
             params: {
               invitee_id: invitee.id,
@@ -51,7 +51,7 @@ describe DiscoursePostEvent::Invitee do
       it "triggers a discourse event" do
         events =
           DiscourseEvent.track_events do
-            DiscoursePostEvent::UpdateInvitee.call(
+            DiscoursePostEvent::UpdateAttendance.call(
               guardian: Guardian.new(user_1),
               params: {
                 invitee_id: invitee.id,
@@ -71,7 +71,7 @@ describe DiscoursePostEvent::Invitee do
     context "when admin updates another user's attendance" do
       it "successfully updates the status" do
         expect {
-          DiscoursePostEvent::UpdateInvitee.call(
+          DiscoursePostEvent::UpdateAttendance.call(
             guardian: Guardian.new(user),
             params: {
               invitee_id: invitee.id,
@@ -97,7 +97,7 @@ describe DiscoursePostEvent::Invitee do
 
       it "fails to update to going status" do
         result =
-          DiscoursePostEvent::UpdateInvitee.call(
+          DiscoursePostEvent::UpdateAttendance.call(
             guardian: Guardian.new(user_1),
             params: {
               invitee_id: invitee.id,
@@ -117,7 +117,7 @@ describe DiscoursePostEvent::Invitee do
 
       it "fails the policy check" do
         result =
-          DiscoursePostEvent::UpdateInvitee.call(
+          DiscoursePostEvent::UpdateAttendance.call(
             guardian: Guardian.new(unauthorized_user),
             params: {
               invitee_id: invitee.id,
