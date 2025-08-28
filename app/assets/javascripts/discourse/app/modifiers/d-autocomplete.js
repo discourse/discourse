@@ -64,6 +64,7 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked searchTerm = "";
   @tracked completeStart = null;
   @tracked completeEnd = null;
+  @tracked pendingSpaceSearch = false;
 
   // Internal state
   previousTerm = null;
@@ -108,19 +109,22 @@ export default class DAutocompleteModifier extends Modifier {
 
   @action
   async handleKeyDown(event) {
-    // Handle navigation when autocomplete is open
-    if (this.expanded) {
+    // Handle navigation when autocomplete is open OR hidden for space
+    if (this.expanded || this.pendingSpaceSearch) {
       switch (event.key) {
         case "ArrowUp":
-          event.preventDefault();
-          await this.moveSelection(-1);
-          break;
         case "ArrowDown":
-          event.preventDefault();
-          await this.moveSelection(1);
+          if (this.expanded) {
+            event.preventDefault();
+            await this.moveSelection(event.key === "ArrowUp" ? -1 : 1);
+          }
           break;
         case "Enter":
         case "Tab":
+          // If hidden for space, don't complete - let normal text input happen
+          if (this.pendingSpaceSearch) {
+            return; // Allow normal enter/tab behavior
+          }
           event.preventDefault();
           event.stopImmediatePropagation();
           if (this.selectedIndex >= 0) {
@@ -252,6 +256,16 @@ export default class DAutocompleteModifier extends Modifier {
     const value = this.getValue();
     const key = value[caretPosition - 1];
 
+    // If caret moved outside our autocomplete context while space search pending
+    if (
+      this.pendingSpaceSearch &&
+      (caretPosition < this.completeStart ||
+        caretPosition > this.completeEnd + 1)
+    ) {
+      await this.closeAutocomplete();
+      return;
+    }
+
     // onKeyUp for additional custom trigger logic
     if (this.options.key && this.options.onKeyUp && key !== this.options.key) {
       const match = this.options.onKeyUp(value, caretPosition);
@@ -294,6 +308,16 @@ export default class DAutocompleteModifier extends Modifier {
       // Validate we're still in autocomplete context
       if (!this.options.key || value[this.completeStart] === this.options.key) {
         this.completeEnd = caretPosition - 1;
+
+        // If we're no longer ending with space, clear space-related state
+        if (this.pendingSpaceSearch && !term.endsWith(" ")) {
+          this.pendingSpaceSearch = false;
+          // If we have results and menu was hidden, reopen it
+          if (this.results.length > 0) {
+            await this.openAutocomplete();
+          }
+        }
+
         await this.performSearch(term);
       } else {
         await this.closeAutocomplete();
@@ -329,6 +353,16 @@ export default class DAutocompleteModifier extends Modifier {
 
     this.previousTerm = term;
     this.searchTerm = term;
+
+    // Special handling for terms ending with space (mentions only)
+    const endsWithSpace = term.endsWith(" ") && term.trim().length > 0;
+    const isMentionAutocomplete = this.options.key === "@";
+
+    if (endsWithSpace && isMentionAutocomplete) {
+      // Close menu but keep state for potential reopening
+      this.pendingSpaceSearch = true;
+      await this.closeAutocomplete({ resetSearchState: false });
+    }
 
     // Close if only whitespace or invalid context
     if (
@@ -385,6 +419,10 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
+    if (this.pendingSpaceSearch) {
+      this.pendingSpaceSearch = false;
+    }
+
     this.openAutocomplete();
   }
 
@@ -435,19 +473,22 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   @action
-  async closeAutocomplete() {
+  async closeAutocomplete({ resetSearchState = true } = {}) {
     await this.menu.close("d-autocomplete");
-
     this.expanded = false;
+    this.selectedIndex = -1;
+
+    if (!resetSearchState) {
+      return;
+    }
+
+    this.pendingSpaceSearch = false;
     this.completeStart = null;
     this.completeEnd = null;
     this.searchTerm = "";
     this.results = [];
-    this.selectedIndex = -1;
     this.previousTerm = null;
-
     cancel(this.debouncedSearch);
-
     // Note: onClose callback is handled by the menu's onClose option
   }
 
