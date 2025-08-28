@@ -96,7 +96,7 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          { role: "assistant", content: msg[:content] }
+          message_for_role("assistant", msg)
         end
 
         def tool_call_msg(msg)
@@ -116,9 +116,13 @@ module DiscourseAi
         end
 
         def user_msg(msg)
+          message_for_role("user", msg)
+        end
+
+        def message_for_role(role, msg)
           content_array = []
 
-          user_message = { role: "user" }
+          user_message = { role: }
 
           if msg[:id]
             if embed_user_ids?

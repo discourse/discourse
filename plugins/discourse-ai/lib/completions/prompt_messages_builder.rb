@@ -175,13 +175,24 @@ module DiscourseAi
         @timestamps = {}
       end
 
+      MIN_CAPTION_LENGTH_TO_RETAIN = 30
+
       def self.strip_upload_markers(markdown, upload_shas)
         return markdown if markdown.blank? || upload_shas.blank?
         base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set
         markdown.gsub(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}) do
           alt = Regexp.last_match(1)
           b62 = Regexp.last_match(2)
-          base62_set.include?(b62) ? alt : Regexp.last_match(0)
+          if base62_set.include?(b62)
+            if alt.length > MIN_CAPTION_LENGTH_TO_RETAIN
+              # this is rather rare, but might as well retain for this specific case
+              "\nImage Description: #{alt}\n"
+            else
+              ""
+            end
+          else
+            Regexp.last_match(0)
+          end
         end
       end
 

@@ -244,13 +244,16 @@ module DiscourseAi
           content.each do |c|
             if c.is_a?(String)
               current_string << c
-            elsif c.is_a?(Hash) && c.key?(:upload_id) && allow_vision
-              if !current_string.empty?
-                result << text_encoder.call(current_string)
-                current_string = +""
+            elsif c.is_a?(Hash) && c.key?(:upload_id)
+              # this ensurse we skip uploads if vision is not supported
+              if allow_vision
+                if !current_string.empty?
+                  result << text_encoder.call(current_string)
+                  current_string = +""
+                end
+                encoded = prompt.encode_upload(c[:upload_id])
+                result << image_encoder.call(encoded) if encoded
               end
-              encoded = prompt.encode_upload(c[:upload_id])
-              result << image_encoder.call(encoded) if encoded
             elsif other_encoder
               encoded = other_encoder.call(c)
               result << encoded if encoded
