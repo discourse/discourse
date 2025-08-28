@@ -51,7 +51,7 @@ module PageObjects
 
       def has_disabled_delete_button?(theme)
         open_theme_menu(theme)
-        has_css?(".btn-danger.delete.disabled")
+        has_css?(".btn-danger.delete[disabled]")
       end
 
       def has_themes?(names)

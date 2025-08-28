@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -85,7 +84,6 @@ export default class ThemeCard extends Component {
           theme: this.args.theme.name,
         }),
       },
-      duration: "short",
     });
 
     window.location.reload();
@@ -108,7 +106,6 @@ export default class ThemeCard extends Component {
       data: {
         message: i18n("admin.customize.theme.setting_was_saved"),
       },
-      duration: "short",
     });
   }
 
@@ -128,7 +125,6 @@ export default class ThemeCard extends Component {
               theme: this.args.theme.name,
             }),
           },
-          duration: "short",
         });
       })
       .catch(popupAjaxError)
@@ -154,7 +150,6 @@ export default class ThemeCard extends Component {
                 theme: this.args.theme.name,
               }),
             },
-            duration: "short",
           });
         } catch (error) {
           popupAjaxError(error);
@@ -297,10 +292,8 @@ export default class ThemeCard extends Component {
                         @action={{this.destroyTheme}}
                         @label="admin.customize.delete"
                         @icon="trash-can"
-                        class={{concatClass
-                          "theme-card__button btn-danger btn-transparent delete"
-                          (if this.destroyDisabled "disabled")
-                        }}
+                        @disabled={{this.destroyDisabled}}
+                        class="theme-card__button btn-danger btn-transparent delete"
                       />
                     </dropdown.item>
                   </DropdownMenu>
