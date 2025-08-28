@@ -39,11 +39,21 @@ export default class ComposerActionTitle extends Component {
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
-  @discourseComputed("options", "action", "model.tags", "model.category")
+  @discourseComputed(
+    "options",
+    "action",
+    "model.tags",
+    "model.category",
+    "model.isWarning"
+  )
   actionTitle(opts, action) {
     const result = this.model.customizationFor("actionTitle");
     if (result) {
       return result;
+    }
+
+    if (action === PRIVATE_MESSAGE && this.model.isWarning) {
+      return i18n("composer.send_warning");
     }
 
     if (TITLES[action]) {

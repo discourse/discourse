@@ -240,6 +240,17 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       });
     }
 
+    if (this.action === PRIVATE_MESSAGE && this.composer.canToggleWarning) {
+      items.push({
+        name: i18n("composer.composer_actions.toggle_official_warning.label"),
+        description: i18n(
+          "composer.composer_actions.toggle_official_warning.desc"
+        ),
+        icon: "circle-exclamation",
+        id: "toggle_official_warning",
+      });
+    }
+
     if (items.length === 0 && this.currentUser.can_create_topic) {
       items.push({
         name: i18n("composer.composer_actions.create_topic.label"),
@@ -278,6 +289,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
   _openComposer(options) {
     this.composer.closeComposer();
     this.composer.open(options);
+  }
+
+  toggleOfficialWarningSelected(options, model) {
+    model.toggleProperty("isWarning");
   }
 
   toggleWhisperSelected(options, model) {

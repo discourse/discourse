@@ -2895,7 +2895,7 @@ en:
       whisper: "whisper"
       unlist: "unlisted"
 
-      add_warning: "This is an official warning."
+      send_warning: "Send an official warning to user"
       toggle_whisper: "Toggle whisper"
       insert_table: "Insert table"
       posting_not_on_topic: "Which topic do you want to reply to?"
@@ -3057,6 +3057,9 @@ en:
         reply: Reply
         draft: Draft
         edit: Edit
+        toggle_official_warning:
+          label: Send Official Warning
+          desc: Create new message as an official warning to a user
         reply_to_post:
           label: Reply to a post by %{postUsername}
           desc: Reply to a specific post
