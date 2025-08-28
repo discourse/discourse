@@ -44,6 +44,7 @@ class DiscourseLogstashLogger < Logger
     HTTP_REFERER
     HTTP_X_FORWARDED_FOR
     HTTP_X_REAL_IP
+    HTTP_ACCEPT_LANGUAGE
   ]
 
   # :nodoc:
@@ -69,6 +70,9 @@ class DiscourseLogstashLogger < Logger
       "type" => @type.to_s,
       "host" => HOST,
       "git_version" => GIT_VERSION,
+      "test_env" => opts.dig(:env, "RAILS_ENV"),
+      "accept_language" => opts.dig(:env, "HTTP_ACCEPT_LANGUAGE"),
+      "http_accept" => opts.dig(:env, "HTTP_ACCEPT"),
     }
 
     # Only log backtrace and env for Logger::WARN and above.
