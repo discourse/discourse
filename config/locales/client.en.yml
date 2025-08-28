@@ -5636,6 +5636,11 @@ en:
           title: "Advanced"
 
       upcoming_changes:
+        name: "Name"
+        plugin: "Plugin"
+        labels: "Labels"
+        enabled: "Enabled"
+        show_image: "Show image"
         statuses:
           alpha: "Alpha"
           beta: "Beta"
@@ -5658,6 +5663,9 @@ en:
           high_risk: "Risk: High"
           type_feature: "Type: Feature"
           type_misc: "Type: Miscellaneous"
+          status_alpha: "Status: Alpha"
+          status_beta: "Status: Beta"
+          status_stable: "Status: Stable"
 
       config:
         about:

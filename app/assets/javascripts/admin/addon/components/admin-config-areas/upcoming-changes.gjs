@@ -4,11 +4,13 @@ import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminFilterControls from "admin/components/admin-filter-controls";
+import DMenu from "float-kit/components/d-menu";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
   @service site;
@@ -60,6 +62,21 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         label: i18n("admin.upcoming_changes.filter.type_misc"),
         value: "misc",
         filterFn: (change) => change.upcoming_change.type === "misc",
+      },
+      {
+        label: i18n("admin.upcoming_changes.filter.status_alpha"),
+        value: "alpha",
+        filterFn: (change) => change.upcoming_change.status === "alpha",
+      },
+      {
+        label: i18n("admin.upcoming_changes.filter.status_beta"),
+        value: "beta",
+        filterFn: (change) => change.upcoming_change.status === "beta",
+      },
+      {
+        label: i18n("admin.upcoming_changes.filter.status_stable"),
+        value: "stable",
+        filterFn: (change) => change.upcoming_change.status === "stable",
       },
     ];
   }
@@ -128,100 +145,153 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       }}
     >
       <:content as |upcomingChanges|>
-        <ul class="color-palette__list">
-          {{#each upcomingChanges as |change|}}
-            <AdminConfigAreaCard
-              class="upcoming-change-card"
-              @translatedHeading={{change.humanized_name}}
-              @translatedDescription={{change.description}}
-            >
-              <:footer>
-                {{#if change.upcoming_change.plugin_identifier}}
-                  <img
-                    src={{concat
-                      "/images/upcoming_change_"
-                      change.setting
-                      ".png"
-                    }}
-                    class="upcoming-change-card__image"
-                  />
-                {{/if}}
-              </:footer>
-
-              <:headerAction>
-                <DToggleSwitch
-                  @state={{change.value}}
-                  {{on "click" (fn this.toggleChange change)}}
-                />
-              </:headerAction>
-              <:content>
-                {{#if change.upcoming_change.plugin_identifier}}
-                  For plugin
-                  <a
-                    href="/admin/plugins/calendar"
-                  >{{change.upcoming_change.plugin_identifier}}<p></p></a>
-                {{/if}}
-                <div class="theme-card__badges">
-                  <span
-                    title={{i18n
-                      (concat
-                        "admin.upcoming_changes.statuses."
-                        change.upcoming_change.status
-                      )
-                    }}
-                    class="theme-card__badge"
-                  >
-                    {{icon "far-circle-dot"}}
-                    {{i18n
-                      (concat
-                        "admin.upcoming_changes.statuses."
-                        change.upcoming_change.status
-                      )
-                    }}
-                  </span>
-
-                  <span
-                    title={{i18n
-                      (concat
-                        "admin.upcoming_changes.risks."
-                        change.upcoming_change.risk
-                      )
-                    }}
-                    class="theme-card__badge"
-                  >
-                    {{icon (this.riskIcon change.upcoming_change.risk)}}
-                    {{i18n
-                      (concat
-                        "admin.upcoming_changes.risks."
-                        change.upcoming_change.risk
-                      )
-                    }}
-                  </span>
-
-                  {{#unless (eq change.upcoming_change.type "misc")}}
+        <table class="d-table upcoming-changes-table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th
+                class="d-table__header-cell upcoming-change__name-header"
+              >{{i18n "admin.upcoming_changes.name"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__plugin-header"
+              >{{i18n "admin.upcoming_changes.plugin"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__labels-header"
+              >{{i18n "admin.upcoming_changes.labels"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__enabled-header"
+              >{{i18n "admin.upcoming_changes.enabled"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__actions-header"
+              ></th>
+            </tr>
+          </thead>
+          <tbody class="d-table__body">
+            {{#each upcomingChanges as |change|}}
+              <tr class="d-table__row upcoming-change-row">
+                <td class="d-table__cell --overview">
+                  <div class="d-table__overview-name">
+                    {{change.humanized_name}}
+                  </div>
+                  {{#if change.description}}
+                    <div
+                      class="d-table__overview-about upcoming-change__description"
+                    >
+                      {{change.description}}
+                    </div>
+                  {{/if}}
+                </td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
+                    {{i18n "admin.upcoming_changes.plugin"}}
+                  </div>
+                  {{#if change.upcoming_change.plugin_identifier}}
+                    <a
+                      href="/admin/plugins/calendar"
+                    >{{change.upcoming_change.plugin_identifier}}</a>
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td class="d-table__cell --detail upcoming-change__labels">
+                  <div class="d-table__mobile-label">
+                    {{i18n "admin.upcoming_changes.labels"}}
+                  </div>
+                  <div class="upcoming-change__badges">
                     <span
                       title={{i18n
                         (concat
-                          "admin.upcoming_changes.types."
-                          change.upcoming_change.type
+                          "admin.upcoming_changes.statuses."
+                          change.upcoming_change.status
                         )
                       }}
-                      class="theme-card__badge"
+                      class="upcoming-change__badge"
                     >
-                      {{icon (this.typeIcon change.upcoming_change.type)}}
+                      {{icon "far-circle-dot"}}
                       {{i18n
                         (concat
-                          "admin.upcoming_changes.types."
-                          change.upcoming_change.type
+                          "admin.upcoming_changes.statuses."
+                          change.upcoming_change.status
                         )
                       }}
                     </span>
-                  {{/unless}}
-                </div>
-              </:content>
-            </AdminConfigAreaCard>
-          {{/each}}
-        </ul>
+
+                    <span
+                      title={{i18n
+                        (concat
+                          "admin.upcoming_changes.risks."
+                          change.upcoming_change.risk
+                        )
+                      }}
+                      class="upcoming-change__badge"
+                    >
+                      {{icon (this.riskIcon change.upcoming_change.risk)}}
+                      {{i18n
+                        (concat
+                          "admin.upcoming_changes.risks."
+                          change.upcoming_change.risk
+                        )
+                      }}
+                    </span>
+
+                    {{#unless (eq change.upcoming_change.type "misc")}}
+                      <span
+                        title={{i18n
+                          (concat
+                            "admin.upcoming_changes.types."
+                            change.upcoming_change.type
+                          )
+                        }}
+                        class="upcoming-change__badge"
+                      >
+                        {{icon (this.typeIcon change.upcoming_change.type)}}
+                        {{i18n
+                          (concat
+                            "admin.upcoming_changes.types."
+                            change.upcoming_change.type
+                          )
+                        }}
+                      </span>
+                    {{/unless}}
+                  </div>
+                </td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
+                    {{i18n "admin.upcoming_changes.enabled"}}
+                  </div>
+                  <DToggleSwitch
+                    @state={{change.value}}
+                    class="upcoming-change__toggle"
+                    {{on "click" (fn this.toggleChange change)}}
+                  />
+                </td>
+                <td class="d-table__cell --controls">
+                  <div class="d-table__cell-actions">
+                    <DMenu
+                      @identifier="upcoming-change-menu"
+                      @title={{i18n
+                        "admin.config_areas.flags.more_options.title"
+                      }}
+                      @icon="ellipsis"
+                      @class="btn-default upcoming-change__more-actions"
+                    >
+                      <:content>
+                        <DropdownMenu as |dropdown|>
+                          <dropdown.item>
+                            <DButton
+                              class="btn-transparent upcoming-change__show-image"
+                              @label="admin.upcoming_changes.show_image"
+                              @icon="image"
+                            />
+                          </dropdown.item>
+                        </DropdownMenu>
+                      </:content>
+                    </DMenu>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
       </:content>
     </AdminFilterControls>
   </template>
