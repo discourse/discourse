@@ -504,7 +504,9 @@ RSpec.configure do |config|
     # instead of 2**31-1 so that the values are easier to read.
     DB
       .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
+      .each do |row|
+        DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
+      end
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
