@@ -1,3 +1,4 @@
+import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import RouteTemplate from "ember-route-template";
@@ -38,8 +39,58 @@ export default RouteTemplate(
     <DVirtualHeight />
 
     <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-      {{#if @controller.showSkipToContent}}
-        <a href="#main-container" id="skip-link">{{i18n
+      {{#if @controller.showTopicSkipLinks}}
+        <div class="skip-links" aria-label={{i18n "skip_links_label"}}>
+          {{#if @controller.isDirectUrlToArbitraryPost}}
+            <a
+              href="{{@controller.topicUrl}}/{{@controller.currentPostNumber}}"
+              class="skip-link"
+              {{on "click" @controller.handleSkipToPost}}
+            >{{i18n
+                "skip_to_post"
+                post_number=@controller.currentPostNumber
+              }}</a>
+          {{/if}}
+          {{#if @controller.resumePostNumber}}
+            {{#if @controller.resumeIsLastReply}}
+              <a
+                href="{{@controller.topicUrl}}/last"
+                class="skip-link"
+                {{on "click" @controller.handleSkipToResume}}
+              >{{i18n
+                  "skip_to_where_you_left_off_last"
+                  post_number=@controller.resumePostNumber
+                }}</a>
+            {{else}}
+              <a
+                href="{{@controller.topicUrl}}/{{@controller.resumePostNumber}}"
+                class="skip-link"
+                {{on "click" @controller.handleSkipToResume}}
+              >{{i18n
+                  "skip_to_where_you_left_off"
+                  post_number=@controller.resumePostNumber
+                }}</a>
+              <a
+                href="{{@controller.topicUrl}}/last"
+                class="skip-link"
+                {{on "click" @controller.handleSkipToLastPost}}
+              >{{i18n "skip_to_last_reply"}}</a>
+            {{/if}}
+          {{else}}
+            <a
+              href="{{@controller.topicUrl}}/last"
+              class="skip-link"
+              {{on "click" @controller.handleSkipToLastPost}}
+            >{{i18n "skip_to_last_reply"}}</a>
+          {{/if}}
+          <a
+            href="{{@controller.topicUrl}}/1"
+            class="skip-link"
+            {{on "click" @controller.handleSkipToTop}}
+          >{{i18n "skip_to_top"}}</a>
+        </div>
+      {{else if @controller.showSkipToContent}}
+        <a href="#main-container" class="skip-link">{{i18n
             "skip_to_main_content"
           }}</a>
       {{/if}}

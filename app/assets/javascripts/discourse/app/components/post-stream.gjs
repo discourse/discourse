@@ -254,6 +254,7 @@ export default class PostStream extends Component {
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
           @direction="above"
           @canLoadMore={{@postStream.canPrependMore}}
+          @postStream={{@postStream}}
         />
       {{/if}}
 
@@ -365,6 +366,7 @@ export default class PostStream extends Component {
             @action={{fn this.loadMoreBelow this.lastAvailablePost}}
             @direction="below"
             @canLoadMore={{@postStream.canAppendMore}}
+            @postStream={{@postStream}}
           />
         {{else}}
           <div

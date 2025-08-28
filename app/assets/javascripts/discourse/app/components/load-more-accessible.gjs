@@ -18,11 +18,32 @@ import { i18n } from "discourse-i18n";
  * @param {boolean} @enabled - Whether loading is enabled (default: true)
  * @param {boolean} @canLoadMore - Whether more content is available to load
  * @param {string} @loadingText - Optional custom loading text
+ * @param {Object} @postStream - Post stream model to watch for loading state changes
  */
 export default class LoadMoreAccessible extends Component {
   @service capabilities;
+  @service appEvents;
 
   @tracked isLoading = false;
+  @tracked pendingFocusContext = null;
+  @tracked loadTriggeredByIntersection = false;
+
+  // Track which event listeners are active
+  #hasPostsAppendedListener = false;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    // Only remove listeners that were actually added
+    if (this.#hasPostsAppendedListener) {
+      this.appEvents.off(
+        "post-stream:posts-appended",
+        this,
+        this.#handlePostsAppended
+      );
+      this.#hasPostsAppendedListener = false;
+    }
+  }
 
   get direction() {
     return this.args.direction || "below";
@@ -38,6 +59,30 @@ export default class LoadMoreAccessible extends Component {
 
   get enabled() {
     return this.args.enabled ?? true;
+  }
+
+  #handlePostsAppended() {
+    if (!this.pendingFocusContext) {
+      return;
+    }
+
+    const { previousPostNumbers, focusContext } = this.pendingFocusContext;
+
+    // Clear the pending context
+    this.pendingFocusContext = null;
+    if (this.#hasPostsAppendedListener) {
+      this.appEvents.off(
+        "post-stream:posts-appended",
+        this,
+        this.#handlePostsAppended
+      );
+      this.#hasPostsAppendedListener = false;
+    }
+
+    // Schedule focus for next render cycle
+    schedule("afterRender", () => {
+      this.#focusAppropriateNewPost(previousPostNumbers, focusContext);
+    });
   }
 
   get buttonLabel() {
@@ -58,6 +103,7 @@ export default class LoadMoreAccessible extends Component {
 
   @action
   async handleIntersectionLoad() {
+    this.loadTriggeredByIntersection = true;
     return this.#loadWithFocusManagement();
   }
 
@@ -80,17 +126,26 @@ export default class LoadMoreAccessible extends Component {
       // Trigger the actual loading action
       await this.args.action();
 
-      // After loading completes, move focus to the appropriate new post
-      schedule("afterRender", () => {
-        setTimeout(() => {
-          this.#focusAppropriateNewPost(
-            existingPostNumbers,
-            currentFocusContext
+      // Set up focus management for intersection-triggered loading (both above and below)
+      if (this.loadTriggeredByIntersection) {
+        this.pendingFocusContext = {
+          previousPostNumbers: existingPostNumbers,
+          focusContext: currentFocusContext,
+        };
+
+        // Listen for the post-stream to signal completion
+        if (!this.#hasPostsAppendedListener) {
+          this.appEvents.on(
+            "post-stream:posts-appended",
+            this,
+            this.#handlePostsAppended
           );
-        }, 300);
-      });
+          this.#hasPostsAppendedListener = true;
+        }
+      }
     } finally {
       this.isLoading = false;
+      this.loadTriggeredByIntersection = false;
     }
   }
 
@@ -139,11 +194,11 @@ export default class LoadMoreAccessible extends Component {
 
   #announceLoading() {
     const announcement = document.createElement("div");
-    announcement.setAttribute("aria-live", "assertive");
+    announcement.setAttribute("aria-live", "polite");
     announcement.className = "sr-only";
     announcement.textContent = this.isLoadingAbove
-      ? "Loading more posts above..."
-      : "Loading more posts below...";
+      ? i18n("post.loading_more_posts_above")
+      : i18n("post.loading_more_posts_below");
     document.body.appendChild(announcement);
 
     setTimeout(() => {
@@ -167,7 +222,6 @@ export default class LoadMoreAccessible extends Component {
     const newPostNumbers = currentPostNumbers.filter(
       (num) => !previousPostNumbers.includes(num)
     );
-
     if (newPostNumbers.length === 0) {
       return;
     }
@@ -212,19 +266,21 @@ export default class LoadMoreAccessible extends Component {
       }
     }
 
-    const targetHeading = document.getElementById(
+    // Try to find the target post heading first
+    let targetElement = document.getElementById(
       `post-heading-${targetPostNumber}`
     );
 
-    if (targetHeading) {
-      // Focus on the new post heading
-      targetHeading.focus();
+    // Fallback to the post element itself if heading not found
+    if (!targetElement) {
+      targetElement = document.querySelector(
+        `[data-post-number="${targetPostNumber}"]`
+      );
+    }
 
-      // Ensure it's visible
-      targetHeading.scrollIntoView({
-        behavior: "auto",
-        block: "start",
-      });
+    if (targetElement) {
+      // Focus on the target element (no scrolling - let screen reader handle navigation)
+      targetElement.focus();
 
       // Announce the successful navigation with direction context
       const announcement = document.createElement("div");

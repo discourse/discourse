@@ -478,6 +478,7 @@ export default class PostStream extends RestModel {
       ).finally(() => {
         postsWithPlaceholders.finishedAppending(fakePostIds);
         this.set("loadingBelow", false);
+        this.appEvents.trigger("post-stream:posts-appended");
       });
     } else {
       const postIds = this.nextWindow;
@@ -495,6 +496,8 @@ export default class PostStream extends RestModel {
         .finally(() => {
           postsWithPlaceholders.finishedAppending(postIds);
           this.set("loadingBelow", false);
+          // Emit event for accessibility components
+          this.appEvents.trigger("post-stream:posts-appended");
         });
     }
   }
