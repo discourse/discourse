@@ -197,11 +197,7 @@ describe "Welcome banner", type: :system do
           )
         end
 
-        before do
-          SiteSetting.welcome_banner_page_visibility = "all_pages"
-          SiteSetting.hide_for_basic_routes =
-            "activate-account|invites.show|login|password-reset|signup"
-        end
+        before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
 
         it "should show on" do
           sign_in(current_user)

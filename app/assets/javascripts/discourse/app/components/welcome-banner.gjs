@@ -13,6 +13,14 @@ import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
+export const ALL_PAGES_EXCLUDED_ROUTES = [
+  "activate-account",
+  "invites.show",
+  "login",
+  "password-reset",
+  "signup",
+];
+
 export default class WelcomeBanner extends Component {
   @service router;
   @service siteSettings;
@@ -52,8 +60,7 @@ export default class WelcomeBanner extends Component {
 
   get displayForRoute() {
     const { currentRouteName } = this.router;
-    const { hide_for_basic_routes, top_menu, welcome_banner_page_visibility } =
-      this.siteSettings;
+    const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
 
     switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
@@ -68,9 +75,9 @@ export default class WelcomeBanner extends Component {
         return (
           currentRouteName !== "full-page-search" &&
           !currentRouteName.startsWith("admin.") &&
-          !hide_for_basic_routes
-            .split("|")
-            .any((routeName) => routeName === currentRouteName)
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
         );
       default:
         return false;

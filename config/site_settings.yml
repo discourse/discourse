@@ -238,11 +238,6 @@ basic:
     default: ""
     regex: "^GTM-"
     area: "analytics"
-  hide_for_basic_routes:
-    client: true
-    hidden: true
-    default: "activate-account|invites.show|login|password-reset|signup"
-    type: list
   top_menu:
     client: true
     refresh: true
