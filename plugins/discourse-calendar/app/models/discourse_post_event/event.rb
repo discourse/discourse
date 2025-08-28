@@ -108,7 +108,6 @@ module DiscoursePostEvent
 
     def starts_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
-      return original_starts_at if recurring?
 
       from_event_dates =
         event_dates.pending.order(:starts_at).last&.starts_at ||
@@ -119,7 +118,6 @@ module DiscoursePostEvent
 
     def ends_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
-      return original_ends_at if recurring?
 
       from_event_dates =
         event_dates.pending.order(:starts_at).last&.ends_at ||
