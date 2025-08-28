@@ -34,7 +34,7 @@ describe RRuleGenerator do
   end
 
   describe "show_local_time" do
-    it "generates floating time RRule without timezone" do
+    it "generates floating time RRule without timezone when show_local_time is enabled" do
       timezone = "Europe/Prague"
       time = Time.utc(2020, 1, 25, 15, 36)
 
