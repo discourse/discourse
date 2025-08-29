@@ -5699,7 +5699,7 @@ en:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Upcoming changes"
-          header_description: "A list of upcoming changes to Discourse that may affect your site. These changes are not yet live, but will be in a future release. You can read more about each change by clicking on the 'Learn more' link."
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by risk level, change type, and status."
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"

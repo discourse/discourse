@@ -152,9 +152,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
-                class="d-table__header-cell upcoming-change__plugin-header"
-              >{{i18n "admin.upcoming_changes.plugin"}}</th>
-              <th
                 class="d-table__header-cell upcoming-change__labels-header"
               >{{i18n "admin.upcoming_changes.labels"}}</th>
               <th
@@ -179,17 +176,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                       {{change.description}}
                     </div>
                   {{/if}}
-                </td>
-                <td class="d-table__cell --detail">
-                  <div class="d-table__mobile-label">
-                    {{i18n "admin.upcoming_changes.plugin"}}
-                  </div>
-                  {{#if change.upcoming_change.plugin_identifier}}
-                    <a
-                      href="/admin/plugins/calendar"
-                    >{{change.upcoming_change.plugin_identifier}}</a>
-                  {{else}}
-                    -
+
+                  {{#if change.plugin}}
+                    <span
+                      class="upcoming-change__plugin upcoming-change__badge"
+                    >
+                      {{icon "plug"}}
+                      {{change.plugin}}
+                    </span>
                   {{/if}}
                 </td>
                 <td class="d-table__cell --detail upcoming-change__labels">

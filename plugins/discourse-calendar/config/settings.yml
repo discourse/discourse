@@ -116,3 +116,14 @@ discourse_calendar:
   include_expired_events_on_calendar:
     default: false
     client: true
+  fullcalendar_v6:
+    client: true
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      risk: "high"
+      type: "misc"
+      restrict_to_groups: ""
+      promote_at_version: ""
+      meta_topic_id: ""

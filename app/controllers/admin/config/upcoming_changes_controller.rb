@@ -8,6 +8,14 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
                  include_hidden: true,
                  include_locale_setting: false,
                )
-               .each { |setting| setting[:value] = setting[:value] == "true" } if request.xhr?
+               .each { |setting|
+                 setting[:value] = setting[:value] == "true"
+                 if setting[:plugin]
+                   plugin = Discourse.plugins_by_name[setting[:plugin]]
+
+                   # TODO (martin) Maybe later we add a URL or something? Not sure
+                   setting[:plugin] = plugin.humanized_name
+                 end
+               } if request.xhr?
   end
 end
