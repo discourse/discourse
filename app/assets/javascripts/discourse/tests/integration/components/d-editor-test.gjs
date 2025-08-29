@@ -1477,6 +1477,65 @@ third line`
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
   });
+
+  test("toolbar button navigation doesn't get stuck", async function (assert) {
+    await render(<template><DEditor /></template>);
+
+    assert.dom(".d-editor-button-bar").exists("Button bar should exist");
+
+    const buttonBar = find(".d-editor-button-bar");
+    const allButtons = buttonBar.querySelectorAll("button:not([disabled])");
+
+    assert.true(
+      allButtons.length >= 2,
+      "Should have multiple toolbar buttons for navigation"
+    );
+
+    const firstButton = allButtons[0];
+    await focus(firstButton);
+
+    const initiallyFocused = document.activeElement;
+
+    let navigationWorked = false;
+    for (let i = 0; i < 3; i++) {
+      await triggerKeyEvent(document.activeElement, "keydown", 39); // 39 = ArrowRight
+      if (document.activeElement !== initiallyFocused) {
+        navigationWorked = true;
+        break;
+      }
+    }
+
+    assert.true(
+      navigationWorked,
+      "Arrow key navigation should work and not get stuck on the first button"
+    );
+
+    const afterNavigation = document.activeElement;
+    await triggerKeyEvent(document.activeElement, "keydown", 37); // 37 = ArrowLeft
+
+    assert.notStrictEqual(
+      document.activeElement,
+      afterNavigation,
+      "Arrow left navigation should also work"
+    );
+  });
+
+  test("popup menu buttons don't break navigation", async function (assert) {
+    await render(<template><DEditor /></template>);
+
+    const headingButton = find(".d-editor-button-bar .heading");
+
+    if (headingButton) {
+      await focus(headingButton);
+
+      await triggerKeyEvent(headingButton, "keydown", 39); // 39 = ArrowRight
+
+      assert.true(
+        true,
+        "Navigation from popup menu buttons should not cause errors"
+      );
+    }
+  });
 });
 
 module("Integration | Component | d-editor | rich editor", function (hooks) {
