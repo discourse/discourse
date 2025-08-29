@@ -126,7 +126,13 @@ module DiscourseAi
 
           if response_h
             @has_function_call ||= response_h.dig(:functionCall).present?
-            @has_function_call ? response_h.dig(:functionCall) : response_h.dig(:text)
+            if @has_function_call
+              response_h.dig(:functionCall)
+            elsif response_h[:text]
+              response_h.dig(:text)
+            elsif response_h[:inlineData]
+              inline_data_to_upload_markdown(response_h[:inlineData])
+            end
           end
         end
 
@@ -183,6 +189,8 @@ module DiscourseAi
                   name: part[:functionCall][:name],
                   parameters: part[:functionCall][:args],
                 )
+              elsif part[:inlineData]
+                inline_data_to_upload_markdown(part[:inlineData])
               else
                 part = part[:text]
                 if part != ""
@@ -216,6 +224,8 @@ module DiscourseAi
                     name: part[:functionCall][:name],
                     parameters: part[:functionCall][:args],
                   )
+                elsif part[:inlineData]
+                  inline_data_to_upload_markdown(part[:inlineData])
                 end
               end
             end
@@ -250,6 +260,41 @@ module DiscourseAi
 
         def xml_tools_enabled?
           !@native_tool_support
+        end
+
+        def inline_data_to_upload_markdown(inline_data)
+          mime = inline_data[:mimeType]
+          data_b64 = inline_data[:data]
+          return unless mime && data_b64
+
+          begin
+            raw = Base64.decode64(data_b64)
+            ext =
+              case mime
+              when "image/png"
+                "png"
+              when "image/jpeg", "image/jpg"
+                "jpg"
+              when "image/gif"
+                "gif"
+              when "image/webp"
+                "webp"
+              else
+                "bin"
+              end
+            filename = "gemini-#{SecureRandom.hex(8)}.#{ext}"
+            file = Tempfile.new(filename, binmode: true)
+            file.write(raw)
+            file.rewind
+            upload =
+              UploadCreator.new(file, filename, for_system_message: true).create_for(
+                Discourse.system_user.id,
+              )
+            return "\n![image](#{upload.short_url})\n" if upload&.persisted?
+          ensure
+            file&.close! if defined?(file)
+          end
+          nil
         end
       end
     end

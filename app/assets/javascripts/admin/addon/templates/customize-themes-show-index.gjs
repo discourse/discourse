@@ -487,7 +487,7 @@ export default RouteTemplate(
           class="btn-default btn-normal"
         />
       {{/if}}
-      {{#unless @controller.model.system}}
+      {{#unless (or @controller.model.system @controller.model.default)}}
         <DButton
           @action={{@controller.destroyTheme}}
           @label="admin.customize.delete"

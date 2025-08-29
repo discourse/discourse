@@ -1786,6 +1786,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        staged_user: "Staged users can not receive password reset emails."
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"

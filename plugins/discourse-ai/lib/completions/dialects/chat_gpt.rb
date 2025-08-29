@@ -96,7 +96,7 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          { role: "assistant", content: msg[:content] }
+          message_for_role("assistant", msg)
         end
 
         def tool_call_msg(msg)
@@ -116,9 +116,13 @@ module DiscourseAi
         end
 
         def user_msg(msg)
+          message_for_role("user", msg)
+        end
+
+        def message_for_role(role, msg)
           content_array = []
 
-          user_message = { role: "user" }
+          user_message = { role: }
 
           if msg[:id]
             if embed_user_ids?
@@ -130,12 +134,15 @@ module DiscourseAi
 
           content_array << msg[:content]
 
+          allow_vision = vision_support?
+          allow_vision = false if responses_api? && role == "assistant"
+
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
               image_encoder: ->(details) { image_node(details) },
-              text_encoder: ->(text) { text_node(text) },
-              allow_vision: vision_support?,
+              text_encoder: ->(text) { text_node(text, role) },
+              allow_vision:,
             )
 
           user_message[:content] = no_array_if_only_text(content_array)
@@ -150,9 +157,9 @@ module DiscourseAi
           end
         end
 
-        def text_node(text)
+        def text_node(text, role)
           if responses_api?
-            { type: "input_text", text: text }
+            { type: role == "user" ? "input_text" : "output_text", text: text }
           else
             { type: "text", text: text }
           end

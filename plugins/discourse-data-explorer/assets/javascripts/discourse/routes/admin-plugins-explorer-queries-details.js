@@ -2,6 +2,13 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
+  queryParams = {
+    autoRun: {
+      as: "run",
+      refreshModel: false,
+    },
+  };
+
   model(params) {
     if (!this.currentUser.admin) {
       // display "Only available to admins" message
@@ -31,7 +38,10 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
     });
   }
 
-  setupController(controller, model) {
-    controller.setProperties(model);
+  setupController(controller, model, transition) {
+    controller.setProperties({
+      ...model,
+      shouldAutoRun: !!transition.to.queryParams.run,
+    });
   }
 }

@@ -3,7 +3,9 @@
 describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
+  fab!(:admin)
   fab!(:user) { Fabricate(:user, email: email, password: password) }
+  fab!(:staged_user) { Fabricate(:user, staged: true) }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
@@ -154,5 +156,31 @@ describe "User preferences | Security", type: :system do
     include_examples "security keys"
     include_examples "passkeys"
     include_examples "enforced second factor"
+  end
+
+  context "when viewing a user's page as an admin" do
+    before { sign_in(admin) }
+
+    describe "password reset" do
+      it "disables the password reset button for staged users" do
+        visit("/u/#{staged_user.username}/preferences/security")
+
+        expect(page.find("#change-password-button")).to be_disabled
+        expect(page).to have_css(
+          ".instructions",
+          text: I18n.t("js.user.change_password.staged_user"),
+        )
+      end
+
+      it "does not disable password reset for non-staged users" do
+        visit("/u/#{user.username}/preferences/security")
+
+        expect(page.find("#change-password-button")).not_to be_disabled
+        expect(page).to have_no_css(
+          ".instructions",
+          text: I18n.t("js.user.change_password.staged_user"),
+        )
+      end
+    end
   end
 end

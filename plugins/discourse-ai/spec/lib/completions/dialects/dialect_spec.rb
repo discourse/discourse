@@ -7,6 +7,10 @@ class TestDialect < DiscourseAi::Completions::Dialects::Dialect
     trim_messages(messages)
   end
 
+  def strip_for_test(messages, mode)
+    strip_upload_markdown(messages, strip_mode: mode)
+  end
+
   def system_msg(msg)
     msg
   end
@@ -116,6 +120,47 @@ RSpec.describe DiscourseAi::Completions::Dialects::Dialect do
           { type: :user, content: five_token_msg },
         ],
       )
+    end
+  end
+
+  describe "#strip_upload_markdown_mode" do
+    fab!(:upload)
+
+    let(:base62) { Upload.base62_sha1(upload.sha1) }
+    let(:user_md) { "User text before ![user image](upload://#{base62}.png) after." }
+    let(:model_md) { "Model text ![model image](upload://#{base62}.png) end." }
+
+    let(:messages_template) do
+      [
+        { type: :system, content: "Sys" },
+        { type: :user, content: [user_md, { upload_id: upload.id }] },
+        { type: :model, content: [model_md, { upload_id: upload.id }] },
+      ]
+    end
+
+    it "does not strip anything when mode is :none" do
+      dialect = TestDialect.new(nil, llm_model)
+      result = dialect.strip_for_test(messages_template.deep_dup, :none)
+
+      expect(result[1][:content].first).to eq(user_md)
+      expect(result[2][:content].first).to eq(model_md)
+    end
+
+    it "strips upload markdown from user and model messages when mode is :all" do
+      dialect = TestDialect.new(nil, llm_model)
+      result = dialect.strip_for_test(messages_template.deep_dup, :all)
+
+      # Image markdown removed producing double spaces where it was
+      expect(result[1][:content].first).to eq("User text before  after.")
+      expect(result[2][:content].first).to eq("Model text  end.")
+    end
+
+    it "strips upload markdown only from model messages when mode is :model_only" do
+      dialect = TestDialect.new(nil, llm_model)
+      result = dialect.strip_for_test(messages_template.deep_dup, :model_only)
+
+      expect(result[1][:content].first).to eq(user_md) # unchanged
+      expect(result[2][:content].first).to eq("Model text  end.") # stripped
     end
   end
 end

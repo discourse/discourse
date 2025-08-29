@@ -79,8 +79,66 @@ module DiscourseAi
           self.class.no_more_tool_calls_text_user
         end
 
+        # supported options are :none/:all/:model_only
+        def strip_upload_markdown_mode
+          :none
+        end
+
+        def strip_upload_markdown(messages, strip_mode: nil)
+          return messages if strip_mode == :none
+
+          eligible_types =
+            case strip_mode
+            when :all
+              %i[user model]
+            when :model_only
+              %i[model]
+            else
+              []
+            end
+
+          return messages if eligible_types.empty?
+
+          upload_ids =
+            messages
+              .flat_map do |m|
+                next [] if eligible_types.exclude?(m[:type].to_sym)
+                content = m[:content]
+                content = [content] unless content.is_a?(Array)
+                content.filter_map { |c| c.is_a?(Hash) && c[:upload_id] ? c[:upload_id] : nil }
+              end
+              .uniq
+
+          return messages if upload_ids.empty?
+
+          shas = Upload.where(id: upload_ids).pluck(:sha1).compact
+
+          messages.map do |m|
+            next m if eligible_types.exclude?(m[:type].to_sym)
+
+            content = m[:content]
+            content = [content] unless content.is_a?(Array)
+
+            new_content =
+              content.map do |c|
+                if c.is_a?(String)
+                  strip_upload_markers(c, shas)
+                else
+                  c
+                end
+              end
+
+            new_content = new_content[0] if new_content.length == 1
+            m.merge(content: new_content)
+          end
+        end
+
         def translate
-          messages = trim_messages(prompt.messages)
+          messages = prompt.messages
+          if strip_upload_markdown_mode != :none
+            messages = strip_upload_markdown(messages, strip_mode: strip_upload_markdown_mode)
+          end
+          messages = trim_messages(messages)
           last_message = messages.last
           inject_done_on_last_tool_call = false
 
@@ -129,6 +187,19 @@ module DiscourseAi
         private
 
         attr_reader :opts, :llm_model
+
+        def strip_upload_markers(markdown, upload_shas)
+          return markdown if markdown.blank? || upload_shas.blank?
+          base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set
+          markdown.gsub(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}) do
+            b62 = Regexp.last_match(2)
+            if base62_set.include?(b62)
+              ""
+            else
+              Regexp.last_match(0)
+            end
+          end
+        end
 
         def trim_messages(messages)
           prompt_limit = max_prompt_tokens
@@ -244,13 +315,16 @@ module DiscourseAi
           content.each do |c|
             if c.is_a?(String)
               current_string << c
-            elsif c.is_a?(Hash) && c.key?(:upload_id) && allow_vision
-              if !current_string.empty?
-                result << text_encoder.call(current_string)
-                current_string = +""
+            elsif c.is_a?(Hash) && c.key?(:upload_id)
+              # this ensurse we skip uploads if vision is not supported
+              if allow_vision
+                if !current_string.empty?
+                  result << text_encoder.call(current_string)
+                  current_string = +""
+                end
+                encoded = prompt.encode_upload(c[:upload_id])
+                result << image_encoder.call(encoded) if encoded
               end
-              encoded = prompt.encode_upload(c[:upload_id])
-              result << image_encoder.call(encoded) if encoded
             elsif other_encoder
               encoded = other_encoder.call(c)
               result << encoded if encoded
