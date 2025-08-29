@@ -49,7 +49,7 @@ export default class FullCalendar extends Component {
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
       firstDay: 1,
-      displayEventTime: true,
+      displayEventTime: this.args.displayEventTime ?? true,
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
