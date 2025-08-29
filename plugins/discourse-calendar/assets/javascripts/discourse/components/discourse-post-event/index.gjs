@@ -62,35 +62,9 @@ export default class DiscoursePostEvent extends Component {
     this.loadRRule();
   }
 
-  get dtstart() {
-    if (!this.args.dtstart) {
-      return moment().subtract(1, "minute").toDate();
-    }
-
-    let dtstart = moment(this.args.dtstart);
-    if (this.event.showLocalTime) {
-      const eventTz = this.event.timezone || "UTC";
-      const inEventTz = dtstart.tz(eventTz).subtract(1, "minute");
-      // Create floating time Date using the time components
-      const components = inEventTz.toArray();
-      dtstart = new Date(
-        components[0],
-        components[1],
-        components[2],
-        components[3],
-        components[4],
-        components[5]
-      );
-    } else {
-      dtstart = dtstart.utc().subtract(1, "minute").toDate();
-    }
-
-    return dtstart;
-  }
-
   get currentEventEnd() {
     if (!this.event.duration) {
-      return this.currentEventStart;
+      return this.currentEventStart.clone().add(1, "hour");
     }
 
     const [hours, minutes, seconds] = this.event.duration
@@ -105,49 +79,59 @@ export default class DiscoursePostEvent extends Component {
     let start = this.event.startsAt;
 
     if (this.event.rrule) {
-      const { rrulestr } = this.rrule;
-      const rule = rrulestr(this.event.rrule);
+      if (this.args.currentEventStart) {
+        if (this.event.showLocalTime && this.event.timezone) {
+          const fullCalendarDate = this.args.currentEventStart;
+          const fullCalendarMoment = moment(fullCalendarDate);
+          const originalEventMoment = moment.tz(
+            this.event.startsAt,
+            this.event.timezone
+          );
 
-      if (this.args.dtstart) {
-        const clickedTime = moment(this.args.dtstart);
-        const searchStart = clickedTime.clone().subtract(23, "hours").toDate();
-        const searchEnd = clickedTime.clone().add(23, "hours").toDate();
+          // Create a new moment with the FullCalendar date but the original event time
+          const eventMoment = moment.tz(
+            [
+              fullCalendarMoment.year(),
+              fullCalendarMoment.month(),
+              fullCalendarMoment.date(),
+              originalEventMoment.hour(),
+              originalEventMoment.minute(),
+              originalEventMoment.second(),
+            ],
+            this.event.timezone
+          );
 
-        const occurrences = rule.between(searchStart, searchEnd, true);
-
-        let closestOccurrence = null;
-        let minDiff = Infinity;
-
-        occurrences.forEach((occurrence) => {
-          const diff = Math.abs(occurrence.getTime() - clickedTime.valueOf());
-          if (diff < minDiff) {
-            minDiff = diff;
-            closestOccurrence = occurrence;
-          }
-        });
-
-        if (closestOccurrence) {
-          start = closestOccurrence;
+          start = eventMoment;
+        } else {
+          start = this.args.currentEventStart;
         }
       } else {
-        const nextOccurrence = rule.after(this.dtstart);
-        if (nextOccurrence) {
-          start = nextOccurrence;
-        }
+        const { rrulestr } = this.rrule;
+        const rule = rrulestr(this.event.rrule);
+        const dtstart = moment().subtract(23, "hours").toDate();
+        start = rule.after(dtstart);
       }
     }
 
+    let result;
     if (this.event.showLocalTime) {
       if (this.event.rrule) {
-        return moment.utc(start).tz(this.event.timezone || "UTC", true);
+        // If start is already a moment object, use it directly
+        if (moment.isMoment(start)) {
+          result = start;
+        } else {
+          result = moment.utc(start).tz(this.event.timezone || "UTC", true);
+        }
       } else {
-        return moment.tz(start, this.event.timezone || "UTC");
+        result = moment.tz(start, this.event.timezone || "UTC");
       }
     } else {
-      return moment
+      result = moment
         .utc(start)
         .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
     }
+
+    return result;
   }
 
   get withDescription() {

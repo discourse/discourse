@@ -222,7 +222,7 @@ describe "Upcoming Events", type: :system do
 
           expect(page).to have_css(
             ".event__section.event-dates",
-            text: "Fri, Sep 12 8:05 AM → 10:05 AM",
+            text: "Fri, Sep 12 8:05 AM → 10:05 AM (New York)",
           )
 
           page.send_keys(:escape)

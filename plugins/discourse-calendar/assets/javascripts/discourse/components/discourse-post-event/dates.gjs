@@ -20,12 +20,29 @@ export default class DiscoursePostEventDates extends Component {
     return this.args.event.timezone || "UTC";
   }
 
+  get startsAt() {
+    const currentEventStart = this.args.currentEventStart;
+    const eventStartsAt = this.args.event.startsAt;
+    const timezone = this.timezone;
+
+    return currentEventStart ?? moment(eventStartsAt).tz(timezone);
+  }
+
+  get endsAt() {
+    const currentEventEnd = this.args.currentEventEnd;
+    const eventEndsAt = this.args.event.endsAt;
+    const timezone = this.timezone;
+
+    return (
+      currentEventEnd ?? (eventEndsAt ? moment(eventEndsAt).tz(timezone) : null)
+    );
+  }
+
   get startsAtFormat() {
-    return this._buildFormat(this.args.currentEventStart, {
-      includeYear: !this.isSameYear(this.args.currentEventStart),
-      includeTime:
-        this.hasTime(this.args.currentEventStart) || this.isSingleDayEvent,
-    });
+    const startsAt = this.startsAt;
+    const includeYear = !this.isSameYear(startsAt);
+    const includeTime = this.hasTime(startsAt) || this.isSingleDayEvent;
+    return this._buildFormat(startsAt, { includeYear, includeTime });
   }
 
   get endsAtFormat() {
@@ -33,15 +50,12 @@ export default class DiscoursePostEventDates extends Component {
       return "LT";
     }
 
-    return this._buildFormat(this.args.currentEventEnd, {
-      includeYear:
-        !this.isSameYear(this.args.currentEventEnd) ||
-        !this.isSameYear(
-          this.args.currentEventEnd,
-          this.args.currentEventStart
-        ),
-      includeTime: this.hasTime(this.args.currentEventEnd),
-    });
+    const endsAt = this.endsAt;
+    const includeYear =
+      !this.isSameYear(endsAt) || !this.isSameYear(endsAt, this.startsAt);
+    const includeTime = this.hasTime(endsAt);
+
+    return this._buildFormat(endsAt, { includeYear, includeTime });
   }
 
   _buildFormat(date, { includeYear, includeTime }) {
@@ -57,28 +71,27 @@ export default class DiscoursePostEventDates extends Component {
   }
 
   get isSingleDayEvent() {
-    return this.args.currentEventStart.isSame(this.args.currentEventEnd, "day");
+    return this.startsAt.isSame(this.endsAt, "day");
   }
 
   get datesBBCode() {
     const dates = [];
 
-    dates.push(
-      this.buildDateBBCode({
-        date: this.args.currentEventStart,
-        format: this.startsAtFormat,
-        range: !!this.args.currentEventEnd && "from",
-      })
-    );
+    const startDate = this.buildDateBBCode({
+      date: this.startsAt,
+      format: this.startsAtFormat,
+      range: !!this.endsAt && "from",
+    });
 
-    if (this.args.currentEventEnd) {
-      dates.push(
-        this.buildDateBBCode({
-          date: this.args.currentEventEnd,
-          format: this.endsAtFormat,
-          range: "to",
-        })
-      );
+    dates.push(startDate);
+
+    if (this.endsAt) {
+      const endDate = this.buildDateBBCode({
+        date: this.endsAt,
+        format: this.endsAtFormat,
+        range: "to",
+      });
+      dates.push(endDate);
     }
 
     return dates;
@@ -103,9 +116,6 @@ export default class DiscoursePostEventDates extends Component {
 
     if (this.args.event.showLocalTime) {
       bbcode.displayedTimezone = this.args.event.timezone;
-    } else {
-      bbcode.displayedTimezone =
-        this.currentUser?.user_option?.timezone || "UTC";
     }
 
     if (range) {
@@ -128,7 +138,8 @@ export default class DiscoursePostEventDates extends Component {
     this.rrule = await loadRRule();
 
     if (this.siteSettings.discourse_local_dates_enabled) {
-      const result = await cook(this.datesBBCode.join("<span> → </span>"));
+      const bbcode = this.datesBBCode.join("<span> → </span>");
+      const result = await cook(bbcode);
       this.htmlDates = htmlSafe(result.toString());
 
       schedule("afterRender", () => {
@@ -136,18 +147,20 @@ export default class DiscoursePostEventDates extends Component {
           return;
         }
 
+        const localDateElements = element.querySelectorAll(
+          `[data-post-id="${this.args.event.id}"].discourse-local-date`
+        );
         applyLocalDates(
-          element.querySelectorAll(
-            `[data-post-id="${this.args.event.id}"].discourse-local-date`
-          ),
+          localDateElements,
           this.siteSettings,
           this.currentUser?.user_option?.timezone
         );
       });
     } else {
-      let dates = `${this.args.currentEventStart.format(this.startsAtFormat)}`;
-      if (this.args.currentEventEnd) {
-        dates += ` → ${moment(this.args.currentEventEnd).format(this.endsAtFormat)}`;
+      let dates = `${this.startsAt.format(this.startsAtFormat)}`;
+      if (this.endsAt) {
+        const endFormatted = moment(this.endsAt).format(this.endsAtFormat);
+        dates += ` → ${endFormatted}`;
       }
       this.htmlDates = htmlSafe(dates);
     }
