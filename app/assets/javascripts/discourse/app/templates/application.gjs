@@ -29,7 +29,6 @@ import TopicSkipLinks from "discourse/components/topic-skip-links";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 import DToasts from "float-kit/components/d-toasts";
 import DTooltips from "float-kit/components/d-tooltips";
@@ -40,13 +39,7 @@ export default RouteTemplate(
     <DVirtualHeight />
 
     <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-      {{#if @controller.showTopicSkipLinks}}
-        <TopicSkipLinks @controller={{@controller}} />
-      {{else if @controller.showSkipToContent}}
-        <a href="#main-container" class="skip-link">{{i18n
-            "skip_to_main_content"
-          }}</a>
-      {{/if}}
+      <TopicSkipLinks />
       <DDocument />
       <PageLoadingSlider />
       <PluginOutlet
