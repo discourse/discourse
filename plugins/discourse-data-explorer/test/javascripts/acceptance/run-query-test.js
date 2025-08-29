@@ -344,4 +344,12 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       .dom("div.query-results tbody td:nth-child(3)")
       .hasText("false", "renders 'false' values");
   });
+
+  test("automatically runs query when run query parameter is present", async function (assert) {
+    await visit("/admin/plugins/explorer/queries/2?run");
+
+    assert
+      .dom("div.query-results table tbody tr")
+      .exists({ count: 1 }, "query results should be displayed");
+  });
 });
