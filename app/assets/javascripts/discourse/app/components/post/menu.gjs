@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
-import { and, eq } from "truth-helpers";
+import { and } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -31,7 +31,7 @@ import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
 import PostMenuDeleteButton from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
 import PostMenuFlagButton from "./menu/buttons/flag";
-import PostMenuLikeButton from "./menu/buttons/like";
+import PostMenuLikeButton from "./menu/buttons/like/post-menu-like-button";
 import PostMenuReadButton from "./menu/buttons/read";
 import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
@@ -670,22 +670,6 @@ export default class PostMenu extends Component {
           "post.actions.people.read"
         }}
         @users={{this.readers}}
-      />
-      <SmallUserList
-        class="who-liked"
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-        @isVisible={{this.isWhoLikedVisible}}
-        @count={{if
-          this.remainingLikedUsers
-          this.remainingLikedUsers
-          this.totalLikedUsers
-        }}
-        @description={{if
-          this.remainingLikedUsers
-          "post.actions.people.like_capped"
-          "post.actions.people.like"
-        }}
-        @users={{this.likedUsers}}
       />
       {{#if
         (this.showMoreButton.shouldRender
