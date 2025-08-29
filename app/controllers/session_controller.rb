@@ -74,6 +74,7 @@ class SessionController < ApplicationController
 
       if request.xhr?
         cookies[:destination_url] = data[:sso_redirect_url]
+        cookies[:sso_redirect_url] = data[:sso_redirect_url]
         render json: success_json.merge(redirect_url: data[:sso_redirect_url])
       else
         redirect_to data[:sso_redirect_url], allow_other_host: true
@@ -810,7 +811,7 @@ class SessionController < ApplicationController
     user.update_timezone_if_missing(params[:timezone])
     log_on_user(user)
 
-    if payload = cookies.delete(:sso_payload)
+    if payload = cookies[:sso_payload]
       confirmed_2fa_during_login =
         passkey_login ||
           (
