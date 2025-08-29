@@ -52,26 +52,6 @@ class TopicTimer < BaseTimer
 
   private
 
-  def duration_in_range?
-    return if duration_minutes.blank?
-
-    if duration_minutes.to_i <= 0
-      errors.add(
-        :duration_minutes,
-        I18n.t("activerecord.errors.models.topic_timer.attributes.duration_minutes.cannot_be_zero"),
-      )
-    end
-
-    if duration_minutes.to_i > MAX_DURATION_MINUTES
-      errors.add(
-        :duration_minutes,
-        I18n.t(
-          "activerecord.errors.models.topic_timer.attributes.duration_minutes.exceeds_maximum",
-        ),
-      )
-    end
-  end
-
   def executed_at_in_future?
     return if created_at.blank? || (execute_at > created_at)
 
