@@ -27,7 +27,12 @@ export default RouteTemplate(
       <UsernamePreference @user={{@controller.model}} />
     </div>
 
-    {{#unless @controller.siteSettings.discourse_connect_overrides_avatar}}
+    {{#unless
+      (or
+        @controller.siteSettings.discourse_connect_overrides_avatar
+        @controller.siteSettings.auth_overrides_avatar
+      )
+    }}
       <div class="control-group pref-avatar" data-setting-name="user-avatar">
         <label class="control-label" id="profile-picture">{{i18n
             "user.avatar.title"
