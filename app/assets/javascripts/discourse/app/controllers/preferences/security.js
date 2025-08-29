@@ -42,6 +42,11 @@ export default class SecurityController extends Controller {
     ).canCheckEmails;
   }
 
+  @computed("model.staged")
+  get canResetPassword() {
+    return !this.model.staged;
+  }
+
   get isCurrentUser() {
     return this.currentUser?.id === this.model.id;
   }

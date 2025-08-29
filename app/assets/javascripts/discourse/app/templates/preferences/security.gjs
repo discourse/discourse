@@ -2,6 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { not } from "truth-helpers";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -22,9 +23,9 @@ export default RouteTemplate(
       >
         <label class="control-label">{{i18n "user.password.title"}}</label>
         <div class="controls">
-          <a
-            href
+          <button
             {{on "click" @controller.changePassword}}
+            disabled={{not @controller.canResetPassword}}
             class="btn btn-default"
             id="change-password-button"
           >
@@ -34,7 +35,13 @@ export default RouteTemplate(
             {{else}}
               {{i18n "user.change_password.action"}}
             {{/if}}
-          </a>
+          </button>
+
+          {{#unless @controller.canResetPassword}}
+            <div class="instructions">
+              {{i18n "user.change_password.staged_user"}}
+            </div>
+          {{/unless}}
 
           {{@controller.passwordProgress}}
         </div>
