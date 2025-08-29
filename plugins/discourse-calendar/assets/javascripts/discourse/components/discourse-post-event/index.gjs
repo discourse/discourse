@@ -44,6 +44,7 @@ export default class DiscoursePostEvent extends Component {
   @service messageBus;
 
   @tracked event = this.args.event;
+  @tracked rrule;
 
   setupMessageBus = modifier(() => {
     const path = `/discourse-post-event/${this.event.post.topic.id}`;

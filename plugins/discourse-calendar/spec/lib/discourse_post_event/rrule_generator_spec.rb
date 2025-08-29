@@ -24,12 +24,12 @@ describe RRuleGenerator do
       freeze_time DateTime.parse("2020-02-25 15:36")
 
       rrule = RRuleGenerator.generate(starts_at: time, timezone:, recurrence: "every_week").first
-      expect(rrule.to_s).to eq("2020-02-29 15:36:00 +0100")
+      expect(rrule.to_s).to eq("2020-02-29 16:36:00 +0100")
 
       freeze_time DateTime.parse("2020-09-25 15:36")
 
       rrule = RRuleGenerator.generate(starts_at: time, timezone:).first
-      expect(rrule.to_s).to eq("2020-09-26 15:36:00 +0200")
+      expect(rrule.to_s).to eq("2020-09-26 16:36:00 +0200")
     end
   end
 
@@ -47,10 +47,8 @@ describe RRuleGenerator do
           show_local_time: true,
         )
 
-      expect(rrule_string).to include("DTSTART:20200125T153600")
-      expect(rrule_string).not_to include("TZID=Europe/Prague")
-      expect(rrule_string).to include(
-        "RRULE:FREQ=WEEKLY;BYDAY=SA;BYHOUR=15;BYMINUTE=36;INTERVAL=1;WKST=MO",
+      expect(rrule_string).to eq(
+        "DTSTART:20200125T153600\nRRULE:FREQ=WEEKLY;BYDAY=SA;INTERVAL=1;WKST=MO",
       )
     end
 
@@ -67,9 +65,8 @@ describe RRuleGenerator do
           show_local_time: false,
         )
 
-      expect(rrule_string).to include("DTSTART;TZID=Europe/Prague:20200125T153600")
-      expect(rrule_string).to include(
-        "RRULE:FREQ=WEEKLY;BYDAY=SA;BYHOUR=15;BYMINUTE=36;INTERVAL=1;WKST=MO",
+      expect(rrule_string).to eq(
+        "DTSTART:20200125T153600Z\nRRULE:FREQ=WEEKLY;BYDAY=SA;INTERVAL=1;WKST=MO",
       )
     end
   end

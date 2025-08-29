@@ -517,14 +517,14 @@ describe DiscoursePostEvent::Event do
     end
 
     context "when event only has starts_at" do
-      it "returns nil" do
+      it "returns default duration of 1 hour" do
         event =
           DiscoursePostEvent::Event.create!(
             id: post_1.id,
             original_starts_at: "2022-01-15 10:00:00 UTC",
           )
 
-        expect(event.duration).to be_nil
+        expect(event.duration).to eq("01:00:00")
       end
     end
 
@@ -635,8 +635,12 @@ describe DiscoursePostEvent::Event do
           )
         end
 
-        it "returns nothing" do
-          expect(next_date).to be_blank
+        it "returns the next occurrence within the recurrence period" do
+          expect(next_date).not_to be_blank
+          expect(next_date).to be_an(Array)
+          expect(next_date.length).to eq(2)
+          expect(next_date[0]).to eq(Time.utc(2020, 4, 24, 15, 0, 0))
+          expect(next_date[1]).to eq(Time.utc(2020, 4, 24, 16, 0, 0))
         end
       end
     end
@@ -672,7 +676,7 @@ describe DiscoursePostEvent::Event do
             root: false,
           )
         json = JSON.parse(serializer.to_json)
-        # Should not crash and should return nil for starts_at and ends_at
+
         expect(json["starts_at"]).to be_nil
         expect(json["ends_at"]).to be_nil
       end
@@ -682,13 +686,8 @@ describe DiscoursePostEvent::Event do
           DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
         json = JSON.parse(serializer.to_json)
 
-        expected_starts_at =
-          expired_recurring_event.original_starts_at.in_time_zone(expired_recurring_event.timezone)
-        expected_ends_at =
-          expired_recurring_event.original_ends_at.in_time_zone(expired_recurring_event.timezone)
-
-        expect(json["starts_at"]).to eq(expected_starts_at.iso8601(3))
-        expect(json["ends_at"]).to eq(expected_ends_at.iso8601(3))
+        expect(json["starts_at"]).to be_nil
+        expect(json["ends_at"]).to be_nil
       end
     end
 

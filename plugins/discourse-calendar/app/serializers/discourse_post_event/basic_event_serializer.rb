@@ -52,21 +52,31 @@ module DiscoursePostEvent
     end
 
     def starts_at
+      if object.recurring? && object.recurrence_until.present? &&
+           object.recurrence_until < Time.current
+        return nil
+      end
+
       if object.show_local_time
         timezone_time = object.original_starts_at&.in_time_zone(object.timezone)
         timezone_time&.strftime("%Y-%m-%dT%H:%M:%S")
       else
         if object.recurring?
           timezone_time = object.original_starts_at&.in_time_zone(object.timezone)
-          timezone_time&.strftime("%Y-%m-%dT%H:%M:%S%:z")
+          timezone_time&.iso8601(3)
         else
           timezone_time = object.starts_at&.in_time_zone(object.timezone)
-          timezone_time&.strftime("%Y-%m-%dT%H:%M:%S%:z")
+          timezone_time&.iso8601(3)
         end
       end
     end
 
     def ends_at
+      if object.recurring? && object.recurrence_until.present? &&
+           object.recurrence_until < Time.current
+        return nil
+      end
+
       if object.show_local_time
         ends_at =
           object.original_ends_at ||
@@ -79,15 +89,15 @@ module DiscoursePostEvent
             object.original_ends_at ||
               (object.original_starts_at && object.original_starts_at + 1.hour)
           timezone_ends_at = ends_at&.in_time_zone(object.timezone)
-          timezone_ends_at&.strftime("%Y-%m-%dT%H:%M:%S%:z")
+          timezone_ends_at&.iso8601(3)
         else
           if object.ends_at
             timezone_ends_at = object.ends_at&.in_time_zone(object.timezone)
-            timezone_ends_at&.strftime("%Y-%m-%dT%H:%M:%S%:z")
+            timezone_ends_at&.iso8601(3)
           else
             base_starts_at = object.starts_at&.in_time_zone(object.timezone)
             if base_starts_at
-              (base_starts_at + 1.hour).strftime("%Y-%m-%dT%H:%M:%S%:z")
+              (base_starts_at + 1.hour).iso8601(3)
             else
               nil
             end
