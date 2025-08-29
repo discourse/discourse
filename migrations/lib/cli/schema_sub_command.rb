@@ -21,6 +21,7 @@ module Migrations::CLI
 
       write_db_schema(config, header, schema)
       write_db_models(config, header, schema)
+      write_enums(config, header, schema)
 
       validate_schema(db)
 
@@ -46,7 +47,7 @@ module Migrations::CLI
         writer = Schema::TableWriter.new(schema_file)
         writer.output_file_header(header)
 
-        schema.each { |table| writer.output_table(table) }
+        schema.tables.each { |table| writer.output_table(table) }
       end
     end
 
@@ -54,12 +55,24 @@ module Migrations::CLI
       writer = Schema::ModelWriter.new(config.dig(:output, :models_namespace), header)
       models_path = File.expand_path(config.dig(:output, :models_directory), ::Migrations.root_path)
 
-      schema.each do |table|
+      schema.tables.each do |table|
         model_file_path = File.join(models_path, Schema::ModelWriter.filename_for(table))
         File.open(model_file_path, "w") { |model_file| writer.output_table(table, model_file) }
       end
 
-      Schema::ModelWriter.format_files(models_path)
+      Schema.format_ruby_files(models_path)
+    end
+
+    def write_enums(config, header, schema)
+      writer = Schema::EnumWriter.new(config.dig(:output, :enums_namespace), header)
+      enums_path = File.expand_path(config.dig(:output, :enums_directory), ::Migrations.root_path)
+
+      schema.enums.each do |enum|
+        enum_file_path = File.join(enums_path, Schema::EnumWriter.filename_for(enum))
+        File.open(enum_file_path, "w") { |enum_file| writer.output_enum(enum, enum_file) }
+      end
+
+      Schema.format_ruby_files(enums_path)
     end
 
     def relative_config_path(db)

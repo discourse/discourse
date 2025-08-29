@@ -4,6 +4,8 @@ output:
   schema_file: "db/intermediate_db_schema/100-base-schema.sql"
   models_directory: "lib/database/intermediate_db"
   models_namespace: Migrations::Database::IntermediateDB
+  enums_directory: "lib/database/intermediate_db/enums"
+  enums_namespace: Migrations::Database::IntermediateDB::Enums
 
 schema:
   tables:
@@ -142,7 +144,7 @@ schema:
           - name: "original_username"
             datatype: text
           - name: "avatar_type"
-            datatype: integer
+            enum: avatar_type
         exclude:
           - "flag_level"
           - "last_emailed_at"
@@ -445,6 +447,18 @@ schema:
         - "web_hook_events"
         - "web_hook_events_daily_aggregates"
         - "web_hooks"
+
+  enums:
+    avatar_type:
+      values:
+        - "avatar"
+        - "gravatar"
+    post_action_type:
+      model: PostActionType
+      source: types
+    upload_type:
+      model: UploadCreator
+      source: TYPES_TO_CROP
 
 plugins:
   - "automation"

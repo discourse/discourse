@@ -36,12 +36,20 @@
         },
         "models_namespace": {
           "type": "string"
+        },
+        "enums_directory": {
+          "type": "string"
+        },
+        "enums_namespace": {
+          "type": "string"
         }
       },
       "required": [
         "schema_file",
         "models_directory",
-        "models_namespace"
+        "models_namespace",
+        "enums_directory",
+        "enums_namespace"
       ]
     },
     "schema": {
@@ -84,6 +92,9 @@
                         "datatype": {
                           "$ref": "#/$defs/datatypes"
                         },
+                        "enum": {
+                          "type": "string"
+                        },
                         "nullable": {
                           "type": "boolean"
                         }
@@ -100,10 +111,21 @@
                         },
                         {
                           "required": [
+                            "enum"
+                          ]
+                        },
+                        {
+                          "required": [
                             "nullable"
                           ]
                         }
-                      ]
+                      ],
+                      "not": {
+                        "required": [
+                          "datatype",
+                          "enum"
+                        ]
+                      }
                     }
                   },
                   "add": {
@@ -117,6 +139,9 @@
                         "datatype": {
                           "$ref": "#/$defs/datatypes"
                         },
+                        "enum": {
+                          "type": "string"
+                        },
                         "nullable": {
                           "type": "boolean"
                         },
@@ -126,8 +151,19 @@
                       },
                       "additionalProperties": false,
                       "required": [
-                        "name",
-                        "datatype"
+                        "name"
+                      ],
+                      "oneOf": [
+                        {
+                          "required": [
+                            "datatype"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "enum"
+                          ]
+                        }
                       ]
                     }
                   }
@@ -264,9 +300,79 @@
             }
           },
           "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
+        },
+        "enums": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "values": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "integer"
+                    }
+                  }
+                ]
+              },
+              "model": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "only": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "extra": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "values"
+                ],
+                "not": {
+                  "required": [
+                    "model",
+                    "source"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "model",
+                  "source"
+                ],
+                "not": {
+                  "required": [
+                    "values"
+                  ]
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
     },
     "plugins": {
       "type": "array",

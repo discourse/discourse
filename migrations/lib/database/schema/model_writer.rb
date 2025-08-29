@@ -14,24 +14,8 @@ module Migrations::Database::Schema
       "#{table.name.singularize}.rb"
     end
 
-    def self.format_files(path)
-      glob_pattern = File.join(path, "**/*.rb")
-
-      system(
-        "bundle",
-        "exec",
-        "stree",
-        "write",
-        glob_pattern,
-        exception: true,
-        out: File::NULL,
-        err: File::NULL,
-      )
-    rescue StandardError
-      raise "Failed to run `bundle exec stree write '#{glob_pattern}'`"
-    end
-
     def output_table(table, output_stream)
+      module_name = ::Migrations::Database::Schema.to_singular_classname(table.name)
       columns = table.sorted_columns
 
       output_stream.puts "# frozen_string_literal: true"
@@ -39,7 +23,7 @@ module Migrations::Database::Schema
       output_stream.puts @header
       output_stream.puts
       output_stream.puts "module #{@namespace}"
-      output_stream.puts "  module #{to_singular_classname(table.name)}"
+      output_stream.puts "  module #{module_name}"
       output_stream.puts "    SQL = <<~SQL"
       output_stream.puts "      INSERT INTO #{escape_identifier(table.name)} ("
       output_stream.puts column_names(columns)
@@ -63,10 +47,6 @@ module Migrations::Database::Schema
     end
 
     private
-
-    def to_singular_classname(snake_case_string)
-      snake_case_string.downcase.singularize.camelize
-    end
 
     def column_names(columns)
       columns.map { |c| "        #{escape_identifier(c.name)}" }.join(",\n")
