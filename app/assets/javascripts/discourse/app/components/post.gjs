@@ -109,10 +109,14 @@ export default class Post extends Component {
   }
 
   get postDateText() {
-    return relativeAge(new Date(this.postDate), {
+    if (!this.postDate) {
+      return "";
+    }
+    const formattedDate = relativeAge(new Date(this.postDate), {
       format: "medium",
       wrapInSpan: false,
     });
+    return formattedDate || new Date(this.postDate).toLocaleDateString();
   }
 
   get filteredRepliesView() {
@@ -427,8 +431,8 @@ export default class Post extends Component {
     >
       <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
         {{i18n
-          "share.post"
-          (hash username=@post.username date=this.postDateText)
+          "post.accessible_heading"
+          (hash username=(or @post.username "") date=(or this.postDateText ""))
         }}
       </h2>
       {{#unless @cloaked}}

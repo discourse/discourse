@@ -4078,6 +4078,7 @@ en:
       aria_post_number: "%{title} - post #%{postNumber}"
 
     post:
+      accessible_heading: "post by %{username} on %{date}"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
