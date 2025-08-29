@@ -10,10 +10,13 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import Category from "discourse/models/category";
+import { i18n } from "discourse-i18n";
 
 export default class CategoryRow extends Component {
   @service site;
   @service siteSettings;
+
+  readOnlyDesc = i18n("category_row.read_only_description");
 
   get isNone() {
     return this.rowValue === this.args.selectKit?.noneItem;
@@ -29,6 +32,18 @@ export default class CategoryRow extends Component {
 
   get isSelected() {
     return this.rowValue === this.args.value;
+  }
+
+  get isReadOnly() {
+    if (!this.readOnlyCategoryId) {
+      return false;
+    }
+
+    return this.rowValue === this.readOnlyCategoryId;
+  }
+
+  get readOnlyCategoryId() {
+    return this.args.selectKit.options.readOnlyCategoryId;
   }
 
   get hideParentCategory() {
@@ -78,7 +93,7 @@ export default class CategoryRow extends Component {
 
   get title() {
     if (this.category) {
-      return this.categoryName;
+      return this.isReadOnly ? this.readOnlyDesc : this.categoryName;
     }
   }
 
@@ -114,6 +129,7 @@ export default class CategoryRow extends Component {
         subcategoryCount: this.args.item?.category
           ? this.category.subcategory_count
           : 0,
+        readOnly: this.isReadOnly,
       })
     );
   }
@@ -187,6 +203,11 @@ export default class CategoryRow extends Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
+
+    if (this.isReadOnly) {
+      return false;
+    }
+
     this.args.selectKit.select(this.rowValue, this.args.item);
     return false;
   }
@@ -225,11 +246,16 @@ export default class CategoryRow extends Component {
         event.preventDefault();
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
+        event.preventDefault();
+
+        if (this.isReadOnly) {
+          return false;
+        }
+
         this.args.selectKit.select(
           this.args.selectKit.highlighted.id,
           this.args.selectKit.highlighted
         );
-        event.preventDefault();
       } else if (event.key === "Escape") {
         this.args.selectKit.close(event);
         this.args.selectKit.headerElement().focus();
