@@ -1799,6 +1799,7 @@ en:
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
+        remove_disabled: "The account needs at least one other login method (e.g. a passkey or a linked external account) before removing the password."
         remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
