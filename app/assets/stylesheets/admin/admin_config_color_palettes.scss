@@ -39,12 +39,7 @@
     &__name-control {
       display: flex;
       gap: var(--space-1);
-
-      .form-kit__container-content,
-      .form-kit__control-input-wrapper,
-      input[name="name"] {
-        height: 100%;
-      }
+      align-items: flex-start;
 
       h2 {
         margin-bottom: 0;
@@ -91,6 +86,13 @@
       display: flex;
       justify-content: flex-end;
       gap: 1em;
+    }
+
+    &__save-name,
+    &__cancel-edit-name {
+      // matches form kit height of inputs
+      height: 2em;
+      width: 2em;
     }
   }
 

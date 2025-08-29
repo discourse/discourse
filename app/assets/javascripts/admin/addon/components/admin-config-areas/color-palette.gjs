@@ -72,6 +72,9 @@ export default class AdminConfigAreasColorPalette extends Component {
   @action
   toggleEditingName() {
     this.editingName = !this.editingName;
+    if (!this.editingName) {
+      this.fkApi.set("name", this.args.colorPalette.name);
+    }
   }
 
   @action
@@ -289,7 +292,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                     @action={{this.triggerNameSave}}
                   />
                   <DButton
-                    class="btn-flat"
+                    class="btn-flat admin-config-color-palettes__cancel-edit-name"
                     @icon="xmark"
                     @action={{this.toggleEditingName}}
                   />
