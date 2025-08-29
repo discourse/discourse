@@ -114,7 +114,7 @@ desc "Remap topic titles - replace a specific string with another"
 task "topics:remap_titles", %i[old_string new_string] => [:environment] do |_, args|
   require "highline/import"
 
-  if args[:old_string].blank? || args[:new_string].nil?
+  if args[:old_string].blank? || args[:new_string].blank?
     puts "ERROR: Missing required arguments"
     puts "Usage: rake topics:remap_titles['old string','new string']"
     exit 1
@@ -137,6 +137,7 @@ task "topics:remap_titles", %i[old_string new_string] => [:environment] do |_, a
     matching_topics =
       Topic
         .where("title LIKE ?", "%#{old_string}%")
+        .where("deleted_at IS NULL")
         .where(archetype: "regular")
         .where.not(title: nil)
 
