@@ -10,6 +10,14 @@ module DiscourseAi
           end
         end
 
+        def strip_upload_markdown_mode
+          if llm_model.name.include?("image")
+            :all
+          else
+            :model_only
+          end
+        end
+
         def native_tool_support?
           !llm_model.lookup_custom_param("disable_native_tools")
         end

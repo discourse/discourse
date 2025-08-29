@@ -575,7 +575,6 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       expect(messages.length).to eq(1)
       content = messages[0][:content]
 
-      # Ensure both uploads are present with sha info and alt text kept (without dimensions)
       upload_hashes = content.select { |c| c.is_a?(Hash) }
       expect(upload_hashes).to include(
         { upload_id: image_upload1.id },
@@ -586,7 +585,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       expect(text).to include("This is the original")
       expect(text).to include("(1 month ago)")
-      expect(text).to include("#{long_title}")
+      expect(text).to include("#{upload_markdown}")
+      expect(text).to include("#{upload2_markdown}")
     end
 
     it "only include regular posts" do

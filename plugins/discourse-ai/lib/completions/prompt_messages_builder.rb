@@ -113,18 +113,18 @@ module DiscourseAi
               "users.username",
               "post_custom_prompts.custom_prompt",
               "(
-                  SELECT array_agg(json_build_object('id', ref.upload_id, 'sha', u.sha1))
+                  SELECT array_agg(ref.upload_id)
                   FROM upload_references ref
                   JOIN uploads u ON u.id = ref.upload_id
                   WHERE ref.target_type = 'Post' AND ref.target_id = posts.id
-               ) as uploads",
+               ) as upload_ids",
               "posts.created_at",
             )
 
         builder = new
         builder.topic = post.topic
 
-        context.reverse_each do |raw, username, custom_prompt, uploads, created_at|
+        context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           custom_prompt_translation =
             Proc.new do |message|
               # We can't keep backwards-compatibility for stored functions.
@@ -153,14 +153,7 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            upload_ids = uploads&.map { |u| u["id"] }
-            if upload_ids.present? && include_uploads
-              context[:upload_ids] = upload_ids.compact
-              context[:content] = strip_upload_markers(
-                context[:content],
-                uploads&.map { |u| u["sha"] },
-              )
-            end
+            context[:upload_ids] = upload_ids.compact if upload_ids.present? && include_uploads
             context[:created_at] = created_at
 
             builder.push(**context)
@@ -173,27 +166,6 @@ module DiscourseAi
       def initialize
         @raw_messages = []
         @timestamps = {}
-      end
-
-      MIN_CAPTION_LENGTH_TO_RETAIN = 30
-
-      def self.strip_upload_markers(markdown, upload_shas)
-        return markdown if markdown.blank? || upload_shas.blank?
-        base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set
-        markdown.gsub(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}) do
-          alt = Regexp.last_match(1)
-          b62 = Regexp.last_match(2)
-          if base62_set.include?(b62)
-            if alt.length > MIN_CAPTION_LENGTH_TO_RETAIN
-              # this is rather rare, but might as well retain for this specific case
-              "\nImage Description: #{alt}\n"
-            else
-              ""
-            end
-          else
-            Regexp.last_match(0)
-          end
-        end
       end
 
       def set_chat_context_posts(post_ids, guardian, include_uploads:)
