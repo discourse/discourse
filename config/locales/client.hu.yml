@@ -6595,15 +6595,6 @@ hu:
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
           built_in_description: "Ez a téma előre telepítve van, és nem törölhető vagy testreszabható."
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
-          settings: "Beállítások"
-          colors: "Színek"
-          unsaved_colors:
-            one: "%{count} mentetlen szín van"
-            other: "%{count} mentetlen szín van"
-          unsaved_colors_leave_route_confirmation: "Még nem mentette a színpaletta módosításait. Biztosan kilép?"
-          save_colors: "Színek mentése"
-          discard_colors: "Elvetés"
-          colors_title: "Színek"
           scss:
             text: "CSS"
             title: "Egyéni CSS-szabályok SCSS-szintaxis támogatásával"

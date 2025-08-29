@@ -45,7 +45,7 @@ ur:
           other: "%{formatted_number} چیٹ کے پیغامات"
     chat:
       text_copied: متن کلپ بورڈ پر کاپی ہوا
-      link_copied: لنک کلپ بورڈ پر کاپی ہو ئے
+      link_copied: رابطہ کلپ بورڈ پر کاپی ہوا
       back_to_forum: "فورم"
       deleted_chat_username: حذف کردہ
       dates:

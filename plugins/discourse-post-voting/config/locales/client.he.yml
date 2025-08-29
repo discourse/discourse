@@ -125,6 +125,11 @@ he:
           two: "%{count} תשובות"
           many: "%{count} תשובות"
           other: "%{count} תשובות"
+        voters_count_diff:
+          one: "ועוד משתמש/ת…"
+          two: "ועוד שני/שתי משתמשים/ות…"
+          many: "ועוד %{count} משתמשים/ות…"
+          other: "ועוד %{count} משתמשים/ות…"
     review:
       transcript:
         view: "הצגת תמליל ההודעות הקודמות"

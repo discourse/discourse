@@ -2948,9 +2948,6 @@ th:
           disable: "ปิดใช้งาน"
           add: "เพิ่ม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
-          settings: "การตั้งค่า"
-          colors: "สี"
-          colors_title: "สี"
           scss:
             text: "CSS"
           footer:

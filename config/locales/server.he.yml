@@ -1718,6 +1718,7 @@ he:
         provider: ספק כניסה
         no_accounts: "אין חשבונות משויכים"
         total_users: "סך כמות החברים"
+      description: "הצגת מספר החשבונות המשויכים מקובצים לפי ספק כניסה. תקף רק כאשר שיטות כניסה דרך רשתות חברתיות פעילות."
   dashboard:
     problem:
       twitter_login: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
@@ -1754,6 +1755,7 @@ he:
       google_analytics_version: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
       category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
       maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
+      admin_sidebar_deprecation: "פריסת הניהול הישנה הוצאה משימוש לטובת <a href='https://meta.discourse.org/t/-/289281'>פריסת סרגל הצד החדשה</a> ותוסר בגרסה הבאה. ניתן <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>להגדיר</a> את פריסת סרגל הצד החדשה כעת כדי להצטרף לפני כן."
     back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
@@ -1765,6 +1767,7 @@ he:
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
     set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
     set_locale_from_cookie: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך עוגיית הדפדפן ‚locale’"
+    set_locale_from_param: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך המשתנה ‚tl’ בכתובת, למשל: ‎?tl=he"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת"
     min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
     min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
@@ -2046,6 +2049,7 @@ he:
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
     maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
     remove_older_backups: "להסיר גיבויים שהתיישנו מעבר למספר הימים שצוין. יש להשאיר ריק להשבתה."
+    backup_frequency: "הגדרת ההפרש, בימים, לגיבוי אוטומטי של האתר. אם מוגדר ל־7, למשל, ייווצר גיבוי חדש כל שבוע. הגדרה ל־0 תשבית."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
@@ -2593,6 +2597,7 @@ he:
     enable_welcome_banner: "להציג כרזה בעמודי רשימת הנושאים העיקרית שלך כדי לקבל את פניהם של החברים ולהאפשר להם לחפש בתוכן האתר"
     welcome_banner_image: "הגדרת תמונה להצגת ברקע כרזת קבלת הפנים."
     welcome_banner_location: "הגדרת המקום בעמוד בו תופיע כרזת קבלת הפנים."
+    welcome_banner_page_visibility: "קביעת העמודים שבהם תופיע כרזת קבלת הפנים."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "ציין את סרגל הצד או הכותרת הנפתחת כתפריט הניווט הראשי של האתר שלך. סרגל צד מומלץ."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."

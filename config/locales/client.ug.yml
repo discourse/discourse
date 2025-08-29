@@ -6626,15 +6626,6 @@ ug:
           repo_unreachable: "بۇ ئۆرنەكنىڭ Git خەزىنە ئامبىرى بىلەن ئالاقىلىشالمىدى. خاتالىق ئۇچۇرى:"
           built_in_description: "بۇ ئۆرنەك ئالدىن ئورنىتىلغان بولۇپ، ئۆچۈرگىلى ياكى خاسلاشتۇرغىلى بولمايدۇ."
           imported_from_archive: "بۇ ئۆرنەك .zip ھۆججەتتىن ئەكىرىلگەن"
-          settings: "تەڭشەك"
-          colors: "رەڭ"
-          unsaved_colors:
-            one: "سىز %{count} رەڭنى ساقلىمىدىڭىز"
-            other: "سىز %{count} رەڭنى ساقلىمىدىڭىز"
-          unsaved_colors_leave_route_confirmation: "سىز تېخى رەڭ تاختا ئۆزگىرىشىنى ساقلىمىدىڭىز. راستتىنلا ئايرىلامسىز؟"
-          save_colors: "رەڭ ساقلا"
-          discard_colors: "تاشلىۋەت"
-          colors_title: "رەڭ"
           scss:
             text: "CSS"
             title: "SCSS گىرامماتىكىسىنى قوللايدىغان ئىختىيارى CSS قائىدىلىرى"

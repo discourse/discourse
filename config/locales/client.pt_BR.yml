@@ -6630,15 +6630,6 @@ pt_BR:
           repo_unreachable: "Não foi possível acessar o repositório Git deste tema. Mensagem de erro:"
           built_in_description: "Este é um tema pré-instalado e não pode ser excluído ou personalizado"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
-          settings: "Configurações"
-          colors: "Cores"
-          unsaved_colors:
-            one: "Você tem %{count} cor não salva"
-            other: "Você tem %{count} cores não salvas"
-          unsaved_colors_leave_route_confirmation: "Você ainda não salvou as alterações da sua paleta de cores. Deseja mesmo sair?"
-          save_colors: "Salvar cores"
-          discard_colors: "Descartar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
             title: "Regras CSS personalizadas com suporte para sintaxe SCSS"

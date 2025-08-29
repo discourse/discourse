@@ -853,6 +853,13 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
+          regenerate: "לסכם בקצרה מחדש"
+          regenerate_bulk: "לסכם תקצירים מחדש"
+          regenerate_success:
+            one: "התקציר הקצר נוצר מחדש בהצלחה"
+            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
+            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
+            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
         topic_list_layout:
           button:
             compact: "מצומצם"

@@ -6630,15 +6630,6 @@ tr_TR:
           repo_unreachable: "Bu temanın Git deposuyla bağlantı kurulamadı. Hata mesajı:"
           built_in_description: "Bu tema önceden yüklenmiş ve silinemez ya da özelleştirilemez"
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
-          settings: "Ayarlar"
-          colors: "Renkler"
-          unsaved_colors:
-            one: "%{count} kaydedilmemiş renginiz var"
-            other: "%{count} kaydedilmemiş renginiz var"
-          unsaved_colors_leave_route_confirmation: "Renk paleti değişikliklerinizi henüz kaydetmediniz. Ayrılmak istediğinizden emin misiniz?"
-          save_colors: "Renkleri kaydet"
-          discard_colors: "Kapat"
-          colors_title: "Renkler"
           scss:
             text: "CSS"
             title: "SCSS sözdizimini destekleyen özel CSS kuralları"

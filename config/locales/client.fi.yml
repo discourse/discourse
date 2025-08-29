@@ -6639,15 +6639,6 @@ fi:
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
           built_in_description: "Tämä teema on esiasennettu, eikä sitä voi poistaa tai mukauttaa"
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
-          settings: "Asetukset"
-          colors: "Värit"
-          unsaved_colors:
-            one: "Sinulla on %{count} tallentamaton väri"
-            other: "Sinulla on %{count} tallentamatonta väriä"
-          unsaved_colors_leave_route_confirmation: "Et ole vielä tallentanut väripaletin muutoksia. Oletko varma, että haluat lähteä?"
-          save_colors: "Tallenna värit"
-          discard_colors: "Hylkää"
-          colors_title: "Värit"
           scss:
             text: "CSS"
             title: "Mukautetut CSS-säännöt, jotka tukevat SCSS-syntaksia"

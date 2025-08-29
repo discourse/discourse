@@ -6635,15 +6635,6 @@ de:
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           built_in_description: "Dieses Theme ist vorinstalliert und kann nicht gelöscht oder angepasst werden"
           imported_from_archive: "Dieses Theme wurde aus einer .zip-Datei importiert"
-          settings: "Einstellungen"
-          colors: "Farben"
-          unsaved_colors:
-            one: "Du hast %{count} nicht gespeicherte Farbe"
-            other: "Du hast %{count} nicht gespeicherte Farben"
-          unsaved_colors_leave_route_confirmation: "Du hast deine Änderungen an der Farbpalette noch nicht gespeichert. Wirklich verlassen?"
-          save_colors: "Farben speichern"
-          discard_colors: "Verwerfen"
-          colors_title: "Farben"
           scss:
             text: "CSS"
             title: "Benutzerdefinierte CSS-Regeln mit Unterstützung für SCSS-Syntax"

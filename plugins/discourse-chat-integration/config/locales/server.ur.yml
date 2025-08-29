@@ -47,7 +47,7 @@ ur:
     chat_integration_flowdock_enabled: "فلَوڈَوک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
     chat_integration_flowdock_excerpt_length: "فلَوڈَوک پوسٹ کے اقتباس کا سائز"
   chat_integration:
-    all_categories: "(تمام زُمرَہ جات)"
+    all_categories: "(تمام زمرہ جات)"
     deleted_category: "(حذف کردہ زُمرہ)"
     deleted_group: "(حذف کردہ گروپ)"
     group_mention_template: "ذکر: @%{name} کے"
@@ -74,7 +74,7 @@ ur:
           category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
         transcript:
           error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
-          post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈِسکورس پر ایک پوسٹ ڈرافٹ کرنے کیلئے یہاں کلک کریں"
+          post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈسکورس پر ایک لڑی کا مسودہ تیار کرنے کے لیے یہاں کلک کریں"
           api_required: "معذرت، یہ اِنٹیگرَیشَن ٹرانسکرِپٹس شائع کرنے کیلئے سیٹ اَپ نہیں ہے۔"
           view_on_slack: "%{name}میں سلَّیک پر دیکھیں"
           first_message_pretext: "شروع %{n} پیغامات قبل:"

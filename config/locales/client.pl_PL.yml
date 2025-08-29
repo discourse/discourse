@@ -1722,7 +1722,7 @@ pl_PL:
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
       home: "Domyślna strona główna"
-      staged: "Wystawiany na scenie"
+      staged: "Etapowi"
       staff_counters:
         flags_given:
           one: '<span class="%{className}">%{count}</span> pomocna flaga'
@@ -2187,7 +2187,7 @@ pl_PL:
         after_2_days: "utworzone w ciągu ostatnich 2 dni"
         after_1_week: "utworzone w ostatnim tygodniu"
         after_2_weeks: "utworzone w ostatnich 2 tygodniach"
-      auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
+      auto_track_topics: "Automatycznie śledź tematy, które odwiedzę"
       auto_track_options:
         never: "nigdy"
         immediately: "natychmiast"
@@ -7207,17 +7207,6 @@ pl_PL:
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
           built_in_description: "Ten motyw jest wstępnie zainstalowany i nie można go usunąć ani dostosować"
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
-          settings: "Ustawienia"
-          colors: "Kolory"
-          unsaved_colors:
-            one: "Masz %{count} niezapisany kolor"
-            few: "Masz %{count} niezapisane kolory"
-            many: "Masz %{count} niezapisanych kolorów"
-            other: "Masz %{count} niezapisanych kolorów"
-          unsaved_colors_leave_route_confirmation: "Nie zapisano jeszcze zmian w palecie kolorów. Czy na pewno chcesz opuścić tę stronę?"
-          save_colors: "Zapisz kolory"
-          discard_colors: "Odrzuć"
-          colors_title: "Kolory"
           scss:
             text: "CSS"
             title: "Niestandardowe reguły CSS z obsługą składni SCSS"

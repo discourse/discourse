@@ -6630,15 +6630,6 @@ nl:
           repo_unreachable: "Kon geen contact krijgen met de Git-repository van dit thema. Foutbericht:"
           built_in_description: "Dit thema is vooraf geïnstalleerd en kan niet worden verwijderd of aangepast"
           imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
-          settings: "Instellingen"
-          colors: "Kleuren"
-          unsaved_colors:
-            one: "Je hebt %{count} niet-opgeslagen kleur"
-            other: "Je hebt %{count} niet-opgeslagen kleuren"
-          unsaved_colors_leave_route_confirmation: "Je hebt je wijzigingen in het kleurenpalet nog niet opgeslagen. Weet je zeker dat je weg wilt gaan?"
-          save_colors: "Kleuren opslaan"
-          discard_colors: "Weggooien"
-          colors_title: "Kleuren"
           scss:
             text: "CSS"
             title: "Aangepaste CSS-regels met ondersteuning voor SCSS-syntaxis"

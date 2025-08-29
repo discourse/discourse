@@ -2888,9 +2888,6 @@ sw:
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           no_settings: "Mandhari hii haina mipangilio."
-          settings: "Mipangilio"
-          colors: "Rangi"
-          colors_title: "Rangi"
           scss:
             text: "CSS"
           after_header:

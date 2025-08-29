@@ -448,6 +448,8 @@ ru:
             label: Версия
           status:
             label: Статус
+          enabled:
+            label: "Обновить автоматизацию"
           disabled:
             label: Отключено
           placeholders:
@@ -458,3 +460,4 @@ ru:
             label: Последний запуск
           last_updated_by:
             label: Кем обновлено
+          enable_toggle_disabled: "Вы сможете включить эту автоматизацию после заполнения всех обязательных полей."

@@ -4400,10 +4400,6 @@ sq:
           enable: "Aktivizo"
           disable: "Çaktivizo"
           add: "Shto"
-          settings: "Rregullimet"
-          colors: "Ngjyrat"
-          discard_colors: "Harroni"
-          colors_title: "Ngjyrat"
           scss:
             text: "CSS"
           footer:
