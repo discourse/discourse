@@ -233,6 +233,37 @@ task "multisite:migrate" => %w[
   end
 end
 
+# Sets sequence's value of BIGINT type sequences to be greater than the max value that an INT column can hold. This is done to prevent
+# type mismatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
+# instead of 2**31-1 so that the values are easier to read.
+def prevent_big_int_foreign_keys_type_mismatch
+  [
+    [PostAction, :post_action_type_id],
+    [Reviewable, :target_id],
+    [ReviewableHistory, :reviewable_id],
+    [ReviewableScore, :reviewable_id],
+    [ReviewableScore, :reviewable_score_type],
+    [SidebarSectionLink, :linkable_id],
+    [SidebarSectionLink, :sidebar_section_id],
+    [User, :last_seen_reviewable_id],
+    [User, :required_fields_version],
+  ].each do |model, column|
+    DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+    model.reset_column_information
+  end
+
+  DB
+    .query(
+      "
+      SELECT sequence_name
+      FROM information_schema.sequences s
+      JOIN pg_sequences ps ON ps.sequencename = s.sequence_name AND ps.schemaname = s.sequence_schema
+      WHERE s.data_type = 'bigint' AND ps.schemaname = 'public' AND (ps.last_value IS NULL OR ps.last_value < 10000000000);
+    ",
+    )
+    .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', 10000000000)" }
+end
+
 task "db:migrate" => %w[
        load_config
        environment
@@ -265,6 +296,7 @@ task "db:migrate" => %w[
     end
 
     ActiveRecord::Tasks::DatabaseTasks.migrate
+    prevent_big_int_foreign_keys_type_mismatch if Rails.env.test?
 
     SeedFu.quiet = true
 

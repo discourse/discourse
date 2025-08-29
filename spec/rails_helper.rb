@@ -484,30 +484,6 @@ RSpec.configure do |config|
       end
     end
 
-    [
-      [PostAction, :post_action_type_id],
-      [Reviewable, :target_id],
-      [ReviewableHistory, :reviewable_id],
-      [ReviewableScore, :reviewable_id],
-      [ReviewableScore, :reviewable_score_type],
-      [SidebarSectionLink, :linkable_id],
-      [SidebarSectionLink, :sidebar_section_id],
-      [User, :last_seen_reviewable_id],
-      [User, :required_fields_version],
-    ].each do |model, column|
-      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-      model.reset_column_information
-    end
-
-    # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
-    # type mistmatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
-    # instead of 2**31-1 so that the values are easier to read.
-    DB
-      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each do |row|
-        DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
-      end
-
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
   end
