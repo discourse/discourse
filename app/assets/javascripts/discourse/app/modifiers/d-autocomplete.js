@@ -250,6 +250,11 @@ export default class DAutocompleteModifier extends Modifier {
     const value = this.getValue();
     const key = value[caretPosition - 1];
 
+    // Update completeEnd if we're still in the same autocomplete context
+    if (this.completeStart !== null && caretPosition >= this.completeStart) {
+      this.completeEnd = caretPosition - 1;
+    }
+
     // If caret moved outside our autocomplete context while space search pending
     if (
       this.pendingSpaceSearch &&
@@ -303,15 +308,6 @@ export default class DAutocompleteModifier extends Modifier {
       if (!this.options.key || value[this.completeStart] === this.options.key) {
         this.completeEnd = caretPosition - 1;
 
-        // If we're no longer ending with space, clear space-related state
-        if (this.pendingSpaceSearch && !term.endsWith(" ")) {
-          this.pendingSpaceSearch = false;
-          // If we have results and menu was hidden, reopen it
-          if (this.results.length > 0) {
-            await this.openAutocomplete();
-          }
-        }
-
         await this.performSearch(term);
       } else {
         await this.closeAutocomplete();
@@ -348,12 +344,12 @@ export default class DAutocompleteModifier extends Modifier {
     this.previousTerm = term;
     this.searchTerm = term;
 
-    // Special handling for terms ending with space (mentions only)
-    const endsWithSpace = term.endsWith(" ") && term.trim().length > 0;
+    // Special handling for terms with spaces to allow for full name search (mentions only)
+    const hasSpaces = term.includes(" ") && term.trim().length > 0;
     const isMentionAutocomplete = this.options.key === "@";
 
-    if (endsWithSpace && isMentionAutocomplete) {
-      // Close menu but keep state for potential reopening
+    if (hasSpaces && isMentionAutocomplete) {
+      // Close menu but keep state for potential reopening and continue with search
       this.pendingSpaceSearch = true;
       await this.closeAutocomplete({ resetSearchState: false });
     }
@@ -413,14 +409,11 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    if (this.pendingSpaceSearch) {
-      this.pendingSpaceSearch = false;
-    }
-
     this.openAutocomplete();
   }
 
   async openAutocomplete() {
+    this.pendingSpaceSearch = false;
     this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
     try {
       // Create virtual element with appropriate positioning
