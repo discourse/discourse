@@ -8,10 +8,8 @@ class TopicTimer < BaseTimer
   validates :user_id, presence: true
   validates :topic_id, presence: true
   validates :execute_at, presence: true
-  validates :status_type, presence: true
   validates :status_type, uniqueness: { scope: %i[topic_id deleted_at] }, if: :public_type?
   validates :status_type, uniqueness: { scope: %i[topic_id deleted_at user_id] }, if: :private_type?
-  validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :executed_at_in_future?
 
