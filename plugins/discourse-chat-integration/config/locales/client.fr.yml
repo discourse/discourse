@@ -84,7 +84,6 @@ fr:
               help: "p. ex., #canal, @utilisateur."
           errors:
             action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
-            channel_not_found: "Le canal spécifié n'existe pas dans Slack"
         telegram:
           title: "Telegram"
           param:

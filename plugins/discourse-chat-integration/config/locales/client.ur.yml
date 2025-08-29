@@ -20,7 +20,7 @@ ur:
       group_mention_template: "ذکر: @%{name} کے"
       group_message_template: "پیغامات: @%{name} کیلئے"
       choose_group: "(ایک گروپ منتخب کریں)"
-      all_categories: "(تمام زُمرَہ جات)"
+      all_categories: "(تمام زمرہ جات)"
       all_tags: "(تمام ٹَیگز)"
       create_rule: "اصول بنائیں"
       create_channel: "چینل بنائیں"
@@ -83,7 +83,6 @@ ur:
               help: "مثال کے طور پر #چینل، @صارف نام۔"
           errors:
             action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
-            channel_not_found: "یہ مخصوص چینل سلَّیک پر موجود نہیں ہے"
         telegram:
           title: "ٹَیلیگرام"
           param:

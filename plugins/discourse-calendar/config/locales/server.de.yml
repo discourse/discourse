@@ -61,7 +61,6 @@ de:
     calendar_automatic_holidays_enabled: "Feiertagsstatus automatisch basierend auf der Region eines Benutzers festlegen (Hinweis: Du kannst bestimmte automatische Feiertage in den Plug-in-Einstellungen deaktivieren)"
     event_participation_buttons: "Liste der Schaltflächen für die Teilnahme am Ereignis, die Benutzer verwenden können."
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
-    include_expired_events_on_calendar: "Schließe vergangene/abgelaufene Ereignisse in die Ansichten „Kategoriekalender“ und „Anstehende Ereignisse“ ein."
   discourse_calendar:
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."

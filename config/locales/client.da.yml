@@ -5584,6 +5584,7 @@ da:
             tag_group_create: "opret mærke gruppe"
             tag_group_destroy: "slet mærke gruppe"
             tag_group_change: "skift mærke gruppe"
+            stop_impersonating: "stop med at udgive dig"
         screened_emails:
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
           email: "E-mail adresse"
