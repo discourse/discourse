@@ -102,8 +102,6 @@ export default class DiscoursePostEventDates extends Component {
     };
 
     if (this.args.event.showLocalTime) {
-      // For showLocalTime, set displayedTimezone to the event's timezone
-      // so the time is displayed in the event's timezone
       bbcode.displayedTimezone = this.args.event.timezone;
     } else {
       bbcode.displayedTimezone =
