@@ -18,17 +18,18 @@ import { i18n } from "discourse-i18n";
  * @param {boolean} @enabled - Whether loading is enabled (default: true)
  * @param {boolean} @canLoadMore - Whether more content is available to load
  * @param {string} @loadingText - Optional custom loading text
- * @param {Object} @postStream - Post stream model to watch for loading state changes
+ * @param {Array<number>} @existingPostNumbers - Array of existing post numbers from PostStream
+ * @param {Object} @firstAvailablePost - First available post from PostStream
+ * @param {Object} @lastAvailablePost - Last available post from PostStream
  */
 export default class LoadMoreAccessible extends Component {
-  @service capabilities;
   @service appEvents;
+  @service accessibilityAnnouncer;
 
   @tracked isLoading = false;
   @tracked pendingFocusContext = null;
   @tracked loadTriggeredByIntersection = false;
 
-  // Track which event listeners are active
   #hasPostsAppendedListener = false;
 
   willDestroy() {
@@ -66,7 +67,7 @@ export default class LoadMoreAccessible extends Component {
       return;
     }
 
-    const { previousPostNumbers, focusContext } = this.pendingFocusContext;
+    const focusContext = this.pendingFocusContext;
 
     // Clear the pending context
     this.pendingFocusContext = null;
@@ -81,7 +82,7 @@ export default class LoadMoreAccessible extends Component {
 
     // Schedule focus for next render cycle
     schedule("afterRender", () => {
-      this.#focusAppropriateNewPost(previousPostNumbers, focusContext);
+      this.#focusAppropriateNewPost(focusContext);
     });
   }
 
@@ -93,12 +94,6 @@ export default class LoadMoreAccessible extends Component {
     return this.isLoadingAbove
       ? i18n("post.load_more_posts_above")
       : i18n("post.load_more_posts_below");
-  }
-
-  get buttonAriaLabel() {
-    return this.isLoadingAbove
-      ? i18n("post.sr_load_more_posts_above")
-      : i18n("post.sr_load_more_posts_below");
   }
 
   @action
@@ -115,25 +110,15 @@ export default class LoadMoreAccessible extends Component {
     try {
       this.isLoading = true;
 
-      // Announce loading has started
-      this.#announceLoading();
-
-      // Get existing post numbers and current focus context before loading
-      const existingPostNumbers = this.#getExistingPostNumbers();
+      const existingPostNumbers = this.args.existingPostNumbers;
       const currentFocusContext =
         this.#getCurrentFocusContext(existingPostNumbers);
 
-      // Trigger the actual loading action
       await this.args.action();
 
-      // Set up focus management for intersection-triggered loading (both above and below)
       if (this.loadTriggeredByIntersection) {
-        this.pendingFocusContext = {
-          previousPostNumbers: existingPostNumbers,
-          focusContext: currentFocusContext,
-        };
+        this.pendingFocusContext = currentFocusContext;
 
-        // Listen for the post-stream to signal completion
         if (!this.#hasPostsAppendedListener) {
           this.appEvents.on(
             "post-stream:posts-appended",
@@ -151,119 +136,39 @@ export default class LoadMoreAccessible extends Component {
 
   #getCurrentFocusContext(existingPostNumbers) {
     if (this.isLoadingAbove) {
-      // For loading above, find all posts in DOM order and get the first one
-      // (since new posts will be inserted above it)
-      const allPostElements = Array.from(
-        document.querySelectorAll("[data-post-number]")
-      );
+      // For loading above, use the first available post from PostStream if provided
       const firstPostNumber =
-        allPostElements.length > 0
-          ? parseInt(allPostElements[0].dataset.postNumber, 10)
-          : Math.min(...existingPostNumbers);
+        this.args.firstAvailablePost?.post_number ||
+        (existingPostNumbers.length > 0
+          ? Math.min(...existingPostNumbers)
+          : null);
 
       return {
         direction: "above",
         nearestPost: firstPostNumber,
-        allExistingInOrder: allPostElements.map((el) =>
-          parseInt(el.dataset.postNumber, 10)
-        ),
       };
     } else {
-      // For loading below, find all posts in DOM order and get the last one
-      // (since new posts will be inserted below it)
-      const allPostElements = Array.from(
-        document.querySelectorAll("[data-post-number]")
-      );
+      // For loading below, use the last available post from PostStream if provided
       const lastPostNumber =
-        allPostElements.length > 0
-          ? parseInt(
-              allPostElements[allPostElements.length - 1].dataset.postNumber,
-              10
-            )
-          : Math.max(...existingPostNumbers);
+        this.args.lastAvailablePost?.post_number ||
+        (existingPostNumbers.length > 0
+          ? Math.max(...existingPostNumbers)
+          : null);
 
       return {
         direction: "below",
         nearestPost: lastPostNumber,
-        allExistingInOrder: allPostElements.map((el) =>
-          parseInt(el.dataset.postNumber, 10)
-        ),
       };
     }
   }
 
-  #announceLoading() {
-    const announcement = document.createElement("div");
-    announcement.setAttribute("aria-live", "polite");
-    announcement.className = "sr-only";
-    announcement.textContent = this.isLoadingAbove
-      ? i18n("post.loading_more_posts_above")
-      : i18n("post.loading_more_posts_below");
-    document.body.appendChild(announcement);
-
-    setTimeout(() => {
-      if (document.body.contains(announcement)) {
-        document.body.removeChild(announcement);
-      }
-    }, 2000);
-  }
-
-  #getExistingPostNumbers() {
-    return Array.from(document.querySelectorAll("[data-post-number]"))
-      .map((el) => parseInt(el.dataset.postNumber, 10))
-      .filter((num) => !isNaN(num));
-  }
-
-  #focusAppropriateNewPost(previousPostNumbers, focusContext) {
-    // Find all current posts
-    const currentPostNumbers = this.#getExistingPostNumbers();
-
-    // Find newly loaded posts
-    const newPostNumbers = currentPostNumbers.filter(
-      (num) => !previousPostNumbers.includes(num)
-    );
-    if (newPostNumbers.length === 0) {
-      return;
-    }
-
-    // Find the logical continuation post by looking at actual DOM order
+  #focusAppropriateNewPost(focusContext) {
     let targetPostNumber;
 
-    // Get all posts (existing + new) in current DOM order
-    const allCurrentElements = Array.from(
-      document.querySelectorAll("[data-post-number]")
-    );
-    const allCurrentNumbers = allCurrentElements.map((el) =>
-      parseInt(el.dataset.postNumber, 10)
-    );
-
     if (focusContext.direction === "above") {
-      // For loading above: find the new post that's now immediately before the first existing post
-      const firstExistingPost = focusContext.nearestPost;
-      const firstExistingIndex = allCurrentNumbers.indexOf(firstExistingPost);
-
-      if (firstExistingIndex > 0) {
-        // Focus on the post that's now just before the first existing post
-        targetPostNumber = allCurrentNumbers[firstExistingIndex - 1];
-      } else {
-        // Fallback: focus on the highest new post
-        targetPostNumber = Math.max(...newPostNumbers);
-      }
+      targetPostNumber = focusContext.nearestPost - 1;
     } else {
-      // For loading below: find the new post that's now immediately after the last existing post
-      const lastExistingPost = focusContext.nearestPost;
-      const lastExistingIndex = allCurrentNumbers.indexOf(lastExistingPost);
-
-      if (
-        lastExistingIndex >= 0 &&
-        lastExistingIndex < allCurrentNumbers.length - 1
-      ) {
-        // Focus on the post that's now just after the last existing post
-        targetPostNumber = allCurrentNumbers[lastExistingIndex + 1];
-      } else {
-        // Fallback: focus on the lowest new post
-        targetPostNumber = Math.min(...newPostNumbers);
-      }
+      targetPostNumber = focusContext.nearestPost + 1;
     }
 
     // Try to find the target post heading first
@@ -271,37 +176,24 @@ export default class LoadMoreAccessible extends Component {
       `post-heading-${targetPostNumber}`
     );
 
-    // Fallback to the post element itself if heading not found
+    // Fallback to the post element if heading not found
     if (!targetElement) {
       targetElement = document.querySelector(
         `[data-post-number="${targetPostNumber}"]`
       );
     }
 
+    this.accessibilityAnnouncer.announce(
+      i18n("post.loading_complete"),
+      "polite"
+    );
+
     if (targetElement) {
-      // Focus on the target element (no scrolling - let screen reader handle navigation)
       targetElement.focus();
-
-      // Announce the successful navigation with direction context
-      const announcement = document.createElement("div");
-      announcement.setAttribute("aria-live", "assertive");
-      announcement.className = "sr-only";
-      announcement.textContent =
-        focusContext.direction === "above"
-          ? `Moved to post ${targetPostNumber}. ${newPostNumbers.length} new posts loaded above.`
-          : `Moved to post ${targetPostNumber}. ${newPostNumbers.length} new posts loaded below.`;
-      document.body.appendChild(announcement);
-
-      setTimeout(() => {
-        if (document.body.contains(announcement)) {
-          document.body.removeChild(announcement);
-        }
-      }, 3000);
     }
   }
 
   <template>
-    {{! Standard intersection-observer based loading for sighted users }}
     <LoadMore
       @action={{this.handleIntersectionLoad}}
       @enabled={{this.enabled}}
@@ -314,13 +206,9 @@ export default class LoadMoreAccessible extends Component {
     </LoadMore>
 
     {{! Screen reader accessible heading for navigation-based loading }}
-    <div class="load-more-accessible">
-      <h2
-        class="load-more-accessible__heading"
-        tabindex="0"
-        id="load-more-heading"
-      >
-        {{if this.isLoading "Loading more posts..." this.buttonLabel}}
+    <div class="load-more-accessible sr-only">
+      <h2 class="load-more-accessible__heading" id="load-more-heading">
+        {{if this.isLoading (i18n "post.loading_more_posts") this.buttonLabel}}
       </h2>
     </div>
   </template>

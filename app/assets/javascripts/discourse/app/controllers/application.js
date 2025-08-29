@@ -16,6 +16,7 @@ export default class ApplicationController extends Controller {
   @service header;
   @service sidebarState;
   @service appEvents;
+  @service accessibilityAnnouncer;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
@@ -126,6 +127,21 @@ export default class ApplicationController extends Controller {
       );
     } catch {
       // Ignore if controller doesn't exist yet
+      return false;
+    }
+  }
+
+  @discourseComputed("router.currentRouteName")
+  topicHasMultiplePosts(currentRouteName) {
+    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
+      return false;
+    }
+
+    try {
+      const topicController = getOwner(this).lookup("controller:topic");
+      const postsCount = topicController?.get("model.posts_count");
+      return postsCount && postsCount > 1;
+    } catch {
       return false;
     }
   }

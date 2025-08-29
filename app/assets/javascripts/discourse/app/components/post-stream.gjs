@@ -83,6 +83,13 @@ export default class PostStream extends Component {
     return this.posts.at(-1);
   }
 
+  get existingPostNumbers() {
+    return this.posts
+      .filter((post) => !this.isPlaceholder(post))
+      .map((post) => post.post_number)
+      .filter((num) => !isNaN(num));
+  }
+
   @cached
   get postTuples() {
     const posts = this.posts;
@@ -255,6 +262,9 @@ export default class PostStream extends Component {
           @direction="above"
           @canLoadMore={{@postStream.canPrependMore}}
           @postStream={{@postStream}}
+          @existingPostNumbers={{this.existingPostNumbers}}
+          @firstAvailablePost={{this.firstAvailablePost}}
+          @lastAvailablePost={{this.lastAvailablePost}}
         />
       {{/if}}
 
@@ -367,6 +377,9 @@ export default class PostStream extends Component {
             @direction="below"
             @canLoadMore={{@postStream.canAppendMore}}
             @postStream={{@postStream}}
+            @existingPostNumbers={{this.existingPostNumbers}}
+            @firstAvailablePost={{this.firstAvailablePost}}
+            @lastAvailablePost={{this.lastAvailablePost}}
           />
         {{else}}
           <div

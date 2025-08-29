@@ -25,6 +25,7 @@ import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
+import { relativeAge } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
@@ -97,6 +98,21 @@ export default class Post extends Component {
       this.args.filteringRepliesToPostNumber ===
       this.args.post.post_number.toString()
     );
+  }
+
+  get postDate() {
+    if (this.args.post.wiki && this.args.post.last_wiki_edit) {
+      return this.args.post.last_wiki_edit;
+    } else {
+      return this.args.post.created_at;
+    }
+  }
+
+  get postDateText() {
+    return relativeAge(new Date(this.postDate), {
+      format: "medium",
+      wrapInSpan: false,
+    });
   }
 
   get filteredRepliesView() {
@@ -409,14 +425,10 @@ export default class Post extends Component {
           all cloaked items can be referenced and we need to override it }}
       id={{if @cloaked (concat "post_" @post.post_number)}}
     >
-      <h2
-        class="sr-only"
-        id={{concat "post-heading-" @post.post_number}}
-        tabindex="0"
-      >
+      <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
         {{i18n
           "share.post"
-          (hash postNumber=@post.post_number username=@post.username)
+          (hash username=@post.username date=this.postDateText)
         }}
       </h2>
       {{#unless @cloaked}}

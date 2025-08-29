@@ -256,7 +256,7 @@ en:
         name: Chinese Simplified
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber} by @%{username}"
+      post: "post by @%{username} on %{date}"
       close: "close"
       twitter: "Share on X"
       facebook: "Share on Facebook"
@@ -4109,6 +4109,8 @@ en:
       sr_load_more_posts_below: "Load more posts below this one"
       loading_more_posts_above: "Loading more posts above..."
       loading_more_posts_below: "Loading more posts below..."
+      loading_more_posts: "Loading more posts..."
+      loading_complete: "Loading complete"
       sr_load_more_instructions: "Use this button to load additional posts when navigating by headings"
       sr_date: "Post date"
       sr_expand_replies:
