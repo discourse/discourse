@@ -1,10 +1,10 @@
 import { schedule } from "@ember/runloop";
 import { create } from "virtual-dom";
+import ImageGrid from "discourse/components/image-grid";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
@@ -28,11 +28,7 @@ export default {
         return highlightSyntax(elem, siteSettings, session);
       });
 
-      api.decorateCookedElement((elem) => {
-        return lightbox(elem, siteSettings);
-      });
-
-      api.decorateCookedElement((elem) => {
+      api.decorateCookedElement((elem, helper) => {
         const grids = elem.querySelectorAll(".d-image-grid");
 
         if (!grids.length) {
@@ -40,10 +36,25 @@ export default {
         }
 
         grids.forEach((grid) => {
-          return new Columns(grid, {
-            columns: site.mobileView ? 2 : 3,
-          });
+          const wrapper = document.createElement("div");
+          wrapper.classList.add("d-image-grid-wrapper");
+
+          helper.renderGlimmer(
+            wrapper,
+            ImageGrid,
+            {
+              // prevent children from being removed from the DOM when rendering the Glimmer component
+              wrappedElements: Array.from(grid.children),
+            },
+            { append: false }
+          );
+
+          grid.replaceWith(wrapper);
         });
+      });
+
+      api.decorateCookedElement((elem) => {
+        return lightbox(elem, siteSettings);
       });
 
       if (siteSettings.support_mixed_text_direction) {
