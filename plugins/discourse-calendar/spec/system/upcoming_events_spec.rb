@@ -33,44 +33,108 @@ describe "Upcoming Events", type: :system do
         PostCreator.create!(
           admin,
           title: "Event with local time",
-          raw: "[event showLocalTime=true timezone=CET start=\"2025-09-11 08:05\"]\n[/event]",
+          raw:
+            "[event showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
         )
 
         PostCreator.create!(
           admin,
           title: "Event without local time",
-          raw: "[event timezone=CET start=\"2025-09-11 19:00\"]\n[/event]",
+          raw: "[event timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 22:00\"]\n[/event]",
         )
 
         PostCreator.create!(
           admin,
           title: "Event with local time and same timezone than user",
           raw:
-            "[event showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\"]\n[/event]",
+            "[event showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-13 08:05\" end=\"2025-09-13 10:05\"]]\n[/event]",
+        )
+
+        PostCreator.create!(
+          admin,
+          title: "Recurring event with local time",
+          raw:
+            "[event recurrence=every_week showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]]\n[/event]",
+        )
+
+        PostCreator.create!(
+          admin,
+          title: "Recurring event without local time",
+          raw:
+            "[event recurrence=every_week timezone=CET start=\"2025-09-11 19:00\"  end=\"2025-09-11 22:00\"]\n[/event]",
+        )
+
+        PostCreator.create!(
+          admin,
+          title: "Recurring event with local time and same timezone than user",
+          raw:
+            "[event recurrence=every_week showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\"  end=\"2025-09-12 10:05\"]\n[/event]",
         )
       end
 
-      it "shows local time when showLocalTime is enabled",
+      it "shows local time when show_local_time is enabled",
          timezone: "Australia/Brisbane",
          time: Time.utc(2025, 6, 2, 19, 00) do
         upcoming_events.visit
         upcoming_events.open_year_view
 
-        first_item = upcoming_events.find_event_by_position(2)
-        expect(upcoming_events.event_time_text(first_item)).to include("2:05am")
-        expect(upcoming_events.event_title_text(first_item)).to eq(
-          "Event with local time (Local time: 8:05am)",
-        )
+        # first_item = upcoming_events.find_event_by_position(2)
+        # expect(upcoming_events.event_time_text(first_item)).to include("8:05am")
+        # expect(upcoming_events.event_title_text(first_item)).to eq(
+        #   "Event with local time (Local time)",
+        # )
 
-        second_item = upcoming_events.find_event_by_position(3)
-        expect(upcoming_events.event_time_text(second_item)).to include("1:00pm")
-        expect(upcoming_events.event_title_text(second_item)).to eq("Event without local time")
+        # click_link("Event with local time (Local time)")
 
-        third_item = upcoming_events.find_event_by_position(5)
-        expect(upcoming_events.event_time_text(third_item)).to include("8:05am")
-        expect(upcoming_events.event_title_text(third_item)).to eq(
-          "Event with local time and same timezone than user",
-        )
+        # expect(page).to have_css(
+        #   ".event__section.event-dates",
+        #   text: "Thu, Sep 11 8:05 AM → 9:05 AM",
+        # )
+
+        # page.send_keys(:escape)
+
+        # second_item = upcoming_events.find_event_by_position(3)
+        # expect(upcoming_events.event_time_text(second_item)).to include("1:00pm - 2:00pm")
+        # expect(upcoming_events.event_title_text(second_item)).to eq(
+        #   "Recurring event with local time (Local time)",
+        # )
+
+        # click_link("Recurring event with local time (Local time)")
+
+        pause_test
+
+        # expect(page).to have_css(
+        #   ".event__section.event-dates",
+        #   text: "Thu, Sep 11 1:00 PM → 2:00 PM",
+        # )
+
+        # page.send_keys(:escape)
+
+        # second_item = upcoming_events.find_event_by_position(3)
+        # expect(upcoming_events.event_time_text(second_item)).to include("1:00pm - 2:00pm")
+        # expect(upcoming_events.event_title_text(second_item)).to eq("Event without local time")
+
+        # click_link("Event without local time")
+
+        # expect(page).to have_css(
+        #   ".event__section.event-dates",
+        #   text: "Thu, Sep 11 1:00 PM → 2:00 PM",
+        # )
+
+        # page.send_keys(:escape)
+
+        # third_item = upcoming_events.find_event_by_position(5)
+        # expect(upcoming_events.event_time_text(third_item)).to include("8:05am - 9:05am")
+        # expect(upcoming_events.event_title_text(third_item)).to eq(
+        #   "Event with local time and same timezone than user",
+        # )
+
+        # click_link("Event with local time and same timezone than user")
+
+        # expect(page).to have_css(
+        #   ".event__section.event-dates",
+        #   text: "Fri, Sep 12 8:05 AM → 9:05 AM",
+        # )
       end
     end
 

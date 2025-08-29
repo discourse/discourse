@@ -403,14 +403,15 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      next_ends_at = original_ends_at ? next_starts_at + event_duration : nil
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
       [next_starts_at, next_ends_at]
     end
 
     def duration
-      return nil unless starts_at && ends_at
+      return nil unless original_starts_at
 
-      duration_seconds = (ends_at - starts_at).to_i
+      duration_seconds = original_ends_at ? original_ends_at - original_starts_at : 3600
       hours = (duration_seconds / 3600)
       minutes = ((duration_seconds % 3600) / 60)
       seconds = (duration_seconds % 60)
@@ -419,7 +420,7 @@ module DiscoursePostEvent
     end
 
     def rrule_timezone
-      show_local_time ? "UTC" : timezone
+      timezone
     end
 
     private
@@ -475,10 +476,6 @@ module DiscoursePostEvent
         recurrence_until: timezone_recurrence_until,
         dtstart: timezone_starts_at,
       ).first
-    end
-
-    def event_duration
-      original_ends_at - original_starts_at
     end
   end
 end

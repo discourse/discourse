@@ -36,10 +36,8 @@ class RRuleGenerator
     if dtstart
       if show_local_time
         dtstart_line = "DTSTART:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
-      elsif timezone == "UTC"
-        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
       else
-        dtstart_line = "DTSTART;TZID=#{timezone}:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
+        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
       end
       "#{dtstart_line}\n#{rrule_line}"
     else
@@ -63,9 +61,6 @@ class RRuleGenerator
   end
 
   def self.set_mandatory_options(rrule, time)
-    # Use local time for BYHOUR/BYMINUTE to match the timezone-specific DTSTART
-    rrule["BYHOUR"] = time.strftime("%H")
-    rrule["BYMINUTE"] = time.strftime("%M")
     rrule["INTERVAL"] ||= 1
     rrule["WKST"] = "MO" # considers Monday as the first day of the week
     rrule
