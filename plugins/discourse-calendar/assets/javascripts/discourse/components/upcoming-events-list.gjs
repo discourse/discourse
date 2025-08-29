@@ -96,7 +96,7 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
-      after: moment().add(-2, "hours").toISOString(),
+      after: moment().subtract(2, "hours").toISOString(),
     };
 
     if (this.includeSubcategories) {
