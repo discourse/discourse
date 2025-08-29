@@ -25,6 +25,14 @@ module PageObjects
         find(".set-default").click
       end
 
+      def delete_theme(theme)
+        open_theme_menu(theme)
+        find(".delete").click
+        confirmation_dialog = PageObjects::Components::Dialog.new
+        confirmation_dialog.click_danger
+        expect(confirmation_dialog).to be_closed
+      end
+
       def has_default_badge?(theme)
         has_badge?(theme, "--default", text: I18n.t("admin_js.admin.customize.theme.default"))
       end
@@ -39,6 +47,11 @@ module PageObjects
 
       def has_no_badge?(theme, badge)
         find_theme_card(theme).has_no_css?(".theme-card__badge.#{badge}")
+      end
+
+      def has_disabled_delete_button?(theme)
+        open_theme_menu(theme)
+        has_css?(".btn-danger.delete[disabled]")
       end
 
       def has_themes?(names)
