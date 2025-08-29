@@ -1468,16 +1468,9 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewTopic({
-    title,
-    body,
-    category,
-    tags,
-    tagRestricted,
-    formTemplate,
-  } = {}) {
+  async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
     const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
-    tags = !tagRestricted ? tags : null;
+    tags = await this.filterTags(tags);
 
     return this.open({
       prioritizedCategoryId: category?.id,
@@ -1505,6 +1498,23 @@ export default class ComposerService extends Service {
       draftKey: this.privateMessageDraftKey,
       hasGroups,
     });
+  }
+
+  async filterTags(tags) {
+    if (!tags || this.currentUser?.staff) {
+      return tags;
+    }
+
+    if (typeof tags === "string") {
+      tags = await this.store.findAll("listTag", {
+        only_tags: tags.split(","),
+      });
+    }
+
+    return tags
+      .filter((t) => !t.staff)
+      .map((t) => t.name)
+      .join(",");
   }
 
   // Given a potential instance and options, set the model for this composer.
