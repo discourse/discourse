@@ -420,7 +420,7 @@ module DiscoursePostEvent
     end
 
     def rrule_timezone
-      timezone
+      timezone || "UTC"
     end
 
     private

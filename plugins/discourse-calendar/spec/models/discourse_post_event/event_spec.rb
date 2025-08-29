@@ -630,7 +630,7 @@ describe DiscoursePostEvent::Event do
           Fabricate(
             :event,
             recurrence: "every_day",
-            recurrence_until: "2020-04-25 06:59",
+            recurrence_until: "2020-04-25 23:59",
             original_starts_at: "2020-04-20 13:00",
           )
         end
@@ -639,8 +639,8 @@ describe DiscoursePostEvent::Event do
           expect(next_date).not_to be_blank
           expect(next_date).to be_an(Array)
           expect(next_date.length).to eq(2)
-          expect(next_date[0]).to eq(Time.utc(2020, 4, 24, 15, 0, 0))
-          expect(next_date[1]).to eq(Time.utc(2020, 4, 24, 16, 0, 0))
+          expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
+          expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
         end
       end
     end
