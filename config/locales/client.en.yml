@@ -4106,13 +4106,8 @@ en:
       load_more_posts_below: "Load more posts below"
       sr_collapse_replies: "Collapse embedded replies"
       sr_load_more_replies: "Load more embedded replies"
-      sr_load_more_posts_above: "Load more posts above this one"
-      sr_load_more_posts_below: "Load more posts below this one"
-      loading_more_posts_above: "Loading more posts above..."
-      loading_more_posts_below: "Loading more posts below..."
       loading_more_posts: "Loading more posts..."
       loading_complete: "Loading complete"
-      sr_load_more_instructions: "Use this button to load additional posts when navigating by headings"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
