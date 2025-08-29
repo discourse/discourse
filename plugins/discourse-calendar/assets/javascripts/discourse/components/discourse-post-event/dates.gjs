@@ -6,6 +6,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import discourseLater from "discourse/lib/later";
 import loadRRule from "discourse/lib/load-rrule";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
@@ -21,28 +22,26 @@ export default class DiscoursePostEventDates extends Component {
   }
 
   get startsAt() {
-    const currentEventStart = this.args.currentEventStart;
-    const eventStartsAt = this.args.event.startsAt;
-    const timezone = this.timezone;
-
-    return currentEventStart ?? moment(eventStartsAt).tz(timezone);
+    return (
+      this.args.currentEventStart ??
+      moment(this.args.event.startsAt).tz(this.timezone)
+    );
   }
 
   get endsAt() {
     const currentEventEnd = this.args.currentEventEnd;
     const eventEndsAt = this.args.event.endsAt;
-    const timezone = this.timezone;
 
     return (
-      currentEventEnd ?? (eventEndsAt ? moment(eventEndsAt).tz(timezone) : null)
+      currentEventEnd ??
+      (eventEndsAt ? moment(eventEndsAt).tz(this.timezone) : null)
     );
   }
 
   get startsAtFormat() {
-    const startsAt = this.startsAt;
-    const includeYear = !this.isSameYear(startsAt);
-    const includeTime = this.hasTime(startsAt) || this.isSingleDayEvent;
-    return this._buildFormat(startsAt, { includeYear, includeTime });
+    const includeYear = !this.isSameYear(this.startsAt);
+    const includeTime = this.hasTime(this.startsAt) || this.isSingleDayEvent;
+    return this._buildFormat(this.startsAt, { includeYear, includeTime });
   }
 
   get endsAtFormat() {
@@ -142,19 +141,22 @@ export default class DiscoursePostEventDates extends Component {
       const result = await cook(bbcode);
       this.htmlDates = htmlSafe(result.toString());
 
-      schedule("afterRender", () => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+      // doesn’t work reliably without discourseLater
+      discourseLater(() => {
+        schedule("afterRender", () => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
 
-        const localDateElements = element.querySelectorAll(
-          `[data-post-id="${this.args.event.id}"].discourse-local-date`
-        );
-        applyLocalDates(
-          localDateElements,
-          this.siteSettings,
-          this.currentUser?.user_option?.timezone
-        );
+          const localDateElements = element.querySelectorAll(
+            `[data-post-id="${this.args.event.id}"].discourse-local-date`
+          );
+          applyLocalDates(
+            localDateElements,
+            this.siteSettings,
+            this.currentUser?.user_option?.timezone
+          );
+        });
       });
     } else {
       let dates = `${this.startsAt.format(this.startsAtFormat)}`;
