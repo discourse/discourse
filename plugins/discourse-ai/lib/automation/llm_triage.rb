@@ -20,7 +20,10 @@ module DiscourseAi
         whisper: nil,
         reply_persona_id: nil,
         max_output_tokens: nil,
-        action: nil
+        action: nil,
+        notify_author_pm: nil,
+        notify_author_pm_user: nil,
+        notify_author_pm_message: nil
       )
         if category_id.blank? && tags.blank? && canned_reply.blank? && hide_topic.blank? &&
              flag_post.blank? && reply_persona_id.blank?
@@ -170,7 +173,53 @@ module DiscourseAi
               # We cannot do this through the PostActionCreator because hiding a post is reserved for auto action flags.
               # Those flags are off_topic, inappropiate, and spam. We want a more generic type for triage, so none of those
               # fit here.
-              post.hide!(PostActionType.types[:notify_moderators]) if flag_type == :review_hide
+              if flag_type == :review_hide
+                post.hide!(PostActionType.types[:notify_moderators])
+              elsif flag_type == :review_delete
+                # Soft-delete the post so it is hidden from users until a moderator handles it in review.
+                PostDestroyer.new(Discourse.system_user, post, context: "llm_triage").destroy
+              end
+
+              if notify_author_pm && action != :edit
+                begin
+                  pm_sender =
+                    if notify_author_pm_user.present?
+                      User.find_by_username(notify_author_pm_user)
+                    else
+                      nil
+                    end
+                  pm_sender ||= Discourse.system_user
+
+                  subject =
+                    I18n.t("discourse_automation.scriptables.llm_triage.notify_author_pm.subject")
+
+                  default_body =
+                    I18n.t(
+                      "discourse_automation.scriptables.llm_triage.notify_author_pm.body",
+                      username: post.user.username,
+                      topic_title: post.topic.title,
+                      post_url: post.url,
+                    )
+
+                  body = notify_author_pm_message.presence || default_body
+
+                  PostCreator.create!(
+                    pm_sender,
+                    title: subject,
+                    raw: body,
+                    archetype: Archetype.private_message,
+                    target_usernames: post.user.username,
+                    skip_validations: true,
+                  )
+                rescue StandardError => e
+                  Discourse.warn_exception(
+                    e,
+                    message:
+                      "Error sending PM notification for triage on: #{post&.url} in LlmTriage.handle",
+                  )
+                  raise e if Rails.env.test?
+                end
+              end
             end
           end
         end

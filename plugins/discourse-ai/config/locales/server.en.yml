@@ -4,6 +4,7 @@ en:
       flag_types:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
+        review_delete: "Add post to review queue and delete post"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -20,6 +21,14 @@ en:
           <div>Response from the model:</div>
           <p>%%LLM_RESPONSE%%</p>
           <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> rule.</b>
+        notify_author_pm:
+          subject: "Your post was temporarily removed for review"
+          body: |
+            Hi @%{username},
+
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
+
+            Reference: %{post_url}
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"

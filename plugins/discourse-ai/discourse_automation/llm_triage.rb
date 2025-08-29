@@ -52,6 +52,9 @@ if defined?(DiscourseAutomation)
               ),
           }
     field :whisper, component: :boolean
+    field :notify_author_pm, component: :boolean
+    field :notify_author_pm_user, component: :user
+    field :notify_author_pm_message, component: :message
 
     script do |context, fields|
       post = context["post"]
@@ -68,6 +71,9 @@ if defined?(DiscourseAutomation)
       canned_reply_user = fields.dig("canned_reply_user", "value")
       reply_persona_id = fields.dig("reply_persona", "value")
       whisper = fields.dig("whisper", "value")
+      notify_author_pm = fields.dig("notify_author_pm", "value")
+      notify_author_pm_user = fields.dig("notify_author_pm_user", "value")
+      notify_author_pm_message = fields.dig("notify_author_pm_message", "value")
 
       # nothing to do if we already replied
       next if post.user.username == canned_reply_user
@@ -122,6 +128,9 @@ if defined?(DiscourseAutomation)
           automation: self.automation,
           max_output_tokens: max_output_tokens,
           action: context["action"],
+          notify_author_pm: notify_author_pm,
+          notify_author_pm_user: notify_author_pm_user,
+          notify_author_pm_message: notify_author_pm_message,
         )
       rescue => e
         Discourse.warn_exception(
