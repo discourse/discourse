@@ -22,6 +22,15 @@ Fabricator(:upload) do
   end
 
   extension "png"
+
+  transient :uploaders
+
+  after_create do |upload, transients|
+    UserUpload.find_or_create_by!(upload:, user: upload.user)
+    transients[:uploaders]&.each do |uploader|
+      UserUpload.find_or_create_by!(upload:, user: uploader)
+    end
+  end
 end
 
 Fabricator(:large_image_upload, from: :upload) do
@@ -119,4 +128,9 @@ Fabricator(:optimized_video_upload, from: :upload) do
   url do |attrs|
     sequence(:url) { |n| "//bucket.s3.region.amazonaws.com/original/1X/#{attrs[:sha1]}.mp4" }
   end
+end
+
+Fabricator(:user_upload) do
+  upload
+  user
 end
