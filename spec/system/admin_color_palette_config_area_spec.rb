@@ -3,6 +3,7 @@
 describe "Admin Color Palette Config Area Page", type: :system do
   fab!(:admin)
   fab!(:color_scheme) { Fabricate(:color_scheme, user_selectable: false, name: "A Test Palette") }
+  fab!(:color_scheme_2, :color_scheme)
 
   let(:config_area) { PageObjects::Pages::AdminColorPaletteConfigArea.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -204,5 +205,34 @@ describe "Admin Color Palette Config Area Page", type: :system do
     color_scheme.colors.each do |color|
       expect(color.hex).to eq(clipboard_scheme["light"][color.name])
     end
+  end
+
+  it "can toggle light and dark palette as default on default theme" do
+    Theme.find_default.update!(color_scheme: color_scheme)
+
+    config_area.visit(color_scheme.id)
+    expect(page).to have_text(
+      I18n.t(
+        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
+        themeName: "Foundation",
+      ),
+    )
+    expect(page).to have_text(
+      I18n.t(
+        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
+        themeName: "Foundation",
+      ),
+    )
+    config_area.default_light_on_theme_field.have_value?(true)
+    config_area.default_dark_on_theme_field.have_value?(false)
+    config_area.default_light_on_theme_field.toggle
+    config_area.default_dark_on_theme_field.toggle
+    config_area.form.submit
+    config_area.default_light_on_theme_field.have_value?(false)
+    config_area.default_dark_on_theme_field.have_value?(true)
+
+    config_area.visit(color_scheme_2.id)
+    config_area.default_light_on_theme_field.have_value?(false)
+    config_area.default_dark_on_theme_field.have_value?(false)
   end
 end

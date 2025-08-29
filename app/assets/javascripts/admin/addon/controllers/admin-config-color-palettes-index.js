@@ -7,7 +7,7 @@ import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
-export default class AdminCustomizeColorsController extends Controller {
+export default class AdminConfigColorPalettesIndexController extends Controller {
   @service router;
   @service modal;
   @service store;
@@ -195,7 +195,7 @@ export default class AdminCustomizeColorsController extends Controller {
       this.model.pushObject(newColorScheme);
       newColorScheme.set("savingStatus", null);
 
-      this.router.replaceWith("adminCustomize.colors-show", newColorScheme);
+      this.router.replaceWith("adminConfig.colorPalettes.show", newColorScheme);
     });
   }
 

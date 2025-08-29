@@ -158,7 +158,7 @@ export default class ColorPaletteListItem extends Component {
           <DButtonTooltip>
             <:button>
               <DButton
-                @route="adminCustomize.colors-show"
+                @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
                 @label={{this.editButtonLabel}}
                 class="btn-secondary"

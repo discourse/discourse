@@ -32,7 +32,7 @@ describe "Admin Customize Themes", type: :system do
 
       expect(page).to have_link(
         I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/customize/colors/#{color_scheme.id}",
+        href: "/admin/config/colors/#{color_scheme.id}",
       )
     end
 
@@ -54,7 +54,7 @@ describe "Admin Customize Themes", type: :system do
 
       expect(page).to have_link(
         I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/customize/colors/#{color_scheme.id}",
+        href: "/admin/config/colors/#{color_scheme.id}",
       )
     end
 

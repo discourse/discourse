@@ -148,7 +148,7 @@ export default RouteTemplate(
 
               {{#if @controller.colorSchemeId}}
                 <LinkTo
-                  @route="adminCustomize.colors-show"
+                  @route="adminConfig.colorPalettes.show"
                   @model={{@controller.colorSchemeId}}
                 >
                   {{i18n "admin.customize.theme.edit_colors"}}
@@ -201,7 +201,7 @@ export default RouteTemplate(
 
               {{#if @controller.darkColorSchemeId}}
                 <LinkTo
-                  @route="adminCustomize.colors-show"
+                  @route="adminConfig.colorPalettes.show"
                   @model={{@controller.darkColorSchemeId}}
                 >
                   {{i18n "admin.customize.theme.edit_colors"}}
