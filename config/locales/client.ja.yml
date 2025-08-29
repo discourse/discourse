@@ -6355,14 +6355,6 @@ ja:
           repo_unreachable: "このテーマの Git リポジトリに接続できませんでした。エラーメッセージ:"
           built_in_description: "このテーマは事前インストール済みであるため、削除またはカスタマイズできません"
           imported_from_archive: "このテーマは .zip ファイルからインポートされました"
-          settings: "設定"
-          colors: "色"
-          unsaved_colors:
-            other: "保存されていない色が %{count} 色あります"
-          unsaved_colors_leave_route_confirmation: "色パレットの変更をまだ保存していません。終了してもよろしいですか？"
-          save_colors: "色を保存"
-          discard_colors: "破棄"
-          colors_title: "色"
           scss:
             text: "CSS"
             title: "SCSS 構文をサポートするカスタム CSS ルール"

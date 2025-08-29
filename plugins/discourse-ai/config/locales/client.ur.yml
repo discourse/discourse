@@ -201,8 +201,8 @@ ur:
           next_log: "اگلا"
           previous_log: "پچھلی"
         share_full_topic_modal:
-          share: "لنک کو شیئر اور کاپی کریں"
-          update: "لنک کو اپ ڈیٹ اور کاپی کریں"
+          share: "رابطہ کو شیئر اور کاپی کریں"
+          update: "رابطہ کو اپ ڈیٹ اور کاپی کریں"
           delete: "شیئر کو حذف کریں"
         invite_ai_conversation:
           button: "دعوت دیں"

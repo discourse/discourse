@@ -5903,10 +5903,6 @@ zh_TW:
           remote_theme_edits: "如果您要編輯此主題，您必須<a href='%{repoURL}' target='_blank'>在其儲存庫中提交變更</a>"
           repo_unreachable: "無法連線至此佈景主題的 Git 版本庫。錯誤訊息："
           imported_from_archive: "此主題從 .zip 檔案匯入"
-          settings: "設定"
-          colors: "顏色"
-          discard_colors: "捨棄"
-          colors_title: "顏色"
           scss:
             text: "CSS"
             title: "支援 SCSS 語法的自訂 CSS 規則"

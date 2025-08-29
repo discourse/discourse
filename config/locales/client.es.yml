@@ -6640,15 +6640,6 @@ es:
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
           built_in_description: "Este tema está preinstalado y no se puede eliminar ni personalizar"
           imported_from_archive: "Este tema se importó desde un archivo .zip"
-          settings: "Ajustes"
-          colors: "Colores"
-          unsaved_colors:
-            one: "Tienes %{count} color sin guardar"
-            other: "Tienes %{count} colores sin guardar"
-          unsaved_colors_leave_route_confirmation: "Aún no has guardado los cambios en la paleta de colores. ¿Seguro que quieres salir?"
-          save_colors: "Guardar colores"
-          discard_colors: "Descartar"
-          colors_title: "Colores"
           scss:
             text: "CSS"
             title: "Reglas CSS personalizadas compatibles con sintaxis SCSS"

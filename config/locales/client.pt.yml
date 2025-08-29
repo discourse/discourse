@@ -4786,10 +4786,6 @@ pt:
           remote_theme_edits: "Se quiser editar este tema, tem de <a href='%{repoURL}' target='_blank'>enviar uma alteração para o seu repositório</a>"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
-          settings: "Configurações"
-          colors: "Cores"
-          discard_colors: "Descartar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:

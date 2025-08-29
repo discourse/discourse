@@ -5138,10 +5138,6 @@ el:
           compare_commits: "(Δείτε νέες συνεισφορές)"
           repo_unreachable: "Δεν ήταν δυνατή η επικοινωνία με το αποθετήριο Git αυτού του θέματος. Μήνυμα σφάλματος:"
           imported_from_archive: "Αυτό το θέμα εισήχθη από ένα αρχείο .zip"
-          settings: "Ρυθμίσεις"
-          colors: "Χρώματα"
-          discard_colors: "Απόρριψη"
-          colors_title: "Χρώματα"
           scss:
             text: "CSS"
           after_header:

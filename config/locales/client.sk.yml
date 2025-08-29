@@ -7077,17 +7077,6 @@ sk:
           repo_unreachable: "Nepodarilo sa kontaktovať Git repozitár tohto motívu. Chybová správa:"
           built_in_description: "Táto téma je predinštalovaná a nie je možné ju odstrániť ani prispôsobiť"
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
-          settings: "Nastavenia"
-          colors: "Farby"
-          unsaved_colors:
-            one: "Máte %{count} neuloženú faribu"
-            few: "Máte %{count} neuložených farieb"
-            many: "Máte %{count} neuložených farieb"
-            other: "Máte %{count} neuložené farby"
-          unsaved_colors_leave_route_confirmation: "Zatiaľ ste neuložili zmeny farebnej palety. Naozaj chcete odísť?"
-          save_colors: "Uložiť farby"
-          discard_colors: "Zahodiť"
-          colors_title: "Farby"
           scss:
             text: "CSS"
             title: "Vlastné pravidlá CSS s podporou syntaxe SCSS"

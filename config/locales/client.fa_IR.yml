@@ -5995,10 +5995,6 @@ fa_IR:
           remote_theme_edits: "اگر می‌خواهید این پوسته را ویرایش کنید، باید <a href='%{repoURL}' target='_blank'>تغییری را در مخزن آن ارسال کنید</a>"
           repo_unreachable: "نمی توان با مخزن Git این پوسته ارتباط برقرار کرد. پیام خطا:"
           imported_from_archive: "این پوسته از یک فایل zip. وارد شده است"
-          settings: "تنظیمات"
-          colors: "رنگ‌ها"
-          discard_colors: "حذف"
-          colors_title: "رنگ‌ها"
           scss:
             text: "سی اس اس"
           after_header:

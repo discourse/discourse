@@ -6627,15 +6627,6 @@ it:
           repo_unreachable: "Impossibile accedere all'archivio Git di questo tema. Messaggio di errore:"
           built_in_description: "Questo tema è preinstallato e non può essere eliminato o personalizzato"
           imported_from_archive: "Questo tema è stato importato da un file .zip"
-          settings: "Impostazioni"
-          colors: "Colori"
-          unsaved_colors:
-            one: "Hai %{count} colore non salvato"
-            other: "Hai %{count} colori non salvati"
-          unsaved_colors_leave_route_confirmation: "Non hai ancora salvato le modifiche allo schema dei colori. Vuoi davvero uscire?"
-          save_colors: "Salva i colori"
-          discard_colors: "Elimina"
-          colors_title: "Colori"
           scss:
             text: "CSS"
             title: "Regole CSS personalizzate con supporto per la sintassi SCSS"

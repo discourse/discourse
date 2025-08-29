@@ -4720,11 +4720,6 @@ ro:
           add: "Adaugă"
           overriden_site_settings_explanation: "Setările site-ului pe care tema le poate personaliza. Dă clic pe Resetare pentru a reveni la valorile implicite a setărilor site-ului. Poți vedea toate setările site-ului suprascrise de teme în <a href='%{themeSiteSettingsConfigUrl}'>pagina de configurare a setărilor temei site-ului</a>."
           built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
-          settings: "Setări"
-          colors: "Culori"
-          save_colors: "Salvează culori"
-          discard_colors: "Renunță"
-          colors_title: "Culori"
           scss:
             text: "CSS"
           after_header:

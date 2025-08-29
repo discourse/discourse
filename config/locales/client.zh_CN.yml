@@ -6342,14 +6342,6 @@ zh_CN:
           repo_unreachable: "无法联系此主题的 Git 仓库。错误消息："
           built_in_description: "此主题为预安装主题，无法删除或自定义"
           imported_from_archive: "此主题是从一个 .zip 文件导入的"
-          settings: "设置"
-          colors: "颜色"
-          unsaved_colors:
-            other: "您有 %{count} 个未保存的颜色"
-          unsaved_colors_leave_route_confirmation: "您尚未保存调色板更改。确定要离开吗？"
-          save_colors: "保存颜色"
-          discard_colors: "舍弃"
-          colors_title: "颜色"
           scss:
             text: "CSS"
             title: "支持 SCSS 语法的自定义 CSS 规则"

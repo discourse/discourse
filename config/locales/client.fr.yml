@@ -6630,15 +6630,6 @@ fr:
           repo_unreachable: "Le dépôt Git de ce thème est inaccessible. Message d'erreur :"
           built_in_description: "Ce thème est préinstallé et ne peut pas être supprimé ou personnalisé"
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
-          settings: "Paramètres"
-          colors: "Couleurs"
-          unsaved_colors:
-            one: "Vous avez %{count} couleur non enregistrée"
-            other: "Vous avez %{count} couleurs non enregistrées"
-          unsaved_colors_leave_route_confirmation: "Vous n'avez pas encore enregistré les modifications apportées à votre palette de couleurs. Voulez-vous vraiment quitter ?"
-          save_colors: "Enregistrer les couleurs"
-          discard_colors: "Abandonner"
-          colors_title: "Couleurs"
           scss:
             text: "CSS"
             title: "Règles CSS personnalisées avec prise en charge de la syntaxe SCSS"

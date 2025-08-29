@@ -7230,17 +7230,6 @@ cs:
           repo_unreachable: "Nelze kontaktovat Git repozitář tohoto motivu. Chybová zpráva:"
           built_in_description: "Tento motiv je předinstalován a nemůže být smazán nebo přizpůsoben"
           imported_from_archive: "Tento motiv byl importován ze souboru .zip"
-          settings: "Nastavení"
-          colors: "Barvy"
-          unsaved_colors:
-            one: "Máte %{count} neuloženou barvu"
-            few: "Máte %{count} neuložené barvy"
-            many: "Máte %{count} neuložených barev"
-            other: "Máte %{count} neuložených barev"
-          unsaved_colors_leave_route_confirmation: "Ještě jste neuložili změny barevné palety. Opravdu chcete odejít?"
-          save_colors: "Uložit barvy"
-          discard_colors: "Zahodit"
-          colors_title: "Barvy"
           scss:
             text: "CSS"
             title: "Vlastní CSS pravidla s podporou syntaxe SCSS"
