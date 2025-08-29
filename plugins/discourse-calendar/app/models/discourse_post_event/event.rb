@@ -403,19 +403,24 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      next_ends_at = original_ends_at ? next_starts_at + event_duration : nil
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
       [next_starts_at, next_ends_at]
     end
 
     def duration
-      return nil unless starts_at && ends_at
+      return nil unless original_starts_at
 
-      duration_seconds = (ends_at - starts_at).to_i
+      duration_seconds = original_ends_at ? original_ends_at - original_starts_at : 3600
       hours = (duration_seconds / 3600)
       minutes = ((duration_seconds % 3600) / 60)
       seconds = (duration_seconds % 60)
 
       sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+    end
+
+    def rrule_timezone
+      timezone || "UTC"
     end
 
     private
@@ -461,17 +466,16 @@ module DiscoursePostEvent
     end
 
     def calculate_next_recurring_date
-      RRuleGenerator.generate(
-        starts_at: original_starts_at.in_time_zone(timezone),
-        timezone: timezone,
-        recurrence: recurrence,
-        recurrence_until: recurrence_until,
-        dtstart: original_starts_at.in_time_zone(timezone),
-      ).first
-    end
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
 
-    def event_duration
-      original_ends_at - original_starts_at
+      RRuleGenerator.generate(
+        starts_at: timezone_starts_at,
+        timezone: rrule_timezone,
+        recurrence: recurrence,
+        recurrence_until: timezone_recurrence_until,
+        dtstart: timezone_starts_at,
+      ).first
     end
   end
 end

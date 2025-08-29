@@ -25,18 +25,18 @@ module("Integration | Component | Dates", function (hooks) {
       starts,
       today: {
         ...starts,
-        startsAt: "2025-11-01T14:00:00Z",
-        endsAt: "2025-11-01T16:00:00Z",
+        startsAt: "2025-11-01T08:00:00Z",
+        endsAt: "2025-11-01T09:00:00Z",
       },
       yesterdayTomorrow: {
         ...starts,
         startsAt: "2025-10-31T08:00:00Z",
-        endsAt: "2025-11-02T18:00:00Z",
+        endsAt: "2025-11-02T08:00:00Z",
       },
       weekdays: {
         ...starts,
-        startsAt: "2025-10-31T00:00:00Z",
-        endsAt: "2025-11-03T00:00:00Z",
+        startsAt: "2025-11-01T14:00:00Z",
+        endsAt: "2025-11-02T14:00:00Z",
       },
       endsSameDay: {
         ...starts,
@@ -74,7 +74,7 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Friday → Monday",
+          "Sunday → Monday",
           "`startsAt` should show full weekday names"
         );
     });
@@ -164,7 +164,7 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Yesterday 8:00 AM → Tomorrow 6:00 PM",
+          "Yesterday 6:00 PM → Tomorrow 6:00 PM",
           "`startsAt` should not show current year and time"
         );
     });
@@ -181,7 +181,7 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Today 2:00 PM → 4:00 PM (UTC)",
+          "Today 6:00 PM → 7:00 PM (Brisbane)",
           "`endsAt` should show from today time to time only"
         );
     });

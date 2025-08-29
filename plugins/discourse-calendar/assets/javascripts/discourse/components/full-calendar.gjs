@@ -21,6 +21,7 @@ const PostEventMenu = <template>
     @eventId={{@data.eventId}}
     @onClose={{@data.onClose}}
     @withDescription={{false}}
+    @currentEventStart={{@data.currentEventStart}}
   />
 </template>;
 
@@ -106,6 +107,7 @@ export default class FullCalendar extends Component {
               modalForMobile: true,
               maxWidth: 500,
               data: {
+                currentEventStart: event.start,
                 eventId: postEvent.id,
                 onClose: () => {
                   this.menu.getByIdentifier("post-event-menu")?.close?.();

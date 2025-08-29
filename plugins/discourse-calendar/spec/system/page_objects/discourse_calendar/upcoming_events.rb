@@ -22,18 +22,26 @@ module PageObjects
 
         def open_year_view
           find(".fc-listYear-button").click
+          expect(page).to have_css(".fc-listYear-view")
+          wait_for_timeout
         end
 
         def open_day_view
           find(".fc-timeGridDay-button").click
+          expect(page).to have_css(".fc-timeGridDay-view")
+          wait_for_timeout
         end
 
         def open_week_view
           find(".fc-timeGridWeek-button").click
+          expect(page).to have_css(".fc-timeGridWeek-view")
+          wait_for_timeout
         end
 
         def open_month_view
           find(".fc-dayGridMonth-button").click
+          expect(page).to have_css(".fc-dayGridMonth-view")
+          wait_for_timeout
         end
 
         def open_mine_events
@@ -118,6 +126,11 @@ module PageObjects
 
         def find_event_by_title(title)
           find(".fc-event", text: title)
+        end
+
+        def has_event_with_time?(title, time)
+          event = find_event_by_title(title)
+          event.has_css?(".fc-list-event-time", text: time)
         end
 
         def get_event_height(title)

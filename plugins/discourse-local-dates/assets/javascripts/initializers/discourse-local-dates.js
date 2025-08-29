@@ -16,12 +16,12 @@ import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
-export function applyLocalDates(dates, siteSettings) {
+export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
 
-  const currentUserTZ = moment.tz.guess();
+  const currentUserTZ = timezone || moment.tz.guess();
 
   dates.forEach((element, index, arr) => {
     const opts = buildOptionsFromElement(element, siteSettings);

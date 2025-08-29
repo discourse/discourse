@@ -24,12 +24,50 @@ describe RRuleGenerator do
       freeze_time DateTime.parse("2020-02-25 15:36")
 
       rrule = RRuleGenerator.generate(starts_at: time, timezone:, recurrence: "every_week").first
-      expect(rrule.to_s).to eq("2020-02-29 15:36:00 +0100")
+      expect(rrule.to_s).to eq("2020-02-29 16:36:00 +0100")
 
       freeze_time DateTime.parse("2020-09-25 15:36")
 
       rrule = RRuleGenerator.generate(starts_at: time, timezone:).first
-      expect(rrule.to_s).to eq("2020-09-26 15:36:00 +0200")
+      expect(rrule.to_s).to eq("2020-09-26 16:36:00 +0200")
+    end
+  end
+
+  describe "show_local_time" do
+    it "generates floating time RRule without timezone when show_local_time is enabled" do
+      timezone = "Europe/Prague"
+      time = Time.utc(2020, 1, 25, 15, 36)
+
+      rrule_string =
+        RRuleGenerator.generate_string(
+          starts_at: time,
+          timezone: timezone,
+          recurrence: "every_week",
+          dtstart: time,
+          show_local_time: true,
+        )
+
+      expect(rrule_string).to eq(
+        "DTSTART:20200125T153600\nRRULE:FREQ=WEEKLY;BYDAY=SA;INTERVAL=1;WKST=MO",
+      )
+    end
+
+    it "generates timezone-specific RRule when show_local_time is disabled" do
+      timezone = "Europe/Prague"
+      time = Time.utc(2020, 1, 25, 15, 36)
+
+      rrule_string =
+        RRuleGenerator.generate_string(
+          starts_at: time,
+          timezone: timezone,
+          recurrence: "every_week",
+          dtstart: time,
+          show_local_time: false,
+        )
+
+      expect(rrule_string).to eq(
+        "DTSTART:20200125T153600Z\nRRULE:FREQ=WEEKLY;BYDAY=SA;INTERVAL=1;WKST=MO",
+      )
     end
   end
 
