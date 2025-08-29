@@ -4,6 +4,7 @@ import { concat, hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { attributeBindings } from "@ember-decorators/component";
 import { eq, gt } from "truth-helpers";
 import BookmarkMenu from "discourse/components/bookmark-menu";
@@ -17,6 +18,12 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
+import {
+  hasDraft as draftStoreHasDraft,
+  invalidateDraftState,
+  setDraftFromTopic,
+  setDraftSaved,
+} from "discourse/lib/draft-state-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -30,10 +37,22 @@ function bind(fn, context) {
   return fn.bind(context);
 }
 
+/**
+ * @component TopicFooterButtons
+ *
+ * @param {Object} topic - The current topic model instance
+ * @param {Function} replyToPost - Action to initiate replying in the composer
+ */
 @attributeBindings("role")
 export default class TopicFooterButtons extends Component {
+  // Services
+  @service appEvents;
+
   elementId = "topic-footer-buttons";
   role = "region";
+
+  // Tracks if a draft exists for the current topic's draft_key
+  hasDraft = false;
 
   @getTopicFooterButtons() inlineButtons;
   @getTopicFooterDropdowns() inlineDropdowns;
@@ -42,6 +61,24 @@ export default class TopicFooterButtons extends Component {
   @alias("topic.details.can_invite_to") canInviteTo;
   @alias("currentUser.user_option.enable_defer") canDefer;
   @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
+
+  init() {
+    super.init?.(...arguments);
+
+    // Seed from preloaded topic state and compute initial state
+    setDraftFromTopic(this.topic);
+    this._checkDraft();
+
+    // React to draft lifecycle events to keep the label in sync
+    // When the composer is cancelled (saved and closed), or a draft is destroyed,
+    // re-check for the current topic's draft.
+    this.appEvents?.on("composer:cancelled", this, this._onDraftChanged);
+    this.appEvents?.on("draft:destroyed", this, this._onDraftChanged);
+    // Also when user drafts change from message bus (store is updated elsewhere)
+    this.appEvents?.on("user-drafts:changed", this, this._checkDraft);
+    // When a draft is saved client-side, update our local store immediately
+    this.appEvents?.on("draft:saved", this, this._onDraftSaved);
+  }
 
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
@@ -104,6 +141,61 @@ export default class TopicFooterButtons extends Component {
   @discourseComputed("topic.isPrivateMessage")
   showBookmarkLabel(isPM) {
     return !isPM;
+  }
+
+  /**
+   * Checks if there is a saved draft for the current topic and updates the button label state.
+   */
+  async _checkDraft() {
+    const topic = this.topic;
+    if (!topic || !topic.draft_key) {
+      this.set?.("hasDraft", false) ?? (this.hasDraft = false);
+      return;
+    }
+
+    const hasDraft = draftStoreHasDraft(topic.draft_key);
+    this.set?.("hasDraft", hasDraft) ?? (this.hasDraft = hasDraft);
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs?.(...arguments);
+    // Topic changed: refresh from preload and re-check draft state
+    setDraftFromTopic(this.topic);
+    this._checkDraft();
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement?.(...arguments);
+    this.appEvents?.off("composer:cancelled", this, this._onDraftChanged);
+    this.appEvents?.off("draft:destroyed", this, this._onDraftChanged);
+    this.appEvents?.off("user-drafts:changed", this, this._checkDraft);
+    this.appEvents?.off("draft:saved", this, this._onDraftSaved);
+  }
+
+  @discourseComputed("hasDraft")
+  replyButtonLabel(hasDraft) {
+    return hasDraft ? "topic.open_draft" : "topic.reply.title";
+  }
+
+  @discourseComputed("hasDraft")
+  replyButtonTitle(hasDraft) {
+    return hasDraft ? "topic.open_draft_help" : "topic.reply.help";
+  }
+
+  _onDraftChanged() {
+    const key = this.topic?.draft_key;
+    if (key) {
+      invalidateDraftState(key);
+    }
+    this._checkDraft();
+  }
+
+  _onDraftSaved(payload) {
+    const key = this.topic?.draft_key;
+    if (key && payload?.draftKey === key) {
+      setDraftSaved(key, { postId: payload.postId, action: payload.action });
+      this._checkDraft();
+    }
   }
 
   <template>
@@ -246,8 +338,8 @@ export default class TopicFooterButtons extends Component {
         <DButton
           @icon="reply"
           @action={{this.replyToPost}}
-          @label="topic.reply.title"
-          @title="topic.reply.help"
+          @label={{this.replyButtonLabel}}
+          @title={{this.replyButtonTitle}}
           class="btn-primary create topic-footer-button"
         />
       {{/if}}
