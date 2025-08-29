@@ -11,6 +11,10 @@ class TopicSkipLinks extends Component {
 
   #skipLinkFocusListener = null;
 
+  get applicationController() {
+    return getOwner(this).lookup("controller:application");
+  }
+
   get showTopicSkipLinks() {
     const currentRouteName = this.router.currentRouteName;
     if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
@@ -311,40 +315,50 @@ class TopicSkipLinks extends Component {
   }
 
   <template>
-    {{#if this.showTopicSkipLinks}}
-      <div class="skip-links" aria-label={{i18n "skip_links_label"}}>
-        {{#if this.isDirectUrlToArbitraryPost}}
-          <a
-            href="{{this.topicUrl}}/{{this.currentPostNumber}}"
-            class="skip-link"
-            {{on "click" this.handleSkipToPost}}
-          >
-            {{i18n "skip_to_post" post_number=this.currentPostNumber}}
-          </a>
-        {{/if}}
-        {{#if this.resumePostNumber}}
-          {{#if this.resumeIsLastReply}}
+    {{#if this.applicationController.showSkipToContent}}
+      {{#if this.showTopicSkipLinks}}
+        <div class="skip-links" aria-label={{i18n "skip_links_label"}}>
+          {{#if this.isDirectUrlToArbitraryPost}}
             <a
-              href="{{this.topicUrl}}/last"
+              href="{{this.topicUrl}}/{{this.currentPostNumber}}"
               class="skip-link"
-              {{on "click" this.handleSkipToResume}}
+              {{on "click" this.handleSkipToPost}}
             >
-              {{i18n
-                "skip_to_where_you_left_off_last"
-                post_number=this.resumePostNumber
-              }}
+              {{i18n "skip_to_post" post_number=this.currentPostNumber}}
             </a>
+          {{/if}}
+          {{#if this.resumePostNumber}}
+            {{#if this.resumeIsLastReply}}
+              <a
+                href="{{this.topicUrl}}/last"
+                class="skip-link"
+                {{on "click" this.handleSkipToResume}}
+              >
+                {{i18n
+                  "skip_to_where_you_left_off_last"
+                  post_number=this.resumePostNumber
+                }}
+              </a>
+            {{else}}
+              <a
+                href="{{this.topicUrl}}/{{this.resumePostNumber}}"
+                class="skip-link"
+                {{on "click" this.handleSkipToResume}}
+              >
+                {{i18n
+                  "skip_to_where_you_left_off"
+                  post_number=this.resumePostNumber
+                }}
+              </a>
+              {{#if this.topicHasMultiplePosts}}
+                <a
+                  href="{{this.topicUrl}}/last"
+                  class="skip-link"
+                  {{on "click" this.handleSkipToLastPost}}
+                >{{i18n "skip_to_last_reply"}}</a>
+              {{/if}}
+            {{/if}}
           {{else}}
-            <a
-              href="{{this.topicUrl}}/{{this.resumePostNumber}}"
-              class="skip-link"
-              {{on "click" this.handleSkipToResume}}
-            >
-              {{i18n
-                "skip_to_where_you_left_off"
-                post_number=this.resumePostNumber
-              }}
-            </a>
             {{#if this.topicHasMultiplePosts}}
               <a
                 href="{{this.topicUrl}}/last"
@@ -353,30 +367,22 @@ class TopicSkipLinks extends Component {
               >{{i18n "skip_to_last_reply"}}</a>
             {{/if}}
           {{/if}}
-        {{else}}
           {{#if this.topicHasMultiplePosts}}
             <a
-              href="{{this.topicUrl}}/last"
+              href="{{this.topicUrl}}/1"
               class="skip-link"
-              {{on "click" this.handleSkipToLastPost}}
-            >{{i18n "skip_to_last_reply"}}</a>
+              {{on "click" this.handleSkipToTop}}
+            >{{i18n "skip_to_top"}}</a>
           {{/if}}
-        {{/if}}
-        {{#if this.topicHasMultiplePosts}}
-          <a
-            href="{{this.topicUrl}}/1"
-            class="skip-link"
-            {{on "click" this.handleSkipToTop}}
-          >{{i18n "skip_to_top"}}</a>
-        {{/if}}
+          <a href="#main-container" class="skip-link">{{i18n
+              "skip_to_main_content"
+            }}</a>
+        </div>
+      {{else}}
         <a href="#main-container" class="skip-link">{{i18n
             "skip_to_main_content"
           }}</a>
-      </div>
-    {{else}}
-      <a href="#main-container" class="skip-link">{{i18n
-          "skip_to_main_content"
-        }}</a>
+      {{/if}}
     {{/if}}
   </template>
 }
