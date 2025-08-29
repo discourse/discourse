@@ -61,7 +61,6 @@ pl_PL:
     calendar_automatic_holidays_enabled: "Automatycznie ustawiaj status świąt na podstawie regionu użytkownika (uwaga: możesz wyłączyć określone automatyczne święta w ustawieniach wtyczki)"
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
-    include_expired_events_on_calendar: "Uwzględnij minione/wygasłe wydarzenia w widokach kalendarza kategorii i nadchodzących wydarzeń."
   discourse_calendar:
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."

@@ -6587,6 +6587,7 @@ hr:
             delete_group: "izbriši grupu"
             watched_word_create: "dodaj promatranu riječ"
             watched_word_destroy: "izbriši gledanu riječ"
+            stop_impersonating: "prestani se lažno predstavljati"
         screened_emails:
           description: "Kad netko pokuša stvoriti račun, slijedeće email adrese će biti provjerene i registracija će biti blokirana ili će neke druge akcije biti poduzete."
           actions:

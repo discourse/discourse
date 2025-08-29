@@ -29,6 +29,9 @@ pl_PL:
       llm_report:
         title: Raport okresowy z wykorzystaniem AI
         description: "Okresowy raport oparty na dużym modelu językowym"
+      llm_tagger:
+        title: Taguj tematy za pomocą AI
+        description: "Automatycznie taguj tematy za pomocą AI"
   site_settings:
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
     ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"

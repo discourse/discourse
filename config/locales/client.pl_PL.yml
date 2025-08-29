@@ -1722,7 +1722,7 @@ pl_PL:
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
       home: "Domyślna strona główna"
-      staged: "Wystawiany na scenie"
+      staged: "Etapowi"
       staff_counters:
         flags_given:
           one: '<span class="%{className}">%{count}</span> pomocna flaga'
@@ -1877,6 +1877,7 @@ pl_PL:
         in_progress: "(e-mail wysyłany)"
         error: "(błąd)"
         action: "Wyślij wiadomość e-mail resetującą hasło"
+        staged_user: "Użytkownicy etapowi nie mogą otrzymywać wiadomości e-mail z prośbą o zresetowanie hasła."
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
@@ -2187,7 +2188,7 @@ pl_PL:
         after_2_days: "utworzone w ciągu ostatnich 2 dni"
         after_1_week: "utworzone w ostatnim tygodniu"
         after_2_weeks: "utworzone w ostatnich 2 tygodniach"
-      auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
+      auto_track_topics: "Automatycznie śledź tematy, które odwiedzę"
       auto_track_options:
         never: "nigdy"
         immediately: "natychmiast"
@@ -7649,6 +7650,7 @@ pl_PL:
             tag_group_change: "zmień grupę tagów"
             delete_associated_accounts: "usuń powiązane konta"
             change_theme_site_setting: "zmień ustawienia motywu witryny"
+            stop_impersonating: "przestań się podszywać"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
