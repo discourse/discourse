@@ -138,6 +138,83 @@ module DiscoursePostEvent
             expect(invitee.status).to eq(1)
             expect(invitee.post_id).to eq(post_1.id)
           end
+
+          context "when invitee not found" do
+            it "returns 404" do
+              put "/discourse-post-event/events/#{post_event_2.id}/invitees/99999.json",
+                  params: {
+                    invitee: {
+                      status: "interested",
+                    },
+                  }
+
+              expect(response.status).to eq(404)
+            end
+          end
+
+          context "when invalid status provided" do
+            it "returns 400" do
+              invitee = post_event_2.invitees.first
+
+              put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
+                  params: {
+                    invitee: {
+                      status: "invalid_status",
+                    },
+                  }
+
+              expect(response.status).to eq(400)
+            end
+          end
+
+          context "when user cannot act on invitee" do
+            let(:other_user) { Fabricate(:user) }
+
+            before { sign_in(other_user) }
+
+            it "returns 403" do
+              invitee = post_event_2.invitees.first
+
+              put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
+                  params: {
+                    invitee: {
+                      status: "interested",
+                    },
+                  }
+
+              expect(response.status).to eq(403)
+            end
+          end
+
+          context "when event is at max capacity" do
+            let(:post_event_full) do
+              pe = Fabricate(:event, post: post_1, max_attendees: 1)
+              pe.create_invitees(
+                [
+                  { user_id: invitee1.id, status: Invitee.statuses[:not_going] },
+                  { user_id: user.id, status: Invitee.statuses[:going] },
+                ],
+              )
+              pe
+            end
+
+            before { sign_in(invitee1) }
+
+            it "returns 422 when trying to change to going status" do
+              invitee = post_event_full.invitees.find_by(user: invitee1)
+
+              put "/discourse-post-event/events/#{post_event_full.id}/invitees/#{invitee.id}.json",
+                  params: {
+                    invitee: {
+                      status: "going",
+                    },
+                  }
+
+              expect(response.status).to eq(422)
+              expect(response.parsed_body["errors"].join).to include("full")
+              expect(invitee.reload.status).to eq(Invitee.statuses[:not_going])
+            end
+          end
         end
 
         describe "destroying invitee" do
@@ -298,6 +375,45 @@ module DiscoursePostEvent
             invitee = post_event_2.invitees.first
             expect(invitee.status).to eq(1)
             expect(invitee.post_id).to eq(post_1.id)
+          end
+        end
+
+        context "when event has max attendees and is full" do
+          let(:user_a) { Fabricate(:user) }
+          let(:user_b) { Fabricate(:user) }
+          let(:post_event_full) do
+            pe = Fabricate(:event, post: post_1, max_attendees: 1)
+            pe.create_invitees(
+              [{ user_id: user_a.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+            )
+            pe
+          end
+
+          it "returns 422 when trying to join as going" do
+            sign_in(user_b)
+
+            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                 params: {
+                   invitee: {
+                     status: "going",
+                   },
+                 }
+
+            expect(response.status).to eq(400)
+            expect(response.parsed_body["errors"].join).to include("max_attendees")
+          end
+
+          it "allows interested when full" do
+            sign_in(user_b)
+
+            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                 params: {
+                   invitee: {
+                     status: "interested",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
           end
         end
       end

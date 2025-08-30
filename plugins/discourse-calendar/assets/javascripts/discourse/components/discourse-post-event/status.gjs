@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -132,8 +133,16 @@ export default class DiscoursePostEventStatus extends Component {
             >
               <DButton
                 class="going-button"
+                @disabled={{and
+                  @event.atCapacity
+                  (not this.watchingInviteeStatus)
+                }}
                 @icon="check"
-                @label="discourse_post_event.models.invitee.status.going"
+                @label={{if
+                  @event.atCapacity
+                  "discourse_post_event.models.event.full"
+                  "discourse_post_event.models.invitee.status.going"
+                }}
                 @action={{fn this.changeWatchingInviteeStatus "going"}}
               />
             </PluginOutlet>
