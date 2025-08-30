@@ -324,10 +324,16 @@ en:
           disabled_state:
             configure: "Configure translations"
             empty_label: "Automatic translations are disabled, click below to configure"
+        stats:
+          title: "Translation statistics"
+          complete_language_detection_description: "All %{total} eligible posts have their language detected %{tooltip}"
+          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected %{tooltip}"
+          description_tooltip: "Eligible posts are determined by AI translation settings"
         progress_chart:
-          title: "Translation progress"
-          completed: "Completed"
-          remaining: "Remaining"
+          title: "Translation Progress"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} out of %{total} posts translated"
+          bar_done: "%{done} posts"
 
 
       spam:

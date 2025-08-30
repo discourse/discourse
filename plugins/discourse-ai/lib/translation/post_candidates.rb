@@ -3,7 +3,10 @@
 module DiscourseAi
   module Translation
     class PostCandidates < BaseCandidates
-      # Posts that are eligible for translation based on site settings
+      private
+
+      # all posts that are eligible for translation based on site settings,
+      # including those without locale detected yet.
       def self.get
         posts =
           Post
@@ -33,14 +36,12 @@ module DiscourseAi
         end
       end
 
-      private
-
       def self.calculate_completion_per_locale(locale)
         base_locale = "#{locale.split("_").first}%"
 
         sql = <<~SQL
           WITH eligible_posts AS (
-            #{get.to_sql}
+            #{get.where("posts.locale IS NOT NULL").to_sql}
           ),
           total_count AS (
             SELECT COUNT(*) AS count FROM eligible_posts
@@ -58,7 +59,7 @@ module DiscourseAi
         DB.query_single(sql, base_locale: "#{base_locale}%")
       end
 
-      def self.completion_cache_key_for_type
+      def self.cache_key_for_type
         "discourse_ai::translation::post_candidates"
       end
     end
