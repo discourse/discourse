@@ -9,29 +9,34 @@ module DiscourseAi
         supported_locales =
           SiteSetting.content_localization_supported_locales.presence&.split("|") || []
 
+        if supported_locales.empty?
+          return(
+            render json: {
+                     translation_progress: [],
+                     translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
+                     enabled: DiscourseAi::Translation.backfill_enabled?,
+                     total: 0,
+                     posts_with_detected_locale: 0,
+                   }
+          )
+        end
+
+        candidates = DiscourseAi::Translation::PostCandidates
+
         result =
           supported_locales.map do |locale|
-            completion_data =
-              DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-
-            total = completion_data[:total].to_f
-            done = completion_data[:done].to_f
-            remaining = total - done
-
-            completion_percentage = safe_percentage(done, total)
-            remaining_percentage = safe_percentage(remaining, total)
-
-            {
-              locale: locale,
-              completion_percentage: completion_percentage,
-              remaining_percentage: remaining_percentage,
-            }
+            candidates.get_completion_per_locale(locale) in { total:, done: }
+            { locale:, total:, done: }
           end
+
+        candidates.get_total_and_with_locale_count in { total:, posts_with_detected_locale: }
 
         render json: {
                  translation_progress: result,
                  translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
                  enabled: DiscourseAi::Translation.backfill_enabled?,
+                 total:,
+                 posts_with_detected_locale:,
                }
       end
 
