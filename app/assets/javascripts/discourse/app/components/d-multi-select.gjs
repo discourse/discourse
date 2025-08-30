@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -69,6 +68,17 @@ export default class DMultiSelect extends Component {
     return new TrackedAsyncData(value);
   }
 
+  get availableOptions() {
+    if (!this.data.isResolved || !this.data.value) {
+      return this.data.value;
+    }
+
+    return this.data.value.filter(
+      (item) =>
+        !this.args.selection?.some((selected) => this.compare(item, selected))
+    );
+  }
+
   @action
   search(event) {
     this.preselectedItem = null;
@@ -97,19 +107,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowDown") {
       event.preventDefault();
 
-      if (!this.data.value?.length) {
+      if (!this.availableOptions?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.data.value[0];
+        this.preselectedItem = this.availableOptions[0];
       } else {
-        const currentIndex = this.data.value.findIndex((item) =>
+        const currentIndex = this.availableOptions.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
-        if (currentIndex < this.data.value.length - 1) {
-          this.preselectedItem = this.data.value[currentIndex + 1];
+        if (currentIndex < this.availableOptions.length - 1) {
+          this.preselectedItem = this.availableOptions[currentIndex + 1];
         }
       }
     }
@@ -117,19 +127,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowUp") {
       event.preventDefault();
 
-      if (!this.data.value?.length) {
+      if (!this.availableOptions?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.data.value[0];
+        this.preselectedItem = this.availableOptions[0];
       } else {
-        const currentIndex = this.data.value.findIndex((item) =>
+        const currentIndex = this.availableOptions.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
         if (currentIndex > 0) {
-          this.preselectedItem = this.data.value[currentIndex - 1];
+          this.preselectedItem = this.availableOptions[currentIndex - 1];
         }
       }
     }
@@ -145,20 +155,10 @@ export default class DMultiSelect extends Component {
   }
 
   @action
-  isSelected(result) {
-    return this.args.selection?.filter((item) => this.compare(item, result))
-      .length;
-  }
-
-  @action
   toggle(result, event) {
     event?.stopPropagation();
 
-    if (this.isSelected(result)) {
-      this.remove(result, event);
-    } else {
-      this.args.onChange?.(makeArray(this.args.selection).concat(result));
-    }
+    this.args.onChange?.(makeArray(this.args.selection).concat(result));
   }
 
   @action
@@ -246,9 +246,9 @@ export default class DMultiSelect extends Component {
               {{yield this.data.error to="error"}}
             </div>
           {{else if this.data.isResolved}}
-            {{#if this.data.value}}
+            {{#if this.availableOptions.length}}
               <div class="d-multi-select__search-results">
-                {{#each this.data.value as |result|}}
+                {{#each this.availableOptions as |result|}}
                   <menu.item
                     class={{concatClass
                       "d-multi-select__result"
@@ -258,12 +258,6 @@ export default class DMultiSelect extends Component {
                     {{on "mouseenter" (fn (mut this.preselectedItem) result)}}
                     {{on "click" (fn this.toggle result)}}
                   >
-                    <Input
-                      @type="checkbox"
-                      @checked={{this.isSelected result}}
-                      class="d-multi-select__result-checkbox"
-                    />
-
                     <span class="d-multi-select__result-label">
                       {{yield result to="result"}}
                     </span>
