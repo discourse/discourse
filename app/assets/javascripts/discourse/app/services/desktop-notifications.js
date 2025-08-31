@@ -131,6 +131,8 @@ export default class DesktopNotificationsService extends Service {
     // 2) subscribe to push notifications.
     if (!this.isNotSupported) {
       if (!this.isGrantedPermission) {
+        // This permission also applies to webpush notifications.
+        // https://stackoverflow.com/q/46551259
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
           this.setIsEnabledBrowser(true);

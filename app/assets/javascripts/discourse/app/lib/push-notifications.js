@@ -20,22 +20,13 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
 
 export function isPushNotificationsSupported() {
   let caps = helperContext().capabilities;
-  if (
-    !(
+  return (
       "serviceWorker" in navigator &&
       typeof ServiceWorkerRegistration !== "undefined" &&
       typeof Notification !== "undefined" &&
-      "showNotification" in ServiceWorkerRegistration.prototype &&
       "PushManager" in window &&
-      !caps.isAppWebview &&
-      navigator.serviceWorker.controller &&
-      navigator.serviceWorker.controller.state === "activated"
-    )
-  ) {
-    return false;
-  }
-
-  return true;
+      !caps.isAppWebview
+  );
 }
 
 export function isPushNotificationsEnabled(user) {
