@@ -192,6 +192,8 @@ async function onNotification(data, siteSettings, user, appEvents) {
 
 // Utility function
 // Wraps Notification.requestPermission in a Promise
+//
+// DEPRECATED: The `Notification.requestPermission` browser API now supports returning a promise.
 function requestPermission() {
   if (havePermission === true) {
     return Promise.resolve();

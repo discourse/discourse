@@ -126,26 +126,33 @@ export default class DesktopNotificationsService extends Service {
 
   @action
   async enable() {
-    if (isPushNotificationsSupported()) {
-      if (Notification.permission !== "granted") {
-        await Notification.requestPermission((permission) => {
-          if (permission === "granted") {
-            confirmNotification(this.siteSettings);
-          }
-        });
+    // If notifications are supported, attempt to:
+    // 1) enable browser notifications
+    // 2) subscribe to push notifications.
+    if (!this.isNotSupported) {
+      if (!this.isGrantedPermission) {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          this.setIsEnabledBrowser(true);
+        }
       }
 
-      if (Notification.permission === "denied") {
+      if (this.isDeniedPermission) {
         // User has denied permission for sending notifications.
         return false;
       }
 
       if (this.isPushNotificationsPreferred) {
-        this.setIsEnabledBrowser(true);
+        // Subscribe to push notifications from the server. If successful, a notification will be sent.
         await subscribePushNotification(() => {
           this.setIsEnabledPush(true);
         }, this.siteSettings.vapid_public_key_bytes);
   
+        return true;
+      } else {
+        // Push notifications not preferred; so generate a confirmation notification.
+        confirmNotification(this.siteSettings);
+
         return true;
       }
     }
