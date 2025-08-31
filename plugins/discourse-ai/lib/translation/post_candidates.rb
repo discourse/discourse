@@ -56,7 +56,7 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        DB.query_single(sql, base_locale: "#{base_locale}%")
+        DB.query_single(sql, base_locale:)
       end
 
       def self.cache_key_for_type
