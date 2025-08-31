@@ -126,22 +126,30 @@ export default class DesktopNotificationsService extends Service {
 
   @action
   async enable() {
-    if (this.isPushNotificationsPreferred) {
-      await subscribePushNotification(() => {
-        this.setIsEnabledPush(true);
-      }, this.siteSettings.vapid_public_key_bytes);
+    if (isPushNotificationsSupported()) {
+      if (Notification.permission !== "granted") {
+        await Notification.requestPermission((permission) => {
+          if (permission === "granted") {
+            confirmNotification(this.siteSettings);
+          }
+        });
+      }
 
-      return true;
-    } else {
-      await Notification.requestPermission((permission) => {
-        confirmNotification(this.siteSettings);
-        if (permission === "granted") {
-          this.setIsEnabledBrowser(true);
-          return true;
-        } else {
-          return false;
-        }
-      });
+      if (Notification.permission === "denied") {
+        // User has denied permission for sending notifications.
+        return false;
+      }
+
+      if (this.isPushNotificationsPreferred) {
+        this.setIsEnabledBrowser(true);
+        await subscribePushNotification(() => {
+          this.setIsEnabledPush(true);
+        }, this.siteSettings.vapid_public_key_bytes);
+  
+        return true;
+      }
     }
+
+    return false;
   }
 }
