@@ -71,16 +71,18 @@ class SubscribeUserNotificationsInit {
 
       initDesktopNotifications(this.messageBus);
 
-      if (isPushNotificationsEnabled(this.currentUser)) {
-        disableDesktopNotifications();
-        registerPushNotifications(
-          this.currentUser,
-          this.router,
-          this.appEvents
-        );
-      } else {
-        unsubscribePushNotifications(this.currentUser);
-      }
+      isPushNotificationsEnabled(this.currentUser).then((enabled) => {
+        if (enabled) {
+          disableDesktopNotifications();
+          return registerPushNotifications(
+            this.currentUser,
+            this.router,
+            this.appEvents
+          );
+        } else {
+          return unsubscribePushNotifications(this.currentUser);
+        }
+      });
     }
   }
 

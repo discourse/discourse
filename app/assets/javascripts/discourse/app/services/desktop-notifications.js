@@ -8,6 +8,7 @@ import {
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
+  PushNotificationSupport,
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
   subscribe as subscribePushNotification,
@@ -42,8 +43,12 @@ export default class DesktopNotificationsService extends Service {
       : false;
   }
 
+  get isSupported() {
+    return typeof window.Notification !== "undefined";
+  }
+
   get isNotSupported() {
-    return typeof window.Notification === "undefined";
+    return !this.isSupported;
   }
 
   get notificationsPermission() {
@@ -80,12 +85,10 @@ export default class DesktopNotificationsService extends Service {
       : this.isEnabledBrowser;
   }
 
+  // Returns whether or not push notifications are preferred (but notably, does _NOT_
+  // check to see whether or not they are supported).
   get isPushNotificationsPreferred() {
-    return (
-      (this.site.mobileView ||
-        this.siteSettings.enable_desktop_push_notifications) &&
-      isPushNotificationsSupported()
-    );
+    return (this.site.mobileView || this.siteSettings.enable_desktop_push_notifications);
   }
 
   setIsEnabledBrowser(value) {
@@ -129,7 +132,7 @@ export default class DesktopNotificationsService extends Service {
     // If notifications are supported, attempt to:
     // 1) enable browser notifications
     // 2) subscribe to push notifications.
-    if (!this.isNotSupported) {
+    if (this.isSupported) {
       if (!this.isGrantedPermission) {
         // This permission also applies to webpush notifications.
         // https://stackoverflow.com/q/46551259
@@ -145,12 +148,20 @@ export default class DesktopNotificationsService extends Service {
       }
 
       if (this.isPushNotificationsPreferred) {
-        // Subscribe to push notifications from the server. If successful, a notification will be sent.
-        await subscribePushNotification(() => {
-          this.setIsEnabledPush(true);
-        }, this.siteSettings.vapid_public_key_bytes);
-  
-        return true;
+        switch (await isPushNotificationsSupported()) {
+          case PushNotificationSupport.Supported:
+            // Subscribe to push notifications from the server. If successful, a notification will be sent.
+            await subscribePushNotification(() => {
+              this.setIsEnabledPush(true);
+            }, this.siteSettings.vapid_public_key_bytes);
+
+            return true;
+          case PushNotificationSupport.PWARequired:
+            // User must install the application as a PWA.
+            return false;
+          default:
+            break;
+        }
       } else {
         // Push notifications not preferred; so generate a confirmation notification.
         confirmNotification(this.siteSettings);
