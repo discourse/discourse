@@ -146,14 +146,10 @@ module PageObjects
           height >= expected_height - 1 && height <= expected_height + 1
         end
 
-        # Returns the visible text of the first day-of-week header cell
-        # in the calendar header (e.g., "Sun", "Mon").
         def first_weekday_header_text
           find(".fc-col-header .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion").text
         end
 
-        # Checks if the first column of the month grid corresponds to Sunday
-        # by asserting at least one cell in the first column has the sunday class.
         def first_column_is_sunday?
           has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-sun", minimum: 1)
         end

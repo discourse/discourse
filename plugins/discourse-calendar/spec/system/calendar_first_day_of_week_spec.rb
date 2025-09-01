@@ -15,11 +15,7 @@ describe "Calendar first day of week", type: :system do
   it "renders Sunday as the first day in the upcoming events calendar" do
     upcoming_events.visit
     upcoming_events.open_month_view
-
-    # Prefer a structural check via class to avoid locale formatting issues
     expect(upcoming_events.first_column_is_sunday?).to eq(true)
-
-    # As a secondary assertion, the first header label should start with "Sun" (case-insensitive)
     expect(upcoming_events.first_weekday_header_text).to match(/^Sun/i)
   end
 end
