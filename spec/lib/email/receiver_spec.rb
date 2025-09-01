@@ -1746,6 +1746,12 @@ RSpec.describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "uses system user if enable_stages_users is false " do
+      SiteSetting.enable_staged_users = false
+      expect { process(:new_user) }.to change(Topic, :count)
+      expect(Topic.last.user).to eq(Discourse.system_user)
+    end
+
     it "lets an email in from a high-TL user" do
       Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
       expect { process(:tl4_user) }.to change(Topic, :count)
