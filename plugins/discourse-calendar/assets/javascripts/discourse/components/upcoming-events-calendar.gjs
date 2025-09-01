@@ -19,6 +19,7 @@ export default class UpcomingEventsCalendar extends Component {
 
   _isInitializing = true;
   _isViewChanging = false;
+  _lastNavigationTime = 0;
 
   get customButtons() {
     return {
@@ -150,12 +151,22 @@ export default class UpcomingEventsCalendar extends Component {
     if (isViewChanged) {
       this._isViewChanging = true;
 
+      let navYear = currentYear;
+      let navMonth = currentMonth;
+      let navDay = currentDay;
+
+      if (view === "month") {
+        navYear = currentYear;
+        navMonth = currentMonth;
+        navDay = 1;
+      }
+
       this.router.replaceWith(
         this.router.currentRouteName,
         view,
-        currentYear,
-        currentMonth,
-        currentDay
+        navYear,
+        navMonth,
+        navDay
       );
       return;
     }
@@ -261,7 +272,20 @@ export default class UpcomingEventsCalendar extends Component {
     } else {
       let viewDate;
       if (view === "week") {
-        viewDate = moment(viewStart).startOf("isoWeek");
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
+        viewDate = moment(viewMiddle).startOf("isoWeek");
+      } else if (view === "day") {
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
+        viewDate = moment(viewMiddle);
+      } else if (view === "year") {
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
+        viewDate = moment(viewMiddle);
       } else {
         viewDate = moment(viewStart);
       }

@@ -26,17 +26,18 @@ class RRuleGenerator
     max_years: nil,
     recurrence: "every_week",
     recurrence_until: nil,
-    dtstart: nil
+    dtstart: nil,
+    show_local_time: false
   )
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
     rrule = set_mandatory_options(rrule, starts_at)
     rrule_line = "RRULE:#{stringify(rrule)}"
 
     if dtstart
-      if timezone == "UTC"
-        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
+      if show_local_time
+        dtstart_line = "DTSTART:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
       else
-        dtstart_line = "DTSTART;TZID=#{timezone}:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
+        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
       end
       "#{dtstart_line}\n#{rrule_line}"
     else
@@ -60,9 +61,6 @@ class RRuleGenerator
   end
 
   def self.set_mandatory_options(rrule, time)
-    # Use local time for BYHOUR/BYMINUTE to match the timezone-specific DTSTART
-    rrule["BYHOUR"] = time.strftime("%H")
-    rrule["BYMINUTE"] = time.strftime("%M")
     rrule["INTERVAL"] ||= 1
     rrule["WKST"] = "MO" # considers Monday as the first day of the week
     rrule

@@ -77,9 +77,10 @@ describe DiscoursePostEvent::EventSerializer do
         )
       end
 
-      it "does not include duration in serialized output" do
+      it "includes default 1-hour duration in serialized output" do
         json = DiscoursePostEvent::EventSerializer.new(event_no_end, scope: Guardian.new).as_json
-        expect(json[:event]).not_to have_key(:duration)
+        expect(json[:event]).to have_key(:duration)
+        expect(json[:event][:duration]).to eq("01:00:00")
       end
     end
   end
