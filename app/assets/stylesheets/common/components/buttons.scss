@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   // global
   --d-button-border-radius: var(--d-border-radius);
@@ -572,5 +574,12 @@
     .d-icon {
       color: var(--primary);
     }
+  }
+}
+
+// temp list of overrules
+@include viewport.until(sm) {
+  .fk-d-menu__trigger.topic-admin-menu-trigger {
+    height: auto.;
   }
 }
