@@ -57,6 +57,7 @@ en:
     calendar_automatic_holidays_enabled: "Automatically set holiday status based on a users region (note: you can disable specific automatic holidays in plugin settings)"
     event_participation_buttons: "List of event participation buttons users can use."
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
+    calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
 
   discourse_calendar:
     invite_user_notification: "%{username} invited you to: %{description}"

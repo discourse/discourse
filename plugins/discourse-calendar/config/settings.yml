@@ -113,3 +113,11 @@ discourse_calendar:
     client: true
     default: ""
     json_schema: DiscourseCalendar::SiteSettings::MapEventsTitleJsonSchema
+  calendar_first_day_of_week:
+    type: enum
+    choices:
+      - Saturday
+      - Sunday
+      - Monday
+    default: Monday
+    client: true
