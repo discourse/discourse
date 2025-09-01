@@ -214,7 +214,7 @@
     margin-bottom: -2px;
 
     @include viewport.until(sm) {
-      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+      grid-template-columns: 4em auto auto min-content;
     }
 
     &.header {
