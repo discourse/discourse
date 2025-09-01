@@ -71,6 +71,20 @@ discourse_calendar:
     default: ""
     allow_any: false
     refresh: true
+  discourse_post_event_manage_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
+  discourse_post_event_create_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
   displayed_invitees_limit:
     default: 10
     client: false

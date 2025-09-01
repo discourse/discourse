@@ -155,6 +155,18 @@ after_initialize do
     @can_create_discourse_post_event =
       begin
         return true if staff?
+
+        # Check if user is in create groups (new setting)
+        create_groups = SiteSetting.discourse_post_event_create_groups.to_s.split("|").compact
+        if create_groups.present? &&
+             (
+               create_groups.include?(Group::AUTO_GROUPS[:everyone].to_s) ||
+                 groups.where(id: create_groups).exists?
+             )
+          return true
+        end
+
+        # Fallback to legacy setting for backward compatibility
         allowed_groups = SiteSetting.discourse_post_event_allowed_on_groups.to_s.split("|").compact
         allowed_groups.present? &&
           (
@@ -183,6 +195,18 @@ after_initialize do
     @can_act_on_discourse_post_event =
       begin
         return true if staff?
+
+        # Check if user is in manage groups (can manage all events)
+        manage_groups = SiteSetting.discourse_post_event_manage_groups.to_s.split("|").compact
+        if manage_groups.present? &&
+             (
+               manage_groups.include?(Group::AUTO_GROUPS[:everyone].to_s) ||
+                 groups.where(id: manage_groups).exists?
+             )
+          return true
+        end
+
+        # Check if user can create events and can edit the post (can manage their own events)
         can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
       rescue StandardError
         false
@@ -195,6 +219,14 @@ after_initialize do
 
   add_class_method(:group, :discourse_post_event_allowed_groups) do
     where(id: SiteSetting.discourse_post_event_allowed_on_groups.split("|").compact)
+  end
+
+  add_class_method(:group, :discourse_post_event_manage_groups) do
+    where(id: SiteSetting.discourse_post_event_manage_groups.split("|").compact)
+  end
+
+  add_class_method(:group, :discourse_post_event_create_groups) do
+    where(id: SiteSetting.discourse_post_event_create_groups.split("|").compact)
   end
 
   TopicView.on_preload do |topic_view|

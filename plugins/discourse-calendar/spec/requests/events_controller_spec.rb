@@ -410,4 +410,41 @@ module DiscoursePostEvent
       end
     end
   end
+
+  context "with manage groups setting" do
+    let(:manage_group) do
+      Fabricate(:group).tap do |g|
+        g.add(user)
+        g.save!
+      end
+    end
+    let(:user) { Fabricate(:moderator) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let(:post1) { Fabricate(:post, user: user, topic: topic) }
+    let(:event_1) { Fabricate(:event, post: post1) }
+
+    before do
+      sign_in(user)
+      SiteSetting.discourse_post_event_manage_groups = manage_group.id
+    end
+
+    it "allows user in manage group to destroy events they didn't create" do
+      other_user = Fabricate(:user)
+      other_topic = Fabricate(:topic, user: other_user, visible: true)
+      other_post = Fabricate(:post, user: other_user, topic: other_topic)
+      other_event = Fabricate(:event, post: other_post)
+
+      expect(other_event.persisted?).to be(true)
+      expect(other_event.id).to be_present
+
+      # Test that the user can act on the event
+      result = user.can_act_on_discourse_post_event?(other_event)
+      expect(result).to be(true)
+
+      # Test that the user can destroy the event even though they didn't create it
+      delete "/discourse-post-event/events/#{other_event.id}.json"
+      expect(response.status).to eq(200)
+      expect(Event).to_not exist(id: other_event.id)
+    end
+  end
 end

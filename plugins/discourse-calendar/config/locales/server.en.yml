@@ -37,6 +37,8 @@ en:
     display_post_event_date_on_topic_title: "Displays the date of the event after the topic title."
     use_local_event_date: "Use local date after topic title instead of relative time."
     discourse_post_event_allowed_on_groups: "Groups that are allowed to create events."
+    discourse_post_event_manage_groups: "Groups that can manage all events (edit, delete, invite). Defaults to staff."
+    discourse_post_event_create_groups: "Groups that can create events they manage. Defaults to staff."
     discourse_post_event_allowed_custom_fields: "Allows to let each event to set the value of custom fields."
     discourse_post_event_edit_notifications_time_extension: "Extends (in minutes) the period after the end of an event when `going` invitees are still being notified from edit in the original post."
     holiday_calendar_topic_id: "Topic ID of staffs holiday / absence calendar."
