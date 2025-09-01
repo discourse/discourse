@@ -302,53 +302,97 @@ module DiscoursePostEvent
         end
 
         context "when event has max attendees and is full" do
-          let(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
-          let(:user_a) { Fabricate(:user) }
-          let(:user_b) { Fabricate(:user) }
-          let(:post_event_full) do
+          fab!(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
+          fab!(:user_a) { Fabricate(:user) }
+          fab!(:user_b) { Fabricate(:user) }
+          fab!(:post_event_full) do
             pe = Fabricate(:event, post: post_2, max_attendees: 1)
             pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
             pe
           end
 
-          it "returns 422 when trying to join as going" do
-            sign_in(user_b)
+          context "when updating an invitee" do
+            fab!(:invitee) do
+              Fabricate(
+                :invitee,
+                post_id: post_2.id,
+                user_id: user_b.id,
+                status: Invitee.statuses[:interested],
+              )
+            end
 
-            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                 params: {
-                   invitee: {
-                     status: "going",
-                   },
-                 }
+            context "when invitee was interested" do
+              it "returns 422 when trying to join as going" do
+                sign_in(user_b)
 
-            expect(response.status).to eq(422)
-            expect(response.parsed_body["errors"].join).to include("full")
+                put "/discourse-post-event/events/#{post_event_full.id}/invitees/#{invitee.id}.json",
+                    params: {
+                      invitee: {
+                        status: "going",
+                      },
+                    }
+
+                expect(response.status).to eq(422)
+                expect(response.parsed_body["errors"].join).to include("full")
+              end
+            end
+
+            context "when invitee was going" do
+              it "allows upading to interested" do
+                sign_in(user_b)
+
+                put "/discourse-post-event/events/#{post_event_full.id}/invitees/#{invitee.id}.json",
+                    params: {
+                      invitee: {
+                        status: "interested",
+                      },
+                    }
+
+                expect(response.status).to eq(200)
+              end
+            end
           end
 
-          it "allows interested when full" do
-            sign_in(user_b)
+          context "when creating an invitee" do
+            it "returns 422 when trying to join as going" do
+              sign_in(user_b)
 
-            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                 params: {
-                   invitee: {
-                     status: "interested",
-                   },
-                 }
+              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                   params: {
+                     invitee: {
+                       status: "going",
+                     },
+                   }
 
-            expect(response.status).to eq(200)
-          end
+              expect(response.status).to eq(422)
+              expect(response.parsed_body["errors"].join).to include("full")
+            end
 
-          it "allows not_going when full" do
-            sign_in(user_b)
+            it "allows interested when full" do
+              sign_in(user_b)
 
-            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                 params: {
-                   invitee: {
-                     status: "not_going",
-                   },
-                 }
+              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                   params: {
+                     invitee: {
+                       status: "interested",
+                     },
+                   }
 
-            expect(response.status).to eq(200)
+              expect(response.status).to eq(200)
+            end
+
+            it "allows not_going when full" do
+              sign_in(user_b)
+
+              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                   params: {
+                     invitee: {
+                       status: "not_going",
+                     },
+                   }
+
+              expect(response.status).to eq(200)
+            end
           end
         end
       end
