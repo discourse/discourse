@@ -52,6 +52,38 @@ const extension = {
     },
   },
 
+  // Provide editor commands so UIs can insert an event without raw BBCode
+  // This avoids markdown conversion issues in rich editor mode.
+  commands: ({ schema, pmState: { TextSelection } }) => ({
+    /**
+     * Inserts an event node at the current selection and places the cursor
+     * after it, ensuring there is a paragraph to continue typing.
+     * @param {Record<string, string|null>} attrs
+     */
+    insertEvent(attrs) {
+      return (state, dispatch) => {
+        const eventNode = schema.nodes.event.create(attrs);
+
+        let tr = state.tr.replaceSelectionWith(eventNode, false);
+
+        // Ensure a paragraph exists after the inserted block so typing can continue
+        const $pos = tr.selection.$to;
+        const nodeAfter = $pos.nodeAfter;
+        if (!nodeAfter || nodeAfter.type !== schema.nodes.paragraph) {
+          const para = schema.nodes.paragraph.create();
+          tr = tr.insert($pos.pos, para);
+        }
+
+        // Place cursor inside the paragraph after the event
+        const newSelPos = tr.selection.$to.pos + 1;
+        tr = tr.setSelection(TextSelection.create(tr.doc, newSelPos));
+
+        dispatch?.(tr);
+        return true;
+      };
+    },
+  }),
+
   parse: {
     wrap_bbcode(state, token) {
       if (token.tag === "div") {
