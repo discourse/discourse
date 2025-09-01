@@ -151,7 +151,10 @@ module Chat
 
     def fetch_uploads(params:, guardian:)
       return [] if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: params.upload_ids)
+      Upload
+        .where(id: params.upload_ids)
+        .joins(:user_uploads)
+        .where(user_uploads: { user: guardian.user })
     end
 
     def instantiate_message(channel:, guardian:, params:, uploads:, thread:, reply:, options:)
