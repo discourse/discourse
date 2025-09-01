@@ -2,25 +2,27 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import DTooltip from "discourse/components/d-tooltip";
+import InterpolatedTranslation from "discourse/components/interpolated-translation";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import Chart from "admin/components/chart";
 
 export default class AiTranslations extends Component {
-  @service siteSettings;
   @service store;
+  @service languageNameLookup;
+  @service site;
 
   @tracked data = this.args.model?.translation_progress;
+  @tracked done = this.args.model?.posts_with_detected_locale;
+  @tracked total = this.args.model?.total;
 
-  getLanguageName(locale) {
-    try {
-      const availableLocales = this.siteSettings.available_locales;
-      const localeObj = availableLocales.find((l) => l.value === locale);
-      return localeObj ? localeObj.name : locale;
-    } catch {
-      return locale; // Fallback to the locale code if not found
-    }
+  get descriptionKey() {
+    return this.done === this.total
+      ? "discourse_ai.translations.stats.complete_language_detection_description"
+      : "discourse_ai.translations.stats.incomplete_language_detection_description";
   }
 
   get chartConfig() {
@@ -29,61 +31,102 @@ export default class AiTranslations extends Component {
     }
 
     const chartEl = document.querySelector(".ai-translations");
-    const computedStyle = getComputedStyle(chartEl);
-    const colors = {
-      progress: computedStyle.getPropertyValue("--chart-progress-color").trim(),
-      remaining: computedStyle
-        .getPropertyValue("--chart-remaining-color")
-        .trim(),
-    };
+    const backgroundColor = getComputedStyle(chartEl)
+      .getPropertyValue("--chart-progress-color")
+      .trim();
 
-    const processedData = this.data.map((item) => {
+    const processedData = this.data.map(({ locale, total, done }) => {
+      const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
       return {
-        locale: this.getLanguageName(item.locale),
-        completionPercentage: item.completion_percentage,
-        remainingPercentage: item.remaining_percentage,
+        locale: this.languageNameLookup.getLanguageName(locale),
+        done,
+        donePercentage,
+        tooltip: [
+          i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
+            done,
+            total,
+          }),
+        ],
       };
     });
+    const chartData = {
+      labels: processedData.map(({ locale }) => locale),
+      datasets: [
+        {
+          tooltip: processedData.map(({ tooltip }) => tooltip),
+          data: processedData.map(({ donePercentage }) => donePercentage),
+          totalItems: processedData.map(({ done }) => done),
+          backgroundColor,
+          barThickness: 30,
+          borderRadius: 4,
+        },
+      ],
+    };
 
     return {
       type: "bar",
-      data: {
-        labels: processedData.map((item) => item.locale),
-        datasets: [
-          {
-            label: i18n("discourse_ai.translations.progress_chart.completed"),
-            data: processedData.map((item) => item.completionPercentage),
-            backgroundColor: colors.progress,
+      data: chartData,
+      plugins: [
+        {
+          id: "barTotalText",
+          afterDraw: ({ ctx, data, scales }) => {
+            ctx.save();
+            ctx.textBaseline = "middle";
+            const items = data.datasets[0].totalItems;
+            items.forEach((done, i) => {
+              ctx.fillText(
+                i18n("discourse_ai.translations.progress_chart.bar_done", {
+                  done,
+                }),
+                scales.x.getPixelForValue(100) + 10,
+                scales.y.getPixelForValue(i)
+              );
+            });
+            ctx.canvas.parentElement.style.height = `${items.length * 50 + 40}px`;
+            ctx.restore();
           },
-          {
-            label: i18n("discourse_ai.translations.progress_chart.remaining"),
-            data: processedData.map((item) => item.remainingPercentage),
-            backgroundColor: colors.remaining,
-          },
-        ],
-      },
+        },
+      ],
       options: {
         indexAxis: "y",
         responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: { right: 70 } },
         scales: {
           x: {
-            stacked: true,
             beginAtZero: true,
             max: 100,
+            grid: {
+              display: false,
+            },
             ticks: {
-              callback: (value) => `${value}%`,
+              callback: (percentage) =>
+                i18n("discourse_ai.translations.progress_chart.data_label", {
+                  percentage,
+                }),
             },
           },
           y: {
-            stacked: true,
+            grid: {
+              display: false,
+            },
           },
         },
         plugins: {
+          legend: { display: false },
           tooltip: {
+            displayColors: false,
             callbacks: {
-              label: (context) =>
-                `${context.dataset.label}: ${context.raw.toFixed(1)}%`,
+              label: ({ dataset: { tooltip }, dataIndex }) =>
+                tooltip[dataIndex],
             },
+          },
+          datalabels: {
+            formatter: (percentage) =>
+              i18n("discourse_ai.translations.progress_chart.data_label", {
+                percentage,
+              }),
+            color: "white",
           },
         },
       },
@@ -120,9 +163,35 @@ export default class AiTranslations extends Component {
           @heading="discourse_ai.translations.progress_chart.title"
         >
           <:content>
+            <div class="ai-translation__stats-container">
+              <div class="ai-translation__stat-item">
+                <span class="ai-translation__stat-label">
+                  <InterpolatedTranslation
+                    @key={{this.descriptionKey}}
+                    as |Placeholder|
+                  >
+                    <Placeholder @name="tooltip">
+                      <DTooltip>
+                        <:trigger>
+                          {{icon "circle-question"}}
+                        </:trigger>
+                        <:content>
+                          {{i18n
+                            "discourse_ai.translations.stats.description_tooltip"
+                          }}
+                        </:content>
+                      </DTooltip>
+                    </Placeholder>
+                    <Placeholder @name="done">{{this.done}}</Placeholder>
+                    <Placeholder @name="total">{{this.total}}</Placeholder>
+                  </InterpolatedTranslation>
+                </span>
+              </div>
+            </div>
             <div class="ai-translation__chart-container">
               <Chart
                 @chartConfig={{this.chartConfig}}
+                @loadChartDataLabelsPlugin={{true}}
                 class="ai-translation__chart"
               />
             </div>
