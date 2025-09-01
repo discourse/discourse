@@ -183,7 +183,8 @@ describe DiscourseAi::Automation::LlmTriage do
 
     reviewable = ReviewablePost.last
     expect(post.reload.trashed?).to eq(true)
-    expect(post.topic.reload.trashed?).to eq(true)
+    topic = Topic.with_deleted.find_by(id: post.topic_id)
+    expect(topic.trashed?).to eq(true)
 
     moderator = Fabricate(:moderator)
     result = reviewable.perform(moderator, :approve_and_restore)
