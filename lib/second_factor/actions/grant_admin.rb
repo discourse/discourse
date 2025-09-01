@@ -16,7 +16,8 @@ module SecondFactor::Actions
         callback_params: {
           user_id: user.id,
         },
-        redirect_url: admin_user_show_path(id: user.id, username: user.username),
+        redirect_url:
+          CGI.unescape(admin_user_show_path(id: user.id, username: CGI.escape(user.username))),
         description: description,
       }
     end
