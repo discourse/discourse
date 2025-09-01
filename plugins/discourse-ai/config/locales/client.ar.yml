@@ -289,6 +289,8 @@ ar:
         card: "بطاقة"
       translations:
         title: "الترجمات"
+        progress_chart:
+          bar_done: "%{done} منشور"
       spam:
         short_title: "عشوائي"
         title: "إعدادات التعامل مع المحتوى العشوائي"

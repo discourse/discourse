@@ -106,6 +106,9 @@ id:
           name: "Spam"
       modals:
         select_option: "Memilih sebuah pilihan..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} post"
       spam:
         short_title: "Spam"
         last_seven_days: "7 hari terakhir"

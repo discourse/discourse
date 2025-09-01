@@ -277,6 +277,8 @@ tr_TR:
         card: "Kart"
       translations:
         title: "Çeviriler"
+        progress_chart:
+          bar_done: "%{done} gönderi"
       spam:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"

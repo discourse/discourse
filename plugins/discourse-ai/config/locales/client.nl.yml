@@ -277,6 +277,8 @@ nl:
         card: "Kaart"
       translations:
         title: "Vertalingen"
+        progress_chart:
+          bar_done: "%{done} berichten"
       spam:
         short_title: "Spam"
         title: "Spamafhandeling configureren"

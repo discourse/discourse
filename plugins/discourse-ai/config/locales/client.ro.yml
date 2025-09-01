@@ -62,6 +62,9 @@ ro:
           name: "Spam"
       modals:
         select_option: "Alege o opțiune..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} de postări"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"

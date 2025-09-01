@@ -84,6 +84,7 @@ de:
               help: "z. B. #kanal, @benutzername."
           errors:
             action_prohibited: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
+            channel_not_found: "Der angegebene Kanal existiert nicht auf Slack"
         telegram:
           title: "Telegram"
           param:

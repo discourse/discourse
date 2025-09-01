@@ -169,6 +169,17 @@ he:
               description: "דמות בינה מלאכותית לשימוש לתגובות (חייב להיות LLM/מש״ג כברירת מחדל), יתועדף על פני תגובה מראש"
             max_output_tokens:
               label: "כמות אסימוני פלט מרבית"
+        llm_tagger:
+          tag_mode:
+            manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
+          fields:
+            tagger_persona:
+              label: "דמות בינה מלאכותית"
+            tag_mode:
+              label: "מצב בחירת תגיות"
+              description: "בחירה איך הבינה המלאכותית בוחר תגיות"
+            available_tags:
+              label: "תגיות זמינות"
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
@@ -266,10 +277,16 @@ he:
           disabled_state:
             configure: "הגדרת תרגומים"
             empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+        stats:
+          title: "סטטיסטיקת תרגום"
+          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה %{tooltip}"
+          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה %{tooltip}"
+          description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
         progress_chart:
           title: "התקדמות התרגום"
-          completed: "הושלם"
-          remaining: "נותרו"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
+          bar_done: "%{done} פוסטים"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"

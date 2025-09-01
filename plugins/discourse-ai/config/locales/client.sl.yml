@@ -58,6 +58,9 @@ sl:
         select_option: "Izberi možnost..."
       layout:
         table: "Tabela"
+      translations:
+        progress_chart:
+          bar_done: "%{done} prispevkov"
       spam:
         short_title: "Neželeno"
         last_seven_days: "Zadnjih 7 dni"

@@ -50,6 +50,9 @@ th:
           name: "ขยะ"
       modals:
         select_option: "เลือกตัวเลือก..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} โพส"
       spam:
         short_title: "ขยะ"
         last_seven_days: "7 วันที่ผ่านมา"

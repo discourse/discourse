@@ -277,6 +277,8 @@ fr:
         card: "Carte"
       translations:
         title: "Traductions"
+        progress_chart:
+          bar_done: "%{done} publications"
       spam:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"

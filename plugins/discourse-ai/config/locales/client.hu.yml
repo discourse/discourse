@@ -62,6 +62,8 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        progress_chart:
+          bar_done: "%{done} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"

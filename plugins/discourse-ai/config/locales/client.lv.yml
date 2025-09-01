@@ -53,6 +53,9 @@ lv:
           name: "Spams"
       modals:
         select_option: "Izvēlieties opciju..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} raksti"
       spam:
         short_title: "Spams"
         last_seven_days: "Pēdējās 7 dienas"

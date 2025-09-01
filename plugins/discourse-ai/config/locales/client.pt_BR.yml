@@ -277,6 +277,8 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        progress_chart:
+          bar_done: "%{done} postagens"
       spam:
         short_title: "Spam"
         title: "Configurar tratamento de spam"

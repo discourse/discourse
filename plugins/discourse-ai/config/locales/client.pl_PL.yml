@@ -319,10 +319,16 @@ pl_PL:
           disabled_state:
             configure: "Konfiguruj tłumaczenia"
             empty_label: "Tłumaczenia automatyczne są wyłączone, kliknij poniżej, aby je skonfigurować"
+        stats:
+          title: "Statystyki tłumaczeń"
+          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język %{tooltip}"
+          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język %{tooltip}"
+          description_tooltip: "Kwalifikujące się posty są określane na podstawie ustawień tłumaczenia AI"
         progress_chart:
           title: "Postęp tłumaczenia"
-          completed: "Zakończone"
-          remaining: "Pozostało"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
+          bar_done: "%{done} postów"
       spam:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"

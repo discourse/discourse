@@ -272,6 +272,8 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        progress_chart:
+          bar_done: "%{done} príspevkov"
       spam:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
