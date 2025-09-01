@@ -37,6 +37,9 @@ cs:
         summarize: "Shrnout"
       tool_help:
         summary: "Shrnout téma"
+    embeddings:
+      configuration:
+        invalid_config: "Vybrali jste neplatnou možnost."
     ai_staff_action_logger:
       updated: "aktualizováno"
       removed: "odstraněno"

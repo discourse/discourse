@@ -572,7 +572,7 @@ ja:
           ai_spam: "迷惑"
           automation: "自動化 (%{persona})"
         in_use_warning:
-          other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。"
+          other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
           anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"

@@ -2620,6 +2620,8 @@ de:
       in_muted: "Stummgeschaltete Themen anzeigen"
       in_normal: "Themen mit normaler Benachrichtigungsstufe anzeigen"
       in_watching_first_post: "Themen anzeigen, bei denen du den ersten Beitrag beobachtest"
+      in_new: "Themen anzeigen, die neu sind oder neue Antworten haben"
+      in_new_replies: "Themen mit neuen Antworten anzeigen"
       in_new_topics: "Zeige neue Themen"
       order_activity: "Nach letzter Aktivität sortieren (die neuesten zuerst)"
       order_activity_asc: "Nach letzter Aktivität sortieren (die ältesten zuerst)"

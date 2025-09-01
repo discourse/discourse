@@ -128,7 +128,7 @@ ur:
     incoming:
       default_subject: "یہ ٹاپک کو ایک عنوان کی ضرورت ہے"
       show_trimmed_content: "کٹا ہوا مواد دکھائیں"
-      maximum_staged_user_per_email_reached: "فی اِی میل بنائے گئے سٹَیجڈ صارفین کی زیادہ سے زیادہ تعداد تک پہنچ گئے ہیں۔"
+      maximum_staged_user_per_email_reached: "عارضی صارفین فی جو ای میل پر بنائے گئے کی زیادہ سے زیادہ تعداد پوری ہو چکی۔"
       no_subject: "(کوئی موضوع نہیں)"
       no_body: "(کوئی مواد نہیں)"
       missing_attachment: "(ملحقہ %{filename} غائب ہے)"
@@ -765,7 +765,7 @@ ur:
   change_email:
     error: "آپ کا اِی میل ایڈریس تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ شاید یہ ایڈریس پہلے سے استعمال میں ہے؟"
     doesnt_exist: "وہ ای میل پتہ آپ کے اکاؤنٹ سے وابستہ نہیں ہے۔"
-    error_staged: "آپ کا اِی میل تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ یہ ایڈریس پہلے سے ہی ایک سٹَیجڈ صارف کے استعمال میں ہے۔"
+    error_staged: "آپ کا ای میل تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ یہ ایڈریس پہلے سے ہی ایک عارضی صارف کے استعمال میں ہے۔"
     already_done: "معذرت، یہ تصدیقی لِنک اب درست نہیں ہے۔ شاید آپ کا اِی میل پہلے ہی بدل چکا تھا؟"
     confirm: "تصدیق کریں"
     max_secondary_emails_error: "آپ ثانوی ای میلز کی زیادہ سے زیادہ اجازت شدہ حد تک پہنچ گئے ہیں۔"
@@ -955,14 +955,14 @@ ur:
         percent: فیصد
         day: دن
     post_edits:
-      title: "پوسٹ ترامیم"
+      title: "لڑی کی ترامیم"
       labels:
         edited_at: تاریخ
         post: پوسٹ
         editor: ترمیم کنندہ
         author: مصنف
         edit_reason: وجہ
-      description: "نئی پوسٹ ترامیم کی تعداد"
+      description: "نئی لڑی کی ترامیم کی تعداد"
     user_flagging_ratio:
       title: "صارف فلَیگ لگانے کا تناسب"
       labels:
@@ -1367,7 +1367,7 @@ ur:
     category_search_priority_low_weight: "کم زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
     category_search_priority_high_weight: "اعلی زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
     allow_uncategorized_topics: "ٹاپکس کو بغیر کسی زُمرہ کے تخلیق ہونے کی اجازت دیں۔ انتباہ: اگر کوئی بِلا زُمرہ ٹاپکس موجود ہوں، تو اِس کو بند کرنے سے پہلے آپ کو اُنہیں دوبارہ کسی زُمرہ میں ڈالنا ہوگا۔"
-    allow_duplicate_topic_titles: "ایک جیسے، نقل عنوانات کے ساتھ ٹاپکس کی اجازت دیں۔"
+    allow_duplicate_topic_titles: "ایک جیسے، ڈپلیکیٹ عنوانات والے موضوعات کی اجازت"
     allow_duplicate_topic_titles_category: "اگر زمرہ مختلف ہے تو ایک جیسے، ڈپلیکیٹ موضوعات کے ساتھ موضوعات کی اجازت دیں۔ allow_duplicate_topic_titles کو غیر فعال کرنا ضروری ہے۔"
     unique_posts_mins: "ایک ہی مواد والی دوبارہ پوسٹ صارف کتنے منٹ بعد بنا سکتا ہے"
     educate_until_posts: "جب صارف اپنی پہلی (ن) نئی پوسٹس کو ٹائپ کرنا شروع کرے، تو کمپوزر میں نیا صارف تعلیمی پینل کا پاپ-اپ دکھائیں۔"
@@ -1393,7 +1393,7 @@ ur:
     exclude_rel_nofollow_domains: "اُن ڈومینز کی فہرست جن کے لنکس پر nofollow کو شامل نہیں کیا جانا چاہئے۔ example.com خود بخود sub.example.com کو بھی اجازت دیدے گا۔ وَیب کرالرز کو تمام مواد تلاش کرنے میں مدد دینے کیلئے آپ کو کم از کم، اِس سائٹ کا ڈومَین شامل کرلینا چاہئے۔ اگر آپ کی ویب سائٹ کے دوسرے حصے دوسرے ڈومینز پر ہیں، تو اُنہیں بھی شامل کر لیں۔"
     post_excerpt_maxlength: "پوسٹ اقتباس / خلاصہ کی زیادہ سے زیادہ لمبائی۔"
     topic_excerpt_maxlength: "کسی موضوع کے اقتباس / خلاصے کی زیادہ سے زیادہ لمبائی، جو کسی موضوع میں پہلی پوسٹ سے تیار کی گئی ہے۔"
-    show_pinned_excerpt_mobile: "موبائل وِیو میں پِن ہوے ٹاپکس پر اقتباس دکھائیں۔"
+    show_pinned_excerpt_mobile: "موبائل ویو میں پن کردہ موضوعات پر اقتباس دکھائیں۔"
     show_pinned_excerpt_desktop: "ڈیسک ٹاپ وِیو میں پِن ہوے ٹاپکس پر اقتباس دکھائیں۔"
     post_onebox_maxlength: "ایک وَن باکسڈ ڈِسکورس پوسٹ کے حروف کی زیادہ سے زیادہ لمبائی۔"
     blocked_onebox_domains: "ڈومینز کی ایک فہرست جو کبھی بھی ون باکس نہیں ہو گی مثلاً wikipedia.org\n(وائلڈ کارڈ کی علامتیں *؟ تعاون یافتہ نہیں)"
@@ -1712,8 +1712,8 @@ ur:
     delete_email_logs_after_days: "(ن) دنوں کے بعد ای میل لاگز حذف کریں۔ غیر متعینہ مدت تک رکھنے کیلئے 0"
     disallow_reply_by_email_after_days: "(ن) دنوں کے بعد بزریعہ ایمیل جواب کی اجازت نہ دیں۔ غیر متعینہ مدت تک رکھنے کیلئے 0"
     max_emails_per_day_per_user: "صارفین کو فی دن بھیجی گئی ای میلز کی زیادہ سے زیادہ تعداد۔ حد کو غیر فعال کرنے کیلئے 0"
-    enable_staged_users: "آنے والی ای میلز سے نمٹتے وقت خود کار طریقے سے سٹَیجڈ صارفین بنائیں۔"
-    maximum_staged_users_per_email: "آنے والی ایک ای میل سے نمٹتے وقت تشکیل کردہ سٹَیجڈ صارفین کی زیادہ سے زیادہ تعداد۔"
+    enable_staged_users: "آنے والی ای میلوں سے نمٹتے وقت خود کار طریقے سے عارضی صارفین بنائیں۔"
+    maximum_staged_users_per_email: "آنے والی ایک ای میل سے نمٹتے وقت تشکیل کردہ عارضی صارفین کی زیادہ سے زیادہ تعداد۔"
     auto_generated_allowlist: "ای میل پتوں کی فہرست جو خود کار طریقہ سے تخلیق شدہ مواد کیلئے چیک نہیں کیے جائیں گے۔ مثال: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "آنے والی ای میلز جو خود کار طریقہ سے تخلیق شدہ کے طور پر شناخت کی گئی ہوں، اُن کو خود بخود بلاک کریں۔"
     ignore_by_title: "اُن کے عنوان کی بَیس پر آنے والی ای میلز کو نظر انداز کریں۔"
@@ -1902,7 +1902,7 @@ ur:
       user_locale_not_enabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'صارف مقامیت کی اجازت' فعال کرنا ضروری ہے۔"
       invalid_regex: "رَیج اَیکس غلط یا اجازت یافتہ نہیں ہے۔"
       email_editable_enabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'قابل ترمیم بذریعہ ای میل' غیر فعال کرنا ضروری ہے۔"
-      staged_users_disabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'سٹَیجڈ صارفین' فعال کرنا ضروری ہے۔"
+      staged_users_disabled: "اس ترتیب کو فعال کرنے سے پہلے آپ کا 'عارضی صارفین' فعال کرنا ضروری ہے۔"
       reply_by_email_disabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'جواب بذریعہ ای میل' فعال کرنا ضروری ہے۔"
       enable_local_logins_disabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'مقامی لاگ اِن' فعال کرنا ضروری ہے۔"
       min_username_length_exists: "آپ صارف نام کی کم از کم لمبائی، سب سے مختصر صارف نام کی لمبائی سے کم مقرر نہیں کرسکتے (%{username})۔"
@@ -1938,6 +1938,7 @@ ur:
       tag: "ایک مخصوص ٹیگ والے موضوعات دکھائیں"
       exclude_tag: "مخصوص ٹیگ والے موضوعات کو خارج کریں"
       likes_min: "کم از کم اتنے پسندیدگیوں والے موضوعات دکھائیں"
+      likes_max: "ان موضوعات کو دکھائیں جن پر زیادہ سے زیادہ اتنی پسندیدگیاں ہوں"
       likes_op_min: "ایسے موضوعات دکھائیں جہاں پہلی لڑی کو کم از کم اتنی زیادہ پسندیدگیاں ہوں"
       likes_op_max: "ایسے موضوعات دکھائیں جہاں پہلی لڑی کو زیادہ سے زیادہ پسندیدگیاں ملیں"
       posts_min: "کم از کم اتنی لڑیوں والے موضوعات دکھائیں"
@@ -2098,8 +2099,8 @@ ur:
       domain_not_allowed: "ویب سائٹ غلط ہے۔ اجازت یافتہ ڈومَینز ہیں: %{domains}"
     auto_rejected: "عمر کی وجہ سے خود کار طریقہ سے رد کر دیا گیا۔ دیکھیے auto_handle_queued_age سائٹ ترتیب۔"
     destroy_reasons:
-      unused_staged_user: "غیر استعمال شدہ سٹَیجڈ صارف"
-      fixed_primary_email: "سٹَیجڈ صارف کیلئے بنیادی ای میل مقرر کر دیا گیا"
+      unused_staged_user: "غیر استعمال شدہ عارضی صارف"
+      fixed_primary_email: "عارضی صارف کیلئے بنیادی ای میل مقرر کر دیا گیا"
       same_ip_address: "دوسرے صارفین کی طرح ایک ہی IP ایڈریس (%{ip_address})"
       inactive_user: "غیر متحرک صارف"
   unsubscribe_mailer:
@@ -2371,6 +2372,14 @@ ur:
         آداب۔ ایسا لگ رہا ہے کہ آپ پڑھنے میں مصروف ہیں، جو کہ لاجواب ہے، اس لیے ہم نے آپ کو اضافی [اعتماد کی سطح!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) پر ترقی دی ہے
 
         ہمیں واقعی خوشی ہے کہ آپ ہمارے ساتھ وقت گزار رہے ہیں اور ہم آپ کے بارے میں مزید جاننا پسند کریں گے۔ [اپنا پروفائل پُر کرنے](%{base_url}/my/preferences/profile) کے لیے ایک لمحہ نکالیں، یا بلا جھجھک [ایک نیا موضوع شروع کریں](%{base_url}/categories)۔
+    welcome_staff:
+      subject_template: "مبارک ہو، آپ کو %{role} کا درجہ دے دیا گیا!"
+      text_body_template: |
+        آپ کو عملے کے ایک ساتھی نے %{role} کا درجہ دے دیا ہے۔
+
+        اب آپ کو بطور %{role}، <a href='%{base_url}/admin' target='_blank'>منتظم انٹرفیس</a>تک رسائی حاصل ہے۔
+
+        بڑی طاقت کے ساتھ بڑی ذمہ داری آتی ہے۔ اگر آپ نگرانی میں نئے ہیں، تو براہ کرم [نگرانی کی گائیڈ](https://meta.discourse.org/t/discourse-moderation-guide/63116) سے رجوع کریں۔
     welcome_invite:
       title: "خوش آمدید دعوت"
       subject_template: "%{site_name} پر خوش آمدید!"
@@ -2388,15 +2397,45 @@ ur:
         اپنے قیام کا لطف اٹھائیں!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "آپ کے اعتماد کی سطح کے فروغ پر مبارکباد!"
+      text_body_template: |
+        ہم نے آپ کی [اعتماد کی سطح] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) اضافہ کر کے ترقی دی ہے!
+
+        اعتماد کی سطح 2 کو حاصل کرنے کا مطلب ہے کہ اس کمیونٹی کا ممبر سمجھا جانے کے لیے آپ نے کافی پڑھا اور فعال طور پر حصہ لیا ہے۔
+
+        ایک تجربہ کار صارف کے طور پر، آپ شاید [ان مفید تجاویز اور آراء کی فہرست] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) کوسراہ سکتے ہیں۔
+
+        ہم آپ کو شامل رہنے کی دعوت دیتے ہیں – ہمیں آپ کا ساتھ اچھا لگتا ہے۔
     backup_succeeded:
       title: "بیک اَپ کامیاب"
       subject_template: "بیک اَپ کامیابی سے مکمل کر لیا گیا"
+      text_body_template: |
+        بیک اپ کامیاب رہا۔
+
+        اپنا نیا بیک اپ ڈاؤن لوڈ کرنے کے لیے [منتظم > بیک اَپس](%{base_url}/admin/backups) پر جائیں۔
+
+        یہ لاگ ہے:
+
+        %{logs}
     backup_failed:
       title: "بیک اَپ ناکام"
       subject_template: "بیک اَپ ناکام ہو گیا"
+      text_body_template: |
+        بیک اپ ناکام ہو گیا۔
+
+        یہ لاگ ہے:
+
+        %{logs}
     restore_succeeded:
       title: "رِیسٹور کامیاب"
       subject_template: "رِیسٹور کامیابی سے مکمل ہو گیا"
+      text_body_template: |
+        بحالی کامیاب رہی۔
+
+        یہ لاگ ہے:
+
+        %{logs}
     restore_failed:
       title: "رِیسٹور ناکام"
       subject_template: "رِیسٹور ناکام ہو گیا"
@@ -2406,6 +2445,10 @@ ur:
     bulk_invite_failed:
       title: "بَلک مدعو ناکام"
       subject_template: "بَلک صارف دعوت ناموں پر خرابں کے ساتھ عملدرآمد ہو گیا"
+    user_added_to_group_as_member:
+      subject_template: "آپ کو %{group_name} گروپ کے رکن کے طور پر شامل کیا گیا"
+      text_body_template: |
+        آپ کو [%{group_name}](%{base_url}%{group_path}) گروپ کے رکن کے طور پر شامل کیا گیا۔
     csv_export_succeeded:
       title: "CSV ایکسپورٹ کامیاب"
       subject_template: "[%{export_title}] ڈَیٹا ایکسپورٹ مکمل"
@@ -2719,6 +2762,7 @@ ur:
   subject_re: "جواب: "
   subject_pm: "[PM] "
   email_from: "%{user_name} بذریعہ %{site_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پچھلے جوابات"
     reached_limit:
@@ -2727,12 +2771,35 @@ ur:
     in_reply_to: "کے جواب میں"
     reply_by_email: "[ٹاپک وِزِٹ کریں](%{base_url}%{url}) یا جواب دینے کیلئے اس ای میل کا جواب دیں۔"
     reply_by_email_pm: "[پیغام وِزِٹ کریں](%{base_url}%{url}) یا %{participants} کا جواب دینے کیلئے اِس ایمیل کا جواب دیں۔"
+    reply_by_email_button_only: "[موضوع ملاحظہ کریں](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[پیغام ملاحظہ کریں](%{base_url}%{url})"
     only_reply_by_email: "جواب دینے کیلئے اس ای میل کا جواب دیں۔"
     only_reply_by_email_pm: "%{participants} کا جواب دینے کیلئے اِس ایمیل کا جواب دیں۔"
+    only_reply_by_email_pm_button_only: "[پیغام ملاحظہ کریں](%{base_url}%{url})"
     visit_link_to_respond: "جواب دینے کیلئے [ٹاپک وِزِٹ کریں](%{base_url}%{url})۔"
     visit_link_to_respond_pm: "[پیغام وِزِٹ کریں](%{base_url}%{url}) %{participants} کا جواب دینے کیلئے۔"
+    visit_link_to_respond_button_only: "[موضوع ملاحظہ کریں](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[پیغام ملاحظہ کریں](%{base_url}%{url})"
+    reply_above_line: "## براہ کرم اپنا جواب اس لائن کے اوپر لکھیں۔ ##"
     posted_by: "%{post_date} کو %{username} نے پوسٹ کیا"
     pm_participants: "شرکاء: %{participants}"
+    more_pm_participants:
+      one: "%{participants} اور %{count} دیگر"
+      other: "%{participants} اور %{count} دیگر"
+    invited_group_to_private_message_body: |
+      %{username} نے @%{group_name} کو ایک پیغام پر مدعو کیا
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+
+
+      > %{site_title} -- %{site_description}
+
+      پیغام میں شامل ہونے کے لئے، نیچے دیئے گئے رابطہ پر کلک کریں:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "صارف نے گروپ ذاتی پیغام میں مدعو کیا"
       subject_template: "[%{email_prefix}]%{username} نے @%{group_name} کو پیغام '%{topic_title}' میں مدعو کیا"
@@ -2752,7 +2819,7 @@ ur:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "صارف ذاتی پیغام سٹَیجڈ میں مدعو"
+      title: "صارف عارضی ذاتی پیغام کے لیے مدعو"
       subject_template: "[%{email_prefix}]%{username} نے آپ کو پیغام '%{topic_title}' میں مدعو کیا"
       text_body_template: |
         %{header_instructions}
@@ -2910,7 +2977,7 @@ ur:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "صارف نے ذاتی پیغام سٹَیجڈ شائع کیا"
+      title: "صارف نے عارضی ذاتی پیغام شائع کیا"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3133,6 +3200,10 @@ ur:
     latte: "لا ٹَیے"
     summer: "موسمِ گرما"
     dark_rose: "گہرا گلابی"
+    dracula: "ڈریکولا"
+    dracula_theme_name: "ڈریکولا"
+    solarized_light: "روشن خورشید"
+    solarized_light_theme_name: "روشن خورشید"
     light_theme_name: "لائٹ"
     dark_theme_name: "ڈارک"
     neutral_theme_name: "نیوٹرل"
@@ -3262,7 +3333,7 @@ ur:
       name: بنیادی
       description: تمام لازمی کمیونٹی کے افعال <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">عطا</a> کر دیے گئے
       long_description: |
-        یہ بَیج آپ کے ٹرسٹ لَیول 1 تک پہنچنے پر دیا جاتا ہے۔ یہاں رکنے اور ہماری کمیونٹی کے بارے میں جاننے کیلئے چند ٹاپک پڑھنے کیلئے شکریہ۔ نئے صارف کی پابندیاں ہٹا دی گئیں ہیں؛ آپ کو تمام لازمی کمیونٹی صلاحیات، جیسے کہ ذاتی پیغام رسانی، فلَیگ سازی، وِیکی ترمیم، اور ایک سے زیادہ تصاویر اور لِنکس شائع کرنا، عطا کر دی گئیں ہیں۔
+        آپ کو اعتماد کی سطح 1 پر پہنچنے پر یہ تمغہ دیا جاتا ہے۔ ہماری کمیونٹی کے بارے میں جاننے کے لیے کچھ موضوعات پڑھنے اور پڑھنے کا شکریہ۔ نئی صارف پابندیاں ہٹا دی گئی ہیں۔ آپ کو کمیونٹی کی تمام ضروری صلاحیتیں عطا کی گئی ہیں، جیسے ذاتی پیغام رسانی، جھنڈا لگانا، ویکی ایڈیٹنگ، اور متعدد تصاویر اور لنکس پوسٹ کرنے کی اہلیت۔
     member:
       name: ممبر
       description: دعوت نامے، گروپ پیغام رسانی، مزید لائیکس <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">عطا</a> کر دیے گئے
@@ -3525,8 +3596,10 @@ ur:
       introduction:
         fields:
           title:
+            label: "نام انجمن"
             placeholder: "جمیلہ کے ٹھہرنے کی جگہ"
           site_description:
+            label: "اپنی انجمن کو ایک جملے میں بیان کریں۔"
             placeholder: "جمیلہ اور اس کی دوستوں کیلئے دلچسپ چیزوں پر بحث کرنے کی ایک جگہ"
           default_locale:
             label: "زبان"
@@ -3560,8 +3633,10 @@ ur:
             placeholder: "گپ شپ فعال کریں"
             extra_description: "اپنے ممبروں کے ساتھ حقیقی وقت میں مشغول ہوں۔"
       ready:
+        title: "آپ کی سائٹ تیار ہے!"
         description: "ابھی کے لیے بس! آپ نے اپنی کمیونٹی کو ترتیب دینے کے لیے بنیاد رکھی۔ اب آپ اسے استعمال کر اور آس پاس دیکھ سکتے ہیں، ایک خوش آئند موضوع لکھ سکتے ہیں، اور دعوت نامے بھیج سکتے ہیں!<br><br>مزہ کریں!"
       styling:
+        title: "ظاہری شکل"
         fields:
           styling_preview:
             label: "پیشگی دیکھیں"
@@ -3572,7 +3647,11 @@ ur:
               hot:
                 label: "گرما گرم"
       corporate:
+        title: "آپ کی تنظیم"
         fields:
+          company_name:
+            label: "کمپنی کا نام"
+            placeholder: "ایکمی تنظیم"
           governing_law:
             placeholder: "کَیلیفَورنیا کے قانون"
           contact_url:

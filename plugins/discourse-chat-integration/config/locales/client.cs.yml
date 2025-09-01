@@ -42,6 +42,8 @@ cs:
           param:
             identifier:
               title: Kanál
+          errors:
+            channel_not_found: "Zadaný kanál na Slacku neexistuje."
         telegram:
           param:
             name:
