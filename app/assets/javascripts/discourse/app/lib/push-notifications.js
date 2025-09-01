@@ -31,9 +31,7 @@ export async function isPushNotificationsSupported() {
     return PushNotificationSupport.NotSupported;
   }
 
-  if (!("serviceWorker" in navigator) ||
-    typeof ServiceWorkerRegistration === "undefined" ||
-    typeof Notification === "undefined") {
+  if (!("serviceWorker" in navigator) || typeof ServiceWorkerRegistration === "undefined") {
     return PushNotificationSupport.NotSupported;
   }
 
@@ -47,6 +45,11 @@ export async function isPushNotificationsSupported() {
       // Not running in standalone mode? A PWA is probably needed.
       return PushNotificationSupport.PWARequired;
     }
+  }
+
+  // As a final sanity check, see if `Notification` is implemented. We should typically never hit this.
+  if (typeof Notification === "undefined") {
+    return PushNotificationSupport.NotSupported;
   }
 
   return PushNotificationSupport.Supported;

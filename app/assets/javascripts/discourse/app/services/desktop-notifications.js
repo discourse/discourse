@@ -159,8 +159,10 @@ export default class DesktopNotificationsService extends Service {
           case PushNotificationSupport.PWARequired:
             // User must install the application as a PWA.
             return false;
+          case PushNotificationSupport.NotSupported:
           default:
-            break;
+            // Push notifications not supported.
+            return false;
         }
       } else {
         // Push notifications not preferred; so generate a confirmation notification.
