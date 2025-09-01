@@ -215,7 +215,7 @@
 
 @mixin standard-btn() {
   height: var(--d-btn-medium);
-  padding-inline: 0.6em;
+  padding-inline: 0.575em;
 }
 
 .btn {
@@ -366,13 +366,13 @@
 .btn-small {
   font-size: var(--font-down-1);
   height: var(--d-btn-small);
-  padding-inline: calc(((var(--font-down-1) * 2.25) - 1rem) / 2);
+  padding-inline: 0.575em;
 }
 
 .btn-large {
   font-size: var(--font-up-1);
   height: var(--d-btn-large);
-  padding-inline: calc(((var(--font-up-1) * 2.25) - 1rem) / 2);
+  padding-inline: 0.575em;
 }
 
 /* Bonus Buttons */
