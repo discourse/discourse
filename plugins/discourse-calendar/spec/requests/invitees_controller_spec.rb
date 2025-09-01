@@ -337,6 +337,19 @@ module DiscoursePostEvent
 
             expect(response.status).to eq(200)
           end
+
+          it "allows not_going when full" do
+            sign_in(user_b)
+
+            post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
+                 params: {
+                   invitee: {
+                     status: "not_going",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+          end
         end
       end
     end
