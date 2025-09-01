@@ -30,12 +30,27 @@ export default class NotificationConsentBanner extends Component {
     );
   }
 
+  get showNotificationPwaTip() {
+    return this.desktopNotifications.isPushNotificationsPreferred &&
+           this.desktopNotifications.isPushSupported &&
+           this.desktopNotifications.isPushPwaNeeded;
+  }
+
   get showNotificationPromptBanner() {
+    let supported = false;
+    if (this.desktopNotifications.isPushNotificationsPreferred) {
+      // TODO: Eventually we want to show this banner even if a PWA is needed (and
+      // guide users toward adding the app to their homescreen).
+      supported = this.desktopNotifications.isPushSupported && !this.desktopNotifications.isPushPwaNeeded;
+    } else {
+      supported = this.desktopNotifications.isSupported;
+    }
+
     return (
       !this.bannerDismissed &&
       this.siteSettings.push_notifications_prompt &&
-      this.desktopNotifications.isSupported &&
-      this.currentUser && // FIXME: Do we need a current user?
+      supported &&
+      this.currentUser &&
       Notification.permission !== "denied" &&
       !this.desktopNotifications.isEnabled
     );

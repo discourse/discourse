@@ -8,9 +8,9 @@ import {
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
-  PushNotificationSupport,
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
+  PushNotificationSupport,
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
@@ -51,6 +51,18 @@ export default class DesktopNotificationsService extends Service {
     return !this.isSupported;
   }
 
+  get isPushSupported() {
+    return (
+      isPushNotificationsSupported() !== PushNotificationSupport.NotSupported
+    );
+  }
+
+  get isPushPwaNeeded() {
+    return (
+      isPushNotificationsSupported() === PushNotificationSupport.PWARequired
+    );
+  }
+
   get notificationsPermission() {
     return this.isNotSupported ? "" : Notification.permission;
   }
@@ -88,7 +100,10 @@ export default class DesktopNotificationsService extends Service {
   // Returns whether or not push notifications are preferred (but notably, does _NOT_
   // check to see whether or not they are supported).
   get isPushNotificationsPreferred() {
-    return (this.site.mobileView || this.siteSettings.enable_desktop_push_notifications);
+    return (
+      this.site.mobileView ||
+      this.siteSettings.enable_desktop_push_notifications
+    );
   }
 
   setIsEnabledBrowser(value) {

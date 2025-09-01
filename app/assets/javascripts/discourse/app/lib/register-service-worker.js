@@ -1,5 +1,11 @@
 import getAbsoluteURL, { isAbsoluteURL } from "discourse/lib/get-url";
 
+let registration = null;
+
+export function getServiceWorkerRegistration() {
+  return registration;
+}
+
 export async function registerServiceWorker(
   serviceWorkerURL,
   registerOptions = {}
@@ -10,19 +16,16 @@ export async function registerServiceWorker(
 
   if (!serviceWorkerURL) {
     // Unregister everything.
-    for (let registration of await navigator.serviceWorker.getRegistrations()) {
-      unregister(registration);
+    for (let reg of await navigator.serviceWorker.getRegistrations()) {
+      unregister(reg);
     }
 
     return true;
   }
 
-  for (let registration of await navigator.serviceWorker.getRegistrations()) {
-    if (
-      registration.active &&
-      !registration.active.scriptURL.includes(serviceWorkerURL)
-    ) {
-      unregister(registration);
+  for (let reg of await navigator.serviceWorker.getRegistrations()) {
+    if (reg.active && !reg.active.scriptURL.includes(serviceWorkerURL)) {
+      unregister(reg);
     }
   }
 
@@ -35,12 +38,12 @@ export async function registerServiceWorker(
       console.log(`failed to register service worker: ${err}`);
     });
 
-  const registration = await navigator.serviceWorker.ready;
+  registration = await navigator.serviceWorker.ready;
   return registration !== undefined;
 }
 
-function unregister(registration) {
-  if (isAbsoluteURL(registration.scope)) {
-    registration.unregister();
+function unregister(r) {
+  if (isAbsoluteURL(r.scope)) {
+    r.unregister();
   }
 }

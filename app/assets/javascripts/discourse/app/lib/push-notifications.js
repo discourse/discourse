@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { getServiceWorkerRegistration } from "discourse/lib/register-service-worker";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -24,7 +25,7 @@ export const PushNotificationSupport = {
   NotSupported: "NotSupported",
 };
 
-export async function isPushNotificationsSupported() {
+export function isPushNotificationsSupported() {
   let caps = helperContext().capabilities;
 
   if (caps.isAppWebview) {
@@ -38,8 +39,10 @@ export async function isPushNotificationsSupported() {
     return PushNotificationSupport.NotSupported;
   }
 
-  // Wait for the service worker to be ready.
-  const registration = await navigator.serviceWorker.ready;
+  const registration = getServiceWorkerRegistration();
+  if (!registration) {
+    return PushNotificationSupport.NotSupported;
+  }
 
   // On iOS, push notifications are only supported when the app is running as a PWA.
   // https://github.com/andreinwald/webpush-ios-example/blob/75a4e707046ebf7f3b88cc1bbbb8aedecc4cf377/frontend.js#L24-L36
@@ -79,9 +82,8 @@ export async function register(user, router, appEvents) {
     return;
   }
 
-  // Wait for the service worker to be ready.
-  const serviceWorkerRegistration = await navigator.serviceWorker.ready;
-  const subscription = await serviceWorkerRegistration.pushManager.getSubscription();
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.getSubscription();
 
   if (subscription) {
     sendSubscriptionToServer(subscription, false);
@@ -103,13 +105,11 @@ export async function subscribe(callback, applicationServerKey) {
     return;
   }
 
-  // Wait for the service worker to be ready.
-  const serviceWorkerRegistration = await navigator.serviceWorker.ready;
-  const subscription = await serviceWorkerRegistration.pushManager
-    .subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
-    });
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
+  });
 
   if (subscription) {
     sendSubscriptionToServer(subscription, true);
@@ -130,8 +130,8 @@ export async function unsubscribe(user, callback) {
   }
 
   // Wait for the service worker to be ready.
-  const serviceWorkerRegistration = await navigator.serviceWorker.ready;
-  const subscription = await serviceWorkerRegistration.pushManager.getSubscription();
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.getSubscription();
 
   if (subscription) {
     keyValueStore.setItem(userSubscriptionKey(user), "");
