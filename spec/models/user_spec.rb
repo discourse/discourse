@@ -425,6 +425,31 @@ RSpec.describe User do
         end
       end
 
+      context "with a confirm user field" do
+        fab!(:user_field) { Fabricate(:user_field, field_type: "confirm", show_on_profile: true) }
+
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        context "with a blocked word" do
+          let(:value) { true }
+
+          it "does not block the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq true
+          end
+        end
+
+        context "with a censored word" do
+          let(:value) { true }
+          before { watched_word.action = WatchedWord.actions[:censor] }
+
+          it "does not censor the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq true
+          end
+        end
+      end
+
       context "when reseting user fields" do
         let!(:censored_word) do
           Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
