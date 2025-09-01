@@ -29,7 +29,7 @@ export async function registerServiceWorker(
     }
   }
 
-  // N.B: The promise returned by `register` may not actually be resolved in some classes
+  // N.B: The promise returned by `register` may not actually be resolved in some cases
   // (e.g. if the worker is already registered)
   // https://stackoverflow.com/a/71240372
   navigator.serviceWorker
