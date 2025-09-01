@@ -2793,6 +2793,8 @@ he:
       order_read: "סידור לפי מתי שקראת לאחרונה (האחרונים בהתחלה)"
       order_read_asc: "סידור לפי מתי שקראת לאחרונה (הישנים בהתחלה)"
       exclude_users: "החרגת נושאים עם משתמשים מסוימים"
+      group: "סינון נושאים לפי קבוצות"
+      groups_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
@@ -5532,8 +5534,11 @@ he:
       approve_and_unhide:
         title: "אישור והצגת הפוסט"
         complete: "הפוסט אושר והוצג מחדש"
+      user_actions:
+        bundle_title: "מה לעשות עם המשתמש/ת?"
       no_action_user:
         title: "אין פעולה"
+        description: "לא לנקוט בפעולות נגד המשתמש/ת"
         complete: "לא לנקוט בפעולה נגד המשתמש/ת"
       silence_user:
         title: "השתקת משתמש"

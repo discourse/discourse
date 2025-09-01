@@ -285,9 +285,7 @@ de:
             configure: "Übersetzungen konfigurieren"
             empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
         progress_chart:
-          title: "Übersetzungsfortschritt"
-          completed: "Abgeschlossen"
-          remaining: "Verbleibend"
+          bar_done: "%{done} Beiträge"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"

@@ -1878,6 +1878,7 @@ cs:
         in_progress: "(odesílám)"
         error: "(chyba)"
         action: "Odeslat email na obnovu hesla"
+        staged_user: "Předběžně založení uživatelé nemohou přijímat e-maily pro obnovení hesla."
         set_password: "Nastavit heslo"
         choose_new: "Zvolte si nové heslo"
         choose: "Vyber si heslo"
@@ -3875,7 +3876,7 @@ cs:
         title: "Automaticky zavřít téma"
         label: "Automaticky zavřít téma po:"
         error: "Prosím zadejte platnou hodnotu."
-        based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
+        based_on_last_post: "Neuzavírat téma, dokud poslední příspěvek v tomto tématu není alespoň takto starý."
       auto_close_after_last_post:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
@@ -6913,7 +6914,7 @@ cs:
           delete: "Smazat"
           color_options:
             title: "Možnosti barev"
-            toggle: "Volitelný uživatelem"
+            toggle: "Volitelná uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
             toggle_default_light_on_theme: "Paleta barev je výchozí světlou paletou ve výchozím motivu (%{themeName})"
             toggle_default_dark_on_theme: "Paleta barev je výchozí tmavou paletou ve výchozím motivu (%{themeName})"

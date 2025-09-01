@@ -83,6 +83,8 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        progress_chart:
+          bar_done: "%{done} پوسٹس"
       spam:
         short_title: "سپَیم"
         last_seven_days: "پچھلے 7 دن"

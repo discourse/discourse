@@ -68,6 +68,8 @@ ug:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        progress_chart:
+          bar_done: "%{done} يازما"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"

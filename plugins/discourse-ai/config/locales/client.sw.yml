@@ -49,6 +49,9 @@ sw:
           name: "Barua Taka"
       modals:
         select_option: "Chagua chaguo moja..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} machapisho"
       spam:
         short_title: "Barua Taka"
         enable: "Wezesha"

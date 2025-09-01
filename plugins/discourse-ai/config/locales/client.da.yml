@@ -59,6 +59,8 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
+        progress_chart:
+          bar_done: "%{done} indlæg"
       spam:
         short_title: "Spam"
         last_seven_days: "Seneste 7 dage"

@@ -55,6 +55,8 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        progress_chart:
+          bar_done: "%{done} գրառում"
       spam:
         short_title: "Սպամ"
         enable: "Միացնել"

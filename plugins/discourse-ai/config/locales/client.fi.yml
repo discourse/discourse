@@ -277,6 +277,8 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        progress_chart:
+          bar_done: "ensimmäisen %{done} viestin"
       spam:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"

@@ -308,9 +308,7 @@ ru:
             configure: "Настроить переводы"
             empty_label: "Автоматические переводы отключены, нажмите ниже, чтобы настроить"
         progress_chart:
-          title: "Ход перевода"
-          completed: "Завершено"
-          remaining: "Осталось"
+          bar_done: "%{done} публикации"
       spam:
         short_title: "Спам"
         title: "Настройте обработку спама"

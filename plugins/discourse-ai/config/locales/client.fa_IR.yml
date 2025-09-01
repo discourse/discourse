@@ -80,6 +80,8 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        progress_chart:
+          bar_done: "%{done} نوشته"
       spam:
         short_title: "هرز‌نامه"
         last_seven_days: "۷ روز گذشته"

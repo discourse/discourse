@@ -54,6 +54,9 @@ bg:
           name: "Спам"
       modals:
         select_option: "Изберете опция..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} публикации"
       spam:
         short_title: "Спам"
         last_seven_days: "Последните 7 дни"

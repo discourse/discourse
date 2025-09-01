@@ -56,6 +56,8 @@ nb_NO:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        progress_chart:
+          bar_done: "%{done} innlegg"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"

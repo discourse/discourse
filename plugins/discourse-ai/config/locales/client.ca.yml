@@ -54,6 +54,8 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
+        progress_chart:
+          bar_done: "%{done} publicacions"
       spam:
         short_title: "Brossa"
         last_seven_days: "Els darrers 7 dies"

@@ -277,6 +277,8 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        progress_chart:
+          bar_done: "%{done} messaggi"
       spam:
         short_title: "Spam"
         title: "Configura la gestione dello spam"

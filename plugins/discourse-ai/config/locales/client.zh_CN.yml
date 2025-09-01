@@ -282,9 +282,7 @@ zh_CN:
             configure: "配置翻译"
             empty_label: "自动翻译已禁用，点击下方进行配置"
         progress_chart:
-          title: "翻译进度"
-          completed: "已完成"
-          remaining: "剩余"
+          bar_done: "%{done} 个帖子"
       spam:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
