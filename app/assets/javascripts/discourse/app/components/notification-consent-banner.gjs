@@ -32,14 +32,12 @@ export default class NotificationConsentBanner extends Component {
 
   get showNotificationPromptBanner() {
     return (
+      !this.bannerDismissed &&
       this.siteSettings.push_notifications_prompt &&
       this.desktopNotifications.isSupported &&
-      this.currentUser &&
-      this.capabilities.isPwa &&
+      this.currentUser && // FIXME: Do we need a current user?
       Notification.permission !== "denied" &&
-      Notification.permission !== "granted" &&
-      !this.desktopNotifications.isEnabled &&
-      !this.bannerDismissed
+      !this.desktopNotifications.isEnabled
     );
   }
 
@@ -48,6 +46,9 @@ export default class NotificationConsentBanner extends Component {
     if (await this.desktopNotifications.enable()) {
       // Dismiss the banner iff notifications were successfully enabled.
       this.setBannerDismissed(true);
+    } else {
+      // TODO: Force a re-render to recheck our conditions. The below does not work for some reason.
+      // this.rerender();
     }
   }
 
