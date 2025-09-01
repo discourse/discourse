@@ -18,7 +18,7 @@ export default RouteTemplate(
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
-          @path="/admin/customize/colors"
+          @path="/admin/config/colors"
           @label={{i18n "admin.config.color_palettes.title"}}
         />
       </:breadcrumbs>
@@ -37,6 +37,7 @@ export default RouteTemplate(
           @outletArgs={{lazyHash actions=actions controller=@controller}}
         >
           <actions.Primary
+            class="create-new-palette"
             @label="admin.customize.new"
             @action={{@controller.newColorScheme}}
             @icon="plus"

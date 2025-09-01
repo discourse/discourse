@@ -4,6 +4,7 @@ RSpec.describe Admin::ColorSchemesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
+  fab!(:theme)
 
   let(:valid_params) do
     {
@@ -186,6 +187,42 @@ RSpec.describe Admin::ColorSchemesController do
         expect(default_theme.color_scheme_id).to eq(existing.id)
         expect(default_theme.dark_color_scheme_id).to eq(existing.id)
       end
+
+      it "doesn't allow editing the name or colors of a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows making a theme-owned palette user selectable" do
+        existing.update!(theme_id: theme.id, user_selectable: false)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                user_selectable: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(existing.reload.user_selectable).to eq(true)
+      end
+
+      it "allows making a theme-owned palette the default theme's palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                default_light_on_theme: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(Theme.find_default.reload.color_scheme_id).to eq(existing.id)
+      end
     end
 
     shared_examples "color scheme update not allowed" do
@@ -221,6 +258,15 @@ RSpec.describe Admin::ColorSchemesController do
           ColorScheme.count
         }.by(-1)
         expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow deleting a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
+
+        expect { delete "/admin/color_schemes/#{existing.id}.json" }.not_to change {
+          ColorScheme.count
+        }
+        expect(response.status).to eq(403)
       end
     end
 
