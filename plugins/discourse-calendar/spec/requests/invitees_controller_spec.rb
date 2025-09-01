@@ -302,10 +302,11 @@ module DiscoursePostEvent
         end
 
         context "when event has max attendees and is full" do
+          let(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
           let(:user_a) { Fabricate(:user) }
           let(:user_b) { Fabricate(:user) }
           let(:post_event_full) do
-            pe = Fabricate(:event, post: post_1, max_attendees: 1)
+            pe = Fabricate(:event, post: post_2, max_attendees: 1)
             pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
             pe
           end

@@ -56,7 +56,7 @@ module DiscoursePostEvent
         invitee.update_attendance!(invitee_params[:status])
         render json: InviteeSerializer.new(invitee)
       rescue Discourse::InvalidParameters => e
-        if e.param == :max_attendees
+        if e.message == "max_attendees"
           render_json_error(
             I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
             422,
@@ -88,7 +88,7 @@ module DiscoursePostEvent
         invitee = Invitee.create_attendance!(user.id, params[:event_id], invitee_params[:status])
         render json: InviteeSerializer.new(invitee)
       rescue Discourse::InvalidParameters => e
-        if e.param == :max_attendees
+        if e.message == "max_attendees"
           render_json_error(
             I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
             422,
