@@ -83,6 +83,7 @@ en:
           raw_invitees:
             only_group: "An event accepts only group names."
           ends_at_before_starts_at: "An event can't end before it starts."
+          max_attendees_reached: "This event is full."
           start_must_be_present_and_a_valid_date: "An event requires a valid start date."
           end_must_be_a_valid_date: "End date must be a valid date."
           invalid_recurrence: "Recurrence must be one of: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
