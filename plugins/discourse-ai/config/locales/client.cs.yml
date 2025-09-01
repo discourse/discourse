@@ -144,6 +144,9 @@ cs:
         usage:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
+        model_description:
+          open_ai-o3: "Nejschopnější model uvažování Open AI"
+          open_ai-gpt-5: "Vlajkový model Open AI. Je vhodný pro řešení problémů napříč oblastmi."
         next:
           title: "Další"
         tests:

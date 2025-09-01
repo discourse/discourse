@@ -6,7 +6,7 @@
 
 hr:
   site_settings:
-    discourse_gamification_enabled: "Omogućite dodatak za gamificiranje diskursa"
+    discourse_gamification_enabled: "Omogućite dodatak za gamificiranje diskursa\n"
     like_received_score_value: "Vrijednost navijanja koja se dodjeljuje kada korisnik dobije lajk"
     like_given_score_value: "Vrijednost navijanja koja se dodjeljuje za svaki lajk koji korisnik daje"
     solution_score_value: "Vrijednost navijanja koja se dodjeljuje kada se objava korisnika označi kao rješenje"

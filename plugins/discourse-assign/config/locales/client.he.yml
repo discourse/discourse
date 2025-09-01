@@ -106,6 +106,7 @@ he:
                 title: "מי יכול להקצות את הקבוצה הזאת"
     user:
       notification_level_when_assigned:
+        label: "כשיש הקצאה"
         watch_topic: "מעקב אחר נושא"
         do_nothing: "לא לעשות דבר"
       messages:

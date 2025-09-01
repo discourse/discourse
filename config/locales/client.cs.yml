@@ -3871,7 +3871,7 @@ cs:
         title: "Automaticky zavřít téma"
         label: "Automaticky zavřít téma po:"
         error: "Prosím zadejte platnou hodnotu."
-        based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
+        based_on_last_post: "Neuzavírat téma, dokud poslední příspěvek v tomto tématu není alespoň takto starý."
       auto_close_after_last_post:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
@@ -6900,7 +6900,7 @@ cs:
           delete: "Smazat"
           color_options:
             title: "Možnosti barev"
-            toggle: "Volitelný uživatelem"
+            toggle: "Volitelná uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
           colors:
             title: "Barvy"

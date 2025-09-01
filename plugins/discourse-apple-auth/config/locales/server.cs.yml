@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    apple_client_id: "(Přihlásit se pomocí Apple) „Identifikátor služby“ Apple z konzole pro vývojáře. Obvykle řetězec ve stylu reverzního názvu domény (např. com.example.auth) (Přihlásit se pomocí Apple)"
