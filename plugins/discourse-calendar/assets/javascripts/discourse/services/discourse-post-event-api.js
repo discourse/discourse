@@ -63,10 +63,9 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
-    // keep capacity state in sync immediately without waiting for MessageBus
-    const capacity1 = Number(event.maxAttendees);
-    if (!Number.isNaN(capacity1) && capacity1 > 0) {
-      event.atCapacity = Number(event.stats.going) >= capacity1;
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
     }
 
     return event;
@@ -83,13 +82,13 @@ export default class DiscoursePostEventApi extends Service {
       event.watchingInvitee = null;
     }
 
-    // optimistically update stats and capacity when leaving
     if (invitee?.status === "going" && Number(event.stats?.going) > 0) {
       event.stats.going = Number(event.stats.going) - 1;
     }
-    const capacity2 = Number(event.maxAttendees);
-    if (!Number.isNaN(capacity2) && capacity2 > 0) {
-      event.atCapacity = Number(event.stats?.going) >= capacity2;
+
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats?.going) >= capacity;
     }
   }
 
@@ -105,7 +104,6 @@ export default class DiscoursePostEventApi extends Service {
       event.sampleInvitees.push(event.watchingInvitee);
     }
 
-    // If joining as going, increment going count immediately for responsiveness
     if (invitee?.status === "going") {
       event.stats.going = Number(event.stats.going || 0) + 1;
     }
@@ -114,10 +112,9 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
-    // keep capacity state in sync immediately without waiting for MessageBus
-    const capacity3 = Number(event.maxAttendees);
-    if (!Number.isNaN(capacity3) && capacity3 > 0) {
-      event.atCapacity = Number(event.stats.going) >= capacity3;
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
     }
 
     return invitee;
