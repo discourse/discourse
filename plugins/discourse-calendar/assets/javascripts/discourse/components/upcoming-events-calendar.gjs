@@ -272,13 +272,19 @@ export default class UpcomingEventsCalendar extends Component {
     } else {
       let viewDate;
       if (view === "week") {
-        const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
-        viewDate = moment(viewMiddle).startOf('isoWeek');
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
+        viewDate = moment(viewMiddle).startOf("isoWeek");
       } else if (view === "day") {
-        const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
         viewDate = moment(viewMiddle);
       } else if (view === "year") {
-        const viewMiddle = moment((viewStart.valueOf() + viewEnd.valueOf()) / 2);
+        const viewMiddle = moment(
+          (viewStart.valueOf() + viewEnd.valueOf()) / 2
+        );
         viewDate = moment(viewMiddle);
       } else {
         viewDate = moment(viewStart);
