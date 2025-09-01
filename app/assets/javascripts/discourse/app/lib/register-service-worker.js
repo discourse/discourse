@@ -1,7 +1,9 @@
 import getAbsoluteURL, { isAbsoluteURL } from "discourse/lib/get-url";
 
+/** @type {ServiceWorkerRegistration | null} */
 let registration = null;
 
+/** @returns {ServiceWorkerRegistration | null} */
 export function getServiceWorkerRegistration() {
   return registration;
 }
@@ -35,6 +37,7 @@ export async function registerServiceWorker(
   navigator.serviceWorker
     .register(getAbsoluteURL(`/${serviceWorkerURL}`), registerOptions)
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.log(`failed to register service worker: ${err}`);
     });
 

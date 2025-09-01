@@ -51,6 +51,9 @@ export function isPushNotificationsSupported() {
       // Not running in standalone mode? A PWA is probably needed.
       return PushNotificationSupport.PWARequired;
     }
+
+    // Not really sure how we can reach this point, but just in-case.
+    return PushNotificationSupport.NotSupported;
   }
 
   // As a final sanity check, see if `Notification` is implemented. We should typically never hit this.
@@ -122,7 +125,6 @@ export async function unsubscribe(user, callback) {
     return;
   }
 
-  // Wait for the service worker to be ready.
   const registration = getServiceWorkerRegistration();
   const subscription = await registration.pushManager.getSubscription();
 
