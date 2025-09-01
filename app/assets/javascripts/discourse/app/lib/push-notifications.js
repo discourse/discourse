@@ -20,8 +20,8 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
 
 export const PushNotificationSupport = {
   Supported: "Supported",
-  PWARequired: "PWARequired", // Push notifications are supported when the app is installed as a PWA.
-  NotSupported: "NotSupported"
+  PWARequired: "PWARequired", // (iOS only) Push notifications are supported when the app is installed as a PWA.
+  NotSupported: "NotSupported",
 };
 
 export async function isPushNotificationsSupported() {
@@ -31,7 +31,10 @@ export async function isPushNotificationsSupported() {
     return PushNotificationSupport.NotSupported;
   }
 
-  if (!("serviceWorker" in navigator) || typeof ServiceWorkerRegistration === "undefined") {
+  if (
+    !("serviceWorker" in navigator) ||
+    typeof ServiceWorkerRegistration === "undefined"
+  ) {
     return PushNotificationSupport.NotSupported;
   }
 
@@ -59,14 +62,17 @@ export async function isPushNotificationsEnabled(user) {
   return (
     user &&
     !user.isInDoNotDisturb() &&
-    await isPushNotificationsSupported() == PushNotificationSupport.Supported &&
+    (await isPushNotificationsSupported()) ===
+      PushNotificationSupport.Supported &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );
 }
 
 // Register an existing subscription with the backend.
 export async function register(user, router, appEvents) {
-  if (await isPushNotificationsSupported() != PushNotificationSupport.Supported) {
+  if (
+    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
+  ) {
     return;
   }
   if (Notification.permission === "denied" || !user) {
@@ -91,7 +97,9 @@ export async function register(user, router, appEvents) {
 }
 
 export async function subscribe(callback, applicationServerKey) {
-  if (await isPushNotificationsSupported() != PushNotificationSupport.Supported) {
+  if (
+    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
+  ) {
     return;
   }
 
@@ -115,7 +123,9 @@ export async function subscribe(callback, applicationServerKey) {
 }
 
 export async function unsubscribe(user, callback) {
-  if (await isPushNotificationsSupported() != PushNotificationSupport.Supported) {
+  if (
+    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
+  ) {
     return;
   }
 
