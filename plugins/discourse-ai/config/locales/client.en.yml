@@ -165,6 +165,15 @@ en:
             flag_post:
               label: "Flag post"
               description: "Flags post (either as spam or for review)"
+            notify_author_pm:
+              label: "Notify author via PM"
+              description: "Send a personal message to the post author when their post is queued and deleted"
+            notify_author_pm_user:
+              label: "PM sender"
+              description: "User who will send the PM (defaults to system)"
+            notify_author_pm_message:
+              label: "PM message"
+              description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
               description: "Also scan and triage personal messages"
