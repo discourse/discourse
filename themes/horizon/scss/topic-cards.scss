@@ -409,18 +409,6 @@
     padding: 0;
   }
 
-  .topic-post-badges .badge-notification.unread-posts,
-  .topic-post-badges .badge-notification.new-topic {
-    background-color: var(--tertiary);
-    color: var(--tertiary);
-    overflow: hidden;
-    height: 8px;
-    width: 8px;
-    padding: 0;
-    top: -2px;
-    min-width: unset;
-  }
-
   // metadata - excerpt
   .topic-excerpt {
     grid-area: excerpt;
