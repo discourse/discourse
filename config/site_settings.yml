@@ -3671,23 +3671,25 @@ uncategorized:
     default: true
     themeable: true
     area: "interface"
-
   welcome_banner_image:
     client: true
     default: ""
     type: upload
     area: "interface"
-
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
     default: "above_topic_content"
     area: "interface"
-
   welcome_banner_page_visibility:
     client: true
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
+    area: "interface"
+  welcome_banner_text_color:
+    type: color
+    default: ""
+    validator: "CssColorWithBlankValidator"
     area: "interface"
 
 user_preferences:
