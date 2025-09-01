@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
+import { eq, and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -136,7 +136,7 @@ export default class DiscoursePostEventStatus extends Component {
                 class="going-button"
                 @disabled={{and
                   @event.atCapacity
-                  (not this.watchingInviteeStatus)
+                  (not (eq this.watchingInviteeStatus "going"))
                 }}
                 @icon="check"
                 @label={{if
