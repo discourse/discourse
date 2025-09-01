@@ -351,7 +351,9 @@ export default class DAutocompleteModifier extends Modifier {
     if (hasSpaces && isMentionAutocomplete) {
       // Close menu but keep state for potential reopening and continue with search
       this.pendingSpaceSearch = true;
-      await this.closeAutocomplete({ resetSearchState: false });
+      if (term.slice(-1) === " ") {
+        await this.closeAutocomplete({ resetSearchState: false });
+      }
     }
 
     // Close if only whitespace or invalid context
