@@ -426,9 +426,7 @@ RSpec.describe User do
       end
 
       context "with a confirm user field" do
-        fab!(:user_field) do
-          Fabricate(:user_field, field_type: "confirm", show_on_profile: true)
-        end
+        fab!(:user_field) { Fabricate(:user_field, field_type: "confirm", show_on_profile: true) }
 
         let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
