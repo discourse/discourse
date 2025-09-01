@@ -26,6 +26,7 @@ export default class Bool extends Component {
         {{on "input" this.onToggle}}
         type="checkbox"
         checked={{this.enabled}}
+        disabled={{@disabled}}
       />
       <span>{{htmlSafe @setting.description}}</span>
     </label>

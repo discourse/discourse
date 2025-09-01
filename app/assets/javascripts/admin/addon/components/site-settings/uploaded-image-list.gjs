@@ -27,6 +27,7 @@ export default class UploadedImageList extends Component {
         this.showUploadModal
         (hash value=this.value setting=this.setting)
       }}
+      @disabled={{@disabled}}
     />
   </template>
 }
