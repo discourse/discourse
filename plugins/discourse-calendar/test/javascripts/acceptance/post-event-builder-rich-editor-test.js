@@ -23,6 +23,8 @@ acceptance("Post event - composer (rich editor)", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
 
+    await click(".composer-toggle-switch");
+
     await click(".toolbar-menu__options-trigger");
     await click(
       `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
@@ -49,7 +51,6 @@ acceptance("Post event - composer (rich editor)", function (needs) {
 
     await click(`${modal} .d-modal__footer .btn-primary`);
 
-    // Assert a discourse-post-event block is rendered inside ProseMirror
     assert
       .dom(
         '.ProseMirror .discourse-post-event[data-start="2022-07-01 12:00"][data-timezone="Europe/Paris"]'
