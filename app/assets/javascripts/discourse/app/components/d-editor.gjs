@@ -94,18 +94,7 @@ export default class DEditor extends Component {
     this.register = getRegister(this);
 
     this.setupToolbar();
-
-    if (this.siteSettings.rich_editor) {
-      // TODO (martin) Remove this once we are sure all users have migrated
-      // to the new rich editor preference, or a few months after the 3.5 release.
-      await this.handleOldRichEditorPreference();
-
-      if (this.currentUser.useRichEditor) {
-        this.editorComponent = await loadRichEditor();
-      }
-    }
-
-    this.editorComponent ??= TextareaEditor;
+    this.setupEditorMode();
   }
 
   setupToolbar() {
@@ -119,6 +108,29 @@ export default class DEditor extends Component {
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);
     }
+  }
+
+  async setupEditorMode() {
+    if (this.forceEditorMode) {
+      if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
+        this.editorComponent = await loadRichEditor();
+      } else {
+        this.editorComponent = TextareaEditor;
+      }
+      return;
+    }
+
+    if (this.siteSettings.rich_editor) {
+      // TODO (martin) Remove this once we are sure all users have migrated
+      // to the new rich editor preference, or a few months after the 3.5 release.
+      await this.handleOldRichEditorPreference();
+
+      if (this.currentUser.useRichEditor) {
+        this.editorComponent = await loadRichEditor();
+      }
+    }
+
+    this.editorComponent ??= TextareaEditor;
   }
 
   async handleOldRichEditorPreference() {
@@ -143,6 +155,11 @@ export default class DEditor extends Component {
       return i18n(placeholder);
     }
     return null;
+  }
+
+  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
+  showEditorModeToggle() {
+    return this.siteSettings.rich_editor && !this.forceEditorMode;
   }
 
   _readyNow() {
@@ -768,7 +785,7 @@ export default class DEditor extends Component {
             </div>
           {{else}}
             <div class="d-editor-button-bar" role="toolbar">
-              {{#if this.siteSettings.rich_editor}}
+              {{#if this.showEditorModeToggle}}
                 <ToggleSwitch
                   @preventFocus={{true}}
                   @disabled={{@disableSubmit}}
