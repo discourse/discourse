@@ -343,6 +343,16 @@ export default class ComposerContainer extends Component {
                   @disableSubmit={{this.composer.disableSubmit}}
                 />
 
+                {{#unless this.site.mobileView}}
+                  <DButton
+                    @action={{this.composer.cancel}}
+                    class="discard-button btn-transparent"
+                    @preventFocus={{true}}
+                    @title="composer.discard"
+                    @label="composer.discard"
+                  />
+                {{/unless}}
+
                 {{#if this.site.mobileView}}
                   <DButton
                     @action={{this.composer.cancel}}
@@ -456,18 +466,6 @@ export default class ComposerContainer extends Component {
                   </span>
                 </div>
               {{/if}}
-
-              <div class="discard">
-                {{#unless this.site.mobileView}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    class="discard-button btn-transparent"
-                    @preventFocus={{true}}
-                    @title="composer.discard"
-                    @label="composer.discard"
-                  />
-                {{/unless}}
-              </div>
 
               {{#if (and this.composer.allowPreview this.site.desktopView)}}
                 <DButton

@@ -313,7 +313,7 @@ module PageObjects
       end
 
       def discard
-        find("#{COMPOSER_ID} .discard .discard-button").click
+        find("#{COMPOSER_ID} .discard-button").click
       end
 
       def close
