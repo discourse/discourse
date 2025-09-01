@@ -163,7 +163,7 @@ export default class DesktopNotificationsService extends Service {
       }
 
       if (this.isPushNotificationsPreferred) {
-        switch (await isPushNotificationsSupported()) {
+        switch (isPushNotificationsSupported()) {
           case PushNotificationSupport.Supported:
             // Subscribe to push notifications from the server. If successful, a notification will be sent.
             await subscribePushNotification(() => {

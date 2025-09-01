@@ -61,21 +61,18 @@ export function isPushNotificationsSupported() {
   return PushNotificationSupport.Supported;
 }
 
-export async function isPushNotificationsEnabled(user) {
+export function isPushNotificationsEnabled(user) {
   return (
     user &&
     !user.isInDoNotDisturb() &&
-    (await isPushNotificationsSupported()) ===
-      PushNotificationSupport.Supported &&
+    isPushNotificationsSupported() === PushNotificationSupport.Supported &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );
 }
 
 // Register an existing subscription with the backend.
 export async function register(user, router, appEvents) {
-  if (
-    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
-  ) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
     return;
   }
   if (Notification.permission === "denied" || !user) {
@@ -99,9 +96,7 @@ export async function register(user, router, appEvents) {
 }
 
 export async function subscribe(callback, applicationServerKey) {
-  if (
-    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
-  ) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
     return;
   }
 
@@ -123,9 +118,7 @@ export async function subscribe(callback, applicationServerKey) {
 }
 
 export async function unsubscribe(user, callback) {
-  if (
-    (await isPushNotificationsSupported()) !== PushNotificationSupport.Supported
-  ) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
     return;
   }
 
