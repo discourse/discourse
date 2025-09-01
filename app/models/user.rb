@@ -1619,9 +1619,8 @@ class User < ActiveRecord::Base
   end
 
   def validatable_user_fields
-    # ignore multiselect and confirm fields since they are admin-set or don't contain text content
-    @public_user_field_ids ||=
-      UserField.public_fields.where.not(field_type: ["multiselect", "confirm"]).pluck(:id)
+    # only validate fields that contain text content
+    @public_user_field_ids ||= UserField.public_fields.user_editable_text_fields.pluck(:id)
 
     user_fields(@public_user_field_ids)
   end
