@@ -26,10 +26,4 @@ describe SiteSetting do
       Discourse::InvalidParameters,
     )
   end
-
-  it "is accessible to clients" do
-    # This test ensures the setting is marked as client: true in the YAML
-    # The actual client access is tested in the JavaScript tests
-    expect(SiteSetting.calendar_first_day_of_week).to be_present
-  end
 end
