@@ -10,7 +10,7 @@ Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_confi
 
 Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
-  config[:skip_default_job_logging] = false
+  config[:skip_default_job_logging] = true
 
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
