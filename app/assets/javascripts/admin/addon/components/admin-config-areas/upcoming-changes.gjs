@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
@@ -8,12 +9,15 @@ import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminFilterControls from "admin/components/admin-filter-controls";
 import DMenu from "float-kit/components/d-menu";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
   @service site;
+
+  registeredMenus = {};
 
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
@@ -64,6 +68,11 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         filterFn: (change) => change.upcoming_change.type === "misc",
       },
       {
+        label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
+        value: "pre_alpha",
+        filterFn: (change) => change.upcoming_change.status === "pre_alpha",
+      },
+      {
         label: i18n("admin.upcoming_changes.filter.status_alpha"),
         value: "alpha",
         filterFn: (change) => change.upcoming_change.status === "alpha",
@@ -100,6 +109,26 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         value: "high_risk",
       },
     ];
+  }
+
+  @action
+  showImage(change) {
+    if (change.upcoming_change.image_url) {
+      window.open(change.upcoming_change.image_url, "_blank");
+      this.registeredMenus[change.setting]?.close();
+    }
+  }
+
+  @bind
+  onRegisterMenuForRow(setting, menuApi) {
+    this.registeredMenus[setting] = menuApi;
+  }
+
+  // TODO (martin) We probably will have more actions here in future,
+  // all we have now is to show the image. Even that, we probably need
+  // to show the image in a lightbox instead.
+  hasChangeActions(change) {
+    return !!change.upcoming_change.image_url;
   }
 
   riskIcon(risk) {
@@ -259,28 +288,35 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                   />
                 </td>
                 <td class="d-table__cell --controls">
-                  <div class="d-table__cell-actions">
-                    <DMenu
-                      @identifier="upcoming-change-menu"
-                      @title={{i18n
-                        "admin.config_areas.flags.more_options.title"
-                      }}
-                      @icon="ellipsis"
-                      @class="btn-default upcoming-change__more-actions"
-                    >
-                      <:content>
-                        <DropdownMenu as |dropdown|>
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent upcoming-change__show-image"
-                              @label="admin.upcoming_changes.show_image"
-                              @icon="image"
-                            />
-                          </dropdown.item>
-                        </DropdownMenu>
-                      </:content>
-                    </DMenu>
-                  </div>
+                  {{#if (this.hasChangeActions change)}}
+                    <div class="d-table__cell-actions">
+                      <DMenu
+                        @identifier="upcoming-change-menu"
+                        @title={{i18n
+                          "admin.config_areas.flags.more_options.title"
+                        }}
+                        @icon="ellipsis"
+                        @class="btn-default upcoming-change__more-actions"
+                        @onRegisterApi={{fn
+                          this.onRegisterMenuForRow
+                          change.setting
+                        }}
+                      >
+                        <:content>
+                          <DropdownMenu as |dropdown|>
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent upcoming-change__show-image"
+                                @label="admin.upcoming_changes.show_image"
+                                @icon="image"
+                                @action={{this.showImage change}}
+                              />
+                            </dropdown.item>
+                          </DropdownMenu>
+                        </:content>
+                      </DMenu>
+                    </div>
+                  {{/if}}
                 </td>
               </tr>
             {{/each}}

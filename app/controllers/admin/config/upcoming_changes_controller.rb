@@ -10,6 +10,15 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
                )
                .each { |setting|
                  setting[:value] = setting[:value] == "true"
+
+                 if File.exist?(
+                      Rails.root.join("public/images/upcoming_change_#{setting[:setting]}.png"),
+                    )
+                   setting[:upcoming_change][
+                     :image_url
+                   ] = "#{Discourse.base_url}/images/upcoming_change_#{setting[:setting]}.png"
+                 end
+
                  if setting[:plugin]
                    plugin = Discourse.plugins_by_name[setting[:plugin]]
 

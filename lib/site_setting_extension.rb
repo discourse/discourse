@@ -900,6 +900,12 @@ module SiteSettingExtension
       end
     end
 
+    if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
+      define_singleton_method("#{clean_name}_groups_map") do
+        upcoming_change_metadata[name][:restrict_to_groups].to_s.split("|").map(&:to_i)
+      end
+    end
+
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))

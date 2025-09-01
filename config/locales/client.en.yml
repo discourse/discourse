@@ -5663,6 +5663,7 @@ en:
           high_risk: "Risk: High"
           type_feature: "Type: Feature"
           type_misc: "Type: Miscellaneous"
+          status_pre_alpha: "Status: Pre-Alpha"
           status_alpha: "Status: Alpha"
           status_beta: "Status: Beta"
           status_stable: "Status: Stable"
