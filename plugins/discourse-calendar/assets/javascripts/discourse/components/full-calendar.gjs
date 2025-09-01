@@ -30,6 +30,7 @@ export default class FullCalendar extends Component {
   @service capabilities;
   @service tooltip;
   @service menu;
+  @service siteSettings;
 
   @controller topic;
 
@@ -41,6 +42,23 @@ export default class FullCalendar extends Component {
     super.willDestroy(...arguments);
   }
 
+  /**
+   * Converts the first day of week site setting to the appropriate number
+   * @returns {number} The first day of week (0=Sunday, 1=Monday, 6=Saturday)
+   */
+  get firstDayOfWeek() {
+    const setting = this.siteSettings.calendar_first_day_of_week;
+    switch (setting) {
+      case "Saturday":
+        return 6;
+      case "Sunday":
+        return 0;
+      case "Monday":
+      default:
+        return 1;
+    }
+  }
+
   @action
   async setupCalendar(element) {
     const calendarModule = await loadFullCalendar();
@@ -49,7 +67,7 @@ export default class FullCalendar extends Component {
       locale: getCurrentBcp47Locale(),
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
-      firstDay: 1,
+      firstDay: this.firstDayOfWeek,
       displayEventTime: true,
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
