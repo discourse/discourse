@@ -247,7 +247,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       end
     end
 
-    it "shows the 'Show more' link after loading additional subcategories via intersection observer" do
+    it "shows the 'Show more' link after loading additional subcategories via intersection observer and hides it after loading all subcategories" do
       visit "/latest"
 
       modal = sidebar.click_edit_categories_button
@@ -267,10 +267,13 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_show_more_button
 
       # We need to briefly wait for things to settle, otherwise clicking the button doesn't work.
-      wait_for_timeout(200)
+      wait_for_timeout(300)
       modal.click_show_more_button
 
       expect(page).to have_content(subcategory6.name)
+
+      # The 'Show more' button should disappear after loading all subcategories
+      expect(modal).to have_no_show_more_button
     end
   end
 
