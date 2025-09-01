@@ -120,6 +120,6 @@ end
 # Indexes
 #
 #  idx_topic_id_public_type_deleted_at  (timerable_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
-#  index_topic_timers_on_topic_id       (timerable_id) WHERE (deleted_at IS NULL)
+#  index_topic_timers_on_timerable_id   (timerable_id) WHERE (deleted_at IS NULL)
 #  index_topic_timers_on_user_id        (user_id)
 #
