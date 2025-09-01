@@ -215,7 +215,7 @@
 
 @mixin standard-btn() {
   height: var(--d-btn-medium);
-  padding-inline: calc(((var(--font-0) * 2.25) - 1rem) / 2);
+  padding-inline: 0.6em;
 }
 
 .btn {
