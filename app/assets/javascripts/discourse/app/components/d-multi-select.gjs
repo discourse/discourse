@@ -170,6 +170,10 @@ export default class DMultiSelect extends Component {
     }
   }
 
+  getDisplayText(item) {
+    return item?.name;
+  }
+
   #resolveAsyncData(asyncData, context, resolve, reject) {
     return asyncData(context).then(resolve).catch(reject);
   }
@@ -193,6 +197,7 @@ export default class DMultiSelect extends Component {
               <button
                 class="d-multi-select-trigger__selected-item"
                 {{on "click" (fn this.remove item)}}
+                title={{this.getDisplayText item}}
               >
                 <span class="d-multi-select-trigger__selection-label">{{yield
                     item
@@ -255,6 +260,7 @@ export default class DMultiSelect extends Component {
                       (if (eq result this.preselectedItem) "--preselected" "")
                     }}
                     role="button"
+                    title={{this.getDisplayText result}}
                     {{on "mouseenter" (fn (mut this.preselectedItem) result)}}
                     {{on "click" (fn this.toggle result)}}
                   >

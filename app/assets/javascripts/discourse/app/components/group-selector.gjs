@@ -67,10 +67,8 @@ export default class GroupSelector extends Component {
 
     this.selectedGroups = selectedGroups;
 
-    // Convert back to names for compatibility
     const groupNames = selectedGroups.map((group) => group.name);
 
-    // Notify parent components
     if (this.args.onChange) {
       this.args.onChange(groupNames.join(","));
     } else if (this.args.onChangeCallback) {
