@@ -473,6 +473,7 @@ export default class SiteSettingComponent extends Component {
           {{#if this.showThemeSiteSettingWarning}}
             <div class="setting-theme-warning">
               <p class="setting-theme-warning__text">
+                {{icon "paintbrush"}}
                 {{this.themeSiteSettingWarningText}}
               </p>
             </div>
