@@ -117,7 +117,7 @@ end
 #  category_id        :integer
 #  deleted_by_id      :integer
 #  timerable_id       :integer          not null
-#  topic_id           :integer          not null
+#  topic_id           :integer
 #  user_id            :integer          not null
 #
 # Indexes
