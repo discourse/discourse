@@ -549,14 +549,25 @@ describe PostRevisor do
         expect(post.revisions.size).to eq(0)
       end
 
-      it "should bump the topic" do
+      it "doesn't bump the topic when editing the last post" do
         expect {
           post_revisor.revise!(
             post.user,
             { raw: "updated body" },
             revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
           )
-        }.to change { post.topic.bumped_at }
+        }.not_to change { post.topic.bumped_at }
+      end
+
+      it "doesn't bump the topic when editing a post that isn't the last post" do
+        create_post(topic_id: post.topic.id)
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { raw: "updated body" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
       end
 
       it "should bump topic when no topic category" do
@@ -571,24 +582,6 @@ describe PostRevisor do
             )
           expect(result).to eq(true)
         }.to change { topic.reload.bumped_at }
-      end
-
-      it "should send muted and latest message" do
-        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
-        messages =
-          MessageBus.track_publish("/latest") do
-            post_revisor.revise!(
-              post.user,
-              { raw: "updated body" },
-              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
-            )
-          end
-
-        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
-        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
-
-        expect(muted_message.data["topic_id"]).to eq(topic.id)
-        expect(latest_message.data["topic_id"]).to eq(topic.id)
       end
     end
 
@@ -1448,6 +1441,24 @@ describe PostRevisor do
                   )
                 expect(result).to eq(true)
               }.to change { topic.reload.bumped_at }
+            end
+
+            it "should send muted and latest message if non staff-only tags are added" do
+              TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
+              messages =
+                MessageBus.track_publish("/latest") do
+                  post_revisor.revise!(
+                    Fabricate(:admin),
+                    raw: post.raw,
+                    tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
+                  )
+                end
+
+              muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+              latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+
+              expect(muted_message.data["topic_id"]).to eq(topic.id)
+              expect(latest_message.data["topic_id"]).to eq(topic.id)
             end
 
             it "creates a hidden revision" do
