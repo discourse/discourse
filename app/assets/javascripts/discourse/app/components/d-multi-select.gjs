@@ -88,6 +88,8 @@ export default class DMultiSelect extends Component {
 
   @action
   focus(input) {
+    // Reset preselection on dropdown open to prevent unwanted scrolling
+    this.preselectedItem = null;
     input.focus({ preventScroll: true });
   }
 

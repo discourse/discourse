@@ -15,14 +15,16 @@ export default class ScrollIntoViewModifier extends Modifier {
   }
 
   modify(element, [shouldScroll, options = {}]) {
-    if (shouldScroll) {
-      const scrollOptions = {
-        behavior: "smooth",
-        block: "nearest",
-        ...options,
-      };
-
-      element.scrollIntoView(scrollOptions);
+    if (!shouldScroll || !element) {
+      return;
     }
+
+    const scrollOptions = {
+      behavior: "smooth",
+      block: "nearest",
+      ...options,
+    };
+
+    element.scrollIntoView(scrollOptions);
   }
 }
