@@ -23,6 +23,7 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import UserTipContainer from "discourse/components/user-tip-container";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
@@ -46,8 +47,12 @@ import {
 } from "discourse/lib/user-status-on-autocomplete";
 import { SKIP } from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 let _createCallbacks = [];
+
+// Custom tip ID for markdown switch (100+ range to avoid conflicts)
+const MARKDOWN_TIP_ID = 100;
 
 export function addToolbarCallback(func) {
   _createCallbacks.push(func);
@@ -68,6 +73,9 @@ export default class DEditor extends Component {
   @service emojiStore;
   @service modal;
   @service menu;
+  @service currentUser;
+  @service tooltip;
+  @service site;
 
   @tracked editorComponent;
   /** @type {TextManipulation} */
@@ -602,8 +610,80 @@ export default class DEditor extends Component {
     };
   }
 
+  get hasSeenMarkdownTip() {
+    if (!this.currentUser) {
+      return true;
+    }
+
+    const seenPopups = this.currentUser.user_option?.seen_popups || [];
+    if (seenPopups.includes(MARKDOWN_TIP_ID)) {
+      return true;
+    }
+
+    const compositionMode = this.currentUser.user_option?.composition_mode;
+    if (compositionMode === USER_OPTION_COMPOSITION_MODES.markdown) {
+      // silently mark as seen for existing markdown users
+      this.markMarkdownTipSeen();
+      return true;
+    }
+
+    return false;
+  }
+
+  async markMarkdownTipSeen() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const seenPopups = this.currentUser.user_option?.seen_popups || [];
+    if (seenPopups.includes(MARKDOWN_TIP_ID)) {
+      return;
+    }
+
+    seenPopups.push(MARKDOWN_TIP_ID);
+    this.currentUser.set("user_option.seen_popups", seenPopups);
+    await this.currentUser.save(["seen_popups"]);
+  }
+
+  async showMarkdownTip() {
+    if (this.hasSeenMarkdownTip) {
+      return;
+    }
+
+    const instance = new DTooltipInstance(getOwner(this), {
+      identifier: "markdown-tip",
+      interactive: true,
+      closeOnScroll: false,
+      closeOnClickOutside: false,
+      placement: "bottom",
+      trapTab: !this.site.mobileView,
+      component: UserTipContainer,
+      onClose: () => {
+        this.markMarkdownTipSeen();
+      },
+      data: {
+        id: "markdown_switch",
+        titleText: i18n("composer.markdown_tip.title"),
+        contentHtml: i18n("composer.markdown_tip.content"),
+        buttonText: i18n("composer.markdown_tip.button"),
+        showSkipButton: false,
+      },
+    });
+
+    const toggleElement = document.querySelector(
+      ".composer-toggle-switch__slider"
+    );
+    if (toggleElement) {
+      instance.trigger = toggleElement;
+      instance.detachedTrigger = true;
+      this.tooltip.show(instance);
+    }
+  }
+
   @action
   async toggleRichEditor() {
+    const switchingToMarkdown = this.isRichEditorEnabled;
+
     // The ProsemirrorEditor component is loaded here, adding this comment because
     // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled
@@ -614,6 +694,16 @@ export default class DEditor extends Component {
       ? USER_OPTION_COMPOSITION_MODES.rich
       : USER_OPTION_COMPOSITION_MODES.markdown;
     this.#debounceSaveRichEditorPreference(preference);
+
+    // only show tip if switching to markdown for the first time
+    if (switchingToMarkdown && !this.hasSeenMarkdownTip) {
+      // delay for composer animation
+      schedule("afterRender", () => {
+        setTimeout(() => {
+          this.showMarkdownTip();
+        }, 300);
+      });
+    }
   }
 
   #debounceSaveRichEditorPreference(preference) {

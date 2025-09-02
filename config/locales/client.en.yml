@@ -2995,6 +2995,10 @@ en:
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
+      markdown_tip:
+        title: "Welcome to Markdown Mode!"
+        content: "Use simple typing shortcuts for formatting (like **bold** and *italic*). New to markdown? <a href='https://commonmark.org/help/' target='_blank' rel='noopener'>Try a tutorial</a>."
+        button: "Got it!"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
