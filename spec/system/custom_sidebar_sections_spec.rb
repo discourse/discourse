@@ -50,6 +50,26 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
+  it "prioritizes exact url matches over ember routes" do
+    sidebar_section = SidebarSection.find_by(section_type: "community")
+    sidebar_url = Fabricate(:sidebar_url, name: "Topics", value: "/latest")
+    sidebar_url_2 =
+      Fabricate(:sidebar_url, name: "Sorted latest", value: "/latest?ascending=true&order=posts")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    sign_in user
+
+    visit("/latest?ascending=true&order=posts")
+    expect(sidebar).to have_exact_url_match_link("Sorted latest")
+    expect(sidebar).to have_no_active_links
+    expect(sidebar).to have_no_exact_url_match_link("everything")
+
+    visit("/latest")
+    expect(sidebar).to have_active_link("everything")
+    expect(sidebar).to have_no_exact_url_match_link("Sorted latest")
+  end
+
   it "allows the user to create custom section with `/` path" do
     SiteSetting.top_menu = "read|posted|latest"
 
