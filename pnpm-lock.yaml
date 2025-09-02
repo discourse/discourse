@@ -116,8 +116,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       puppeteer-core:
-        specifier: ^24.17.1
-        version: 24.17.1
+        specifier: ^24.18.0
+        version: 24.18.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -3469,8 +3469,8 @@ packages:
   bare-events@2.6.1:
     resolution: {integrity: sha512-AuTJkq9XmE6Vk0FJVNq5QxETrSA/vKHarWVBG5l/JbdCL1prJemiyJqUS0jrlXO0MftuPq4m3YVYhoNc5+aE/g==}
 
-  bare-fs@4.2.1:
-    resolution: {integrity: sha512-mELROzV0IhqilFgsl1gyp48pnZsaV9xhQapHLDsvn4d4ZTfbFhcghQezl7FTEDNBcGqLUnNI3lUlm6ecrLWdFA==}
+  bare-fs@4.2.2:
+    resolution: {integrity: sha512-5vn+bdnlCYMwETIm1FqQXDP6TYPbxr2uJd88ve40kr4oPbiTZJVrTNzqA3/4sfWZeWKuQR/RkboBt7qEEDtfMA==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -7592,8 +7592,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.17.1:
-    resolution: {integrity: sha512-Msh/kf9k1XFN0wuKiT4/npMmMWOT7kPBEUw01gWvRoKOOoz3It9TEmWjnt4Gl4eO+p73VMrvR+wfa0dm9rfxjw==}
+  puppeteer-core@24.18.0:
+    resolution: {integrity: sha512-As0BvfXxek2MbV0m7iqBmQKFnfSrzSvTM4zGipjd4cL+9f2Ccgut6RvHlc8+qBieKHqCMFy9BSI4QyveoYXTug==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -12097,7 +12097,7 @@ snapshots:
   bare-events@2.6.1:
     optional: true
 
-  bare-fs@4.2.1:
+  bare-fs@4.2.2:
     dependencies:
       bare-events: 2.6.1
       bare-path: 3.0.0
@@ -17170,7 +17170,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.17.1:
+  puppeteer-core@24.18.0:
     dependencies:
       '@puppeteer/browsers': 2.10.8
       chromium-bidi: 8.0.0(devtools-protocol@0.0.1475386)
@@ -18262,7 +18262,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.2.1
+      bare-fs: 4.2.2
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-buffer
