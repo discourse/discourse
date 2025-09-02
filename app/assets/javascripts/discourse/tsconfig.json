@@ -1,0 +1,17 @@
+{
+  "include": [
+    "./app/**/*"
+  ],
+  "extends": "../../../../jsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./app",
+    "outDir": "dist"
+  },
+  "glint": {
+    "environment": [
+      "ember-template-imports"
+    ],
+    "checkStandaloneTemplates": false
+  }
+}

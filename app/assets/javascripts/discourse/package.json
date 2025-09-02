@@ -7,7 +7,10 @@
   "author": "Discourse",
   "exports": {
     "./tests/*": "./tests/*",
-    "./*": "./app/*"
+    "./*": {
+      "default": "./app/*",
+      "types": "./dist"
+    }
   },
   "directories": {
     "doc": "doc",

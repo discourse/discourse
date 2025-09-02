@@ -76,6 +76,9 @@ importers:
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
+      discourse:
+        specifier: ./
+        version: 'link:'
       ember-template-lint:
         specifier: 7.9.3
         version: 7.9.3

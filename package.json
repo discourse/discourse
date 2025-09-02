@@ -1,5 +1,4 @@
 {
-  "name": "discourse",
   "private": true,
   "repository": "https://github.com/discourse/discourse",
   "author": "Discourse",

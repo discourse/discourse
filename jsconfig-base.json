@@ -1,0 +1,20 @@
+{  "compilerOptions": {
+    "target": "es2021",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "noEmitOnError": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
+    // "declarationDir": "types"
+  },
+  "glint": {
+    "environment": [
+      "ember-template-imports"
+    ],
+    "checkStandaloneTemplates": false
+  }
+}
