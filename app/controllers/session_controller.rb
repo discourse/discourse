@@ -74,7 +74,6 @@ class SessionController < ApplicationController
 
       if request.xhr?
         cookies[:destination_url] = data[:sso_redirect_url]
-        cookies[:sso_redirect_url] = data[:sso_redirect_url]
         render json: success_json.merge(redirect_url: data[:sso_redirect_url])
       else
         redirect_to data[:sso_redirect_url], allow_other_host: true
