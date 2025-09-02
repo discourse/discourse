@@ -96,7 +96,7 @@ const extension = {
         state.renderContent(node);
         state.write("");
         // strip newlines added by renderContent
-        while (state.out.endsWith("\n") && state.out.length > prevLength) {
+        while (state.out.endsWith("\n") && state.out.length >= prevLength) {
           state.out = state.out.slice(0, -1);
         }
         state.write("\n");
