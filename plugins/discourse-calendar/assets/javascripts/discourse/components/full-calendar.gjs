@@ -156,9 +156,6 @@ export default class FullCalendar extends Component {
   updateCalendar() {
     if (this.calendar) {
       this.calendar.setOption("headerToolbar", this.headerToolbar);
-      if (this.args.initialDate) {
-        this.calendar.gotoDate(this.args.initialDate);
-      }
     }
   }
 
