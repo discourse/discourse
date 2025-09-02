@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class AddTimerableIdToTopicTimer < ActiveRecord::Migration[8.0]
   def change
-    add_column :topic_timers, :timerable_id, :integer
+    add_column :topic_timers, :timerable_id, :integer, null: false
     execute <<-SQL
       UPDATE topic_timers SET timerable_id = topic_id;
     SQL
