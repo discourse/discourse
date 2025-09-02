@@ -151,10 +151,7 @@ export default class DesktopNotificationsService extends Service {
       if (!this.isGrantedPermission) {
         // This permission also applies to webpush notifications.
         // https://stackoverflow.com/q/46551259
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          this.setIsEnabledBrowser(true);
-        }
+        await Notification.requestPermission();
       }
 
       if (this.isDeniedPermission) {
@@ -182,6 +179,7 @@ export default class DesktopNotificationsService extends Service {
       } else {
         // Push notifications not preferred; so generate a confirmation notification.
         confirmNotification(this.siteSettings);
+        this.setIsEnabledBrowser(true);
 
         return true;
       }
