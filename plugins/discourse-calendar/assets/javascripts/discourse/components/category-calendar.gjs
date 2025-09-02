@@ -26,7 +26,7 @@ export default class CategoryCalendar extends Component {
       };
 
       const events = await this.discoursePostEventApi.events(params);
-      return this.formatedEvents(events);
+      return this.formattedEvents(events);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -103,7 +103,7 @@ export default class CategoryCalendar extends Component {
   }
 
   @action
-  formatedEvents(events = []) {
+  formattedEvents(events = []) {
     return events.map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
