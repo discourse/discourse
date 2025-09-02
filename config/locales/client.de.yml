@@ -5633,6 +5633,7 @@ de:
           feature_tooltip:
             title_disabled: "Probiere diese Funktion aus"
             title_enabled: "Deaktiviere diese Funktion"
+            content_disabled: "Teste diese neue Funktion! Du kannst sie jederzeit wieder deaktivieren, wenn du möchtest.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiviert."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"

@@ -1567,6 +1567,9 @@ de:
         anon_views: Anonym
         total_views: Gesamt
       description: "Die 100 meistgesehenen Themen in einem Zeitraum, basierend auf Aufrufen durch angemeldete und anonyme Benutzer. Kann nach Kategorie gefiltert werden."
+    associated_accounts_by_provider:
+      labels:
+        total_users: "Gesamtzahl der Mitglieder"
   dashboard:
     problem:
       twitter_login: 'Die Anmeldung über Twitter scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
