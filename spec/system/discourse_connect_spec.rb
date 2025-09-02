@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require "webrick"
-
 describe "Discourse Connect", type: :system do
+  include SsoHelpers
+
   let(:sso_secret) { SecureRandom.alphanumeric(32) }
   let(:sso_port) { 9876 }
   let(:sso_url) { "http://localhost:#{sso_port}/sso" }
 
   before do
-    setup_test_sso_server
     configure_discourse_connect
+    setup_test_sso_server(user:, sso_secret:, sso_port:, sso_url:)
   end
 
   after { shutdown_test_sso_server }
@@ -32,7 +32,8 @@ describe "Discourse Connect", type: :system do
       expect(page).to have_css(".login-page")
     end
   end
-  context "when using vanilla DiscourseConnect " do
+
+  context "when using vanilla DiscourseConnect" do
     fab!(:user)
     fab!(:private_group) { Fabricate(:group, users: [user]) }
     fab!(:private_category) { Fabricate(:private_category, group: private_group) }
@@ -41,6 +42,7 @@ describe "Discourse Connect", type: :system do
 
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic:) }
+
     context "when login_required is false" do
       before { SiteSetting.login_required = false }
 
@@ -143,88 +145,7 @@ describe "Discourse Connect", type: :system do
     end
   end
 
-  context "when using DiscourseConnect provider" do
-    fab!(:user_1) { Fabricate(:user, username: "john", password: "supersecurepassword") }
-    let(:login_form) { PageObjects::Pages::Login.new }
-    before do
-      SiteSetting.enable_discourse_connect_provider = true
-      SiteSetting.discourse_connect_provider_secrets = "localhost|Test"
-      SiteSetting.enable_discourse_connect = false
-
-      Jobs.run_immediately!
-    end
-
-    it "redirects back to the return_sso_url after successful login" do
-      return_url = "http://localhost:#{sso_port}/test/url"
-      sso, sig = build_sso_payload(return_url)
-      EmailToken.confirm(Fabricate(:email_token, user: user_1).token)
-
-      visit "/"
-      visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
-      expect(page).to have_current_path("/login")
-
-      login_form.fill(username: "john", password: "supersecurepassword").click_login
-
-      expect(page).to have_current_path(
-        /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-        url: true,
-        ignore_query: false,
-      )
-    end
-  end
-
   private
-
-  def build_sso_payload(return_url)
-    secret = SiteSetting.discourse_connect_provider_secrets.split("|")[1]
-    nonce = SecureRandom.hex
-
-    payload = "nonce=#{CGI.escape(nonce)}&return_sso_url=#{CGI.escape(return_url)}"
-    sso = Base64.strict_encode64(payload)
-    sig = OpenSSL::HMAC.hexdigest("sha256", secret, sso)
-
-    [sso, sig]
-  end
-
-  def setup_test_sso_server
-    @server =
-      WEBrick::HTTPServer.new(
-        Port: sso_port,
-        Logger: WEBrick::Log.new(File.open(File::NULL, "w")),
-        AccessLog: [],
-      )
-
-    @server.mount_proc "/sso" do |req, res|
-      decoded = Base64.decode64(req.query["sso"])
-      params = Rack::Utils.parse_query(decoded)
-
-      response_sso = DiscourseConnectBase.new
-      response_sso.nonce = params["nonce"]
-      response_sso.sso_secret = sso_secret
-      response_sso.external_id = "foo-bar"
-      response_sso.email = user.email
-      response_sso.username = user.username
-
-      res.status = 302
-      res["Location"] = "#{params["return_sso_url"]}?#{response_sso.payload}"
-    end
-
-    @server_thread = Thread.new { @server.start }
-
-    sleep 0.1 until server_responding?
-  end
-
-  def shutdown_test_sso_server
-    @server&.shutdown
-    @server_thread&.kill
-  end
-
-  def server_responding?
-    Net::HTTP.get_response(URI(sso_url))
-    true
-  rescue StandardError
-    false
-  end
 
   def configure_discourse_connect
     SiteSetting.discourse_connect_url = sso_url
