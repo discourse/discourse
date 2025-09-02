@@ -137,13 +137,12 @@ export default class AiTranslations extends Component {
             },
           },
           datalabels: {
-            formatter: (percentage) => {
-              return this.site.mobileView && percentage < 20
+            formatter: (percentage) =>
+              this.site.mobileView && percentage < 20
                 ? ""
                 : i18n("discourse_ai.translations.progress_chart.data_label", {
                     percentage,
-                  });
-            },
+                  }),
             color: "white",
           },
         },

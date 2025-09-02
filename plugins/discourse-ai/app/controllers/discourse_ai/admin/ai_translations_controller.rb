@@ -39,7 +39,10 @@ module DiscourseAi
       def base_result
         {
           translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
-          enabled: DiscourseAi::Translation.enabled?,
+          # the progress chart will be empty if max_age_days is 0
+          enabled:
+            DiscourseAi::Translation.enabled? &&
+              SiteSetting.ai_translation_backfill_max_age_days > 0,
           backfill_enabled: DiscourseAi::Translation.backfill_enabled?,
         }
       end
