@@ -314,7 +314,7 @@ es:
         month: "Mes"
         week: "Semana"
         day: "Día"
-        list: "Lista"
+        year: "Año"
     group_timezones:
       search: "Buscar..."
       group_availability: "Disponibilidad de %{group}"
@@ -399,13 +399,13 @@ es:
             not_going: "No asistiré"
             interested: "Estoy interesado"
             going_count:
-              one: "%{count} asistirán"
+              one: "%{count} asistirá"
               other: "%{count} asistirán"
             not_going_count:
-              one: "%{count} no asistirán"
+              one: "%{count} no asistirá"
               other: "%{count} no asistirán"
             interested_count:
-              one: "%{count} interesados"
+              one: "%{count} interesado"
               other: "%{count} interesados"
             invited_count:
               one: "%{count} usuario invitado"

@@ -30,6 +30,7 @@
     font-size: var(--font-down-1);
     padding: 1rem;
     padding-top: 0;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
 
     &__buttons {
       display: flex;

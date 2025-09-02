@@ -54,6 +54,9 @@ sq:
           name: "Spam"
       modals:
         select_option: "Zgjidhni një opsion..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} postime"
       spam:
         short_title: "Spam"
         enable: "Aktivizo"

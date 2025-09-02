@@ -10,7 +10,12 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category", "tags" => "tag", "groups" => "group" }
+  FILTER_ALIASES = {
+    "categories" => "category",
+    "tags" => "tag",
+    "groups" => "group",
+    "user" => "users",
+  }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -65,7 +70,7 @@ class TopicsFilter
       when "order"
         order_by(values: filter_values)
       when "users"
-        filter_users(values: filter_values)
+        filter_users(values: key_prefixes.zip(filter_values))
       when "group"
         filter_groups(values: filter_values)
       when "posts-min"
@@ -198,6 +203,7 @@ class TopicsFilter
         description: I18n.t("filter.description.users"),
         type: "username",
         priority: 1,
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_users") }],
         delimiters: [
           { name: ",", description: I18n.t("filter.description.users_any") },
           { name: "+", description: I18n.t("filter.description.users_all") },
@@ -292,6 +298,7 @@ class TopicsFilter
           { name: "in:new", description: I18n.t("filter.description.in_new") },
           { name: "in:new-replies", description: I18n.t("filter.description.in_new_replies") },
           { name: "in:new-topics", description: I18n.t("filter.description.in_new_topics") },
+          { name: "in:unseen", description: I18n.t("filter.description.in_unseen") },
         ],
       )
     end
@@ -444,8 +451,10 @@ class TopicsFilter
 
   # users:a,b => any of a or b participated in the topic
   # users:a+b => both a and b participated in the topic
+  # -users:a,b => neither a nor b participated in the topic
+  # -users:a+b => at least one of a or b did not participate in the topic
   def filter_users(values:)
-    values.each do |value|
+    values.each do |prefix, value|
       require_all, usernames = calculate_all_or_any(value)
 
       if usernames.empty?
@@ -468,20 +477,34 @@ class TopicsFilter
 
         # A possible alternative is to select the topics with the users with the least posts
         # then expand to all of the rest of the users, this can limit the scanning
-        user_ids.each_with_index { |uid, idx| @scope = @scope.where(<<~SQL) }
+        if prefix == "-"
+          @scope = @scope.where(<<~SQL, user_ids: user_ids, user_count: user_ids.length)
+            topics.id NOT IN (
+              SELECT p1.topic_id
+              FROM posts p1
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL
+              GROUP BY p1.topic_id
+              HAVING COUNT(DISTINCT p1.user_id) = :user_count
+            )
+          SQL
+        else
+          user_ids.each_with_index { |uid, idx| @scope = @scope.where(<<~SQL) }
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid}
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL
               LIMIT 1
             )
           SQL
+        end
       else
+        not_sql = prefix == "-" ? "NOT" : ""
         @scope = @scope.where(<<~SQL, user_ids: user_ids)
-              topics.id IN (
+              topics.id #{not_sql} IN (
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 WHERE p.user_id IN (:user_ids)
+                  AND p.deleted_at IS NULL
               )
             SQL
       end
@@ -695,6 +718,11 @@ class TopicsFilter
         base.joins_values.dup.concat(new_topics.joins_values, unread_topics.joins_values)
         base.joins_values.uniq!
         @scope = base.merge(new_topics.or(unread_topics))
+      end
+
+      if values.delete("unseen")
+        ensure_topic_users_reference!
+        @scope = TopicQuery.unseen_filter(@scope, @guardian.user)
       end
 
       if values.delete("bookmarked")

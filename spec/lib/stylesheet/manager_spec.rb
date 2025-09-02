@@ -688,81 +688,6 @@ RSpec.describe Stylesheet::Manager do
       expect(href).to include("/stylesheets/color_definitions_funky-bunch_#{cs.id}_")
     end
 
-    it "generates the dark mode of a color scheme when the dark option is specified" do
-      scheme =
-        ColorScheme.create_from_base(
-          name: "Neutral",
-          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
-        )
-      ColorSchemeRevisor.revise(
-        scheme,
-        colors: [{ name: "primary", hex: "CABFAF", dark_hex: "FAFCAB" }],
-      )
-      theme = Fabricate(:theme)
-      manager = manager(theme.id)
-
-      dark_stylesheet =
-        Stylesheet::Manager::Builder.new(
-          target: :color_definitions,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-          dark: true,
-        ).compile
-      light_stylesheet =
-        Stylesheet::Manager::Builder.new(
-          target: :color_definitions,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile
-
-      expect(light_stylesheet).to include("--primary: #CABFAF;")
-      expect(light_stylesheet).to include("color_definitions_neutral_#{scheme.id}_#{theme.id}")
-      expect(light_stylesheet).not_to include(
-        "color_definitions_neutral_#{scheme.id}_#{theme.id}_dark",
-      )
-
-      expect(dark_stylesheet).to include("--primary: #FAFCAB;")
-      expect(dark_stylesheet).to include("color_definitions_neutral_#{scheme.id}_#{theme.id}_dark")
-    end
-
-    it "uses the light colors as fallback if the dark scheme doesn't define them" do
-      scheme =
-        ColorScheme.create_from_base(
-          name: "Neutral",
-          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
-        )
-      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "BACFAB", dark_hex: nil }])
-      theme = Fabricate(:theme)
-      manager = manager(theme.id)
-
-      dark_stylesheet =
-        Stylesheet::Manager::Builder.new(
-          target: :color_definitions,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-          dark: true,
-        ).compile
-      light_stylesheet =
-        Stylesheet::Manager::Builder.new(
-          target: :color_definitions,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile
-
-      expect(light_stylesheet).to include("--primary: #BACFAB;")
-      expect(light_stylesheet).to include("color_definitions_neutral_#{scheme.id}_#{theme.id}")
-      expect(light_stylesheet).not_to include(
-        "color_definitions_neutral_#{scheme.id}_#{theme.id}_dark",
-      )
-
-      expect(dark_stylesheet).to include("--primary: #BACFAB;")
-      expect(dark_stylesheet).to include("color_definitions_neutral_#{scheme.id}_#{theme.id}_dark")
-    end
-
     it "updates outputted colors when updating a color scheme" do
       scheme =
         ColorScheme.create_from_base(
@@ -1004,7 +929,7 @@ RSpec.describe Stylesheet::Manager do
 
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2) # ltr/rtl
-      expect(StylesheetCache.count).to eq(10) # (2 theme with rtl/ltr) + 8 color schemes (2 themes * 2 color schemes (1 base light palette + 1 theme scheme) * 2 (light and dark mode per scheme))
+      expect(StylesheetCache.count).to eq(6) # (2 theme with rtl/ltr) + 4 color schemes (2 themes * 2 color schemes (1 base light palette + 1 theme scheme))
     end
 
     it "generates precompiled CSS - core and themes" do
@@ -1012,7 +937,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(20) # 10 core targets + 2 theme (ltr/rtl) + 8 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(16) # 10 core targets + 2 theme (ltr/rtl) + 4 color schemes
 
       expect(results.count { |target| target =~ /^common_theme_/ }).to eq(2) # ltr/rtl
     end
@@ -1024,7 +949,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(24) # 10 core targets + 2 theme rtl/ltr + 12 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(18) # 10 core targets + 2 theme rtl/ltr + 6 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(

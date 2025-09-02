@@ -10,10 +10,17 @@ import DMenu from "float-kit/components/d-menu";
 export default class LanguageSwitcher extends Component {
   @service siteSettings;
   @service languageNameLookup;
+  @service currentUser;
 
   @action
   async changeLocale(locale) {
-    cookie("locale", locale, { path: "/" });
+    if (this.currentUser) {
+      this.currentUser.set("locale", locale);
+      await this.currentUser.save(["locale"]);
+    } else {
+      cookie("locale", locale, { path: "/" });
+    }
+
     this.dMenu.close();
     // content should switch immediately,
     // but we need a hard refresh here for controls to switch to the new locale

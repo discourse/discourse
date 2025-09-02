@@ -169,6 +169,17 @@ he:
               description: "דמות בינה מלאכותית לשימוש לתגובות (חייב להיות LLM/מש״ג כברירת מחדל), יתועדף על פני תגובה מראש"
             max_output_tokens:
               label: "כמות אסימוני פלט מרבית"
+        llm_tagger:
+          tag_mode:
+            manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
+          fields:
+            tagger_persona:
+              label: "דמות בינה מלאכותית"
+            tag_mode:
+              label: "מצב בחירת תגיות"
+              description: "בחירה איך הבינה המלאכותית בוחר תגיות"
+            available_tags:
+              label: "תגיות זמינות"
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
@@ -266,10 +277,16 @@ he:
           disabled_state:
             configure: "הגדרת תרגומים"
             empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+        stats:
+          title: "סטטיסטיקת תרגום"
+          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה %{tooltip}"
+          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה %{tooltip}"
+          description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
         progress_chart:
           title: "התקדמות התרגום"
-          completed: "הושלם"
-          remaining: "נותרו"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
+          bar_done: "%{done} פוסטים"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
@@ -569,9 +586,7 @@ he:
           google-gemini-2-0-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים (מהדור הקודם)"
           google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
           google-gemini-2-0-flash-lite: "מודל חסכוני ומהיר"
-          open_ai-o3: "מודל ההיגיון החזק ביותר מבית OpenAI"
           open_ai-o4-mini: "מודל הגיון מתקדם וחסכוני"
-          open_ai-gpt-5: "מודל הדגל של Open AI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
           open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
           open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
@@ -623,6 +638,7 @@ he:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "מותאם"
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
@@ -853,6 +869,13 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
+          regenerate: "לסכם בקצרה מחדש"
+          regenerate_bulk: "לסכם תקצירים מחדש"
+          regenerate_success:
+            one: "התקציר הקצר נוצר מחדש בהצלחה"
+            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
+            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
+            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
         topic_list_layout:
           button:
             compact: "מצומצם"

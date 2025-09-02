@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -103,12 +104,16 @@ const Picker = class extends Component {
 
   @action
   onTextPaste(event) {
-    const content = (event.clipboardData || window.clipboardData).getData(
-      "text"
-    );
+    event.preventDefault();
 
-    if (!this.isValidHex(content)) {
-      event.preventDefault();
+    const content = (event.clipboardData || window.clipboardData)
+      .getData("text")
+      .trim()
+      .replace(/^#/, "");
+
+    if (this.isValidHex(content)) {
+      this.args.onChange(this.ensureSixDigitsHex(content));
+    } else {
       this.toasts.error({
         data: {
           message: i18n(
@@ -116,7 +121,6 @@ const Picker = class extends Component {
           ),
         },
       });
-      return;
     }
   }
 
@@ -167,7 +171,7 @@ const Picker = class extends Component {
         data-position={{@position}}
         type="color"
         value={{this.activeValue}}
-        disabled={{@system}}
+        disabled={{or @system @disabled}}
         title={{this.disabledEditForSystemDescription}}
         {{on "input" this.onInput}}
         {{on "change" this.onChange}}
@@ -179,7 +183,7 @@ const Picker = class extends Component {
           data-position={{@position}}
           type="text"
           maxlength="6"
-          disabled={{@system}}
+          disabled={{or @system @disabled}}
           title={{this.disabledEditForSystemDescription}}
           value={{this.displayedColor}}
           {{on "keypress" this.onTextKeypress}}
@@ -236,8 +240,9 @@ export default class ColorPaletteEditor extends Component {
                 @editorElement={{this.editorElement}}
                 @onChange={{fn @onColorChange color}}
                 @system={{@system}}
+                @disabled={{@disabled}}
               />
-              {{#unless @hideRevertButton}}
+              {{#unless @disabled}}
                 <DButton
                   class={{concatClass
                     "btn-flat"

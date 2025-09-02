@@ -11,6 +11,7 @@ import { modifier } from "ember-modifier";
 import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
@@ -18,7 +19,7 @@ import { authorizesOneOrMoreExtensions, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
-// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo
+// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo, previewSize
 export default class UppyImageUploader extends Component {
   @service currentUser;
   @service siteSettings;
@@ -108,6 +109,10 @@ export default class UppyImageUploader extends Component {
     return getURLWithCDN(this.args.imageUrl);
   }
 
+  get previewSizeClass() {
+    return this.args.previewSize === "cover" ? "--bg-size-cover" : "";
+  }
+
   get backgroundStyle() {
     // Only apply background style for images, not videos
     if (this.isVideoFile) {
@@ -169,7 +174,10 @@ export default class UppyImageUploader extends Component {
       ...attributes
     >
       <div
-        class="uploaded-image-preview input-xxlarge"
+        class={{concatClass
+          "uploaded-image-preview input-xxlarge"
+          this.previewSizeClass
+        }}
         style={{this.backgroundStyle}}
       >
         {{#if this.showingPlaceholder}}

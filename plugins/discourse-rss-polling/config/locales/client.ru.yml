@@ -9,7 +9,7 @@ ru:
     admin:
       site_settings:
         categories:
-          discourse_rss_polling: "RSS-опрос Discourse"
+          discourse_rss_polling: "Плагин «RSS-опрос» для Discourse"
   js:
     rss_polling:
       title: RSS-опрос
@@ -22,6 +22,6 @@ ru:
         discourse_category: Категория
         discourse_tags: Теги
         feed_category_filter: Фильтр категорий
-        documentation: Документация по настройке RSS
+        documentation: Документация по настройке RSS-опроса
         destroy_feed:
-          confirm: "Вы действительно хотите удалить эту ленту?"
+          confirm: "Действительно удалить эту ленту?"

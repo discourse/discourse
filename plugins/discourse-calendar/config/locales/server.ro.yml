@@ -12,7 +12,6 @@ ro:
   site_settings:
     map_events_title: "Suprascrie „Evenimente” în titlul barei laterale „Evenimente viitoare” pe categorie."
     sidebar_show_upcoming_events: "Afișează legătură evenimente viitoare în bara laterală sub „Mai multe”."
-    include_expired_events_on_calendar: "Include evenimentele trecute sau expirate în vizualizările de calendar pe categorii și evenimente viitoare."
   discourse_post_event:
     errors:
       bulk_invite:

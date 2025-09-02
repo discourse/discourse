@@ -1722,7 +1722,7 @@ pl_PL:
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
       home: "Domyślna strona główna"
-      staged: "Wystawiany na scenie"
+      staged: "Etapowi"
       staff_counters:
         flags_given:
           one: '<span class="%{className}">%{count}</span> pomocna flaga'
@@ -1877,6 +1877,7 @@ pl_PL:
         in_progress: "(e-mail wysyłany)"
         error: "(błąd)"
         action: "Wyślij wiadomość e-mail resetującą hasło"
+        staged_user: "Użytkownicy etapowi nie mogą otrzymywać wiadomości e-mail z prośbą o zresetowanie hasła."
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
@@ -2187,7 +2188,7 @@ pl_PL:
         after_2_days: "utworzone w ciągu ostatnich 2 dni"
         after_1_week: "utworzone w ostatnim tygodniu"
         after_2_weeks: "utworzone w ostatnich 2 tygodniach"
-      auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
+      auto_track_topics: "Automatycznie śledź tematy, które odwiedzę"
       auto_track_options:
         never: "nigdy"
         immediately: "natychmiast"
@@ -3039,6 +3040,9 @@ pl_PL:
       create_shared_draft: "Utwórz udostępniony szkic"
       edit_shared_draft: "Edytuj udostępniony szkic"
       title: "Lub naciśnij %{modifier}Enter"
+      save_and_close: "Zapisz i zamknij"
+      discard: "Odrzuć"
+      draft_saved: "Szkic zapisany!"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
@@ -3094,14 +3098,15 @@ pl_PL:
       list_item: "Element listy"
       toggle_direction: "Przełącz kierunek"
       help: "Pomoc formatowania Markdown"
-      collapse: "zminimalizuj panel kompozytora"
-      open: "otwórz panel kompozytora"
-      abandon: "zamknij kompozytora i odrzuć szkic"
-      enter_fullscreen: "wprowadź kompozytora na pełnym ekranie"
-      exit_fullscreen: "zamknij kompozytora na pełnym ekranie"
+      collapse: "Zminimalizuj panel kompozytora"
+      open: "Otwórz panel kompozytora"
+      abandon: "Zamknij kompozytor i odrzuć szkic"
+      enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
+      exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
-      show_toolbar: "pokaż pasek narzędzi kompozytora"
-      hide_toolbar: "ukryj pasek narzędzi kompozytora"
+      show_toolbar: "Pokaż pasek narzędzi kompozytora"
+      hide_toolbar: "Ukryj pasek narzędzi kompozytora"
+      peek_mode_toggle: "Przełącz tryb podglądu"
       modal_ok: "OK"
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
       create_message_error: "Przepraszamy, wystąpił błąd podczas tworzenia tej wiadomości. Spróbuj ponownie."
@@ -6888,6 +6893,8 @@ pl_PL:
             title: "Opcje kolorów"
             toggle: "Możliwe do wyboru przez użytkownika"
             toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
+            toggle_default_light_on_theme: "Paleta kolorów to domyślna jasna paleta w domyślnym motywie (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta kolorów to domyślna ciemna paleta w domyślnym motywie (%{themeName})"
           colors:
             title: "Kolory"
           save_changes: "Zapisz zmiany"
@@ -7081,7 +7088,7 @@ pl_PL:
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
-          default: "Domyślny"
+          default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
           is_default: "Motyw ustawiony jako domyślny"
@@ -7216,17 +7223,6 @@ pl_PL:
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
           built_in_description: "Ten motyw jest wstępnie zainstalowany i nie można go usunąć ani dostosować"
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
-          settings: "Ustawienia"
-          colors: "Kolory"
-          unsaved_colors:
-            one: "Masz %{count} niezapisany kolor"
-            few: "Masz %{count} niezapisane kolory"
-            many: "Masz %{count} niezapisanych kolorów"
-            other: "Masz %{count} niezapisanych kolorów"
-          unsaved_colors_leave_route_confirmation: "Nie zapisano jeszcze zmian w palecie kolorów. Czy na pewno chcesz opuścić tę stronę?"
-          save_colors: "Zapisz kolory"
-          discard_colors: "Odrzuć"
-          colors_title: "Kolory"
           scss:
             text: "CSS"
             title: "Niestandardowe reguły CSS z obsługą składni SCSS"
@@ -7335,9 +7331,6 @@ pl_PL:
           default_dark_badge:
             text: "Domyślny ciemny"
             title: "Domyślna ciemna paleta kolorów"
-          default_both_badge:
-            text: "Domyślny jasny i ciemny"
-            title: "Domyślna jasna i ciemna paleta kolorów"
           system_palette: "Jest to wbudowana paleta kolorów, której nie można edytować ani usunąć."
           back_to_colors: "Powrót do palet kolorów"
           long_title: "Palety kolorów"
@@ -7657,6 +7650,7 @@ pl_PL:
             tag_group_change: "zmień grupę tagów"
             delete_associated_accounts: "usuń powiązane konta"
             change_theme_site_setting: "zmień ustawienia motywu witryny"
+            stop_impersonating: "przestań się podszywać"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -7848,6 +7842,7 @@ pl_PL:
         help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."
         not_found: "Wskazany użytkownik nie został znaleziony."
         invalid: "Przepraszamy, nie możesz zalogować się jako ten użytkownik."
+        error: "Ups. Wystąpił nieoczekiwany błąd."
       users:
         title: "Użytkownicy"
         description: "Przeglądaj i zarządzaj użytkownikami."
@@ -7923,7 +7918,7 @@ pl_PL:
           title: "Wyświetl adres email tego użytkownika"
           text: "Pokaż"
         check_sso:
-          title: "Reveal SSO payload"
+          title: "Ujawnij ładunek SSO"
           text: "Pokaż"
         delete_associated_accounts:
           title: "Usuń wszystkie powiązane konta dla tego użytkownika"

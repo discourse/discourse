@@ -7,9 +7,6 @@ export default class AdminEmailLogsRoute extends DiscourseRoute {
   }
 
   setupController(controller) {
-    controller.setProperties({
-      loading: true,
-      filter: { status: this.status },
-    });
+    controller.set("status", this.status);
   }
 }

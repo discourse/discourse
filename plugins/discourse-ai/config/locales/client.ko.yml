@@ -57,6 +57,8 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        progress_chart:
+          bar_done: "글 %{done}개"
       spam:
         short_title: "스팸"
         last_seven_days: "지난 7일"

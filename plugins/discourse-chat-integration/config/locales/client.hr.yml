@@ -84,7 +84,6 @@ hr:
               help: "npr. #channel, @username."
           errors:
             action_prohibited: "Bot nema dozvolu za objavljivanje na tom kanalu"
-            channel_not_found: "Navedeni kanal ne postoji na slacku"
         telegram:
           title: "Telegram"
           param:

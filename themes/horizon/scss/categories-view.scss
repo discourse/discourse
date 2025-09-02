@@ -361,3 +361,11 @@
     }
   }
 }
+
+// theme component: https://github.com/discourse/discourse-minimal-category-boxes
+.custom-category-boxes-container {
+  @include viewport.until(sm) {
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
+  }
+}

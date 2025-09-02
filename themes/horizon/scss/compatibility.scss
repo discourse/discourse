@@ -1,0 +1,53 @@
+@use "lib/viewport";
+
+.custom-homepage-columns {
+  .header-wrapper {
+    @include viewport.from(lg) {
+      margin-bottom: 1.25em;
+    }
+  }
+
+  .topic-list .topic-list-item {
+    height: auto;
+
+    &:nth-child(odd) {
+      background: var(--topic-list-item-background-color);
+    }
+  }
+}
+
+.b-header {
+  .nav-pills > li > a:hover {
+    .discourse-no-touch & {
+      color: var(--secondary);
+    }
+  }
+
+  .nav-pills > li > a:hover::after {
+    .discourse-no-touch & {
+      background: var(--secondary);
+    }
+  }
+}
+
+// theme component: https://github.com/discourse/discourse-minimal-category-boxes
+.custom-category-boxes-container {
+  @include viewport.until(sm) {
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
+  }
+}
+
+@include viewport.from(md) {
+  #main-outlet {
+    div[class^="category-title-header"] {
+      width: calc(100% - (2 * var(--space-4)));
+      border-radius: var(--d-border-radius-large);
+      max-width: calc(1000px - 3rem) !important;
+    }
+
+    .list-container div[class^="category-title-header"] {
+      width: 100%;
+    }
+  }
+}

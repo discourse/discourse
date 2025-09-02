@@ -272,6 +272,8 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        progress_chart:
+          bar_done: "%{done} príspevkov"
       spam:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
@@ -578,9 +580,7 @@ sk:
           google-gemini-2-0-flash: "Ľahký, rýchly a nákladovo efektívny s multimodálnym uvažovaním (predchádzajúca generácia)"
           google-gemini-2-5-flash: "Ľahké, rýchle a nákladovo efektívne multimodálne uvažovanie"
           google-gemini-2-0-flash-lite: "Nákladovo efektívny model s nízkou latenciou"
-          open_ai-o3: "Najschopnejší model uvažovania Open AI"
           open_ai-o4-mini: "Pokročilý model nákladovo efektívneho uvažovania"
-          open_ai-gpt-5: "Vlajkový model Open AI. Je vhodný na riešenie problémov v rôznych oblastiach"
           open_ai-gpt-5-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
           open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efektívny ľahký viacjazyčný model"

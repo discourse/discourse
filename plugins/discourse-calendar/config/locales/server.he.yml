@@ -33,7 +33,6 @@ he:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "כמות שורות טקסט מרבית לאירוע בלוח השנה."
     map_events_to_color: "הקצאת צבע לכל תגית או קטגוריה."
     map_events_title: "דריסת ‚אירועים’ בכותרת סרגל הצד ה‚אירועים הקרובים’ לפי קטגוריה."
     calendar_enabled: "נא להפעיל את התוסף discourse-calendar. כך תתווסף תמיכה בתגית ‎[calendar][/calendar] בפוסט ראשון בנושא."
@@ -62,7 +61,6 @@ he:
     calendar_automatic_holidays_enabled: "להגדיר מצב חופשה לפי האזור של המשתמש (לתשומת לבך: ניתן להשבית חגים אוטומטיים מסוימים בהגדרות התוסף)"
     event_participation_buttons: "רשימת כפתורי השתתפות באירועים לשימוש המשתמשים."
     sidebar_show_upcoming_events: "הצגת קישור לאירועים קרובים בסרגל הצד תחת ‚עוד’."
-    include_expired_events_on_calendar: "לכלול אירועי קודמים/שפג תוקפם בתצוגות לוח השנה של הקטגוריה ובאירועים קרבים."
   discourse_calendar:
     invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
     calendar_must_be_in_first_post: "ניתן להשתמש בתגית יומן רק בפוסט הראשון של נושא."

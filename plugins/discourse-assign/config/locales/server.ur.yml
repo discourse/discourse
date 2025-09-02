@@ -48,7 +48,7 @@ ur:
       >
       > %{topic_excerpt}
 
-      اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے لنک پر کلک کریں:
+      اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے رابطہ پر کلک کریں:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "آپ کے پاس %{pending_assignments} زیر التواء اسائنمنٹس ہیں"

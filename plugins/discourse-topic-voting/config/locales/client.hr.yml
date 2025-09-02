@@ -25,6 +25,7 @@ hr:
         few: "Glasa"
         other: "Glasova"
       remove_vote: "Ukloni glas"
+      no_votes_title_others: "%{username} još nije glasao niti za jednu temu"
     filters:
       votes:
         title: "Glasovi"

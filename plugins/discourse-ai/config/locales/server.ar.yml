@@ -60,7 +60,7 @@ ar:
     ai_nsfw_flag_threshold_porn: "الحد الأدنى للصورة المصنَّفة كمحتوى إباحي ليتم اعتبارها غير آمنة لبيئة العمل."
     ai_nsfw_flag_threshold_sexy: "الحد الأدنى للصورة المصنَّفة كمحتوى جنسي ليتم اعتبارها غير آمنة لبيئة العمل."
     ai_nsfw_models: "النماذج المراد استخدامها في الاستدلال على المحتوى غير الآمن لبيئة العمل."
-    ai_spam_detection_enabled: "تفعيل وحدة اكتشاف الرسائل العشوائية بالذكاء الاصطناعي"
+    ai_spam_detection_enabled: "تفعيل وحدة اكتشاف المحتوى العشوائي بالذكاء الاصطناعي"
     ai_openai_api_key: "مفتاح API الخاص بـ OpenAI. يُستخدم فقط لإنشاء الصور وتحريرها. لاستخدام GPT، استخدم تبويب إعدادات نموذج اللغة الكبير"
     ai_openai_image_generation_url: "عنوان URL الخاص بـ API لتوليد الصور من OpenAI"
     ai_openai_image_edit_url: "عنوان URL الخاص بـ API لتحرير الصور من OpenAI"
@@ -133,88 +133,88 @@ ar:
       yaxis: "التاريخ"
     emotion_admiration:
       title: "\U0001F929 الإعجاب"
-      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_amusement:
       title: "\U0001F604 التسلية"
-      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_anger:
       title: "\U0001F620 الغضب"
-      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_annoyance:
       title: "\U0001F612 الإزعاج"
-      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_approval:
       title: "\U0001F44D الموافقة"
-      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_caring:
       title: "\U0001F917 الاهتمام"
-      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_confusion:
       title: "\U0001F615 الارتباك"
-      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_curiosity:
       title: "\U0001F914 الفضول"
-      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_desire:
       title: "\U0001F60D الرغبة"
-      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disappointment:
       title: "\U0001F61E خيبة الأمل"
-      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disapproval:
       title: "\U0001F44E عدم الموافقة"
-      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disgust:
       title: "\U0001F922 الاشمئزاز"
-      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_embarrassment:
       title: "\U0001F633 الإحراج"
-      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_excitement:
       title: "\U0001F92A الإثارة"
-      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_fear:
       title: "\U0001F628 الخوف"
-      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_gratitude:
       title: "\U0001F64F الامتنان"
-      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_grief:
       title: "\U0001F622 الكآبة"
-      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_joy:
       title: "\U0001F60A المرح"
-      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_love:
       title: '❤️ الحب'
-      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_nervousness:
       title: "\U0001F630 التوتر"
-      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_neutral:
       title: "\U0001F610 محايدة"
-      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_optimism:
       title: "\U0001F31F التفاؤل"
-      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_pride:
       title: "\U0001F981 الفخر"
-      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_realization:
       title: "\U0001F4A1 الإدراك"
-      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_relief:
       title: "\U0001F60C الراحة"
-      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_remorse:
       title: "\U0001F614 الندم"
-      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_sadness:
       title: "\U0001F62D الحزن"
-      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_surprise:
       title: "\U0001F632 المفاجأة"
-      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
   discourse_ai:
     ai_artifact:
       errors:
@@ -282,7 +282,7 @@ ar:
       invalid_error_type: "تم إدخال نوع خطأ غير صالح"
       unexpected: "حدث خطأ غير متوقع"
       bot_user_update_failed: "فشل تحديث مستخدم روبوت فحص المحتوى العشوائي"
-      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > الرسائل العشوائية' قبل التفعيل."
+      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
       logging_subject: "اكتشاف المحتوى العشوائي"
     ai_bot:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
@@ -385,7 +385,7 @@ ar:
           description: "يشغّل ميزة الترجمة كمترجم نصوص عام، يُستخدم للنصوص القصيرة مثل أسماء الفئات أو الوسوم"
         spam_detector:
           name: "كاشف المحتوى العشوائي"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة كشف المحتوى العشوائي لدينا"
+          description: "الشخصية الافتراضية المسؤولة عن ميزة اكتشاف المحتوى العشوائي لدينا"
         content_creator:
           name: "مبدع المحتوى"
           description: "الشخصية الافتراضية المسؤولة عن تشغيل بحث HyDE"
@@ -635,7 +635,6 @@ ar:
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
-        invalid_config: "لقد اخترت خيارًا غير صالح."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"

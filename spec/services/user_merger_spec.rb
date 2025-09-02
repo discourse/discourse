@@ -897,6 +897,17 @@ RSpec.describe UserMerger do
     expect(UserCustomField.where(user_id: source_user.id).count).to eq(0)
   end
 
+  it "merges bookmarks" do
+    b1 = Bookmark.create!(user: source_user, bookmarkable: p1)
+    b2 = Bookmark.create!(user: source_user, bookmarkable: p2)
+    b3 = Bookmark.create!(user: target_user, bookmarkable: p1)
+
+    merge_users!
+
+    expect(Bookmark.where(user: target_user).pluck(:id)).to contain_exactly(b2.id, b3.id)
+    expect(Bookmark.where(user: source_user).count).to eq(0)
+  end
+
   it "merges email addresses" do
     merge_users!
 

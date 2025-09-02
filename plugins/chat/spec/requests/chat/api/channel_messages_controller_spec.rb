@@ -28,7 +28,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     context "when params are invalid" do
       it "returns a 400" do
-        get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+        get "/chat/api/channels/#{channel.id}/messages?page_size=0"
 
         expect(response.status).to eq(400)
       end
@@ -70,6 +70,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when page_size is above limit" do
+      fab!(:messages) { Fabricate.times(5, :chat_message, chat_channel: channel) }
+
+      it "clamps it to the max" do
+        stub_const(Chat::Api::ChannelMessagesController, "MAX_PAGE_SIZE", 1) do
+          get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["messages"].size).to eq(1)
+        end
       end
     end
   end

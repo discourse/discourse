@@ -33,7 +33,6 @@ nl:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maximaal aantal tekstrijen per evenement in de agenda."
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
     calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
@@ -62,7 +61,6 @@ nl:
     calendar_automatic_holidays_enabled: "Stel automatisch de feestdagstatus in op basis van een gebruikersregio (opmerking: je kunt specifieke automatische feestdagen uitschakelen in de plug-in-instellingen)"
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
-    include_expired_events_on_calendar: "Neem eerdere/afgelopen evenementen op in de weergaven Categoriekalender en Aankomende evenementen."
   discourse_calendar:
     invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
     calendar_must_be_in_first_post: "Calendar-tag kan alleen worden gebruikt in het eerste bericht van een topic."

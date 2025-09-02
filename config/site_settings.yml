@@ -1654,10 +1654,18 @@ content_localization:
     default: 10
     type: integer
     hidden: true
-  content_localization_anon_language_switcher:
-    default: false
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  content_localization_crawler_param:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -3645,11 +3653,6 @@ uncategorized:
     default: false
     area: "users"
 
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
-
   splash_screen:
     default: true
     area: "interface"
@@ -4152,11 +4155,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
-    area: "experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list

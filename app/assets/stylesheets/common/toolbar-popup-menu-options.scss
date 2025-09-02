@@ -26,6 +26,34 @@
   }
 }
 
+.toolbar-menu__options-content {
+  .dropdown-menu {
+    .btn {
+      &.--active {
+        .d-button-label__active-icon {
+          visibility: visible;
+          margin-left: auto;
+        }
+      }
+    }
+
+    .d-button-label {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      align-items: center;
+
+      &__active-icon {
+        visibility: hidden;
+      }
+
+      .shortcut {
+        margin-left: var(--space-4);
+      }
+    }
+  }
+}
+
 .toolbar-menu__heading-content {
   .dropdown-menu {
     .btn {

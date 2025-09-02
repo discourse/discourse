@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
@@ -11,9 +12,11 @@ import { i18n } from "discourse-i18n";
 export default class DiscourseReactionsPicker extends Component {
   @service siteSettings;
 
+  emojiPickerIsOpen = false;
+
   @action
   pointerOut(event) {
-    if (event.pointerType !== "mouse") {
+    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
       return;
     }
 
@@ -83,7 +86,13 @@ export default class DiscourseReactionsPicker extends Component {
     });
   }
 
-  _getOptimalColsCount(count) {
+  get optimalColsCount() {
+    let count = this.reactionInfo.length;
+
+    if (this.siteSettings.discourse_reactions_experimental_allow_any_emoji) {
+      count += 1;
+    }
+
     let x;
     const colsByRow = [5, 6, 7, 8];
 
@@ -116,6 +125,28 @@ export default class DiscourseReactionsPicker extends Component {
     return x;
   }
 
+  @action
+  onSelectEmoji(selected_emoji) {
+    this.args.toggle({
+      reaction: selected_emoji,
+      postId: this.args.post.id,
+      canUndo: true,
+    });
+  }
+
+  @action
+  preventCollapse() {
+    this.emojiPickerIsOpen = true;
+    this.args.cancelCollapse?.();
+    this.args.disableClickOutside?.();
+  }
+
+  @action
+  reenableCollapse() {
+    this.emojiPickerIsOpen = false;
+    this.args.enableClickOutside?.();
+  }
+
   <template>
     <div
       class={{concatClass
@@ -127,9 +158,7 @@ export default class DiscourseReactionsPicker extends Component {
     >
       {{#if @reactionsPickerExpanded}}
         <div
-          class="discourse-reactions-picker-container col-{{this._getOptimalColsCount
-              this.reactionInfo.length
-            }}"
+          class="discourse-reactions-picker-container col-{{this.optimalColsCount}}"
         >
           {{#each this.reactionInfo as |reaction|}}
             <DButton
@@ -152,6 +181,18 @@ export default class DiscourseReactionsPicker extends Component {
               {{emoji reaction.id}}
             </DButton>
           {{/each}}
+          {{#if
+            this.siteSettings.discourse_reactions_experimental_allow_any_emoji
+          }}
+            <EmojiPicker
+              ...attributes
+              @icon="far-face-smile"
+              @didSelectEmoji={{this.onSelectEmoji}}
+              @onShow={{this.preventCollapse}}
+              @onClose={{this.reenableCollapse}}
+              @btnClass="btn-icon btn-flat"
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

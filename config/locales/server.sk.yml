@@ -2618,7 +2618,6 @@ sk:
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
     content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
     content_localization_allowed_groups: "Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje \"povolená lokalizácia obsahu\"."
-    content_localization_anon_language_switcher: "Povolenie prepínača jazykov, ktorý umožňuje návštevníkom stránky, ktorí nie sú prihlásení, prepínať medzi preloženými verziami diskurzu a obsahom pridaným používateľom. Závisí od zoznamu jazykov definovaných v položke \"lokality podporované lokalizáciou obsahu\"."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."
@@ -2696,7 +2695,6 @@ sk:
       invalid_uncategorized_category_setting: 'Kategóriu „Nekategorizované“ nie je možné vybrať, ak nie je povolené „povoliť témy bez kategórie“.'
       invalid_search_ranking_weights: "Hodnota je neplatná pre nastavenie stránky search_ranking_weights. Príklad: \"{0.1,0.2,0.3,1.0}\". Všimnite si, že maximálna hodnota pre každú váhu je 1,0."
       content_localization_locale_limit: "Počet podporovaných lokálnych jazykov nemôže prekročiť %{max}."
-      content_localization_anon_language_switcher_requirements: "Prepínač jazykov vyžaduje, aby bolo povolené nastavenie stránky `nastaviť lokálnosť zo súboru cookie` a aby v poli `lokalizácia obsahu podporovaná lokálnymi jazykmi` bol aspoň jeden jazyk."
       mediaconvert_role_arn_required: "Pri používaní AWS MediaConvert na konverziu videa sa vyžaduje rola AWS IAM ARN."
       s3_credentials_required_for_video_conversion: "Na konverziu videa sú potrebné poverenia S3. Nakonfigurujte prístupové kľúče S3 alebo povoľte profil IAM."
     keywords:
@@ -5568,9 +5566,20 @@ sk:
       approve_and_unhide:
         title: "Schváliť a Odkryť príspevok"
         complete: "Príspevok schválený a odkrytý"
+      no_action_user:
+        title: "Žiadna akcia"
+      silence_user:
+        title: "Umlčať používateľa"
+        complete: "Používateľ umlčaný"
+      suspend_user:
+        title: "Pozastavenie používateľa"
+        complete: "Pozastavenie používateľa"
       delete_user:
+        title: "Odstránenie používateľa"
+        complete: "Používateľ odstránený"
         reason: "Odstránené prostredníctvom poradia na kontrolu"
-        complete: "Používateľ odstránený."
+      delete_and_block_user:
+        complete: "Používateľ vymazaný a zablokovaný"
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"
   notification_level:

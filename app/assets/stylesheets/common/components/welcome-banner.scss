@@ -25,6 +25,15 @@
     position: relative;
     padding: var(--space-6) 0 3em;
 
+    .--with-bg-img & {
+      border-radius: var(--d-border-radius);
+      padding-inline: var(--space-4);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-bottom: var(--space-2);
+    }
+
     @include viewport.until(md) {
       padding: var(--space-4) 8px var(--space-5);
       margin-top: var(--space-2);
@@ -142,13 +151,6 @@
   .search-menu-panel {
     // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
     max-height: calc(100vh - var(--header-offset) - -3em - 4em);
-  }
-
-  &.--with-bg-img {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-bottom: var(--space-2);
   }
 }
 

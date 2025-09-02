@@ -7,6 +7,7 @@ en:
     discourse_reactions_desaturated_reaction_panel: "Reduces visual noise of reactions by displaying them desaturated until hover."
     discourse_reactions_excluded_from_like: "Reactions that do not count as a Like. Any reactions that are not on this list will count as a Like for badges, reporting, and other purposes."
     discourse_reactions_like_sync_enabled: "If this is enabled, historical reactions will have their matching Like records created, except those reactions defined in `discourse_reactions_excluded_from_like`. This sync will happen on a regular basis in the background, and also when you change `discourse_reactions_excluded_from_like`."
+    discourse_reactions_experimental_allow_any_emoji: "EXPERIMENTAL: If this is enabled, will add a button allowing users to select any emoji in the reactions picker. Members will be allowed to choose any emoji, including custom emoji, for reactions, so enable this with caution."
     errors:
       invalid_excluded_emoji: "You cannot exclude emojis that are not in 'discourse reactions enabled reactions' and you cannot exclude the emoji used for 'discourse reactions reaction for like'."
   badges:

@@ -62,6 +62,9 @@ ro:
           name: "Spam"
       modals:
         select_option: "Alege o opțiune..."
+      translations:
+        progress_chart:
+          bar_done: "%{done} de postări"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"
@@ -135,7 +138,11 @@ ro:
         model_description:
           google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
+          open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
+          groq-openai-gpt-oss-120b: "Model de ultimă generație, deschis de la OpenAI"
+          groq-openai-gpt-oss-20b: "Model ușor, rapid, deschis, de la OpenAI"
         next:
           title: "Următorul"
         tests:

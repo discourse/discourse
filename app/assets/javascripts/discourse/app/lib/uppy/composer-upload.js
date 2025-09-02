@@ -44,7 +44,6 @@ export default class UppyComposerUpload {
   editorInputClass = ".d-editor-input";
   mobileFileUploaderId = "mobile-file-upload";
   fileUploadElementId;
-  editorClass = ".d-editor";
 
   composerEventPrefix;
   composerModel;
@@ -136,7 +135,7 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
-    this.#editorEl = element.querySelector(this.editorClass);
+    this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
     this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
@@ -485,7 +484,7 @@ export default class UppyComposerUpload {
           optionsResolverFn({
             composerModel: this.composerModel,
             capabilities: this.capabilities,
-            isMobileDevice: this.site.isMobileDevice,
+            isMobileDevice: this.capabilities.isMobileDevice,
           })
         );
       });

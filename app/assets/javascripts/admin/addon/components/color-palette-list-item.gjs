@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { not, or } from "truth-helpers";
+import { not } from "truth-helpers";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -69,26 +69,6 @@ export default class ColorPaletteListItem extends Component {
     );
   }
 
-  get defaultBadgeTitle() {
-    if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.default_both_badge.title");
-    }
-    if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.default_light_badge.title");
-    }
-    return i18n("admin.customize.colors.default_dark_badge.title");
-  }
-
-  get defaultBadgeText() {
-    if (this.isDefaultLight && this.isDefaultDark) {
-      return i18n("admin.customize.colors.default_both_badge.text");
-    }
-    if (this.isDefaultLight) {
-      return i18n("admin.customize.colors.default_light_badge.text");
-    }
-    return i18n("admin.customize.colors.default_dark_badge.text");
-  }
-
   @bind
   setAsDefaultLabel(mode) {
     const themeName = this.args.defaultTheme?.name || "Default";
@@ -140,6 +120,28 @@ export default class ColorPaletteListItem extends Component {
           </div>
 
           <div class="color-palette__badges">
+            {{#if this.isDefaultLight}}
+              <span
+                title={{i18n
+                  "admin.customize.colors.default_light_badge.title"
+                }}
+                class="theme-card__badge --default"
+              >
+                {{icon "sun"}}
+                {{i18n "admin.customize.colors.default_light_badge.text"}}
+              </span>
+            {{/if}}
+
+            {{#if this.isDefaultDark}}
+              <span
+                title={{i18n "admin.customize.colors.default_dark_badge.title"}}
+                class="theme-card__badge --default"
+              >
+                {{icon "moon"}}
+                {{i18n "admin.customize.colors.default_dark_badge.text"}}
+              </span>
+            {{/if}}
+
             {{#if @scheme.user_selectable}}
               <span
                 title={{i18n "admin.customize.theme.user_selectable"}}
@@ -150,22 +152,13 @@ export default class ColorPaletteListItem extends Component {
               </span>
             {{/if}}
           </div>
-
-          {{#if (or this.isDefaultLight this.isDefaultDark)}}
-            <span
-              title={{this.defaultBadgeTitle}}
-              class="theme-card__badge --default"
-            >
-              {{this.defaultBadgeText}}
-            </span>
-          {{/if}}
         </div>
 
         <div class="color-palette__controls">
           <DButtonTooltip>
             <:button>
               <DButton
-                @route="adminCustomize.colors-show"
+                @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
                 @label={{this.editButtonLabel}}
                 class="btn-secondary"

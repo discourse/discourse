@@ -1,4 +1,5 @@
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -21,6 +22,7 @@ export default RouteTemplate(
         {{/if}}
 
         <DButton
+          {{didInsert @controller.runOnLoad}}
           @action={{@controller.run}}
           @icon="play"
           @label="explorer.run"

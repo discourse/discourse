@@ -23,6 +23,7 @@ hr:
       topic_status_filter:
         all: "sve"
         solved: "riješeno"
+      no_solved_topics_title_others: "%{username} još nije riješio/la nijednu temu"
     topic_statuses:
       solved:
         help: "Ova tema ima rješenje"

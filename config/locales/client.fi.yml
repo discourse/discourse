@@ -2755,6 +2755,7 @@ fi:
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
       title: "Tai paina %{modifier}Enter"
+      discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
@@ -2810,14 +2811,7 @@ fi:
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
       help: "Markdown-muokkausohje"
-      collapse: "pienennä kirjoituspaneeli"
-      open: "avaa kirjoituspaneeli"
-      abandon: "sulje kirjoitustila ja hylkää luonnos"
-      enter_fullscreen: "siirry koko ruudun kirjoitustilaan"
-      exit_fullscreen: "poistu koko ruudun kirjoitustilasta"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
-      show_toolbar: "näytä kirjoitustilan työkalurivi"
-      hide_toolbar: "piilota kirjoitustilan työkalurivi"
       modal_ok: "OK"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
       create_message_error: "Viestin luonti epäonnistui. Yritä uudelleen."
@@ -3013,7 +3007,7 @@ fi:
       delete: "Poista"
       uploading: "Ladataan"
       processing: "Käsitellään lähetystä"
-      select_file: "Napsauta ladataksesi tai vedä ja pudota tiedosto"
+      select_file: "Klikkaa ladataksesi tai vedä ja pudota tiedosto"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -4099,7 +4093,7 @@ fi:
         description: "Kuvaus"
         add: "Lisää uusi kielialue"
         remove: "Poista"
-        hint: "Tällä hetkellä tähän kategoriaan ei ole lokalisointia. Napsauta \"Lisää uusi kielialue\" alla aloittaaksesi lokalisointien lisäämisen."
+        hint: "Tällä hetkellä tähän kategoriaan ei ole lokalisointia. Klikkaa \"Lisää uusi kielialue\" alla aloittaaksesi lokalisointien lisäämisen."
       tags_allowed_tags: "Rajoita nämä tunnisteet alueeseen \"%{categoryName}\":"
       tags_allowed_tags_new_category: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajoita nämä tunnisteryhmät alueeseen \"%{categoryName}\":"
@@ -4141,7 +4135,7 @@ fi:
         options:
           square: "Neliö"
           icon: "Kuvake"
-          emoji: "Emoji"
+          emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
       name_placeholder: "Enintään yksi tai kaksi sanaa"
@@ -5328,7 +5322,7 @@ fi:
             mobile_logo_dark:
               required: "Käytetäänkö tummassa tilassa eri mobiililogoa?"
               title: "Mobiililogo tumma"
-              help_text: "Käytä laajaa suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1."
+              help_text: "Käytä leveää suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde on suurempi kuin 3:1."
             manifest_icon:
               title: "Manifestin kuvake"
               description: "Kuva, jota käytetään logona/splash-kuvana Androidissa. Jos jätetään tyhjäksi, käytetään large_icon-kuvaa."
@@ -5502,7 +5496,7 @@ fi:
           sub_pages:
             server_settings:
               title: "Palvelimen asetukset"
-              header_description: "Määritä asetukset sähköposteille, jotka lähetetään jäsenillesi"
+              header_description: "Määritä jäsenillesi lähetettävien sähköpostien asetukset"
             preview_summary:
               title: "Esikatsele yhteenveto"
               header_description: "Esikatsele ei-aktiivisille käyttäjille lähetettyjen yhteenvetosähköpostien sisältöä"
@@ -5573,7 +5567,7 @@ fi:
         overridden_value: "Korvattu arvo: %{value}"
         select_setting: "Valitse sivustoasetus nähdäksesi nykyiset teeman arvot"
         add: "Siirry teeman sivustoasetuksiin"
-        help: "Tällä hetkellä käyttämäsi teema on <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Siirry <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>teeman määrityssivulle</a> muuttaaksesi teeman sivustoasetuksia tai napsauta linkitettyä teemaa alla olevassa taulukossa muokataksesi sen asetuksia."
+        help: "Tällä hetkellä käyttämäsi teema on <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Siirry <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>teeman määrityssivulle</a> muuttaaksesi teeman sivustoasetuksia tai klikkaa linkitettyä teemaa alla olevassa taulukossa muokataksesi sen asetuksia."
       search:
         modal_title: "Hae kaikkea ylläpidossa"
         title: "Hae"
@@ -6513,7 +6507,7 @@ fi:
           extra_files_upload: "Vie teema nähdäksesi nämä tiedostot."
           extra_files_remote: "Vie teema tai katso git-tietovarasto nähdäksesi nämä tiedostot."
           preview: "Esikatselu"
-          default: "Oletus"
+          default: "Oletusteema"
           settings_editor: "Asetuseditori"
           show_advanced: "Näytä edistyneet"
           is_default: "Teema on käytössä oletuksena"
@@ -6628,8 +6622,8 @@ fi:
           theme_settings: "Mukautetut teeman asetukset"
           theme_site_settings: "Asetukset, jotka teema voi korvata"
           edit_objects_theme_setting: "Objektien asetuseditori"
-          overriden_settings_explanation: "Oletuksista tehdyt muutokset on merkitty pisteellä ja korostuksella. Palauta oletusasetukset napsauttamalla Palauta."
-          overriden_site_settings_explanation: "Sivustoasetukset, joita teema voi mukauttaa. Palauta sivuston asetukset oletusarvoihin napsauttamalla Palauta. Voit nähdä kaikki teemojen korvaamat sivustoasetukset <a href='%{themeSiteSettingsConfigUrl}'>teeman sivustoasetusten määrityssivulla</a>."
+          overriden_settings_explanation: "Oletuksista tehdyt muutokset on merkitty pisteellä ja korostuksella. Palauta oletusasetukset klikkaamalla Palauta."
+          overriden_site_settings_explanation: "Sivustoasetukset, joita teema voi mukauttaa. Palauta sivuston asetukset oletusarvoihin klikkaamalla Palauta. Voit nähdä kaikki teemojen korvaamat sivustoasetukset <a href='%{themeSiteSettingsConfigUrl}'>teeman sivustoasetusten määrityssivulla</a>."
           no_settings: "Teemalla ei ole asetuksia."
           theme_translations: "Teeman käännökset"
           empty: "Ei kohteita"
@@ -6641,15 +6635,6 @@ fi:
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
           built_in_description: "Tämä teema on esiasennettu, eikä sitä voi poistaa tai mukauttaa"
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
-          settings: "Asetukset"
-          colors: "Värit"
-          unsaved_colors:
-            one: "Sinulla on %{count} tallentamaton väri"
-            other: "Sinulla on %{count} tallentamatonta väriä"
-          unsaved_colors_leave_route_confirmation: "Et ole vielä tallentanut väripaletin muutoksia. Oletko varma, että haluat lähteä?"
-          save_colors: "Tallenna värit"
-          discard_colors: "Hylkää"
-          colors_title: "Värit"
           scss:
             text: "CSS"
             title: "Mukautetut CSS-säännöt, jotka tukevat SCSS-syntaksia"
@@ -6746,9 +6731,6 @@ fi:
             reset: "Palauta suodattimet"
           default_dark_badge:
             text: "Oletusarvoinen tumma"
-          default_both_badge:
-            text: "Oletusarvoinen vaalea ja tumma"
-            title: "Oletusarvoinen vaalea ja tumma väripaletti"
           system_palette: "Tämä on sisäänrakennettu väripaletti, eikä sitä voi muokata tai poistaa."
           back_to_colors: "Takaisin väripaletteihin"
           long_title: "Väripaletit"
@@ -7259,7 +7241,7 @@ fi:
         invalid: "Et voi valitettavasti esiintyä tuona käyttäjänä."
       users:
         title: "Käyttäjät"
-        description: "Tarkastele ja hallinnoi käyttäjiä."
+        description: "Tarkastele ja hallitse käyttäjiä."
         create: "Lisää ylläpitäjä"
         last_emailed: "Viimeksi lähetetty sähköpostia"
         not_found: "Tätä käyttäjätunnusta ei löydy järjestelmästä."

@@ -486,6 +486,14 @@ class UserMerger
       ],
     )
 
+    update_user_id(
+      :bookmarks,
+      conditions: [
+        "x.bookmarkable_type = y.bookmarkable_type",
+        "x.bookmarkable_id = y.bookmarkable_id",
+      ],
+    )
+
     UserBadge.where(granted_by_id: @source_user.id).update_all(granted_by_id: @target_user.id)
 
     update_user_id(:user_custom_fields, conditions: "x.name = y.name")

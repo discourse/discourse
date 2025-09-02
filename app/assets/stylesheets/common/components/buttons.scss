@@ -322,7 +322,25 @@
     }
   }
 
-  /* https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign 
+  &.discourse_id {
+    background-color: var(--discourse_id-background);
+    color: var(--discourse_id-text);
+
+    .d-icon {
+      color: var(--discourse_id-icon);
+    }
+
+    &:hover {
+      background-color: var(--discourse_id-background-hover);
+      color: var(--discourse_id-text-hover);
+
+      .d-icon {
+        color: var(--discourse_id-icon-hover);
+      }
+    }
+  }
+
+  /* https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign
   if you are unable to use Facebook blue, revert to black and white. */
 }
 
@@ -370,7 +388,6 @@
 
   &.close {
     background: var(--d-button-flat-close-bg-color);
-    font-size: var(--font-up-2);
 
     .d-icon {
       color: var(--d-button-flat-close-icon-color);

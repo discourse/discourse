@@ -3215,7 +3215,6 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
-          default: "Vaikimisi"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3234,9 +3233,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          settings: "Seaded"
-          colors: "Värvid"
-          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:

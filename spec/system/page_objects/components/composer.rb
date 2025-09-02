@@ -312,8 +312,12 @@ module PageObjects
         find("#{COMPOSER_ID} .save-or-cancel .create").click
       end
 
+      def discard
+        find("#{COMPOSER_ID} .discard-button").click
+      end
+
       def close
-        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+        find("#{COMPOSER_ID} .toggle-save-and-close").click
       end
 
       def has_no_in_progress_uploads?

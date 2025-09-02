@@ -7,6 +7,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) } # User with no associated accounts
     fab!(:user5) { Fabricate(:user) } # User with disabled provider
+    fab!(:user6) { Fabricate(:user) } # User with DiscourseConnect
 
     before do
       # Mock enabled authenticators to only include specific providers
@@ -18,10 +19,19 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
         [google_auth, facebook_auth, github_auth],
       )
 
+      SiteSetting.enable_discourse_connect = false
+
       Fabricate(:user_associated_account, user: user1, provider_name: "google_oauth2")
       Fabricate(:user_associated_account, user: user2, provider_name: "google_oauth2")
       Fabricate(:user_associated_account, user: user3, provider_name: "facebook")
       Fabricate(:user_associated_account, user: user5, provider_name: "twitter") # twitter is not enabled
+
+      # Create a SingleSignOnRecord for user6
+      SingleSignOnRecord.create!(
+        user_id: user6.id,
+        external_id: "discourse_connect_user",
+        last_payload: "test",
+      )
     end
 
     it "returns data grouped by provider, enabled providers only" do
@@ -53,7 +63,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
 
       total_data = report.data.find { |d| d[:key] == "total_users" }
       expect(total_data).to be_present
-      expect(total_data[:provider]).to eq("Total number of members")
+      expect(total_data[:provider]).to eq("Total active user accounts")
       expect(total_data[:count]).to be >= 4 # At least our test users
     end
 
@@ -126,6 +136,30 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       expect(counts).to include(0) # GitHub
       expect(counts).to include(1) # Facebook
       expect(counts).to include(2) # Google
+    end
+
+    context "with DiscourseConnect enabled" do
+      before do
+        SiteSetting.discourse_connect_url = "https://example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+      end
+
+      it "includes DiscourseConnect user count and users without DiscourseConnect records" do
+        report = Report.find("associated_accounts_by_provider")
+
+        discourse_connect_data = report.data.find { |d| d[:key] == "discourse_connect" }
+        expect(discourse_connect_data).to be_present
+        expect(discourse_connect_data[:count]).to eq(1) # user6
+
+        # Only user6 has an SSO record
+        # The users without accounts should be total (6) - the one user with an SSO record
+        no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
+
+        expect(no_accounts_data[:count]).to eq(5)
+
+        total_data = report.data.find { |d| d[:key] == "total_users" }
+        expect(total_data).not_to be_present
+      end
     end
   end
 end

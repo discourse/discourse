@@ -60,6 +60,14 @@ export default class ColorInput extends Component {
   }
 
   @action
+  handlePaste(event) {
+    event.preventDefault();
+    const colorCode = event.clipboardData.getData("text/plain") ?? "";
+
+    this.set("hexValue", colorCode.replace(/^#/, ""));
+  }
+
+  @action
   handleBlur() {
     this.onBlur?.(this.normalize(this.hexValue));
   }
@@ -89,6 +97,7 @@ export default class ColorInput extends Component {
       class="hex-input"
       aria-labelledby={{this.ariaLabelledby}}
       {{on "blur" this.handleBlur}}
+      {{on "paste" this.handlePaste}}
     />
     <input
       class="picker"

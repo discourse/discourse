@@ -257,6 +257,11 @@ export default class Composer extends RestModel {
     return (title || "").trim() !== (original || "").trim();
   }
 
+  @discourseComputed("replyDirty", "titleDirty", "hasMetaData")
+  anyDirty(replyDirty, titleDirty, hasMetaData) {
+    return replyDirty || titleDirty || hasMetaData;
+  }
+
   @dependentKeyCompat
   get categoryId() {
     return this._categoryId;
@@ -1356,7 +1361,7 @@ export default class Composer extends RestModel {
 
   saveDraft() {
     if (!this.canSaveDraft) {
-      return Promise.resolve();
+      return Promise.reject();
     }
 
     this.set("draftSaving", true);
@@ -1389,6 +1394,8 @@ export default class Composer extends RestModel {
             draftForceSave: false,
           });
         }
+
+        return result;
       })
       .catch((e) => {
         let draftStatus;

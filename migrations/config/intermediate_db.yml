@@ -15,6 +15,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
+    badge_groupings: {}
     categories:
       columns:
         add:
@@ -89,6 +90,29 @@ schema:
       columns:
         exclude:
           - "id"
+    tag_group_memberships:
+      primary_key_column_names: [ "tag_group_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
+    tag_group_permissions:
+      primary_key_column_names: [ "tag_group_id", "group_id", "permission_type" ]
+      columns:
+        exclude:
+          - "id"
+    tag_groups: {}
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+    tags:
+      columns:
+        exclude:
+          - "pm_topic_count"
+          - "public_topic_count"
+          - "staff_topic_count"
+          - "target_tag_id"
     user_emails:
       columns:
         include:
@@ -97,6 +121,16 @@ schema:
           - "user_id"
           - "created_at"
       primary_key_column_names: [ "user_id" , "email" ]
+    user_field_options:
+      primary_key_column_names: [ "user_field_id", "value" ]
+      columns:
+        exclude:
+          - "id"
+    user_fields:
+      columns:
+        exclude:
+          - "field_type"
+          - "required"
     user_options:
       primary_key_column_names: [ "user_id" ]
     users:
@@ -163,7 +197,6 @@ schema:
         - "backup_draft_posts"
         - "backup_draft_topics"
         - "backup_metadata"
-        - "badge_groupings"
         - "badge_types"
         - "bookmarks"
         - "calendar_events"
@@ -336,14 +369,8 @@ schema:
         - "skipped_email_logs"
         - "stylesheet_cache"
         - "summary_sections"
-        - "tag_group_memberships"
-        - "tag_group_permissions"
-        - "tag_groups"
         - "tag_search_data"
-        - "tag_users"
-        - "tags"
         - "tags_web_hooks"
-        - "theme_color_schemes"
         - "theme_fields"
         - "theme_modifier_sets"
         - "theme_settings"
@@ -394,8 +421,6 @@ schema:
         - "user_chat_thread_memberships"
         - "user_custom_fields"
         - "user_exports"
-        - "user_field_options"
-        - "user_fields"
         - "user_histories"
         - "user_ip_address_histories"
         - "user_notification_schedules"

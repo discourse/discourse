@@ -84,7 +84,6 @@ ar:
               help: "على سبيل المثال، #channel، @username."
           errors:
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
-            channel_not_found: "القناة المحدَّدة غير موجودة على Slack"
         telegram:
           title: "Telegram"
           param:

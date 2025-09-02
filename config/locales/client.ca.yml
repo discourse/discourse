@@ -1698,6 +1698,7 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
+      discard: "Descarta"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
@@ -1729,11 +1730,6 @@ ca:
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
       help: "Ajuda d'edició Markdown"
-      collapse: "minimitza el tauler de redacció"
-      open: "obre el tauler de redacció"
-      abandon: "tanca la redacció i rebutja l'esborrany"
-      enter_fullscreen: "entra en la redacció a pantalla completa"
-      exit_fullscreen: "surt de la redacció a pantalla completa"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
@@ -3652,7 +3648,6 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
-          default: "Per defecte"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3723,10 +3718,6 @@ ca:
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
-          settings: "Configuració"
-          colors: "Colors"
-          discard_colors: "Descarta"
-          colors_title: "Colors"
           scss:
             text: "CSS"
           after_header:

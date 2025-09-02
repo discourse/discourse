@@ -433,6 +433,113 @@ describe DiscoursePostEvent::Event do
         end
       end
     end
+
+    context "with recurring events" do
+      context "with recurrence_until set" do
+        context "when current date is before recurrence_until" do
+          it "is not expired" do
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: DateTime.parse("2020-05-01 00:00"),
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(false)
+          end
+        end
+
+        context "when current date is after recurrence_until" do
+          it "is expired" do
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: DateTime.parse("2020-04-23 00:00"),
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(true)
+          end
+        end
+
+        context "when current date equals recurrence_until" do
+          it "is not expired" do
+            current_time = DateTime.parse("2020-04-24 14:10")
+            post_event =
+              DiscoursePostEvent::Event.create!(
+                original_starts_at: DateTime.parse("2020-04-22 14:05"),
+                original_ends_at: DateTime.parse("2020-04-22 15:05"),
+                recurrence: "FREQ=WEEKLY",
+                recurrence_until: current_time,
+                post: first_post,
+              )
+
+            expect(post_event.expired?).to be(false)
+          end
+        end
+      end
+
+      context "without recurrence_until set" do
+        it "never expires" do
+          post_event =
+            DiscoursePostEvent::Event.create!(
+              original_starts_at: DateTime.parse("2020-04-22 14:05"),
+              original_ends_at: DateTime.parse("2020-04-22 15:05"),
+              recurrence: "FREQ=WEEKLY",
+              recurrence_until: nil,
+              post: first_post,
+            )
+
+          expect(post_event.expired?).to be(false)
+        end
+      end
+    end
+  end
+
+  describe "#duration" do
+    let!(:post_1) { Fabricate(:post) }
+
+    context "when event has both starts_at and ends_at" do
+      it "returns duration in HH:MM:SS format" do
+        event =
+          DiscoursePostEvent::Event.create!(
+            id: post_1.id,
+            original_starts_at: "2022-01-15 10:00:00 UTC",
+            original_ends_at: "2022-01-15 11:30:00 UTC",
+          )
+
+        expect(event.duration).to eq("01:30:00")
+      end
+    end
+
+    context "when event only has starts_at" do
+      it "returns default duration of 1 hour" do
+        event =
+          DiscoursePostEvent::Event.create!(
+            id: post_1.id,
+            original_starts_at: "2022-01-15 10:00:00 UTC",
+          )
+
+        expect(event.duration).to eq("01:00:00")
+      end
+    end
+
+    context "when event spans multiple days" do
+      it "returns correct duration" do
+        event =
+          DiscoursePostEvent::Event.create!(
+            id: post_1.id,
+            original_starts_at: "2022-01-15 10:00:00 UTC",
+            original_ends_at: "2022-01-16 12:30:00 UTC",
+          )
+
+        expect(event.duration).to eq("26:30:00")
+      end
+    end
   end
 
   describe "#update_with_params!" do
@@ -523,15 +630,123 @@ describe DiscoursePostEvent::Event do
           Fabricate(
             :event,
             recurrence: "every_day",
-            recurrence_until: "2020-04-25 06:59",
+            recurrence_until: "2020-04-25 23:59",
             original_starts_at: "2020-04-20 13:00",
           )
         end
 
-        it "returns nothing" do
-          expect(next_date).to be_blank
+        it "returns the next occurrence within the recurrence period" do
+          expect(next_date).not_to be_blank
+          expect(next_date).to be_an(Array)
+          expect(next_date.length).to eq(2)
+          expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
+          expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
         end
       end
     end
+  end
+
+  describe "#starts_at and #ends_at for expired recurring events" do
+    context "when recurring event has expired (past recurrence_until)" do
+      let(:expired_recurring_event) do
+        event =
+          Fabricate(
+            :event,
+            recurrence: "every_week",
+            recurrence_until: Time.current - 1.day,
+            original_starts_at: Time.current - 1.week,
+            original_ends_at: Time.current - 1.week + 2.hours,
+          )
+        event
+      end
+
+      it "returns nil for starts_at since no future dates can be computed" do
+        expect(expired_recurring_event.starts_at).to be_nil
+      end
+
+      it "returns nil for ends_at since no future dates can be computed" do
+        expect(expired_recurring_event.ends_at).to be_nil
+      end
+
+      it "serializer handles nil starts_at correctly" do
+        serializer =
+          DiscoursePostEvent::EventSerializer.new(
+            expired_recurring_event,
+            scope: Guardian.new,
+            root: false,
+          )
+        json = JSON.parse(serializer.to_json)
+
+        expect(json["starts_at"]).to be_nil
+        expect(json["ends_at"]).to be_nil
+      end
+
+      it "basic serializer handles expired recurring events correctly" do
+        serializer =
+          DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
+        json = JSON.parse(serializer.to_json)
+
+        expect(json["starts_at"]).to be_nil
+        expect(json["ends_at"]).to be_nil
+      end
+    end
+
+    context "when recurring event has no recurrence_until (endless)" do
+      let(:endless_recurring_event) do
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          recurrence_until: nil,
+          original_starts_at: Time.current - 1.week,
+          original_ends_at: Time.current - 1.week + 2.hours,
+        )
+      end
+
+      it "still returns starts_at from event_dates" do
+        expect(endless_recurring_event.starts_at).not_to be_nil
+      end
+
+      it "still returns ends_at from event_dates" do
+        expect(endless_recurring_event.starts_at).not_to be_nil
+      end
+    end
+
+    context "when non-recurring event" do
+      let(:non_recurring_event) do
+        Fabricate(
+          :event,
+          recurrence: nil,
+          original_starts_at: Time.current - 1.week,
+          original_ends_at: Time.current - 1.week + 2.hours,
+        )
+      end
+
+      it "still returns starts_at from event_dates regardless of when it was" do
+        expect(non_recurring_event.starts_at).not_to be_nil
+      end
+
+      it "still returns ends_at from event_dates regardless of when it was" do
+        expect(non_recurring_event.ends_at).not_to be_nil
+      end
+    end
+  end
+end
+
+describe DiscoursePostEvent::Event, "#capacity" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  it "detects capacity when max_attendees set" do
+    creator = Fabricate(:user)
+    topic = Fabricate(:topic, user: creator)
+    post = Fabricate(:post, user: creator, topic: topic)
+    event = Fabricate(:event, post: post, max_attendees: 1)
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+    )
+    expect(event.at_capacity?).to eq(true)
   end
 end

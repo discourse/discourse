@@ -308,7 +308,7 @@ en:
         month: "Month"
         week: "Week"
         day: "Day"
-        list: "List"
+        year: "Year"
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
@@ -407,6 +407,7 @@ en:
         event:
           expired: "Expired"
           closed: "Closed"
+          full: "Full"
           status:
             standalone:
               title: "Standalone"
@@ -464,6 +465,9 @@ en:
         minimal:
           label: "Minimal event"
           checkbox_label: "Hide Going/Not going buttons and invitees status"
+        max_attendees:
+          label: "Maximum attendees"
+          placeholder: "No limit"
         allow_chat:
           label: "Chat integration"
           checkbox_label: "Create and manage event specific chat channel"

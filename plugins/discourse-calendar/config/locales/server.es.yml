@@ -33,7 +33,6 @@ es:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Máximo de filas de texto por evento en el Calendario."
     map_events_to_color: "Asigna un color a cada etiqueta o categoría."
     map_events_title: "Reemplaza «Eventos» en el título de la barra lateral «Próximos eventos» por categoría."
     calendar_enabled: "Habilitar el complemento de calendario de Discourse. Esto añadirá soporte para una etiqueta [calendar][/calendar] en la primera entrada de un tema."
@@ -62,7 +61,6 @@ es:
     calendar_automatic_holidays_enabled: "Establecer automáticamente el estado de vacaciones en función de la región del usuario (nota: puedes desactivar las vacaciones automáticas específicas en la configuración del plugin)"
     event_participation_buttons: "Lista de botones de participación en eventos que los usuarios pueden utilizar."
     sidebar_show_upcoming_events: "Muestra el enlace de los próximos eventos en la barra lateral en «Más»."
-    include_expired_events_on_calendar: "Incluir eventos pasados/vencidos en las vistas Calendario de categorías y Próximos eventos."
   discourse_calendar:
     invite_user_notification: "%{username} te invitó a: %{description}"
     calendar_must_be_in_first_post: "La etiqueta de calendario solo se puede utilizar en la primera publicación de un tema."

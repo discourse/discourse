@@ -672,4 +672,73 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     expect(output).to eq(["Hello", "! This is a simple response"])
   end
+
+  it "handles inlineData in non-streaming response" do
+    base64_data =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ inlineData: { mimeType: "image/png", data: base64_data } }],
+            role: "model",
+          },
+          finishReason: "STOP",
+          index: 0,
+          safetyRatings: [
+            { category: "HARM_CATEGORY_HATE_SPEECH", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_HARASSMENT", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", probability: "NEGLIGIBLE" },
+          ],
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate("Show image", user: user)
+    expect(result).to include("![image](")
+  end
+
+  it "handles inlineData in streaming response" do
+    base64_data =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+    rows = [
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ inlineData: { mimeType: "image/png", data: base64_data } }],
+              role: "model",
+            },
+            safetyRatings: [
+              { category: "HARM_CATEGORY_HATE_SPEECH", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_DANGEROUS_CONTENT", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_HARASSMENT", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", probability: "NEGLIGIBLE" },
+            ],
+          },
+        ],
+      },
+      { candidates: [{ content: { parts: [{ text: "" }], role: "model" }, finishReason: "STOP" }] },
+    ]
+
+    payload = rows.map { |r| "data: #{r.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    llm.generate("Show image", user: user) { |partial| output << partial }
+
+    expect(output.length).to eq(1)
+    expect(output.first).to include("![image](")
+  end
 end

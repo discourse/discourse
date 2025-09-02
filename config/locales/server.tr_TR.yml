@@ -60,8 +60,8 @@ tr_TR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
-    too_many_urls: "Tek bir istekte 10’dan fazla URL’yi satır içinde onebox olarak ekleyemezsiniz"
-    concurrency_not_allowed: "Eş zamanlı satır içi onebox yapma isteklerine izin verilmez. Lütfen her seferinde bir istek gönderin."
+    too_many_urls: "Tek bir talepte 10’dan fazla URL’yi satır içinde onebox olarak ekleyemezsiniz."
+    concurrency_not_allowed: "Eş zamanlı satır içi onebox yapma taleplerine izin verilmez. Lütfen her seferinde bir talep gönderin."
   components:
     enabled_filter: "Etkin"
     disabled_filter: "Devre Dışı"
@@ -1480,7 +1480,7 @@ tr_TR:
     http_total_reqs:
       title: "Toplam"
       xaxis: "Gün"
-      yaxis: "Toplam talepler"
+      yaxis: "Toplam talep sayısı"
     time_to_first_response:
       title: "İlk yanıta kadar geçen süre"
       xaxis: "Gün"
@@ -1572,7 +1572,6 @@ tr_TR:
       labels:
         provider: Giriş sağlayıcısı
         no_accounts: "İlişkili hesap yok"
-        total_users: "Toplam üye sayısı"
       description: "Giriş sağlayıcısına göre gruplandırılmış ilişkili hesap sayısını gösterin. Yalnızca sosyal giriş yöntemleri etkinleştirildiğinde geçerlidir."
   dashboard:
     problem:
@@ -2483,7 +2482,6 @@ tr_TR:
     content_localization_enabled: "Kullanıcılara tarayıcı veya kullanıcı dil tercihlerine göre yerelleştirilmiş içerik görüntüler. Bu içerik kategoriler, etiketler, gönderiler ve konular içerebilir. Desteklenen yerel ayarlar, \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde belirtilmiştir."
     content_localization_supported_locales: "Kullanıcı içeriğinin çevrilebileceği desteklenen yerel ayarların listesi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
     content_localization_allowed_groups: "Grupların yerelleştirilmiş içeriği güncellemesine izin verildi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
-    content_localization_anon_language_switcher: "Giriş yapmamış site ziyaretçilerinin Discourse'un çevrilmiş sürümleri ile kullanıcı tarafından sağlanan içerik arasında geçiş yapmasına olanak tanıyan dil değiştiriciyi etkinleştirin. \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde tanımlanan diller listesine bağlıdır."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -2555,7 +2553,6 @@ tr_TR:
       invalid_uncategorized_category_setting: '"Kategorize edilmemiş konulara izin ver" etkinleştirilmemişse "Kategorize edilmemiş" kategorisi seçilemez.'
       invalid_search_ranking_weights: "Değer, search_ranking_weights site ayarı için geçersiz. Örnek: \"{0.1,0.2,0.3,1.0}\". Her ağırlık için maksimum değerin 1,0 olduğunu unutmayın."
       content_localization_locale_limit: "Desteklenen yerel ayar sayısı en fazla %{max} olabilir."
-      content_localization_anon_language_switcher_requirements: "Dil değiştiricinin kullanılabilmesi için `set locale from cookie` site ayarının etkinleştirilmesi ve `content localization supported locales` alanının en az bir dile sahip olması gerekir."
       mediaconvert_role_arn_required: "Video dönüştürme için AWS MediaConvert kullanıldığında AWS IAM rolü ARN'si gereklidir."
       s3_credentials_required_for_video_conversion: "Video dönüştürme için S3 giriş bilgileri gereklidir. Lütfen S3 erişim anahtarlarını yapılandırın veya IAM profilini etkinleştirin."
     keywords:
@@ -5299,9 +5296,20 @@ tr_TR:
       approve_and_unhide:
         title: "Gönderiyi onayla ve Gizlemesini kaldır"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
+      no_action_user:
+        title: "Eylem yok"
+      silence_user:
+        title: "Kullanıcıyı sustur"
+        complete: "Kullanıcı susturuldu"
+      suspend_user:
+        title: "Kullanıcıyı askıya al"
+        complete: "Kullanıcı askıya alındı"
       delete_user:
+        title: "Kullanıcı sil"
+        complete: "Kullanıcı silindi"
         reason: "İnceleme kuyruğu aracılığıyla silindi"
-        complete: "Kullanıcı silindi."
+      delete_and_block_user:
+        complete: "Kullanıcı silindi ve engellendi"
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermeli"
   notification_level:

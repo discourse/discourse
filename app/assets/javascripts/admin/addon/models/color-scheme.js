@@ -11,15 +11,10 @@ import ColorSchemeColor from "admin/models/color-scheme-color";
 class ColorSchemes extends ArrayProxy {}
 
 export default class ColorScheme extends EmberObject {
-  static findAll({ excludeThemeOwned = false } = {}) {
+  static findAll() {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
 
-    const data = {};
-    if (excludeThemeOwned) {
-      data.exclude_theme_owned = true;
-    }
-
-    return ajax("/admin/color_schemes", { data }).then((all) => {
+    return ajax("/admin/color_schemes").then((all) => {
       all.forEach((colorScheme) => {
         colorSchemes.pushObject(
           ColorScheme.create({
@@ -89,14 +84,11 @@ export default class ColorScheme extends EmberObject {
   }
 
   schemeObject() {
-    const extractColors = (property) =>
-      Object.fromEntries(
-        this.colors.map((color) => [color.name, color[property]])
-      );
     return {
       name: this.name,
-      dark: extractColors("dark_hex"),
-      light: extractColors("hex"),
+      light: Object.fromEntries(
+        this.colors.map((color) => [color.name, color.hex])
+      ),
     };
   }
 
@@ -115,9 +107,7 @@ export default class ColorScheme extends EmberObject {
     });
     this.colors.forEach((c) => {
       newScheme.colors.pushObject(
-        ColorSchemeColor.create(
-          c.getProperties("name", "hex", "default_hex", "dark_hex")
-        )
+        ColorSchemeColor.create(c.getProperties("name", "hex", "default_hex"))
       );
     });
     return newScheme;
@@ -168,11 +158,13 @@ export default class ColorScheme extends EmberObject {
 
       if (!opts?.saveNameOnly) {
         data.user_selectable = this.user_selectable;
+        data.default_light_on_theme = this.default_light_on_theme;
+        data.default_dark_on_theme = this.default_dark_on_theme;
         data.base_scheme_id = this.base_scheme_id;
         data.colors = [];
         this.colors.forEach((c) => {
           if (!this.id || c.get("changed")) {
-            data.colors.pushObject(c.getProperties("name", "hex", "dark_hex"));
+            data.colors.pushObject(c.getProperties("name", "hex"));
           }
         });
       }

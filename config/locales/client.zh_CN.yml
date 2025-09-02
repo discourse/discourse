@@ -773,7 +773,7 @@ zh_CN:
         reviewable_post:
           title: "帖子"
           noun: "帖子"
-      flagged_as: "被举报为"
+      flagged_as: "被标记为"
       assigned_to: "已指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
@@ -1759,7 +1759,7 @@ zh_CN:
         revoke: "撤消"
         cancel: "取消"
         not_connected: "（未连接）"
-        confirm_modal_title: "连接 %{provider} 帐户"
+        confirm_modal_title: "关联 %{provider} 帐户"
         confirm_description:
           disconnect: "您现有的 %{provider} 帐户 '%{account_description}' 将被断开连接。"
           account_specific: "您的 %{provider} 帐户 '%{account_description}' 将被用于身份验证。"
@@ -2598,6 +2598,7 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
+      discard: "舍弃"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
@@ -2653,14 +2654,7 @@ zh_CN:
       list_item: "列表条目"
       toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
-      collapse: "最小化编辑器面板"
-      open: "打开编辑器面板"
-      abandon: "关闭编辑器并舍弃草稿"
-      enter_fullscreen: "进入全屏编辑器"
-      exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
-      show_toolbar: "显示编辑器工具栏"
-      hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确定"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       create_message_error: "抱歉，创建该消息时出错。请重试。"
@@ -2722,7 +2716,7 @@ zh_CN:
         edit: "编辑链接"
         copy: "复制链接"
         remove: "移除链接"
-        visit: "在外部标签中打开链接"
+        visit: "在外部标签页中打开链接"
         link_copied: "链接已复制！"
     notifications:
       tooltip:
@@ -4871,8 +4865,8 @@ zh_CN:
       placeholder: "按类别、标签或其他条件筛选话题"
       description:
         yesterday: "昨天"
-        last_week: "上周"
-        last_month: "上个月"
+        last_week: "过去一周"
+        last_month: "过去一个月"
         last_year: "去年"
     discovery:
       headings:
@@ -4995,7 +4989,7 @@ zh_CN:
         flags:
           title: "审核"
           header_description: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
-          keywords: "举报|评论|垃圾|非法"
+          keywords: "举报|评论|垃圾信息|非法"
         files:
           title: "文件"
           header_description: "控制文件大小与类型限制、头像大小与来源、文件存储、图片质量和压缩等的设置"
@@ -5035,7 +5029,7 @@ zh_CN:
               help_text: "建议尺寸为 512 x 512 像素。"
             favicon:
               title: "网站图标"
-              description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
+              description: "徽标将作为图标出现在浏览器标签页和浏览器收藏夹/书签中。"
             logo_small:
               title: "小徽标"
               description: "您的站点左上角的小徽标图片，向下滚动时可见。如果留空，将显示首页字形。"
@@ -5119,8 +5113,8 @@ zh_CN:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
         spam:
-          title: "垃圾内容"
-          header_description: "配置系统如何分析用户的注册和发帖行为，以快速识别和阻止垃圾内容"
+          title: "垃圾信息"
+          header_description: "配置系统如何分析用户的注册和发帖行为，以快速识别和阻止垃圾信息"
         trust_levels:
           title: "信任级别"
           header_description: "信任级别设置允许您微调社区升级系统的要求和通知，当用户在论坛中表现出持续、积极的参与时，系统会自动将用户提升到更高的信任级别"
@@ -5154,7 +5148,7 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
         reports:
-          title: "报告"
+          title: "举报"
           header_description: "报告是帮助您了解站点上所发生事情的强大工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
           sub_pages:
             settings:
@@ -5168,7 +5162,7 @@ zh_CN:
           keywords: "搜索|google|站点地图"
         interface:
           title: "界面与布局"
-          header_description: "自定义站点总体布局和用户界面"
+          header_description: "自定义站点总体布局和用户界面的详细信息"
           keywords: "斜杠"
         content:
           title: "内容"
@@ -6225,7 +6219,7 @@ zh_CN:
           extra_files_upload: "导出主题以查看这些文件。"
           extra_files_remote: "导出主题或检查 git 仓库以查看这些文件。"
           preview: "预览"
-          default: "默认"
+          default: "默认主题"
           settings_editor: "设置编辑器"
           show_advanced: "显示高级"
           is_default: "主题默认启用"
@@ -6351,14 +6345,6 @@ zh_CN:
           repo_unreachable: "无法联系此主题的 Git 仓库。错误消息："
           built_in_description: "此主题为预安装主题，无法删除或自定义"
           imported_from_archive: "此主题是从一个 .zip 文件导入的"
-          settings: "设置"
-          colors: "颜色"
-          unsaved_colors:
-            other: "您有 %{count} 个未保存的颜色"
-          unsaved_colors_leave_route_confirmation: "您尚未保存调色板更改。确定要离开吗？"
-          save_colors: "保存颜色"
-          discard_colors: "舍弃"
-          colors_title: "颜色"
           scss:
             text: "CSS"
             title: "支持 SCSS 语法的自定义 CSS 规则"
@@ -6454,9 +6440,6 @@ zh_CN:
             reset: "重置筛选器"
           default_dark_badge:
             text: "默认深色"
-          default_both_badge:
-            text: "默认浅色和深色"
-            title: "默认浅色和深色调色板"
           system_palette: "这是一个内置调色板，无法编辑或删除。"
           back_to_colors: "返回调色板"
           long_title: "调色板"

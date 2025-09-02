@@ -13,6 +13,14 @@ import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
+export const ALL_PAGES_EXCLUDED_ROUTES = [
+  "activate-account",
+  "invites.show",
+  "login",
+  "password-reset",
+  "signup",
+];
+
 export default class WelcomeBanner extends Component {
   @service router;
   @service siteSettings;
@@ -51,22 +59,26 @@ export default class WelcomeBanner extends Component {
   });
 
   get displayForRoute() {
-    switch (this.siteSettings.welcome_banner_page_visibility) {
+    const { currentRouteName } = this.router;
+    const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
+
+    switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
-        return this.siteSettings.top_menu
+        return top_menu
           .split("|")
-          .any(
-            (menuItem) =>
-              `discovery.${menuItem}` === this.router.currentRouteName
-          );
+          .any((menuItem) => `discovery.${menuItem}` === currentRouteName);
       case "homepage":
-        return (
-          this.router.currentRouteName === `discovery.${defaultHomepage()}`
-        );
+        return currentRouteName === `discovery.${defaultHomepage()}`;
       case "discovery":
-        return this.router.currentRouteName.startsWith("discovery.");
+        return currentRouteName.startsWith("discovery.");
       case "all_pages":
-        return true;
+        return (
+          currentRouteName !== "full-page-search" &&
+          !currentRouteName.startsWith("admin.") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
       default:
         return false;
     }
@@ -129,7 +141,6 @@ export default class WelcomeBanner extends Component {
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        style={{if this.bgImgStyle this.bgImgStyle}}
         class={{concatClass
           "welcome-banner"
           this.locationClass
@@ -138,31 +149,33 @@ export default class WelcomeBanner extends Component {
         {{this.checkViewport}}
         {{this.handleKeyboardShortcut}}
       >
-        <div class="custom-search-banner welcome-banner__inner-wrapper">
-          <div class="custom-search-banner-wrap welcome-banner__wrap">
-            <div class="welcome-banner__title">
-              {{htmlSafe this.headerText}}
-              {{#if this.subheaderText}}
-                <p class="welcome-banner__subheader">
-                  {{htmlSafe this.subheaderText}}
-                </p>
-              {{/if}}
-            </div>
-            <PluginOutlet @name="welcome-banner-below-headline" />
-            <div class="search-menu welcome-banner__search-menu">
-              <DButton
-                @icon="magnifying-glass"
-                @title="search.open_advanced"
-                @href="/search?expanded=true"
-                class="search-icon"
-              />
-              <SearchMenu
-                @location="welcome-banner"
-                @searchInputId="welcome-banner-search-input"
-              />
-            </div>
-            <PluginOutlet @name="welcome-banner-below-input" />
+        <div
+          class="custom-search-banner-wrap welcome-banner__wrap"
+          style={{if this.bgImgStyle this.bgImgStyle}}
+        >
+          <div class="welcome-banner__title">
+            {{htmlSafe this.headerText}}
+            {{#if this.subheaderText}}
+              <p class="welcome-banner__subheader">
+                {{htmlSafe this.subheaderText}}
+              </p>
+            {{/if}}
           </div>
+          <PluginOutlet @name="welcome-banner-below-headline" />
+          <div class="search-menu welcome-banner__search-menu">
+            <DButton
+              @icon="magnifying-glass"
+              @title="search.open_advanced"
+              @href="/search?expanded=true"
+              class="search-icon"
+            />
+            <SearchMenu
+              @location="welcome-banner"
+              @searchInputId="welcome-banner-search-input"
+              @placeholder={{i18n "welcome_banner.search"}}
+            />
+          </div>
+          <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>
     {{/if}}

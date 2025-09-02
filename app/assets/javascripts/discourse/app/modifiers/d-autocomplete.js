@@ -64,6 +64,7 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked searchTerm = "";
   @tracked completeStart = null;
   @tracked completeEnd = null;
+  @tracked pendingSpaceSearch = false;
 
   // Internal state
   previousTerm = null;
@@ -112,12 +113,9 @@ export default class DAutocompleteModifier extends Modifier {
     if (this.expanded) {
       switch (event.key) {
         case "ArrowUp":
-          event.preventDefault();
-          await this.moveSelection(-1);
-          break;
         case "ArrowDown":
           event.preventDefault();
-          await this.moveSelection(1);
+          await this.moveSelection(event.key === "ArrowUp" ? -1 : 1);
           break;
         case "Enter":
         case "Tab":
@@ -252,6 +250,21 @@ export default class DAutocompleteModifier extends Modifier {
     const value = this.getValue();
     const key = value[caretPosition - 1];
 
+    // Update completeEnd if we're still in the same autocomplete context
+    if (this.completeStart !== null && caretPosition >= this.completeStart) {
+      this.completeEnd = caretPosition - 1;
+    }
+
+    // If caret moved outside our autocomplete context while space search pending
+    if (
+      this.pendingSpaceSearch &&
+      (caretPosition < this.completeStart ||
+        caretPosition > this.completeEnd + 1)
+    ) {
+      await this.closeAutocomplete();
+      return;
+    }
+
     // onKeyUp for additional custom trigger logic
     if (this.options.key && this.options.onKeyUp && key !== this.options.key) {
       const match = this.options.onKeyUp(value, caretPosition);
@@ -294,6 +307,7 @@ export default class DAutocompleteModifier extends Modifier {
       // Validate we're still in autocomplete context
       if (!this.options.key || value[this.completeStart] === this.options.key) {
         this.completeEnd = caretPosition - 1;
+
         await this.performSearch(term);
       } else {
         await this.closeAutocomplete();
@@ -329,6 +343,18 @@ export default class DAutocompleteModifier extends Modifier {
 
     this.previousTerm = term;
     this.searchTerm = term;
+
+    // Special handling for terms with spaces to allow for full name search (mentions only)
+    const hasSpaces = term.includes(" ") && term.trim().length > 0;
+    const isMentionAutocomplete = this.options.key === "@";
+
+    if (hasSpaces && isMentionAutocomplete) {
+      // Close menu but keep state for potential reopening and continue with search
+      this.pendingSpaceSearch = true;
+      if (term.slice(-1) === " ") {
+        await this.closeAutocomplete({ resetSearchState: false });
+      }
+    }
 
     // Close if only whitespace or invalid context
     if (
@@ -389,6 +415,7 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async openAutocomplete() {
+    this.pendingSpaceSearch = false;
     this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
     try {
       // Create virtual element with appropriate positioning
@@ -435,19 +462,22 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   @action
-  async closeAutocomplete() {
+  async closeAutocomplete({ resetSearchState = true } = {}) {
     await this.menu.close("d-autocomplete");
-
     this.expanded = false;
+    this.selectedIndex = -1;
+
+    if (!resetSearchState) {
+      return;
+    }
+
+    this.pendingSpaceSearch = false;
     this.completeStart = null;
     this.completeEnd = null;
     this.searchTerm = "";
     this.results = [];
-    this.selectedIndex = -1;
     this.previousTerm = null;
-
     cancel(this.debouncedSearch);
-
     // Note: onClose callback is handled by the menu's onClose option
   }
 

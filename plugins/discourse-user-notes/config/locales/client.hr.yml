@@ -7,5 +7,6 @@
 hr:
   js:
     user_notes:
+      title: "Bilješke o korisniku"
       attach: "Dodaj bilješku za korisnike"
       show_post: "Prikaži objavu"

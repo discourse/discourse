@@ -102,4 +102,9 @@ html {
   --d-sidebar-section-link-icon-size: 1em !important;
   --d-hover: oklch(from var(--d-selected) l c h / 0.75) !important;
   --d-input-bg-color: var(--d-content-background) !important;
+  --discourse_id-text: var(--accent-text-color) !important;
+  --discourse_id-text-hover: var(--accent-text-color) !important;
+  --discourse_id-icon: var(--accent-text-color) !important;
+  --discourse_id-icon-hover: var(--accent-text-color) !important;
+  --discourse_id-border: var(--discourse_id-background) !important;
 }

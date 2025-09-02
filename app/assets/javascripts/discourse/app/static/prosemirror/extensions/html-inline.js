@@ -24,12 +24,10 @@ const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
-    // TODO(renato): this node is hard to get past when at the end of a block
-    //   and is added to a newline unintentionally, investigate
     html_inline: {
       group: "inline",
       inline: true,
-      isolating: true,
+      defining: true,
       content: "inline*",
       attrs: { tag: {} },
       parseDOM: ALLOWED_INLINE.map((tag) => ({

@@ -3591,9 +3591,11 @@ gl:
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       reject:
         title: "Rexeitar"
+      no_action_user:
+        title: "Sen acción"
       delete_user:
+        complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"
-        complete: "Usuario eliminado."
   email_style:
     html_missing_placeholder: "O modelo HTML debe incluír %{placeholder}"
   notification_level:

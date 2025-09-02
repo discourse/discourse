@@ -3732,9 +3732,11 @@ ko:
         title: "게시물 삭제 유지"
       approve_and_restore:
         title: "게시물 승인 및 복원"
+      no_action_user:
+        title: "조치 없음"
       delete_user:
+        complete: "사용자 삭제됨"
         reason: "검토 대기열을 통해 삭제됨"
-        complete: "사용자 삭제됨."
   email_style:
     html_missing_placeholder: "html 템플릿에는 %{placeholder} 포함이 필수입니다."
   notification_level:

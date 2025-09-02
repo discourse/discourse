@@ -200,6 +200,7 @@ export default class ComposerContainer extends Component {
                 @toggleToolbar={{this.composer.toggleToolbar}}
                 @toggleFullscreen={{this.composer.fullscreenComposer}}
                 @disableTextarea={{this.composer.disableTextarea}}
+                @saveAndClose={{this.composer.saveAndClose}}
               />
             </div>
 
@@ -342,25 +343,24 @@ export default class ComposerContainer extends Component {
                   @disableSubmit={{this.composer.disableSubmit}}
                 />
 
-                {{#if this.site.mobileView}}
+                {{#unless this.site.mobileView}}
                   <DButton
                     @action={{this.composer.cancel}}
-                    class="cancel btn-transparent"
-                    @icon={{if this.composer.canEdit "xmark" "trash-can"}}
+                    class="discard-button btn-transparent"
                     @preventFocus={{true}}
-                    @title="close"
+                    @title="composer.discard"
+                    @label="composer.discard"
                   />
-                {{else}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    class="cancel btn-transparent"
-                    @preventFocus={{true}}
-                    @title="close"
-                    @label="close"
-                  />
-                {{/if}}
+                {{/unless}}
 
                 {{#if this.site.mobileView}}
+                  <DButton
+                    @action={{this.composer.cancel}}
+                    @icon="trash-can"
+                    class="discard-button btn-transparent"
+                    @preventFocus={{true}}
+                    @title="composer.discard"
+                  />
 
                   {{#if this.composer.model.noBump}}
                     <span class="no-bump">{{icon "anchor"}}</span>
@@ -509,6 +509,7 @@ export default class ComposerContainer extends Component {
             @toggleFullscreen={{this.composer.openIfDraft}}
             @toggleComposer={{this.composer.toggle}}
             @toggleToolbar={{this.composer.toggleToolbar}}
+            @saveAndClose={{this.composer.saveAndClose}}
           />
         {{/if}}
       {{/if}}

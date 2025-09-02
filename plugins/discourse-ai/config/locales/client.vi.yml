@@ -54,6 +54,8 @@ vi:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        progress_chart:
+          bar_done: "%{done} bài đăng"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"

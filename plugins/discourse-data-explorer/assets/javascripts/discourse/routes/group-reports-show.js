@@ -5,6 +5,13 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class GroupReportsShowRoute extends DiscourseRoute {
   @service router;
 
+  queryParams = {
+    autoRun: {
+      as: "run",
+      refreshModel: false,
+    },
+  };
+
   model(params) {
     const group = this.modelFor("group");
     return ajax(`/g/${group.name}/reports/${params.query_id}`)
@@ -31,7 +38,10 @@ export default class GroupReportsShowRoute extends DiscourseRoute {
       });
   }
 
-  setupController(controller, model) {
-    controller.setProperties(model);
+  setupController(controller, model, transition) {
+    controller.setProperties({
+      ...model,
+      shouldAutoRun: !!transition.to.queryParams.run,
+    });
   }
 }

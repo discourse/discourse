@@ -85,6 +85,7 @@ ko:
         month: "월"
         week: "주"
         day: "일"
+        year: "년"
     group_timezones:
       search: "검색..."
     discourse_post_event:

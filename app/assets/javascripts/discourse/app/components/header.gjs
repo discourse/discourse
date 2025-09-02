@@ -225,18 +225,10 @@ export default class GlimmerHeader extends Component {
           @topicInfoVisible={{@topicInfoVisible}}
           @narrowDesktop={{this.site.narrowDesktopView}}
         >
+          {{! WARNING: Do not modify the order of `div.header-buttons` and the `<Icons />` component.
+          These components have DAG plugin APIs for the header, and changing their order will break
+          the layout of themes and Theme Components that use these APIs. }}
           <span class="header-buttons">
-            {{#if (or this.currentUser (not this.siteSettings.login_required))}}
-              <Icons
-                @sidebarEnabled={{@sidebarEnabled}}
-                @toggleSearchMenu={{this.toggleSearchMenu}}
-                @toggleNavigationMenu={{this.toggleNavigationMenu}}
-                @toggleUserMenu={{this.toggleUserMenu}}
-                @topicInfoVisible={{@topicInfoVisible}}
-                @narrowDesktop={{this.site.narrowDesktopView}}
-                @searchButtonId={{SEARCH_BUTTON_ID}}
-              />
-            {{/if}}
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
@@ -250,6 +242,20 @@ export default class GlimmerHeader extends Component {
               {{/if}}
             {{/each}}
           </span>
+
+          {{#if
+            (not (and this.siteSettings.login_required (not this.currentUser)))
+          }}
+            <Icons
+              @sidebarEnabled={{@sidebarEnabled}}
+              @toggleSearchMenu={{this.toggleSearchMenu}}
+              @toggleNavigationMenu={{this.toggleNavigationMenu}}
+              @toggleUserMenu={{this.toggleUserMenu}}
+              @topicInfoVisible={{@topicInfoVisible}}
+              @narrowDesktop={{this.site.narrowDesktopView}}
+              @searchButtonId={{SEARCH_BUTTON_ID}}
+            />
+          {{/if}}
 
           {{#if this.search.visible}}
             <SearchMenuWrapper

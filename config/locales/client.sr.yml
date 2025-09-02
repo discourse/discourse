@@ -1760,6 +1760,7 @@ sr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
+      discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1785,8 +1786,6 @@ sr:
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
-      collapse: "smanji panel za sastavljanje teksta"
-      hide_toolbar: "sakrij alatku za pisanje"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -2961,7 +2960,6 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
-          default: "Подразумевано"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"
@@ -2973,10 +2971,6 @@ sr:
           enable: "Omogući"
           disable: "Onemogući"
           add: "Dodaj"
-          settings: "Podešavanje"
-          colors: "Boje"
-          discard_colors: "Odbaci"
-          colors_title: "Boje"
           scss:
             text: "CSS"
           footer:
