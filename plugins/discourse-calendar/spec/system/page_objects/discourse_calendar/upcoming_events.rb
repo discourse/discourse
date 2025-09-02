@@ -150,8 +150,16 @@ module PageObjects
           find(".fc-col-header .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion").text
         end
 
-        def first_column_is_sunday?
+        def has_first_column_as_sunday?
           has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-sun", minimum: 1)
+        end
+
+        def has_first_column_as_saturday?
+          has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-sat", minimum: 1)
+        end
+
+        def has_first_column_as_monday?
+          has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-mon", minimum: 1)
         end
       end
     end

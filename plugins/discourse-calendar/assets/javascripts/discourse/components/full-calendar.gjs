@@ -69,6 +69,16 @@ export default class FullCalendar extends Component {
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
       events: this.args.events || [],
+      events: async (info, successCallback, failureCallback) => {
+        if (this.args.onLoadEvents) {
+          try {
+            const events = await this.args.onLoadEvents(info);
+            successCallback(events);
+          } catch (error) {
+            failureCallback(error);
+          }
+        }
+      },
       plugins: [
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
@@ -144,7 +154,6 @@ export default class FullCalendar extends Component {
   updateCalendar() {
     if (this.calendar) {
       this.calendar.setOption("headerToolbar", this.headerToolbar);
-      this.calendar.setOption("events", this.args.events || []);
       if (this.args.initialDate) {
         this.calendar.gotoDate(this.args.initialDate);
       }

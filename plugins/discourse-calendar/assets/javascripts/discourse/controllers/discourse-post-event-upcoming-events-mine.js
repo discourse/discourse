@@ -9,10 +9,8 @@ export default class DiscoursePostEventUpcomingEventsMineController extends Cont
   }
 
   get initialDate() {
-    return this.model.initialDate;
-  }
-
-  get events() {
-    return this.model.events;
+    return Date.parse(
+      `${this.model.year}/${this.model.month}/${this.model.day}`
+    );
   }
 }
