@@ -182,7 +182,7 @@ jobs:
 
       - name: Create and migrate database
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          DB_MIGRATE_SKIP_SEED_FU: true
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -192,7 +192,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          DB_MIGRATE_SKIP_SEED_FU: true
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -200,6 +200,13 @@ jobs:
       - name: Dump database for cache
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Seed database
+        run: bin/rake db:migrate
+
+      - name: Seed parallel databases
+        if: env.USES_PARALLEL_DATABASES == 'true'
+        run: bin/rake parallel:migrate
 
       - name: Dump uploads for cache
         if: steps.app-cache.outputs.cache-hit != 'true'

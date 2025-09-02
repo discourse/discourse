@@ -131,12 +131,7 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-# let's not run seed_fu every test
-SeedFu.quiet = true if SeedFu.respond_to? :quiet
-
 SiteSetting.automatically_download_gravatars = false
-
-SeedFu.seed
 
 # we need this env var to ensure that we can impersonate in test
 # this enable integration_helpers sign_in helper
