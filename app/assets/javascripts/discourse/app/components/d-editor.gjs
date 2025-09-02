@@ -23,6 +23,7 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import concatClass from "discourse/helpers/concat-class";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
@@ -173,6 +174,14 @@ export default class DEditor extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
     this._previewMutationObserver = this._disablePreviewTabIndex();
+  }
+
+  get editorContainerModeClass() {
+    if (this.isRichEditorEnabled) {
+      return "--rich-editor-enabled";
+    } else {
+      return "--markdown-editor-enabled";
+    }
   }
 
   get keymap() {
@@ -756,8 +765,7 @@ export default class DEditor extends Component {
 
   <template>
     <div
-      class="d-editor-container
-        {{if this.siteSettings.rich_editor '--rich-editor-enabled'}}"
+      class={{concatClass "d-editor-container" this.editorContainerModeClass}}
     >
       <div class="d-editor-textarea-column">
         {{yield}}

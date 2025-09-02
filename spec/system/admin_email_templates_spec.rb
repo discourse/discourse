@@ -4,9 +4,16 @@ describe "Admin Email Templates", type: :system do
   fab!(:admin)
 
   let(:email_templates_page) { PageObjects::Pages::AdminEmailTemplates.new }
-  let(:composer) { PageObjects::Components::Composer.new(nil) }
+  let(:composer) { PageObjects::Components::Composer.new(".email-template__body") }
 
   before { sign_in(admin) }
+
+  it "forces markdown mode and doesn't allow the user to toggle the rich text editor" do
+    email_templates_page.visit_template("user_notifications.account_exists")
+
+    expect(composer).to have_markdown_editor_active
+    expect(composer).to have_no_toggle_switch
+  end
 
   it "can edit an email template" do
     email_templates_page.visit_template("user_notifications.account_exists")

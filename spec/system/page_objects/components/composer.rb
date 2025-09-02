@@ -272,7 +272,7 @@ module PageObjects
       end
 
       def composer_input
-        find("#{@composer_id} .d-editor .d-editor-input")
+        find("#{@composer_id} .d-editor-input")
       end
 
       def composer_popup
@@ -341,11 +341,11 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        find("#{@composer_id}").has_css?(".composer-toggle-switch.--rte")
+        find("#{@composer_id}").has_css?(".d-editor-container.--rich-editor-enabled")
       end
 
       def has_no_rich_editor_active?
-        find("#{@composer_id}").has_css?(".composer-toggle-switch.--markdown")
+        find("#{@composer_id}").has_css?(".d-editor-container.--markdown-editor-enabled")
       end
 
       def has_markdown_editor_active?
@@ -364,6 +364,14 @@ module PageObjects
         end
 
         self
+      end
+
+      def has_toggle_switch?
+        page.has_css?("#{@composer_id} .composer-toggle-switch")
+      end
+
+      def has_no_toggle_switch?
+        page.has_no_css?("#{@composer_id} .composer-toggle-switch")
       end
 
       def editor_toggle_switch
