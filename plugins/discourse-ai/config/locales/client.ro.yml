@@ -62,6 +62,15 @@ ro:
           name: "Spam"
       modals:
         select_option: "Alege o opțiune..."
+      translations:
+        title: "Traduceri"
+        description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
+        admin_actions:
+          translation_settings: "Setări traducere"
+          localization_settings: "Setări localizare"
+          disabled_state:
+            configure: "Configurează traduceri"
+            empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"
@@ -133,8 +142,11 @@ ro:
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
+          anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
+          open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
         next:
           title: "Următorul"
