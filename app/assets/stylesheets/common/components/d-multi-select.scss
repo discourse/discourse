@@ -33,6 +33,7 @@
 .d-multi-select-trigger__label {
   font-size: var(--font-0);
   line-height: normal;
+  color: var(--primary-medium);
 }
 
 .d-multi-select__search-no-result,
@@ -106,10 +107,6 @@
   &.--preselected {
     background-color: var(--primary-low);
   }
-}
-
-.d-multi-select__result-checkbox {
-  margin: 0 !important;
 }
 
 .d-multi-select__skeletons {

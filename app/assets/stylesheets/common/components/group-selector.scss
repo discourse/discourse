@@ -1,40 +1,7 @@
-// GroupSelector component specific styles
-// Scoped to .group-selector-wrapper to avoid affecting other DMultiSelect usage
 .group-selector-wrapper {
-  // Remove truncation - always show full group names
   .d-multi-select-trigger__selected-item
     .d-multi-select-trigger__selection-label {
-    // Remove max-width constraint and ellipsis to show full names
-    max-width: none !important;
+    max-width: 10em;
     min-width: auto;
-
-    // Override the ellipsis mixin from base styles
-    overflow: visible !important;
-    text-overflow: clip !important;
-    white-space: normal !important;
-  }
-
-  // Pills size to content - no artificial limits
-  .d-multi-select-trigger__selected-item {
-    // Remove width constraints to let pills size naturally to full content
-    max-width: none;
-    flex: 0 0 auto; // Don't grow or shrink, size to content
-    // Ensure proper sizing for label + padding + icon
-    box-sizing: border-box;
-  }
-
-  // Container adjusts to full-width content
-  .d-multi-select-trigger__selection {
-    flex-wrap: wrap; // Allow wrapping to new lines when needed
-    max-height: none; // Remove height limit to show all content
-    overflow: visible; // Show all content
-    gap: 0.25em; // Ensure proper spacing between pills
-  }
-
-  // Remove hover color change on the trigger
-  .fk-d-menu__trigger:hover {
-    background-color: inherit !important;
-    border-color: inherit !important;
-    color: inherit !important;
   }
 }
