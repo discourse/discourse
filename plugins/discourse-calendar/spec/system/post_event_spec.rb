@@ -111,6 +111,23 @@ describe "Post event", type: :system do
     end
   end
 
+  context "when defaulting timezone" do
+    it "uses the user's profile timezone in the builder" do
+      admin.user_option.update!(timezone: "Europe/Paris")
+
+      visit("/new-topic")
+
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      tz_select =
+        PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
+
+      # Expect the timezone select to default to the user's timezone
+      expect(tz_select.value).to eq("Europe/Paris")
+    end
+  end
+
   context "when showing local time", timezone: "Australia/Brisbane" do
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
