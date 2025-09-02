@@ -187,6 +187,7 @@ export default class DMultiSelect extends Component {
       @placement={{@placement}}
       @allowedPlacements={{@allowedPlacements}}
       @offset={{@offset}}
+      @matchTriggerMinWidth={{@matchTriggerWidth}}
       @matchTriggerWidth={{@matchTriggerWidth}}
       ...attributes
     >

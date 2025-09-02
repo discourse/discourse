@@ -2,6 +2,9 @@
   .d-multi-select-trigger__selected-item
     .d-multi-select-trigger__selection-label {
     max-width: 10em;
-    min-width: auto;
+  }
+
+  .d-multi-select-trigger {
+    width: 100%;
   }
 }

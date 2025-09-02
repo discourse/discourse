@@ -143,4 +143,15 @@
 
 .fk-d-menu[data-identifier="d-multi-select"] {
   z-index: z("modal", "dialog") + 1;
+
+  // This ensures child elements of the main d-multi-select container maintain the same width
+  // even if content width changes as options are selected to ensure consistency with the UI
+  // and click-on-outside behaviour
+  .fk-d-menu__inner-content {
+    width: inherit;
+
+    .d-multi-select__content {
+      width: inherit;
+    }
+  }
 }
