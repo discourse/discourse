@@ -67,6 +67,7 @@ ro:
         event:
           expired: "Expirate"
           closed: "Închis"
+          full: "Complet"
           status:
             public:
               title: "Public"
@@ -91,6 +92,9 @@ ro:
           label: "Recurență"
           none: "Fără recurență"
           every_day: "În fiecare zi"
+        max_attendees:
+          label: "Număr maxim de participanți"
+          placeholder: "Fără limită"
         url:
           label: "URL"
           placeholder: "Opțional"

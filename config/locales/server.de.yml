@@ -5328,19 +5328,30 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      user_actions:
+        bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:
         title: "Keine Aktion"
+        description: "Keine Maßnahmen gegen den Benutzer ergreifen"
+        complete: "Keine Maßnahmen gegen den Benutzer ergriffen"
       silence_user:
         title: "Benutzer stummschalten"
+        description: "Benutzer daran hindern Beiträge zu veröffentlichen"
         complete: "Benutzer stummgeschaltet"
+        reason: "Benutzer von der Warteschlange zur Überprüfung aus stummgeschaltet"
       suspend_user:
         title: "Benutzer sperren"
+        description: "Das Benutzerkonto sperren"
         complete: "Benutzer gesperrt"
+        reason: "Benutzer von der Warteschlange zur Überprüfung aus gesperrt"
       delete_user:
         title: "Benutzer löschen"
+        description: "Diesen Benutzer aus dem Forum löschen"
         complete: "Benutzer gelöscht"
         reason: "Gelöscht via Warteschlange zur Überprüfung"
       delete_and_block_user:
+        title: "Löschen & Blockieren"
+        description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
         complete: "Benutzer gelöscht und gesperrt"
   email_style:
     html_missing_placeholder: "Die HTML-Vorlage muss %{placeholder} beinhalten"
@@ -5385,6 +5396,8 @@ de:
       reserved_id: "hat ein reserviertes Schlüsselwort als ID: %{id}"
       unsafe_description: "hat eine unsichere HTML-Beschreibung"
       invalid_tag_group: "hat eine ungültige Schlagwortgruppe: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Diese Webseite ist bereits mit Discourse ID registriert"
   activemodel:
     errors:
       <<: *errors

@@ -5,6 +5,20 @@
 # https://translate.discourse.org/
 
 ro:
+  discourse_automation:
+    ai:
+      flag_types:
+        review_delete: "Adaugă postarea pentru a revizui lista de așteptare și pentru a șterge postarea"
+    scriptables:
+      llm_triage:
+        notify_author_pm:
+          subject: "Postarea ta a fost ștearsă temporar pentru revizuire"
+          body: |
+            Salut, @%{username}!
+
+            Postarea ta din „%{topic_title}” a fost ștearsă temporar și plasată în lista noastră de revizuiri pentru ca un moderator să se uite la ea. Dacă este aprobată, acesta va fi restaurată automat.
+
+            Referință: %{post_url}
   site_settings:
     ai_default_llm_model: "Modelul LLM implicit de utilizat pentru toate funcționalitățile IA"
     ai_embeddings_semantic_search_use_hyde: "Folosește HyDE pentru căutare semantică pe întreaga pagină. Folosește un LLM pentru a crea o postare ipotetică pe baza termenului de căutare al utilizatorului, pentru a ajuta la găsirea potrivirilor."
