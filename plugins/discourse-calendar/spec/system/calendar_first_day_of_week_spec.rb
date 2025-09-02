@@ -12,7 +12,7 @@ describe "Calendar first day of week", type: :system do
   end
 
   context "when default" do
-    it "renders Monday as the first day" do
+    it "renders monday as the first day" do
       upcoming_events.visit
       upcoming_events.open_month_view
 
@@ -20,10 +20,10 @@ describe "Calendar first day of week", type: :system do
     end
   end
 
-  context "when Monday" do
-    before { SiteSetting.calendar_first_day_of_week = "Monday" }
+  context "when monday" do
+    before { SiteSetting.calendar_first_day_of_week = "monday" }
 
-    it "renders Monday as the first day" do
+    it "renders monday as the first day" do
       upcoming_events.visit
       upcoming_events.open_month_view
 
@@ -31,10 +31,10 @@ describe "Calendar first day of week", type: :system do
     end
   end
 
-  context "when Saturday" do
-    before { SiteSetting.calendar_first_day_of_week = "Saturday" }
+  context "when saturday" do
+    before { SiteSetting.calendar_first_day_of_week = "saturday" }
 
-    it "renders Saturday as the first day" do
+    it "renders saturday as the first day" do
       upcoming_events.visit
       upcoming_events.open_month_view
 
@@ -42,10 +42,10 @@ describe "Calendar first day of week", type: :system do
     end
   end
 
-  context "when Sunday" do
-    before { SiteSetting.calendar_first_day_of_week = "Sunday" }
+  context "when sunday" do
+    before { SiteSetting.calendar_first_day_of_week = "sunday" }
 
-    it "renders Sunday as the first day" do
+    it "renders sunday as the first day" do
       upcoming_events.visit
       upcoming_events.open_month_view
 

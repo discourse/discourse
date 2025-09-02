@@ -46,11 +46,11 @@ export default class FullCalendar extends Component {
   get firstDayOfWeek() {
     const setting = this.siteSettings.calendar_first_day_of_week;
     switch (setting) {
-      case "Saturday":
+      case "saturday":
         return 6;
-      case "Sunday":
+      case "sunday":
         return 0;
-      case "Monday":
+      case "monday":
       default:
         return 1;
     }
