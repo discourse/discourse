@@ -11,15 +11,8 @@
   border: 1px solid var(--primary-medium);
   justify-content: space-between;
 
-  &:hover {
-    &:not(.--has-selection) {
-      background-color: var(--primary-medium);
-      color: var(--secondary);
-
-      .btn-transparent .d-icon-angle-down {
-        color: var(--secondary);
-      }
-    }
+  &.-expanded {
+    @include default-focus;
   }
 }
 
