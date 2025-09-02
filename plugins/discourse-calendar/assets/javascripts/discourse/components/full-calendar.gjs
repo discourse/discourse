@@ -30,6 +30,8 @@ export default class FullCalendar extends Component {
   @service capabilities;
   @service tooltip;
   @service menu;
+  @service siteSettings;
+  @service loadingSlider;
 
   @controller topic;
 
@@ -41,6 +43,19 @@ export default class FullCalendar extends Component {
     super.willDestroy(...arguments);
   }
 
+  get firstDayOfWeek() {
+    const setting = this.siteSettings.calendar_first_day_of_week;
+    switch (setting) {
+      case "saturday":
+        return 6;
+      case "sunday":
+        return 0;
+      case "monday":
+      default:
+        return 1;
+    }
+  }
+
   @action
   async setupCalendar(element) {
     const calendarModule = await loadFullCalendar();
@@ -49,12 +64,23 @@ export default class FullCalendar extends Component {
       locale: getCurrentBcp47Locale(),
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
-      firstDay: 1,
+      firstDay: this.firstDayOfWeek,
       displayEventTime: true,
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
-      events: this.args.events || [],
+      events: async (info, successCallback, failureCallback) => {
+        if (this.args.onLoadEvents) {
+          try {
+            this.loadingSlider.transitionStarted();
+            const events = await this.args.onLoadEvents(info);
+            successCallback(events);
+            this.loadingSlider.transitionEnded();
+          } catch (error) {
+            failureCallback(error);
+          }
+        }
+      },
       plugins: [
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
@@ -130,10 +156,6 @@ export default class FullCalendar extends Component {
   updateCalendar() {
     if (this.calendar) {
       this.calendar.setOption("headerToolbar", this.headerToolbar);
-      this.calendar.setOption("events", this.args.events || []);
-      if (this.args.initialDate) {
-        this.calendar.gotoDate(this.args.initialDate);
-      }
     }
   }
 
