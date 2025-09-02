@@ -197,7 +197,7 @@ CREATE TABLE user_associated_accounts
     user_id       NUMERIC,
     created_at    DATETIME,
     info          JSON_TEXT,
-    last_used     DATETIME  NOT NULL,
+    last_used     DATETIME,
     provider_uid  TEXT      NOT NULL,
     PRIMARY KEY (user_id, provider_name)
 );

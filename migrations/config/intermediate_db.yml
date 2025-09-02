@@ -120,6 +120,9 @@ schema:
           - "id"
           - "credentials"
           - "extra"
+        modify:
+          - name: "last_used"
+            nullable: true
     user_emails:
       columns:
         include:
