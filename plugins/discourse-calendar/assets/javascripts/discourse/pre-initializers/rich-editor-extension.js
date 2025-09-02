@@ -91,7 +91,16 @@ const extension = {
 
       bbcode += "]\n";
       state.write(bbcode);
-      state.renderContent(node);
+      if (node.childCount > 0) {
+        const prevLength = state.out.length;
+        state.renderContent(node);
+        state.write("");
+        // strip newlines added by renderContent
+        while (state.out.endsWith("\n") && state.out.length > prevLength) {
+          state.out = state.out.slice(0, -1);
+        }
+        state.write("\n");
+      }
       state.write("[/event]\n");
     },
   },
