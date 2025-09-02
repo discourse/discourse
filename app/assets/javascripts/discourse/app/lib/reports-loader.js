@@ -60,7 +60,7 @@ export default {
     ajax(BULK_REPORTS_ENDPOINT, { data: { reports } })
       .then((response) => {
         jobs.forEach((job) => {
-          const report = response.reports.findBy("type", job.type);
+          const report = response.reports.find((r) => r.type === job.type);
           job.runnable()(report);
         });
       })

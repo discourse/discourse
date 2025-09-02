@@ -71,7 +71,9 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id || category.model.id);
+      return Category.list().find(
+        (c) => c.id === (category.id || category.model.id)
+      );
     })
     .compact();
 

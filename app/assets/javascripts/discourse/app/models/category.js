@@ -51,9 +51,9 @@ export default class Category extends RestModel {
   static findUncategorized() {
     _uncategorized =
       _uncategorized ||
-      Category.list().findBy(
-        "id",
-        Site.currentProp("uncategorized_category_id")
+      Category.list().find(
+        (category) =>
+          category.id === Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   }
@@ -284,7 +284,7 @@ export default class Category extends RestModel {
 
     // In case the slug didn't work, try to find it by id instead.
     if (!category) {
-      category = categories.findBy("id", parseInt(slug, 10));
+      category = categories.find((c) => c.id === parseInt(slug, 10));
     }
 
     return category;
@@ -814,7 +814,9 @@ export default class Category extends RestModel {
   }
 
   removePermission(group_name) {
-    const permission = this.permissions.findBy("group_name", group_name);
+    const permission = this.permissions.find(
+      (p) => p.group_name === group_name
+    );
     if (permission) {
       this.permissions.removeObject(permission);
       this.availableGroups.addObject(group_name);

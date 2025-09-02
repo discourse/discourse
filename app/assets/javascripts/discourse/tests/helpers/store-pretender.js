@@ -79,7 +79,9 @@ export default function (helpers) {
   });
 
   this.get("/widgets/:widget_id", function (request) {
-    const w = _widgets.findBy("id", parseInt(request.params.widget_id, 10));
+    const w = _widgets.find(
+      (widget) => widget.id === parseInt(request.params.widget_id, 10)
+    );
     if (w) {
       return response({ widget: w, extras: { hello: "world" } });
     } else {
