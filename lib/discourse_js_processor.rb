@@ -166,5 +166,9 @@ class DiscourseJsProcessor
         fetch_result_call: "getPostCssResult",
       )
     end
+
+    def ember_version
+      self.class.v8_call("emberVersion")
+    end
   end
 end
