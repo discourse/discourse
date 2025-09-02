@@ -31,6 +31,7 @@ export default class FullCalendar extends Component {
   @service tooltip;
   @service menu;
   @service siteSettings;
+  @service loadingSlider;
 
   @controller topic;
 
@@ -72,8 +73,10 @@ export default class FullCalendar extends Component {
       events: async (info, successCallback, failureCallback) => {
         if (this.args.onLoadEvents) {
           try {
+            this.loadingSlider.transitionStarted();
             const events = await this.args.onLoadEvents(info);
             successCallback(events);
+            this.loadingSlider.transitionEnded();
           } catch (error) {
             failureCallback(error);
           }
