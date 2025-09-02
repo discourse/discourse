@@ -65,7 +65,6 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked completeStart = null;
   @tracked completeEnd = null;
   @tracked pendingSpaceSearch = false;
-  @tracked selectedItems = [];
 
   // Internal state
   previousTerm = null;
