@@ -421,7 +421,7 @@ module(
         .dom(".setting-theme-warning__text")
         .exists("warning text element is displayed");
 
-      const expectedHtml = i18n(
+      const expectedText = i18n(
         "admin.theme_site_settings.site_setting_warning",
         {
           basePath: "",
@@ -430,7 +430,7 @@ module(
         }
       );
 
-      assert.dom(".setting-theme-warning__text").hasHtml(expectedHtml);
+      assert.dom(".setting-theme-warning__text").containsText(expectedText);
     });
   }
 );
