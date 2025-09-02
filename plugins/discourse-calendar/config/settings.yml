@@ -116,5 +116,5 @@ discourse_calendar:
   calendar_first_day_of_week:
     type: enum
     enum: "CalendarFirstDayOfWeek"
-    default: Monday
+    default: monday
     client: true

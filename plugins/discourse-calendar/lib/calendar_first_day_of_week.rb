@@ -9,9 +9,9 @@ class CalendarFirstDayOfWeek < EnumSiteSetting
 
   def self.values
     @values ||= [
-      { name: "user.notification_schedule.saturday", value: "Saturday" },
-      { name: "user.notification_schedule.sunday", value: "Sunday" },
-      { name: "user.notification_schedule.monday", value: "Monday" },
+      { name: "user.notification_schedule.saturday", value: "saturday" },
+      { name: "user.notification_schedule.sunday", value: "sunday" },
+      { name: "user.notification_schedule.monday", value: "monday" },
     ]
   end
 
