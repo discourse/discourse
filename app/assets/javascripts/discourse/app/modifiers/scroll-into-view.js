@@ -1,4 +1,3 @@
-import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
 
 /**
@@ -9,11 +8,6 @@ import Modifier from "ember-modifier";
  * @param {Object} options - ScrollIntoView options (behavior, block, inline)
  */
 export default class ScrollIntoViewModifier extends Modifier {
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
-  }
-
   modify(element, [shouldScroll, options = {}]) {
     if (!shouldScroll || !element) {
       return;
