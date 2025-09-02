@@ -9,6 +9,16 @@ export function buildEventPreview(eventContainer) {
   eventContainer.innerHTML = "";
   eventContainer.classList.add("discourse-post-event-preview");
 
+  // Name first
+  const name = eventContainer.dataset.name;
+  if (name) {
+    const nameContainer = document.createElement("div");
+    nameContainer.classList.add("event-preview-name");
+    nameContainer.innerText = name;
+    eventContainer.appendChild(nameContainer);
+  }
+
+  // Status after name
   const statusLocaleKey = `discourse_post_event.models.event.status.${
     eventContainer.dataset.status || "public"
   }.title`;
