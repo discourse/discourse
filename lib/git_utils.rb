@@ -17,7 +17,7 @@ class GitUtils
   def self.has_commit?(hash)
     return false if !hash.match?(/\A[a-f0-9]{40}\Z/)
 
-    self.try_git("git cat-file -t #{hash} 2> /dev/null", false) == "commit"
+    self.try_git("git merge-base --is-ancestor #{hash} HEAD 2> /dev/null; echo $?", "1") == "0"
   end
 
   def self.last_commit_date
