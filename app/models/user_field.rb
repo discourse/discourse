@@ -62,18 +62,19 @@ end
 # Table name: user_fields
 #
 #  id                :integer          not null, primary key
-#  name              :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  editable          :boolean          default(FALSE), not null
 #  description       :string           not null
-#  required          :boolean          default(TRUE), not null
-#  show_on_profile   :boolean          default(FALSE), not null
-#  position          :integer          default(0)
-#  show_on_user_card :boolean          default(FALSE), not null
+#  editable          :boolean          default(FALSE), not null
 #  external_name     :string
 #  external_type     :string
-#  searchable        :boolean          default(FALSE), not null
-#  requirement       :integer          default("optional"), not null
 #  field_type_enum   :integer          not null
+#  name              :string           not null
+#  position          :integer          default(0)
+#  required          :boolean          default(TRUE), not null
+#  requirement       :integer          default("optional"), not null
+#  searchable        :boolean          default(FALSE), not null
+#  show_on_profile   :boolean          default(FALSE), not null
+#  show_on_signup    :boolean          default(TRUE), not null
+#  show_on_user_card :boolean          default(FALSE), not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
