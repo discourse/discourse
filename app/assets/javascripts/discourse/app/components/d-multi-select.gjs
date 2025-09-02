@@ -16,6 +16,7 @@ import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -262,6 +263,7 @@ export default class DMultiSelect extends Component {
                     }}
                     role="button"
                     title={{this.getDisplayText result}}
+                    {{scrollIntoView (eq result this.preselectedItem)}}
                     {{on "mouseenter" (fn (mut this.preselectedItem) result)}}
                     {{on "click" (fn this.toggle result)}}
                   >
