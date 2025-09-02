@@ -46,15 +46,7 @@ export default class GroupSelector extends Component {
         return [];
       }
 
-      const groups = await this.args.groupFinder(term);
-
-      // Filter out already selected groups
-      if (this.selectedGroups.length > 0) {
-        const selectedNames = this.selectedGroups.map((g) => g.name);
-        return groups.filter((group) => !selectedNames.includes(group.name));
-      }
-
-      return groups;
+      return this.args.groupFinder(term);
     };
   }
 
