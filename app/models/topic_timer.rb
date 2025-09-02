@@ -5,6 +5,8 @@ class TopicTimer < BaseTimer
   belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
 
+  attr_readonly :topic_id
+
   validates :user_id, presence: true
   validates :timerable_id, presence: true
   validates :execute_at, presence: true
