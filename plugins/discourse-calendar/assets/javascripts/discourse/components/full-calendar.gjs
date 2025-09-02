@@ -69,7 +69,6 @@ export default class FullCalendar extends Component {
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
-      events: this.args.events || [],
       events: async (info, successCallback, failureCallback) => {
         if (this.args.onLoadEvents) {
           try {
