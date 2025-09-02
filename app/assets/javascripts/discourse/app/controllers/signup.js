@@ -60,7 +60,8 @@ export default class SignupPageController extends Controller {
   });
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
-    getUserFields: () => this.site.get("user_fields"),
+    getUserFields: () =>
+      this.site.get("user_fields")?.filter((f) => f.show_on_signup),
     getAccountPassword: () => this.accountPassword,
     showValidationOnInit: false,
   });

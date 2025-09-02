@@ -38,6 +38,7 @@ export default class AdminUserFieldsForm extends Component {
       "requirement",
       "editable",
       "show_on_profile",
+      "show_on_signup",
       "show_on_user_card",
       "searchable",
       "options",
@@ -52,8 +53,20 @@ export default class AdminUserFieldsForm extends Component {
     if (value === "for_all_users") {
       this.editableDisabled = true;
       set("editable", true);
+      set("show_on_signup", true);
+    } else if (value === "on_signup") {
+      set("show_on_signup", true);
     } else {
       this.editableDisabled = false;
+    }
+  }
+
+  @action
+  setEditable(value, { set }) {
+    set("editable", value);
+
+    if (value === false) {
+      set("show_on_signup", true);
     }
   }
 
@@ -98,6 +111,10 @@ export default class AdminUserFieldsForm extends Component {
   @action
   cancel() {
     this.router.transitionTo("adminUserFields.index");
+  }
+
+  showOnSignupDisabled(formData) {
+    return formData.requirement !== "optional" || formData.editable === false;
   }
 
   _focusName() {
@@ -217,6 +234,7 @@ export default class AdminUserFieldsForm extends Component {
         <group.Field
           @name="editable"
           @showTitle={{false}}
+          @onSet={{this.setEditable}}
           @title={{i18n "admin.user_fields.editable.title"}}
           as |field|
         >
@@ -245,6 +263,16 @@ export default class AdminUserFieldsForm extends Component {
           as |field|
         >
           <field.Checkbox />
+        </group.Field>
+        <group.Field
+          @name="show_on_signup"
+          @showTitle={{false}}
+          @title={{i18n "admin.user_fields.show_on_signup.title"}}
+          as |field|
+        >
+          <field.Checkbox
+            disabled={{this.showOnSignupDisabled transientData}}
+          />
         </group.Field>
       </form.CheckboxGroup>
 

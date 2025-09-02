@@ -5,7 +5,7 @@ class UserField < ActiveRecord::Base
   include HasDeprecatedColumns
   include HasSanitizableFields
 
-  FLAG_ATTRIBUTES = %w[editable show_on_profile show_on_user_card searchable].freeze
+  FLAG_ATTRIBUTES = %w[editable show_on_profile show_on_signup show_on_user_card searchable].freeze
 
   deprecate_column :required, drop_from: "3.3"
   self.ignored_columns += %i[field_type]
