@@ -303,6 +303,11 @@ html.composer-open:not(.has-full-page-chat) {
   }
 
   .user-selector {
+    position: relative;
+    display: flex;
+    flex: 1 0 40%;
+    max-width: 40%;
+
     @include viewport.until(sm) {
       flex-wrap: wrap;
     }
@@ -408,28 +413,8 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  .add-warning {
-    color: var(--primary-high);
-    padding: 0.5em;
-    display: flex;
-    line-height: var(--line-height-medium);
-    margin: 0;
-
-    @include viewport.until(sm) {
-      margin-bottom: 0.15em;
-    }
-
-    input {
-      margin-right: 8px;
-    }
-  }
-
   @include viewport.until(sm) {
     .users-input,
-    .add-warning {
-      width: 100%;
-    }
-
     .users-input .select-kit.multi-select {
       width: 100%;
     }
@@ -645,21 +630,12 @@ html.composer-open:not(.has-full-page-chat) {
     &.private-message {
       .with-tags {
         .title-and-category {
-          flex-wrap: nowrap;
-          gap: 0.5em;
+          flex-wrap: wrap;
 
-          .tags-input {
+          .tags-input,
+          .user-selector {
             max-width: 50%;
             flex: 1 1 auto;
-          }
-        }
-
-        .title-input {
-          max-width: 50%;
-          min-width: 0;
-
-          input {
-            min-width: 0;
           }
         }
       }
@@ -668,21 +644,6 @@ html.composer-open:not(.has-full-page-chat) {
       .users-input {
         width: 100%;
         flex: 0 0 auto;
-
-        &.can-warn {
-          // space for warning, inverse of mini-tag-chooser width
-          width: 60%;
-        }
-      }
-
-      .add-warning {
-        flex: 1 1 auto;
-        overflow: hidden;
-
-        span {
-          // protects the space of the user input in case there's a very long translation
-          @include ellipsis;
-        }
       }
     }
   }
