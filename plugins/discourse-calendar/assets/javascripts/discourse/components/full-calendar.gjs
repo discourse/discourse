@@ -42,10 +42,6 @@ export default class FullCalendar extends Component {
     super.willDestroy(...arguments);
   }
 
-  /**
-   * Converts the first day of week site setting to the appropriate number
-   * @returns {number} The first day of week (0=Sunday, 1=Monday, 6=Saturday)
-   */
   get firstDayOfWeek() {
     const setting = this.siteSettings.calendar_first_day_of_week;
     switch (setting) {
