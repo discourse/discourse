@@ -26,10 +26,10 @@ export default class UpcomingEventsCalendar extends Component {
           const params = this.router.currentRoute.params;
           this.router.replaceWith(
             "discourse-post-event-upcoming-events.mine",
-            params.view || "month",
-            params.year || moment().year(),
-            params.month || moment().month() + 1,
-            params.day || moment().date()
+            params.view,
+            params.year,
+            params.month,
+            params.day
           );
         },
       },
@@ -39,10 +39,10 @@ export default class UpcomingEventsCalendar extends Component {
           const params = this.router.currentRoute.params;
           this.router.replaceWith(
             "discourse-post-event-upcoming-events.index",
-            params.view || "month",
-            params.year || moment().year(),
-            params.month || moment().month() + 1,
-            params.day || moment().date()
+            params.view,
+            params.year,
+            params.month,
+            params.day
           );
         },
       },
@@ -141,7 +141,7 @@ export default class UpcomingEventsCalendar extends Component {
   async onDatesChange(info) {
     this.applyCustomButtonsState();
 
-    const localDate = moment(info.start)
+    const localDate = moment(info.view.currentStart)
       .clone()
       .tz(this.currentUser?.user_option?.timezone);
 
