@@ -122,6 +122,10 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  def upcoming_change_metadata
+    @upcoming_change_metadata ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -282,6 +286,7 @@ module SiteSettingExtension
     include_locale_setting: true,
     only_overridden: false,
     basic_attributes: false,
+    only_upcoming_changes: false,
     filter_categories: nil,
     filter_plugin: nil,
     filter_names: nil,
@@ -339,6 +344,13 @@ module SiteSettingExtension
           true
         end
       end
+      .select do |setting_name, _|
+        if only_upcoming_changes
+          upcoming_change_metadata.key?(setting_name)
+        else
+          true
+        end
+      end
       .reject do |setting_name, _|
         # Do not show themeable site settings all_settings list or in the UI, they
         # are managed separately via the ThemeSiteSetting model.
@@ -373,6 +385,7 @@ module SiteSettingExtension
             placeholder: placeholder(s),
             mandatory_values: mandatory_values[s],
             requires_confirmation: requires_confirmation_settings[s],
+            upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
           )
           opts.merge!(type_hash)
@@ -887,6 +900,12 @@ module SiteSettingExtension
       end
     end
 
+    if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
+      define_singleton_method("#{clean_name}_groups_map") do
+        upcoming_change_metadata[name][:restrict_to_groups].to_s.split("|").map(&:to_i)
+      end
+    end
+
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
@@ -953,6 +972,8 @@ module SiteSettingExtension
           opts[:requires_confirmation]
         end
       )
+
+      upcoming_change_metadata[name] = opts[:upcoming_change] if opts[:upcoming_change]
 
       categories[name] = opts[:category] || :uncategorized
 

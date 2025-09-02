@@ -4158,6 +4158,23 @@ experimental:
     area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
-    type: group_list
-    default: ""
+    default: false
     area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      risk: "medium"
+      type: "feature"
+      restrict_to_groups: ""
+      promote_at_version: ""
+      meta_topic_id: ""
+  formkit_site_settings:
+    client: true
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "alpha"
+      risk: "medium"
+      type: "misc"
+      restrict_to_groups: ""
+      promote_at_version: ""
+      meta_topic_id: ""

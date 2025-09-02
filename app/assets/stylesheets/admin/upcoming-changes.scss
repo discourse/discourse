@@ -1,0 +1,72 @@
+.upcoming-changes-table {
+  table-layout: fixed;
+  width: 100%;
+
+  .upcoming-change__name-header {
+    width: 45%;
+  }
+
+  .upcoming-change__plugin-header {
+    width: 15%;
+  }
+
+  .upcoming-change__labels-header {
+    width: 25%;
+  }
+
+  .upcoming-change__enabled-header {
+    width: 8%;
+  }
+
+  .upcoming-change__actions-header {
+    width: 7%;
+  }
+
+  td.d-table__cell {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+  }
+
+  td.d-table__cell.--detail.upcoming-change__labels {
+    height: 100%;
+  }
+
+  .upcoming-change__labels .upcoming-change__badges {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    margin: 0;
+    padding: 0.5rem 0;
+  }
+
+  .upcoming-change__plugin {
+    margin-top: 0.5em;
+  }
+}
+
+.upcoming-change__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+}
+
+.upcoming-change__badge {
+  font-size: var(--font-down-2);
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
+  color: var(--primary-very-high);
+  background: var(--tertiary-low);
+  letter-spacing: 0.25px;
+  align-items: center;
+  display: inline-flex;
+  gap: 0.25rem;
+
+  svg {
+    height: 0.75em;
+    color: var(--primary-high);
+  }
+}

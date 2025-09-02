@@ -118,3 +118,14 @@ discourse_calendar:
     enum: "CalendarFirstDayOfWeek"
     default: monday
     client: true
+  fullcalendar_v6:
+    client: true
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      risk: "high"
+      type: "misc"
+      restrict_to_groups: ""
+      promote_at_version: ""
+      meta_topic_id: ""

@@ -5636,6 +5636,39 @@ en:
         advanced:
           title: "Advanced"
 
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plugin"
+        labels: "Labels"
+        enabled: "Enabled"
+        show_image: "Show image"
+        statuses:
+          alpha: "Alpha"
+          beta: "Beta"
+          stable: "Stable"
+        risks:
+          low: "Low"
+          medium: "Medium"
+          high: "High"
+        types:
+          feature: "Feature"
+          misc: "Miscellaneous"
+        filter:
+          search_placeholder: "Filter by name, description, or plugin..."
+          no_results: "No upcoming changes match your filter"
+          all: "All"
+          enabled: "Enabled"
+          disabled: "Disabled"
+          low_risk: "Risk: Low"
+          medium_risk: "Risk: Medium"
+          high_risk: "Risk: High"
+          type_feature: "Type: Feature"
+          type_misc: "Type: Miscellaneous"
+          status_pre_alpha: "Status: Pre-Alpha"
+          status_alpha: "Status: Alpha"
+          status_beta: "Status: Beta"
+          status_stable: "Status: Stable"
+
       config:
         about:
           title: "About your site"
@@ -5666,6 +5699,9 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
+        upcoming_changes:
+          title: "Upcoming changes"
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by risk level, change type, and status."
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
