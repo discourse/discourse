@@ -430,7 +430,7 @@ module(
         }
       );
 
-      assert.dom(".setting-theme-warning__text").containsText(expectedText);
+      assert.dom(".setting-theme-warning__text").includesHtml(expectedText);
     });
   }
 );
