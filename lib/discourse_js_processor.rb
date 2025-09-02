@@ -54,8 +54,6 @@ class DiscourseJsProcessor
           @processor_mutex.synchronize { build_theme_transpiler }
         end
 
-      # source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
-
       ctx.eval(source, filename: "theme-transpiler.js")
 
       ctx
