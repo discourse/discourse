@@ -85,6 +85,7 @@ export default class GroupSelector extends Component {
         @placement="bottom-start"
         @allowedPlacements={{array "top-start" "bottom-start"}}
         @matchTriggerWidth={{true}}
+        @matchTriggerMinWidth={{true}}
         class="group-selector"
       >
         <:selection as |group|>
