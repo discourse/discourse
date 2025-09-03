@@ -84,6 +84,9 @@ body:not(.d-toc-installed) {
     font-size: var(--font-down-1);
     padding: 0.15em 0.35em;
     border-radius: 1em;
+    min-width: 1.3em;
+    box-sizing: border-box;
+    color: var(--secondary);
   }
 }
 
