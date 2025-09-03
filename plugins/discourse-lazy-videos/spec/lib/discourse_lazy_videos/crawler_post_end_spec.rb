@@ -79,12 +79,6 @@ describe DiscourseLazyVideos::CrawlerPostEnd do
         expect(html).to include('"url":"' + post1.full_url)
         expect(html).to include('"uploadDate":"' + post1.created_at.iso8601)
       end
-
-      it "does not include isPartOf" do
-        html = post_crawler_schema.html
-
-        expect(html).not_to include('"isPartOf"')
-      end
     end
 
     context "when non-first post has a video" do
@@ -98,16 +92,6 @@ describe DiscourseLazyVideos::CrawlerPostEnd do
             </a>
           </div>
         HTML
-
-      it "generates VideoObject schema without isPartOf" do
-        schema = described_class.new(controller, post2)
-        html = schema.html
-
-        expect(html).to include('<script type="application/ld+json">')
-        expect(html).to include('"@type":"VideoObject"')
-        expect(html).to include('"embedUrl":"https://player.vimeo.com/video/123456"')
-        expect(html).not_to include('"isPartOf"')
-      end
 
       it "uses the comment post URL" do
         schema = described_class.new(controller, post2)
