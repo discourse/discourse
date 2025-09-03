@@ -10,11 +10,16 @@ enabled_site_setting :lazy_videos_enabled
 
 register_asset "stylesheets/lazy-videos.scss"
 
-require_relative "lib/lazy-videos/lazy_youtube"
-require_relative "lib/lazy-videos/lazy_vimeo"
-require_relative "lib/lazy-videos/lazy_tiktok"
+require_relative "lib/discourse_lazy_videos/lazy_youtube"
+require_relative "lib/discourse_lazy_videos/lazy_vimeo"
+require_relative "lib/discourse_lazy_videos/lazy_tiktok"
+require_relative "lib/discourse_lazy_videos/crawler_post_end"
 
 after_initialize do
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    DiscourseLazyVideos::CrawlerPostEnd.new(controller, post).html
+  end
+
   on(:reduce_cooked) do |fragment|
     fragment
       .css(".lazy-video-container")
