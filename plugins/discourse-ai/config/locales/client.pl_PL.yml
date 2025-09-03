@@ -167,6 +167,15 @@ pl_PL:
             flag_post:
               label: "Oflaguj post"
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
+            notify_author_pm:
+              label: "Powiadom autora przez PW"
+              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+            notify_author_pm_user:
+              label: "Nadawca PW"
+              description: "Użytkownik, który wyśle PW (domyślnie system)"
+            notify_author_pm_message:
+              label: "Wiadomość PW"
+              description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
               label: "Dołącz osobiste wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"

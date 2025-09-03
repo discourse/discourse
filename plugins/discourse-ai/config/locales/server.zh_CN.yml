@@ -10,6 +10,7 @@ zh_CN:
       flag_types:
         review: "将帖子添加到审核队列"
         review_hide: "将帖子添加到审核队列并隐藏帖子"
+        review_delete: "将帖子添加到审核队列并删除帖子"
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
@@ -26,6 +27,14 @@ zh_CN:
           <div>模型的回答：</div>
           <p>%%LLM_RESPONSE%%</p>
           <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发</b>。
+        notify_author_pm:
+          subject: "您的帖子已暂时移除供审核"
+          body: |
+            你好 @%{username},
+
+            你在 “%{topic_title}” 中的帖子已被暂时删除并放入我们的审阅队列中供版主查看。如果获得批准，它将自动恢复。
+
+            参考： %{post_url}
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"

@@ -1301,6 +1301,7 @@ ro:
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
+    content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1326,6 +1327,7 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       discourse_id_credentials: "Trebuie să configurezi datele de conectare Discourse ID ('discourse_id_client_id' și 'discourse_id_client_secret') înainte de a activa această setare."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
+      content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
       s3_credentials_required_for_video_conversion: "Sunt necesare datele de conectare S3 pentru conversia video. Te rog să configurezi cheile de acces S3 sau să activezi profilul IAM."
     keywords:

@@ -167,6 +167,9 @@ de:
             flag_post:
               label: "Beitrag melden"
               description: "Meldet den Beitrag (entweder als Spam oder zur Überprüfung)"
+            notify_author_pm_message:
+              label: "PN-Nachrichtentext"
+              description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
               description: "Auch persönliche Nachrichten scannen und sortieren"
@@ -179,6 +182,14 @@ de:
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
+        llm_tagger:
+          tag_mode:
+            manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
+            discover: "Lassen die KI beliebige Schlagworte auf der Website entdecken und verwenden"
+          fields:
+            tagger_persona:
+              label: "KI-Persona"
+              description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
     discourse_ai:
       title: "KI"
       default_llm:
