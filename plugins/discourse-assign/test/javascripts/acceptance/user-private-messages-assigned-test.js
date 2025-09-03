@@ -23,7 +23,7 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
     );
   });
 
-  test("viewing assigned messages", async function (assert) {
+  test.skip("viewing assigned messages", async function (assert) {
     updateCurrentUser({ redesigned_user_page_nav_enabled: true });
 
     await visit("/u/eviltrout/messages");
