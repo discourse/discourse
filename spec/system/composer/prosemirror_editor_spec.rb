@@ -59,11 +59,9 @@ describe "Composer - ProseMirror editor", type: :system do
     composer.toggle_rich_editor
     expect(composer).to have_markdown_editor_active
 
-    try_until_success(frequency: 0.5) do
-      expect(current_user.user_option.reload.composition_mode).to eq(
-        UserOption.composition_mode_types[:markdown],
-      )
-    end
+    expect(current_user.user_option.reload.composition_mode).to eq(
+      UserOption.composition_mode_types[:markdown],
+    )
 
     visit("/")
     open_composer
