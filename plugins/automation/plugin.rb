@@ -55,7 +55,6 @@ after_initialize do
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
-    lib/discourse_automation/scripts/move_topic_on_close
     lib/discourse_automation/scripts/topic
     lib/discourse_automation/scripts/send_pms
     lib/discourse_automation/scripts/suspend_user_by_email

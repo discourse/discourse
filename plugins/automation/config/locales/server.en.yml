@@ -62,6 +62,9 @@ en:
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+      topic_closed:
+        title: Topic closed
+        description: Triggers a script when a topic is closed.
       after_post_cook:
         title: After post cook
         description: When a post content is cooked the automation will be triggered
@@ -89,9 +92,6 @@ en:
       auto_tag_topic:
         title: Auto Tag Topic
         description: Automatically add tags to a topic
-      move_topic_on_close:
-        title: Move Topic on Close
-        description: Moves a topic to a specified category when it is closed
       pin_topic:
         title: Pin Topic
         description: Pins a specified topic at a given date
