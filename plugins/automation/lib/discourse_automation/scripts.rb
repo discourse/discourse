@@ -14,7 +14,6 @@ module DiscourseAutomation
     GROUP_CATEGORY_NOTIFICATION_DEFAULT = "group_category_notification_default"
     PIN_TOPIC = "pin_topic"
     POST = "post"
-    MOVE_TOPIC_ON_CLOSE = "move_topic_on_close"
     SEND_PMS = "send_pms"
     SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
     TOPIC = "topic"
