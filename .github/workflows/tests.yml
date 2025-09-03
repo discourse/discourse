@@ -23,7 +23,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ (matrix.enable_fix == '0' && 'original recipe' || 'new coke') }} \#${{ matrix.iteration }}
     runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
@@ -51,6 +51,7 @@ jobs:
         target: [core]
         browser: [Chrome]
         iteration: [1, 2]
+        enable_fix: [0, 1]
 
     steps:
       - name: Set working directory owner
