@@ -18,7 +18,7 @@
 
 #main-outlet {
   @include viewport.until(sm) {
-    padding-top: var(--space-2m);
+    padding-top: var(--space-2);
   }
 
   .list-controls {
