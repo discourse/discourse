@@ -327,7 +327,9 @@ export default class PostStream extends RestModel {
   **/
   refresh(opts) {
     opts = opts || {};
-    opts.nearPost = parseInt(opts.nearPost, 10);
+    if (opts.nearPost) {
+      opts.nearPost = parseInt(opts.nearPost, 10);
+    }
 
     if (opts.cancelFilter) {
       this.cancelFilter();
