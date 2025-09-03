@@ -42,13 +42,14 @@ jobs:
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      DISCOURSE_ENABLE_FLAKY_FIX: ${{ matrix.enable_fix }}
 
     strategy:
       fail-fast: false
 
       matrix:
         build_type: [system]
-        target: [core]
+        target: [core] # expand to [core, plugins, themes, chat]?
         browser: [Chrome]
         iteration: [1, 2]
         enable_fix: [0, 1]
