@@ -315,6 +315,7 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
+  /** Inserts the event into the composer, supporting rich editor when available. */
   createEvent() {
     if (!this.startsAt) {
       this.args.closeModal();
@@ -328,20 +329,29 @@ export default class PostEventBuilder extends Component {
       this.siteSettings
     );
 
-    const description = eventParams.description
-      ? `${eventParams.description}\n`
-      : "";
-    delete eventParams.description;
+    // If rich editor is active and command is available, insert block directly
+    const maybeCommands = this.args.model?.toolbarEvent?.commands;
+    if (this.siteSettings.rich_editor && maybeCommands?.insertEvent) {
+      // Drop description in rich mode for now (basic view only)
+      delete eventParams.description;
+      maybeCommands.insertEvent(eventParams);
+    } else {
+      // Fallback to raw markdown insertion
+      const description = eventParams.description
+        ? `${eventParams.description}\n`
+        : "";
+      delete eventParams.description;
 
-    const markdownParams = [];
-    Object.keys(eventParams).forEach((key) => {
-      let value = eventParams[key];
-      markdownParams.push(`${key}="${value}"`);
-    });
+      const markdownParams = [];
+      Object.keys(eventParams).forEach((key) => {
+        let value = eventParams[key];
+        markdownParams.push(`${key}="${value}"`);
+      });
 
-    this.args.model.toolbarEvent.addText(
-      `[event ${markdownParams.join(" ")}]\n${description}[/event]`
-    );
+      this.args.model.toolbarEvent.addText(
+        `[event ${markdownParams.join(" ")}]\n${description}[/event]`
+      );
+    }
     this.args.closeModal();
   }
 
