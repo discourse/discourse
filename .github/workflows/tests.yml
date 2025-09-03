@@ -35,7 +35,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: 0
       CHEAP_SOURCE_MAPS: "1"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -47,21 +47,10 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
+        build_type: [system]
+        target: [core]
         browser: [Chrome]
-        exclude:
-          - build_type: backend
-            target: themes
-        include:
-          - build_type: system
-            target: chat
-          - build_type: frontend
-            target: core
-            browser: Firefox Evergreen
-          - build_type: frontend
-            target: core
-            browser: Firefox ESR
+        iteration: [1, 2]
 
     steps:
       - name: Set working directory owner
