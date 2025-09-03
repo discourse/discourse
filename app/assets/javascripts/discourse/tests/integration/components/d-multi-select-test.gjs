@@ -268,4 +268,56 @@ module("Integration | Component | d-multi-select", function (hooks) {
 
     assert.dom(".d-multi-select__error").hasText("Error: error");
   });
+
+  test("prevents duplicate selections when pressing Enter multiple times", async function (assert) {
+    await render(<template><TestComponent /></template>);
+    await click(".d-multi-select-trigger");
+
+    // Navigate to first item and press Enter
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    // Verify first item is selected
+    assert
+      .dom(".d-multi-select-trigger__selected-item")
+      .exists({ count: 1 }, "Should have exactly one selected item");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasText("foo");
+
+    // Press Enter again multiple times on the same item
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    // Verify still only one item is selected (no duplicates)
+    assert
+      .dom(".d-multi-select-trigger__selected-item")
+      .exists(
+        { count: 1 },
+        "Should still have exactly one selected item after multiple Enter presses"
+      );
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasText("foo");
+  });
+
+  test("Enter key does nothing when no item is preselected", async function (assert) {
+    await render(<template><TestComponent /></template>);
+    await click(".d-multi-select-trigger");
+
+    // Press Enter without navigating to any item first
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    // Verify no items are selected
+    assert
+      .dom(".d-multi-select-trigger__selected-item")
+      .doesNotExist("Should not select any items when no item is preselected");
+
+    // Verify both options are still available
+    assert.dom(".d-multi-select__result").exists({ count: 2 });
+    assert.dom(".d-multi-select__result:nth-child(1)").hasText("foo");
+    assert.dom(".d-multi-select__result:nth-child(2)").hasText("bar");
+  });
 });

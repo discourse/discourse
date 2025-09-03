@@ -102,7 +102,13 @@ export default class DMultiSelect extends Component {
     if (event.key === "Enter") {
       event.preventDefault();
 
-      if (this.preselectedItem) {
+      // Only toggle if we have a preselected item and it's in the available options
+      if (
+        this.preselectedItem &&
+        this.availableOptions?.some((item) =>
+          this.compare(item, this.preselectedItem)
+        )
+      ) {
         this.toggle(this.preselectedItem, event);
       }
     }
@@ -161,7 +167,14 @@ export default class DMultiSelect extends Component {
   toggle(result, event) {
     event?.stopPropagation();
 
-    this.args.onChange?.(makeArray(this.args.selection).concat(result));
+    const currentSelection = makeArray(this.args.selection);
+
+    // Check if item is already selected
+    if (currentSelection.some((item) => this.compare(item, result))) {
+      return; // Don't add duplicates
+    }
+
+    this.args.onChange?.(currentSelection.concat(result));
   }
 
   @action
