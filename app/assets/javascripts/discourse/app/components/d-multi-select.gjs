@@ -101,6 +101,7 @@ export default class DMultiSelect extends Component {
 
     if (event.key === "Enter") {
       event.preventDefault();
+      event.stopPropagation();
 
       // Only toggle if we have a preselected item and it's in the available options
       if (
