@@ -89,6 +89,9 @@ en:
       auto_tag_topic:
         title: Auto Tag Topic
         description: Automatically add tags to a topic
+      move_topic_on_close:
+        title: Move Topic on Close
+        description: Moves a topic to a specified category when it is closed
       pin_topic:
         title: Pin Topic
         description: Pins a specified topic at a given date
@@ -105,7 +108,7 @@ en:
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
       suspend_user_by_email:
         title: Suspend user by email
-        description: Automatically suspend an account based on email address 
+        description: Automatically suspend an account based on email address
       user_global_notice:
         title: User global notice
         description: Allows to display a global notice for a user
@@ -149,6 +152,6 @@ en:
       send_chat_message:
         title: "Send Chat Message"
         description: "Send a custom chat message to a channel"
-      random_assign: 
+      random_assign:
         title: "Random Assign"
         description: "Randomly assign topics to a group"

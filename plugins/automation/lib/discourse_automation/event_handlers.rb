@@ -315,7 +315,6 @@ module DiscourseAutomation
           # Add any filtering logic here if needed (e.g., category)
           automation.trigger!(
             "kind" => name,
-
             "topic" => topic,
             "placeholders" => {
               "topic_url" => topic.relative_url,
