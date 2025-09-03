@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { _backburner } from "@ember/runloop";
 import { getSettledState, waitUntil } from "@ember/test-helpers";
 import $ from "jquery";
 import { isDevelopment, isRailsTesting } from "discourse/lib/environment";
@@ -45,6 +46,8 @@ export default {
     };
 
     if (isRailsTesting()) {
+      _backburner.DEBUG = true;
+
       window.emberGetSettledState = getSettledState;
 
       const pendingRequests = [];
@@ -73,13 +76,12 @@ export default {
         .on("ajaxSend", incrementAjaxPendingRequests)
         .on("ajaxComplete ajaxError", decrementAjaxPendingRequests);
 
-      window.emberSettled = () => {
+      window.emberSettled = (action) => {
         return waitUntil(
           () => {
             const state = getSettledState();
 
             return (
-              !state.hasPendingTimers &&
               !state.hasRunLoop &&
               !state.hasPendingTransitions &&
               !state.isRenderPending &&

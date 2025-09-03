@@ -53,6 +53,8 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
     )
     chat_channel_page.click_send_message
 
+    pause_test
+
     message =
       Chat::Message.find_by(
         user: user,
