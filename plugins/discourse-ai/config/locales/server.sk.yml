@@ -114,7 +114,6 @@ sk:
     ai_translation_enabled: "Umožňuje funkciu prekladu pomocou AI"
     ai_translation_model: "Model, ktorý sa má použiť na preklad. Tento model musí podporovať preklad. Personas môžu toto nastavenie prepísať."
     ai_translation_backfill_limit_to_public_content: "Ak je táto možnosť povolená, preloží sa iba obsah verejných kategórií. Ak je vypnuté, na preklad sa bude posielať aj obsah v skupinových PM a súkromných kategóriách."
-    ai_translation_max_post_length: "Maximálna dĺžka príspevku, ktorý sa má preložiť. Príspevky dlhšie ako táto hodnota nebudú preložené."
     ai_translation_backfill_max_age_days: "Maximálny vek príspevku a témy, ktoré sa majú preložiť. Príspevky a témy staršie ako táto hodnota nebudú preložené. Hodnota 0 zakáže spätné dopĺňanie, ale nezakáže preklad nových príspevkov."
   reviewables:
     reasons:

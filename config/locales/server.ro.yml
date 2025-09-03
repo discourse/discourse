@@ -947,6 +947,7 @@ ro:
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
     set_locale_from_accept_language_header: "Setează limba interfeței pentru utilizatorii anonimi din anteturile de limbă ale navigatorului lor web"
     set_locale_from_cookie: "Permite setarea localei unui utilizator anonim prin intermediul localei din cookie-ului navigatorului"
+    set_locale_from_param: "Permite setarea localei unui utilizator anonim prin parametrul URL „tl”, de exemplu ?tl=es"
     support_mixed_text_direction: "Acceptă indicații de text mixte de la stânga la dreapta și de la dreapta la stânga"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
@@ -1029,12 +1030,15 @@ ro:
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     auth_require_interaction: "Solicită interacțiunea utilizatorului înainte de a redirecționa către un sistem de conectare extern prin `/auth/*`. Aceasta este o apărare în profunzime împotriva atacurilor „Autentificare CSRF”. Dezactivează această setare numai dacă ai încredere deplină că toate metodele de autentificare activate sunt protejate împotriva autentificării CSRF."
     discourse_connect_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
+    auth_overrides_avatar: "Suprascrie avatarul local cu avatarul site-ului extern la fiecare conectare și previne modificările locale. Se aplică tuturor furnizorilor de autentificare."
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
+    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii obișnuiți de conectare socială, cum ar fi Google, Facebook și Twitter, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
+    backup_frequency: "Specifică intervalul, în zile, la care sunt create copii de rezervă automate ale site-ului. Dacă este setat la 7, de exemplu, o copie de rezervă nouă va fi generată în fiecare săptămână. Setează 0 pentru a dezactiva."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_use_acls: "AWS recomandă să nu folosești ACL pentru bucket-urile S3; debifează această opțiune doar dacă intenționezi să configurezi politici de permisiuni pe `s3_upload_bucket` și `s3_backup_bucket`."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -2332,6 +2336,8 @@ ro:
       approve_post:
         complete: "Postarea a fost aprobată."
       approve_post_closed:
+        title: "Aprobă postarea"
+        confirm: "Acest subiect este închis. Vrei să creezi postarea oricum?"
         complete: "Postarea a fost aprobată."
       reject_post:
         complete: "Postarea a fost respinsă."
@@ -2386,6 +2392,8 @@ ro:
   form_templates:
     errors:
       invalid_tag_group: "are un grup de etichete nevalid: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Acest site este deja înregistrat cu Discourse ID"
   activemodel:
     errors:
       <<: *errors

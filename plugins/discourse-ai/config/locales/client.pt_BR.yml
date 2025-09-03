@@ -278,7 +278,9 @@ pt_BR:
       translations:
         title: "Traduções"
         progress_chart:
-          bar_done: "%{done} postagens"
+          bar_done:
+            one: "%{count} postagem"
+            other: "%{count} postagens"
       spam:
         short_title: "Spam"
         title: "Configurar tratamento de spam"

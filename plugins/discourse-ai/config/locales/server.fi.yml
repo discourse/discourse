@@ -116,7 +116,6 @@ fi:
     ai_translation_enabled: "Ottaa käyttöön tekoälykäännösominaisuuden"
     ai_translation_model: "Käännöksessä käytettävä malli. Tämän mallin täytyy tukea käännöstä. Persoonat voivat korvata tämän asetuksen."
     ai_translation_backfill_limit_to_public_content: "Kun tämä on käytössä, vain julkisten alueiden sisältö käännetään. Kun tämä ei ole käytössä, myös ryhmäyksityisviestien ja yksityisten alueiden sisältö lähetetään käännettäväksi."
-    ai_translation_max_post_length: "Käännettävän viestin enimmäispituus. Tätä pidempiä viestejä ei käännetä."
     ai_translation_backfill_max_age_days: "Käännettävien viestien ja ketjujen enimmäisikä. Tätä vanhempia viestejä ja ketjuja ei käännetä. 0 poistaa aiempien viestien kääntämisen käytöstä, mutta ei poista käytöstä uusien viestien kääntämistä."
   reviewables:
     reasons:

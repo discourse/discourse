@@ -308,7 +308,11 @@ ru:
             configure: "Настроить переводы"
             empty_label: "Автоматические переводы отключены, нажмите ниже, чтобы настроить"
         progress_chart:
-          bar_done: "%{done} публикации"
+          bar_done:
+            one: "%{count} публикация"
+            few: "%{count} публикации"
+            many: "%{count} публикаций"
+            other: "%{count} публикаций"
       spam:
         short_title: "Спам"
         title: "Настройте обработку спама"

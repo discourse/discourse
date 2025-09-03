@@ -423,6 +423,7 @@ he:
         event:
           expired: "לא בתוקף"
           closed: "סגור"
+          full: "מלא"
           status:
             standalone:
               title: "עצמאי"
@@ -480,6 +481,9 @@ he:
         minimal:
           label: "אירוע מזערי"
           checkbox_label: "הסתרת כפתורי הצטרפות/העדרות ומצב מוזמנים"
+        max_attendees:
+          label: "כמות משתתפים מרבית"
+          placeholder: "אין הגבלה"
         allow_chat:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"

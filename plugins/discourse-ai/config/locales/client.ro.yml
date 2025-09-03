@@ -82,14 +82,17 @@ ro:
             empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
         stats:
           title: "Statistici traducere"
-          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată %{tooltip}"
-          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată %{tooltip}"
+          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
+          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           description_tooltip: "Postările eligibile sunt determinate de setările de traducere AI"
         progress_chart:
-          title: "Progresul traducerii"
+          title: "Progres traducere %{tooltip}"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} din %{total} postări traduse"
-          bar_done: "%{done} postări"
+          bar_done:
+            one: "o postare"
+            few: "%{count} postări"
+            other: "%{count} de postări"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"

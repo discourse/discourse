@@ -413,6 +413,7 @@ de:
         event:
           expired: "Abgelaufen"
           closed: "Geschlossen"
+          full: "Voll"
           status:
             standalone:
               title: "Einzeln"
@@ -470,6 +471,9 @@ de:
         minimal:
           label: "Minimales Event"
           checkbox_label: "Schaltflächen „Dabei“/„Nicht dabei“ und Status der eingeladenen Personen ausblenden"
+        max_attendees:
+          label: "Maximale Teilnehmerzahl"
+          placeholder: "Keine Begrenzung"
         allow_chat:
           label: "Chat-Integration"
           checkbox_label: "Erstelle und verwalte ereignisspezifische Chat-Kanäle"

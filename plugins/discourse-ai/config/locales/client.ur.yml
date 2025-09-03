@@ -84,7 +84,9 @@ ur:
       translations:
         title: "ترجمہ"
         progress_chart:
-          bar_done: "%{done} پوسٹس"
+          bar_done:
+            one: "%{count} پوسٹ"
+            other: "%{count} پوسٹس"
       spam:
         short_title: "سپَیم"
         last_seven_days: "پچھلے 7 دن"

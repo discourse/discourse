@@ -278,7 +278,9 @@ tr_TR:
       translations:
         title: "Çeviriler"
         progress_chart:
-          bar_done: "%{done} gönderi"
+          bar_done:
+            one: "%{count} gönderi"
+            other: "%{count} gönderi"
       spam:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
