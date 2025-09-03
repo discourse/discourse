@@ -159,6 +159,9 @@ export default class DMultiSelect extends Component {
   remove(selectedItem, event) {
     event?.stopPropagation();
 
+    // Reset preselected item since the available options will change
+    this.preselectedItem = null;
+
     this.args.onChange?.(
       this.args.selection?.filter((item) => !this.compare(item, selectedItem))
     );
@@ -174,6 +177,9 @@ export default class DMultiSelect extends Component {
     if (currentSelection.some((item) => this.compare(item, result))) {
       return; // Don't add duplicates
     }
+
+    // Reset preselected item since the available options will change
+    this.preselectedItem = null;
 
     this.args.onChange?.(currentSelection.concat(result));
   }
