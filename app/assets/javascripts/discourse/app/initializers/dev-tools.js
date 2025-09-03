@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import { getSettledState } from "@ember/test-helpers";
+import { settled } from "@ember/test-helpers";
 import { isDevelopment } from "discourse/lib/environment";
 
 const KEY = "discourse__dev_tools";
@@ -43,19 +43,7 @@ export default {
       window.location.reload();
     };
 
-    // Make test helpers available in development
-    window.emberIsSettled = () => {
-      const state = getSettledState();
-      console.log(state);
-
-      return (
-        !state.hasPendingTimers &&
-        !state.hasRunLoop &&
-        !state.hasPendingRequests &&
-        !state.hasPendingTransitions &&
-        !state.isRenderPending
-      );
-    };
+    window.emberSettled = settled;
 
     if (parseStoredValue() ?? defaultEnabled) {
       // eslint-disable-next-line no-console

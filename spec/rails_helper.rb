@@ -476,37 +476,41 @@ RSpec.configure do |config|
       end
     end
 
-    module SomePatch
-      def click(keys = [], **options)
-        super
+    module CapybaraPlaywrightNodePatch
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+      ]
 
-        puts "clicked #{keys}"
-        start_time = Time.now.to_f
-        timeout = 5
-        session = @driver.send(:session)
-
-        loop do
-          if Time.now.to_f - start_time > timeout
-            puts "timeout"
-            break
-          else
-            result = session.evaluate_script("window.emberIsSettled()")
-
-            if result
-              puts "ember is settled"
-              break
-            else
-              puts "ember is not settled"
-              sleep 0.1
-            end
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          super(*args, **options).tap do
+            @driver.send(:session).evaluate_async_script("window.emberSettled().then(arguments[0])")
           end
         end
-
-        puts "Clicked: #{Time.now.to_f - start_time}"
       end
     end
 
-    Capybara::Playwright::Node.prepend(SomePatch)
+    module CapybaraPlaywrightBrowserPatch
+      def visit(path)
+        super.tap do
+          @driver.send(:session).evaluate_async_script(
+            "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
+          )
+        end
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
