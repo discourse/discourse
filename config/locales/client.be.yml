@@ -9,16 +9,18 @@ be:
     number:
       human:
         storage_units:
+          format: "%n %u"
           units:
             byte:
               one: байт
-              few: байтаў
+              few: байты
               many: байтаў
               other: байтаў
             gb: ГБ
             kb: КБ
             mb: МБ
             tb: ТБ
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"

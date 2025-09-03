@@ -56,7 +56,9 @@ hy:
       translations:
         title: "Թարգմանություններ"
         progress_chart:
-          bar_done: "%{done} գրառում"
+          bar_done:
+            one: "%{count} գրառում"
+            other: "%{count} գրառում"
       spam:
         short_title: "Սպամ"
         enable: "Միացնել"

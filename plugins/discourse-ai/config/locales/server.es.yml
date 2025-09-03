@@ -116,7 +116,6 @@ es:
     ai_translation_enabled: "Activa la función de traducción de IA"
     ai_translation_model: "El modelo que se usará para la traducción. Este modelo debe ser compatible con la traducción. Las personas pueden anular este ajuste."
     ai_translation_backfill_limit_to_public_content: "Al activar esta función, solo se traducirá el contenido de las categorías públicas. Al desactivarla, también se enviará a traducir el contenido de los mensajes privados grupales y las categorías privadas."
-    ai_translation_max_post_length: "La longitud máxima de una publicación a traducir. Las publicaciones más largas no se traducirán."
     ai_translation_backfill_max_age_days: "La antigüedad máxima de una publicación y tema que se traducirá. Las publicaciones y temas más antiguos no se traducirán. 0 desactiva el relleno, pero no desactivará la traducción de publicaciones nuevas."
   reviewables:
     reasons:

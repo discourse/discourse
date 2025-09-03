@@ -22,6 +22,7 @@ ro:
   site_settings:
     ai_default_llm_model: "Modelul LLM implicit de utilizat pentru toate funcționalitățile IA"
     ai_embeddings_semantic_search_use_hyde: "Folosește HyDE pentru căutare semantică pe întreaga pagină. Folosește un LLM pentru a crea o postare ipotetică pe baza termenului de căutare al utilizatorului, pentru a ajuta la găsirea potrivirilor."
+    ai_translation_max_post_length: "Numărul maxim de caractere care pot fi traduse pentru o postare. Postările mai lungi decât acesta nu vor fi traduse."
   reports:
     overall_sentiment:
       yaxis: "Dată"

@@ -55,7 +55,8 @@ vi:
       translations:
         title: "Bản dịch"
         progress_chart:
-          bar_done: "%{done} bài đăng"
+          bar_done:
+            other: "%{count} bài đăng"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"

@@ -116,7 +116,6 @@ tr_TR:
     ai_translation_enabled: "YZ çeviri özelliğini etkinleştirir"
     ai_translation_model: "Çeviri için kullanılacak model. Bu modelin çeviriyi desteklemesi gerekir. Kişilikler bu ayarı geçersiz kılabilir."
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
-    ai_translation_max_post_length: "Çevrilecek gönderinin maksimum uzunluğu. Bu uzunluktan daha uzun gönderiler çevrilmez."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
   reviewables:
     reasons:
