@@ -73,9 +73,8 @@ export default class GroupSelector extends Component {
     return a.name === b.name;
   }
 
-  //TODO consider removing fullWidthWrap and disabled options if not needed
   <template>
-    <div class="group-selector-wrapper {{if @disabled 'disabled'}}">
+    <div class="group-selector-wrapper">
       <DMultiSelect
         @selection={{this.selectedGroups}}
         @loadFn={{this.loadFn}}

@@ -587,7 +587,6 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.invitees.label"
               >
                 <GroupSelector
-                  @fullWidthWrap={{true}}
                   @groupFinder={{this.groupFinder}}
                   @groupNames={{@model.event.rawInvitees}}
                   @onChangeCallback={{this.setRawInvitees}}
