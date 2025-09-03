@@ -434,6 +434,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -492,7 +493,9 @@ RSpec.configure do |config|
       NODE_METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           super(*args, **options).tap do
+            now = Time.now.to_f
             @driver.send(:session).evaluate_async_script("window.emberSettled().then(arguments[0])")
+            puts "#{method_name}: #{Time.now.to_f - now}"
           end
         end
       end
@@ -501,9 +504,11 @@ RSpec.configure do |config|
     module CapybaraPlaywrightBrowserPatch
       def visit(path)
         super.tap do
+          now = Time.now.to_f
           @driver.send(:session).evaluate_async_script(
             "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
           )
+          puts "VISIT #{path}: #{Time.now.to_f - now}"
         end
       end
     end

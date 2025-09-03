@@ -53,15 +53,12 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
     )
     chat_channel_page.click_send_message
 
-    message = nil
-    try_until_success do
-      message =
-        Chat::Message.find_by(
-          user: user,
-          message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
-        )
-      expect(message).not_to eq(nil)
-    end
+    message =
+      Chat::Message.find_by(
+        user: user,
+        message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
+      )
+
     expect(chat_channel_page.messages).to have_message(id: message.id)
 
     expect(page).to have_css(".hashtag-cooked[aria-label]", count: 3)
