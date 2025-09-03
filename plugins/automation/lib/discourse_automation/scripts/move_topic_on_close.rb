@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::MOVE_TOPIC_ON_CLOSE) {}
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::MOVE_TOPIC_ON_CLOSE) do
+  triggerables %i[topic_closed]
+end
