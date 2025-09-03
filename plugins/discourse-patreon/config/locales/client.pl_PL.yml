@@ -43,12 +43,12 @@ pl_PL:
             email_not_available: "Wybierz użytkownika Patreona i sprawdź prawą dolną część strony, by zobaczyć historię wpłat."
       donation_prompt:
         body: |
-          <h1>Witaj czytelniku!</h1>
+          <h1>Witaj, czytelniku!</h1>
 
           <p>Podoba Ci się nasza strona? Chcesz wesprzeć dobrą sprawę?</p>
 
           <p>
-            Jeśli uważasz naszą stronę za przydatną i podoba Ci się społeczność, którą stworzyliśmy, będziemy wdzięczni za Twoją darowiznę.
+            Jeśli uważasz naszą stronę za pomocną i podoba Ci się społeczność, którą stworzyliśmy, będziemy wdzięczni za Twoją darowiznę.
             Darowizny zapewniają sprawne funkcjonowanie naszych usług i gwarantują, że nasza społeczność będzie działać przez wiele lat.
             Każdy dolar się liczy i zostanie dobrze wykorzystany.
           </p>
