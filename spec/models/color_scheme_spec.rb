@@ -190,4 +190,53 @@ RSpec.describe ColorScheme do
       expect(resolved["selected"]).to eq("e9e9e9")
     end
   end
+
+  describe "#diverge_from_remote" do
+    fab!(:theme)
+    fab!(:original_scheme) do
+      Fabricate(
+        :color_scheme,
+        name: "somescheme",
+        theme_id: theme.id,
+        user_selectable: true,
+        color_scheme_colors: [
+          Fabricate(:color_scheme_color, name: "primary", hex: "998877"),
+          Fabricate(:color_scheme_color, name: "secondary", hex: "553322"),
+        ],
+      )
+    end
+
+    it "creates a new scheme with the same colors and sets it as the base scheme" do
+      expect(original_scheme.base_scheme_id).to eq(nil)
+
+      original_scheme.diverge_from_remote
+
+      expect(original_scheme.base_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first)).to eq(
+        original_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first),
+      )
+      expect(original_scheme.base_scheme.theme.id).to eq(theme.id)
+      expect(original_scheme.base_scheme.user_selectable).to eq(false)
+      expect(original_scheme.base_scheme.remote_copy).to eq(true)
+    end
+  end
+
+  describe "#destroy_remote_original" do
+    fab!(:theme)
+
+    fab!(:original_scheme) { Fabricate(:color_scheme, name: "somescheme", theme_id: theme.id) }
+
+    fab!(:unrelated_scheme) do
+      Fabricate(:color_scheme, theme_id: theme.id, base_scheme_id: original_scheme.id)
+    end
+
+    before { original_scheme.diverge_from_remote }
+
+    it "deletes the base scheme that stores the original colors and is triggered on destroy" do
+      expect(ColorScheme.unscoped.exists?(id: original_scheme.base_scheme_id)).to eq(true)
+
+      expect do original_scheme.destroy! end.to change { ColorScheme.unscoped.count }.by(-2)
+
+      expect(ColorScheme.unscoped.exists?(id: original_scheme.base_scheme_id)).to eq(false)
+    end
+  end
 end

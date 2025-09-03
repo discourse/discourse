@@ -23,7 +23,6 @@ class Admin::ColorSchemesController < Admin::AdminController
 
     if @color_scheme.theme_id.present?
       if (update_params.key?(:name) && update_params[:name] != @color_scheme.name) ||
-           update_params[:colors].present? ||
            (
              update_params.key?(:base_scheme_id) &&
                update_params[:base_scheme_id] != @color_scheme.base_scheme_id
@@ -32,7 +31,11 @@ class Admin::ColorSchemesController < Admin::AdminController
       end
     end
 
-    color_scheme = ColorSchemeRevisor.revise(@color_scheme, update_params)
+    diverge_from_remote =
+      update_params[:colors].present? && @color_scheme.theme_id.present? &&
+        @color_scheme.base_scheme_id.blank?
+
+    color_scheme = ColorSchemeRevisor.revise(@color_scheme, update_params, diverge_from_remote:)
     update_theme_default_scheme!
     if color_scheme.valid?
       render json: color_scheme, root: false

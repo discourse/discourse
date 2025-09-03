@@ -6893,7 +6893,7 @@ en:
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
-        theme_owner: "Not editable, owned by:"
+        theme_owner: "Owned by:"
         email_templates:
           title: "Email"
           subject: "Subject"
