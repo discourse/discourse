@@ -5,6 +5,8 @@ module DiscourseLazyVideos
     attr_reader :controller, :post
 
     PROVIDER_NAMES = { "youtube" => "YouTube", "vimeo" => "Vimeo", "tiktok" => "TikTok" }.freeze
+    SCRIPT_ESCAPE_REGEX = %r{</script}i.freeze
+    LAZY_VIDEO_CONTAINER = "lazy-video-container".freeze
 
     def initialize(controller, post)
       @controller = controller
@@ -15,29 +17,34 @@ module DiscourseLazyVideos
       return "" if !controller.instance_of?(TopicsController)
       return "" if !SiteSetting.lazy_videos_enabled
       return "" if !post
+      return "" if post.cooked.exclude?(LAZY_VIDEO_CONTAINER)
 
-      videos = extract_videos_from_post(post)
-      return "" if videos.empty?
-
-      videos
-        .map do |video|
-          schema = build_video_object(video, post)
-          next if !schema
-
-          json = MultiJson.dump(schema).gsub("</script", "<\\/script")
-          "<script type=\"application/ld+json\">#{json}</script>"
-        end
-        .compact
-        .join("\n")
+      generate_video_schemas
     end
 
     private
 
-    def extract_videos_from_post(post)
-      videos = []
-      doc = Nokogiri::HTML5.fragment(post.cooked)
+    def generate_video_schemas
+      videos = extract_videos_from_post(post)
+      return "" if videos.empty?
 
-      doc
+      @post_excerpt ||= post.excerpt(200, strip_links: true, text_entities: true)
+
+      videos
+        .each_with_object([]) do |video, scripts|
+          schema = build_video_object(video, post, @post_excerpt)
+          next if !schema
+
+          scripts << build_json_script(schema)
+        end
+        .join("\n")
+    end
+
+    def extract_videos_from_post(post)
+      @parsed_doc ||= Nokogiri::HTML5.fragment(post.cooked)
+      videos = []
+
+      @parsed_doc
         .css(".lazy-video-container")
         .each do |container|
           video_data = {
@@ -54,7 +61,7 @@ module DiscourseLazyVideos
       videos
     end
 
-    def build_video_object(video, post)
+    def build_video_object(video, post, post_excerpt)
       embed_url = get_embed_url(video[:provider], video[:id])
       return nil if !embed_url
 
@@ -67,13 +74,16 @@ module DiscourseLazyVideos
         "uploadDate" => post.created_at.iso8601,
       }
 
-      post_excerpt = post.excerpt(200, strip_links: true, text_entities: true)
       schema["description"] = post_excerpt if post_excerpt.present?
-
       schema["thumbnailUrl"] = video[:thumbnail] if video[:thumbnail]
       schema["contentUrl"] = video[:url] if video[:url]
 
       schema
+    end
+
+    def build_json_script(schema)
+      json = MultiJson.dump(schema).gsub(SCRIPT_ESCAPE_REGEX, "<\\/script")
+      "<script type=\"application/ld+json\">#{json}</script>"
     end
 
     def get_embed_url(provider, video_id)
