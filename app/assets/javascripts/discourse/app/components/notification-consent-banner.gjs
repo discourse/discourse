@@ -20,14 +20,20 @@ export default class NotificationConsentBanner extends Component {
     super(...arguments);
     this.bannerDismissed = pushNotificationKeyValueStore.getItem(
       userDismissedPromptKey
-    );
+    ) != null;
   }
 
   setBannerDismissed(value) {
-    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
+    if (value) {
+      const timestamp = Date.now();
+      pushNotificationKeyValueStore.setItem(userDismissedPromptKey, timestamp);
+    } else {
+      pushNotificationKeyValueStore.removeItem(userDismissedPromptKey);
+    }
+
     this.bannerDismissed = pushNotificationKeyValueStore.getItem(
       userDismissedPromptKey
-    );
+    ) != null;
   }
 
   get showNotificationPwaTip() {
@@ -69,7 +75,7 @@ export default class NotificationConsentBanner extends Component {
 
   @action
   dismiss() {
-    this.setBannerDismissed(false);
+    this.setBannerDismissed(true);
   }
 
   <template>
