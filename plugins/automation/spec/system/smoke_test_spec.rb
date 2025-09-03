@@ -39,6 +39,7 @@ describe "DiscourseAutomation | smoke test", type: :system do
       automation = Fabricate(:automation, name: "automation-test")
 
       visit("/admin/plugins/automation")
+
       # find the row of "automation test" then click on trash icon
       find(".automations__name", text: "automation-test")
         .find(:xpath, "..")
@@ -48,10 +49,7 @@ describe "DiscourseAutomation | smoke test", type: :system do
       find(".dialog-footer .btn-danger").click
 
       expect(page).not_to have_css(".automations__name", text: "automation-test")
-
-      try_until_success do
-        expect(DiscourseAutomation::Automation.exists?(id: automation.id)).to be(false)
-      end
+      expect(DiscourseAutomation::Automation.exists?(id: automation.id)).to be(false)
     end
   end
 

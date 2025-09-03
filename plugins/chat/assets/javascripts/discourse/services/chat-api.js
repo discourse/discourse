@@ -280,6 +280,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   createInteraction(channelId, messageId, data = {}) {
+    console.log("posting request");
     return this.#postRequest(
       `/channels/${channelId}/messages/${messageId}/interactions`,
       data
@@ -636,10 +637,12 @@ export default class ChatApi extends Service {
   }
 
   #postRequest(endpoint, data = {}) {
-    return ajax(`${this.#basePath}${endpoint}`, {
+    const promise = ajax(`${this.#basePath}${endpoint}`, {
       type: "POST",
       data,
     });
+
+    return promise;
   }
 
   #deleteRequest(endpoint, data = {}) {

@@ -434,7 +434,6 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
-
         begin
           super
         rescue StandardError => e
