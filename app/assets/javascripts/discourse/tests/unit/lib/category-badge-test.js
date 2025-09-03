@@ -196,7 +196,7 @@ module("Unit | Utility | category-badge", function (hooks) {
 
     const badge = categoryBadgeHTML(emojiChild, { ancestors: [emojiParent] });
 
-    assert.true(badge.includes("d-icon-book"), "has parent with icon style");
-    assert.true(badge.includes("d-icon-file"), "has child with file style");
+    assert.true(badge.includes("d-icon-book"), "has parent with book icon");
+    assert.true(badge.includes("d-icon-file"), "has child with file icon");
   });
 });
