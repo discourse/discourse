@@ -23,7 +23,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ (matrix.enable_fix == '0' && 'original recipe' || 'new coke') }} ${{ matrix.iteration }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ (matrix.enable_fix == '0' && 'original' || 'fixed') }} ${{ matrix.iteration }}
     runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
