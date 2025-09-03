@@ -122,6 +122,9 @@ he:
           fields:
             persona:
               label: "דמות"
+            whisper:
+              label: "להגיב בלחישה"
+              description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
         llm_triage:
