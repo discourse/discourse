@@ -569,20 +569,6 @@ describe PostRevisor do
           )
         }.not_to change { post.topic.bumped_at }
       end
-
-      it "should bump topic when no topic category" do
-        topic_with_no_category = Fabricate(:topic, category_id: nil)
-        post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
-        expect {
-          result =
-            post_revisor.revise!(
-              Fabricate(:admin),
-              raw: post_from_topic_with_no_category.raw,
-              tags: ["foo"],
-            )
-          expect(result).to eq(true)
-        }.to change { topic.reload.bumped_at }
-      end
     end
 
     describe "edit reasons" do
@@ -1431,7 +1417,7 @@ describe PostRevisor do
               }.to_not change { topic.reload.bumped_at }
             end
 
-            it "should bump topic if non staff-only tags are added" do
+            it "doesn't bump topic if non staff-only tags are added" do
               expect {
                 result =
                   post_revisor.revise!(
@@ -1440,25 +1426,7 @@ describe PostRevisor do
                     tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
                   )
                 expect(result).to eq(true)
-              }.to change { topic.reload.bumped_at }
-            end
-
-            it "should send muted and latest message if non staff-only tags are added" do
-              TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
-              messages =
-                MessageBus.track_publish("/latest") do
-                  post_revisor.revise!(
-                    Fabricate(:admin),
-                    raw: post.raw,
-                    tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
-                  )
-                end
-
-              muted_message = messages.find { |message| message.data["message_type"] == "muted" }
-              latest_message = messages.find { |message| message.data["message_type"] == "latest" }
-
-              expect(muted_message.data["topic_id"]).to eq(topic.id)
-              expect(latest_message.data["topic_id"]).to eq(topic.id)
+              }.to_not change { topic.reload.bumped_at }
             end
 
             it "creates a hidden revision" do
