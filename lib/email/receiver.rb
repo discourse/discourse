@@ -210,7 +210,7 @@ module Email
         log_and_validate_user(user)
       elsif !SiteSetting.enable_staged_users
         category = Category.find_by_email(mail.to)
-        if category&.email_in_allow_strangers == true
+        if category&.email_in_allow_strangers?
           user = Discourse.system_user
         else
           raise UserNotFoundError
