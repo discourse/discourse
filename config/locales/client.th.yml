@@ -3218,7 +3218,6 @@ th:
             text: "ถ่ายโอน @%{username} ไปยัง @%{targetUsername}"
             transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
-        delete_forbidden_because_staff: "ไม่สามารถลบแอดมินและผู้ดูแลระบบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"

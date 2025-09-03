@@ -8080,7 +8080,7 @@ pl_PL:
             cancel: "Anuluj"
         merging_user: "Łączenie użytkownika…"
         merge_failed: "Wystąpił błąd podczas łączenia użytkowników."
-        delete_forbidden_because_staff: "Administratorzy i moderatorzy nie mogą zostać usunięci."
+        delete_forbidden_because_staff: "Administratorów nie można usuwać."
         delete_posts_forbidden_because_staff: "Nie można usunąć wszystkich wpisów administratorów i moderatorów."
         delete_forbidden:
           one: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dzień.)"

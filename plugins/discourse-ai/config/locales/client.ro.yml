@@ -38,6 +38,15 @@ ro:
               label: "Etichete"
             canned_reply:
               label: "Răspunde"
+            notify_author_pm:
+              label: "Notifică autorul prin PM"
+              description: "Trimite un mesaj personal autorului postării atunci când postarea lor este în așteptare și ștearsă"
+            notify_author_pm_user:
+              label: "Expeditor PM"
+              description: "Utilizatorul care va trimite PM (implicit la sistem)"
+            notify_author_pm_message:
+              label: "Mesaj PM"
+              description: "Mesaj personalizat opțional pentru a trimite autorului"
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
@@ -63,8 +72,24 @@ ro:
       modals:
         select_option: "Alege o opțiune..."
       translations:
+        title: "Traduceri"
+        description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
+        admin_actions:
+          translation_settings: "Setări traducere"
+          localization_settings: "Setări localizare"
+          disabled_state:
+            configure: "Configurează traduceri"
+            empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
+        stats:
+          title: "Statistici traducere"
+          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată %{tooltip}"
+          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată %{tooltip}"
+          description_tooltip: "Postările eligibile sunt determinate de setările de traducere AI"
         progress_chart:
-          bar_done: "%{done} de postări"
+          title: "Progresul traducerii"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} din %{total} postări traduse"
+          bar_done: "%{done} postări"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"
@@ -136,10 +161,13 @@ ro:
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
+          anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
           open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
           open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
+          open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
+          open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
           groq-openai-gpt-oss-120b: "Model de ultimă generație, deschis de la OpenAI"
           groq-openai-gpt-oss-20b: "Model ușor, rapid, deschis, de la OpenAI"

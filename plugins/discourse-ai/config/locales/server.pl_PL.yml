@@ -10,6 +10,7 @@ pl_PL:
       flag_types:
         review: "Dodaj post do kolejki recenzji"
         review_hide: "Dodaj post do kolejki recenzji i ukryj post"
+        review_delete: "Dodaj wpis do kolejki recenzji i usuń post"
         spam: "Oznacz jako spam i ukryj post"
         spam_silence: "Oznacz jako spam, ukryj post i wycisz użytkownika"
     scriptables:
@@ -26,6 +27,14 @@ pl_PL:
           <div>Odpowiedź modelu:</div>
           <p>%%LLM_RESPONSE%%</p>
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
+        notify_author_pm:
+          subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
+          body: |
+            Cześć @%{username},
+
+            Twój post w „%{topic_title}” został tymczasowo usunięty i umieszczony w kolejce do sprawdzenia przez moderatora. Po zatwierdzeniu zostanie automatycznie przywrócony.
+
+            Źródło: %{post_url}
       llm_report:
         title: Raport okresowy z wykorzystaniem AI
         description: "Okresowy raport oparty na dużym modelu językowym"

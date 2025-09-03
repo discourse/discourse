@@ -41,6 +41,8 @@ de:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Du kannst eine Umfrage nur in den ersten %{minutes} Minuten ändern."
       cannot_edit_named_poll_with_votes: "Du kannst die Umfrage namens <strong>${name}</strong> nur in den ersten %{minutes} Minuten ändern."
+    dynamic_poll:
+      enabled_hint: "Diese Umfrage ist dynamisch. Optionen können nach dem Veröffentlichen bearbeitet werden."
     no_poll_with_this_name: "Diesem Beitrag ist keine Umfrage mit dem Namen <strong>%{name}</strong> zugeordnet."
     post_is_deleted: "Die Aktion kann nicht durchgeführt werden, da der Beitrag gelöscht wurde."
     user_cant_post_in_topic: "Du kannst nicht abstimmen, weil du in diesem Thema nicht schreiben kannst."

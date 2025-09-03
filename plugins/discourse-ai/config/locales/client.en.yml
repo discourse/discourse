@@ -335,15 +335,17 @@ en:
             empty_label: "Automatic translations are disabled, click below to configure"
         stats:
           title: "Translation statistics"
-          complete_language_detection_description: "All %{total} eligible posts have their language detected %{tooltip}"
-          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected %{tooltip}"
+          complete_language_detection_description: "All %{total} eligible posts have their language detected."
+          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
+          backfill_disabled: "Backfilling is currently disabled."
           description_tooltip: "Eligible posts are determined by AI translation settings"
         progress_chart:
-          title: "Translation Progress"
+          title: "Translation Progress %{tooltip}"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} out of %{total} posts translated"
-          bar_done: "%{done} posts"
-
+          bar_done:
+            one: "%{count} post"
+            other: "%{count} posts"
 
       spam:
         short_title: "Spam"

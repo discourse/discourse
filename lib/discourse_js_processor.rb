@@ -54,8 +54,6 @@ class DiscourseJsProcessor
           @processor_mutex.synchronize { build_theme_transpiler }
         end
 
-      # source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
-
       ctx.eval(source, filename: "theme-transpiler.js")
 
       ctx
@@ -167,6 +165,10 @@ class DiscourseJsProcessor
         source_map_file,
         fetch_result_call: "getPostCssResult",
       )
+    end
+
+    def ember_version
+      self.class.v8_call("emberVersion")
     end
   end
 end
