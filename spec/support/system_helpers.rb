@@ -74,7 +74,7 @@ module SystemHelpers
       ).join("|")
   end
 
-  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
     start ||= Time.zone.now
     backoff ||= frequency
     yield

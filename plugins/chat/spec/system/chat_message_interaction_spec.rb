@@ -48,7 +48,7 @@ RSpec.describe "Interacting with a message", type: :system do
       DiscourseEvent.on(:chat_message_interaction, &blk)
       find(".block__button").click
 
-      try_until_success do
+      try_until_success(reason: "Relies on Ember timer") do
         expect(action_id).to_not be_nil
         expect(chat_channel_page.messages).to have_text(action_id)
       end

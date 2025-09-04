@@ -204,12 +204,10 @@ describe "Post event", type: :system do
     find(".d-modal .add-invitee").click
 
     topic_page = PageObjects::Pages::Topic.new
-    try_until_success do
-      topic = Topic.find(topic_page.current_topic_id)
-      event = topic.posts.first.event
+    topic = Topic.find(topic_page.current_topic_id)
+    event = topic.posts.first.event
 
-      expect(event.invitees.count).to eq(2)
-    end
+    expect(event.invitees.count).to eq(2)
   end
 
   it "does not show participants button when event is standalone" do

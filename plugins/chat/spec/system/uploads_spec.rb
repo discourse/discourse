@@ -75,7 +75,7 @@ describe "Uploading files in chat messages", type: :system do
 
       message = Chat::Message.last
 
-      try_until_success(timeout: 5) { expect(message.uploads.first.thumbnail).to be_present }
+      expect(message.uploads.first.thumbnail).to be_present
 
       upload = message.uploads.first
 
@@ -169,7 +169,8 @@ describe "Uploading files in chat messages", type: :system do
       expect(channel_page.message_by_id(message_2.id)).to have_no_css(".chat-uploads")
 
       channel_page.click_send_message
-      try_until_success(timeout: 5) { expect(message_2.reload.upload_ids).to be_empty }
+
+      expect(message_2.reload.upload_ids).to be_empty
     end
 
     it "allows adding more uploads" do
@@ -185,7 +186,7 @@ describe "Uploading files in chat messages", type: :system do
       expect(page).to have_no_css(".chat-composer-upload")
       expect(page).to have_css(".chat-img-upload", count: 2)
 
-      try_until_success(timeout: 5) { expect(message_2.reload.uploads.count).to eq(2) }
+      expect(message_2.reload.uploads.count).to eq(2)
     end
   end
 

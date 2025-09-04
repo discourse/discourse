@@ -174,15 +174,11 @@ describe "Custom sidebar sections", type: :system do
     visit("/latest")
 
     sidebar.click_add_section_button
+
     section_modal.close
 
-    expect(section_modal).to be_closed
-
-    try_until_success do
-      is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
-
-      expect(is_focused).to be true
-    end
+    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+    expect(is_focused).to eq(true)
   end
 
   it "allows the user to edit custom section" do

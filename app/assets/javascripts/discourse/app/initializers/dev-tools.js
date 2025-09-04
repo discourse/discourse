@@ -65,7 +65,7 @@ export default {
         pendingRequests.push(xhr);
       };
 
-      const decrementAjaxPendingRequests = (_event, xhr, settings) => {
+      const decrementAjaxPendingRequests = (_event, xhr) => {
         for (let i = 0; i < pendingRequests.length; i++) {
           if (xhr === pendingRequests[i]) {
             // console.log(`[${Date.now() / 1000}] removed`, settings.url);
@@ -109,6 +109,7 @@ export default {
               !state.hasRunLoop &&
               !state.hasPendingTransitions &&
               !state.isRenderPending &&
+              !state.hasPendingWaiters &&
               pendingRequests.length === 0;
 
             // if (settled) {

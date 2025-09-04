@@ -22,7 +22,9 @@ RSpec.describe "Update last read", type: :system do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
+      try_until_success(reason: "Relies on Ember timer") do
+        expect(membership.reload.last_read_message_id).to eq(last_message.id)
+      end
     end
   end
 
@@ -32,7 +34,9 @@ RSpec.describe "Update last read", type: :system do
 
       last_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
-      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
+      try_until_success(reason: "Relies on Ember timer") do
+        expect(membership.reload.last_read_message_id).to eq(last_message.id)
+      end
     end
   end
 
@@ -43,7 +47,9 @@ RSpec.describe "Update last read", type: :system do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
+      try_until_success(reason: "Relies on Ember timer") do
+        expect(membership.reload.last_read_message_id).to eq(last_message.id)
+      end
     end
   end
 end

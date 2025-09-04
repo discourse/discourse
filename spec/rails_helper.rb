@@ -493,20 +493,26 @@ RSpec.configure do |config|
       NODE_METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           runloop_version_before =
-            @driver.send(:session).evaluate_script("window.emberGetBackburnerBeginCount()")
+            @driver.send(:session).evaluate_script(
+              "window.emberGetBackburnerBeginCount ? window.emberGetBackburnerBeginCount() : null",
+            )
 
           # puts "[#{Time.now.to_f}] #{method_name} Backburner Before (#{runloop_version_before})"
 
           result = super(*args, **options)
 
           now = Time.now.to_f
-          @driver.send(:session).evaluate_async_script(
-            "window.emberBackburnerBegan(#{runloop_version_before}).then(arguments[0])",
-          )
-          runloop_version_after =
-            @driver.send(:session).evaluate_script("window.emberGetBackburnerBeginCount()")
 
-          # puts "[#{Time.now.to_f}] #{method_name} Backburner After (#{runloop_version_after}): #{Time.now.to_f - now}"
+          if runloop_version_before
+            @driver.send(:session).evaluate_async_script(
+              "window.emberBackburnerBegan(#{runloop_version_before}).then(arguments[0])",
+            )
+
+            # runloop_version_after =
+            #   @driver.send(:session).evaluate_script("window.emberGetBackburnerBeginCount()")
+
+            # puts "[#{Time.now.to_f}] #{method_name} Backburner After (#{runloop_version_after}): #{Time.now.to_f - now}"
+          end
 
           now = Time.now.to_f
           # puts "[#{Time.now.to_f}] #{method_name} START"
@@ -521,7 +527,7 @@ RSpec.configure do |config|
     end
 
     module CapybaraPlaywrightBrowserPatch
-      METHODS_TO_PATCH = %i[visit go_back go_forward refresh]
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
 
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|

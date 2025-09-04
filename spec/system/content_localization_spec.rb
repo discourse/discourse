@@ -98,18 +98,18 @@ describe "Content Localization" do
       composer.set_locale("日本語")
       composer.fill_content("この小説は、名前のない猫の視点から明治時代の人間社会を風刺的に描いています。")
       composer.create
-      try_until_success do
-        new_post = Post.find_by(post_number: 4, topic_id: topic.id)
-        expect(new_post).to_not be_nil
-        # simulates a localization that would have been automatically created
-        Fabricate(
-          :post_localization,
-          post: new_post,
-          locale: "en",
-          cooked:
-            "This novel satirically depicts Meiji-era human society from the perspective of a nameless cat.",
-        )
-      end
+
+      new_post = Post.find_by(post_number: 4, topic_id: topic.id)
+      expect(new_post).to_not be_nil
+
+      # simulates a localization that would have been automatically created
+      Fabricate(
+        :post_localization,
+        post: new_post,
+        locale: "en",
+        cooked:
+          "This novel satirically depicts Meiji-era human society from the perspective of a nameless cat.",
+      )
 
       sign_in(site_local_user)
 
