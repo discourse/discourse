@@ -1,4 +1,5 @@
-{  "compilerOptions": {
+{
+  "compilerOptions": {
     "target": "es2021",
     "module": "nodenext",
     "moduleResolution": "nodenext",
@@ -9,7 +10,6 @@
     "noEmitOnError": false,
     "declaration": true,
     "emitDeclarationOnly": true
-    // "declarationDir": "types"
   },
   "glint": {
     "environment": [
