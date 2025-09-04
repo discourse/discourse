@@ -79,21 +79,11 @@ export default {
         .on("ajaxSend", incrementAjaxPendingRequests)
         .on("ajaxComplete ajaxError", decrementAjaxPendingRequests);
 
-      let backburnerBeginCount = 0;
+      window.emberSettled = async (timeoutSeconds) => {
+        await new Promise((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(r))
+        );
 
-      _backburner.on("begin", () => {
-        backburnerBeginCount++;
-      });
-
-      window.emberGetBackburnerBeginCount = () => backburnerBeginCount;
-
-      window.emberBackburnerBegan = (previousCount) => {
-        return waitUntil(() => backburnerBeginCount > previousCount, {
-          timeout: Infinity,
-        });
-      };
-
-      window.emberSettled = (timeoutSeconds) => {
         timeoutSeconds = timeoutSeconds || 10;
         const start = Date.now();
 
