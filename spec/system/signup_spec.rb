@@ -5,6 +5,7 @@ shared_examples "signup scenarios" do
   let(:login_page) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:invite) { Fabricate(:invite) }
   let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
@@ -103,7 +104,7 @@ shared_examples "signup scenarios" do
 
     it "redirects to a new-topic after signin and keeps the query" do
       category = Fabricate(:category)
-      SiteSetting.default_trust_level = 4
+      SiteSetting.create_topic_allowed_groups = "0"
 
       visit "/new-topic?category_id=#{category.id}"
       signup_page
@@ -125,7 +126,8 @@ shared_examples "signup scenarios" do
 
       activate_account.click_activate_account
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(page).to have_current_path("/c/#{category.id}")
+      expect(composer).to be_opened
     end
 
     it "cannot signup with a common password" do
