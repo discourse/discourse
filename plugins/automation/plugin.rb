@@ -74,6 +74,7 @@ after_initialize do
     lib/discourse_automation/triggers/stalled_wiki
     lib/discourse_automation/triggers/topic_tags_changed
     lib/discourse_automation/triggers/topic
+    lib/discourse_automation/triggers/topic_closed
     lib/discourse_automation/triggers/user_added_to_group
     lib/discourse_automation/triggers/user_badge_granted
     lib/discourse_automation/triggers/user_promoted
@@ -192,6 +193,8 @@ after_initialize do
       user,
     )
   end
+
+  on(:topic_closed) { |topic| ::DiscourseAutomation::EventHandlers.handle_topic_closed(topic) }
 
   on(:post_created) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :create)
