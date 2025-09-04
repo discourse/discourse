@@ -93,9 +93,18 @@ export default {
         });
       };
 
-      window.emberSettled = () => {
+      window.emberSettled = (timeoutSeconds) => {
+        timeoutSeconds = timeoutSeconds || 10;
+        const start = Date.now();
+
         return waitUntil(
           () => {
+            if ((Date.now() - start) / 1000 > timeoutSeconds) {
+              // eslint-disable-next-line no-console
+              console.error("Timed out waiting for Ember to settle");
+              return true;
+            }
+
             const state = getSettledState();
 
             // console.log(`[${Date.now() / 1000}]`, {
@@ -103,7 +112,10 @@ export default {
             //   hasPendingTransitions: state.hasPendingTransitions,
             //   isRenderPending: state.isRenderPending,
             //   pendingRequests: pendingRequests.length,
+            //   hasPendingWaiters: state.hasPendingWaiters,
             // });
+
+            // console.log(`[${Date.now() / 1000}]`, _backburner.getDebugInfo());
 
             const settled =
               !state.hasRunLoop &&

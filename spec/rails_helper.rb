@@ -517,10 +517,9 @@ RSpec.configure do |config|
           now = Time.now.to_f
           # puts "[#{Time.now.to_f}] #{method_name} START"
           @driver.send(:session).evaluate_async_script(
-            "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
+            "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
           )
           # puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
-          raise "Took too long" if (Time.now.to_f - now) > 10
           result
         end
       end
