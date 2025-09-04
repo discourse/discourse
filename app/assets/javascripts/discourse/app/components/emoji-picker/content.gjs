@@ -169,8 +169,7 @@ export default class EmojiPicker extends Component {
   @action
   focusFilter(target) {
     if (
-      this.capabilities.isIOS &&
-      this.site.mobileView
+      this.capabilities.isIOS
     ) {
       return;
     }
