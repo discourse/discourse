@@ -1,5 +1,4 @@
-import { getOwner } from "@ember/owner";
-import { click, currentURL, visit, waitUntil } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -359,11 +358,6 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     await visit("/t/internationalization-localization/280/1");
 
     await click(".timeline-date-wrapper .now-date");
-
-    await waitUntil(() => {
-      const controller = getOwner(this).lookup("controller:topic");
-      return controller?.model?.postStream?.loadedAllPosts;
-    });
 
     assert.strictEqual(
       currentURL(),
