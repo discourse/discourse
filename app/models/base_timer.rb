@@ -3,6 +3,9 @@
 class BaseTimer < ActiveRecord::Base
   self.table_name = "topic_timers"
 
+  # TODO: Remove once db/post_migrate/20250902073957_drop_topic_timer_topic_id.rb has been promoted to pre-deploy
+  self.ignored_columns = ["topic_id"]
+
   MAX_DURATION_MINUTES = 20.years.to_i / 60
 
   include Trashable
