@@ -176,9 +176,11 @@ describe "Admin Color Palette Config Area Page", type: :system do
       visible: false,
     )
 
-    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-    )
+    try_until_success(reason: "Relies on browser to update") do
+      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+      )
+    end
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do

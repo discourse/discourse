@@ -59,11 +59,8 @@ describe "Edit Category Localizations", type: :system do
           "Demander de nouvelles fonctionnalités dans cette catégorie",
         )
         category_page.save_settings
-        page.refresh
 
-        try_until_success do
-          expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
-        end
+        expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
         expect(CategoryLocalization.where(category_id: category.id, locale: "es").count).to eq(1)
         expect(CategoryLocalization.where(category_id: category.id, locale: "fr").count).to eq(1)
         expect(CategoryLocalization.where(category_id: category.id, locale: "es").first.name).to eq(

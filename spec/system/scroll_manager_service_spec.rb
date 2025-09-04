@@ -22,23 +22,23 @@ describe "Ember route-scroll-manager service", type: :system do
     JS
 
     topic_list_scroll_y = current_scroll_y
-    try_until_success { expect(topic_list_scroll_y).to be > 0 }
+    expect(current_scroll_y).to be > 0
 
     find(".sidebar-section-link[data-link-name='all-categories']").click
 
     expect(page).to have_css("body.navigation-categories")
 
-    try_until_success { expect(current_scroll_y).to eq(0) }
+    expect(current_scroll_y).to eq(0)
 
     page.go_back
 
     expect(page).to have_css("body.navigation-topics")
     expect(discovery.topic_list).to have_topics
 
-    try_until_success { expect(current_scroll_y).to eq(topic_list_scroll_y) }
+    expect(current_scroll_y).to eq(topic_list_scroll_y)
 
     # Clicking site logo triggers refresh and scrolls to top
     click_logo
-    try_until_success { expect(current_scroll_y).to eq(0) }
+    expect(current_scroll_y).to eq(0)
   end
 end

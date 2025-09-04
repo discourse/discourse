@@ -28,13 +28,16 @@ describe "Edit Category Form Templates", type: :system do
     it "should allow you to select and save a form template" do
       category_page.visit_edit_template(category)
       category_page.toggle_form_templates
+
       expect(category_page).to have_no_d_editor
+
       category_page.select_form_template(form_template.name)
+
       expect(category_page).to have_selected_template(form_template.name)
+
       category_page.save_settings
-      try_until_success do
-        expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
-      end
+
+      expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
     end
 
     it "should allow you to select and save multiple form templates" do
@@ -43,11 +46,10 @@ describe "Edit Category Form Templates", type: :system do
       category_page.select_form_template(form_template.name)
       category_page.select_form_template(form_template_2.name)
       category_page.save_settings
-      try_until_success do
-        expect(Category.find_by_id(category.id).form_template_ids).to eq(
-          [form_template.id, form_template_2.id],
-        )
-      end
+
+      expect(Category.find_by_id(category.id).form_template_ids).to eq(
+        [form_template.id, form_template_2.id],
+      )
     end
   end
 
