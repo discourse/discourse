@@ -495,7 +495,7 @@ RSpec.configure do |config|
           super(*args, **options).tap do
             now = Time.now.to_f
             @driver.send(:session).evaluate_async_script(
-              "window.emberSettled('#{method_name}').then(arguments[0])",
+              "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
             )
             puts "#{method_name}: #{Time.now.to_f - now}"
           end
