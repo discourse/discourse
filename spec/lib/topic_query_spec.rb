@@ -110,7 +110,6 @@ RSpec.describe TopicQuery do
       it "respects SiteSetting.max_topic_query_page_param" do
         SiteSetting.max_topic_query_page_param = 100
 
-        # Invalid values
         expect(TopicQuery.validate?(:page, -1)).to eq(false)
         expect(TopicQuery.validate?(:page, 101)).to eq(false)
 
