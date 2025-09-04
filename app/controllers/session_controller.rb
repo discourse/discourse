@@ -73,6 +73,7 @@ class SessionController < ApplicationController
       end
 
       if request.xhr?
+        # This is needed for DiscourseConnect provider to redirect users correctly
         cookies[:sso_destination_url] = data[:sso_redirect_url]
         render json: success_json.merge(redirect_url: data[:sso_redirect_url])
       else
@@ -80,6 +81,7 @@ class SessionController < ApplicationController
       end
     elsif result.no_second_factors_enabled?
       if request.xhr?
+        # This is needed for DiscourseConnect provider to redirect users correctly
         cookies[:sso_destination_url] = result.data[:sso_redirect_url]
       else
         redirect_to result.data[:sso_redirect_url], allow_other_host: true
