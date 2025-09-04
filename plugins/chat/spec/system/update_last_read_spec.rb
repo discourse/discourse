@@ -43,7 +43,7 @@ RSpec.describe "Update last read", type: :system do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
+      expect(membership.reload.last_read_message_id).to eq(last_message.id)
     end
   end
 end

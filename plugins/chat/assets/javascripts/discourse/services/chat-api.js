@@ -280,7 +280,6 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   createInteraction(channelId, messageId, data = {}) {
-    console.log("posting request");
     return this.#postRequest(
       `/channels/${channelId}/messages/${messageId}/interactions`,
       data

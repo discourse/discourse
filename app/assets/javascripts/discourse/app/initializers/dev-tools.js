@@ -76,7 +76,7 @@ export default {
         .on("ajaxSend", incrementAjaxPendingRequests)
         .on("ajaxComplete ajaxError", decrementAjaxPendingRequests);
 
-      window.emberSettled = (action) => {
+      window.emberSettled = () => {
         return waitUntil(
           () => {
             const state = getSettledState();
