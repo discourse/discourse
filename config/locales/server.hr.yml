@@ -714,7 +714,7 @@ hr:
     connected: "(povezano)"
   activation:
     already_done: "Žao nam je, poveznica za aktivaciju računa više nije važeća. Možda vam je račun već aktivan?"
-    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
+    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobit ćete email kad vam račun bude odobren!"
     missing_session: "Ne možemo utvrditi je li vaš korisnički račun kreiran, molimo osigurajte da su vam omogućeni cookieji (kolačići)."
     activated: "Žao nam je, ovaj korisnički račun je već aktiviran."
     admin_confirm:
