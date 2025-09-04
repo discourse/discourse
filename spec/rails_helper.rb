@@ -519,17 +519,6 @@ RSpec.configure do |config|
           result
         end
       end
-
-      def visit(path)
-        result = super
-        now = Time.now.to_f
-        @driver.send(:session).evaluate_async_script(
-          "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
-        )
-        raise "Took too long" if (Time.now.to_f - now) > 5
-        puts "VISIT #{path}: #{Time.now.to_f - now}"
-        result
-      end
     end
 
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
