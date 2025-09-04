@@ -1,5 +1,5 @@
 import { debounce } from "@ember/runloop";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 
 /**
   Debounce a Javascript function. This means if it's called many times in a time limit it
@@ -8,7 +8,7 @@ import { isTesting } from "discourse/lib/environment";
 **/
 
 export default function () {
-  if (isTesting()) {
+  if (isRailsTesting() || isTesting()) {
     const lastArgument = arguments[arguments.length - 1];
     const hasImmediateArgument = typeof lastArgument === "boolean";
 

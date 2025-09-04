@@ -20,12 +20,9 @@ describe "User preferences | Interface", type: :system do
       dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
       click_button(I18n.t("js.save"))
 
-      expect(
-        UserOption.exists?(
-          user_id: user.id,
-          bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
-        ),
-      ).to be_truthy
+      expect(user.reload.user_option.bookmark_auto_delete_preference).to eq(
+        Bookmark.auto_delete_preferences[:when_reminder_sent],
+      )
     end
   end
 

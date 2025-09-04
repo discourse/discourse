@@ -60,12 +60,15 @@ export default {
           return;
         }
 
+        // console.log(`[${Date.now() / 1000}] added`, settings.url);
+
         pendingRequests.push(xhr);
       };
 
-      const decrementAjaxPendingRequests = (_event, xhr) => {
+      const decrementAjaxPendingRequests = (_event, xhr, settings) => {
         for (let i = 0; i < pendingRequests.length; i++) {
           if (xhr === pendingRequests[i]) {
+            // console.log(`[${Date.now() / 1000}] removed`, settings.url);
             pendingRequests.splice(i, 1);
             break;
           }
@@ -76,17 +79,43 @@ export default {
         .on("ajaxSend", incrementAjaxPendingRequests)
         .on("ajaxComplete ajaxError", decrementAjaxPendingRequests);
 
+      let backburnerBeginCount = 0;
+
+      _backburner.on("begin", () => {
+        backburnerBeginCount++;
+      });
+
+      window.emberGetBackburnerBeginCount = () => backburnerBeginCount;
+
+      window.emberBackburnerBegan = (previousCount) => {
+        return waitUntil(() => backburnerBeginCount > previousCount, {
+          timeout: Infinity,
+        });
+      };
+
       window.emberSettled = () => {
         return waitUntil(
           () => {
             const state = getSettledState();
 
-            return (
+            // console.log(`[${Date.now() / 1000}]`, {
+            //   hasRunLoop: state.hasRunLoop,
+            //   hasPendingTransitions: state.hasPendingTransitions,
+            //   isRenderPending: state.isRenderPending,
+            //   pendingRequests: pendingRequests.length,
+            // });
+
+            const settled =
               !state.hasRunLoop &&
               !state.hasPendingTransitions &&
               !state.isRenderPending &&
-              pendingRequests.length === 0
-            );
+              pendingRequests.length === 0;
+
+            // if (settled) {
+            //   console.log(`[${Date.now() / 1000}] SETTLED!`);
+            // }
+
+            return settled;
           },
           { timeout: Infinity }
         ).then(() => {});

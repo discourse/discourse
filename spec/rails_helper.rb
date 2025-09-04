@@ -492,12 +492,28 @@ RSpec.configure do |config|
 
       NODE_METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
+          runloop_version_before =
+            @driver.send(:session).evaluate_script("window.emberGetBackburnerBeginCount()")
+
+          # puts "[#{Time.now.to_f}] #{method_name} Backburner Before (#{runloop_version_before})"
+
           result = super(*args, **options)
+
           now = Time.now.to_f
+          @driver.send(:session).evaluate_async_script(
+            "window.emberBackburnerBegan(#{runloop_version_before}).then(arguments[0])",
+          )
+          runloop_version_after =
+            @driver.send(:session).evaluate_script("window.emberGetBackburnerBeginCount()")
+
+          # puts "[#{Time.now.to_f}] #{method_name} Backburner After (#{runloop_version_after}): #{Time.now.to_f - now}"
+
+          now = Time.now.to_f
+          # puts "[#{Time.now.to_f}] #{method_name} START"
           @driver.send(:session).evaluate_async_script(
             "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
           )
-          puts "#{method_name}: #{Time.now.to_f - now}"
+          # puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
           raise "Took too long" if (Time.now.to_f - now) > 10
           result
         end
@@ -514,7 +530,7 @@ RSpec.configure do |config|
           @driver.send(:session).evaluate_async_script(
             "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
           )
-          puts "#{method_name}: #{Time.now.to_f - now}"
+          # puts "[#{Time.now.to_f}] #{method_name}: #{Time.now.to_f - now}"
           raise "Took too long" if (Time.now.to_f - now) > 10
           result
         end
