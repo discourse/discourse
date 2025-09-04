@@ -3445,6 +3445,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
