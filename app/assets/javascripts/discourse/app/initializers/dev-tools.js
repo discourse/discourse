@@ -82,7 +82,6 @@ export default {
             const state = getSettledState();
 
             return (
-              !state.hasPendingTimers &&
               !state.hasRunLoop &&
               !state.hasPendingTransitions &&
               !state.isRenderPending &&

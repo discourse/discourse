@@ -2,11 +2,7 @@ import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
-import {
-  INPUT_DELAY,
-  isRailsTesting,
-  isTesting,
-} from "discourse/lib/environment";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape } from "discourse/lib/text";
@@ -98,12 +94,11 @@ function _searchGeneric(term, contextualHashtagConfiguration) {
   }
 
   return new Promise((resolve) => {
-    let timeoutPromise =
-      isTesting() || isRailsTesting()
-        ? null
-        : discourseLater(() => {
-            resolve(CANCELLED_STATUS);
-          }, 5000);
+    let timeoutPromise = isTesting()
+      ? null
+      : discourseLater(() => {
+          resolve(CANCELLED_STATUS);
+        }, 5000);
 
     const debouncedSearch = (q, ctx, resultFunc) => {
       discourseDebounce(this, _searchRequest, q, ctx, resultFunc, INPUT_DELAY);
