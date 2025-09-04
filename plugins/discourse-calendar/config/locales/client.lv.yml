@@ -23,6 +23,7 @@ lv:
         month: "Mēneša"
         week: "Nedēļas"
         day: "Diena"
+        year: "Gada"
     group_timezones:
       search: "Meklēt..."
     discourse_post_event:

@@ -84,7 +84,6 @@ sk:
               help: "napr. #kanál, @používateľské_meno"
           errors:
             action_prohibited: "Bot nemá povolenie na odosielanie príspevkov do tohto kanála"
-            channel_not_found: "Zadaný kanál na Slacku neexistuje."
         telegram:
           title: "Telegram"
           param:

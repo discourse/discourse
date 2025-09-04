@@ -33,17 +33,18 @@ end
 # Table name: web_hook_events
 #
 #  id               :integer          not null, primary key
-#  web_hook_id      :integer          not null
+#  duration         :integer          default(0)
 #  headers          :string
 #  payload          :text
-#  status           :integer          default(0)
-#  response_headers :string
 #  response_body    :text
-#  duration         :integer          default(0)
+#  response_headers :string
+#  status           :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  web_hook_id      :integer          not null
 #
 # Indexes
 #
+#  index_web_hook_events_on_created_at   (created_at)
 #  index_web_hook_events_on_web_hook_id  (web_hook_id)
 #

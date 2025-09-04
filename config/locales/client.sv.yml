@@ -2242,6 +2242,7 @@ sv:
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
       title: "Eller tryck på %{modifier}Enter"
+      discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
@@ -2279,14 +2280,7 @@ sv:
       upload_description: "skriv en bildbeskrivning här"
       list_item: "Listobjekt"
       help: "Markdown-redigeringshjälp"
-      collapse: "minimera skaparpanelen"
-      open: "öppna skaparpanelen"
-      abandon: "stäng skaparen och kasta utkast"
-      enter_fullscreen: "skaparen i helskärm"
-      exit_fullscreen: "avsluta helskärmsläge för skaparen"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
-      show_toolbar: "visa redigerarens verktygsfält"
-      hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
       yourself_confirm:
@@ -5304,10 +5298,6 @@ sv:
           remote_theme_edits: "Om du vill redigera detta tema måste du <a href='%{repoURL}' target='_blank'>skicka in en ändring av dess lagringsplats</a>"
           repo_unreachable: "Kunde inte kontakta Git-lagringsplatsen för detta tema. Felmeddelande:"
           imported_from_archive: "Detta tema importerades från en .zip-fil"
-          settings: "Inställningar"
-          colors: "Färger"
-          discard_colors: "Förkasta"
-          colors_title: "Färger"
           scss:
             text: "CSS"
           after_header:
@@ -5954,7 +5944,6 @@ sv:
             cancel: "Avbryt"
         merging_user: "Slår samman användare…"
         merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
-        delete_forbidden_because_staff: "Administratörer och moderatorer kan inte tas bort."
         delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg från administratörer och moderatorer."
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"

@@ -48,7 +48,7 @@ ur:
         dropdowns:
           title: "ڈراپ ڈاؤن"
         categories:
-          title: "اقسام"
+          title: "زمرہ جات"
         bread_crumbs:
           title: "بریڈ کرم"
         navigation:
@@ -60,7 +60,7 @@ ur:
         categories_list:
           title: "اقسام کی فہرست"
         topic_link:
-          title: "عنوان کا لنک"
+          title: "موضوع کا رابطہ"
         topic_list_item:
           title: "موضوعات کی فہرست میں ایک شے"
         topic_statuses:

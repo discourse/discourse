@@ -1889,8 +1889,14 @@ id:
           complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      no_action_user:
+        title: "Tidak ada tindakan"
+      silence_user:
+        title: "Senyapkan pengguna"
+      suspend_user:
+        title: "Tangguhkan pengguna"
       delete_user:
-        complete: "Pengguna dihapus."
+        complete: "Pengguna dihapus"
   fallback_username: "pengguna"
   form_templates:
     errors:

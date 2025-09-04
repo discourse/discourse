@@ -1,10 +1,6 @@
 import RSVP from "rsvp";
-import {
-  isDevelopment,
-  isProduction,
-  isTesting,
-  setEnvironment,
-} from "discourse/lib/environment";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
+import * as environment from "discourse/lib/environment";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setIconList } from "discourse/lib/icon-library";
@@ -16,6 +12,9 @@ import I18n from "discourse-i18n";
 export default {
   // The very first initializer to run
   initialize(app) {
+    const { isDevelopment, isProduction, isTesting, setEnvironment } =
+      environment;
+
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
 
@@ -52,6 +51,8 @@ export default {
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
+    DeprecationWorkflow.setEnvironment(environment);
+
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};

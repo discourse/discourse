@@ -565,6 +565,7 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
+        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 

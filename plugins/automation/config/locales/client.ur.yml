@@ -41,7 +41,7 @@ ur:
         user_badge_granted:
           fields:
             badge:
-              label: بَیج
+              label: تمغہ
             only_first_grant:
               label: صرف پہلی گرانٹ پر
         stalled_topic:
@@ -128,7 +128,7 @@ ur:
           created: بنایا گیا
           topics: تمام موضوعات
           with_images: تصاویر
-          with_links: لنکس
+          with_links: رابطے
           with_code: کَوڈ
           with_uploads: اَپ لوڈز
         user_updated:
@@ -197,7 +197,7 @@ ur:
               label: صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
               description: اختیاری، صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
             badge:
-              label: بَیج
+              label: تمغہ
         suspend_user_by_email:
           fields:
             actor:

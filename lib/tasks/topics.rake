@@ -109,3 +109,65 @@ task "topics:update_fancy_titles" => :environment do
 
   puts "", "Done"
 end
+
+desc "Remap topic titles - replace a specific string with another"
+task "topics:remap_titles", %i[old_string new_string] => [:environment] do |_, args|
+  require "highline/import"
+
+  if args[:old_string].blank? || args[:new_string].blank?
+    puts "ERROR: Missing required arguments"
+    puts "Usage: rake topics:remap_titles['old string','new string']"
+    exit 1
+  end
+
+  old_string = args[:old_string]
+  new_string = args[:new_string]
+
+  # add a confirmation to ensure user wants to replace old with new here
+  confirm_replace =
+    ask(
+      "Are you sure you want to replace all occurrences of '#{old_string}' with '#{new_string}' in topic titles? (Y/n)",
+    )
+
+  if confirm_replace.blank? || confirm_replace.downcase == "y"
+    puts "Remapping topic titles..."
+    puts "Replacing '#{old_string}' with '#{new_string}'"
+
+    # Filter topics that contain the old_string (using LIKE for case-sensitive matching)
+    matching_topics =
+      Topic
+        .where("title LIKE ?", "%#{old_string}%")
+        .where("deleted_at IS NULL")
+        .where(archetype: "regular")
+        .where.not(title: nil)
+
+    total_matches = matching_topics.count
+    puts "Found #{total_matches} topics containing '#{old_string}'"
+
+    if total_matches == 0
+      puts "No matching topics found. Exiting."
+      exit 0
+    end
+
+    count = 0
+    matching_topics.find_each do |topic|
+      old_title = topic.title
+      new_title = topic.title.gsub(old_string, new_string)
+
+      # Only update if there's an actual change
+      if old_title != new_title
+        puts "#{topic.id}: #{old_title} → #{new_title}"
+
+        # Update the title directly with SQL
+        Topic.where(id: topic.id).update_all(title: new_title, fancy_title: new_title)
+
+        count += 1
+      end
+    end
+
+    puts "Remapped #{count} topic titles."
+  else
+    puts "Aborting..."
+    exit 0
+  end
+end

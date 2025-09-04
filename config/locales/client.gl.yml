@@ -1827,6 +1827,7 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
+      discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1860,13 +1861,6 @@ gl:
       upload_description: "introducir a descrición da carga aquí"
       list_item: "Elemento da listaxe"
       help: "Axuda para a edición con Markdown"
-      collapse: "minimizar o panel de composición"
-      open: "abrir o panel de composición"
-      abandon: "pechar o panel de composición e desbotar o borrador"
-      enter_fullscreen: "abrir o panel de composición en pantalla completa"
-      exit_fullscreen: "saír do panel de composición en pantalla completa"
-      show_toolbar: "amosar a barra de ferramentas de composición"
-      hide_toolbar: "agochar a barra de ferramentas de composición"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -4144,10 +4138,6 @@ gl:
           remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
-          settings: "Configuración"
-          colors: "Cores"
-          discard_colors: "Desbotar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:
@@ -4677,7 +4667,6 @@ gl:
             transfer_and_delete: "Transferir e eliminar @%{username}"
             cancel: "Cancelar"
         merge_failed: "Produciuse un erro ao combinar os usuarios."
-        delete_forbidden_because_staff: "Non é posíbel eliminar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
           one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimine as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AsyncContent from "discourse/components/async-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -26,11 +25,8 @@ export default class CategoryCalendar extends Component {
         include_subcategories: true,
       };
 
-      if (this.siteSettings.include_expired_events_on_calendar) {
-        params.include_expired = true;
-      }
-
-      return await this.discoursePostEventApi.events(params);
+      const events = await this.discoursePostEventApi.events(params);
+      return this.formattedEvents(events);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -107,7 +103,7 @@ export default class CategoryCalendar extends Component {
   }
 
   @action
-  formatedEvents(events = []) {
+  formattedEvents(events = []) {
     return events.map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
@@ -141,6 +137,7 @@ export default class CategoryCalendar extends Component {
         display: "list-item",
         rrule: event.rrule,
         end: endsAt || startsAt,
+        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
@@ -151,16 +148,12 @@ export default class CategoryCalendar extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      <AsyncContent @asyncData={{this.loadEvents}}>
-        <:content as |events|>
-          <FullCalendar
-            @events={{this.formatedEvents events}}
-            @height="650px"
-            @initialView={{this.categorySetting?.defaultView}}
-            @weekends={{this.renderWeekends}}
-          />
-        </:content>
-      </AsyncContent>
+      <FullCalendar
+        @onLoadEvents={{this.loadEvents}}
+        @height="650px"
+        @initialView={{this.categorySetting?.defaultView}}
+        @weekends={{this.renderWeekends}}
+      />
     {{/if}}
   </template>
 }

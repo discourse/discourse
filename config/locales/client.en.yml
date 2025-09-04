@@ -1792,6 +1792,7 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        staged_user: "Staged users can not receive password reset emails."
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
@@ -6734,6 +6735,8 @@ en:
             title: "Color options"
             toggle: "User selectable"
             toggle_description: "Color palette can be selected by users"
+            toggle_default_light_on_theme: "Color palette is the default light palette on default theme (%{themeName})"
+            toggle_default_dark_on_theme: "Color palette is the default dark palette on default theme (%{themeName})"
           colors:
             title: "Colors"
           save_changes: "Save changes"
@@ -7485,6 +7488,7 @@ en:
             tag_group_change: "change tag group"
             delete_associated_accounts: "delete associated accounts"
             change_theme_site_setting: "change theme site setting"
+            stop_impersonating: "stop impersonating"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -7677,6 +7681,7 @@ en:
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "That user can't be found."
         invalid: "Sorry, you may not impersonate that user."
+        error: "Oops. An unexpected error occurred."
 
       users:
         title: "Users"
@@ -7931,7 +7936,7 @@ en:
 
         merging_user: "Merging user…"
         merge_failed: "There was an error while merging the users."
-        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        delete_forbidden_because_staff: "Admins can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         delete_forbidden:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"

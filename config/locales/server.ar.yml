@@ -2786,7 +2786,6 @@ ar:
     content_localization_enabled: "يعرض المحتوى المترجم للمستخدمين بناءً على إعدادات لغة المتصفح أو تفضيلات اللغة الخاصة بهم. قد يشمل هذا المحتوى الفئات، والوسوم، والمنشورات، والموضوعات. اللغات المدعومة محددة في إعداد 'اللغات المدعومة لتوطين المحتوى'."
     content_localization_supported_locales: "قائمة باللغات المدعومة التي يمكن ترجمة محتوى المستخدم إليها. يتطلب تفعيل إعداد \"توطين المحتوى\"."
     content_localization_allowed_groups: "المجموعات المسموح لها بتحديث المحتوى المترجم. يتطلب تفعيل إعداد \"توطين المحتوى\"."
-    content_localization_anon_language_switcher: "تفعيل أداة تغيير اللغة التي تتيح لزوار الموقع غير المسجلين الدخول التبديل بين النسخ المترجمة من محتوى Discourse والمحتوى المساهم من المستخدمين. يعتمد ذلك على قائمة اللغات المحددة في 'اللغات المدعومة لتوطين المحتوى'"
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
       invalid_email: "عنوان البريد الإلكتروني غير صالح."
@@ -2870,7 +2869,6 @@ ar:
       invalid_uncategorized_category_setting: 'لا يمكن تحديد الفئة "غير المصنَّفة" إذا لم يتم تفعيل ''allow uncategorized topics''.'
       invalid_search_ranking_weights: "القيمة غير صالحة لإعداد الموقع search_ranking_weights. مثال: '{0.1,0.2,0.3,1.0}'. لاحظ أن الحد الأقصى لقيمة كل وزن هو 1.0."
       content_localization_locale_limit: "لا يمكن أن يتجاوز عدد اللغات المحلية المدعومة %{max}."
-      content_localization_anon_language_switcher_requirements: "يتطلب مفتاح تغيير اللغة تفعيل إعداد الموقع تعيين اللغة من الكوكيز، كما يجب أن يحتوي اللغات المدعومة لتوطين المحتوى على لغة واحدة على الأقل."
       mediaconvert_role_arn_required: "مطلوب تحديد معرف الدور (ARN) في AWS IAM عند استخدام خدمة AWS MediaConvert لتحويل مقاطع الفيديو."
       s3_credentials_required_for_video_conversion: "تتطلب عملية تحويل الفيديو بيانات اعتماد S3. يرجى إعداد مفاتيح الوصول إلى S3 أو تفعيل ملف تعريف IAM."
     keywords:
@@ -5779,9 +5777,20 @@ ar:
       approve_and_unhide:
         title: "الموافقة على المنشور وإظهاره"
         complete: "تمت الموافقة على المنشور وإظهاره"
+      no_action_user:
+        title: "التي لم يتم اتخاذ إجراء بشأنها"
+      silence_user:
+        title: "كتم المستخدم"
+        complete: "تم كتم صوت المستخدم"
+      suspend_user:
+        title: "تعليق المستخدم"
+        complete: "تم تعليق المستخدم"
       delete_user:
+        title: "حذف المستخدم"
+        complete: "تم حذف المستخدم"
         reason: "تم الحذف من خلال قائمة انتظار المراجعة"
-        complete: "تم حذف المستخدم."
+      delete_and_block_user:
+        complete: "تم حذف المستخدم وحظره"
   email_style:
     html_missing_placeholder: "يجب أن يشتمل قالب html على %{placeholder}"
   notification_level:

@@ -326,6 +326,9 @@ ro:
         logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search: "Caută"
+    impersonation:
+      notice: "Preia identitatea utilizatorului %{username}"
+      stop: "Oprește preluarea identității"
     themes:
       default_description: "Implicit"
       broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau o componentă are erori. Vezi consola navigatorului pentru mai multe informații."
@@ -2207,6 +2210,9 @@ ro:
       create_pm: "Trimite mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
+      save_and_close: "Salvează și închide"
+      discard: "Renunță"
+      draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
@@ -2257,6 +2263,13 @@ ro:
       list_item: "Element listă"
       toggle_direction: "Comută direcția"
       help: "Ajutor pentru formatarea cu Markdown"
+      collapse: "Minimizează panoul de compunere"
+      open: "Deschide panoul de compunere"
+      abandon: "Închide compozitorul și renunță la ciornă"
+      enter_fullscreen: "Folosește ecranul complet al compozitorului"
+      exit_fullscreen: "Ieși din ecranul complet al compozitorului"
+      show_toolbar: "Arată bara de instrumente a compozitorului"
+      hide_toolbar: "Ascunde bara de instrumente a compozitorului"
       modal_ok: "Ok"
       cant_send_pm: "Nu poți trimite mesaje către %{username}"
       create_message_error: "Ne pare rău, s-a produs o eroare la crearea acestui mesaj. Te rugăm să încerci din nou."
@@ -3104,6 +3117,10 @@ ro:
         add: "Adaugă locală nouă"
         remove: "Elimină"
         hint: "Momentan nu există localizări pentru această categorie. Dă clic pe „Adaugă locală nouă” pentru a începe să adaugi localizări."
+      tags_allowed_tags: "Restricționează aceste etichete la categoria „%{categoryName}”:"
+      tags_allowed_tags_new_category: "Restricționează aceste etichete la această categorie:"
+      tags_allowed_tag_groups: "Restricționează aceste grupuri de etichete la categoria „%{categoryName}”:"
+      tags_allowed_tag_groups_new_category: "Restricționează aceste grupuri de etichete la această categorie:"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
       required_tag_group:
@@ -4538,6 +4555,8 @@ ro:
             title: "Opțiuni de culoare"
             toggle: "Selectabil de către utilizator"
             toggle_description: "Paleta de culori poate fi selectată de utilizatori"
+            toggle_default_light_on_theme: "Paleta de culori este paleta deschisă implicită în tema implicită (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta de culori este paleta închisă implicită în tema implicită (%{themeName})"
           colors:
             title: "Culori"
           save_changes: "Salvează modificări"
@@ -4682,6 +4701,7 @@ ro:
           user_selectable: "Tema poate fi aleasă de către utilizatori"
           user_selectable_badge_label: "Selectabilă de către utilizator"
           user_selectable_button_label: "Permite utilizatorilor să selecteze"
+          user_selectable_unavailable_button_label: "Nu permite utilizatorilor să selecteze"
           broken_badge_label: "Temă stricată"
           color_scheme_user_selectable: "Paleta de culori poate fi selectată de utilizatori"
           dark_color_scheme: "Paletă de culori întunecate"
@@ -4717,11 +4737,6 @@ ro:
           add: "Adaugă"
           overriden_site_settings_explanation: "Setările site-ului pe care tema le poate personaliza. Dă clic pe Resetare pentru a reveni la valorile implicite a setărilor site-ului. Poți vedea toate setările site-ului suprascrise de teme în <a href='%{themeSiteSettingsConfigUrl}'>pagina de configurare a setărilor temei site-ului</a>."
           built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
-          settings: "Setări"
-          colors: "Culori"
-          save_colors: "Salvează culori"
-          discard_colors: "Renunță"
-          colors_title: "Culori"
           scss:
             text: "CSS"
           after_header:
@@ -4979,6 +4994,7 @@ ro:
             tag_group_destroy: "șterge etichetă grup"
             tag_group_change: "schimbă etichetă grup"
             delete_associated_accounts: "șterge conturile asociate"
+            stop_impersonating: "oprește preluarea identității"
         screened_emails:
           description: "Când cineva încearcă să creeze un cont nou, următorul email va fi verificat iar înregistrarea va fi blocată, sau o altă acțiune va fi inițiată."
           email: "Adresă email"
@@ -5080,6 +5096,7 @@ ro:
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
         invalid: "Ne pare rău, nu poți prelua acest rol."
+        error: "Hopa. A apărut o eroare neașteptată."
       users:
         title: "Utilizatori"
         description: "Vizualizare și gestionare utilizatorii."
@@ -5210,7 +5227,7 @@ ro:
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
-        delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
+        delete_forbidden_because_staff: "Administratorii nu pot fi șterși."
         delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"

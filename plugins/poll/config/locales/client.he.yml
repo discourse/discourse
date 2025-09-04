@@ -12,6 +12,8 @@ he:
           poll: "סקר של Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "הסקר הזה דינמי. אפשר לערוך את האפשרויות אחרי הפרסום."
       voters:
         one: "מצביע"
         two: "מצביעים"
@@ -164,6 +166,8 @@ he:
           step: צעד
         poll_public:
           label: להציג מי המצביעים
+        poll_dynamic:
+          label: לאפשר לערוך האפשרויות לאחר הפרסום (סקר דינמי)
         poll_title:
           label: כותרת (רשות)
         poll_options:

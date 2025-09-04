@@ -29,6 +29,7 @@ export default class DiscoursePostEventEvent {
   @tracked categoryId;
   @tracked startsAt;
   @tracked endsAt;
+  @tracked duration;
   @tracked rawInvitees;
   @tracked location;
   @tracked url;
@@ -45,6 +46,8 @@ export default class DiscoursePostEventEvent {
   @tracked isClosed;
   @tracked isExpired;
   @tracked isStandalone;
+  @tracked maxAttendees;
+  @tracked atCapacity;
   @tracked recurrenceUntil;
   @tracked recurrence;
   @tracked customFields;
@@ -63,6 +66,7 @@ export default class DiscoursePostEventEvent {
     this.categoryId = args.category_id;
     this.startsAt = args.starts_at;
     this.endsAt = args.ends_at;
+    this.duration = args.duration;
     this.rawInvitees = args.raw_invitees;
     this.sampleInvitees = args.sample_invitees || [];
     this.location = args.location;
@@ -78,6 +82,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = args.is_standalone;
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
+    this.maxAttendees = args.max_attendees;
+    this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
     this.recurrenceUntil = args.recurrence_until;
     this.canUpdateAttendance = args.can_update_attendance;
@@ -148,6 +154,7 @@ export default class DiscoursePostEventEvent {
     this.name = event.name;
     this.startsAt = event.startsAt;
     this.endsAt = event.endsAt;
+    this.duration = event.duration;
     this.location = event.location;
     this.url = event.url;
     this.timezone = event.timezone;
@@ -161,6 +168,8 @@ export default class DiscoursePostEventEvent {
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
     this.rrule = event.rrule;
+    this.maxAttendees = event.maxAttendees;
+    this.atCapacity = event.atCapacity;
     this.recurrence = event.recurrence;
     this.recurrenceUntil = event.recurrenceUntil;
     this.canUpdateAttendance = event.canUpdateAttendance;

@@ -83,7 +83,6 @@ ko:
               help: "예 : #channel, @username"
           errors:
             action_prohibited: "봇은 해당 채널에 게시 할 권한이 없습니다"
-            channel_not_found: "지정된 채널이 여유 시간에 존재하지 않습니다"
         telegram:
           title: "텔레그램"
           param:

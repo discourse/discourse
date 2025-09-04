@@ -195,6 +195,12 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
+        progress_chart:
+          bar_done:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"

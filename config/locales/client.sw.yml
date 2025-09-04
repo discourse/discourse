@@ -1291,8 +1291,6 @@ sw:
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
       list_item: "Listi kitu"
       help: "Msaada kwenye kuhariri MarkDown"
-      collapse: "Shusha chini paneli ya Composer"
-      abandon: "Funga Composer na acha rasimu"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
       yourself_confirm:
@@ -2887,9 +2885,6 @@ sw:
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           no_settings: "Mandhari hii haina mipangilio."
-          settings: "Mipangilio"
-          colors: "Rangi"
-          colors_title: "Rangi"
           scss:
             text: "CSS"
           after_header:
@@ -3269,7 +3264,6 @@ sw:
             cancel: "Ghairi"
           confirmation:
             cancel: "Ghairi"
-        delete_forbidden_because_staff: "Viongozi na wasimamizi hawawezi kufutwa."
         delete_posts_forbidden_because_staff: "Hauwezi kufuta machapisho yote za viongozi na wasimamizi."
         cant_delete_all_posts:
           one: "Hauwezi kufuta taarifa zote. Kuna taarifa ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"

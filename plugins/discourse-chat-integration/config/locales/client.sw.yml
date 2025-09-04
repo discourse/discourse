@@ -81,7 +81,6 @@ sw:
               help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             action_prohibited: "Roboti hana ruhusa kuchapisha ndani ya hiyo chaneli"
-            channel_not_found: "Chaneli iliyochaguliwa haipo slack"
         telegram:
           title: "Telegram"
           param:

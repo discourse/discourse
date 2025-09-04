@@ -919,6 +919,11 @@ ro:
         logged_in_views: Autentificați
         anon_views: Anonimi
         total_views: Total
+    associated_accounts_by_provider:
+      labels:
+        discourse_connect: "SSO prin Discourse Connect"
+        no_sso_accounts: "Conturi fără o înregistrare SSO"
+        total_users: "Total conturi de utilizator active"
   dashboard:
     problem:
       twitter_login: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
@@ -942,6 +947,7 @@ ro:
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
     set_locale_from_accept_language_header: "Setează limba interfeței pentru utilizatorii anonimi din anteturile de limbă ale navigatorului lor web"
     set_locale_from_cookie: "Permite setarea localei unui utilizator anonim prin intermediul localei din cookie-ului navigatorului"
+    set_locale_from_param: "Permite setarea localei unui utilizator anonim prin parametrul URL „tl”, de exemplu ?tl=es"
     support_mixed_text_direction: "Acceptă indicații de text mixte de la stânga la dreapta și de la dreapta la stânga"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
@@ -1024,12 +1030,15 @@ ro:
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     auth_require_interaction: "Solicită interacțiunea utilizatorului înainte de a redirecționa către un sistem de conectare extern prin `/auth/*`. Aceasta este o apărare în profunzime împotriva atacurilor „Autentificare CSRF”. Dezactivează această setare numai dacă ai încredere deplină că toate metodele de autentificare activate sunt protejate împotriva autentificării CSRF."
     discourse_connect_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
+    auth_overrides_avatar: "Suprascrie avatarul local cu avatarul site-ului extern la fiecare conectare și previne modificările locale. Se aplică tuturor furnizorilor de autentificare."
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
+    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii obișnuiți de conectare socială, cum ar fi Google, Facebook și Twitter, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
+    backup_frequency: "Specifică intervalul, în zile, la care sunt create copii de rezervă automate ale site-ului. Dacă este setat la 7, de exemplu, o copie de rezervă nouă va fi generată în fiecare săptămână. Setează 0 pentru a dezactiva."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_use_acls: "AWS recomandă să nu folosești ACL pentru bucket-urile S3; debifează această opțiune doar dacă intenționezi să configurezi politici de permisiuni pe `s3_upload_bucket` și `s3_backup_bucket`."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -1282,6 +1291,8 @@ ro:
     floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
+    experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
+    experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
@@ -1294,7 +1305,7 @@ ro:
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
-    content_localization_anon_language_switcher: "Activează comutatorul de limbă care permite vizitatorilor site-ului care nu sunt autentificați să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatori. Depinde de lista de limbi definite în „locale acceptate pentru localizarea conținutului”."
+    content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1320,7 +1331,7 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       discourse_id_credentials: "Trebuie să configurezi datele de conectare Discourse ID ('discourse_id_client_id' și 'discourse_id_client_secret') înainte de a activa această setare."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
-      content_localization_anon_language_switcher_requirements: "Comutatorul de limbă necesită activarea setării site-ului „setează locală din cookie”, și „locale acceptate pentru localizarea conținutului” pentru a avea cel puțin o limbă."
+      content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
       s3_credentials_required_for_video_conversion: "Sunt necesare datele de conectare S3 pentru conversia video. Te rog să configurezi cheile de acces S3 sau să activezi profilul IAM."
     keywords:
@@ -1388,6 +1399,7 @@ ro:
       in_muted: "Arată subiecte silențioase"
       in_normal: "Arată subiectele cu nivel normal de notificare"
       in_watching_first_post: "Arată subiectele pe care le urmărești pentru prima postare"
+      in_unseen: "Arată subiectele pe care nu le-ai văzut"
       order_activity: "Sortează după ultima activitate (cele mai noi)"
       order_activity_asc: "Sortează după ultima activitate (cele mai vechi)"
       order_category: "Sortează după numele categoriei (Z-A)"
@@ -1408,6 +1420,7 @@ ro:
       order_views_asc: "Sortează după numărul de vizualizări (primele cu cele mai puține)"
       order_read: "Sortează după data la care ai citit ultima dată (primele cea mai recentă dată)"
       order_read_asc: "Sortează după data la care ai citit ultima dată (primele cea mai veche dată)"
+      exclude_users: "Exclude subiectele cu anumiți utilizatori"
   discourse_connect:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
@@ -2323,6 +2336,8 @@ ro:
       approve_post:
         complete: "Postarea a fost aprobată."
       approve_post_closed:
+        title: "Aprobă postarea"
+        confirm: "Acest subiect este închis. Vrei să creezi postarea oricum?"
         complete: "Postarea a fost aprobată."
       reject_post:
         complete: "Postarea a fost respinsă."
@@ -2349,12 +2364,36 @@ ro:
       approve_and_unhide:
         title: "Aprobă și reafișează postarea"
         complete: "Postare aprobată și afișată"
+      user_actions:
+        bundle_title: "Ce vrei să faci cu utilizatorul?"
+      no_action_user:
+        title: "Nicio acțiune"
+        description: "Nu lua nicio măsură împotriva utilizatorului"
+        complete: "Nicio măsură luată împotriva utilizatorului"
+      silence_user:
+        title: "Redu la tăcere utilizatorul"
+        description: "Împiedică utilizatorul să posteze"
+        complete: "Utilizatorul a fost redus la tăcere"
+        reason: "Utilizator redus la tăcere prin coada de examinare"
+      suspend_user:
+        title: "Suspendă utilizatorul"
+        description: "Suspendă contul de utilizator"
+        complete: "Utilizatorul a fost suspendat"
+        reason: "Utilizator suspendat prin coada de examinare"
       delete_user:
-        complete: "Utilizatorul a fost șters."
+        title: "Șterge utilizator"
+        description: "Șterge acest utilizator din forum"
+        complete: "Utilizatorul a fost șters"
+      delete_and_block_user:
+        title: "Șterge și blochează"
+        description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
+        complete: "Utilizatorul a fost șters și blocat"
   fallback_username: "utilizator"
   form_templates:
     errors:
       invalid_tag_group: "are un grup de etichete nevalid: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Acest site este deja înregistrat cu Discourse ID"
   activemodel:
     errors:
       <<: *errors

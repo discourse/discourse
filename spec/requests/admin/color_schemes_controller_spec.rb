@@ -4,6 +4,7 @@ RSpec.describe Admin::ColorSchemesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
+  fab!(:theme)
 
   let(:valid_params) do
     {
@@ -148,6 +149,80 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to be_present
       end
+
+      it "can set a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: nil, dark_color_scheme_id: nil)
+        params = valid_params
+
+        params[:color_scheme][:default_light_on_theme] = true
+        params[:color_scheme][:default_dark_on_theme] = true
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
+
+      it "can unset a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+        params = valid_params
+
+        params[:color_scheme][:default_light_on_theme] = false
+        params[:color_scheme][:default_dark_on_theme] = false
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to be_nil
+        expect(default_theme.dark_color_scheme_id).to be_nil
+      end
+
+      it "does not change color schame default when params are not present" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
+
+      it "doesn't allow editing the name or colors of a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows making a theme-owned palette user selectable" do
+        existing.update!(theme_id: theme.id, user_selectable: false)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                user_selectable: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(existing.reload.user_selectable).to eq(true)
+      end
+
+      it "allows making a theme-owned palette the default theme's palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                default_light_on_theme: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(Theme.find_default.reload.color_scheme_id).to eq(existing.id)
+      end
     end
 
     shared_examples "color scheme update not allowed" do
@@ -183,6 +258,15 @@ RSpec.describe Admin::ColorSchemesController do
           ColorScheme.count
         }.by(-1)
         expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow deleting a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
+
+        expect { delete "/admin/color_schemes/#{existing.id}.json" }.not_to change {
+          ColorScheme.count
+        }
+        expect(response.status).to eq(403)
       end
     end
 

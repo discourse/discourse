@@ -63,6 +63,11 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
+    }
+
     return event;
   }
 
@@ -75,6 +80,15 @@ export default class DiscoursePostEventApi extends Service {
 
     if (event.watchingInvitee?.id === invitee.id) {
       event.watchingInvitee = null;
+    }
+
+    if (invitee?.status === "going" && Number(event.stats?.going) > 0) {
+      event.stats.going = Number(event.stats.going) - 1;
+    }
+
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats?.going) >= capacity;
     }
   }
 
@@ -90,9 +104,18 @@ export default class DiscoursePostEventApi extends Service {
       event.sampleInvitees.push(event.watchingInvitee);
     }
 
+    if (invitee?.status === "going") {
+      event.stats.going = Number(event.stats.going || 0) + 1;
+    }
+
     event.stats = result.invitee.meta.event_stats;
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
+
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
+    }
 
     return invitee;
   }

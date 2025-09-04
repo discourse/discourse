@@ -167,6 +167,15 @@ pl_PL:
             flag_post:
               label: "Oflaguj post"
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
+            notify_author_pm:
+              label: "Powiadom autora przez PW"
+              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+            notify_author_pm_user:
+              label: "Nadawca PW"
+              description: "Użytkownik, który wyśle PW (domyślnie system)"
+            notify_author_pm_message:
+              label: "Wiadomość PW"
+              description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
               label: "Dołącz osobiste wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"
@@ -179,6 +188,35 @@ pl_PL:
             max_output_tokens:
               label: "Maksymalna liczba tokenów wyjściowych"
               description: "Po określeniu, ustawia górną granicę maksymalnej liczby tokenów, jaką model może wygenerować. Szanuje limit maksymalnej liczby tokenów wyjściowych LLM."
+        llm_tagger:
+          tag_mode:
+            manual: "Użyj konkretnej listy tagów (skonfigurowanej poniżej)"
+            discover: "Pozwól AI odkrywać i używać dowolnych tagów witryny"
+          fields:
+            tagger_persona:
+              label: "Osobowość AI"
+              description: "Osobowość AI do analizy i tagowania postów"
+            tag_mode:
+              label: "Tryb wyboru tagów"
+              description: "Wybierz sposób, w jaki AI wybiera tagi"
+            available_tags:
+              label: "Dostępne tagi"
+              description: "Tagi, z których AI może wybierać (używane tylko w trybie ręcznym)"
+            confidence_threshold:
+              label: "Próg ufności"
+              description: "Minimalny procent ufności (0–100) wymagany do zastosowania sugerowanych tagów"
+            max_tags_per_post:
+              label: "Maksymalna liczba tagów na post"
+              description: "Maksymalna liczba tagów, które można zastosować do jednego wpisu"
+            max_post_tokens:
+              label: "Maksymalna liczba tokenów wpisów"
+              description: "Maksymalna liczba tokenów z treści wpisu do analizy"
+            allow_restricted_tags:
+              label: "Zezwalaj na ograniczone tagi"
+              description: "Pozwól AI proponować i stosować tagi z ograniczonymi uprawnieniami lub widocznością."
+            max_posts_for_context:
+              label: "Maksymalna liczba postów dla kontekstu"
+              description: "Maksymalna liczba postów z tematu do uwzględnienia w kontekście analizy (domyślnie: 5)"
     discourse_ai:
       title: "AI"
       default_llm:
@@ -290,10 +328,21 @@ pl_PL:
           disabled_state:
             configure: "Konfiguruj tłumaczenia"
             empty_label: "Tłumaczenia automatyczne są wyłączone, kliknij poniżej, aby je skonfigurować"
+        stats:
+          title: "Statystyki tłumaczeń"
+          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
+          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
+          backfill_disabled: "Uzupełnianie danych jest obecnie wyłączone."
+          description_tooltip: "Kwalifikujące się posty są określane na podstawie ustawień tłumaczenia AI"
         progress_chart:
-          title: "Postęp tłumaczenia"
-          completed: "Zakończone"
-          remaining: "Pozostało"
+          title: "Postęp tłumaczenia %{tooltip}"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
+          bar_done:
+            one: "%{count} wpis"
+            few: "%{count} wpisy"
+            many: "%{count} wpisów"
+            other: "%{count} wpisów"
       spam:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
@@ -601,6 +650,7 @@ pl_PL:
           google-gemini-2-0-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem (poprzednia generacja)"
           google-gemini-2-5-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem"
           google-gemini-2-0-flash-lite: "Model ekonomiczny i o niskim opóźnieniu"
+          google-gemini-2-5-flash-image-preview: "Najnowszy model generowania obrazu z funkcjami wizyjnymi"
           open_ai-o3: "Najbardziej zaawansowany model wnioskowania OpenAI"
           open_ai-o4-mini: "Zaawansowany, efektywny kosztowo model rozumowania"
           open_ai-gpt-5: "Flagowy model OpenAI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."

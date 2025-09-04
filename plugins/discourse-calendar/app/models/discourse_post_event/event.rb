@@ -30,6 +30,7 @@ module DiscoursePostEvent
               },
               unless: ->(event) { event.name.blank? }
     validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
+    validates :max_attendees, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
 
     validate :raw_invitees_length
     validate :ends_before_start
@@ -78,7 +79,7 @@ module DiscoursePostEvent
     def set_topic_bump
       date = nil
 
-      return if reminders.blank?
+      return if reminders.blank? || starts_at.nil?
       reminders
         .split(",")
         .each do |reminder|
@@ -97,20 +98,37 @@ module DiscoursePostEvent
     end
 
     def expired?
+      if recurring?
+        return false if recurrence_until.nil?
+        return Time.current > recurrence_until
+      end
+
+      return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
     end
 
     def starts_at
-      event_dates.pending.order(:starts_at).last&.starts_at ||
-        event_dates.order(:updated_at, :id).last&.starts_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      from_event_dates =
+        event_dates.pending.order(:starts_at).last&.starts_at ||
+          event_dates.order(:updated_at, :id).last&.starts_at
+
+      from_event_dates || original_starts_at
     end
 
     def ends_at
-      event_dates.pending.order(:starts_at).last&.ends_at ||
-        event_dates.order(:updated_at, :id).last&.ends_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      from_event_dates =
+        event_dates.pending.order(:starts_at).last&.ends_at ||
+          event_dates.order(:updated_at, :id).last&.ends_at
+
+      from_event_dates || original_ends_at
     end
 
     def on_going_event_invitees
+      return [] if self.starts_at.nil? # Can't determine ongoing status without start time
       return [] if !self.ends_at && self.starts_at < Time.now
 
       if self.ends_at
@@ -194,7 +212,7 @@ module DiscoursePostEvent
     end
 
     def create_notification!(user, post, predefined_attendance: false)
-      return if post.event.starts_at < Time.current
+      return if post.event.starts_at.nil? || post.event.starts_at < Time.current
 
       message =
         if predefined_attendance
@@ -220,9 +238,18 @@ module DiscoursePostEvent
     end
 
     def ongoing?
-      return false if self.closed || self.expired?
+      return false if self.closed || self.expired? || self.starts_at.nil?
       finishes_at = self.ends_at || self.starts_at.end_of_day
       (self.starts_at..finishes_at).cover?(Time.now)
+    end
+
+    def going_count
+      invitees.where(status: Invitee.statuses[:going]).count
+    end
+
+    def at_capacity?
+      return false if max_attendees.blank?
+      going_count >= max_attendees
     end
 
     def self.statuses
@@ -314,6 +341,7 @@ module DiscoursePostEvent
           minimal: event_params[:minimal],
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
+          max_attendees: event_params[:"max-attendees"]&.to_i,
         }
 
         params[:custom_fields] = {}
@@ -386,8 +414,24 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      next_ends_at = original_ends_at ? next_starts_at + event_duration : nil
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
       [next_starts_at, next_ends_at]
+    end
+
+    def duration
+      return nil unless original_starts_at
+
+      duration_seconds = original_ends_at ? original_ends_at - original_starts_at : 3600
+      hours = (duration_seconds / 3600)
+      minutes = ((duration_seconds % 3600) / 60)
+      seconds = (duration_seconds % 60)
+
+      sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+    end
+
+    def rrule_timezone
+      timezone || "UTC"
     end
 
     private
@@ -433,17 +477,16 @@ module DiscoursePostEvent
     end
 
     def calculate_next_recurring_date
-      RRuleGenerator.generate(
-        starts_at: original_starts_at.in_time_zone(timezone),
-        timezone: timezone,
-        recurrence: recurrence,
-        recurrence_until: recurrence_until,
-        dtstart: original_starts_at.in_time_zone(timezone),
-      ).first
-    end
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
 
-    def event_duration
-      original_ends_at - original_starts_at
+      RRuleGenerator.generate(
+        starts_at: timezone_starts_at,
+        timezone: rrule_timezone,
+        recurrence: recurrence,
+        recurrence_until: timezone_recurrence_until,
+        dtstart: timezone_starts_at,
+      ).first
     end
   end
 end
@@ -472,4 +515,5 @@ end
 #  chat_channel_id    :bigint
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
+#  max_attendees      :integer
 #

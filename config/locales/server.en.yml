@@ -1987,6 +1987,7 @@ en:
     auth_overrides_email: "Overrides local email with external site email on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
     auth_overrides_username: "Overrides local username with external site username on every login, and prevent local changes.  Applies to all authentication providers. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     auth_overrides_name: "Overrides local full name with external site full name on every login, and prevent local changes.  Applies to all authentication providers."
+    auth_overrides_avatar: "Overrides local avatar with external site avatar on every login, and prevent local changes. Applies to all authentication providers."
     discourse_connect_overrides_avatar: "Overrides user avatar with value from DiscourseConnect payload. If enabled, users will not be allowed to upload avatars on Discourse."
     discourse_connect_overrides_location: "Overrides user location with value from DiscourseConnect payload and prevent local changes."
     discourse_connect_overrides_website: "Overrides user website with value from DiscourseConnect payload and prevent local changes."
@@ -2764,7 +2765,7 @@ en:
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
-    content_localization_anon_language_switcher: "Enable language switcher which allows site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content. Depends on the list of languages defined in 'content localization supported locales'"
+    content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2837,7 +2838,7 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_anon_language_switcher_requirements: "The language switcher requires the `set locale from cookie` site setting to be enabled, and the `content localization supported locales` to have at least one language."
+      content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 

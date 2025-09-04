@@ -35,7 +35,13 @@ describe DiscoursePostEvent::EventSerializer do
 
       it "returns the correct stats" do
         json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
-        expect(json[:event][:stats]).to eq(going: 1, interested: 0, invited: 2, not_going: 0)
+        expect(json[:event][:stats]).to eq(
+          going: 1,
+          interested: 0,
+          invited: 2,
+          not_going: 0,
+          capacity: nil,
+        )
       end
     end
   end
@@ -46,6 +52,42 @@ describe DiscoursePostEvent::EventSerializer do
     it "returns the event category's id" do
       json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
       expect(json[:event][:category_id]).to eq(category.id)
+    end
+
+    context "when event has duration" do
+      fab!(:post_with_duration) { Fabricate(:post, topic: topic) }
+      fab!(:event_with_duration) do
+        Fabricate(
+          :event,
+          post: post_with_duration,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: "2022-01-15 11:30:00 UTC",
+        )
+      end
+
+      it "includes duration in serialized output" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(event_with_duration, scope: Guardian.new).as_json
+        expect(json[:event][:duration]).to eq("01:30:00")
+      end
+    end
+
+    context "when event has no end time" do
+      fab!(:post_no_end) { Fabricate(:post, topic: topic) }
+      fab!(:event_no_end) do
+        Fabricate(
+          :event,
+          post: post_no_end,
+          original_starts_at: "2022-01-15 10:00:00 UTC",
+          original_ends_at: nil,
+        )
+      end
+
+      it "includes default 1-hour duration in serialized output" do
+        json = DiscoursePostEvent::EventSerializer.new(event_no_end, scope: Guardian.new).as_json
+        expect(json[:event]).to have_key(:duration)
+        expect(json[:event][:duration]).to eq("01:00:00")
+      end
     end
   end
 end

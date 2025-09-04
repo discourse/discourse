@@ -3,6 +3,10 @@
 module DiscourseAi
   module Translation
     class CategoryCandidates < BaseCandidates
+      private
+
+      # all categories that are eligible for translation based on site settings,
+      # including those without locale detected yet.
       def self.get
         categories = Category.all
         if SiteSetting.ai_translation_backfill_limit_to_public_content
@@ -11,13 +15,11 @@ module DiscourseAi
         categories
       end
 
-      private
-
       def self.calculate_completion_per_locale(locale)
         base_locale = "#{locale.split("_").first}%"
         sql = <<~SQL
           WITH eligible_categories AS (
-            #{get.to_sql}
+            #{get.where("categories.locale IS NOT NULL").to_sql}
           ),
           total_count AS (
             SELECT COUNT(*) AS count FROM eligible_categories
@@ -32,10 +34,10 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        DB.query_single(sql, base_locale: "#{base_locale}%")
+        DB.query_single(sql, base_locale:)
       end
 
-      def self.completion_cache_key_for_type
+      def self.cache_key_for_type
         "discourse_ai::translation::category_candidates"
       end
     end

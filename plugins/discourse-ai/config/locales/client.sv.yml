@@ -60,6 +60,10 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        progress_chart:
+          bar_done:
+            one: "%{count} inlägg"
+            other: "%{count} inlägg"
       spam:
         short_title: "Skräppost"
         last_seven_days: "Senaste 7 dagarna"

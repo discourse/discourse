@@ -1760,6 +1760,7 @@ sr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
+      discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1785,8 +1786,6 @@ sr:
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
-      collapse: "smanji panel za sastavljanje teksta"
-      hide_toolbar: "sakrij alatku za pisanje"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -2972,10 +2971,6 @@ sr:
           enable: "Omogući"
           disable: "Onemogući"
           add: "Dodaj"
-          settings: "Podešavanje"
-          colors: "Boje"
-          discard_colors: "Odbaci"
-          colors_title: "Boje"
           scss:
             text: "CSS"
           footer:
@@ -3234,7 +3229,6 @@ sr:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"

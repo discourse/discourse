@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input, Textarea } from "@ember/component";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -32,6 +31,7 @@ export default class PostEventBuilder extends Component {
 
   @tracked flash = null;
   @tracked isSaving = false;
+  @tracked maxAttendeesInput = this.args.model.event.maxAttendees;
 
   @tracked startsAt = moment(this.event.startsAt).tz(
     this.event.timezone || "UTC"
@@ -178,6 +178,15 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
+  setMaxAttendees(e) {
+    const raw = e.target.value;
+    const value = parseInt(raw, 10);
+    this.event.maxAttendees =
+      Number.isFinite(value) && value > 0 ? value : null;
+    this.maxAttendeesInput = raw;
+  }
+
+  @action
   onChangeDates(dates) {
     this.event.startsAt = dates.from;
     this.event.endsAt = dates.to;
@@ -230,6 +239,50 @@ export default class PostEventBuilder extends Component {
     this.endsAt = this.event.endsAt
       ? moment(this.event.endsAt).tz(newTz)
       : null;
+  }
+
+  // Native input handlers
+  @action
+  setName(e) {
+    this.event.name = e.target.value;
+  }
+
+  @action
+  setLocation(e) {
+    this.event.location = e.target.value;
+  }
+
+  @action
+  setUrl(e) {
+    this.event.url = e.target.value;
+  }
+
+  @action
+  setDescription(e) {
+    this.event.description = e.target.value;
+  }
+
+  @action
+  setShowLocalTime(e) {
+    this.event.showLocalTime = e.target.checked;
+  }
+
+  @action
+  setMinimal(e) {
+    this.event.minimal = e.target.checked;
+  }
+
+  @action
+  setChatEnabled(e) {
+    this.event.chatEnabled = e.target.checked;
+  }
+
+  @action
+  setReminderValue(reminder, e) {
+    const val = e.target.value;
+    // keep numeric when possible
+    const parsed = val === "" ? null : Number(val);
+    reminder.value = Number.isFinite(parsed) ? parsed : val;
   }
 
   @action
@@ -365,8 +418,10 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.name.label"
                 class="name"
               >
-                <Input
-                  @value={{@model.event.name}}
+                <input
+                  type="text"
+                  value={{@model.event.name}}
+                  {{on "input" this.setName}}
                   placeholder={{i18n
                     "discourse_post_event.builder_modal.name.placeholder"
                   }}
@@ -377,8 +432,10 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.location.label"
                 class="location"
               >
-                <Input
-                  @value={{@model.event.location}}
+                <input
+                  type="text"
+                  value={{@model.event.location}}
+                  {{on "input" this.setLocation}}
                   placeholder={{i18n
                     "discourse_post_event.builder_modal.location.placeholder"
                   }}
@@ -390,8 +447,10 @@ export default class PostEventBuilder extends Component {
                   @label="discourse_post_event.builder_modal.url.label"
                   class="url"
                 >
-                  <Input
-                    @value={{@model.event.url}}
+                  <input
+                    type="url"
+                    value={{@model.event.url}}
+                    {{on "input" this.setUrl}}
                     placeholder={{i18n
                       "discourse_post_event.builder_modal.url.placeholder"
                     }}
@@ -403,10 +462,27 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.description.label"
                 class="description"
               >
-                <Textarea
-                  @value={{@model.event.description}}
+                <textarea
+                  value={{@model.event.description}}
+                  {{on "input" this.setDescription}}
                   placeholder={{i18n
                     "discourse_post_event.builder_modal.description.placeholder"
+                  }}
+                ></textarea>
+              </EventField>
+
+              <EventField
+                class="max-attendees"
+                @label="discourse_post_event.builder_modal.max_attendees.label"
+              >
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={{this.maxAttendeesInput}}
+                  {{on "input" this.setMaxAttendees}}
+                  placeholder={{i18n
+                    "discourse_post_event.builder_modal.max_attendees.placeholder"
                   }}
                 />
               </EventField>
@@ -427,9 +503,10 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.show_local_time.label"
               >
                 <label class="checkbox-label">
-                  <Input
-                    @type="checkbox"
-                    @checked={{@model.event.showLocalTime}}
+                  <input
+                    type="checkbox"
+                    checked={{@model.event.showLocalTime}}
+                    {{on "input" this.setShowLocalTime}}
                   />
                   <span class="message">
                     {{i18n
@@ -533,13 +610,16 @@ export default class PostEventBuilder extends Component {
                         class="reminder-type"
                       />
 
-                      <Input
-                        @value={{reminder.value}}
+                      <input
+                        type="number"
+                        class="reminder-value"
                         min="0"
+                        step="1"
+                        value={{reminder.value}}
+                        {{on "input" (fn this.setReminderValue reminder)}}
                         placeholder={{i18n
                           "discourse_post_event.builder_modal.name.placeholder"
                         }}
-                        class="reminder-value"
                       />
 
                       <ComboBox
@@ -563,7 +643,6 @@ export default class PostEventBuilder extends Component {
                         @icon="xmark"
                         class="remove-reminder"
                       />
-
                     </div>
                   {{/each}}
                 </div>
@@ -610,7 +689,11 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.minimal.label"
               >
                 <label class="checkbox-label">
-                  <Input @type="checkbox" @checked={{@model.event.minimal}} />
+                  <input
+                    type="checkbox"
+                    checked={{@model.event.minimal}}
+                    {{on "input" this.setMinimal}}
+                  />
                   <span class="message">
                     {{i18n
                       "discourse_post_event.builder_modal.minimal.checkbox_label"
@@ -625,9 +708,10 @@ export default class PostEventBuilder extends Component {
                   @label="discourse_post_event.builder_modal.allow_chat.label"
                 >
                   <label class="checkbox-label">
-                    <Input
-                      @type="checkbox"
-                      @checked={{@model.event.chatEnabled}}
+                    <input
+                      type="checkbox"
+                      checked={{@model.event.chatEnabled}}
+                      {{on "input" this.setChatEnabled}}
                     />
                     <span class="message">
                       {{i18n
@@ -651,15 +735,14 @@ export default class PostEventBuilder extends Component {
                     <span class="label custom-field-label">
                       {{allowedCustomField}}
                     </span>
-                    <Input
+                    <input
+                      type="text"
+                      class="custom-field-input"
+                      value={{get @model.event.customFields allowedCustomField}}
                       {{on "input" (fn this.setCustomField allowedCustomField)}}
-                      @value={{readonly
-                        (get @model.event.customFields allowedCustomField)
-                      }}
                       placeholder={{i18n
                         "discourse_post_event.builder_modal.custom_fields.placeholder"
                       }}
-                      class="custom-field-input"
                     />
                   {{/each}}
                 </EventField>

@@ -348,6 +348,9 @@ export default class FilterNavigationMenu extends Component {
         {{on "input" (withEventValue this.updateInput)}}
         {{on "focus" this.openFilterMenu}}
         {{didInsert this.storeInputElement}}
+        autocapitalize="none"
+        enterkeyhint="search"
+        autocorrect="off"
         type="text"
         id="topic-query-filter-input"
         autocomplete="off"

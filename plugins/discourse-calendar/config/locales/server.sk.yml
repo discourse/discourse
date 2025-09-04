@@ -33,7 +33,6 @@ sk:
         %{logs}
         ````
   site_settings:
-    events_max_rows: "Maximálny počet riadkov textu na udalosť v Kalendári."
     map_events_to_color: "Priraďte farbu každej značke alebo kategórii."
     map_events_title: "Prepíše „Udalosti“ v názve bočného panela „Nadchádzajúce udalosti“ pre každú kategóriu."
     calendar_enabled: "Povoľte plugin discourse-calendar. Týmto sa pridá podpora pre značku [calendar][/calendar] v prvom príspevku témy."
@@ -62,7 +61,6 @@ sk:
     calendar_automatic_holidays_enabled: "Automatické nastavenie stavu dovolenky na základe regiónu používateľa (poznámka: v nastaveniach pluginu môžete vypnúť konkrétne automatické dovolenky)"
     event_participation_buttons: "Zoznam tlačidiel účasti na udalosti, ktoré môžu používatelia používať."
     sidebar_show_upcoming_events: "Zobrazenie odkazu na nadchádzajúce udalosti v bočnom paneli v časti \"Viac\"."
-    include_expired_events_on_calendar: "Zahrnutie minulých/vypršaných udalostí do zobrazení Kalendár kategórií a Nadchádzajúce udalosti."
   discourse_calendar:
     invite_user_notification: "%{username} vás pozval na: %{description}"
     calendar_must_be_in_first_post: "Značku kalendára možno použiť len v prvom príspevku témy."

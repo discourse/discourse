@@ -42,15 +42,16 @@ describe "Composer - Drafts", type: :system do
       end
     end
 
-    context "when only title is specified" do
+    context "when only title is specified and it is too short" do
       it "does not save the draft or show a toast" do
         visit "/new-topic"
 
         expect(composer).to be_opened
-        composer.fill_title("this is a test topic")
+        composer.fill_title("test")
         composer.close
+        expect(composer).to be_closed
 
-        expect(toasts).to have_no_message(I18n.t("js.composer.draft_saved"))
+        expect(toasts).to have_no_message
         expect(Draft.where(user: current_user).count).to eq(0)
       end
     end

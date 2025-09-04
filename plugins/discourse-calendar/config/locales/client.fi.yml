@@ -314,7 +314,7 @@ fi:
         month: "Kuukausi"
         week: "Viikko"
         day: "Päivä"
-        list: "Luettelo"
+        year: "Vuosi"
     group_timezones:
       search: "Hae..."
       group_availability: "%{group} – saatavuus"

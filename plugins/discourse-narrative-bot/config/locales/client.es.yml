@@ -14,4 +14,4 @@ es:
     admin:
       site_settings:
         categories:
-          discourse_narrative_bot: "Bot narrativo de Discourse"
+          discourse_narrative_bot: "Discourse Narrative Bot"

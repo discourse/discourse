@@ -2659,6 +2659,12 @@ te:
         title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       approve_and_restore:
         title: "పోస్ట్‌ను ఆమోదించండి మరియు పునరుద్ధరించండి"
+      no_action_user:
+        title: "చర్య తీసుకోలేదు"
+      silence_user:
+        title: "సభ్యుని నిశ్శబ్దం చేయండి"
+      suspend_user:
+        title: "సభ్యుడిని సస్పెండు చేయండి"
       delete_user:
         reason: "సమీక్ష క్యూ ద్వారా తొలగించబడింది"
   notification_level:

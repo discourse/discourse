@@ -45,7 +45,7 @@ ur:
           other: "%{formatted_number} چیٹ کے پیغامات"
     chat:
       text_copied: متن کلپ بورڈ پر کاپی ہوا
-      link_copied: لنک کلپ بورڈ پر کاپی ہو ئے
+      link_copied: رابطہ کلپ بورڈ پر کاپی ہوا
       back_to_forum: "فورم"
       deleted_chat_username: حذف کردہ
       dates:
@@ -167,7 +167,11 @@ ur:
             all: "کسی کو مطلع نہیں کیا جائے گا"
           unreachable_1: "@%{group} ذکر کی اجازت نہیں دیتا۔"
           unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
+      only_chat_push_notifications:
+        title: "صرف چیٹ کی اطلاعات بھیجیں"
+        description: "چیٹ کے علاوہ تمام اطلاعات کو روکیں"
       ignore_channel_wide_mention:
+        title: "چینل بھر کے تذکروں کو نظر انداز کریں"
         description: "چینل بھر میں تذکروں کے لئے اطلاعات نہ بھیجیں (@here اور @all)"
       show_thread_title_prompts:
         description: "نئے دھاگوں کے لیے عنوان سیٹ کرنے کے لیے بلا تاخیردکھائیں"
@@ -283,7 +287,7 @@ ur:
         followed: "شمولیت اختیار کی"
         threading_disabled: "غیر فعال"
         notifications: "اطلاعات"
-        preview: "پیشگی دیکھیں"
+        preview: "جھلک دیکھیں"
         save: "محفوظ کریں"
         saved: "محفوظ کر لیا گیا"
         unfollow: "چھوڑ دیں"
@@ -350,6 +354,11 @@ ur:
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"
+      quick_reaction_type:
+        title: "ایک کلک چیٹ کے رد عمل"
+        options:
+          frequent: "زیادہ استعمال ہونے والے چیٹ کے رد عمل"
+          custom: "اپنی مرضی کے رد عمل"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:

@@ -84,7 +84,6 @@ nl:
               help: "bijvoorbeeld #kanaal, @gebruikersnaam."
           errors:
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
-            channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
         telegram:
           title: "Telegram"
           param:

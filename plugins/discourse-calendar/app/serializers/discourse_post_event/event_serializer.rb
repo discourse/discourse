@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 module DiscoursePostEvent
-  class EventSerializer < ApplicationSerializer
+  class EventSerializer < BasicEventSerializer
     attributes :can_act_on_discourse_post_event
     attributes :can_update_attendance
-    attributes :category_id
     attributes :creator
     attributes :custom_fields
-    attributes :ends_at
-    attributes :id
     attributes :is_closed
     attributes :is_expired
     attributes :is_ongoing
@@ -24,11 +21,8 @@ module DiscoursePostEvent
     attributes :reminders
     attributes :sample_invitees
     attributes :should_display_invitees
-    attributes :starts_at
     attributes :stats
     attributes :status
-    attributes :timezone
-    attributes :show_local_time
     attributes :url
     attributes :description
     attributes :location
@@ -36,6 +30,8 @@ module DiscoursePostEvent
     attributes :chat_enabled
     attributes :channel
     attributes :rrule
+    attributes :max_attendees
+    attributes :at_capacity
 
     def channel
       ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
@@ -43,6 +39,10 @@ module DiscoursePostEvent
 
     def include_channel?
       object.chat_enabled && defined?(::Chat::ChannelSerializer) && object.chat_channel.present?
+    end
+
+    def at_capacity
+      object.at_capacity?
     end
 
     def can_act_on_discourse_post_event
@@ -89,20 +89,6 @@ module DiscoursePostEvent
       Event.statuses[object.status]
     end
 
-    # lightweight post object containing
-    # only needed info for client
-    def post
-      {
-        id: object.post.id,
-        post_number: object.post.post_number,
-        url: object.post.url,
-        topic: {
-          id: object.post.topic.id,
-          title: object.post.topic.title,
-        },
-      }
-    end
-
     def can_update_attendance
       scope.current_user && object.can_user_update_attendance(scope.current_user)
     end
@@ -133,30 +119,8 @@ module DiscoursePostEvent
         (object.private? && object.raw_invitees.count > 0)
     end
 
-    def category_id
-      object.post.topic.category_id
-    end
-
     def include_url?
       object.url.present?
-    end
-
-    def include_rrule?
-      object.recurring?
-    end
-
-    def rrule
-      RRuleGenerator.generate_string(
-        starts_at: object.original_starts_at.in_time_zone(object.timezone),
-        timezone: object.timezone,
-        recurrence: object.recurrence,
-        recurrence_until: object.recurrence_until&.in_time_zone(object.timezone),
-        dtstart: object.original_starts_at.in_time_zone(object.timezone),
-      )
-    end
-
-    def ends_at
-      object.ends_at || object.starts_at + 1.hour
     end
   end
 end

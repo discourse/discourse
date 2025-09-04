@@ -10,6 +10,7 @@ zh_CN:
       flag_types:
         review: "将帖子添加到审核队列"
         review_hide: "将帖子添加到审核队列并隐藏帖子"
+        review_delete: "将帖子添加到审核队列并删除帖子"
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
@@ -26,6 +27,14 @@ zh_CN:
           <div>模型的回答：</div>
           <p>%%LLM_RESPONSE%%</p>
           <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发</b>。
+        notify_author_pm:
+          subject: "您的帖子已暂时移除供审核"
+          body: |
+            你好 @%{username},
+
+            你在 “%{topic_title}” 中的帖子已被暂时删除并放入我们的审阅队列中供版主查看。如果获得批准，它将自动恢复。
+
+            参考： %{post_url}
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
@@ -116,7 +125,7 @@ zh_CN:
     ai_translation_enabled: "启用 AI 翻译功能"
     ai_translation_model: "用于翻译的模型。此模型必须支持翻译。角色可以覆盖此设置。"
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
-    ai_translation_max_post_length: "待翻译帖子的最大长度。超过该长度的帖子将不进行翻译。"
+    ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
   reviewables:
     reasons:
@@ -576,7 +585,6 @@ zh_CN:
       cannot_edit_builtin: "您无法编辑内置模型。"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
-        invalid_config: "您选择了无效的选项。"
         choose_model: "首先设置 'ai embeddings selected model'。"
     llm_models:
       missing_provider_param: "%{param}不能为空"

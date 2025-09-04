@@ -2419,6 +2419,7 @@ nb_NO:
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
       title: "Eller trykk %{modifier}Enter"
+      discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
@@ -2455,14 +2456,7 @@ nb_NO:
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
       help: "Hjelp for redigering i Markdown"
-      collapse: "minimer redigeringspanelet"
-      open: "minimer redigeringspanelet"
-      abandon: "lukk redigeringspanel og forkast utkast"
-      enter_fullscreen: "gå inn i fullskjerm komponist"
-      exit_fullscreen: "avslutt fullskjerm komponist"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
-      show_toolbar: "vis verktøylinje for komponist"
-      hide_toolbar: "skjul verktøylinje for komponist"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
       create_message_error: "Beklager, det oppstod en feil ved opprettelsen av denne meldingen. Vennligst prøv igjen."
@@ -5027,10 +5021,6 @@ nb_NO:
           commits_behind:
             one: "Drakten er én utgave foreldet!"
             other: "Drakten er %{count} utgaver foreldet!"
-          settings: "Innstillinger"
-          colors: "Farger"
-          discard_colors: "Forkast"
-          colors_title: "Farger"
           scss:
             text: "CSS"
           after_header:
@@ -5485,7 +5475,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"

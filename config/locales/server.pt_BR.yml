@@ -2476,7 +2476,6 @@ pt_BR:
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
     content_localization_allowed_groups: "Grupos com permissão para enviar conteúdo localizado. Requer \"content localization enabled\"."
-    content_localization_anon_language_switcher: "Ative o seletor de idioma para que os visitantes do site que não tiverem feito login possam alternar entre as versões traduzidas do Discourse e do conteúdo fornecido pelo(a) usuário(a). Depende da lista de idiomas definida em \"locais compatíveis com localização de conteúdo\"."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"
@@ -2548,7 +2547,6 @@ pt_BR:
       invalid_uncategorized_category_setting: 'A categoria "Não categorizado" não pode ser selecionada se "permitir tópicos não categorizados" não estiver ativado.'
       invalid_search_ranking_weights: "O valor é inválido para a configuração do site search_ranking_weights. Exemplo: '{0.1,0.2,0.3,1.0}'. Observe que o valor máximo para cada peso é 1,0."
       content_localization_locale_limit: "A quantidade de locais compatíveis não pode exceder %{max}."
-      content_localization_anon_language_switcher_requirements: "É preciso ativar a configuração do site \"set locale from cookie\" para usar o seletor de idioma e \"content localization supported locales\" para ter pelo menos um idioma."
       mediaconvert_role_arn_required: "A função ARN da AWS IAM é obrigatória ao usar o AWS MediaConvert para a conversão de vídeo."
       s3_credentials_required_for_video_conversion: "As credenciais S3 são obrigatórias para a conversão de vídeo. Configure as chaves de acesso S3 ou ative o perfil IAM."
     keywords:
@@ -5321,9 +5319,15 @@ pt_BR:
       approve_and_unhide:
         title: "Aprovar e revelar postagem."
         complete: "Postagem aprovada e revelada"
+      no_action_user:
+        title: "Sem ação"
+      silence_user:
+        title: "Silenciar usuário(a)"
+      suspend_user:
+        title: "Suspender usuário(a)"
       delete_user:
+        title: "Excluir usuário(a)"
         reason: "Excluído(a) via fila de revisão"
-        complete: "Usuário(a) excluído(a)."
   email_style:
     html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"
   notification_level:

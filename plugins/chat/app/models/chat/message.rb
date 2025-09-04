@@ -245,6 +245,7 @@ module Chat
       emphasis
       replacements
       escape
+      entity
     ]
 
     def self.cook(message, opts = {})

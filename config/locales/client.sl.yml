@@ -2022,6 +2022,7 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
+      discard: "Zavrzi"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "zakaj spreminjate prispevek?"
@@ -2055,13 +2056,6 @@ sl:
       upload_description: "vnesite opis prenosa tukaj"
       list_item: "Element seznama"
       help: "pomoč pri Markdown urejanju"
-      collapse: "minimiziraj urejevalnik"
-      open: "odpri urejevalnik"
-      abandon: "zapri urejevalnik in zavrzi osnutek"
-      enter_fullscreen: "vklopi celozaslonski urejevalnik"
-      exit_fullscreen: "izklopi celozaslonski urejevalnik"
-      show_toolbar: "prikaži orodno vrstico urejevalnika"
-      hide_toolbar: "skrij orodno vrstico urejevalnika"
       modal_ok: "V redu"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
       yourself_confirm:
@@ -4248,10 +4242,6 @@ sl:
           disable: "Onemogoči"
           add: "Dodaj"
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
-          settings: "Nastavitve"
-          colors: "Barve"
-          discard_colors: "Zavrzi"
-          colors_title: "Barve"
           scss:
             text: "CSS"
           all_filter: "Vse"
@@ -4598,7 +4588,6 @@ sl:
           confirmation:
             cancel: "Prekliči"
         merging_user: "Združujem uporabnika…"
-        delete_forbidden_because_staff: "Administratorjev in moderatorjev se ne da izbrisati."
         delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:
           one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"

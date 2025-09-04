@@ -2405,6 +2405,7 @@ lt:
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
       title: "Arba paspauskite %{modifier}Enter"
+      discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "kodėl jūs redaguojate?"
@@ -4793,10 +4794,6 @@ lt:
           compare_commits: "(Žr. naujus įsipareigojimus)"
           repo_unreachable: "Nepavyko susisiekti su šios temos „Git“ saugykla. Klaidos pranešimas:"
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
-          settings: "Nustatymai"
-          colors: "Spalvos"
-          discard_colors: "Išmesti"
-          colors_title: "Spalvos"
           scss:
             text: "CSS"
           after_header:
@@ -5286,7 +5283,6 @@ lt:
             transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
         merge_failed: "Sujungiant vartotojus įvyko klaida."
-        delete_forbidden_because_staff: "Administratoriai ir moderatoriai negali būti ištrinti."
         delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
           one: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienos senumo įrašas negali būti ištrintas)"

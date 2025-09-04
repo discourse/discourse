@@ -20,5 +20,11 @@ Discourse::Application.routes.draw do
   get "/g/:group_name/reports/:id" => "discourse_data_explorer/query#group_reports_show"
   post "/g/:group_name/reports/:id/run" => "discourse_data_explorer/query#group_reports_run"
 
+  # Public API to fetch query results via GET with permission checks
+  get "/data-explorer/queries/:id/run" => "discourse_data_explorer/query#public_run",
+      :constraints => {
+        format: /(json|csv)/,
+      }
+
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/explorer"
 end

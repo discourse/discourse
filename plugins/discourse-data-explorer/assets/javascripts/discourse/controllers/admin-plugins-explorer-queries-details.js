@@ -28,6 +28,7 @@ export default class PluginsExplorerController extends Controller {
   explain = false;
   order = null;
   form = null;
+  shouldAutoRun = false;
 
   get saveDisabled() {
     return !this.dirty;
@@ -288,5 +289,12 @@ export default class PluginsExplorerController extends Controller {
         }
       })
       .finally(() => (this.loading = false));
+  }
+
+  @action
+  runOnLoad() {
+    if (this.shouldAutoRun) {
+      this.run();
+    }
   }
 }

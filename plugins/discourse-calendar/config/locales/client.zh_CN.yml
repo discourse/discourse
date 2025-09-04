@@ -314,7 +314,7 @@ zh_CN:
         month: "月"
         week: "周"
         day: "天"
-        list: "列表"
+        year: "年"
     group_timezones:
       search: "搜索…"
       group_availability: "%{group} 可用性"

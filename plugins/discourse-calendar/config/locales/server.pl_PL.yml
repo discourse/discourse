@@ -33,7 +33,6 @@ pl_PL:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maksymalna liczba wierszy tekstu na wydarzenie w kalendarzu."
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
@@ -62,7 +61,7 @@ pl_PL:
     calendar_automatic_holidays_enabled: "Automatycznie ustawiaj status świąt na podstawie regionu użytkownika (uwaga: możesz wyłączyć określone automatyczne święta w ustawieniach wtyczki)"
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
-    include_expired_events_on_calendar: "Uwzględnij minione/wygasłe wydarzenia w widokach kalendarza kategorii i nadchodzących wydarzeń."
+    calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
   discourse_calendar:
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
@@ -88,6 +87,7 @@ pl_PL:
           raw_invitees:
             only_group: "Wydarzenie akceptuje tylko nazwy grup."
           ends_at_before_starts_at: "Wydarzenie nie może zakończyć się zanim się zacznie."
+          max_attendees_reached: "To wydarzenie jest pełne."
           start_must_be_present_and_a_valid_date: "Wydarzenie wymaga prawidłowej daty rozpoczęcia."
           end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

@@ -489,6 +489,21 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
+  discourse_welcome_topic:
+    body: |
+      Drago nam je što ste nam se pridružili.
+
+      %{site_info_quote}
+
+      Evo nekoliko stvari koje možete učiniti za početak:
+
+      :speaking_head: **Predstavite se** dodavanjem svoje slike i informacija o sebi i svojim interesima u [svoj profil](%{base_path}/my/preferences/account). O čemu biste željeli da vas pitamo?
+
+      :open_book: **Upoznajte zajednicu** [pregledavanjem rasprava](%{base_path}/latest) koje se ovdje već događaju. Kada smatrate da je objava zanimljiva, informativna ili zabavna, upotrijebite :heart: kako biste pokazali svoju zahvalnost ili podršku!
+
+      :handshake: **Doprinesite** komentiranjem, dijeljenjem vlastite perspektive, postavljanjem pitanja ili davanjem povratnih informacija u raspravi. Prije nego što odgovorite ili započnete nove teme, molimo vas da pregledate [Smjernice zajednice](%{base_path}/faq).
+
+      > Ako vam je potrebna pomoć ili imate prijedlog, slobodno pitajte u %{feedback_category} ili [kontaktirajte administratore](%{base_path}/about).
   category:
     topic_prefix: "O %{category} kategoriji"
     post_template: "%{replace_paragraph}\n\nKoristite sljedeće odlomke za dulji opis ili za postavljanje smjernica ili pravila kategorije:\n\n- Zašto bi ljudi trebali koristiti ovu kategoriju? Čemu služi?\n\n- Po čemu se točno ovo razlikuje od ostalih kategorija koje već imamo?\n\n- Što bi teme u ovoj kategoriji općenito trebale sadržavati?\n\n- Trebamo li ovu kategoriju? Možemo li se spojiti s drugom kategorijom ili potkategorijom?\n"
@@ -699,7 +714,7 @@ hr:
     connected: "(povezano)"
   activation:
     already_done: "Žao nam je, poveznica za aktivaciju računa više nije važeća. Možda vam je račun već aktivan?"
-    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
+    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobit ćete email kad vam račun bude odobren!"
     missing_session: "Ne možemo utvrditi je li vaš korisnički račun kreiran, molimo osigurajte da su vam omogućeni cookieji (kolačići)."
     activated: "Žao nam je, ovaj korisnički račun je već aktiviran."
     admin_confirm:
@@ -2267,6 +2282,7 @@ hr:
       description: Prva izmjena objave
     basic_user:
       name: Osnovno
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobrene</a> sve osnovne funkcije
     member:
       name: Član
     regular:
@@ -2311,11 +2327,18 @@ hr:
       name: Prvi citat
     read_guidelines:
       name: Pročitao smjernice
+      description: Pročitajte <a href="%{base_uri}/guidelines">smjernice zajednice</a>
     reader:
       name: Čitatelj
+    first_emoji:
+      name: Prvi emotikon
+      description: Korišten je emotikon u objavi
     first_onebox:
       long_description: |
         Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
+    enthusiast:
+      name: Entuzijast
+      description: Posjetio 10 dana za redom
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   tags:
     title: "Oznake"
@@ -2421,8 +2444,10 @@ hr:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      no_action_user:
+        title: "Nema akcije"
       delete_user:
-        complete: "Korisnik izbrisan."
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   activemodel:
     errors:

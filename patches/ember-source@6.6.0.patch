@@ -1,0 +1,39 @@
+diff --git a/dist/packages/@ember/-internals/deprecations/index.js b/dist/packages/@ember/-internals/deprecations/index.js
+index 894cd5c5e28db30f8798ee828b8364c94d488964..bffb6b1c0d22d3611f8e85414c0f34f0e416e4f4 100644
+--- a/dist/packages/@ember/-internals/deprecations/index.js
++++ b/dist/packages/@ember/-internals/deprecations/index.js
+@@ -123,7 +123,7 @@ function deprecateUntil(message, deprecation) {
+   if (deprecation.isRemoved) {
+     throw new Error(`The API deprecated by ${options.id} was removed in ember-source ${options.until}. The message was: ${message}. Please see ${options.url} for more details.`);
+   }
+-  (isDevelopingApp() && !(deprecation.test) && deprecate(message, deprecation.test, options));
++  (true && !(deprecation.test) && deprecate(message, deprecation.test, options));
+ }
+ const {
+   EXTEND_PROTOTYPES
+diff --git a/dist/packages/@ember/debug/lib/deprecate.js b/dist/packages/@ember/debug/lib/deprecate.js
+index 2a40f7cca607ab80beb267d79243fc30f16c92a1..9c15e205f3fb1661b8f1ae397c2338c42a3cc601 100644
+--- a/dist/packages/@ember/debug/lib/deprecate.js
++++ b/dist/packages/@ember/debug/lib/deprecate.js
+@@ -50,7 +50,7 @@ let missingOptionsDeprecation;
+ let missingOptionsIdDeprecation;
+ let missingOptionDeprecation = () => '';
+ let deprecate = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(handler) {
+     registerHandler$1('deprecate', handler);
+   };
+diff --git a/dist/packages/@ember/debug/lib/handlers.js b/dist/packages/@ember/debug/lib/handlers.js
+index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef78279f25c531 100644
+--- a/dist/packages/@ember/debug/lib/handlers.js
++++ b/dist/packages/@ember/debug/lib/handlers.js
+@@ -3,7 +3,7 @@ import { isDevelopingApp } from '@embroider/macros';
+ let HANDLERS = {};
+ let registerHandler = function registerHandler(_type, _callback) {};
+ let invoke = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(type, callback) {
+     let nextHandler = HANDLERS[type] || (() => {});
+     HANDLERS[type] = (message, options) => {

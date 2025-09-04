@@ -2673,8 +2673,10 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_user:
+        title: "Jokių veiksmų"
       delete_user:
-        complete: "Naudotojas ištrintas."
+        complete: "Naudotojas ištrintas"
   create_linked_topic:
     post_raw: "Tęsiant diskusiją nuo %{parent_url}.\n\nAnkstesnės diskusijos:\n\n%{previous_topics}"
     small_action_post_raw: "Tęsti diskusiją %{new_title}."

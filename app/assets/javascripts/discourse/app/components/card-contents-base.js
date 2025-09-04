@@ -194,12 +194,17 @@ export default class CardContentsBase extends Component {
     return this._show(target.innerText.replace(/^@/, ""), target, event);
   }
 
+  get autoUpdateCard() {
+    return this.cardTarget.dataset["autoUpdateCard"] === "true";
+  }
+
   _positionCard(target) {
     schedule("afterRender", async () => {
       if (this.site.desktopView) {
         this._menuInstance = await this.menu.show(target, {
           content: this.element,
-          autoUpdate: false,
+          autoUpdate: this.autoUpdateCard,
+          hide: this.autoUpdateCard,
           identifier: "usercard",
           padding: {
             top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),

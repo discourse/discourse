@@ -113,6 +113,8 @@ discourse_calendar:
     client: true
     default: ""
     json_schema: DiscourseCalendar::SiteSettings::MapEventsTitleJsonSchema
-  include_expired_events_on_calendar:
-    default: false
+  calendar_first_day_of_week:
+    type: enum
+    enum: "CalendarFirstDayOfWeek"
+    default: monday
     client: true

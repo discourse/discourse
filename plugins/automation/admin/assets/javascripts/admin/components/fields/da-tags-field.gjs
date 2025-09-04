@@ -25,6 +25,7 @@ export default class TagsField extends BaseField {
           <TagChooser
             @tags={{readonly @field.metadata.value}}
             @everyTag={{true}}
+            @unlimitedTagCount={{true}}
             @options={{hash allowAny=false disabled=@field.isDisabled}}
             @onChange={{this.onChangeTags}}
           />

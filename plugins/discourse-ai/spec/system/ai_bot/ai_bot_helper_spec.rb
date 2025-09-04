@@ -28,21 +28,26 @@ RSpec.describe "AI chat channel summarization", type: :system do
     allowed_persona = AiPersona.last
     allowed_persona.update!(allowed_group_ids: [group.id], enabled: true)
 
+    # second persona to ensure dropdown shows (requires >1 option)
+    second_persona = Fabricate(:ai_persona, allowed_group_ids: [group.id], enabled: true)
+    second_persona.update!(allow_personal_messages: true)
+
     visit "/latest"
     expect(page).to have_selector(".ai-bot-button")
     find(".ai-bot-button").click
 
     find(".gpt-persona").click
-    expect(page).to have_css(".gpt-persona ul li", count: 1)
+    expect(page).to have_css(".gpt-persona ul li", count: 2)
 
     find(".llm-selector").click
     expect(page).to have_css(".llm-selector ul li", count: 2)
 
     expect(page).to have_selector(".d-editor-container")
 
-    # lets disable bots but still allow 1 persona
     allowed_persona.create_user!
     allowed_persona.update!(default_llm_id: gpt_4.id)
+    second_persona.create_user!
+    second_persona.update!(default_llm_id: gpt_4.id)
 
     gpt_4.update!(enabled_chat_bot: false)
     gpt_3_5_turbo.update!(enabled_chat_bot: false)
@@ -51,7 +56,7 @@ RSpec.describe "AI chat channel summarization", type: :system do
     find(".ai-bot-button").click
 
     find(".gpt-persona").click
-    expect(page).to have_css(".gpt-persona ul li", count: 1)
+    expect(page).to have_css(".gpt-persona ul li", count: 2)
     expect(page).not_to have_selector(".llm-selector")
 
     SiteSetting.ai_bot_add_to_header = false
