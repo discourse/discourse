@@ -32,7 +32,9 @@ describe "Assign | Assigning topics", type: :system do
 
           expect(assign_modal).to be_closed
           expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
-          expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+          try_until_success do
+            expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+          end
 
           topic_page.click_unassign_topic
 
@@ -51,7 +53,9 @@ describe "Assign | Assigning topics", type: :system do
 
           expect(assign_modal).to be_closed
           expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
-          expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+          try_until_success do
+            expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+          end
         end
 
         context "when prioritize_full_name_in_ux setting is enabled" do
@@ -75,7 +79,9 @@ describe "Assign | Assigning topics", type: :system do
             topic_page.click_assign_topic
             assign_modal.assignee = staff_user
             assign_modal.confirm
-            expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+            try_until_success do
+              expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+            end
           end
         end
 
@@ -145,7 +151,9 @@ describe "Assign | Assigning topics", type: :system do
             assign_modal.confirm
 
             expect(page).to have_no_css("#post_4")
-            expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+            try_until_success do
+              expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+            end
           end
 
           context "when reassign_on_open is set to true" do
@@ -177,7 +185,9 @@ describe "Assign | Assigning topics", type: :system do
                 I18n.t("js.action_codes.closed.disabled", when: "just now"),
               )
               expect(page).to have_no_css("#post_5")
-              expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+              try_until_success do
+                expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+              end
             end
           end
         end
