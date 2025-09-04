@@ -1,6 +1,6 @@
 import { later } from "@ember/runloop";
 import { extendColorSchemeCookies } from "discourse/lib/color-scheme-picker";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { extendThemeCookie } from "discourse/lib/theme-selector";
 import { extendTextSizeCookie } from "discourse/models/user";
 
@@ -13,7 +13,7 @@ export default {
         extendColorSchemeCookies();
         extendTextSizeCookie();
       },
-      isTesting() ? 0 : 5000
+      isTesting() || isRailsTesting() ? 0 : 5000
     );
   },
 };

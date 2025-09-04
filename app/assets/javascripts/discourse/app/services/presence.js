@@ -6,7 +6,7 @@ import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import discourseLater from "discourse/lib/later";
@@ -17,8 +17,8 @@ import userPresent, {
 import User from "discourse/models/user";
 
 const PRESENCE_INTERVAL_S = 30;
-const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
-const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
+const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() || isRailsTesting() ? 0 : 500;
+const PRESENCE_THROTTLE_MS = isTesting() || isRailsTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
 
@@ -630,7 +630,7 @@ export default class PresenceService extends Service {
     } else if (
       !this._nextUpdateTimer &&
       this._presentChannels.size > 0 &&
-      !isTesting()
+      !(isTesting() || isRailsTesting())
     ) {
       this._nextUpdateTimer = discourseLater(
         this,
