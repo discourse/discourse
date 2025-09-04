@@ -11,6 +11,13 @@
       justify-content: flex-start;
       text-align: left;
     }
+
+    &.--text-only {
+      padding: 0.65rem 1rem;
+      font-size: --var(--font-down-1);
+      color: var(--primary-high);
+      font-weight: 700;
+    }
   }
 
   &__divider {
