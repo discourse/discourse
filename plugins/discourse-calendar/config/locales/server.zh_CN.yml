@@ -61,6 +61,7 @@ zh_CN:
     calendar_automatic_holidays_enabled: "根据用户所在区域自动设置假期状态（注意：您可以在插件设置中禁用特定的自动假期）"
     event_participation_buttons: "用户可以使用的活动参与按钮列表。"
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
+    calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
   discourse_calendar:
     invite_user_notification: "%{username} 邀请您加入：%{description}"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"

@@ -7169,6 +7169,7 @@ zh_CN:
             cancel: "取消"
         merging_user: "正在合并用户…"
         merge_failed: "合并用户时出错。"
+        delete_forbidden_because_staff: "管理员不能被删除。"
         delete_posts_forbidden_because_staff: "无法删除管理员和版主的所有帖子。"
         delete_forbidden:
           other: "如果用户有帖子，则无法删除用户。在尝试删除用户之前请删除所有帖子。（无法删除超过 %{count} 天的帖子。）"

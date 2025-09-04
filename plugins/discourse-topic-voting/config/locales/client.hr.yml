@@ -18,7 +18,7 @@ hr:
       vote_title: "Glasaj"
       vote_title_plural: "Glasovi"
       voted_title: "Glasovao"
-      voting_closed_title: "Zatvoreno"
+      voting_closed_title: "\U0001F510"
       voting_limit: "Limit"
       anonymous_button:
         one: "Glas"
