@@ -1417,7 +1417,7 @@ describe PostRevisor do
               }.to_not change { topic.reload.bumped_at }
             end
 
-            it "doesn't bump topic if non staff-only tags are added" do
+            it "bumps topic if non staff-only tags are added" do
               expect {
                 result =
                   post_revisor.revise!(
@@ -1426,7 +1426,7 @@ describe PostRevisor do
                     tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
                   )
                 expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
+              }.to change { topic.reload.bumped_at }
             end
 
             it "creates a hidden revision" do
