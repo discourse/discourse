@@ -1785,6 +1785,7 @@ zh_CN:
     auth_overrides_email: "在每次登录时使用外部网站电子邮件替换本地电子邮件，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于本地电子邮件的规范化，可能会出现差异）"
     auth_overrides_username: "在每次登录时使用外部网站用户名替换本地用户名，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于用户名长度/要求的差异，可能会出现差异）"
     auth_overrides_name: "在每次登录时使用外部网站全名替换本地全名，并禁止进行本地更改。适用于所有身份验证服务提供商。"
+    auth_overrides_avatar: "每次登录时使用外部站点头像覆盖本地头像，并防止本地更改。适用于所有身份验证提供商。"
     discourse_connect_overrides_avatar: "使用来自 DiscourseConnect 有效负载的值替换用户头像。如果启用，将不允许用户在 Discourse 上上传头像。"
     discourse_connect_overrides_location: "使用来自 DiscourseConnect 有效负载的值替换用户位置，并禁止进行本地更改。"
     discourse_connect_overrides_website: "使用来自 DiscourseConnect 有效负载的值替换用户网站，并禁止进行本地更改。"

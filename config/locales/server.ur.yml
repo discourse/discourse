@@ -3642,7 +3642,7 @@ ur:
         title: "ظاہری شکل"
         fields:
           styling_preview:
-            label: "پیشگی دیکھیں"
+            label: "جھلک دیکھیں"
           homepage_style:
             choices:
               latest:
