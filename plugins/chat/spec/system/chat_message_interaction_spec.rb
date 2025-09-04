@@ -48,8 +48,10 @@ RSpec.describe "Interacting with a message", type: :system do
       DiscourseEvent.on(:chat_message_interaction, &blk)
       find(".block__button").click
 
-      expect(action_id).to_not be_nil
-      expect(chat_channel_page.messages).to have_text(action_id)
+      try_until_success do
+        expect(action_id).to_not be_nil
+        expect(chat_channel_page.messages).to have_text(action_id)
+      end
     ensure
       DiscourseEvent.off(:chat_message_interaction, &blk)
     end
