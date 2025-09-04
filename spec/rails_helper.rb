@@ -505,7 +505,7 @@ RSpec.configure do |config|
 
           if runloop_version_before
             @driver.send(:session).evaluate_async_script(
-              "window.emberBackburnerBegan(#{runloop_version_before}).then(arguments[0])",
+              "window.emberBackburnerBegan ? window.emberBackburnerBegan(#{runloop_version_before}).then(arguments[0]) : arguments[0]()",
             )
 
             # runloop_version_after =
