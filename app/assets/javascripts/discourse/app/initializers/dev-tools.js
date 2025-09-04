@@ -54,8 +54,8 @@ export default {
 
       const incrementAjaxPendingRequests = (_event, xhr, settings) => {
         if (
-          settings.url.startsWith("/message-bus") ||
-          settings.url.startsWith("/presence")
+          settings.url.includes("/message-bus") ||
+          settings.url.includes("/presence/")
         ) {
           return;
         }

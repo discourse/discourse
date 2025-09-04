@@ -492,30 +492,28 @@ RSpec.configure do |config|
 
       NODE_METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
-          super(*args, **options).tap do
-            now = Time.now.to_f
-            @driver.send(:session).evaluate_async_script(
-              "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
-            )
-
-            raise "Took too long" if (Time.now.to_f - now) > 5
-
-            puts "#{method_name}: #{Time.now.to_f - now}"
-          end
+          result = super(*args, **options)
+          now = Time.now.to_f
+          @driver.send(:session).evaluate_async_script(
+            "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
+          )
+          raise "Took too long" if (Time.now.to_f - now) > 5
+          puts "#{method_name}: #{Time.now.to_f - now}"
+          result
         end
       end
     end
 
     module CapybaraPlaywrightBrowserPatch
       def visit(path)
-        super.tap do
-          now = Time.now.to_f
-          @driver.send(:session).evaluate_async_script(
-            "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
-          )
-          raise "Took too long" if (Time.now.to_f - now) > 5
-          puts "VISIT #{path}: #{Time.now.to_f - now}"
-        end
+        result = super
+        now = Time.now.to_f
+        @driver.send(:session).evaluate_async_script(
+          "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
+        )
+        raise "Took too long" if (Time.now.to_f - now) > 5
+        puts "VISIT #{path}: #{Time.now.to_f - now}"
+        result
       end
     end
 
