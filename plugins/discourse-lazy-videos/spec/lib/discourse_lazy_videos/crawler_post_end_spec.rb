@@ -253,13 +253,6 @@ describe DiscourseLazyVideos::CrawlerPostEnd do
 
         html = post_crawler_schema.html
 
-        if html.empty?
-          puts "Controller class: #{controller.class}"
-          puts "Crawler post: #{controller.instance_variable_get(:@crawler_post)&.id}"
-          puts "Topic view: #{controller.instance_variable_get(:@topic_view)}"
-          puts "SiteSetting.lazy_videos_enabled: #{SiteSetting.lazy_videos_enabled}"
-        end
-
         expect(html).not_to be_empty
         expect(html).to include('"description":')
         parsed = JSON.parse(html.match(%r{<script[^>]*>(.*?)</script>}m)[1])
