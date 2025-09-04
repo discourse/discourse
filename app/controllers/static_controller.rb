@@ -154,7 +154,8 @@ class StaticController < ApplicationController
 
     allow_other_hosts = false
 
-    if destination = cookies.delete(:sso_destination_url)
+    if cookies[:sso_destination_url]
+      destination = cookies.delete(:sso_destination_url)
       allow_other_hosts = true
     end
 
