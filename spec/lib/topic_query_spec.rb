@@ -114,7 +114,6 @@ RSpec.describe TopicQuery do
         expect(TopicQuery.validate?(:page, -1)).to eq(false)
         expect(TopicQuery.validate?(:page, 101)).to eq(false)
 
-        # Valid values
         expect(TopicQuery.validate?(:page, 0)).to eq(true)
         expect(TopicQuery.validate?(:page, 1)).to eq(true)
         expect(TopicQuery.validate?(:page, 100)).to eq(true)
