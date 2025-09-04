@@ -22,7 +22,7 @@ RSpec.describe ColorScheme do
     href = manager.stylesheet_data(:desktop_theme)[0][:new_href]
     colors_href = manager.color_scheme_stylesheet_details(scheme.id, fallback_to_base: true)
 
-    ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "bbb" }])
+    ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "bbb" }] })
 
     href2 = manager.stylesheet_data(:desktop_theme)[0][:new_href]
     colors_href2 = manager.color_scheme_stylesheet_details(scheme.id, fallback_to_base: true)
@@ -87,7 +87,7 @@ RSpec.describe ColorScheme do
         scheme = ColorScheme.create_from_base(name: "test scheme")
         ColorSchemeRevisor.revise(
           scheme,
-          colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }],
+          { colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }] },
         )
         scheme.reload
         expect(ColorScheme.hex_for_name("header_background", scheme.id)).to eq("9dc927")
@@ -104,13 +104,13 @@ RSpec.describe ColorScheme do
       scheme = ColorScheme.create_from_base(name: "Tester")
       ColorSchemeRevisor.revise(
         scheme,
-        colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }],
+        { colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }] },
       )
       expect(scheme.is_dark?).to eq(false)
 
       ColorSchemeRevisor.revise(
         scheme,
-        colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }],
+        { colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }] },
       )
       expect(scheme.is_dark?).to eq(true)
     end
