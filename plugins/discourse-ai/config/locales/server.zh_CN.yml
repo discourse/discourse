@@ -125,7 +125,7 @@ zh_CN:
     ai_translation_enabled: "启用 AI 翻译功能"
     ai_translation_model: "用于翻译的模型。此模型必须支持翻译。角色可以覆盖此设置。"
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
-    ai_translation_max_post_length: "待翻译帖子的最大长度。超过该长度的帖子将不进行翻译。"
+    ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
   reviewables:
     reasons:

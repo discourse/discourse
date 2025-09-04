@@ -278,7 +278,9 @@ it:
       translations:
         title: "Traduzioni"
         progress_chart:
-          bar_done: "%{done} messaggi"
+          bar_done:
+            one: "%{count} messaggio"
+            other: "%{count} messaggi"
       spam:
         short_title: "Spam"
         title: "Configura la gestione dello spam"

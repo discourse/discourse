@@ -74,7 +74,7 @@ body:not(.has-full-page-chat, .wizard) {
     #main-outlet {
       width: 100%;
       max-width: unset;
-      padding-bottom: var(--spacing-block-l);
+      padding-bottom: var(--space-6);
       border-radius: var(--d-border-radius-large);
       background-color: var(--d-content-background);
 
@@ -91,7 +91,7 @@ body:not(.has-full-page-chat, .wizard) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;
-          padding-inline: var(--spacing-inline-l);
+          padding-inline: var(--space-6);
         }
       }
     }
@@ -112,7 +112,7 @@ body:not(.has-full-page-chat, .wizard) {
       transform: translateX(50%);
 
       .alert {
-        padding: var(--spacing-block-sm) var(--spacing-inline-m);
+        padding: var(--space-2) var(--space-4);
         border-radius: var(--d-border-radius-large);
         font-size: var(--font-down-1-rem);
       }
@@ -120,7 +120,7 @@ body:not(.has-full-page-chat, .wizard) {
   }
 
   .topic-list-body {
-    padding-top: var(--spacing-block-m);
+    padding-top: var(--space-4);
   }
 }
 

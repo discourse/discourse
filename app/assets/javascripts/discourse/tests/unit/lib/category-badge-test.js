@@ -150,4 +150,53 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
     assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
   });
+
+  test("category style types", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const category = store.createRecord("category", { name: "hello", id: 123 });
+
+    assert.true(
+      categoryBadgeHTML(category).includes("--style-square"),
+      "has square style by default"
+    );
+
+    assert.true(
+      categoryBadgeHTML(category, {
+        styleType: "icon",
+        icon: "book",
+      }).includes("--style-icon"),
+      "has icon style"
+    );
+
+    assert.true(
+      categoryBadgeHTML(category, {
+        styleType: "emoji",
+        emoji: "wave",
+      }).includes("--style-emoji"),
+      "has emoji style"
+    );
+  });
+
+  test("category style with ancestors", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+
+    const emojiParent = store.createRecord("category", {
+      name: "hello",
+      id: 123,
+      style_type: "icon",
+      icon: "book",
+    });
+    const emojiChild = store.createRecord("category", {
+      name: "world",
+      id: 456,
+      style_type: "icon",
+      icon: "file",
+      parent_category_id: emojiParent.id,
+    });
+
+    const badge = categoryBadgeHTML(emojiChild, { ancestors: [emojiParent] });
+
+    assert.true(badge.includes("d-icon-book"), "has parent with book icon");
+    assert.true(badge.includes("d-icon-file"), "has child with file icon");
+  });
 });

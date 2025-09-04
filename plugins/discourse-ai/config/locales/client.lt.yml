@@ -196,7 +196,11 @@ lt:
       translations:
         title: "Vertimai"
         progress_chart:
-          bar_done: "%{done} pranešimų"
+          bar_done:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"

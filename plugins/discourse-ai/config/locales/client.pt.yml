@@ -57,7 +57,9 @@ pt:
       translations:
         title: "Traduções"
         progress_chart:
-          bar_done: "%{done} mensagens"
+          bar_done:
+            one: "%{count} mensagem"
+            other: "%{count} mensagens"
       spam:
         short_title: "Spam"
         last_seven_days: "Últimos 7 Dias"

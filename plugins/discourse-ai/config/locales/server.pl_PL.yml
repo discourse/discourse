@@ -128,7 +128,7 @@ pl_PL:
     ai_translation_enabled: "Włącza funkcję tłumaczenia AI"
     ai_translation_model: "Model używany do tłumaczenia. Ten model musi obsługiwać tłumaczenie. Osobowości mogą nadpisać to ustawienie."
     ai_translation_backfill_limit_to_public_content: "Po włączeniu tej opcji tłumaczone będą tylko treści z kategorii publicznych. Po wyłączeniu tej opcji do tłumaczenia będą wysyłane również treści z prywatnych wiadomości grupowych i kategorii."
-    ai_translation_max_post_length: "Maksymalna długość posta do przetłumaczenia. Posty dłuższe nie będą tłumaczone."
+    ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
   reviewables:
     reasons:

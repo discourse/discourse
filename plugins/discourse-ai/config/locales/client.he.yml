@@ -122,6 +122,9 @@ he:
           fields:
             persona:
               label: "דמות"
+            whisper:
+              label: "להגיב בלחישה"
+              description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
         llm_triage:
@@ -158,6 +161,15 @@ he:
             flag_post:
               label: "סימון פוסט"
               description: "סימון פוסט (או כספאם או לסקירה)"
+            notify_author_pm:
+              label: "להודיע למחבר/ת בהודעה פרטית"
+              description: "לשלוח הודעה אישית לכותב/ת הפוסט כאשר הפוסט שלו/ה מועבר לתור ונמחק"
+            notify_author_pm_user:
+              label: "מוען או מוענת ההודעה הפרטית"
+              description: "המשתמש שישלח את ההודעה הפרטית (ברירת מחדל היא המערכת)"
+            notify_author_pm_message:
+              label: "הודעה פרטית"
+              description: "הודעה מותאמת אישית לשליחה לכותב/ת"
             include_personal_messages:
               label: "כולל הודעות פרטיות"
               description: "לסרוק ולאמת הודעות אישיות"
@@ -180,10 +192,19 @@ he:
               description: "בחירה איך הבינה המלאכותית בוחר תגיות"
             available_tags:
               label: "תגיות זמינות"
+            max_tags_per_post:
+              label: "כמות תגים מרבית לפוסט"
+              description: "מספר התגיות המרבי שאפשר להחיל על פוסט יחיד"
+            max_post_tokens:
+              label: "כמות אסימונים מרבית לפוסט"
+              description: "מספר האסימונים המרבי מתוכן הפוסט לניתוח"
+            allow_restricted_tags:
+              label: "לאפשר תגיות מוגבלות"
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
+        description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -213,6 +234,8 @@ he:
         bot:
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
+        nav:
+          configured: "מוגדר"
         filters:
           all: "הכול"
           text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
@@ -279,14 +302,18 @@ he:
             empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
         stats:
           title: "סטטיסטיקת תרגום"
-          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה %{tooltip}"
-          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה %{tooltip}"
+          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
+          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
         progress_chart:
-          title: "התקדמות התרגום"
+          title: "תהליך התרגום %{tooltip}"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
-          bar_done: "%{done} פוסטים"
+          bar_done:
+            one: "פוסט"
+            two: "שני פוסטים"
+            many: "שני פוסטים"
+            other: "שני פוסטים"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"

@@ -7,214 +7,641 @@
 be:
   js:
     number:
+      format:
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
+          format: "%n %u"
           units:
             byte:
               one: байт
-              few: байтаў
+              few: байты
               many: байтаў
               other: байтаў
             gb: ГБ
             kb: КБ
             mb: МБ
             tb: ТБ
+      percent: "%{count}%"
       short:
-        thousands: "%{number}k"
-        millions: "%{number}M"
+        thousands: "%{number} тыс."
+        millions: "%{number} млн"
     dates:
       time: "HH:mm"
+      time_short: "HH:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
+      timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "D MMM"
+      long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D МММ, YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM YYYY LT"
+      long_date_without_year: "D MMM LT"
+      long_date_with_year_without_time: "D MMM YYYY"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} таму"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "< 1 хв"
+        less_than_x_seconds:
+          one: "< %{count} с"
+          few: "< %{count} с"
+          many: "< %{count} с"
+          other: "< %{count} с"
+        x_seconds:
+          one: "%{count} с"
+          few: "%{count} с"
+          many: "%{count} с"
+          other: "%{count} с"
         less_than_x_minutes:
-          one: "< %{count}хв"
-          few: "< %{count}хв"
-          many: "< %{count}хв"
-          other: "< %{count}хв"
+          one: "< %{count} хв"
+          few: "< %{count} хв"
+          many: "< %{count} хв"
+          other: "< %{count} хв"
         x_minutes:
-          one: "%{count}хв"
-          few: "%{count}хв"
-          many: "%{count}хв"
-          other: "%{count}хв"
+          one: "%{count} хв"
+          few: "%{count} хв"
+          many: "%{count} хв"
+          other: "%{count} хв"
+        about_x_hours:
+          one: "%{count} гадз"
+          few: "%{count} гадз"
+          many: "%{count} гадз"
+          other: "%{count} гадз"
+        x_days:
+          one: "%{count} дз."
+          few: "%{count} дн."
+          many: "%{count} дз."
+          other: "%{count} дз."
+        x_months:
+          one: "%{count} мес."
+          few: "%{count} мес."
+          many: "%{count} мес."
+          other: "%{count} мес."
+        about_x_years:
+          one: "%{count} г."
+          few: "%{count} гг."
+          many: "%{count} гг."
+          other: "%{count} гг."
+        over_x_years:
+          one: "> %{count} г."
+          few: "> %{count} гг."
+          many: "> %{count} гг."
+          other: "> %{count} гг."
+        almost_x_years:
+          one: "%{count} г."
+          few: "%{count} гг."
+          many: "%{count} гг."
+          other: "%{count} гг."
         date_month: "D MMM"
+        date_year: "MMM YYYY"
       medium:
+        less_than_x_minutes:
+          one: "менш за %{count} хв"
+          few: "менш за %{count} хв"
+          many: "менш за %{count} хв"
+          other: "менш за %{count} хв"
         x_minutes:
-          one: "%{count} хвіліна"
-          few: " %{Count} хвіліны"
-          many: " %{Count} хвілін"
-          other: " %{Count} хвілін"
+          one: "%{count} хв"
+          few: "%{count} хв"
+          many: "%{count} хв"
+          other: "%{count} хв"
         x_hours:
-          one: "0%{count}:00"
-          few: " %{Count} гадзіны"
-          many: " %{Count} гадзін"
-          other: " %{Count} гадзін"
+          one: "%{count} гадзіна"
+          few: "%{count} гадзіны"
+          many: "%{count} гадзін"
+          other: "%{count} гадзін"
+        about_x_hours:
+          one: "каля %{count} гадзіны"
+          few: "каля %{count} гадзін"
+          many: "каля %{count} гадзін"
+          other: "каля %{count} гадзіны"
         x_days:
           one: "%{count} дзень"
-          few: " %{Count} дні"
-          many: " %{Count} дзён"
-          other: " %{Count} дзён"
+          few: "%{count} дні"
+          many: "%{count} дзён"
+          other: "%{count} дзён"
+        x_months:
+          one: "%{count} месяц"
+          few: "%{count} месяцы"
+          many: "%{count} месяцаў"
+          other: "%{count} месяцаў"
+        about_x_years:
+          one: "каля %{count} года"
+          few: "каля %{count} гадоў"
+          many: "каля %{count} гадоў"
+          other: "каля %{count} гадоў"
+        over_x_years:
+          one: "больш за %{count} год"
+          few: "больш за %{count} гады"
+          many: "больш за %{count} гадоў"
+          other: "больш за %{count} гадоў"
+        almost_x_years:
+          one: "амаль %{count} год"
+          few: "амаль %{count} гады"
+          many: "амаль %{count} гадоў"
+          other: "амаль %{count} гадоў"
+        date_year: "D MMM YYYY"
       medium_with_ago:
+        x_minutes:
+          one: "%{count} хв таму"
+          few: "%{count} хв таму"
+          many: "%{count} хв таму"
+          other: "%{count} хв таму"
         x_hours:
-          one: "0%{count}:00 таму"
-          few: "гадзін таму: %{count}"
-          many: " %{Count} гадзін таму"
-          other: " %{Count} гадзін таму"
+          one: "%{count} гадзіну таму"
+          few: "%{count} гадзіны таму"
+          many: "%{count} гадзін таму"
+          other: "%{count} гадзін таму"
         x_days:
           one: "%{count} дзень таму"
-          few: "дзён таму: %{count}"
-          many: "%{Count} дзён таму"
-          other: " %{Count} дзён таму"
-      previous_month: "папярэдні месяц"
-      next_month: "наступны месяц"
+          few: "%{count} дні таму"
+          many: "%{count} дзён таму"
+          other: "%{count} дзён таму"
+        x_months:
+          one: "%{count} месяц таму"
+          few: "%{count} месяцы таму"
+          many: "%{count} месяцаў таму"
+          other: "%{count} месяцаў таму"
+        x_years:
+          one: "%{count} год таму"
+          few: "%{count} гады таму"
+          many: "%{count} гадоў таму"
+          other: "%{count} гадоў таму"
+      later:
+        x_days:
+          one: "праз %{count} дзень"
+          few: "праз %{count} дні"
+          many: "праз %{count} дзён"
+          other: "праз %{count} дзён"
+        x_months:
+          one: "праз %{count} месяц"
+          few: "праз %{count} месяцы"
+          many: "праз %{count} месяцаў"
+          other: "праз %{count} месяцаў"
+        x_years:
+          one: "праз %{count} год"
+          few: "праз %{count} гады"
+          many: "праз %{count} гадоў"
+          other: "праз %{count} гадоў"
+      previous_month: "Папярэдні месяц"
+      next_month: "Наступны месяц"
+      placeholder: дата
+      from_placeholder: "з даты"
+      to_placeholder: "па дату"
+    languages:
+      ar:
+        name: Арабская
+      be:
+        name: Беларуская
+      bg:
+        name: Балгарская
+      bs_BA:
+        name: Баснійская
+      ca:
+        name: Каталонская
+      cs:
+        name: Чэшская
+      da:
+        name: Дацкая
+      de:
+        name: Нямецкая
+      el:
+        name: Грэчаская
+      en:
+        name: Англійская (ЗША)
+      en_GB:
+        name: Англійская (Вялікабрытанія)
+      es:
+        name: Іспанская
+      et:
+        name: Эстонская
+      fa_IR:
+        name: Персідская
+      fi:
+        name: Фінская
+      fr:
+        name: Французская
+      gl:
+        name: Галісійская
+      he:
+        name: Іўрыт
+      hr:
+        name: Харвацкая
+      hu:
+        name: Венгерская
+      hy:
+        name: Армянская
+      id:
+        name: Інданезійская
+      it:
+        name: Італьянская
+      ja:
+        name: Японская
+      ko:
+        name: Карэйская
+      lt:
+        name: Літоўская
+      lv:
+        name: Латышская
+      nb_NO:
+        name: Нарвежская букмол
+      nl:
+        name: Галандская
+      pl_PL:
+        name: Польская
+      pt:
+        name: Партугальская
+      pt_BR:
+        name: Партугальская
+      ro:
+        name: Румынская
+      ru:
+        name: Руская
+      sk:
+        name: Славацкая
+      sl:
+        name: Славенская
+      sq:
+        name: Албанская
+      sr:
+        name: Сербская
+      sv:
+        name: Шведская
+      sw:
+        name: Суахілі
+      te:
+        name: Тэлугу
+      th:
+        name: Тайская
+      tr_TR:
+        name: Турэцкая
+      ug:
+        name: Уйгурская
+      uk:
+        name: Украінская
+      ur:
+        name: Урду
+      vi:
+        name: В'етнамская
+      zh_TW:
+        name: Кітайская
+      zh_CN:
+        name: Кітайская спрошчаная
     share:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
-      close: "схаваць"
+      post: "допіс №%{postNumber} ад карыстальніка @%{username}"
+      close: "закрыць"
+      twitter: "Абагуліць у X"
+      facebook: "Абагуліць у Facebook"
+      email: "Адправіць па электроннай пошце"
+      url: "Скапіяваць і абагуліць URL-адрас"
+    word_connector:
+      comma: ", "
+      last_item: "і"
     action_codes:
       tags_changed: "Тэгі абноўлены %{when}"
       category_changed: "Катэгорыя абноўлена %{when}"
-    emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
+    skip_user_nav: "Перайсці да зместу профілю"
+    emails_are_disabled: "Уся выходная электронная пошта была глабальна адключана адміністратарам. Ніякіх апавяшчэнняў па электроннай пошце адпраўляцца не будзе."
+    emails_are_disabled_non_staff: "Выходная электронная пошта адключана для карыстальнікаў, якія не з'яўляюцца супрацоўнікамі."
+    software_update_prompt:
+      message: "Мы абнавілі гэты сайт, <span>абнавіце старонку</span> , каб усё працавала без праблем."
+      dismiss: "Адхіліць"
+    bootstrap_mode: "Пачатак працы"
     back_button: "Назад"
     welcome_banner:
       header:
-        anonymous_members: "Сардэчна запрашаем да сайта %{site_name}!"
+        logged_in_members: "З вяртаннем, %{preferred_display_name}!"
+        anonymous_members: "Вітаем у %{site_name}!"
       search: "Пошук"
+    impersonation:
+      notice: "Вы выдаеце сябе за %{username}"
+      stop: "Перастаньце выдаваць сябе за іншую асобу"
     themes:
-      default_description: "Default"
+      default_description: "Прадвызначаная"
+      broken_theme_alert: "Ваш сайт можа не працаваць з-за памылак у тэме/кампаненце. Больш падрабязную інфармацыю можна знайсці ў кансолі браўзера."
+      error_caused_by: "Выклікана памылкай '%{name}'. <a target='blank' href='%{path}'>Націсніце тут</a> , каб абнавіць, пераканфігураваць або адключыць."
+      only_admins: "(гэта паведамленне паказваецца толькі адміністратарам сайта)"
     s3:
       regions:
-        ap_northeast_1: "Азія (Токіа)"
-        ap_northeast_2: "Азія (Сеул)"
-        ap_south_1: "Азія (Мумбай)"
-        ap_southeast_1: "Азія (Сінгапур)"
-        ap_southeast_2: "Азія (Сіднэй)"
+        ap_northeast_1: "Азіяцка-Ціхаакіянскі рэгіён (Токіо)"
+        ap_northeast_2: "Азіяцка-Ціхаакіянскі рэгіён (Сеул)"
+        ap_east_1: "Азіяцка-Ціхаакіянскі рэгіён (Ганконг)"
+        ap_south_1: "Азіяцка-Ціхаакіянскі рэгіён (Мумбаі)"
+        ap_southeast_1: "Азіяцка-Ціхаакіянскі рэгіён (Сінгапур)"
+        ap_southeast_2: "Азіяцка-Ціхаакіянскі рэгіён (Сіднэй)"
+        ca_central_1: "Канада (Цэнтральная)"
         cn_north_1: "Кітай (Пекін)"
+        cn_northwest_1: "Кітай (Нінся)"
         eu_central_1: "ЕС (Франкфурт)"
+        eu_north_1: "ЕС (Стакгольм)"
+        eu_south_1: "ЕС (Мілан)"
         eu_west_1: "ЕС (Ірландыя)"
+        eu_west_2: "ЕС (Лондан)"
+        eu_west_3: "ЕС (Парыж)"
+        sa_east_1: "Паўднёвая Амерыка (Сан-Паўлу)"
+        us_east_1: "Усход ЗША (Паўночная Вірджынія)"
+        us_east_2: "Усход ЗША (Агаё)"
+        us_gov_east_1: "AWS GovCloud (Заходняя частка ЗША)"
+        us_gov_west_1: "AWS GovCloud (Заходняя частка ЗША)"
+        us_west_1: "Захад ЗША (Паўночная Каліфорнія)"
         us_west_2: "ЗША Захад (Арэгон)"
-    edit: "рэдагаваць"
-    edit_topic: "рэдагаваць назву і катэгорыю гэтай тэмы"
-    not_implemented: "Гэты функцыянал яшчэ не рэалізаваны, прабачце!"
+    clear_input: "Ачысціць увод"
+    edit: "Рэдагаваць"
+    edit_topic: "Рэдагаваць назву і катэгорыю гэтай тэмы"
+    not_implemented: "Гэта функцыя яшчэ не рэалізавана, прабачце!"
     no_value: "Не"
     yes_value: "Так"
-    ok_value: "Добра"
-    cancel_value: "адмяніць"
+    ok_value: "ОК"
+    cancel_value: "Скасаваць"
     submit: "Адправіць"
-    delete: "выдаляць"
-    generic_error: "Выбачайце, здарылася памылка."
-    generic_error_with_reason: "Паўстала памылка: %{error}"
+    delete: "Выдаліць"
+    generic_error: "Прабачце, узнікла памылка."
+    generic_error_with_reason: "Узнікла памылка: %{error}"
     sign_up: "Рэгістрацыя"
     log_in: "Увайсці"
     age: "Узрост"
-    joined: "Далучыўся (-ась)"
-    admin_title: "Адмін панэль"
+    joined: "Далучыўся(-лася)"
+    admin_title: "Адміністратар"
     show_more: "паказаць больш"
-    show_help: "налады"
+    show_help: "параметры"
     links: "Спасылкі"
     links_lowercase:
       one: "спасылка"
-      few: "спасылак"
+      few: "спасылкі"
       many: "спасылак"
       other: "спасылак"
-    faq: "Пытанні і адказы"
-    guidelines: "інструкцыі"
-    privacy_policy: "палітыка прыватнасці"
-    privacy: "Канфідэнцыяльнасць"
-    tos: "ўмовы выкарыстання"
+    faq: "Частыя пытанні"
+    guidelines: "Рэкамендацыі"
+    privacy_policy: "Палітыка прыватнасці"
+    privacy: "Прыватнасць"
+    tos: "Умовы абслугоўвання"
     rules: "Правілы"
-    mobile_view: "Выгляд для мабільнага"
-    desktop_view: "Выгляд для настольнага кампутара"
+    mobile_view: "Мабільная версія"
+    desktop_view: "Поўная версія"
     now: "толькі што"
     read_more: "чытаць далей"
-    more: "больш"
+    more: "Больш"
     never: "ніколі"
     every_30_minutes: "кожныя 30 хвілін"
-    every_hour: "кожную гадзіну"
+    every_hour: "штогадзіну"
     daily: "штодня"
     weekly: "штотыдзень"
-    every_month: "кожны месяц"
-    every_six_months: "кожныя паўгады"
+    every_month: "штомесяц"
+    every_six_months: "кожныя шэсць месяцаў"
     max_of_count:
-      one: "Не больш за %{count}"
-      few: "Не больш за %{count}"
-      many: "Не больш за %{count}"
-      other: "Не больш за %{count}"
+      one: "не больш за %{count}"
+      few: "не больш за %{count}"
+      many: "не больш за %{count}"
+      other: "не больш за %{count}"
     character_count:
-      one: "%{Count} сімвал"
-      few: "%{Count} сімвалы"
-      many: "%{Count} сімвалаў"
-      other: "%{Count} сімвалаў"
+      one: "%{count} сімвал"
+      few: "%{count} сімвалы"
+      many: "%{count} сімвалаў"
+      other: "%{count} сімвалаў"
     related_messages:
-      title: "падобныя паведамленні"
-      pill: "падобныя паведамленні"
+      title: "Звязаныя паведамленні"
+      pill: "Звязаныя паведамленні"
     suggested_topics:
-      pm_title: "прапанаваныя паведамленні"
+      pm_title: "Прапанаваныя паведамленні"
     about:
-      edit: "Рэдагаваць гэтую старонку"
-      simple_title: "Аб сайце"
-      title: "Аб %{title}"
-      stats: "статыстыка"
-      our_admins: "адміны"
-      our_moderators: "мадэратары"
-      moderators: "мадэратары"
-      like_count: "перавагі"
+      edit: "Рэдагаваць гэту старонку"
+      simple_title: "Пра сайт"
+      title: "Пра %{title}"
+      stats: "Статыстыка сайта"
+      our_admins: "Нашы адміністратары"
+      our_moderators: "Нашы мадэратары"
+      moderators: "Мадэратары"
+      stat:
+        all_time: "За ўвесь час"
+        last_day: "24 гадзіны"
+        last_7_days: "7 дзён"
+        last_30_days: "30 дзён"
+      like_count: "Падабайкі"
       topic_count: "Тэмы"
-      post_count: "Паведамленні"
+      post_count: "Допісы"
+      user_count: "Рэгістрацыі"
+      active_user_count: "Актыўныя карыстальнікі"
+      visitor_count: "Наведвальнікі"
+      eu_visitor_count: "Наведвальнікі з Еўрапейскага Саюза"
+      traffic_info_footer_MF: |
+        За апошнія 6 месяцаў гэты сайт штомесяц прапаноўваў кантэнт прыблізна { total_visitors, plural,
+            one {# чалавеку}
+            few {# чалавекам}
+            many {# чалавекам}
+          other {# чалавекам}
+        } , з із прыкладна { eu_visitors, plural,
+            one {# чалавек}
+            few {# чалавекі}
+            many {# чалавек}
+          other {# чалавек}
+        } з Еўрапейскага Саюза.
+      contact: "Звязацца з намі"
+      contact_info: "У выпадку ўзнікнення крытычнай праблемы або тэрміновага пытання, якое тычыцца гэтага сайта, звяжыцеся з намі: %{contact_info}."
+      site_activity: "Актыўнасць сайта"
+      view_more: "Паказаць больш"
+      view_less: "Паказаць менш"
       activities:
+        topics:
+          one: "%{formatted_number} тэма"
+          few: "%{formatted_number} тэмы"
+          many: "%{formatted_number} тэм"
+          other: "%{formatted_number} тэм"
         posts:
-          one: "%{formatted_number} запіс"
-          few: "%{formatted_number}запісаў"
-          many: "%{formatted_number}запісаў"
-          other: "%{formatted_number}запісаў"
+          one: "%{formatted_number} допіс"
+          few: "%{formatted_number} допісы"
+          many: "%{formatted_number} допісаў"
+          other: "%{formatted_number} допісаў"
+        active_users:
+          one: "%{formatted_number} актыўны карыстальнік"
+          few: "%{formatted_number} актыўныя карыстальнікі"
+          many: "%{formatted_number} актыўных карыстальнікаў"
+          other: "%{formatted_number} актыўных карыстальнікаў"
+        sign_ups:
+          one: "%{formatted_number} рэгістрацыя"
+          few: "%{formatted_number} рэгістрацыі"
+          many: "%{formatted_number} рэгістрацый"
+          other: "%{formatted_number} рэгістрацый"
+        likes:
+          one: "%{formatted_number} падабайка"
+          few: "%{formatted_number} падабайкі"
+          many: "%{formatted_number} падабаек"
+          other: "%{formatted_number} падабаек"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} наведвальнік}
+              few {{total_formatted_number} наведвальнікі}
+              many {{total_formatted_number} наведвальнікаў}
+            other {{total_formatted_number} наведвальнікаў}
+          }, каля { eu_count, plural,
+              one {{eu_formatted_number}}
+              few {{eu_formatted_number}}
+              many {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } з ЕС
         periods:
           last_7_days: "за апошнія 7 дзён"
           today: "сёння"
+          all_time: "за ўвесь час"
+      member_count:
+        one: "%{formatted_number} удзельнік"
+        few: "%{formatted_number} удзельнікі"
+        many: "%{formatted_number} удзельнікаў"
+        other: "%{formatted_number} удзельнікаў"
+      admin_count:
+        one: "%{formatted_number} адміністратар"
+        few: "%{formatted_number} адміністратары"
+        many: "%{formatted_number} адміністратараў"
+        other: "%{formatted_number} адміністратараў"
+      moderator_count:
+        one: "%{formatted_number} мадэратар"
+        few: "%{formatted_number} мадэратары"
+        many: "%{formatted_number} мадэратараў"
+        other: "%{formatted_number} мадэратараў"
+      report_inappropriate_content: "Калі вы сутыкнецеся з непрымальным кантэнтам, смела звяртайцеся да нашых мадэратараў і адміністратараў. Не забудзьцеся ўвайсці ў сістэму, перш чым пачынаць размову."
+      site_age:
+        less_than_one_month: "Створаны < 1 месяц таму"
+        month:
+          one: "Створаны %{count} месяц таму"
+          few: "Створаны %{count} месяцы таму"
+          many: "Створаны %{count} месяцаў таму"
+          other: "Створаны %{count} месяцаў таму"
+        year:
+          one: "Створаны %{count} год таму"
+          few: "Створаны %{count} гады таму"
+          many: "Створаны %{count} гадоў таму"
+          other: "Створаны %{count} гадоў таму"
     bookmarked:
-      title: "Абранае"
-      clear_bookmarks: "Выдаліць з абранага"
+      title: "Закладка"
+      edit_bookmark: "Рэдагаваць закладку"
+      clear_bookmarks: "Ачысціць закладкі"
       help:
         bookmark: "Націсніце, каб дадаць гэтую тэму ў закладкі"
-        unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
+        edit_bookmark: "Націсніце, каб рэдагаваць закладку для допісу ў гэтай тэме"
+        edit_bookmark_for_topic: "Націсніце, каб рэдагаваць закладку для гэтай тэмы"
+        unbookmark: "Націсніце, каб выдаліць усе закладкі ў гэтай тэме"
+        unbookmark_with_reminder: "Націсніце, каб выдаліць усе закладкі і напаміны ў гэтай тэме"
     bookmarks:
-      not_bookmarked: "закладка гэты пост"
+      also_set_reminder: "Таксама задаць напамін?"
+      bookmarked_success: "Дададзена ў закладкі!"
+      not_bookmarked: "дадаць гэты допіс у закладкі"
       save: "Захаваць"
-      no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
+      no_user_bookmarks: "У вас няма допісаў у закладках; закладкі дазваляюць хутка звяртацца да пэўных допісаў."
       search: "Пошук"
-      bookmark: "закладка"
+      bookmark: "Закладка"
       bulk:
-        select_all: "выбраць усе"
+        select_all: "Выбраць усе"
     drafts:
       label: "Чарнавікі"
-      remove: "выдаліць"
-    preview: "папярэдні прагляд"
-    cancel: "адмяніць"
+      resume: "Узнавіць"
+      remove: "Выдаліць"
+      remove_confirmation: "Вы ўпэўнены, што хочаце выдаліць гэты чарнавік?"
+      new_topic: "Чарнавік новай тэмы"
+      new_private_message: "Чарнавік новага асабістага паведамлення"
+      edit_topic: "Рэдагаваць чарнавік тэмы"
+      dropdown:
+        title: "Адкрыць меню апошніх чарнавікоў"
+        untitled: "Чарнавік без назвы"
+        view_all: "праглядзець усе чарнавікі"
+        other_drafts:
+          one: "+ яшчэ %{count} чарнавік"
+          few: "+ яшчэ %{count} чарнавікі"
+          many: "+ яшчэ %{count} чарнавікоў"
+          other: "+ яшчэ %{count} чарнавікоў"
+    topic_count_all:
+      one: "Паглядзець %{count} новую тэму"
+      few: "Паглядзець %{count} новыя тэмы"
+      many: "Паглядзець %{count} новых тэм"
+      other: "Паглядзець %{count} новых тэм"
+    topic_count_categories:
+      one: "Паглядзець %{count} новую або абноўленую тэму"
+      few: "Паглядзець %{count} новыя або абноўленыя тэмы"
+      many: "Паглядзець %{count} новых або абноўленых тэм"
+      other: "Паглядзець %{count} новых або абноўленых тэм"
+    topic_count_latest:
+      one: "Паглядзець %{count} новую або абноўленую тэму"
+      few: "Паглядзець %{count} новыя або абноўленыя тэмы"
+      many: "Паглядзець %{count} новых або абноўленых тэм"
+      other: "Паглядзець %{count} новых або абноўленых тэм"
+    topic_count_unseen:
+      one: "Паглядзець %{count} новую або абноўленую тэму"
+      few: "Паглядзець %{count} новыя або абноўленыя тэмы"
+      many: "Паглядзець %{count} новых або абноўленых тэм"
+      other: "Паглядзець %{count} новых або абноўленых тэм"
+    topic_count_unread:
+      one: "Паглядзець %{count} непрачытаную тэму"
+      few: "Паглядзець %{count} непрачытаныя тэмы"
+      many: "Паглядзець %{count} непрачытаных тэм"
+      other: "Паглядзець %{count} непрачытаных тэм"
+    topic_count_new:
+      one: "Паглядзець %{count} новую тэму"
+      few: "Паглядзець %{count} новыя тэмы"
+      many: "Паглядзець %{count} новых тэм"
+      other: "Паглядзець %{count} новых тэм"
+    preview: "Перадпрагляд"
+    cancel: "Скасаваць"
+    deleting: "Выдаленне…"
     save: "Захаваць змены"
+    saving: "Захаванне…"
     saved: "Захавана!"
-    upload: "Загрузіць"
-    uploaded: "Загружана!"
+    upload: "Запампаваць"
+    uploading: "Запампоўванне…"
+    processing: "Апрацоўка…"
+    uploading_filename: "Запампоўванне: %{filename}…"
+    processing_filename: "Апрацоўка: %{filename}…"
+    clipboard: "буфер абмену"
+    uploaded: "Запампавана!"
+    pasting: "Устаўка…"
     enable: "Уключыць"
     disable: "Адключыць"
     continue: "Працягнуць"
-    switch_to_anon: "Увайсці як ананім"
-    switch_from_anon: "Пакінуць ананімны прагляд"
+    switch_to_anon: "Увайсці ў ананімны рэжым"
+    switch_from_anon: "Выйсці з ананімнага рэжыму"
+    select_placeholder: "Выбраць…"
+    none_placeholder: "Няма"
     banner:
+      close: "Закрыць гэты банер"
       edit: "Рэдагаваць"
+    pwa:
+      install_banner: "Вы хочаце <a href>ўсталяваць %{title} на гэту прыладу?</a>"
     choose_topic:
-      none_found: "Не знойдзена тэмаў."
+      none_found: "Тэм не знойдзена."
+      title:
+        search: "Пошук тэмы"
+        placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар тэмы"
+    choose_message:
+      none_found: "Паведамленняў не знойдзена."
+      title:
+        search: "Пошук паведамлення"
+        placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
     review:
+      show_more: "Паказаць больш"
+      show_less: "Паказаць менш"
+      order_by: "Сартаваць па"
+      date_filter: "Апублікавана паміж"
+      in_reply_to: "у адказ на"
+      unknown:
+        ignore_all: "Ігнараваць усе"
       explain:
-        total: "агульны"
+        formula: "Формула"
+        subtotal: "Прамежкавы вынік"
+        total: "Усяго"
       revise_and_reject_post:
-        reason: "прычына"
+        reason: "Прычына"
+        other_reason: "Іншае..."
       delete: "Выдаліць"
       settings:
         saved: "Захавана"
-        save_changes: "Захаваць"
+        save_changes: "Захаваць змены"
         title: "Налады"
       moderation_history: "Гісторыя мадэрацыі"
-      title: "Патрабуе перагляду"
+      title: "Разгляд"
       topic: "Тэма:"
       filtered_user: "Карыстальнік"
       show_all_topics: "паказаць усе тэмы"
@@ -222,32 +649,32 @@ be:
         username: "Імя карыстальніка"
         email: "Электронная пошта"
         name: "Імя"
-        reject_reason: "прычына"
-        scrubbed_reason: "прычына"
+        reject_reason: "Прычына"
+        scrubbed_reason: "Прычына"
         scrub_record:
-          cancel_button: "Адмяніць"
+          cancel_button: "Скасаваць"
       topics:
         topic: "Тэма"
-        reviewable_count: "падлічваць"
-        deleted: "[Тэма выдаленая]"
-        details: "дэталі"
+        reviewable_count: "Колькасць"
+        deleted: "[Тэма выдалена]"
+        details: "падрабязнасці"
       edit: "Рэдагаваць"
       save: "Захаваць"
-      cancel: "Адмяніць"
+      cancel: "Скасаваць"
       filters:
         all_categories: "(усе катэгорыі)"
         type:
-          title: "тып"
-        refresh: "абнавіць"
+          title: "Тып"
+        refresh: "Абнавіць"
         status: "Статус"
-        category: "катэгорыя"
+        category: "Катэгорыя"
         score_type:
-          title: "прычына"
+          title: "Прычына"
         orders:
-          score: "кошт"
+          score: "Балы"
       scores:
-        score: "кошт"
-        type: "прычына"
+        score: "Балы"
+        type: "Прычына"
         status: "Статус"
       statuses:
         pending:
@@ -328,37 +755,37 @@ be:
       days_visited: "наведванне"
       days_visited_long: "дзён наведанае"
       posts_read: "прачытаныя"
-      posts_read_long: "паведамленняў прачытана"
+      posts_read_long: "Прачытана допісаў"
       total_rows:
-        one: " %{Count} карыстальнік"
-        few: " %{Count} карыстальнікі"
-        many: " %{Count} карыстальнікаў"
-        other: " %{Count} карыстальнікаў"
+        one: "%{count} карыстальнік"
+        few: "%{count} карыстальнікі"
+        many: "%{count} карыстальнікаў"
+        other: "%{count} карыстальнікаў"
       edit_columns:
         save: "Захаваць"
       group:
         all: "усе групы"
     group_histories:
       actions:
-        change_group_setting: "Змяніць наладкі групы"
-        add_user_to_group: "дадаць карыстальніка"
-        remove_user_from_group: "выдаліць карыстальніка"
+        change_group_setting: "Змяніць налады групы"
+        add_user_to_group: "Дадаць карыстальніка"
+        remove_user_from_group: "Выдаліць карыстальніка"
     groups:
       requests:
-        reason: "прычына"
-        handle: "звяртацца з просьбай аб членстве"
-        undo: "Адмяніць"
+        reason: "Прычына"
+        handle: "апрацаваць запыт на членства"
+        undo: "Адрабіць"
       manage:
         name: "Імя"
-        full_name: "поўнае Імя"
+        full_name: "Поўнае Імя"
         delete_member_confirm: "Выдаліць '%{username}' з групы '%{group}'?"
         profile:
           title: Профіль
         interaction:
-          posting: апублікаванне
+          posting: Публікацыі
         email:
           title: "Электронная пошта"
-          last_updated_by: "ад"
+          last_updated_by: "карыстальнікам"
           credentials:
             username: "Імя карыстальніка"
             password: "Пароль"
@@ -367,24 +794,24 @@ be:
           mailboxes:
             disabled: "Адключана"
         membership:
-          access: доступ
+          access: Доступ
         categories:
           title: Катэгорыі
         tags:
-          title: Цэтлікі
+          title: Тэгі
         logs:
-          title: "Логі"
-          when: "калі"
-          action: "дзеянне"
-          subject: "тэма"
-          details: "дэталі"
-          from: "ад"
-          to: "да"
+          title: "Журналы"
+          when: "Калі"
+          action: "Дзеянне"
+          subject: "Тэма"
+          details: "Падрабязнасці"
+          from: "Ад"
+          to: "Каму"
       permissions:
-        title: "дазволу"
+        title: "Дазволы"
       add: "Дадаць"
-      request: "запыт"
-      message: "паведамленне"
+      request: "Запыт"
+      message: "Паведамленне"
       name: "Імя"
       user_count: "Карыстальнікі"
       bio: "Аб групе"
@@ -394,64 +821,64 @@ be:
         all: "Усе групы"
         close_groups: "Закрытыя групы"
         closed: "Закрыта"
-        public: "грамадскага"
-        private: "прыватны"
+        public: "Публічная"
+        private: "Прыватная"
         public_groups: "Публічныя групы"
         my_groups: "Мае Групы"
-        is_group_user: "член"
+        is_group_user: "Член"
       title:
         one: "Група"
-        few: "Групаў"
-        many: "Групаў"
+        few: "Групы"
+        many: "Групы"
         other: "Групы"
       activity: "Актыўнасць"
       members:
-        title: "Удзельнікі"
+        title: "Члены"
         filter_placeholder_admin: "імя карыстальніка або email"
         filter_placeholder: "імя карыстальніка"
         status: "Статус"
-      topics: "тэмы"
-      posts: "паведамленні"
-      mentions: "згадкі"
+      topics: "Тэмы"
+      posts: "Допісы"
+      mentions: "Згадкі"
       messages: "Паведамленні"
       alias_levels:
-        nobody: "ніхто"
-        only_admins: "толькі адміністратары"
+        nobody: "Ніхто"
+        only_admins: "Толькі адміністратары"
         mods_and_admins: "Толькі мадэратары і адміністратары"
-        members_mods_and_admins: "Толькі участикы групы, мадэратары і адміністратары"
-        everyone: "усе"
+        members_mods_and_admins: "Толькі члены групы, мадэратары і адміністратары"
+        everyone: "Усе"
       notifications:
         watching:
-          title: "сачыць"
+          title: "Назіраюцца"
         tracking:
-          title: "Cачыць"
+          title: "Адсочваюцца"
         muted:
-          title: "ігнараваць"
+          title: "Адключаныя"
       default_notifications:
         modal_yes: "Так"
     user_action_groups:
-      "1": "упадабаныя"
-      "2": "атрыманыя перавагі"
-      "3": "закладкі"
-      "4": "тэмы"
-      "5": "адказы"
-      "7": "згадкі"
-      "9": "цытаты"
-      "11": "рэдагаванне"
-      "12": "дасланыя"
-      "13": "ўваходныя"
-      "14": "чакаецца"
+      "1": "Падабайкі"
+      "2": "Падабайкі"
+      "3": "Закладкі"
+      "4": "Тэмы"
+      "5": "Адказы"
+      "7": "Згадкі"
+      "9": "Цытаты"
+      "11": "Праўкі"
+      "12": "Адпраўленыя элементы"
+      "13": "Уваходныя"
+      "14": "У чаканні"
       "15": "Чарнавікі"
       "17": "Спасылкі"
     categories:
       categories_label: "катэгорыі"
       subcategories_label: "падкатэгорыі"
-      remove_filter: "прыбраць фільтр"
-      category: "катэгорыя"
+      remove_filter: "выдаліць фільтр"
+      category: "Катэгорыя"
       reorder:
-        apply_all: "прымяніць"
-        position: "пазіцыя"
-      posts: "Паведамленні"
+        apply_all: "Ужыць"
+        position: "Пазіцыя"
+      posts: "Допісы"
       topics: "Тэмы"
       latest: "Апошнія"
       subcategories: "Падкатэгорыі"
@@ -459,113 +886,113 @@ be:
         week: "тыдзень"
         month: "месяц"
     ip_lookup:
-      title: Пошук IP адрасы
-      hostname: Імя хосту
-      location: месцазнаходжанне
-      location_not_found: (Невядома)
-      organisation: арганізацыя
-      phone: тэлефон
-      other_accounts: "Іншыя ўліковыя запісы з гэтым IP адрасам"
+      title: Пошук IP-адраса
+      hostname: Імя хоста
+      location: Месцазнаходжанне
+      location_not_found: (невядома)
+      organisation: Арганізацыя
+      phone: Тэлефон
+      other_accounts: "Іншыя ўліковыя запісы з гэтым IP-адрасам"
       delete_other_accounts:
         one: "Выдаліць %{count}"
         few: "Выдаліць %{count}"
         many: "Выдаліць %{count}"
         other: "Выдаліць %{count}"
       username: "імя карыстальніка"
-      read_time: "пры чытанні"
-      topics_entered: "створана тым"
-      post_count: "паведамленняў"
-      confirm_delete_other_accounts: "Вы ўпэўненыя, што жадаеце выдаліць гэтых карыстальнікаў?"
+      read_time: "час чытання"
+      topics_entered: "наведана тэм"
+      post_count: "допісы"
+      confirm_delete_other_accounts: "Вы ўпэўнены, што хочаце выдаліць гэтыя ўліковыя запісы?"
     user:
-      said: "%{Username}"
+      said: "%{username}:"
       profile: "Профіль"
-      mute: "Заглушыць"
-      edit: "рэдагаваць налады"
-      new_private_message: "новае паведамленне"
-      private_message: "паведамленне"
+      mute: "Адключыць гук"
+      edit: "Рэдагаваць налады"
+      new_private_message: "Новае паведамленне"
+      private_message: "Паведамленне"
       private_messages: "Паведамленні"
       user_notifications:
         filters:
-          all: "Усё"
-          read: "прачытаныя"
+          all: "Усе"
+          read: "Прачытаныя"
           unread: "Непрачытаныя"
         ignore_duration_username: "Імя карыстальніка"
-        ignore_duration_save: "ігнараваць"
-        mute_option: "ігнараваць"
+        ignore_duration_save: "Ігнараваць"
+        mute_option: "Адключана"
       notification_schedule:
         to: "да"
       activity_stream: "Актыўнасць"
-      read: "прачытаныя"
+      read: "Прачытаныя"
       preferences:
-        title: "Налады"
+        title: "Параметры"
       feature_topic_on_profile:
         save: "Захаваць"
         clear:
-          title: "ачысціць"
-      bookmarks: "закладкі"
-      bio: "Аба мне"
-      invited_by: "Запрошаны (а)"
-      trust_level: "ўзровень даверу"
-      notifications: "Натыфікацыі"
-      statistics: "статыстыка"
+          title: "Ачысціць"
+      bookmarks: "Закладкі"
+      bio: "Пра мяне"
+      invited_by: "Запрошаны(-а)"
+      trust_level: "Узровень даверу"
+      notifications: "Апавяшчэнні"
+      statistics: "Статыстыка"
       desktop_notifications:
-        perm_default: "ўключыць абвесткі"
-        perm_denied_btn: "няма доступу"
-        disable: "адключыць апавяшчэння"
-        enable: "ўключыць абвесткі"
-      dismiss_notifications_tooltip: "Адзначыць ўсё апавяшчэнні як прачытаныя"
+        perm_default: "Уключыць апавяшчэнні"
+        perm_denied_btn: "Няма доступу"
+        disable: "Адключыць апавяшчэнні"
+        enable: "Уключыць апавяшчэнні"
+      dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
-        undo: "скінуць"
+        undo: "Скінуць"
         interface_modes:
-          light: "святло"
-          dark: "цёмна"
+          light: "Светлая"
+          dark: "Цёмная"
         picker:
-          active: "актыўны"
+          active: "Актыўная"
       experimental_sidebar:
         options: "Налады"
-        navigation_section: "рух"
-      suspended_reason: "прычына: "
-      silenced_reason: "прычына: "
-      tag_settings: "Цэтлікі"
-      watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
-      tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
-      muted_tags: "ігнаруемай"
-      muted_tags_instructions: "Вы ня будзеце атрымоўваць паведамленні аб новых тэмах па гэтых цэтліках і яны не адлюструюцца ў спісе апошніх тэмаў."
-      muted_categories: "ігнаруемай"
+        navigation_section: "Навігацыя"
+      suspended_reason: "Прычына: "
+      silenced_reason: "Прычына: "
+      tag_settings: "Тэгі"
+      watched_tags_instructions: "Вы будзеце аўтаматычна назіраць за ўсімі новымі тэмамі з гэтымі тэгамі. Таксама вам будуць прыходзіць апавяшчэнні пра новыя допісы і тэмы, а побач з тэмай будзе адлюстроўвацца колькасць новых допісаў."
+      tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы з гэтымі тэгамі. Побач з тэмай будзе адлюстроўвацца колькасць новых допісаў."
+      muted_tags: "Адключаныя"
+      muted_tags_instructions: "Вы не будзеце атрымліваць апавяшчэнні пра новыя тэмы з гэтымі тэгамі, і яны не будуць адлюстроўвацца ў спісе апошніх."
+      muted_categories: "Адключаныя"
       unread_message_count: "Паведамленні"
       admin_delete: "Выдаліць"
       users: "Карыстальнікі"
-      muted_users: "ігнаруемай"
-      apps: "Аппы"
-      api_approved: "Адобрана:"
-      theme: "тэма"
+      muted_users: "Адключаныя"
+      apps: "Праграмы"
+      api_approved: "Ухвалена:"
+      theme: "Тэма"
       messages:
-        inbox: "ўваходныя"
+        inbox: "Уваходныя"
         latest: "Апошнія"
-        sent: "адпраўлена"
+        sent: "Адпраўленыя"
         unread: "Непрачытаныя"
-        new: "Новая"
-        archive: "архіў"
-        groups: "Мае Групы"
-        move_to_inbox: "Перамясціць у тэчцы Уваходныя"
-        move_to_archive: "архіў"
+        new: "Новыя"
+        archive: "Архіў"
+        groups: "Мае групы"
+        move_to_inbox: "Перамясціць ва ўваходныя"
+        move_to_archive: "У архіў"
         tags: "Тэгі"
       preferences_nav:
-        account: "Аккаўнт"
+        account: "Уліковы запіс"
         security: "Бяспека"
         profile: "Профіль"
-        emails: "Емейлы"
-        notifications: "Натыфікацыі"
-        tracking: "Сачыць"
+        emails: "Электронныя лісты"
+        notifications: "Апавяшчэнні"
+        tracking: "Адсочваюцца"
         categories: "Катэгорыі"
         users: "Карыстальнікі"
-        tags: "Цэтлікі"
+        tags: "Тэгі"
         interface: "Інтэрфейс"
-        apps: "Аппы"
+        apps: "Праграмы"
       change_password:
-        success: "(Ліст адпраўлены)"
-        in_progress: "(Адпраўкі ліста)"
-        error: "(Памылка)"
+        success: "(ліст адпраўлены)"
+        in_progress: "(адпраўка ліста)"
+        error: "(памылка)"
         action: "Адправіць ліст для аднаўлення пароля"
         set_password: "ўсталяваць пароль"
         choose_new: "Абярыце новы пароль"

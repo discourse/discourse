@@ -96,7 +96,9 @@ el:
       translations:
         title: "Μεταφράσεις"
         progress_chart:
-          bar_done: "%{done} αναρτήσεις"
+          bar_done:
+            one: "%{count} ανάρτηση"
+            other: "%{count} αναρτήσεις"
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"

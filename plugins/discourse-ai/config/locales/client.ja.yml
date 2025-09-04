@@ -282,7 +282,8 @@ ja:
             configure: "翻訳を構成"
             empty_label: "自動翻訳は無効です。構成するには以下をクリックしてください"
         progress_chart:
-          bar_done: "%{done} 投稿"
+          bar_done:
+            other: "投稿 %{count} 件"
       spam:
         short_title: "迷惑"
         title: "迷惑処理の構成"

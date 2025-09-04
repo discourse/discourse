@@ -306,6 +306,23 @@ module DiscourseAutomation
         end
     end
 
+    def self.handle_topic_closed(topic)
+      name = DiscourseAutomation::Triggers::TOPIC_CLOSED
+
+      DiscourseAutomation::Automation
+        .where(trigger: name, enabled: true)
+        .find_each do |automation|
+          automation.trigger!(
+            "kind" => name,
+            "topic" => topic,
+            "placeholders" => {
+              "topic_url" => topic.relative_url,
+              "topic_title" => topic.title,
+            },
+          )
+        end
+    end
+
     def self.handle_after_post_cook(post, cooked)
       return cooked if post.post_type != Post.types[:regular] || post.post_number > 1
 

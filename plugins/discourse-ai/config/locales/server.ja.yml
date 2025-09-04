@@ -116,7 +116,6 @@ ja:
     ai_translation_enabled: "AI 翻訳機能を有効にします"
     ai_translation_model: "翻訳に使用するモデル。このモデルは翻訳をサポートしている必要があります。ペルソナはこの設定を上書きできます。"
     ai_translation_backfill_limit_to_public_content: "有効にすると、公開カテゴリのコンテンツのみが翻訳されます。無効にすると、グループ PM と非公開カテゴリのコンテンツも翻訳対象として送信されます。"
-    ai_translation_max_post_length: "翻訳する投稿の最大長。これより長い投稿は翻訳されません。"
     ai_translation_backfill_max_age_days: "翻訳する投稿とトピックの最大経過日数。これより古い投稿とトピックは翻訳されません。0 にするとバックファイルは無効になりますが、新しい投稿の翻訳は無効になりません。"
   reviewables:
     reasons:

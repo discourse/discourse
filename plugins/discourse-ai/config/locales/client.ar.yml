@@ -290,7 +290,13 @@ ar:
       translations:
         title: "الترجمات"
         progress_chart:
-          bar_done: "%{done} منشور"
+          bar_done:
+            zero: "%{count} منشور"
+            one: "منشور %{count}"
+            two: "منشوران %{count}"
+            few: "%{count} منشور"
+            many: "%{count} منشور"
+            other: "%{count} منشورات"
       spam:
         short_title: "عشوائي"
         title: "إعدادات التعامل مع المحتوى العشوائي"

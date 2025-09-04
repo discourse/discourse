@@ -57,7 +57,9 @@ gl:
       translations:
         title: "Traducións"
         progress_chart:
-          bar_done: "%{done} publicacións"
+          bar_done:
+            one: "%{count} publicación"
+            other: "%{count} publicacións"
       spam:
         short_title: "Lixo"
         enable: "Activar"

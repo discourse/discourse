@@ -12,6 +12,7 @@ ro:
   site_settings:
     map_events_title: "Suprascrie „Evenimente” în titlul barei laterale „Evenimente viitoare” pe categorie."
     sidebar_show_upcoming_events: "Afișează legătură evenimente viitoare în bara laterală sub „Mai multe”."
+    calendar_first_day_of_week: "Setează prima zi a săptămânii pentru afișarea calendarului. Opțiunile sunt Sâmbătă, Duminică sau Luni."
   discourse_post_event:
     errors:
       bulk_invite:

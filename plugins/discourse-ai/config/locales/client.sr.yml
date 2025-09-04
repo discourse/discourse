@@ -56,7 +56,10 @@ sr:
         select_option: "Izaberi jednu od opcija..."
       translations:
         progress_chart:
-          bar_done: "%{done} poruka"
+          bar_done:
+            one: "%{count} poruka"
+            few: "%{count} poruka"
+            other: "%{count} poruka"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Последњих 7 дана"

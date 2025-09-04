@@ -290,8 +290,14 @@ zh_CN:
           disabled_state:
             configure: "配置翻译"
             empty_label: "自动翻译已禁用，点击下方进行配置"
+        stats:
+          complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
+          incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
+          backfill_disabled: "回填功能目前已禁用。"
         progress_chart:
-          bar_done: "%{done} 个帖子"
+          title: "翻译进度 %{tooltip}"
+          bar_done:
+            other: "%{count} 个帖子"
       spam:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"

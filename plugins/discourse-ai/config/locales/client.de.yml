@@ -167,6 +167,8 @@ de:
             flag_post:
               label: "Beitrag melden"
               description: "Meldet den Beitrag (entweder als Spam oder zur Überprüfung)"
+            notify_author_pm_user:
+              description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
               label: "PN-Nachrichtentext"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
@@ -190,6 +192,9 @@ de:
             tagger_persona:
               label: "KI-Persona"
               description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
+            max_posts_for_context:
+              label: "Maximale Beiträge für Kontext"
+              description: "Maximale Anzahl von Beiträgen aus dem Thema, die in den Analysekontext einbezogen werden sollen (Standard: 5)"
     discourse_ai:
       title: "KI"
       default_llm:
@@ -295,8 +300,13 @@ de:
           disabled_state:
             configure: "Übersetzungen konfigurieren"
             empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
+        stats:
+          title: "Übersetzungsstatistiken"
         progress_chart:
-          bar_done: "%{done} Beiträge"
+          data_label: "%{percentage}%"
+          bar_done:
+            one: "%{count} Beitrag"
+            other: "%{count} Beiträge"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -599,6 +609,7 @@ de:
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
+          open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
@@ -608,6 +619,8 @@ de:
           open_router-x-ai-grok-3-beta: "Das neueste Modell von xAI"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
           open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
+          groq-openai-gpt-oss-120b: "Hochmodernes Open-Weight-Modell von OpenAI"
+          groq-openai-gpt-oss-20b: "Leichtes, schnelles, offenes Modell von OpenAI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"

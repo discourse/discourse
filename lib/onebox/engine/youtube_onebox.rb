@@ -17,11 +17,15 @@ module Onebox
       WIDTH = 480
       HEIGHT = 360
 
+      def self.embed_url(video_id)
+        "https://www.youtube.com/embed/#{video_id}"
+      end
+
       def parse_embed_response
         return unless video_id
         return @parse_embed_response if defined?(@parse_embed_response)
 
-        embed_url = "https://www.youtube.com/embed/#{video_id}"
+        embed_url = self.class.embed_url(video_id)
         @embed_doc ||= Onebox::Helpers.fetch_html_doc(embed_url)
 
         begin
@@ -60,7 +64,7 @@ module Onebox
         if video_id
           <<-HTML
             <iframe
-              src="https://www.youtube.com/embed/#{video_id}?#{embed_params}"
+              src="#{self.class.embed_url(video_id)}?#{embed_params}"
               width="#{WIDTH}"
               height="#{HEIGHT}"
               frameborder="0"

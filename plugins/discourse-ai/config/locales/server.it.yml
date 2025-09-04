@@ -116,7 +116,6 @@ it:
     ai_translation_enabled: "Abilita la funzionalità di traduzione IA"
     ai_translation_model: "Il modello da utilizzare per la traduzione. Il modello deve supportare la funzionalità di traduzione. I personaggi possono ignorare questa impostazione."
     ai_translation_backfill_limit_to_public_content: "Se abilitata, verranno tradotti solo i contenuti nelle categorie pubbliche. Se disabilitata, verranno inviati all'assistente di traduzione anche gli MP di gruppo e le categorie private."
-    ai_translation_max_post_length: "La lunghezza massima di un messaggio da tradurre. I messaggi che superano la lunghezza impostata non verranno tradotti."
     ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messaggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
   reviewables:
     reasons:

@@ -10,6 +10,7 @@ he:
       flag_types:
         review: "הוספת פוסט לתור הביקורת"
         review_hide: "הוספת פוסט לתור הסקירה והסתרתו"
+        review_delete: "הוספת פוסט לתור הסקירה ומחיקתו"
         spam: "סימון כזבל והסתרת הפוסט"
         spam_silence: "סימון כזבל, הסתרת הפוסט והשתקת המשתמש"
     scriptables:
@@ -24,6 +25,14 @@ he:
           <div>תגובה מהמודל:</div>
           <p>%%LLM_RESPONSE%%</p>
           <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+        notify_author_pm:
+          subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
+          body: |
+            שלום ‎@%{username},
+
+            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
+
+            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
@@ -111,7 +120,7 @@ he:
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
-    ai_translation_max_post_length: "אורך הפוסט המרבי לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
+    ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.

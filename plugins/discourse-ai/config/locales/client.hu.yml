@@ -63,7 +63,9 @@ hu:
       translations:
         title: "Fordítások"
         progress_chart:
-          bar_done: "%{done} bejegyzés"
+          bar_done:
+            one: "%{count} bejegyzés"
+            other: "%{count} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"
