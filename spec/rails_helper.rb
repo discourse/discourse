@@ -495,7 +495,7 @@ RSpec.configure do |config|
           result = super(*args, **options)
           now = Time.now.to_f
           @driver.send(:session).evaluate_async_script(
-            "window.emberSettled ? window.emberSettled('#{path}').then(arguments[0]) : arguments[0]()",
+            "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
           )
           raise "Took too long" if (Time.now.to_f - now) > 5
           puts "#{method_name}: #{Time.now.to_f - now}"
@@ -505,6 +505,21 @@ RSpec.configure do |config|
     end
 
     module CapybaraPlaywrightBrowserPatch
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          now = Time.now.to_f
+          @driver.send(:session).evaluate_async_script(
+            "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
+          )
+          raise "Took too long" if (Time.now.to_f - now) > 5
+          puts "#{method_name}: #{Time.now.to_f - now}"
+          result
+        end
+      end
+
       def visit(path)
         result = super
         now = Time.now.to_f
