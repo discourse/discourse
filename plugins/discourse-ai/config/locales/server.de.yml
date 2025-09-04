@@ -10,6 +10,7 @@ de:
       flag_types:
         review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
+        review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
@@ -29,6 +30,8 @@ de:
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
+      llm_tagger:
+        title: Themen mithilfe von KI mit Schlagwörtern versehen
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
     ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
@@ -116,7 +119,6 @@ de:
     ai_translation_enabled: "Aktiviert die KI-Übersetzungsfunktion"
     ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
-    ai_translation_max_post_length: "Die maximale Länge eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
   reviewables:
     reasons:

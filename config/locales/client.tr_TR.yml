@@ -7451,7 +7451,6 @@ tr_TR:
             cancel: "İptal et"
         merging_user: "Kullanıcı birleştiriliyor…"
         merge_failed: "Kullanıcılar birleştirilirken bir hata oluştu."
-        delete_forbidden_because_staff: "Yöneticiler ve moderatörler silinemez."
         delete_posts_forbidden_because_staff: "Yöneticilerin ve moderatörlerin tüm gönderileri silinemez."
         delete_forbidden:
           one: "Gönderileri olan kullanıcılar silinemez. Bir kullanıcıyı silmeye çalışmadan önce tüm gönderileri silin. (%{count} günden eski gönderiler silinemez.)"

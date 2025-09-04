@@ -4,7 +4,7 @@
   max-height: 300px;
 
   @include viewport.until(md) {
-    -webkit-text-size-adjust: 100%; /* stylelint-disable-line */
+    text-size-adjust: 100%;
   }
 
   .fk-d-menu__inner-content,

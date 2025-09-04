@@ -4161,7 +4161,6 @@ ca:
             cancel: "Cancel·la"
           confirmation:
             cancel: "Cancel·la"
-        delete_forbidden_because_staff: "No es poden suprimir administradors i moderadors. "
         delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:
           one: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més d'%{count} dia.)"

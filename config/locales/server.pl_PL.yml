@@ -594,10 +594,10 @@ pl_PL:
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
   rss_num_posts:
-    one: "%{count} post"
-    few: "%{count} posty"
-    many: "%{count} postów"
-    other: "%{count} postów"
+    one: "%{count} wpis"
+    few: "%{count} wpisy"
+    many: "%{count} wpisów"
+    other: "%{count} wpisów"
   rss_num_participants:
     one: "%{count} uczestnik"
     few: "%{count} uczestników"
@@ -2016,6 +2016,7 @@ pl_PL:
     auth_overrides_email: "Nadpisuje lokalny e-mail przez adres e-mail zewnętrznej witryny przy każdym logowaniu i zapobiega lokalnym zmianom. Stosuje się do wszystkich dostawców uwierzytelniania. (WARNING: mogą wystąpić rozbieżności w wyniku normalizacji lokalnych adresów e-mail)"
     auth_overrides_username: "Zastępuje lokalną nazwę użytkownika nazwą użytkownika witryny zewnętrznej przy każdym logowaniu i zapobiega lokalnym zmianom. Dotyczy wszystkich dostawców uwierzytelniania. (OSTRZEŻENIE: mogą wystąpić rozbieżności ze względu na różnice w długości/wytycznych nazwy użytkownika)"
     auth_overrides_name: "Zastępuje pełną nazwę lokalną pełną nazwą witryny zewnętrznej przy każdym logowaniu i zapobiega zmianom lokalnym. Dotyczy wszystkich dostawców uwierzytelniania."
+    auth_overrides_avatar: "Zastępuje awatar lokalny awatarem witryny zewnętrznej przy każdym logowaniu i uniemożliwia wprowadzanie zmian lokalnych. Dotyczy wszystkich dostawców uwierzytelniania."
     discourse_connect_overrides_avatar: "Zastępuje awatar użytkownika wartością z DiscourseConnect. Jeśli ta opcja jest włączona, użytkownicy nie będą mogli przesyłać awatarów do Discourse."
     discourse_connect_overrides_location: "Zastępuje lokalizację użytkownika wartością z DiscourseConnect i zapobiega lokalnym zmianom."
     discourse_connect_overrides_website: "Zastępuje witrynę użytkownika wartością z DiscourseConnect i zapobiega lokalnym zmianom."
@@ -2348,7 +2349,7 @@ pl_PL:
     minimum_topics_similar: "Jak wiele tematów musi istnieć przed proponowaniem podobnych tematów podczas tworzenia nowych tematów."
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_user_max_post_age: "Nie pozwalaj na usuwanie użytkowników których pierwszy wpis jest starszy niż (x) dni."
-    delete_all_posts_max: "Maksymalna liczba wpisów jaka może zostać usunięta jednorazowo przyciskiem \"Usuń Wszystkie Wpisy\". Jeśli użytkownik ma więcej wpisów, ani one ani użytkownik nie mogą one być usunięte."
+    delete_all_posts_max: "Maksymalna liczba wpisów jaka może zostać usunięta jednorazowo przyciskiem \"Usuń Wszystkie Wpisy\". Jeśli użytkownik ma więcej wpisów, ani one ani użytkownik nie mogą one być usunięte.1\n"
     delete_user_self_max_post_count: "Maksymalna liczba wpisów, jaką może posiadać użytkownik, umożliwiając usunięcie konta samoobsługowego. Ustaw na -1, aby wyłączyć usuwanie konta samoobsługowego."
     username_change_period: "Maksymalna liczba dni po rejestracji, w których konta mogą zmienić swoją nazwę użytkownika (0, aby uniemożliwić zmianę nazwy użytkownika)."
     email_editable: "Zezwól użytkownikom na zmianę adresu e-mail po rejestracji."
@@ -3294,7 +3295,7 @@ pl_PL:
       title: "Ukryty wpis"
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
 
@@ -3355,39 +3356,39 @@ pl_PL:
       title: "Post ukryty ponownie"
       subject_template: "Wpis ukryty przez społeczność, powiadomiono personel"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} informująca, że Twój post został ponownie ukryty.
+        To jest automatyczna wiadomość od %{site_name} informująca, że Twój wpis został ponownie ukryty.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Społeczność oznaczyła ten post i teraz jest ukryty. **Ponieważ ten post był ukrywany więcej niż raz, Twój post pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.**
+        Społeczność oznaczyła ten post i teraz jest ukryty. **Ponieważ ten wpis był ukrywany więcej niż raz, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.**
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     queued_by_staff:
       title: "Post wymaga zatwierdzenia"
       subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
+        To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że Twój wpis został ukryty.
 
         <%{base_url}%{url}>
 
-        Twój post pozostanie ukryty, dopóki pracownik go nie przejrzy.
+        Twój wpis pozostanie ukryty, dopóki pracownik go nie przejrzy.
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     flags_disagreed:
       title: "Oznaczony post został przywrócony przez personel"
       subject_template: "Oznaczony post został przywrócony przez personel"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} z informacją, że [Twój post](%{base_url}%{url}) został przywrócony.
+        To jest automatyczna wiadomość od %{site_name} z informacją, że [Twój wpis](%{base_url}%{url}) został przywrócony.
 
-        Ten post został oflagowany przez społeczność, a członek personelu zdecydował się go przywrócić.
+        Ten wpis został oflagowany przez społeczność, a członek personelu zdecydował się go przywrócić.
 
         [details="Kliknij, aby rozwinąć przywrócony post"]
         ``` markdown
@@ -3398,7 +3399,7 @@ pl_PL:
       title: "Oznaczony post został usunięty przez personel"
       subject_template: "Oznaczony post został usunięty przez personel"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         Jest to automatyczna wiadomość od %{site_name} , aby poinformować Cię, że [twój wpis](%{base_url}%{url}) został usunięty.
 
@@ -3415,13 +3416,13 @@ pl_PL:
       title: "Odpowiedź usunięta z oflagowanego postu przez personel"
       subject_template: "Odpowiedź usunięta z oflagowanego postu przez personel"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} informująca, że [post](%{base_url}%{url}), na który odpowiedziałeś, został usunięty.
+        To jest automatyczna wiadomość od %{site_name} informująca, że [wpis](%{base_url}%{url}), na który odpowiedziałeś, został usunięty.
 
         %{flag_reason}
 
-        Ten post został oznaczony przez społeczność, a członek personelu zdecydował się go usunąć.
+        Ten wpis został oznaczony przez społeczność, a członek personelu zdecydował się go usunąć.
 
         ``` markdown
         %{flagged_post_raw_content}
@@ -3703,7 +3704,7 @@ pl_PL:
 
         Aby promować bardziej szczegółowe rozmowy, bardzo krótkie odpowiedzi są niedozwolone. Czy możesz odpowiedzieć, używając co najmniej %{count} znaków? Możesz też polubić post przez e-mail, odpowiadając za pomocą "+1".
     email_reject_invalid_post_action:
-      title: "Email odrzucony nieprawidłowa akcja wpisu"
+      title: "E-mail odrzucony nieprawidłowa akcja wpisu"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieprawidłowa akcja wpisu"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
@@ -3829,7 +3830,7 @@ pl_PL:
       title: "Ignorowanie użytkownika"
       subject_template: "Użytkownik jest ignorowany przez wielu innych użytkowników"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         To jest automatyczna wiadomość od %{site_name} informująca, że @%{username} został zignorowany przez %{ignores_threshold} użytkowników. Może to oznaczać, że w Twojej społeczności rozwija się problem.
 
@@ -3840,9 +3841,9 @@ pl_PL:
       title: "Zbyt wiele spamowych flag."
       subject_template: "Nowe konto zawieszone"
       text_body_template: |
-        Dzień dobry,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twoje posty zostały tymczasowo ukryte, ponieważ zostały oflagowane przez społeczność.
+        To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że Twoje wpisy zostały tymczasowo ukryte, ponieważ zostały oflagowane przez społeczność.
 
         Jako środek zapobiegawczy, Twoje nowe konto zostało wyciszone i nie będzie mogło tworzyć odpowiedzi ani tematów, dopóki personel przejrzy Twoje konto. Przepraszamy za niedogodności.
 
@@ -3851,9 +3852,9 @@ pl_PL:
       title: "Zbyt wiele flag TL3"
       subject_template: "Nowe konto zawieszone"
       text_body_template: |
-        Dzień dobry,
+        Witaj!
 
-        Jest to wiadomość zautomatyzowana od %{site_name} , aby poinformować Cię, że Twoje konto zostało zawieszone z powodu dużej liczby flag społeczności.
+        Jest to wiadomość zautomatyzowana od %{site_name}, aby poinformować Cię, że Twoje konto zostało zawieszone z powodu dużej liczby flag społeczności.
 
         Jako środek zapobiegawczy, Twoje nowe konto zostało pozbawione możliwości tworzenia nowych odpowiedzi lub tematów do czasu sprawdzenia Twojego konta. Przepraszamy za niedogodności.
 
@@ -3861,7 +3862,14 @@ pl_PL:
     silenced_by_staff:
       title: "Wyciszony przez personel"
       subject_template: "Konto tymczasowo zawieszone"
-      text_body_template: "Dzień dobry, \n\nTo jest automatyczna wiadomość od %{site_name}, aby poinformować cię, że twoje konto zostało tymczasowo zablokowane jako środek zapobiegawczy.\n\nMożesz kontynuować przeglądanie, ale nie będzie mógł/mogła dodawać odpowiedzi lub tworzyć tematów dopóki [członek obsługi](%{base_url}/o nas) przejrzy twoje ostatnie wpisy. Przepraszamy za niedogodności.\n\nW celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).\n"
+      text_body_template: |
+        Witaj!
+
+        To jest automatyczna wiadomość od %{site_name}, aby poinformować cię, że twoje konto zostało tymczasowo zablokowane jako środek zapobiegawczy.
+
+        Możesz kontynuować przeglądanie, ale nie będzie mógł/mogła dodawać odpowiedzi lub tworzyć tematów dopóki [członek obsługi](%{base_url}/o nas) przejrzy twoje ostatnie wpisy. Przepraszamy za niedogodności.
+
+        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).
     user_automatically_silenced:
       title: "Użytkownik automatycznie wyciszony"
       subject_template: "Nowy użytkownik %{username} wyciszony przez flagi społeczności"
@@ -3888,9 +3896,9 @@ pl_PL:
       title: "Niewyciszony"
       subject_template: "Konto odblokowane"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        Wysyłamy tę automatyczną wiadomość z %{site_name} aby poinformować Cię, że Twoje konto zostało odblokowane po interwencji zespołu.
+        Wysyłamy tę automatyczną wiadomość z %{site_name}, aby poinformować Cię, że Twoje konto zostało odblokowane po interwencji zespołu.
 
         Możesz znowu tworzyć wpisy i tematy. Dziękujemy za cierpliwość.
     pending_users_reminder:
@@ -3925,9 +3933,9 @@ pl_PL:
         many: "%{count} wpisów czeka na przejrzenie;"
         other: "%{count} wpisów czeka na przejrzenie"
       text_body_template: |
-        Witam,
+        Witaj!
 
-        Posty od nowych użytkowników zostały przekazane do moderacji i obecnie czekają na przejrzanie. [Zatwierdzić lub odrzucić je tutaj](%{base_url}/review?type=ReviewableQueuedPost).
+        Wpisy od nowych użytkowników zostały przekazane do moderacji i obecnie czekają na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -4167,7 +4175,7 @@ pl_PL:
 
         %{respond_instructions}
     user_watching_first_post:
-      title: "Użytkownik Przegląda pierwszy wpis"
+      title: "Użytkownik przegląda pierwszy wpis"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4226,7 +4234,7 @@ pl_PL:
       title: "Konto usunięte"
       subject_template: "[%{email_prefix}] Twoje konto zostało usunięte"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         To jest automatyczna wiadomość z [%{site_name}](%{base_url}), aby poinformować Cię, że konto użytkownika powiązane z tym adresem e-mail zostało usunięte przez członka personelu.
 
@@ -4425,7 +4433,7 @@ pl_PL:
       title: "Alert nowego logowania"
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         Zauważyliśmy logowanie z urządzenia lub miejsca, którego zwykle nie używasz. Czy to byłeś Ty?
 
@@ -4440,9 +4448,9 @@ pl_PL:
       title: "Twój post został zatwierdzony"
       subject_template: "[%{site_name}] Twój post został zatwierdzony"
       text_body_template: |
-        Witaj,
+        Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że [Twój post](%{base_url}%{post_url}) został zatwierdzony.
+        To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że [Twój wpis](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
     title: "Ups! Ta strona jest prywatna."
   site_setting_missing: "Ustawienie `%{name}` musi być ustawione."
@@ -5125,7 +5133,7 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy posiadasz 500 polubionych postów i oddałeś/łaś 1000 lub więcej polubień w zamian. Wow! Jesteś wzorem hojności i wzajemnego uznania :two_hearts:.
     first_emoji:
       name: Pierwsze Emoji
-      description: Użyto Emoji we Wpisie
+      description: Użyto emotikony we wpisie
       long_description: |
         Ta odznaka jest przyznawana za pierwszym razem, gdy dodasz Emoji do swojego posta :thumbsup:. Emoji pozwalają wyrazić emocje w swoich wypowiedziach, od szczęścia :smiley: przez smutek :anguished: po złość :angry: i wszystko pomiędzy :sunglasses:. Po prostu wpisz : (dwukropek) lub naciśnij przycisk Emoji na pasku narzędzi w edytorze, aby wybrać spośród setek opcji do wyboru :ok_hand:
     first_mention:
@@ -5620,13 +5628,13 @@ pl_PL:
   old_keys_reminder:
     title: "Przypomnienie o starych poświadczeniach"
     body: |
-      Witaj! To jest rutynowe coroczne przypomnienie o bezpieczeństwie z twojej instancji.
+      Witaj! To rutynowe, coroczne przypomnienie o bezpieczeństwie od Twojej instancji Discourse.
 
-      Uprzejmie informujemy Cię, że następujące dane uwierzytelniające używane na twojej instancji Discourse nie zostały zaktualizowane w ciągu ponad dwóch lat:
+      Z grzeczności informujemy, że następujące dane uwierzytelniające używane w Twojej instancji Discourse nie były aktualizowane od ponad dwóch lat:
 
       %{keys}
 
-      W tej chwili nie jest wymagane żadne działanie, uważa się jednak za dobrą praktykę w zakresie bezpieczeństwa, aby co kilka lat zmieniać wszystkie ważne dane uwierzytelniające.
+      Obecnie nie jest wymagane żadne działanie, jednak dobrą praktyką bezpieczeństwa jest cykliczna aktualizacja wszystkich ważnych danych uwierzytelniających co kilka lat.
   create_linked_topic:
     topic_title_with_sequence:
       one: "%{topic_title} (Część %{count})"

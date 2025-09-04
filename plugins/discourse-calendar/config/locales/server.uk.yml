@@ -61,6 +61,7 @@ uk:
     calendar_automatic_holidays_enabled: "Автоматично визначати стан свята на основі регіону користувачів (зверніть увагу: ви можете відключити певні автоматичні свята в налаштуваннях плагінів)"
     event_participation_buttons: "Список кнопок участі у заходах, які можуть використовувати користувачі."
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
+    calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
   discourse_calendar:
     invite_user_notification: "%{username} запросили Вас на: %{description}"
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
@@ -86,6 +87,7 @@ uk:
           raw_invitees:
             only_group: "Подія приймає лише назви груп."
           ends_at_before_starts_at: "Подія не може закінчитися до початку."
+          max_attendees_reached: "Цей захід повний."
           start_must_be_present_and_a_valid_date: "Подія вимагає дійсної дати початку."
           end_must_be_a_valid_date: "Дата закінчення повинна бути дійсною датою."
           invalid_recurrence: "Періодичність повинна бути однією з наступних: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

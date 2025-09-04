@@ -56,7 +56,10 @@ bs_BA:
       translations:
         title: "Prevodi"
         progress_chart:
-          bar_done: "%{done} objava"
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
       spam:
         short_title: "Spam"
         enable: "Omogući"

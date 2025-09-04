@@ -86,6 +86,7 @@ he:
           raw_invitees:
             only_group: "אירוע מקבל רק שמות קבוצות."
           ends_at_before_starts_at: "אירוע לא יכול להסתיים לפני שהתחיל."
+          max_attendees_reached: "האירוע הזה מלא."
           start_must_be_present_and_a_valid_date: "לאירוע נחוץ תאריך התחלה תקף."
           end_must_be_a_valid_date: "תאריך הסיום חייב להיות תאריך תקף."
           invalid_recurrence: "חזרה חייבת להיות אחת מבין: every_month,‏ every_week,‏ every_two_weeks,‏ every_four_weeks,‏ every_day,‏ every_weekday."

@@ -423,6 +423,7 @@ pl_PL:
         event:
           expired: "Wygasły"
           closed: "Zamknięte"
+          full: "Pełne"
           status:
             standalone:
               title: "Samodzielne"
@@ -480,6 +481,9 @@ pl_PL:
         minimal:
           label: "Minimalne wydarzenie"
           checkbox_label: "Ukryj przyciski Wezmę udział/Nie biorę udziału oraz status zaproszeń"
+        max_attendees:
+          label: "Maksymalna liczba uczestników"
+          placeholder: "Bez limitu"
         allow_chat:
           label: "Integracja czatu"
           checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"

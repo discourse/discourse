@@ -55,7 +55,10 @@ lv:
         select_option: "Izvēlieties opciju..."
       translations:
         progress_chart:
-          bar_done: "%{done} raksti"
+          bar_done:
+            zero: "%{count} raksti"
+            one: "%{count} raksts"
+            other: "%{count} raksti"
       spam:
         short_title: "Spams"
         last_seven_days: "Pēdējās 7 dienas"

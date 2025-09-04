@@ -56,7 +56,9 @@ bg:
         select_option: "Изберете опция..."
       translations:
         progress_chart:
-          bar_done: "%{done} публикации"
+          bar_done:
+            one: "%{count} публикация"
+            other: "%{count} публикации"
       spam:
         short_title: "Спам"
         last_seven_days: "Последните 7 дни"

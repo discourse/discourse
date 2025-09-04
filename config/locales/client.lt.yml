@@ -5283,7 +5283,6 @@ lt:
             transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
         merge_failed: "Sujungiant vartotojus įvyko klaida."
-        delete_forbidden_because_staff: "Administratoriai ir moderatoriai negali būti ištrinti."
         delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
           one: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienos senumo įrašas negali būti ištrintas)"

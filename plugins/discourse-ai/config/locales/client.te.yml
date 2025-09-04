@@ -54,7 +54,9 @@ te:
       translations:
         title: "అనువాదాలు"
         progress_chart:
-          bar_done: "%{done} పోస్ట్‌లు"
+          bar_done:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
         enable: "ప్రారంభించండి"

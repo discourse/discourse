@@ -593,9 +593,9 @@ module ApplicationHelper
     current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
-  def build_plugin_html(name)
+  def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
-    DiscoursePluginRegistry.build_html(name, controller) || ""
+    DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

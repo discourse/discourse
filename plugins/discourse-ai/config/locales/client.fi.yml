@@ -278,7 +278,9 @@ fi:
       translations:
         title: "Käännökset"
         progress_chart:
-          bar_done: "ensimmäisen %{done} viestin"
+          bar_done:
+            one: "ensimmäisen %{count} viestin"
+            other: "ensimmäisen %{count} viestin"
       spam:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"

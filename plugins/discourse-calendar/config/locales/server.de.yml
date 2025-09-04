@@ -61,6 +61,7 @@ de:
     calendar_automatic_holidays_enabled: "Feiertagsstatus automatisch basierend auf der Region eines Benutzers festlegen (Hinweis: Du kannst bestimmte automatische Feiertage in den Plug-in-Einstellungen deaktivieren)"
     event_participation_buttons: "Liste der Schaltflächen für die Teilnahme am Ereignis, die Benutzer verwenden können."
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
+    calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
   discourse_calendar:
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."
@@ -86,6 +87,7 @@ de:
           raw_invitees:
             only_group: "Ein Ereignis akzeptiert nur Gruppennamen."
           ends_at_before_starts_at: "Ein Ereignis kann nicht enden, bevor es beginnt."
+          max_attendees_reached: "Diese Veranstaltung ist ausgebucht."
           start_must_be_present_and_a_valid_date: "Ein Ereignis erfordert ein gültiges Startdatum."
           end_must_be_a_valid_date: "Das Enddatum muss ein gültiges Datum sein."
           invalid_recurrence: "Die Wiederholung muss einer der folgenden Werte sein: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

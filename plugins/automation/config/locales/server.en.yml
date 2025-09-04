@@ -62,6 +62,9 @@ en:
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+      topic_closed:
+        title: Topic closed
+        description: Triggers a script when a topic is closed.
       after_post_cook:
         title: After post cook
         description: When a post content is cooked the automation will be triggered
@@ -105,7 +108,7 @@ en:
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
       suspend_user_by_email:
         title: Suspend user by email
-        description: Automatically suspend an account based on email address 
+        description: Automatically suspend an account based on email address
       user_global_notice:
         title: User global notice
         description: Allows to display a global notice for a user
@@ -149,6 +152,6 @@ en:
       send_chat_message:
         title: "Send Chat Message"
         description: "Send a custom chat message to a channel"
-      random_assign: 
+      random_assign:
         title: "Random Assign"
         description: "Randomly assign topics to a group"

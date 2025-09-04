@@ -5475,7 +5475,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"

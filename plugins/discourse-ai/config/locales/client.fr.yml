@@ -278,7 +278,9 @@ fr:
       translations:
         title: "Traductions"
         progress_chart:
-          bar_done: "%{done} publications"
+          bar_done:
+            one: "%{count} publication"
+            other: "%{count} publications"
       spam:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"

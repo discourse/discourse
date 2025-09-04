@@ -51,7 +51,9 @@ sw:
         select_option: "Chagua chaguo moja..."
       translations:
         progress_chart:
-          bar_done: "%{done} machapisho"
+          bar_done:
+            one: "%{count} chapisho"
+            other: "%{count} machapisho"
       spam:
         short_title: "Barua Taka"
         enable: "Wezesha"
