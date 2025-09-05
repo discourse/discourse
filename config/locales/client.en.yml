@@ -8075,6 +8075,10 @@ en:
           title: "Show on user card"
           enabled: "Shown on user card"
           disabled: "Not shown on user card"
+        show_on_signup:
+          title: "Show on signup form"
+          enabled: "Shown signup form"
+          disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
           enabled: "Searchable"
