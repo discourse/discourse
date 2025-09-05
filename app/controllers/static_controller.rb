@@ -151,7 +151,15 @@ class StaticController < ApplicationController
     params.delete(:password)
 
     destination = extract_redirect_param
-    redirect_to(destination, allow_other_host: false)
+
+    allow_other_hosts = false
+
+    if cookies[:sso_destination_url]
+      destination = cookies.delete(:sso_destination_url)
+      allow_other_hosts = true
+    end
+
+    redirect_to(destination, allow_other_host: allow_other_hosts)
   end
 
   FAVICON = -"favicon"

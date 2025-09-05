@@ -1484,7 +1484,7 @@ RSpec.describe SessionController do
              xhr: true,
              headers: headers
 
-        location = response.cookies["destination_url"]
+        location = response.cookies["sso_destination_url"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
@@ -1808,8 +1808,8 @@ RSpec.describe SessionController do
                xhr: true,
                headers: headers
           expect(response.status).to eq(200)
-          # the frontend will take care of actually redirecting the user
-          redirect_url = response.cookies["destination_url"]
+          # the backend will take care of actually redirecting the user
+          redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(true)
@@ -1831,7 +1831,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          redirect_url = response.cookies["destination_url"]
+          redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(nil)
