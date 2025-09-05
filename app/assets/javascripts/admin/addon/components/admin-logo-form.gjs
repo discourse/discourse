@@ -287,11 +287,11 @@ export default class AdminLogoForm extends Component {
             >
               <field.Custom>
                 <SimpleList
-                  @id={{field.id}}
                   @onChange={{fn this.updateManifestScreenshots field}}
                   @inputDelimiter="|"
                   @values={{field.value}}
                   @allowAny={{true}}
+                  id={{field.id}}
                 />
               </field.Custom>
             </form.Field>
