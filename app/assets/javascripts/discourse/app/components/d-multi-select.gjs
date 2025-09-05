@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -17,6 +16,7 @@ import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -69,6 +69,17 @@ export default class DMultiSelect extends Component {
     return new TrackedAsyncData(value);
   }
 
+  get availableOptions() {
+    if (!this.data.isResolved || !this.data.value) {
+      return this.data.value;
+    }
+
+    return this.data.value.filter(
+      (item) =>
+        !this.args.selection?.some((selected) => this.compare(item, selected))
+    );
+  }
+
   @action
   search(event) {
     this.preselectedItem = null;
@@ -77,7 +88,9 @@ export default class DMultiSelect extends Component {
 
   @action
   focus(input) {
-    input.focus();
+    // Reset preselection on dropdown open to prevent unwanted scrolling
+    this.preselectedItem = null;
+    input.focus({ preventScroll: true });
   }
 
   @action
@@ -88,8 +101,15 @@ export default class DMultiSelect extends Component {
 
     if (event.key === "Enter") {
       event.preventDefault();
+      event.stopPropagation();
 
-      if (this.preselectedItem) {
+      // Only toggle if we have a preselected item and it's in the available options
+      if (
+        this.preselectedItem &&
+        this.availableOptions?.some((item) =>
+          this.compare(item, this.preselectedItem)
+        )
+      ) {
         this.toggle(this.preselectedItem, event);
       }
     }
@@ -97,19 +117,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowDown") {
       event.preventDefault();
 
-      if (!this.data.value?.length) {
+      if (!this.availableOptions?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.data.value[0];
+        this.preselectedItem = this.availableOptions[0];
       } else {
-        const currentIndex = this.data.value.findIndex((item) =>
+        const currentIndex = this.availableOptions.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
-        if (currentIndex < this.data.value.length - 1) {
-          this.preselectedItem = this.data.value[currentIndex + 1];
+        if (currentIndex < this.availableOptions.length - 1) {
+          this.preselectedItem = this.availableOptions[currentIndex + 1];
         }
       }
     }
@@ -117,19 +137,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowUp") {
       event.preventDefault();
 
-      if (!this.data.value?.length) {
+      if (!this.availableOptions?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.data.value[0];
+        this.preselectedItem = this.availableOptions[0];
       } else {
-        const currentIndex = this.data.value.findIndex((item) =>
+        const currentIndex = this.availableOptions.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
         if (currentIndex > 0) {
-          this.preselectedItem = this.data.value[currentIndex - 1];
+          this.preselectedItem = this.availableOptions[currentIndex - 1];
         }
       }
     }
@@ -139,26 +159,29 @@ export default class DMultiSelect extends Component {
   remove(selectedItem, event) {
     event?.stopPropagation();
 
+    // Reset preselected item since the available options will change
+    this.preselectedItem = null;
+
     this.args.onChange?.(
       this.args.selection?.filter((item) => !this.compare(item, selectedItem))
     );
   }
 
   @action
-  isSelected(result) {
-    return this.args.selection?.filter((item) => this.compare(item, result))
-      .length;
-  }
-
-  @action
   toggle(result, event) {
     event?.stopPropagation();
 
-    if (this.isSelected(result)) {
-      this.remove(result, event);
-    } else {
-      this.args.onChange?.(makeArray(this.args.selection).concat(result));
+    const currentSelection = makeArray(this.args.selection);
+
+    // Check if item is already selected
+    if (currentSelection.some((item) => this.compare(item, result))) {
+      return; // Don't add duplicates
     }
+
+    // Reset preselected item since the available options will change
+    this.preselectedItem = null;
+
+    this.args.onChange?.(currentSelection.concat(result));
   }
 
   @action
@@ -170,6 +193,10 @@ export default class DMultiSelect extends Component {
     }
   }
 
+  getDisplayText(item) {
+    return item?.name;
+  }
+
   #resolveAsyncData(asyncData, context, resolve, reject) {
     return asyncData(context).then(resolve).catch(reject);
   }
@@ -179,6 +206,12 @@ export default class DMultiSelect extends Component {
       @identifier="d-multi-select"
       @triggerComponent={{element "div"}}
       @triggerClass={{concatClass (if this.hasSelection "--has-selection")}}
+      @visibilityOptimizer={{@visibilityOptimizer}}
+      @placement={{@placement}}
+      @allowedPlacements={{@allowedPlacements}}
+      @offset={{@offset}}
+      @matchTriggerMinWidth={{@matchTriggerMinWidth}}
+      @matchTriggerWidth={{@matchTriggerWidth}}
       ...attributes
     >
       <:trigger>
@@ -188,6 +221,7 @@ export default class DMultiSelect extends Component {
               <button
                 class="d-multi-select-trigger__selected-item"
                 {{on "click" (fn this.remove item)}}
+                title={{this.getDisplayText item}}
               >
                 <span class="d-multi-select-trigger__selection-label">{{yield
                     item
@@ -241,24 +275,20 @@ export default class DMultiSelect extends Component {
               {{yield this.data.error to="error"}}
             </div>
           {{else if this.data.isResolved}}
-            {{#if this.data.value}}
+            {{#if this.availableOptions.length}}
               <div class="d-multi-select__search-results">
-                {{#each this.data.value as |result|}}
+                {{#each this.availableOptions as |result|}}
                   <menu.item
                     class={{concatClass
                       "d-multi-select__result"
                       (if (eq result this.preselectedItem) "--preselected" "")
                     }}
                     role="button"
+                    title={{this.getDisplayText result}}
+                    {{scrollIntoView (eq result this.preselectedItem)}}
                     {{on "mouseenter" (fn (mut this.preselectedItem) result)}}
                     {{on "click" (fn this.toggle result)}}
                   >
-                    <Input
-                      @type="checkbox"
-                      @checked={{this.isSelected result}}
-                      class="d-multi-select__result-checkbox"
-                    />
-
                     <span class="d-multi-select__result-label">
                       {{yield result to="result"}}
                     </span>
