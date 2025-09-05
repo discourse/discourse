@@ -30,9 +30,10 @@ Discourse is large with long history. Understand context before changes.
 - Members: specify `@type`
 
 ## Testing
+- Do not write unnecessary comments in tests, every single assertion doesn't need a comment
 - Don't test functionality handled by other classes/components
 - Don't write obvious tests
-- Ruby: use `fab!()` over `let()`, system tests for UI (`spec/system`), page objects (`spec/system/page_objects`)
+- Ruby: use `fab!()` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
 
 ### Commands
 ```bash

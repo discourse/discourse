@@ -44,4 +44,20 @@ describe "Admin Theme Site Settings", type: :system do
       "search_field",
     )
   end
+
+  describe "all site setting list" do
+    fab!(:default_theme) { Theme.find_default }
+    let(:site_settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    it "shows warning and disabled state for themeable site settings" do
+      site_settings_page.visit("enable_welcome_banner")
+
+      expect(site_settings_page).to have_disabled_input("enable_welcome_banner")
+      expect(site_settings_page).to have_theme_warning(
+        "enable_welcome_banner",
+        default_theme.name,
+        default_theme.id,
+      )
+    end
+  end
 end
