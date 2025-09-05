@@ -11,7 +11,6 @@ import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -47,30 +46,24 @@ export default RouteTemplate(
         </div>
 
         {{#unless @controller.model.no_password}}
-          {{#if @controller.associatedAccountsLoaded}}
-            {{#if @controller.canRemovePassword}}
-              <div class="controls">
-                <a
-                  href
-                  {{on "click" @controller.removePassword}}
-                  hidden={{@controller.removePasswordInProgress}}
-                  id="remove-password-link"
-                >
-                  {{icon "trash-can"}}
-                  {{i18n "user.change_password.remove"}}
-                </a>
-              </div>
-            {{/if}}
-          {{else}}
-            <div class="controls">
-              <DButton
-                @action={{fn (routeAction "checkEmail") @controller.model}}
-                @title="admin.users.check_email.title"
-                @icon="envelope"
-                @label="admin.users.check_email.text"
-              />
+          <div class="controls">
+            <button
+              {{on "click" @controller.removePassword}}
+              disabled={{not @controller.canRemovePassword}}
+              hidden={{@controller.removePasswordInProgress}}
+              class="btn"
+              id="remove-password-link"
+            >
+              {{icon "trash-can"}}
+              {{i18n "user.change_password.remove"}}
+            </button>
+          </div>
+
+          {{#unless @controller.canRemovePassword}}
+            <div class="instructions">
+              {{i18n "user.change_password.remove_disabled"}}
             </div>
-          {{/if}}
+          {{/unless}}
         {{/unless}}
       </div>
 
