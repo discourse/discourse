@@ -8,6 +8,9 @@ import { i18n } from "discourse-i18n";
 
 const userDismissedPromptKey = "dismissed-prompt";
 
+// If the banner was dismissed before this time, reset the dismissal state.
+const RESET_MS = 1757104409520; // 9/5/2025
+
 export default class NotificationConsentBanner extends Component {
   @service capabilities;
   @service currentUser;
@@ -18,40 +21,74 @@ export default class NotificationConsentBanner extends Component {
 
   constructor() {
     super(...arguments);
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
+
+    const storedValue = pushNotificationKeyValueStore.getItem(
       userDismissedPromptKey
     );
+
+    // Reset the dismissal state if the user dismissed it before `RESET_MS`.
+    // This allows us to re-prompt users if the notification functionality substantially changes.
+    const parsedValue = parseInt(storedValue, 10);
+    if (!Number.isNaN(parsedValue)) {
+      this.bannerDismissed = parsedValue > RESET_MS;
+    } else {
+      this.setBannerDismissed(false);
+    }
   }
 
   setBannerDismissed(value) {
-    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
+    if (value) {
+      const timestamp = Date.now();
+      pushNotificationKeyValueStore.setItem(userDismissedPromptKey, timestamp);
+    } else {
+      pushNotificationKeyValueStore.removeItem(userDismissedPromptKey);
+    }
+
     this.bannerDismissed = pushNotificationKeyValueStore.getItem(
       userDismissedPromptKey
-    );
+    ) != null;
+  }
+
+  get showNotificationPwaTip() {
+    return this.desktopNotifications.isPushNotificationsPreferred &&
+           this.desktopNotifications.isPushSupported &&
+           this.desktopNotifications.isPushPwaNeeded;
   }
 
   get showNotificationPromptBanner() {
+    let supported = false;
+    if (this.desktopNotifications.isPushNotificationsPreferred) {
+      // TODO: Eventually we want to show this banner even if a PWA is needed (and
+      // guide users toward adding the app to their homescreen).
+      supported = this.desktopNotifications.isPushSupported && !this.desktopNotifications.isPushPwaNeeded;
+    } else {
+      supported = this.desktopNotifications.isSupported;
+    }
+
     return (
+      !this.bannerDismissed &&
       this.siteSettings.push_notifications_prompt &&
-      !this.desktopNotifications.isNotSupported &&
+      supported &&
       this.currentUser &&
-      this.capabilities.isPwa &&
       Notification.permission !== "denied" &&
-      Notification.permission !== "granted" &&
-      !this.desktopNotifications.isEnabled &&
-      !this.bannerDismissed
+      !this.desktopNotifications.isEnabled
     );
   }
 
   @action
-  turnon() {
-    this.desktopNotifications.enable();
-    this.setBannerDismissed(true);
+  async turnon() {
+    if (await this.desktopNotifications.enable()) {
+      // Dismiss the banner iff notifications were successfully enabled.
+      this.setBannerDismissed(true);
+    } else {
+      // TODO: Force a re-render to recheck our conditions. The below does not work for some reason.
+      // this.rerender();
+    }
   }
 
   @action
   dismiss() {
-    this.setBannerDismissed(false);
+    this.setBannerDismissed(true);
   }
 
   <template>
