@@ -33,13 +33,20 @@ export default class DesktopNotificationsService extends Service {
   constructor() {
     super(...arguments);
 
+    if (this.isPushNotificationsPreferred) {
+      this.isEnabledPush = this.currentUser
+        ? pushNotificationKeyValueStore.getItem(
+            pushNotificationUserSubscriptionKey(this.currentUser)
+          ) === SUBSCRIBED
+        : false;
+
+      // N.B: If push notifications are preferred, treat them as superseding regular browser
+      // notifications and disable the latter.
+      this.setIsEnabledBrowser(false);
+    }
+
     this.isEnabledBrowser = this.isGrantedPermission
       ? keyValueStore.getItem("notifications-disabled") === ENABLED
-      : false;
-    this.isEnabledPush = this.currentUser
-      ? pushNotificationKeyValueStore.getItem(
-          pushNotificationUserSubscriptionKey(this.currentUser)
-        ) === SUBSCRIBED
       : false;
   }
 
