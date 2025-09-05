@@ -14,6 +14,16 @@ export default class ComposerToggleSwitch extends Component {
     }
   }
 
+  @action
+  handleKeydown(event) {
+    // forward events to parent handlers (like roving button bar)
+    const result = this.args.onKeydown?.(event);
+    if (result) {
+      event.preventDefault();
+    }
+    return result;
+  }
+
   get label() {
     if (this.args.state) {
       return i18n("composer.switch_to_markdown", {
@@ -50,6 +60,7 @@ export default class ComposerToggleSwitch extends Component {
       title={{this.label}}
       {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
+      {{on "keydown" this.handleKeydown}}
       data-rich-editor={{@state}}
       ...attributes
     >
