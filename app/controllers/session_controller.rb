@@ -25,7 +25,7 @@ class SessionController < ApplicationController
   def sso
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect?
 
-    destination_url = cookies[:destination_url] || session[:destination_url]
+    destination_url = cookies[:destination_url] || secure_session[:destination_url]
     return_path = params[:return_path] || path("/")
 
     if destination_url && return_path == path("/")
@@ -33,10 +33,10 @@ class SessionController < ApplicationController
       return_path = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
     end
 
-    session.delete(:destination_url)
+    secure_session[:destination_url] = nil
     cookies.delete(:destination_url)
 
-    sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
+    sso = DiscourseConnect.generate_sso(return_path, secure_session:)
     connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
     redirect_to sso_url(sso), allow_other_host: true
   end
