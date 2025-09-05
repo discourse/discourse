@@ -2,6 +2,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import RouteTemplate from "ember-route-template";
 import { and, eq } from "truth-helpers";
+import AccessibilityLiveRegions from "discourse/components/accessibility-live-region";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -24,10 +25,10 @@ import RenderGlimmerContainer from "discourse/components/render-glimmer-containe
 import Sidebar from "discourse/components/sidebar";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
+import TopicSkipLinks from "discourse/components/topic-skip-links";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 import DToasts from "float-kit/components/d-toasts";
 import DTooltips from "float-kit/components/d-tooltips";
@@ -38,11 +39,7 @@ export default RouteTemplate(
     <DVirtualHeight />
 
     <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-      {{#if @controller.showSkipToContent}}
-        <a href="#main-container" id="skip-link">{{i18n
-            "skip_to_main_content"
-          }}</a>
-      {{/if}}
+      <TopicSkipLinks />
       <DDocument />
       <PageLoadingSlider />
       <PluginOutlet
@@ -179,5 +176,10 @@ export default RouteTemplate(
     <DMenus />
     <DTooltips />
     <DToasts />
+
+    <AccessibilityLiveRegions
+      @politeMessage={{@controller.accessibilityAnnouncer.politeMessage}}
+      @assertiveMessage={{@controller.accessibilityAnnouncer.assertiveMessage}}
+    />
   </template>
 );

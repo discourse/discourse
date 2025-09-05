@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
@@ -7,7 +8,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
@@ -128,7 +129,28 @@ export default class PostSmallAction extends Component {
     return this.args.post.action_code_who;
   }
 
+  @cached
+  get headingDescription() {
+    // plain text version for screen reader headings
+    const when = this.createdAt
+      ? relativeAge(this.createdAt, {
+          format: "medium",
+          wrapInSpan: false,
+        })
+      : "";
+
+    let who = "";
+    if (this.username) {
+      who = `@${this.username}`;
+    }
+
+    return i18n(`action_codes.${this.code}`, { who, when, path: this.path });
+  }
+
   <template>
+    <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
+      {{this.headingDescription}}
+    </h2>
     <article
       ...attributes
       class={{unless
@@ -140,12 +162,7 @@ export default class PostSmallAction extends Component {
           this.additionalClasses
         )
       }}
-      aria-label={{i18n
-        "share.post"
-        postNumber=@post.post_number
-        username=@post.username
-      }}
-      role="region"
+      aria-labelledby={{concat "post-heading-" @post.post_number}}
       data-post-number={{@post.post_number}}
     >
       {{#unless @cloaked}}
@@ -153,7 +170,7 @@ export default class PostSmallAction extends Component {
           {{icon this.icon}}
         </div>
         <div class="small-action-desc">
-          <div class="small-action-contents" role="heading" aria-level="2">
+          <div class="small-action-contents">
             <UserAvatar
               @ariaHidden={{false}}
               @size="small"

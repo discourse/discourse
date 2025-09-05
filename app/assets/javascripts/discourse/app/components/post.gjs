@@ -25,6 +25,7 @@ import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
+import { relativeAge } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
@@ -97,6 +98,25 @@ export default class Post extends Component {
       this.args.filteringRepliesToPostNumber ===
       this.args.post.post_number.toString()
     );
+  }
+
+  get postDate() {
+    if (this.args.post.wiki && this.args.post.last_wiki_edit) {
+      return this.args.post.last_wiki_edit;
+    } else {
+      return this.args.post.created_at;
+    }
+  }
+
+  get postDateText() {
+    if (!this.postDate) {
+      return "";
+    }
+    const formattedDate = relativeAge(new Date(this.postDate), {
+      format: "medium",
+      wrapInSpan: false,
+    });
+    return formattedDate || new Date(this.postDate).toLocaleDateString();
   }
 
   get filteredRepliesView() {
@@ -409,6 +429,12 @@ export default class Post extends Component {
           all cloaked items can be referenced and we need to override it }}
       id={{if @cloaked (concat "post_" @post.post_number)}}
     >
+      <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
+        {{i18n
+          "post.accessible_heading"
+          (hash username=(or @post.username "") date=(or this.postDateText ""))
+        }}
+      </h2>
       {{#unless @cloaked}}
         {{#let
           (lazyHash
@@ -439,11 +465,7 @@ export default class Post extends Component {
                 (if @post.via_email "post--via-email via-email")
                 this.additionalArticleClasses
               }}
-              aria-label={{i18n
-                "share.post"
-                (hash postNumber=@post.post_number username=@post.username)
-              }}
-              role="region"
+              aria-labelledby={{concat "post-heading-" @post.post_number}}
               data-post-id={{@post.id}}
               data-topic-id={{@post.topicId}}
               data-user-id={{@post.user_id}}

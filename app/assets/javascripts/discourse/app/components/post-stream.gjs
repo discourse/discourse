@@ -6,7 +6,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
+import LoadMoreAccessible from "discourse/components/load-more-accessible";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
@@ -81,6 +81,13 @@ export default class PostStream extends Component {
 
   get lastAvailablePost() {
     return this.posts.at(-1);
+  }
+
+  get existingPostNumbers() {
+    return this.posts
+      .filter((post) => !this.isPlaceholder(post))
+      .map((post) => post.post_number)
+      .filter((num) => !isNaN(num));
   }
 
   @cached
@@ -250,7 +257,15 @@ export default class PostStream extends Component {
       }}
     >
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
-        <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        <LoadMoreAccessible
+          @action={{fn this.loadMoreAbove this.firstAvailablePost}}
+          @direction="above"
+          @canLoadMore={{@postStream.canPrependMore}}
+          @postStream={{@postStream}}
+          @existingPostNumbers={{this.existingPostNumbers}}
+          @firstAvailablePost={{this.firstAvailablePost}}
+          @lastAvailablePost={{this.lastAvailablePost}}
+        />
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -357,7 +372,15 @@ export default class PostStream extends Component {
 
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
-          <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+          <LoadMoreAccessible
+            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
+            @direction="below"
+            @canLoadMore={{@postStream.canAppendMore}}
+            @postStream={{@postStream}}
+            @existingPostNumbers={{this.existingPostNumbers}}
+            @firstAvailablePost={{this.firstAvailablePost}}
+            @lastAvailablePost={{this.lastAvailablePost}}
+          />
         {{else}}
           <div
             class="post-stream__bottom-boundary"
