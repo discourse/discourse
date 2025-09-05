@@ -51,7 +51,13 @@ module Migrations::Database::Schema
           )
         end + added_columns(config, primary_key_column_names)
 
-      Table.new(table_alias || table_name, columns, indexes(config), primary_key_column_names)
+      Table.new(
+        table_alias || table_name,
+        columns,
+        indexes(config),
+        primary_key_column_names,
+        constraints(config),
+      )
     end
 
     def filtered_columns_of(table_name, config)
@@ -119,6 +125,16 @@ module Migrations::Database::Schema
           column_names: Array.wrap(index[:columns]),
           unique: index.fetch(:unique, false),
           condition: index[:condition],
+        )
+      end
+    end
+
+    def constraints(config)
+      config[:constraints]&.map do |constraint|
+        Constraint.new(
+          name: constraint[:name],
+          type: constraint.fetch(:type, :check).to_sym,
+          condition: constraint[:condition],
         )
       end
     end

@@ -13,8 +13,8 @@ module Migrations::Database::Schema
 
     def output_table(table)
       output_create_table_statement(table)
-      output_columns(table)
-      output_primary_key(table)
+      output_table_definitions(table)
+      @output.puts ");"
       output_indexes(table)
       @output.puts ""
     end
@@ -26,19 +26,24 @@ module Migrations::Database::Schema
       @output.puts "("
     end
 
-    def output_columns(table)
-      column_definitions = create_column_definitions(table)
-      column_definitions << "" if table.primary_key_column_names.size > 1
-      @output.puts column_definitions.join(",\n")
-    end
+    def output_table_definitions(table)
+      definitions = create_column_definitions(table)
 
-    def output_primary_key(table)
       if table.primary_key_column_names.size > 1
-        pk_definition =
+        primary_key_column_names =
           table.primary_key_column_names.map { |name| escape_identifier(name) }.join(", ")
-        @output.puts "    PRIMARY KEY (#{pk_definition})"
+        definitions << "    PRIMARY KEY (#{primary_key_column_names})"
       end
-      @output.puts ");"
+
+      if table.constraints&.any?
+        definitions.concat(
+          table.constraints.map do |constraint|
+            "    CONSTRAINT #{escape_identifier(constraint.name)} CHECK (#{constraint.condition})"
+          end,
+        )
+      end
+
+      @output.puts definitions.join(",\n")
     end
 
     def create_column_definitions(table)

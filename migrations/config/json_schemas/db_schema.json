@@ -178,6 +178,29 @@
               },
               "copy_of": {
                 "type": "string"
+              },
+              "constraints": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [ "check" ]
+                    },
+                    "condition": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "condition"
+                  ]
+                }
               }
             },
             "additionalProperties": false
