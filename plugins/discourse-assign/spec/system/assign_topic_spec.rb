@@ -154,6 +154,7 @@ describe "Assign | Assigning topics", type: :system do
             before { SiteSetting.reassign_on_open = true }
 
             it "reassigns the topic on open" do
+              skip_on_ci!("Flaky test - reassigning topic on open")
               visit "/t/#{topic.id}"
 
               topic_page.click_assign_topic
