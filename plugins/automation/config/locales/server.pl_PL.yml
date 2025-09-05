@@ -68,6 +68,9 @@ pl_PL:
       topic:
         title: Temat
         description: Powiązany skrypt będzie używany tylko w określonym temacie, jest to przydatne na przykład dla skryptów przeprowadzających walidację.
+      topic_closed:
+        title: Temat zamknięty
+        description: Uruchamia skrypt po zamknięciu tematu.
       after_post_cook:
         title: Po sfinalizowaniu publikacji
         description: Gdy treść posta zostanie przygotowana, zostanie uruchomiona automatyzacja
