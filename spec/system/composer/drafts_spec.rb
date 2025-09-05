@@ -77,7 +77,9 @@ describe "Composer - Drafts", type: :system do
       composer.fill_title("this is a test topic")
       composer.fill_content("a b c d e f g")
 
-      expect(Draft.where(user: current_user).count).to eq(1)
+      try_until_success(reason: "Depends on Ember debounce") do
+        expect(Draft.where(user: current_user).count).to eq(1)
+      end
 
       composer.discard
 
