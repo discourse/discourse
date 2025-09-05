@@ -162,7 +162,7 @@ describe "Post translations", type: :system do
     it "should not have a locale set by default" do
       visit("/latest")
       page.find("#create-topic").click
-      expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be -ue
+      expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
     end
   end
 end
