@@ -12,6 +12,9 @@ ro:
     triggerables:
       topic:
         title: Subiect
+      topic_closed:
+        title: Subiect închis
+        description: Declanșează un script când un subiect este închis.
     scriptables:
       topic:
         title: Creează un subiect
