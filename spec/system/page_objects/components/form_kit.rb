@@ -202,10 +202,7 @@ module PageObjects
       end
 
       def submit
-        page.execute_script(
-          "var form = arguments[0]; form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));",
-          find(component),
-        )
+        find("#{component} button[type='submit']").click
       end
 
       def reset
