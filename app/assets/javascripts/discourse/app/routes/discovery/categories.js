@@ -12,8 +12,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
-  @service modal;
-  @service router;
   @service session;
 
   templateName = "discovery/categories";

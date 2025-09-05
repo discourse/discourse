@@ -12,7 +12,6 @@ import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-l
 import Chart from "admin/components/chart";
 
 export default class AiTranslations extends Component {
-  @service store;
   @service languageNameLookup;
   @service site;
 
