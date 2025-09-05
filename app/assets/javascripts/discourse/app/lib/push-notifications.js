@@ -29,6 +29,7 @@ export function isPushNotificationsSupported() {
   let caps = helperContext().capabilities;
 
   if (caps.isAppWebview) {
+    // DiscourseHub app. This implements notifications via native APIs.
     return PushNotificationSupport.NotSupported;
   }
 
