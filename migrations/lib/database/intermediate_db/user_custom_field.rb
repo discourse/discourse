@@ -8,35 +8,24 @@ module Migrations::Database::IntermediateDB
   module UserCustomField
     SQL = <<~SQL
       INSERT INTO user_custom_fields (
-        created_at,
-        field_id,
-        is_multiselect_field,
         name,
         user_id,
-        value
+        value,
+        created_at
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
 
-    def self.create(
-      created_at: nil,
-      field_id: nil,
-      is_multiselect_field: nil,
-      name:,
-      user_id:,
-      value: nil
-    )
+    def self.create(name:, user_id:, value:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        ::Migrations::Database.format_datetime(created_at),
-        field_id,
-        ::Migrations::Database.format_boolean(is_multiselect_field),
         name,
         user_id,
         value,
+        ::Migrations::Database.format_datetime(created_at),
       )
     end
   end

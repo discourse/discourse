@@ -18,11 +18,12 @@ module Migrations::Converters::Discourse
     def items
       @source_db.query <<~SQL
         SELECT user_custom_fields.*,
-               CAST(REPLACE(name, '#{USER_FIELD_PREFIX}', '') AS INTEGER) AS field_id
+               CAST(REPLACE(name, '#{USER_FIELD_PREFIX}', '') AS INTEGER) AS field_id,
+               (COUNT(*) OVER (PARTITION BY user_id, name) > 1)           AS is_multiselect_field
         FROM user_custom_fields
         WHERE user_id >= 0
           AND name LIKE '#{USER_FIELD_PREFIX}%'
-        ORDER BY user_id
+        ORDER BY user_id, name
       SQL
     end
 
@@ -32,6 +33,7 @@ module Migrations::Converters::Discourse
         field_id: item[:field_id],
         user_id: item[:user_id],
         value: item[:value],
+        is_multiselect_field: item[:is_multiselect_field],
       )
     end
   end
