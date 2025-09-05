@@ -180,7 +180,8 @@ describe "Assign | Assigning topics", type: :system do
                 I18n.t("js.action_codes.closed.disabled", when: "just now"),
               )
               expect(page).to have_no_css("#post_5")
-              try_until_success do
+
+              try_until_success(reason: "Relies on messageBus updates") do
                 expect(find("#topic .assigned-to")).to have_content(admin2.username)
               end
             end
