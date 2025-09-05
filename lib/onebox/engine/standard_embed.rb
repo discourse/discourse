@@ -159,8 +159,9 @@ module Onebox
         @json_ld ||= Onebox::JsonLd.new(html_doc)
       end
 
-      def set_from_normalizer_data(normalizer)
+      def set_from_normalizer_data(normalizer, skip_dimensions: false)
         normalizer.data.each do |k, _|
+          next if skip_dimensions && k.in?(%i[width height])
           v = normalizer.public_send(k)
           @raw[k] ||= v unless v.nil?
         end
@@ -179,7 +180,8 @@ module Onebox
 
       def set_oembed_data_on_raw
         oembed = get_oembed
-        set_from_normalizer_data(oembed)
+        skip_dimensions = oembed.data[:type] == "rich" && !oembed.data[:html]&.include?("<iframe")
+        set_from_normalizer_data(oembed, skip_dimensions:)
       end
 
       def set_json_ld_data_on_raw
