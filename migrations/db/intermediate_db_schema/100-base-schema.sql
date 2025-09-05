@@ -191,6 +191,23 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE user_custom_fields
+(
+    created_at           DATETIME,
+    field_id             NUMERIC,
+    is_multiselect_field BOOLEAN,
+    name                 TEXT,
+    user_id              NUMERIC  NOT NULL,
+    value                TEXT,
+    CONSTRAINT require_field_id_or_name CHECK (field_id IS NOT NULL OR name IS NOT NULL),
+    CONSTRAINT disallow_both_field_id_and_name CHECK (NOT (field_id IS NOT NULL AND name IS NOT NULL))
+);
+
+CREATE UNIQUE INDEX user_custom_field_values_multiselect_by_field_id_index ON user_custom_fields (user_id, field_id, value) WHERE is_multiselect_field = TRUE AND field_id IS NOT NULL;
+CREATE UNIQUE INDEX user_custom_field_values_not_multiselect_by_field_id_index ON user_custom_fields (user_id, field_id) WHERE is_multiselect_field = FALSE AND field_id IS NOT NULL;
+CREATE UNIQUE INDEX user_custom_field_values_multiselect_by_name_index ON user_custom_fields (user_id, name, value) WHERE is_multiselect_field = TRUE AND name IS NOT NULL;
+CREATE UNIQUE INDEX user_custom_field_values_not_multiselect_by_name_index ON user_custom_fields (user_id, name) WHERE is_multiselect_field = FALSE AND name IS NOT NULL;
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
