@@ -1,7 +1,6 @@
 import { on } from "@ember/modifier";
 import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse/lib/get-url";
-import icon from "discourse/helpers/d-icon";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
 import Component from "@glimmer/component";
@@ -15,10 +14,9 @@ import ChatMessageComponent from "discourse/plugins/chat/discourse/components/ch
 import { tracked } from "@glimmer/tracking";
 import FilterInput from "discourse/components/filter-input";
 import { action } from "@ember/object";
-import { fn, array, hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import discourseDebounce from "discourse/lib/debounce";
 import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-thread-heading";
-import { LinkTo } from "@ember/routing";
 
 export default class ChatRouteChannelInfoSearch extends Component {
   @tracked term = "";
