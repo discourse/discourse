@@ -508,7 +508,7 @@ RSpec.describe Stylesheet::Manager do
 
       digest1 = builder.color_scheme_digest
 
-      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+      ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
 
       digest2 = builder.color_scheme_digest
 
@@ -652,7 +652,7 @@ RSpec.describe Stylesheet::Manager do
 
     it "uses the correct color scheme when a non-default theme is selected and it uses the base 'Light' scheme" do
       cs = Fabricate(:color_scheme, name: "Not This")
-      ColorSchemeRevisor.revise(cs, colors: [{ name: "primary", hex: "CC0000" }])
+      ColorSchemeRevisor.revise(cs, { colors: [{ name: "primary", hex: "CC0000" }] })
       default_theme = Fabricate(:theme, color_scheme_id: cs.id)
       SiteSetting.default_theme_id = default_theme.id
 
@@ -706,7 +706,7 @@ RSpec.describe Stylesheet::Manager do
         )
       stylesheet = builder.compile
 
-      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+      ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
 
       builder2 =
         Stylesheet::Manager::Builder.new(
@@ -833,7 +833,7 @@ RSpec.describe Stylesheet::Manager do
             name: "Neutral",
             base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Neutral"],
           )
-        ColorSchemeRevisor.revise(custom_scheme, colors: [{ name: "primary", hex: "CC0000" }])
+        ColorSchemeRevisor.revise(custom_scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
         theme.color_scheme_id = custom_scheme.id
         theme.save!
 
