@@ -654,7 +654,7 @@ class PostRevisor
   end
 
   def bump_topic
-    return if bypass_bump? || !is_last_post?
+    return if bypass_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
@@ -662,8 +662,8 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true ||
-      @post.whisper? || only_hidden_tags_changed?
+    !@post_successfully_saved || post_changes.any? || @topic_changes.errored? ||
+      @opts[:bypass_bump] == true || @post.whisper? || only_hidden_tags_changed?
   end
 
   def only_hidden_tags_changed?
@@ -677,10 +677,6 @@ class PostRevisor
     end
 
     false
-  end
-
-  def is_last_post?
-    !Post.where(topic_id: @topic.id).where("post_number > ?", @post.post_number).exists?
   end
 
   def plugin_callbacks
