@@ -274,18 +274,11 @@
       svg {
         font-size: var(--font-down-1);
       }
-    }
 
-    &:hover {
-      .sidebar-section-hover-button {
+      &.--hovering {
+        display: block;
         background: var(--d-sidebar-highlight-background);
       }
-    }
-  }
-
-  &:hover {
-    .sidebar-section-hover-button {
-      display: block;
     }
   }
 }
