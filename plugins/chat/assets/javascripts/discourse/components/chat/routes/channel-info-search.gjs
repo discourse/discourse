@@ -1,3 +1,6 @@
+import { tracked } from "@glimmer/tracking";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { isPresent } from "@ember/utils";
 import { on } from "@ember/modifier";
 import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse/lib/get-url";
@@ -11,21 +14,21 @@ import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessageComponent from "discourse/plugins/chat/discourse/components/chat-message";
-import { tracked } from "@glimmer/tracking";
 import FilterInput from "discourse/components/filter-input";
 import { action } from "@ember/object";
 import { fn, hash } from "@ember/helper";
+import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-thread-heading";
 
 export default class ChatRouteChannelInfoSearch extends Component {
-  @tracked term = "";
+  @service router;
 
   @bind
   async searchMessages() {
     const response = await ajax(
       `/chat/api/channels/${this.args.channel.id}/messages/search`,
-      { data: { term: this.term, channel_id: this.args.channel.id } }
+      { data: { term: this.args.query, channel_id: this.args.channel.id } }
     );
 
     if (!response.messages?.length) {
@@ -49,8 +52,16 @@ export default class ChatRouteChannelInfoSearch extends Component {
   }
 
   @action
-  debounceFilterChange(term) {
-    this.term = term;
+  debounceFilterChange(query) {
+    console.log(query);
+    this.router.replaceWith({ queryParams: { q: query } });
+  }
+
+  @action
+  loadExistingQuery() {
+    if (isPresent(this.args.query)) {
+      this.debounceFilterChange(this.args.query);
+    }
   }
 
   @action
@@ -68,20 +79,23 @@ export default class ChatRouteChannelInfoSearch extends Component {
     DiscourseURL.routeTo(url);
   }
 
+  query = this.args.query;
+
   <template>
     <div class="c-routes --channel-info-search">
-      <div class="c-channel-search">
+      <div class="c-channel-search" {{didInsert this.loadExistingQuery}}>
         <FilterInput
           {{autoFocus}}
           @filterAction={{this.onFilterChange}}
-          @value={{this.textFilter}}
+          @value={{@query}}
           @icons={{hash right="magnifying-glass"}}
           placeholder={{i18n "chat.search_view.filter_placeholder"}}
+          class="no-blur"
         />
 
         <AsyncContent @asyncData={{this.searchMessages}}>
           <:empty>
-            {{#if this.term.length}}
+            {{#if @query.length}}
               <div class="alert alert-info">
                 {{i18n "chat.search_view.no_results"}}
               </div>
