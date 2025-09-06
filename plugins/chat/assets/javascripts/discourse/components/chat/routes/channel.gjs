@@ -21,6 +21,7 @@ export default class ChatRoutesChannel extends Component {
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |action|>
+          <action.SearchButton @channel={{@channel}} />
           <action.OpenDrawerButton />
           <action.ThreadsListButton @channel={{@channel}} />
         </navbar.Actions>

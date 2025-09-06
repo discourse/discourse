@@ -4,6 +4,7 @@ import CloseDrawerButton from "./close-drawer-button";
 import CloseThreadButton from "./close-thread-button";
 import CloseThreadsButton from "./close-threads-button";
 import FullPageButton from "./full-page-button";
+import SearchButton from "./search-button";
 import NewChannelButton from "./new-channel-button";
 import NewDirectMessageButton from "./new-direct-message-button";
 import OpenDrawerButton from "./open-drawer-button";
@@ -28,6 +29,7 @@ const ChatNavbarActions = <template>
         CloseDrawerButton=CloseDrawerButton
         ToggleDrawerButton=ToggleDrawerButton
         FullPageButton=FullPageButton
+        SearchButton=SearchButton
       )
     }}
   </nav>
