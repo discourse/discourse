@@ -23,6 +23,7 @@ export default function () {
       function () {
         this.route("members");
         this.route("settings");
+        this.route("search");
       }
     );
 

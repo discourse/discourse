@@ -1,0 +1,25 @@
+.chat-message-search-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.chat-message-search-entry {
+  border: 1px solid var(--content-border-color);
+  padding: 0.25rem;
+  border-radius: var(--d-border-radius);
+  cursor: pointer;
+
+  > * {
+    pointer-events: none;
+  }
+
+  .chat-thread__heading {
+    padding: 0;
+
+    h2 {
+      font-size: var(--font-0);
+    }
+  }
+}

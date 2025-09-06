@@ -18,6 +18,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id" => "channels#show"
     put "/channels/:channel_id/status" => "channels_status#update"
     get "/channels/:channel_id/messages" => "channel_messages#index"
+    get "/channels/:channel_id/messages/search" => "channel_messages#search"
     put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
     delete "/channels/:channel_id/messages/:message_id/streaming" =>
@@ -108,7 +109,7 @@ Chat::Engine.routes.draw do
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"
 
-  %w[info info/about info/members info/settings].each do |route|
+  %w[info info/about info/members info/settings info/search].each do |route|
     get "#{base_c_route}/#{route}" => "chat#respond"
   end
 
