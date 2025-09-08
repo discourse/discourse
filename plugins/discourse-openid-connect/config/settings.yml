@@ -39,3 +39,12 @@ discourse_openid_connect:
     default: false
   openid_connect_use_pkce:
     default: false
+  openid_connect_groups_enabled:
+    default: false
+    client: true
+  openid_connect_groups_maps:
+    default: ""
+    type: list
+    list_type: simple
+  openid_connect_groups_remove_unmapped_groups:
+    default: true
