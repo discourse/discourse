@@ -165,6 +165,11 @@
     color: var(--primary);
     cursor: pointer;
   }
+
+  &__meta-topic-title {
+    display: flex;
+    gap: 0 var(--space-2);
+  }
 }
 
 .review-item__status {
