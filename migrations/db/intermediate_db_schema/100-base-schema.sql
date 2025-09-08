@@ -211,6 +211,34 @@ CREATE TABLE user_custom_fields
     PRIMARY KEY (user_id, name, value)
 );
 
+CREATE TABLE topics
+(
+    original_id          NUMERIC  NOT NULL PRIMARY KEY,
+    archetype            TEXT,
+    archived             BOOLEAN,
+    bannered_until       DATETIME,
+    category_id          NUMERIC,
+    closed               BOOLEAN,
+    created_at           DATETIME,
+    deleted_at           DATETIME,
+    deleted_by_id        NUMERIC,
+    external_id          NUMERIC,
+    featured_link        TEXT,
+    image_upload_id      TEXT,
+    locale               TEXT,
+    pinned_at            DATETIME,
+    pinned_globally      BOOLEAN,
+    pinned_until         DATETIME,
+    posts_count          INTEGER,
+    score                FLOAT,
+    subtype              TEXT,
+    title                TEXT     NOT NULL,
+    user_id              NUMERIC,
+    views                INTEGER,
+    visibility_reason_id NUMERIC,
+    visible              BOOLEAN
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
