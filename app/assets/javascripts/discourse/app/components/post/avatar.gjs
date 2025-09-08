@@ -9,85 +9,102 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class PostAvatar extends Component {
-  get size() {
-    return this.args.size || "large";
-  }
-
   @cached
   get user() {
-    const username = this.args.post.username;
-    const name = this.args.post.name;
-    const path = this.args.post.usernameUrl;
+    const user = this.args.post.user;
+    if (!user) {
+      return null;
+    }
+
     const avatarTemplate = applyValueTransformer(
       "post-avatar-template",
-      this.args.post.avatar_template,
-      {
-        post: this.args.post,
-        keyboardSelected: this.args.keyboardSelected,
-        username,
-        name,
-        path,
-        decoratorState: this.args.decoratorState,
-      }
+      user.avatar_template,
+      this.#transformerContext(user)
     );
 
-    return {
-      avatar_template: avatarTemplate,
-      username,
-      name,
-      path,
-    };
+    if (avatarTemplate !== user.avatar_template) {
+      // returns a proxy object to user which overrides the avatarTemplate
+      return new Proxy(user, {
+        get(target, prop) {
+          if (prop === "avatar_template") {
+            return avatarTemplate;
+          }
+          return target[prop];
+        },
+      });
+    }
+
+    // if the template is unchanged, return the original user object directly
+    return user;
+  }
+
+  get size() {
+    return applyValueTransformer(
+      "post-avatar-size",
+      this.args.size || "large",
+      this.#transformerContext()
+    );
   }
 
   get userWasDeleted() {
-    return !this.args.post.user_id;
+    return !this.args.post.user;
   }
 
   get additionalClasses() {
-    return applyValueTransformer("post-avatar-class", [], {
+    return applyValueTransformer(
+      "post-avatar-class",
+      [],
+      this.#transformerContext()
+    );
+  }
+
+  #transformerContext(user = this.user) {
+    return {
+      decoratorState: this.args.decoratorState,
+      keyboardSelected: this.args.keyboardSelected,
       post: this.args.post,
-      user: this.user,
+      user,
       userWasDeleted: this.userWasDeleted,
-      size: this.size,
-    });
+    };
   }
 
   <template>
     <div class={{concatClass "topic-avatar" this.additionalClasses}}>
-      <PluginOutlet
-        @name="post-avatar"
-        @outletArgs={{lazyHash
+      {{#let
+        (lazyHash
           post=@post
           size=this.size
           user=this.user
           userWasDeleted=this.userWasDeleted
-        }}
-      >
-        <div class="post-avatar">
-          {{#if this.userWasDeleted}}
-            {{icon "trash-can" class="deleted-user-avatar"}}
-          {{else}}
-            <UserAvatar
-              class="main-avatar"
-              tabindex="-1"
-              @hideTitle={{true}}
-              @lazy={{true}}
-              @size={{this.size}}
-              @user={{this.user}}
-            />
-            <UserAvatarFlair @user={{@post}} />
-            <div>
+        )
+        as |avatarOutletArgs|
+      }}
+        <PluginOutlet @name="post-avatar" @outletArgs={{avatarOutletArgs}}>
+          <div class="post-avatar">
+            {{#if this.userWasDeleted}}
+              {{icon "trash-can" class="deleted-user-avatar"}}
+            {{else}}
+              <UserAvatar
+                class="main-avatar"
+                tabindex="-1"
+                @hideTitle={{true}}
+                @lazy={{true}}
+                @size={{this.size}}
+                @user={{this.user}}
+              />
               <PluginOutlet
                 @name="post-avatar-flair"
-                @outletArgs={{lazyHash user=this.user}}
-              />
-            </div>
-          {{/if}}
-          {{#if @displayPosterName}}
-            <div class="post-avatar-user-info"></div>
-          {{/if}}
-        </div>
-      </PluginOutlet>
+                @outletArgs={{avatarOutletArgs}}
+              >
+                <UserAvatarFlair @user={{this.user}} />
+              </PluginOutlet>
+            {{/if}}
+            {{#if @displayPosterName}}
+              <div class="post-avatar-user-info"></div>
+            {{/if}}
+          </div>
+        </PluginOutlet>
+      {{/let}}
     </div>
   </template>
 }

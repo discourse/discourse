@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    discourse_reactions_like_icon: "Define o ícone usado para o botão de reação principal. Deve ser um nome de ícone do <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, não um nome de emoji."
+    discourse_reactions_reaction_for_like: "Define a reação associada à ação Curtir. Os registros do tipo Histórico não mudarão se esta configuração for alterada. É <strong>altamente recomendável</strong> nunca alterar esta configuração."
+    discourse_reactions_enabled: "Ative o plugin de reações do Discourse."
+    discourse_reactions_enabled_reactions: "Define uma lista de reações ativadas, qualquer emoji é permitido aqui."
+    discourse_reactions_desaturated_reaction_panel: "Reduz a poluição visual das reações exibindo-as sem saturação até pairar."
+    discourse_reactions_excluded_from_like: "Reações que não são consideradas Curtidas. As reações que não estiverem nesta lista serão consideradas Curtidas para emblemas, denúncias e outras finalidades."
+    discourse_reactions_like_sync_enabled: "Ao ativar esta funcionalidade, serão criados registros de Curtidas para as reações de histórico, exceto as que forem definidas em \"discourse_reactions_excluded_from_like\". A sincronização acontecerá regularmente em segundo plano e também ao alterar \"discourse_reactions_excluded_from_like\"."
+    errors:
+      invalid_excluded_emoji: "Não é possível excluir emojis que não estiverem em \"reações ativadas por reações do Discourse\" nem excluir o emoji usado para \"reação a reações do Discourse para curtidas\"."
+  badges:
+    first_reaction:
+      name: Primeira Reação
+      description: Reagiu à postagem
+      long_description: |
+        Este emblema é concedido na primeira vez que você reage a uma postagem. Reagir às postagens é uma ótima maneira de informar aos outros membros da comunidade que o conteúdo da sua postagem foi interessante, útil, legal ou divertido. Compartilhe sua reação!
+  reports:
+    reactions:
+      title: "Reações"
+      description: "Liste as reações mais recentes."
+      labels:
+        day: "Dia"

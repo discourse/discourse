@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
@@ -13,6 +12,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
+  # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
 
   def confirm_request
@@ -21,17 +21,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def complete
-    auth = request.env["omniauth.auth"]
-    raise Discourse::NotFound unless request.env["omniauth.auth"]
-    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
+    raise Discourse::NotFound unless auth = request.env["omniauth.auth"]
 
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
-      path = persist_auth_token(auth)
-      return redirect_to path
+      return redirect_to persist_auth_token(auth)
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
       @auth_result = authenticator.after_authenticate(auth)
@@ -71,7 +69,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     return render_auth_result_failure if @auth_result.failed?
 
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !@auth_result.user&.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !@auth_result.user&.staff?
 
     complete_response_data
 
@@ -221,9 +219,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def persist_auth_token(auth)
     secret = SecureRandom.hex
-    secure_session.set "#{Users::AssociateAccountsController.key(secret)}",
-                       auth.to_json,
-                       expires: 10.minutes
+    key = Users::AssociateAccountsController.key(secret)
+    secure_session.set key, auth.to_json, expires: 10.minutes
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

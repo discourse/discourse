@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
@@ -20,15 +19,15 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // and technical debt, so anything copied from there to here is subject
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
-  @service siteSettings;
   @service toasts;
+  @service dialog;
 
   @tracked isUpdating = false;
 
   get themeCardClasses() {
     return [
       "theme-card",
-      this.args.theme.get("default") ? "-active" : "",
+      this.args.theme.get("default") ? "--default" : "",
       this.isUpdating ? "--updating" : "",
       dasherize(this.args.theme.name),
     ].join(" ");
@@ -40,6 +39,10 @@ export default class ThemeCard extends Component {
 
   get themePreviewUrl() {
     return `/admin/themes/${this.args.theme.id}/preview`;
+  }
+
+  get destroyDisabled() {
+    return this.args.theme.default || this.args.theme.system;
   }
 
   @action
@@ -81,7 +84,6 @@ export default class ThemeCard extends Component {
           theme: this.args.theme.name,
         }),
       },
-      duration: "short",
     });
 
     window.location.reload();
@@ -104,7 +106,6 @@ export default class ThemeCard extends Component {
       data: {
         message: i18n("admin.customize.theme.setting_was_saved"),
       },
-      duration: "short",
     });
   }
 
@@ -124,7 +125,6 @@ export default class ThemeCard extends Component {
               theme: this.args.theme.name,
             }),
           },
-          duration: "short",
         });
       })
       .catch(popupAjaxError)
@@ -133,17 +133,34 @@ export default class ThemeCard extends Component {
       });
   }
 
+  @action
+  destroyTheme() {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.delete_confirm", {
+        theme_name: this.args.theme.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await this.args.theme.destroyRecord();
+          this.args.allThemes.removeObject(this.args.theme);
+
+          this.toasts.success({
+            data: {
+              message: i18n("admin.customize.theme.delete_success", {
+                theme: this.args.theme.name,
+              }),
+            },
+          });
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
+  }
+
   <template>
     <AdminConfigAreaCard class={{this.themeCardClasses}}>
       <:content>
-        {{#if @theme.default}}
-          <span
-            class="theme-card__badge --active"
-            title={{i18n "admin.customize.theme.default_theme"}}
-          >
-            {{i18n "admin.customize.theme.default"}}
-          </span>
-        {{/if}}
 
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
@@ -170,6 +187,14 @@ export default class ThemeCard extends Component {
                 class="theme-card__badge"
               >{{icon "arrows-rotate"}}
                 {{i18n "admin.customize.theme.update_available"}}</span>
+            {{/if}}
+
+            {{#if @theme.default}}
+              <span
+                class="theme-card__badge --default"
+                title={{i18n "admin.customize.theme.default_theme"}}
+              >{{icon "paintbrush"}}
+                {{i18n "admin.customize.theme.default"}}</span>
             {{/if}}
 
             {{#if @theme.user_selectable}}
@@ -199,7 +224,6 @@ export default class ThemeCard extends Component {
                 @onRegisterApi={{this.onRegisterApi}}
                 @modalForMobile={{true}}
                 @icon="ellipsis"
-                @triggers={{array "click"}}
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
@@ -210,7 +234,7 @@ export default class ThemeCard extends Component {
                         @action={{this.setDefault}}
                         @preventFocus={{true}}
                         @icon={{if @theme.default "star" "far-star"}}
-                        class="theme-card__button set-active"
+                        class="theme-card__button set-default"
                         @translatedLabel={{i18n
                           (if
                             @theme.default
@@ -262,6 +286,15 @@ export default class ThemeCard extends Component {
                         class="btn btn-transparent theme-card__button preview"
                       >{{icon "eye"}}
                         {{i18n "admin.customize.theme.preview"}}</a>
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        @action={{this.destroyTheme}}
+                        @label="admin.customize.delete"
+                        @icon="trash-can"
+                        @disabled={{this.destroyDisabled}}
+                        class="theme-card__button btn-danger btn-transparent delete"
+                      />
                     </dropdown.item>
                   </DropdownMenu>
                 </:content>

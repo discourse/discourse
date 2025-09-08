@@ -3,9 +3,8 @@ import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FilterInput from "discourse/components/filter-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | filter-input", function (hooks) {
+module("Integration | Component | FilterInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Left icon", async function (assert) {
@@ -13,7 +12,7 @@ module("Integration | Component | filter-input", function (hooks) {
       <template><FilterInput @icons={{hash left="bell"}} /></template>
     );
 
-    assert.true(exists(".d-icon-bell.-left"));
+    assert.dom(".d-icon-bell.-left").exists();
   });
 
   test("Right icon", async function (assert) {
@@ -21,13 +20,13 @@ module("Integration | Component | filter-input", function (hooks) {
       <template><FilterInput @icons={{hash right="bell"}} /></template>
     );
 
-    assert.true(exists(".d-icon-bell.-right"));
+    assert.dom(".d-icon-bell.-right").exists();
   });
 
   test("containerClass argument", async function (assert) {
     await render(<template><FilterInput @containerClass="foo" /></template>);
 
-    assert.true(exists(".filter-input-container.foo"));
+    assert.dom(".filter-input-container.foo").exists();
   });
 
   test("Html attributes", async function (assert) {
@@ -35,8 +34,8 @@ module("Integration | Component | filter-input", function (hooks) {
       <template><FilterInput data-foo="1" placeholder="bar" /></template>
     );
 
-    assert.true(exists('.filter-input[data-foo="1"]'));
-    assert.true(exists('.filter-input[placeholder="bar"]'));
+    assert.dom('.filter-input[data-foo="1"]').exists();
+    assert.dom('.filter-input[placeholder="bar"]').exists();
   });
 
   test("Filter action", async function (assert) {
@@ -62,10 +61,10 @@ module("Integration | Component | filter-input", function (hooks) {
     );
     await triggerEvent(".filter-input", "focusin");
 
-    assert.true(exists(".filter-input-container.is-focused"));
+    assert.dom(".filter-input-container.is-focused").exists();
 
     await triggerEvent(".filter-input", "focusout");
 
-    assert.false(exists(".filter-input-container.is-focused"));
+    assert.dom(".filter-input-container.is-focused").doesNotExist();
   });
 });

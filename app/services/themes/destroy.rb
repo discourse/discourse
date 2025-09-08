@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Destroys a theme and logs the staff action. Related records are destroyed
-# by ActiveRecord dependent: :destroy. Cannot be used to destroy system themes.
+# by ActiveRecord dependent: :destroy. Cannot be used to destroy system or default themes.
 #
 # @example
 #  Themes::Destroy.call(
@@ -28,6 +28,7 @@ class Themes::Destroy
   end
 
   model :theme
+  policy :not_default
 
   transaction do
     step :destroy_theme
@@ -38,6 +39,10 @@ class Themes::Destroy
 
   def fetch_theme(params:)
     Theme.find_by(id: params.id)
+  end
+
+  def not_default(theme:)
+    !theme.default?
   end
 
   def destroy_theme(theme:)

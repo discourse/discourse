@@ -913,7 +913,22 @@ RSpec.describe InvitesController do
         another_invite = Fabricate(:invite, email: "test2@example.com")
 
         delete "/invites.json", params: { id: another_invite.id }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(403)
+        expect(invite.reload.trashed?).to be_falsey
+        expect(another_invite.reload.trashed?).to be_falsey
+      end
+
+      it "allows an admin to delete any invite" do
+        user.update!(admin: true)
+        another_invite = Fabricate(:invite, email: "test2@example.com")
+
+        delete "/invites.json", params: { id: another_invite.id }
+        expect(response.status).to eq(200)
+        expect(another_invite.reload.trashed?).to be_truthy
+
+        delete "/invites.json", params: { id: invite.id }
+        expect(response.status).to eq(200)
+        expect(invite.reload.trashed?).to be_truthy
       end
 
       it "destroys the invite" do
@@ -1619,22 +1634,30 @@ RSpec.describe InvitesController do
   end
 
   describe "#destroy_all_expired" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:invite_1) { Fabricate(:invite, invited_by: user) }
+    fab!(:invite_2) { Fabricate(:invite, invited_by: user) }
+    fab!(:expired_invite) { Fabricate(:invite, invited_by: user, expires_at: 2.days.ago) }
+
+    before { SiteSetting.invite_expiry_days = 1 }
+
     it "removes all expired invites sent by a user" do
-      SiteSetting.invite_expiry_days = 1
-
-      user = Fabricate(:admin)
-      invite_1 = Fabricate(:invite, invited_by: user)
-      invite_2 = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(expires_at: 2.days.ago)
-
-      sign_in(user)
-      post "/invites/destroy-all-expired"
+      sign_in(admin)
+      post "/invites/destroy-all-expired", params: { username: user.username }
 
       expect(response.status).to eq(200)
       expect(invite_1.reload.deleted_at).to eq(nil)
       expect(invite_2.reload.deleted_at).to eq(nil)
       expect(expired_invite.reload.deleted_at).to be_present
+    end
+
+    it "returns 403 for non-staff user" do
+      sign_in(user)
+      post "/invites/destroy-all-expired", params: { username: user.username }
+
+      expect(response.status).to eq(403)
+      expect(expired_invite.reload.deleted_at).to eq(nil)
     end
   end
 

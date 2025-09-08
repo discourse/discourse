@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Action::ResetUserLastReadChannelMessage do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, created_at: 1.hour.ago) }
   fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.seconds.ago) }
   fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1, created_at: 3.minutes.ago) }

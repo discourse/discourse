@@ -9,9 +9,11 @@ de:
     admin:
       site_settings:
         categories:
-          poll: "Discourse Umfrage"
+          poll: "Discourse – Umfrage"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Diese Umfrage ist dynamisch. Optionen können nach dem Veröffentlichen bearbeitet werden."
       voters:
         one: "Teilnehmer"
         other: "Teilnehmer"
@@ -148,6 +150,8 @@ de:
           step: Schrittweite
         poll_public:
           label: Anzeigen, wer abgestimmt hat
+        poll_dynamic:
+          label: Bearbeiten der Optionen nach dem Veröffentlichen zulassen (dynamische Umfrage)
         poll_title:
           label: Titel (optional)
         poll_options:

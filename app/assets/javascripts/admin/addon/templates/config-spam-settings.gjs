@@ -10,6 +10,7 @@ export default RouteTemplate(
       @hideTabs={{true}}
       @titleLabel={{i18n "admin.config.spam.title"}}
       @descriptionLabel={{i18n "admin.config.spam.header_description"}}
+      @learnMoreUrl="https://meta.discourse.org/t/tips-for-preventing-spam/264020"
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />

@@ -2,7 +2,7 @@
 
 RSpec.describe Search do
   fab!(:topic)
-  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic2, :topic)
   fab!(:regular_post) { Fabricate(:post, topic: topic, raw: <<~RAW) }
       Somewhere over the rainbow but no poll.
     RAW

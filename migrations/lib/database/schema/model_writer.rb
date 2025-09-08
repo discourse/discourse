@@ -48,6 +48,7 @@ module Migrations::Database::Schema
       output_stream.puts value_placeholders(columns)
       output_stream.puts "      )"
       output_stream.puts "    SQL"
+      output_stream.puts "    private_constant :SQL"
       output_stream.puts
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
@@ -64,7 +65,7 @@ module Migrations::Database::Schema
     private
 
     def to_singular_classname(snake_case_string)
-      snake_case_string.singularize.camelize
+      snake_case_string.downcase.singularize.camelize
     end
 
     def column_names(columns)

@@ -21,12 +21,12 @@ RSpec.describe Chat::UpdateMessage do
 
   describe "with validation" do
     let(:guardian) { Guardian.new(user1) }
-    fab!(:admin1) { Fabricate(:admin) }
-    fab!(:admin2) { Fabricate(:admin) }
+    fab!(:admin1, :admin)
+    fab!(:admin2, :admin)
     fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user)
     fab!(:admin_group) do
       Fabricate(
         :public_group,
@@ -34,8 +34,8 @@ RSpec.describe Chat::UpdateMessage do
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
       )
     end
-    fab!(:user_without_memberships) { Fabricate(:user) }
-    fab!(:public_chat_channel) { Fabricate(:category_channel) }
+    fab!(:user_without_memberships, :user)
+    fab!(:public_chat_channel, :category_channel)
 
     before do
       SiteSetting.chat_enabled = true
@@ -628,6 +628,7 @@ RSpec.describe Chat::UpdateMessage do
     describe "uploads" do
       fab!(:upload1) { Fabricate(:upload, user: user1) }
       fab!(:upload2) { Fabricate(:upload, user: user1) }
+      fab!(:upload3) { Fabricate(:upload, user: user3, uploaders: [user1]) }
 
       it "does nothing if the passed in upload_ids match the existing upload_ids" do
         chat_message =
@@ -790,6 +791,20 @@ RSpec.describe Chat::UpdateMessage do
         )
         expect(chat_message.reload.message).to eq(new_message)
       end
+
+      it "adds upload even if created by another user" do
+        chat_message = create_chat_message(user1, "something", public_chat_channel)
+        expect {
+          described_class.call(
+            guardian: guardian,
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload3.id],
+            },
+          )
+        }.to change { UploadReference.where(target: chat_message).count }.by(1)
+      end
     end
 
     context "when the message is in a thread" do
@@ -914,8 +929,8 @@ RSpec.describe Chat::UpdateMessage do
   describe ".call" do
     subject(:result) { described_class.call(params:, options:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:current_user, :user)
+    fab!(:channel_1, :chat_channel)
     fab!(:upload_1) { Fabricate(:upload, user: current_user) }
     fab!(:message_1) do
       Fabricate(

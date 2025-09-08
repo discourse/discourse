@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "AddUserToGroupThroughCustomField" do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
   fab!(:target_group) { Fabricate(:group, full_name: "Groupity Group") }
   fab!(:user_field) do
     Fabricate(:user_field, name: "groupity_group", field_type: "text", description: "a nice field")
@@ -140,12 +140,12 @@ describe "AddUserToGroupThroughCustomField" do
     fab!(:iowa) { Fabricate(:group, full_name: "Iowa") }
     fab!(:missouri) { Fabricate(:group, full_name: "Missouri") }
 
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:user5) { Fabricate(:user) }
-    fab!(:user6) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user)
+    fab!(:user5, :user)
+    fab!(:user6, :user)
 
     before do
       [

@@ -384,7 +384,7 @@ RSpec.describe PostSerializer do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-    fab!(:anonymous_user) { Fabricate(:anonymous) }
+    fab!(:anonymous_user, :anonymous)
 
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new(anonymous_user), root: false) }
     let(:post_action) do
@@ -510,7 +510,7 @@ RSpec.describe PostSerializer do
 
   describe "#badges_granted" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:post2) { Fabricate(:post, user: user) }
 
@@ -788,7 +788,7 @@ RSpec.describe PostSerializer do
       SiteSetting.content_localization_enabled = true
       post.update!(locale: "ja")
 
-      expect(json[:language]).to eq("日本語")
+      expect(json[:language]).to eq("ja")
     end
 
     it "defaults to locale if language does not exist" do

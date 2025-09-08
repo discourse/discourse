@@ -2,7 +2,7 @@
 
 describe ChatSDK::Message do
   describe ".create" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
 
     let(:guardian) { Discourse.system_user.guardian }
     let(:params) do
@@ -143,7 +143,7 @@ describe ChatSDK::Message do
   end
 
   describe ".create_with_stream" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
 
     let(:guardian) { Discourse.system_user.guardian }
     let(:params) { { raw: "something", channel_id: channel_1.id, guardian: guardian } }

@@ -17,6 +17,8 @@ export const TextManipulation = {};
  * @property {boolean} [inCode]
  * @property {boolean} [inCodeBlock]
  * @property {boolean} [inBlockquote]
+ * @property {boolean} [inHeading]
+ * @property {number}  [inHeadingLevel]
  */
 
 /**

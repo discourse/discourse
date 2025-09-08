@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "PM user removal", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :admin)
+  fab!(:other_user, :user)
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:dialog) { PageObjects::Components::Dialog.new }

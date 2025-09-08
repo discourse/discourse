@@ -108,6 +108,10 @@ export default class AvatarSelectorModal extends Component {
     );
   }
 
+  get allowGravatar() {
+    return this.allowAvatarUpload && this.siteSettings.gravatar_enabled;
+  }
+
   @action
   onSelectedChanged(value) {
     this.selected = value;
@@ -210,7 +214,7 @@ export default class AvatarSelectorModal extends Component {
               </label>
             </div>
           {{/if}}
-          <div class="avatar-choice">
+          <div class="avatar-choice avatar-choice--system">
             <RadioButton
               @id="system-avatar"
               @name="avatar"
@@ -223,8 +227,8 @@ export default class AvatarSelectorModal extends Component {
               {{i18n "user.change_avatar.letter_based"}}
             </label>
           </div>
-          {{#if this.allowAvatarUpload}}
-            <div class="avatar-choice">
+          {{#if this.allowGravatar}}
+            <div class="avatar-choice avatar-choice--gravatar">
               <RadioButton
                 @id="gravatar"
                 @name="avatar"
@@ -270,7 +274,9 @@ export default class AvatarSelectorModal extends Component {
                 </p>
               {{/if}}
             </div>
-            <div class="avatar-choice">
+          {{/if}}
+          {{#if this.allowAvatarUpload}}
+            <div class="avatar-choice avatar-choice--upload">
               <RadioButton
                 @id="uploaded-avatar"
                 @name="avatar"

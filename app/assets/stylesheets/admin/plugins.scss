@@ -8,7 +8,7 @@
     }
   }
 
-  .d-admin-table.admin-plugins-list {
+  .d-table.admin-plugins-list {
     .admin-plugins-list__version {
       width: 14%;
 
@@ -18,7 +18,7 @@
       }
     }
 
-    .d-admin-row__controls {
+    .d-table__cell.--controls {
       width: 10%;
 
       @include viewport.until(md) {
@@ -58,6 +58,15 @@
         margin-right: var(--space-1);
       }
     }
+
+    &__about-link {
+      white-space: nowrap;
+      display: block;
+    }
+
+    &__preinstalled {
+      color: var(--primary-medium);
+    }
   }
 }
 
@@ -82,7 +91,7 @@
 
   .d-nav-submenu {
     background: transparent;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .horizontal-overflow-nav {
       background: transparent;
@@ -138,4 +147,8 @@
   &__filter {
     width: 100%;
   }
+}
+
+.admin-plugins-howto {
+  margin-left: 0.35em;
 }

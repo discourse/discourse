@@ -16,6 +16,7 @@ cs:
       date_only: "%-d %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     -
@@ -73,6 +74,7 @@ cs:
     bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Při aktualizaci motivu se něco pokazilo"
     ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
+    setting_not_themeable: "'%{name}' nelze nastavit v motivu."
     import_error:
       generic: Při importu tohoto motivu došlo k chybě
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
@@ -277,10 +279,19 @@ cs:
         auto_generated_email_error: "Stává se, když je v hlavičce hodnota 'precedence' nastavena na: list, junk, bulk nebo auto_reply, nebo když jakékoli jiné záhlaví obsahuje: auto-submitted, auto-replied nebo auto-generated."
         no_body_detected_error: "Stává se, když jsme nemohli přečíst tělo a neexistovaly ani žádné přílohy."
         no_sender_detected_error: "Stává se, když jsme nemohli najít platnou e-mailovou adresu v záhlaví From."
+        from_reply_by_address_error: "Nastane, když se hlavička Od shoduje s e-mailovou adresou pro odpověď."
         inactive_user_error: "Toto se stává, když odesílatel není aktivní."
         silenced_user_error: "Toto se stává, když odesílatel byl ztišen."
+        bad_destination_address: "Stane se to, když žádná z e-mailových adres v polích Komu/Kopie neodpovídá nakonfigurované adrese příchozího e-mailu."
+        strangers_not_allowed_error: "Stane se to, když se uživatel pokusí vytvořit nové téma v kategorii, jejíž není členem."
+        insufficient_trust_level_error: "Stane se to, když se uživatel pokusí vytvořit nové téma v kategorii, pro kterou nemá požadovanou úroveň důvěry."
+        reply_user_not_matching_error: "Stane se, když odpověď přijde z jiné e-mailové adresy, než na kterou bylo oznámení odesláno."
         topic_not_found_error: "Toto se stává, když přijde odpověď k smazanému tématu."
         topic_closed_error: "Toto se stává, když přijde odpověď k uzavřenému tématu."
+        bounced_email_error: "E-mail je hlášení o nedoručitelném e-mailu."
+        screened_email_error: "Stane se, když e-mailová adresa odesílatele již byla blokována."
+        unsubscribe_not_allowed: "Stane se, když pro tohoto uživatele není povoleno odhlášení odběru e-mailem."
+        email_not_allowed: "Stane se, když e-mailová adresa není na seznamu povolených nebo je na seznamu blokovaných."
       unrecognized_error: "Neznámá chyba"
     secure_uploads_placeholder: "Upraveno: Tato stránka má povoleno bezpečné nahrávání. Navštivte téma nebo klikněte na Zobrazit média a zobrazte připojené soubory."
     view_redacted_media: "Zobrazit média"
@@ -288,6 +299,7 @@ cs:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} není platný jazyk"
       too_long_validation:
         one: "je limitováno na %{count} znak; zadali jste %{length}."
         few: "je limitováno na %{count} znaky; zadali jste %{length}."
@@ -295,6 +307,7 @@ cs:
         other: "je limitováno na %{count} znaků; zadali jste %{length}."
       invalid_boolean: "Nevalidní boolean."
       taken: "už je zabráno"
+      reserved: "Název skupiny '%{name}' je rezervovaný, zvolte jiný název"
       accepted: musí být odsouhlasen
       blank: nemůže zůstat prázdné
       present: musí zůstat prázdné
@@ -318,6 +331,7 @@ cs:
       less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
       not_an_integer: musí být celé číslo
+      must_all_be_positive: musí být všechny kladné
       odd: musí být liché
       record_invalid: ! "Ověření selhalo: %{errors}"
       max_emojis: "nemůže mít více než %{max_emojis_count} emotikonů"
@@ -358,6 +372,10 @@ cs:
     site_settings:
       invalid_site_setting: "Neexistuje žádné nastavení s názvem '%{name}'"
       invalid_category_id: "Zadali jste kategorii, která neexistuje"
+      site_settings_are_deprecated: "Následující nastavení jsou zastaralá: %{old_names}. Použijte místo toho %{new_names}"
+      site_settings_are_hidden: "Nemáte povoleno měnit skrytá nastavení: %{setting_names}"
+      site_settings_are_shadowed_globally: "Tato nastavení nelze změnit, protože jsou konfigurována globálně: %{setting_names}"
+      site_settings_are_unconfigurable: "Nemáte povoleno měnit nastavení, která nejsou konfigurovatelná: %{setting_names}"
       invalid_choice:
         one: "'%{name}' je neplatná volba."
         few: "'%{name}' jsou neplatné volby."
@@ -379,8 +397,21 @@ cs:
       cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Odstranění metadat odstranění obrázků nelze zakázat, pokud je povolena možnost 'composer media optimization image enabled'. Před vypnutím odstraňování metadat obrázků zakažte možnost 'composer media optimization image enabled'."
       x_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
       tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Toto nastavení vyžaduje, aby bylo nejprve povoleno nastavení 'allow anonymous mode'."
+    conflicting_google_user_id: 'ID účtu Google pro tento účet se změnilo; z bezpečnostních důvodů je nutný zásah redakce. Kontaktujte prosím redakci a odkažte je na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože server '%{hostname}' nebyl nalezen. Místo náhledu se ve vašem příspěvku zobrazí pouze odkaz. :cry:"
+      error_response: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože webový server vrátil chybový kód %{status_code}. Místo náhledu se ve vašem příspěvku zobrazí pouze odkaz. :cry:"
+      missing_data:
+        one: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože se nepodařilo nalézt následující oEmbed/OpenGraph tag: %{missing_attributes}"
+        few: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože se nepodařilo nalézt následující oEmbed/OpenGraph tagy: %{missing_attributes}"
+        many: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože se nepodařilo nalézt následující oEmbed/OpenGraph tagy: %{missing_attributes}"
+        other: "Omlouváme se, ale pro tuto webovou stránku se nám nepodařilo vygenerovat náhled, protože se nepodařilo nalézt následující oEmbed/OpenGraph tagy: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   custom_fields:
     validations:
       max_items: "Bylo dosaženo maximálního počtu uživatelských polí pro tuto entitu (%{max_items_number})"
@@ -449,7 +480,10 @@ cs:
   authenticator_not_found: "Metoda ověřování neexistuje nebo byla deaktivována."
   authenticator_no_connect: "Tento poskytovatel ověřování neumožňuje připojení k existujícímu účtu fóra."
   invalid_api_credentials: "Nemáte oprávnění na zobrazení požadovaného zdroje. Uživatelské jméno nebo klíč k API je nevalidní."
+  provider_not_enabled: "Nemáte oprávnění zobrazit požadovaný zdroj. Poskytovatel ověřování není povolen."
+  provider_not_found: "Nemáte oprávnění zobrazit požadovaný zdroj. Poskytovatel ověřování neexistuje."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  invalid_grant_badge_reason_link: "V odznaku není dovoleno použít externí nebo neplatný odkaz."
   email_template_cant_be_modified: "Tuto šablonu e-mailu nelze upravit"
   invalid_whisper_access: "Buď šeptání není povoleno, nebo nemáte přístup k vytváření šeptaných příspěvků"
   not_in_group:
@@ -476,7 +510,10 @@ cs:
     start_discussion: "Začít diskuzi"
     continue: "Pokračovat v diskuzi"
     error: "Chyba při vkládání"
+    referer: "Referer:"
     error_topics: "Nastavení webu `embed topics list` nebylo povoleno"
+    mismatch: "Referer buď nebyl odeslán, nebo neodpovídal žádnému z následujících hostitelů:"
+    no_hosts: "Pro vkládání nebyly nastaveny žádné hostitelské servery."
     configure: "Konfigurace zabudování"
     more_replies:
       one: "%{count} další odpověď"
@@ -632,6 +669,7 @@ cs:
         many: "Následující uživatelé jsou již členy této skupiny: %{username}"
         other: "Následující uživatelé jsou již členy této skupiny: %{username}"
       invalid_domain: "'%{domain}' není platná doména."
+      too_many_domains: "Příliš mnoho domén. Maximální počet %{max}."
       invalid_incoming_email: "'%{email}' není platná emailová adresa."
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
@@ -643,6 +681,11 @@ cs:
         many: "Najednou lze přidat maximálně %{count} uživatelů"
         other: "Najednou lze přidat maximálně %{count} uživatelů"
       usernames_or_emails_required: "Musí být uvedena uživatelská jména nebo e-maily"
+      counting_too_many_email_domains:
+        one: "Započítat lze v jedné chvíli maximálně %{count} doménu"
+        few: "Započítat lze v jedné chvíli maximálně %{count} domény"
+        many: "Započítat lze v jedné chvíli maximálně %{count} domén"
+        other: "Započítat lze v jedné chvíli maximálně %{count} domén"
       no_invites_with_discourse_connect: "Pokud je povolena funkce DiscourseConnect, můžete zvát pouze registrované uživatele."
       no_invites_without_local_logins: "Pokud je zakázáno místní přihlášování, můžete zvát pouze registrované uživatele"
     default_names:
@@ -676,12 +719,27 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
+    "new-topic": |
+      Děkujeme, že jste přispěli na %{site_name}!
+
+      Než začnete psát, vyberte prosím kategorii nebo štítek, abyste toto téma seskupili do souvisejících diskusí a ostatní ho snadno našli.
+
+      Další tipy a rady týkající se účasti v naší komunitě naleznete [v pokynech pro komunitu](%{base_path}/guidelines).
+    "new-reply": |
+      Děkujeme, že jste přispěli na %{site_name}!
+
+      Nezapomeňte, že všichni jsme skuteční lidé. Buďte prosím ke svým kolegům z komunity laskaví.
+
+      Další tipy a rady týkající se účasti v naší komunitě naleznete [v pokynech pro komunitu](%{base_path}/guidelines).
     dominating_topic: Do tohoto tématu jste toho hodně napsali! Zvažte, zda byste neměli dát i ostatním příležitost se zapojit.
     get_a_room:
       one: Již jste jednou odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       few: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       many: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       other: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
+    dont_feed_the_trolls: Tento příspěvek byl nahlášen moderátorovi. Odpovídání na negativní obsah může podnítit další negativní chování – opravdu chcete pokračovat?
+    too_many_replies: |
+      Noví uživatelé jsou dočasně omezeni na %{newuser_max_replies_per_topic} odpovědí v tomtéž tématu. Abyste se mohli lépe seznámit s komunitou, zvažte prosím návštěvu jiných témat.
   activerecord:
     attributes:
       category:
@@ -791,6 +849,9 @@ cs:
           attributes:
             linkable_type:
               invalid: "není platný"
+        api_key:
+          base:
+            at_least_one_granular_scope: "musí být vybrán alespoň jeden"
       <<: *errors
   uncategorized_category_name: "Nezařazené"
   general_category_name: "Obecné"
@@ -816,6 +877,8 @@ cs:
 
       > Pokud potřebujete pomoc nebo máte nějaký návrh, neváhejte se zeptat na %{feedback_category} nebo [kontaktujte administrátory](%{base_path}/about).
   admin_quick_start_title: "Příručka správce: Začínáme"
+  topic_view_stats:
+    invalid_date: "Datum je v neplatném formátu, použijte RRRR-MM-DD"
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(Nahraďte tento první odstavec stručným popisem vaší nové kategorie. Tyto pokyny se zobrazí v oblasti pro výběr kategorie, takže se snažte držet pod délkou 200 znaků.)"
@@ -829,6 +892,7 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
       slug_contains_non_ascii_chars: "obsahuje znaky jiné než ASCII"
@@ -856,6 +920,7 @@ cs:
     media_placeholder:
       blocked_hotlinked_title: "Média jsou umístěna na jiném webu. Klepnutím otevřete v novém panelu."
       blocked_hotlinked: "Externí média"
+    hidden_bidi_character: "Obousměrné řídicí znaky mohou změnit pořadí, ve kterém je text vykreslován. To by mohlo být použito k zakrytí škodlivého kódu."
     has_likes:
       one: "%{count} Líbí se"
       few: "%{count} Líbí se"
@@ -863,6 +928,7 @@ cs:
       other: "%{count} Líbí se"
     cannot_permanently_delete:
       many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
+      wait_or_different_admin: "Před trvalým smazáním tohoto příspěvku musíte počkat %{time_left} nebo to musí udělat jiný administrátor."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
     too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left}, než to zkusíte znovu."
@@ -1117,8 +1183,37 @@ cs:
     too_many_drafts:
       title: "Příliš mnoho konceptů"
       description: "Dosáhli jste maximálního počtu povolených konceptů. Prosím odstraňte některé [vaše koncepty](%{base_url}/my/activity/drafts) a zkuste to znovu."
+  draft_backup:
+    pm_title: "Zálohovat koncepty z probíhajících témat"
+    pm_body: "Téma obsahující zálohované koncepty"
+  user_activity:
+    no_log_search_queries: "Záznamy o vyhledávacích dotazech jsou momentálně zakázány (správce je může povolit v nastavení webu)."
+  email_settings:
+    pop3_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji POP3, zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
+    imap_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji IMAP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
+    imap_no_response_error: "Při komunikaci se serverem IMAP došlo k chybě. %{message}"
+    smtp_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji SMTP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu. %{message}"
+    smtp_server_busy_error: "SMTP server je momentálně zaneprázdněn, zkuste to znovu později."
+    smtp_unhandled_error: "Při komunikaci se SMTP serverem došlo k neošetřené chybě. %{message}"
+    imap_unhandled_error: "Při komunikaci se serverem IMAP došlo k neošetřené chybě. %{message}"
+    connection_error: "Došlo k problému s připojením k serveru, zkontrolujte název serveru a port a zkuste to znovu."
+    timeout_error: "Časový limit připojení k serveru vypršel, zkontrolujte název serveru a port a zkuste to znovu."
+    unhandled_error: "Při testování nastavení e-mailu nastala neošetřená chyba. %{message}"
   webauthn:
     validation:
+      invalid_type_error: "Zadaný typ webauthn byl neplatný. Platné typy jsou webauthn.get a webauthn.create."
+      challenge_mismatch_error: "Poskytnutý challenge neodpovídá challenge vygenerovanému ověřovacím serverem."
+      invalid_origin_error: "Origin požadavku na ověření neodpovídá origin serveru."
+      malformed_attestation_error: "Při dekódování dat atestace došlo k chybě."
+      invalid_relying_party_id_error: "Relying Party ID v požadavku na ověření se neshoduje s Relying Party ID serveru."
+      user_presence_error: "Je vyžadována přítomnost uživatele."
+      user_verification_error: "Je vyžadováno ověření uživatele."
+      unsupported_public_key_algorithm_error: "Zadaný algoritmus veřejného klíče není serverem podporován."
+      unsupported_attestation_format_error: "Formát atestace není serverem podporován."
+      credential_id_in_use_error: "Zadané credential ID se již používá."
+      public_key_error: "Ověření veřejného klíče pro dané pověření se nezdařilo."
+      ownership_error: "Bezpečnostní klíč není ve vlastnictví uživatele."
+      not_found_error: "Bezpečnostní klíč se zadaným credential ID nebyl nalezen."
       unknown_cose_algorithm_error: "Algoritmus použitý pro bezpečnostní klíč nebyl rozpoznán."
       malformed_public_key_credential_error: "Zadaný veřejný klíč je neplatný."
   topic_flag_types:
@@ -1195,15 +1290,26 @@ cs:
     read_write: "čtení/zápis"
     description: '„%{application_name}" požaduje následující přístup k vašemu účtu:'
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
+    otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:
       confirm_title: Pokračovat na %{site_name}
       logging_in_as: Přihlášení jako %{username}
       confirm_button: Dokončit přihlášení
+    no_trust_level: "Je nám líto, ale pro přístup k uživatelskému API nemáte požadovanou úroveň důvěry."
+    generic_error: "Omlouváme se, ale nemůžeme vydávat uživatelské API klíče, tato funkce mohla být zakázána administrátorem webu."
     scopes:
       message_bus: "Živé aktualizace"
+      notifications: "Čtení a mazání oznámení"
+      push: "Push notifikace do externích služeb"
       session_info: "Číst user session info"
       read: "Číst vše"
       write: "Zapsat vše"
+      one_time_password: "Vytvoření jednorázového přihlašovacího tokenu"
+      bookmarks_calendar: "Čtení připomenutí záložek"
+      user_status: "Čtení a aktualizace stavu uživatele"
+    invalid_public_key: "Omlouváme se, veřejný klíč je neplatný."
+    invalid_auth_redirect: "Omlouváme se, ale tento hostitel auth_redirect není povolen."
+    invalid_token: "Chybějící, neplatný nebo vypršený token."
   flags:
     errors:
       already_handled: "Nahlášení již bylo zpracováno"
@@ -1285,6 +1391,7 @@ cs:
       yaxis: "Den"
       description: "Počet uživatelů, kteří během tohoto období zvýšili svou úroveň důvěry."
     consolidated_page_views:
+      title: "Starší konsolidované počty zobrazení stránek"
       title_legacy: "Konsolidovaná zobrazení stránek"
       xaxis:
         page_view_crawler: "Vyhledávače"
@@ -1306,12 +1413,16 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
+      title: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
+      title_legacy: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
       xaxis:
         page_view_anon_browser: "Anonymní prohlížeč"
         page_view_logged_in_browser: "Přihlášený prohlížeč"
         page_view_crawler: "Známý prohledávač"
         page_view_other: "Ostatní zobrazení"
       yaxis: "Den"
+      description: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další. Tato experimentální sestava před započítáním požadavků zajišťuje, aby požadavky přihlášených/anonymních uživatelů pocházely ze skutečných prohlížečů. Historická data nejsou v této sestavě k dispozici, ale naleznete je v sestavě „Starší konsolidované počty zobrazení stránek“."
+      description_legacy: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další. Tato experimentální sestava před započítáním požadavků zajišťuje, aby požadavky přihlášených/anonymních uživatelů pocházely ze skutečných prohlížečů. Historická data nejsou v této sestavě k dispozici, ale naleznete je v sestavě „Konsolidované počty zobrazení stránek“."
     site_traffic:
       title: "Návštěvnost stránek"
       xaxis:
@@ -1408,18 +1519,22 @@ cs:
       title: "Systémové soukromé zprávy"
       xaxis: "Den"
       yaxis: "Počet zpráv"
+      description: "Počet soukromých zpráv automaticky odeslaných systémem."
     moderator_warning_private_messages:
       title: "Moderátorská varování"
       xaxis: "Den"
       yaxis: "Počet zpráv"
+      description: "Počet varování odeslaných moderátory přes soukromé zprávy."
     notify_moderators_private_messages:
       title: "Moderátorská upozornění"
       xaxis: "Den"
       yaxis: "Počet zpráv"
+      description: "Počet případů, kdy moderátoři obdrželi soukromé zprávy s dalšími údaji o nahlášení."
     notify_user_private_messages:
       title: "Uživatelská upozornění"
       xaxis: "Den"
       yaxis: "Počet zpráv"
+      description: "Počet odeslání soukromých zpráv uživatelům pomocí dialogového okna pro nahlášení."
     top_referrers:
       title: "Odkazovatelé"
       xaxis: "Uživatel"
@@ -1429,6 +1544,7 @@ cs:
         user: "Uživatel"
         num_clicks: "Kliknutí"
         num_topics: "Témata"
+      description: "Uživatelé uvedení podle počtu kliknutí na odkazy, které sdíleli."
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
@@ -1439,6 +1555,7 @@ cs:
         domain: Doména
         num_clicks: Kliknutí
         num_topics: Témata
+      description: "Externí zdroje, které na tento web odkazovaly nejvíce."
     top_referred_topics:
       title: "Odkazovaná témata"
       labels:
@@ -1523,19 +1640,34 @@ cs:
       title: "Témat bez odpovědi"
       xaxis: "Den"
       yaxis: "Celkem"
+      description: "Počet nově vytvořených témat bez odpovědi."
     mobile_visits:
+      title: "Návštěvy uživatelů (mobilní)"
       xaxis: "Den"
       yaxis: "Počet návštěv"
       description: "Počet unikátních přihlášených uživatelů, kteří navštívili stránku pomocí mobilního zařízení."
     web_crawlers:
+      title: "User Agents webových prohledávačů"
       labels:
+        user_agent: "User Agent"
         page_views: "Zobrazení stránky"
+      description: "Seznam uživatelských agentů webových prohledávačů seřazených podle zobrazení stránek."
     web_hook_events_daily_aggregate:
+      title: "Události webhooku"
       xaxis: "Den"
+      yaxis: "Počet událostí"
+      description: "Počet spuštěných událostí webhooku nebo jejich průměrná doba trvání."
     suspicious_logins:
+      title: "Podezřelé přihlášení"
       labels:
         user: Uživatel
+        client_ip: IP klienta
         location: Poloha
+        browser: Prohlížeč
+        device: Zařízení
+        os: Operační systém
+        login_time: Čas přihlášení
+      description: "Podrobnosti o nových přihlášeních, které se podezřele liší od předchozích přihlášení."
     staff_logins:
       title: "Přihlášení správců"
       labels:
@@ -1544,9 +1676,13 @@ cs:
         login_at: Přihlášen/a
       description: "Seznam časů a míst přihlášení správců."
     top_uploads:
+      title: "Nejpopulárnější nahrané soubory"
       labels:
         filename: Název souboru
+        extension: Přípona
         author: Autor
+        filesize: Velikost souboru
+      description: "Seznam všech nahraných souborů podle přípony, velikosti souboru a autora."
     top_ignored_users:
       title: "Nejvíce ignorovaní/ztišení uživatelé"
       labels:
@@ -1574,11 +1710,22 @@ cs:
         qtt_like: Obdržených 'líbí se'
       description: "Top 10 uživatelů, kteří měli Líbí se od širokého spektra lidí."
     topic_view_stats:
+      title: "Statistiky zobrazení tématu"
       labels:
         topic: Témata
         logged_in_views: Přihlášen
         anon_views: Anonymní
         total_views: Celkem
+      description: "100 nejzobrazovanějších témat v daném časovém období, kombinující přihlášené i anonymní zobrazení. Lze filtrovat podle kategorie."
+    associated_accounts_by_provider:
+      title: "Propojené účty podle metody přihlášení"
+      labels:
+        provider: Poskytovatel přihlášení
+        no_accounts: "Žádné propojené účty"
+        discourse_connect: "SSO přes Discourse Connect"
+        no_sso_accounts: "Účty bez záznamu SSO"
+        total_users: "Celkový počet aktivních uživatelských účtů"
+      description: "Zobrazit počet propojených účtů seskupených podle poskytovatele přihlášení. Použitelné pouze v případě, že jsou povoleny metody přihlášení přes sociální sítě."
   dashboard:
     problem:
       twitter_login: 'Zdá se, že přihlášení na Twitteru momentálně nefunguje. Zkontrolujte přihlašovací údaje v <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Nastavení webu</a>.'
@@ -1620,20 +1767,55 @@ cs:
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
+    display_local_time_in_user_card: "V kartě uživatele zobrazit místní čas na základě jeho časového pásma."
     censored_words: "Slova, která budou automaticky nahrazena &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automaticky smazat všechny skryté příspěvky, které jsou skryté déle než 30 dní."
     default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
+    set_locale_from_accept_language_header: "Nastavit jazyk rozhraní pro anonymní uživatele z nastavení jejich webového prohlížeče"
+    set_locale_from_cookie: "Umožňuje nastavení jazyka anonymního uživatele pomocí cookie \"locale\"."
+    set_locale_from_param: "Umožňuje nastavení jazyka anonymního uživatele pomocí parametru URL 'tl', např. ?tl=es"
     support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva"
+    min_post_length: "Minimální povolená délka příspěvku ve znacích (kromě soukromých zpráv)"
+    min_first_post_length: "Minimální povolená délka prvního příspěvku (těla tématu) (kromě osobních zpráv)"
+    prevent_uploads_only_posts: "Při kontrole minimální délky příspěvku nezapočítávat názvy nahraných souborů"
+    min_personal_message_post_length: "Minimální povolená délka příspěvku ve znacích pro zprávy (první příspěvek i odpovědi)"
+    max_post_length: "Maximální povolená délka příspěvku ve znacích"
+    topic_featured_link_enabled: "Umožňuje uživatelům připnout k tématům odkaz. Pokud je tato funkce zapnutá, k tématům může být připojen zvýrazněný odkaz, který je veřejně viditelný a lze jej upravovat, pokud má uživatel dostatečná oprávnění. Připnutý odkaz může zlepšit srozumitelnost tématu tím, že poskytuje související doplňkový obsah."
+    show_topic_featured_link_in_digest: "Zobrazit odkaz připnutý k tématu v e-mailovém souhrnu"
+    min_topic_views_for_delete_confirm: "Minimální počet zobrazení, které téma musí mít, aby se při jeho smazání objevilo vyskakovací okno vyžadující potvrzení"
+    min_topic_title_length: "Minimální povolená délka názvu tématu ve znacích"
+    max_topic_title_length: "Maximální povolená délka názvu tématu ve znacích"
+    min_personal_message_title_length: "Minimální povolená délka názvu zprávy ve znacích"
+    max_emojis_in_title: "Maximální povolený počet emotikonů v názvu tématu. Pokud je nastavená hodnota nula, zabrání se použití jakýchkoli emotikonů v názvech témat."
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
+    search_tokenize_chinese: "Vynutit tokenizaci čínštiny při vyhledávání i na nečínských webech"
+    search_tokenize_japanese: "Vynutit tokenizaci japonštiny při vyhledávání i na nejaponských webech"
+    search_prefer_recent_posts: "Pokud je vyhledávání ve vašem rozsáhlém fóru pomalé, tato možnost nejprve zkusí index novějších příspěvků."
+    search_recent_posts_size: "Kolik nedávných příspěvků uchovávat v indexu"
+    log_search_queries: "Zaznamenávat vyhledávací dotazy provedené uživateli"
+    search_query_log_max_size: "Maximální počet vyhledávacích dotazů, které je třeba uchovat"
+    search_query_log_max_retention_days: "Maximální doba uchování vyhledávacích dotazů, ve dnech."
+    search_ignore_accents: "Pokud je toto nastavení povoleno, diakritika ve vyhledávacích dotazech se ignoruje, což umožňuje uživatelům najít výsledky, i když nezadají správnou diakritiku."
+    search_default_sort_order: "Výchozí řazení pro celostránkové vyhledávání"
+    search_experience: "Výchozí pozice a vzhled vyhledávání na stolních počítačích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
+    title: "Název tohoto webu. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
+    site_description: "Popište tento web jednou větou. Viditelné pro všechny návštěvníky včetně anonymních uživatelů."
     download_remote_images_to_local: "Převést vzdálené (hotlinkované) obrázky na místní obrázky jejich stažením; Tím se zachová obsah, i když budou obrázky v budoucnu ze vzdáleného webu odstraněny."
     download_remote_images_threshold: "Minimální místo na disku potřebné pro lokální stahování vzdálených obrázků (v procentech)"
     disabled_image_download_domains: "Vzdálené obrázky nebudou nikdy staženy z těchto domén. Seznam oddělený svislou čarou."
     block_hotlinked_media: "Zabránit uživatelům v zavádění vzdálených (hotlinkovaných) médií ve svých příspěvcích. Vzdálené médium, které není staženo pomocí 'download_remote_images_to_local', bude nahrazeno zástupným odkazem."
+    large_icon: "Obrázek použitý jako základ pro další ikony. Ideálně by měl být větší než 512 x 512. Pokud pole ponecháte prázdné, použije se logo_small."
+    manifest_icon: "Obrázek použitý jako logo/úvodní obrázek v systému Android. Jeho velikost bude automaticky změněna na 512 × 512. Pokud pole ponecháte prázdné, použije se large_icon."
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
+    favicon: "Favicon pro váš web, viz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Pro správné fungování přes CDN musí být ve formátu png. Velikost bude změněna na 32x32. Pokud zůstane prázdná, použije se large_icon."
+    apple_touch_icon: "Ikona používaná pro dotyková zařízení Apple. Průhledné pozadí se nedoporučuje. Velikost se automaticky změní na 180x180. Pokud pole ponecháte prázdné, použije se ikona large_icon."
+    opengraph_image: "Výchozí obrázek opengraph, který se použije, pokud stránka nemá jiný vhodný obrázek. Pokud zůstane prázdný, použije se large_icon"
+    x_summary_large_image: "„Velký souhrnný obrázek“ karty Twitteru (měl by mít šířku alespoň 280 a výšku alespoň 150, nesmí být ve formátu .svg). Pokud se toto pole ponechá prázdné, budou generována běžná metadata karty pomocí opengraph_image, pokud se zároveň nejedná o soubor .svg."
+    notification_email: "E-mailová adresa odesílatele používaná při odesílání všech základních systémových e-mailů. Aby mohl e-mail dorazit, zde určená doména musí mít správně nastavené SPF, DKIM a reverzní PTR záznamy."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     silence_new_user_sensitivity: "Pravděpodobnost, že nový uživatel bude ztišen na základě nahlášení spamu."
@@ -1641,6 +1823,7 @@ cs:
     num_tl3_flags_to_silence_new_user: "Pokud příspěvky nového uživatele dostanou tolik příznaků z num_tl3_users_to_silence_new_user různých uživatelů úrovně důvěryhodnosti 3, skryjte všechny jeho příspěvky a zabraňte mu v budoucím psaní. 0 pro zakázání."
     num_tl3_users_to_silence_new_user: "Pokud příspěvky nového uživatele dostanou příznaky num_tl3_flags_to_silence_new_user od tohoto počtu různých uživatelů s úrovní důvěryhodnosti 3, skryjte všechny jeho příspěvky a zabraňte mu v budoucnu psát. 0 pro zakázání."
     notify_mods_when_user_silenced: "Pokud je uživatel automaticky ztišen, pošlete zprávu všem moderátorům."
+    use_admin_ip_allowlist: "Administrátoři se mohou přihlásit pouze v případě, že se nacházejí na IP adrese definované v seznamu filtrovaných IP adres (Administrace > Protokoly a monitoring > Filtrované IP)."
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     send_tl1_welcome_message: "Pslat novým uživatelům úrovně důvěry 1 uvítací zprávu."
@@ -1669,7 +1852,6 @@ cs:
     tl3_promotion_min_duration: "Minimální počet dní, po které povýšení na úroveň důvěry 3 trvá, než může být uživatel snížen zpět na úroveň důvěry 2."
     delete_all_posts_and_topics_allowed_groups: "Skupiny s povolením mazat příspěvky a témata vytvořená jinými uživateli. Tyto skupiny budou moci také vidět odstraněná témata a příspěvky."
     min_trust_to_create_topic: "Minimální úroveň důvěry potřebná k vytvoření nového tématu."
-    flush_timings_secs: "Jak často odesíláme časová data na server v sekundách."
     dark_mode_none: "Žádná"
     max_image_size_kb: "Maximální velikost nahrávaného obrázku. Toto musí být také nakonfigurováno v nginx (client_max_body_size) nebo apache nebo proxy. Obrázky větší než toto a menší než client_max_body_size budou změněny tak, aby se vešly při nahrávání."
     max_attachment_size_kb: "Maximální velikost nahrávaných souborů příloh. Toto musí být také nakonfigurováno v nginx (client_max_body_size) / apache nebo proxy."
@@ -1680,6 +1862,8 @@ cs:
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky služby' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
+    max_age_unmatched_emails: "Smazat neshodující se blokované e-maily po (N) dnech."
+    max_age_unmatched_ips: "Smazat neshodné záznamy o filtrovaných IP adresách po (N) dnech."
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
@@ -1756,6 +1940,7 @@ cs:
     use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
     use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
+    adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer_min_max: "Hodnota musí být mezi %{min} a %{max}."
@@ -1780,6 +1965,81 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
+  filter:
+    description:
+      status: "Filtrovat témata podle jejich stavu"
+      in: "Filtrovat témata v..."
+      order: "Seřadit témata podle konkrétního pole"
+      category: "Zobrazit témata v konkrétní kategorii"
+      category_any: "Zobrazit témata v kterékoli ze zadaných kategorií (oddělené čárkami)"
+      exclude_category: "Vyloučit témata v konkrétní kategorii"
+      category_without_subcategories: "Zobrazit témata pouze v nadřazené kategorii, nikoli podkategoriích"
+      exclude_category_without_subcategories: "Vyloučit témata pouze z nadřazené kategorie, ponechat témata v podkategoriích"
+      tag: "Zobrazit témata s konkrétním štítkem"
+      tags_any: "Zobrazit témata s kterýmkoli ze zadaných štítků (oddělených čárkami)"
+      tags_all: "Zobrazit témata se všemi zadanými štítky (oddělenými plusem)"
+      exclude_tag: "Vyloučit témata s konkrétním štítkem"
+      exclude_tags_any: "Vyloučit témata s kterýmkoli ze zadaných štítků (oddělenými čárkou)"
+      exclude_tags_all: "Vyloučit témata se všemi zadanými štítky (oddělenými plusem)"
+      tags_alias: "Alias pro filtr 'tag:'"
+      tag_group: "Zobrazit témata se štítky z konkrétní skupiny štítků"
+      exclude_tag_group: "Vyloučit témata se štítky z konkrétní skupiny štítků"
+      activity_before: "Zobrazit témata s poslední činností před datem (RRRR-MM-DD nebo před x dny)"
+      activity_after: "Zobrazit témata s poslední činností po datu (před YYYY-MM-DD nebo x dnech)"
+      created_before: "Zobrazit témata vytvořená před datem (před YYYY-MM-DD nebo před x dny)"
+      created_after: "Zobrazit témata vytvořená před datem (RRRR-MM-DD nebo x dny)"
+      created_by: "Zobrazit témata vytvořená konkrétním uživatelem"
+      created_by_user: "Zobrazit témata vytvořená uživatelským jménem (bez @)"
+      created_by_multiple: "Zobrazit témata vytvořená kterýmkoli ze zadaných uživatelů (oddělenými čárkou)"
+      latest_post_before: "Zobrazit témata s posledním příspěvkem před datem (před YYYY-MM-DD nebo před x dny)"
+      latest_post_after: "Zobrazit témata s posledním příspěvkem po datu (před YYYY-MM-DD nebo x dnech)"
+      likes_min: "Zobrazit témata alespoň s tímto množstvím líbí se"
+      likes_max: "Zobrazit témata s maximálně tolika líbí se"
+      likes_op_min: "Zobrazit témata, kde má první příspěvek alespoň toto množství líbí se"
+      likes_op_max: "Zobrazit témata, kde má první příspěvek nanejvýš toto množství líbí se"
+      posts_min: "Zobrazit témata alespoň s tímto počtem příspěvků"
+      posts_max: "Zobrazit témata s maximálně tímto počtem příspěvků"
+      posters_min: "Zobrazit témata alespoň s tímto počtem účastníků"
+      posters_max: "Zobrazit témata s maximálně tolika účastníky"
+      views_min: "Zobrazit témata s alespoň tímto množstvím zobrazení"
+      views_max: "Zobrazit témata s maximálně tolika zobrazeními"
+      status_open: "Zobrazit otevřená témata (ne zavřená nebo archivovaná)"
+      status_closed: "Zobrazit uzavřená témata"
+      status_archived: "Zobrazit archivovaná témata"
+      status_listed: "Zobrazit publikovaná (viditelná) témata"
+      status_unlisted: "Zobrazit nepublikovaná (skrytá) témata"
+      status_deleted: "Zobrazit odstraněná témata (pokud máte oprávnění)"
+      status_public: "Zobrazit témata ve veřejných kategoriích"
+      in_pinned: "Zobrazit připnutá témata"
+      in_bookmarked: "Zobrazit témata, která jste přidali do záložek"
+      in_watching: "Zobrazit témata, která hlídáte"
+      in_tracking: "Zobrazit témata, která sledujete"
+      in_muted: "Zobrazit ztišená témata"
+      in_normal: "Zobrazit témata s normální úrovní oznámení"
+      in_watching_first_post: "Zobrazit témata, která sledujete pro první příspěvek"
+      in_new: "Zobrazit témata, která jsou nová nebo mají nové odpovědi"
+      in_new_replies: "Zobrazit témata s novými odpověďmi"
+      in_new_topics: "Zobrazit nová témata"
+      order_activity: "Seřadit podle poslední aktivity (nejnovější jako první)"
+      order_activity_asc: "Seřadit podle poslední aktivity (nejstarší jako první)"
+      order_category: "Seřadit podle názvu kategorie (Z-A)"
+      order_category_asc: "Seřadit podle názvu kategorie (A-Z)"
+      order_created: "Seřadit podle data vytvoření (nejnovější jako první)"
+      order_created_asc: "Seřadit podle data vytvoření (nejstarší jako první)"
+      order_latest_post: "Seřadit podle data posledního příspěvku (nejnovější jako první)"
+      order_latest_post_asc: "Seřadit podle data posledního příspěvku (nejstarší jako první)"
+      order_likes: "Seřadit podle počtu líbí se (nejvíce jako první)"
+      order_likes_asc: "Seřadit podle počtu líbí se (nejméně jako první)"
+      order_likes_op: "Seřadit podle líbí se na prvním příspěvku (nejvíce jako první)"
+      order_likes_op_asc: "Seřadit podle líbí se na prvním příspěvku (nejméně jako první)"
+      order_posters: "Seřadit podle počtu účastníků (nejvíce jako první)"
+      order_posters_asc: "Seřadit podle počtu účastníků (nejméně první)"
+      order_title: "Seřadit podle názvu (Z-A)"
+      order_title_asc: "Seřadit podle názvu (A-Z)"
+      order_views: "Seřadit podle počtu zobrazení (nejvíce jako první)"
+      order_views_asc: "Seřadit podle počtu zobrazení (nejméně jako první)"
+      order_read: "Seřadit podle data posledního čtení (nejnovější jako první)"
+      order_read_asc: "Seřadit podle data posledního čtení (nejstarší jako první)"
   discourse_connect:
     login_error: "Chyba při přihlášení"
     not_found: "Váš účet nebyl nalezen. Obraťte se prosím na správce webu."
@@ -3266,8 +3526,6 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
-  color_schemes:
-    default_theme_name: "Výchozí"
   edit_this_page: "Upravit tuto stránku"
   csv_export:
     boolean_yes: "Ano"
@@ -3710,15 +3968,22 @@ cs:
         Tento odznak se uděluje za návštěvu po 365 po sobě jdoucích dnů. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na %{site_title}"
   admin_login:
-    success: "E-mail odeslán"
-    errors:
-      unknown_email_address: "Neznámá e-mailová adresa."
-      invalid_token: "Neplatný token."
+    acknowledgement: "Pokud existuje administrátorský účet s e-mailovou adresou %{email} , obdržíte e-mail s odkazem pro přihlášení."
     email_input: "E-mail správce"
     submit_button: "Odeslat e-mail"
     safe_mode: "Nouzový režim: při přihlášení zakázat všechny motivy/pluginy"
+  performance_report:
+    initial_post_raw: Toto téma zahrnuje denní přehledy výkonu vašeho webu.
+    initial_topic_title: Zprávy o výkonu webových stránek
   tags:
     title: "Štítky"
+    restricted_tag_disallowed: 'Nelze použít štítek "%{tag}".'
+    restricted_tag_remove_disallowed: 'Nelze odstranit štítek "%{tag}".'
+    minimum_required_tags:
+      one: "Musíte vybrat alespoň %{count} štítek."
+      few: "Musíte vybrat alespoň %{count} štítky."
+      many: "Musíte vybrat alespoň %{count} štítků."
+      other: "Musíte vybrat alespoň %{count} štítků."
     forbidden:
       invalid:
         one: "Vybraný štítek nelze použít"
@@ -3766,9 +4031,14 @@ cs:
     resend_email:
       title: "Znovu odeslat aktivační email"
   safe_mode:
+    title: "Vstup do bezpečného režimu"
+    no_plugins: "Zakázat všechna přizpůsobení pluginů na straně klienta"
     deprecation_error_description: "Chcete-li zkontrolovat kompatibilitu s nadcházejícími aktualizacemi Discourse, můžete nastavit, že zastaralé Javascripty vyvolají chybu:"
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
+    enter: "Vstoupit do bezpečného režimu"
+    must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
   wizard:
+    title: "Nastavení Discourse"
     step:
       introduction:
         title: "O vašem webu"
@@ -3821,6 +4091,8 @@ cs:
             label: "Barevná paleta"
           body_font:
             label: "Písmo obsahu"
+          site_font:
+            label: "Písmo"
           heading_font:
             label: "Písmo nadpisů"
           styling_preview:
@@ -3932,11 +4204,9 @@ cs:
         description: "Schválit nahlášení a ztišit uživatele."
       agree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
-      delete_single:
+      delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
-      delete:
-        title: "Odstranit…"
       delete_and_ignore:
         title: "Ignorovat nahlášení a smazat příspěvek"
         description: "Ignorovat nahlášení tím, že jej odstraněníte z fronty a smažete příspěvek; pokud jde o první příspěvek, smaže i téma. "
@@ -3975,7 +4245,10 @@ cs:
         complete: "Příspěvek schválen."
       approve_post:
         title: "Schválit příspěvek"
-        confirm_closed: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
+        complete: "Příspěvek schválen."
+      approve_post_closed:
+        title: "Schválit příspěvek"
+        confirm: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
         complete: "Příspěvek schválen."
       reject_post:
         title: "Odmítnout příspěvek"
@@ -4005,9 +4278,16 @@ cs:
         title: "Ponechat příspěvek smazaný"
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+      no_action_user:
+        title: "Bez akce"
+      silence_user:
+        title: "Ztišit uživatele"
+      suspend_user:
+        title: "Pozastavit uživatele"
       delete_user:
+        title: "Smazat uživatele"
+        complete: "Uživatel smazán"
         reason: "Smazáno prostřednictvím fronty revizí"
-        complete: "Uživatel smazán."
   email_style:
     html_missing_placeholder: "Šablona html musí obsahovat %{placeholder}"
   notification_level:

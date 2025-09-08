@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :can_post_anonymously,
              :can_ignore_users,
+             :can_edit_tags,
              :can_delete_all_posts_and_topics,
              :custom_fields,
              :muted_category_ids,
@@ -79,7 +80,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_glimmer_post_stream_mode_auto_mode,
              :can_localize_content?,
              :effective_locale,
-             :use_reviewable_ui_refresh
+             :use_reviewable_ui_refresh,
+             :can_see_ip,
+             :is_impersonating
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -97,6 +100,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def login_method
     @options[:login_method]
+  end
+
+  def is_impersonating
+    !!object.is_impersonating
   end
 
   def groups
@@ -163,6 +170,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
+  end
+
+  def can_edit_tags
+    scope.can_edit_tag?
   end
 
   def can_invite_to_forum
@@ -350,5 +361,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_use_reviewable_ui_refresh?
     scope.can_see_review_queue?
+  end
+
+  def can_see_ip
+    scope.can_see_ip?
+  end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
   end
 end

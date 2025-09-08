@@ -4,7 +4,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
@@ -16,7 +16,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
   end
 
   context "when displaying the public channels section" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
 
     before { channel_1.add(current_user) }
 
@@ -44,7 +44,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
     end
 
     context "when the category is private" do
-      fab!(:group_1) { Fabricate(:group) }
+      fab!(:group_1, :group)
       fab!(:private_channel_1) { Fabricate(:private_category_channel, group: group_1) }
 
       before do
@@ -76,7 +76,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
     end
 
     context "when the channel is muted" do
-      fab!(:channel_2) { Fabricate(:chat_channel) }
+      fab!(:channel_2, :chat_channel)
 
       before do
         Fabricate(
@@ -115,7 +115,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
 
   context "when displaying the direct message channels section" do
     context "when the channel has two participants" do
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       it "displays other user avatar in prefix when two participants" do
@@ -172,7 +172,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
     end
 
     context "when username contains malicious content" do
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       before do
@@ -191,7 +191,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
 
     context "as admin" do
       fab!(:admin)
-      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:channel_1, :chat_channel)
       before { sign_in admin }
 
       it "has back to forum button which leads to forum homepage" do

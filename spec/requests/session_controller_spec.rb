@@ -131,11 +131,33 @@ RSpec.describe SessionController do
   end
 
   describe "#email_login" do
-    let(:email_token) do
-      Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
-    end
+    let(:email_token) { Fabricate(:email_token, user:, scope: EmailToken.scopes[:email_login]) }
 
     before { SiteSetting.enable_local_logins_via_email = true }
+
+    context "when in readonly mode" do
+      before { Discourse.enable_readonly_mode }
+
+      it "allows admins to login" do
+        user.update!(admin: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow moderators to login" do
+        user.update!(moderator: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+
+      it "does not allow regular users to login" do
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+    end
 
     context "when in staff writes only mode" do
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
@@ -147,7 +169,14 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(user.id)
       end
 
-      it "does not allow other users to login" do
+      it "allows moderators to login" do
+        user.update!(moderator: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow regular users to login" do
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(503)
         expect(session[:current_user_id]).to eq(nil)
@@ -1455,7 +1484,7 @@ RSpec.describe SessionController do
              xhr: true,
              headers: headers
 
-        location = response.cookies["sso_destination_url"]
+        location = response.cookies["destination_url"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
@@ -1780,7 +1809,7 @@ RSpec.describe SessionController do
                headers: headers
           expect(response.status).to eq(200)
           # the frontend will take care of actually redirecting the user
-          redirect_url = response.cookies["sso_destination_url"]
+          redirect_url = response.cookies["destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(true)
@@ -1802,7 +1831,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          redirect_url = response.cookies["sso_destination_url"]
+          redirect_url = response.cookies["destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(nil)
@@ -2029,11 +2058,14 @@ RSpec.describe SessionController do
         end
 
         before do
-          simulate_localhost_webauthn_challenge
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by failing login once
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          read_secure_session[
+            DiscourseWebauthn.session_challenge_key(user)
+          ] = valid_security_key_challenge_data[:challenge]
         end
 
         context "when the security key params are blank and a random second factor token is provided" do
@@ -2091,10 +2123,23 @@ RSpec.describe SessionController do
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["error"]).not_to be_present
+
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
             expect(user.user_auth_tokens.count).to eq(1)
+
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: valid_security_key_auth_post_data,
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
+
+            expect(response.parsed_body["error"]).to eq(
+              I18n.t("webauthn.validation.challenge_mismatch_error"),
+            )
           end
         end
 

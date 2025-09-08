@@ -4,9 +4,9 @@ RSpec.describe "Navigation", type: :system do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:category_channel)
-  fab!(:category_channel_2) { Fabricate(:category_channel) }
+  fab!(:category_channel_2, :category_channel)
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
@@ -381,7 +381,7 @@ RSpec.describe "Navigation", type: :system do
     end
 
     context "when opening a channel in full page" do
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
       fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       it "activates the channel in the sidebar" do

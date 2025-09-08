@@ -1,18 +1,26 @@
 # Available options:
 #
-# default            - The default value of the setting. For upload site settings, use the id of the upload seeded in db/fixtures/010_uploads.rb.
-# client             - Set to true if the javascript should have access to this setting's value.
-# refresh            - Set to true if clients should refresh when the setting is changed.
-# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex              - A regex that the value must match.
-# validator          - The name of the class that will be use to validate the value of the setting.
-# allow_any          - For choice settings allow items not specified in the choice list (default true)
-# secret             - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
-# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
-#                      Set to the class name that defines the set.
-# locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
-#                      The key should be as the same as possible value of default_locale.
+# default               - The default value of the setting. For upload site settings, use the id of the upload seeded
+#                         in db/fixtures/010_uploads.rb.
+# client                - Set to true if the javascript should have access to this setting's value.
+# refresh               - Set to true if clients should refresh when the setting is changed.
+# min                   - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                   - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex                 - A regex that the value must match.
+# validator             - The name of the class that will be use to validate the value of the setting.
+# allow_any             - For choice settings allow items not specified in the choice list (default true)
+# secret                - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
+# enum                  - The setting has a fixed set of allowed values, and only one can be chosen.
+#                         Set to the class name that defines the set.
+# locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
+#                         The key should be as the same as possible value of default_locale.
+# mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
+#                         in the UI.
+# requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
+#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
+#                         is changed.
+# themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
+#                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 #
 #
 # type: email                 - Must be a valid email address.
@@ -359,11 +367,6 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
-  default_dark_mode_color_scheme_id:
-    default: -1
-    type: enum
-    enum: "ColorSchemeSetting"
-    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -486,7 +489,7 @@ basic:
     area: "analytics"
   enable_user_tips:
     client: true
-    default: true
+    default: false
     refresh: true
     area: "users"
   page_loading_indicator:
@@ -561,6 +564,18 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  floatkit_autocomplete_composer:
+    client: true
+    default: true
+    area: "interface"
+  floatkit_autocomplete_input_fields:
+    client: true
+    default: true
+    area: "interface"
+  floatkit_autocomplete_chat_composer:
+    client: true
+    default: true
+    area: "interface"
 
 login:
   invite_only:
@@ -595,6 +610,7 @@ login:
   enable_discourse_id:
     default: false
     hidden: true
+    validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -692,6 +708,7 @@ login:
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_overrides_avatar: false
   auth_require_interaction: true
   enable_discourse_connect:
     client: true
@@ -923,7 +940,7 @@ users:
     client: true
     hidden: true
   anonymous_posting_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators and trust_level_1
     type: group_list
     allow_any: false
     refresh: true
@@ -960,6 +977,10 @@ users:
     default: false
     client: true
     area: "users"
+  hide_silencing_reasons:
+    default: false
+    client: true
+    area: "users"
   log_personal_messages_views:
     default: false
     area: "users"
@@ -992,17 +1013,25 @@ users:
     default: 10000
     hidden: true
     area: "notifications"
+  gravatar_enabled:
+    type: "bool"
+    default: true
+    client: true
+    area: "users"
   gravatar_name:
     default: Gravatar
     client: true
+    hidden: true
     area: "users"
   gravatar_base_url:
     default: www.gravatar.com
     client: true
+    hidden: true
     area: "users"
   gravatar_login_url:
     default: /emails
     client: true
+    hidden: true
     area: "users"
   max_bookmarks_per_user:
     default: 2000
@@ -1203,7 +1232,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   shared_drafts_allowed_groups:
-    default: "3" # auto group staff
+    default: "1|2" # auto group admins and moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1597,7 +1626,9 @@ posting:
     hidden: true
   rich_editor:
     client: true
-    default: false
+    default: true
+    hidden: true
+    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
@@ -1615,19 +1646,27 @@ content_localization:
     default: ""
     type: list
     client: true
-    list_type: named
+    list_type: locale
     allow_any: false
-    choices: "LocaleSiteSetting.values"
+    enum: "LocaleSiteSetting"
     area: "localization"
     validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
     default: 10
     type: integer
     hidden: true
-  content_localization_anon_language_switcher:
-    default: false
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  content_localization_crawler_param:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -2247,6 +2286,19 @@ files:
     default: true
     client: true
     hidden: true
+  video_conversion_enabled:
+    default: false
+    validator: "VideoConversionEnabledValidator"
+  video_conversion_service:
+    type: enum
+    default: "aws_mediaconvert"
+    choices:
+      - "aws_mediaconvert"
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
+    hidden: true
 
 trust:
   default_trust_level:
@@ -2491,7 +2543,8 @@ trust:
     hidden: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
-    default: ""
+    default: "1|2" # auto group admins, moderators
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -2501,7 +2554,8 @@ trust:
     type: group_list
     area: "group_permissions"
   edit_all_post_groups:
-    default: "14"
+    default: "1|2|14" # auto group admins, moderators, and TL4
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     area: "group_permissions"
 
@@ -2544,6 +2598,9 @@ security:
   moderators_view_emails:
     client: true
     default: false
+  moderators_view_ips:
+    default: true
+    client: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
@@ -3081,10 +3138,8 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:
@@ -3206,6 +3261,7 @@ search:
     client: true
     type: enum
     enum: "SearchExperienceSiteSetting"
+    themeable: true
 
 uncategorized:
   version_checks:
@@ -3585,10 +3641,16 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
     client: true
+
+  max_topic_query_page_param:
+    default: 2000
+    min: 100
+    hidden: true
 
   create_revision_on_bulk_topic_moves:
     default: true
@@ -3597,11 +3659,6 @@ uncategorized:
   allow_changing_staged_user_tracking:
     default: false
     area: "users"
-
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
 
   splash_screen:
     default: true
@@ -3624,6 +3681,25 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    themeable: true
+    area: "interface"
+
+  welcome_banner_image:
+    client: true
+    default: ""
+    type: upload
+    area: "interface"
+
+  welcome_banner_location:
+    client: true
+    enum: "WelcomeBannerLocation"
+    default: "above_topic_content"
+    area: "interface"
+
+  welcome_banner_page_visibility:
+    client: true
+    enum: "WelcomeBannerPageVisibility"
+    default: "top_menu_pages"
     area: "interface"
 
 user_preferences:
@@ -3772,6 +3848,13 @@ user_preferences:
   default_sidebar_show_count_of_new_items:
     default: false
     area: "navigation"
+  default_composition_mode:
+    default: 1
+    enum: "CompositionModeSiteSetting"
+    area: "posts_and_topics|user_defaults"
+  default_other_enable_markdown_monospace_font:
+    default: true
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -3883,6 +3966,13 @@ tags:
     allow_any: false
     refresh: true
     area: "group_permissions"
+  edit_tags_allowed_groups:
+    default: "1|2" # auto group admins, moderators
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
@@ -3900,6 +3990,7 @@ tags:
     client: true
     default: 5
     min: 1
+    max: 1000
     area: "categories_and_tags"
   max_tags_in_filter_list:
     client: true
@@ -4002,20 +4093,33 @@ experimental:
   experimental_auto_grid_images:
     default: false
     client: true
+    area: "experimental"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
+    area: "experimental"
   experimental_form_templates:
     client: true
     default: false
+    area: "experimental"
+  experimental_impersonation:
+    default: false
+    hidden: true
+    area: "experimental"
+  experimental_impersonation_time_limit_minutes:
+    default: 15
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
+    area: "experimental"
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -4023,7 +4127,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-    area: "group_permissions|navigation"
+    area: "group_permissions|navigation|experimental"
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list
@@ -4031,6 +4135,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "experimental"
   glimmer_post_stream_mode:
     client: true
     type: enum
@@ -4038,31 +4143,27 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: disabled
+    default: "auto"
+    area: "experimental"
+  deactivate_widgets_rendering:
+    client: true
+    default: false
+    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
+    area: "experimental"
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+    area: "experimental"
   lazy_load_categories_groups:
     default: ""
     type: group_list
     list_type: compact
-    area: "group_permissions"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
+    area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
-  experimental_system_themes:
-    type: list
-    default: "horizon"
-    hidden: true
-    allow_any: false
-    choices:
-      - "foundation"
-      - "horizon"
+    area: "experimental"

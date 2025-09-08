@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import UserBadge from "discourse/components/user-badge";
 import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { bind } from "discourse/lib/decorators";
@@ -19,61 +20,61 @@ import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {
+  @service site;
   @service siteSettings;
   @service userStatus;
 
   showNameAndGroup = true;
   showGlyph = true;
 
-  constructor() {
-    super(...arguments);
-    this.#trackUserStatus();
-  }
+  trackUserStatus = helperFn(({ user }, on) => {
+    if (!this.userStatus.isEnabled) {
+      return;
+    }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopTrackingUserStatus();
-  }
+    user?.statusManager?.trackStatus();
 
-  get suppressSimilarName() {
-    return applyValueTransformer(
-      "post-meta-data-poster-name-suppress-similar-name",
-      true,
-      { post: this.args.post, name: this.name }
-    );
-  }
+    on.cleanup(() => {
+      user?.statusManager?.stopTrackingStatus();
+    });
+  });
 
   get name() {
-    return userPrioritizedName(this.args.post);
+    return userPrioritizedName(this.user);
   }
 
   get nameFirst() {
-    return this.name === this.args.post.name;
+    return this.name === this.user.name;
   }
 
   get primaryGroupHref() {
-    return getURL(`/g/${this.args.post.primary_group_name}`);
+    return getURL(`/g/${this.user.primary_group_name}`);
   }
 
   get shouldDisplaySecondName() {
     return (
-      this.args.post.name &&
+      this.user.name &&
       this.siteSettings.display_name_on_posts &&
-      this.#sanitizeName(this.args.post.name) !==
-        this.#sanitizeName(this.args.post.username)
+      !this.#suppressSimilarName
     );
   }
 
   get user() {
-    // TODO where does user comes from?
     return this.args.post.user;
   }
 
-  get titleClassNames() {
-    const classNames = [this.args.post.user_title];
+  get userTitle() {
+    return applyValueTransformer("poster-name-user-title", this.user.title, {
+      post: this.args.post,
+      user: this.user,
+    });
+  }
 
-    if (this.args.post.title_is_group && this.args.post.primary_group_name) {
-      classNames.push(this.args.post.primary_group_name);
+  get titleClassNames() {
+    const classNames = [this.userTitle];
+
+    if (this.args.post.title_is_group && this.user.primary_group_name) {
+      classNames.push(this.user.primary_group_name);
     }
 
     return classNames.map(
@@ -84,14 +85,21 @@ export default class PostMetaDataPosterName extends Component {
 
   get additionalClasses() {
     return applyValueTransformer("poster-name-class", [], {
+      post: this.args.post,
       user: this.user,
     });
   }
 
-  @bind
-  refreshUserStatus() {
-    this.#stopTrackingUserStatus();
-    this.#trackUserStatus();
+  get shouldShowUserStatus() {
+    return this.userStatus.isEnabled && this.user.status;
+  }
+
+  get shouldDisplayIconsBefore() {
+    return this.site.mobileView;
+  }
+
+  get shouldDisplayIconsAfter() {
+    return !this.shouldDisplayIconsBefore;
   }
 
   @bind
@@ -105,129 +113,170 @@ export default class PostMetaDataPosterName extends Component {
     return badge;
   }
 
+  get #suppressSimilarName() {
+    const sanitizedName = this.#sanitizeName(this.user.name);
+    const sanitizedUsername = this.#sanitizeName(this.user.username);
+
+    return applyValueTransformer(
+      "post-meta-data-poster-name-suppress-similar-name",
+      sanitizedName === sanitizedUsername,
+      {
+        name: this.user.name,
+        post: this.args.post,
+        sanitizedName,
+        sanitizedUsername,
+        user: this.user,
+        username: this.user.username,
+      }
+    );
+  }
+
   #sanitizeName(name) {
-    return this.suppressSimilarName
-      ? name.toLowerCase().replace(/[\s._-]/g, "")
-      : name;
-  }
-
-  #trackUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.trackStatus();
-    }
-  }
-
-  #stopTrackingUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.stopTrackingStatus();
-    }
+    return name?.toLowerCase()?.replace(/[\s._-]/g, "");
   }
 
   <template>
-    <div
-      class="names trigger-user-card"
-      {{didUpdate this.refreshUserStatus this.user}}
-    >
-      <PluginOutlet
-        @name="post-meta-data-poster-name"
-        @outletArgs={{lazyHash post=@post}}
-      >
-        <span
-          class={{concatClass
-            "first"
-            (if this.nameFirst "full-name" "username")
-            (if @post.staff "staff")
-            (if @post.admin "admin")
-            (if @post.moderator "moderator")
-            (if @post.group_moderator "category-moderator")
-            (if @post.new_user "new-user")
-            (if
-              @post.primary_group_name
-              (concat "group--" @post.primary_group_name)
-            )
-            this.additionalClasses
-          }}
+    {{#if this.user}}
+      {{this.trackUserStatus user=this.user}}
+      <div class="names trigger-user-card">
+        <PluginOutlet
+          @name="post-meta-data-poster-name"
+          @outletArgs={{lazyHash post=@post user=this.user}}
         >
-          {{! use the position argument to choose between the first and second name if needed}}
-          <PluginOutlet
-            @name="post-meta-data-poster-name-user-link"
-            @outletArgs={{lazyHash position="first" name=this.name post=@post}}
+          {{#if this.shouldDisplayIconsBefore}}
+            <PostMetaDataPosterNameIcons @post={{@post}} />
+          {{/if}}
+          <span
+            class={{concatClass
+              "first"
+              (if this.nameFirst "full-name" "username")
+              (if this.user.staff "staff")
+              (if this.user.admin "admin")
+              (if this.user.moderator "moderator")
+              (if @post.group_moderator "category-moderator")
+              (if @post.new_user "new-user")
+              (if
+                this.user.primary_group_name
+                (concat "group--" this.user.primary_group_name)
+              )
+              this.additionalClasses
+            }}
           >
-            <UserLink @user={{@post}}>
-              {{this.name}}
-              {{#if this.showGlyph}}
-                {{#if (or @post.moderator @post.group_moderator)}}
-                  {{icon "shield-halved" title=(i18n "user.moderator_tooltip")}}
-                {{/if}}
-              {{/if}}
-            </UserLink>
-          </PluginOutlet>
-        </span>
-
-        {{#if this.showNameAndGroup}}
-          {{#if this.shouldDisplaySecondName}}
-            <span
-              class={{concatClass
-                "second"
-                (if this.nameFirst "username" "full-name")
+            {{! use the position argument to choose between the first and second name if needed}}
+            <PluginOutlet
+              @name="post-meta-data-poster-name-user-link"
+              @outletArgs={{lazyHash
+                position="first"
+                name=this.name
+                post=@post
+                user=this.user
               }}
             >
-              {{! use the position argument to choose between the first and second name if needed}}
-              <PluginOutlet
-                @name="post-meta-data-poster-name-user-link"
-                @outletArgs={{lazyHash
-                  position="second"
-                  name=this.name
-                  post=@post
+              <UserLink @user={{this.user}}>
+                {{this.name}}
+                {{#if this.showGlyph}}
+                  {{#if (or this.user.moderator @post.group_moderator)}}
+                    {{icon
+                      "shield-halved"
+                      translatedTitle=(i18n "user.moderator_tooltip")
+                    }}
+                  {{/if}}
+                {{/if}}
+              </UserLink>
+            </PluginOutlet>
+          </span>
+
+          {{#if this.showNameAndGroup}}
+            {{#if this.shouldDisplaySecondName}}
+              <span
+                class={{concatClass
+                  "second"
+                  (if this.nameFirst "username" "full-name")
                 }}
               >
-                <UserLink @user={{@post}}>
-                  {{#if this.nameFirst}}
-                    {{formatUsername @post.username}}
-                  {{else}}
-                    {{@post.name}}
-                  {{/if}}
-                </UserLink>
-              </PluginOutlet>
-            </span>
-          {{/if}}
-
-          {{#if @post.user_title}}
-            <span class={{concatClass "user-title" this.titleClassNames}}>
-              {{#if (and @post.primary_group_name @post.title_is_group)}}
-                <GroupLink
-                  @name={{@post.primary_group_name}}
-                  @href={{this.primaryGroupHref}}
+                {{! use the position argument to choose between the first and second name if needed}}
+                <PluginOutlet
+                  @name="post-meta-data-poster-name-user-link"
+                  @outletArgs={{lazyHash
+                    position="second"
+                    name=this.name
+                    post=@post
+                    user=this.user
+                  }}
                 >
-                  {{@post.user_title}}
-                </GroupLink>
-              {{else}}
-                {{@post.user_title}}
-              {{/if}}
-            </span>
-          {{/if}}
+                  <UserLink @user={{this.user}}>
+                    {{#if this.nameFirst}}
+                      {{formatUsername this.user.username}}
+                    {{else}}
+                      {{this.user.name}}
+                    {{/if}}
+                  </UserLink>
+                </PluginOutlet>
+              </span>
+            {{/if}}
 
-          {{#if (and this.userStatus.isEnabled this.user.status)}}
-            <span class="user-status-message-wrap">
-              <UserStatusMessage @status={{this.user.status}} />
-            </span>
-          {{/if}}
+            {{#if this.userTitle}}
+              <span class={{concatClass "user-title" this.titleClassNames}}>
+                {{#if (and this.user.primary_group_name @post.title_is_group)}}
+                  <GroupLink
+                    @name={{this.user.primary_group_name}}
+                    @href={{this.primaryGroupHref}}
+                  >
+                    {{this.userTitle}}
+                  </GroupLink>
+                {{else}}
+                  {{this.userTitle}}
+                {{/if}}
+              </span>
+            {{/if}}
 
-          {{#if @post.badgesGranted}}
-            <span class="user-badge-buttons">
-              {{#each @post.badgesGranted key="id" as |badge|}}
-                <span class={{concat "user-badge-button-" badge.slug}}>
-                  <UserBadge
-                    @badge={{this.withBadgeDescription badge}}
-                    @user={{@post.user}}
-                    @showName={{false}}
-                  />
-                </span>
-              {{/each}}
-            </span>
+            {{#if this.shouldShowUserStatus}}
+              <span class="user-status-message-wrap">
+                <UserStatusMessage @status={{this.user.status}} />
+              </span>
+            {{/if}}
+
+            {{#if @post.badgesGranted}}
+              <span class="user-badge-buttons">
+                {{#each @post.badgesGranted key="id" as |badge|}}
+                  <span class={{concat "user-badge-button-" badge.slug}}>
+                    <UserBadge
+                      @badge={{this.withBadgeDescription badge}}
+                      @user={{this.user}}
+                      @showName={{false}}
+                    />
+                  </span>
+                {{/each}}
+              </span>
+            {{/if}}
           {{/if}}
-        {{/if}}
-      </PluginOutlet>
-    </div>
+          {{#if this.shouldDisplayIconsAfter}}
+            <PostMetaDataPosterNameIcons @post={{@post}} />
+          {{/if}}
+        </PluginOutlet>
+      </div>
+    {{/if}}
+  </template>
+}
+
+class PostMetaDataPosterNameIcons extends Component {
+  get definitions() {
+    return applyValueTransformer("poster-name-icons", [], {
+      post: this.args.post,
+    });
+  }
+
+  <template>
+    {{#each this.definitions as |definition|}}
+      <PostMetaDataPosterNameIcon
+        @className={{definition.className}}
+        @emoji={{definition.emoji}}
+        @emojiTitle={{definition.emojiTitle}}
+        @icon={{definition.icon}}
+        @text={{definition.text}}
+        @title={{definition.title}}
+        @url={{definition.url}}
+      />
+    {{/each}}
   </template>
 }

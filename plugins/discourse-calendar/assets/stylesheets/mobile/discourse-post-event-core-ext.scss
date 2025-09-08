@@ -1,0 +1,16 @@
+.link-top-line {
+  .event-date-container {
+    display: block;
+    margin-top: 0.25em;
+
+    .event-date {
+      margin: 0;
+    }
+  }
+}
+
+.header-title {
+  .event-date {
+    display: none;
+  }
+}

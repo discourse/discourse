@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "User chat preferences", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:user_preferences_chat_page) { PageObjects::Pages::UserPreferencesChat.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
@@ -48,7 +48,7 @@ RSpec.describe "User chat preferences", type: :system do
   end
 
   describe "chat interface" do
-    fab!(:category_channel_1) { Fabricate(:category_channel) }
+    fab!(:category_channel_1, :category_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
     xit "sees expected quick-reactions on hover" do
@@ -114,8 +114,8 @@ RSpec.describe "User chat preferences", type: :system do
   end
 
   context "as an admin on another user's preferences" do
-    fab!(:current_user) { Fabricate(:admin) }
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:current_user, :admin)
+    fab!(:user_1, :user)
 
     before { sign_in(current_user) }
 

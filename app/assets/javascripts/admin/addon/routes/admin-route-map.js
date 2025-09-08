@@ -61,16 +61,14 @@ export default function () {
       "adminCustomize",
       { path: "/customize", resetNamespace: true },
       function () {
-        this.route("colors", function () {
-          this.route("show", { path: "/:scheme_id" });
-        });
+        this.route("colors");
+        this.route("colors-show", { path: "/colors/:scheme_id" });
         this.route(
           "adminCustomizeThemes",
           { path: "/:type", resetNamespace: true },
           function () {
             this.route("show", { path: "/:theme_id" }, function () {
               this.route("schema", { path: "schema/:setting_name" });
-              this.route("colors");
             });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
@@ -251,6 +249,7 @@ export default function () {
         );
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });
+          this.route("settings");
           this.route("sharing");
           this.route("postsAndTopics", { path: "/posts-and-topics" });
           this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
@@ -322,6 +321,7 @@ export default function () {
         this.route("customize", function () {
           this.route("themes");
           this.route("components");
+          this.route("themeSiteSettings", { path: "/theme-site-settings" });
         });
         this.route(
           "adminAnalytics",

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 /* global Pikaday:true */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
@@ -193,6 +194,7 @@ export default class DateInput extends Component {
       @value={{readonly this.value}}
       id={{this.inputId}}
       {{on "input" this.onChangeDate}}
+      ...attributes
     />
 
     {{#unless this.useGlobalPickerContainer}}

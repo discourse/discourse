@@ -170,15 +170,21 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.with_experimental_system_themes.strict_loading.include_relations.order(:name)
+    @themes = Theme.strict_loading.include_relations.order(:name)
 
     @color_schemes =
       ColorScheme
         .strict_loading
         .all
-        .without_theme_owned_palettes
-        .with_experimental_system_theme_palettes
-        .includes(:theme, color_scheme_colors: :color_scheme)
+        .includes(
+          :theme,
+          :base_scheme,
+          color_scheme_colors: {
+            color_scheme: {
+              base_scheme: :color_scheme_colors,
+            },
+          },
+        )
         .to_a
 
     payload = {
@@ -222,7 +228,14 @@ class Admin::ThemesController < Admin::AdminController
       raise Discourse::InvalidAccess.new
     end
 
-    %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
+    %i[
+      name
+      color_scheme_id
+      dark_color_scheme_id
+      user_selectable
+      enabled
+      auto_update
+    ].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
@@ -276,7 +289,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def destroy
     Themes::Destroy.call(service_params) do
-      on_success { render json: {}, status: :no_content }
+      on_success { head :no_content }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
@@ -286,7 +299,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def bulk_destroy
     Themes::BulkDestroy.call(service_params) do
-      on_success { render json: {}, status: :no_content }
+      on_success { head :no_content }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
@@ -351,6 +364,30 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def update_theme_site_setting
+    Themes::ThemeSiteSettingManager.call(
+      params: {
+        theme_id: params[:id],
+        name: params[:name],
+        value: params[:value],
+      },
+      guardian:,
+    ) do
+      on_success do |theme_site_setting:|
+        if theme_site_setting.present?
+          render json: success_json.merge(theme_site_setting.as_json(only: %i[name value theme_id]))
+        else
+          render json: success_json
+        end
+      end
+      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ensure_setting_is_themeable) do
+        render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+    end
+  end
+
   def schema
   end
 
@@ -362,20 +399,6 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
 
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
-  end
-
-  def change_colors
-    raise Discourse::InvalidAccess if params[:id].to_i.negative?
-    theme = Theme.find_by(id: params[:id], component: false)
-    raise Discourse::NotFound if !theme
-
-    palette = theme.find_or_create_owned_color_palette
-
-    colors = params.permit(colors: %i[name hex dark_hex])
-
-    ColorSchemeRevisor.revise_existing_colors_only(palette, colors)
-
-    render_serialized(palette, ColorSchemeSerializer, root: false)
   end
 
   private
@@ -409,6 +432,7 @@ class Admin::ThemesController < Admin::AdminController
         params.require(:theme).permit(
           :name,
           :color_scheme_id,
+          :dark_color_scheme_id,
           :default,
           :user_selectable,
           :component,

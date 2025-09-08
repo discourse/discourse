@@ -7,15 +7,15 @@ RSpec.describe UserMerger do
   fab!(:source_user) do
     Fabricate(:user, username: "alice1", email: "alice@work.com", refresh_auto_groups: true)
   end
-  fab!(:walter) { Fabricate(:walter_white) }
+  fab!(:walter, :walter_white)
   fab!(:coding_horror)
 
-  fab!(:p1) { Fabricate(:post) }
-  fab!(:p2) { Fabricate(:post) }
-  fab!(:p3) { Fabricate(:post) }
-  fab!(:p4) { Fabricate(:post) }
-  fab!(:p5) { Fabricate(:post) }
-  fab!(:p6) { Fabricate(:post) }
+  fab!(:p1, :post)
+  fab!(:p2, :post)
+  fab!(:p3, :post)
+  fab!(:p4, :post)
+  fab!(:p5, :post)
+  fab!(:p6, :post)
 
   def merge_users!(source = nil, target = nil)
     source ||= source_user
@@ -895,6 +895,17 @@ RSpec.describe UserMerger do
     fields = UserCustomField.where(user_id: target_user.id).pluck(:name, :value)
     expect(fields).to contain_exactly(%w[foo 123], %w[bar 456], %w[duplicate target], %w[baz 789])
     expect(UserCustomField.where(user_id: source_user.id).count).to eq(0)
+  end
+
+  it "merges bookmarks" do
+    b1 = Bookmark.create!(user: source_user, bookmarkable: p1)
+    b2 = Bookmark.create!(user: source_user, bookmarkable: p2)
+    b3 = Bookmark.create!(user: target_user, bookmarkable: p1)
+
+    merge_users!
+
+    expect(Bookmark.where(user: target_user).pluck(:id)).to contain_exactly(b2.id, b3.id)
+    expect(Bookmark.where(user: source_user).count).to eq(0)
   end
 
   it "merges email addresses" do

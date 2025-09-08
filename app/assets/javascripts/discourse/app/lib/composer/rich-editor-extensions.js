@@ -93,6 +93,8 @@
  *    ProseMirror node views
  * @property {RichKeymap} [keymap]
  *   Additional keymap definitions
+ * @property {(params: PluginParams) => Record<string, import('prosemirror-state').Command>} [commands]
+ *   Command definitions that will be available on view.state.commands
  */
 
 /** @type {RichEditorExtension[]} */

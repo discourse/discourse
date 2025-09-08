@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat New Message from params", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:public_channel) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:public_channel, :chat_channel)
   fab!(:user_1_channel) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
@@ -43,7 +43,7 @@ RSpec.describe "Chat New Message from params", type: :system do
     fab!(:group_dm) do
       Fabricate(:direct_message_channel, users: [current_user, user_1, user_2], group: true)
     end
-    fab!(:user_3) { Fabricate(:user) }
+    fab!(:user_3, :user)
 
     it "loads existing dm channel when one exists" do
       expect { chat_page.visit_new_message([user_1, user_2]) }.not_to change { Chat::Channel.count }

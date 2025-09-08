@@ -65,7 +65,7 @@ export default class TopicPresenceDisplay extends Component {
           <div class="presence-avatars">
             {{#each this.users as |user|}}
               <UserLink @user={{user}}>
-                {{avatar user imageSize="small"}}
+                {{avatar user imageSize=@avatarSize}}
               </UserLink>
             {{/each}}
           </div>

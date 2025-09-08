@@ -109,6 +109,7 @@ export default class Results extends Component {
                 @topicResultsOnly={{true}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchLogId={{this.searchLogId}}
+                @isPMOnly={{@isPMOnly}}
               />
               <MoreLink
                 @updateTypeFilter={{@updateTypeFilter}}
@@ -130,6 +131,7 @@ export default class Results extends Component {
                 @searchTermChanged={{@searchTermChanged}}
                 @displayNameWithUser={{true}}
                 @searchLogId={{this.searchLogId}}
+                @isPMOnly={{@isPMOnly}}
               />
             {{/if}}
             <PluginOutlet

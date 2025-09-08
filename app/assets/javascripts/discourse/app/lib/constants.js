@@ -104,3 +104,11 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
 export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
 
 export const INVITE_DESCRIPTION_MAX_LENGTH = 100;
+
+export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
+
+export const INTERFACE_COLOR_MODES = {
+  AUTO: 1,
+  LIGHT: 2,
+  DARK: 3,
+};

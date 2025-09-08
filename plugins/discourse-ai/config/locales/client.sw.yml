@@ -1,0 +1,161 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Panga kwa"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Utambulisho wa Mada"
+            title:
+              label: "Kichwa cha Habari"
+            categories:
+              label: "Kategoria"
+            tags:
+              label: "Lebo"
+        llm_triage:
+          fields:
+            category:
+              label: "Kikundi"
+            tags:
+              label: "Lebo"
+            canned_reply:
+              label: "Jibu"
+    discourse_ai:
+      features:
+        back: "Iliyopita"
+        disabled: "(imezuiwa)"
+        groups: "Makundi:"
+        no_groups: "Hakuna"
+        edit: "Hariri"
+        filters:
+          all: "Yote"
+          reset: "Weka/Anzisha Upya"
+        search:
+          name: "Tafuta"
+        spam:
+          name: "Barua Taka"
+      modals:
+        select_option: "Chagua chaguo moja..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} chapisho"
+            other: "%{count} machapisho"
+      spam:
+        short_title: "Barua Taka"
+        enable: "Wezesha"
+        test_modal:
+          spam: "Barua Taka"
+      usage:
+        summary: "Muhtasari"
+        username: "Jina la mtumiaji"
+        total_requests: "Jumla ya Maombi"
+      ai_persona:
+        back: "Iliyopita"
+        name: "Jina"
+        edit: "Hariri"
+        export: "Hamisha"
+        import: "Imeingizwa kutoka sehemu nyingine"
+        description: "Maelezo"
+        user: Mtumiaji
+        save: "Hifadhi"
+        enabled: "Imeruhusiwa?"
+        delete: "Futa"
+        response_format:
+          open_modal: "Hariri"
+        filters:
+          reset: "Weka/Anzisha Upya"
+      rag:
+        uploads:
+          title: "Upakiaji"
+          uploading: "Inaongezwa"
+      tools:
+        back: "Iliyopita"
+        export: "Hamisha"
+        import: "Imeingizwa kutoka sehemu nyingine"
+        name: "Jina"
+        description: "Maelezo"
+        summary: "Muhtasari"
+        save: "Hifadhi"
+        remove_parameter: "Ondoa"
+        parameter_required: "Muhimu na Inahitajika"
+        edit: "Hariri"
+        delete: "Futa"
+      llms:
+        display_name: "Jina"
+        provider: "Mkimu"
+        save: "Hifadhi"
+        edit: "Hariri"
+        back: "Iliyopita"
+        delete: Futa
+        quotas:
+          group: "Kikundi"
+        usage:
+          ai_spam: "Barua Taka"
+        next:
+          title: "Ijayo"
+        tests:
+          success: "Mafanikio!"
+        providers:
+          google: "Google"
+          fake: "Binafsi"
+      ai_helper:
+        context_menu:
+          cancel: "Batili"
+        post_options_menu:
+          close: "Funga"
+          copy: "Nakili"
+          cancel: "Batili"
+        image_caption:
+          save_caption: "Hifadhi"
+      embeddings:
+        back: "Iliyopita"
+        save: "Hifadhi"
+        delete: "Futa"
+        edit: "Hariri"
+        tests:
+          success: "Mafanikio!"
+        display_name: "Jina"
+        provider: "Mkimu"
+        providers:
+          google: "Google"
+          fake: "Binafsi"
+      ai_bot:
+        debug_ai_modal:
+          request: "Ombi"
+          response: "Mwitikio"
+          next_log: "Ijayo"
+          previous_log: "Uliopita"
+        invite_ai_conversation:
+          button: "Mualiko"
+        share_modal:
+          copy: "Nakili"
+        conversations:
+          today: "Leo"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Yote"
+          group_types:
+            category: "Kikundi"
+          table:
+            total_count: "Jumla"
+      discobot_discoveries:
+        regular_results: "Mada"
+        collapse: "Kunja"
+        tooltip:
+          actions:
+            disable: "Sitisha"

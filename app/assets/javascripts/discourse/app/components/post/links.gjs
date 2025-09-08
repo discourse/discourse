@@ -56,7 +56,7 @@ export default class PostLinks extends Component {
                 href={{link.url}}
               >
                 {{icon "link"}}
-                {{replaceEmoji link.title}}
+                <span> {{replaceEmoji link.title}}</span>
               </a>
             </li>
           {{/each}}

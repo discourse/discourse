@@ -135,4 +135,23 @@ export default function (helpers) {
   });
 
   this.delete("/widgets/:widget_id", success);
+
+  this.get("/complex_things", function () {
+    return response({
+      __rest_serializer: "1",
+      complex_things: [
+        {
+          id: 1,
+          foo_ids: [1, 2, 3, 4],
+          bar_ids: [5, 6, 7, 8],
+        },
+      ],
+      foos: [
+        { id: 1, name: "foo1" },
+        { id: 2, name: "foo2" },
+        { id: 3, name: "foo3" },
+        { id: 4, name: "foo4" },
+      ],
+    });
+  });
 }

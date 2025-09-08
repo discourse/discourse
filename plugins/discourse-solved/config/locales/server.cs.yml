@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  accepted_answer: "Přijatá odpověď"
+  site_settings:
+    solved_enabled: "Zapnout plugin \"vyřešeno\", povolit uživatelům zvolit řešení témat"
+    allow_solved_on_all_topics: "Povolit uživatelům výběr řešení pro všechna témata (pokud není zaškrtnuto, lze povolit řešení pro jednotlivé kategorie nebo štítky)."
+    accept_all_solutions_trust_level: "Minimální důvěryhodnost požadovaná pro schválení řešení jakéhokoliv tématu (i když není OP)"
+    accept_all_solutions_allowed_groups: "Skupiny, které mohou přijímat řešení na jakékoli téma (i když nejsou OP). Správci a moderátoři jsou vždy povoleni."
+    empty_box_on_unsolved: "Zobrazit prázdný box vedle nevyřešených témat"
+    solved_quote_length: "Počet citovaných znaků daného řešení tématu pod prvním příspěvkem"
+    solved_topics_auto_close_hours: "Automaticky zavřít téma (n) hodin po poslední odpovědi, jakmile bylo téma označeno jako vyřešené. Nastavením na 0 deaktivujete automatické zavírání."
+    show_filter_by_solved_status: "Zobrazit rozevírací seznam pro filtrování seznamu témat podle statusu vyřešení."
+    notify_on_staff_accept_solved: "Odeslání oznámení tvůrci tématu, když je příspěvek označen jako řešení zaměstnancem."
+    ignore_solved_topics_in_assigned_reminder: "Zabránit tomu, aby připomenutí úkolů zahrnovala vyřešená témata. Relevantní pouze při použití pluginu discourse-assign."
+    assignment_status_on_solve: "Když je téma vyřešeno, aktualizujte všechny úkoly na tento stav."
+    assignment_status_on_unsolve: "Když je téma nevyřešené, aktualizujte všechna přiřazení na tento stav"
+    disable_solved_education_message: "Zakázat vzdělávací zprávu pro řešení témat."
+    accept_solutions_topic_author: "Povolit autorovi tématu přijmout řešení."
+    solved_add_schema_markup: "Přidání do HTML značky schématu QAPage."
+    enable_solved_tags: "Štítky, které umožní uživatelům vybrat řešení."
+    prioritize_solved_topics_in_search: "Upřednostnit ve výsledcích vyhledávání vyřešená témata."
+    show_who_marked_solved: "Zobrazit, kdo označil téma jako vyřešené. Toto je uvedeno v prvním příspěvku tématu a v bublině u příspěvku s odpovědí."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Přijatá řešení"
+      xaxis: "Den"
+      yaxis: "Celkem"
+  solved:
+    no_solutions:
+      self: "Nemáte zatím žádná akceptovaná řešení."
+      others: "Žádná akceptovaná řešení."
+    filter:
+      description:
+        solved: "Filtrovat témata, která byla vyřešena"
+        unsolved: "Filtrovat témata, která nebyla vyřešena"
+  badges:
+    solved_1:
+      name: "Vyřešeno!"
+      description: "Má odpověď označenu jako řešení"
+      long_description: "Tento odznak se uděluje za označení odpovědi jako Řešení tématu. :white_check_mark: Dobrá práce.: +1:"
+    solved_2:
+      name: "Poradce"
+      description: "Má 10 odpovědí označeno jako řešení"
+      long_description: "Tento odznak je udělen za to, že 10 z vašich odpovědí bylo označeno jako řešení témat. :white_check_mark: Pro své kolegy z komunity jste opravdovým přínosem."
+    solved_3:
+      name: "Všechno ví"
+      description: "Má 50 odpovědí označeno jako řešení"
+      long_description: "Tento odznak je udělen za 50 vašich odpovědí označených jako řešení témat. :white_check_mark: Opravdu se vyznáte. :clap:"
+    solved_4:
+      name: "Továrna na řešení"
+      description: "Má 150 odpovědí označeno jako řešení"
+      long_description: "Tento odznak je udělen za 150 vašich odpovědí označených jako řešení témat. :white_check_mark: Vynikající práce. :slightly_smiling_face: Jste oficiálně továrnou na řešení. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: První přijaté řešení
+        doc: Spustí se, když bylo uživateli poprvé přijato řešení.
+  education:
+    topic_is_solved: |
+      ### Toto téma bylo vyřešeno
+
+      Odpovídejte pouze pokud:
+
+      - Máte další podrobnosti
+
+      - Řešení pro vás nefunguje
+
+      Pokud máte nesouvisející problém, založte místo toho [nové téma](%{base_url}/new-topic).

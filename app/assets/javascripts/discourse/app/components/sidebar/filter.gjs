@@ -7,8 +7,6 @@ import { i18n } from "discourse-i18n";
 
 export default class Filter extends Component {
   @service sidebarState;
-  @service router;
-  @service currentUser;
 
   willDestroy() {
     super.willDestroy(...arguments);

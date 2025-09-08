@@ -29,6 +29,9 @@ class CategoriesController < ApplicationController
                      ]
   skip_before_action :verify_authenticity_token, only: %i[search]
 
+  # The front-end is POSTing data to this endpoint, but we're not modifying anything
+  allow_in_readonly_mode :search
+
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_LIMIT = 25
@@ -541,9 +544,7 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
-          conditional_param_keys << {
-            category_localizations_attributes: %i[id category_id locale name description _destroy],
-          }
+          conditional_param_keys << { category_localizations: %i[id locale name description] }
         end
 
         result =
@@ -593,7 +594,8 @@ class CategoriesController < ApplicationController
               require_reply_approval
               require_topic_approval
             ],
-            custom_fields: [custom_field_params],
+            custom_fields: {
+            },
             permissions: [*p.try(:keys)],
             allowed_tags: [],
             allowed_tag_groups: [],
@@ -607,13 +609,6 @@ class CategoriesController < ApplicationController
 
         result
       end
-  end
-
-  def custom_field_params
-    keys = params[:custom_fields].try(:keys)
-    return if keys.blank?
-
-    keys.map { |key| params[:custom_fields][key].is_a?(Array) ? { key => [] } : key }
   end
 
   def fetch_category

@@ -87,7 +87,7 @@ pl_PL:
         few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-      draft_too_long: "Wersja robocza jest za długa."
+      draft_too_long: "Szkic jest zbyt długi."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
       message_move_no_messages_found: "Nie znaleziono wiadomości z podanymi identyfikatorami wiadomości."
@@ -170,6 +170,7 @@ pl_PL:
     mention_warning:
       dismiss: "odrzuć"
       cannot_see: "%{first_identifier} nie ma dostępu do tego kanału i nie został powiadomiony."
+      cannot_see_group: "Niektórzy członkowie %{group_name} nie mają dostępu do tego kanału i nie zostali o tym powiadomieni."
       cannot_see_multiple:
         one: "%{first_identifier} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."

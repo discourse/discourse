@@ -138,7 +138,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Awesome Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(3)
+        expect(json["theme"]["theme_fields"].length).to eq(4)
       end
     end
 
@@ -337,7 +337,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -369,7 +369,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Some other name")
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
@@ -399,7 +399,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Header Icons")
         expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -508,26 +508,6 @@ RSpec.describe Admin::ThemesController do
         ).to eq(false)
 
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
-      end
-
-      it "filters experimental system themes" do
-        SiteSetting.experimental_system_themes = ""
-        get "/admin/themes.json"
-        expect(response.status).to eq(200)
-        theme_names = response.parsed_body["themes"].map { |theme| theme[:name] }
-        color_scheme_names =
-          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
-        expect(theme_names).not_to include("Horizon")
-        expect(color_scheme_names).not_to include("Horizon")
-
-        SiteSetting.experimental_system_themes = "horizon"
-        get "/admin/themes.json"
-        expect(response.status).to eq(200)
-        theme_names = response.parsed_body["themes"].map { |t| t[:name] }
-        color_scheme_names =
-          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
-        expect(theme_names).to include("Horizon")
-        expect(color_scheme_names).to include("Horizon")
       end
 
       it "does not result in N+1 queries" do
@@ -1208,18 +1188,18 @@ RSpec.describe Admin::ThemesController do
         )
         theme.save!
 
-        javascript_cache =
+        javascript_caches =
           theme
             .theme_fields
             .find_by(target_id: Theme.targets[:common], name: :header)
-            .javascript_cache
-        expect(javascript_cache).to_not eq(nil)
+            .raw_javascript_caches
+        expect(javascript_caches.length).to eq(1)
 
         delete "/admin/themes/#{theme.id}.json"
 
         expect(response.status).to eq(204)
         expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { javascript_caches[0].reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -1707,98 +1687,6 @@ RSpec.describe Admin::ThemesController do
       get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
 
       expect(response.status).to eq(200)
-    end
-  end
-
-  describe "#change_colors" do
-    fab!(:theme)
-
-    before { sign_in(admin) }
-
-    context "with valid parameters" do
-      it "creates a theme-owned color palette if one doesn't exist" do
-        expect(theme.owned_color_palette).to be_nil
-
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
-
-        expect(response.status).to eq(200)
-
-        theme.reload
-        expect(theme.owned_color_palette.id).to eq(response.parsed_body["id"])
-
-        color = theme.owned_color_palette.colors.find_by(name: "primary")
-        expect(color.hex).to eq("ff0000")
-        expect(color.dark_hex).to eq("0000ff")
-      end
-
-      it "updates an existing theme-owned color palette" do
-        palette = theme.find_or_create_owned_color_palette
-        primary_color = palette.colors.find_by(name: "primary")
-        secondary_color = palette.colors.find_by(name: "secondary")
-
-        original_secondary_hex = secondary_color.hex
-        original_secondary_dark_hex = secondary_color.dark_hex
-
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "aabbcc", dark_hex: "ccddee" }],
-            }
-
-        expect(response.status).to eq(200)
-
-        primary_color.reload
-        secondary_color.reload
-
-        expect(primary_color.hex).to eq("aabbcc")
-        expect(primary_color.dark_hex).to eq("ccddee")
-
-        expect(secondary_color.hex).to eq(original_secondary_hex)
-        expect(secondary_color.dark_hex).to eq(original_secondary_dark_hex)
-      end
-
-      it "returns the updated palette in the response" do
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "abcdef", dark_hex: "fedcba" }],
-            }
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["colors"]).to be_present
-        primary_color = json["colors"].find { |c| c["name"] == "primary" }
-        expect(primary_color["hex"]).to eq("abcdef")
-        expect(primary_color["dark_hex"]).to eq("fedcba")
-      end
-    end
-
-    context "with invalid parameters" do
-      it "returns 404 for non-existent theme" do
-        max_id = (Theme.maximum(:id) || 0) + 1
-
-        put "/admin/themes/#{max_id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
-
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when system theme" do
-      before { theme.update_columns(id: -10) }
-
-      it "returns invalid access" do
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
-
-        expect(response.status).to eq(403)
-      end
     end
   end
 

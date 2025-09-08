@@ -81,9 +81,9 @@ RSpec.describe Flag, type: :model do
   end
 
   describe ".used_flag_ids" do
-    fab!(:used_by_post_action_flag) { Fabricate(:flag) }
-    fab!(:used_by_reviewable_score_flag) { Fabricate(:flag) }
-    fab!(:unused_flag) { Fabricate(:flag) }
+    fab!(:used_by_post_action_flag, :flag)
+    fab!(:used_by_reviewable_score_flag, :flag)
+    fab!(:unused_flag, :flag)
 
     fab!(:post_action) { Fabricate(:post_action, post_action_type_id: used_by_post_action_flag.id) }
 

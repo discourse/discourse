@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  reports:
+    currently_away:
+      title: Šiuo metu išvykę naudotojai
+      labels:
+        username: Naudotojo vardas
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Įvykis prasidėjo
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Nurodytas švenčių regionas neegzistuoja."
+    discourse_calendar_enable_holiday_failed: "Šios šventės negalėjo būti įjungtos, ji jau įjungta arba ji nėra išjungta."
+  discourse_calendar:
+    holiday_status:
+      description: "Švenčių metu"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} netrukus prasidės."
+      after_event_reminder: "%{title} jau baigėsi."
+      ongoing_event_reminder: "%{title} vyksta."
+    errors:
+      bulk_invite:
+        error: "Įkeliant failą įvyko klaida. Pabandykite dar kartą vėliau."
+      models:
+        event:
+          raw_invitees:
+            only_group: "Įvykiui priimami tik grupių pavadinimai."
+          invalid_timezone: "Laiko juosta neatpažinta."
+          acting_user_not_allowed_to_act_on_this_event: "Dabartiniam naudotojui neleidžiama veikti su šiuo įvykiu."
+          invalid_allowed_groups: "Netinkamos leidžiamos grupės."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Įvykio priminimas"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin Chat Incoming Webhooks", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:chat_channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :admin)
+  fab!(:chat_channel_1, :chat_channel)
 
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:admin_incoming_webhooks_page) { PageObjects::Pages::AdminIncomingWebhooks.new }
@@ -38,8 +38,8 @@ describe "Admin Chat Incoming Webhooks", type: :system do
   end
 
   describe "existing webhooks" do
-    fab!(:webhook_1) { Fabricate(:incoming_chat_webhook) }
-    fab!(:webhook_2) { Fabricate(:incoming_chat_webhook) }
+    fab!(:webhook_1, :incoming_chat_webhook)
+    fab!(:webhook_2, :incoming_chat_webhook)
 
     it "can list existing incoming webhooks" do
       admin_incoming_webhooks_page.visit

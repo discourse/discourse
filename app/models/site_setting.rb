@@ -9,6 +9,7 @@ class SiteSetting < ActiveRecord::Base
     email
     embedding
     emojis
+    experimental
     flags
     fonts
     group_permissions
@@ -49,6 +50,7 @@ class SiteSetting < ActiveRecord::Base
     default_other_dynamic_favicon
     default_other_like_notification_frequency
     default_other_skip_new_user_tips
+    default_other_enable_markdown_monospace_font
     default_topics_automatic_unpin
     default_categories_watching
     default_categories_tracking
@@ -65,6 +67,7 @@ class SiteSetting < ActiveRecord::Base
     default_navigation_menu_tags
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
+    default_composition_mode
   ]
 
   extend GlobalPath
@@ -337,8 +340,8 @@ class SiteSetting < ActiveRecord::Base
 
   protected
 
-  def self.clear_cache!
-    super
+  def self.clear_cache!(expire_theme_site_setting_cache: false)
+    super(expire_theme_site_setting_cache:)
 
     @blocked_attachment_content_types_regex = nil
     @blocked_attachment_filenames_regex = nil

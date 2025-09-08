@@ -1241,7 +1241,6 @@ ca:
     enable_discord_logins: "S'ha de permetre als usuaris autenticar-se mitjançant Discord?"
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
-    automatic_backups_enabled: "Executa còpies de seguretat automàtiques tal com són definides en la freqüència de les còpies de seguretat"
     s3_backup_bucket: "Bucket remot que contindrà les còpies de seguretat. ATENCIÓ: Assegureu-vos que és un bucket privat."
     s3_endpoint: "El punt final es pot modificar per a fer còpies de seguretat en un servei compatible amb S3 com ara DigitalOcean Spaces o Minio. AVÍS: Deixeu-ho en blanc si feu servir AWS S3."
     s3_configure_tombstone_policy: "Activa la política de supressió automàtica per a càrregues 'tombstone'. IMPORTANT: si és desactivat, no es reclamarà cap espai després de suprimir les càrregues."
@@ -1287,7 +1286,6 @@ ca:
     s3_region: "El nom de la regió d'Amazon S3 que s'utilitzarà per a carregar imatges i còpies de seguretat."
     s3_cdn_url: "L'URL de CDN que es farà servir per a tots els actius s3 (per exemple: https://cdn.somewhere.com). ATENCIÓ: després de canviar aquesta configuració cal regenerar totes les publicacions antigues."
     avatar_sizes: "Llista de mides d'avatar generades automàticament."
-    external_system_avatars_url: "URL del sistema extern de servei d'avatars. Les substitucions permeses són {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "Llista de valors de color hexadecimal de 6 dígits que s'utilitzaran per al fons de l'avatar de lletres."
     allow_all_attachments_for_group_messages: "Permet tots els adjunts de correu per a missatges de grup."
     png_to_jpg_quality: "La qualitat del fitxer JPG convertit (1 és la qualitat més baixa, 99 és la qualitat més alta, 100 per a desactivar)."
@@ -1338,7 +1336,6 @@ ca:
     email_time_window_mins: "Espera (n) minuts abans d'enviar qualsevol correu de notificació, per a donar l'oportunitat als usuaris d'editar i acabar les seves publicacions. "
     personal_email_time_window_seconds: "Espera (n) segons abans d'enviar correus de notificació de missatges personals perquè els usuaris puguin editar i completar els missatges."
     email_posts_context: "Quantes respostes prèvies s'inclouen com a context en els correus de notificació."
-    flush_timings_secs: "Amb quina freqüència descarreguem les dades de sincronització al servidor, en segons."
     title_max_word_length: "La longitud màxima permesa d'una paraula, en caràcters, en el títol d'un tema."
     title_min_entropy: "Entropia mínima (caràcters únics; els caràcters amb diacrítics compten més) necessària per al títol d'un tema."
     body_min_entropy: "Entropia mínima (caràcters únics; els caràcters amb diacrítics compten més) necessària per al cos d'una publicació."
@@ -2461,7 +2458,6 @@ ca:
     latte: "Latte"
     summer: "Estiu"
     dark_rose: "Rosa fosc"
-    default_theme_name: "Per defecte"
     light_theme_name: "Clar"
     dark_theme_name: "Fosc"
     neutral_theme_name: "Neutre"
@@ -2721,10 +2717,6 @@ ca:
         Aquesta insígnia es concedeix per visitar 365 dies consecutius. Caram, un any sencer!
     badge_title_metadata: "%{display_name} insígnia en %{site_title}"
   admin_login:
-    success: "Correu enviat"
-    errors:
-      unknown_email_address: "Adreça de correu electrònic desconeguda."
-      invalid_token: "Testimoni no vàlid."
     email_input: "Correu d'administrador"
     submit_button: "Envia un correu"
   performance_report:
@@ -2856,7 +2848,7 @@ ca:
         description: "D'acord amb la bandera i silencia l'usuari. "
       agree_and_restore:
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      delete_single:
+      delete:
         title: "Suprimeix"
         complete: "Publicació suprimida."
       delete_and_ignore:
@@ -2879,7 +2871,9 @@ ca:
         title: "Aprova"
       approve_post:
         title: "Aprova la publicació"
-        confirm_closed: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"
+      approve_post_closed:
+        title: "Aprova la publicació"
+        confirm: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"
       reject_post:
         title: "Rebutja la publicació"
       approve_user:
@@ -2894,9 +2888,11 @@ ca:
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       reject:
         title: "Rebutja"
+      no_action_user:
+        title: "Cap acció"
       delete_user:
+        complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"
-        complete: "Usuari suprimit."
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:

@@ -1,0 +1,168 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortiraj po"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID teme"
+            title:
+              label: "Naslov"
+            categories:
+              label: "Kategorije"
+            tags:
+              label: "Oznake"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategorija"
+            tags:
+              label: "Oznake"
+            canned_reply:
+              label: "Odgovori"
+    discourse_ai:
+      features:
+        back: "Prethodno"
+        disabled: "(neomogućen)"
+        groups: "Grupa:"
+        no_groups: "Ništa"
+        edit: "Izmijeni"
+        expand_list:
+          one: "(još %{count})"
+          few: "(još %{count})"
+          other: "(još %{count})"
+        filters:
+          all: "Sve"
+          reset: "Resetovati"
+        search:
+          name: "Pretraži"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Odaberi opciju..."
+      translations:
+        title: "Prevodi"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
+      spam:
+        short_title: "Spam"
+        enable: "Omogući"
+        test_modal:
+          spam: "Spam"
+      usage:
+        summary: "Sažetak"
+        username: "Nadimak"
+      ai_persona:
+        back: "Prethodno"
+        name: "Ime"
+        edit: "Izmijeni"
+        export: "Izvoz"
+        description: "Opis"
+        user: User
+        save: "Sačuvaj"
+        enabled: "Omogućen?"
+        allowed_groups: "Dozvoljene grupe"
+        delete: "Delete"
+        response_format:
+          open_modal: "Izmijeni"
+          modal:
+            key_title: "Ključ"
+        filters:
+          reset: "Resetovati"
+      rag:
+        uploads:
+          title: "Uploads"
+          uploading: "Učitavanje..."
+      tools:
+        back: "Prethodno"
+        export: "Izvoz"
+        name: "Ime"
+        description: "Opis"
+        summary: "Sažetak"
+        save: "Sačuvaj"
+        remove_parameter: "Ukloni"
+        parameter_required: "Required"
+        edit: "Izmijeni"
+        delete: "Delete"
+      llms:
+        display_name: "Ime"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
+        back: "Prethodno"
+        delete: Delete
+        quotas:
+          group: "Grupa"
+          duration: "Trajanje"
+        usage:
+          ai_spam: "Spam"
+        next:
+          title: "Iduće"
+        tests:
+          success: "Uspjeh!"
+        providers:
+          google: "Google"
+          fake: "Custom"
+      ai_helper:
+        context_menu:
+          cancel: "Odustani"
+          discard: "Odbaci"
+        post_options_menu:
+          close: "Zatvori"
+          copy: "Copy"
+          copied: "Kopirano!"
+          cancel: "Odustani"
+        image_caption:
+          save_caption: "Sačuvaj"
+      embeddings:
+        back: "Prethodno"
+        save: "Sačuvaj"
+        delete: "Delete"
+        edit: "Izmijeni"
+        tests:
+          success: "Uspjeh!"
+        display_name: "Ime"
+        providers:
+          google: "Google"
+          fake: "Custom"
+      ai_bot:
+        debug_ai_modal:
+          request: "Zatraži"
+          response: "Odgovor"
+          next_log: "Iduće"
+          previous_log: "Previous"
+        invite_ai_conversation:
+          button: "Invite"
+        share_modal:
+          copy: "Copy"
+        conversations:
+          today: "Today"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Sve"
+          group_types:
+            category: "Kategorija"
+          table:
+            total_count: "Suma"
+      discobot_discoveries:
+        regular_results: "Topics"
+        collapse: "Spusti"
+        tooltip:
+          actions:
+            disable: "Onemogući"

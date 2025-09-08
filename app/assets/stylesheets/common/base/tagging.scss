@@ -4,10 +4,6 @@
   --tag-text-color: var(--primary-high);
 }
 
-.extra-info-wrapper {
-  --tag-text-color: var(--header_primary-high);
-}
-
 .container.tags-index {
   background: var(--d-content-background);
 }
@@ -20,7 +16,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 #list-area .tags-list h3 {
@@ -72,6 +68,11 @@
   vertical-align: middle;
   margin: 0;
   color: var(--tag-text-color);
+  font-size: var(--d-tag-font-size);
+  font-weight: var(--d-tag-font-weight);
+  padding: 0 var(--d-tag-horizontal-padding);
+  border-radius: var(--d-tag-border-radius);
+  background-color: var(--d-tag-background-color);
 
   @include ellipsis;
 
@@ -125,6 +126,10 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+
+  &:has(.box) {
+    gap: var(--space-1);
+  }
 
   &__tag-separator {
     margin-right: 0.25em;
@@ -337,7 +342,7 @@ section.tag-info {
   gap: 1em;
   margin: 1em 0;
   padding: 2em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   .edit-tag-wrapper {
     display: flex;

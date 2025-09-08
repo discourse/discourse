@@ -1,8 +1,8 @@
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -287,6 +287,11 @@ const UserAbout = <template>
                 {{@dummy.user.number_of_deleted_posts}}
               </span>&nbsp;{{i18n "user.staff_counters.deleted_posts"}}
             </a>
+          </div>
+          <div>
+            <span class="silencings">
+              {{@dummy.user.num_of_silencings}}
+            </span>&nbsp;{{i18n "user.staff_counters.silencings"}}
           </div>
           <div>
             <span class="suspensions">

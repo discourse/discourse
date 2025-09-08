@@ -13,7 +13,7 @@ module("Integration | Component | ApiKeyItem", function (hooks) {
 
     await render(<template><ApiKeyItem @apiKey={{apiKey}} /></template>);
 
-    assert.dom(".key-scope > .d-icon-globe").exists();
+    assert.dom(".key-scope .d-icon-globe").exists();
     assert.dom(".key-scope").includesText("Global");
   });
 
@@ -24,7 +24,7 @@ module("Integration | Component | ApiKeyItem", function (hooks) {
 
     await render(<template><ApiKeyItem @apiKey={{apiKey}} /></template>);
 
-    assert.dom(".key-scope > .d-icon-eye").exists();
+    assert.dom(".key-scope .d-icon-eye").exists();
     assert.dom(".key-scope").includesText("Read-only");
   });
 
@@ -35,7 +35,7 @@ module("Integration | Component | ApiKeyItem", function (hooks) {
 
     await render(<template><ApiKeyItem @apiKey={{apiKey}} /></template>);
 
-    assert.dom(".key-scope > .d-icon-bullseye").exists();
+    assert.dom(".key-scope .d-icon-bullseye").exists();
     assert.dom(".key-scope").includesText("Granular");
   });
 });

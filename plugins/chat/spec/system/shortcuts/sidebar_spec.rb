@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | sidebar", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
@@ -13,7 +13,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
   end
 
   context "when using Alt+Up/Down arrows" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
     fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
 
     before { channel_1.add(current_user) }
@@ -54,7 +54,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
     fab!(:channel_3) { Fabricate(:chat_channel, name: "Channel 3") }
     fab!(:channel_4) { Fabricate(:chat_channel, name: "Channel 4") }
     fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
     before do

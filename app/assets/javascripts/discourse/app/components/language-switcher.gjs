@@ -8,17 +8,32 @@ import cookie from "discourse/lib/cookie";
 import DMenu from "float-kit/components/d-menu";
 
 export default class LanguageSwitcher extends Component {
-  @service site;
   @service siteSettings;
-  @service router;
+  @service languageNameLookup;
+  @service currentUser;
 
   @action
   async changeLocale(locale) {
-    cookie("locale", locale, { path: "/" });
+    if (this.currentUser) {
+      this.currentUser.set("locale", locale);
+      await this.currentUser.save(["locale"]);
+    } else {
+      cookie("locale", locale, { path: "/" });
+    }
+
     this.dMenu.close();
-    // we need a hard refresh here for the locale to take effect
-    // window.location.reload();
-    this.router.refresh();
+    // content should switch immediately,
+    // but we need a hard refresh here for controls to switch to the new locale
+    window.location.reload();
+  }
+
+  get content() {
+    return this.siteSettings.available_content_localization_locales.map(
+      ({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      })
+    );
   }
 
   @action
@@ -36,10 +51,7 @@ export default class LanguageSwitcher extends Component {
     >
       <:content>
         <DropdownMenu as |dropdown|>
-          {{#each
-            this.siteSettings.available_content_localization_locales
-            as |option|
-          }}
+          {{#each this.content as |option|}}
             <dropdown.item
               class="locale-options"
               data-menu-option-id={{option.value}}

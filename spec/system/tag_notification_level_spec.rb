@@ -6,8 +6,8 @@ describe "Tag notification level", type: :system do
     PageObjects::Components::NotificationsTracking.new(".tag-notifications-tracking")
   end
 
-  fab!(:tag_1) { Fabricate(:tag) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:tag_1, :tag)
+  fab!(:current_user, :admin)
 
   before { sign_in(current_user) }
 

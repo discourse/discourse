@@ -4,11 +4,11 @@ RSpec.describe "Visit channel", type: :system do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
-  fab!(:private_category_channel_1) { Fabricate(:private_category_channel) }
+  fab!(:current_user, :user)
+  fab!(:category_channel_1, :category_channel)
+  fab!(:private_category_channel_1, :private_category_channel)
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-  fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
+  fab!(:inaccessible_dm_channel_1, :direct_message_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }

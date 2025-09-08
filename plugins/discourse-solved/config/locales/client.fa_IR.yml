@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "تایید شده"
+    solutions: "راه‌حل‌ها"
+    solved:
+      title: "حل شده"
+      allow_accepted_answers: "به صاحب عنوان و مدیران اجازه انتخاب یک پاسخ را به عنوان راه حل بده."
+      accept_answer: "اگر این پاسخ مشکل را حل می‌کند، آن را انتخاب کنید"
+      has_no_accepted_answer: "این موضوع هیچ راه حلی ندارد"
+      accepted_answer: "راه حل مورد قبول"
+      solution: "راه حل مورد قبول"
+      solution_summary:
+        one: "راه حل مورد قبول"
+        other: "راه حل ها"
+      accepted_answer_post_number: "نوشته %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "همه"
+        solved: "حل شده"
+        unsolved: "حل نشده"
+      no_solved_topics_title_others: "%{username} هنوز هیچ موضوعی را حل نکرده است"
+      notification:
+        title: "نوشته شما به عنوان راه حل مشخص شد"
+    topic_statuses:
+      solved:
+        help: "این موضوع راه حلی دارد"
+    search:
+      advanced:
+        statuses:
+          solved: "حل شده‌اند"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "رویداد حل شده"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: تایید/رد کردن یک راه‌حل
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: سطح‌اعتماد

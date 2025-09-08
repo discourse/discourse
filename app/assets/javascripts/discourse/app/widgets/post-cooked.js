@@ -15,21 +15,15 @@ import {
 } from "discourse/lib/update-user-status-on-mention";
 import { i18n } from "discourse-i18n";
 
-let _beforeAdoptDecorators = [];
-let _afterAdoptDecorators = [];
+let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCookedElement`
-export function addDecorator(callback, { afterAdopt = false } = {}) {
-  if (afterAdopt) {
-    _afterAdoptDecorators.push(callback);
-  } else {
-    _beforeAdoptDecorators.push(callback);
-  }
+export function addDecorator(callback) {
+  _decorators.push(callback);
 }
 
 export function resetDecorators() {
-  _beforeAdoptDecorators = [];
-  _afterAdoptDecorators = [];
+  _decorators = [];
 }
 
 let detachedDocument = document.implementation.createHTMLDocument("detached");
@@ -83,11 +77,8 @@ export default class PostCooked {
   }
 
   _decorateAndAdopt(cooked) {
-    _beforeAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
-
+    _decorators.forEach((d) => d(cooked, this.decoratorHelper));
     document.adoptNode(cooked);
-
-    _afterAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight(html) {
@@ -269,7 +260,7 @@ export default class PostCooked {
       const icon = iconHTML("arrow-up");
       navLink = `<a href='${this._urlForPostNumber(
         postNumber
-      )}' title='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
+      )}' title='${quoteTitle}' aria-label='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
@@ -277,12 +268,13 @@ export default class PostCooked {
     let expandContract = "";
 
     if (!aside.dataset.full) {
-      const icon = iconHTML(desc, { title: "post.expand_collapse" });
+      const icon = iconHTML(desc);
       const quoteId = aside.querySelector("blockquote")?.id;
 
       if (quoteId) {
         const isExpanded = aside.dataset.expanded === "true";
-        expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
+        const toggleLabel = isExpanded ? i18n("post.collapse") : i18n("expand");
+        expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" aria-label="${toggleLabel}" title="${toggleLabel}" class="quote-toggle btn-flat">${icon}</button>`;
 
         if (titleElement) {
           titleElement.style.cursor = "pointer";

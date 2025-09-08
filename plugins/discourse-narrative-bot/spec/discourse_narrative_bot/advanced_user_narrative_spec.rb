@@ -20,7 +20,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
   fab!(:narrative) { described_class.new }
-  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_topic, :topic)
   fab!(:other_post) { Fabricate(:post, topic: other_topic) }
   fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
   fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }

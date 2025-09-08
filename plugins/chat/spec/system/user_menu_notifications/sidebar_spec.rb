@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "User menu notifications | sidebar", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
@@ -35,7 +35,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
   end
 
   context "when mentioning" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     context "when dm channel" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
@@ -203,8 +203,8 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
   end
 
   context "when inviting a user" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:channel_1, :chat_channel)
+    fab!(:other_user, :user)
 
     before { channel_1.add(current_user) }
 

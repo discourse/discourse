@@ -123,15 +123,26 @@ RSpec.describe ColorScheme do
 
   describe "is_wcag?" do
     it "works as expected" do
-      expect(ColorScheme.create_from_base(name: "Nope").is_wcag?).to eq(nil)
-      expect(ColorScheme.create_from_base(name: "Nah", base_scheme_id: "Dark").is_wcag?).to eq(
-        false,
-      )
+      expect(ColorScheme.create_from_base(name: "Nope").is_wcag?).to eq(false)
+      expect(
+        ColorScheme.create_from_base(
+          name: "Nah",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        ).is_wcag?,
+      ).to eq(false)
 
-      expect(ColorScheme.create_from_base(name: "Yup", base_scheme_id: "WCAG").is_wcag?).to eq(true)
-      expect(ColorScheme.create_from_base(name: "Yup", base_scheme_id: "WCAG Dark").is_wcag?).to eq(
-        true,
-      )
+      expect(
+        ColorScheme.create_from_base(
+          name: "Yup",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+        ).is_wcag?,
+      ).to eq(true)
+      expect(
+        ColorScheme.create_from_base(
+          name: "Yup",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+        ).is_wcag?,
+      ).to eq(true)
     end
   end
 
@@ -145,18 +156,20 @@ RSpec.describe ColorScheme do
     end
 
     it "falls back to default scheme if base scheme does not have color" do
-      custom_scheme_id = "BaseSchemeWithNoHighlightColor"
-      ColorScheme::BUILT_IN_SCHEMES[custom_scheme_id.to_sym] = { "secondary" => "123123" }
-
-      color_scheme = ColorScheme.new(base_scheme_id: custom_scheme_id)
+      custom_color_scheme = Fabricate(:color_scheme)
+      Fabricate(
+        :color_scheme_color,
+        color_scheme: custom_color_scheme,
+        name: "secondary",
+        hex: "123123",
+      )
+      color_scheme = ColorScheme.new(base_scheme_id: custom_color_scheme.id)
       color_scheme.color_scheme_colors << ColorSchemeColor.new(name: "primary", hex: "121212")
 
       resolved = color_scheme.resolved_colors
       expect(resolved["primary"]).to eq("121212") # From db
       expect(resolved["secondary"]).to eq("123123") # From custom scheme
       expect(resolved["tertiary"]).to eq("08c") # From `foundation/colors.scss`
-    ensure
-      ColorScheme::BUILT_IN_SCHEMES.delete(custom_scheme_id.to_sym)
     end
 
     it "calculates 'hover' and 'selected' from existing db colors in dark mode" do

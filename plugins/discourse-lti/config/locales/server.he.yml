@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    lti_enabled: הפעלת אימות LTI 1.3
+    lti_authorization_endpoint: נקודת גישה לאימות מול הפלטפורמה של LTI
+    lti_client_ids: מזהי הלקוח עבור הכלי הזה
+    lti_platform_issuer_id: מזהה המנפיק לפלטפורמת LTI. בדרך כלל כתובת, כולל https://‎
+    lti_platform_public_key: המפתח הציבורי של פלטפורמת LTI
+    lti_email_verified: יש להפעיל אם כתובת הדוא״ל מהפלטפורמה אומתה.

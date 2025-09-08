@@ -3,14 +3,14 @@
 RSpec.describe Chat::Admin::IncomingWebhooksController do
   fab!(:admin)
   fab!(:user)
-  fab!(:chat_channel1) { Fabricate(:category_channel) }
-  fab!(:chat_channel2) { Fabricate(:category_channel) }
+  fab!(:chat_channel1, :category_channel)
+  fab!(:chat_channel2, :category_channel)
 
   before { SiteSetting.chat_enabled = true }
 
   describe "#index" do
-    fab!(:existing1) { Fabricate(:incoming_chat_webhook) }
-    fab!(:existing2) { Fabricate(:incoming_chat_webhook) }
+    fab!(:existing1, :incoming_chat_webhook)
+    fab!(:existing2, :incoming_chat_webhook)
 
     it "blocks non-admin" do
       sign_in(user)

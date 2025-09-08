@@ -1,10 +1,10 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
@@ -18,8 +18,6 @@ let _messagesCache = {};
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
-  @service modal;
-
   @tracked showShareModal;
 
   checkedMessages = false;

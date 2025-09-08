@@ -1,8 +1,11 @@
 import Route from "@ember/routing/route";
-import ColorScheme from "admin/models/color-scheme";
+import { service } from "@ember/service";
 
 export default class AdminCustomizeColorsRoute extends Route {
-  model() {
-    return ColorScheme.findAll();
+  @service router;
+
+  beforeModel(transition) {
+    transition.abort();
+    this.router.replaceWith("adminConfig.colorPalettes");
   }
 }

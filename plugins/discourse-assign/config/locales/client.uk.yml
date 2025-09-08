@@ -1,0 +1,197 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Відповідальні"
+  js:
+    filters:
+      unassigned:
+        title: "Непризначені"
+        help: "Теми, які не призначені"
+    action_codes:
+      assigned: "Призначено %{who} %{when}"
+      assigned_group: "Призначено %{who} %{when}"
+      assigned_to_post: "Призначено %{who} допису <a href='%{path}'></a> %{when}"
+      assigned_group_to_post: "Призначено %{who} допису <a href='%{path}'></a> %{when}"
+      unassigned: "Скасовано %{who} %{when}"
+      unassigned_group: "Скасовано %{who} %{when}"
+      unassigned_from_post: "Скасовано %{who} з <a href='%{path}'>допису</a> %{when}"
+      unassigned_group_from_post: "Скасовано %{who} з <a href='%{path}'>допису</a> %{when}"
+      reassigned: "Перепризначено %{who} %{when}"
+      reassigned_group: "Перепризначено %{who} %{when}"
+      details_change: "Змінено деталі призначення для %{who} %{when}"
+      note_change: "Змінено призначення для %{who} %{when}"
+      status_change: "Змінено статус призначення для %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
+      cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
+      cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
+      topic_search_placeholder: "Пошук тем за назвою або змістом публікації"
+      sidebar_name_filter_placeholder: "Ім'я/Ім'я користувача"
+      assigned: "Призначено"
+      group_everyone: "Усі"
+      assigned_to: "Призначено для"
+      assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Призначено з #%{post_number} на %{username}"
+      assign_post_to_multiple: "#%{post_number} для %{username}"
+      assigned_to_w_ellipsis: "Призначено для..."
+      unassign:
+        title: "Скасувати призначення"
+        title_w_ellipsis: "Скасувати призначення..."
+        help: "Скасувати призначення %{username} з теми"
+      assign:
+        title: "Призначити"
+        help: "Призначити тему користувачеві"
+      assign_post:
+        title: "Призначити повідомлення"
+      unassign_post:
+        title: "Скасувати призначення з публікації"
+        help: "Скасувати призначення %{username} з публікації"
+      reassign:
+        title: "Редагувати"
+        title_w_ellipsis: "Редагувати призначення..."
+        to_self: "Перепризначити мені"
+        to_self_help: "Перепризначити тему мені"
+        help: "Редагувати деталі призначення"
+      reassign_modal:
+        title: "Перепризначити тему"
+      topic_level_menu:
+        edit_assignments: "Редагувати призначення..."
+        reassign_topic_to_me: "Перепризначити мені тему"
+        unassign_with_ellipsis: "Скасувати призначення..."
+        unassign_from_post: "Скасувати призначення @%{assignee} з #%{post_number}"
+        unassign_from_post_help: "Скасувати призначення @%{assignee} з допису №%{post_number}"
+        unassign_from_topic: "Вилучити @%{username} з теми"
+      assign_modal:
+        title: "Призначити тему"
+        reassign_title: "Перепризначити тему"
+        assign: "Призначити"
+        assignee_label: Правонаступник
+        assignment_label: Призначення
+        choose_assignee: Виберіть користувача для призначення.
+        edit_assignments_title: "Редагувати призначення"
+        note_label: Примітка
+        optional_label: "(опціонально)"
+        status_label: Статус
+        suggestions: пропозиції
+      assign_post_modal:
+        title: "Призначити публікацію"
+      claim:
+        title: "претензія"
+        help: "Призначте тему собі"
+      assign_mailer:
+        never: "Ніколи"
+        different_users: "Тільки якщо правонаступник і передавач є різними користувачами"
+        always: "Завжди"
+      reminders_frequency:
+        description: "Частота прийому нагадувань про призначені теми"
+        never: "Ніколи"
+        daily: "За день"
+        weekly: "Щотижня"
+        monthly: "Щомісяця"
+        quarterly: "Щоквартала"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Призначити"
+              assignable_levels:
+                title: "Хто може призначити цю групу"
+    user:
+      notification_level_when_assigned:
+        label: "Призначено"
+        watch_topic: "Переглянути тему"
+        track_topic: "Відстежувати тему"
+        do_nothing: "Нічого не робити"
+      messages:
+        assigned_title: "Призначено (%{count})"
+        assigned: "Призначено"
+      no_assignments_title: "У вас ще немає жодного призначення"
+      no_assignments_body: >
+        Тут буде перелічено ваші призначені теми та повідомлення. Ви також періодично отримуватимете нагадування про ваші завдання, які ви можете налаштувати у своїх <a href='%{preferencesUrl}'>налаштуваннях користувача</a>. <br><br> Щоб призначити тему чи повідомлення собі або комусь іншому, знайдіть кнопку %{icon} «Призначити» внизу.
+      dismiss_assigned_tooltip: "Позначити всі непрочитані сповіщення як прочитані"
+      assigned_to_group:
+        post: "публікацію призначено %{group_name}"
+        topic: "тема призначена %{group_name}"
+      assigned_to_you:
+        post: "допис, призначений вам"
+        topic: "тема, призначена вам"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Призначити події"
+          assigned: "Коли користувач призначає тему"
+          unassigned: "Коли користувач скасовує призначення теми"
+    search:
+      advanced:
+        in:
+          assigned: "призначені"
+          unassigned: "не призначені"
+        assigned:
+          label: "Призначено для"
+    topics:
+      bulk:
+        unassign: "Скасувати призначення тем"
+        assign: "Призначити теми"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Шаблон повідомлення
+              description: Якщо це поле заповнено, буде створено публікацію з цим шаблоном, і їй буде призначено користувача замість теми.
+            assignees_group:
+              label: Група правонаступників
+            minimum_time_between_assignments:
+              label: Мінімум годин між призначеннями
+            min_recently_assigned_days:
+              label: Мінімум нещодавно призначених днів
+              description: За замовчуванням 14 днів.
+            skip_new_users_for_days:
+              label: Ігнорувати нових користувачів протягом декількох днів
+              description: За замовчуванням 0 днів (користувачі можуть бути призначені негайно після реєстрації).
+            max_recently_assigned_days:
+              label: Максимум днів поки користувач буде вважатись нещодавно призначеним
+              description: Перша спроба виключити користувачів, призначених за останні `n` днів. Якщо користувачів не залишилося, використовується значення `min_recently_assigned_days`. За замовчуванням використовується значення 180 днів.
+            assigned_topic:
+              label: Присвоєний ідентифікатор теми
+            in_working_hours:
+              label: Користувачі в робочий час
+    notification_reason:
+      user: "Ви побачите кількість нових відповідей, оскільки цю тему було призначено вам."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} призначив вас"
+      titles:
+        assigned: "Призначено"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Ви впевнені? У вас є %{count} непрочитане сповіщення про призначення."
+            few: "Ви впевнені? У вас є %{count} непрочитаних сповіщення про призначення."
+            many: "Ви впевнені? У вас є %{count} непрочитаних сповіщень про призначення."
+            other: "Ви впевнені? У вас є %{count} непрочитані сповіщення про призначення."
+    user_menu:
+      view_all_assigned: "переглянути всі призначені"
+      tabs:
+        assign_list: "Список призначень"
+        assign_list_with_unread:
+          one: "Список призначень – %{count} непрочитане завдання"
+          few: "Список призначень – %{count} непрочитані завдання"
+          many: "Список призначень – %{count} непрочитаних завдань"
+          other: "Список призначень – %{count} непрочитаних завданнь"
+    edit_assignments_modal:
+      title: "Редагувати призначення"
+      topic: "Тема"
+      post: "Допис"

@@ -2,7 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
   initialize() {
-    withPluginApi("1.36.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("mentions-class", ({ value, context }) => {
         const { user } = context;
 

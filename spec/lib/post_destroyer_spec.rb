@@ -301,7 +301,7 @@ RSpec.describe PostDestroyer do
         end
 
         context "when recovered by user with access to moderate topic category" do
-          fab!(:review_user) { Fabricate(:user) }
+          fab!(:review_user, :user)
 
           before do
             SiteSetting.enable_category_group_moderation = true
@@ -548,7 +548,7 @@ RSpec.describe PostDestroyer do
     end
 
     context "when deleted by user with access to moderate topic category" do
-      fab!(:review_user) { Fabricate(:user) }
+      fab!(:review_user, :user)
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -625,7 +625,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "private message" do
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) }
     fab!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
     fab!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
@@ -1003,7 +1003,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "topic links" do
-    fab!(:first_post) { Fabricate(:post) }
+    fab!(:first_post, :post)
     let!(:topic) { first_post.topic }
     let!(:second_post) { Fabricate(:post_with_external_links, topic: topic) }
 
@@ -1023,7 +1023,7 @@ RSpec.describe PostDestroyer do
   describe "internal links" do
     fab!(:topic)
     let!(:second_post) { Fabricate(:post, topic: topic) }
-    fab!(:other_topic) { Fabricate(:topic) }
+    fab!(:other_topic, :topic)
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:base_url) { URI.parse(Discourse.base_url) }
@@ -1275,6 +1275,48 @@ RSpec.describe PostDestroyer do
       post_1.reload
       expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post_1.id }) do
         PostDestroyer.new(admin, post_1).recover
+      end
+    end
+  end
+
+  describe "deleting a last reply" do
+    let!(:topic) { post.topic }
+    let!(:second_last_reply) do
+      freeze_time 1.day.from_now
+      create_post(topic:, user: coding_horror)
+    end
+    fab!(:user)
+    let!(:last_reply) do
+      freeze_time 2.days.from_now
+      create_post(topic:, user:)
+    end
+
+    context "when deleting by the creator" do
+      before { PostDestroyer.new(user, last_reply).destroy }
+
+      it "will reset the topic's bumped_at" do
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "still can see the post" do
+        last_reply.reload
+
+        expect(last_reply.deleted_at).to be_blank
+        expect(last_reply.deleted_by).to be_blank
+        expect(last_reply.user_deleted).to eq(true)
+        expect(last_reply.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
+      end
+    end
+
+    context "when deleting by a staff user" do
+      before { PostDestroyer.new(moderator, last_reply).destroy }
+
+      it "will reset the topic's bumped_at" do
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
       end
     end
   end

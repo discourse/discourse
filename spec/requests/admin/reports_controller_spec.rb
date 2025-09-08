@@ -320,7 +320,7 @@ RSpec.describe Admin::ReportsController do
       describe "when report is scoped to a category" do
         fab!(:category)
         fab!(:topic) { Fabricate(:topic, category: category) }
-        fab!(:other_topic) { Fabricate(:topic) }
+        fab!(:other_topic, :topic)
 
         it "should render the report as JSON" do
           get "/admin/reports/topics.json", params: { category_id: category.id }
@@ -336,7 +336,7 @@ RSpec.describe Admin::ReportsController do
 
       describe "when report is scoped to a group" do
         fab!(:user)
-        fab!(:other_user) { Fabricate(:user) }
+        fab!(:other_user, :user)
         fab!(:group)
 
         it "should render the report as JSON" do

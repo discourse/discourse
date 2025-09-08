@@ -264,12 +264,16 @@ class BulkImport::Base
     @last_category_id = last_id(Category)
     @last_category_group_id = last_id(CategoryGroup)
     @highest_category_position = Category.unscoped.maximum(:position) || 0
-    @category_names =
-      Category
-        .unscoped
-        .pluck(:parent_category_id, :name)
-        .map { |pci, name| "#{pci}-#{name.downcase}" }
-        .to_set
+
+    @category_names = Set.new
+    @category_slugs = Set.new
+    Category
+      .unscoped
+      .pluck(:parent_category_id, :name, :slug)
+      .each do |pci, name, slug|
+        @category_names << "#{pci}-#{name.downcase}"
+        @category_slugs << slug.downcase
+      end
 
     puts "Loading topics indexes..."
     @last_topic_id = last_id(Topic)
@@ -603,6 +607,7 @@ class BulkImport::Base
     automatically_unpin_topics
     enable_quoting
     enable_smart_lists
+    enable_markdown_monospace_font
     external_links_in_new_tab
     dynamic_favicon
     new_topic_duration_minutes
@@ -616,6 +621,7 @@ class BulkImport::Base
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
+    composition_mode
   ]
 
   USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
@@ -1389,6 +1395,7 @@ class BulkImport::Base
     automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
     enable_quoting: SiteSetting.default_other_enable_quoting,
     enable_smart_lists: SiteSetting.default_other_enable_smart_lists,
+    enable_markdown_monospace_font: SiteSetting.default_other_enable_markdown_monospace_font,
     external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
     dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
     new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,
@@ -1401,6 +1408,7 @@ class BulkImport::Base
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+    composition_mode: SiteSetting.default_composition_mode,
   }
 
   def process_user_option(user_option)
@@ -1458,20 +1466,27 @@ class BulkImport::Base
     category[:id] ||= @last_category_id += 1
     @categories[category[:imported_id].to_i] ||= category[:id]
 
-    next_number = 1
+    name_next_number = 1
     original_name = name = category[:name][0...50].scrub.strip
 
-    while @category_names.include?("#{category[:parent_category_id]}-#{name.downcase}")
-      name = "#{original_name[0...50 - next_number.to_s.length]}#{next_number}"
-      next_number += 1
+    while !@category_names.add?("#{category[:parent_category_id]}-#{name.downcase}")
+      name = "#{original_name[0...50 - name_next_number.to_s.length]}#{name_next_number}"
+      name_next_number += 1
     end
 
-    @category_names << "#{category[:parent_category_id]}-#{name.downcase}"
     name_lower = name.downcase
-
     category[:name] = name
     category[:name_lower] = name_lower
-    category[:slug] ||= Slug.for(name_lower, "") # TODO Ensure that slug doesn't exist yet
+
+    slug_next_number = 1
+    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+
+    while !@category_slugs.add?(slug.downcase)
+      slug = "#{original_slug}-#{slug_next_number}"
+      slug_next_number += 1
+    end
+
+    category[:slug] = slug
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
     category[:created_at] ||= NOW

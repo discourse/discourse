@@ -25,8 +25,8 @@ RSpec.describe Jobs::CheckNewFeatures do
     )
   end
 
-  fab!(:admin1) { Fabricate(:admin) }
-  fab!(:admin2) { Fabricate(:admin) }
+  fab!(:admin1, :admin)
+  fab!(:admin2, :admin)
 
   let(:feature1) do
     build_feature_hash(id: 35, created_at: 3.days.ago, discourse_version: "2.8.1.beta12")

@@ -9,7 +9,7 @@ RSpec.describe Chat::CreateCategoryChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:category)
     let(:category_id) { category.id }
 
@@ -20,7 +20,7 @@ RSpec.describe Chat::CreateCategoryChannel do
     let(:dependencies) { { guardian: } }
 
     context "when public channels are disabled" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { SiteSetting.enable_public_channels = false }
 
@@ -28,7 +28,7 @@ RSpec.describe Chat::CreateCategoryChannel do
     end
 
     context "when the current user cannot make a channel" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_create_channel) }
     end

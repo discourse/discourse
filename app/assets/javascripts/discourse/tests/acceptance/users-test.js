@@ -120,7 +120,7 @@ acceptance("User Directory", function () {
     await visit("/u");
 
     assert
-      .dom(".empty-state-body")
+      .dom(".empty-state__body")
       .hasText(
         i18n("directory.no_results.body"),
         "a JIT message is shown when there are no users"
@@ -140,7 +140,7 @@ acceptance("User Directory", function () {
     await visit("/u?name=somenamethatdoesnotexist");
 
     assert
-      .dom(".empty-state-body")
+      .dom(".empty-state__body")
       .hasText(
         i18n("directory.no_results_with_search"),
         "a different JIT message is used when there are no results for the search term"

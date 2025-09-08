@@ -16,7 +16,7 @@ RSpec.describe ForumsController do
     end
 
     it "returns a readonly header if the site is in staff-writes-only mode" do
-      Discourse.stubs(:staff_writes_only_mode?).returns(true)
+      Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
       get "/srv/status"
       expect(response.status).to eq(200)
       expect(response.headers["Discourse-Readonly"]).to eq("true")
@@ -42,11 +42,6 @@ RSpec.describe ForumsController do
       get "/srv/status?cluster=mycluster"
       expect(response.status).to eq(200)
       expect(response.body).not_to include("not match")
-    end
-
-    it "returns a 200 response when given shutdown_ok" do
-      get "/srv/status?shutdown_ok=1"
-      expect(response.status).to eq(200)
     end
   end
 end

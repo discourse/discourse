@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "acceptat"
+    solved:
+      title: "Rezolvat"
+      allow_accepted_answers: "Permite inițiatorului subiectului și personalului să marcheze un răspuns ca soluție"
+      solved_topics_auto_close_hours: "Închide subiectul automat la (n) ore după ultimul răspuns după ce subiectul a fost marcat ca rezolvat."
+      accept_answer: "Selectează acest mesaj dacă rezolvă problema"
+      accepted_description: "Aceasta este soluţia acceptată pentru acest subiect"
+      has_no_accepted_answer: "Acest subiect nu are nicio soluție"
+      unaccept_answer: "Deselectați dacă acest răspuns nu mai rezolvă problema"
+      accepted_answer: "Soluție"
+      solution: "Soluție"
+      solution_summary:
+        one: "soluţie"
+        few: "soluţii"
+        other: "soluţii"
+      accepted_answer_post_number: "postarea %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "tot"
+        solved: "rezolvat"
+        unsolved: "nerezolvat"
+    topic_statuses:
+      solved:
+        help: "Acest subiect are o soluție"
+    search:
+      advanced:
+        statuses:
+          solved: "sunt rezolvate"
+          unsolved: "sunt nerezolvate"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Eveniment rezolvat"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Nivel de încredere

@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    lti_enabled: Включить аутентификацию LTI 1.3
+    lti_authorization_endpoint: Конечная точка авторизации платформы LTI
+    lti_client_ids: Идентификаторы клиента для этого инструмента
+    lti_platform_issuer_id: Идентификатор эмитента для платформы LTI. Обычно URL-адрес, включая https://
+    lti_platform_public_key: Открытый ключ платформы LTI
+    lti_email_verified: Включить, если адреса электронной почты платформы были проверены.

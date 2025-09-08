@@ -1,0 +1,189 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sorter etter"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Emne-ID"
+            title:
+              label: "Tittel"
+            categories:
+              label: "Kategorier"
+            tags:
+              label: "Stikkord"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategori"
+            tags:
+              label: "Stikkord"
+            canned_reply:
+              label: "Svar"
+    discourse_ai:
+      features:
+        back: "Forrige"
+        disabled: "(deaktivert)"
+        groups: "Grupper:"
+        no_persona: "Ikke angitt"
+        no_groups: "Ingen"
+        edit: "Rediger"
+        expand_list:
+          one: "(%{count} mer)"
+          other: "(%{count} mer)"
+        collapse_list: "(vis mindre)"
+        filters:
+          all: "Alle"
+          reset: "Tilbakestill"
+        search:
+          name: "Søk"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Velg et alternativ..."
+      translations:
+        title: "Oversettelser"
+        progress_chart:
+          bar_done:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Siste 7 dager"
+        enable: "Aktiver"
+        test_modal:
+          spam: "Spam"
+      usage:
+        summary: "Sammendrag"
+        username: "Brukernavn"
+        total_requests: "Totalt forespørsler"
+        periods:
+          last_day: "Siste 24 timer"
+      ai_persona:
+        back: "Forrige"
+        name: "Navn"
+        edit: "Rediger"
+        export: "Eksporter"
+        import: "Importer"
+        description: "Beskrivelse"
+        user: Bruker
+        save: "Lagre"
+        enabled: "Aktivert?"
+        delete: "Slett"
+        response_format:
+          open_modal: "Rediger"
+        filters:
+          reset: "Tilbakestill"
+      rag:
+        uploads:
+          title: "Opplastinger"
+          uploading: "Laster opp…"
+      tools:
+        back: "Forrige"
+        export: "Eksporter"
+        import: "Importer"
+        name: "Navn"
+        description: "Beskrivelse"
+        summary: "Sammendrag"
+        save: "Lagre"
+        remove_parameter: "Fjern"
+        parameter_required: "Påkrevd"
+        edit: "Rediger"
+        delete: "Slett"
+      llms:
+        display_name: "Navn"
+        provider: "Tilbyder"
+        save: "Lagre"
+        edit: "Rediger"
+        back: "Forrige"
+        delete: Slett
+        quotas:
+          group: "Gruppe"
+          max_usages: "Maks antall bruk"
+          duration: "Varighet"
+          durations:
+            hour: "1 time"
+            six_hours: "6 timer"
+            day: "24 timer"
+            week: "7 dager"
+          hours: "timer"
+        usage:
+          ai_summarization: "Oppsummer"
+          ai_spam: "Spam"
+        next:
+          title: "Neste"
+        tests:
+          success: "Suksess!"
+        providers:
+          google: "Google"
+          fake: "Egendefinert"
+      ai_helper:
+        context_menu:
+          cancel: "Avbryt"
+          confirm: "Bekreft"
+          discard: "Forkast"
+        post_options_menu:
+          close: "Lukk"
+          copy: "Kopier"
+          copied: "Kopiert!"
+          cancel: "Avbryt"
+        thumbnail_suggestions:
+          select: "Velg"
+        image_caption:
+          save_caption: "Lagre"
+      embeddings:
+        back: "Forrige"
+        save: "Lagre"
+        delete: "Slett"
+        edit: "Rediger"
+        tests:
+          success: "Suksess!"
+        display_name: "Navn"
+        provider: "Tilbyder"
+        providers:
+          google: "Google"
+          fake: "Egendefinert"
+      ai_bot:
+        debug_ai_modal:
+          request: "Forespørsel"
+          response: "Svar"
+          next_log: "Neste"
+          previous_log: "Forrige"
+        invite_ai_conversation:
+          button: "Inviter"
+        share_modal:
+          copy: "Kopier"
+        conversations:
+          today: "I dag"
+          last_7_days: "Siste 7 dager"
+          last_30_days: "Siste 30 dager"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Alle"
+          group_types:
+            category: "Kategori"
+          table:
+            total_count: "Totalt"
+      summarization:
+        chat:
+          summarize: "Oppsummer"
+      discobot_discoveries:
+        regular_results: "Emner"
+        collapse: "Fold sammen"
+        tooltip:
+          actions:
+            disable: "Deaktiver"

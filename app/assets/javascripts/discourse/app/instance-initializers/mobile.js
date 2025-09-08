@@ -10,7 +10,7 @@ export default {
       return;
     }
 
-    Mobile.init();
     setResolverOption("mobileView", Mobile.mobileView);
+    Mobile.maybeReload();
   },
 };

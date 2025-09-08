@@ -1,9 +1,10 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
@@ -22,10 +23,10 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
-import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -37,12 +38,13 @@ import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { SKIP } from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -93,14 +95,17 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
-    if (
-      this.siteSettings.rich_editor &&
-      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
-    ) {
-      this.editorComponent = await loadRichEditor();
-    } else {
-      this.editorComponent = TextareaEditor;
+    if (this.siteSettings.rich_editor) {
+      // TODO (martin) Remove this once we are sure all users have migrated
+      // to the new rich editor preference, or a few months after the 3.5 release.
+      await this.handleOldRichEditorPreference();
+
+      if (this.currentUser.useRichEditor) {
+        this.editorComponent = await loadRichEditor();
+      }
     }
+
+    this.editorComponent ??= TextareaEditor;
   }
 
   setupToolbar() {
@@ -114,6 +119,22 @@ export default class DEditor extends Component {
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);
     }
+  }
+
+  async handleOldRichEditorPreference() {
+    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
+
+    if (!oldValue) {
+      return;
+    }
+
+    await this.#saveRichEditorPreference(
+      oldValue === "true"
+        ? USER_OPTION_COMPOSITION_MODES.rich
+        : USER_OPTION_COMPOSITION_MODES.markdown
+    ).finally(() => {
+      this.keyValueStore.remove("d-editor-prefers-rich-editor");
+    });
   }
 
   @discourseComputed("placeholder")
@@ -140,8 +161,14 @@ export default class DEditor extends Component {
   get keymap() {
     const keymap = {};
 
-    const shortcuts = this.get("toolbar.shortcuts");
+    // These are defined in lib/composer/toolbar.js via addButton.
+    // It includes shortcuts for top level toolbar buttons, as well
+    // as the toolbar popup menu option shortcuts.
 
+    // TODO (martin) Might be nice to automatically add these shortcuts
+    // to keyboard-shortcuts-help.gjs at some point (the modal launched with
+    // ?)
+    const shortcuts = this.get("toolbar.shortcuts");
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
       keymap[sc] = () => {
@@ -159,6 +186,10 @@ export default class DEditor extends Component {
       };
     });
 
+    // This refers to the "special" composer toolbar popup menu which
+    // is launched from the (+) button in the toolbar. This menu is customizable
+    // via the plugin API, so it differs from regular toolbar button definitions
+    // from toolbar.js
     this.popupMenuOptions?.forEach((popupButton) => {
       if (popupButton.shortcut && popupButton.condition) {
         const shortcut =
@@ -190,6 +221,7 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
+    cancel(this._debounceSaveRichEditorPreference);
 
     this._cachedCookFunction = null;
   }
@@ -236,7 +268,6 @@ export default class DEditor extends Component {
     this.textManipulation.autocomplete(
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["topic-composer"],
-        this.siteSettings,
         {
           afterComplete: () => {
             schedule(
@@ -431,7 +462,10 @@ export default class DEditor extends Component {
       },
       onRender: (options) => renderUserStatusHtml(options),
       key: "@",
-      transformComplete: (v) => v.username || v.name,
+      transformComplete: (v) => {
+        validateSearchResult(v);
+        return v.username || v.name;
+      },
       afterComplete: () => {
         schedule(
           "afterRender",
@@ -471,8 +505,11 @@ export default class DEditor extends Component {
    * @returns {ToolbarEvent} An object with toolbar event actions
    */
   newToolbarEvent(trimLeading) {
-    const selected = this.textManipulation.getSelected(trimLeading);
+    const selected = this.textManipulation.getSelected(trimLeading, {
+      lineVal: true,
+    });
     return {
+      commands: this.textManipulation.commands,
       selected,
       selectText: (from, length) =>
         this.textManipulation.selectText(from, length, { scroll: false }),
@@ -486,6 +523,8 @@ export default class DEditor extends Component {
         ),
       applyList: (head, exampleKey, opts) =>
         this.textManipulation.applyList(selected, head, exampleKey, opts),
+      applyHeading: (level, exampleKey) =>
+        this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
       getText: () => this.value,
@@ -523,6 +562,10 @@ export default class DEditor extends Component {
 
   @action
   handleFocusOut() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this.set("isEditorFocused", false);
   }
 
@@ -567,10 +610,24 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    this.keyValueStore.set({
-      key: "d-editor-prefers-rich-editor",
-      value: this.isRichEditorEnabled,
-    });
+    const preference = this.isRichEditorEnabled
+      ? USER_OPTION_COMPOSITION_MODES.rich
+      : USER_OPTION_COMPOSITION_MODES.markdown;
+    this.#debounceSaveRichEditorPreference(preference);
+  }
+
+  #debounceSaveRichEditorPreference(preference) {
+    this._debounceSaveRichEditorPreference = discourseDebounce(
+      this,
+      this.#saveRichEditorPreference,
+      preference,
+      1000
+    );
+  }
+
+  #saveRichEditorPreference(preference) {
+    this.currentUser.set("user_option.composition_mode", preference);
+    return this.currentUser.save(["composition_mode"]);
   }
 
   @action
@@ -683,10 +740,7 @@ export default class DEditor extends Component {
   <template>
     <div
       class="d-editor-container
-        {{if
-          this.siteSettings.rich_editor
-          'd-editor-container--rich-editor-enabled'
-        }}"
+        {{if this.siteSettings.rich_editor '--rich-editor-enabled'}}"
     >
       <div class="d-editor-textarea-column">
         {{yield}}
@@ -757,12 +811,19 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-      <DEditorPreview
-        @preview={{if @hijackPreview @hijackPreview this.preview}}
-        @forcePreview={{this.forcePreview}}
-        @onPreviewUpdated={{this.previewUpdated}}
-        @outletArgs={{this.outletArgs}}
-      />
+
+      {{#if @hijackPreview}}
+        <div class="d-editor-preview-wrapper">
+          <@hijackPreview.component @model={{@hijackPreview.model}} />
+        </div>
+      {{else}}
+        <DEditorPreview
+          @preview={{this.preview}}
+          @forcePreview={{this.forcePreview}}
+          @onPreviewUpdated={{this.previewUpdated}}
+          @outletArgs={{this.outletArgs}}
+        />
+      {{/if}}
     </div>
   </template>
 }

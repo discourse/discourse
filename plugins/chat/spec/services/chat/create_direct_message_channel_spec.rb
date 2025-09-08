@@ -34,7 +34,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     fab!(:current_user) { Fabricate(:user, username: "guybrush", refresh_auto_groups: true) }
     fab!(:user_1) { Fabricate(:user, username: "lechuck") }
     fab!(:user_2) { Fabricate(:user, username: "elaine") }
-    fab!(:user_3) { Fabricate(:user) }
+    fab!(:user_3, :user)
     fab!(:group) { Fabricate(:public_group, users: [user_3]) }
 
     let(:guardian) { Guardian.new(current_user) }
@@ -187,7 +187,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     end
 
     context "when the current user cannot make direct messages" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
 

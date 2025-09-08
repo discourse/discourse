@@ -14,10 +14,8 @@ import { i18n } from "discourse-i18n";
 
 export default class PostTextSelectionToolbar extends Component {
   @service currentUser;
-  @service modal;
   @service site;
   @service siteSettings;
-  @service appEvents;
   @service toasts;
 
   get topic() {

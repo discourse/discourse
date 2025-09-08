@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -15,7 +16,7 @@ export default class SelectKitCollection extends Component {
   @service site;
 
   bodyScrollLock = modifier((element) => {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 

@@ -47,6 +47,26 @@ module PageObjects
           text: I18n.t("js.welcome_banner.subheader.logged_in_members"),
         )
       end
+
+      def has_no_bg_img?
+        has_no_css?(".welcome-banner.--with-bg-img")
+      end
+
+      def has_bg_img?(url)
+        has_css?(
+          ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap",
+          style: "background-image: url(#{url})",
+          visible: :visible,
+        )
+      end
+
+      def above_topic_content?
+        has_css?("#main-outlet > .--location-above-topic-content", visible: :visible)
+      end
+
+      def below_site_header?
+        has_css?(".discourse-root > .--location-below-site-header", visible: :visible)
+      end
     end
   end
 end

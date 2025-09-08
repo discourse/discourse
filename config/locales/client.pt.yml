@@ -197,17 +197,12 @@ pt:
       search: "Pesquisar"
     themes:
       default_description: "Predefinição"
-      broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é exibida apenas para administradores do site)"
     broken_decorator_alert: "As publicações podem não ser apresentadas corretamente porque um dos decoradores de conteúdo da publicação no seu sítio gerou um erro."
     broken_page_change_alert: "O manipulador onPageChange gerou um erro. Consulte as ferramentas de programador do navegador para obter mais informações."
     broken_plugin_alert: "Causado pelo plugin '%{name}'"
     broken_transformer_alert: "Ocorreu um erro. O seu sítio pode não funcionar corretamente."
-    critical_deprecation:
-      notice: "<b>[Aviso do administrador]</b> Um dos seus temas ou plugins precisa de ser atualizado para ser compatível com as próximas alterações ao núcleo do Discourse."
-      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Plugin identificado: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
@@ -728,6 +723,16 @@ pt:
         reviewable_post:
           title: "Mensagem"
           noun: "publicação"
+      notes:
+        delete: "Eliminar"
+      review_user: "Utilizador"
+      copy_link: "Copiar link"
+      insights:
+        activities:
+          posts:
+            one: "%{count} mensagem"
+            other: "%{count} mensagens"
+        visibility: "Visibilidade"
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
@@ -1290,18 +1295,15 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Define a paleta de cores predefinida em todos os meus dispositivos"
       color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
-        disable_dark_scheme: "Igual ao normal"
         dark_instructions: "Pode pré-visualizar a paleta de cores do modo escuro, alternando o modo escuro do seu dispositivo."
         undo: "Repor"
-        regular: "Habitual"
         dark: "Modo escuro"
-        default_dark_scheme: "(padrão do site)"
+        picker:
+          active: "Ativo"
       dark_mode: "Modo Escuro"
-      dark_mode_enable: "Ativar a paleta de cores do modo escuro automaticamente"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -1325,6 +1327,8 @@ pt:
       suspended_notice: "Este utilizador está suspenso até %{date}."
       suspended_permanently: "Este utilizador está suspenso"
       suspended_reason: "Motivo: "
+      silenced_permanently: "Este utilizador está silenciado."
+      silenced_reason: "Motivo:"
       github_profile: "GitHub"
       email_activity_summary: "Sumário de actividade"
       mailing_list_mode:
@@ -1847,7 +1851,8 @@ pt:
         removed: "Removido"
         search: "digite para pesquisar convites…"
         user: "Utilizador Convidado"
-        none: "Sem convites para exibir."
+        none:
+          title: "Sem convites para exibir."
         truncated:
           one: "A exibir o primeiro convite."
           other: "A exibir os primeiros %{count} convites."
@@ -2368,6 +2373,8 @@ pt:
       disabled: "Não mostrar"
       sidebar_footer: "Mostra no rodapé da barra lateral"
       header: "Mostra no cabeçalho"
+    welcome_banner_page_visibility:
+      homepage: "Página de início"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2450,9 +2457,7 @@ pt:
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
-      toggle_whisper: "Alternar Sussuro"
-      toggle_unlisted: "Alternar Não Listado"
-      insert_table: "Inserir tabela"
+      toggle_whisper: "Alternar sussurro"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "O teu tópico é semelhante a…"
@@ -2491,6 +2496,7 @@ pt:
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
       title: "Ou pressione %{modifier}Enter"
+      discard: "Descartar"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
@@ -2524,18 +2530,8 @@ pt:
       paste_code_text: "digite ou cole aqui o código"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do ficheiro a enviar"
-      olist_title: "Lista numerada"
-      ulist_title: "Lista de items"
       list_item: "Item da Lista"
-      toggle_direction: "Alternar Direção"
       help: "Ajuda de Edição Markdown"
-      collapse: "minimizar o painel de composição"
-      open: "abrir o painel compositor"
-      abandon: "fechar painel de composição e rejeitar rascunho"
-      enter_fullscreen: "entrar no compositor de ecrã inteiro"
-      exit_fullscreen: "sair do compositor de ecrã inteiro"
-      show_toolbar: "mostrar barra de compositor"
-      hide_toolbar: "esconder barra de compositor"
       modal_ok: "CONFIRMAR"
       cant_send_pm: "Desculpe, não pode enviar uma mensagem para %{username}."
       yourself_confirm:
@@ -3478,8 +3474,8 @@ pt:
         name: "Nome"
         description: "Descrição"
         remove: "Remover"
-      tags_allowed_tags: "Restringir essas tags a esta categoria:"
-      tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"
+      tags_allowed_tags_new_category: "Restringir essas tags a esta categoria:"
+      tags_allowed_tag_groups_new_category: "Restringir esses grupos de tags a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "Tags e grupos de tags especificados acima só estarão disponíveis nesta categoria e em outras categorias que também os especificam. Eles não estarão disponíveis para uso em outras categorias."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
@@ -3742,7 +3738,6 @@ pt:
         topics: "Tópicos"
         replies: "Respostas"
       posted:
-        title: "As Minhas publicações"
         help: "tópicos em que publicou"
       bookmarks:
         title: "Marcadores"
@@ -4079,6 +4074,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            filter:
+              content: "Filtrar"
             topics:
               content: "Tópicos"
             faq:
@@ -4089,8 +4086,6 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
-            my_posts:
-              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -4118,6 +4113,9 @@ pt:
         show: "Mostrar"
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
+    filter:
+      description:
+        yesterday: "Ontem"
     discovery:
       headings:
         multi_tag:
@@ -4128,7 +4126,7 @@ pt:
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar relatórios
+      filter_reports: "Filtrar relatórios..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4242,6 +4240,8 @@ pt:
           title: "Webhooks"
         embedding:
           title: "Incorporação"
+      theme_site_settings:
+        default_value: "Predefinição"
       search:
         title: "Pesquisar"
         result_types:
@@ -4594,6 +4594,9 @@ pt:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copiar para a Área de Transferência"
+          copied_to_clipboard: "Copiado para a Área de Transferência"
+          copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
           delete: "Eliminar"
           colors:
             title: "Cores"
@@ -4609,6 +4612,11 @@ pt:
         howto: "Como instalo plugins?"
         author: "Por %{author}"
         learn_more: "Saiba mais"
+        filters:
+          all: "Todos"
+          enabled: "Ativado"
+          disabled: "Desativado"
+          reset: "Repor"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:
@@ -4706,6 +4714,7 @@ pt:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
+          filter_all: "Todos"
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
@@ -4730,13 +4739,12 @@ pt:
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
-          default: "Ativo"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
           color_scheme: "Paleta de Cores"
           default_light_scheme: "Light (padrão)"
-          color_scheme_select: "Selecione as cores a serem usadas pelo tema"
+          color_scheme_select: "Selecione as cores a serem usadas pelo tema."
           custom_sections: "Seções personalizadas:"
           theme_components: "Componentes do Tema"
           add_all_themes: "Adicionar todos os temas"
@@ -4762,9 +4770,7 @@ pt:
           up_to_date: "O tema está atualizado, verificado pela última vez:"
           has_overwritten_history: "A versão do tema atual não existe mais porque o histórico do Git foi sobrescrito por um push forçado."
           add: "Adicionar"
-          theme_settings: "Configurações de Tema"
           no_settings: "Este tema não tem configurações."
-          theme_translations: "Traduções do Tema"
           empty: "Sem itens"
           commits_behind:
             one: "O tema está %{count} commit atrás!"
@@ -4773,10 +4779,6 @@ pt:
           remote_theme_edits: "Se quiser editar este tema, tem de <a href='%{repoURL}' target='_blank'>enviar uma alteração para o seu repositório</a>"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
-          settings: "Configurações"
-          colors: "Cores"
-          discard_colors: "Descartar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:
@@ -4810,6 +4812,9 @@ pt:
           select_base:
             description: "Paleta de base:"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todos"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
           copy_name_prefix: "Cópia de"
           undo: "Desfazer"
@@ -5151,7 +5156,6 @@ pt:
         activity: Atividade
         like_count: Gostos Dados / Recebidos
         last_100_days: "nos últimos 100 dias"
-        private_topics_count: Tópicos Privados
         posts_read_count: Publicações lidas
         post_count: Mensagens Criadas
         topics_entered: Tópicos Visualizados
@@ -5180,7 +5184,6 @@ pt:
             cancel: "Cancelar"
           confirmation:
             cancel: "Cancelar"
-        delete_forbidden_because_staff: "Administradores e moderadores não podem ser eliminados."
         delete_posts_forbidden_because_staff: "Não é possível eliminar todas as publicações dos administradores e moderadores."
         delete_forbidden:
           one: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dia de existência não podem ser eliminadas.)"

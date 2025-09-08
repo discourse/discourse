@@ -4,7 +4,7 @@ describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
   fab!(:theme)
-  fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
+  fab!(:long_post, :post_with_very_long_raw_content)
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
@@ -84,7 +84,7 @@ describe "Reviewables", type: :system do
   end
 
   describe "when there is a queued post reviewable with a short post" do
-    fab!(:short_queued_reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:short_queued_reviewable, :reviewable_queued_post)
 
     it "should not show a button to expand/collapse the post content" do
       visit("/review")
@@ -104,7 +104,7 @@ describe "Reviewables", type: :system do
   end
 
   describe "when there is a queued post reviewable with a long post" do
-    fab!(:long_queued_reviewable) { Fabricate(:reviewable_queued_long_post) }
+    fab!(:long_queued_reviewable, :reviewable_queued_long_post)
 
     it "should show a button to expand/collapse the post content" do
       visit("/review")
@@ -182,8 +182,8 @@ describe "Reviewables", type: :system do
   end
 
   context "when performing a review action from the show route" do
-    fab!(:contact_group) { Fabricate(:group) }
-    fab!(:contact_user) { Fabricate(:user) }
+    fab!(:contact_group, :group)
+    fab!(:contact_user, :user)
 
     before do
       SiteSetting.site_contact_group_name = contact_group.name
@@ -191,7 +191,7 @@ describe "Reviewables", type: :system do
     end
 
     context "with a ReviewableQueuedPost" do
-      fab!(:queued_post_reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:queued_post_reviewable, :reviewable_queued_post)
 
       it "delete_user does not delete reviewable" do
         review_page.visit_reviewable(queued_post_reviewable)
@@ -305,7 +305,7 @@ describe "Reviewables", type: :system do
 
   describe "when there is an unknown plugin reviewable" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
-    fab!(:reviewable2) { Fabricate(:reviewable) }
+    fab!(:reviewable2, :reviewable)
 
     before do
       reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")

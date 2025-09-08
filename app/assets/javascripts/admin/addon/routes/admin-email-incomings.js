@@ -8,6 +8,6 @@ export default class AdminEmailIncomingsRoute extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
-    controller.set("filter.status", this.status);
+    controller.set("status", this.status);
   }
 }

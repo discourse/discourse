@@ -99,6 +99,9 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    delete "admin/impersonate" => "admin/impersonate#destroy",
+           :constraints => ImpersonatorConstraint.new
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
@@ -249,8 +252,8 @@ Discourse::Application.routes.draw do
           get "preview" => "themes#preview"
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
+          put "site-setting" => "themes#update_theme_site_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
-          put "change-colors" => "themes#change_colors"
         end
 
         collection do
@@ -271,7 +274,6 @@ Discourse::Application.routes.draw do
         get "components/:id" => "themes#index"
         get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
-        get "themes/:id/colors" => "themes#index"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
 
@@ -409,6 +411,7 @@ Discourse::Application.routes.draw do
         resources :site_settings, only: %i[index]
         get "analytics-and-seo" => "site_settings#index"
         get "content" => "site_settings#index"
+        get "content/settings" => "site_settings#index"
         get "content/sharing" => "site_settings#index"
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"
@@ -455,6 +458,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end
       end
@@ -494,7 +498,7 @@ Discourse::Application.routes.draw do
           format: :js,
         }
 
-    resources :session, id: RouteFormat.username, only: %i[create destroy become] do
+    resources :session, id: RouteFormat.username, only: %i[create destroy] do
       get "become" if !Rails.env.production?
 
       collection { post "forgot_password" }
@@ -1622,6 +1626,7 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
     # Apple accepts either of these paths for the apple-app-site-association file
     # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false

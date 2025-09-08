@@ -158,7 +158,7 @@ RSpec.describe ListController do
       get "/latest?page=1"
       expect(response.status).to eq(200)
 
-      get "/latest.json?page=2147483647"
+      get "/latest.json?page=1999"
       expect(response.status).to eq(200)
 
       get "/latest?search="
@@ -932,7 +932,7 @@ RSpec.describe ListController do
 
   describe "topics_by" do
     fab!(:topic2) { Fabricate(:topic, user: user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before do
       user.user_stat.update!(post_count: 1)
@@ -1058,7 +1058,7 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_unread" do
-    fab!(:pm_user) { Fabricate(:user) }
+    fab!(:pm_user, :user)
 
     fab!(:pm) do
       Fabricate(:private_message_topic).tap do |t|
@@ -1090,10 +1090,10 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_warnings" do
-    fab!(:target_user) { Fabricate(:user) }
+    fab!(:target_user, :user)
     fab!(:admin)
-    fab!(:moderator1) { Fabricate(:moderator) }
-    fab!(:moderator2) { Fabricate(:moderator) }
+    fab!(:moderator1, :moderator)
+    fab!(:moderator2, :moderator)
 
     let(:create_args) do
       {
@@ -1299,8 +1299,8 @@ RSpec.describe ListController do
   end
 
   describe "shared drafts" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
 
     fab!(:topic1) { Fabricate(:topic, category: category1) }
     fab!(:topic2) { Fabricate(:topic, category: category2) }
@@ -1441,6 +1441,15 @@ RSpec.describe ListController do
         expect(parsed["topic_list"]["topics"].length).to eq(1)
         expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
       end
+    end
+
+    it "should include filter_option_info in the response" do
+      get "/filter.json"
+      parsed = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(parsed["topic_list"]["filter_option_info"].length).to eq(
+        TopicsFilter.option_info(Guardian.new).length,
+      )
     end
 
     it "should filter with tag_group option" do
@@ -1604,7 +1613,7 @@ RSpec.describe ListController do
       fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
       it "does not return topics that are unlisted when `q` query param is `status:unlisted` for a user that cannot view unlisted topics" do
-        Topic.update_all(deleted_at: true)
+        Topic.update_all(deleted_at: Time.current)
         topic.update!(visible: false)
 
         sign_in(user)
@@ -1790,6 +1799,100 @@ RSpec.describe ListController do
           expect(ids).to contain_exactly(new_reply_with_tag.id)
         end
       end
+    end
+  end
+
+  context "when content localization is enabled" do
+    fab!(:category)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+
+      topic.update!(category:)
+    end
+
+    describe "when tl param is absent" do
+      fab!(:pt_topic) do
+        Fabricate(
+          :topic_localization,
+          topic:,
+          locale: "pt",
+          title: "This is a localized portuguese title",
+        )
+      end
+      fab!(:pt_category) do
+        Fabricate(:category_localization, category:, locale: "pt", name: "Localized Category Name")
+      end
+
+      it "localizes topic title for crawler to default locale when localization exists" do
+        # topic is in english but default locale is portuguese
+        topic.update!(locale: "en")
+        topic.category.update!(locale: "en")
+        SiteSetting.default_locale = "pt"
+
+        filter = Discourse.anonymous_filters[0]
+        get "/#{filter}"
+
+        expect(response.body).to include(pt_topic.title)
+        expect(response.body).to include(pt_category.name)
+      end
+
+      it "leaves topic title as-is if no localization" do
+        # no spanish localizations exist for the default locale spanish
+        topic.update!(locale: "en")
+        SiteSetting.default_locale = "es"
+
+        filter = Discourse.anonymous_filters[0]
+        get "/#{filter}"
+
+        expect(response.body).to include(topic.title)
+        expect(response.body).to include(category.name)
+        expect(response.body).not_to include(pt_topic.title)
+        expect(response.body).not_to include(pt_category.name)
+      end
+    end
+
+    describe "when tl param is present ?tl=ja" do
+      fab!(:ja_topic) { Fabricate(:topic_localization, topic:, locale: "ja", title: "こんにちは世界") }
+      fab!(:ja_category) do
+        Fabricate(:category_localization, category:, locale: "ja", name: "カテゴリ名")
+      end
+
+      before do
+        topic.update!(locale: "en")
+        topic.category.update!(locale: "en")
+      end
+
+      it "localizes topic title for crawler" do
+        get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
+
+        expect(response.body).to include(ja_topic.title)
+        expect(response.body).to include(ja_category.name)
+      end
+    end
+
+    it "should not have N+1s when loading localizations" do
+      Fabricate.times(5, :topic, category:, locale: "en")
+      Topic.all.each { |t| Fabricate(:topic_localization, topic: t, locale: "ja") }
+
+      initial_sql_queries =
+        track_sql_queries do
+          get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
+          expect(response.status).to eq(200)
+        end.select { |q| q.include?("_localizations") }.count
+
+      new_category = Fabricate(:category, locale: "en")
+      Fabricate(:category_localization, category: new_category, locale: "ja")
+      new_topic = Fabricate(:topic, category: new_category, locale: "en")
+      Fabricate(:topic_localization, topic: new_topic, locale: "ja")
+
+      new_sql_queries =
+        track_sql_queries do
+          get "/#{Discourse.anonymous_filters[0]}", params: { tl: "ja" }
+          expect(response.status).to eq(200)
+        end.select { |q| q.include?("_localizations") }.count
+
+      expect(new_sql_queries).to eq(initial_sql_queries)
     end
   end
 end

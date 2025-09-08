@@ -55,6 +55,9 @@ export const REPLACEMENTS = {
   "user_menu.replies": "reply",
   "user_menu.drafts": "pencil",
   "sidebar.all_categories": "list",
+  "topic.closed": "lock",
+  "topic.opened": "unlock",
+  "category.restricted": "lock",
 };
 
 export function replaceIcon(source, destination) {

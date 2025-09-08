@@ -26,7 +26,7 @@ const TopicLabelButton = <template>
 
           {{#if @topic.closed}}
             <span class="topic-status">
-              {{icon "lock"}}
+              {{icon "topic.closed"}}
             </span>
           {{/if}}
 

@@ -9,6 +9,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
@@ -38,6 +39,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
@@ -71,6 +73,7 @@ export default class TopicController extends Controller {
   @service siteSettings;
   @service site;
   @service appEvents;
+  @service languageNameLookup;
 
   @tracked model;
 
@@ -684,7 +687,7 @@ export default class TopicController extends Controller {
 
   // Post related methods
   @action
-  replyToPost(post) {
+  async replyToPost(post) {
     const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
@@ -728,6 +731,16 @@ export default class TopicController extends Controller {
         opts.post = post;
       } else {
         opts.topic = topic;
+      }
+
+      if (!opts.quote) {
+        const draftData = await Draft.get(opts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          opts.reply = data.reply;
+          opts.draftSequence = draftData.draft_sequence;
+        }
       }
 
       composerController.open(opts);
@@ -877,6 +890,38 @@ export default class TopicController extends Controller {
 
     const topic = this.model;
 
+    const editingLocalizedPost =
+      post?.is_localized && this.siteSettings.content_localization_enabled;
+
+    if (editingLocalizedPost) {
+      if (!this.currentUser.can_localize_content) {
+        return this._openComposerForEdit(topic, post);
+      }
+
+      const language = this.languageNameLookup.getLanguageName(post.language);
+      return this.dialog.alert({
+        message: i18n("post.localizations.edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n("post.localizations.edit_warning.action_original"),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, post),
+          },
+          {
+            label: i18n("post.localizations.edit_warning.action_translation"),
+            class: "btn-default",
+            action: () => this._openComposerForEditTranslation(topic, post),
+          },
+        ],
+      });
+    }
+
+    return this._openComposerForEdit(topic, post);
+  }
+
+  _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -902,6 +947,24 @@ export default class TopicController extends Controller {
       opts.draftKey === composerModel?.draftKey;
 
     return editingSamePost ? composer.unshrink() : composer.open(opts);
+  }
+
+  async _openComposerForEditTranslation(topic, post) {
+    const { raw } = await ajax(`/posts/${post.id}.json`);
+
+    const composerOpts = {
+      action: Composer.ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: { postLocale: post.locale, rawPost: raw },
+      },
+      post,
+      selectedTranslationLocale: this.currentUser?.effective_locale,
+    };
+
+    await this.composer.open(composerOpts);
   }
 
   @action
@@ -1768,13 +1831,16 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
 
     if (data.reload_topic) {
-      topic.reload().then(() => {
-        this.send("postChangedRoute", topic.get("post_number") || 1);
+      topic.reload(opts).then(() => {
         this.appEvents.trigger("header:update-topic", topic);
         if (data.refresh_stream) {
-          postStream.refresh();
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
         }
       });
 

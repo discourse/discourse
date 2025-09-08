@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    discourse_policy:
+      title: "ポリシー"
+      accepted_tooltip: "このポリシーに同意したユーザー"
+      not_accepted_tooltip: "このポリシーに同意していないユーザー"
+      accept_policy: "ポリシーに同意"
+      revoke_policy: "ポリシーへの同意を取り消す"
+      edit_reason: "ポリシーの設定が変更されました"
+      no_possible_users: "このポリシーには可能なユーザーがいません"
+      accept_policy_template: "このポリシーに同意します"
+      builder:
+        title: ポリシー
+        attach: ポリシーを作成
+        save: 変更を保存
+        insert: 挿入
+        errors:
+          group: グループが必要です
+          version: バージョンが必要です
+        groups:
+          label: グループ
+          description: このポリシーに関連付けられているグループ
+        version:
+          label: バージョン
+          description: ポリシーのバージョン。バージョンを上げると、ユーザーはそれに同意し直する必要があります
+        renew:
+          label: 更新
+          description: x 日ごとにポリシーを更新します
+        renew-start:
+          label: 更新開始
+          description: ポリシーの更新が必要となったとき
+        reminder:
+          label: リマインダー
+          description: ポリシーへの同意に関するリマインダー通知を送信する頻度
+          no_reminder: (リマインダーなし)
+        accept:
+          label: 同意
+          description: 同意ボタンに使用するテキスト
+        revoke:
+          label: 取り消す
+          description: 同意の取り消しボタンに使用するテキスト
+        private:
+          label: 非公開？
+          description: ポリシーステータスを管理者に非公開にします
+        send-email:
+          label: メールを送信?
+          description: ユーザーにメールで新しいポリシーを通知する
+        add-users-to-group:
+          label: ユーザーをグループに追加
+          description: このポリシーに同意したユーザーを次のグループに追加します
+      preferences:
+        title: ポリシー
+        policy_emails:
+          always_description: 新しいアクティビティメールもオプトインしている場合にのみ、メールが送信されます。
+          away_description: ポリシーのステータスが変更された時点で 10 分以上アクセスがない場合で、新しいアクティビティメールにオプトインしている場合にのみ、メールを送信します。
+          label: ポリシーをレビューする必要がある場合にメールで通知を受け取る
+          email_frequency_options:
+            never: 送信しない
+            when_away: 退席中の時のみ
+            always: 常時

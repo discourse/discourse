@@ -4,8 +4,8 @@ RSpec.describe "Chat message onebox", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     chat_system_bootstrap

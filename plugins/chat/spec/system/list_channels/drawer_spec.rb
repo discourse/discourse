@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "List channels | Drawer", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
@@ -14,7 +14,7 @@ RSpec.describe "List channels | Drawer", type: :system do
 
   context "when channels tab" do
     context "when channels are available" do
-      fab!(:category_channel_1) { Fabricate(:category_channel) }
+      fab!(:category_channel_1, :category_channel)
 
       context "when member of the channel" do
         before { category_channel_1.add(current_user) }
@@ -90,7 +90,7 @@ RSpec.describe "List channels | Drawer", type: :system do
   context "when no category channels" do
     it "shows the empty channel list" do
       drawer_page.visit_index
-      expect(drawer_page).to have_selector(".channel-list-empty-message")
+      expect(drawer_page).to have_selector(".empty-state")
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe "List channels | Drawer", type: :system do
     end
 
     context "when not member of the channel" do
-      fab!(:dm_channel_1) { Fabricate(:direct_message_channel) }
+      fab!(:dm_channel_1, :direct_message_channel)
 
       it "does not show the channel" do
         drawer_page.visit_index
@@ -118,9 +118,9 @@ RSpec.describe "List channels | Drawer", type: :system do
     end
 
     context "when multiple channels are present" do
-      fab!(:user_1) { Fabricate(:user) }
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_1, :user)
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
       fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
       fab!(:dm_channel_3) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
@@ -231,7 +231,7 @@ RSpec.describe "List channels | Drawer", type: :system do
       drawer_page.visit_index
       drawer_page.click_direct_messages
 
-      expect(drawer_page).to have_selector(".channel-list-empty-message")
+      expect(drawer_page).to have_selector(".empty-state")
     end
   end
 end

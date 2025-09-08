@@ -55,7 +55,7 @@ describe "AutoTagTopic" do
 
     context "when category restricted tags" do
       fab!(:category)
-      fab!(:restricted_category) { Fabricate(:category) }
+      fab!(:restricted_category, :category)
       fab!(:category_tag) do
         CategoryTag.create!(category: restricted_category, tag: restricted_tag)
       end

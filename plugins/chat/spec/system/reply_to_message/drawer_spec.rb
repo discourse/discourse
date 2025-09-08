@@ -6,8 +6,8 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
   fab!(:original_message) do
     Fabricate(
       :chat_message,

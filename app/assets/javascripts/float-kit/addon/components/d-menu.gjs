@@ -16,7 +16,6 @@ import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
-  @service menu;
   @service site;
 
   menuInstance = new DMenuInstance(getOwner(this), {
@@ -62,10 +61,6 @@ export default class DMenu extends Component {
 
       firstFocusable?.focus() || this.body.focus();
     }
-  }
-
-  get menuId() {
-    return `d-menu-${this.menuInstance.id}`;
   }
 
   get options() {

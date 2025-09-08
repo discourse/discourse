@@ -1,0 +1,172 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Järjesta"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Teema ID"
+            title:
+              label: "Pealkiri"
+            categories:
+              label: "Kategooriad"
+            tags:
+              label: "Sildid"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategooriad"
+            tags:
+              label: "Sildid"
+            canned_reply:
+              label: "Vasta"
+    discourse_ai:
+      features:
+        back: "Tagasi"
+        disabled: "(välja lülitatud)"
+        groups: "Rühmad:"
+        no_groups: "Pole"
+        edit: "Muuda"
+        expand_list:
+          one: "(veel %{count})"
+          other: "(veel %{count})"
+        filters:
+          all: "Kõik"
+          reset: "Nulli"
+        search:
+          name: "Otsi"
+        spam:
+          name: "Spämm"
+      modals:
+        select_option: "Vali võimalus..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
+      spam:
+        short_title: "Spämm"
+        enable: "Luba"
+        test_modal:
+          spam: "Spämm"
+      usage:
+        summary: "Kokkuvõte"
+        username: "Kasutajanimi"
+        total_requests: "Kokku päringuid"
+      ai_persona:
+        back: "Tagasi"
+        name: "Nimi"
+        edit: "Muuda"
+        export: "Ekspordi"
+        import: "Impordi"
+        description: "Kirjeldus"
+        user: Kasutaja
+        save: "Salvesta"
+        enabled: "Sisse lülitatud?"
+        delete: "Kustuta"
+        response_format:
+          open_modal: "Muuda"
+        filters:
+          reset: "Nulli"
+      rag:
+        uploads:
+          title: "Üleslaadimised"
+          uploading: "Laen üles..."
+      tools:
+        back: "Tagasi"
+        export: "Ekspordi"
+        import: "Impordi"
+        name: "Nimi"
+        description: "Kirjeldus"
+        summary: "Kokkuvõte"
+        save: "Salvesta"
+        remove_parameter: "Eemalda"
+        parameter_required: "Nõutud"
+        edit: "Muuda"
+        delete: "Kustuta"
+      llms:
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        save: "Salvesta"
+        edit: "Muuda"
+        back: "Tagasi"
+        delete: Kustuta
+        quotas:
+          group: "Rühm"
+          durations:
+            hour: "1 tund"
+            six_hours: "6 tundi"
+            day: "24 tundi"
+            week: "7 päeva"
+          hours: "tundi"
+        usage:
+          ai_spam: "Spämm"
+        next:
+          title: "Järgmine"
+        tests:
+          success: "Korras!"
+        providers:
+          google: "Google"
+          fake: "Individuaalne"
+      ai_helper:
+        context_menu:
+          cancel: "Loobu"
+        post_options_menu:
+          close: "Sulge"
+          copy: "Kopeeri"
+          copied: "Kopeeritud!"
+          cancel: "Loobu"
+        image_caption:
+          save_caption: "Salvesta"
+      embeddings:
+        back: "Tagasi"
+        save: "Salvesta"
+        delete: "Kustuta"
+        edit: "Muuda"
+        tests:
+          success: "Korras!"
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        providers:
+          google: "Google"
+          fake: "Individuaalne"
+      ai_bot:
+        debug_ai_modal:
+          request: "Taotle"
+          response: "Vastus"
+          next_log: "Järgmine"
+          previous_log: "Eelmine"
+        invite_ai_conversation:
+          button: "Kutsu"
+        share_modal:
+          copy: "Kopeeri"
+        conversations:
+          today: "Täna"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Kõik"
+            neutral: "Neutraalne"
+          group_types:
+            category: "Kategooriad"
+          table:
+            total_count: "Kokku"
+      discobot_discoveries:
+        regular_results: "Teemasid"
+        collapse: "Ahenda"
+        tooltip:
+          actions:
+            disable: "Keela"

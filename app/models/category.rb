@@ -16,6 +16,7 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include Localizable
 
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
@@ -1273,6 +1274,18 @@ class Category < ActiveRecord::Base
 
   def has_restricted_tags?
     tags.count > 0 || tag_groups.count > 0
+  end
+
+  def category_localizations=(localizations_params)
+    return self.category_localizations_attributes = localizations_params unless persisted?
+
+    incoming_ids = localizations_params.map { |loc| loc["id"] }
+    category_localizations
+      .where.not(id: incoming_ids)
+      .select(:id)
+      .each { |record| localizations_params << { "id" => record.id, "_destroy" => true } }
+
+    self.category_localizations_attributes = localizations_params
   end
 
   private

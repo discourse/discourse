@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -111,6 +111,7 @@ function withGroupMessagesSetup(needs) {
 
     [
       "/topics/private-messages-new/:username.json",
+      "/topics/private-messages-sent/:username.json",
       "/topics/private-messages-unread/:username.json",
       "/topics/private-messages-archive/:username.json",
       "/topics/private-messages-group/:username/:group_name/new.json",
@@ -598,73 +599,76 @@ acceptance(
 
     test("navigating between user messages route with dropdown", async function (assert) {
       await visit("/u/Charlie/messages");
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText(
+          i18n("user.messages.inbox"),
+          "User personal inbox is selected in dropdown"
+        );
 
-      const messagesDropdown = selectKit(".user-nav-messages-dropdown");
-
-      assert.strictEqual(
-        messagesDropdown.header().name(),
-        i18n("user.messages.inbox"),
-        "User personal inbox is selected in dropdown"
+      await click(
+        ".user-nav__messages-sent a[href='/u/Charlie/messages/sent']"
       );
-
-      await click(".user-nav__messages-sent");
-
       assert.strictEqual(
-        messagesDropdown.header().name(),
-        i18n("user.messages.inbox"),
-        "User personal inbox is still selected when viewing sent messages"
+        currentURL(),
+        "/u/Charlie/messages/sent",
+        "routes to the right URL when clicking sent messages"
       );
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText(
+          i18n("user.messages.inbox"),
+          "User personal inbox is still selected when viewing sent messages"
+        );
 
-      await messagesDropdown.expand();
-      await messagesDropdown.selectRowByName("awesome_group");
+      await click(".messages-dropdown-trigger");
+      const options = findAll(".dropdown-menu__item");
 
+      await click(options[1].querySelector(".btn"));
       assert.strictEqual(
         currentURL(),
         "/u/charlie/messages/group/awesome_group",
         "routes to the right URL when selecting awesome_group in the dropdown"
       );
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText("awesome_group", "Group inbox is selected in dropdown");
 
-      assert.strictEqual(
-        messagesDropdown.header().name(),
-        "awesome_group",
-        "Group inbox is selected in dropdown"
+      await click(
+        ".user-nav__messages-group-new a[href='/u/charlie/messages/group/awesome_group/new']"
       );
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText("awesome_group", "Group inbox is still selected in dropdown");
 
-      await click(".user-nav__messages-group-new");
+      await click(".messages-dropdown-trigger");
+      const options2 = findAll(".dropdown-menu__item");
 
-      assert.strictEqual(
-        messagesDropdown.header().name(),
-        "awesome_group",
-        "Group inbox is still selected in dropdown"
-      );
-
-      await messagesDropdown.expand();
-      await messagesDropdown.selectRowByName(i18n("user.messages.tags"));
-
+      await click(options2[2].querySelector(".btn"));
       assert.strictEqual(
         currentURL(),
         "/u/charlie/messages/tags",
         "routes to the right URL when selecting tags in the dropdown"
       );
-
-      assert.strictEqual(
-        messagesDropdown.header().name(),
-        i18n("user.messages.tags"),
-        "All tags is selected in dropdown"
-      );
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText(
+          i18n("user.messages.tags"),
+          "All tags is selected in dropdown"
+        );
 
       await click(".discourse-tag[data-tag-name='tag1']");
-
-      assert.strictEqual(
-        messagesDropdown.header().name(),
-        i18n("user.messages.tags"),
-        "All tags is still selected in dropdown"
-      );
+      assert
+        .dom(".messages-dropdown-trigger")
+        .hasText(
+          i18n("user.messages.tags"),
+          "All tags is still selected in dropdown"
+        );
     });
 
     test("addUserMessagesNavigationDropdownRow plugin api", async function (assert) {
       try {
-        withPluginApi("1.5.0", (api) => {
+        withPluginApi((api) => {
           api.addUserMessagesNavigationDropdownRow(
             "preferences",
             "test nav",
@@ -673,14 +677,18 @@ acceptance(
         });
 
         await visit("/u/eviltrout/messages");
+        await click(".messages-dropdown-trigger");
 
-        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
-        await messagesDropdown.expand();
+        const options = findAll(".dropdown-menu__item");
+        assert.dom(options[2]).hasText("test nav");
+        assert.dom(options[2].querySelector(".d-icon-arrow-left")).exists();
 
-        const row = messagesDropdown.rowByName("test nav");
-
-        assert.strictEqual(row.value(), "/u/eviltrout/preferences");
-        assert.dom(row.icon()).hasClass("d-icon-arrow-left");
+        await click(options[2].querySelector(".btn"));
+        assert.strictEqual(
+          currentURL(),
+          "/u/eviltrout/preferences/account",
+          "navigates to the preferences page when clicking on the custom row"
+        );
       } finally {
         resetCustomUserNavMessagesDropdownRows();
       }

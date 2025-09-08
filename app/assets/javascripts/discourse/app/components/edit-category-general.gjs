@@ -14,14 +14,15 @@ import {
   CATEGORY_TEXT_COLORS,
 } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
+import { optionalRequire } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import ColorInput from "admin/components/color-input";
 import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
 
+const ColorInput = optionalRequire("admin/components/color-input");
+
 export default class EditCategoryGeneral extends Component {
-  @service router;
   @service site;
   @service siteSettings;
 
@@ -258,8 +259,10 @@ export default class EditCategoryGeneral extends Component {
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
+          <span class="readonly-field">{{this.categoryDescription}}</span>
+
           {{#if @category.topic_url}}
-            <@form.Container @subtitle={{this.categoryDescription}}>
+            <@form.Container>
               <@form.Button
                 @action={{this.showCategoryTopic}}
                 @icon="pencil"
@@ -350,7 +353,7 @@ export default class EditCategoryGeneral extends Component {
                 <ColorInput
                   @hexValue={{readonly field.value}}
                   @ariaLabelledby="foreground-color-label"
-                  @onChangeColor={{fn this.updateColor field}}
+                  @onBlur={{fn this.updateColor field}}
                 />
                 <ColorPicker
                   @colors={{CATEGORY_TEXT_COLORS}}

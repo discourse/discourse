@@ -4,7 +4,6 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { SEARCH_BUTTON_ID } from "discourse/components/header";
 import Icons from "discourse/components/header/icons";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Header | Icons", function (hooks) {
@@ -72,33 +71,6 @@ module("Integration | Component | Header | Icons", function (hooks) {
       .dom(".search-dropdown")
       .exists(
         "it does display when the site is in mobile view even if search_experience setting is search_field"
-      );
-
-    sinon.stub(site, "mobileView").value(false);
-    this.siteSettings.search_experience = "search_icon";
-
-    withPluginApi("1.37.1", (api) => {
-      api.registerValueTransformer("site-setting-search-experience", () => {
-        return "search_field";
-      });
-    });
-
-    await render(
-      <template>
-        <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
-          @searchButtonId={{SEARCH_BUTTON_ID}}
-        />
-      </template>
-    );
-
-    assert
-      .dom(".search-dropdown")
-      .doesNotExist(
-        "it does not display when the value transformer is not search_icon"
       );
   });
 });

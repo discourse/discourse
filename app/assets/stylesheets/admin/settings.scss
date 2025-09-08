@@ -69,8 +69,6 @@
       }
 
       .uploaded-image-preview {
-        background-size: contain;
-        background-repeat: no-repeat;
         background-color: var(--primary-medium);
       }
     }
@@ -96,7 +94,7 @@
     .input-setting-list {
       padding: 1px;
       background-color: var(--secondary);
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--input-border-color);
       border-radius: 3px;
       transition:
         border linear 0.2s,
@@ -131,6 +129,29 @@
 
     .validation-error {
       color: var(--danger);
+    }
+
+    .job.site-setting {
+      display: flex;
+      flex-direction: row;
+
+      p {
+        margin: 0;
+      }
+
+      .alert {
+        color: var(--danger);
+        background-color: transparent;
+        padding: 0;
+      }
+
+      .success {
+        color: var(--success);
+      }
+
+      .progress {
+        margin-left: 0.5rem;
+      }
     }
 
     .desc {

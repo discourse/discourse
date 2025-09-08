@@ -74,11 +74,6 @@ module(
             "50px",
             "Image width style should be 50px"
           );
-          assert.strictEqual(
-            img.style.height,
-            "100px",
-            "Image height style should be 100px"
-          );
         }
       )
     );
@@ -104,11 +99,6 @@ module(
             img.style.width,
             "50px",
             "Image width style should be 50px"
-          );
-          assert.strictEqual(
-            img.style.height,
-            "100px",
-            "Image height style should be 100px"
           );
         }
       )

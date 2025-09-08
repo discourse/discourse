@@ -70,16 +70,16 @@ module(
       });
       await render(<template><BookmarksList /></template>);
       assert
-        .dom(".empty-state-title")
+        .dom(".empty-state__title")
         .hasText(i18n("user.no_bookmarks_title"), "empty state title is shown");
       assert
-        .dom(".empty-state-body")
+        .dom(".empty-state__body")
         .hasText(
           i18n("user.no_bookmarks_body", { icon: "" }),
           "empty state body is shown"
         );
       assert
-        .dom(".empty-state-body svg.d-icon-bookmark")
+        .dom(".empty-state__body svg.d-icon-bookmark")
         .exists("icon is correctly rendered in the empty state body");
     });
   }

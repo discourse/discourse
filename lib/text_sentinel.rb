@@ -46,7 +46,7 @@ class TextSentinel
       seems_quiet?
   end
 
-  # Ensure minumum entropy
+  # Ensure minimum entropy
   def seems_meaningful?
     @opts[:min_entropy].nil? || entropy >= @opts[:min_entropy]
   end

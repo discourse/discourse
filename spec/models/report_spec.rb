@@ -1619,8 +1619,8 @@ RSpec.describe Report do
     end
 
     context "with data" do
-      fab!(:gwen) { Fabricate(:user) }
-      fab!(:martin) { Fabricate(:user) }
+      fab!(:gwen, :user)
+      fab!(:martin, :user)
 
       before do
         UserHistory.create(
@@ -1868,8 +1868,8 @@ RSpec.describe Report do
   describe "topic_view_stats" do
     let(:report) { Report.find("topic_view_stats") }
 
-    fab!(:topic_1) { Fabricate(:topic) }
-    fab!(:topic_2) { Fabricate(:topic) }
+    fab!(:topic_1, :topic)
+    fab!(:topic_2, :topic)
 
     include_examples "no data"
 

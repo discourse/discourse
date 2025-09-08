@@ -4,7 +4,7 @@ RSpec.describe ReviewableClaimedTopicsController do
   fab!(:moderator)
 
   fab!(:topic)
-  fab!(:automatic_topic) { Fabricate(:topic) }
+  fab!(:automatic_topic, :topic)
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
   fab!(:automatic_reviewable) { Fabricate(:reviewable_flagged_post, topic: automatic_topic) }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableSerializer do
-  fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+  fab!(:reviewable, :reviewable_queued_post)
   fab!(:admin)
 
   it "serializes all the fields" do

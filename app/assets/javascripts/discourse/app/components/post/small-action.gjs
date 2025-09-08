@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
@@ -17,10 +18,10 @@ export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];
 
 export const ICONS = {
-  "closed.enabled": "lock",
-  "closed.disabled": "unlock-keyhole",
-  "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-keyhole",
+  "closed.enabled": "topic.closed",
+  "closed.disabled": "topic.opened",
+  "autoclosed.enabled": "topic.closed",
+  "autoclosed.disabled": "topic.opened",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
   "pinned.enabled": "thumbtack",
@@ -53,6 +54,8 @@ export function resetGroupPostSmallActionCodes() {
 }
 
 export default class PostSmallAction extends Component {
+  decoratorState = new TrackedMap();
+
   @cached
   get CustomComponent() {
     return applyValueTransformer("post-small-action-custom-component", null, {
@@ -150,7 +153,7 @@ export default class PostSmallAction extends Component {
           {{icon this.icon}}
         </div>
         <div class="small-action-desc">
-          <div class="small-action-contents">
+          <div class="small-action-contents" role="heading" aria-level="2">
             <UserAvatar
               @ariaHidden={{false}}
               @size="small"
@@ -196,7 +199,12 @@ export default class PostSmallAction extends Component {
           {{#unless this.CustomComponent}}
             {{#if @post.cooked}}
               <div class="small-action-custom-message">
-                <PostCookedHtml @post={{@post}} />
+                <PostCookedHtml
+                  @post={{@post}}
+                  @decoratorState={{this.decoratorState}}
+                  @highlightTerm={{@highlightTerm}}
+                  @streamElement={{@streamElement}}
+                />
               </div>
             {{/if}}
           {{/unless}}

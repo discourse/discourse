@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    enable_login_with_amazon: "Habilitar el inicio de sesión con la autenticación de Amazon, requiere «iniciar sesión con el id de cliente de amazon» e «iniciar sesión con el secreto de cliente de amazon»."
+    login_with_amazon_client_id: "Iniciar sesión con el ID de cliente de Amazon"
+    login_with_amazon_client_secret: "Iniciar sesión con el secreto de cliente de Amazon"
+    login_with_amazon_scope: "Iniciar sesión con los ámbitos de Amazon OAuth2 (separados por espacio)"
+    login_with_amazon_overrides_email: "Reemplaza la dirección de correo electrónico en la cuenta de usuario de Discourse."
+    errors:
+      login_with_amazon_client_id_is_blank: "Debes configurar «iniciar sesión con el ID de cliente de Amazon» antes de habilitar esta configuración."
+      login_with_amazon_client_secret_is_blank: "Debes configurar «iniciar sesión con el secreto de cliente de Amazon» antes de habilitar esta configuración."

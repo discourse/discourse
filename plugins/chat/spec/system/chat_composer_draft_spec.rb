@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat composer draft", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) do
     Fabricate(
       :chat_message,
@@ -32,7 +32,7 @@ RSpec.describe "Chat composer draft", type: :system do
     end
 
     context "when loading another channel and back" do
-      fab!(:channel_2) { Fabricate(:chat_channel) }
+      fab!(:channel_2, :chat_channel)
 
       before do
         create_draft(channel_2, user: current_user, data: { message: "draft2" })

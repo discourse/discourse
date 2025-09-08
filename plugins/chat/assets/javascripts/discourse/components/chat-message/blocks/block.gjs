@@ -1,7 +1,7 @@
-import { default as GlimmerComponent } from "@glimmer/component";
+import Component from "@glimmer/component";
 import Actions from "./actions";
 
-export default class Block extends GlimmerComponent {
+export default class Block extends Component {
   get blockForType() {
     switch (this.args.definition.type) {
       case "actions":

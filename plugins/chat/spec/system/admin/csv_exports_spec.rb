@@ -3,7 +3,7 @@
 RSpec.describe "Admin Chat CSV exports", type: :system do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before do
     Jobs.run_immediately!

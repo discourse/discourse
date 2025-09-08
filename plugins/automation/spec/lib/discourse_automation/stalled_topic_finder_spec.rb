@@ -34,7 +34,7 @@ describe DiscourseAutomation::StalledTopicFinder do
   end
 
   describe "filter by tags" do
-    fab!(:tag_1) { Fabricate(:tag) }
+    fab!(:tag_1, :tag)
     # tagged topic with replies
     fab!(:topic_1) { create_topic(tags: [tag_1.name], user: user) }
     # untagged topic with replies
@@ -67,7 +67,7 @@ describe DiscourseAutomation::StalledTopicFinder do
   end
 
   describe "filter by categories" do
-    fab!(:category_1) { Fabricate(:category) }
+    fab!(:category_1, :category)
 
     # topic with stalled replies and category
     fab!(:topic_1) { create_topic(user: user, category: category_1) }
@@ -99,7 +99,7 @@ describe DiscourseAutomation::StalledTopicFinder do
   end
 
   describe "filter recent topic owner replies" do
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
     # replies from topic owner
     fab!(:topic_1) { create_topic(user: user) }
     # replies from not topic owner

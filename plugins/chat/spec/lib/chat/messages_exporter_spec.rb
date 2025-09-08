@@ -2,7 +2,7 @@
 
 describe Chat::MessagesExporter do
   context "with different kinds of channels" do
-    fab!(:public_channel) { Fabricate(:chat_channel) }
+    fab!(:public_channel, :chat_channel)
     fab!(:public_channel_message_1) { Fabricate(:chat_message, chat_channel: public_channel) }
     fab!(:public_channel_message_2) { Fabricate(:chat_message, chat_channel: public_channel) }
     # this message is deleted in the before block:
@@ -12,8 +12,8 @@ describe Chat::MessagesExporter do
     fab!(:private_channel_message_1) { Fabricate(:chat_message, chat_channel: private_channel) }
     fab!(:private_channel_message_2) { Fabricate(:chat_message, chat_channel: private_channel) }
 
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
     fab!(:direct_message_1) do
       Fabricate(:chat_message, chat_channel: private_channel, user: user_1)
@@ -57,7 +57,7 @@ describe Chat::MessagesExporter do
   end
 
   context "with corrupted data" do
-    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:message, :chat_message)
 
     it "exports a message even its chat_channel doesn't exist" do
       nonexistent_channel_id = Chat::Channel.pluck(:id).max + 1

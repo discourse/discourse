@@ -6,9 +6,19 @@
 
 ur:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: آٹومیشن کو حذف کریں
     discourse_automation:
+      title: آٹومیشن
+      create: آٹومیشن شامل کریں
+      update: آٹومیشن کو اپ ڈیٹ کریں۔
       back: واپس
       edit: ترمیم کریں
+      select_script: ایک اسکرپٹ منتخب کریں
+      select_trigger: ایک ٹرگر منتخب کریں
       fields:
         user:
           label: صارف
@@ -27,33 +37,84 @@ ur:
         text:
           label: ٹیکسٹ
       triggerables:
+        not_found: ٹرگر `%{trigger}` آٹومیشن `%{automation}` کے لیے نہیں ملا، براہ کرم یقین دہانی کریں کہ متعلقہ پلگ اِن انسٹال ہے۔
         user_badge_granted:
           fields:
             badge:
-              label: بَیج
+              label: تمغہ
+            only_first_grant:
+              label: صرف پہلی گرانٹ پر
         stalled_topic:
           durations:
+            PT1H: "ایک گھنٹہ"
+            P1D: "ایک دن"
+            P1W: "ایک ہفتہ"
             P2W: "دو ہفتے"
+            P1M: "ایک ماہ"
             P3M: "تین مہینے"
             P6M: "چھ مہینے"
             P1Y: "ایک سال"
+          fields:
+            categories:
+              label: زمرہ جات تک محدود
+            tags:
+              label: ٹیگز تک محدود
+            stalled_after:
+              label: کے بعد رک گیا۔
         recurring:
+          every: ہر
           frequencies:
             minute: منٹ
             hour: گھنٹہ
             day: دن
+            weekday: ہفتے کے دن
             week: ہفتہ
             month: مہینہ
             year: سال
           fields:
             recurrence:
               label: تَقْلِید
+            start_date:
+              label: تاریخِ آغاز
         stalled_wiki:
           durations:
+            PT1H: "ایک گھنٹہ"
+            P1D: "ایک دن"
+            P1W: "ایک ہفتہ"
             P2W: "دو ہفتے"
-            P3M: "تین مہینے"
-            P6M: "چھ مہینے"
+            P1M: "ایک ماہ"
+            P3M: "تین ماہ"
+            P6M: "چھ ماہ"
             P1Y: "ایک سال"
+          fields:
+            restricted_category:
+              label: زمرہ تک محدود
+            stalled_after:
+              label: ٹرگر تاخیر
+              description: آخری ویکی ترمیم اور آٹومیشن کے محرک کے درمیان تاخیر کی وضاحت کرتا ہے۔
+            retriggered_after:
+              label: دوبارہ ٹرگر میں تاخیر
+              description: پہلے ٹرگر اور اگلے ٹرگر کے درمیان تاخیر متعین کرتا ہے، اگر وکی پہلے ٹرگر کے بعد بھی ترمیم نہ کیا گیا ہو۔
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: ٹریک شدہ گروپ
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: ٹریک شدہ گروپ
+        user_promoted:
+          fields:
+            restricted_group:
+              label: گروپ تک محدود
+            trust_level_transition:
+              label: اعتماد کی سطح کی منتقلی
+          trust_levels:
+            ALL: "اعتماد کی تمام سطحیں۔"
+            TL01: "TL0 سے TL1"
+            TL12: "TL1 سے TL2"
+            TL23: "TL2 سے TL3"
+            TL34: "TL3 سے TL4"
         topic:
           fields:
             restricted_topic:
@@ -65,10 +126,17 @@ ur:
             restricted_categories:
               label: اقسام
           created: بنایا گیا
+          topics: تمام موضوعات
           with_images: تصاویر
-          with_links: لنکس
+          with_links: رابطے
           with_code: کَوڈ
           with_uploads: اَپ لوڈز
+        user_updated:
+          fields:
+            once_per_user:
+              label: ایک بار فی صارف
+            new_users_only:
+              label: صرف نئے صارفین
         category_created_edited:
           fields:
             restricted_category:
@@ -92,12 +160,25 @@ ur:
               label: ٹیگز
         post:
           fields:
+            creator:
+              updated_user_context: تازہ ترین صارف
             topic:
               label: ٹاپک ID
+        topic:
+          fields:
+            creator:
+              updated_user_context: تازہ ترین صارف
+            title:
+              label: موضوع کا عنوان
+            category:
+              label: موضوع کا زمرہ
         group_category_notification_default:
           fields:
             group:
               label: گروپ
+            update_existing_members:
+              label: موجودہ اراکین کو اپ ڈیٹ کریں۔
+              description: موجودہ گروپ ممبران کے لیے اطلاع کی سطح کو اپ ڈیٹ کیا
         user_global_notice:
           fields:
             level:
@@ -108,10 +189,15 @@ ur:
             error: خرابی
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: تمغہ کا نام
             group:
               label: گروپ
+            update_user_title_and_flair:
+              label: صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
+              description: اختیاری، صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
             badge:
-              label: بَیج
+              label: تمغہ
         suspend_user_by_email:
           fields:
             actor:
@@ -137,6 +223,9 @@ ur:
           name:
             label: محرکات
         automation:
+          runs_today: "%{count} آج"
+          runs_this_week: "%{count} اس ہفتے"
+          runs_this_month: "%{count} اس ماہ"
           name:
             label: نام
           trigger:
@@ -147,3 +236,7 @@ ur:
             label: سٹیٹس
           disabled:
             label: غیر فعال
+          last_updated_at:
+            label: آخری دفعہ اپ ڈیٹ
+          last_updated_by:
+            label: نے اپ ڈیٹ کیا

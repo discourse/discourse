@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Search | Shortcuts for variations of search input", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:welcome_banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }
@@ -9,18 +9,22 @@ describe "Search | Shortcuts for variations of search input", type: :system do
   before { sign_in(current_user) }
 
   context "when search_experience is search_field" do
-    before { SiteSetting.search_experience = "search_field" }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_field")
+    end
 
     context "when enable_welcome_banner is true" do
-      before { SiteSetting.enable_welcome_banner = true }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
+      end
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#welcome-banner-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -31,43 +35,49 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
           expect(search_page).to have_search_field
           expect(welcome_banner).to be_invisible
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#header-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end
     end
 
     context "when enable_welcome_banner is false" do
-      before { SiteSetting.enable_welcome_banner = false }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+      end
 
       it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_hidden
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#header-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
     end
   end
 
   context "when search_experience is search_icon" do
-    before { SiteSetting.search_experience = "search_icon" }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_icon")
+    end
 
     context "when enable_welcome_banner is true" do
-      before { SiteSetting.enable_welcome_banner = true }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
+      end
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#welcome-banner-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -78,25 +88,27 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
           expect(search_page).to have_search_icon
           expect(welcome_banner).to be_invisible
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#icon-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end
     end
 
     context "when enable_welcome_banner is false" do
-      before { SiteSetting.enable_welcome_banner = false }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+      end
 
       it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_hidden
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#icon-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -108,10 +120,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
 
         it "opens search on first press of /, and closes when Escape is pressed" do
           visit "/t/#{topic.slug}/#{topic.id}"
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#icon-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end

@@ -3,8 +3,8 @@
 describe Chat::MessageReactor do
   subject(:message_reactor) { described_class.new(reacting_user, channel) }
 
-  fab!(:reacting_user) { Fabricate(:user) }
-  fab!(:channel) { Fabricate(:category_channel) }
+  fab!(:reacting_user, :user)
+  fab!(:channel, :category_channel)
   fab!(:reactor) { described_class.new(reacting_user, channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: reacting_user) }
 

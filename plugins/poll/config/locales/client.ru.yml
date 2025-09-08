@@ -5,8 +5,15 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Плагин «Опрос» для Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Этот опрос динамический. Варианты можно редактировать после публикации."
       voters:
         one: "проголосовавший"
         few: "проголосовавших"
@@ -126,7 +133,7 @@ ru:
       error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."
       error_while_exporting_results: "Произошла ошибка в процессе экспорта результатов опроса."
       ui_builder:
-        title: Создать опрос
+        title: Создание опроса
         insert: Вставить опрос в сообщение
         help:
           options_min_count: Введите хотя бы 1 вариант.
@@ -159,6 +166,8 @@ ru:
           step: Шаг
         poll_public:
           label: Показывать проголосовавших (не отмечайте, если голосование анонимное)
+        poll_dynamic:
+          label: Разрешить редактирование после публикации (динамический опрос)
         poll_title:
           label: Заголовок (необязательно)
         poll_options:

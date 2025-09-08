@@ -1,0 +1,79 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse vyriešený"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "prijať"
+    solutions: "Riešenia"
+    solved:
+      title: "Vyriešené"
+      allow_accepted_answers: "Umožniť vlastníkovi témy a zamestnancom označiť odpoveď ako riešenie"
+      solved_topics_auto_close_hours: "Automatické uzavretie témy (n) hodín po poslednej odpovedi, keď bola téma označená ako vyriešená."
+      accept_answer: "Vyberte, či táto odpoveď rieši problém"
+      accepted_description: "Toto je akceptované riešenie tejto témy"
+      has_no_accepted_answer: "Táto téma nemá riešenie"
+      unaccept_answer: "Zrušte výber, ak táto odpoveď už problém nerieši"
+      accepted_answer: "Riešenie"
+      solution: "Riešenie"
+      solution_summary:
+        one: "riešenie"
+        few: "riešení"
+        many: "riešení"
+        other: "riešenia"
+      accepted_answer_post_number: "príspevok %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "všetko"
+        solved: "vyriešené"
+        unsolved: "nevyriešené"
+      no_solved_topics_title: "Ešte ste nevyriešili žiadnu tému"
+      no_solved_topics_title_others: "%{username} zatiaľ nevyriešil žiadne témy"
+      no_solved_topics_body: "Keď poskytnete užitočnú odpoveď na tému, môže byť vaša odpoveď vybraná ako riešenie vlastníkom témy alebo zamestnancami."
+      no_answer:
+        title: Bola vaša otázka zodpovedaná?
+        description: "Zvýraznite odpoveď a pomôžte ostatným pomocou tlačidla riešenia pod správnou odpoveďou."
+      notification:
+        title: "Váš príspevok bol označený ako riešenie"
+    topic_statuses:
+      solved:
+        help: "Táto téma má riešenie"
+    search:
+      advanced:
+        statuses:
+          solved: "sú vyriešené"
+          unsolved: "sú nevyriešené"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Vyriešená udalosť"
+          accepted_solution: "Keď používateľ označí príspevok ako prijatú odpoveď"
+          unaccepted_solution: "Keď používateľ označí príspevok ako neprijatú odpoveď"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Prijať/neprijať riešenie.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Akékoľvek
+          fields:
+            maximum_trust_level:
+              label: Stupeň dôvery
+              description: Používatelia pod touto úrovňou dôveryhodnosti spustia túto automatizáciu

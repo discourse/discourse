@@ -20,9 +20,9 @@ module(
 
     test("empty state when there are no notifications", async function (assert) {
       await render(template);
-      assert.dom(".empty-state .empty-state-body").exists();
+      assert.dom(".empty-state .empty-state__body").exists();
       assert
-        .dom(".empty-state .empty-state-title")
+        .dom(".empty-state .empty-state__title")
         .hasText(i18n("user_menu.no_chat_notifications_title"));
     });
   }

@@ -21,7 +21,7 @@ const message = {
 
 acceptance("Discourse Chat - Channel Reactions", function (needs) {
   needs.user({ has_chat_enabled: true });
-  needs.settings({ chat_enabled: true });
+  needs.settings({ chat_enabled: true, enable_emoji: true });
 
   needs.hooks.beforeEach(function () {
     pretender.get("/chat/api/me/channels", () =>

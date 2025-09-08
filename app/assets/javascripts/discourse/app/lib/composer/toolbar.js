@@ -1,4 +1,5 @@
 // @ts-check
+import { action } from "@ember/object";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -21,6 +22,7 @@ import { i18n } from "discourse-i18n";
  * @property {boolean} [hideShortcutInTitle]
  * @property {string} title
  * @property {string} [shortcut]
+ * @property {string} [ariaKeyshortcuts]
  * @property {boolean} [unshift]
  * @property {Function} [active]
  */
@@ -48,12 +50,13 @@ export class ToolbarBase {
    * @param {string=} buttonAttrs.tabindex
    * @param {string=} buttonAttrs.className
    * @param {string=} buttonAttrs.label
+   * @param {string|Function} buttonAttrs.icon
    * @param {string=} buttonAttrs.icon
    * @param {string=} buttonAttrs.href
    * @param {Function=} buttonAttrs.action
    * @param {Function=} buttonAttrs.perform
    * @param {boolean=} buttonAttrs.trimLeading
-   * @param {boolean=} buttonAttrs.popupMenu
+   * @param {Object=} buttonAttrs.popupMenu
    * @param {boolean=} buttonAttrs.preventFocus
    * @param {Function=} buttonAttrs.condition
    * @param {Function=} buttonAttrs.sendAction
@@ -96,22 +99,57 @@ export class ToolbarBase {
       );
     };
 
+    // Main button shortcut bindings and title text.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
     if (buttonAttrs.shortcut) {
+      const shortcutKeyTranslated = translateModKey(
+        buttonAttrs.shortcut.length === 1
+          ? buttonAttrs.shortcut.toUpperCase()
+          : buttonAttrs.shortcut
+      );
       const shortcutTitle = `${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+"
-      )}${translateModKey(buttonAttrs.shortcut)}`;
+        PLATFORM_KEY_MODIFIER + " "
+      )}${shortcutKeyTranslated}`;
 
       if (buttonAttrs.hideShortcutInTitle) {
         createdButton.title = title;
       } else {
         createdButton.title = `${title} (${shortcutTitle})`;
       }
+
+      // These shortcuts are actually bound in the keymap inside
+      // components/d-editor.gjs
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
+
+      createdButton.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
     } else {
       createdButton.title = title;
+    }
+
+    // Popup menu option item shortcut bindings and title text.
+    if (buttonAttrs.popupMenu) {
+      buttonAttrs.popupMenu.options()?.forEach((option) => {
+        if (option.shortcut) {
+          const shortcutKeyTranslated = translateModKey(
+            option.shortcut.length === 1
+              ? option.shortcut.toUpperCase()
+              : option.shortcut
+          );
+          const shortcutTitle = `${translateModKey(
+            PLATFORM_KEY_MODIFIER + " "
+          )}${shortcutKeyTranslated}`;
+
+          // These shortcuts are actually bound in the keymap inside
+          // components/d-editor.gjs
+          this.shortcuts[
+            `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
+          ] = option;
+
+          option.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
+        }
+      });
     }
 
     if (buttonAttrs.unshift) {
@@ -172,6 +210,79 @@ export default class Toolbar extends ToolbarBase {
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
       active: ({ state }) => state.inItalic,
+    });
+
+    this.addButton({
+      id: "heading",
+      group: "fontStyles",
+      active: ({ state }) => {
+        if (!state || !state.inHeading) {
+          return false;
+        }
+
+        if (state.inHeadingLevel > 4) {
+          return false;
+        }
+
+        return true;
+      },
+      icon: ({ state }) => {
+        if (!state || !state.inHeading) {
+          return "discourse-text";
+        }
+
+        if (state.inHeadingLevel > 4) {
+          return "discourse-text";
+        }
+
+        return `discourse-h${state.inHeadingLevel}`;
+      },
+      title: "composer.heading_title",
+      popupMenu: {
+        options: () => {
+          const headingOptions = [];
+          for (let headingLevel = 1; headingLevel <= 4; headingLevel++) {
+            headingOptions.push({
+              name: `heading-${headingLevel}`,
+              icon: `discourse-h${headingLevel}`,
+              translatedLabel: i18n("composer.heading_level_n", {
+                levelNumber: headingLevel,
+              }),
+              translatedTitle: i18n("composer.heading_level_n_title", {
+                levelNumber: headingLevel,
+              }),
+              shortcut: "Alt+" + headingLevel,
+              condition: true,
+              showActiveIcon: true,
+              active: ({ state }) => {
+                if (!state || !state.inHeading) {
+                  return false;
+                }
+
+                if (state.inHeadingLevel === headingLevel) {
+                  return true;
+                }
+
+                return false;
+              },
+              action: this.onHeadingMenuAction.bind(this),
+            });
+          }
+          headingOptions.push({
+            name: "heading-paragraph",
+            icon: "discourse-text",
+            label: "composer.heading_level_paragraph",
+            title: "composer.heading_level_paragraph_title",
+            condition: true,
+            showActiveIcon: true,
+            shortcut: "Alt+0",
+            active: ({ state }) => state?.inParagraph,
+            action: this.onHeadingMenuAction.bind(this),
+          });
+          return headingOptions;
+        },
+        action: this.onHeadingMenuAction.bind(this),
+      },
     });
 
     if (opts.showLink) {
@@ -245,5 +356,18 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.toggleDirection(),
       });
     }
+  }
+
+  @action
+  onHeadingMenuAction(menuItem) {
+    let level;
+
+    if (menuItem.name === "heading-paragraph") {
+      level = 0;
+    } else {
+      level = parseInt(menuItem.name.split("-")[1], 10);
+    }
+
+    this.context.newToolbarEvent().applyHeading(level, "heading");
   }
 }

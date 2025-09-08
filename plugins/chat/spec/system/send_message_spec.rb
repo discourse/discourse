@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Send message", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:user_2) { Fabricate(:admin) }
+  fab!(:user_1, :admin)
+  fab!(:user_2, :admin)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -97,9 +97,9 @@ RSpec.describe "Send message", type: :system do
     let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
-    fab!(:post_1) { Fabricate(:post) }
+    fab!(:post_1, :post)
     fab!(:post_2) { Fabricate(:post, topic: post_1.topic) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
 
     before do
       sign_in(user_1)

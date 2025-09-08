@@ -62,7 +62,7 @@ module PageObjects
       end
 
       def row_selector
-        ".d-admin-row__content"
+        ".d-table__row"
       end
 
       def form_selector

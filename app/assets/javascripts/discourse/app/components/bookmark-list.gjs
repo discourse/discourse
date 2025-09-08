@@ -1,8 +1,10 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import { and } from "truth-helpers";
@@ -21,7 +23,6 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";

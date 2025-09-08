@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
 import { afterRender } from "discourse/lib/decorators";

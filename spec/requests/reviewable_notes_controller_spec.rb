@@ -4,7 +4,7 @@ RSpec.describe ReviewableNotesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:reviewable, :reviewable_flagged_post)
 
   describe "#create" do
     context "when user is staff" do
@@ -194,7 +194,7 @@ RSpec.describe ReviewableNotesController do
     end
 
     context "when note belongs to different reviewable" do
-      fab!(:other_reviewable) { Fabricate(:reviewable_flagged_post) }
+      fab!(:other_reviewable, :reviewable_flagged_post)
       fab!(:other_note) { Fabricate(:reviewable_note, reviewable: other_reviewable, user: admin) }
 
       before { sign_in(admin) }

@@ -49,7 +49,7 @@ class InvitesController < ApplicationController
   end
 
   def create_multiple
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
     emails = params[:email]
     # validate that topics and groups can accept invites.
     if params[:topic_id].present?
@@ -319,8 +319,10 @@ class InvitesController < ApplicationController
   def destroy
     params.require(:id)
 
-    invite = Invite.find_by(invited_by_id: current_user.id, id: params[:id])
+    invite = Invite.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
+
+    guardian.ensure_can_destroy_invite!(invite)
 
     invite.trash!(current_user)
 
@@ -419,10 +421,11 @@ class InvitesController < ApplicationController
   end
 
   def destroy_all_expired
-    guardian.ensure_can_destroy_all_invites!(current_user)
+    guardian.ensure_can_destroy_all_invites!
+    user = fetch_user_from_params
 
     Invite
-      .where(invited_by: current_user)
+      .where(invited_by: user)
       .where("expires_at < ?", Time.zone.now)
       .find_each { |invite| invite.trash!(current_user) }
 
@@ -442,7 +445,7 @@ class InvitesController < ApplicationController
   end
 
   def resend_all_invites
-    guardian.ensure_can_resend_all_invites!(current_user)
+    guardian.ensure_can_resend_all_invites!
 
     begin
       RateLimiter.new(
@@ -465,7 +468,7 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
 
     hijack do
       begin

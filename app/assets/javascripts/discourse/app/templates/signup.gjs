@@ -33,12 +33,10 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     {{bodyClass "signup-page"}}
 
-    {{#if @controller.isRedirectingToExternalAuth}}
-      {{! Hide the signup form if the site has only one external }}
-      {{! authentication method and is being automatically redirected to it }}
-      {{loadingSpinner}}
-    {{else}}
-      <div class="signup-fullpage">
+    <div class="signup-fullpage">
+      {{#if @controller.isRedirectingToExternalAuth}}
+        {{loadingSpinner size="large"}}
+      {{else}}
         <FlashMessage
           @flash={{@controller.flash}}
           @type={{@controller.flashType}}
@@ -109,6 +107,13 @@ export default RouteTemplate(
                       {{/if}}
                     </span>
                   {{/if}}
+
+                  <PluginOutlet
+                    @name="create-account-after-email"
+                    @outletArgs={{lazyHash
+                      accountEmail=@controller.accountEmail
+                    }}
+                  />
                 </div>
 
                 <div class="input-group create-account__username">
@@ -141,6 +146,13 @@ export default RouteTemplate(
                       id="username-validation"
                     />
                   {{/if}}
+
+                  <PluginOutlet
+                    @name="create-account-after-username"
+                    @outletArgs={{lazyHash
+                      accountUsername=@controller.accountUsername
+                    }}
+                  />
                 </div>
 
                 {{#if
@@ -273,6 +285,10 @@ export default RouteTemplate(
                     @onFocusIn={{@controller.scrollInputIntoView}}
                     class="input-group create-account__fullname"
                   />
+                  <PluginOutlet
+                    @name="create-account-after-fullname"
+                    @outletArgs={{lazyHash accountName=@controller.accountName}}
+                  />
                 {{/if}}
 
                 {{#if @controller.userFields}}
@@ -342,7 +358,7 @@ export default RouteTemplate(
             />
           {{/if}}
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 );

@@ -3,7 +3,7 @@
 describe "Viewing sidebar", type: :system do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  context "as logged in user", type: :system do
+  context "as logged in user" do
     fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
@@ -36,7 +36,7 @@ describe "Viewing sidebar", type: :system do
       end
     end
 
-    describe "Community sidebar section", type: :system do
+    describe "Community sidebar section" do
       fab!(:user) { Fabricate(:user, locale: "pl_PL") }
       fab!(:translation_override) do
         TranslationOverride.create!(
@@ -167,7 +167,7 @@ describe "Viewing sidebar", type: :system do
       end
     end
 
-    describe "My messages sidebar link" do
+    describe "when My messages sidebar link" do
       it "should show for user with `can_send_private_messages` permission" do
         sign_in(admin)
         visit("/")
@@ -180,6 +180,50 @@ describe "Viewing sidebar", type: :system do
         visit("/")
         expect(sidebar).to have_no_my_messages_link
       end
+
+      context "with translation override" do
+        fab!(:translation_override) do
+          TranslationOverride.create!(
+            locale: "en",
+            translation_key: "js.sidebar.sections.community.links.my_messages.content",
+            value: "Overrided",
+          )
+        end
+
+        it "is translated" do
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link("Overrided")
+        end
+      end
+
+      describe "has unread messages" do
+        fab!(:private_message) do
+          Fabricate(:private_message_post, user: user, recipient: admin).topic
+        end
+        let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
+
+        it "should show new messages indicator" do
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+        end
+
+        it "should show a count of the new items" do
+          admin.user_option.update!(sidebar_show_count_of_new_items: true)
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_count
+        end
+
+        it "should remove unread icon after all messages are read" do
+          sign_in(admin)
+          user_private_messages_page.visit(admin)
+          user_private_messages_page.click_unseen_private_mesage(private_message.id)
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+          try_until_success { expect(sidebar).to have_my_messages_link_without_unread_icon }
+        end
+      end
     end
 
     it "shouldn't display the panel header for the main sidebar" do
@@ -189,7 +233,7 @@ describe "Viewing sidebar", type: :system do
     end
   end
 
-  context "as anonymous user", type: :system do
+  context "as anonymous user" do
     describe "My messages sidebar link" do
       it "shouldn't show for anonymous user" do
         visit("/")

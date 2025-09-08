@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    affiliate_enabled: 'Увімкніть плагін Партнера. Якщо ви зміните це, ви повинні перепекти всі повідомлення за допомогою: «rake posts:rebaker».'
+    affiliate_amazon_ca: "Ваш ідентифікатор партнерів amazon.ca (Канада)."
+    affiliate_amazon_cn: "Ваш ідентифікатор партнера amazon.cn (Китай)."
+    affiliate_amazon_co_jp: "Ваш ідентифікатор партнера amazon.co.jp (Японія)."
+    affiliate_amazon_co_uk: "Ваш ідентифікатор партнера amazon.co.uk (Великобританія)."
+    affiliate_amazon_com: "Ваш ідентифікатор партнера amazon.com/amzn.com/amzn.to (США)."
+    affiliate_amazon_com_au: "Ваш ідентифікатор партнера amazon.com.au (Австралія)."
+    affiliate_amazon_com_br: "Ваш ідентифікатор партнера amazon.com.br (Бразилія)."
+    affiliate_amazon_com_mx: "Ваш ідентифікатор партнера amazon.com.mx (Мексика)."
+    affiliate_amazon_de: "Ваш ідентифікатор партнера amazon.de (Німеччина)."
+    affiliate_amazon_es: "Ваш ідентифікатор партнера amazon.es (Іспанія)."
+    affiliate_amazon_fr: "Ваш ідентифікатор партнера amazon.fr (Франція)."
+    affiliate_amazon_in: "Ваш ідентифікатор партнера amazon.in (Індія)."
+    affiliate_amazon_it: "Ваш ідентифікатор партнера amazon.it (Італія)."
+    affiliate_amazon_nl: "Ваш ідентифікатор партнера amazon.nl (Нідерланди)."
+    affiliate_amazon_eu: "Ваш ідентифікатор партнера amzn.eu (Європа)."
+    affiliate_ldlc_com: "Ваш ідентифікатор партнера ldlc.com (без номера)."

@@ -43,7 +43,6 @@ ca:
       save: "Desa"
       sounds:
         none: "Cap"
-      exit: "enrere"
       channel_status:
         closed: "Tancat"
         open: "Obre"

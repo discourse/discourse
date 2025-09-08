@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Patreon Discourse"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Zaloguj się przez Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtry'
+      group: 'Grupa'
+      rewards: 'Nagrody'
+      filter: 'Filtr'
+      help_text: 'Możesz zsynchronizować grupę Discourse’a z jednym lub większą liczbą progów Patreona.'
+      last_synced: 'Ostatnio zsynchronizowane'
+      edit: 'Edytuj'
+      delete: 'Usuń'
+      save: 'Zapisz'
+      update_data: 'Zaktualizuj dane Patreona i zsynchronizuj grupy'
+      refresh_page: 'Nowe dane są pobierane przez API Patreona. Odśwież stronę.'
+      select_group: 'Wybierz grupę'
+      field:
+        id: "ID"
+        email: "E-mail"
+        amount_cents: "Liczba (w centach)"
+        rewards: "Nagrody"
+        declined_since: "Wpłata odrzucona od"
+        more_details:
+          label: "Płatność i szczegóły"
+          help_text:
+            email_available: "Sprawdź prawą dolną część strony, by zobaczyć historię wpłat Patreona."
+            email_not_available: "Wybierz użytkownika Patreona i sprawdź prawą dolną część strony, by zobaczyć historię wpłat."
+      donation_prompt:
+        body: |
+          <h1>Witaj, czytelniku!</h1>
+
+          <p>Podoba Ci się nasza strona? Chcesz wesprzeć dobrą sprawę?</p>
+
+          <p>
+            Jeśli uważasz naszą stronę za pomocną i podoba Ci się społeczność, którą stworzyliśmy, będziemy wdzięczni za Twoją darowiznę.
+            Darowizny zapewniają sprawne funkcjonowanie naszych usług i gwarantują, że nasza społeczność będzie działać przez wiele lat.
+            Każdy dolar się liczy i zostanie dobrze wykorzystany.
+          </p>
+
+          <p>Dziękujemy za wsparcie!</p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Zostań patronem</a>
+          </p>

@@ -3,8 +3,8 @@
 RSpec.describe TopicHotScore do
   describe ".update_scores" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user2, :user)
+    fab!(:user3, :user)
 
     after { Discourse.cache.delete(described_class::CACHE_KEY) }
 

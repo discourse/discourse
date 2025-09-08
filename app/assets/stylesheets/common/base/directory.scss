@@ -1,8 +1,22 @@
 @use "lib/viewport";
 
-.directory-table-top-scroll {
-  width: 100%;
-  overflow-x: auto;
+.horizontal-scroll-sync {
+  &__container {
+    width: 100%;
+  }
+
+  &__top-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  &__fake-content {
+    pointer-events: auto;
+  }
+
+  &__content {
+    overflow-x: auto;
+  }
 }
 
 .directory {
@@ -75,7 +89,7 @@
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--table-border-color);
 
       .column-name {
         display: flex;
@@ -140,7 +154,6 @@
   gap: 0;
   width: 100%;
   margin-top: var(--space-1);
-  overflow-x: auto;
 
   .me {
     .directory-table__cell {
@@ -168,7 +181,7 @@
   &__cell--empty,
   &__cell--user-field {
     display: flex;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--table-border-color);
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -316,12 +329,12 @@
     &__row {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--table-border-color);
       padding: var(--space-3) var(--space-2) var(--space-4);
       gap: 0 10%;
 
       &:first-child {
-        border-top: 1px solid var(--primary-low);
+        border-top: 1px solid var(--table-border-color);
       }
     }
 

@@ -2,7 +2,7 @@
 
 RSpec.describe ::Jobs::NotifyTagChange do
   fab!(:user)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:post) { Fabricate(:post, user: regular_user) }
   fab!(:tag) { Fabricate(:tag, name: "test") }
 

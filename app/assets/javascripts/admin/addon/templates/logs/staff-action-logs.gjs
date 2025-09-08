@@ -1,14 +1,15 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DateTimeInputRange from "discourse/components/date-time-input-range";
 import LoadMore from "discourse/components/load-more";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import StaffActions from "admin/components/staff-actions";
 import ComboBox from "select-kit/components/combo-box";
@@ -16,85 +17,99 @@ import ComboBox from "select-kit/components/combo-box";
 export default RouteTemplate(
   <template>
     <div class="staff-action-logs-controls">
-      {{#if @controller.filtersExists}}
-        <div class="staff-action-logs-filters">
-          <a
-            href
-            {{on "click" @controller.clearAllFilters}}
-            class="clear-filters filter btn"
-          >
-            <span class="label">{{i18n
-                "admin.logs.staff_actions.clear_filters"
-              }}</span>
-          </a>
-          {{#if @controller.actionFilter}}
+      <div class="staff-action-logs-controls__left">
+        {{#if @controller.filtersExists}}
+          <div class="staff-action-logs-filters">
             <a
               href
-              {{on "click" (fn @controller.clearFilter "actionFilter")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n "admin.logs.action"}}</span>:
-              {{@controller.actionFilter}}
-              {{icon "circle-xmark"}}
-            </a>
-          {{/if}}
-          {{#if @controller.filters.acting_user}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "acting_user")}}
-              class="filter btn"
+              {{on "click" @controller.clearAllFilters}}
+              class="clear-filters filter btn"
             >
               <span class="label">{{i18n
-                  "admin.logs.staff_actions.staff_user"
-                }}</span>:
-              {{@controller.filters.acting_user}}
-              {{icon "circle-xmark"}}
+                  "admin.logs.staff_actions.clear_filters"
+                }}</span>
             </a>
-          {{/if}}
-          {{#if @controller.filters.target_user}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "target_user")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n
-                  "admin.logs.staff_actions.target_user"
-                }}</span>:
-              {{@controller.filters.target_user}}
-              {{icon "circle-xmark"}}
-            </a>
-          {{/if}}
-          {{#if @controller.filters.subject}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "subject")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n
-                  "admin.logs.staff_actions.subject"
-                }}</span>:
-              {{@controller.filters.subject}}
-              {{icon "circle-xmark"}}
-            </a>
-          {{/if}}
-        </div>
-      {{else}}
-        {{i18n "admin.logs.staff_actions.filter"}}
-        <ComboBox
-          @content={{@controller.userHistoryActions}}
-          @value={{@controller.filterActionId}}
-          @onChange={{@controller.filterActionIdChanged}}
-          @options={{hash none="admin.logs.staff_actions.all"}}
-          @id="staff-action-logs-action-filter"
-        />
-      {{/if}}
+            {{#if @controller.actionFilter}}
+              <a
+                href
+                {{on "click" (fn @controller.clearFilter "actionFilter")}}
+                class="filter btn"
+              >
+                <span class="label">{{i18n "admin.logs.action"}}</span>:
+                {{@controller.actionFilter}}
+                {{icon "circle-xmark"}}
+              </a>
+            {{/if}}
+            {{#if @controller.filters.acting_user}}
+              <a
+                href
+                {{on "click" (fn @controller.clearFilter "acting_user")}}
+                class="filter btn"
+              >
+                <span class="label">{{i18n
+                    "admin.logs.staff_actions.staff_user"
+                  }}</span>:
+                {{@controller.filters.acting_user}}
+                {{icon "circle-xmark"}}
+              </a>
+            {{/if}}
+            {{#if @controller.filters.target_user}}
+              <a
+                href
+                {{on "click" (fn @controller.clearFilter "target_user")}}
+                class="filter btn"
+              >
+                <span class="label">{{i18n
+                    "admin.logs.staff_actions.target_user"
+                  }}</span>:
+                {{@controller.filters.target_user}}
+                {{icon "circle-xmark"}}
+              </a>
+            {{/if}}
+            {{#if @controller.filters.subject}}
+              <a
+                href
+                {{on "click" (fn @controller.clearFilter "subject")}}
+                class="filter btn"
+              >
+                <span class="label">{{i18n
+                    "admin.logs.staff_actions.subject"
+                  }}</span>:
+                {{@controller.filters.subject}}
+                {{icon "circle-xmark"}}
+              </a>
+            {{/if}}
+          </div>
+        {{else}}
+          {{i18n "admin.logs.staff_actions.filter"}}
+          <ComboBox
+            @content={{@controller.userHistoryActions}}
+            @value={{@controller.filterActionId}}
+            @onChange={{@controller.filterActionIdChanged}}
+            @options={{hash none="admin.logs.staff_actions.all"}}
+            @id="staff-action-logs-action-filter"
+          />
+        {{/if}}
 
-      <DButton
-        @action={{@controller.exportStaffActionLogs}}
-        @label="admin.export_csv.button_text"
-        @icon="download"
-        class="btn-default"
-      />
+        <div class="date-filter-container">
+          <DateTimeInputRange
+            @from={{@controller.startDate}}
+            @to={{@controller.endDate}}
+            @onChange={{@controller.onChangeDateRange}}
+            @showFromTime={{false}}
+            @showToTime={{false}}
+          />
+        </div>
+      </div>
+
+      <div class="staff-action-logs-controls__right">
+        <DButton
+          @action={{@controller.exportStaffActionLogs}}
+          @label="admin.export_csv.button_text"
+          @icon="download"
+          class="btn-default export-staff-action-logs"
+        />
+      </div>
     </div>
 
     <div class="clearfix"></div>

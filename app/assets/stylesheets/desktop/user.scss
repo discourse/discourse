@@ -123,6 +123,7 @@
     }
 
     .controls {
+      align-self: center;
       max-width: 13.5em;
       margin-left: 0.5em;
 
@@ -153,7 +154,7 @@
         position: relative;
         padding: 0;
         margin-top: 0;
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
   }

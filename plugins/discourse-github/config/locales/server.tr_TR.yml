@@ -1,0 +1,63 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    enable_discourse_github_plugin: "discourse-github eklentisini etkinleştirin"
+    github_linkback_enabled: "GitHub sorunlarını forum tartışmalarına geri bağlayın"
+    github_linkback_projects: "Geri bağlantı kurulacak projelerin listesi"
+    github_linkback_access_token: 'Geri bağlantıyı gönderecek kullanıcı için ve rozet vermek üzere taahhütleri/katkıları saymak için geçerli bir erişim token''ı. Nasıl token alınacağına ilişkin talimatlar için <a href="https://meta.discourse.org/t/99895">burayı</a> inceleyin.'
+    github_linkback_maximum_links: "Tek bir gönderiden oluşturulacak maksimum geri bağlantı sayısı. Bir gönderi daha fazla bağlantı içeriyorsa hiçbiri oluşturulmaz."
+    github_permalinks_enabled: "GitHub kalıcı bağlantılarının üzerine yazmayı etkinleştirin"
+    github_permalinks_exclude: "Kalıcı bağlantı üzerine yazma işlemlerinin dışında bırakılması gereken dosya adı veya dizin. Yalnızca dosya adı veya tam yol sağlayın: kullanıcı/havuz/isteğe bağlı dizin/dosya adı"
+    github_badges_enabled: "GitHub rozetlerini etkinleştirin"
+    github_badges_repos: "Katkılar ve taahhütler için taranacak GitHub depolarının URL'leri"
+    github_silver_badge_min_commits: "Gümüş rozet için minimum taahhüt sayısı"
+    github_gold_badge_min_commits: "Altın rozet için minimum taahhüt sayısı"
+    errors:
+      invalid_badge_repo: "Bir GitHub URL'si veya depo adını github_user/repository_name biçiminde sağlamalısınız"
+      invalid_github_linkback_access_token: "Sağladığınız rozet depolarına erişimi olan geçerli bir GitHub linkback erişim token'ı sağlamalısınız."
+  github_linkback:
+    commit_template: |
+      Bu taahhütten **%{title}** başlığında bahsedildi. Orada ilgili ayrıntılar olabilir:
+
+      %{post_url}
+    pr_template: |
+      Bu çekme talebinden **%{title}** başlığında bahsedildi. Orada ilgili ayrıntılar olabilir:
+
+      %{post_url}
+    issue_template: |
+      Bu sorundan **%{title}** başlığında bahsedildi. Orada ilgili ayrıntılar olabilir:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "discourse-github eklentisi için eylem gerekli"
+      repository_identifier_invalid_pm: |
+        discourse-github eklentisinde belirtilen bir depo geçersiz:
+        %{repo_name}
+
+        `user/repo` olarak belirtilmeliler.
+
+        İsim
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
+        adresinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
+      repository_not_found_pm_title: "discourse-github eklentisi için eylem gerekli"
+      repository_not_found_pm: |
+        discourse-github eklentisinde belirtilen bir depo "Bulunamadı"
+        hatası döndürdü: %{repo_name}
+
+        İsim
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
+        içinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
+      invalid_octokit_credentials_pm_title: "discourse-github eklentisi için eylem gerekli"
+      invalid_octokit_credentials_pm: |
+        discourse-github eklentisine eklenen GitHub giriş bilgileri geçersiz. "github rozetleri etkin\ site
+        ayarı devre dışı ve sorun çözülene kadar taahhütler doldurulmaz.
+
+        Belirtecin doğru olduğundan ve
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a> aracılığıyla tüm
+        depolara izne sahip olduğundan emin olmak için "github geri bağlantı erişim token'ı" site ayarınızı kontrol edin.

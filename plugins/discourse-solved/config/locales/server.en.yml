@@ -1,0 +1,75 @@
+en:
+  accepted_answer: "Accepted Answer"
+
+  site_settings:
+    solved_enabled: "Enable solved plugin, allow users to select solutions for topics"
+    allow_solved_on_all_topics: "Allow users to select solutions on all topics (when unchecked, solutions can be enabled per category or tag)"
+    accept_all_solutions_trust_level: "Minimum trust level required to accept solutions on any topic (even when not OP)"
+    accept_all_solutions_allowed_groups: "Groups that are allowed to accept solutions on any topic (even when not OP). Admins and moderators are always allowed."
+    empty_box_on_unsolved: "Display an empty box next to unsolved topics"
+    solved_quote_length: "Number of characters to quote when displaying the solution under the first post"
+    solved_topics_auto_close_hours: "Auto close topic (n) hours after the last reply once the topic has been marked as solved. Set to 0 to disable auto closing."
+    show_filter_by_solved_status: "Show a dropdown to filter a topic list by solved status."
+    notify_on_staff_accept_solved: "Send notification to the topic creator when a post is marked as solution by a staff."
+    ignore_solved_topics_in_assigned_reminder: "Prevent reminders for assignments from including solved topics. Only relevant when using the discourse-assign plugin."
+    assignment_status_on_solve: "When a topic is solved update all assignments to this status"
+    assignment_status_on_unsolve: "When a topic is unsolved update all assignments to this status"
+    disable_solved_education_message: "Disable education message for solved topics."
+    accept_solutions_topic_author: "Allow the topic author to accept a solution."
+    solved_add_schema_markup: "Add QAPage schema markup to HTML."
+    enable_solved_tags: "Tags that will allow users to select solutions."
+    prioritize_solved_topics_in_search: "Prioritize solved topics in search results."
+    show_who_marked_solved: "Show who marked the topic as solved. This is indicated in the topic's first post, and the answer post in a tooltip."
+
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+
+  reports:
+    accepted_solutions:
+      title: "Accepted solutions"
+      xaxis: "Day"
+      yaxis: "Total"
+  solved:
+    no_solutions:
+      self: "You have no accepted solutions yet."
+      others: "No accepted solutions."
+    filter:
+      description:
+        solved: "Filter topics that have been solved"
+        unsolved: "Filter topics that have not been solved"
+
+  badges:
+    solved_1:
+      name: "Solved!"
+      description: "Have a reply marked as a Solution"
+      long_description: "This badge is granted for having a reply marked as a Solution to a topic. :white_check_mark: Nice job. :+1:"
+    solved_2:
+      name: "Guidance Counsellor"
+      description: "Have 10 replies marked as Solutions"
+      long_description: "This badge is granted for having 10 of your replies marked as Solutions to topics. :white_check_mark: You are a true asset to your fellow community members."
+    solved_3:
+      name: "Know-it-All"
+      description: "Have 50 replies marked as Solutions"
+      long_description: "This badge is granted for having 50 of your replies marked as Solutions to topics. :white_check_mark: You really know your stuff. :clap:"
+    solved_4:
+      name: "Solution Institution"
+      description: "Have 150 replies marked as Solutions"
+      long_description: "This badge is granted for having 150 of your replies marked as Solutions to topics. :white_check_mark: Excellent work. :slightly_smiling_face: You are officially a Solution Institution. :brain:"
+
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: First accepted solution
+        doc: Triggers when a user got a solution accepted for the first time.
+
+  education:
+    topic_is_solved: |
+      ### This topic has been solved
+
+      Only reply here if:
+
+      - You have additional details
+
+      - The solution doesn't work for you
+
+      If you have an unrelated issue, please [start a new topic](%{base_url}/new-topic) instead.

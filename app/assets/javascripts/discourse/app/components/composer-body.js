@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";

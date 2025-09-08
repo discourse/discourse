@@ -84,8 +84,8 @@ RSpec.describe PostsController do
   fab!(:admin)
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
-  fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
+  fab!(:user_trust_level_0, :trust_level_0)
+  fab!(:user_trust_level_1, :trust_level_1)
   fab!(:category)
   fab!(:topic)
   fab!(:post_by_user) { Fabricate(:post, user: user) }
@@ -368,7 +368,7 @@ RSpec.describe PostsController do
                      }
 
     describe "when logged in" do
-      fab!(:poster) { Fabricate(:moderator) }
+      fab!(:poster, :moderator)
       fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
       fab!(:post2) do
         Fabricate(
@@ -1514,7 +1514,7 @@ RSpec.describe PostsController do
       end
 
       describe "posts_controller_create_user modifier" do
-        fab!(:different_user) { Fabricate(:admin) }
+        fab!(:different_user, :admin)
 
         let!(:plugin) { Plugin::Instance.new }
         let!(:modifier) { :posts_controller_create_user }
@@ -1797,7 +1797,7 @@ RSpec.describe PostsController do
       end
 
       context "when `enable_user_status` site setting is enabled" do
-        fab!(:user_to_mention) { Fabricate(:user) }
+        fab!(:user_to_mention, :user)
 
         before { SiteSetting.enable_user_status = true }
 
@@ -1911,7 +1911,7 @@ RSpec.describe PostsController do
     end
 
     describe "shared draft" do
-      fab!(:destination_category) { Fabricate(:category) }
+      fab!(:destination_category, :category)
 
       it "will raise an error for regular users" do
         post "/posts.json",
@@ -1939,7 +1939,7 @@ RSpec.describe PostsController do
         end
 
         context "with a shared category" do
-          fab!(:shared_category) { Fabricate(:category) }
+          fab!(:shared_category, :category)
           before { SiteSetting.shared_drafts_category = shared_category.id }
 
           it "will work if the shared draft category is present" do

@@ -1181,7 +1181,6 @@ nb_NO:
   color_schemes:
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Forvalg"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Endre denne siden"
@@ -1271,7 +1270,6 @@ nb_NO:
       name: Gir tilbake
     badge_title_metadata: "%{display_name} merke på %{site_title}"
   admin_login:
-    success: "E-post sendt"
     submit_button: "Send e-post"
   tags:
     title: "Stikkord"
@@ -1343,7 +1341,7 @@ nb_NO:
         description: "Si deg enig med rapportering og demp bruker. "
       agree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      delete_single:
+      delete:
         title: "Slett"
         complete: "Post slettet."
       delete_and_ignore:
@@ -1368,8 +1366,10 @@ nb_NO:
           complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      no_action_user:
+        title: "Ingen handling"
       delete_user:
-        complete: "Bruker slettet."
+        complete: "Bruker slettet"
   fallback_username: "bruker"
   activemodel:
     errors:

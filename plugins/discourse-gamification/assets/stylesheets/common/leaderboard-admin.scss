@@ -1,0 +1,44 @@
+.leaderboard-admin {
+  &__title {
+    display: inline-block;
+  }
+
+  &__cta-new {
+    display: flex;
+    margin-top: 1rem;
+  }
+
+  &__btn-recalculate {
+    float: right;
+    margin-right: 1rem;
+  }
+
+  &__btn-new {
+    float: right;
+  }
+
+  &__btn-back {
+    margin-bottom: 1rem;
+    padding-left: 0;
+  }
+
+  &__listitem-action {
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    justify-content: flex-end;
+  }
+}
+
+.leaderboard-edit {
+  &__cancel {
+    margin-left: 1rem;
+  }
+}
+
+.new-leaderboard-container {
+  .form-kit__row {
+    padding-top: 0;
+  }
+}

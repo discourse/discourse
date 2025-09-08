@@ -9,8 +9,15 @@ ja:
     discourse_automation_enabled: "discourse-automation プラグインを有効にする"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "スクリプトを空にすることはできません"
+          trigger_blank: "トリガーを空にすることはできません"
+          script_missing_required_fields: "スクリプトの必須フィールドが入力されていません: %{fields}"
+          trigger_missing_required_fields: "トリガーの必須フィールドが入力されていません: %{fields}"
       fields:
         required_field: フィールド `%{name}` は `%{target}:%{target_name}` で入力する必要があります。
+        invalid_field: フィールドのコンポーネント `%{component}` は `%{target}:%{target_name}` では使用できません。
         invalid_metadata: '`%{field}` のデータが無効であるか、コンポーネント `%{component}` が不明です。'
     triggerables:
       errors:

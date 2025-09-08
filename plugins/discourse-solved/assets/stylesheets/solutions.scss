@@ -1,0 +1,116 @@
+$solved-color: var(--success);
+
+.select-kit {
+  &.solved-status-filter {
+    min-width: auto;
+    margin-right: 0.5em;
+
+    .select-kit-header {
+      color: var(--primary-high);
+    }
+  }
+}
+
+.fa.accepted {
+  color: $solved-color;
+}
+
+.post-controls .extra-buttons {
+  // anon text
+  .accepted-text {
+    white-space: nowrap;
+
+    .d-icon,
+    .accepted-label {
+      color: $solved-color;
+    }
+  }
+
+  // logged in button
+  .accepted {
+    .d-icon,
+    .d-button-label {
+      color: $solved-color;
+    }
+  }
+}
+
+.post-controls span.accepted-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0 0.5rem;
+  font-size: var(--font-up-1);
+  height: 100%;
+}
+
+.mobile-view .solved-panel {
+  margin-bottom: 15px;
+}
+
+.solved-panel {
+  .by {
+    display: none;
+  }
+  margin-top: 20px;
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+aside.quote.accepted-answer {
+  > .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &:not(.accepted-answer--has-excerpt) {
+    > .title {
+      padding: 0.8em;
+    }
+
+    > blockquote {
+      display: none;
+    }
+  }
+
+  .accepted-answer--solver-accepter {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+    gap: 0.25em;
+  }
+
+  .accepted-answer--solver {
+    margin-right: auto;
+  }
+
+  .accepted-answer--accepter {
+    font-size: var(--font-down-1);
+    width: 100%;
+    flex-basis: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 0.25em;
+
+    @media (width >= 480px) {
+      width: auto;
+    }
+  }
+}
+
+.user-card-metadata-outlet.accepted-answers {
+  display: inline-block;
+}
+
+.post-action-menu__solved-accepted-tooltip-content
+  .fk-d-tooltip__inner-content {
+  display: block;
+}
+
+.topic-statuses .topic-status.solved {
+  .d-icon {
+    color: $solved-color;
+  }
+}

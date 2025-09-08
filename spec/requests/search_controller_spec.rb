@@ -303,6 +303,15 @@ RSpec.describe SearchController do
         end
       end
     end
+
+    context "when visited by a crawler" do
+      it "responds with a noindex page" do
+        get "/search", params: { q: "test" }, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+        expect(response.body).to include("<meta name='robots' content='noindex'>")
+      end
+    end
   end
 
   describe "#show" do
@@ -498,7 +507,7 @@ RSpec.describe SearchController do
     end
 
     context "with lazy loaded categories" do
-      fab!(:parent_category) { Fabricate(:category) }
+      fab!(:parent_category, :category)
       fab!(:category) { Fabricate(:category, parent_category: parent_category) }
       fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
 

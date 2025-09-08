@@ -9,8 +9,8 @@ RSpec.describe Jobs::CreateLinkedTopic do
     fab!(:category)
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
 
     let :watching do
       TopicUser.notification_levels[:watching]

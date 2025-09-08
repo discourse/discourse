@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Introdu cel puțin un caracter"
+              few: "Introdu cel puțin %{count} caractere"
+              other: "Introdu cel puțin %{count} de caractere"
+          edit: "editează"
+          cancel: "anulează"
+          user:
+            deleted: "(utilizator șters)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Suspendă utilizator"
+              agree_and_silence:
+                title: "Reducere la tăcere utilizator"
+              disagree:
+                title: "Nu sunt de acord"
+      topic:
+        sort_by: "Sortează după"
+        votes: "Evaluări"
+        activity: "Activitate"

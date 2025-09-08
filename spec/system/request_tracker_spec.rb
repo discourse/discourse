@@ -189,7 +189,7 @@ describe "Request tracking", type: :system do
   end
 
   describe "topic views" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 

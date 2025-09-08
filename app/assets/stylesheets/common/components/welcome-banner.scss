@@ -16,10 +16,23 @@
 .welcome-banner {
   border-radius: var(--d-border-radius-large);
 
+  @include viewport.until(sm) {
+    display: none;
+  }
+
   &__wrap {
     box-sizing: border-box;
     position: relative;
     padding: var(--space-6) 0 3em;
+
+    .--with-bg-img & {
+      border-radius: var(--d-border-radius);
+      padding-inline: var(--space-4);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-bottom: var(--space-2);
+    }
 
     @include viewport.until(md) {
       padding: var(--space-4) 8px var(--space-5);
@@ -32,18 +45,11 @@
       margin-top: 0;
     }
 
-    > div {
-      margin: 0 auto;
-      max-width: 600px;
-    }
-
     .search-menu {
       display: flex;
       position: relative;
-
-      @include viewport.until(sm) {
-        display: none;
-      }
+      margin-inline: auto;
+      max-width: 600px;
 
       .search-menu-container {
         width: 100%;
@@ -59,41 +65,6 @@
       .search-term__input {
         min-width: 0;
         flex: 1 1;
-      }
-    }
-
-    .welcome-banner__title {
-      font-size: var(--font-up-6);
-      line-height: $line-height-medium;
-      font-weight: bold;
-      margin-bottom: var(--space-2);
-
-      @include viewport.until(md) {
-        font-size: var(--font-up-4);
-      }
-
-      @include viewport.until(sm) {
-        font-size: var(--font-up-1);
-      }
-    }
-
-    .welcome-banner__title,
-    p {
-      text-align: center;
-    }
-
-    .welcome-banner__subheader {
-      font-size: var(--font-down-6);
-      font-weight: normal;
-      margin: 0;
-      padding: 0.25rem 0;
-
-      @include viewport.until(md) {
-        font-size: var(--font-down-4);
-      }
-
-      @include viewport.until(sm) {
-        font-size: var(--font-down-1);
       }
     }
 
@@ -181,6 +152,31 @@
     // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
     max-height: calc(100vh - var(--header-offset) - -3em - 4em);
   }
+}
+
+.welcome-banner__title {
+  font-size: var(--font-up-6);
+  line-height: $line-height-medium;
+  font-weight: bold;
+  margin-bottom: var(--space-2);
+  margin-inline: auto;
+  max-width: 600px;
+  text-align: center;
+
+  @include viewport.until(md) {
+    font-size: var(--font-up-4);
+  }
+
+  @include viewport.until(sm) {
+    font-size: var(--font-up-1);
+  }
+}
+
+.welcome-banner__subheader {
+  font-size: var(--font-up-1-rem);
+  font-weight: normal;
+  margin: 0;
+  padding: 0.25rem 0;
 }
 
 // hide search icon from default search menu

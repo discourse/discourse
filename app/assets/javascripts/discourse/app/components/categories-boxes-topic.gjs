@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import { attributeBindings, tagName } from "@ember-decorators/component";
@@ -13,7 +14,7 @@ export default class CategoriesBoxesTopic extends Component {
       return "thumbtack";
     }
     if (closed || archived) {
-      return "lock";
+      return "category.restricted";
     }
     return "far-file-lines";
   }

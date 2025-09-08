@@ -3,8 +3,10 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 
 export default class PostMetaDataReplyToTab extends Component {
@@ -45,8 +47,13 @@ export default class PostMetaDataReplyToTab extends Component {
       {{else}}
         {{icon "share"}}
       {{/if}}
-      {{avatar @post.reply_to_user imageSize="small"}}
-      <span>{{userPrioritizedName @post.reply_to_user}}</span>
+      <PluginOutlet
+        @name="post-meta-data-reply-to-tab-info"
+        @outletArgs={{lazyHash post=@post}}
+      >
+        {{avatar @post.reply_to_user imageSize="small"}}
+        <span>{{userPrioritizedName @post.reply_to_user}}</span>
+      </PluginOutlet>
     </a>
   </template>
 }

@@ -5,6 +5,8 @@ describe "DiscourseAutomation | smoke test", type: :system do
   fab!(:group) { Fabricate(:group, name: "test") }
   fab!(:badge) { Fabricate(:badge, name: "badge") }
 
+  let(:automation_page) { PageObjects::Pages::Automation.new }
+
   before do
     SiteSetting.discourse_automation_enabled = true
     sign_in(admin)
@@ -70,7 +72,7 @@ describe "DiscourseAutomation | smoke test", type: :system do
     select_kit = PageObjects::Components::SelectKit.new(".group-chooser")
     select_kit.expand
     select_kit.select_row_by_name("test")
-    find(".automation-enabled input").click
+    automation_page.enabled_toggle.toggle
     find(".update-automation").click
 
     expect(page).to have_css(".automations__name", text: "aaaaa")

@@ -1665,7 +1665,7 @@ RSpec.describe CookedPostProcessor do
         end
 
         context "with media uploads" do
-          fab!(:image_upload) { Fabricate(:upload) }
+          fab!(:image_upload, :upload)
           fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
           fab!(:video_upload) { Fabricate(:upload, extension: "mov") }
 

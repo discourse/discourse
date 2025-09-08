@@ -78,7 +78,7 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.2
+    config.load_defaults 8.0
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
@@ -156,6 +156,9 @@ module Discourse
 
     require "middleware/default_headers"
     config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
+
+    require "middleware/crawler_hooks"
+    config.middleware.use Middleware::CrawlerHooks
 
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,

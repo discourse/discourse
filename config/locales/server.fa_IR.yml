@@ -1564,7 +1564,6 @@ fa_IR:
     allow_new_registrations: "اجازه ثبت نام کاربر جدید. برای جلوگیری از ایجاد حساب جدید، این تنظیم را غیر فعال کنید."
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_secret: "Client secret برنامه گوگل شما. "
-    automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
     s3_backup_bucket: "میزبان راه‌دور برای نگهداری از نسخه‌های پشتیبان. اخطار: مطمئن شوید که میزبان خصوصی است."
     backup_time_of_day: "زمان UTC روز برای رخ دادن نسخه پشتیبان."
     backup_with_uploads: "قراردادن فایل های بارگذاری شده در نسخه های پشتیبان. غیر فعال کردن این بخش باعث تهیه نسخه پشتیبان از دیتابیس می‌شود."
@@ -1598,7 +1597,6 @@ fa_IR:
     s3_upload_bucket: "نام میزبان Amazon S3 که فایل‌ها در آنجا بارگذاری می شود. اخطار: باید حروف کوچک باشد٬ بدون دوره٬‌ بدون زیرخط"
     s3_cdn_url: "آدرس CDN برای دسترسی به تمام دارایی‌های s3 (به طور مثال: https://cdn.somewhere.com). هشدار: بعد از تغییر این مقدار باید تمامی نوشته‌ها و مطالب قدیمی را rebake کنید."
     avatar_sizes: "لیست اندازه‌های آواتار که به صورت خودکار تولید شده است."
-    external_system_avatars_url: "لینک سرویس آواتار خارجی. تغییرات مجاز {username} {first_letter} {color} {size} هستند"
     allow_all_attachments_for_group_messages: "اجازه‌ی ضمیمه فایل در ایمیل پیام‌های گروهی."
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
     allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
@@ -1641,7 +1639,6 @@ fa_IR:
     create_thumbnails: "ایجاد تصویر بند‌انگشتی و کادر تصاویر کوچک عکس‌ها را درست که برای جا شدن در نوشته بسیار بزگ هستند"
     email_time_window_mins: "قبل از ارسال هرگونه آگاهی‌سازی از طریق ایمیل، (n) دقیقه صبر کن تا به کاربران فرصتی داده شود تا پست‌های خود را ویرایش و نهایی کنند."
     email_posts_context: "چند پاسخ قبلی به عنوان متن در ایمیل‌های اعلان گنجانده شود."
-    flush_timings_secs: "هر چند وقت یک بار اطلاعات زمان‌بندی سرور را خالی کنیم، واحد ثانیه"
     title_max_word_length: "حداکثر طول مجاز کلمه٬ در نویسه، در عنوان موضوع."
     title_min_entropy: "حداقل آنتروپی مورد نیاز عنوان موضوع (نویسه‌های خاص٬ تعداد غیر انگلیسی برای بیشتر)"
     body_min_entropy: "حداقل پیچیدگی و تنوع مورد نیاز برای بدنه فرسته (نویسه‌های منحصربه‌فرد و غیرانگلیسی ارزش بیشتری دارند)."
@@ -1816,6 +1813,11 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  filter:
+    description:
+      in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"
+      in_new_replies: "نمایش موضوعات با پاسخ‌های جدید"
+      in_new_topics: "نمایش موضوعات جدید"
   discourse_connect:
     login_error: "خطا در ورود"
     not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
@@ -2570,7 +2572,6 @@ fa_IR:
     solarized_light_theme_name: "خورشیدی روشن"
     solarized_dark: "خورشیدی تیره"
     solarized_dark_theme_name: "خورشیدی تیره"
-    default_theme_name: "پیش‌فرض"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
   edit_this_page: "ویرایش این صفحه"
@@ -2754,7 +2755,6 @@ fa_IR:
       name: هواخواه
     badge_title_metadata: "نشان %{display_name} در %{site_title}"
   admin_login:
-    success: "ایمیل ارسال شد"
     email_input: "ایمیل مدیر ارشد"
     submit_button: "ارسال ایمیل"
     safe_mode: "حالت ایمن: هنگام ورود به سیستم، تمام پوسته‌ها/افزونه‌ها را غیرفعال شود"
@@ -2875,11 +2875,9 @@ fa_IR:
         title: "کاربر تعلیق شده"
       agree_and_restore:
         title: "بازیابی نوشته"
-      delete_single:
+      delete:
         title: "حذف"
         complete: "نوشته حذف شده."
-      delete:
-        title: "حذف…"
       delete_and_ignore:
         complete: "نوشته حذف شده."
       delete_and_agree:
@@ -2898,6 +2896,8 @@ fa_IR:
         complete: "نوشته تایید شده."
       approve_post:
         complete: "نوشته تایید شده."
+      approve_post_closed:
+        complete: "نوشته تایید شده."
       reject_post:
         complete: "نوشته رد شده."
       approve_user:
@@ -2910,8 +2910,13 @@ fa_IR:
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      no_action_user:
+        title: "هیچ اقدامی"
+      suspend_user:
+        title: "کاربر تعلیق شده"
       delete_user:
-        complete: "کاربر حذف شده."
+        title: "حذف کاربر"
+        complete: "کاربر حذف شده"
   fallback_username: "کاربران"
   user_status:
     errors:

@@ -11,7 +11,7 @@ export default {
       return;
     }
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",

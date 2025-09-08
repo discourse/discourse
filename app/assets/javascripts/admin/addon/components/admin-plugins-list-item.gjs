@@ -58,15 +58,21 @@ export default class AdminPluginsListItem extends Component {
     return "";
   }
 
+  get isPreinstalled() {
+    return this.args.plugin.url?.includes(
+      "/discourse/discourse/tree/main/plugins/"
+    );
+  }
+
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
       class={{concat
-        "d-admin-row__content admin-plugins-list__row"
+        "d-table__row admin-plugins-list__row"
         (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
     >
-      <td class="d-admin-row__overview admin-plugins-list__name-details">
+      <td class="d-table__cell --overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
           <div class="d-admin-row__overview-name admin-plugins-list__name">
             {{@plugin.nameTitleized}}
@@ -96,15 +102,16 @@ export default class AdminPluginsListItem extends Component {
               href={{@plugin.linkUrl}}
               rel="noopener noreferrer"
               target="_blank"
+              class="admin-plugins-list__about-link"
             >
-              {{i18n "admin.plugins.learn_more"}}
               {{icon "up-right-from-square"}}
+              {{i18n "admin.plugins.learn_more"}}
             </a>
           {{/if}}
         </div>
       </td>
-      <td class="d-admin-row__detail admin-plugins-list__version">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail admin-plugins-list__version">
+        <div class="d-table__mobile-label">
           {{i18n "admin.plugins.version"}}
         </div>
         <div class="plugin-version">
@@ -113,12 +120,18 @@ export default class AdminPluginsListItem extends Component {
             @outletArgs={{lazyHash plugin=@plugin}}
           >
             {{@plugin.version}}<br />
-            <PluginCommitHash @plugin={{@plugin}} />
+            {{#if this.isPreinstalled}}
+              <span class="admin-plugins-list__preinstalled">
+                {{i18n "admin.plugins.preinstalled"}}
+              </span>
+            {{else}}
+              <PluginCommitHash @plugin={{@plugin}} />
+            {{/if}}
           </PluginOutlet>
         </div>
       </td>
-      <td class="d-admin-row__detail admin-plugins-list__enabled">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail admin-plugins-list__enabled">
+        <div class="d-table__mobile-label">
           {{i18n "admin.plugins.enabled"}}
         </div>
         <PluginOutlet
@@ -135,7 +148,7 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </PluginOutlet>
       </td>
-      <td class="d-admin-row__controls admin-plugins-list__settings">
+      <td class="d-table__cell --controls admin-plugins-list__settings">
         <PluginOutlet
           @name="admin-plugin-list-item-settings"
           @outletArgs={{lazyHash plugin=@plugin}}

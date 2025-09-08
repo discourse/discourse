@@ -48,13 +48,13 @@ module(
       );
 
       assert
-        .dom(formKit().field("foo").element.querySelector("input"))
+        .dom(formKit().field("foo").inputElement)
         .hasAttribute("type", "password");
 
       await formKit().field("foo").toggle();
 
       assert
-        .dom(formKit().field("foo").element.querySelector("input"))
+        .dom(formKit().field("foo").inputElement)
         .hasAttribute("type", "text");
     });
   }

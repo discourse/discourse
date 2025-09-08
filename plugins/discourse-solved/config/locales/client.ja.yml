@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse 解決済み"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "同意"
+    solutions: "解決策"
+    solved:
+      title: "解決済み"
+      allow_accepted_answers: "トピックオーナーとスタッフが返信を解決策としてマークすることを許可する"
+      solved_topics_auto_close_hours: "トピックが解決済みとマークされたら、最後の返信から (n) 時間後にトピックを自動クローズします。"
+      accept_answer: "この返信が問題を解決したか選択してください"
+      accepted_description: "これは、このトピックについて受け入れられた解決策です。"
+      has_no_accepted_answer: "このトピックには解決策がありません"
+      unaccept_answer: "この返信が問題を解決できなくなった場合は選択を解除してください"
+      accepted_answer: "解決策"
+      solution: "解決策"
+      solution_summary:
+        other: "解決策"
+      accepted_answer_post_number: "投稿 %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "すべて"
+        solved: "解決済み"
+        unsolved: "未解決"
+      no_solved_topics_title: "まだトピックを解決していません。"
+      no_solved_topics_title_others: "%{username} はまだトピックを解決していません"
+      no_solved_topics_body: "トピックに有益な返信を提供すると、その返信がトピックオーナーまたはスタッフによって解決策として選択される場合があります。"
+      no_answer:
+        title: 質問の回答は得られましたか？
+        description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"
+      notification:
+        title: "あなたの投稿が解決策としてマークされました"
+    topic_statuses:
+      solved:
+        help: "このトピックには解決策があります"
+    search:
+      advanced:
+        statuses:
+          solved: "解決済み"
+          unsolved: "未解決"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "解決済みイベント"
+          accepted_solution: "ユーザーが投稿を受け入れられる回答としてマークしたとき"
+          unaccepted_solution: "ユーザーが投稿を受け入れられない回答としてマークしたとき"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: 解決策に同意/非同意します。
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: すべて
+          fields:
+            maximum_trust_level:
+              label: 信頼レベル
+              description: この信頼レベルより低いユーザーは、この自動化をトリガーする

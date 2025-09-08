@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    assign_enabled: "Aktiver tildelings udvidelse"
+    assigns_public: "Tillad offentligheden at se emnetildelinger"
+    assigns_user_url_path: "Sti til brugerens tildelte emner (brug: {username} til at erstatte brugernavnet)"
+    assigns_by_staff_mention: "Hvis en medarbejder nævner en anden medarbejder, tildeles emnet automatisk"
+    unassign_creates_tracking_post: "Hvis du fjerner tildelingen af et emne, oprettes der en hvisken eller en lille handling for at spore ændringer"
+    assign_self_regex: "Regex, der skal bestå for selvtildeling. Eksempel 'min liste'"
+    assign_other_regex: "Regex, der skal bestå for at tildele emner til andre via omtale. Eksempel 'din liste'."
+  discourse_assign:
+    assigned_to: "Emne tildelt til @%{username}"
+    unassigned: "Emne blev fradelt"
+    already_claimed: "Det emne er allerede blevet hævdet."
+    already_assigned: "Emnet er allerede tildelt @%{username}"
+    too_many_assigns: "@%{username} har allerede nået det maksimale antal tildelte emner (%{max})."
+    forbidden_assign_to: "@%{username} kan ikke tildeles, da de ikke tilhører tildelte tilladte grupper."
+    forbidden_assignee_not_pm_participant: "@%{username} kan ikke tildeles, fordi de ikke har adgang til denne PM. Du kan give @%{username} adgang ved at invitere dem til denne PM."
+    forbidden_assignee_cant_see_topic: "@%{username} kan ikke tildeles, fordi der ikke har adgang til dette emne."
+    group_already_assigned: "Emnet er allerede tildelt @%{group}"
+    forbidden_group_assign_to: "@%{group} kan ikke tildeles, da de ikke tilhører tildelte tilladte grupper."
+    flag_assigned: "Beklager, dette flag er tildelt til en anden bruger"
+    flag_unclaimed: "Du skal gøre krav på emnet, før du handler på markeringsflaget"
+    topic_assigned_excerpt: "tildelte dig emnet '%{title}“"
+    reminders_frequency:
+      never: "aldrig"
+      daily: "dagligt"
+      weekly: "ugenligt"
+      monthly: "Månedligt"
+      quarterly: "kvartalvis"
+  assign_mailer:
+    title: "Tildel Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} tildelte dig til '%{topic_title}'!"
+    text_body_template: |
+      Hej, %{assignee_name} **tildelte** dig til en diskussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Hvis du er interesseret, skal du klikke på nedenstående link:
+      [%{topic_link}] (%{topic_link})
+  pending_assigns_reminder:
+    newest: |
+      ### Nyeste
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Ældste
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

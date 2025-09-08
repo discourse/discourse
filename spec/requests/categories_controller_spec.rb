@@ -101,7 +101,7 @@ RSpec.describe CategoriesController do
     end
 
     it "does not return subcategories without query param" do
-      subcategory = Fabricate(:category, user: admin, parent_category: category)
+      Fabricate(:category, user: admin, parent_category: category)
 
       sign_in(user)
 
@@ -343,8 +343,8 @@ RSpec.describe CategoriesController do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
       upload = Fabricate(:upload)
-      topic1 = Fabricate(:topic, category: category1)
-      topic2 = Fabricate(:topic, category: category1, image_upload: upload)
+      Fabricate(:topic, category: category1)
+      Fabricate(:topic, category: category1, image_upload: upload)
 
       CategoryFeaturedTopic.feature_topics
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -363,8 +363,7 @@ RSpec.describe CategoriesController do
         response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
       expect(category_response["topics"].count).to eq(2)
 
-      upload = Fabricate(:upload)
-      topic3 = Fabricate(:topic, category: category2, image_upload: upload)
+      Fabricate(:topic, category: category2, image_upload: Fabricate(:upload))
       CategoryFeaturedTopic.feature_topics
 
       second_request_queries =
@@ -651,9 +650,9 @@ RSpec.describe CategoriesController do
   end
 
   describe "#update" do
-    fab!(:mod_group_1) { Fabricate(:group) }
-    fab!(:mod_group_2) { Fabricate(:group) }
-    fab!(:mod_group_3) { Fabricate(:group) }
+    fab!(:mod_group_1, :group)
+    fab!(:mod_group_2, :group)
+    fab!(:mod_group_3, :group)
 
     before { Jobs.run_immediately! }
 
@@ -689,14 +688,13 @@ RSpec.describe CategoriesController do
 
       it "returns errors when there is a name conflict while moving a category into another" do
         parent_category = Fabricate(:category, name: "Parent", user: admin)
-        other_category =
-          Fabricate(
-            :category,
-            name: category.name,
-            user: admin,
-            parent_category: parent_category,
-            slug: "a-different-slug",
-          )
+        Fabricate(
+          :category,
+          name: category.name,
+          user: admin,
+          parent_category:,
+          slug: "a-different-slug",
+        )
 
         put "/categories/#{category.id}.json", params: { parent_category_id: parent_category.id }
 
@@ -704,7 +702,7 @@ RSpec.describe CategoriesController do
       end
 
       it "returns 422 if email_in address is already in use for other category" do
-        _other_category = Fabricate(:category, name: "Other", email_in: "mail@example.com")
+        Fabricate(:category, name: "Other", email_in: "mail@example.com")
 
         put "/categories/#{category.id}.json",
             params: {
@@ -1558,6 +1556,22 @@ RSpec.describe CategoriesController do
       after { ActionController::Base.allow_forgery_protection = false }
 
       it "works and is not CSRF protected" do
+        post "/categories/search.json", params: { term: "" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+          SiteSetting.uncategorized_category_id,
+          category.id,
+          subcategory.id,
+          category2.id,
+        )
+      end
+    end
+
+    context "when in readonly mode" do
+      before { Discourse.enable_readonly_mode }
+
+      it "works" do
         post "/categories/search.json", params: { term: "" }
 
         expect(response.status).to eq(200)

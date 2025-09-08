@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsMembershipsController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel_1) do
     Fabricate(:direct_message_channel, group: true, users: [current_user, other_user])
   end

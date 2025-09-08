@@ -11,10 +11,11 @@ describe "User preferences | Account", type: :system do
     it "saves custom picture and system assigned pictures" do
       user_account_preferences_page.open_avatar_selector_modal(user)
       expect(avatar_selector_modal).to be_open
+      expect(avatar_selector_modal).to have_avatar_options("system", "gravatar", "upload")
 
       avatar_selector_modal.select_avatar_upload_option
       file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
-      attach_file(file_path) { avatar_selector_modal.click_avatar_upload_button }
+      attach_file("custom-profile-upload", file_path, make_visible: true)
       expect(avatar_selector_modal).to have_user_avatar_image_uploaded
       avatar_selector_modal.click_primary_button
       expect(avatar_selector_modal).to be_closed
@@ -32,6 +33,65 @@ describe "User preferences | Account", type: :system do
       user_account_preferences_page.open_avatar_selector_modal(user)
       expect(avatar_selector_modal).to be_open
       expect(avatar_selector_modal).to have_no_avatar_upload_button
+    end
+
+    it "does not show Gravatar option when gravatars are not enabled" do
+      SiteSetting.gravatar_enabled = false
+
+      user_account_preferences_page.open_avatar_selector_modal(user)
+      expect(avatar_selector_modal).to be_open
+      expect(avatar_selector_modal).to have_avatar_options("system", "upload")
+    end
+  end
+
+  describe "overridden provider attributes" do
+    before do
+      authenticator =
+        Class
+          .new(Auth::ManagedAuthenticator) do
+            def name
+              "test_auth"
+            end
+
+            def enabled?
+              true
+            end
+          end
+          .new
+
+      provider =
+        Auth::AuthProvider.new(
+          authenticator:,
+          icon: "flash",
+          icon_setting: :test_icon,
+          pretty_name: "old pretty name",
+          pretty_name_setting: :test_pretty_name,
+          title: "old_title",
+          title_setting: :test_title,
+        )
+      DiscoursePluginRegistry.register_auth_provider(provider)
+
+      allow(SiteSetting).to receive(:get).and_call_original
+      allow(SiteSetting).to receive(:get).with(:test_icon).and_return("bullseye")
+      allow(SiteSetting).to receive(:get).with(:test_pretty_name).and_return("new pretty name")
+      allow(SiteSetting).to receive(:get).with(:test_title).and_return("new_title")
+    end
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "displays the correct name when overridden" do
+      user_account_preferences_page.visit(user)
+      name = find(".pref-associated-accounts table tr.test-auth .associated-account__name")
+      expect(name).not_to have_text("old pretty name")
+      expect(name).to have_text("new pretty name")
+    end
+
+    it "displays the correct icon when overridden" do
+      user_account_preferences_page.visit(user)
+      icon_classes =
+        find(".pref-associated-accounts table tr.test-auth .associated-account__icon svg")[:class]
+      expect(icon_classes).not_to have_content("d-icon-flash")
+      expect(icon_classes).to have_content("d-icon-bullseye")
     end
   end
 

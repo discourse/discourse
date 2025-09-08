@@ -1419,7 +1419,6 @@ ko:
     discord_trusted_guilds: '이 Discord 길드 회원만 Discord를 통해 로그인할 수 있습니다. 길드에 숫자 ID를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>에서 지침을 확인하세요. 모든 길드를 허용하려면 공백으로 두세요.'
     enable_backups: "관리자가 포럼 백업을 생성하도록 허용"
     allow_restore: "모든 사이트 데이터를 대체할 수 있는 복원을 허용합니다! 백업을 복원할 계획이 아니라면 비활성화된 상태로 두세요."
-    automatic_backups_enabled: "백업 주기에 정의된 대로 자동 백업 실행"
     s3_backup_bucket: "백업을 보관할 원격 버킷입니다. 경고: 비공개 버킷인지 확인하세요."
     s3_endpoint: "엔드포인트를 수정하여 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스로 백업할 수 있습니다. 경고: AWS S3를 사용하는 경우 비워두세요."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 활성화합니다. 중요: 비활성화하면 업로드가 삭제된 후 공간이 확보되지 않습니다."
@@ -1471,7 +1470,6 @@ ko:
     s3_region: "이미지 및 백업을 업로드하는 데 사용될 Amazon S3 영역 이름입니다."
     s3_cdn_url: "모든 s3 에셋에 사용될 CDN URL(예: https://cdn.somewhere.com)입니다. 경고: 이 설정을 변경한 후 기존 게시물을 다시 작성해야 합니다."
     avatar_sizes: "자동 생성 아바타 크기 목록입니다."
-    external_system_avatars_url: "외부 시스템 아바타 서비스의 URL입니다. 허용된 대체는 {username} {first_letter} {color} {size}입니다."
     external_emoji_url: "이모티콘 이미지에 대한 외부 서비스의 URL입니다. 비활성화하려면 비워 두세요."
     use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용합니다. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용할 6자리 16진수 색상 값 목록입니다."
@@ -1538,7 +1536,6 @@ ko:
     email_time_window_mins: "알림 이메일을 보내기 전에 (n)분 정도 기다려서 사용자가 게시물을 편집하고 마무리하도록 합니다."
     personal_email_time_window_seconds: "개인 메시지를 보내기 전에 (n)초 정도 기다려서 사용자가 메시지를 편집하고 마무리하도록 합니다."
     email_posts_context: "알림 이메일의 콘텐츠로 추가할 기존 댓글 수입니다."
-    flush_timings_secs: "타이밍 데이터를 서버로 플러시하는 주기(초)입니다."
     title_max_word_length: "주제 제목 내 허용되는 최대 단어 길이(문자)입니다."
     title_min_entropy: "주제 제목에 필요한 최소 엔트로피(고유 문자, 초과할 경우 영어가 아닌 문자 수)입니다."
     body_min_entropy: "게시물 본문에 필요한 최소 엔트로피(고유 문자, 초과할 경우 영어가 아닌 문자 수)입니다."
@@ -3236,7 +3233,6 @@ ko:
     wcag_theme_name: "WCAG 라이트"
     wcag_dark: "WCAG 다크"
     wcag_dark_theme_name: "WCAG 다크"
-    default_theme_name: "기본"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
     neutral_theme_name: "중립국"
@@ -3521,10 +3517,6 @@ ko:
         이 배지는 365일 연속 방문시 부여됩니다. 와, 일년 내내!
     badge_title_metadata: "%{site_title}의 %{display_name} 배지"
   admin_login:
-    success: "이메일 전송됨"
-    errors:
-      unknown_email_address: "알 수 없는 이메일 주소입니다."
-      invalid_token: "토큰이 유효하지 않습니다."
     email_input: "관리자 이메일"
     submit_button: "이메일 전송"
   performance_report:
@@ -3690,7 +3682,7 @@ ko:
         description: "신고에 동의하고 사용자를 차단합니다."
       agree_and_restore:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      delete_single:
+      delete:
         title: "삭제"
         complete: "게시물 삭제됨."
       delete_and_ignore:
@@ -3713,7 +3705,9 @@ ko:
         title: "승인"
       approve_post:
         title: "게시물 승인"
-        confirm_closed: "이 주제는 종료되었습니다. 그래도 게시물을 작성할까요?"
+      approve_post_closed:
+        title: "게시물 승인"
+        confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"
       reject_post:
         title: "게시물 거부"
       approve_user:
@@ -3738,9 +3732,11 @@ ko:
         title: "게시물 삭제 유지"
       approve_and_restore:
         title: "게시물 승인 및 복원"
+      no_action_user:
+        title: "조치 없음"
       delete_user:
+        complete: "사용자 삭제됨"
         reason: "검토 대기열을 통해 삭제됨"
-        complete: "사용자 삭제됨."
   email_style:
     html_missing_placeholder: "html 템플릿에는 %{placeholder} 포함이 필수입니다."
   notification_level:

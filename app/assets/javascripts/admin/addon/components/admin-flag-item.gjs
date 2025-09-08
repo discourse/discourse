@@ -121,21 +121,21 @@ export default class AdminFlagItem extends Component {
   <template>
     <tr
       class={{concatClass
-        "d-admin-row__content admin-flag-item"
+        "d-table__row admin-flag-item"
         @flag.name_key
         (if this.isSaved "saved")
       }}
     >
-      <td class="d-admin-row__overview">
+      <td class="d-table__cell --overview">
         <div
-          class="d-admin-row__overview-name admin-flag-item__name"
+          class="d-table__overview-name admin-flag-item__name"
         >{{@flag.name}}</div>
-        <div class="d-admin-row__overview-about">{{htmlSafe
+        <div class="d-table__overview-about">{{htmlSafe
             @flag.description
           }}</div>
       </td>
-      <td class="d-admin-row__detail">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
           {{i18n "admin.config_areas.flags.enabled"}}
         </div>
         <DToggleSwitch
@@ -144,8 +144,8 @@ export default class AdminFlagItem extends Component {
           {{on "click" (fn this.toggleFlagEnabled @flag)}}
         />
       </td>
-      <td class="d-admin-row__controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
 
           <DButton
             class="btn-default btn-small admin-flag-item__edit"

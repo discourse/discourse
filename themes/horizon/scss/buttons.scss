@@ -6,17 +6,12 @@
   transition: none;
 }
 
-.sidebar-new-topic-button__wrapper .topic-drafts-menu-trigger.btn.no-text {
-  background: var(--accent-color);
-
-  &:hover,
-  &:focus-visible {
-    background: oklch(from var(--accent-color) 40% c h) !important;
-    box-shadow: none;
-  }
-
-  .d-icon {
-    color: var(--accent-text-color);
+.sidebar-new-topic-button__wrapper {
+  &:has(.fk-d-tooltip__trigger) {
+    #create-topic.btn {
+      border-radius: var(--d-button-border-radius) 0 0
+        var(--d-button-border-radius);
+    }
   }
 }
 
@@ -66,7 +61,6 @@
 }
 
 .btn-primary,
-#create-topic.btn,
 .discourse-no-touch .btn-default.ai-new-question-button {
   background-color: var(--accent-color);
   color: var(--accent-text-color);
@@ -106,5 +100,17 @@
       oklch(from var(--accent-color) 40% c h),
       oklch(from var(--accent-color) 50% c h)
     );
+  }
+}
+
+// DiscoToc plugin
+.d-toc-main,
+.timeline-footer-controls {
+  .btn.timeline-toggle {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    bottom: var(--main-grid-gap);
   }
 }

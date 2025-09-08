@@ -1092,8 +1092,8 @@ RSpec.describe PostCreator do
   # integration test ... minimise db work
   describe "private message" do
     let(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
-    fab!(:unrelated_user) { Fabricate(:user) }
+    fab!(:target_user2, :moderator)
+    fab!(:unrelated_user, :user)
     let(:post) do
       PostCreator.create!(
         user,
@@ -1240,7 +1240,7 @@ RSpec.describe PostCreator do
 
   describe "warnings" do
     let(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2, :moderator)
     let(:base_args) do
       {
         title: "you need a warning buddy!",
@@ -1330,7 +1330,7 @@ RSpec.describe PostCreator do
 
   describe "private message to group" do
     fab!(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2, :moderator)
     let!(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
@@ -1338,7 +1338,7 @@ RSpec.describe PostCreator do
       g.save
       g
     end
-    fab!(:unrelated) { Fabricate(:user) }
+    fab!(:unrelated, :user)
     let(:post) do
       PostCreator.create!(
         user,
@@ -1809,7 +1809,7 @@ RSpec.describe PostCreator do
 
   describe "private message to a muted user" do
     fab!(:muted_me) { evil_trout }
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     it "should fail" do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1831,7 +1831,7 @@ RSpec.describe PostCreator do
       )
     end
 
-    fab!(:staff_user) { Fabricate(:admin) }
+    fab!(:staff_user, :admin)
 
     it "succeeds if the user is staff" do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1852,7 +1852,7 @@ RSpec.describe PostCreator do
 
   describe "private message to an ignored user" do
     fab!(:ignorer) { evil_trout }
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     context "when post author is ignored" do
       let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
@@ -1875,7 +1875,7 @@ RSpec.describe PostCreator do
     end
 
     context "when post author is admin who is ignored" do
-      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user, :admin)
       fab!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
 
       it "succeeds if the user is staff" do
@@ -1895,7 +1895,7 @@ RSpec.describe PostCreator do
 
   describe "private message to user in allow list" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
 
     context "when post author is allowed" do
       let!(:allowed_pm_user) do
@@ -1947,8 +1947,8 @@ RSpec.describe PostCreator do
 
   describe "private message to user not in allow list" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
       let!(:allowed_pm_user) do
@@ -1992,9 +1992,9 @@ RSpec.describe PostCreator do
   end
 
   describe "private message when post author is admin who is not in allow list" do
-    fab!(:staff_user) { Fabricate(:admin) }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:staff_user, :admin)
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
     fab!(:allowed_pm_user) do
       Fabricate(:allowed_pm_user, user: staff_user, allowed_pm_user: allowed_user)
     end
@@ -2015,8 +2015,8 @@ RSpec.describe PostCreator do
 
   describe "private message to multiple users and one is not allowed" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
       let!(:allowed_pm_user) do
@@ -2047,7 +2047,7 @@ RSpec.describe PostCreator do
   describe "private message recipients limit (max_allowed_message_recipients) reached" do
     fab!(:target_user1) { coding_horror }
     fab!(:target_user2) { evil_trout }
-    fab!(:target_user3) { Fabricate(:walter_white) }
+    fab!(:target_user3, :walter_white)
 
     before { SiteSetting.max_allowed_message_recipients = 2 }
 
@@ -2089,7 +2089,7 @@ RSpec.describe PostCreator do
     end
 
     context "if the user is staff" do
-      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user, :admin)
 
       it "succeeds when sending message to multiple recipients" do
         pc =
@@ -2162,8 +2162,8 @@ RSpec.describe PostCreator do
 
   describe "secure uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:public_topic) { Fabricate(:topic) }
+    fab!(:user2, :user)
+    fab!(:public_topic, :topic)
 
     before do
       setup_s3

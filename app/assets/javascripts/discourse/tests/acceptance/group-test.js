@@ -250,7 +250,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".nav-pills li a[title='Messages']");
 
     assert
-      .dom("span.empty-state-title")
+      .dom(".empty-state__title")
       .hasText(
         i18n("no_group_messages_title"),
         "should display the right text"

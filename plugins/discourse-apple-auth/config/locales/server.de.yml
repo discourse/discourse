@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    sign_in_with_apple_enabled: 'Anmeldung mit Apple aktivieren?'
+    apple_team_id: '(Mit Apple anmelden) Apple Team ID (10 Zeichen)'
+    apple_key_id: '(Mit Apple anmelden) Apple Key ID (10 Zeichen)'
+    apple_pem: '(Mit Apple anmelden) Inhalt der Apple Pem-Datei. Füge die Zeilen BEGIN und END ein'

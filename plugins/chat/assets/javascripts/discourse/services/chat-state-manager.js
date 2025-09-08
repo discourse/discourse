@@ -62,7 +62,7 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
@@ -88,7 +88,7 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL

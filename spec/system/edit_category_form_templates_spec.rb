@@ -5,7 +5,7 @@ describe "Edit Category Form Templates", type: :system do
   fab!(:theme)
   fab!(:admin)
   fab!(:form_template)
-  fab!(:form_template_2) { Fabricate(:form_template) }
+  fab!(:form_template_2, :form_template)
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
   end

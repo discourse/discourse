@@ -9,6 +9,7 @@ require "git_utils"
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
+  LOCALE_PARAM = "tl"
 
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
@@ -397,6 +398,7 @@ module Discourse
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
       next if !args[:include_disabled] && !plugin.enabled?
+      next if args[:only] && !args[:only].include?(plugin.directory_name)
 
       true
     end
@@ -453,8 +455,9 @@ module Discourse
       assets = []
       assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
       assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
-      # TODO: make admin asset only load for admins
-      assets << "plugins/#{plugin.directory_name}_admin" if plugin.admin_js_asset_exists?
+      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+        assets << "plugins/#{plugin.directory_name}_admin"
+      end
       assets
     end
   end
@@ -1217,7 +1220,7 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale = request.params["lang"] if SiteSetting.set_locale_from_param
+    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
     locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header

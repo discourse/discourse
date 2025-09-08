@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  accepted_answer: "Hyväksytty vastaus"
+  site_settings:
+    solved_enabled: "Ota käyttöön Solved-lisäosa, salii käyttäjän merkitä ratkaisuja ketjuille"
+    allow_solved_on_all_topics: "Salli käyttäjien valita ratkaisuja kaikissa ketjuissa (jos tätä ei ole valittu, ratkaisut voidaan ottaa käyttöön alue- tai tunnistekohtaisesti)"
+    accept_all_solutions_trust_level: "Luottamustaso joka vaaditaan, jotta voi merkitä ratkaisuksi (vaikkei olisikaan itse kysyjä)"
+    accept_all_solutions_allowed_groups: "Ryhmät, jotka voivat hyväksyä ratkaisuja missä tahansa ketjussa (vaikka ei eivät olisi alkuperäisen viestin kirjoittajia). Ylläpitäjät ja valvojat voivat aina hyväksyä ratkaisuja."
+    empty_box_on_unsolved: "Näytä tyhjä laatikko ratkaisemattomien ketjujen yhteydessä"
+    solved_quote_length: "Kuinka monta merkkiä näytetään, kun lainataan ratkaisua ketjun avausviestin alapuolella"
+    solved_topics_auto_close_hours: "Sulje ketju automaattisesti (n) tunnin kuluttua viimeisestä vastauksesta, kun aihe on merkitty ratkaistuksi. Poista automaattinen sulkeminen käytöstä asettamalla arvoksi 0."
+    show_filter_by_solved_status: "Näytä pudotusvalikko, jolla voi suodattaa ketjuluetteloa ratkaisun tilan mukaan."
+    notify_on_staff_accept_solved: "Lähetä ilmoitus ketjun luojalle, kun henkilökunta merkitsee viestin ratkaisuksi."
+    ignore_solved_topics_in_assigned_reminder: "Estä osoitusten muistutuksia sisällyttämästä ratkaistuja ketjuja. Olennainen vain käytettäessä discourse-assign-lisäosaa."
+    assignment_status_on_solve: "Kun ketju on ratkaistu, päivitä kaikki osoitukset tähän tilaan"
+    assignment_status_on_unsolve: "Kun ketju on ratkaisematon, päivitä kaikki osoitukset tähän tilaan"
+    disable_solved_education_message: "Poista koulutusviesti käytöstä ratkaistuissa ketjuissa."
+    accept_solutions_topic_author: "Salli ketjun luojan hyväksyä ratkaisu."
+    solved_add_schema_markup: "Lisää QAPage-skeemamerkintä HTML:ään."
+    enable_solved_tags: "Tunnisteet, joilla käyttäjät voivat valita ratkaisuja."
+    prioritize_solved_topics_in_search: "Priorisoi ratkaistut ketjut hakutuloksissa."
+    show_who_marked_solved: "Näytä, kuka merkitsi ketjun ratkaistuksi. Tämä näkyy ketjun ensimmäisessä viestissä ja vastausviestissä työkaluvihjeessä."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Hyväksytyt ratkaisut"
+      xaxis: "Päivä"
+      yaxis: "Yhteensä"
+  solved:
+    no_solutions:
+      self: "Viestejäsi ei ole vielä hyväksytty ratkaisuiksi."
+      others: "Ei hyväksyttyjä ratkaisuja."
+    filter:
+      description:
+        solved: "Suodata ratkaistut ketjut"
+        unsolved: "Suodata ratkaisemattomat ketjut"
+  badges:
+    solved_1:
+      name: "Ratkaistu!"
+      description: "Vastauksesi on merkitty ratkaisuksi"
+      long_description: "Tämä kunniamerkki myönnetään vastauksesta, joka on merkitty ketjun ratkaisuksi. :white_check_mark: Hyvää työtä. :+1:"
+    solved_2:
+      name: "Opinto-ohjaaja"
+      description: "10 vastaustasi on merkitty ratkaisuksi"
+      long_description: "Tämä kunniamerkki myönnetään siitä, että 10 vastauksistasi on merkitty ketjujen ratkaisuiksi. :white_check_mark: Olet todellinen voimavara yhteisön jäsenille."
+    solved_3:
+      name: "Kaikkitietävä"
+      description: "50 vastaustasi on merkitty ratkaisuksi"
+      long_description: "Tämä kunniamerkki myönnetään siitä, että 50 vastauksistasi on merkitty ketjujen ratkaisuiksi. :white_check_mark: Tiedät todellakin, mistä puhut. :clap:"
+    solved_4:
+      name: "Ratkaisulaitos"
+      description: "150 vastaustasi on merkitty ratkaisuksi"
+      long_description: "Tämä kunniamerkki myönnetään siitä, että 150 vastauksistasi on merkitty ketjujen ratkaisuiksi. :white_check_mark: Erinomaista työtä. :slightly_smiling_face: Olet virallisesti ratkaisulaitos. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Ensimmäinen hyväksytty ratkaisu
+        doc: Laukaistaan, kun käyttäjän ratkaisu hyväksytään ensimmäisen kerran.
+  education:
+    topic_is_solved: |
+      ### Tämä ketju on ratkaistu
+
+      Vastaa tähän vain, jos:
+
+      – sinulla on lisätietoja
+
+      – ratkaisu ei toimi sinulle
+
+      Jos sinulla on asiaan liittymätön ongelma, [aloita uusi ketju](%{base_url}/new-topic).

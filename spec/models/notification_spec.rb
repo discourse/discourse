@@ -811,12 +811,12 @@ RSpec.describe Notification do
   describe ".populate_acting_user" do
     SiteSetting.enable_names = true
 
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:user5) { Fabricate(:user) }
-    fab!(:user6) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user)
+    fab!(:user5, :user)
+    fab!(:user6, :user)
     fab!(:notification1) do
       Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
     end

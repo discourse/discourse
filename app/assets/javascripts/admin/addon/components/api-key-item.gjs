@@ -63,22 +63,28 @@ export default class ApiKeyItem extends Component {
   }
 
   <template>
-    <tr class="d-admin-row__content">
-      <td class="d-admin-row__overview key">
-        {{this.apiKey.truncatedKey}}
-        {{#if this.apiKey.revoked_at}}
-          <span class="d-admin-table__badge">{{i18n
-              "admin.api.revoked"
-            }}</span>{{/if}}
+    <tr class="d-table__row">
+      <td class="d-table__cell --overview key">
+        <div class="d-table__value-wrapper">
+          {{this.apiKey.truncatedKey}}
+          {{#if this.apiKey.revoked_at}}
+            <div class="status-label --inactive">
+              <div class="status-label-indicator"></div>
+              <div class="status-label-text">
+                {{i18n "admin.api.revoked"}}
+              </div>
+            </div>
+          {{/if}}
+        </div>
       </td>
-      <td class="d-admin-row__detail key-description">
-        <div class="d-admin-row__mobile-label">{{i18n
+      <td class="d-table__cell --detail key-description">
+        <div class="d-table__mobile-label">{{i18n
             "admin.api.description"
           }}</div>
         {{this.apiKey.shortDescription}}
       </td>
-      <td class="d-admin-row__detail key-user">
-        <div class="d-admin-row__mobile-label">{{i18n "admin.api.user"}}</div>
+      <td class="d-table__cell --detail key-user">
+        <div class="d-table__mobile-label">{{i18n "admin.api.user"}}</div>
         {{#if this.apiKey.user}}
           <LinkTo @route="adminUser" @model={{this.apiKey.user}}>
             {{avatar this.apiKey.user imageSize="small"}}
@@ -87,32 +93,32 @@ export default class ApiKeyItem extends Component {
           {{i18n "admin.api.all_users"}}
         {{/if}}
       </td>
-      <td class="d-admin-row__detail key-created">
-        <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
-          {{avatar this.apiKey.createdBy imageSize="small"}}
-        </LinkTo>
-        <div class="d-admin-row__mobile-label">{{i18n
-            "admin.api.created"
-          }}</div>
-        {{formatDate this.apiKey.created_at}}
+      <td class="d-table__cell --detail key-created">
+        <div class="d-table__mobile-label">{{i18n "admin.api.created"}}</div>
+        <div class="d-table__value-wrapper">
+          <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
+            {{avatar this.apiKey.createdBy imageSize="small"}}
+          </LinkTo>
+          {{formatDate this.apiKey.created_at}}
+        </div>
       </td>
-      <td class="d-admin-row__detail key-scope">
-        <div class="d-admin-row__mobile-label">{{i18n "admin.api.scope"}}</div>
-        {{icon this.scopeIcon}}
-        {{this.scopeName}}
+      <td class="d-table__cell --detail key-scope">
+        <div class="d-table__mobile-label">{{i18n "admin.api.scope"}}</div>
+        <div class="d-table__value-wrapper">
+          {{icon this.scopeIcon}}
+          {{this.scopeName}}
+        </div>
       </td>
-      <td class="d-admin-row__detail key-last-used">
-        <div class="d-admin-row__mobile-label">{{i18n
-            "admin.api.last_used"
-          }}</div>
+      <td class="d-table__cell --detail key-last-used">
+        <div class="d-table__mobile-label">{{i18n "admin.api.last_used"}}</div>
         {{#if this.apiKey.last_used_at}}
           {{formatDate this.apiKey.last_used_at}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
       </td>
-      <td class="d-admin-row__controls key-controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls key-controls">
+        <div class="d-table__cell-actions">
           <DButton
             @action={{this.edit}}
             @label="admin.api_keys.edit"

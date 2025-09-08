@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";

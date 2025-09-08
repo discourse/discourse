@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    sign_in_with_apple_enabled: 'Ativar login com a Apple?'
+    apple_team_id: '(Entrar com a Apple) Apple Team ID (dez caracteres)'
+    apple_key_id: '(Entrar com a Apple) Apple Key ID (dez caracteres)'
+    apple_pem: '(Entrar com a Apple) Conteúdo do arquivo PEM da Apple. Inclua as linhas BEGIN e END'

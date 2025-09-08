@@ -7,8 +7,8 @@ RSpec.describe FormTemplatesController do
 
   describe "#index" do
     fab!(:form_template)
-    fab!(:form_template_2) { Fabricate(:form_template) }
-    fab!(:form_template_3) { Fabricate(:form_template) }
+    fab!(:form_template_2, :form_template)
+    fab!(:form_template_3, :form_template)
 
     context "when logged in as a user" do
       before { sign_in(user) }
@@ -67,8 +67,8 @@ RSpec.describe FormTemplatesController do
         fab!(:admin)
         fab!(:tag1) { Fabricate(:tag, description: "A Tag 1 custom Translation") }
         fab!(:tag2) { Fabricate(:tag, description: "A Tag 2 custom Translation") }
-        fab!(:tag3) { Fabricate(:tag) }
-        fab!(:tag4) { Fabricate(:tag) }
+        fab!(:tag3, :tag)
+        fab!(:tag4, :tag)
         fab!(:tag_synonym) { Fabricate(:tag, name: "discourse") }
 
         fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag3, tag1]) }

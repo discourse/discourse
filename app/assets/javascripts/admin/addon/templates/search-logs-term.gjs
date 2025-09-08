@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HighlightSearch from "discourse/components/highlight-search";
@@ -8,7 +9,6 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTag from "discourse/helpers/discourse-tag";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import Chart from "admin/components/chart";
 import ComboBox from "select-kit/components/combo-box";

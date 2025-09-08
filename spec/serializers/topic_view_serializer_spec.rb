@@ -12,7 +12,7 @@ RSpec.describe TopicViewSerializer do
 
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
   fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
@@ -94,7 +94,7 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#suggested_topics" do
-    fab!(:topic2) { Fabricate(:topic) }
+    fab!(:topic2, :topic)
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 

@@ -5,7 +5,7 @@ RSpec.describe Chat::Action::FetchThreads do
     described_class.call(user_id: current_user.id, channel_id: channel.id, limit:, offset:)
   end
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel:) }
   fab!(:thread_2) { Fabricate(:chat_thread, channel:) }

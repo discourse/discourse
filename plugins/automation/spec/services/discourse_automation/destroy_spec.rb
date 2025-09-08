@@ -8,7 +8,7 @@ RSpec.describe DiscourseAutomation::Destroy do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:user) { Fabricate(:admin) }
+    fab!(:user, :admin)
     fab!(:automation)
 
     let(:guardian) { user.guardian }

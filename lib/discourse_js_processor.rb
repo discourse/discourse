@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require "execjs"
-require "mini_racer"
 
 class DiscourseJsProcessor
   class TranspileError < StandardError
@@ -27,7 +25,6 @@ class DiscourseJsProcessor
     end
 
     def self.build_theme_transpiler
-      FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
       Discourse::Utils.execute_command(
         "pnpm",
         "-C=app/assets/javascripts/theme-transpiler",
@@ -109,7 +106,14 @@ class DiscourseJsProcessor
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil, theme_id: nil, extension: nil)
+    def perform(
+      source,
+      root_path = nil,
+      logical_path = nil,
+      theme_id: nil,
+      extension: nil,
+      generate_map: false
+    )
       self.class.v8_call(
         "transpile",
         source,
@@ -119,6 +123,7 @@ class DiscourseJsProcessor
           filename: logical_path || "unknown",
           extension: extension,
           themeId: theme_id,
+          generateMap: generate_map,
         },
       )
     end
@@ -148,6 +153,10 @@ class DiscourseJsProcessor
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
     end
 
+    def rollup(tree, opts)
+      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
+    end
+
     def post_css(css:, map:, source_map_file:)
       self.class.v8_call(
         "postCss",
@@ -156,6 +165,10 @@ class DiscourseJsProcessor
         source_map_file,
         fetch_result_call: "getPostCssResult",
       )
+    end
+
+    def ember_version
+      self.class.v8_call("emberVersion")
     end
   end
 end
