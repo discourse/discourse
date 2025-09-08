@@ -17,9 +17,11 @@ export default class CategoryCalendar extends Component {
   @service discoursePostEventApi;
 
   @bind
-  async loadEvents() {
+  async loadEvents(info) {
     try {
       const params = {
+        after: info.startStr,
+        before: info.endStr,
         post_id: this.categorySetting?.postId,
         category_id: this.category.id,
         include_subcategories: true,
