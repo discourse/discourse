@@ -39,6 +39,10 @@ discourse_openid_connect:
     default: false
   openid_connect_use_pkce:
     default: false
+  openid_connect_request_timeout_seconds:
+    default: 10
+    min: 0
+    max: 180
   openid_connect_groups_enabled:
     default: false
     client: true

@@ -151,7 +151,7 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
   end
 
   def request_timeout_seconds
-    GlobalSetting.openid_connect_request_timeout_seconds
+    SiteSetting.openid_connect_request_timeout_seconds.to_i > 0 ? SiteSetting.openid_connect_request_timeout_seconds.to_i : GlobalSetting.openid_connect_request_timeout_seconds
   end
 
   def set_oidc_mapped_groups(user, auth)
