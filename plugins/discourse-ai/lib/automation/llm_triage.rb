@@ -135,7 +135,10 @@ module DiscourseAi
           if flag_post
             score_reason =
               I18n
-                .t("discourse_automation.scriptables.llm_triage.flagged_post")
+                .t(
+                  "discourse_automation.scriptables.llm_triage.flagged_post",
+                  base_path: Discourse.base_path,
+                )
                 .sub("%%LLM_RESPONSE%%", result)
                 .sub("%%AUTOMATION_ID%%", automation&.id.to_s)
                 .sub("%%AUTOMATION_NAME%%", automation&.name.to_s)

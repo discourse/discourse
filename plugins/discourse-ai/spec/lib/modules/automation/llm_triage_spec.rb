@@ -345,4 +345,25 @@ describe DiscourseAi::Automation::LlmTriage do
 
     expect(post.topic.reload.tags).to contain_exactly(tag_1, tag_2)
   end
+
+  it "includes the base path in the flagged post message" do
+    allow(Discourse).to receive(:base_path).and_return("http://test.host")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include(
+      "<a href=\"#{Discourse.base_path}/admin/plugins/discourse-automation/",
+    )
+  end
 end
