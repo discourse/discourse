@@ -19,7 +19,7 @@
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
-    "webpack": "^5.99.9"
+    "webpack": "^5.101.3"
   },
   "engines": {
     "node": ">= 18",

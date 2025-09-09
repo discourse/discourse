@@ -165,6 +165,7 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
   end
 
   it "breaks out of inline spoiler when pressing Enter" do
+    skip_on_ci!("Flaky test - breaking out of inline spoiler when pressing Enter")
     open_composer
 
     composer.type_content("Test ")

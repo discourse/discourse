@@ -74,6 +74,16 @@
       color: var(--primary-high);
     }
   }
+
+  td {
+    max-width: 20em;
+    overflow-wrap: break-word;
+  }
+
+  .incoming-email-link,
+  .sent-email-post-link-with-smtp-response {
+    min-width: 19em;
+  }
 }
 
 .incoming-emails {
