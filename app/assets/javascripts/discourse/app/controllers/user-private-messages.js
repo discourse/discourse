@@ -145,4 +145,9 @@ export default class extends Controller {
   onMessagesDropdownChange(item) {
     return DiscourseURL.routeTo(item);
   }
+
+  @action
+  changeGroupNotificationLevel(notificationLevel) {
+    this.group?.setNotification(notificationLevel, this.currentUser.id);
+  }
 }
