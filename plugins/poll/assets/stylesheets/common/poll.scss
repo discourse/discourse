@@ -114,7 +114,7 @@ div.poll-outer {
 
       @include viewport.from(sm) {
         gap: 0 1em;
-        padding: 1em;
+        padding: var(--space-2);
         border-left: 1px solid var(--content-border-color);
         flex-direction: column;
         justify-content: center;
