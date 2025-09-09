@@ -150,6 +150,16 @@
     font-weight: 700;
     max-width: 80%;
     margin-bottom: 0;
+    color: var(--primary);
+
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   &-author {
