@@ -66,7 +66,7 @@ export default class AdminPluginsListItem extends Component {
   }
 
   get pluginUrl() {
-    if (!this.showPluginSettingsButton) {
+    if (this.disablePluginSettingsButton) {
       return null;
     }
 
