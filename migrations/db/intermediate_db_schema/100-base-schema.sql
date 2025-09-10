@@ -191,17 +191,6 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
-CREATE TABLE user_associated_accounts
-(
-    provider_name TEXT      NOT NULL,
-    user_id       NUMERIC,
-    created_at    DATETIME,
-    info          JSON_TEXT,
-    last_used     DATETIME,
-    provider_uid  TEXT      NOT NULL,
-    PRIMARY KEY (user_id, provider_name)
-);
-
 CREATE TABLE topics
 (
     original_id          NUMERIC  NOT NULL PRIMARY KEY,
@@ -215,19 +204,26 @@ CREATE TABLE topics
     deleted_by_id        NUMERIC,
     external_id          NUMERIC,
     featured_link        TEXT,
-    image_upload_id      TEXT,
-    locale               TEXT,
     pinned_at            DATETIME,
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,
-    posts_count          INTEGER,
-    score                FLOAT,
     subtype              TEXT,
     title                TEXT     NOT NULL,
     user_id              NUMERIC,
     views                INTEGER,
     visibility_reason_id NUMERIC,
     visible              BOOLEAN
+);
+
+CREATE TABLE user_associated_accounts
+(
+    provider_name TEXT      NOT NULL,
+    user_id       NUMERIC,
+    created_at    DATETIME,
+    info          JSON_TEXT,
+    last_used     DATETIME,
+    provider_uid  TEXT      NOT NULL,
+    PRIMARY KEY (user_id, provider_name)
 );
 
 CREATE TABLE user_emails
@@ -261,6 +257,7 @@ CREATE TABLE user_fields
     requirement       INTEGER,
     searchable        BOOLEAN,
     show_on_profile   BOOLEAN,
+    show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
 

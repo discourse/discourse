@@ -27,9 +27,7 @@ module Migrations::Importer::Steps
                    deleted_by_id
                    external_id
                    featured_link
-                   image_upload_id
                    last_post_user_id
-                   locale
                    pinned_at
                    pinned_globally
                    pinned_until
@@ -51,12 +49,11 @@ module Migrations::Importer::Steps
       WHERE mapped_topic.original_id IS NULL
     SQL
 
-    rows_query <<~SQL,
+    rows_query <<~SQL, MappingType::TOPICS, MappingType::CATEGORIES, MappingType::USERS
       SELECT topics.*,
               mapped_category.discourse_id        AS discourse_category_id,
               mapped_user.discourse_id            AS discourse_user_id,
-              mapped_deleted_by_user.discourse_id AS discourse_deleted_by_user_id,
-              mapped_image_upload.discourse_id    AS discourse_image_upload_id
+              mapped_deleted_by_user.discourse_id AS discourse_deleted_by_user_id
       FROM topics
            LEFT JOIN mapped.ids mapped_topic
              ON topics.original_id = mapped_topic.original_id  AND mapped_topic.type = ?1
@@ -66,14 +63,8 @@ module Migrations::Importer::Steps
              ON topics.user_id = mapped_user.original_id  AND mapped_user.type = ?3
            LEFT JOIN mapped.ids mapped_deleted_by_user
              ON topics.deleted_by_id = mapped_deleted_by_user.original_id  AND mapped_deleted_by_user.type = ?3
-          LEFT JOIN mapped.ids mapped_image_upload
-             ON topics.image_upload_id = mapped_image_upload.original_id  AND mapped_image_upload.type = ?4
       WHERE mapped_topic.original_id IS NULL
     SQL
-               MappingType::TOPICS,
-               MappingType::CATEGORIES,
-               MappingType::USERS,
-               MappingType::UPLOADS
 
     private
 
@@ -93,7 +84,6 @@ module Migrations::Importer::Steps
       row[:category_id] = row[:discourse_category_id] ||
         (UNCATEGORIZED_ID if row[:archetype] != Archetype.private_message)
       row[:deleted_by_id] = row[:discourse_deleted_by_user_id]
-      row[:image_upload_id] = row[:discourse_image_upload_id]
       row[:user_id] = row[:discourse_user_id] || SYSTEM_USER_ID
 
       # TODO: improve this
