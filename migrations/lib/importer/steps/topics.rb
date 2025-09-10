@@ -4,10 +4,12 @@ module Migrations::Importer::Steps
   class Topics < ::Migrations::Importer::CopyStep
     ARCHETYPES = Archetype.list.map(&:id).to_set.freeze
     DEFAULT_ARCHETYPE = Archetype.default
+    SUBTYPES = TopicSubtype.instance_variable_get(:@subtypes).keys.to_set.freeze
     VISIBILITY_REASONS = Topic.visibility_reasons.values.to_set.freeze
     DEFAULT_VIEWS = 0
     EXTERNAL_ID_FORMAT = /\A[\w-]+\z/
     UNCATEGORIZED_ID = SiteSetting.uncategorized_category_id
+    MAX_TOPIC_TITLE_LENGTH = SiteSetting.max_topic_title_length
 
     depends_on :categories, :users, :uploads
     store_mapped_ids true
@@ -27,9 +29,7 @@ module Migrations::Importer::Steps
                    deleted_by_id
                    external_id
                    featured_link
-                   image_upload_id
                    last_post_user_id
-                   locale
                    pinned_at
                    pinned_globally
                    pinned_until
@@ -51,12 +51,11 @@ module Migrations::Importer::Steps
       WHERE mapped_topic.original_id IS NULL
     SQL
 
-    rows_query <<~SQL,
+    rows_query <<~SQL, MappingType::TOPICS, MappingType::CATEGORIES, MappingType::USERS
       SELECT topics.*,
               mapped_category.discourse_id        AS discourse_category_id,
               mapped_user.discourse_id            AS discourse_user_id,
-              mapped_deleted_by_user.discourse_id AS discourse_deleted_by_user_id,
-              mapped_image_upload.discourse_id    AS discourse_image_upload_id
+              mapped_deleted_by_user.discourse_id AS discourse_deleted_by_user_id
       FROM topics
            LEFT JOIN mapped.ids mapped_topic
              ON topics.original_id = mapped_topic.original_id  AND mapped_topic.type = ?1
@@ -66,14 +65,8 @@ module Migrations::Importer::Steps
              ON topics.user_id = mapped_user.original_id  AND mapped_user.type = ?3
            LEFT JOIN mapped.ids mapped_deleted_by_user
              ON topics.deleted_by_id = mapped_deleted_by_user.original_id  AND mapped_deleted_by_user.type = ?3
-          LEFT JOIN mapped.ids mapped_image_upload
-             ON topics.image_upload_id = mapped_image_upload.original_id  AND mapped_image_upload.type = ?4
       WHERE mapped_topic.original_id IS NULL
     SQL
-               MappingType::TOPICS,
-               MappingType::CATEGORIES,
-               MappingType::USERS,
-               MappingType::UPLOADS
 
     private
 
@@ -93,11 +86,9 @@ module Migrations::Importer::Steps
       row[:category_id] = row[:discourse_category_id] ||
         (UNCATEGORIZED_ID if row[:archetype] != Archetype.private_message)
       row[:deleted_by_id] = row[:discourse_deleted_by_user_id]
-      row[:image_upload_id] = row[:discourse_image_upload_id]
       row[:user_id] = row[:discourse_user_id] || SYSTEM_USER_ID
 
-      # TODO: improve this
-      row[:title] = row[:title][0...255].scrub.strip
+      row[:title] = row[:title][0, MAX_TOPIC_TITLE_LENGTH].scrub.strip
       row[:last_post_user_id] ||= row[:user_id]
       row[:slug] = Slug.for(row[:title])
       row[:bumped_at] = row[:created_at]
@@ -109,13 +100,16 @@ module Migrations::Importer::Steps
       ) do |_, default_value|
         puts "   #{row[:id]}: Topic archetype is invalid, defaulting to #{default_value}"
       end
+      row[:subtype] = ensure_valid_value(
+        value: row[:subtype],
+        allowed_set: SUBTYPES,
+        default_value: nil,
+      ) if row[:subtype]
       row[:visibility_reason_id] = ensure_valid_value(
         value: row[:visibility_reason_id],
         allowed_set: VISIBILITY_REASONS,
         default_value: nil,
       ) if row[:visibility_reason_id]
-
-      # TODO: subtype
 
       super
     end
