@@ -19,13 +19,9 @@ module Migrations::Database::IntermediateDB
         deleted_by_id,
         external_id,
         featured_link,
-        image_upload_id,
-        locale,
         pinned_at,
         pinned_globally,
         pinned_until,
-        posts_count,
-        score,
         subtype,
         title,
         user_id,
@@ -34,7 +30,7 @@ module Migrations::Database::IntermediateDB
         visible
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -51,13 +47,9 @@ module Migrations::Database::IntermediateDB
       deleted_by_id: nil,
       external_id: nil,
       featured_link: nil,
-      image_upload_id: nil,
-      locale: nil,
       pinned_at: nil,
       pinned_globally: nil,
       pinned_until: nil,
-      posts_count: nil,
-      score: nil,
       subtype: nil,
       title:,
       user_id: nil,
@@ -78,13 +70,9 @@ module Migrations::Database::IntermediateDB
         deleted_by_id,
         external_id,
         featured_link,
-        image_upload_id,
-        locale,
         ::Migrations::Database.format_datetime(pinned_at),
         ::Migrations::Database.format_boolean(pinned_globally),
         ::Migrations::Database.format_datetime(pinned_until),
-        posts_count,
-        score,
         subtype,
         title,
         user_id,
