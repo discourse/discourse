@@ -134,11 +134,13 @@ module DiscourseAi
 
           if flag_post
             score_reason =
-              I18n
-                .t("discourse_automation.scriptables.llm_triage.flagged_post")
-                .sub("%%LLM_RESPONSE%%", result)
-                .sub("%%AUTOMATION_ID%%", automation&.id.to_s)
-                .sub("%%AUTOMATION_NAME%%", automation&.name.to_s)
+              I18n.t(
+                "discourse_automation.scriptables.llm_triage.flagged_post",
+                base_path: Discourse.base_path,
+                llm_response: result,
+                automation_id: automation&.id.to_s,
+                automation_name: automation&.name.to_s,
+              )
 
             if flag_type == :spam || flag_type == :spam_silence
               result =
