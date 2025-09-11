@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   has_many :topics, through: :topic_invites, source: :topic
 
   validates_presence_of :invited_by_id
-  validates :email, email: true, allow_blank: true, length: { maximum: 500 }
+  validates :email, email: true, allow_blank: true
   validates :custom_message, length: { maximum: 1000 }
   validates :domain, length: { maximum: 500 }
   validates :description, length: { maximum: DESCRIPTION_MAX_LENGTH }
