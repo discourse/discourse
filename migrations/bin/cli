@@ -9,6 +9,7 @@ require "thor"
 module Migrations
   configure_zeitwerk
   enable_i18n
+  apply_global_config
 
   module CLI
     class Application < Thor
