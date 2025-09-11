@@ -2411,6 +2411,33 @@ RSpec.describe PostsController do
         },
       )
     end
+    let(:tag_only_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[tag1 tag2], %w[tag2 tag3]],
+        },
+      )
+    end
+    let(:text_number_tags) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[123 tag1 tag2], %w[456 tag3 tag4]],
+        },
+      )
+    end
+    let(:legacy_string_tag_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => ["tag1, tag2", "tag2, tag3"],
+        },
+      )
+    end
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
@@ -2464,6 +2491,36 @@ RSpec.describe PostsController do
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
         expect(response.status).to eq(200)
+      end
+
+      it "supports reverting tag-only revisions" do
+        post.topic.tags = Tag.where(name: %w[tag2 tag3])
+
+        put "/posts/#{post_id}/revisions/#{tag_only_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
+      end
+
+      it "supports reverting text and number tags" do
+        post.topic.tags = Tag.where(name: %w[456 tag3 tag4])
+
+        put "/posts/#{post_id}/revisions/#{text_number_tags.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[123 tag1 tag2])
+      end
+
+      it "supports reverting legacy string-format tags" do
+        post.topic.tags = Tag.where(name: ["tag2, tag3"])
+
+        put "/posts/#{post_id}/revisions/#{legacy_string_tag_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
       end
     end
   end
