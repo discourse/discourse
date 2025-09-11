@@ -36,7 +36,6 @@
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
-    border-bottom: 1px solid var(--content-border-color);
     font-size: var(--font-down-1);
   }
 
@@ -49,6 +48,7 @@
       flex: 1 0 auto;
 
       a {
+        box-sizing: border-box;
         width: 100%;
         justify-content: center;
       }
