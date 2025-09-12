@@ -188,6 +188,7 @@ describe "LTI Plugin" do
 
     context "with invite custom field" do
       let(:invite) { Invite.generate(Discourse.system_user) }
+
       before do
         token_data[DiscourseLti::CUSTOM_DATA_CLAIM] = {
           DiscourseLti::DISCOURSE_INVITE_KEYS.first => invite.link,
