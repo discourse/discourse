@@ -64,6 +64,8 @@ pt:
               label: Etiquetas
             restricted_categories:
               label: Categorias
+            post_features:
+              label: Funcionalidades de publicação
           created: Criado
           with_images: Imagens
           with_links: Hiperligações

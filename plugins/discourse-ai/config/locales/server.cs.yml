@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    ai_translation_max_post_length: "Maximální délka příspěvku k překladu. Příspěvky delší než tato délka nebudou přeloženy."
   reports:
     overall_sentiment:
       yaxis: "Datum"

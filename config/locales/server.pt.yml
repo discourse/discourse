@@ -414,7 +414,7 @@ pt:
               too_many_users: "Apenas pode enviar avisos a um utilizador de cada vez."
               no_user_selected: "Tem que selecionar um utilizador válido."
             featured_link:
-              invalid: "é inválida. URL deve incluir http:// ou https://."
+              invalid: "é inválida. O URL deveria incluir http:// ou https://."
         user:
           attributes:
             password:
@@ -702,7 +702,7 @@ pt:
       logging_in_as: Fazendo login como %{username}
       confirm_button: Concluir o Login
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
-    generic_error: "Desculpe, não somos capazes de gerar chaves API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
+    generic_error: "Desculpe, nós não conseguimos gerar as chaves de API do utilizador, esta funcionalidade poderá estar desativada pela administração do site"
     scopes:
       message_bus: "Actualizações ao vivo"
       notifications: "Ler e remover notificações"
@@ -978,7 +978,7 @@ pt:
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
-    show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
+    show_topic_featured_link_in_digest: "Mostrar a hiperligação em destaque do tópico na mensagem de resumo."
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_personal_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
@@ -1188,7 +1188,7 @@ pt:
     email_editable: "Permitir que os utilizadores alterem o seu endereço de email após o registo."
     allow_uploaded_avatars: "Permitir que os utilizadores carreguem fotografias de perfil personalizadas."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
-    automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de ''e-mail''."
+    automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração do seu endereço de correio eletrónico."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
     digest_other_topics: "O número máximo de tópicos a mostrar na secção de \"Novos em tópicos e categorias que segue\" do email de resumo."
@@ -1388,11 +1388,11 @@ pt:
   download_backup_mailer:
     subject_template: "[%{email_prefix}] Transferir Cópia de Segurança do Site"
     text_body_template: |
-      Aqui tem o [download do backup do site](%{backup_file_path}) que solicitou.
+      Aqui tem a [transferência da cópia de segurança do ''site''](%{backup_file_path}) que solicitou.
 
-      Nós enviámos este link de download para o endereço de e-mail validado por motivos de segurança.
+      Nós enviámos esta hiperligação de transferêcina para o seu endereço de correio eletrónico validado por motivos de segurança.
 
-      (se *não* solicitou este download, deveria ficar preocupado -- alguém tem acesso de administrador ao seu site.)
+      (se *não* solicitou esta transferência, deveria ficar muito preocupado -- alguém tem acesso de administrador ao seu ''site''.)
     no_token: |
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
@@ -1462,6 +1462,14 @@ pt:
     backup_succeeded:
       title: "Cópia de segurança bem-sucedida"
       subject_template: "Cópia de segurança completa corretamente"
+      text_body_template: |
+        A cópia de segurança foi bem-sucedida.
+
+        Visite a [secção administração > cópia de segurança](%{base_url}/admin/backups) para transferir a sua nova cópia de segurança.
+
+        Aqui tem o registo:
+
+        %{logs}
     backup_failed:
       title: "Cópia de segurança falhou"
       subject_template: "A cópia de segurança falhou"
@@ -1561,7 +1569,7 @@ pt:
         other: "%{count} utilizadores esperam a aprovação"
     download_remote_images_disabled:
       title: "Transferência de Imagens Remotas Desativada"
-      subject_template: "Transferência de imagens remotas desativada"
+      subject_template: "A transferência remota de imagens está desativada"
       text_body_template: "A definição `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi atingido."
   unsubscribe_link: |2
 
@@ -1794,6 +1802,7 @@ pt:
     pasted_image_filename: "Imagem colada"
     store_failure: "Falha ao armazenar o carregamento #%{upload_id} para o utilizador #%{user_id}."
     file_missing: "Desculpe, deve fornecer um ficheiro para carregamento."
+    download_failure: "A transferência do ficheiro do provedor externo falhou."
     attachments:
       too_large: "Pedimos desculpa, o ficheiro que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB)."
     images:
@@ -1879,7 +1888,7 @@ pt:
       long_description: |
         Este distintivo é concedido ao criar um tópico que obtém 10 gostos. Iniciou uma discussão interessante que a comunidade gostou.
     good_topic:
-      name: Ótimo Tópico
+      name: Bom Tópico
       description: Recebeu 25 gostos num tópico
     great_topic:
       name: Excelente Tópico
@@ -1891,7 +1900,7 @@ pt:
 
         Este distintivo é concedido por partilhar uma ligação que foi clicada por 25 visitantes externos. Obrigado por espalhar a palavra sobre as nossas discussões, e esta comunidade.
     good_share:
-      name: Ótima Partilha
+      name: Boa Partilha
       description: Partilhou uma publicação com 300 visitantes únicos
     great_share:
       name: Excelente Partilha
@@ -2053,7 +2062,7 @@ pt:
           homepage_style:
             choices:
               latest:
-                label: "Recente"
+                label: "Mais Recente"
       corporate:
         fields:
           contact_url:

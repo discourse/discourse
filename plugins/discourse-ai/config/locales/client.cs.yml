@@ -68,6 +68,10 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        progress_chart:
+          title: "Průběh překladu"
+          completed: "Dokončeno"
+          remaining: "Zbývá"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"

@@ -17,6 +17,6 @@ hr:
     post_created_score_value: "Vrijednost navijanja koja se dodjeljuje kada korisnik kreira objavu"
     flag_created_score_value: "Vrijednost navijanja koja se dodjeljuje kada korisnik označi objavu i tu zastavu prihvaća korisnik osoblja"
     day_visited_score_value: "Vrijednost navijanja koji se dodjeljuje za svaki dan kada korisnik posjeti web stranicu"
-    scorable_categories: "Popis kategorija u kojima će akcije generirati veselje. Ostavite prazno kako biste omogućili navijanje za sve kategorije"
-  score: "Živjeli"
+    scorable_categories: "Popis kategorija u kojima će akcije generirati navijanje. Ostavite prazno kako biste omogućili navijanje za sve kategorije."
+  score: "Bravo"
   default_leaderboard_name: "Globalna ploča s najboljim rezultatima"

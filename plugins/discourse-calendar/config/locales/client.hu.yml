@@ -293,6 +293,7 @@ hu:
         month: "Utolsó 30 nap"
         week: "Utolsó 7 nap"
         day: "Nap"
+        list: "Lista"
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"

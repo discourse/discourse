@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    ai_translation_max_post_length: "A lefordítandó bejegyzés maximális hossza. Az ennél hosszabb bejegyzések nem kerülnek fordításra."
   reports:
     overall_sentiment:
       yaxis: "Dátum"
@@ -23,6 +25,9 @@ hu:
           neutral: "Semleges \U0001F610"
         sentiment_analysis:
           neutral: "Semleges"
+    embeddings:
+      configuration:
+        invalid_config: "A kiválasztott opció érvénytelen"
     ai_staff_action_logger:
       updated: "frissítve"
       removed: "eltávolítva"
