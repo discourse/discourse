@@ -34,6 +34,7 @@ export default class SiteSettingsInteger extends Component {
       max={{if @setting.max @setting.max null}}
       class="input-setting-integer"
       step="1"
+      disabled={{@disabled}}
     />
   </template>
 }
