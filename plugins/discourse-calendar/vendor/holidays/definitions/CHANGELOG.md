@@ -1,5 +1,93 @@
 # Holiday definitions
 
+## 5.8.0
+
+* FIX: tasmania / nsw / vic do not observe on Monday
+* FIX: anxac day
+* Add tsx
+* Update HK holiays
+* Update Weltekindertag and some historical data
+
+## 5.7.4
+
+* Fix missing GR entry in index.yaml
+
+## 5.7.3
+
+* Fix stupid naming problem in Greece yaml file
+
+## 5.7.2
+
+* Fix `gr` in index countries
+
+## 5.7.1
+
+* Fix GitHub Actions
+* Add Kenya correctly (thanks to https://github.com/bkmgit)
+* Add Weltkindertag (thanks to https://github.com/dennisvandehoef)
+* Add Nov 2 for `lt` (thanks to https://github.com/Brunas)
+* Use correct country code for Greece (thanks to https://github.com/toy)
+* Update Australian Queen/King public holiday (thanks to https://github.com/lairtonmendes)
+
+## 5.7.0
+
+* Add GitHub Actions
+* Remove Travis CI config
+* Black Consciousness holiday [br] (thanks to https://github.com/hbontempo-cw)
+* NZ monarch change (thanks to https://github.com/michael-smith-nz)
+
+## 5.6.2
+
+* Fix tests for `gb` coronation of King Charles
+* Fix spacing for `au` defs
+* Fix `au_act` reconciliation day
+
+## 5.6.1
+
+* Fix `de` holiday for 'Tag der Deutschen Einheit' to correctly use `year_ranges` syntax
+
+## 5.6.0
+
+* Update `ca`, `ca_bc, `ca_nt, `ca_pe`, `ca_yt` for national truth and reconciliation day (thanks to https://github.com/danger-ranger)
+* Update `au_act` with reconcilation day (thanks to https://github.com/mylestan)
+* Update `lv` with ice hockey team bronze medal holiday (thanks to https://github.com/aleksandrs-ledovskis)
+* Update `fr` region for Pentecote (thanks to https://github.com/skalimer0)
+* Update for `gb` region for bank holidays (thanks to https://github.com/i2chris)
+* Update for `de` region for tag der deutcshen (thanks to https://github.com/HanSolo72)
+* Update for `dk` for store bededag (thanks to https://github.com/LarsDK)
+* Update for `de_mv` for Internationaler Frauentag (thanks to https://github.com/jiveeee)
+* Update for `gb` for King Charles bank holiday (thanks to https://github.com/ryanharkins)
+
+## 5.5.0
+
+* Update `si` region to add `novo leto` (thanks to https://github.com/vlakre)
+* Add informal Mothering Sunday in UK+IE (thanks to https://github.com/ericcj)
+* Add Juneteenth for `federalreserve` and `federalreservebanks` (thanks to https://github.com/kapil2004)
+* Create `ke` region with initial holidays (thanks to https://github.com/bkmgit)
+* Add planned 2023 ocurrence of Latvian Song and Dance festival (thanks to https://github.com/aleksandrs-ledovskis)
+* Update `mx` holidays for accuracy (thanks to https://github.com/andres107)
+* Add Juneteenth to NYSE calendar (thanks to https://github.com/vassilios)
+* Add Matariki to `nz` (thanks to https://github.com/bagp1)
+* Adds function to calculate shifting Ekka holiday (thanks to https://github.com/antonivanopoulos)
+* change 9th of May dan pobjede to informal holiday (thanks to https://github.com/KristjanSever)
+* Add AU National Day of Mourning (thanks to https://github.com/justinjones)
+* Correct KE holidays indentation (thanks to https://github.com/hlascelles)
+* Add QEII Memorial Bank Holiday (thanks to https://github.com/hlascelles)
+
+## 5.4.1
+
+* Add Platinum Jubilee bank holiday for 2022. (thanks to https://github.com/frankieroberto)
+* Fix definitions tests.
+
+## 5.4.0
+Brunas
+* Fix boxing day in `za` region
+* Fix ANZAC day in `au_vic` region (thanks to https://github.com/evjan)
+* Update `ar` region holidays for accuracy (thanks to https://github.com/elsupergomez)
+* Add Juneteenth holiday for `us` and `federalreservebank` regions (thanks to https://github.com/Murphydbuffalo and https://github.com/pjsier)
+* Add National Day for Truth and Reconciliation for `ca` region (thanks to https://github.com/Xipher7934)
+* Fix Christmas observation in `ca_on` region (thanks to https://github.com/jeffmess)
+
 ## 5.3.1
 
 Fix jp holidays from 2022.

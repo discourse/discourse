@@ -75,6 +75,9 @@ months:
     mday: 25
     observed: to_monday_if_sunday(date)
   - name: ANZAC Day
+    regions: [au_vic]
+    mday: 25
+  - name: ANZAC Day
     regions: [au_wa]
     mday: 25
     observed: to_monday_if_weekend(date)
@@ -89,6 +92,12 @@ months:
   - name: May Public Holiday
     regions: [au_sa]
     function: may_pub_hol_sa(year)
+  - name: Reconciliation Day
+    mday: 27
+    regions: [au_act]
+    function: to_nearest_monday_after(date)
+    year_ranges:
+      from: 2018
   6:
   - name: Western Australia Day
     regions: [au_wa]
@@ -98,6 +107,14 @@ months:
     regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
     week: 2
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
+    week: 2
+    wday: 1
+    year_ranges:
+      from: 2023
   - name: Queen's Birthday
     regions: [au_qld]
     function: qld_queens_birthday_june(year)
@@ -113,20 +130,31 @@ months:
   8:
   - name: Ekka
     regions: [au_qld_brisbane]
-    week: -3
-    wday: 3
+    function: qld_brisbane_ekka_holiday(year)
   9:
+  - name: National Day of Mourning for Her Majesty Queen Elizabeth II
+    regions: [au]
+    mday: 22
+    year_ranges:
+      limited: [2022]
   - name: Queen's Birthday
     regions: [au_wa]
     week: -1
     wday: 1
+    year_ranges:
+      until: 2021
+  - name: King's Birthday
+    regions: [au_wa]
+    week: -1
+    wday: 1
+    year_ranges:
+      from: 2022
   - name: "Family & Community Day"
     regions: [au_act]
     week: -1
     wday: 1
-  - name: National Day of Mourning
-    regions: [au]
-    function: national_day_of_mourning_2022(year)
+    year_ranges:
+      until: 2017
   10:
   - name: Friday before the AFL Grand Final
     regions: [au_vic]
@@ -143,6 +171,14 @@ months:
     regions: [au_qld]
     function: qld_queens_bday_october(year)
     observed: to_monday_if_weekend(date)
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_qld]
+    function: qld_kings_bday_october(year)
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2023
   - name: Royal Hobart Show
     regions: [au_tas_south]
     function: hobart_show_day(year)
@@ -180,22 +216,21 @@ months:
 
 methods:
   afl_grand_final:
-    # The AFL Grand Final is typically held on the last Saturday in September.
-    # Starting 2015, the day before the Grand Final is observed as a public holiday in Victoria.
-    # Some years are exceptions, these are defined manually.
     arguments: year
     ruby: |
       case year
-      when year < 2015
-        nil
       when 2015
         Date.civil(2015, 10, 2)
       when 2016
         Date.civil(2016, 9, 30)
+      when 2017
+        Date.civil(2017, 9, 29)
+      when 2018
+        Date.civil(2018, 9, 28)
+      when 2019
+        Date.civil(2019,9, 27)
       when 2020
         Date.civil(2020, 10, 23)
-      else
-        Date.civil(year, 9, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 9, :last, :saturday) - 1)
       end
   qld_queens_bday_october:
     # http://www.justice.qld.gov.au/fair-and-safe-work/industrial-relations/public-holidays/dates
@@ -207,6 +242,17 @@ methods:
         Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 10, 1, 1)
       elsif year == 2012
         1
+      else
+        nil
+      end
+  qld_kings_bday_october:
+    # http://www.justice.qld.gov.au/fair-and-safe-work/industrial-relations/public-holidays/dates
+    # celebrated twice in 2012
+    # in october again from 2016
+    arguments: year
+    ruby: |
+      if year >= 2023
+        Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 10, 1, 1)
       else
         nil
       end
@@ -267,12 +313,37 @@ methods:
       else
         Date.civil(year, 5, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 5, :third, :monday))
       end
-  national_day_of_mourning_2022:
-    # https://www.pm.gov.au/media/commemorating-her-majesty-queen-elizabeth-ii
-    # 22 / 2022 - National day of Mourning for the Queen
+  qld_brisbane_ekka_holiday:
+    # https://www.qld.gov.au/recreation/travel/holidays/public
+    # The Ekka holiday occurs on the Wednesday during the RNA Show perido, the RNA show occurs on the first Friday of August, unless that's prior to August 5, then it occurs on the second.
     arguments: year
     ruby: |
-      year == 2022 ? 22 : nil
+      first_friday = Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 8, :first, :friday)
+
+      if first_friday < 5
+        second_friday = Date.civil(year, 8, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 8, :second, :friday))
+        second_friday + 5 # The next Wednesday
+      else
+        Date.civil(year, 8, first_friday) + 5
+      end
+  to_nearest_monday_after:
+    arguments: date
+    ruby: |
+        case date.wday
+        when 6
+          date += 2
+        when 5
+          date += 3
+        when 4
+          date += 4
+        when 3
+          date += 5
+        when 2
+          date += 6
+        when 0
+          date += 1
+        end
+        date
 
 tests:
   - given:
@@ -311,15 +382,35 @@ tests:
     expect:
       name: 'Labour Day'
   - given:
-      date: ['2012-06-11', '2012-10-01', '2013-6-10', '2015-6-8', '2016-10-3']
+      date: ['2012-06-11', '2012-10-01', '2013-6-10', '2015-6-8', '2016-10-3', '2022-10-03']
       regions: ["au_qld"]
     expect:
       name: "Queen's Birthday"
   - given:
-      date: ['2014-09-29', '2015-09-28', '2016-09-26']
+      date: ['2023-10-2']
+      regions: ["au_qld"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: ['2022-06-13']
+      regions: ["au_act", "au_nsw", "au_sa", "au_tas", "au_nt", "au_vic"]
+    expect:
+      name: "Queen's Birthday"
+  - given:
+      date: ['2023-06-12']
+      regions: ["au_act", "au_nsw", "au_sa", "au_tas", "au_nt", "au_vic"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: ['2014-09-29', '2015-09-28', '2016-09-26', '2021-09-27']
       regions: ["au_wa"]
     expect:
       name: "Queen's Birthday"
+  - given:
+      date: ['2022-09-26', '2023-09-25']
+      regions: ["au_wa"]
+    expect:
+      name: "King's Birthday"
   - given:
       date: '2014-09-29'
       regions: ["au_act"]
@@ -759,3 +850,58 @@ tests:
       regions: ["au_qld_brisbane"]
     expect:
       name: "G20 Day"
+  - given:
+      date: '2021-04-26'
+      regions: ["au_vic"]
+    expect:
+      holiday: false
+  - given:
+      date: '2019-08-14'
+      regions: ["au_qld_brisbane"]
+    expect:
+      name: "Ekka"
+  - given:
+      date: '2022-08-10'
+      regions: ["au_qld_brisbane"]
+    expect:
+      name: "Ekka"
+  - given:
+      date: '2023-08-16'
+      regions: ["au_qld_brisbane"]
+    expect:
+      name: "Ekka"
+  - given:
+      date: '2024-08-14'
+      regions: ["au_qld_brisbane"]
+    expect:
+      name: "Ekka"
+  - given:
+      date: '2025-08-13'
+      regions: ["au_qld_brisbane"]
+    expect:
+      name: "Ekka"
+  - given:
+      date: '2022-09-22'
+      regions: ['au']
+    expect:
+      name: "National Day of Mourning for Her Majesty Queen Elizabeth II"
+  - given:
+      date: '2023-09-22'
+      regions: ['au']
+    expect:
+      holiday: false
+  - given:
+      date: '2021-09-22'
+      regions: ['au']
+    expect:
+      holiday: false
+  - given:
+      date: '2024-05-27'
+      regions: ['au_act']
+    expect:
+      name: "Reconciliation Day"
+  - given:
+      date: '2025-06-02'
+      regions: ['au_act']
+    expect:
+      name: "Reconciliation Day"

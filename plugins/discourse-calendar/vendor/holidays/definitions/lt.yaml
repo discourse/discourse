@@ -46,6 +46,9 @@ months:
   - name: Visų šventųjų diena
     regions: [lt]
     mday: 1
+  - name: Mirusiųjų atminimo (Vėlinių) diena
+    regions: [lt]
+    mday: 2
   12:
   - name: Šv. Kūčios
     regions: [lt]
@@ -188,3 +191,8 @@ tests:
       regions: ["lt"]
     expect:
       name: "Antroji Kalėdų diena"
+  - given:
+      date: '2024-11-02'
+      regions: ["lt"]
+    expect:
+      name: "Mirusiųjų atminimo (Vėlinių) diena"

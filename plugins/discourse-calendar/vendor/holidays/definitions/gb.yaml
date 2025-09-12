@@ -14,6 +14,11 @@
 ---
 months:
   0:
+  - name: Mothering Sunday
+    regions: [gb]
+    function: easter(year)
+    function_modifier: -21
+    type: informal
   - name: Good Friday
     regions: [gb]
     function: easter(year)
@@ -54,6 +59,11 @@ months:
     mday: 8
     year_ranges:
       limited: [2020]
+  - name: Bank Holiday for the Coronation of King Charles III
+    regions: [gb]
+    mday: 8
+    year_ranges:
+      limited: [2023]
   - name: May Day
     regions: [gb]
     week: 1
@@ -75,6 +85,11 @@ months:
     wday: 1
     year_ranges:
       from: 2023
+  - name: Bank Holiday for the Coronation of King Charles III
+    regions: [gb]
+    mday: 8
+    year_ranges:
+      limited: [2023]
   6:
   - name: Bank Holiday
     regions: [gb]
@@ -104,7 +119,7 @@ months:
     week: -1
     wday: 1
   9:
-  - name: State Funeral of Queen Elizabeth II
+  - name: Bank Holiday for the State Funeral of Queen Elizabeth II
     regions: [gb]
     mday: 19
     year_ranges:
@@ -138,6 +153,18 @@ months:
     observed: to_weekday_if_boxing_weekend(date)
 
 tests:
+  - given:
+      date: '2022-03-27'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Mothering Sunday"
+  - given:
+      date: '2021-03-14'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Mothering Sunday"
   - given:
       date: '2008-03-21'
       regions: ["gb"]
@@ -497,17 +524,42 @@ tests:
     expect:
       name: "Platinum Jubilee"
   - given:
+      date: '2022-09-19'
+      regions: ["gb"]
+    expect:
+      name: "Bank Holiday for the State Funeral of Queen Elizabeth II"
+  - given:
+      date: '2023-09-19'
+      regions: ['gb']
+    expect:
+      holiday: false
+  - given:
+      date: '2021-09-19'
+      regions: ['gb']
+    expect:
+      holiday: false
+  - given:
+      date: '2023-05-08'
+      regions: ["gb"]
+    expect:
+      name: "Bank Holiday for the Coronation of King Charles III"
+  - given:
+      date: '2024-05-08'
+      regions: ['gb']
+    expect:
+      holiday: false
+  - given:
+      date: '2022-05-08'
+      regions: ['gb']
+    expect:
+      holiday: false
+  - given:
       date: '2023-05-29'
       regions: ["gb"]
     expect:
       name: "Bank Holiday"
   - given:
-      date: '2022-09-19'
+      date: '2023-05-08'
       regions: ["gb"]
     expect:
-      name: "State Funeral of Queen Elizabeth II"
-  - given:
-      date: '2023-09-19'
-      regions: ["gb"]
-    expect:
-      holiday: false
+      name: "Bank Holiday for the Coronation of King Charles III"

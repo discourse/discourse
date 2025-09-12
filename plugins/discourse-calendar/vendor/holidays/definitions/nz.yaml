@@ -1,8 +1,8 @@
 # New Zealand holiday definitions for the Ruby Holiday gem.
-# Updated: 2022-07-01.
+# Updated: 2010-03-28.
 # Sources:
 # - http://en.wikipedia.org/wiki/Public_holidays_in_New_Zealand
-# - Matariki - https://www.mbie.govt.nz/assets/matariki-dates-2022-to-2052-matariki-advisory-group.pdf
+# - Matariki https://www.mbie.govt.nz/business-and-employment/employment-and-skills/employment-legislation-reviews/matariki/matariki-public-holiday/
 ---
 months:
   0:
@@ -70,6 +70,14 @@ months:
     regions: [nz]
     week: 1
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [nz]
+    week: 1
+    wday: 1
+    year_ranges:
+      from: 2023
   9:
   - name: Dominion Day
     regions: [nz_sc]
@@ -264,6 +272,17 @@ tests:
       regions: ["nz"]
     expect:
       name: "Matariki"
+  - given:
+      date: "2022-06-06"
+      regions: ["nz"]
+    expect:
+      name: "Queen's Birthday"
+  - given:
+      date: "2023-06-05"
+      regions: ["nz"]
+    expect:
+      name: "King's Birthday"
+
 
 methods:
   closest_monday:
@@ -286,39 +305,42 @@ methods:
     ruby: |
       date + 7
   matariki:
+    # Matariki is based on the Māori lunar calendar (similar to Easter) so can't be
+    # easily calculated, so must be manually entered. Matariki falls on a Friday to
+    # give us long weekends.
     arguments: year
     ruby: |
       @matariki_dates ||= {
-        2022 => Date.civil(2022, 6, 24),
-        2023 => Date.civil(2023, 7, 14),
-        2024 => Date.civil(2024, 6, 28),
-        2025 => Date.civil(2025, 6, 20),
-        2026 => Date.civil(2026, 7, 10),
-        2027 => Date.civil(2027, 6, 25),
-        2028 => Date.civil(2028, 7, 14),
-        2029 => Date.civil(2029, 7,  6),
-        2030 => Date.civil(2030, 6, 21),
-        2031 => Date.civil(2031, 7, 11),
-        2032 => Date.civil(2032, 7,  2),
-        2033 => Date.civil(2033, 6, 24),
-        2034 => Date.civil(2034, 7,  7),
-        2035 => Date.civil(2035, 6, 29),
-        2036 => Date.civil(2036, 7, 18),
-        2037 => Date.civil(2037, 7, 10),
-        2038 => Date.civil(2038, 6, 25),
-        2039 => Date.civil(2039, 7, 15),
-        2040 => Date.civil(2040, 7,  6),
-        2041 => Date.civil(2041, 7, 19),
-        2042 => Date.civil(2042, 7, 11),
-        2043 => Date.civil(2043, 7,  3),
-        2044 => Date.civil(2044, 6, 24),
-        2045 => Date.civil(2045, 7,  7),
-        2046 => Date.civil(2046, 6, 29),
-        2047 => Date.civil(2047, 7, 19),
-        2048 => Date.civil(2048, 7,  3),
-        2049 => Date.civil(2049, 6, 25),
-        2050 => Date.civil(2050, 7, 15),
-        2051 => Date.civil(2051, 6, 30),
-        2052 => Date.civil(2052, 6, 21),
+      '2022' => Date.civil(2022, 6, 24),
+      '2023' => Date.civil(2023, 7, 14),
+      '2024' => Date.civil(2024, 6, 28),
+      '2025' => Date.civil(2025, 6, 20),
+      '2026' => Date.civil(2026, 7, 10),
+      '2027' => Date.civil(2027, 6, 25),
+      '2028' => Date.civil(2028, 7, 14),
+      '2029' => Date.civil(2029, 7, 6),
+      '2030' => Date.civil(2030, 6, 21),
+      '2031' => Date.civil(2031, 7, 11),
+      '2032' => Date.civil(2032, 7, 2),
+      '2033' => Date.civil(2033, 6, 24),
+      '2034' => Date.civil(2034, 7, 7),
+      '2035' => Date.civil(2035, 6, 29),
+      '2036' => Date.civil(2036, 7, 18),
+      '2037' => Date.civil(2037, 7, 10),
+      '2038' => Date.civil(2038, 6, 25),
+      '2039' => Date.civil(2039, 7, 15),
+      '2040' => Date.civil(2040, 7, 6),
+      '2041' => Date.civil(2041, 7, 19),
+      '2042' => Date.civil(2042, 7, 11),
+      '2043' => Date.civil(2043, 7, 3),
+      '2044' => Date.civil(2044, 6, 24),
+      '2045' => Date.civil(2045, 7, 7),
+      '2046' => Date.civil(2046, 6, 29),
+      '2047' => Date.civil(2047, 7, 19),
+      '2048' => Date.civil(2048, 7, 3),
+      '2049' => Date.civil(2049, 6, 25),
+      '2050' => Date.civil(2050, 7, 15),
+      '2051' => Date.civil(2051, 6, 30),
+      '2052' => Date.civil(2052, 6, 21),
       }
-      @matariki_dates[year]
+      @matariki_dates[year.to_s]

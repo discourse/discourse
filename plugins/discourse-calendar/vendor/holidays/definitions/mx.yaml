@@ -58,6 +58,7 @@ months:
   - name: Grito de Dolores
     regions: [mx]
     mday: 15
+    type: informal
   - name: Día de la Independencia
     regions: [mx]
     mday: 16
@@ -121,6 +122,12 @@ tests:
       options: ["informal"]
     expect:
       name: "Cinco de Mayo"
+  - given:
+      date: '2007-09-15'
+      regions: ["mx"]
+      options: ["informal"]
+    expect:
+      name: "Grito de Dolores"
   - given:
       date: '2007-09-16'
       regions: ["mx"]

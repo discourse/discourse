@@ -62,7 +62,7 @@ months:
   - name: Day of Goodwill
     regions: [za]
     mday: 26
-    observed: to_weekday_if_boxing_weekend(date)
+    observed: to_monday_if_sunday(date)
 
 tests:
   - given:
