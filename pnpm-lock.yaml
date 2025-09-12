@@ -1052,8 +1052,8 @@ importers:
         specifier: ^2.0.10
         version: 2.0.10(postcss@8.5.6)
       '@rollup/browser':
-        specifier: ^4.50.0
-        version: 4.50.0
+        specifier: ^4.50.1
+        version: 4.50.1
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.28.3)(rollup@4.44.0)
@@ -2550,8 +2550,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.50.0':
-    resolution: {integrity: sha512-SENP0x9u6lHdRPdn/KzTAh6NEDGTk8npAEk7IVKTm9UD6Apzb/eli5/wvYyMt5pcqyaEmKuhq0l+K9+Ek7SXeg==}
+  '@rollup/browser@4.50.1':
+    resolution: {integrity: sha512-KJPGMh7pd+3vL/ui/DHkkgJ7q9CxbVITaDDZszE7HNZu/k8Y2iQ37mthFU0rSfczae1WwmTilUAqfFrtGs3b7Q==}
 
   '@rollup/plugin-babel@6.0.4':
     resolution: {integrity: sha512-YF7Y52kFdFT/xVSuVdjkV5ZdX/3YtmX0QulG+x0taQOtJdHYzVU61aSSkAgVJ7NOv6qPkIYiJSgSWWN/DM5sGw==}
@@ -11131,7 +11131,7 @@ snapshots:
       prettier: 3.5.3
       rxjs: 6.6.7
 
-  '@rollup/browser@4.50.0':
+  '@rollup/browser@4.50.1':
     dependencies:
       '@types/estree': 1.0.8
 
