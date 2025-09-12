@@ -1,6 +1,7 @@
 import RouteTemplate from "ember-route-template";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
+import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
@@ -43,7 +44,12 @@ export default RouteTemplate(
           {{/if}}
         {{/if}}
 
-        <span id="navigation-controls__button"></span>
+        {{#if @controller.isGroup}}
+          <GroupNotificationsTracking
+            @levelId={{@controller.group.group_user.notification_level}}
+            @onChange={{@controller.changeGroupNotificationLevel}}
+          />
+        {{/if}}
 
         {{#if @controller.showNewPM}}
           <DButton

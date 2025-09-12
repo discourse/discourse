@@ -1,5 +1,4 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 
@@ -19,10 +18,6 @@ export default class extends Controller {
     return this.#linkText("unread");
   }
 
-  get navigationControlsButton() {
-    return document.getElementById("navigation-controls__button");
-  }
-
   #linkText(type) {
     const count = this.pmTopicTrackingState?.lookupCount(type, {
       inboxFilter: "group",
@@ -34,10 +29,5 @@ export default class extends Controller {
     } else {
       return i18n(`user.messages.${type}_with_count`, { count });
     }
-  }
-
-  @action
-  changeGroupNotificationLevel(notificationLevel) {
-    this.group.setNotification(notificationLevel, this.get("user.model.id"));
   }
 }

@@ -1,6 +1,5 @@
 import RouteTemplate from "ember-route-template";
 import DNavigationItem from "discourse/components/d-navigation-item";
-import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -47,13 +46,6 @@ export default RouteTemplate(
         </DNavigationItem>
       {{/if}}
     </MessagesSecondaryNav>
-
-    {{#in-element @controller.navigationControlsButton}}
-      <GroupNotificationsTracking
-        @levelId={{@controller.group.group_user.notification_level}}
-        @onChange={{@controller.changeGroupNotificationLevel}}
-      />
-    {{/in-element}}
 
     <div class="group-messages group-{{@controller.group.name}}">
       {{outlet}}
