@@ -25,9 +25,9 @@ const extension = {
     event: {
       attrs: EVENT_ATTRIBUTES,
       group: "block",
-      defining: true,
-      isolating: true,
+      content: "block+",
       draggable: true,
+      selectable: true,
       parseDOM: [
         {
           tag: "div.discourse-post-event",
@@ -89,9 +89,19 @@ const extension = {
         }
       });
 
-      bbcode += "]\n[/event]\n";
-
+      bbcode += "]\n";
       state.write(bbcode);
+      if (node.childCount > 0) {
+        const prevLength = state.out.length;
+        state.renderContent(node);
+        state.write("");
+        // strip newlines added by renderContent
+        while (state.out.endsWith("\n") && state.out.length >= prevLength) {
+          state.out = state.out.slice(0, -1);
+        }
+        state.write("\n");
+      }
+      state.write("[/event]\n");
     },
   },
 };

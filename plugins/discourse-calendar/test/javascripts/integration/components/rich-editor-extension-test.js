@@ -8,9 +8,9 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
   const testCases = {
     "event alone": [
       [
-        `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\n[/event]\n`,
-        `<div class="discourse-post-event discourse-post-event-preview ProseMirror-selectednode" data-start="2025-03-21 15:41" data-status="public" data-timezone="Europe/Paris" contenteditable="false" draggable="true"><div class="event-preview-status">Public</div><div class="event-preview-dates"><span class="start">March 21, 2025 2:41 PM</span></div></div>`,
-        `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\n[/event]\n`,
+        `[event name="my event" start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\nhello\n[/event]\n`,
+        `<div class="discourse-post-event discourse-post-event-preview" data-name="my event" data-start="2025-03-21 15:41" data-status="public" data-timezone="Europe/Paris" contenteditable="false" draggable="true"><div class="event-preview-name">my event</div><div class="event-preview-status">Public</div><div class="event-preview-dates"><span class="start">March 21, 2025 2:41 PM</span></div></div>`,
+        `[event name="my event" start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\nhello\n[/event]\n`,
       ],
     ],
     "event with content around": [
