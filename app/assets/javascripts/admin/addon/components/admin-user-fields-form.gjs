@@ -22,6 +22,10 @@ export default class AdminUserFieldsForm extends Component {
 
   @tracked
   editableDisabled = this.args.userField.requirement === "for_all_users";
+  @tracked
+  showOnSignupDisabled =
+    this.args.userField.requirement !== "optional" ||
+    this.args.userField.editable === false;
   originalRequirement = this.args.userField.requirement;
   userField;
 
@@ -38,6 +42,7 @@ export default class AdminUserFieldsForm extends Component {
       "requirement",
       "editable",
       "show_on_profile",
+      "show_on_signup",
       "show_on_user_card",
       "searchable",
       "options",
@@ -51,9 +56,27 @@ export default class AdminUserFieldsForm extends Component {
 
     if (value === "for_all_users") {
       this.editableDisabled = true;
+      this.showOnSignupDisabled = true;
       set("editable", true);
+      set("show_on_signup", true);
+    } else if (value === "on_signup") {
+      this.showOnSignupDisabled = true;
+      set("show_on_signup", true);
     } else {
       this.editableDisabled = false;
+      this.showOnSignupDisabled = false;
+    }
+  }
+
+  @action
+  setEditable(value, { set }) {
+    set("editable", value);
+
+    if (value === false) {
+      this.showOnSignupDisabled = true;
+      set("show_on_signup", true);
+    } else {
+      this.showOnSignupDisabled = false;
     }
   }
 
@@ -217,6 +240,7 @@ export default class AdminUserFieldsForm extends Component {
         <group.Field
           @name="editable"
           @showTitle={{false}}
+          @onSet={{this.setEditable}}
           @title={{i18n "admin.user_fields.editable.title"}}
           as |field|
         >
@@ -245,6 +269,14 @@ export default class AdminUserFieldsForm extends Component {
           as |field|
         >
           <field.Checkbox />
+        </group.Field>
+        <group.Field
+          @name="show_on_signup"
+          @showTitle={{false}}
+          @title={{i18n "admin.user_fields.show_on_signup.title"}}
+          as |field|
+        >
+          <field.Checkbox disabled={{this.showOnSignupDisabled}} />
         </group.Field>
       </form.CheckboxGroup>
 
