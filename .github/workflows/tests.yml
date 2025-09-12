@@ -23,7 +23,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ (matrix.enable_fix == '0' && 'original' || 'fixed') }} ${{ matrix.iteration }}
     runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
@@ -35,33 +35,24 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: 0
       CHEAP_SOURCE_MAPS: "1"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      DISCOURSE_ENABLE_FLAKY_FIX: ${{ matrix.enable_fix }}
 
     strategy:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
+        build_type: [system]
+        target: [core] # expand to [core, plugins, themes, chat]?
         browser: [Chrome]
-        exclude:
-          - build_type: backend
-            target: themes
-        include:
-          - build_type: system
-            target: chat
-          - build_type: frontend
-            target: core
-            browser: Firefox Evergreen
-          - build_type: frontend
-            target: core
-            browser: Firefox ESR
+        iteration: [1, 2]
+        enable_fix: [0, 1]
 
     steps:
       - name: Set working directory owner
