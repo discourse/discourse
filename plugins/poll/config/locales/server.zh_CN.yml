@@ -39,8 +39,6 @@ zh_CN:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "在创建 %{minutes} 分钟后，您将无法更改投票。"
       cannot_edit_named_poll_with_votes: "在创建 %{minutes} 分钟后，您将无法更改投票名称“<strong>${name}</strong>”。"
-    dynamic_poll:
-      enabled_hint: "此投票是动态的。选项可以在发布后编辑。"
     no_poll_with_this_name: "没有与此帖子相关的名为“<strong>%{name}</strong>”的投票。"
     post_is_deleted: "无法对已被删除的帖子执行操作。"
     user_cant_post_in_topic: "您无法投票，因为您无法在此话题中发帖。"

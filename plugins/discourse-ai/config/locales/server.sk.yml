@@ -24,8 +24,8 @@ sk:
         description: "Triedenie príspevkov pomocou rozsiahleho jazykového modelu"
         flagged_post: |
           <div>Odpoveď modelu:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Spúšťa sa <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> pravidlom.</b>
+          <p>%{llm_response}</p>
+          <b>Spúšťa sa <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> pravidlom.</b>
       llm_report:
         title: Pravidelná správa s použitím AI
         description: "Pravidelná správa na základe rozsiahleho jazykového modelu"

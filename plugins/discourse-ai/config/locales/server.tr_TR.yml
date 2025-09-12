@@ -24,8 +24,8 @@ tr_TR:
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         flagged_post: |
           <div>Modelden gelen yanıt:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> kuralı ile tetiklenir.</b>
+          <p>%{llm_response}</p>
+          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> kuralı ile tetiklenir.</b>
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"

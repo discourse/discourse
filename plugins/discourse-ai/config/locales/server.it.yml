@@ -24,8 +24,8 @@ it:
         description: "Triage dei messaggi con LLM"
         flagged_post: |
           <div>Risposta dal modello:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Innescato dalla regola <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Innescato dalla regola <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Report periodico con IA
         description: "Report periodico basato su LLM"

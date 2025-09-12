@@ -61,6 +61,7 @@ cs:
     calendar_automatic_holidays_enabled: "Automaticky nastavit stav dovolené na základě regionu uživatele (poznámka: konkrétní automatické svátky můžete zakázat v nastavení pluginu)"
     event_participation_buttons: "Seznam tlačítek účasti na události, která mohou uživatelé použít."
     sidebar_show_upcoming_events: "Zobrazit odkaz na nadcházející události na postranním panelu pod položkou 'Více'."
+    calendar_first_day_of_week: "Nastavte první den v týdnu pro zobrazení kalendáře. Možnosti jsou sobota, neděle nebo pondělí."
   discourse_calendar:
     invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
     calendar_must_be_in_first_post: "Značka pro kalendář se může vložit jen do prvního příspěvku tématu."
@@ -86,6 +87,7 @@ cs:
           raw_invitees:
             only_group: "Událost přijímá pouze názvy skupin."
           ends_at_before_starts_at: "Událost nemůže končit dříve, než začne."
+          max_attendees_reached: "Tato událost je plně obsazena."
           start_must_be_present_and_a_valid_date: "Událost vyžaduje platné datum začátku."
           end_must_be_a_valid_date: "Datum konce musí být platné datum."
           invalid_recurrence: "Opakování musí být jedno z následujících: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

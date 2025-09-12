@@ -25,8 +25,8 @@ pl_PL:
         description: "Oceniaj posty przy użyciu dużego modelu językowego"
         flagged_post: |
           <div>Odpowiedź modelu:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
+          <p>%{llm_response}</p>
+          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
           body: |

@@ -6,9 +6,9 @@
 
 hr:
   js:
-    gamification_score: "Živjeli"
+    gamification_score: "Bravo"
     gamification:
-      score: "Živjeli"
+      score: "Bravo"
       you: "Vi"
       leaderboard:
         title: "Ljestvice članova"
