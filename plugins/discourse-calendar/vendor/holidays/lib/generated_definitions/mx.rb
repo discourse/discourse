@@ -31,7 +31,7 @@ module Holidays
             {:wday => 6, :week => 3, :type => :informal, :name => "Armed Forces Day", :regions => [:us]}],
       6 => [{:wday => 0, :week => 3, :type => :informal, :name => "Día del Padre", :regions => [:mx]},
             {:wday => 0, :week => 3, :type => :informal, :name => "Father's Day", :regions => [:us, :ca]}],
-      9 => [{:mday => 15, :name => "Grito de Dolores", :regions => [:mx]},
+      9 => [{:mday => 15, :type => :informal, :name => "Grito de Dolores", :regions => [:mx]},
             {:mday => 16, :name => "Día de la Independencia", :regions => [:mx]}],
       10 => [{:mday => 12, :type => :informal, :name => "Día de la Raza", :regions => [:mx]},
             {:mday => 31, :type => :informal, :name => "Halloween", :regions => [:us, :ca]}],

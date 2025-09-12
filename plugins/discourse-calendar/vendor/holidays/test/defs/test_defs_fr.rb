@@ -17,7 +17,7 @@ class FrDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Ascension", (Holidays.on(Date.civil(2007, 5, 17), [:fr])[0] || {})[:name]
 
-    assert_equal "Lundi de Pentecôte", (Holidays.on(Date.civil(2007, 5, 28), [:fr])[0] || {})[:name]
+    assert_equal "Pentecôte", (Holidays.on(Date.civil(2007, 5, 27), [:fr])[0] || {})[:name]
 
     assert_equal "Fête nationale", (Holidays.on(Date.civil(2007, 7, 14), [:fr])[0] || {})[:name]
 
@@ -31,11 +31,11 @@ class FrDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_nil (Holidays.on(Date.civil(2007, 4, 8), [:fr])[0] || {})[:name]
 
-    assert_nil (Holidays.on(Date.civil(2007, 5, 27), [:fr])[0] || {})[:name]
+    assert_nil (Holidays.on(Date.civil(2007, 5, 28), [:fr])[0] || {})[:name]
 
     assert_equal "Pâques", (Holidays.on(Date.civil(2007, 4, 8), [:fr], [:informal])[0] || {})[:name]
 
-    assert_equal "Pentecôte", (Holidays.on(Date.civil(2007, 5, 27), [:fr], [:informal])[0] || {})[:name]
+    assert_equal "Lundi de Pentecôte", (Holidays.on(Date.civil(2007, 5, 28), [:fr], [:informal])[0] || {})[:name]
 
     assert_equal "Saint-Étienne", (Holidays.on(Date.civil(2017, 12, 26), [:fr_a, :fr_m], [:informal])[0] || {})[:name]
 

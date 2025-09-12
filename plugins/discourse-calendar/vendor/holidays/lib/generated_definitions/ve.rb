@@ -23,9 +23,7 @@ module Holidays
       7 => [{:mday => 5, :name => "Día de la Independencia", :regions => [:ve]},
             {:mday => 24, :name => "Natalicio de Simón Bolívar", :regions => [:ve]}],
       10 => [{:mday => 12, :name => "Día de la Resistencia Indígena", :regions => [:ve]}],
-      12 => [{:mday => 24, :name => "Víspera de Navidad", :regions => [:ve]},
-            {:mday => 25, :name => "Día de Navidad", :regions => [:ve]},
-            {:mday => 31, :name => "Víspera de Año Nuevo", :regions => [:ve]}]
+      12 => [{:mday => 25, :name => "Día de Navidad", :regions => [:ve]}]
       }
     end
 

@@ -17,6 +17,7 @@ module Holidays
             {:wday => 1, :week => 3, :name => "Martin Luther King, Jr. Day", :regions => [:nyse]}],
       2 => [{:wday => 1, :week => 3, :name => "Presidents' Day", :regions => [:nyse]}],
       5 => [{:wday => 1, :week => -1, :name => "Memorial Day", :regions => [:nyse]}],
+      6 => [{:mday => 19, :year_ranges => { :from => 2022 },:observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Juneteenth National Independence Day", :regions => [:nyse]}],
       7 => [{:mday => 4, :observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Independence Day", :regions => [:nyse]}],
       9 => [{:wday => 1, :week => 1, :name => "Labor Day", :regions => [:nyse]}],
       11 => [{:wday => 4, :week => 4, :name => "Thanksgiving", :regions => [:nyse]}],

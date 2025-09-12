@@ -24,7 +24,7 @@ module Holidays
             {:mday => 16, :name => "Dan državnosti Srbije", :regions => [:rs_la]}],
       5 => [{:mday => 1, :name => "Praznik rada", :regions => [:rs_la]},
             {:mday => 2, :name => "Praznik rada", :regions => [:rs_la]},
-            {:mday => 9, :name => "Dan pobede", :regions => [:rs_la]}],
+            {:mday => 9, :type => :informal, :name => "Dan pobede", :regions => [:rs_la]}],
       6 => [{:mday => 28, :name => "Vidovdan", :regions => [:rs_la]}],
       11 => [{:mday => 11, :name => "Dan primirja", :regions => [:rs_la]}]
       }

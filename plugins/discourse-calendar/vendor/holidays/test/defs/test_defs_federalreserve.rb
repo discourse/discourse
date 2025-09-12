@@ -109,5 +109,11 @@ class FederalreserveDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Christmas Day", (Holidays.on(Date.civil(2016, 12, 26), [:federalreserve], [:observed])[0] || {})[:name]
 
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2021, 6, 18), [:federalreserve], [:observed])[0] || {})[:name]
+
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2022, 6, 20), [:federalreserve], [:observed])[0] || {})[:name]
+
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2023, 6, 19), [:federalreserve], [:observed])[0] || {})[:name]
+
   end
 end

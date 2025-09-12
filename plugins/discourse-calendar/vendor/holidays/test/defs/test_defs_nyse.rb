@@ -35,5 +35,12 @@ assert_equal "New Year's Day", (Holidays.on(Date.civil(2012, 1, 2), [:nyse], [:o
 assert_equal "New Year's Day", (Holidays.on(Date.civil(2011, 1, 1), [:nyse], [:observed])[0] || {})[:name]
 assert_equal "New Year's Day", (Holidays.on(Date.civil(2006, 1, 2), [:nyse], [:observed])[0] || {})[:name]
 
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2022, 6, 20), [:nyse], [:observed])[0] || {})[:name]
+assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2023, 6, 19), [:nyse], [:observed])[0] || {})[:name]
+assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2024, 6, 19), [:nyse], [:observed])[0] || {})[:name]
+assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2027, 6, 18), [:nyse], [:observed])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2021, 6, 18), [:nyse], [:observed])[0] || {})[:name]
+
   end
 end

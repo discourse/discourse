@@ -7,7 +7,7 @@ module Holidays
   # All the definitions are available at https://github.com/holidays/holidays
   module SOUTHAMERICA # :nodoc:
     def self.defined_regions
-      [:ar, :br, :br_spcapital, :br_sp, :cl, :co, :pe, :ve]
+      [:ar, :br, :cl, :co, :pe, :ve]
     end
 
     def self.holidays_by_month
@@ -15,8 +15,7 @@ module Holidays
                 0 => [{:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Viernes Santo", :regions => [:ar]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -48, :name => "Carnaval Lunes", :regions => [:ar]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -47, :name => "Carnaval Martes", :regions => [:ar]},
-            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -48, :name => "Segunda-Feira de Carnaval", :regions => [:br]},
-            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -47, :name => "Terça-Feira de Carnaval", :regions => [:br]},
+            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -47, :type => :informal, :name => "Carnaval", :regions => [:br]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Sexta-feira Santa", :regions => [:br]},
             {:function => "easter(year)", :function_arguments => [:year], :name => "Páscoa", :regions => [:br]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 60, :name => "Corpus Christi", :regions => [:br]},
@@ -38,7 +37,6 @@ module Holidays
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Viernes Santo", :regions => [:ve]}],
       1 => [{:mday => 1, :name => "Año Nuevo", :regions => [:ar]},
             {:mday => 1, :name => "Dia da Confraternização Universal", :regions => [:br]},
-            {:mday => 25, :name => "Aniversário da cidade de São Paulo", :regions => [:br_spcapital]},
             {:mday => 1, :name => "Año Nuevo", :regions => [:cl]},
             {:mday => 1, :name => "Año Nuevo", :regions => [:co]},
             {:function => "epiphany(year)", :function_arguments => [:year], :name => "Día de los Reyes Magos", :regions => [:co]},
@@ -52,6 +50,7 @@ module Holidays
             {:mday => 19, :name => "Declaración Independencia", :regions => [:ve]}],
       5 => [{:mday => 1, :name => "Día del Trabajador", :regions => [:ar]},
             {:mday => 25, :name => "Día de la Revolución de Mayo", :regions => [:ar]},
+            {:mday => 24, :year_ranges => { :limited => [2021] },:name => "Feriado con fines turísticos", :regions => [:ar]},
             {:mday => 1, :name => "Dia do Trabalho", :regions => [:br]},
             {:mday => 1, :name => "Día del Trabajo", :regions => [:cl]},
             {:mday => 21, :name => "Día de las Glorias Navales", :regions => [:cl]},
@@ -59,7 +58,8 @@ module Holidays
             {:mday => 1, :name => "Día del Trabajador", :regions => [:pe]},
             {:wday => 0, :week => 2, :type => :informal, :name => "Día de la Madre", :regions => [:pe]},
             {:mday => 1, :name => "Día del Trabajador", :regions => [:ve]}],
-      6 => [{:mday => 20, :name => "Día de la Bandera", :regions => [:ar]},
+      6 => [{:mday => 17, :function => "to_nearest_monday(date)", :function_arguments => [:date], :name => "Paso a la Inmortalidad del General Martín Miguel de Güemes", :regions => [:ar]},
+            {:mday => 20, :name => "Día de la Bandera", :regions => [:ar]},
             {:mday => 29, :year_ranges => { :until => 1999 },:name => "San Pedro y San Pablo", :regions => [:cl]},
             {:function => "saint_peter_and_saint_paul(year)", :function_arguments => [:year], :name => "San Pedro y San Pablo", :regions => [:co]},
             {:mday => 7, :type => :informal, :name => "Día de la Bandera", :regions => [:pe]},
@@ -67,21 +67,21 @@ module Holidays
             {:mday => 24, :type => :informal, :name => "Inti Raymi", :regions => [:pe]},
             {:mday => 29, :name => "San Pablo y San Pedro", :regions => [:pe]},
             {:mday => 24, :name => "Aniversario Batalla de Carabobo", :regions => [:ve]}],
-      7 => [{:mday => 8, :name => "Feriado puente turístico", :regions => [:ar]},
+      7 => [{:mday => 8, :year_ranges => { :limited => [2016] },:name => "Feriado con fines turísticos", :regions => [:ar]},
             {:mday => 9, :name => "Día de la Independencia", :regions => [:ar]},
-            {:mday => 9, :name => "Revolução Constitucionalista", :regions => [:br_sp, :br_spcapital]},
             {:mday => 16, :name => "Día de la Virgen del Carmen", :regions => [:cl]},
             {:mday => 20, :name => "Día de la Independencia", :regions => [:co]},
             {:mday => 28, :name => "Primer Día de la Independencia", :regions => [:pe]},
             {:mday => 29, :name => "Segundo Día de la Independencia", :regions => [:pe]},
             {:mday => 5, :name => "Día de la Independencia", :regions => [:ve]},
             {:mday => 24, :name => "Natalicio de Simón Bolívar", :regions => [:ve]}],
-      8 => [{:mday => 17, :name => "Paso a la Inmortalidad del General José de San Martín", :regions => [:ar]},
+      8 => [{:mday => 17, :function => "to_nearest_monday(date)", :function_arguments => [:date], :name => "Paso a la Inmortalidad del General José de San Martín", :regions => [:ar]},
             {:mday => 15, :name => "Asunción de la Virgen", :regions => [:cl]},
             {:mday => 7, :name => "Batalla de Boyacá", :regions => [:co]},
             {:function => "assumption_of_mary(year)", :function_arguments => [:year], :name => "La Asunción de la Virgen", :regions => [:co]},
             {:mday => 30, :name => "Santa Rosa de Lima", :regions => [:pe]}],
-      10 => [{:mday => 12, :name => "Día del Respeto a la Diversidad Cultural", :regions => [:ar]},
+      10 => [{:mday => 12, :function => "to_nearest_monday(date)", :function_arguments => [:date], :name => "Día del Respeto a la Diversidad Cultural", :regions => [:ar]},
+            {:mday => 8, :year_ranges => { :limited => [2021] },:name => "Feriado con fines turísticos", :regions => [:ar]},
             {:mday => 12, :name => "Dia de Nossa Senhora Aparecida", :regions => [:br]},
             {:mday => 12, :year_ranges => { :until => 1999 },:name => "Encuentro de Dos Mundos", :regions => [:cl]},
             {:function => "columbus_day_cl(year)", :function_arguments => [:year], :year_ranges => { :from => 2000 },:name => "Encuentro de Dos Mundos", :regions => [:cl]},
@@ -89,15 +89,16 @@ module Holidays
             {:mday => 8, :name => "Batalla de Angamos", :regions => [:pe]},
             {:mday => 12, :name => "Día de la Resistencia Indígena", :regions => [:ve]}],
       11 => [{:mday => 20, :name => "Día de la Soberanía Nacional", :regions => [:ar]},
+            {:mday => 22, :year_ranges => { :limited => [2021] },:name => "Feriado con fines turísticos", :regions => [:ar]},
             {:mday => 2, :name => "Dia de Finados", :regions => [:br]},
             {:mday => 15, :name => "Proclamação da República", :regions => [:br]},
-            {:mday => 20, :name => "Dia da Consciência Negra", :regions => [:br_spcapital]},
+            {:mday => 20, :year_ranges => { :from => 2024 },:name => "Dia Nacional de Zumbi e da Consciência Negra", :regions => [:br]},
             {:mday => 1, :name => "Día de Todos los Santos", :regions => [:cl]},
             {:function => "all_saints_day(year)", :function_arguments => [:year], :name => "Día de Todos los Santos", :regions => [:co]},
             {:function => "independence_of_cartagena(year)", :function_arguments => [:year], :name => "Independencia de Cartagena", :regions => [:co]},
             {:mday => 1, :name => "Todos los Santos", :regions => [:pe]}],
       12 => [{:mday => 8, :name => "Inmaculada Concepción de María", :regions => [:ar]},
-            {:mday => 9, :name => "Feriado puente turístico", :regions => [:ar]},
+            {:mday => 9, :year_ranges => { :limited => [2016] },:name => "Feriado con fines turísticos", :regions => [:ar]},
             {:mday => 25, :name => "Navidad", :regions => [:ar]},
             {:mday => 25, :name => "Natal", :regions => [:br]},
             {:mday => 8, :name => "Inmaculada Concepción de María", :regions => [:cl]},
@@ -106,9 +107,7 @@ module Holidays
             {:mday => 25, :name => "Navidad", :regions => [:co]},
             {:mday => 8, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Inmaculada Concepción", :regions => [:pe]},
             {:mday => 25, :name => "Navidad del Señor", :regions => [:pe]},
-            {:mday => 24, :name => "Víspera de Navidad", :regions => [:ve]},
-            {:mday => 25, :name => "Día de Navidad", :regions => [:ve]},
-            {:mday => 31, :name => "Víspera de Año Nuevo", :regions => [:ve]}],
+            {:mday => 25, :name => "Día de Navidad", :regions => [:ve]}],
       9 => [{:mday => 7, :name => "Proclamação da Independência", :regions => [:br]},
             {:mday => 18, :name => "Independencia Nacional", :regions => [:cl]},
             {:mday => 19, :name => "Día de las Glorias del Ejército", :regions => [:cl]},
@@ -118,7 +117,22 @@ module Holidays
 
     def self.custom_methods
       {
-          "st_peter_st_paul_cl(year)" => Proc.new { |year|
+          "to_nearest_monday(date)" => Proc.new { |date|
+case date.wday
+when 5
+  date += 3
+when 4
+  date += 4
+when 3
+  date -= 2
+when 2
+  date -= 1
+end
+
+date
+},
+
+"st_peter_st_paul_cl(year)" => Proc.new { |year|
 date = Date.civil(year, 6, 29)
 if [2,3,4].include?(date.wday)
   date -= (date.wday - 1)

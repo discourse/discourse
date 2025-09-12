@@ -16,6 +16,7 @@ module Holidays
             {:wday => 1, :week => 3, :name => "Birthday of Martin Luther King, Jr", :regions => [:federalreservebanks]}],
       2 => [{:wday => 1, :week => 3, :name => "Washington's Birthday", :regions => [:federalreservebanks]}],
       5 => [{:wday => 1, :week => -1, :name => "Memorial Day", :regions => [:federalreservebanks]}],
+      6 => [{:mday => 19, :year_ranges => { :from => 2021 },:observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Juneteenth National Independence Day", :regions => [:federalreservebanks]}],
       7 => [{:mday => 4, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Independence Day", :regions => [:federalreservebanks]}],
       9 => [{:wday => 1, :week => 1, :name => "Labor Day", :regions => [:federalreservebanks]}],
       10 => [{:wday => 1, :week => 2, :name => "Columbus Day", :regions => [:federalreservebanks]}],

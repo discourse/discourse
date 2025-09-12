@@ -59,5 +59,7 @@ class LtDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Antroji Kalėdų diena", (Holidays.on(Date.civil(2012, 12, 26), [:lt])[0] || {})[:name]
 
+    assert_equal "Mirusiųjų atminimo (Vėlinių) diena", (Holidays.on(Date.civil(2024, 11, 2), [:lt])[0] || {})[:name]
+
   end
 end
