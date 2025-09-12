@@ -225,7 +225,11 @@ class PostActionCreator
       true,
       Discourse.system_user,
       message:
-        I18n.t("temporarily_closed_due_to_flags", count: SiteSetting.num_hours_to_close_topic),
+        I18n.t(
+          "temporarily_closed_due_to_flags",
+          count: SiteSetting.num_hours_to_close_topic,
+          locale: SiteSetting.default_locale,
+        ),
     )
 
     topic.set_or_create_timer(
