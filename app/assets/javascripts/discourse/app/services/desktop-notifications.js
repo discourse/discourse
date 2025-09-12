@@ -10,6 +10,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import {
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
+  PushNotificationSupport,
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
@@ -32,18 +33,41 @@ export default class DesktopNotificationsService extends Service {
   constructor() {
     super(...arguments);
 
+    if (this.isPushNotificationsPreferred) {
+      this.isEnabledPush = this.currentUser
+        ? pushNotificationKeyValueStore.getItem(
+            pushNotificationUserSubscriptionKey(this.currentUser)
+          ) === SUBSCRIBED
+        : false;
+
+      // N.B: If push notifications are preferred, treat them as superseding regular browser
+      // notifications and disable the latter.
+      this.setIsEnabledBrowser(false);
+    }
+
     this.isEnabledBrowser = this.isGrantedPermission
       ? keyValueStore.getItem("notifications-disabled") === ENABLED
       : false;
-    this.isEnabledPush = this.currentUser
-      ? pushNotificationKeyValueStore.getItem(
-          pushNotificationUserSubscriptionKey(this.currentUser)
-        ) === SUBSCRIBED
-      : false;
+  }
+
+  get isSupported() {
+    return typeof window.Notification !== "undefined";
   }
 
   get isNotSupported() {
-    return typeof window.Notification === "undefined";
+    return !this.isSupported;
+  }
+
+  get isPushSupported() {
+    return (
+      isPushNotificationsSupported() !== PushNotificationSupport.NotSupported
+    );
+  }
+
+  get isPushPwaNeeded() {
+    return (
+      isPushNotificationsSupported() === PushNotificationSupport.PWARequired
+    );
   }
 
   get notificationsPermission() {
@@ -80,11 +104,12 @@ export default class DesktopNotificationsService extends Service {
       : this.isEnabledBrowser;
   }
 
+  // Returns whether or not push notifications are preferred (but notably, does _NOT_
+  // check to see whether or not they are supported).
   get isPushNotificationsPreferred() {
     return (
-      (this.site.mobileView ||
-        this.siteSettings.enable_desktop_push_notifications) &&
-      isPushNotificationsSupported()
+      this.site.mobileView ||
+      this.siteSettings.enable_desktop_push_notifications
     );
   }
 
@@ -126,22 +151,47 @@ export default class DesktopNotificationsService extends Service {
 
   @action
   async enable() {
-    if (this.isPushNotificationsPreferred) {
-      await subscribePushNotification(() => {
-        this.setIsEnabledPush(true);
-      }, this.siteSettings.vapid_public_key_bytes);
+    // If notifications are supported, attempt to:
+    // 1) enable browser notifications
+    // 2) subscribe to push notifications.
+    if (this.isSupported) {
+      if (!this.isGrantedPermission) {
+        // This permission also applies to webpush notifications.
+        // https://stackoverflow.com/q/46551259
+        await Notification.requestPermission();
+      }
 
-      return true;
-    } else {
-      await Notification.requestPermission((permission) => {
-        confirmNotification(this.siteSettings);
-        if (permission === "granted") {
-          this.setIsEnabledBrowser(true);
-          return true;
-        } else {
-          return false;
+      if (this.isDeniedPermission) {
+        // User has denied permission for sending notifications.
+        return false;
+      }
+
+      if (this.isPushNotificationsPreferred) {
+        switch (isPushNotificationsSupported()) {
+          case PushNotificationSupport.Supported:
+            // Subscribe to push notifications from the server. If successful, a notification will be sent.
+            await subscribePushNotification(() => {
+              this.setIsEnabledPush(true);
+            }, this.siteSettings.vapid_public_key_bytes);
+
+            return true;
+          case PushNotificationSupport.PWARequired:
+            // User must install the application as a PWA.
+            return false;
+          case PushNotificationSupport.NotSupported:
+          default:
+            // Push notifications not supported.
+            return false;
         }
-      });
+      } else {
+        // Push notifications not preferred; so generate a confirmation notification.
+        confirmNotification(this.siteSettings);
+        this.setIsEnabledBrowser(true);
+
+        return true;
+      }
     }
+
+    return false;
   }
 }
