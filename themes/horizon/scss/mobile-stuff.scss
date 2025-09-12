@@ -85,12 +85,6 @@
           margin-bottom: 0;
         }
       }
-
-      .navigation-controls {
-        @include viewport.until(sm) {
-          gap: var(--space-2);
-        }
-      }
     }
   }
 
