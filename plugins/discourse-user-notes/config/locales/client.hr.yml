@@ -7,6 +7,11 @@
 hr:
   js:
     user_notes:
-      title: "Bilješke o korisniku"
-      attach: "Dodaj bilješku za korisnike"
+      title: "Napomene o korisniku"
+      attach: "Dodaj napomenu o korisniku"
+      attach_note_description: "Dodajte napomenu o ovom korisniku. Ova će napomena biti vidljiva samo osoblju."
+      remove: "Ukloni napomenu o korisniku"
+      show: "Napomene o korisniku (%{count})"
+      delete_confirm: "Jeste li sigurni da želite izbrisati tu napomenu o korisniku?"
       show_post: "Prikaži objavu"
+      copy_reviewable_note: "Kopiraj napomenu u korisnički profil?"

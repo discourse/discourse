@@ -423,6 +423,7 @@ cs:
         event:
           expired: "Platnost vypršela"
           closed: "Zavřené"
+          full: "Obsazeno"
           status:
             standalone:
               title: "Samostatná"
@@ -480,6 +481,9 @@ cs:
         minimal:
           label: "Mini-událost"
           checkbox_label: "Skrýt tlačítka Zúčastním/Nuzúčastním a stav pozvaných osob"
+        max_attendees:
+          label: "Maximální počet účastníků"
+          placeholder: "Bez omezení"
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"

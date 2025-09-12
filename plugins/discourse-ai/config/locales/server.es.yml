@@ -24,8 +24,8 @@ es:
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
         flagged_post: |
           <div>Respuesta del modelo:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a></b>
+          <p>%{llm_response}</p>
+          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a></b>
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"

@@ -23,8 +23,8 @@ he:
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
         flagged_post: |
           <div>תגובה מהמודל:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
           body: |

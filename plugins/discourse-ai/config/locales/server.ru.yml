@@ -24,8 +24,8 @@ ru:
         description: "Сортировка публикаций с использованием большой языковой модели"
         flagged_post: |
           <div>Ответ модели:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Срабатывает по правилу: <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Срабатывает по правилу: <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Периодический отчет с использованием AI
         description: "Периодический отчет на основе большой языковой модели"

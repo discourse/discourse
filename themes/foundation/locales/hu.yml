@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 hu:
+  theme_metadata:
+    description: "A klasszikus diskurzus téma, amely jól illeszkedik a közösség sajátos igényeihez való testreszabáshoz."

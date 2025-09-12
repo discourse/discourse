@@ -25,8 +25,8 @@ de:
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
         flagged_post: |
           <div>Antwort des Modells:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"

@@ -8113,6 +8113,7 @@ cs:
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         merge_failed: "Při slučování uživatelů došlo k chybě."
+        delete_forbidden_because_staff: "Nelze smazat správce."
         delete_posts_forbidden_because_staff: "Nelze smazat všechny příspěvky administrátorů a moderátorů."
         delete_forbidden:
           one: "Uživatele nelze odstranit, pokud mají příspěvky. Než se pokusíte uživatele odstranit, smažte všechny příspěvky. (Příspěvky starší než %{count} den nelze smazat.)"

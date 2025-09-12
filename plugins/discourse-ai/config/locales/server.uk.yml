@@ -24,8 +24,8 @@ uk:
         description: "Сортування повідомлень за допомогою великої мовної моделі"
         flagged_post: |
           <div>Відповідь від моделі:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Запущено правилом <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
+          <p>%{llm_response}</p>
+          <b>Запущено правилом <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> .</b>
       llm_report:
         title: Періодичний звіт з використанням ШІ
         description: "Періодичний звіт на основі великої мовної моделі"

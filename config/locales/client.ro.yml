@@ -327,7 +327,7 @@ ro:
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search: "Caută"
     impersonation:
-      notice: "Preia identitatea utilizatorului %{username}"
+      notice: "Preiei identitatea utilizatorului %{username}"
       stop: "Oprește preluarea identității"
     themes:
       default_description: "Implicit"
@@ -4290,6 +4290,7 @@ ro:
         show_details: Detalii
         description: Descriere
         user_mode: Nivel utilizator
+        impersonate_all_users: Preia identitatea oricărui utilizator
         single_user: "Utilizator unic"
         save: Salvează
         delete: Șterge definitiv
@@ -4795,6 +4796,8 @@ ro:
             no_results: "Nu am găsit palete de culori"
           default_light_badge:
             reset: "Resetează filtre"
+          default_dark_badge:
+            title: "Paletă implicită de culori întunecate"
           system_palette: "Aceasta este o paletă de culori încorporată, nu poate fi editată sau ștearsă."
           back_to_colors: "Înapoi la paletele de culori"
           long_title: "Paletă de culori"
@@ -4962,7 +4965,7 @@ ro:
             delete_topic: "șterge subiectul"
             recover_topic: "recuperează discuția"
             delete_post: "șterge postarea"
-            impersonate: "joacă rolul utilizatorului"
+            impersonate: "preia identitatea"
             anonymize_user: "transformă în utilizator anonim"
             roll_up: "consolidează blocurile de IP"
             change_category_settings: "schimbă setările categoriei"
@@ -5092,10 +5095,10 @@ ro:
             type:
               key: "tip"
       impersonate:
-        title: "Joacă rolul utilizatorului"
-        help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
+        title: "Preia identitatea"
+        help: "Folosește această unealtă pentru a prelua identitatea unui cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
-        invalid: "Ne pare rău, nu poți prelua acest rol."
+        invalid: "Scuze, nu poți prelua această identitate."
         error: "Hopa. A apărut o eroare neașteptată."
       users:
         title: "Utilizatori"
@@ -5443,6 +5446,9 @@ ro:
           add_document_types: "Documente"
           add_types_title: "Permite extensiile %{types}"
           add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
+        job_status:
+          completed: "Actualizare completă"
+          enqueued: "Actualizare în curs"
       badges:
         status: Stare
         title: Insigne

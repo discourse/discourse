@@ -24,8 +24,8 @@ ar:
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
         flagged_post: |
           <div>استجابة من النموذج:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> القاعدة.</b>
+          <p>%{llm_response}</p>
+          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> القاعدة.</b>
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
