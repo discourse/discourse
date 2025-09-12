@@ -18,8 +18,6 @@ import {
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
-  @service currentUser;
-  @service siteSettings;
 
   @tracked currentPanelKey = currentPanelKey;
   @tracked mode = COMBINED_MODE;

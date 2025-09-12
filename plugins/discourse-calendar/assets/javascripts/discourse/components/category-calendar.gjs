@@ -13,7 +13,6 @@ export default class CategoryCalendar extends Component {
   @service currentUser;
   @service router;
   @service siteSettings;
-  @service store;
   @service discoursePostEventApi;
 
   @bind

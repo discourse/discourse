@@ -8,10 +8,6 @@ import { i18n } from "discourse-i18n";
 import AdminSearchModal from "admin/components/modal/admin-search";
 
 export default class AdminRoute extends DiscourseRoute {
-  @service sidebarState;
-  @service siteSettings;
-  @service store;
-  @service currentUser;
   @service adminSidebarStateManager;
   @service modal;
 

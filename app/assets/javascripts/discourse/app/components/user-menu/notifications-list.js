@@ -35,7 +35,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
   @service siteSettings;
   @service site;
-  @service store;
   @service modal;
 
   get filterByTypes() {

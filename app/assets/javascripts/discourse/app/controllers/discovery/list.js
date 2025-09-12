@@ -49,7 +49,6 @@ export function addDiscoveryQueryParam(p, opts) {
 export default class DiscoveryListController extends Controller {
   @service composer;
   @service siteSettings;
-  @service site;
   @service currentUser;
   @service router;
   @service topicTrackingState;

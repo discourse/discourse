@@ -17,7 +17,6 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
 
   @service capabilities;
   @service discobotDiscoveries;
-  @service site;
 
   get previewLength() {
     if (!this.capabilities.viewport.md) {

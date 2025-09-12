@@ -1,6 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -17,8 +17,6 @@ const HANDLED_TRANSITIONS = new WeakSet();
  */
 @disableImplicitInjections
 export default class HistoryStore extends Service {
-  @service router;
-
   #routeData = new TrackedMap();
   #uuid;
   #pendingStore = DEBUG && isTesting() ? new TrackedMap() : null;

@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { cancel, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
@@ -24,8 +23,6 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
-  @service capabilities;
-
   elementId = "reply-control";
 
   @discourseComputed("composer.action")
