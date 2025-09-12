@@ -23,7 +23,7 @@ module Holidays
       9 => [{:mday => 24, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Heritage Day", :regions => [:za]}],
       12 => [{:mday => 16, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Day of Reconciliation", :regions => [:za]},
             {:mday => 25, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Christmas Day", :regions => [:za]},
-            {:mday => 26, :observed => "to_weekday_if_boxing_weekend(date)", :observed_arguments => [:date], :name => "Day of Goodwill", :regions => [:za]}]
+            {:mday => 26, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Day of Goodwill", :regions => [:za]}]
       }
     end
 

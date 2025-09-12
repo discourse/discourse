@@ -24,7 +24,7 @@ module Holidays
             {:mday => 16, :name => "Дан државности Србије", :regions => [:rs_cyrl]}],
       5 => [{:mday => 1, :name => "Празник рада", :regions => [:rs_cyrl]},
             {:mday => 2, :name => "Празник рада", :regions => [:rs_cyrl]},
-            {:mday => 9, :name => "Дан победе над фашизмом", :regions => [:rs_cyrl]}],
+            {:mday => 9, :type => :informal, :name => "Дан победе над фашизмом", :regions => [:rs_cyrl]}],
       6 => [{:mday => 28, :name => "Видовдан", :regions => [:rs_cyrl]}],
       11 => [{:mday => 11, :name => "Дан примирја", :regions => [:rs_cyrl]}]
       }

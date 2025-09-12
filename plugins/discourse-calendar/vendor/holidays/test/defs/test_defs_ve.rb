@@ -29,11 +29,7 @@ class VeDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Día de la Resistencia Indígena", (Holidays.on(Date.civil(2013, 10, 12), [:ve])[0] || {})[:name]
 
-    assert_equal "Víspera de Navidad", (Holidays.on(Date.civil(2021, 12, 24), [:ve])[0] || {})[:name]
-
     assert_equal "Día de Navidad", (Holidays.on(Date.civil(2013, 12, 25), [:ve])[0] || {})[:name]
-
-    assert_equal "Víspera de Año Nuevo", (Holidays.on(Date.civil(2021, 12, 31), [:ve])[0] || {})[:name]
 
   end
 end

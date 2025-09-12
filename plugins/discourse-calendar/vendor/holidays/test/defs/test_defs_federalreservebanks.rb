@@ -243,5 +243,9 @@ class FederalreservebanksDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Christmas Day", (Holidays.on(Date.civil(2024, 12, 25), [:federalreservebanks], [:observed])[0] || {})[:name]
 
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2022, 6, 20), [:federalreservebanks], [:observed])[0] || {})[:name]
+
+    assert_equal "Juneteenth National Independence Day", (Holidays.on(Date.civil(2023, 6, 19), [:federalreservebanks], [:observed])[0] || {})[:name]
+
   end
 end

@@ -54,6 +54,7 @@ months:
     mday: 2
   - name: Dan pobede # Victory Day
     regions: [rs_la]
+    type: informal
     mday: 9
   6:
   - name: Vidovdan # Saint Vitus Day
@@ -93,6 +94,7 @@ tests:
   - given:
       date: '2017-5-9'
       regions: ["rs_la"]
+      options: ["informal"]
     expect:
       name: "Dan pobede"
   - given:

@@ -29,6 +29,13 @@ months:
     week: -1
     wday: 1
     regions: [federalreservebanks]
+  6:
+  - name: Juneteenth National Independence Day
+    regions: [federalreservebanks]
+    mday: 19
+    observed: to_monday_if_sunday(date)
+    year_ranges:
+      from: 2021
   7:
   - name: Independence Day
     regions: [federalreservebanks]
@@ -800,3 +807,15 @@ tests:
       options: ["observed"]
     expect:
       name: "Christmas Day"
+  - given:
+      date: '2022-06-20'
+      regions: ["federalreservebanks"]
+      options: ["observed"]
+    expect:
+      name: "Juneteenth National Independence Day"
+  - given:
+      date: '2023-06-19'
+      regions: ["federalreservebanks"]
+      options: ["observed"]
+    expect:
+      name: "Juneteenth National Independence Day"

@@ -27,10 +27,21 @@ assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2012, 10, 1), [:au_qld]
 assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2013, 6, 10), [:au_qld])[0] || {})[:name]
 assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2015, 6, 8), [:au_qld])[0] || {})[:name]
 assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2016, 10, 3), [:au_qld])[0] || {})[:name]
+assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2022, 10, 3), [:au_qld])[0] || {})[:name]
+
+    assert_equal "King's Birthday", (Holidays.on(Date.civil(2023, 10, 2), [:au_qld])[0] || {})[:name]
+
+    assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2022, 6, 13), [:au_act, :au_nsw, :au_sa, :au_tas, :au_nt, :au_vic])[0] || {})[:name]
+
+    assert_equal "King's Birthday", (Holidays.on(Date.civil(2023, 6, 12), [:au_act, :au_nsw, :au_sa, :au_tas, :au_nt, :au_vic])[0] || {})[:name]
 
     assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2014, 9, 29), [:au_wa])[0] || {})[:name]
 assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2015, 9, 28), [:au_wa])[0] || {})[:name]
 assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2016, 9, 26), [:au_wa])[0] || {})[:name]
+assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2021, 9, 27), [:au_wa])[0] || {})[:name]
+
+    assert_equal "King's Birthday", (Holidays.on(Date.civil(2022, 9, 26), [:au_wa])[0] || {})[:name]
+assert_equal "King's Birthday", (Holidays.on(Date.civil(2023, 9, 25), [:au_wa])[0] || {})[:name]
 
     assert_equal "Family & Community Day", (Holidays.on(Date.civil(2014, 9, 29), [:au_act])[0] || {})[:name]
 
@@ -195,6 +206,28 @@ assert_equal "Queen's Birthday", (Holidays.on(Date.civil(2016, 9, 26), [:au_wa])
     assert_equal "Easter Sunday", (Holidays.on(Date.civil(2017, 4, 16), [:au_qld])[0] || {})[:name]
 
     assert_equal "G20 Day", (Holidays.on(Date.civil(2014, 11, 14), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2021, 4, 26), [:au_vic])[0] || {})[:name]
+
+    assert_equal "Ekka", (Holidays.on(Date.civil(2019, 8, 14), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_equal "Ekka", (Holidays.on(Date.civil(2022, 8, 10), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_equal "Ekka", (Holidays.on(Date.civil(2023, 8, 16), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_equal "Ekka", (Holidays.on(Date.civil(2024, 8, 14), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_equal "Ekka", (Holidays.on(Date.civil(2025, 8, 13), [:au_qld_brisbane])[0] || {})[:name]
+
+    assert_equal "National Day of Mourning for Her Majesty Queen Elizabeth II", (Holidays.on(Date.civil(2022, 9, 22), [:au])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2023, 9, 22), [:au])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2021, 9, 22), [:au])[0] || {})[:name]
+
+    assert_equal "Reconciliation Day", (Holidays.on(Date.civil(2024, 5, 27), [:au_act])[0] || {})[:name]
+
+    assert_equal "Reconciliation Day", (Holidays.on(Date.civil(2025, 6, 2), [:au_act])[0] || {})[:name]
 
   end
 end

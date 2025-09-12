@@ -1,0 +1,257 @@
+# Toronto Stock Exchange (TSX)'s holiday definitions for the Ruby Holiday gem.
+#
+# Source: https://www.tsx.com/trading/calendars-and-trading-hours/calendar
+---
+months:
+  0:
+  - name: Good Friday
+    regions: [tsx]
+    function: easter(year)
+    function_modifier: -2
+  1:
+  - name: New Year's Day
+    regions: [tsx]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  2:
+  - name: Family Day
+    regions: [tsx]
+    wday: 1
+    week: 3
+    year_ranges:
+      from: 2008
+  5:
+  - name: Victoria Day
+    regions: [tsx]
+    function: ca_victoria_day(year)
+  7:
+  - name: Canada Day
+    regions: [tsx]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  8:
+  - name: Civic Holiday
+    week: 1
+    regions: [tsx]
+    wday: 1
+  9:
+  - name: Labour Day
+    week: 1
+    regions: [tsx]
+    wday: 1
+  10:
+  - name: Thanksgiving
+    week: 2
+    regions: [tsx]
+    wday: 1
+  12:
+  - name: Christmas Day
+    regions: [tsx]
+    mday: 25
+    year_ranges:
+      until: 2020
+    observed: to_weekday_if_weekend(date)
+  - name: Christmas Day
+    regions: [tsx]
+    mday: 25
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2020
+  - name: Boxing Day
+    regions: [tsx]
+    mday: 26
+    year_ranges:
+      until: 2020
+    observed: to_monday_if_weekend(date)
+  - name: Boxing Day
+    regions: [tsx]
+    mday: 26
+    year_ranges:
+      from: 2020
+    observed: to_weekday_if_boxing_weekend(date)
+
+methods:
+  ca_victoria_day:
+    # Monday on or before May 24
+    arguments: year
+    ruby: |
+      date = Date.civil(year,5,24)
+      if date.wday > 1
+        date -= (date.wday - 1)
+      elsif date.wday == 0
+        date -= 6
+      end
+      date
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["tsx"]
+      options: ["informal"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2008-03-21'
+      regions: ["tsx"]
+      options: ["informal"]
+    expect:
+      name: "Good Friday"
+  - given:
+      date: '2008-07-01'
+      regions: ["tsx"]
+      options: ["informal"]
+    expect:
+      name: "Canada Day"
+  - given:
+      date: '2008-09-01'
+      regions: ["tsx"]
+      options: ["informal"]
+    expect:
+      name: "Labour Day"
+  - given:
+      date: '2008-12-25'
+      regions: ["tsx"]
+      options: ["informal"]
+    expect:
+      name: "Christmas Day"
+
+  # Family Day in Ontario - should not be active before 2008
+  - given:
+      date: '1970-02-16'
+      regions: ["tsx"]
+    expect:
+      holiday: false
+  - given:
+      date: '1988-02-15'
+      regions: ["tsx"]
+    expect:
+      holiday: false
+  - given:
+      date: '1989-02-20'
+      regions: ["tsx"]
+    expect:
+      holiday: false
+  - given:
+      date: '2006-02-20'
+      regions: ["tsx"]
+    expect:
+      holiday: false
+  - given:
+      date: '2007-02-19'
+      regions: ["tsx"]
+    expect:
+      holiday: false
+
+  # New years observed date
+  - given:
+      date: '2011-01-03'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2012-01-02'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2016-01-01'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+
+  # Canada Day observed date
+  - given:
+      date: '2011-07-01'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Canada Day"
+  - given:
+      date: '2012-07-02'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Canada Day"
+  - given:
+      date: '2017-07-03'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Canada Day"
+
+  # Christmas Day
+  - given:
+      date: '2010-12-25'
+      regions: ["tsx"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2018-12-25'
+      regions: ["tsx"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2022-12-25'
+      regions: ["tsx"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2022-12-25'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      holiday: false
+
+  # Christmas Day observed date
+  - given:
+      date: '2010-12-24'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2012-12-25'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2016-12-26'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2021-12-27'
+      regions: [ "tsx" ]
+      options: [ "observed" ]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2022-12-26'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+
+  - given:
+      date: ['2010-12-27', '2012-12-26', '2015-12-28']
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      name: "Boxing Day"
+
+  - given:
+      date: ['2022-05-23', '2021-05-24']
+      regions: ['tsx']
+    expect:
+      name: "Victoria Day"
+  - given:
+      date: '2015-05-24'
+      regions: ["tsx"]
+      options: ["observed"]
+    expect:
+      holiday: false

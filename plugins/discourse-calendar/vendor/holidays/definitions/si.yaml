@@ -21,6 +21,9 @@ months:
   - name: novo leto
     regions: [si]
     mday: 1
+  - name: novo leto
+    regions: [si]
+    mday: 2
   2:
   - name: Prešernov dan, slovenski kulturni praznik
     regions: [si]

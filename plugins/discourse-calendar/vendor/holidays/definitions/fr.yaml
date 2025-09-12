@@ -32,11 +32,11 @@ months:
     regions: [fr]
     function: easter(year)
     function_modifier: 49
-    type: informal
   - name: Lundi de Pentecôte
     regions: [fr]
     function: easter(year)
     function_modifier: 50
+    type: informal
   1:
   - name: Jour de l'an
     regions: [fr]
@@ -98,10 +98,10 @@ tests:
     expect:
       name: "Ascension"
   - given:
-      date: '2007-05-28'
+      date: '2007-05-27'
       regions: ["fr"]
     expect:
-      name: "Lundi de Pentecôte"
+      name: "Pentecôte"
   - given:
       date: '2007-07-14'
       regions: ["fr"]
@@ -133,7 +133,7 @@ tests:
     expect:
       holiday: false
   - given:
-      date: '2007-05-27'
+      date: '2007-05-28'
       regions: ["fr"]
     expect:
       holiday: false
@@ -144,11 +144,11 @@ tests:
     expect:
       name: "Pâques"
   - given:
-      date: '2007-05-27'
+      date: '2007-05-28'
       regions: ["fr"]
       options: ["informal"]
     expect:
-      name: "Pentecôte"
+      name: "Lundi de Pentecôte"
   - given:
       date: '2017-12-26'
       regions: ["fr_a", "fr_m"]

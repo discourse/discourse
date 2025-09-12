@@ -8,14 +8,11 @@
 ---
 months:
   0:
-  - name: Segunda-Feira de Carnaval
-    regions: [br]
-    function: easter(year)
-    function_modifier: -48
-  - name: Terça-Feira de Carnaval # same as Shrove Tuesday
+  - name: Carnaval # same as Shrove Tuesday
     regions: [br]
     function: easter(year)
     function_modifier: -47
+    type: informal
   - name: Sexta-feira Santa
     regions: [br]
     function: easter(year)
@@ -31,9 +28,6 @@ months:
   - name: Dia da Confraternização Universal
     regions: [br]
     mday: 1
-  - name: Aniversário da cidade de São Paulo
-    regions: [br_spcapital]
-    mday: 25
   4:
   - name: Dia de Tiradentes
     regions: [br]
@@ -42,10 +36,6 @@ months:
   - name: Dia do Trabalho
     regions: [br]
     mday: 1
-  7:
-  - name: Revolução Constitucionalista
-    regions: [br_sp, br_spcapital]
-    mday: 9
   9:
   - name: Proclamação da Independência
     regions: [br]
@@ -61,9 +51,11 @@ months:
   - name: Proclamação da República
     regions: [br]
     mday: 15
-  - name: Dia da Consciência Negra
-    regions: [br_spcapital]
+  - name: Dia Nacional de Zumbi e da Consciência Negra
+    regions: [br]
     mday: 20
+    year_ranges:
+      from: 2024
   12:
   - name: Natal
     regions: [br]
@@ -81,25 +73,25 @@ tests:
       regions: ["br"]
       options: ["informal"]
     expect:
-      name: "Terça-Feira de Carnaval"
+      name: "Carnaval"
   - given:
       date: '2006-02-28'
       regions: ["br"]
       options: ["informal"]
     expect:
-      name: "Terça-Feira de Carnaval"
+      name: "Carnaval"
   - given:
       date: '2007-02-20'
       regions: ["br"]
       options: ["informal"]
     expect:
-      name: "Terça-Feira de Carnaval"
+      name: "Carnaval"
   - given:
       date: '2008-02-05'
       regions: ["br"]
       options: ["informal"]
     expect:
-      name: "Terça-Feira de Carnaval"
+      name: "Carnaval"
   - given:
       date: '2008-03-21'
       regions: ["br"]
@@ -166,6 +158,18 @@ tests:
       options: ["informal"]
     expect:
       name: "Proclamação da República"
+  - given:
+      date: '2023-11-20'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      holiday: false
+  - given:
+      date: '2024-11-20'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia Nacional de Zumbi e da Consciência Negra"
   - given:
       date: '2008-12-25'
       regions: ["br"]

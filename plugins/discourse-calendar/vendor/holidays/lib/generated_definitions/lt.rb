@@ -21,7 +21,8 @@ module Holidays
       6 => [{:mday => 24, :name => "Joninės", :regions => [:lt]}],
       7 => [{:mday => 6, :name => "Valstybės diena", :regions => [:lt]}],
       8 => [{:mday => 15, :name => "Žolinė", :regions => [:lt]}],
-      11 => [{:mday => 1, :name => "Visų šventųjų diena", :regions => [:lt]}],
+      11 => [{:mday => 1, :name => "Visų šventųjų diena", :regions => [:lt]},
+            {:mday => 2, :name => "Mirusiųjų atminimo (Vėlinių) diena", :regions => [:lt]}],
       12 => [{:mday => 24, :name => "Šv. Kūčios", :regions => [:lt]},
             {:mday => 25, :name => "Šv. Kalėdos", :regions => [:lt]},
             {:mday => 26, :name => "Antroji Kalėdų diena", :regions => [:lt]}]

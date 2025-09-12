@@ -20,7 +20,7 @@ assert_equal "Dan državnosti Srbije", (Holidays.on(Date.civil(2017, 2, 16), [:r
     assert_equal "Praznik rada", (Holidays.on(Date.civil(2017, 5, 1), [:rs_la])[0] || {})[:name]
 assert_equal "Praznik rada", (Holidays.on(Date.civil(2017, 5, 2), [:rs_la])[0] || {})[:name]
 
-    assert_equal "Dan pobede", (Holidays.on(Date.civil(2017, 5, 9), [:rs_la])[0] || {})[:name]
+    assert_equal "Dan pobede", (Holidays.on(Date.civil(2017, 5, 9), [:rs_la], [:informal])[0] || {})[:name]
 
     assert_equal "Vidovdan", (Holidays.on(Date.civil(2017, 6, 28), [:rs_la])[0] || {})[:name]
 

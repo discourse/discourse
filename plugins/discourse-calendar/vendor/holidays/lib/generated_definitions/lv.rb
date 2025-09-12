@@ -20,7 +20,8 @@ module Holidays
       1 => [{:mday => 1, :name => "Jaungada diena", :regions => [:lv]}],
       5 => [{:mday => 1, :name => "Darba svētki, Latvijas Republikas Satversmes sapulces sasaukšanas diena", :regions => [:lv]},
             {:mday => 4, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Latvijas Republikas Neatkarības atjaunošanas diena", :regions => [:lv]},
-            {:wday => 0, :week => 2, :name => "Mātes diena", :regions => [:lv]}],
+            {:wday => 0, :week => 2, :name => "Mātes diena", :regions => [:lv]},
+            {:mday => 29, :year_ranges => { :limited => [2023] },:name => "Diena, kad Latvijas hokeja komanda ieguva bronzas medaļu 2023. gada Pasaules hokeja čempionātā", :regions => [:lv]}],
       6 => [{:mday => 23, :name => "Līgo diena", :regions => [:lv]},
             {:mday => 24, :name => "Jāņu diena", :regions => [:lv]}],
       9 => [{:mday => 24, :year_ranges => { :limited => [2018] },:name => "Viņa Svētības pāvesta Franciska pastorālās vizītes Latvijā diena", :regions => [:lv]}],
@@ -40,8 +41,11 @@ when 2018
   # https://likumi.lv/ta/id/281541 (Ministru kabineta rīkojums Nr. 252 "Par XXVI Vispārējo latviešu dziesmu un XVI Deju svētku norises laiku")
   Date.new(2018, 7, 8)
 when 2023
+  # https://likumi.lv/ta/id/330067 (Ministru kabineta rīkojums Nr. 92 "Par XXVII Vispārējo latviešu dziesmu un XVII Deju svētku norises laiku")
+  Date.new(2023, 7, 9)
+when 2028
   # Event's period/next year is known, but precise dates aren't.
-  # Previously, dates were announced 2 years ahead, so at ~2021-05 this method would need to be revisited.
+  # Previously, dates were announced 2 years ahead, so on ~2026-05 this method would need to be revisited.
 end
 },
 

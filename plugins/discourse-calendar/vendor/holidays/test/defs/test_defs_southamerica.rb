@@ -31,33 +31,49 @@ class SouthamericaDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Día de la Revolución de Mayo", (Holidays.on(Date.civil(2016, 5, 25), [:ar], [:informal])[0] || {})[:name]
 
-    assert_equal "Día de la Bandera", (Holidays.on(Date.civil(2016, 6, 20), [:ar], [:informal])[0] || {})[:name]
+    assert_equal "Paso a la Inmortalidad del General Martín Miguel de Güemes", (Holidays.on(Date.civil(2020, 6, 15), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Paso a la Inmortalidad del General Martín Miguel de Güemes", (Holidays.on(Date.civil(2021, 6, 21), [:ar], [:informal])[0] || {})[:name]
 
-    assert_equal "Feriado puente turístico", (Holidays.on(Date.civil(2016, 7, 8), [:ar], [:informal])[0] || {})[:name]
+    assert_nil (Holidays.on(Date.civil(2020, 6, 17), [:ar], [:informal])[0] || {})[:name]
+assert_nil (Holidays.on(Date.civil(2021, 6, 17), [:ar], [:informal])[0] || {})[:name]
+
+    assert_equal "Paso a la Inmortalidad del General Martín Miguel de Güemes", (Holidays.on(Date.civil(2016, 6, 20), [:ar], [:informal])[0] || {})[:name]
 
     assert_equal "Día de la Independencia", (Holidays.on(Date.civil(2016, 7, 9), [:ar], [:informal])[0] || {})[:name]
 
-    assert_equal "Paso a la Inmortalidad del General José de San Martín", (Holidays.on(Date.civil(2016, 8, 17), [:ar], [:informal])[0] || {})[:name]
+    assert_equal "Paso a la Inmortalidad del General José de San Martín", (Holidays.on(Date.civil(2016, 8, 15), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Paso a la Inmortalidad del General José de San Martín", (Holidays.on(Date.civil(2020, 8, 17), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Paso a la Inmortalidad del General José de San Martín", (Holidays.on(Date.civil(2021, 8, 16), [:ar], [:informal])[0] || {})[:name]
 
-    assert_equal "Día del Respeto a la Diversidad Cultural", (Holidays.on(Date.civil(2016, 10, 12), [:ar], [:informal])[0] || {})[:name]
+    assert_nil (Holidays.on(Date.civil(2016, 8, 17), [:ar], [:informal])[0] || {})[:name]
+assert_nil (Holidays.on(Date.civil(2021, 8, 17), [:ar], [:informal])[0] || {})[:name]
+
+    assert_equal "Día del Respeto a la Diversidad Cultural", (Holidays.on(Date.civil(2016, 10, 10), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Día del Respeto a la Diversidad Cultural", (Holidays.on(Date.civil(2021, 10, 11), [:ar], [:informal])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2021, 10, 12), [:ar], [:informal])[0] || {})[:name]
 
     assert_equal "Día de la Soberanía Nacional", (Holidays.on(Date.civil(2016, 11, 20), [:ar], [:informal])[0] || {})[:name]
 
     assert_equal "Inmaculada Concepción de María", (Holidays.on(Date.civil(2016, 12, 8), [:ar], [:informal])[0] || {})[:name]
 
-    assert_equal "Feriado puente turístico", (Holidays.on(Date.civil(2016, 12, 9), [:ar], [:informal])[0] || {})[:name]
+    assert_equal "Feriado con fines turísticos", (Holidays.on(Date.civil(2016, 7, 8), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Feriado con fines turísticos", (Holidays.on(Date.civil(2016, 12, 9), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Feriado con fines turísticos", (Holidays.on(Date.civil(2021, 5, 24), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Feriado con fines turísticos", (Holidays.on(Date.civil(2021, 10, 8), [:ar], [:informal])[0] || {})[:name]
+assert_equal "Feriado con fines turísticos", (Holidays.on(Date.civil(2021, 11, 22), [:ar], [:informal])[0] || {})[:name]
 
     assert_equal "Navidad", (Holidays.on(Date.civil(2016, 12, 25), [:ar], [:informal])[0] || {})[:name]
 
     assert_equal "Dia da Confraternização Universal", (Holidays.on(Date.civil(2008, 1, 1), [:br], [:informal])[0] || {})[:name]
 
-    assert_equal "Terça-Feira de Carnaval", (Holidays.on(Date.civil(2005, 2, 8), [:br], [:informal])[0] || {})[:name]
+    assert_equal "Carnaval", (Holidays.on(Date.civil(2005, 2, 8), [:br], [:informal])[0] || {})[:name]
 
-    assert_equal "Terça-Feira de Carnaval", (Holidays.on(Date.civil(2006, 2, 28), [:br], [:informal])[0] || {})[:name]
+    assert_equal "Carnaval", (Holidays.on(Date.civil(2006, 2, 28), [:br], [:informal])[0] || {})[:name]
 
-    assert_equal "Terça-Feira de Carnaval", (Holidays.on(Date.civil(2007, 2, 20), [:br], [:informal])[0] || {})[:name]
+    assert_equal "Carnaval", (Holidays.on(Date.civil(2007, 2, 20), [:br], [:informal])[0] || {})[:name]
 
-    assert_equal "Terça-Feira de Carnaval", (Holidays.on(Date.civil(2008, 2, 5), [:br], [:informal])[0] || {})[:name]
+    assert_equal "Carnaval", (Holidays.on(Date.civil(2008, 2, 5), [:br], [:informal])[0] || {})[:name]
 
     assert_equal "Sexta-feira Santa", (Holidays.on(Date.civil(2008, 3, 21), [:br], [:informal])[0] || {})[:name]
 
@@ -80,6 +96,10 @@ class SouthamericaDefinitionTests < Test::Unit::TestCase  # :nodoc:
     assert_equal "Dia de Finados", (Holidays.on(Date.civil(2008, 11, 2), [:br], [:informal])[0] || {})[:name]
 
     assert_equal "Proclamação da República", (Holidays.on(Date.civil(2008, 11, 15), [:br], [:informal])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2023, 11, 20), [:br], [:informal])[0] || {})[:name]
+
+    assert_equal "Dia Nacional de Zumbi e da Consciência Negra", (Holidays.on(Date.civil(2024, 11, 20), [:br], [:informal])[0] || {})[:name]
 
     assert_equal "Natal", (Holidays.on(Date.civil(2008, 12, 25), [:br], [:informal])[0] || {})[:name]
 
@@ -301,11 +321,7 @@ class SouthamericaDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Día de la Resistencia Indígena", (Holidays.on(Date.civil(2013, 10, 12), [:ve])[0] || {})[:name]
 
-    assert_equal "Víspera de Navidad", (Holidays.on(Date.civil(2021, 12, 24), [:ve])[0] || {})[:name]
-
     assert_equal "Día de Navidad", (Holidays.on(Date.civil(2013, 12, 25), [:ve])[0] || {})[:name]
-
-    assert_equal "Víspera de Año Nuevo", (Holidays.on(Date.civil(2021, 12, 31), [:ve])[0] || {})[:name]
 
   end
 end

@@ -51,15 +51,9 @@ months:
     regions: [ve]
     mday: 12
   12:
-  - name: Víspera de Navidad
-    regions: [ve]
-    mday: 24
   - name: Día de Navidad
     regions: [ve]
     mday: 25
-  - name: Víspera de Año Nuevo
-    regions: [ve]
-    mday: 31
 
 tests:
   - given:
@@ -118,17 +112,7 @@ tests:
     expect:
       name: "Día de la Resistencia Indígena"
   - given:
-      date: '2021-12-24'
-      regions: ["ve"]
-    expect:
-      name: "Víspera de Navidad"
-  - given:
       date: '2013-12-25'
       regions: ["ve"]
     expect:
       name: "Día de Navidad"
-  - given:
-      date: '2021-12-31'
-      regions: ["ve"]
-    expect:
-      name: "Víspera de Año Nuevo"

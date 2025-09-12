@@ -1,0 +1,329 @@
+# Israel holiday definitions for the Ruby Holiday gem.
+# Updated 2022-09-14.
+#
+# Sources:
+# - https://www.worlddata.info/asia/israel/public-holidays.php
+#
+# Notes:
+#  - ATTENTION: these calculations are only going to work from 2022 year till 2026 year.
+#  - Israel has its own way of calculation holidays (different calendar).
+#  - In case of holidays being out of date - message voiteh322@gmail.com to update.
+---
+months:
+  3:
+  - name: Exodus from Egypt
+    regions: [il]
+    mday: 16
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Exodus from Egypt
+    regions: [il]
+    mday: 6
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Exodus from Egypt
+    regions: [il]
+    mday: 23
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Exodus from Egypt
+    regions: [il]
+    mday: 13
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Exodus from Egypt
+    regions: [il]
+    mday: 2
+    year_ranges:
+      limited: [ 2026 ]
+  - name: Exodus from Egypt (day 7)
+    regions: [il]
+    mday: 22
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Exodus from Egypt (day 7)
+    regions: [il]
+    mday: 12
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Exodus from Egypt (day 7)
+    regions: [il]
+    mday: 29
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Exodus from Egypt (day 7)
+    regions: [il]
+    mday: 19
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Exodus from Egypt (day 7)
+    regions: [il]
+    mday: 8
+    year_ranges:
+      limited: [ 2026 ]
+  - name: Independence Day
+    regions: [il]
+    mday: 24
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Independence Day
+    regions: [il]
+    mday: 20
+    year_ranges:
+      limited: [ 2026 ]
+  4:
+  - name: Independence Day
+    regions: [il]
+    mday: 4
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Independence Day
+    regions: [il]
+    mday: 11
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Independence Day
+    regions: [il]
+    mday: 1
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Thanksgiving
+    regions: [il]
+    mday: 26
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Thanksgiving
+    regions: [il]
+    mday: 22
+    year_ranges:
+      limited: [ 2026 ]
+  - name: Thanksgiving (day 2)
+    regions: [il]
+    mday: 27
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Thanksgiving (day 2)
+    regions: [il]
+    mday: 23
+    year_ranges:
+      limited: [ 2026 ]
+  5:
+  - name: Thanksgiving
+    regions: [il]
+    mday: 5
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Thanksgiving
+    regions: [il]
+    mday: 12
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Thanksgiving
+    regions: [il]
+    mday: 2
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Thanksgiving (day 2)
+    regions: [il]
+    mday: 6
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Thanksgiving (day 2)
+    regions: [il]
+    mday: 13
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Thanksgiving (day 2)
+    regions: [il]
+    mday: 3
+    year_ranges:
+      limited: [ 2025 ]
+  9:
+  - name: Jewish New Year
+    regions: [il]
+    mday: 26
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Jewish New Year
+    regions: [il]
+    mday: 16
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Jewish New Year
+    regions: [il]
+    mday: 23
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Jewish New Year
+    regions: [il]
+    mday: 12
+    year_ranges:
+      limited: [ 2026 ]
+  - name: 2nd New Year's Day
+    regions: [il]
+    mday: 27
+    year_ranges:
+      limited: [ 2022 ]
+  - name: 2nd New Year's Day
+    regions: [il]
+    mday: 17
+    year_ranges:
+      limited: [ 2023 ]
+  - name: 2nd New Year's Day
+    regions: [il]
+    mday: 24
+    year_ranges:
+      limited: [ 2025 ]
+  - name: 2nd New Year's Day
+    regions: [il]
+    mday: 13
+    year_ranges:
+      limited: [ 2026 ]
+  - name: Day of Atonement
+    regions: [il]
+    mday: 25
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Day of Atonement
+    regions: [il]
+    mday: 21
+    year_ranges:
+      limited: [ 2026 ]
+  - name: Feast of Tabernacles
+    regions: [il]
+    mday: 30
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Feast of Tabernacles
+    regions: [il]
+    mday: 26
+    year_ranges:
+      limited: [ 2026 ]
+  10:
+  - name: Jewish New Year
+    regions: [il]
+    mday: 3
+    year_ranges:
+      limited: [ 2024 ]
+  - name: 2nd New Year's Day
+    regions: [il]
+    mday: 4
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Day of Atonement
+    regions: [il]
+    mday: 5
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Day of Atonement
+    regions: [il]
+    mday: 12
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Day of Atonement
+    regions: [il]
+    mday: 2
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Feast of Tabernacles
+    regions: [il]
+    mday: 10
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Feast of Tabernacles
+    regions: [il]
+    mday: 17
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Feast of Tabernacles
+    regions: [il]
+    mday: 7
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Rejoicing of the Torah
+    regions: [il]
+    mday: 18
+    year_ranges:
+      limited: [ 2022 ]
+  - name: Rejoicing of the Torah
+    regions: [il]
+    mday: 8
+    year_ranges:
+      limited: [ 2023 ]
+  - name: Rejoicing of the Torah
+    regions: [il]
+    mday: 25
+    year_ranges:
+      limited: [ 2024 ]
+  - name: Rejoicing of the Torah
+    regions: [il]
+    mday: 15
+    year_ranges:
+      limited: [ 2025 ]
+  - name: Rejoicing of the Torah
+    regions: [il]
+    mday: 4
+    year_ranges:
+      limited: [ 2026 ]
+
+tests:
+  - given:
+      date: '2024-03-23'
+      regions: ["il"]
+    expect:
+      name: "Exodus from Egypt"
+  - given:
+      date: '2023-03-12'
+      regions: ["il"]
+    expect:
+      name: "Exodus from Egypt (day 7)"
+  - given:
+      date: '2025-04-01'
+      regions: ["il"]
+    expect:
+      name: "Independence Day"
+  - given:
+      date: '2026-04-22'
+      regions: ["il"]
+    expect:
+      name: "Thanksgiving"
+  - given:
+      date: '2024-05-13'
+      regions: ["il"]
+    expect:
+      name: "Thanksgiving (day 2)"
+  - given:
+      date: '2023-09-16'
+      regions: ["il"]
+    expect:
+      name: "Jewish New Year"
+  - given:
+      date: '2025-09-24'
+      regions: ["il"]
+    expect:
+      name: "2nd New Year's Day"
+  - given:
+      date: '2026-09-21'
+      regions: ["il"]
+    expect:
+      name: "Day of Atonement"
+  - given:
+      date: '2024-10-17'
+      regions: ["il"]
+    expect:
+      name: "Feast of Tabernacles"
+  - given:
+      date: '2025-10-15'
+      regions: ["il"]
+    expect:
+      name: "Rejoicing of the Torah"
+  - given:
+      date: '2024-07-09'
+      regions: ['il']
+    expect:
+      holiday: false
+  - given:
+      date: '2026-08-15'
+      regions: ['il']
+    expect:
+      holiday: false

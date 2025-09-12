@@ -12,7 +12,8 @@ module Holidays
 
     def self.holidays_by_month
       {
-                0 => [{:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Good Friday", :regions => [:gb]},
+                0 => [{:function => "easter(year)", :function_arguments => [:year], :function_modifier => -21, :type => :informal, :name => "Mothering Sunday", :regions => [:gb]},
+            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Good Friday", :regions => [:gb]},
             {:function => "easter(year)", :function_arguments => [:year], :name => "Easter Sunday", :regions => [:gb]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 1, :name => "Easter Monday", :regions => [:gb_eng, :gb_wls, :gb_eaw, :gb_nir, :je, :gb_jsy, :gg, :gb_gsy]}],
       1 => [{:mday => 1, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "New Year's Day", :regions => [:gb]},
@@ -21,6 +22,7 @@ module Holidays
             {:mday => 17, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "St. Patrick's Day", :regions => [:gb_nir]}],
       5 => [{:wday => 1, :week => 1, :year_ranges => { :until => 2019 },:name => "May Day", :regions => [:gb]},
             {:mday => 8, :year_ranges => { :limited => [2020] },:name => "May Day", :regions => [:gb]},
+            {:mday => 8, :year_ranges => { :limited => [2023] },:name => "Bank Holiday for the Coronation of King Charles III", :regions => [:gb, :gb]},
             {:wday => 1, :week => 1, :year_ranges => { :from => 2021 },:name => "May Day", :regions => [:gb]},
             {:mday => 9, :name => "Liberation Day", :regions => [:je, :gb_jsy, :gg, :gb_gsy]},
             {:wday => 1, :week => -1, :year_ranges => { :until => 2021 },:name => "Bank Holiday", :regions => [:gb]},
@@ -31,7 +33,7 @@ module Holidays
             {:mday => 12, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Battle of the Boyne", :regions => [:gb_nir]}],
       8 => [{:wday => 1, :week => 1, :name => "Bank Holiday", :regions => [:gb_sct]},
             {:wday => 1, :week => -1, :name => "Bank Holiday", :regions => [:gb_eng, :gb_wls, :gb_eaw, :gb_nir, :je, :gb_jsy, :gg, :gb_gsy]}],
-      9 => [{:mday => 19, :year_ranges => { :limited => [2022] },:name => "State Funeral of Queen Elizabeth II", :regions => [:gb]}],
+      9 => [{:mday => 19, :year_ranges => { :limited => [2022] },:name => "Bank Holiday for the State Funeral of Queen Elizabeth II", :regions => [:gb]}],
       11 => [{:mday => 5, :type => :informal, :name => "Guy Fawkes Day", :regions => [:gb]},
             {:mday => 30, :year_ranges => { :until => 2006 },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :type => :informal, :name => "St. Andrew's Day", :regions => [:gb_sct]},
             {:mday => 30, :year_ranges => { :from => 2007 },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "St. Andrew's Day", :regions => [:gb_sct]}],

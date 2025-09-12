@@ -55,5 +55,39 @@ class HkDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Boxing Day", (Holidays.on(Date.civil(2017, 12, 26), [:hk], [:observed])[0] || {})[:name]
 
+    assert_equal "New Year's Day", (Holidays.on(Date.civil(2023, 1, 2), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Lunar New Year's Day", (Holidays.on(Date.civil(2023, 1, 23), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "The second day of Lunar New Year", (Holidays.on(Date.civil(2023, 1, 24), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "The third day of Lunar New Year", (Holidays.on(Date.civil(2023, 1, 25), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Ching Ming Festival", (Holidays.on(Date.civil(2023, 4, 5), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Good Friday", (Holidays.on(Date.civil(2023, 4, 7), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "The day following Good Friday", (Holidays.on(Date.civil(2023, 4, 8), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Easter Monday", (Holidays.on(Date.civil(2023, 4, 10), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Labour Day", (Holidays.on(Date.civil(2023, 5, 1), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Buddha's Birthday", (Holidays.on(Date.civil(2023, 5, 26), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Tuen Ng Festival", (Holidays.on(Date.civil(2023, 6, 22), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Hong Kong Special Administrative Region Establishment Day", (Holidays.on(Date.civil(2023, 7, 1), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "The day following the Chinese Mid-Autumn Festival", (Holidays.on(Date.civil(2023, 9, 30), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "National Day", (Holidays.on(Date.civil(2023, 10, 2), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Chung Yeung Festival", (Holidays.on(Date.civil(2023, 10, 23), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Christmas Day", (Holidays.on(Date.civil(2023, 12, 25), [:hk], [:observed])[0] || {})[:name]
+
+    assert_equal "Boxing Day", (Holidays.on(Date.civil(2023, 12, 26), [:hk], [:observed])[0] || {})[:name]
+
   end
 end

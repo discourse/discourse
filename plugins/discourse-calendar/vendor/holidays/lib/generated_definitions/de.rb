@@ -7,7 +7,7 @@ module Holidays
   # All the definitions are available at https://github.com/holidays/holidays
   module DE # :nodoc:
     def self.defined_regions
-      [:de, :de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn_sorbian, :de_th_cath, :de_sn, :de_st, :de_be, :de_by_cath, :de_by_augsburg, :de_bb, :de_mv, :de_th, :de_hb, :de_hh, :de_ni, :de_sh]
+      [:de, :de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn_sorbian, :de_th_cath, :de_sn, :de_st, :de_be, :de_mv, :de_by_cath, :de_by_augsburg, :de_th, :de_bb, :de_hb, :de_hh, :de_ni, :de_sh]
     end
 
     def self.holidays_by_month
@@ -23,19 +23,25 @@ module Holidays
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -48, :type => :informal, :name => "Rosenmontag", :regions => [:de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -46, :type => :informal, :name => "Aschermittwoch", :regions => [:de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn]}],
       1 => [{:mday => 1, :name => "Neujahrstag", :regions => [:de]},
-            {:mday => 6, :name => "Heilige Drei Könige", :regions => [:de_bw, :de_by, :de_st]}],
-      3 => [{:mday => 8, :year_ranges => { :from => 2019 },:name => "Internationaler Frauentag", :regions => [:de_be]}],
-      5 => [{:mday => 1, :name => "Tag der Arbeit", :regions => [:de]},
+            {:mday => 6, :name => "Heilige Drei Könige", :regions => [:de_bw, :de_by]},
+            {:mday => 6, :year_ranges => { :from => 1991 },:name => "Heilige Drei Könige", :regions => [:de_st]}],
+      3 => [{:mday => 8, :year_ranges => { :from => 2019 },:name => "Internationaler Frauentag", :regions => [:de_be]},
+            {:mday => 8, :year_ranges => { :from => 2023 },:name => "Internationaler Frauentag", :regions => [:de_mv]}],
+      5 => [{:mday => 1, :year_ranges => { :from => 1933 },:name => "Tag der Arbeit", :regions => [:de]},
             {:mday => 8, :year_ranges => { :limited => [2020] },:name => "Tag der Befreiung", :regions => [:de_be]}],
+      6 => [{:mday => 17, :year_ranges => { :between => 1954..1990 },:name => "Tag der Deutschen Einheit", :regions => [:de]}],
       8 => [{:mday => 15, :name => "Mariä Himmelfahrt", :regions => [:de_by_cath, :de_by_augsburg, :de_sl]},
-            {:mday => 8, :name => "Friedensfest", :regions => [:de_by_augsburg]}],
-      10 => [{:mday => 3, :name => "Tag der Deutschen Einheit", :regions => [:de]},
+            {:mday => 8, :year_ranges => { :from => 1950 },:name => "Friedensfest", :regions => [:de_by_augsburg]}],
+      9 => [{:mday => 20, :year_ranges => { :from => 2019 },:name => "Weltkindertag", :regions => [:de_th]}],
+      10 => [{:mday => 3, :year_ranges => { :from => 1990 },:name => "Tag der Deutschen Einheit", :regions => [:de]},
             {:mday => 31, :name => "Reformationstag", :regions => [:de_bb, :de_mv, :de_sn, :de_st, :de_th]},
             {:mday => 31, :type => :informal, :name => "Reformationstag", :regions => [:de_bw]},
             {:mday => 31, :year_ranges => { :limited => [2017] },:name => "Reformationstag", :regions => [:de]},
             {:mday => 31, :year_ranges => { :from => 2018 },:name => "Reformationstag", :regions => [:de_hb, :de_hh, :de_ni, :de_sh]}],
       11 => [{:mday => 1, :name => "Allerheiligen", :regions => [:de_bw, :de_by, :de_nw, :de_rp, :de_sl]},
-            {:function => "de_buss_und_bettag(year)", :function_arguments => [:year], :name => "Buß- und Bettag", :regions => [:de_sn]}],
+            {:function => "de_buss_und_bettag(year)", :function_arguments => [:year], :year_ranges => { :from => 1990 },:name => "Buß- und Bettag", :regions => [:de_sn]},
+            {:function => "de_buss_und_bettag(year)", :function_arguments => [:year], :year_ranges => { :until => 1994 },:name => "Buß- und Bettag", :regions => [:de_bw, :de_by, :de_be, :de_hb, :de_hh, :de_he, :de_ni, :de_nw, :de_rp, :de_sl, :de_sh]},
+            {:function => "de_buss_und_bettag(year)", :function_arguments => [:year], :year_ranges => { :between => 1990..1994 },:name => "Buß- und Bettag", :regions => [:de_bb, :de_mv, :de_st, :de_th]}],
       12 => [{:mday => 24, :type => :informal, :name => "Heilig Abend", :regions => [:de]},
             {:mday => 25, :name => "1. Weihnachtstag", :regions => [:de]},
             {:mday => 26, :name => "2. Weihnachtstag", :regions => [:de]},

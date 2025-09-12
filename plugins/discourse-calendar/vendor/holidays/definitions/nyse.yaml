@@ -33,6 +33,13 @@ months:
     week: -1
     regions: [nyse]
     wday: 1
+  6:
+  - name: Juneteenth National Independence Day
+    regions: [nyse]
+    mday: 19
+    observed: to_weekday_if_weekend(date)
+    year_ranges:
+      from: 2022
   7:
   - name: Independence Day
     regions: [nyse]
@@ -114,3 +121,17 @@ tests:
       options: ["observed"]
     expect:
       name: "New Year's Day"
+  # Test observed Juneteenth National Independence Day
+  - given:
+      date: ['2022-06-20', '2023-06-19', '2024-06-19', '2027-06-18']
+      regions: ["nyse"]
+      options: ["observed"]
+    expect:
+      name: "Juneteenth National Independence Day"
+  # Ensure that Juneteenth National Independence Day not observed before 2022
+  - given:
+      date: ['2021-06-18']
+      regions: ["nyse"]
+      options: ["observed"]
+    expect:
+      holiday: false

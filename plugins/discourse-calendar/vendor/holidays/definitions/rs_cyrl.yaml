@@ -54,6 +54,7 @@ months:
     mday: 2
   - name: Дан победе над фашизмом # Victory Day
     regions: [rs_cyrl]
+    type: informal
     mday: 9
   6:
   - name: Видовдан # Saint Vitus Day
@@ -93,6 +94,7 @@ tests:
   - given:
       date: '2017-5-9'
       regions: ["rs_cyrl"]
+      options: ["informal"]
     expect:
       name: "Дан победе над фашизмом"
   - given:
