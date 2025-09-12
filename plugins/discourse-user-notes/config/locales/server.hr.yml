@@ -5,9 +5,19 @@
 # https://translate.discourse.org/
 
 hr:
+  site_settings:
+    user_notes_enabled: "Dopustite korisnicima osoblja da prilažu napomene o korisnicima"
+    user_notes_icon_placement: "Smještaj ikone koja označava napomene o korisnicima u objavama"
+    user_notes_moderators_delete: "Dopustite moderatorima brisanje napomena o korisnicima"
+  user_notes:
+    official_warning: "Primio/la službeno upozorenje od @%{username} -- %{warning_link}"
+    user_suspended: "@%{username} je suspendirao ovaj račun do %{suspended_till}. Razlog: %{reason}"
+    user_silenced: "@%{username} je utišao/la ovaj račun do %{silenced_till}. Razlog: %{reason}"
   reports:
     user_notes:
+      title: "Napomene o korisniku"
+      description: "Navedite najnovije napomene o korisniku."
       labels:
         user: Korisnik
-        note: Bilješka
+        note: Napomena
         moderator: Moderator

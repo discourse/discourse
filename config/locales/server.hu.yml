@@ -1566,6 +1566,9 @@ hu:
         anon_views: Névtelen
         total_views: Összes
       description: "A 100 legnézettebb téma egy adott dátumtartományban, a bejelentkezett és az anonim megtekintések kombinálásával. Kategóriák szerint szűrhető."
+    associated_accounts_by_provider:
+      labels:
+        total_users: "Tagok száma összesen"
   dashboard:
     problem:
       twitter_login: 'Úgy tűnik, hogy az X bejelentkezés jelenleg nem működik. Ellenőrizze a hitelesítő adatokat a <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Webhelybeállítások</a>részben.'

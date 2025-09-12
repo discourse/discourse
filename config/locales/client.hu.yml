@@ -6679,6 +6679,11 @@ hu:
           filters:
             all: "Összes"
             user_selectable: "Felhasználó által választható"
+          default_dark_badge:
+            title: "Alapértelmezett világos színpaletta"
+          default_both_badge:
+            text: "Alapértelmezett világos és sötét"
+            title: "Alapértelmezett világos és sötét színpaletta"
           long_title: "Színpaletták"
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"

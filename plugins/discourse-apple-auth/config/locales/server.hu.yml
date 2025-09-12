@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    apple_client_id: "(Bejelentkezés Apple-lel) Az Apple „szolgáltatásazonosítója” a fejlesztői konzolról. Normális esetben egy fordított domainnév stílusú karakterlánc (pl. com.example.auth) (Bejelentkezés Apple-lel)"

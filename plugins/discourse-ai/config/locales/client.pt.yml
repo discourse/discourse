@@ -35,7 +35,8 @@ pt:
               label: "Responder"
     discourse_ai:
       features:
-        back: "Retroceder"
+        short_title: "Funcionalidades"
+        back: "Voltar"
         disabled: "(desativado)"
         groups: "Grupos:"
         no_persona: "Não definido"
@@ -45,13 +46,30 @@ pt:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
         collapse_list: "(mostrar menos)"
+        bot:
+          bot: "Robô de Conversação"
+          name: "Robô"
+          description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
+        nav:
+          configured: "Configurada"
+          unconfigured: "Não configurada"
         filters:
           all: "Todos"
           reset: "Repor"
+        summarization:
+          name: "Resumos"
+          topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
+        embeddings:
+          hyde: "HyDE"
+        ai_helper:
+          description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
+          explain: "Explicar"
+          markdown_tables: "Gerar tabela de Marcação"
+          image_caption: "Imagens de legenda"
         spam:
-          name: "Spam"
+          name: "Lixo Eletrónico"
       modals:
         select_option: "Selecione uma opção..."
       translations:
@@ -64,6 +82,8 @@ pt:
           spam: "Spam"
       usage:
         summary: "Resumo"
+        feature: "Funcionalidade"
+        all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
         periods:
@@ -87,6 +107,9 @@ pt:
             key_title: "Chave"
         filters:
           reset: "Repor"
+        features_list:
+          one: "Funcionalidade:"
+          other: "Funcionalidades:"
       rag:
         uploads:
           title: "Uploads"

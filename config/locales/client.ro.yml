@@ -327,7 +327,7 @@ ro:
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search: "Caută"
     impersonation:
-      notice: "Preia identitatea utilizatorului %{username}"
+      notice: "Preiei identitatea utilizatorului %{username}"
       stop: "Oprește preluarea identității"
     themes:
       default_description: "Implicit"
@@ -4280,6 +4280,7 @@ ro:
         show_details: Detalii
         description: Descriere
         user_mode: Nivel utilizator
+        impersonate_all_users: Preia identitatea oricărui utilizator
         single_user: "Utilizator unic"
         save: Salvează
         delete: Șterge definitiv
@@ -4950,7 +4951,7 @@ ro:
             delete_topic: "șterge subiectul"
             recover_topic: "recuperează discuția"
             delete_post: "șterge postarea"
-            impersonate: "joacă rolul utilizatorului"
+            impersonate: "preia identitatea"
             anonymize_user: "transformă în utilizator anonim"
             roll_up: "consolidează blocurile de IP"
             change_category_settings: "schimbă setările categoriei"
@@ -5079,10 +5080,10 @@ ro:
             type:
               key: "tip"
       impersonate:
-        title: "Joacă rolul utilizatorului"
-        help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
+        title: "Preia identitatea"
+        help: "Folosește această unealtă pentru a prelua identitatea unui cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
-        invalid: "Ne pare rău, nu poți prelua acest rol."
+        invalid: "Scuze, nu poți prelua această identitate."
       users:
         title: "Utilizatori"
         description: "Vizualizare și gestionare utilizatorii."

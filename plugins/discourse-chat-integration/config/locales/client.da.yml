@@ -101,3 +101,11 @@ da:
               label: Meddelelse
             url:
               label: URL
+            channel:
+              label: Kanal
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Kanal navn
+            provider:
+              label: Udbyder

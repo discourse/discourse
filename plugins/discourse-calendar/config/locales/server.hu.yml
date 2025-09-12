@@ -31,8 +31,10 @@ hu:
         %{logs}
         ```
   site_settings:
+    events_max_rows: "Maximális szöveges sorok száma eseményenként a naptárban."
     working_day_start_hour: "A munkanapok kezdési időpontja."
     working_day_end_hour: "A munkanapok befejezési időpontja."
+    include_expired_events_on_calendar: "A Kategórianaptár és a Közelgő események nézetben szerepeltetheti a múltbeli/lejárt eseményeket."
   discourse_calendar:
     invite_user_notification: "%{username} meghívta erre: %{description}"
     calendar_must_be_in_first_post: "A naptár címke csak a téma első bejegyzésében használható."
