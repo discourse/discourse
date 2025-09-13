@@ -85,11 +85,6 @@ export default class UpcomingEventsCalendar extends Component {
         backgroundColor = `#${categoryColor}`;
       }
 
-      let classNames;
-      if (moment(endsAt || startsAt).isBefore(moment())) {
-        classNames = "fc-past-event";
-      }
-
       return {
         extendedProps: { postEvent: event },
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
@@ -100,7 +95,6 @@ export default class UpcomingEventsCalendar extends Component {
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
-        classNames,
       };
     });
   }
