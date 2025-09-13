@@ -136,7 +136,6 @@ export default class CategoryCalendar extends Component {
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        display: "list-item",
         rrule: event.rrule,
         end: endsAt || startsAt,
         duration: event.duration,

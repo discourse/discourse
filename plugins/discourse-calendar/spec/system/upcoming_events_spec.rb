@@ -504,4 +504,36 @@ describe "Upcoming Events", type: :system do
       end
     end
   end
+
+  describe "with calendar_event_display setting", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "This is a short meeting",
+        raw:
+          "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    context "with block" do
+      before { SiteSetting.calendar_event_display = "block" }
+
+      it "renders block" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-block-event")
+      end
+    end
+
+    context "with auto" do
+      before { SiteSetting.calendar_event_display = "auto" }
+
+      it "renders dot" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-dot-event")
+      end
+    end
+  end
 end
