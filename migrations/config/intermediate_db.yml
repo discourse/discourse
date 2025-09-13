@@ -113,6 +113,22 @@ schema:
           - "public_topic_count"
           - "staff_topic_count"
           - "target_tag_id"
+    user_custom_fields:
+      columns:
+        exclude:
+          - "id"
+        add:
+          - name: "is_multiselect_field"
+            datatype: boolean
+      indexes:
+        - name: "user_custom_fields_multiselect_index"
+          columns: [ "user_id", "name", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "user_custom_fields_not_multiselect_index"
+          columns: [ "user_id", "name" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
     user_emails:
       columns:
         include:
@@ -126,6 +142,27 @@ schema:
       columns:
         exclude:
           - "id"
+    user_field_values:
+      copy_of: user_custom_fields
+      columns:
+        exclude:
+          - "id"
+          - "name"
+        add:
+          - name: "field_id"
+            datatype: numeric
+            nullable: false
+          - name: "is_multiselect_field"
+            datatype: boolean
+      indexes:
+        - name: "user_field_values_multiselect_index"
+          columns: [ "user_id", "field_id", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "user_field_values_not_multiselect_index"
+          columns: [ "user_id", "field_id" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
     user_fields:
       columns:
         exclude:
@@ -419,7 +456,6 @@ schema:
         - "user_badges"
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
-        - "user_custom_fields"
         - "user_exports"
         - "user_histories"
         - "user_ip_address_histories"
