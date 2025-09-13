@@ -14,10 +14,9 @@ const GroupAssignedFilter = <template>
         @query={{hash order=@order ascending=@ascending search=@search}}
       >
         <div class="assign-image">
-          <a
-            href={{@filter.userPath}}
-            data-user-card={{@filter.username}}
-          >{{avatar this.filter imageSize="large"}}</a>
+          <a href={{@filter.userPath}} data-user-card={{@filter.username}}>
+            {{avatar @filter imageSize="small"}}
+          </a>
         </div>
 
         <div class="assign-names">
