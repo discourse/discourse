@@ -311,7 +311,16 @@ export default class DNavigation extends Component {
         {{#if this.showToggleInfo}}
           <DButton
             @icon={{if this.currentUser.canEditTags "wrench" "circle-info"}}
-            @ariaLabel="tagging.info"
+            @ariaLabel={{if
+              this.currentUser.canEditTags
+              "tagging.edit"
+              "tagging.info"
+            }}
+            @title={{if
+              this.currentUser.canEditTags
+              "tagging.edit"
+              "tagging.info"
+            }}
             @action={{this.toggleInfo}}
             id="show-tag-info"
             class="btn-default"
