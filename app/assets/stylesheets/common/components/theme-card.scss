@@ -137,6 +137,16 @@
     gap: 0.5rem;
     align-items: center;
     overflow-wrap: anywhere;
+    color: var(--primary);
+
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   &__description {

@@ -47,6 +47,13 @@ export default class AdminFlagItem extends Component {
       : "admin.config_areas.flags.form.non_deletable";
   }
 
+  get editUrl() {
+    if (!this.canEdit) {
+      return null;
+    }
+    return this.router.urlFor("adminConfig.flags.edit", this.args.flag);
+  }
+
   @action
   toggleFlagEnabled(flag) {
     this.enabled = !this.enabled;
@@ -127,9 +134,16 @@ export default class AdminFlagItem extends Component {
       }}
     >
       <td class="d-table__cell --overview">
-        <div
-          class="d-table__overview-name admin-flag-item__name"
-        >{{@flag.name}}</div>
+        {{#if this.editUrl}}
+          <a
+            class="d-table__overview-name admin-flag-item__name"
+            href={{this.editUrl}}
+          >{{@flag.name}}</a>
+        {{else}}
+          <div
+            class="d-table__overview-name admin-flag-item__name"
+          >{{@flag.name}}</div>
+        {{/if}}
         <div class="d-table__overview-about">{{htmlSafe
             @flag.description
           }}</div>
