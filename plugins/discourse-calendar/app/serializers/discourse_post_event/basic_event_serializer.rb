@@ -24,10 +24,7 @@ module DiscoursePostEvent
         id: object.post.id,
         post_number: object.post.post_number,
         url: object.post.url,
-        topic: {
-          id: object.post.topic.id,
-          title: object.post.topic.title,
-        },
+        topic: TopicListItemSerializer.new(object.post.topic, scope:, root: false).as_json,
       }
     end
 
