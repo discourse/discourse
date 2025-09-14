@@ -974,7 +974,7 @@ end
           old_raw = post.raw.to_s
           next if old_raw.blank?
 		  #next unless old_raw =~ @legacy_upload_regex 
-		  next unless old_raw.include?("/images/uploaded/")
+		  next if old_raw.exclude?("/images/uploaded/")
           begin
             total_legacy = old_raw.scan(@legacy_upload_regex).length
             mapped_legacy = old_raw.scan(@legacy_upload_regex).count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
