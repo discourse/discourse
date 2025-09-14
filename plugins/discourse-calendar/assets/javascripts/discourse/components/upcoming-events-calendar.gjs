@@ -75,7 +75,7 @@ export default class UpcomingEventsCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorEntry = tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post.category_slug
         );
         backgroundColor = categoryColorEntry?.color;
       }

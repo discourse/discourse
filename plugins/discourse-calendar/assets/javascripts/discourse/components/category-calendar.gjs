@@ -122,7 +122,7 @@ export default class CategoryCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorFromMap = this.tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post.category_slug
         )?.color;
         backgroundColor =
           categoryColorFromMap || `#${Category.findById(categoryId)?.color}`;

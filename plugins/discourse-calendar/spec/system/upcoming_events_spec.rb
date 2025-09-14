@@ -562,7 +562,7 @@ describe "Upcoming Events", type: :system do
   context "with category color", time: Time.utc(2025, 6, 2, 19, 00) do
     before do
       SiteSetting.map_events_to_color = [
-        { type: "category", color: "rgb(140,24,193)", slug: "awesome-category" },
+        { type: "category", color: "rgb(231, 76, 60)", slug: "awesome-category" },
       ].to_json
 
       create_post(
@@ -576,7 +576,7 @@ describe "Upcoming Events", type: :system do
     it "display the event with the correct color" do
       visit("/upcoming-events/month/2025/6/16")
 
-      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(140,24,193)")
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
     end
   end
 end

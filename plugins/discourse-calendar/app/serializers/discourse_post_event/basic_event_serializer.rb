@@ -24,6 +24,14 @@ module DiscoursePostEvent
         id: object.post.id,
         post_number: object.post.post_number,
         url: object.post.url,
+        category_slug:
+          (
+            if object.post.topic && object.post.topic.category
+              object.post.topic.category.slug_for_url
+            else
+              ""
+            end
+          ),
         topic: TopicListItemSerializer.new(object.post.topic, scope:, root: false).as_json,
       }
     end
