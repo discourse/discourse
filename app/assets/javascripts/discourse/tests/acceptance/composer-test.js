@@ -485,7 +485,7 @@ import { i18n } from "discourse-i18n";
           .hasValue("This is a draft of the first post");
       });
 
-      test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
+      test("Autosaves drafts after clicking keep editing or escaping modal", async function (assert) {
         pretender.post("/drafts.json", function () {
           assert.step("saveDraft");
           return response(200, {});
@@ -520,17 +520,38 @@ import { i18n } from "discourse-i18n";
 
         await fillIn(
           ".d-editor-input",
-          "this is the updated content of the reply",
+          "this is the first update to the draft content",
           "update content in the composer"
         );
 
         assert.verifySteps(["saveDraft"], "second draft is saved");
 
+        await click("#reply-control .discard-button");
+
+        assert
+          .dom(".discard-draft-modal.modal")
+          .exists("pops up the discard drafts modal");
+
+        await triggerKeyEvent(
+          ".discard-draft-modal .save-draft",
+          "keydown",
+          "Escape"
+        );
+        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+
+        await fillIn(
+          ".d-editor-input",
+          "this is the second update to the draft content",
+          "update content in the composer"
+        );
+
+        assert.verifySteps(["saveDraft"], "third draft is saved");
+
         await click("#reply-control button.create");
 
         assert
           .dom(".topic-post:nth-last-child(1 of .topic-post) .cooked p")
-          .hasText("this is the updated content of the reply");
+          .hasText("this is the second update to the draft content");
       });
 
       test("Create an enqueued Reply", async function (assert) {

@@ -55,7 +55,9 @@ ca:
       translations:
         title: "Traduccions"
         progress_chart:
-          bar_done: "%{done} publicacions"
+          bar_done:
+            one: "%{count} publicació"
+            other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
         last_seven_days: "Els darrers 7 dies"

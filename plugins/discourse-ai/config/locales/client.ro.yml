@@ -47,6 +47,10 @@ ro:
             notify_author_pm_message:
               label: "Mesaj PM"
               description: "Mesaj personalizat opțional pentru a trimite autorului"
+        llm_tagger:
+          fields:
+            confidence_threshold:
+              description: "Procentul minim de încredere (0-100) necesar pentru aplicarea etichetelor sugerate"
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
@@ -82,14 +86,17 @@ ro:
             empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
         stats:
           title: "Statistici traducere"
-          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată %{tooltip}"
-          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată %{tooltip}"
+          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
+          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           description_tooltip: "Postările eligibile sunt determinate de setările de traducere AI"
         progress_chart:
-          title: "Progresul traducerii"
+          title: "Progres traducere %{tooltip}"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} din %{total} postări traduse"
-          bar_done: "%{done} postări"
+          bar_done:
+            one: "o postare"
+            few: "%{count} postări"
+            other: "%{count} de postări"
       spam:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"
@@ -164,6 +171,7 @@ ro:
           anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
           open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
           open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
           open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."

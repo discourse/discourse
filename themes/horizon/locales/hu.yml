@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 hu:
+  theme_metadata:
+    description: "Egy egyszerű, gyönyörű téma, amely javítja a Discourse webhelyek élményét."

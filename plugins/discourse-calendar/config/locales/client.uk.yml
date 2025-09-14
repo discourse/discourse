@@ -423,6 +423,7 @@ uk:
         event:
           expired: "Термін дії закінчився"
           closed: "Закриті"
+          full: "Повний"
           status:
             standalone:
               title: "Автономна"
@@ -480,6 +481,9 @@ uk:
         minimal:
           label: "Мінімальна подія"
           checkbox_label: "Приховати кнопки \"Йду/Не йду\" та статус запрошених"
+        max_attendees:
+          label: "Максимальна кількість учасників"
+          placeholder: "Без обмежень"
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"

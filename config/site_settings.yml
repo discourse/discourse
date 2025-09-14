@@ -3641,10 +3641,16 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
     client: true
+
+  max_topic_query_page_param:
+    default: 2000
+    min: 100
+    hidden: true
 
   create_revision_on_bulk_topic_moves:
     default: true

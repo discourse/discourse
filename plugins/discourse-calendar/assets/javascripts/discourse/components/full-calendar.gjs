@@ -62,6 +62,7 @@ export default class FullCalendar extends Component {
 
     this.calendar = new calendarModule.Calendar(element, {
       locale: getCurrentBcp47Locale(),
+      eventDisplay: this.siteSettings.calendar_event_display ?? "auto",
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
       firstDay: this.firstDayOfWeek,

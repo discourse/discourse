@@ -56,7 +56,8 @@ zh_TW:
       translations:
         title: "翻譯"
         progress_chart:
-          bar_done: "%{done} 篇貼文"
+          bar_done:
+            other: "%{count} 篇貼文"
       spam:
         short_title: "垃圾內容"
         last_seven_days: "過去 7 天"

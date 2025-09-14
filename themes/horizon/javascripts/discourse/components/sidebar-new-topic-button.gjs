@@ -59,7 +59,7 @@ export default class SidebarNewTopicButton extends Component {
   }
 
   get createTopicClass() {
-    const baseClasses = "btn-default sidebar-new-topic-button";
+    const baseClasses = "sidebar-new-topic-button";
     return this.categoryReadOnlyBanner
       ? `${baseClasses} disabled`
       : baseClasses;
@@ -107,6 +107,7 @@ export default class SidebarNewTopicButton extends Component {
           @disabled={{this.createTopicDisabled}}
           @label="topic.create"
           @btnClass={{this.createTopicClass}}
+          @btnTypeClass="btn-primary"
           @canCreateTopicOnTag={{not this.tagRestricted}}
           @showDrafts={{gt this.draftCount 0}}
         />

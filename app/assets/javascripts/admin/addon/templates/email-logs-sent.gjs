@@ -62,8 +62,6 @@ export default RouteTemplate(
               <span class="email-logs-user">
                 <LinkTo @route="adminUser" @model={{emailLog.user}}>
                   {{avatar emailLog.user imageSize="tiny"}}
-                </LinkTo>
-                <LinkTo @route="adminUser" @model={{emailLog.user}}>
                   {{emailLog.user.username}}
                 </LinkTo>
               </span>
