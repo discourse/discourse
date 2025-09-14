@@ -640,7 +640,7 @@ export default class ChatMessage extends Component {
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
-                          @context={{concat "channel_" @message.channel.id}}
+                          @context="chat"
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
                           @btnClass="btn-flat react-btn chat-message-react-btn"
                           @onClose={{this.onEmojiPickerClose}}
