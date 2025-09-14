@@ -80,12 +80,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     name = PARENT_CATEGORY.strip
     parent =
       Category.where("lower(name) = ?", name.downcase).first ||
-      Category.where("lower(slug) = ?", name.parameterize.downcase).first
+        Category.where("lower(slug) = ?", name.parameterize.downcase).first
 
     unless parent
       print_warning(
         "Note: PARENT_CATEGORY='#{PARENT_CATEGORY}' not found. " \
-        "Import will create top-level categories."
+          "Import will create top-level categories.",
       )
       return nil
     end
@@ -209,7 +209,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         # respect already "prepared" users created earlier (e.g. via mbox import)
         next if user["Email"].blank?
         if existing = User.find_by_email(user["Email"])
-		  @lookup.add_user(user["UserID"].to_s, existing)
+          @lookup.add_user(user["UserID"].to_s, existing)
           next
         end
         next if @lookup.user_id_from_imported_user_id(user["UserID"])
@@ -221,7 +221,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           email: user["Email"],
           username: user["username"],
           name: user["Name"],
-		  staged: true,
+          staged: true,
           created_at: user["DateInserted"] == nil ? 0 : Time.zone.at(user["DateInserted"]),
           bio_raw: user["bio_raw"],
           registration_ip_address: user["InsertIPAddress"],
@@ -360,7 +360,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     youtube_available =
       mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
     youtube_select = youtube_available ? ", youtube_link as youtube" : ""
-   
 
     batches(BATCH_SIZE) do |offset|
       comments =
@@ -475,10 +474,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw.gsub!(/\[div\]/mix, "[quote]")
     raw.gsub!(%r{\[/div\]}mix, "[/quote]")
 
-	# BBCode list to Markdown (unordered)
-	raw.gsub!(%r{\[list\]}i, "")
-	raw.gsub!(%r{\[/list\]}i, "")
-	raw.gsub!(%r{\[\*\]\s*}i, "* ")
+    # BBCode list to Markdown (unordered)
+    raw.gsub!(/\[list\]/i, "")
+    raw.gsub!(%r{\[/list\]}i, "")
+    raw.gsub!(/\[\*\]\s*/i, "* ")
 
     # [postedby] -> link to @user
     raw.gsub(%r{\[postedby\](.+?)\[b\](.+?)\[/b\]\[/postedby\]}i) { "#{$1}@#{$2}" }
@@ -500,14 +499,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n").gsub("\\t", "\t")
 
-	# enforce block boundaries so BBCode [quote] is parsed reliably
-	raw.gsub!(%r{[ \t]*\n?[ \t]*\[quote\][ \t]*}i) { "\n\n[quote]\n" }
-	raw.gsub!(%r{[ \t]*\[/quote\][ \t]*\n?}i) { "\n[/quote]\n\n" }
+    # enforce block boundaries so BBCode [quote] is parsed reliably
+    raw.gsub!(/[ \t]*\n?[ \t]*\[quote\][ \t]*/i) { "\n\n[quote]\n" }
+    raw.gsub!(%r{[ \t]*\[/quote\][ \t]*\n?}i) { "\n[/quote]\n\n" }
 
-	# end a Markdown blockquote unless the next line intentionally continues it
-	# (next line starts with '>' or a list marker like '- ', '* ', '1. ')
-	# prevent Markdown lazy-continuation from pulling the next paragraph into the quote
-	raw = ensure_quote_breaks(raw)
+    # end a Markdown blockquote unless the next line intentionally continues it
+    # (next line starts with '>' or a list marker like '- ', '* ', '1. ')
+    # prevent Markdown lazy-continuation from pulling the next paragraph into the quote
+    raw = ensure_quote_breaks(raw)
 
     unless CONVERT_HTML
       # replace all chevrons with HTML entities
@@ -614,33 +613,32 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   # ensure a blank line after a quoted block unless the next line intentionally continues it
   def ensure_quote_breaks(text)
-	return text if text.blank?
+    return text if text.blank?
 
-	out = []
-	in_quote = false
-	lines = text.split("\n", -1) # keep trailing empties
+    out = []
+    in_quote = false
+    lines = text.split("\n", -1) # keep trailing empties
 
-	lines.each do |line|
-	if line =~ /\A\s*>/
-		in_quote = true
-		out << line
-		next
-	end
+    lines.each do |line|
+      if line =~ /\A\s*>/
+        in_quote = true
+        out << line
+        next
+      end
 
-	if in_quote
-		# leaving a quote: if the current non-quote line is NOT a continuation marker, insert a blank line before it
-		unless line =~ /\A\s*(?:>|[-*]\s|\d+\.\s)/
-		out << "" unless out.last == ""
-		end
-	end
+      if in_quote
+        # leaving a quote: if the current non-quote line is NOT a continuation marker, insert a blank line before it
+        unless line =~ /\A\s*(?:>|[-*]\s|\d+\.\s)/
+          out << "" unless out.last == ""
+        end
+      end
 
-	in_quote = false
-	out << line
-	end
+      in_quote = false
+      out << line
+    end
 
-	out.join("\n")
-end
-  
+    out.join("\n")
+  end
 
   private
 
@@ -669,30 +667,34 @@ end
 
       @rewrite_links_enabled = true
     rescue => e
-      print_warning("Note: REWRITE_LINKS enabled but IMAGE_BASE invalid (#{e.message}). Skipping link rewrite.")
+      print_warning(
+        "Note: REWRITE_LINKS enabled but IMAGE_BASE invalid (#{e.message}). Skipping link rewrite.",
+      )
       @rewrite_links_enabled = false
     end
   end
 
   def rewrite_legacy_links(raw)
-	return raw unless @rewrite_links_enabled
-	return raw if raw.blank?
+    return raw unless @rewrite_links_enabled
+    return raw if raw.blank?
 
-	prefix = "/#{BASE.to_s.strip.sub(%r{\A/}, "").sub(%r{/\z}, "")}"
-	prefix = "" if prefix == "/"
-  
-	# 1) rewrite only href="LEGACY..."
-	raw = raw.gsub(/(\bhref\s*=\s*["'])#{@legacy_link_regex}/i) do
-		%(#{$1}#{prefix}/forum_entry-id-#{$2}.html)
-	end
-  
-	# 2) rewrite naked legacy URLs to clickable anchors (avoid attr contexts)
-	raw = raw.gsub(/(?<![="'=])#{@legacy_link_regex}/i) do
-		path = "#{prefix}/forum_entry-id-#{$1}.html"
-		%(<a href="#{path}">#{path}</a>)
-	end
-	
-	raw
+    prefix = "/#{BASE.to_s.strip.sub(%r{\A/}, "").sub(%r{/\z}, "")}"
+    prefix = "" if prefix == "/"
+
+    # 1) rewrite only href="LEGACY..."
+    raw =
+      raw.gsub(/(\bhref\s*=\s*["'])#{@legacy_link_regex}/i) do
+        %(#{$1}#{prefix}/forum_entry-id-#{$2}.html)
+      end
+
+    # 2) rewrite naked legacy URLs to clickable anchors (avoid attr contexts)
+    raw =
+      raw.gsub(/(?<![="'=])#{@legacy_link_regex}/i) do
+        path = "#{prefix}/forum_entry-id-#{$1}.html"
+        %(<a href="#{path}">#{path}</a>)
+      end
+
+    raw
   end
 
   #
@@ -721,7 +723,9 @@ end
 
       @rewrite_uploads_enabled = true
     rescue => e
-      print_warning("Note: IMAGE_BASE invalid for upload rewrite (#{e.message}). Skipping upload link rewrite.")
+      print_warning(
+        "Note: IMAGE_BASE invalid for upload rewrite (#{e.message}). Skipping upload link rewrite.",
+      )
       @rewrite_uploads_enabled = false
     end
   end
@@ -752,17 +756,15 @@ end
     begin
       File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
     rescue => e
-      print_warning("Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}")
+      print_warning(
+        "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}",
+      )
     end
   end
 
   def find_uploads_table_name
     # try common variants
-    candidates = [
-      "#{TABLE_PREFIX}uploads",
-      "mlf_uploads",
-      "#{TABLE_PREFIX}mlf_uploads",
-    ]
+    candidates = ["#{TABLE_PREFIX}uploads", "mlf_uploads", "#{TABLE_PREFIX}mlf_uploads"]
     names = @client.query("SHOW TABLES").map { |r| r.values.first.to_s }
     candidates.find { |t| names.include?(t) }
   end
@@ -772,7 +774,9 @@ end
 
     table = find_uploads_table_name
     unless table
-      print_warning("No uploads table found (tried '#{TABLE_PREFIX}uploads', 'mlf_uploads'). Skipping uploads import.")
+      print_warning(
+        "No uploads table found (tried '#{TABLE_PREFIX}uploads', 'mlf_uploads'). Skipping uploads import.",
+      )
       return
     end
 
@@ -795,23 +799,32 @@ end
 
       # temporarily allow all extensions ('*') so extension checks don't block the import
       begin
-        SiteSetting.authorized_extensions = "*" unless SiteSetting.authorized_extensions.to_s.strip == "*"
+        SiteSetting.authorized_extensions = "*" unless SiteSetting
+          .authorized_extensions
+          .to_s
+          .strip == "*"
       rescue => e
         print_warning("Could not widen authorized_extensions: #{e.message}")
       end
       begin
-        SiteSetting.authorized_extensions_for_staff = "*" unless SiteSetting.authorized_extensions_for_staff.to_s.strip == "*"
+        SiteSetting.authorized_extensions_for_staff = "*" unless SiteSetting
+          .authorized_extensions_for_staff
+          .to_s
+          .strip == "*"
       rescue => e
         print_warning("Could not widen authorized_extensions_for_staff: #{e.message}")
       end
     end
 
     # only import uploads newer than IMPORT_AFTER (consistent with topics/posts)
-    total = mysql_query(
-      "SELECT count(*) AS c
+    total =
+      mysql_query(
+        "SELECT count(*) AS c
        FROM #{table}
-       WHERE tstamp > '#{IMPORT_AFTER}'"
-    ).first["c"]
+       WHERE tstamp > '#{IMPORT_AFTER}'",
+      ).first[
+        "c"
+      ]
     offset = 0
 
     missing = 0
@@ -819,14 +832,15 @@ end
     skipped = 0
 
     while offset < total
-      rows = mysql_query(
-        "SELECT id, uploader, filename, tstamp
+      rows =
+        mysql_query(
+          "SELECT id, uploader, filename, tstamp
          FROM #{table}
          WHERE tstamp > '#{IMPORT_AFTER}'
          ORDER BY id ASC
          LIMIT #{BATCH_SIZE}
-         OFFSET #{offset}"
-      ).to_a
+         OFFSET #{offset}",
+        ).to_a
       break if rows.empty?
 
       rows.each do |row|
@@ -872,8 +886,11 @@ end
           File.open(path, "rb") do |file|
             # create an Upload in Discourse; Discourse deduplicates identical files internally
             # note: the uploader context is determined by the argument to `create_for`
-			upload = UploadCreator.new(file, File.basename(path), type: "attachment").create_for(uploader_id)
-                        
+            upload =
+              UploadCreator.new(file, File.basename(path), type: "attachment").create_for(
+                uploader_id,
+              )
+
             if upload && upload.url
               url = relative_upload_url(upload.url)
               # map both keys: the DB name (possibly without extension) and the actual filename
@@ -881,9 +898,15 @@ end
               @upload_map[actual_fn] = url unless actual_fn == base_fn
               created += 1
             else
-			  missing += 1
+              missing += 1
               append_missing_upload(fn)
-			  print_warning("Upload returned no URL for #{actual_fn} (ext='#{File.extname(actual_fn).delete(".")}', size=#{File.size(path)} bytes)") rescue nil
+              begin
+                print_warning(
+                  "Upload returned no URL for #{actual_fn} (ext='#{File.extname(actual_fn).delete(".")}', size=#{File.size(path)} bytes)",
+                )
+              rescue StandardError
+                nil
+              end
             end
           end
         rescue => e
@@ -907,7 +930,8 @@ end
         print_warning("Could not restore authorized_extensions: #{e.message}")
       end
       begin
-        SiteSetting.authorized_extensions_for_staff = original_limits[:authorized_extensions_for_staff]
+        SiteSetting.authorized_extensions_for_staff =
+          original_limits[:authorized_extensions_for_staff]
       rescue => e
         print_warning("Could not restore authorized_extensions_for_staff: #{e.message}")
       end
@@ -921,9 +945,9 @@ end
     return raw unless @rewrite_uploads_enabled
     return raw if @upload_map.nil? || @upload_map.empty?
 
-	# 0) [img]LEGACY[/img] -> [img]NEW[/img]
+    # 0) [img]LEGACY[/img] -> [img]NEW[/img]
     raw =
-      raw.gsub(/\[img\]\s*(#{@legacy_upload_regex})\s*\[\/img\]/i) do
+      raw.gsub(%r{\[img\]\s*(#{@legacy_upload_regex})\s*\[/img\]}i) do
         legacy = $1 # full legacy URL
         filename = $2 # captured filename from @legacy_upload_regex
         new_url = @upload_map[filename]
@@ -952,9 +976,9 @@ end
     # 2) rewrite naked legacy upload URLs in plain text (groups: 1=prefix, 2=filename)
     raw =
       raw.gsub(/(^|[\s\(\[\{>"'])#{@legacy_upload_regex}(?=$|[\s\)\]\}',\.\!\?:;])/i) do
-        prefix   = $1
+        prefix = $1
         filename = $2
-        new_url  = @upload_map[filename]
+        new_url = @upload_map[filename]
         new_url ? %(#{prefix}<a href="#{new_url}">#{new_url}</a>) : $&
       end
     raw
@@ -968,32 +992,41 @@ end
     ids = PostCustomField.where(name: "import_id").pluck(:post_id)
     return if ids.empty?
 
-    Post.where(id: ids).find_in_batches(batch_size: BATCH_SIZE) do |posts|
-      posts.each do |post|
-        begin
-          old_raw = post.raw.to_s
-          next if old_raw.blank?
-		  #next unless old_raw =~ @legacy_upload_regex 
-		  next if old_raw.exclude?("/images/uploaded/")
+    Post
+      .where(id: ids)
+      .find_in_batches(batch_size: BATCH_SIZE) do |posts|
+        posts.each do |post|
           begin
-            total_legacy = old_raw.scan(@legacy_upload_regex).length
-            mapped_legacy = old_raw.scan(@legacy_upload_regex).count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
-            print_warning("Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}") if total_legacy > 0
-          rescue
+            old_raw = post.raw.to_s
+            next if old_raw.blank?
+            #next unless old_raw =~ @legacy_upload_regex
+            next if old_raw.exclude?("/images/uploaded/")
+            begin
+              total_legacy = old_raw.scan(@legacy_upload_regex).length
+              mapped_legacy =
+                old_raw
+                  .scan(@legacy_upload_regex)
+                  .count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
+              if total_legacy > 0
+                print_warning(
+                  "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}",
+                )
+              end
+            rescue StandardError
+            end
+
+            new_raw = rewrite_legacy_uploads(old_raw)
+            next if new_raw == old_raw
+
+            post.raw = new_raw
+            post.save!
+            post.rebake!
+            print "."
+          rescue => e
+            print_warning("Repair failed for post #{post.id}: #{e.message}")
           end
-
-          new_raw = rewrite_legacy_uploads(old_raw)
-          next if new_raw == old_raw
-
-          post.raw = new_raw
-          post.save!
-          post.rebake!
-          print "."
-        rescue => e
-          print_warning("Repair failed for post #{post.id}: #{e.message}")
         end
       end
-    end
 
     puts "", "repair pass finished", ""
   end
