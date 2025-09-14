@@ -123,7 +123,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
     it "should apply the auto-close timer upon publishing" do
       freeze_time
 
-      another_category.update!(auto_close_hours: 5)
+      another_category.set_or_create_default_timer duration_minutes: 300,
+                                                   executed_at: Time.now,
+                                                   user: Discourse.system_user
       topic
 
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)

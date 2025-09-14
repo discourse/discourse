@@ -17,7 +17,7 @@ RSpec.describe Topic do
     end
 
     context "with category without default auto-close" do
-      let(:category) { Fabricate(:category, auto_close_hours: nil) }
+      let(:category) { Fabricate(:category) }
 
       it "should not schedule the topic to auto-close" do
         expect(topic.public_topic_timer).to eq(nil)
@@ -29,7 +29,10 @@ RSpec.describe Topic do
       before { freeze_time }
 
       context "when category has a default auto-close" do
-        let(:category) { Fabricate(:category, auto_close_hours: 2.0) }
+        let(:category) { Fabricate(:category) }
+        fab!(:category_default_timer) do
+          Fabricate(:category_default_timer, duration_minutes: 120.0)
+        end
 
         it "should schedule the topic to auto-close" do
           topic
