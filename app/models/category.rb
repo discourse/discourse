@@ -169,6 +169,8 @@ class Category < ActiveRecord::Base
   has_many :category_form_templates, dependent: :destroy
   has_many :form_templates, through: :category_form_templates
 
+  has_one :category_default_timer, dependent: :destroy, foreign_key: :timerable_id
+
   scope :latest, -> { order("topic_count DESC") }
 
   scope :secured,
@@ -1286,6 +1288,15 @@ class Category < ActiveRecord::Base
       .each { |record| localizations_params << { "id" => record.id, "_destroy" => true } }
 
     self.category_localizations_attributes = localizations_params
+  end
+
+  def auto_close_based_on_last_post
+    return false unless category_default_timer
+    category_default_timer.based_on_last_post
+  end
+
+  def auto_close_hours
+    category_default_timer&.duration_minutes&.minutes&.in_hours
   end
 
   private
