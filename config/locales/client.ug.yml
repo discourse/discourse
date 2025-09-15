@@ -4703,7 +4703,6 @@ ug:
       choose_for_topic_required_group:
         one: "«%{name}» دىن %{count} بەلگە تاللايدۇ…"
         other: "«%{name}» دىن %{count} بەلگە تاللايدۇ…"
-      info: "ئۇچۇر"
       default_info: "بۇ بەلگە ھېچقانداق سەھىپە بىلەن چەكلەنمەيدۇ ھەمدە مەنىداش سۆزى يوق."
       staff_info: "چەكلىمە قوشۇشتا، بەلگىنى <a href=%{basePath}/tag_groups>بەلگە گۇرۇپپا</a>غا قوشۇش كېرەك."
       category_restricted: "بۇ بەلگە سىز زىيارەت قىلالمايدىغان سەھىپە بىلەن چەكلىنىدۇ."

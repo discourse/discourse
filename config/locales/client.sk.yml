@@ -5062,7 +5062,6 @@ sk:
         few: "vyberte %{count} značiek z „%{name}“…"
         many: "vyberte %{count} značiek z „%{name}“…"
         other: "vyberte %{count} značky z „%{name}“…"
-      info: "Info"
       default_info: "Táto značka nie je obmedzená na žiadne kategórie a nemá žiadne synonymá."
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."

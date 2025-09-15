@@ -4686,7 +4686,6 @@ it:
       choose_for_topic_required_group:
         one: "Seleziona %{count} etichetta da '%{name}'…"
         other: "Seleziona %{count} etichette da '%{name}'…"
-      info: "Info"
       default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."

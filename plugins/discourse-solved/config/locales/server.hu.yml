@@ -24,6 +24,7 @@ hu:
     solved_add_schema_markup: "QAPage sémaleíró hozzáadása a HTML-hez."
     enable_solved_tags: "Címkék, amelyek lehetővé teszik a felhasználók számára a megoldások kiválasztását."
     prioritize_solved_topics_in_search: "A megoldott témák rangsorolása a keresési eredményekben."
+    show_who_marked_solved: "Mutasd, hogy ki jelölte meg a témát megoldottként. Ez a téma első hozzászólásában, a válasz hozzászólásában pedig egy elemleírásban látható."
     keywords:
       accept_all_solutions_allowed_groups: "minden_bizalmiszint_megoldas_elfogadasa"
   reports:
@@ -35,6 +36,10 @@ hu:
     no_solutions:
       self: "Még nincs elfogadott megoldásod."
       others: "Nincs elfogadott megoldás."
+    filter:
+      description:
+        solved: "Megoldott témák szűrése"
+        unsolved: "Szűrje ki a megoldatlan témákat"
   badges:
     solved_1:
       name: "Megoldott!"

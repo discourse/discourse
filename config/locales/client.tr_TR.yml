@@ -4689,7 +4689,6 @@ tr_TR:
       choose_for_topic_required_group:
         one: "'%{name}' içinden %{count} etiket seç…"
         other: "'%{name}' içinden %{count} etiket seç…"
-      info: "Bilgi"
       default_info: "Bu etiket hiçbir kategoriyle sınırlı değil ve eş anlamlısı yok."
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."

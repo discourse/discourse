@@ -141,8 +141,48 @@ fa_IR:
     languages:
       ar:
         name: عربی
+      be:
+        name: بلاروسی
+      bs_BA:
+        name: بوسنیایی
+      de:
+        name: آلمانی
+      en:
+        name: انگلیسی (لهجه آمریکایی)
+      en_GB:
+        name: انگلیسی
+      es:
+        name: اسپانیایی
+      et:
+        name: استونی
       fa_IR:
         name: فارسی
+      fr:
+        name: فرانسوی
+      he:
+        name: عبری
+      hr:
+        name: کرواسی
+      hy:
+        name: ارمنی
+      id:
+        name: اندونزیایی
+      it:
+        name: ایتالیایی
+      ja:
+        name: ژاپنی
+      ko:
+        name: کره‌ای
+      lt:
+        name: لیتوانی
+      pt:
+        name: پرتغالی
+      ro:
+        name: رومانی
+      ru:
+        name: روسی
+      sk:
+        name: اسلوواکی
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
@@ -4377,7 +4417,6 @@ fa_IR:
       choose_for_topic_required_group:
         one: "برچسب از '%{name}' انتخاب کنید... %{count}"
         other: "برچسب از '%{name}' انتخاب کنید... %{count}"
-      info: "اطلاعات"
       default_info: "این برچسب به هیچ دسته ای محدود نمی شود و مترادف ندارد."
       staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
       category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."

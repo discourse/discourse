@@ -4444,7 +4444,6 @@ ja:
         other: "少なくとも %{count} 個のタグを選択してください…"
       choose_for_topic_required_group:
         other: "'%{name}' から %{count} 個のタグを選択…"
-      info: "情報"
       default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。"
       staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"

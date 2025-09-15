@@ -5209,7 +5209,6 @@ cs:
         few: "vyberte %{count} štítky z '%{name}'..."
         many: "vyberte %{count} štítků z '%{name}'..."
         other: "vyberte %{count} štítků z '%{name}'..."
-      info: "Informace"
       default_info: "Tento štítek není omezen na žádné kategorie a nemá žádná synonyma."
       staff_info: "Chcete-li přidat omezení, vložte tento štítek do <a href=%{basePath}/tag_groups>skupiny štítků</a>."
       category_restricted: "Tento štítek je omezen na kategorie, ke kterým nemáte oprávnění k přístupu."

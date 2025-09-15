@@ -4940,7 +4940,6 @@ hr:
         one: "odaberite %{count} oznaku iz '%{name}"
         few: "odaberite %{count} oznake iz '%{name}"
         other: "odaberite %{count} oznaka iz '%{name}"
-      info: "Info"
       default_info: "Ova oznaka nije ograničena ni na jednu kategoriju i nema sinonime."
       staff_info: "Da biste dodali ograničenja, stavite ovu oznaku u grupu oznaka <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Ova je oznaka ograničena na kategorije kojima nemate dopuštenje za pristup."

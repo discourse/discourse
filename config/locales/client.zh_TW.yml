@@ -4244,7 +4244,6 @@ zh_TW:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
         other: "從 '%{name}' 中選擇 %{count} 個標記…"
-      info: "資訊"
       default_info: "此標記不限於任何類別，並且沒有同義詞。"
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"

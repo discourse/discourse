@@ -4689,7 +4689,6 @@ nl:
       choose_for_topic_required_group:
         one: "selecteer %{count} tag uit '%{name}…"
         other: "selecteer %{count} tags uit '%{name}…"
-      info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën en heeft geen synoniemen."
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
