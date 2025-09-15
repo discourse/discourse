@@ -536,4 +536,47 @@ describe "Upcoming Events", type: :system do
       end
     end
   end
+
+  context "with tag color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "tag", color: "rgb(231, 76, 60)", slug: "awesome-tag" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        topic: Fabricate(:topic, tags: [Fabricate(:tag, name: "awesome-tag")]),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+    end
+  end
+
+  context "with category color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "category", color: "rgb(231, 76, 60)", slug: "awesome-category" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category, slug: "awesome-category"),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+    end
+  end
 end
