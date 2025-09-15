@@ -80,7 +80,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
             channel_not_found: "یہ مخصوص چینل سلَّیک پر موجود نہیں ہے"
@@ -116,7 +116,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             channel_not_found: "یہ مخصوص چینل مَیٹرمَوسٹ پر موجود نہیں ہے"
         matrix:
@@ -147,7 +147,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             invalid_channel: "وہ چینل راکٹ چَیٹ پر موجود نہیں ہے"
         gitter:

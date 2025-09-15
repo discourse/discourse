@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    scorable_categories: "ان زمرے کی فہرست جہاں اقدامات شکریہ دیں گے۔ تمام زمرے پر شکریہ کو فعال کرنے کے لئے خالی چھوڑ دیں"
+    score_ranking_strategy: "لیڈر بورڈ پوزیشن کی درجہ بندی کی حکمت عملی"
+  score: "شکریہ"
+  default_leaderboard_name: "عالمی لیڈر بورڈ"
+  errors:
+    leaderboard_positions_not_ready: "ہم آپ کا لیڈر بورڈ بنا رہے ہیں۔ چند منٹوں میں دوبارہ کوشش کریں۔"

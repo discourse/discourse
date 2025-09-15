@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 cs:
+  discourse_automation:
+    scriptables:
+      llm_triage:
+        flagged_post: |
+          <div>Odpověď od modelu:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b>Spuštěno pravidlem <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
   site_settings:
     ai_translation_max_post_length: "Maximální délka příspěvku k překladu. Příspěvky delší než tato délka nebudou přeloženy."
   reports:
