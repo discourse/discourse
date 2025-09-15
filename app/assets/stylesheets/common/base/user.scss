@@ -430,15 +430,17 @@
     background: var(--primary);
     color: var(--secondary);
     display: flex;
+    flex-wrap: wrap;
     padding: 10px;
     margin-bottom: 16px;
+    gap: var(--space-2);
 
     > div,
     > div a {
       display: flex;
       align-items: baseline;
       flex: 0 1 auto;
-      margin: 0 10px 0 0;
+      margin: 0;
       color: var(--secondary);
 
       span {
@@ -1101,6 +1103,10 @@
   min-width: 0;
   word-break: break-word;
   max-width: 100%;
+
+  @include viewport.until(md) {
+    width: 100%;
+  }
 
   @include viewport.from(md) {
     margin-right: auto;
