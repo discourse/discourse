@@ -10,6 +10,7 @@ class UserFieldSerializer < ApplicationSerializer
              :requirement,
              :show_on_profile,
              :show_on_user_card,
+             :show_on_signup,
              :searchable,
              :position,
              :options
