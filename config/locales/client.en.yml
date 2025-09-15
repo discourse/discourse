@@ -3445,6 +3445,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
@@ -5034,7 +5035,7 @@ en:
       choose_for_topic_required_group:
         one: "select %{count} tag from '%{name}'…"
         other: "select %{count} tags from '%{name}'…"
-      info: "Info"
+      info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -5065,6 +5066,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
+      edit: "Edit this tag"
       description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
