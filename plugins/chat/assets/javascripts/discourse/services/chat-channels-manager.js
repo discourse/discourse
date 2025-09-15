@@ -30,7 +30,7 @@ export default class ChatChannelsManager extends Service {
     if (existingChannel) {
       return Promise.resolve(existingChannel);
     } else if (options.fetchIfNotFound) {
-      return this.#find(id);
+      return await this.#find(id);
     } else {
       return Promise.resolve();
     }
