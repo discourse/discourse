@@ -222,7 +222,15 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
   def after_authenticate(auth, existing_account: nil)
     result = super(auth, existing_account: existing_account)
-    set_oidc_mapped_groups(result.user, auth)
+    if result.user != nil
+      set_oidc_mapped_groups(result.user, auth)
+    end
     result
   end
+
+  def after_create_account(user, auth)
+    super(user, auth)
+    set_groups(user, auth)
+  end
+
 end
