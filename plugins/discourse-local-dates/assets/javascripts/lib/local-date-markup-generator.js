@@ -1,4 +1,5 @@
 import { isEmpty } from "@ember/utils";
+import toASCIIDigits from "discourse/lib/to-ascii-numerals";
 
 export default function generateDateMarkup(
   fromDateTime,
@@ -54,5 +55,5 @@ export default function generateDateMarkup(
 
   text += `]`;
 
-  return text;
+  return toASCIIDigits(text);
 }

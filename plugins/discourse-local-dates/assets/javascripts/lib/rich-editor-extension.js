@@ -1,3 +1,5 @@
+import LocalDateBuilder from "../lib/local-date-builder";
+
 /** @type {RichEditorExtension} */
 const extension = {
   // TODO(renato): the rendered date needs to be localized to better match the cooked content
@@ -20,6 +22,7 @@ const extension = {
       ],
       toDOM: (node) => {
         const optionalTime = node.attrs.time ? ` ${node.attrs.time}` : "";
+        const optionalTimeZone = node.attrs.timezone || "UTC";
         return [
           "span",
           {
@@ -28,7 +31,17 @@ const extension = {
             "data-time": node.attrs.time,
             "data-timezone": node.attrs.timezone,
           },
-          `${node.attrs.date}${optionalTime}`,
+          `${
+            new LocalDateBuilder(
+              {
+                time: optionalTime,
+                date: node.attrs.date,
+                timezone: optionalTimeZone,
+                localTimezone: optionalTimeZone,
+              },
+              optionalTimeZone
+            ).build().formatted
+          }`,
         ];
       },
     },
@@ -61,6 +74,8 @@ const extension = {
           ? ` ${node.attrs.fromTime}`
           : "";
         const toTimeStr = node.attrs.toTime ? ` ${node.attrs.toTime}` : "";
+        const optionalTimeZone = node.attrs.timezone || "UTC";
+
         return [
           "span",
           { class: "discourse-local-date-range" },
@@ -73,7 +88,17 @@ const extension = {
               "data-time": node.attrs.fromTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.fromDate}${fromTimeStr}`,
+            `${
+              new LocalDateBuilder(
+                {
+                  time: fromTimeStr,
+                  date: node.attrs.fromDate,
+                  timezone: optionalTimeZone,
+                  localTimezone: optionalTimeZone,
+                },
+                optionalTimeZone
+              ).build().formatted
+            }`,
           ],
           " → ",
           [
@@ -85,7 +110,17 @@ const extension = {
               "data-time": node.attrs.toTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.toDate}${toTimeStr}`,
+            `${
+              new LocalDateBuilder(
+                {
+                  time: toTimeStr,
+                  date: node.attrs.toDate,
+                  timezone: optionalTimeZone,
+                  localTimezone: optionalTimeZone,
+                },
+                optionalTimeZone
+              ).build().formatted
+            }`,
           ],
         ];
       },
