@@ -3466,7 +3466,6 @@ ko:
       selector_remove_filter: "필터 제거"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
-      info: "정보"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"

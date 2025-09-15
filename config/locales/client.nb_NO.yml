@@ -4141,7 +4141,6 @@ nb_NO:
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
-      info: "Informasjon"
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."

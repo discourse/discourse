@@ -3539,6 +3539,7 @@ pl_PL:
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
+        select: "Wybór zbiorczy"
         confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
@@ -5186,7 +5187,7 @@ pl_PL:
         few: "wybierz %{count} tagi z '%{name}'…"
         many: "wybierz %{count} tagi z '%{name}'…"
         other: "wybierz %{count} tagi z '%{name}'…"
-      info: "Informacje"
+      info: "Pokaż informacje o tagu"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
@@ -5227,6 +5228,7 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
+      edit: "Edytuj ten tag"
       description: "Opis (maks. 1000 znaków)"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
@@ -8238,6 +8240,10 @@ pl_PL:
           title: "Pokaż na karcie użytkownika"
           enabled: "Widoczne na karcie użytkownika"
           disabled: "Niewidoczne na karcie użytkownika"
+        show_on_signup:
+          title: "Pokaż w formularzu rejestracyjnym"
+          enabled: "Pokazany formularz rejestracyjny"
+          disabled: "Nie pokazano w formularzu rejestracyjnym"
         searchable:
           title: "Możliwe do wyszukania"
           enabled: "Możliwe do wyszukania"

@@ -4689,7 +4689,6 @@ fi:
       choose_for_topic_required_group:
         one: "valitse %{count} tunniste joukosta %{name}…"
         other: "valitse %{count} tunnistetta joukosta %{name}…"
-      info: "Tietoa"
       default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle, eikä sillä ole synonyymejä."
       staff_info: "Lisää rajoituksia asettamalla tämä tunniste <a href=%{basePath}/tag_groups>-tunnisteryhmään</a>."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."

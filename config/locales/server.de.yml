@@ -2459,6 +2459,8 @@ de:
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
+    experimental_impersonation: "Schlüpfe in die Rolle eines anderen Benutzers, ohne dich von deinem Administratorkonto abmelden zu müssen."
+    experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
@@ -2475,6 +2477,7 @@ de:
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
+    content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in ‚content localization supported locales‘ festgelegt wurden."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2546,6 +2549,7 @@ de:
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
       content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
+      content_localization_language_switcher_requirements: "Für den Sprachumschalter müssen die Seiteneinstellungen ‚set locale from cookie‘ und ‚allow user locale‘ aktiviert sein und ‚content localization supported locales‘ muss mindestens eine Sprache enthalten."
       mediaconvert_role_arn_required: "Die AWS IAM role ARN ist erforderlich, wenn du AWS MediaConvert für die Videokonvertierung verwendest."
       s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
     keywords:

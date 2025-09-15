@@ -797,10 +797,12 @@ pt:
       notes:
         add_note_button: "Adicionar nota"
         delete: "Eliminar"
+      posted_in: "Publicado em"
       review_user: "Utilizador"
       copy_link: "Copiar link"
       insights:
         title: "Conhecimentos"
+        similar_posts: "Similar às publicações antigas"
         activities:
           new_account: "nova conta"
           posts:
@@ -3373,6 +3375,7 @@ pt:
     post_list:
       title: "Últimas mensagens"
       empty: "Não existem publicações"
+      aria_post_number: "%{title} - publicação #%{postNumber}"
     post:
       confirm_delete: "Tem a certeza que deseja eliminar esta publicação?"
       quote_reply: "Citar"
@@ -3387,6 +3390,7 @@ pt:
       ignored: "Conteúdo ignorado"
       wiki_last_edited_on: "wiki editado pela última vez em %{dateTime}"
       last_edited_on: "postagem editada pela última vez em %{dateTime}"
+      edit_history: "histórico de pós-edição"
       reply_as_new_topic: "Responder com novo Tópico"
       reply_as_new_private_message: "Responda como uma nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuar a discussão de %{postLink}:"
@@ -3395,6 +3399,9 @@ pt:
       show_hidden: "Veja o conteúdo ignorado."
       deleted_by_author_simple: "(postagem excluída pelo autor)"
       collapse: "colapsar"
+      load_more_replies: "carregar mais respostas"
+      sr_collapse_replies: "Ocultar respostas integradas"
+      sr_load_more_replies: "Carregar mais respostas integradas"
       sr_date: "Data da publicação"
       sr_expand_replies:
         one: "Esta publicação tem %{count} resposta"
@@ -3444,6 +3451,9 @@ pt:
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:
           none: "Nenhuma"
+        edit_warning:
+          action_original: "Editar publicação original"
+          action_translation: "Editar esta tradução"
       errors:
         create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
@@ -4046,7 +4056,6 @@ pt:
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
       choose_for_topic: "tags opcionais"
-      info: "Informações"
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
       synonyms_description: "Quando as tags seguintes forem usadas, elas serão substituídas por <b>%{base_tag_name}</b>."

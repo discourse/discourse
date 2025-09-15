@@ -5,5 +5,19 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    discourse_templates_enabled: "Engedélyezze az alább megadott kategóriához megtekintési hozzáféréssel rendelkező felhasználóknak a rendelkezésre álló sablonok használatát."
+    discourse_templates_categories: "A sablonok lekérdezéséhez használandó kategóriák"
+    discourse_templates_enable_private_templates: "Lehetővé teszi a privát sablonok használatát"
+    discourse_templates_groups_allowed_private_templates: "A csoportok használhatnak privát sablonokat. A személyzet tagjai mindig használhatják."
+    discourse_templates_private_templates_tags: "Olyan címkék, amelyek egy személyes üzenetet privát sablonként azonosítanak"
   default_category_template:
     name: Sablonok
+    description: |
+      Ez a kategória sablonok tárolására szolgál.
+
+      A sablonok lehetővé teszik a felhasználók számára, hogy gyakran ismételt felhasználásra szánt tartalmat tároljanak.
+
+      Ebben a kategóriában minden téma egy másik sablont képvisel. Minden téma **első bejegyzése** szolgál a sablon modelljeként.
+
+      Vegye figyelembe, hogy minden felhasználó, aki rendelkezik hozzáféréssel ebbe a kategóriába, használhat sablonokat.

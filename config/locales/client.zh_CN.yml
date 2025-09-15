@@ -4430,7 +4430,6 @@ zh_CN:
         other: "至少选择 %{count} 个标签…"
       choose_for_topic_required_group:
         other: "从 '%{name}' 中选择 %{count} 个标签…"
-      info: "信息"
       default_info: "此标签不限于任何类别，并且没有同义词。"
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"

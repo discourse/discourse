@@ -4689,7 +4689,6 @@ fr:
       choose_for_topic_required_group:
         one: "sélectionnez %{count} étiquette de « %{name} »…"
         other: "sélectionnez %{count} étiquettes de « %{name} »…"
-      info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."

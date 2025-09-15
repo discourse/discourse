@@ -167,7 +167,11 @@ de:
             flag_post:
               label: "Beitrag melden"
               description: "Meldet den Beitrag (entweder als Spam oder zur Überprüfung)"
+            notify_author_pm:
+              label: "Autor per PN benachrichtigen"
+              description: "Sende dem Autor des Beitrags eine persönliche Nachricht, wenn sein Beitrag zur Warteschlange hinzugefügt und gelöscht wird."
             notify_author_pm_user:
+              label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
               label: "PN-Nachrichtentext"
@@ -303,6 +307,7 @@ de:
         stats:
           title: "Übersetzungsstatistiken"
         progress_chart:
+          title: "Übersetzungsfortschritt %{tooltip}"
           data_label: "%{percentage}%"
           bar_done:
             one: "%{count} Beitrag"

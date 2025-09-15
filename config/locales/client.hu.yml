@@ -4664,7 +4664,6 @@ hu:
       choose_for_topic_required_group:
         one: "válasszon %{count} címkét innen: „%{name}”…"
         other: "válasszon %{count} címkét innen: „%{name}”…"
-      info: "Információ"
       default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       category_restricted: "Ez a címke olyan kategóriákra korlátozódik, amelyekhez nincs hozzáférési jogosultsága."
