@@ -3,9 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import DButton from "discourse/components/d-button";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
 import concatClass from "discourse/helpers/concat-class";
-import { i18n } from "discourse-i18n";
-import DButtonTooltip from "float-kit/components/d-button-tooltip";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class CreateTopicButton extends Component {
   @tracked btnTypeClass = this.args.btnTypeClass || "btn-default";
