@@ -1,4 +1,10 @@
 en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+
   discourse_automation:
     ai:
       flag_types:

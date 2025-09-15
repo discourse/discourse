@@ -486,6 +486,21 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         end
       end
     end
+
+    context "when config is invalid" do
+      it "returns a success false with the validation error" do
+        get "/admin/plugins/discourse-ai/ai-llms/test.json",
+            params: {
+              ai_llm: test_attrs.except(:max_prompt_tokens),
+            }
+
+        expect(response).to be_successful
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["validation_errors"]).to contain_exactly(
+          "Context window is not a number",
+        )
+      end
+    end
   end
 
   describe "DELETE #destroy" do
