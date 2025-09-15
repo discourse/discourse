@@ -135,6 +135,18 @@
     font-weight: 700;
     max-width: 80%;
     margin-bottom: var(--space-1);
+    color: var(--primary);
+  }
+
+  a.d-table__overview-name {
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   .d-table__overview-author {
