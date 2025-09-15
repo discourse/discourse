@@ -694,6 +694,7 @@ en:
           title: "Run test"
           running: "Running test..."
           success: "Success!"
+          invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
 
         hints:
