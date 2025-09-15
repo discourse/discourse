@@ -15,202 +15,25 @@ RSpec.describe "posts" do
     get "List latest posts across topics" do
       tags "Posts"
       operationId "listPosts"
-      parameter name: "Api-Key", in: :header, type: :string, required: true
-      parameter name: "Api-Username", in: :header, type: :string, required: true
-      parameter name: "before",
+      consumes "application/json"
+      expected_request_schema = nil
+      parameter name: :before,
                 in: :query,
-                type: :string,
-                description: "Load posts with an id lower than this value. Useful for pagination.",
-                required: false
-      produces "application/json"
+                type: :integer,
+                required: false,
+                description: "Load posts with an id lower than this value. Useful for pagination."
 
+      produces "application/json"
       response "200", "latest posts" do
-        schema type: :object,
-               properties: {
-                 latest_posts: {
-                   type: :array,
-                   items: {
-                     type: :object,
-                     properties: {
-                       id: {
-                         type: :integer,
-                       },
-                       name: {
-                         type: :string,
-                       },
-                       username: {
-                         type: :string,
-                       },
-                       avatar_template: {
-                         type: :string,
-                       },
-                       created_at: {
-                         type: :string,
-                       },
-                       cooked: {
-                         type: :string,
-                       },
-                       post_number: {
-                         type: :integer,
-                       },
-                       post_type: {
-                         type: :integer,
-                       },
-                       updated_at: {
-                         type: :string,
-                       },
-                       reply_count: {
-                         type: :integer,
-                       },
-                       reply_to_post_number: {
-                         type: %i[string null],
-                       },
-                       quote_count: {
-                         type: :integer,
-                       },
-                       incoming_link_count: {
-                         type: :integer,
-                       },
-                       reads: {
-                         type: :integer,
-                       },
-                       readers_count: {
-                         type: :integer,
-                       },
-                       score: {
-                         type: :number,
-                       },
-                       yours: {
-                         type: :boolean,
-                       },
-                       topic_id: {
-                         type: :integer,
-                       },
-                       topic_slug: {
-                         type: :string,
-                       },
-                       topic_title: {
-                         type: :string,
-                       },
-                       topic_html_title: {
-                         type: :string,
-                       },
-                       category_id: {
-                         type: :integer,
-                       },
-                       display_username: {
-                         type: :string,
-                       },
-                       primary_group_name: {
-                         type: %i[string null],
-                       },
-                       flair_name: {
-                         type: %i[string null],
-                       },
-                       flair_url: {
-                         type: %i[string null],
-                       },
-                       flair_bg_color: {
-                         type: %i[string null],
-                       },
-                       flair_color: {
-                         type: %i[string null],
-                       },
-                       flair_group_id: {
-                         type: %i[integer null],
-                       },
-                       version: {
-                         type: :integer,
-                       },
-                       can_edit: {
-                         type: :boolean,
-                       },
-                       can_delete: {
-                         type: :boolean,
-                       },
-                       can_recover: {
-                         type: :boolean,
-                       },
-                       can_see_hidden_post: {
-                         type: :boolean,
-                       },
-                       can_wiki: {
-                         type: :boolean,
-                       },
-                       user_title: {
-                         type: %i[string null],
-                       },
-                       raw: {
-                         type: :string,
-                       },
-                       actions_summary: {
-                         type: :array,
-                         items: {
-                           type: :object,
-                           properties: {
-                             id: {
-                               type: :integer,
-                             },
-                             can_act: {
-                               type: :boolean,
-                             },
-                           },
-                         },
-                       },
-                       moderator: {
-                         type: :boolean,
-                       },
-                       admin: {
-                         type: :boolean,
-                       },
-                       staff: {
-                         type: :boolean,
-                       },
-                       user_id: {
-                         type: :integer,
-                       },
-                       hidden: {
-                         type: :boolean,
-                       },
-                       trust_level: {
-                         type: :integer,
-                       },
-                       deleted_at: {
-                         type: %i[string null],
-                       },
-                       user_deleted: {
-                         type: :boolean,
-                       },
-                       edit_reason: {
-                         type: %i[string null],
-                       },
-                       can_view_edit_history: {
-                         type: :boolean,
-                       },
-                       wiki: {
-                         type: :boolean,
-                       },
-                       reviewable_id: {
-                         type: %i[integer null],
-                       },
-                       reviewable_score_count: {
-                         type: :integer,
-                       },
-                       reviewable_score_pending_count: {
-                         type: :integer,
-                       },
-                       post_localizations: {
-                         type: :array,
-                         items: {
-                         },
-                       },
-                     },
-                   },
-                 },
-               }
+        expected_response_schema = load_spec_schema("latest_posts_response")
+        schema expected_response_schema
 
         let!(:post) { Fabricate(:post) }
-        run_test!
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
 
