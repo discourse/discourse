@@ -77,6 +77,6 @@ describe "JS Deprecation Handling", type: :system do
 
     visit "/latest"
 
-    expect(page).to have_css("#global-notice-critical-deprecation")
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
   end
 end
