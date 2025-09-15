@@ -141,8 +141,48 @@ fa_IR:
     languages:
       ar:
         name: عربی
+      be:
+        name: بلاروسی
+      bs_BA:
+        name: بوسنیایی
+      de:
+        name: آلمانی
+      en:
+        name: انگلیسی (لهجه آمریکایی)
+      en_GB:
+        name: انگلیسی
+      es:
+        name: اسپانیایی
+      et:
+        name: استونی
       fa_IR:
         name: فارسی
+      fr:
+        name: فرانسوی
+      he:
+        name: عبری
+      hr:
+        name: کرواسی
+      hy:
+        name: ارمنی
+      id:
+        name: اندونزیایی
+      it:
+        name: ایتالیایی
+      ja:
+        name: ژاپنی
+      ko:
+        name: کره‌ای
+      lt:
+        name: لیتوانی
+      pt:
+        name: پرتغالی
+      ro:
+        name: رومانی
+      ru:
+        name: روسی
+      sk:
+        name: اسلوواکی
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"

@@ -7,7 +7,7 @@
 pt:
   post_action_types:
     vote:
-      title: "Voto"
+      title: "Votar"
   post_voting:
     comment:
       reviewables:
@@ -15,7 +15,7 @@ pt:
           agree_and_suspend:
             title: "Utilizador Suspenso"
           agree_and_silence:
-            title: "Silenciar Usuário"
+            title: "Silenciar Utilizador"
           disagree:
             title: "Discordar"
       reviewable_score_types:
