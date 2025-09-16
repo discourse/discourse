@@ -228,25 +228,31 @@ export default class SchemaSettingNewEditor extends Component {
   @action
   moveUp() {
     if (this.canMoveUp) {
-      const item = this.activeData[this.activeIndex];
-      this.activeData.removeAt(this.activeIndex);
-      this.activeData.insertAt(this.activeIndex - 1, item);
+      this.#swapAdjacentItems(this.activeIndex, this.activeIndex - 1);
       this.activeIndex = this.activeIndex - 1;
-      // Clear observers - tree nodes will re-register when they re-render
-      this.inputFieldObserver.clear();
     }
   }
 
   @action
   moveDown() {
     if (this.canMoveDown) {
-      const item = this.activeData[this.activeIndex];
-      this.activeData.removeAt(this.activeIndex);
-      this.activeData.insertAt(this.activeIndex + 1, item);
+      this.#swapAdjacentItems(this.activeIndex, this.activeIndex + 1);
       this.activeIndex = this.activeIndex + 1;
-      // Clear observers - tree nodes will re-register when they re-render
-      this.inputFieldObserver.clear();
     }
+  }
+
+  #swapAdjacentItems(fromIndex, toIndex) {
+    const item = this.activeData[fromIndex];
+    const fromCallback = this.inputFieldObserver[fromIndex];
+    const toCallback = this.inputFieldObserver[toIndex];
+
+    // Move the data
+    this.activeData.removeAt(fromIndex);
+    this.activeData.insertAt(toIndex, item);
+
+    // Swap the observer callbacks to match new positions
+    this.inputFieldObserver[toIndex] = fromCallback;
+    this.inputFieldObserver[fromIndex] = toCallback;
   }
 
   get showMoveButtons() {
