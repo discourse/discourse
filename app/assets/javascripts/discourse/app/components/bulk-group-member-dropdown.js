@@ -25,8 +25,6 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
       icon: "user-xmark",
     });
 
-    // Ownership management moved to Manage → Membership owners field
-
     if (this.currentUser.staff) {
       if (this.bulkSelection.some((m) => !m.primary)) {
         items.push({
