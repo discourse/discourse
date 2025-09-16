@@ -125,6 +125,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
       another_category.set_or_create_default_timer duration_minutes: 300,
                                                    executed_at: Time.now,
+                                                   status_type: BaseTimer.types[:close],
                                                    user: Discourse.system_user
       topic
 
