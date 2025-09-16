@@ -3,7 +3,11 @@ let alreadyInitialized = false;
 const WORKAROUND_PROPERTY = "--safari-workaround-offset";
 
 function runWorkaround() {
-  const workaroundOffset = window.innerHeight - window.visualViewport.height;
+  let workaroundOffset = window.innerHeight - window.visualViewport.height;
+  if (workaroundOffset > 25) {
+    // Keyboard is open. Disable workaround
+    workaroundOffset = 0;
+  }
 
   const oldValue =
     document.documentElement.style.getPropertyValue(WORKAROUND_PROPERTY);
