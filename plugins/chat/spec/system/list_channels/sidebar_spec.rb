@@ -137,7 +137,9 @@ RSpec.describe "List channels | sidebar", type: :system do
     before { visit("/") }
 
     it "shows the start new dm button" do
-      expect(page).to have_css(".sidebar-section[data-section-name='chat-dms'] .sidebar-section-link[data-link-name='new-chat-dm']")
+      expect(page).to have_css(
+        ".sidebar-section[data-section-name='chat-dms'] .sidebar-section-link[data-link-name='new-chat-dm']",
+      )
     end
   end
 
