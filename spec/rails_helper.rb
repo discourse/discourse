@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
