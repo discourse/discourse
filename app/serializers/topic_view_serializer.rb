@@ -274,12 +274,11 @@ class TopicViewSerializer < ApplicationSerializer
 
   def requested_group_name
     Group
-      .joins(:group_users)
+      .joins(:group_owners)
       .where(
         id: object.topic.custom_fields["requested_group_id"].to_i,
-        group_users: {
+        group_owners: {
           user_id: scope.user.id,
-          owner: true,
         },
       )
       .pick(:name)

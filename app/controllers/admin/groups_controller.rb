@@ -17,7 +17,7 @@ class Admin::GroupsController < Admin::StaffController
     if group_params[:owner_usernames].present?
       owner_ids = User.where(username: group_params[:owner_usernames].split(",")).pluck(:id)
 
-      owner_ids.each { |user_id| group.group_users.build(user_id: user_id, owner: true) }
+      owner_ids.each { |user_id| group.group_owners.build(user_id: user_id) }
     end
 
     if group_params[:usernames].present?
@@ -65,7 +65,7 @@ class Admin::GroupsController < Admin::StaffController
     end
 
     users.each do |user|
-      group.group_users.where(user_id: user.id).update_all(owner: false)
+      group.remove_owner(user)
       GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
     end
 

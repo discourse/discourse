@@ -14,7 +14,7 @@ import {
 })
 @pluginApiIdentifiers("group-member-dropdown")
 export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
-  @computed("member.owner", "member.primary")
+  @computed("member.primary")
   get content() {
     const items = [
       {
@@ -26,37 +26,6 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
         icon: "user-xmark",
       },
     ];
-
-    if (this.canAdminGroup) {
-      if (this.member.owner) {
-        items.push({
-          id: "removeOwner",
-          name: i18n("groups.members.remove_owner"),
-          description: i18n("groups.members.remove_owner_description", {
-            username: this.get("member.username"),
-          }),
-          icon: "shield-halved",
-        });
-      } else {
-        items.push({
-          id: "makeOwner",
-          name: i18n("groups.members.make_owner"),
-          description: i18n("groups.members.make_owner_description", {
-            username: this.get("member.username"),
-          }),
-          icon: "shield-halved",
-        });
-      }
-    } else if (this.canEditGroup && !this.member.owner) {
-      items.push({
-        id: "makeOwner",
-        name: i18n("groups.members.make_owner"),
-        description: i18n("groups.members.make_owner_description", {
-          username: this.get("member.username"),
-        }),
-        icon: "shield-halved",
-      });
-    }
 
     if (this.currentUser.staff) {
       if (this.member.primary) {

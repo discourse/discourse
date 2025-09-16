@@ -25,23 +25,7 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
       icon: "user-xmark",
     });
 
-    if (this.bulkSelection.some((m) => !m.owner)) {
-      items.push({
-        id: "makeOwners",
-        name: i18n("groups.members.make_owners"),
-        description: i18n("groups.members.make_owners_description"),
-        icon: "shield-halved",
-      });
-    }
-
-    if (this.bulkSelection.some((m) => m.owner)) {
-      items.push({
-        id: "removeOwners",
-        name: i18n("groups.members.remove_owners"),
-        description: i18n("groups.members.remove_owners_description"),
-        icon: "shield-halved",
-      });
-    }
+    // Ownership management moved to Manage → Membership owners field
 
     if (this.currentUser.staff) {
       if (this.bulkSelection.some((m) => !m.primary)) {

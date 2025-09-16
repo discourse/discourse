@@ -1175,6 +1175,7 @@ Discourse::Application.routes.draw do
         end
 
         member do
+          delete "owners" => "groups#remove_owner"
           put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"

@@ -76,7 +76,7 @@ class GroupsController < ApplicationController
     if current_user
       group_users = GroupUser.where(group: groups, user: current_user)
       user_group_ids = group_users.pluck(:group_id)
-      owner_group_ids = group_users.where(owner: true).pluck(:group_id)
+      owner_group_ids = GroupOwner.where(group: groups, user: current_user).pluck(:group_id)
     else
       type_filters = type_filters - %i[my owner]
     end
@@ -277,7 +277,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
     dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
-    order = "NOT group_users.owner"
+    order = "group_users.created_at"
 
     if params[:requesters]
       guardian.ensure_can_edit!(group)
@@ -353,7 +353,7 @@ class GroupsController < ApplicationController
         .order(username_lower: dir)
 
     members = users.limit(limit).offset(offset)
-    owners = users.where("group_users.owner")
+    owners = group.owners.includes(:user_option)
 
     group_members_serializer =
       include_custom_fields ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
@@ -451,15 +451,35 @@ class GroupsController < ApplicationController
         group.add(user)
         group_action_logger.log_add_user_to_group(user)
       end
-      group.group_users.where(user_id: user.id).update_all(owner: true)
+      group.add_owner(user)
       group_action_logger.log_make_user_group_owner(user)
 
-      group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
+      group.notify_added_as_owner(user) if params[:notify_users].to_s == "true"
     end
 
     group.restore_user_count!
 
     render json: success_json.merge!(usernames: users.pluck(:username))
+  end
+
+  def remove_owner
+    group = Group.find_by(id: params.require(:id))
+    raise Discourse::NotFound unless group
+
+    return can_not_modify_automatic if group.automatic
+    guardian.ensure_can_edit_group!(group)
+
+    users = users_from_params
+    raise Discourse::InvalidParameters.new(:usernames) if users.blank?
+
+    group_action_logger = GroupActionLogger.new(current_user, group)
+
+    users.each do |user|
+      group.remove_owner(user)
+      group_action_logger.log_remove_user_as_group_owner(user)
+    end
+
+    render json: success_json
   end
 
   def join
@@ -618,8 +638,7 @@ class GroupsController < ApplicationController
 
     usernames = [current_user.username].concat(
       group
-        .users
-        .where("group_users.owner")
+        .owners
         .order("users.last_seen_at DESC")
         .limit(MAX_NOTIFIED_OWNERS)
         .pluck("users.username"),

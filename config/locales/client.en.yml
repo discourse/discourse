@@ -1170,6 +1170,8 @@ en:
         membership:
           title: Membership
           access: Access
+          group_owners: Owners
+          remove_self_warning: "You are removing yourself as an owner of %{group_name}. You will no longer be able to manage this group. Continue?"
         categories:
           title: Categories
           long_title: "Category default notifications"
@@ -6172,6 +6174,7 @@ en:
             automatic_membership_user_unknown_count: "Users with one of the new email domains will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
+            remove_self_warning: "You are removing yourself as an owner of %{group_name}. You will no longer be able to manage this group. Continue?"
           alert:
             primary_group: "Since this is a primary group, the name '%{group_name}' will be used in CSS classes which can be viewed by anyone."
             flair_group: "Since this group has flair for its members, the name '%{group_name}' will be visible to anyone."

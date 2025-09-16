@@ -75,7 +75,7 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def include_is_group_owner?
-    authenticated? && fetch_group_user&.owner
+    authenticated? && object.owner?(scope.user)
   end
 
   def is_group_owner
@@ -87,7 +87,7 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def is_group_owner_display
-    !!fetch_group_user&.owner
+    object.owner?(scope.user)
   end
 
   def include_mentionable?

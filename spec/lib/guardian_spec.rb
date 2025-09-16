@@ -3329,4 +3329,37 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).is_developer?).to eq(true)
     end
   end
+
+  describe "#can_edit_group?" do
+    it "allows owners to edit groups even if they are not members" do
+      group.add_owner(owner)
+      
+      expect(Guardian.new(owner).can_edit_group?(group)).to eq(true)
+      expect(group.users).not_to include(owner)
+    end
+
+    it "allows members who are also owners to edit groups" do
+      group.add(member)
+      group.add_owner(member)
+      
+      expect(Guardian.new(member).can_edit_group?(group)).to eq(true)
+    end
+
+    it "does not allow members who are not owners to edit groups" do
+      group.add(member)
+      
+      expect(Guardian.new(member).can_edit_group?(group)).to eq(false)
+    end
+
+    it "allows admins to edit groups" do
+      expect(Guardian.new(admin).can_edit_group?(group)).to eq(true)
+    end
+
+    it "does not allow editing of automatic groups" do
+      automatic_group.add_owner(owner)
+      
+      expect(Guardian.new(owner).can_edit_group?(automatic_group)).to eq(false)
+      expect(Guardian.new(admin).can_edit_group?(automatic_group)).to eq(false)
+    end
+  end
 end

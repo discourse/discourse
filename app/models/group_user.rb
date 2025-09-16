@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class GroupUser < ActiveRecord::Base
+  # TODO: Remove owner column after post-deployment migration
+  self.ignored_columns = %w[owner]
+
   belongs_to :group
   belongs_to :user
 
