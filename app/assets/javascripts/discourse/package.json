@@ -8,7 +8,7 @@
   "exports": {
     "./tests/*": "./tests/*",
     "./*": {
-      "default": "./app",
+      "default": "./app/*",
       "types": "./declarations/*.d.ts"
     }
   },
