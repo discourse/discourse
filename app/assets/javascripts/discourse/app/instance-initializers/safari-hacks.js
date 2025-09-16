@@ -16,6 +16,12 @@ function runWorkaround() {
   if (oldValue !== newValue) {
     document.documentElement.style.setProperty(WORKAROUND_PROPERTY, newValue);
   }
+
+  if (newValue === "0px") {
+    document.documentElement.classList.remove("safari-workaround-active");
+  } else {
+    document.documentElement.classList.add("safari-workaround-active");
+  }
 }
 
 export default {

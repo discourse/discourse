@@ -835,9 +835,15 @@ html.composer-open:not(.has-full-page-chat) {
 .ios-device {
   #reply-control {
     // the two properties below are equivalent to bottom: 0
-    top: calc(var(--composer-vh, 1vh) * 100);
+    top: calc(var(--composer-vh, 1vh) * 100 + var(--safari-workaround-offset));
     transform: translateY(-100%);
     bottom: unset;
+  }
+
+  &.safari-workaround-active #reply-control {
+    // Impossible to position at actual bottom of screen. Make the floating version look a little nicer
+    border-bottom-left-radius: var(--d-border-radius-large);
+    border-bottom-right-radius: var(--d-border-radius-large);
   }
 
   &.footer-nav-visible {
