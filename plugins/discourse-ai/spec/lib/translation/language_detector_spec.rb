@@ -54,5 +54,13 @@ describe DiscourseAi::Translation::LanguageDetector do
         locale_detector.detect
       end
     end
+
+    it "skips detection when provided blank text" do
+      blank_detector = described_class.new("    ")
+      allow(AiPersona).to receive(:find_by).and_call_original
+
+      expect(blank_detector.detect).to eq(nil)
+      expect(AiPersona).not_to have_received(:find_by)
+    end
   end
 end
