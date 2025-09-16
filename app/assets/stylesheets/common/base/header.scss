@@ -3,6 +3,7 @@
 .d-header-wrap {
   position: sticky;
   top: 0;
+  padding-top: var(--safari-workaround-offset);
   z-index: z("header");
 }
 
