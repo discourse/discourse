@@ -123,3 +123,6 @@ openapi/*
 .direnv
 
 types/
+
+app/assets/javascripts/discourse/declarations
+*.tsbuildinfo

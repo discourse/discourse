@@ -274,7 +274,3 @@ function printDebugInfo() {
 }
 
 export default Discourse;
-
-/**
- * @typedef {import('ember-source/types')} EmberTypes
- */

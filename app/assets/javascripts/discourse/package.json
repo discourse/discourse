@@ -8,8 +8,8 @@
   "exports": {
     "./tests/*": "./tests/*",
     "./*": {
-      "default": "./app/*.js",
-      "types": "./dist"
+      "default": "./app",
+      "types": "./declarations/*.d.ts"
     }
   },
   "directories": {

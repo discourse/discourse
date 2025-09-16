@@ -6,7 +6,8 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": "./app",
-    "outDir": "dist"
+    "outDir": "./declarations",
+    "types": ["ember-source/types"]
   },
   "glint": {
     "environment": [

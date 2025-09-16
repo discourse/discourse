@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * @typedef PluginContext
  * @property {string} placeholder
