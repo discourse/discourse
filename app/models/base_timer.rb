@@ -3,7 +3,6 @@
 class BaseTimer < ActiveRecord::Base
   self.table_name = "topic_timers"
 
-  # TODO: Remove once db/post_migrate/20250902073957_drop_topic_timer_topic_id.rb has been promoted to pre-deploy
   self.ignored_columns = ["topic_id"]
 
   MAX_DURATION_MINUTES = 20.years.to_i / 60
@@ -121,6 +120,8 @@ end
 # Indexes
 #
 #  idx_timerable_id_public_type_deleted_at  (timerable_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
+#  idx_topic_id_public_type_deleted_at      (topic_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
 #  index_topic_timers_on_timerable_id       (timerable_id) WHERE (deleted_at IS NULL)
+#  index_topic_timers_on_topic_id           (topic_id) WHERE (deleted_at IS NULL)
 #  index_topic_timers_on_user_id            (user_id)
 #
