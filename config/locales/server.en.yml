@@ -1764,7 +1764,7 @@ en:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    disabled_image_download_domains: "Remote images will never be downloaded from these domains."
     block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
     block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
@@ -1818,7 +1818,7 @@ en:
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_custom_headers: "A list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up two-factor authentication."
@@ -1944,8 +1944,8 @@ en:
     hidden_post_visible_groups: "Allow members of these groups to view hidden posts. Staff users can always view hidden posts."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. You can <a href='%{base_path}/admin/customize/robots'>override your robots.txt here.</a> <b>WARNING</b>: Misconfigured rules could prevent your site from being crawled as expected."
-    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
-    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
+    blocked_email_domains: "A list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com"
+    allowed_email_domains: "A list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
@@ -2460,7 +2460,7 @@ en:
 
     max_notifications_per_user: "Maximum amount of notifications per user, if this number is exceeded old notifications will be deleted. Enforced weekly. Set to 0 to disable"
 
-    allowed_user_website_domains: "User website will be verified against these domains. Pipe-delimited list."
+    allowed_user_website_domains: "User website will be verified against these domains."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
