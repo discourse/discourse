@@ -1,7 +1,6 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const eventsPretender = (server, helper) => {
   server.get("/discourse-post-event/events", () => {
@@ -43,18 +42,16 @@ acceptance(
 
     needs.pretender(eventsPretender);
 
-    test("don't display calendars if outlet option is none", async (assert) => {
+    test("don't display calendars if outlet option is none", async function (assert) {
       await visit("/c/bug/1");
 
-      assert.notOk(
-        exists("#category-events-calendar"),
-        "Category Events calendar div does not exist"
-      );
+      assert
+        .dom("#category-events-calendar")
+        .doesNotExist("Category Events calendar div does not exist");
 
-      assert.notOk(
-        exists(".category-calendar"),
-        "Category calendar div does not exist."
-      );
+      assert
+        .dom(".category-calendar")
+        .doesNotExist("Category calendar div does not exist");
     });
   }
 );
@@ -73,18 +70,16 @@ acceptance(
 
     needs.pretender(eventsPretender);
 
-    test("display the specific calendar for the discovery-list-container-top outlet", async (assert) => {
+    test("display the specific calendar for the discovery-list-container-top outlet", async function (assert) {
       await visit("/c/bug/1");
 
-      assert.ok(
-        exists("#category-events-calendar"),
-        "Category Events calendar div exists"
-      );
+      assert
+        .dom("#category-events-calendar")
+        .exists("Category Events calendar div exists");
 
-      assert.notOk(
-        exists(".category-calendar"),
-        "Category calendar div does not exist."
-      );
+      assert
+        .dom(".category-calendar")
+        .doesNotExist("Category calendar div does not exist");
     });
   }
 );
@@ -103,15 +98,14 @@ acceptance(
 
     needs.pretender(eventsPretender);
 
-    test("display the specific calendar for before-topic-list-body outlet", async (assert) => {
+    test("display the specific calendar for before-topic-list-body outlet", async function (assert) {
       await visit("/c/bug/1");
 
-      assert.notOk(
-        exists("#category-events-calendar"),
-        "Category Events calendar div does not exist"
-      );
+      assert
+        .dom("#category-events-calendar")
+        .doesNotExist("Category Events calendar div does not exist");
 
-      assert.ok(exists(".category-calendar"), "Category calendar div exists.");
+      assert.dom(".category-calendar").exists("Category calendar div exists");
     });
   }
 );

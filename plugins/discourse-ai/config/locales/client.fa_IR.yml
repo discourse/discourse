@@ -56,8 +56,6 @@ fa_IR:
               label: "پاسخ"
             canned_reply_user:
               label: "پاسخ کاربر"
-            model:
-              label: "مدل"
     discourse_ai:
       title: "هوش مصنوعی"
       features:
@@ -80,6 +78,12 @@ fa_IR:
           name: "هرز‌نامه"
       modals:
         select_option: "یک گزینه را انتخاب کنید..."
+      translations:
+        title: "ترجمه‌ها"
+        progress_chart:
+          bar_done:
+            one: "%{count} فرسته"
+            other: "%{count} نوشته"
       spam:
         short_title: "هرز‌نامه"
         last_seven_days: "۷ روز گذشته"
@@ -184,8 +188,6 @@ fa_IR:
           selected: "انتخاب شده"
         image_caption:
           save_caption: "ذخیره"
-          automatic_caption_dialog:
-            confirm: "فعال کردن"
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"

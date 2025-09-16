@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -50,17 +50,11 @@ export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
-  @service dialog;
   @service currentUser;
-  @service appEvents;
-  @service capabilities;
   @service chat;
   @service chatApi;
   @service chatChannelPane;
   @service chatThreadPane;
-  @service chatChannelsManager;
-  @service router;
-  @service toasts;
   @service modal;
   @service interactedChatMessage;
 
@@ -646,7 +640,7 @@ export default class ChatMessage extends Component {
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
-                          @context={{concat "channel_" @message.channel.id}}
+                          @context="chat"
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
                           @btnClass="btn-flat react-btn chat-message-react-btn"
                           @onClose={{this.onEmojiPickerClose}}

@@ -45,6 +45,7 @@ class ApplicationController < ActionController::Base
   before_action :preload_json
   before_action :initialize_application_layout_preloader
   before_action :check_xhr
+  before_action :set_crawler_header
   after_action :add_readonly_header
   after_action :perform_refresh_session
   after_action :dont_cache_page
@@ -732,8 +733,15 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `app/assets/javascripts/discourse/app/lib/utilities.js`
+  NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
+
+  def is_valid_destination_url?(url)
+    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(_1) }
+  end
+
   def destination_url
-    request.original_url unless request.original_url =~ /uploads/
+    request.original_url if is_valid_destination_url?(request.original_url)
   end
 
   def redirect_to_login
@@ -744,7 +752,7 @@ class ApplicationController < ActionController::Base
       session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
-          Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+          Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -1047,5 +1055,9 @@ class ApplicationController < ActionController::Base
 
   def service_params
     { params: params.to_unsafe_h, guardian: }
+  end
+
+  def set_crawler_header
+    response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
   end
 end

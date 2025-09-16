@@ -3,35 +3,39 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { service } from "@ember/service";
 import { not } from "truth-helpers";
+import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import SvgSingleColorPalettePlaceholder from "admin/components/svg/single-color-palette-placeholder";
-import { getColorSchemeStyles } from "admin/lib/color-transformations";
 import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
+  @service router;
+
   @tracked isLoading = false;
 
   get isBuiltInDefault() {
     return this.args.scheme?.is_builtin_default || false;
   }
 
-  get setAsDefaultLabel() {
-    const themeName = this.args.defaultTheme?.name || "Default";
-
-    return i18n("admin.customize.colors.set_default", {
-      theme: themeName,
-    });
-  }
-
   get canEdit() {
     return !this.isBuiltInDefault && this.args.scheme?.id;
+  }
+
+  get isThemePalette() {
+    return this.args.scheme?.theme_id;
+  }
+
+  get editButtonLabel() {
+    return this.isThemePalette && !this.isBuiltInDefault
+      ? "admin.customize.colors.view"
+      : "admin.customize.colors.edit";
   }
 
   get canDelete() {
@@ -45,44 +49,46 @@ export default class ColorPaletteListItem extends Component {
     return true;
   }
 
-  get isActive() {
+  get isDefaultLight() {
     if (this.isBuiltInDefault) {
       return this.args.defaultTheme && !this.args.defaultTheme.color_scheme_id;
     }
     return (
       this.args.defaultTheme &&
-      this.args.isDefaultThemeColorScheme(this.args.scheme)
+      this.args.isDefaultThemeLightColorScheme(this.args.scheme)
     );
   }
 
-  get styles() {
+  get isDefaultDark() {
     if (this.isBuiltInDefault) {
-      return htmlSafe(
-        "--primary-low--preview: #e9e9e9; --tertiary-low--preview: #d1f0ff;"
+      return (
+        this.args.defaultDarkTheme &&
+        !this.args.defaultDarkTheme.color_scheme_id
       );
     }
+    return (
+      this.args.defaultTheme &&
+      this.args.isDefaultThemeDarkColorScheme(this.args.scheme)
+    );
+  }
 
-    // generate primary-low and tertiary-low
-    const existingStyles = getColorSchemeStyles(this.args.scheme);
+  get editUrl() {
+    if (!this.canEdit) {
+      return null;
+    }
+    return this.router.urlFor(
+      "adminConfig.colorPalettes.show",
+      this.args.scheme.id
+    );
+  }
 
-    // create variables from scheme.colors
-    const colorVariables =
-      this.args.scheme?.colors
-        ?.map((color) => {
-          let hex = color.hex || color.default_hex;
+  @bind
+  setAsDefaultLabel(mode) {
+    const themeName = this.args.defaultTheme?.name || "Default";
 
-          if (hex && !hex.startsWith("#")) {
-            hex = `#${hex}`;
-          }
-          return `--${color.name}--preview: ${hex}`;
-        })
-        .join("; ") || "";
-
-    const allStyles = colorVariables
-      ? `${existingStyles} ${colorVariables};`
-      : existingStyles;
-
-    return htmlSafe(allStyles);
+    return i18n(`admin.customize.colors.set_default_${mode}`, {
+      theme: themeName,
+    });
   }
 
   @action
@@ -103,17 +109,21 @@ export default class ColorPaletteListItem extends Component {
 
   <template>
     <li
-      style={{this.styles}}
       class="admin-config-area-card color-palette"
       data-palette-id={{@scheme.id}}
     >
       <div class="color-palette__container">
-        <div class="color-palette__preview">
-          <SvgSingleColorPalettePlaceholder />
-        </div>
+        <ColorPalettePreview
+          class="color-palette__preview"
+          @scheme={{@scheme}}
+        />
 
         <div class="color-palette__details">
-          <h3>{{@scheme.description}}</h3>
+          {{#if this.editUrl}}
+            <h3><a href={{this.editUrl}}>{{@scheme.description}}</a></h3>
+          {{else}}
+            <h3>{{@scheme.description}}</h3>
+          {{/if}}
           <div class="color-palette__theme-link">
             {{#if @scheme.theme_id}}
               <LinkTo
@@ -127,6 +137,28 @@ export default class ColorPaletteListItem extends Component {
           </div>
 
           <div class="color-palette__badges">
+            {{#if this.isDefaultLight}}
+              <span
+                title={{i18n
+                  "admin.customize.colors.default_light_badge.title"
+                }}
+                class="theme-card__badge --default"
+              >
+                {{icon "sun"}}
+                {{i18n "admin.customize.colors.default_light_badge.text"}}
+              </span>
+            {{/if}}
+
+            {{#if this.isDefaultDark}}
+              <span
+                title={{i18n "admin.customize.colors.default_dark_badge.title"}}
+                class="theme-card__badge --default"
+              >
+                {{icon "moon"}}
+                {{i18n "admin.customize.colors.default_dark_badge.text"}}
+              </span>
+            {{/if}}
+
             {{#if @scheme.user_selectable}}
               <span
                 title={{i18n "admin.customize.theme.user_selectable"}}
@@ -137,24 +169,15 @@ export default class ColorPaletteListItem extends Component {
               </span>
             {{/if}}
           </div>
-
-          {{#if this.isActive}}
-            <span
-              title={{i18n "admin.customize.colors.active_badge.title"}}
-              class="theme-card__badge --active"
-            >
-              {{i18n "admin.customize.colors.active_badge.text"}}
-            </span>
-          {{/if}}
         </div>
 
         <div class="color-palette__controls">
           <DButtonTooltip>
             <:button>
               <DButton
-                @route="adminCustomize.colors-show"
+                @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
-                @label="admin.customize.colors.edit"
+                @label={{this.editButtonLabel}}
                 class="btn-secondary"
                 @disabled={{not this.canEdit}}
               />
@@ -174,7 +197,6 @@ export default class ColorPaletteListItem extends Component {
               @triggerClass="btn-flat"
               @modalForMobile={{true}}
               @icon="ellipsis"
-              @triggers={{array "click"}}
               @onRegisterApi={{this.onRegisterApi}}
               @isLoading={{this.isLoading}}
             >
@@ -209,11 +231,26 @@ export default class ColorPaletteListItem extends Component {
                         this.handleAsyncAction
                         @setAsDefaultThemePalette
                         @scheme
+                        "light"
+                      }}
+                      @icon="far-star"
+                      @translatedLabel={{fn this.setAsDefaultLabel "light"}}
+                      class="btn-transparent btn-palette-default"
+                      disabled={{this.isDefaultLight}}
+                    />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @action={{fn
+                        this.handleAsyncAction
+                        @setAsDefaultThemePalette
+                        @scheme
+                        "dark"
                       }}
                       @icon="star"
-                      @translatedLabel={{this.setAsDefaultLabel}}
+                      @translatedLabel={{fn this.setAsDefaultLabel "dark"}}
                       class="btn-transparent btn-palette-default"
-                      disabled={{this.isActive}}
+                      disabled={{this.isDefaultDark}}
                     />
                   </dropdown.item>
 

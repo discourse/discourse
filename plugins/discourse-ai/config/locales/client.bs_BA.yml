@@ -53,6 +53,13 @@ bs_BA:
           name: "Spam"
       modals:
         select_option: "Odaberi opciju..."
+      translations:
+        title: "Prevodi"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
       spam:
         short_title: "Spam"
         enable: "Omogući"
@@ -122,8 +129,6 @@ bs_BA:
           cancel: "Odustani"
         image_caption:
           save_caption: "Sačuvaj"
-          automatic_caption_dialog:
-            confirm: "Omogući"
       embeddings:
         back: "Prethodno"
         save: "Sačuvaj"

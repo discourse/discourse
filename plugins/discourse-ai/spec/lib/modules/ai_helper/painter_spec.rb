@@ -7,7 +7,7 @@ RSpec.describe DiscourseAi::AiHelper::Painter do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_stability_api_url = "https://api.stability.dev"
     SiteSetting.ai_stability_api_key = "abc"
     SiteSetting.ai_openai_api_key = "abc"
@@ -41,7 +41,7 @@ RSpec.describe DiscourseAi::AiHelper::Painter do
 
         thumbnails =
           DiscourseAi::Completions::Llm.with_prepared_responses([expected_image_prompt]) do
-            thumbnails = subject.commission_thumbnails(raw_content, user)
+            thumbnails = painter.commission_thumbnails(raw_content, user)
           end
 
         thumbnail_urls = Upload.last(4).map(&:short_url)
@@ -77,7 +77,7 @@ RSpec.describe DiscourseAi::AiHelper::Painter do
           end
           .to_return(status: 200, body: { data: data }.to_json)
 
-        thumbnails = subject.commission_thumbnails(raw_content, user)
+        thumbnails = painter.commission_thumbnails(raw_content, user)
         thumbnail_urls = Upload.last(1).map(&:short_url)
 
         expect(

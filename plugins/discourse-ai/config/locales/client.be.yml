@@ -46,6 +46,13 @@ be:
           name: "Пошук"
         spam:
           name: "Спам"
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
       spam:
         short_title: "Спам"
         enable: "Уключыць"
@@ -108,8 +115,6 @@ be:
           cancel: "Адмяніць"
         image_caption:
           save_caption: "Захаваць"
-          automatic_caption_dialog:
-            confirm: "Уключыць"
       embeddings:
         back: "Назад"
         save: "Захаваць"

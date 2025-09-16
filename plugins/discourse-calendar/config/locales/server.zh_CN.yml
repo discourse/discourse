@@ -33,7 +33,6 @@ zh_CN:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "日历中每个活动的最大文本行数。"
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
     calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
@@ -55,14 +54,14 @@ zh_CN:
     working_days: "设置工作日。您可以在帖子中使用 `timezones` 标签显示群组可用性，例如：`[timezones group=admins][timezones]`"
     working_day_start_hour: "工作日的开始时间。"
     working_day_end_hour: "工作日的结束时间。"
-    close_to_working_day_hours_extension: "以工作日小时为单位设置延长时间，突出显示时区。"
+    close_to_working_day_hours_extension: "以工作日小时为单位设置延长时间，高亮显示时区。"
     events_calendar_categories: "在类别顶部显示活动日历。"
     sort_categories_by_event_start_date_enabled: "启用按活动开始日期对类别话题进行排序。"
     disable_resorting_on_categories_enabled: "允许类别禁用用户对活动类别进行排序的功能。"
     calendar_automatic_holidays_enabled: "根据用户所在区域自动设置假期状态（注意：您可以在插件设置中禁用特定的自动假期）"
     event_participation_buttons: "用户可以使用的活动参与按钮列表。"
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
-    include_expired_events_on_calendar: "在“类别日历”和“近期活动”视图中包括过去/过期的活动。"
+    calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
   discourse_calendar:
     invite_user_notification: "%{username} 邀请您加入：%{description}"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"

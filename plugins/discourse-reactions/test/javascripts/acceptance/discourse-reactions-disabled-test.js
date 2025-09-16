@@ -1,8 +1,7 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { default as ReactionsTopics } from "../fixtures/reactions-topic-fixtures";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
 ["enabled", "disabled"].forEach((postStreamMode) => {
   acceptance(
@@ -22,13 +21,12 @@ import { default as ReactionsTopics } from "../fixtures/reactions-topic-fixtures
         );
       });
 
-      test("Does not show reactions controls", async (assert) => {
+      test("Does not show reactions controls", async function (assert) {
         await visit("/t/topic_with_reactions_and_likes/374");
 
-        assert.notOk(
-          exists(".discourse-reactions-actions"),
-          "reactions controls are not shown"
-        );
+        assert
+          .dom(".discourse-reactions-actions")
+          .doesNotExist("reactions controls are not shown");
       });
     }
   );

@@ -14,6 +14,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -203,7 +204,7 @@ export default class Composer extends RestModel {
 
   @service dialog;
   @service siteSettings;
-  @service keyValueStore;
+  @service currentUser;
 
   @tracked topic;
   @tracked post;
@@ -254,6 +255,11 @@ export default class Composer extends RestModel {
   @discourseComputed("title", "originalTitle")
   titleDirty(title, original) {
     return (title || "").trim() !== (original || "").trim();
+  }
+
+  @discourseComputed("replyDirty", "titleDirty", "hasMetaData")
+  anyDirty(replyDirty, titleDirty, hasMetaData) {
+    return replyDirty || titleDirty || hasMetaData;
   }
 
   @dependentKeyCompat
@@ -366,10 +372,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (
-      this.siteSettings.rich_editor &&
-      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
-    ) {
+    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
       return 2;
     }
 
@@ -465,7 +468,12 @@ export default class Composer extends RestModel {
 
     if (post) {
       options.label = i18n(`post.${action}`);
-      options.userAvatar = tinyAvatar(post.avatar_template);
+      const avatarTemplate = applyValueTransformer(
+        "composer-reply-options-user-avatar-template",
+        post.avatar_template,
+        { post }
+      );
+      options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
@@ -487,7 +495,12 @@ export default class Composer extends RestModel {
         anchor: i18n("post.post_number", { number: postNumber }),
       };
 
-      const name = prioritizeNameFallback(post.name, post.username);
+      const namePrioritized = prioritizeNameFallback(post.name, post.username);
+      const name = applyValueTransformer(
+        "composer-reply-options-user-link-name",
+        namePrioritized,
+        { post }
+      );
 
       options.userLink = {
         href: `${topic.url}/${postNumber}`,
@@ -1348,7 +1361,7 @@ export default class Composer extends RestModel {
 
   saveDraft() {
     if (!this.canSaveDraft) {
-      return Promise.resolve();
+      return Promise.reject();
     }
 
     this.set("draftSaving", true);
@@ -1381,6 +1394,8 @@ export default class Composer extends RestModel {
             draftForceSave: false,
           });
         }
+
+        return result;
       })
       .catch((e) => {
         let draftStatus;

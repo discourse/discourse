@@ -70,8 +70,8 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
       before { RateLimiter.enable }
 
       it "will rate limit correctly" do
-        stub_const(subject.class, :MAX_HYDE_SEARCHES_PER_MINUTE, 1) do
-          stub_const(subject.class, :MAX_SEARCHES_PER_MINUTE, 2) do
+        stub_const(described_class, :MAX_HYDE_SEARCHES_PER_MINUTE, 1) do
+          stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 2) do
             query = "test #{SecureRandom.hex}"
             stub_embedding(query)
             get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false"
@@ -121,7 +121,7 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
     end
 
     it "doesn't skip HyDE if the hyde param is missing" do
-      assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+      assign_fake_provider_to(:ai_default_llm_model)
       index(topic)
       index(topic_in_subcategory)
 
@@ -133,6 +133,86 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["topics"].map { |t| t["id"] }).to eq([topic_in_subcategory.id])
+      end
+    end
+
+    context "with HYDE site setting" do
+      before do
+        assign_fake_provider_to(:ai_default_llm_model)
+        index(topic)
+        index(topic_in_subcategory)
+      end
+
+      it "uses HYDE when site setting is enabled and no hyde param is provided" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = true
+
+        query = "test"
+        stub_embedding("test")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Hyde #{query}"]) do
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}"
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "doesn't use HYDE when site setting is disabled and no hyde param is provided" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = false
+
+        query = "test"
+        stub_embedding("test")
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=#{query}"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "overrides site setting when hyde=true param is provided" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = false
+
+        query = "test"
+        stub_embedding("test")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Hyde #{query}"]) do
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=true"
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "overrides site setting when hyde=false param is provided" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = true
+
+        query = "test"
+        stub_embedding("test")
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "handles hyde=0 as false" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = true
+
+        query = "test"
+        stub_embedding("test")
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=0"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "handles hyde=1 as true" do
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = false
+
+        query = "test"
+        stub_embedding("test")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Hyde #{query}"]) do
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=1"
+
+          expect(response.status).to eq(200)
+        end
       end
     end
   end

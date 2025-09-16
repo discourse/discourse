@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ProblemCheck::AiLlmStatus do
   subject(:check) { described_class.new }
 
   fab!(:llm_model)
+  fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
 
   let(:post_url) { "https://api.openai.com/v1/chat/completions" }
   let(:success_response) do
@@ -26,7 +25,8 @@ RSpec.describe ProblemCheck::AiLlmStatus do
 
   before do
     stub_request(:post, post_url).to_return(status: 200, body: success_response, headers: {})
-    SiteSetting.ai_summarization_model = "custom:#{llm_model.id}"
+    assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_summarization_persona = ai_persona.id
     SiteSetting.ai_summarization_enabled = true
   end
 

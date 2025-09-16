@@ -74,7 +74,6 @@ en_GB:
       logout_disabled: "Logout is disabled whilst the site is in read only mode."
     composer:
       italic_text: "emphasised text"
-      collapse: "minimise the composer panel"
     search:
       categories: "Categories"
       type:
@@ -156,9 +155,7 @@ en_GB:
           customize_desc: "Customise:"
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
-          color_scheme_select: "Select colours to be used by theme"
-          colors: "Colours"
-          colors_title: "Colours"
+          color_scheme_select: "Select colours to be used by theme."
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"

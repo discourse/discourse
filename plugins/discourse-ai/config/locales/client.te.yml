@@ -51,6 +51,12 @@ te:
           name: "శోధించండి"
         spam:
           name: "స్పామ్"
+      translations:
+        title: "అనువాదాలు"
+        progress_chart:
+          bar_done:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
         enable: "ప్రారంభించండి"
@@ -129,8 +135,6 @@ te:
           selected: "ఎంపిక చేయబడినవి"
         image_caption:
           save_caption: "సేవ్ చేయండి"
-          automatic_caption_dialog:
-            confirm: "ప్రారంభించండి"
       embeddings:
         back: "వెనుకకు"
         save: "సేవ్ చేయండి"

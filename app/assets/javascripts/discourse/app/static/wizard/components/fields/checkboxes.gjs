@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";

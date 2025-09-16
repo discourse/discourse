@@ -61,18 +61,16 @@ module Holidays
       {
           "afl_grand_final(year)" => Proc.new { |year|
 case year
+when year < 2015
+  nil
 when 2015
   Date.civil(2015, 10, 2)
 when 2016
   Date.civil(2016, 9, 30)
-when 2017
-  Date.civil(2017, 9, 29)
-when 2018
-  Date.civil(2018, 9, 28)
-when 2019
-  Date.civil(2019,9, 27)
 when 2020
   Date.civil(2020, 10, 23)
+else
+  Date.civil(year, 9, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 9, :last, :saturday) - 1)
 end
 },
 

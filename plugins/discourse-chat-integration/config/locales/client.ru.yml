@@ -25,7 +25,7 @@ ru:
       create_rule: "Создать правило"
       create_channel: "Создать канал"
       delete_channel: "Удалить"
-      test_channel: "Тестирование слов"
+      test_channel: "Тест"
       edit_channel: "Изменить"
       channel_delete_confirm: "Вы действительно хотите удалить этот канал? Все связанные правила будут удалены."
       test_modal:
@@ -53,7 +53,7 @@ ru:
       edit_channel_modal:
         title: "Редактировать канал"
         save: "Сохранить канал"
-        cancel: "Нет"
+        cancel: "Отмена"
         provider: "Поставщик"
         channel_validation:
           ok: "Валидный"
@@ -61,9 +61,9 @@ ru:
       edit_rule_modal:
         title: Изменить правило
         save: Сохранить правило
-        cancel: Нет
+        cancel: Отмена
         provider: Поставщик
-        type: Тип опроса
+        type: Тип
         channel: Канал
         filter: Фильтр
         category: Категория
@@ -84,7 +84,6 @@ ru:
               help: "например, #channel, @username."
           errors:
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
-            channel_not_found: "Указанный канал не существует в Slack"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ ru:
               help: "Имя для описания канала. Оно не используется для подключения к Matrix."
             room_id:
               title: "ID комнаты"
-              help: "'Частный идентификатор' для комнаты. Это должно выглядеть примерно как !abcdefg:matrix.org"
           errors:
             unknown_token: "Неверный токен доступа"
             unknown_room: "Номер комнаты недействителен"

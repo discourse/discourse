@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -81,7 +80,6 @@ export default class PostMenuAddTranslationButton extends Component {
         <DMenu
           ...attributes
           @identifier="post-action-menu-edit-translations"
-          @triggers={{array "click"}}
           class="update-translations-menu"
           @title={{i18n "post.localizations.add"}}
           @icon="discourse-add-translation"

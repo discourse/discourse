@@ -21,7 +21,6 @@ import ComboBox from "select-kit/components/combo-box";
 import SpamTestModal from "./modal/spam-test-modal";
 
 export default class AiSpam extends Component {
-  @service siteSettings;
   @service toasts;
   @service modal;
 
@@ -90,7 +89,7 @@ export default class AiSpam extends Component {
     this.isEnabled = model.is_enabled;
 
     if (model.llm_id) {
-      this.selectedLLM = "custom:" + model.llm_id;
+      this.selectedLLM = model.llm_id;
     } else {
       if (this.availableLLMs.length) {
         this.selectedLLM = this.availableLLMs[0].id;
@@ -127,7 +126,7 @@ export default class AiSpam extends Component {
   }
 
   get llmId() {
-    return this.selectedLLM.toString().split(":")[1];
+    return this.selectedLLM;
   }
 
   @action

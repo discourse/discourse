@@ -262,7 +262,8 @@
   }
 }
 
-.category-boxes.with-subcategories {
+.category-boxes,
+.category-boxes-with-topics {
   .category-logo {
     display: none;
   }
@@ -352,12 +353,19 @@
 
     .subcategories {
       margin-top: auto;
-      row-gap: 0.5em;
 
       .subcategory {
         margin-bottom: 0;
         font-size: var(--font-down-1);
       }
     }
+  }
+}
+
+// theme component: https://github.com/discourse/discourse-minimal-category-boxes
+.custom-category-boxes-container {
+  @include viewport.until(sm) {
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
   }
 }

@@ -201,7 +201,6 @@ ca:
       search: "Cerca"
     themes:
       default_description: "Per defecte"
-      broken_theme_alert: "És possible que el vostre lloc no funcioni perquè una aparença o component té errors."
       error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
       only_admins: "(aquest missatge només es mostra als administradors del lloc)"
     broken_decorator_alert: "És possible que les publicacions no es mostrin correctament perquè un dels decoradors de contingut de publicacions del vostre lloc web ha generat un error."
@@ -990,11 +989,13 @@ ca:
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_scheme: "Paleta de colors"
       color_schemes:
-        disable_dark_scheme: "Igual que habitualment"
         undo: "Restableix"
-        regular: "Habitual"
         dark: "Mode fosc"
-        default_dark_scheme: "(lloc predeterminat)"
+        interface_modes:
+          light: "Clar"
+          dark: "Fosc"
+        picker:
+          active: "Actiu"
       dark_mode: "Mode fosc"
       text_size_default_on_all_devices: "Fes que aquesta sigui la mida de text predeterminada en tots els meus dispositius"
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"
@@ -1621,6 +1622,8 @@ ca:
     full_name_requirement:
       required_at_signup: "Necessari"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Pàgina principal"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1674,7 +1677,7 @@ ca:
       whisper: "xiuxiueig"
       unlist: "invisible"
       add_warning: "Aquest és un avís oficial."
-      toggle_whisper: "Commuta el xiuxiueig"
+      toggle_whisper: "Commuta xiuxiueig"
       posting_not_on_topic: "A quin tema voleu respondre?"
       saved_local_draft_tip: "desat localment"
       drafts_offline: "esborranys fora de línia"
@@ -1695,6 +1698,7 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
+      discard: "Descarta"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
@@ -1724,16 +1728,8 @@ ca:
       paste_code_text: "escriviu o enganxeu el codi aquí"
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
-      olist_title: "Llista numerada"
-      ulist_title: "Llista de pics"
       list_item: "Element de llista"
-      toggle_direction: "Commuta la direcció"
       help: "Ajuda d'edició Markdown"
-      collapse: "minimitza el tauler de redacció"
-      open: "obre el tauler de redacció"
-      abandon: "tanca la redacció i rebutja l'esborrany"
-      enter_fullscreen: "entra en la redacció a pantalla completa"
-      exit_fullscreen: "surt de la redacció a pantalla completa"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
@@ -2485,8 +2481,8 @@ ca:
         name: "Nom"
         description: "Descripció"
         remove: "Elimina"
-      tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
-      tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
+      tags_allowed_tags_new_category: "Restringeix aquestes etiquetes per a aquesta categoria:"
+      tags_allowed_tag_groups_new_category: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       allow_global_tags_label: "Permet també altres etiquetes"
@@ -3070,7 +3066,7 @@ ca:
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtra reports
+      filter_reports: "Filtra reports..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3531,6 +3527,11 @@ ca:
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
         learn_more: "Per a saber-ne més"
+        filters:
+          all: "Tots"
+          enabled: "Activat"
+          disabled: "Desactivat"
+          reset: "Restableix"
       backups:
         title: "Còpies de seguretat"
         menu:
@@ -3625,6 +3626,7 @@ ca:
           theme: "Aparença"
           component: "Component"
           components: "Components"
+          filter_all: "Tots"
           theme_name: "Nom de l'aparença"
           component_name: "Nom del component"
           themes_intro: "Seleccioneu una aparença existent o instal·leu-ne una de nova per a començar"
@@ -3646,11 +3648,10 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
-          default: "Actiu"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
-          color_scheme_select: "Seleccioneu els colors que farà servir l'aparença"
+          color_scheme_select: "Seleccioneu els colors que farà servir l'aparença."
           custom_sections: "Seccions personalitzades:"
           theme_components: "Components de l'aparença"
           convert: "Converteix"
@@ -3717,10 +3718,6 @@ ca:
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
-          settings: "Configuració"
-          colors: "Colors"
-          discard_colors: "Descarta"
-          colors_title: "Colors"
           scss:
             text: "CSS"
           after_header:
@@ -3742,12 +3739,12 @@ ca:
           select_base:
             title: "Seleccioneu la paleta de colors base"
             description: "Paleta base:"
+          light: "clar"
+          dark: "fosc"
           title: "Colors"
           edit: "Edita"
           filters:
             all: "Tots"
-          active_badge:
-            text: "Actiu"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
           copy_name_prefix: "Còpia de"
           undo: "Desfés"
@@ -4164,7 +4161,6 @@ ca:
             cancel: "Cancel·la"
           confirmation:
             cancel: "Cancel·la"
-        delete_forbidden_because_staff: "No es poden suprimir administradors i moderadors. "
         delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:
           one: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més d'%{count} dia.)"

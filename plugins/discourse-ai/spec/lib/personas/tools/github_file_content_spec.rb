@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
   fab!(:llm_model)
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   let(:tool) do
     described_class.new(

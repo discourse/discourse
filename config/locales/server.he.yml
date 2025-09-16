@@ -1712,6 +1712,15 @@ he:
         anon_views: אלמוני
         total_views: סה״כ
       description: "100 הנושאים הנצפים ביותר בטווח תאריכים, תוך שילוב צפיות אלמוניות ומשתמשי מערכת. אפשר לסנן לפי קטגוריה."
+    associated_accounts_by_provider:
+      title: "חשבונות משויכים לפי שיטת כניסה"
+      labels:
+        provider: ספק כניסה
+        no_accounts: "אין חשבונות משויכים"
+        discourse_connect: "כניסה אחודה (SSO) דרך Discourse Connect"
+        no_sso_accounts: "חשבונות ללא רשומת SSO (כניסה אחודה)"
+        total_users: "סך כל חשבונות המשתמשים הפעילים"
+      description: "הצגת מספר החשבונות המשויכים מקובצים לפי ספק כניסה. תקף רק כאשר שיטות כניסה דרך רשתות חברתיות פעילות."
   dashboard:
     problem:
       twitter_login: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
@@ -1748,6 +1757,7 @@ he:
       google_analytics_version: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
       category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
       maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
+      admin_sidebar_deprecation: "פריסת הניהול הישנה הוצאה משימוש לטובת <a href='https://meta.discourse.org/t/-/289281'>פריסת סרגל הצד החדשה</a> ותוסר בגרסה הבאה. ניתן <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>להגדיר</a> את פריסת סרגל הצד החדשה כעת כדי להצטרף לפני כן."
     back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
@@ -1759,7 +1769,7 @@ he:
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
     set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
     set_locale_from_cookie: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך עוגיית הדפדפן ‚locale’"
-    set_locale_from_param: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך המשתנה ‚lang’ בכתובת, למשל: ‎?lang=he"
+    set_locale_from_param: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך המשתנה ‚tl’ בכתובת, למשל: ‎?tl=he"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת"
     min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
     min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
@@ -1955,6 +1965,7 @@ he:
     redirect_users_to_top_page: "להפנות משתמשים חדשים וכאלו שנעדרו לזמן רב לעמוד העליון אוטומטית. חל רק כאשר יש ‚top’ (עליון) בהגדרת האתר ‚top menu’ (סרגל עליון)."
     top_page_default_timeframe: "משך זמן למשתמשים אלמוניים (מתכוונן אוטומטית למשתמשים שנכנסו למערכת בהתאם לביקור האחרון שלהם)."
     moderators_view_emails: "לאפשר למפקחים לצפות בכתובות הדוא״ל של המשתמשים."
+    moderators_view_ips: "לאפשר למפקחים לצפות בכתובות ה־ip של המשתמשים."
     prioritize_username_in_ux: "שם המשתמש יוצג ראשון בעמוד המשתמש, כרטיס המשתמש והפוסטים (כשהאפשרות מושבתת השם מופיע ראשון)"
     enable_rich_text_paste: "הפעלת המרה אוטומטית מ־HTML ל־Markdown בעת הדבקת טקסט לתוך המחבר."
     send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
@@ -2040,8 +2051,7 @@ he:
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
     maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
     remove_older_backups: "להסיר גיבויים שהתיישנו מעבר למספר הימים שצוין. יש להשאיר ריק להשבתה."
-    automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
-    backup_frequency: "הגדרת ההפרש, בימים, לגיבוי אוטומטי של האתר. אם מוגדר ל־7, למשל, ייווצר גיבוי חדש כל שבוע. הפעלת ההגדרה הזאת תלויה בהגדרה `automatic_backups_enabled` (גיבויים אוטומטיים מופעלים)."
+    backup_frequency: "הגדרת ההפרש, בימים, לגיבוי אוטומטי של האתר. אם מוגדר ל־7, למשל, ייווצר גיבוי חדש כל שבוע. הגדרה ל־0 תשבית."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
@@ -2117,6 +2127,8 @@ he:
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
+    video_conversion_enabled: "הפעלת המרת וידאו עבור קובצי וידאו שהועלו. כך מתאפשר להמיר סרטונים לתסדירים תואמי אינטרנט."
+    video_conversion_service: "שירות המרת הווידאו לעיבוד הסרטונים שהועלו."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -2203,7 +2215,6 @@ he:
     desktop_category_page_style: "הגדרה זו קובעת את הפריסה החזותית של דף /categories בשולחן העבודה. היא כוללת אפשרויות כגון הצגת קטגוריות משנה עם נושאים נבחרים, הצגת הנושאים העדכניים ביותר או הצגת נושאים מובילים. הסגנון הנבחר ישפיע על האופן שבו משתמשים מתקשרים ומנווטים בין קטגוריות באתר."
     mobile_category_page_style: "ההגדרה הזאת קובעת את הפריסה החזותית של עמוד ‎/categories (קטגוריות) במכשירים ניידים."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
-    default_dark_mode_color_scheme_id: "ערכת הצבעים לשימוש במצב כהה."
     dark_mode_none: "בלי"
     max_image_size_kb: "גודל ההעלאה המרבי. יש להגדיר זאת ב־nginx‏ (client_max_body_size) / apache או גם במתווך. תמונות שחורגות מהגודל הזה וקטנות מההגדרה client_max_body_size יערכו כך שגודלן יתאים להעלאה."
     max_attachment_size_kb: "הגודל המרבי של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב־nginx (client_max_body_size) / apache או במתווך."
@@ -2492,6 +2503,7 @@ he:
     default_other_enable_quoting: "איפשור תגובות עם ציטוט לטקסט מצוטט כברירת מחדל."
     default_other_enable_smart_lists: "הפעלת רשימות חכמות בעת הקלדה בחלון עריכת הודעות כברירת מחדל."
     default_other_enable_defer: "הפעלת תכונת „אחר כך” כבררת מחדל."
+    default_other_enable_markdown_monospace_font: "להשתמש בגופן ברוחב אחיד במצב ה־Markdown בכתיבת הודעה כברירת מחדל."
     default_other_dynamic_favicon: "להציג מניין נושאים חדשים/עדכניים בסמל הדפדפן כברירת מחדל."
     default_other_skip_new_user_tips: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים."
     default_other_like_notification_frequency: "מגדיר את התדירות בה משתמשים יקבלו התראות על לייקים כברירת מחדל. משתמשים שלא התאימו את הגדרות ההתראה שלהם יצמדו להתנהגות ברירת המחדל הזאת."
@@ -2532,6 +2544,7 @@ he:
     tagging_enabled: "להפעיל תגיות על נושאים? אפשר לעיין <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>במדריך למנהלים על תגיות ב־Meta</a> למידע נוסף."
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
     create_tag_allowed_groups: "קבוצות שמורשות ליצור תגיות. מנהלים ומפקחים תמיד יכולים ליצור תגיות."
+    edit_tags_allowed_groups: "קבוצות שמורשות לערוך תגיות, תיאורי תגיות ומילים נרדפות לתגיות."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     enable_max_tags_per_email_subject: "להשתמש ב־max_tags_per_email_subject (כמות תגיות מרבית לנושא הודעת דוא״ל) בעת יצירת נושא להודעת דוא״ל"
     max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
@@ -2584,6 +2597,9 @@ he:
     show_bottom_topic_map: "הצגת מפת הנושאים בתחתית הנושא כשיש 10 תגובות ומעלה."
     show_topic_map_in_topics_without_replies: "הצגת מפת הנושאים אם לנושא איך תגובות."
     enable_welcome_banner: "להציג כרזה בעמודי רשימת הנושאים העיקרית שלך כדי לקבל את פניהם של החברים ולהאפשר להם לחפש בתוכן האתר"
+    welcome_banner_image: "הגדרת תמונה להצגת ברקע כרזת קבלת הפנים."
+    welcome_banner_location: "הגדרת המקום בעמוד בו תופיע כרזת קבלת הפנים."
+    welcome_banner_page_visibility: "קביעת העמודים שבהם תופיע כרזת קבלת הפנים."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "ציין את סרגל הצד או הכותרת הנפתחת כתפריט הניווט הראשי של האתר שלך. סרגל צד מומלץ."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
@@ -2685,7 +2701,7 @@ he:
       invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
-      content_localization_anon_language_switcher_requirements: "בורר השפות דורש שהגדרת האתר `set locale from cookie` (הגדרת שפה מעוגייה) תהיה פעילה ושתחת `content localization supported locales` (שפות שנתמכות לתרגום תוכן) תופיע לפחות שפה אחת."
+      s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
@@ -2704,6 +2720,82 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  filter:
+    description:
+      status: "סינון נושאים לפי המצב שלהם"
+      in: "סינון נושאים לפי רשימות אישיות"
+      order: "מיון נושאים לפי שדה מסוים"
+      category: "הצגת נושאים בקטגוריה מסוימת"
+      category_any: "הצגת נושאים בלפחות אחת מבין הקטגוריות שצוינו (מופרדות בפסיקים)"
+      exclude_category: "החרגת נושאים מקטגוריה מסוימת"
+      category_without_subcategories: "הצגת נושאים רק בקטגוריית העל, תוך החרגת תת־הקטגוריות"
+      exclude_category_without_subcategories: "להחריג נושאים רק מקטגוריית העל, לא מתת־הקטגוריות"
+      tag: "הצגת נושאים עם תגית מסוימת"
+      tags_any: "הצגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
+      tags_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
+      exclude_tag: "החרגת נושאים עם תגית מסוימת"
+      exclude_tags_any: "החרגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
+      exclude_tags_all: "החרגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
+      tags_alias: "כינוי למסנן ‚tag:‎’"
+      tag_group: "הצגת נושאים עם תגיות מקבוצת תגיות מסוימת"
+      exclude_tag_group: "החרגת נושאים עם תגיות מקבוצת תגיות מסוימת"
+      activity_before: "הצגת נושאים עם פעילות אחרונה לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
+      activity_after: "הצגת נושאים עם פעילות אחרונה אחרי תאריך (YYYY-MM-DD או כמות ימים)"
+      created_before: "הצגת נושאים שנוצרו לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
+      created_after: "הצגת נושאים שנוצרו אחרי תאריך (YYYY-MM-DD או כמות ימים)"
+      created_by: "הצגת נושאים שנוצרו על ידי משתמש/ת מסויימים"
+      created_by_user: "הצגת נושאים שנוצרו על ידי שם משתמש (ללא @)"
+      latest_post_before: "הצגת נושאים עם פוסט אחרון לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
+      latest_post_after: "הצגת נושאים עם פוסט אחרון אחרי תאריך (YYYY-MM-DD או כמות ימים לפני)"
+      likes_min: "הצגת נושאים עם כמות כזאת של לייקים לכל הפחות"
+      likes_max: "הצגת נושאים עם כמות כזאת של לייקים לכל היותר"
+      likes_op_min: "הצגת נושאים בהם לפוסט הראשון יש כזאת כמות של לייקים לפחות"
+      likes_op_max: "הצגת נושאים בהם לפוסט הראשון יש כזאת כמות של לייקים לכל היותר"
+      posts_min: "הצגת נושאים עם כמות כזאת של פוסטים לכל הפחות"
+      posts_max: "הצגת נושאים עם כמות כזאת של פוסטים לכל היותר"
+      posters_min: "הצגת נושאים עם כמות כזאת של משתתפים לכל הפחות"
+      posters_max: "הצגת נושאים עם כמות כזאת של משתתפים לכל היותר"
+      views_min: "הצגת נושאים עם כמות כזאת של צפיות לכל הפחות"
+      views_max: "הצגת נושאים עם כמות כזאת של צפיות לכל יותר"
+      status_open: "הצגת נושאים פתוחים (לא סגורים או בארכיון)"
+      status_closed: "הצגת נושאים סגורים"
+      status_archived: "הצגת נושאים בארכיון"
+      status_listed: "הצג נושאים שמופיעים (גלויים)"
+      status_unlisted: "הצג נושאים שלא מופיעים (מוסתרים)"
+      status_deleted: "הצגת נושאים שנמחקו (אם יש לך הרשאות)"
+      status_public: "הצגת נושאים בקטגוריות ציבוריות"
+      in_pinned: "הצגת נושאים נעוצים"
+      in_bookmarked: "הצגת נושאים שהוספת לסימניות"
+      in_watching: "הצגת נושאים שבחרת לעקוב אחריהם"
+      in_muted: "הצגת נושאים מושתקים"
+      in_normal: "הצגת נושאים עם רמת התראות רגילה"
+      in_new_replies: "הצגת נושאים עם תגובות חדשות"
+      in_new_topics: "הצגת נושאים חדשים"
+      in_unseen: "הצגת נושאים שלא ראית"
+      order_activity: "סידור לפי תאריך פעילות אחרונה (חדש בהתחלה)"
+      order_activity_asc: "סידור לפי תאריך פעילות אחרונה (הישנה בהתחלה)"
+      order_category: "סידור לפי שם קטגוריה (ת-א)"
+      order_category_asc: "סידור לפי שם קטגוריה (א-ת)"
+      order_created: "סידור לפי תאריך יצירה (חדש בהתחלה)"
+      order_created_asc: "סידור לפי תאריך יצירה (ישן בהתחלה)"
+      order_latest_post: "סידור לפי תאריך פוסט אחרון (חדש בהתחלה)"
+      order_latest_post_asc: "סידור לפי תאריך פוסט אחרון (ישן בהתחלה)"
+      order_likes: "סידור לפי כמות לייקים (הכי הרבה בהתחלה)"
+      order_likes_asc: "סידור לפי כמות לייקים (הכי מעט בהתחלה)"
+      order_likes_op: "סידור לפי לייקים על הפוסט הראשון (הכי הרבה בהתחלה)"
+      order_likes_op_asc: "סידור לפי לייקים על הפוסט הראשון (הכי מעט בהתחלה)"
+      order_posters: "סידור לפי כמות המשתתפים (הכי הרבה בהתחלה)"
+      order_posters_asc: "סידור לפי כמות המשתתפים (הכי מעט בהתחלה)"
+      order_title: "סידור לפי כותרת (ת-א)"
+      order_title_asc: "סידור לפי כותרת (א-ת)"
+      order_views: "סידור לפי מונה צפיות (הכי הרבה בהתחלה)"
+      order_views_asc: "סידור לפי מונה צפיות (הכי מעט בהתחלה)"
+      order_read: "סידור לפי מתי שקראת לאחרונה (האחרונים בהתחלה)"
+      order_read_asc: "סידור לפי מתי שקראת לאחרונה (הישנים בהתחלה)"
+      exclude_users: "החרגת נושאים עם משתמשים מסוימים"
+      group: "סינון נושאים לפי קבוצות"
+      groups_any: "הצגת נושאים עם כל אחת מהקבוצות המפורטות (עם פסיקים ביניהן)"
+      groups_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
@@ -5355,11 +5447,9 @@ he:
         title: "להסכים ולערוך את הפוסט"
         description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
         complete: "הדגל אושר, עכשיו אפשר לערוך את הפוסט"
-      delete_single:
+      delete:
         title: "מחיקה"
         complete: "פוסט נמחק."
-      delete:
-        title: "מחיקה…"
       delete_and_ignore:
         title: "התעלמות מהדגל ומחיקת הפוסט"
         description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
@@ -5403,7 +5493,10 @@ he:
         complete: "הפרסום אושר."
       approve_post:
         title: "לאשר פוסט"
-        confirm_closed: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
+        complete: "הפרסום אושר."
+      approve_post_closed:
+        title: "לאשר פוסט"
+        confirm: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
         complete: "הפרסום אושר."
       reject_post:
         title: "לדחות פוסט"
@@ -5442,9 +5535,31 @@ he:
       approve_and_unhide:
         title: "אישור והצגת הפוסט"
         complete: "הפוסט אושר והוצג מחדש"
+      user_actions:
+        bundle_title: "מה לעשות עם המשתמש/ת?"
+      no_action_user:
+        title: "אין פעולה"
+        description: "לא לנקוט בפעולות נגד המשתמש/ת"
+        complete: "לא לנקוט בפעולה נגד המשתמש/ת"
+      silence_user:
+        title: "השתקת משתמש"
+        description: "למנוע מהמשתמש/ת לפרסם"
+        complete: "משתמש הושתק"
+        reason: "המשתמש/ת הושתקו דרך תור הסקירה"
+      suspend_user:
+        title: "השעיית משתמש"
+        description: "השעיית חשבון המשתמש/ת"
+        complete: "משתמש הושעה"
+        reason: "המשתמש/ת הושעו דרך תור הסקירה"
       delete_user:
+        title: "מחיקת משתמש"
+        description: "מחיקת המשתמש/ת מהפורום"
+        complete: "משתמש נמחק"
         reason: "למחוק דרך תור סקירה"
-        complete: "משתמש נמחק."
+      delete_and_block_user:
+        title: "מחיקה וחסימה"
+        description: "למחוק את המשתמש/ת ולחסום את ה־IP/דוא״ל שלהם"
+        complete: "המשתמש נמחק ונחסם"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   notification_level:
@@ -5489,6 +5604,9 @@ he:
       duplicate_ids: "יש מזהים כפולים"
       reserved_id: "יש מילת מפתח שמורה בתור מזהה: %{id}"
       unsafe_description: "יש תיאור HTML מפוקפק"
+      invalid_tag_group: "יש לו קבוצת תגיות שגויה: %{tag_group_name}"
+  discourse_id:
+    already_registered: "האתר הזה כבר רשום עם Discourse ID"
   activemodel:
     errors:
       <<: *errors

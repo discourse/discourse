@@ -313,6 +313,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.user_deleted?).to eq(false)
       expect(post.hidden?).to eq(false)
     end
+    context "when reviewable_ui_refresh enabled (separated bundles)" do
+      before do
+        # Stub guardian check on reviewable to simulate feature flag on
+        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+      end
+
+      it "builds user actions bundle with moderation actions" do
+        actions = reviewable.actions_for(guardian)
+        user_bundle = actions.bundles.find { |b| b.id.ends_with?("-user-actions") }
+        expect(user_bundle).to be_present
+        expect(actions.has?(:silence_user)).to eq(true)
+        expect(actions.has?(:suspend_user)).to eq(true)
+        expect(actions.has?(:delete_user)).to eq(true)
+      end
+
+      it "omits user deletion when reviewer cannot delete user" do
+        allow(guardian).to receive(:can_delete_user?).and_return(false)
+        actions = reviewable.actions_for(guardian)
+        expect(actions.has?(:delete_user)).to eq(false)
+        expect(actions.has?(:delete_and_block_user)).to eq(false)
+      end
+    end
   end
 
   describe "pending count" do

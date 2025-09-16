@@ -132,9 +132,9 @@ en:
               description: "In silent mode persona will receive the content but will not post anything on the forum - useful when performing triage using tools"
         llm_triage:
           fields:
-            system_prompt:
-              label: "System Prompt"
-              description: "The prompt that will be used to triage, be sure for it to reply with a single word you can use to trigger the action"
+            triage_persona:
+              label: "Persona"
+              description: "Persona used to triage, be sure for it to reply with a single word you can use to trigger the action"
             max_post_tokens:
               label: "Max Post Tokens"
               description: "The maximum number of tokens to scan using LLM triage"
@@ -165,6 +165,15 @@ en:
             flag_post:
               label: "Flag post"
               description: "Flags post (either as spam or for review)"
+            notify_author_pm:
+              label: "Notify author via PM"
+              description: "Send a personal message to the post author when their post is queued and deleted"
+            notify_author_pm_user:
+              label: "PM sender"
+              description: "User who will send the PM (defaults to system)"
+            notify_author_pm_message:
+              label: "PM message"
+              description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
               description: "Also scan and triage personal messages"
@@ -174,18 +183,45 @@ en:
             reply_persona:
               label: "Reply Persona"
               description: "AI Persona to use for replies (must have default LLM), will be prioritized over canned reply"
-            model:
-              label: "Model"
-              description: "Language model used for triage"
-            temperature:
-              label: "Temperature"
-              description: "Temperature to use for the LLM. Increase to increase randomness (leave empty to use model default)"
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
+        llm_tagger:
+          tag_mode:
+            manual: "Use specific tag list (configured below)"
+            discover: "Let AI discover and use any site tags"
+          fields:
+            tagger_persona:
+              label: "AI Persona"
+              description: "The AI persona to use for analyzing and tagging posts"
+            tag_mode:
+              label: "Tag Selection Mode"
+              description: "Choose how the AI selects tags"
+            available_tags:
+              label: "Available Tags"
+              description: "Tags that the AI can choose from (only used in manual mode)"
+            confidence_threshold:
+              label: "Confidence Threshold"
+              description: "Minimum confidence percentage (0-100) required to apply suggested tags"
+            max_tags_per_post:
+              label: "Maximum Tags Per Post"
+              description: "Maximum number of tags that can be applied to a single post"
+            max_post_tokens:
+              label: "Maximum Post Tokens"
+              description: "Maximum number of tokens from the post content to analyze"
+            allow_restricted_tags:
+              label: "Allow Restricted Tags"
+              description: "Allow AI to suggest and apply tags with restricted permissions or visibility."
+            max_posts_for_context:
+              label: "Maximum Posts for Context"
+              description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
 
     discourse_ai:
       title: "AI"
+
+      default_llm:
+        title: "Default LLM model"
+        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
 
       features:
         short_title: "Features"
@@ -219,6 +255,9 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -270,12 +309,43 @@ en:
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
 
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
+
       modals:
         select_option: "Select an option..."
 
       layout:
         table: "Table"
         card: "Card"
+
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          disabled_state:
+            configure: "Configure translations"
+            empty_label: "Automatic translations are disabled, click below to configure"
+        stats:
+          title: "Translation statistics"
+          complete_language_detection_description: "All %{total} eligible posts have their language detected."
+          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
+          backfill_disabled: "Backfilling is currently disabled."
+          description_tooltip: "Eligible posts are determined by AI translation settings"
+        progress_chart:
+          title: "Translation Progress %{tooltip}"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} out of %{total} posts translated"
+          bar_done:
+            one: "%{count} post"
+            other: "%{count} posts"
 
       spam:
         short_title: "Spam"
@@ -569,7 +639,7 @@ en:
           max_usages_required: "Must be set if max tokens is not set"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Helper"
+          ai_helper: "Helper (%{persona})"
           ai_helper_image_caption: "Image caption"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Summarize"
@@ -582,7 +652,7 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-0: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-1: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-0: "Optimal balance of speed and cost"
           anthropic-claude-3-7-sonnet-latest: "Optimal balance of speed and cost (previous generation)"
           anthropic-claude-3-5-haiku-latest: "Fast and cost-effective"
@@ -590,11 +660,12 @@ en:
           google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
           google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
-          open_ai-o3: "Open AI's most capable reasoning model"
+          google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
+          open_ai-o3: "OpenAI's most capable reasoning model"
           open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
-          open_ai-gpt-4-1: "Open AI's flagship model. It is well suited for problem solving across domains"
-          open_ai-gpt-4-1-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
-          open_ai-gpt-4-1-nano: "Fastest, most cost-effective GPT-4.1 model."
+          open_ai-gpt-5: "OpenAI's flagship model. It is well suited for problem solving across domains"
+          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
+          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Powerful multipurpose model"
           mistral-mistral-large-latest: "Mistral's most powerful model"
@@ -602,6 +673,8 @@ en:
           open_router-x-ai-grok-3-beta: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
+          groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
+          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by OpenAI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -621,6 +694,7 @@ en:
           title: "Run test"
           running: "Running test..."
           success: "Success!"
+          invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
 
         hints:
@@ -648,6 +722,7 @@ en:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Custom"
 
         provider_fields:
@@ -718,12 +793,6 @@ en:
           generating: "Generating caption..."
           credits: "Captioned by AI"
           save_caption: "Save"
-          automatic_caption_setting: "Enable auto caption"
-          automatic_caption_loading: "Captioning images..."
-          automatic_caption_dialog:
-            prompt: "This post contains non-captioned images. Would you like to enable automatic captions on image uploads? (This can be changed in your preferences later)"
-            confirm: "Enable"
-            cancel: "Don't ask again"
         no_content_error: "Add content first to perform AI actions on it"
 
       reviewables:
@@ -809,6 +878,7 @@ en:
         cancel_streaming: "Stop reply"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
+        exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"
         embed_copied: "Embed copied to clipboard"
@@ -910,6 +980,14 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
+          regenerate: "Regenerate short summary"
+          regenerate_bulk: "Regenerate short summaries"
+          regenerate_success:
+            one: "Short summary regenerated successfully"
+            other: "%{count} short summaries regenerated successfully"
+          regenerate_error:
+            one: "Failed to regenerate short summary"
+            other: "Failed to regenerate %{count} short summaries"
         topic_list_layout:
           button:
             compact: "Compact"

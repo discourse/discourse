@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   fab!(:moderator)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
@@ -192,6 +190,13 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         described_class.after_cooked_post(post)
       }.to change(Jobs::AiSpamScan.jobs, :size).by(1)
     end
+
+    it "does nothing when staff is the last revisor" do
+      expect {
+        PostRevisor.new(post).revise!(moderator, title: "#{post.topic.title} spam spam")
+        described_class.after_cooked_post(post)
+      }.not_to change(Jobs::AiSpamScan.jobs, :size)
+    end
   end
 
   describe ".hide_post" do
@@ -217,7 +222,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
     end
   end
 
-  it "unsilences flagging user if erronuously silenced" do
+  it "unsilences flagging user if erroneously silenced" do
     described_class.flagging_user.update!(silenced_till: 1.day.from_now)
     expect(described_class.flagging_user.silenced?).to eq(false)
   end
@@ -227,7 +232,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
     expect(described_class.flagging_user.trust_level).to eq(4)
   end
 
-  it "unsuspends user if it was erronuously suspended" do
+  it "unsuspends user if it was erroneously suspended" do
     described_class.flagging_user.update!(suspended_till: 1.day.from_now, suspended_at: 1.day.ago)
     expect(described_class.flagging_user.suspended?).to eq(false)
   end

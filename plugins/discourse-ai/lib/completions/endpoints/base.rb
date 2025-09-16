@@ -165,6 +165,24 @@ module DiscourseAi
             # of the JSON won't be included in the response. Supply it to keep JSON valid.
             structured_output << +"{" if structured_output && @forced_json_through_prefill
 
+            log = nil
+            start_logging =
+              lambda do
+                log =
+                  start_log(
+                    provider_id: provider_id,
+                    request_body: request_body,
+                    dialect: dialect,
+                    prompt: prompt,
+                    user: user,
+                    feature_name: feature_name,
+                    feature_context: feature_context,
+                  )
+              end
+
+            # during dev we want to log all requests even ones that fail
+            start_logging.call if Rails.env.development?
+
             http.request(request) do |response|
               if response.code.to_i != 200
                 Rails.logger.error(
@@ -198,16 +216,7 @@ module DiscourseAi
                   end
               end
 
-              log =
-                start_log(
-                  provider_id: provider_id,
-                  request_body: request_body,
-                  dialect: dialect,
-                  prompt: prompt,
-                  user: user,
-                  feature_name: feature_name,
-                  feature_context: feature_context,
-                )
+              start_logging.call if !log
 
               if !@streaming_mode
                 response_data =

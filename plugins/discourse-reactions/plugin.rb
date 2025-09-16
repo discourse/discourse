@@ -193,8 +193,16 @@ after_initialize do
 
     has_matching_reaction_user =
       object.emoji_reactions.any? do |reaction|
-        DiscourseReactions::Reaction.reactions_counting_as_like.include?(reaction.reaction_value) &&
-          reaction.reaction_users.find { |ru| ru.user_id == scope.user.id }.present?
+        reaction.reaction_users.any? { |ru| ru.user_id == scope.user.id } &&
+          (
+            if SiteSetting.discourse_reactions_experimental_allow_any_emoji
+              reaction.reaction_value != DiscourseReactions::Reaction.main_reaction_id
+            else
+              DiscourseReactions::Reaction.reactions_counting_as_like.include?(
+                reaction.reaction_value,
+              )
+            end
+          )
       end
 
     like_post_action.present? && !has_matching_reaction_user
@@ -235,28 +243,28 @@ after_initialize do
 
     reactions_results =
       DB.query(<<~SQL, start_date: report.start_date.to_date, end_date: report.end_date.to_date)
-      SELECT
-        reactions.reaction_value,
-        count(reaction_users.id) as reactions_count,
-        date_trunc('day', reaction_users.created_at)::date as day
-      FROM discourse_reactions_reactions as reactions
-      LEFT OUTER JOIN discourse_reactions_reaction_users as reaction_users on reactions.id = reaction_users.reaction_id
-      WHERE reactions.reaction_users_count IS NOT NULL
-        AND reaction_users.created_at::DATE >= :start_date::DATE AND reaction_users.created_at::DATE <= :end_date::DATE
-      GROUP BY reactions.reaction_value, day
-    SQL
+        SELECT
+          reactions.reaction_value,
+          count(reaction_users.id) as reactions_count,
+          date_trunc('day', reaction_users.created_at)::date as day
+        FROM discourse_reactions_reactions as reactions
+        LEFT OUTER JOIN discourse_reactions_reaction_users as reaction_users on reactions.id = reaction_users.reaction_id
+        WHERE reactions.reaction_users_count IS NOT NULL
+          AND reaction_users.created_at::DATE >= :start_date::DATE AND reaction_users.created_at::DATE <= :end_date::DATE
+        GROUP BY reactions.reaction_value, day
+      SQL
 
     likes_results =
       DB.query(
         <<~SQL,
-      SELECT
-        count(post_actions.id) as likes_count,
-        date_trunc('day', post_actions.created_at)::date as day
-      FROM post_actions as post_actions
-      WHERE post_actions.created_at::DATE >= :start_date::DATE AND post_actions.created_at::DATE <= :end_date::DATE
-      AND #{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql}
-      GROUP BY day
-    SQL
+          SELECT
+            count(post_actions.id) as likes_count,
+            date_trunc('day', post_actions.created_at)::date as day
+          FROM post_actions as post_actions
+          WHERE post_actions.created_at::DATE >= :start_date::DATE AND post_actions.created_at::DATE <= :end_date::DATE
+          AND #{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql}
+          GROUP BY day
+        SQL
         start_date: report.start_date.to_date,
         end_date: report.end_date.to_date,
         like: PostActionType::LIKE_POST_ACTION_ID,

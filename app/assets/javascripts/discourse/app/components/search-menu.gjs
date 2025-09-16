@@ -18,7 +18,6 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -30,6 +29,7 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -454,6 +454,7 @@ export default class SearchMenu extends Component {
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
             @inputId={{this.searchInputId}}
+            @placeholder={{@placeholder}}
           />
 
           {{#if this.loading}}

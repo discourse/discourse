@@ -8,6 +8,7 @@
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1em;
   align-items: stretch;
+  margin-top: var(--space-4);
 }
 
 .theme-card {
@@ -79,7 +80,7 @@
     flex-grow: 1;
   }
 
-  &.-active {
+  &.--default {
     @include theme-card-border(tertiary);
   }
 
@@ -94,7 +95,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     border-top-left-radius: var(--d-border-radius);
     border-top-right-radius: var(--d-border-radius);
 
@@ -136,6 +137,16 @@
     gap: 0.5rem;
     align-items: center;
     overflow-wrap: anywhere;
+    color: var(--primary);
+
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   &__description {
@@ -201,16 +212,6 @@
       height: 0.75em;
       color: var(--primary-high);
     }
-
-    &.--active {
-      background-color: var(--tertiary);
-      color: var(--secondary);
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      font-size: var(--font-down-3);
-      text-transform: uppercase;
-    }
   }
 
   .admin-config-area-card__header-action {
@@ -244,10 +245,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    border-color: var(--tertiary-medium);
-  }
 
   .admin-config-area-card__content {
     margin: 0;

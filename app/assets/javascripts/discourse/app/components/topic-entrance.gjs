@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
@@ -37,8 +38,6 @@ function entranceDate(dt, showTime) {
 
 @classNameBindings("visible::hidden")
 export default class TopicEntrance extends Component {
-  @service router;
-  @service session;
   @service historyStore;
 
   elementId = "topic-entrance";

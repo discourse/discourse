@@ -9,7 +9,6 @@ import AsyncContent from "discourse/components/async-content";
 import SmallUserList from "discourse/components/small-user-list";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
-import cookie from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
@@ -45,9 +44,7 @@ export default class VoteBox extends Component {
     event.stopPropagation();
 
     if (!this.currentUser) {
-      cookie("destination_url", window.location.href, { path: "/" });
-      this.args.showLogin();
-      return;
+      return this.args.showLogin();
     }
 
     if (this.showWhoVoted) {

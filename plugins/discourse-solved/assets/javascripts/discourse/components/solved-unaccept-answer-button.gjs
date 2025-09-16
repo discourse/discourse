@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import InterpolatedTranslation from "discourse/components/interpolated-translation";
+import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
@@ -17,25 +17,6 @@ export default class SolvedUnacceptAnswerButton extends Component {
   @service siteSettings;
 
   @tracked saving = false;
-
-  get solvedBy() {
-    if (!this.siteSettings.show_who_marked_solved) {
-      return;
-    }
-
-    const username = this.args.post.topic.accepted_answer.accepter_username;
-    const name = this.args.post.topic.accepted_answer.accepter_name;
-    const displayedName =
-      this.siteSettings.display_name_on_posts && name
-        ? name
-        : formatUsername(username);
-    if (this.args.post.topic.accepted_answer.accepter_username) {
-      return i18n("solved.marked_solved_by", {
-        username: displayedName,
-        username_lower: username,
-      });
-    }
-  }
 
   @action
   async unacceptAnswer() {
@@ -58,10 +39,27 @@ export default class SolvedUnacceptAnswerButton extends Component {
     }
   }
 
+  get showAcceptedBy() {
+    return !(
+      !this.siteSettings.show_who_marked_solved ||
+      !this.args.post.topic.accepted_answer.accepter_username
+    );
+  }
+
+  get acceptedByUsername() {
+    return this.args.post.topic.accepted_answer.accepter_username;
+  }
+
+  get acceptedByDisplayName() {
+    const username = this.args.post.topic.accepted_answer.accepter_username;
+    const name = this.args.post.topic.accepted_answer.accepter_name;
+    return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
   <template>
     <span class="extra-buttons">
       {{#if (and @post.can_accept_answer @post.accepted_answer)}}
-        {{#if this.solvedBy}}
+        {{#if this.showAcceptedBy}}
           <DTooltip @identifier="post-action-menu__solved-accepted-tooltip">
             <:trigger>
               <DButton
@@ -74,7 +72,16 @@ export default class SolvedUnacceptAnswerButton extends Component {
               />
             </:trigger>
             <:content>
-              {{htmlSafe this.solvedBy}}
+              <InterpolatedTranslation
+                @key="solved.marked_solved_by"
+                as |Placeholder|
+              >
+                <Placeholder @name="user">
+                  <UserLink @username={{this.acceptedByUsername}}>
+                    {{this.acceptedByDisplayName}}
+                  </UserLink>
+                </Placeholder>
+              </InterpolatedTranslation>
             </:content>
           </DTooltip>
         {{else}}

@@ -57,7 +57,6 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
               "/uploads/default/original/1X/f8a61b9a0bfac672daec9e401787812f8c5e28df.png",
             system: true,
             color_scheme: null,
-            owned_color_palette: null,
             user: {
               id: -1,
               username: "system",
@@ -80,7 +79,7 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
   });
 
   test("admin-customize-theme-included-components-setting plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-customize-theme-included-components-setting",
         <template>

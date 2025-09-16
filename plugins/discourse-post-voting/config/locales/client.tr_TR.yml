@@ -13,6 +13,8 @@ tr_TR:
     reviewables:
       comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
   js:
+    discourse_post_voting:
+      title: "Gönderi oylaması"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -111,6 +113,9 @@ tr_TR:
         answer_count:
           one: "%{count} Yanıt"
           other: "%{count} Yanıt"
+        voters_count_diff:
+          one: "ve %{count} kullanıcı daha..."
+          other: "ve %{count} kullanıcı daha..."
     review:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"

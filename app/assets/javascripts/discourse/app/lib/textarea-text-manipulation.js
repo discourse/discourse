@@ -1,8 +1,9 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -18,6 +19,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -69,6 +71,9 @@ export default class TextareaTextManipulation {
 
   autocompleteHandler;
   placeholder;
+
+  /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
+  state = new TrackedObject();
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
@@ -726,9 +731,9 @@ export default class TextareaTextManipulation {
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
       this.selectText(this.value.indexOf(newValue), newValue.length);
-    }
 
-    return true;
+      return true;
+    }
   }
 
   @bind
@@ -900,12 +905,21 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    this.$textarea.autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.floatkit_autocomplete_composer) {
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwner(this),
+        this.textarea,
+        this.autocompleteHandler,
+        options
+      );
+    } else {
+      // @ts-ignore
+      this.$textarea.autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 }
 

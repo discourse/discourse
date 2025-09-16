@@ -87,7 +87,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       htmlLabel += ` <kbd class="shortcut ${
         content.alwaysShowShortcut ? "--always-visible" : ""
       }">${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+        PLATFORM_KEY_MODIFIER + " " + content.shortcut.replace(/\+/g, " ")
       )}</kbd>`;
     }
 
@@ -138,6 +138,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       tabindex="-1"
       @triggerClass={{concatClass "toolbar__button" @class}}
       @class="toolbar-popup-menu-options"
+      title={{@title}}
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}
@@ -153,6 +154,7 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
                 class={{concatClass (if (this.getActive option) "--active")}}
+                aria-keyshortcuts={{option.ariaKeyshortcuts}}
               />
             </dropdown.item>
           {{/each}}

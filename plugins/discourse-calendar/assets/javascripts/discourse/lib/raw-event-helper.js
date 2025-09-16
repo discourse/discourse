@@ -55,16 +55,16 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.maxAttendees) {
+    params.maxAttendees = `${event.maxAttendees}`;
+  }
+
   if (endsAt) {
     params.end = moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {
     params.allowedGroups = (event.rawInvitees || []).join(",");
-  }
-
-  if (event.status === "public") {
-    params.allowedGroups = "trust_level_0";
   }
 
   if (event.reminders && event.reminders.length) {

@@ -19,9 +19,11 @@ hr:
       unaccept_answer: "Poništite odabir ako ovaj odgovor više ne rješava problem"
       accepted_answer: "Riješenje"
       solution: "Riješenje"
+      accepted_answer_post_number: "objava %{post_number}"
       topic_status_filter:
         all: "sve"
         solved: "riješeno"
+      no_solved_topics_title_others: "%{username} još nije riješio/la nijednu temu"
     topic_statuses:
       solved:
         help: "Ova tema ima rješenje"

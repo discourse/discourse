@@ -7,10 +7,8 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import FilterInput from "discourse/components/filter-input";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
@@ -23,6 +21,7 @@ import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import AdminFilterControls from "admin/components/admin-filter-controls";
 import InstallComponentModal from "admin/components/modal/install-theme";
 import { COMPONENTS } from "admin/models/theme";
 import DMenu from "float-kit/components/d-menu";
@@ -30,21 +29,27 @@ import DMenu from "float-kit/components/d-menu";
 const STATUS_FILTER_OPTIONS = [
   {
     value: "all",
-    label: "admin.config_areas.themes_and_components.components.filter_by_all",
+    label: i18n(
+      "admin.config_areas.themes_and_components.components.filter_by_all"
+    ),
   },
   {
     value: "used",
-    label: "admin.config_areas.themes_and_components.components.filter_by_used",
+    label: i18n(
+      "admin.config_areas.themes_and_components.components.filter_by_used"
+    ),
   },
   {
     value: "unused",
-    label:
-      "admin.config_areas.themes_and_components.components.filter_by_unused",
+    label: i18n(
+      "admin.config_areas.themes_and_components.components.filter_by_unused"
+    ),
   },
   {
     value: "updates_available",
-    label:
-      "admin.config_areas.themes_and_components.components.filter_by_updates_available",
+    label: i18n(
+      "admin.config_areas.themes_and_components.components.filter_by_updates_available"
+    ),
   },
 ];
 
@@ -101,7 +106,12 @@ export default class AdminConfigAreasComponents extends Component {
       },
       duration: "short",
     });
-    this.load();
+
+    this.router.transitionTo(
+      "adminCustomizeThemes.show.index",
+      "components",
+      component.id
+    );
   }
 
   @action
@@ -116,6 +126,15 @@ export default class AdminConfigAreasComponents extends Component {
   onStatusFilterChange(value) {
     this.loading = true;
     this.statusFilter = value;
+    this.page = 0;
+    this.load();
+  }
+
+  @action
+  onResetFilters() {
+    this.loading = true;
+    this.nameFilter = null;
+    this.statusFilter = null;
     this.page = 0;
     this.load();
   }
@@ -199,82 +218,61 @@ export default class AdminConfigAreasComponents extends Component {
     </DPageSubheader>
     <div class="container">
       {{#if this.hasComponents}}
-        <div class="d-admin-filter">
-          <div
-            class="admin-filter__input-container admin-config-components__name-filter"
-          >
-            <FilterInput
-              placeholder={{i18n
-                "admin.config_areas.themes_and_components.components.search_components"
-              }}
-              @filterAction={{this.onNameFilterChange}}
-              class="admin-filter__input"
-            />
-          </div>
-
-          <label class="admin-config-components__status-filter">
-            {{i18n
-              "admin.config_areas.themes_and_components.components.filter_by"
-            }}
-            <DSelect
-              @value="all"
-              @includeNone={{false}}
-              @onChange={{this.onStatusFilterChange}}
-              as |select|
-            >
-              {{#each STATUS_FILTER_OPTIONS as |option|}}
-                <select.Option @value={{option.value}}>
-                  {{i18n option.label}}
-                </select.Option>
-              {{/each}}
-            </DSelect>
-          </label>
-        </div>
+        <AdminFilterControls
+          @array={{this.components}}
+          @dropdownOptions={{STATUS_FILTER_OPTIONS}}
+          @inputPlaceholder={{i18n
+            "admin.config_areas.themes_and_components.components.search_components"
+          }}
+          @noResultsMessage={{i18n
+            "admin.config_areas.themes_and_components.components.no_components_found"
+          }}
+          @onTextFilterChange={{this.onNameFilterChange}}
+          @onDropdownFilterChange={{this.onStatusFilterChange}}
+          @onResetFilters={{this.onResetFilters}}
+          @loading={{this.loading}}
+        >
+          <:content>
+            <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+              <table class="d-table component-list">
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.name"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.used_on"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "admin.config_areas.themes_and_components.components.enabled"
+                      }}</th>
+                    <th class="d-table__header-cell"></th>
+                  </tr>
+                </thead>
+                <tbody class="d-table__body">
+                  {{#each this.components as |comp|}}
+                    <ComponentRow
+                      @component={{comp}}
+                      @deleteComponent={{this.deleteComponentById}}
+                    />
+                  {{/each}}
+                </tbody>
+              </table>
+              <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+            </LoadMore>
+          </:content>
+        </AdminFilterControls>
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
-        {{#if this.components.length}}
-          <LoadMore @action={{this.loadMore}}>
-            <table class="d-table component-list">
-              <thead class="d-table__header">
-                <tr class="d-table__row">
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.name"
-                    }}</th>
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.used_on"
-                    }}</th>
-                  <th class="d-table__header-cell">{{i18n
-                      "admin.config_areas.themes_and_components.components.enabled"
-                    }}</th>
-                  <th class="d-table__header-cell"></th>
-                </tr>
-              </thead>
-              <tbody class="d-table__body">
-                {{#each this.components as |comp|}}
-                  <ComponentRow
-                    @component={{comp}}
-                    @deleteComponent={{this.deleteComponentById}}
-                  />
-                {{/each}}
-              </tbody>
-            </table>
-            <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-          </LoadMore>
-        {{else}}
-          {{#if this.hasComponents}}
-            {{i18n
-              "admin.config_areas.themes_and_components.components.no_components_found"
-            }}
-          {{else}}
-            <AdminConfigAreaEmptyList
-              @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
-            >
-              <PluginOutlet
-                @name="admin-config-area-components-empty-list-bottom"
-              />
-            </AdminConfigAreaEmptyList>
-          {{/if}}
-        {{/if}}
+        {{#unless this.hasComponents}}
+          <AdminConfigAreaEmptyList
+            @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
+          >
+            <PluginOutlet
+              @name="admin-config-area-components-empty-list-bottom"
+            />
+          </AdminConfigAreaEmptyList>
+        {{/unless}}
       </ConditionalLoadingSpinner>
     </div>
   </template>
@@ -283,6 +281,7 @@ export default class AdminConfigAreasComponents extends Component {
 class ComponentRow extends Component {
   @service toasts;
   @service dialog;
+  @service router;
 
   @tracked enabled = this.args.component.enabled;
   @tracked hasUpdates = this.args.component.remote_theme?.commits_behind > 0;
@@ -333,6 +332,14 @@ class ComponentRow extends Component {
     return (
       this.args.component.description ??
       (remoteUrl && descriptionForRemoteUrl(remoteUrl))
+    );
+  }
+
+  get editUrl() {
+    return this.router.urlFor(
+      "adminCustomizeThemes.show",
+      "themes",
+      this.args.component.id
     );
   }
 
@@ -462,9 +469,9 @@ class ComponentRow extends Component {
         {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-table__cell --overview">
-        <div class="d-table__overview-name">
+        <a class="d-table__overview-name" href={{this.editUrl}}>
           {{@component.name}}
-        </div>
+        </a>
         {{#if @component.remote_theme.authors}}
           <div
             class="d-table__overview-author admin-config-components__author-name"

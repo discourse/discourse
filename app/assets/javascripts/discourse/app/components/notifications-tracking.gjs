@@ -48,6 +48,7 @@ class NotificationsTrackingTrigger extends Component {
         "btn btn-default"
         (if this.showFullTitle "btn-icon-text" "no-text")
       }}
+      title={{i18n "user.preferences_nav.tracking"}}
       ...attributes
     >
       {{icon @selectedLevel.icon}}

@@ -9,6 +9,12 @@ pl_PL:
     discourse_automation_enabled: "Włącz wtyczkę discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Skrypt nie może być pusty"
+          trigger_blank: "Wyzwalacz nie może być pusty"
+          script_missing_required_fields: "W skrypcie brakuje wymaganych pól: %{fields}"
+          trigger_missing_required_fields: "W wyzwalaczu brakuje wymaganych pól: %{fields}"
       fields:
         required_field: Pole `%{name}` musi być wypełnione na `%{target}:%{target_name}`.
         invalid_field: Składnik pola `%{component}` nie może być użyty na `%{target}:%{target_name}`.
@@ -62,6 +68,9 @@ pl_PL:
       topic:
         title: Temat
         description: Powiązany skrypt będzie używany tylko w określonym temacie, jest to przydatne na przykład dla skryptów przeprowadzających walidację.
+      topic_closed:
+        title: Temat zamknięty
+        description: Uruchamia skrypt po zamknięciu tematu.
       after_post_cook:
         title: Po sfinalizowaniu publikacji
         description: Gdy treść posta zostanie przygotowana, zostanie uruchomiona automatyzacja

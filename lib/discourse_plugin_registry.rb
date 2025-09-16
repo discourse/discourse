@@ -229,9 +229,9 @@ class DiscoursePluginRegistry
     html_builders[name] << block
   end
 
-  def self.build_html(name, ctx = nil)
+  def self.build_html(name, ctx = nil, **kwargs)
     builders = html_builders[name] || []
-    builders.map { |b| b.call(ctx) }.join("\n").html_safe
+    builders.map { |b| b.call(ctx, **kwargs) }.join("\n").html_safe
   end
 
   def self.seed_paths

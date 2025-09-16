@@ -35,7 +35,7 @@ ja:
       cant_act_unclaimed: "通報に対応する前に、このトピックを引き受ける必要があります。"
       topic_search_placeholder: "タイトルまたは投稿のコンテンツでトピックを検索"
       sidebar_name_filter_placeholder: "名前/ユーザー名"
-      assigned: "割り当て完了"
+      assigned: "割り当て済み"
       group_everyone: "全員"
       assigned_to: "割り当て先"
       assigned_topic_to: "トピックを <a href='%{path}'>%{username}</a> に割り当てました"
@@ -77,7 +77,7 @@ ja:
         assignment_label: 割り当て
         choose_assignee: 割り当てるユーザーを選択します。
         edit_assignments_title: "割り当ての編集"
-        note_label: 注意
+        note_label: メモ
         optional_label: "(オプション)"
         status_label: ステータス
         suggestions: 提案
@@ -87,16 +87,16 @@ ja:
         title: "引き受ける"
         help: "トピックを自分に割り当てる"
       assign_mailer:
-        never: "未使用"
+        never: "割り当てない"
         different_users: "割り当てユーザーと割り当てられたユーザーが異なるユーザーである場合のみ"
         always: "常時"
       reminders_frequency:
         description: "割り当てられたトピックのリマインダーを受け取る頻度"
-        never: "未使用"
-        daily: "日間"
-        weekly: "週間"
-        monthly: "月間"
-        quarterly: "四半期"
+        never: "送信しない"
+        daily: "毎日"
+        weekly: "毎週"
+        monthly: "毎月"
+        quarterly: "3 か月ごと"
       admin:
         groups:
           manage:
@@ -112,7 +112,7 @@ ja:
         do_nothing: "何もしない"
       messages:
         assigned_title: "割り当て済み（%{count}）"
-        assigned: "割り当て完了"
+        assigned: "割り当て済み"
       no_assignments_title: "まだ割り当てはありません"
       no_assignments_body: >
         割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知頻度は<a href='%{preferencesUrl}'>ユーザー設定</a>で変更できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。

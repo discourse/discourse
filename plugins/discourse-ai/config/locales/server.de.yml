@@ -8,8 +8,9 @@ de:
   discourse_automation:
     ai:
       flag_types:
-        review: "Beitrag zur Überprüfungswarteschlange hinzufügen"
+        review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
+        review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
@@ -24,13 +25,17 @@ de:
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
         flagged_post: |
           <div>Antwort des Modells:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
+      llm_tagger:
+        title: Themen mithilfe von KI mit Schlagwörtern versehen
+        description: "Themen mithilfe von KI automatisch mit Schlagwörtern versehen"
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
+    ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
     ai_artifact_security: "Das KI-Artefaktsystem generiert IFRAMEs mit ausführbarem Code. Der strikte Modus erfordert einen zusätzlichen Klick zum Ausführen des Codes. Der laxe Modus führt Code sofort aus. Im Hybridmodus kann der Benutzer data-ai-artifact-autorun angeben, um den Code sofort anzuzeigen. Der deaktivierte Modus deaktiviert das Artefaktsystem."
     ai_toxicity_enabled: "Aktiviere das Toxizitätsmodul."
     ai_toxicity_inference_service_api_endpoint: "URL, unter der die API für das Toxizitätsmodul läuft"
@@ -72,15 +77,15 @@ de:
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_illustrate_post_model: "Modell, das für die Funktion „Beitrag illustrieren“ des Composer-KI-Helfers verwendet wird"
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
-    post_ai_helper_allowed_groups: "Nutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
+    post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
     ai_helper_image_caption_model: "Wähle das Modell aus, das für die Erstellung von Bildbeschriftungen verwendet werden soll"
-    ai_auto_image_caption_allowed_groups: "Benutzer dieser Gruppen können die automatische Bildbeschriftung ein- und ausschalten."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
     ai_embeddings_semantic_related_topics: "Maximale Anzahl der Themen, die im Abschnitt für verwandte Themen angezeigt werden sollen."
     ai_embeddings_backfill_batch_size: "Anzahl der Einbettungen, die alle 15 Minuten aufgefüllt werden."
     ai_embeddings_semantic_search_enabled: "Aktiviere die semantische Ganzseitensuche."
+    ai_embeddings_semantic_search_use_hyde: "Verwende HyDE für die semantische Ganzseitensuche. Verwendet ein LLM, um einen hypothetischen Beitrag aus dem Suchbegriff des Benutzers zu erstellen, der bei der Suche nach Treffern hilft."
     ai_embeddings_semantic_quick_search_enabled: "Aktiviere die semantische Suchoption im Such-Menü-Pop-up."
     ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
     ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"
@@ -115,7 +120,7 @@ de:
     ai_translation_enabled: "Aktiviert die KI-Übersetzungsfunktion"
     ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
-    ai_translation_max_post_length: "Die maximale Länge eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
+    ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
   reviewables:
     reasons:
@@ -220,7 +225,7 @@ de:
         max_keys_exceeded:
           one: "Du kannst nur %{count} Schlüssel im Artefakt haben."
           other: "Du kannst nur %{count} Schlüssel im Artefakt haben."
-      link: "In neuem Tab anzeigen"
+      link: "In neuer Registerkarte anzeigen"
       copy_embed: "Einbettung kopieren"
       view_source: "Quelle anzeigen"
       view_changes: "Änderungen anzeigen"
@@ -282,7 +287,7 @@ de:
     ai_bot:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
-      thinking: "Ich denke..."
+      thinking: "Ich denke …"
       personas:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
@@ -565,7 +570,7 @@ de:
     llm:
       configuration:
         create_llm: "Du musst einen LLM einrichten, bevor du diese Funktion aktivierst"
-        disable_module_first: "Du musst zuerst %{setting} deaktivieren."
+        disable_modules_first: "Du musst zuerst diese Module deaktivieren: %{settings}"
         set_llm_first: "Stelle zuerst %{setting} ein"
         model_unreachable: "Wir konnten keine Antwort von diesem Modell abrufen. Überprüfe zuerst deine Einstellungen."
         invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
@@ -587,8 +592,8 @@ de:
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
-        invalid_config: "Du hast eine ungültige Option ausgewählt."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
+        model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
       bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."
@@ -609,6 +614,9 @@ de:
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
       persona_already_exists: Eine Persona mit dem Namen %{name} existiert bereits.
+      custom_tool_exists:
+        one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
+        other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."
   dashboard:
     problem:
       ai_llm_status: "Bei dem LLM-Modell: %{model_name} treten Probleme auf. Bitte überprüfe <a href='%{url}'>die Konfigurationsseite des Modells</a>."

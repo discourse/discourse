@@ -1,10 +1,9 @@
 <%- if @popular_posts.present? %>
-### <%=t 'user_notifications.digest.popular_posts' %>
+  ### <%=t 'user_notifications.digest.popular_posts' %>
 
-<%- @popular_posts.each_with_index do |post,i| %>
-<%= post.user.username -%> - <%= raw(@markdown_linker.create(post.topic.title, post.topic.url)) %>
+  <%- @popular_posts.each_with_index do |post,i| %>
+    <%= post.user.username -%> - <%= raw(@markdown_linker.create(post.topic.title, post.topic.url)) %>
 
- <%= raw(post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
-
-<%- end %>
+    <%= raw(post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
+  <%- end %>
 <%- end %>

@@ -69,7 +69,6 @@ export default function () {
           function () {
             this.route("show", { path: "/:theme_id" }, function () {
               this.route("schema", { path: "schema/:setting_name" });
-              this.route("colors");
             });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
@@ -322,6 +321,7 @@ export default function () {
         this.route("customize", function () {
           this.route("themes");
           this.route("components");
+          this.route("themeSiteSettings", { path: "/theme-site-settings" });
         });
         this.route(
           "adminAnalytics",
@@ -380,7 +380,6 @@ export default function () {
         this.route("spam", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("theme-site-settings");
 
         this.route(
           "colorPalettes",

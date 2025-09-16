@@ -25,7 +25,6 @@ export default class AdminFontsForm extends Component {
   @service siteSettingChangeTracker;
   @service toasts;
   @service modal;
-  @service router;
 
   updateExistingUsers = null;
 

@@ -39,7 +39,7 @@ export default class ChatChannelSubscriptionManager {
   }
 
   @bind
-  onMessage(busData) {
+  onMessage(busData, _, lastMessageBusId) {
     switch (busData.type) {
       case "sent":
         this.handleSentMessage(busData);
@@ -81,6 +81,8 @@ export default class ChatChannelSubscriptionManager {
         this.handleNotice(busData);
         break;
     }
+
+    this.channel.channelMessageBusLastId = lastMessageBusId;
   }
 
   handleSentMessage(data) {
@@ -213,8 +215,13 @@ export default class ChatChannelSubscriptionManager {
 
   handleNewThreadCreated(data) {
     this.channel.threadsManager
-      .find(this.channel.id, data.thread_id, { fetchIfNotFound: true })
+      .find(this.channel.id, data.thread_id, { fetchIfNotFound: false })
       .then((thread) => {
+        thread ??= this.channel.threadsManager.add(
+          this.channel,
+          data.chat_message.thread
+        );
+
         const channelOriginalMessage = this.channel.messagesManager.findMessage(
           thread.originalMessage.id
         );

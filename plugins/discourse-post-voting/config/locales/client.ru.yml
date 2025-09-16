@@ -13,6 +13,8 @@ ru:
     reviewables:
       comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
   js:
+    discourse_post_voting:
+      title: "Голосование по публикациям"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -40,9 +42,9 @@ ru:
     last_answer_lowercase: последний ответ
     answer_lowercase:
       one: ответ
-      few: ответа
-      many: ответов
-      other: ответов
+      few: ответы
+      many: ответы
+      other: ответы
     post_voting:
       post:
         post_voting_comment:
@@ -50,7 +52,7 @@ ru:
             too_short:
               one: "Введите не менее %{count} символа"
               few: "Введите не менее %{count} символов"
-              many: "Введите не менее %{count} символа"
+              many: "Введите не менее %{count} символов"
               other: "Введите не менее %{count} символа"
             length_ok:
               one: "Остался %{count} символ..."
@@ -70,7 +72,7 @@ ru:
             one: Показать ещё %{count} комментарий
             few: Показать ещё %{count} комментария
             many: Показать ещё %{count} комментариев
-            other: Показать ещё %{count} комментариев
+            other: Показать ещё %{count} комментария
           delete:
             confirm: "Действительно удалить этот комментарий?"
           user:
@@ -117,12 +119,17 @@ ru:
           help: "начните писать ответ"
         sort_by: "Сортировка"
         votes: "Голоса"
-        activity: "Последняя активность"
+        activity: "Активность"
         answer_count:
           one: "%{count} ответ"
           few: "%{count} ответа"
           many: "%{count} ответов"
-          other: "%{count} ответов"
+          other: "%{count} ответа"
+        voters_count_diff:
+          one: "и еще %{count} пользователь..."
+          few: "и еще %{count} пользователя..."
+          many: "и еще %{count} пользователей..."
+          other: "и еще %{count} пользователя..."
     review:
       transcript:
         view: "Просмотр содержимого предыдущих сообщений"

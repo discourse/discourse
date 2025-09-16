@@ -34,6 +34,7 @@ he:
     post_voting_comment_limit_per_post: "מספר התגובות המותר על כל פוסט"
     min_trust_to_flag_posts_voting_comments: "דרגת האמון המזערית לסימון הערת הצבעה על פוסט"
     flag_posts_voting_comments_allowed_groups: "קבוצות שמורשות לסמן הערת הצבעה לפוסט"
+    post_voting_comment_enabled: "הפעלת הערות בפוסט בנושאים עם הצבעות על פוסטים"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments (דרגת אמון מזערית לסימון הערות הצבעה על פוסטים)"
   post_action_types:
@@ -62,6 +63,7 @@ he:
         limit_exceeded: "הגעת למגבלה של %{limit} תגובות לפוסט."
         perform: "הערת הצבעת פוסט סומנה עם ניקוד גבוה מספיק כדי להשתיק את המשתמש."
         auto_silence_from_flags: "הושתק אוטומטית עקב סימון."
+        disabled: "הוספת תגובה על פוסט אסורה."
       reviewables:
         comment_already_handled: "תודה לך, כבר בדקנו את התגובה הזאת והחלטנו שאין צורך לסמן אותה בדגל פעם נוספת."
         actions:

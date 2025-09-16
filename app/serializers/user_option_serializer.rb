@@ -14,6 +14,7 @@ class UserOptionSerializer < ApplicationSerializer
              :enable_quoting,
              :enable_smart_lists,
              :enable_defer,
+             :enable_markdown_monospace_font,
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,
@@ -43,7 +44,9 @@ class UserOptionSerializer < ApplicationSerializer
              :sidebar_link_to_filtered_list,
              :sidebar_show_count_of_new_items,
              :watched_precedence_over_muted,
-             :topics_unread_when_closed
+             :topics_unread_when_closed,
+             :composition_mode,
+             :interface_color_mode
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

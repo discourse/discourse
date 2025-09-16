@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 RSpec.describe "Discourse Zendesk Plugin" do
   let(:staff) { Fabricate(:moderator) }
   let(:zendesk_url_default) { "https://your-url.zendesk.com/api/v2" }

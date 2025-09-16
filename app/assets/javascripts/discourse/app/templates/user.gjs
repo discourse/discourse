@@ -1,6 +1,8 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -9,7 +11,6 @@ import UserProfileAvatar from "discourse/components/user-profile-avatar";
 import UserStatusMessage from "discourse/components/user-status-message";
 import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
@@ -312,7 +313,7 @@ export default RouteTemplate(
                       {{#if @controller.model.suspend_reason}}
                         <div class="suspension-reason">
                           <b>{{i18n "user.suspended_reason"}}</b>
-                          {{@controller.model.suspend_reason}}
+                          {{htmlSafe @controller.model.suspend_reason}}
                         </div>
                       {{/if}}
                     </div>
@@ -335,7 +336,7 @@ export default RouteTemplate(
                       {{#if @controller.model.silence_reason}}
                         <div class="silence-reason">
                           <b>{{i18n "user.silenced_reason"}}</b>
-                          {{@controller.model.silence_reason}}
+                          {{htmlSafe @controller.model.silence_reason}}
                         </div>
                       {{/if}}
                     </div>
@@ -403,7 +404,12 @@ export default RouteTemplate(
 
               <section class="controls">
                 <ul>
-                  {{#if @controller.model.can_send_private_message_to_user}}
+                  {{#if
+                    (and
+                      @controller.model.can_send_private_message_to_user
+                      (not @controller.viewingSelf)
+                    )
+                  }}
                     <li>
                       <DButton
                         @action={{fn
@@ -458,7 +464,7 @@ export default RouteTemplate(
                           "true"
                           "false"
                         }}
-                        class="btn-default"
+                        class="btn-default user-profile-toggle-btn"
                       />
                     </li>
                   {{/if}}

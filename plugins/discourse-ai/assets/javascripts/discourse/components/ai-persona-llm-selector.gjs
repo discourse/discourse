@@ -43,6 +43,9 @@ export default class AiPersonaLlmSelector extends Component {
     }
 
     let enabledPersonas = this.currentUser.ai_enabled_personas;
+    enabledPersonas = enabledPersonas.filter(
+      (persona) => persona.allow_personal_messages
+    );
 
     if (!this.hasLlmSelector) {
       enabledPersonas = enabledPersonas.filter((persona) => persona.username);
@@ -126,12 +129,38 @@ export default class AiPersonaLlmSelector extends Component {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  get showPersonaSelector() {
+    return this.botOptions?.length > 1;
+  }
+
   get showLLMSelector() {
     return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
+  #getPersonaIdFromAttrs() {
+    const personaName = this.args?.personaName;
+    if (personaName) {
+      const persona = this.botOptions.find((p) => p.name === personaName);
+      if (persona) {
+        return persona.id;
+      }
+    }
+  }
+
+  #getLlmIdFromAttrs() {
+    const llmName = this.args?.llmName;
+    if (llmName) {
+      const llm = this.llmOptions.find((l) => l.name === llmName);
+      if (llm) {
+        return llm.id;
+      }
+    }
+  }
+
   #loadStoredPersona() {
-    let personaId = this.keyValueStore.getItem(PERSONA_SELECTOR_KEY);
+    let personaId =
+      this.#getPersonaIdFromAttrs() ||
+      this.keyValueStore.getItem(PERSONA_SELECTOR_KEY);
 
     this._value = this.botOptions[0].id;
     if (personaId) {
@@ -148,7 +177,9 @@ export default class AiPersonaLlmSelector extends Component {
     this.setAllowLLMSelector();
 
     if (this.hasLlmSelector) {
-      let llmId = this.keyValueStore.getItem(LLM_SELECTOR_KEY);
+      let llmId =
+        this.#getLlmIdFromAttrs() ||
+        this.keyValueStore.getItem(LLM_SELECTOR_KEY);
       if (llmId) {
         llmId = parseInt(llmId, 10);
       }
@@ -173,20 +204,22 @@ export default class AiPersonaLlmSelector extends Component {
 
   <template>
     <div class="persona-llm-selector">
-      <div class="persona-llm-selector__selection-wrapper gpt-persona">
-        {{#if @showLabels}}
-          <label>{{i18n "discourse_ai.ai_bot.persona"}}</label>
-        {{/if}}
-        <DropdownSelectBox
-          class="persona-llm-selector__persona-dropdown"
-          @value={{this.value}}
-          @content={{this.botOptions}}
-          @options={{hash
-            icon=(if @showLabels "angle-down" "robot")
-            filterable=this.filterable
-          }}
-        />
-      </div>
+      {{#if this.showPersonaSelector}}
+        <div class="persona-llm-selector__selection-wrapper gpt-persona">
+          {{#if @showLabels}}
+            <label>{{i18n "discourse_ai.ai_bot.persona"}}</label>
+          {{/if}}
+          <DropdownSelectBox
+            class="persona-llm-selector__persona-dropdown"
+            @value={{this.value}}
+            @content={{this.botOptions}}
+            @options={{hash
+              icon=(if @showLabels "angle-down" "robot")
+              filterable=this.filterable
+            }}
+          />
+        </div>
+      {{/if}}
       {{#if this.showLLMSelector}}
         <div class="persona-llm-selector__selection-wrapper llm-selector">
           {{#if @showLabels}}

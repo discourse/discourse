@@ -98,7 +98,7 @@ const extension = {
 
 export default {
   initialize() {
-    withPluginApi("2.1.1", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension(extension);
     });
   },

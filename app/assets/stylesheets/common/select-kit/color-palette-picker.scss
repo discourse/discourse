@@ -1,0 +1,33 @@
+.select-kit {
+  &.color-palette-picker {
+    .color-palette-picker-row {
+      gap: 0.5em;
+      position: relative;
+
+      &__badge {
+        padding: 0.07rem 0.15rem;
+        border-radius: 4px;
+        letter-spacing: 0.25px;
+        align-items: center;
+        display: inline-flex;
+        gap: 0.25rem;
+        background-color: var(--tertiary);
+        color: var(--secondary);
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        font-size: var(--font-down-6);
+        text-transform: uppercase;
+      }
+
+      &__preview {
+        background: var(--secondary--preview, #fff);
+        padding: 5px;
+
+        svg {
+          height: 40px;
+        }
+      }
+    }
+  }
+}

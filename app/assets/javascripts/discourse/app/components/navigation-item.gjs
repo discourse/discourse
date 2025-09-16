@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";

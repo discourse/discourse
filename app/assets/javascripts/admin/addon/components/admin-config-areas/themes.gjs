@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import getURL from "discourse/helpers/get-url";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -68,13 +68,12 @@ export default class AdminConfigAreasThemes extends Component {
       },
       duration: "short",
     });
+
     this.router.transitionTo(
-      `adminConfig.customize.${theme.component ? "components" : "themes"}`,
-      {
-        queryParams: { repoUrl: null, repoName: null },
-      }
+      "adminCustomizeThemes.show.index",
+      "themes",
+      theme.id
     );
-    this.router.refresh();
   }
 
   @action
@@ -91,7 +90,9 @@ export default class AdminConfigAreasThemes extends Component {
       }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.themes.description"
-        themeSiteSettingsUrl=(getURL "/admin/config/theme-site-settings")
+        themeSiteSettingsUrl=(getURL
+          "/admin/config/customize/theme-site-settings"
+        )
       }}
     >
       <:actions as |actions|>
@@ -106,8 +107,6 @@ export default class AdminConfigAreasThemes extends Component {
         </PluginOutlet>
       </:actions>
     </DPageSubheader>
-    <div class="admin-detail">
-      <ThemesGrid @themes={{@themes}} />
-    </div>
+    <ThemesGrid @themes={{@themes}} />
   </template>
 }

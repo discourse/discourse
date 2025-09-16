@@ -21,7 +21,7 @@ RSpec.describe DiscourseAi::Personas::Tools::Image do
     toggle_enabled_bots(bots: [gpt_35_turbo])
   end
 
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{gpt_35_turbo.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
 
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
 

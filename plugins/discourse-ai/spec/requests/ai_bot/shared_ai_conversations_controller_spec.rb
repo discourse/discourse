@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   before do
     enable_current_plugin

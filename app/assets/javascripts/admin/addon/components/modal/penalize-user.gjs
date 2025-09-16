@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import FutureDateInput from "discourse/components/future-date-input";
-import htmlSafe from "discourse/helpers/html-safe";
 import { extractError } from "discourse/lib/ajax-error";
 import I18n, { i18n } from "discourse-i18n";
 import AdminPenaltyPostAction from "admin/components/admin-penalty-post-action";
@@ -112,8 +112,8 @@ export default class PenalizeUser extends Component {
       if (this.successCallback) {
         await this.successCallback(result);
       }
-    } catch {
-      this.flash = extractError(result);
+    } catch (error) {
+      this.flash = result ? extractError(result) : extractError(error);
     } finally {
       this.penalizing = false;
     }

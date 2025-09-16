@@ -38,13 +38,15 @@
 }
 
 .sidebar-section-wrapper {
+  --d-sidebar-section-border-color: var(--d-sidebar-border-color);
+
   @include viewport.from(xl) {
     padding-block: 0.45em;
   }
 
   @include viewport.until(sm) {
     .hamburger-panel .revamped & {
-      margin-bottom: var(--spacing-block-m);
+      margin-bottom: var(--space-4);
     }
   }
 
@@ -58,7 +60,7 @@
     flex-direction: column;
 
     @include viewport.from(xl) {
-      gap: var(--spacing-block-xs);
+      gap: var(--space-1);
     }
   }
 }
@@ -76,7 +78,7 @@
 }
 
 .sidebar-new-topic-button__wrapper {
-  margin: 0 var(--spacing-inline-m) var(--spacing-block-l);
+  margin: 0 var(--space-4) var(--space-6);
 
   .sidebar-new-topic-button .d-icon {
     display: none;
@@ -90,4 +92,16 @@
       z-index: z("modal", "overlay");
     }
   }
+}
+
+.sidebar-theme-toggle__wrapper {
+  order: -1;
+
+  .d-icon-paintbrush {
+    display: none;
+  }
+}
+
+.sidebar-theme-toggle-dropdown.select-kit.combo-box .select-kit-header {
+  padding-left: 1em;
 }

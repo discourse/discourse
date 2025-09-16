@@ -22,6 +22,7 @@ export default class GroupReportsShowController extends Controller {
   @tracked loading = false;
   @tracked results = this.model.results;
   @tracked queryGroupBookmark = this.queryGroup?.bookmark;
+  shouldAutoRun = false;
 
   queryParams = ["params"];
   form = null;
@@ -133,5 +134,12 @@ export default class GroupReportsShowController extends Controller {
   @action
   onRegisterApi(form) {
     this.form = form;
+  }
+
+  @action
+  runOnLoad() {
+    if (this.shouldAutoRun) {
+      this.run();
+    }
   }
 }

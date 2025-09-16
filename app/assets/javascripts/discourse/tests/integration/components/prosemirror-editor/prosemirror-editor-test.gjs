@@ -62,7 +62,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   test("supports registered nodeSpec/parser/serializer", async function (assert) {
     this.siteSettings.rich_editor = true;
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       // Multiple parsers can be registered for the same node type
       api.registerRichEditorExtension({
         parse: { wrap_open() {}, wrap_close() {} },
@@ -116,7 +116,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   test("supports registered markSpec/parser/serializer", async function (assert) {
     this.siteSettings.rich_editor = true;
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension({
         // just for testing purpose - our actual hashtag is a node, not a mark
         markSpec: {
@@ -155,7 +155,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
 
     const state = {};
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension({
         nodeViews: {
           paragraph: class CustomNodeView {
@@ -185,7 +185,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
 
     const state = {};
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       // plugins can be an array
       api.registerRichEditorExtension({
         plugins: [

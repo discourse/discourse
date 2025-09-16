@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    lazy_videos_enabled: "سست ویڈیوز پلگ ان کو فعال کریں"
+    lazy_youtube_enabled: "YouTube ایمبیڈز کے لیے سست لوڈنگ کو فعال کریں۔"

@@ -54,6 +54,11 @@ sq:
           name: "Spam"
       modals:
         select_option: "Zgjidhni një opsion..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} postim"
+            other: "%{count} postime"
       spam:
         short_title: "Spam"
         enable: "Aktivizo"
@@ -134,8 +139,6 @@ sq:
           select: "Zgjidhni"
         image_caption:
           save_caption: "Ruani"
-          automatic_caption_dialog:
-            confirm: "Aktivizo"
       embeddings:
         back: "Kthehu mbrapa"
         save: "Ruani"

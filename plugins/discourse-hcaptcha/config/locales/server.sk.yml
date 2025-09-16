@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 sk:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "Nastal problém s konfiguráciou hCaptcha `site_key` alebo `secret_key`"
+  admin:
+    site_settings:
+      categories:
+        discourse_hcaptcha: "Plugin hCaptcha"
+  site_settings:
+    discourse_hcaptcha_enabled: "Povoľte doplnok hCaptcha. Vyžaduje sa účet <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> ."
+    hcaptcha_site_key: "Kľúč stránky hCaptcha z vášho účtu <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
+    hcaptcha_secret_key: "Tajný kľúč hCaptcha z vášho účtu <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
+  h_captcha_verification_failed: "Overenie hCaptcha zlyhalo"

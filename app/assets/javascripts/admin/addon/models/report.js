@@ -622,7 +622,7 @@ export default class Report extends EmberObject {
   _percentLabel(value) {
     return {
       value: toNumber(value),
-      formattedValue: value ? `${value}%` : "—",
+      formattedValue: value === null || value === undefined ? "—" : `${value}%`,
     };
   }
 

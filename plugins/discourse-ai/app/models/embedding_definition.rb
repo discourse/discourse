@@ -165,8 +165,8 @@ class EmbeddingDefinition < ActiveRecord::Base
     "https://#{service.target}:#{service.port}"
   end
 
-  def prepare_query_text(text, asymetric: false)
-    strategy.prepare_query_text(text, self, asymetric: asymetric)
+  def prepare_query_text(text, asymmetric: false)
+    strategy.prepare_query_text(text, self, asymmetric: asymmetric)
   end
 
   def prepare_target_text(target)
@@ -216,7 +216,9 @@ class EmbeddingDefinition < ActiveRecord::Base
   end
 
   def gemini_client
-    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key)
+    client_dimensions = matryoshka_dimensions ? dimensions : nil
+
+    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key, client_dimensions)
   end
 end
 

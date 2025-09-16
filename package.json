@@ -6,37 +6,37 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@discourse/lint-configs": "^2.22.0",
+    "@discourse/lint-configs": "^2.31.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.7.2",
-    "@glint/core": "1.4.1-unstable.34c4510",
-    "@glint/environment-ember-loose": "1.4.1-unstable.34c4510",
-    "@glint/environment-ember-template-imports": "1.4.1-unstable.34c4510",
-    "@glint/template": "1.4.1-unstable.34c4510",
+    "@glint/core": "^2.0.0-alpha.3",
+    "@glint/environment-ember-loose": "^2.0.0-alpha.3",
+    "@glint/environment-ember-template-imports": "^2.0.0-alpha.3",
+    "@glint/template": "^1.6.0-alpha.2",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.13.1",
+    "@swc/core": "^1.13.5",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.2.0",
     "chrome-remote-interface": "^0.33.3",
-    "concurrently": "^9.2.0",
-    "ember-template-lint": "7.7.0",
-    "esbuild": "^0.25.8",
-    "eslint": "9.27.0",
+    "concurrently": "^9.2.1",
+    "ember-template-lint": "7.9.3",
+    "esbuild": "^0.25.9",
+    "eslint": "9.34.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.12.2",
+    "lefthook": "^1.13.0",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.3",
     "lint-to-the-future-ember-template": "^3.1.0",
-    "lint-to-the-future-eslint": "^3.1.0",
+    "lint-to-the-future-eslint": "^3.2.0",
     "magnific-popup": "1.1.0",
     "pikaday": "1.8.2",
-    "playwright": "1.52.0",
+    "playwright": "1.55.0",
     "prettier": "3.5.3",
-    "puppeteer-core": "^24.14.0",
+    "puppeteer-core": "^24.20.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
-    "stylelint": "16.19.1",
-    "terser": "^5.43.1",
+    "stylelint": "16.23.1",
+    "terser": "^5.44.0",
     "typescript": "5.6.x"
   },
   "scripts": {
@@ -51,6 +51,7 @@
     "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' 'themes/**/*.{gjs,hbs}' --fix",
     "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
     "lint:prettier:fix": "pnpm prettier -w 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
+    "lint:glint": "glint -p jsconfig.json --noEmit",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
@@ -70,7 +71,7 @@
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
-      "ember-source@5.12.0": "patches/ember-source@5.12.0.patch"
+      "ember-source@6.6.0": "patches/ember-source@6.6.0.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -82,6 +83,9 @@
       "ignoreMissing": [
         "webpack"
       ]
+    },
+    "overrides": {
+      "@ember/test-waiters": "4.1.1"
     }
   }
 }

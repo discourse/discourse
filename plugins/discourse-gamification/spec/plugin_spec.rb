@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe ::DiscourseGamification do
   let(:user) { Fabricate(:user) }
   let!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id) }

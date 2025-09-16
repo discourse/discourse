@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import CategoriesOnly from "discourse/components/categories-only";
 

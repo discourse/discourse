@@ -84,7 +84,6 @@ fr:
               help: "p. ex., #canal, @utilisateur."
           errors:
             action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
-            channel_not_found: "Le canal spécifié n'existe pas dans Slack"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ fr:
               help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Matrix."
             room_id:
               title: "ID du salon"
-              help: "L'« identifiant privé » du salon. Il devrait ressembler à !abcdefg:matrix.org"
           errors:
             unknown_token: "Le jeton d'accès est invalide"
             unknown_room: "L'ID du salon est invalide"

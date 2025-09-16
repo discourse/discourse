@@ -18,6 +18,12 @@ module PageObjects
         form.choose(I18n.t("admin_js.admin.user_fields.requirement.#{requirement}.title"))
       end
 
+      def unselect_preference(preference)
+        form = page.find(".user-field")
+
+        form.find(".form-kit__control-checkbox[name='#{preference}']:checked").click
+      end
+
       def click_add_field
         page.find(".d-page-header__actions .btn-primary").click
       end

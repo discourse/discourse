@@ -4,6 +4,7 @@ RSpec.describe Admin::ColorSchemesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
+  fab!(:theme)
 
   let(:valid_params) do
     {
@@ -44,45 +45,6 @@ RSpec.describe Admin::ColorSchemesController do
         scheme_colors = serialized_scheme["colors"]
         expect(scheme_colors[0]["name"]).to eq("primary")
         expect(scheme_colors[0]["hex"]).to eq(scheme.resolved_colors["primary"])
-      end
-
-      it "doesn't list theme-owned color schemes" do
-        owned_scheme = Fabricate(:color_scheme, owning_theme: Fabricate(:theme))
-        scheme = Fabricate(:color_scheme)
-
-        get "/admin/color_schemes.json"
-        expect(response.status).to eq(200)
-
-        ids = response.parsed_body.map { |obj| obj["id"] }
-        expect(ids).to include(scheme.id)
-        expect(ids).not_to include(owned_scheme.id)
-      end
-
-      it "filters out theme-owned color schemes when exclude_theme_owned is true" do
-        theme = Fabricate(:theme)
-        theme_owned_scheme = Fabricate(:color_scheme, name: "Theme Scheme")
-
-        ThemeColorScheme.create!(theme: theme, color_scheme: theme_owned_scheme)
-
-        owned_scheme = Fabricate(:color_scheme, name: "Directly Owned", theme: theme)
-        regular_scheme = Fabricate(:color_scheme, name: "Regular Scheme")
-
-        get "/admin/color_schemes.json", params: { exclude_theme_owned: true }
-
-        expect(response.status).to eq(200)
-
-        scheme_names = response.parsed_body.map { |scheme| scheme["name"] }
-        expect(scheme_names).to include("Regular Scheme")
-        expect(scheme_names).not_to include("Theme Scheme")
-        expect(scheme_names).not_to include("Directly Owned")
-
-        get "/admin/color_schemes.json"
-
-        expect(response.status).to eq(200)
-        scheme_names = response.parsed_body.map { |scheme| scheme["name"] }
-        expect(scheme_names).to include("Regular Scheme")
-        expect(scheme_names).to include("Directly Owned")
-        expect(scheme_names).not_to include("Theme Scheme")
       end
     end
 
@@ -188,13 +150,78 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.parsed_body["errors"]).to be_present
       end
 
-      it "doesn't allow editing theme-owned schemes" do
-        color_scheme = Fabricate(:color_scheme, owning_theme: Fabricate(:theme))
+      it "can set a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: nil, dark_color_scheme_id: nil)
+        params = valid_params
 
-        put "/admin/color_schemes/#{color_scheme.id}.json", params: valid_params
-        expect(response.status).to eq(404)
-        color_scheme.reload
-        expect(color_scheme.name).not_to eq(valid_params[:color_scheme][:name])
+        params[:color_scheme][:default_light_on_theme] = true
+        params[:color_scheme][:default_dark_on_theme] = true
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
+
+      it "can unset a light and dark color scheme as default on the theme" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+        params = valid_params
+
+        params[:color_scheme][:default_light_on_theme] = false
+        params[:color_scheme][:default_dark_on_theme] = false
+
+        put "/admin/color_schemes/#{existing.id}.json", params: params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to be_nil
+        expect(default_theme.dark_color_scheme_id).to be_nil
+      end
+
+      it "does not change color schame default when params are not present" do
+        Theme.find_default.update!(color_scheme_id: existing.id, dark_color_scheme_id: existing.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        default_theme = Theme.find_default
+        expect(default_theme.color_scheme_id).to eq(existing.id)
+        expect(default_theme.dark_color_scheme_id).to eq(existing.id)
+      end
+
+      it "doesn't allow editing the name or colors of a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows making a theme-owned palette user selectable" do
+        existing.update!(theme_id: theme.id, user_selectable: false)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                user_selectable: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(existing.reload.user_selectable).to eq(true)
+      end
+
+      it "allows making a theme-owned palette the default theme's palette" do
+        existing.update!(theme_id: theme.id)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                default_light_on_theme: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(Theme.find_default.reload.color_scheme_id).to eq(existing.id)
       end
     end
 
@@ -233,12 +260,13 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.status).to eq(200)
       end
 
-      it "doesn't allow deleting theme-owned schemes" do
-        color_scheme = Fabricate(:color_scheme, owning_theme: Fabricate(:theme))
+      it "doesn't allow deleting a theme-owned palette" do
+        existing.update!(theme_id: theme.id)
 
-        delete "/admin/color_schemes/#{color_scheme.id}.json"
-        expect(response.status).to eq(404)
-        expect(color_scheme.reload).to be_persisted
+        expect { delete "/admin/color_schemes/#{existing.id}.json" }.not_to change {
+          ColorScheme.count
+        }
+        expect(response.status).to eq(403)
       end
     end
 

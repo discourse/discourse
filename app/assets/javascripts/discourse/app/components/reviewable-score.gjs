@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { gt } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";

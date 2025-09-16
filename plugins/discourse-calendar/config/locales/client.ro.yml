@@ -24,24 +24,27 @@ ro:
         month: "Lună"
         week: "Săptămână"
         day: "Zi"
+        year: "An"
     group_timezones:
       search: "Caută..."
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      invite: "Notifică un utilizator"
+        invite_user_predefined_attendance_notification: "%{username} ți-a setat automat participarea și te-a invitat la %{eventName}"
+        an_event: "un eveniment"
+      invite: "Notifică utilizator"
       add_to_calendar: "Adaugă în calendar"
       send_pm_to_creator: "Trimite PM către %{username}"
-      export_event: "Exportă evenimentul"
-      created_by: "Creată de"
-      bulk_invite: "Invitație în masă"
+      export_event: "Exportă eveniment"
+      created_by: "Creat de"
+      bulk_invite: "Invită în masă"
       bulk_invite_modal:
         title: "Invitație în masă"
-        success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
+        success: "Fișier încărcat cu succes, te vom înștiința printr-un mesaj când procesarea este completă."
         error: "Scuze, fișierul trebuie să fie în format CSV."
         confirmation_message: "Ești pe cale să anunți pe toată lumea din fișierul încărcat."
         send_bulk_invites: "Trimite invitații"
-        group_selector_placeholder: "Selectează un grup..."
+        group_selector_placeholder: "Alege un grup..."
       upcoming_events:
         title: "Evenimente viitoare"
         creator: "Creator"
@@ -58,12 +61,13 @@ ro:
         invitee:
           status:
             unknown: "Nu sunt interesat"
-            going: "Vin"
-            not_going: "Nu Vin"
+            going: "Merg"
+            not_going: "Nu merg"
             interested: "Interesat"
         event:
           expired: "Expirate"
           closed: "Închis"
+          full: "Complet"
           status:
             public:
               title: "Public"
@@ -78,9 +82,9 @@ ro:
           label: Fus orar
         reminders:
           units:
-            minutes: "de minute"
-            hours: "de ore"
-            days: "de zile"
+            minutes: "minute"
+            hours: "ore"
+            days: "zile"
           periods:
             before: "înainte"
             after: "după"
@@ -88,6 +92,9 @@ ro:
           label: "Recurență"
           none: "Fără recurență"
           every_day: "În fiecare zi"
+        max_attendees:
+          label: "Număr maxim de participanți"
+          placeholder: "Fără limită"
         url:
           label: "URL"
           placeholder: "Opțional"

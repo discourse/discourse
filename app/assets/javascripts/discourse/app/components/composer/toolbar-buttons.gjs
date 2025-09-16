@@ -43,6 +43,7 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
+              @title={{button.title}}
               @context={{@data.context}}
               @content={{(button.popupMenu.options)}}
               @onChange={{button.popupMenu.action}}
@@ -66,6 +67,7 @@ export default class ComposerToolbarButtons extends Component {
               @icon={{button.icon}}
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
+              aria-keyshortcuts={{button.ariaKeyshortcuts}}
               tabindex={{this.tabIndex button}}
               class={{concatClass
                 "toolbar__button"

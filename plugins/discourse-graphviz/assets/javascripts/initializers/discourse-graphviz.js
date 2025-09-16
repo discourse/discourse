@@ -51,7 +51,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.discourse_graphviz_enabled) {
-      withPluginApi("0.8.22", (api) => {
+      withPluginApi((api) => {
         api.decorateCooked(
           ($elem) => {
             const $graphviz = $elem.find(".graphviz");

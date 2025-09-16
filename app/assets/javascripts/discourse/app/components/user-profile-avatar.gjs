@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";

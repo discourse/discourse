@@ -66,6 +66,14 @@ cs:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
+      translations:
+        title: "Překlady"
+        progress_chart:
+          bar_done:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvků"
+            many: "%{count} příspěvky"
+            other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"
@@ -213,12 +221,6 @@ cs:
           generating: "Generování popisku..."
           credits: "Popisek od AI"
           save_caption: "Uložit"
-          automatic_caption_setting: "Povolit automatické popisky"
-          automatic_caption_loading: "Popisuji obrázky..."
-          automatic_caption_dialog:
-            prompt: "Tento příspěvek obsahuje obrázky bez popisků. Chcete povolit automatické popisky při nahrávání obrázků? (To lze později změnit ve vašich nastaveních)"
-            confirm: "Zapnout"
-            cancel: "Již se neptat"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
       embeddings:
         back: "Zpět"

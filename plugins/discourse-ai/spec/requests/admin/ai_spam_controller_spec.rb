@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Admin::AiSpamController do
   fab!(:admin)
   fab!(:user)
@@ -32,30 +30,6 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
         expect(AiModerationSetting.spam.data["custom_instructions"]).to eq("custom instructions")
       end
 
-      it "denies update for disallowed seeded llm" do
-        seeded_llm = Fabricate(:llm_model, id: -1)
-
-        put "/admin/plugins/discourse-ai/ai-spam.json",
-            params: {
-              is_enabled: true,
-              llm_model_id: seeded_llm.id,
-              custom_instructions: "custom instructions",
-            }
-
-        expect(response.status).to eq(422)
-
-        SiteSetting.ai_spam_detection_model_allowed_seeded_models = seeded_llm.id.to_s
-
-        put "/admin/plugins/discourse-ai/ai-spam.json",
-            params: {
-              is_enabled: true,
-              llm_model_id: seeded_llm.id,
-              custom_instructions: "custom instructions",
-            }
-
-        expect(response.status).to eq(200)
-      end
-
       it "validates the selected persona has a valid response format" do
         ai_persona = Fabricate(:ai_persona, response_format: nil)
 
@@ -81,26 +55,6 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
 
         expect(response.status).to eq(200)
         expect(AiModerationSetting.spam.ai_persona_id).to eq(ai_persona.id)
-      end
-
-      it "ensures that seeded llm ID is properly passed and allowed" do
-        seeded_llm = Fabricate(:seeded_model)
-
-        SiteSetting.ai_spam_detection_model_allowed_seeded_models = [
-          llm_model.id,
-          seeded_llm.id,
-        ].join("|")
-
-        put "/admin/plugins/discourse-ai/ai-spam.json",
-            params: {
-              is_enabled: true,
-              llm_model_id: seeded_llm.id,
-              custom_instructions: "custom instructions",
-            }
-        expect(SiteSetting.ai_spam_detection_model_allowed_seeded_models).to eq(
-          "#{llm_model.id}|#{seeded_llm.id}",
-        )
-        expect(response.status).to eq(200)
       end
 
       it "can not enable spam detection without a model selected" do
@@ -355,18 +309,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
         AiModerationSetting.create!(setting_type: :spam, llm_model_id: llm_model.id)
       end
 
-      it "correctly filters seeded llms" do
+      it "lists available LLMs" do
         SiteSetting.ai_spam_detection_enabled = true
-        seeded_llm = Fabricate(:seeded_model)
-
-        get "/admin/plugins/discourse-ai/ai-spam.json"
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        # only includes fabricated model
-        expect(json["available_llms"].length).to eq(1)
-
-        SiteSetting.ai_spam_detection_model_allowed_seeded_models = seeded_llm.id.to_s
+        Fabricate(:seeded_model)
 
         get "/admin/plugins/discourse-ai/ai-spam.json"
         expect(response.status).to eq(200)

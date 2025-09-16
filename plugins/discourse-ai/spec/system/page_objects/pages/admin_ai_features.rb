@@ -26,7 +26,7 @@ module PageObjects
 
       def has_feature_persona?(feature_name, name)
         page.has_css?(
-          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__persona-button .d-button-label",
+          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__persona-link",
           text: name,
         )
       end

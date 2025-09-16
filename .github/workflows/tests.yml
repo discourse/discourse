@@ -12,11 +12,6 @@ on:
       - main
       - beta
       - stable
-    paths-ignore:
-      - ".github/workflows/migration-tests.yml"
-      - ".github/dependabot.yml"
-      - ".github/labeler.yml"
-      - "migrations/**"
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -86,7 +81,7 @@ jobs:
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -186,7 +181,6 @@ jobs:
         run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
       - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
@@ -281,6 +275,11 @@ jobs:
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+
+      - name: Theme Transpiler Tests
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        working-directory: app/assets/javascripts/theme-transpiler
+        run: pnpm test
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'

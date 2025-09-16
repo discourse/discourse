@@ -8,7 +8,7 @@
   .item,
   .user-stream-item {
     background: var(--d-content-background, var(--secondary));
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     padding: 1em 0.53em;
     list-style: none;
 
@@ -120,8 +120,8 @@
     padding-top: 0;
 
     li.notification {
-      padding: 0.25em 0;
-      border-bottom: 1px solid var(--primary-low);
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--content-border-color);
 
       a {
         align-items: center;
@@ -129,23 +129,14 @@
 
       .d-icon {
         color: var(--primary-medium);
+        padding-top: 0;
+        font-size: var(--font-up-2);
       }
 
       .relative-date {
         margin-left: auto;
         padding-top: 0;
         float: none;
-      }
-    }
-
-    &:not(.show-avatars) {
-      li.notification {
-        padding: var(--space-3);
-
-        .d-icon {
-          padding-top: 0;
-          font-size: var(--font-up-2);
-        }
       }
     }
   }

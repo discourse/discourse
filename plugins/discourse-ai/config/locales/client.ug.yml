@@ -7,6 +7,14 @@
 ug:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
         reports:
           filters:
@@ -58,6 +66,12 @@ ug:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
+      translations:
+        title: "تەرجىمە"
+        progress_chart:
+          bar_done:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"
@@ -151,8 +165,6 @@ ug:
           selected: "تاللاندى"
         image_caption:
           save_caption: "ساقلا"
-          automatic_caption_dialog:
-            confirm: "قوزغات"
       embeddings:
         back: "كەينى"
         save: "ساقلا"

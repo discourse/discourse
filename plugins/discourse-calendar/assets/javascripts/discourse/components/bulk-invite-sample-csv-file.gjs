@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
@@ -29,8 +30,7 @@ export default class BulkInviteSampleCsvFile extends Component {
   <template>
     <DButton
       @label="discourse_post_event.bulk_invite_modal.download_sample_csv"
-      {{! template-lint-disable no-action }}
-      @action={{action "downloadSampleCsv"}}
+      @action={{this.downloadSampleCsv}}
     />
   </template>
 }

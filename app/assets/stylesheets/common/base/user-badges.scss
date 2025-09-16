@@ -6,12 +6,11 @@
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
   background-color: var(--secondary);
-  margin: 4px 0 0;
 
   img {
     height: 16px;
@@ -132,8 +131,8 @@
 }
 
 .badge-card {
-  background-color: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
+  background-color: var(--d-badge-card-background-color);
+  border: 1px solid var(--content-border-color);
   position: relative;
   border-radius: var(--d-border-radius);
 
@@ -319,7 +318,7 @@
   .badge-set-title {
     flex: 0 1 auto;
     padding: 1.5em;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .badge-title {
       height: 100%;

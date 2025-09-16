@@ -13,6 +13,10 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
+import {
+  INTERFACE_COLOR_MODES,
+  USER_OPTION_COMPOSITION_MODES,
+} from "discourse/lib/constants";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -106,10 +110,12 @@ let userOptionFields = [
   "email_previous_replies",
   "color_scheme_id",
   "dark_scheme_id",
+  "interface_color_mode",
   "dynamic_favicon",
   "enable_quoting",
   "enable_smart_lists",
   "enable_defer",
+  "enable_markdown_monospace_font",
   "automatically_unpin_topics",
   "digest_after_minutes",
   "new_topic_duration_minutes",
@@ -134,6 +140,7 @@ let userOptionFields = [
   "sidebar_show_count_of_new_items",
   "watched_precedence_over_muted",
   "topics_unread_when_closed",
+  "composition_mode",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -215,6 +222,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
   @userOption("enable_quoting") enable_quoting;
   @userOption("enable_smart_lists") enable_smart_lists;
+  @userOption("enable_markdown_monospace_font") enable_markdown_monospace_font;
   @userOption("dynamic_favicon") dynamic_favicon;
   @userOption("automatically_unpin_topics") automatically_unpin_topics;
   @userOption("likes_notifications_disabled") likes_notifications_disabled;
@@ -231,6 +239,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("should_be_redirected_to_top") should_be_redirected_to_top;
   @userOption("redirected_to_top") redirected_to_top;
   @userOption("treat_as_new_topic_start_date") treat_as_new_topic_start_date;
+  @userOption("composition_mode") composition_mode;
 
   @gt("private_messages_stats.all", 0) hasPMs;
   @gt("private_messages_stats.mine", 0) hasStartedPMs;
@@ -245,10 +254,16 @@ export default class User extends RestModel.extend(Evented) {
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
   @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
+  @alias("can_edit_tags") canEditTags;
 
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @discourseComputed("user_option.composition_mode")
+  useRichEditor(compositionMode) {
+    return compositionMode === USER_OPTION_COMPOSITION_MODES.rich;
+  }
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
@@ -1290,6 +1305,24 @@ export default class User extends RestModel.extend(Evented) {
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  }
+
+  get prefersLightColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.LIGHT
+    );
+  }
+
+  get prefersDarkColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.DARK
+    );
+  }
+
+  get prefersAutoColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.AUTODARK
+    );
   }
 }
 

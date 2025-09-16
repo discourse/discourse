@@ -17,6 +17,7 @@ export default class AdminPluginsListItem extends Component {
   @service session;
   @service currentUser;
   @service sidebarState;
+  @service router;
 
   @action
   async togglePluginEnabled(plugin) {
@@ -64,6 +65,24 @@ export default class AdminPluginsListItem extends Component {
     );
   }
 
+  get pluginUrl() {
+    if (this.disablePluginSettingsButton) {
+      return null;
+    }
+
+    if (this.args.plugin.useNewShowRoute) {
+      return this.router.urlFor("adminPlugins.show", this.args.plugin);
+    } else {
+      return this.router.urlFor(
+        "adminSiteSettingsCategory",
+        this.args.plugin.settingCategoryName,
+        {
+          queryParams: { filter: `plugin:${this.args.plugin.name}` },
+        }
+      );
+    }
+  }
+
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
@@ -74,9 +93,18 @@ export default class AdminPluginsListItem extends Component {
     >
       <td class="d-table__cell --overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
-          <div class="d-admin-row__overview-name admin-plugins-list__name">
-            {{@plugin.nameTitleized}}
-          </div>
+          {{#if this.pluginUrl}}
+            <a
+              class="d-admin-row__overview-name admin-plugins-list__name"
+              href={{this.pluginUrl}}
+            >
+              {{@plugin.nameTitleized}}
+            </a>
+          {{else}}
+            <div class="d-admin-row__overview-name admin-plugins-list__name">
+              {{@plugin.nameTitleized}}
+            </div>
+          {{/if}}
 
           <div class="badges">
             {{#if @plugin.label}}
@@ -121,14 +149,9 @@ export default class AdminPluginsListItem extends Component {
           >
             {{@plugin.version}}<br />
             {{#if this.isPreinstalled}}
-              <a
-                href="https://meta.discourse.org/t/bundling-more-popular-plugins-with-discourse-core/373574"
-                rel="noopener noreferrer"
-                target="_blank"
-                class="admin-plugins-list__preinstalled-link"
-              >
+              <span class="admin-plugins-list__preinstalled">
                 {{i18n "admin.plugins.preinstalled"}}
-              </a>
+              </span>
             {{else}}
               <PluginCommitHash @plugin={{@plugin}} />
             {{/if}}

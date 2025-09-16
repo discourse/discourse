@@ -1,13 +1,15 @@
 import { cancel } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import { cloneJSON } from "discourse/lib/object";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { i18n } from "discourse-i18n";
 
 let cache = {},
   cacheKey,
@@ -41,7 +43,7 @@ function performSearch(
 ) {
   let cached = cache[term];
   if (cached) {
-    resultsFn(cached);
+    resultsFn(cloneJSON(cached));
     return;
   }
 
@@ -105,7 +107,7 @@ function performSearch(
     })
     .finally(function () {
       oldSearch = null;
-      resultsFn(returnVal);
+      resultsFn(cloneJSON(returnVal));
     });
 }
 
@@ -371,4 +373,28 @@ export default function userSearch(options) {
       }
     );
   });
+}
+
+export function validateSearchResult(obj) {
+  const expectedPropertiesMap = {
+    isUser: {
+      nameProperty: "username",
+      translateKey: "composer.autocomplete.username_missing",
+    },
+    isEmail: {
+      nameProperty: "username",
+      translateKey: "composer.autocomplete.username_missing",
+    },
+    isGroup: {
+      nameProperty: "name",
+      translateKey: "composer.autocomplete.name_missing",
+    },
+  };
+
+  for (const [isEntity, props] of Object.entries(expectedPropertiesMap)) {
+    if (obj[isEntity] && !obj[props.nameProperty]) {
+      throw new Error(i18n(props.translateKey));
+    }
+  }
+  return true;
 }

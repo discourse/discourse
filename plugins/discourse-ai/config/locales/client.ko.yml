@@ -55,6 +55,11 @@ ko:
           name: "스팸"
       modals:
         select_option: "옵션 선택..."
+      translations:
+        title: "번역"
+        progress_chart:
+          bar_done:
+            other: "글 %{count}개"
       spam:
         short_title: "스팸"
         last_seven_days: "지난 7일"
@@ -144,8 +149,6 @@ ko:
           select: "선택"
         image_caption:
           save_caption: "저장"
-          automatic_caption_dialog:
-            confirm: "활성화"
       embeddings:
         back: "뒤로"
         save: "저장"

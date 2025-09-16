@@ -84,7 +84,6 @@ gl:
               help: "i.e. #canle, @usuario."
           errors:
             action_prohibited: "O bot non ten permisos para publicar nesta canle"
-            channel_not_found: "A canle especificada non existe en Slack"
         telegram:
           title: "Telegram"
           param:
@@ -128,7 +127,6 @@ gl:
               help: "Un nome para describir a canle. Non se utiliza para a conexión con Matrix."
             room_id:
               title: "ID de sala"
-              help: "O «identificador privado» da sala. Debería parecerse a algo como !abcdefg:matrix.org"
           errors:
             unknown_token: "O token de acceso non é correcto"
             unknown_room: "O ID da sala non é correcto"

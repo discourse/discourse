@@ -5,6 +5,8 @@ module ::DiscourseHcaptcha
     requires_plugin DiscourseHcaptcha::PLUGIN_NAME
 
     before_action :ensure_config
+    skip_before_action :redirect_to_login_if_required
+
     TOKEN_TTL = 2.minutes
     protect_from_forgery except: [:create]
 

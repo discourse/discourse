@@ -53,6 +53,11 @@ zh_TW:
           name: "搜尋"
         spam:
           name: "垃圾內容"
+      translations:
+        title: "翻譯"
+        progress_chart:
+          bar_done:
+            other: "%{count} 篇貼文"
       spam:
         short_title: "垃圾內容"
         last_seven_days: "過去 7 天"
@@ -147,8 +152,6 @@ zh_TW:
           selected: "已選"
         image_caption:
           save_caption: "儲存"
-          automatic_caption_dialog:
-            confirm: "啟用"
       embeddings:
         back: "上一步"
         save: "儲存"

@@ -49,6 +49,11 @@ sw:
           name: "Barua Taka"
       modals:
         select_option: "Chagua chaguo moja..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} chapisho"
+            other: "%{count} machapisho"
       spam:
         short_title: "Barua Taka"
         enable: "Wezesha"
@@ -116,8 +121,6 @@ sw:
           cancel: "Batili"
         image_caption:
           save_caption: "Hifadhi"
-          automatic_caption_dialog:
-            confirm: "Wezesha"
       embeddings:
         back: "Iliyopita"
         save: "Hifadhi"

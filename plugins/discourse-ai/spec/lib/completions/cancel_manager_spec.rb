@@ -87,9 +87,21 @@ describe DiscourseAi::Completions::CancelManager do
       wait_for { cancel_manager.callbacks.size == 1 }
 
       cancel_manager.cancel!
-      completion_thread.join(2)
 
-      expect(completion_thread).not_to be_alive
+      # on slow machines this may take a bit longer to cancel, usually on a fast machine this is instant
+      completion_thread.join(5)
+
+      begin
+        expect(completion_thread).not_to be_alive
+      rescue RSpec::Expectations::ExpectationNotMetError
+        puts "Thread still alive - dumping backtraces:"
+        Thread.list.each do |t|
+          puts "Thread #{t.object_id}: #{t.status}"
+          puts t.backtrace&.join("\n")
+          puts
+        end
+        raise
+      end
     ensure
       begin
         server.close

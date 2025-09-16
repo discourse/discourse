@@ -5,7 +5,7 @@ module DiscourseAi
     module Endpoints
       class OpenAi < Base
         def self.can_contact?(model_provider)
-          %w[open_ai azure].include?(model_provider)
+          %w[open_ai azure groq].include?(model_provider)
         end
 
         def normalize_model_params(model_params)
@@ -14,7 +14,7 @@ module DiscourseAi
           # max_tokens is deprecated however we still need to support it
           # on older OpenAI models and older Azure models, so we will only normalize
           # if our model name starts with o (to denote all the reasoning models)
-          if llm_model.name.starts_with?("o")
+          if llm_model.name.starts_with?(/o|gpt-5/)
             max_tokens = model_params.delete(:max_tokens)
             model_params[:max_completion_tokens] = max_tokens if max_tokens
           end
@@ -62,7 +62,7 @@ module DiscourseAi
         def reasoning_effort
           return @reasoning_effort if defined?(@reasoning_effort)
           @reasoning_effort = llm_model.lookup_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !%w[low medium high].include?(@reasoning_effort)
+          @reasoning_effort = nil if !%w[minimal low medium high].include?(@reasoning_effort)
           @reasoning_effort
         end
 
@@ -80,7 +80,13 @@ module DiscourseAi
         def prepare_payload(prompt, model_params, dialect)
           payload = default_options.merge(model_params).merge(messages: prompt)
 
-          payload[:reasoning_effort] = reasoning_effort if reasoning_effort
+          if reasoning_effort
+            if responses_api?
+              payload.merge!({ reasoning: { effort: reasoning_effort } })
+            else
+              payload.merge!({ reasoning_effort: reasoning_effort })
+            end
+          end
 
           if @streaming_mode
             payload[:stream] = true

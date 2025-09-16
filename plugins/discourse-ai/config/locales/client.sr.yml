@@ -54,6 +54,12 @@ sr:
           name: "Nepoželjno"
       modals:
         select_option: "Izaberi jednu od opcija..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} poruka"
+            few: "%{count} poruka"
+            other: "%{count} poruka"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Последњих 7 дана"
@@ -126,8 +132,6 @@ sr:
           select: "Odaberite"
         image_caption:
           save_caption: "Sačuvaj"
-          automatic_caption_dialog:
-            confirm: "Omogući"
       embeddings:
         back: "Nazad"
         save: "Sačuvaj"

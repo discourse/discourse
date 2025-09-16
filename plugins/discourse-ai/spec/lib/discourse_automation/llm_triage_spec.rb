@@ -11,6 +11,7 @@ describe DiscourseAi::Automation::LlmTriage do
   let(:automation) { Fabricate(:automation, script: "llm_triage", enabled: true) }
 
   fab!(:llm_model)
+  fab!(:ai_persona)
 
   def add_automation_field(name, value, type: "text")
     automation.fields.create!(
@@ -27,9 +28,11 @@ describe DiscourseAi::Automation::LlmTriage do
     enable_current_plugin
 
     SiteSetting.tagging_enabled = true
-    add_automation_field("system_prompt", "hello %%POST%%")
+
+    ai_persona.update!(default_llm: llm_model)
+
+    add_automation_field("triage_persona", ai_persona.id)
     add_automation_field("search_for_text", "bad")
-    add_automation_field("model", "custom:#{llm_model.id}")
     add_automation_field("category", category.id, type: "category")
     add_automation_field("tags", %w[aaa bbb], type: "tags")
     add_automation_field("hide_topic", true, type: "boolean")
@@ -42,21 +45,17 @@ describe DiscourseAi::Automation::LlmTriage do
   it "can trigger via automation" do
     post = Fabricate(:post, raw: "hello " * 5000)
 
-    body = {
-      model: "gpt-3.5-turbo-0301",
-      usage: {
-        prompt_tokens: 337,
-        completion_tokens: 162,
-        total_tokens: 499,
-      },
-      choices: [
-        { message: { role: "assistant", content: "bad" }, finish_reason: "stop", index: 0 },
-      ],
-    }.to_json
+    chunks = <<~RESPONSE
+    data: {"id":"chatcmpl-B2VwlY6KzSDtHvg8pN1VAfRhhLFgn","object":"chat.completion.chunk","created":1739939159,"model": "gpt-3.5-turbo-0301","service_tier":"default","system_fingerprint":"fp_ef58bd3122","choices":[{"index":0,"delta":{"role":"assistant","content":"","refusal":null},"finish_reason":null}],"usage":null}
+
+    data: {"id":"chatcmpl-B2VwlY6KzSDtHvg8pN1VAfRhhLFgn","object":"chat.completion.chunk","created":1739939159,"model": "gpt-3.5-turbo-0301","service_tier":"default","system_fingerprint":"fp_ef58bd3122","choices":[{"index":0,"delta":{"content":"bad"},"finish_reason":null}],"usage":null}
+
+    data: [DONE]
+    RESPONSE
 
     WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
       status: 200,
-      body: body,
+      body: chunks,
     )
 
     automation.running_in_background!
@@ -96,7 +95,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # PM
     reply_user.update!(admin: true)
     add_automation_field("include_personal_messages", true, type: :boolean)
-    add_automation_field("temperature", "0.2")
+    ai_persona.update!(temperature: 0.2)
     add_automation_field("max_output_tokens", "700")
     post = Fabricate(:post, topic: personal_message)
 

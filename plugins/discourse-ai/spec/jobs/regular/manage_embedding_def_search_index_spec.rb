@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ManageEmbeddingDefSearchIndex do
+  subject(:job) { described_class.new }
+
   fab!(:embedding_definition)
 
   before { enable_current_plugin }
@@ -10,7 +12,7 @@ RSpec.describe Jobs::ManageEmbeddingDefSearchIndex do
       it "does nothing" do
         invalid_id = 999_999_999
 
-        subject.execute(id: invalid_id)
+        job.execute(id: invalid_id)
 
         expect(
           DiscourseAi::Embeddings::Schema.correctly_indexed?(
@@ -22,14 +24,14 @@ RSpec.describe Jobs::ManageEmbeddingDefSearchIndex do
 
     context "when the embedding def is fresh" do
       it "creates the indexes" do
-        subject.execute(id: embedding_definition.id)
+        job.execute(id: embedding_definition.id)
 
         expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_definition)).to eq(true)
       end
 
       it "creates them only once" do
-        subject.execute(id: embedding_definition.id)
-        subject.execute(id: embedding_definition.id)
+        job.execute(id: embedding_definition.id)
+        job.execute(id: embedding_definition.id)
 
         expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_definition)).to eq(true)
       end
@@ -46,7 +48,7 @@ RSpec.describe Jobs::ManageEmbeddingDefSearchIndex do
             false,
           )
 
-          subject.execute(id: embedding_definition.id)
+          job.execute(id: embedding_definition.id)
 
           expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_definition)).to eq(
             true,

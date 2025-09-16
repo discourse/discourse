@@ -853,7 +853,11 @@ et:
       color_schemes:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
-        regular: "Tavaline"
+        interface_modes:
+          light: "Hele"
+          dark: "Tume"
+        picker:
+          active: "Aktiivne"
       dark_mode: "Tume režiim"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
@@ -1402,6 +1406,8 @@ et:
     full_name_requirement:
       required_at_signup: "Nõutud"
       optional_at_signup: "Valikuline"
+    welcome_banner_page_visibility:
+      homepage: "Avaleht"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1441,8 +1447,6 @@ et:
       whisper: "sosista"
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
-      toggle_whisper: "Lülita sosistamine ümber"
-      insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"
       drafts_offline: "mustandid vallasrežiimis"
@@ -1485,10 +1489,7 @@ et:
       paste_code_text: "kirjuta või kleebi kood siia"
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
-      olist_title: "Numberloend"
-      ulist_title: "Täpploend"
       list_item: "Loendi element"
-      toggle_direction: "Muuda suunda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -3109,6 +3110,11 @@ et:
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
         learn_more: "Uuri veel"
+        filters:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          reset: "Nulli"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3195,6 +3201,7 @@ et:
           theme: "Teema"
           component: "Komponent"
           components: "Komponendid"
+          filter_all: "Kõik"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
           customize_desc: "Kohanda:"
@@ -3208,7 +3215,6 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
-          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3227,9 +3233,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          settings: "Seaded"
-          colors: "Värvid"
-          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:
@@ -3249,12 +3252,12 @@ et:
               too_small: "peab olema suurem või võrdne kui %{count}"
               too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
+          light: "hele"
+          dark: "tume"
           title: "Värvid"
           edit: "Muuda"
           filters:
             all: "Kõik"
-          active_badge:
-            text: "Aktiivne"
           copy_name_prefix: "Koopia sellest"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
@@ -3591,7 +3594,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_forbidden_because_staff: "Adminne ja moderaatoreid ei saa kustutada."
         delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"

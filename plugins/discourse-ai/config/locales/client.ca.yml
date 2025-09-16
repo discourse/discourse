@@ -52,6 +52,12 @@ ca:
           name: "Brossa"
       modals:
         select_option: "Trieu una opció..."
+      translations:
+        title: "Traduccions"
+        progress_chart:
+          bar_done:
+            one: "%{count} publicació"
+            other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
         last_seven_days: "Els darrers 7 dies"
@@ -129,8 +135,6 @@ ca:
           cancel: "Cancel·la"
         image_caption:
           save_caption: "Desa"
-          automatic_caption_dialog:
-            confirm: "Activa"
       embeddings:
         back: "Enrere"
         save: "Desa"

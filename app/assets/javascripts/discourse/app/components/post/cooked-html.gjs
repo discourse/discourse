@@ -14,11 +14,13 @@ import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
+import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
 import { i18n } from "discourse-i18n";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
 const POST_COOKED_DECORATORS = [
+  decorateStatefulHtmlElements,
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,
@@ -46,7 +48,7 @@ export default class PostCookedHtml extends Component {
   }
 
   @bind
-  decorateBeforeAdopt(element, helper, args) {
+  decorate(element, helper, args) {
     this.#cleanupDecorations();
 
     const decorators = [...POST_COOKED_DECORATORS, ...this.extraDecorators];
@@ -131,21 +133,8 @@ export default class PostCookedHtml extends Component {
 
     this.appEvents.trigger(
       this.isStreamElement
-        ? "decorate-post-cooked-element:before-adopt"
+        ? "decorate-post-cooked-element"
         : "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
-  }
-
-  @bind
-  decorateAfterAdopt(element, helper) {
-    if (!this.isStreamElement) {
-      return;
-    }
-
-    this.appEvents.trigger(
-      "decorate-post-cooked-element:after-adopt",
       element,
       helper
     );
@@ -194,8 +183,7 @@ export default class PostCookedHtml extends Component {
   <template>
     <DecoratedHtml
       @className={{this.className}}
-      @decorate={{this.decorateBeforeAdopt}}
-      @decorateAfterAdopt={{this.decorateAfterAdopt}}
+      @decorate={{this.decorate}}
       @decorateArgs={{lazyHash
         highlightTerm=this.highlightTerm
         isIgnored=this.isIgnored

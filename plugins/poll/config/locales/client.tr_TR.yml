@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Anketi"
   js:
     poll:
       voters:
@@ -110,7 +115,7 @@ tr_TR:
       error_while_fetching_voters: "Üzgünüz, oy verenler gösterilirken bir hata oluştu."
       error_while_exporting_results: "Üzgünüz, anket sonuçlarını dışa aktarırken bir hata oluştu."
       ui_builder:
-        title: Anket Oluştur
+        title: Anket oluştur
         insert: Anket Ekle
         help:
           options_min_count: En az 1 seçenek girin.

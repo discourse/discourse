@@ -54,6 +54,12 @@ nb_NO:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
+      translations:
+        title: "Oversettelser"
+        progress_chart:
+          bar_done:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"
@@ -138,8 +144,6 @@ nb_NO:
           select: "Velg"
         image_caption:
           save_caption: "Lagre"
-          automatic_caption_dialog:
-            confirm: "Aktiver"
       embeddings:
         back: "Forrige"
         save: "Lagre"

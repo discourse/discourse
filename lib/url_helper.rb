@@ -98,7 +98,7 @@ class UrlHelper
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
     # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.
-    # To temporaily work around those issues for the majority of cases, we try parsing with `::URI`.
+    # To temporarily work around those issues for the majority of cases, we try parsing with `::URI`.
     # If that fails (e.g. due to non-ascii characters) then we will fall back to addressable.
     # Hopefully we can simplify this back to `Addressable::URI.normalized_encode` in the future.
 

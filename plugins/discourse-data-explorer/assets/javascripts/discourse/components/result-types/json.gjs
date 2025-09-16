@@ -6,7 +6,6 @@ import DButton from "discourse/components/d-button";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 export default class Json extends Component {
-  @service dialog;
   @service modal;
 
   @cached
@@ -35,8 +34,7 @@ export default class Json extends Component {
       <div class="result-json-value">{{@ctx.value}}</div>
       <DButton
         class="result-json-button"
-        {{! template-lint-disable no-action }}
-        @action={{action "viewJson"}}
+        @action={{this.viewJson}}
         @icon="ellipsis"
         @title="explorer.view_json"
       />

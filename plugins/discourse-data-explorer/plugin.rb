@@ -68,7 +68,12 @@ after_initialize do
 
   add_api_key_scope(
     :discourse_data_explorer,
-    { run_queries: { actions: %w[discourse_data_explorer/query#run], params: %i[id] } },
+    {
+      run_queries: {
+        actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],
+        params: %i[id],
+      },
+    },
   )
 
   reloadable_patch do

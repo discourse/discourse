@@ -54,6 +54,11 @@ bg:
           name: "Спам"
       modals:
         select_option: "Изберете опция..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} публикация"
+            other: "%{count} публикации"
       spam:
         short_title: "Спам"
         last_seven_days: "Последните 7 дни"
@@ -134,8 +139,6 @@ bg:
           cancel: "Отмени"
         image_caption:
           save_caption: "Запази"
-          automatic_caption_dialog:
-            confirm: "Позволи"
       embeddings:
         back: "Назад"
         save: "Запази"

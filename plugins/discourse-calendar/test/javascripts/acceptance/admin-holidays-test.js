@@ -7,7 +7,7 @@ acceptance("Admin - Discourse Calendar - Holidays", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,
-    available_locales: JSON.stringify([{ name: "English", value: "en" }]),
+    available_locales: [{ name: "English", value: "en" }],
   });
 
   needs.pretender((server, helper) => {

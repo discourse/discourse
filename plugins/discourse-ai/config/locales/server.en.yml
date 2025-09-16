@@ -1,9 +1,16 @@
 en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+
   discourse_automation:
     ai:
       flag_types:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
+        review_delete: "Add post to review queue and delete post"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -18,13 +25,25 @@ en:
         description: "Triage posts using a large language model"
         flagged_post: |
           <div>Response from the model:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> rule.</b>
+          <p>%{llm_response}</p>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> rule.</b>
+        notify_author_pm:
+          subject: "Your post was temporarily removed for review"
+          body: |
+            Hi @%{username},
+
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
+
+            Reference: %{post_url}
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
+      llm_tagger:
+        title: Tag topics using AI
+        description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
+    ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
     ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
@@ -73,7 +92,6 @@ en:
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_image_caption_model: "Select the model to use for generating image captions"
-    ai_auto_image_caption_allowed_groups: "Users on these groups can toggle automatic image captioning."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
@@ -81,6 +99,7 @@ en:
     ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
     ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
     ai_embeddings_semantic_search_enabled: "Enable full-page semantic search."
+    ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
@@ -121,7 +140,7 @@ en:
     ai_translation_enabled: "Enables the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
-    ai_translation_max_post_length: "The maximum length of a post to be translated. Posts longer than this will not be translated."
+    ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
 
   reviewables:
@@ -582,7 +601,7 @@ en:
     llm:
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
-        disable_module_first: "You have to disable %{setting} first."
+        disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
         invalid_seeded_model: "You can't use this model with this feature"
@@ -607,8 +626,8 @@ en:
       cannot_edit_builtin: "You can't edit a built-in model."
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
-        invalid_config: "You selected a invalid option."
         choose_model: "Set 'ai embeddings selected model' first."
+        model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"

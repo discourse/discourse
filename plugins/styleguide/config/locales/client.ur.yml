@@ -5,21 +5,35 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "ڈسکورس اسٹائل گائیڈ"
   js:
     styleguide:
       title: "اسٹائل گائڈ"
       welcome: "شروع کرنے کےلئے ، بائیں طرف والے مینو میں سے ایک سیکشن منتخب کریں۔"
       categories:
+        syntax: نحو
         atoms: ایٹم
         molecules: مالیکیول
         organisms: حیاتیات
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "ٹائپوگرافی"
           example: "ڈسکورس میں خوش آمدید"
           paragraph: "اور ڈور میگنا القیہ۔ آپ کو صرف ایک چھوٹی سی چھوٹی سی ورزش کا استعمال کرنا پڑتا ہے ، لیکن اس سے پہلے ہی ہم اس کی قیمتوں پر نتیجہ اخذ کرسکتے ہیں۔ ڈوائس آٹی ایرور ڈولر نے وولپٹیٹ ویلٹیٹ ایسیس سیلم ڈولور ای یو فوگیٹ نولا پیریاتور کی نمائندگی کی۔ غیر معمولی سنت کے موقع پر کامیڈیٹ کے بغیر ، اس کی وجہ یہ ہے کہ اس کی وجہ سے آپ کو غیر معقول حد تک مہیا کیا جاسکتا ہے۔"
         date_time_inputs:
           title: "تاریخ / وقت کی معلومات"
+        menus:
+          title: "مینوز"
+        multi_select:
+          title: "ملٹی سلیکٹ"
+        toasts:
+          title: "ٹکیاں"
         font_scale:
           title: "فونٹ سسٹم"
         colors:
@@ -27,12 +41,14 @@ ur:
         icons:
           title: "آئیکن"
           full_list: "فونٹ آسم آئیکن کی مکمل فہرست ملاحظہ کریں"
+        forms:
+          title: "فارمز"
         buttons:
           title: "بٹن"
         dropdowns:
           title: "ڈراپ ڈاؤن"
         categories:
-          title: "اقسام"
+          title: "زمرہ جات"
         bread_crumbs:
           title: "بریڈ کرم"
         navigation:
@@ -44,15 +60,15 @@ ur:
         categories_list:
           title: "اقسام کی فہرست"
         topic_link:
-          title: "عنوان کا لنک"
+          title: "موضوع کا رابطہ"
         topic_list_item:
-          title: "عنوانات کی فہرست میں ایک شے"
+          title: "موضوعات کی فہرست میں ایک شے"
         topic_statuses:
           title: "موضوع کا مَقام"
         topic_list:
-          title: "عنوانات کی فہرست"
+          title: "موضوعات کی فہرست"
         basic_topic_list:
-          title: "بنیادی عنوانات کی فہرست"
+          title: "بنیادی موضوعات کی فہرست"
         footer_message:
           title: "اختتامی پیغام"
         signup_cta:
@@ -65,12 +81,16 @@ ur:
           title: "موضوع کی اطلاعات"
         post:
           title: "پوسٹ"
+        post_list:
+          title: "پوسٹ فہرست"
+          empty_example: "<PostList /> خالی حالت"
+          populated_example: "<PostList /> آبادی والی حالت"
         topic_map:
           title: "موضوع کا نقشہ"
         site_header:
           title: "سائٹ ہیڈر"
-        suggested_topics:
-          title: "تجویز کردہ موضوعات"
+        more_topics:
+          title: "مزید ٹاپک"
         post_menu:
           title: "پوسٹ فہرست"
         modal:
@@ -78,7 +98,7 @@ ur:
           header: "موڈل کا عنوان"
           footer: "موڈل کا اختتام"
         user_about:
-          title: "صارف کے بارے میں ڈِبّا"
+          title: "رکن کے بارے میں ڈِبّا"
         header_icons:
           title: "ہیڈر آئیکن"
         spinners:
@@ -86,5 +106,10 @@ ur:
         empty_state:
           title: "خالی حالت"
         tooltips:
+          title: "ٹوٹکے"
           description: "تفصیل"
           header: "ہَیڈر"
+          hover_to_see: "ٹوٹکا دیکھنے کے لیے ہوور کریں"
+        char_counter:
+          title: "حرف گننے والا"
+          placeholder: "اپنا متن یہاں درج کریں۔۔"

@@ -12,6 +12,8 @@ cs:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Možnosti lze přidat nebo odebrat."
       voters:
         one: "hlasující"
         few: "hlasující"
@@ -164,6 +166,8 @@ cs:
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval
+        poll_dynamic:
+          label: Povolit přidání nebo odebrání možností po odeslání
         poll_title:
           label: Název (nepovinný)
         poll_options:

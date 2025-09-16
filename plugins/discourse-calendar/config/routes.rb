@@ -12,7 +12,9 @@ DiscoursePostEvent::Engine.routes.draw do
   post "/discourse-post-event/events/:event_id/invitees" => "invitees#create"
   get "/discourse-post-event/events/:post_id/invitees" => "invitees#index"
   delete "/discourse-post-event/events/:post_id/invitees/:id" => "invitees#destroy"
+  get "/upcoming-events/:view/:year/:month/:day" => "upcoming_events#index"
   get "/upcoming-events" => "upcoming_events#index"
+  get "/upcoming-events/mine/:view/:year/:month/:day" => "upcoming_events#index"
   get "/upcoming-events/mine" => "upcoming_events#index"
 end
 

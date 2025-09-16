@@ -449,14 +449,6 @@ nav.post-controls {
     }
 
     button {
-      flex: 0 1 auto;
-      font-size: var(--font-up-1);
-      padding: 8px 10px;
-      vertical-align: top;
-      background: transparent;
-      border: none;
-      border-radius: var(--d-post-control-border-radius);
-
       .discourse-no-touch & {
         &:hover,
         &:focus-visible,
@@ -491,7 +483,6 @@ nav.post-controls {
       }
 
       &.create {
-        margin-right: 0;
         color: var(--d-post-control-create-text-color);
 
         .d-icon {
@@ -706,6 +697,7 @@ aside.quote {
   display: flex;
   align-items: center;
   margin-left: auto;
+  order: 2; // for non-glimmer post stream
 
   a {
     margin-left: 0.3em;
@@ -766,6 +758,10 @@ aside.quote {
 
 .topic-post.staged {
   opacity: 0.4;
+}
+
+.post-stream--cloaked {
+  min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
 }
 
 .quote-button {
@@ -961,7 +957,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     padding-top: 0.5em;
   }
 }
@@ -1119,12 +1115,19 @@ kbd {
 // will remove margins from first (top) and last (bottom) child elements
 blockquote,
 blockquote .post__contents-cooked-quote {
+  overflow-wrap: break-word;
+
   > *:first-child {
     margin-top: 0 !important;
   }
 
   > *:last-child {
     margin-bottom: 0 !important;
+  }
+
+  table {
+    table-layout: fixed; // prevents table from expanding past the post body width
+    width: 100%;
   }
 }
 
@@ -1182,7 +1185,7 @@ blockquote .post__contents-cooked-quote {
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .topic-avatar {
@@ -1372,7 +1375,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   align-items: center;
   justify-content: center;
 
@@ -1514,7 +1517,7 @@ span.mention {
   box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
   max-width: calc(

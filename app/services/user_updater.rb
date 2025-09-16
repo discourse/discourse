@@ -26,8 +26,10 @@ class UserUpdater
     enable_quoting
     enable_smart_lists
     enable_defer
+    enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
+    interface_color_mode
     dynamic_favicon
     automatically_unpin_topics
     digest_after_minutes
@@ -55,6 +57,7 @@ class UserUpdater
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
     topics_unread_when_closed
+    composition_mode
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do

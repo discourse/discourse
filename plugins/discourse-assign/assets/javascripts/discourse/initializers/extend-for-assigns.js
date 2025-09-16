@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
@@ -869,7 +869,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       const currentUser = container.lookup("service:current-user");
       if (currentUser?.can_assign) {
         api.modifyClass(

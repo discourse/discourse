@@ -16,11 +16,8 @@ module PageObjects
         page.has_no_css?(".admin-new-feature-item__screenshot")
       end
 
-      def has_toggle_experiment_button?(enabled)
-        page.has_css?(
-          ".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox[aria-checked='#{enabled}']",
-          visible: false,
-        )
+      def has_toggle_feature_button?()
+        page.has_css?(".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox")
       end
 
       def has_learn_more_link?

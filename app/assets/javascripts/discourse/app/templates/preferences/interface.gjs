@@ -6,6 +6,7 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import ColorPalettePicker from "select-kit/components/color-palette-picker";
 import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
@@ -51,32 +52,42 @@ export default RouteTemplate(
       >
         <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
         <div class="controls">
-          <div class="control-subgroup light-color-scheme">
-            {{#if @controller.showDarkColorSchemeSelector}}
+          {{#if @controller.showLightColorSchemeSelector}}
+            <div class="control-subgroup light-color-scheme">
               <div class="instructions">{{i18n
                   "user.color_schemes.regular"
                 }}</div>
-            {{/if}}
-            <div class="controls">
-              <ComboBox
-                @content={{@controller.userSelectableColorSchemes}}
-                @value={{@controller.selectedColorSchemeId}}
-                @onChange={{@controller.loadColorScheme}}
-                @options={{hash
-                  translatedNone=@controller.selectedColorSchemeNoneLabel
-                  autoInsertNoneItem=@controller.showColorSchemeNoneItem
-                }}
-              />
+              <div class="controls">
+                <ColorPalettePicker
+                  @content={{@controller.userSelectableColorSchemes}}
+                  @value={{@controller.selectedColorSchemeId}}
+                  @onChange={{@controller.loadColorScheme}}
+                />
+              </div>
             </div>
-          </div>
+          {{/if}}
           {{#if @controller.showDarkColorSchemeSelector}}
             <div class="control-subgroup dark-color-scheme">
               <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
               <div class="controls">
-                <ComboBox
+                <ColorPalettePicker
                   @content={{@controller.userSelectableDarkColorSchemes}}
                   @value={{@controller.selectedDarkColorSchemeId}}
                   @onChange={{@controller.loadDarkColorScheme}}
+                />
+              </div>
+            </div>
+          {{/if}}
+          {{#if @controller.showInterfaceColorModeSelector}}
+            <div class="control-subgroup interface-color-mode">
+              <div class="instructions">{{i18n
+                  "user.color_schemes.interface_mode"
+                }}</div>
+              <div class="controls">
+                <ComboBox
+                  @content={{@controller.interfaceColorModes}}
+                  @value={{@controller.selectedInterfaceColorMode}}
+                  @onChange={{@controller.selectColorMode}}
                 />
               </div>
             </div>
@@ -100,22 +111,10 @@ export default RouteTemplate(
         {{/if}}
         {{#if @controller.showDarkColorSchemeSelector}}
           <div class="instructions">
-            {{i18n "user.color_schemes.dark_instructions"}}
+            {{i18n "user.color_schemes.interface_mode_instructions"}}
           </div>
         {{/if}}
       </fieldset>
-    {{/if}}
-
-    {{#if @controller.showDarkModeToggle}}
-      <div class="control-group dark-mode" data-setting-name="user-dark-mode">
-        <label class="control-label">{{i18n "user.dark_mode"}}</label>
-        <div class="controls">
-          <PreferenceCheckbox
-            @labelKey="user.dark_mode_enable"
-            @checked={{@controller.enableDarkMode}}
-          />
-        </div>
-      </div>
     {{/if}}
 
     <div class="control-group text-size" data-setting-name="user-text-size">
@@ -221,6 +220,12 @@ export default RouteTemplate(
         @checked={{@controller.model.user_option.dynamic_favicon}}
         data-setting-name="user-dynamic-favicon"
         class="pref-dynamic-favicon"
+      />
+      <PreferenceCheckbox
+        @labelKey="user.enable_markdown_monospace_font"
+        @checked={{@controller.model.user_option.enable_markdown_monospace_font}}
+        data-setting-name="user-enable-markdown-monospace-font"
+        class="pref-enable-markdown-monospace-font"
       />
       <div
         class="controls controls-dropdown pref-page-title"

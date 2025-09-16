@@ -996,11 +996,13 @@ gl:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
-        disable_dark_scheme: "O mesmo que o normal"
         undo: "Restabelecer"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(predeterminado do sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Escuro"
+        picker:
+          active: "Activo"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
@@ -1722,6 +1724,8 @@ gl:
     full_name_requirement:
       required_at_signup: "Obrigatorio"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Páxina de inicio"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1823,6 +1827,7 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
+      discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1854,18 +1859,8 @@ gl:
       paste_code_text: "escriba un título ou pégueo aquí"
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
-      olist_title: "Listaxe numerada"
-      ulist_title: "Listaxe con símbolos"
       list_item: "Elemento da listaxe"
-      toggle_direction: "Trocar dirección"
       help: "Axuda para a edición con Markdown"
-      collapse: "minimizar o panel de composición"
-      open: "abrir o panel de composición"
-      abandon: "pechar o panel de composición e desbotar o borrador"
-      enter_fullscreen: "abrir o panel de composición en pantalla completa"
-      exit_fullscreen: "saír do panel de composición en pantalla completa"
-      show_toolbar: "amosar a barra de ferramentas de composición"
-      hide_toolbar: "agochar a barra de ferramentas de composición"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -2764,8 +2759,8 @@ gl:
         name: "Nome"
         description: "Descrición"
         remove: "Retirar"
-      tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
-      tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
+      tags_allowed_tags_new_category: "Restrinxir estas etiquetas a esta categoría:"
+      tags_allowed_tag_groups_new_category: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
       tags_tab_description: "As etiquetas e os grupos de etiquetas anteriores só estarán dispoñíbeis nesta categoría e outras que as inclúan. Non poderán usarse noutras categorías."
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
@@ -3204,7 +3199,6 @@ gl:
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
-      info: "Información"
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
@@ -3430,7 +3424,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3935,6 +3929,11 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        filters:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restabelecer"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -4029,6 +4028,7 @@ gl:
           theme: "Tema"
           component: "Compoñente"
           components: "Compoñentes"
+          filter_all: "Todas"
           theme_name: "Nome do tema"
           component_name: "Nome do compoñente"
           themes_intro: "Seleccione un tema existente ou instale un novo para comezar"
@@ -4053,13 +4053,12 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          default: "Activo"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
-          color_scheme_select: "Seleccione as cores que quere utilizar no tema"
+          color_scheme_select: "Seleccione as cores que quere utilizar no tema."
           custom_sections: "Seccións personalizadas:"
           theme_components: "Compoñentes do tema"
           add_all_themes: "Engadir todos os temas"
@@ -4138,10 +4137,6 @@ gl:
           remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
-          settings: "Configuración"
-          colors: "Cores"
-          discard_colors: "Desbotar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:
@@ -4177,12 +4172,12 @@ gl:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
+          light: "claro"
+          dark: "escuro"
           title: "Cores"
           edit: "Editar"
           filters:
             all: "Todas"
-          active_badge:
-            text: "Activo"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"
@@ -4671,7 +4666,6 @@ gl:
             transfer_and_delete: "Transferir e eliminar @%{username}"
             cancel: "Cancelar"
         merge_failed: "Produciuse un erro ao combinar os usuarios."
-        delete_forbidden_because_staff: "Non é posíbel eliminar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
           one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimine as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"

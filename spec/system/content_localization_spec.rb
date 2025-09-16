@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
+  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
   fab!(:admin)
@@ -68,9 +70,16 @@ describe "Content Localization" do
       topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
-      page.find("button.btn-toggle-localized-content").click
+
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.not_translated"),
+      )
 
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
@@ -191,11 +200,16 @@ describe "Content Localization" do
     let(:banner) { PageObjects::Components::AdminChangesBanner.new }
 
     it "does not allow more than the maximum number of locales" do
+      SiteSetting.content_localization_supported_locales = "en|ja"
       SiteSetting.content_localization_max_locales = 2
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      settings_page.select_list_values("content_localization_supported_locales", %w[en ja es])
+      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
+        "English (US), Japanese",
+      )
+
+      settings_page.select_list_values("content_localization_supported_locales", %w[es])
       settings_page.save_setting("content_localization_supported_locales")
       expect(settings_page.error_message("content_localization_supported_locales")).to have_content(
         I18n.t(

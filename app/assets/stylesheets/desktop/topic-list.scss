@@ -26,7 +26,7 @@
 
 .topic-list {
   @extend .topic-list-icons;
-  margin: var(--d-topic-list-margin-h) var(--d-topic-list-margin-v)
+  margin: var(--d-topic-list-margin-y) var(--d-topic-list-margin-x)
     var(--d-topic-list-margin-bottom);
 
   .topic-list-header {
@@ -34,14 +34,14 @@
   }
 
   .topic-list-header .topic-list-data {
-    padding: var(--d-topic-list-header-data-padding-h)
-      var(--d-topic-list-header-data-padding-v);
+    padding: var(--d-topic-list-header-data-padding-y)
+      var(--d-topic-list-header-data-padding-x);
     color: var(--d-topic-list-header-text-color);
   }
 
   .topic-list-data {
-    padding: var(--d-topic-list-data-padding-h)
-      var(--d-topic-list-data-padding-v);
+    padding: var(--d-topic-list-data-padding-y)
+      var(--d-topic-list-data-padding-x);
 
     &:first-of-type {
       padding-inline-start: var(--d-topic-list-data-padding-inline-start);
@@ -58,6 +58,7 @@
 
   button.bulk-select {
     padding: 0;
+    border: 0;
     margin-right: var(--space-2);
     line-height: var(--line-height-large);
   }
@@ -120,7 +121,7 @@
     }
   }
 
-  .topic-list-data.posters {
+  td.topic-list-data.posters {
     height: $td-posters-height;
   }
 
@@ -247,11 +248,6 @@
   }
 }
 
-.category-logo.aspect-image {
-  float: left;
-  margin: var(--space-1) var(--space-8) var(--space-8) 0;
-}
-
 /* Tablet (portrait) ----------- */
 
 // These styles kick in a little earlier when the sidebar appears
@@ -317,5 +313,13 @@
 
 .container.list-container {
   position: relative;
-  padding: 0 var(--list-container-horizontal-padding);
+  padding: 0 var(--list-container-padding-x);
+}
+
+.container.list-container.--categories {
+  padding: 0 var(--list-container-categories-padding-x);
+}
+
+.container.list-container.--topic-list {
+  padding: 0 var(--list-container-topiclist-padding-x);
 }

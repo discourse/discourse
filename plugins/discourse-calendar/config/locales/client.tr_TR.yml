@@ -39,6 +39,7 @@ tr_TR:
       date: "Tarih"
       add_to_calendar: "Google Takvim'e Ekle"
       toggle_timezone_offset_title: "Saat dilimi farkını değiştir"
+      local_time: "Yerel saat"
       region:
         title: "Bölge"
         none: "Hiçbiri"
@@ -313,7 +314,7 @@ tr_TR:
         month: "Ay"
         week: "Hafta"
         day: "Gün"
-        list: "Liste"
+        year: "Yıl"
     group_timezones:
       search: "Ara..."
       group_availability: "%{group} uygunluğu"
@@ -323,10 +324,8 @@ tr_TR:
         after_event_reminder: "Bir etkinlik sona erdi"
         ongoing_event_reminder: "Bir etkinlik devam ediyor"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username}, katılımınızı otomatik olarak ayarladı ve sizi %{description} adlı etkinliğe davet etti"
-        before_event_reminder_html: "Bir etkinlik başlamak üzere %{description}"
-        after_event_reminder_html: "Bir etkinlik sona erdi %{description}"
-        ongoing_event_reminder_html: "Bir etkinlik devam ediyor  %{description}"
+        invite_user_predefined_attendance_notification: "%{username}, katılımınızı otomatik olarak ayarladı ve sizi %{eventName} adlı etkinliğe davet etti"
+        an_event: "bir etkinlik"
       edit_reason: "Etkinlik güncellendi"
       edit_reason_closed: "Etkinlik kapatıldı"
       edit_reason_opened: "Etkinlik açıldı"
@@ -375,6 +374,8 @@ tr_TR:
         creator: "Oluşturucu"
         status: "Durum"
         starts_at: "Başlangıç:"
+        all_events: "Tüm etkinlikler"
+        my_events: "Etkinliklerim"
       upcoming_events_list:
         title: "Yaklaşan etkinlikler"
         empty: "Yaklaşan etkinlik yok"
@@ -417,7 +418,7 @@ tr_TR:
               title: "Bağımsız"
               description: "Bağımsız bir etkinliğe katılınamaz."
             public:
-              title: "Genel"
+              title: "Herkese Açık"
               description: "Herkese açık bir etkinliğe herkes katılabilir."
             private:
               title: "Özel"
@@ -436,6 +437,9 @@ tr_TR:
         update: "Kaydet"
         attach: "Etkinlik oluştur"
         add_reminder: "Hatırlatıcı ekle"
+        show_local_time:
+          label: "Yerel saati göster"
+          description: "Tarihler ve saatler %{timezone} kullanılarak görüntülenir. Bunu bir konumdaki etkinlikler için kullanın, böylece saatler etkinliğin gerçekleştiği saat dilimini yansıtır."
         timezone:
           label: Saat dilimi
           remove_timezone: Saat dilimi yok (UTC)
@@ -452,6 +456,8 @@ tr_TR:
           periods:
             before: "önce"
             after: "sonra"
+        recurrence_until:
+          label: "Kadar (dâhil)"
         recurrence:
           label: "Yinelenme"
           none: "Yineleme yok"
@@ -464,13 +470,18 @@ tr_TR:
         minimal:
           label: "Minimal etkinlik"
           checkbox_label: "Giden/Gitmeyen düğmelerini ve davetlilerin durumunu gizle"
+        allow_chat:
+          label: "Sohbet entegrasyonu"
+          checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
         url:
           label: "URL"
           placeholder: "İsteğe bağlı"
         location:
           label: "Konum"
+          placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
         description:
           label: "Açıklama"
+          placeholder: "İnsanlara etkinliğiniz hakkında biraz daha bilgi verin. Yeni hatlar ve bağlantılar desteklenir."
         name:
           label: "Etkinlik adı"
           placeholder: "İsteğe bağlı, varsayılan olarak konu başlığı"

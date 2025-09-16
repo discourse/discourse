@@ -26,19 +26,19 @@ sv:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM, YYYY h:mm"
+      long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "MMM D, ÅÅÅÅ LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "MMM D, ÅÅÅÅ"
+      long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, YYYY <br/>LT"
       wrap_ago: "%{date} sedan"
@@ -105,7 +105,7 @@ sv:
         almost_x_years:
           one: "nästan %{count} år"
           other: "nästan %{count} år"
-        date_year: "MMM D, ÅÅÅÅ"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min sedan"
@@ -198,7 +198,6 @@ sv:
       search: "Sök"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
       only_admins: "(detta meddelande visas endast för webbplatsadministratörer)"
     broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av inläggsinnehållsdekoratörerna på din webbplats upptäckte ett fel."
@@ -1184,11 +1183,13 @@ sv:
       color_scheme: "Färgpalett"
       color_schemes:
         default_description: "Temat Standard"
-        disable_dark_scheme: "Samma som vanlig"
         undo: "Återställ"
-        regular: "Vanlig"
         dark: "Mörkt läge"
-        default_dark_scheme: "(standard för webbplatsen)"
+        interface_modes:
+          light: "Ljust"
+          dark: "Mörkt"
+        picker:
+          active: "Aktiv"
       dark_mode: "Mörkt läge"
       text_size_default_on_all_devices: "Gör detta till standardstorlek för text på alla mina enheter"
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
@@ -2101,6 +2102,8 @@ sv:
     full_name_requirement:
       required_at_signup: "Krävs"
       optional_at_signup: "Valfritt"
+    welcome_banner_page_visibility:
+      homepage: "Hemsida"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -2181,7 +2184,6 @@ sv:
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
-      insert_table: "Infoga tabell"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Ditt ämne liknar…"
@@ -2240,6 +2242,7 @@ sv:
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
       title: "Eller tryck på %{modifier}Enter"
+      discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
@@ -2275,19 +2278,9 @@ sv:
       paste_code_text: "skriv eller klistra in din kod här"
       upload_title: "Bild"
       upload_description: "skriv en bildbeskrivning här"
-      olist_title: "Numrerad lista"
-      ulist_title: "Punktlista"
       list_item: "Listobjekt"
-      toggle_direction: "Växla riktning"
       help: "Markdown-redigeringshjälp"
-      collapse: "minimera skaparpanelen"
-      open: "öppna skaparpanelen"
-      abandon: "stäng skaparen och kasta utkast"
-      enter_fullscreen: "skaparen i helskärm"
-      exit_fullscreen: "avsluta helskärmsläge för skaparen"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
-      show_toolbar: "visa redigerarens verktygsfält"
-      hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
       yourself_confirm:
@@ -3459,8 +3452,8 @@ sv:
         name: "Namn"
         description: "Beskrivning"
         remove: "Ta bort"
-      tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
-      tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
+      tags_allowed_tags_new_category: "Begränsa dessa taggar till följande kategori:"
+      tags_allowed_tag_groups_new_category: "Begränsa dessa tagg-grupper till denna kategori:"
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
       tags_tab_description: "Taggar och tagg-grupper som specificerats ovan kommer enbart att vara tillgängliga för denna kategori samt andra kategorier som också har specificerat dem. De kommer inte att vara tillgängliga i övriga kategorier."
       tag_groups_placeholder: "(Valfri) lista över tillåtna grupptaggar"
@@ -3972,7 +3965,6 @@ sv:
       choose_for_topic_required_group:
         one: "välj %{count} tagg från '%{name}'…"
         other: "välj %{count} taggar från '%{name}'…"
-      info: "Info"
       default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
       staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."
@@ -4398,7 +4390,7 @@ sv:
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
-      filter_reports: Filtrera rapporter
+      filter_reports: "Filtrera rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -5061,6 +5053,11 @@ sv:
         author: "Av %{author}"
         experimental_badge: "experimentell"
         learn_more: "Läs mer"
+        filters:
+          all: "Alla"
+          enabled: "Aktiverad"
+          disabled: "Inaktiverad"
+          reset: "Återställ"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
@@ -5179,7 +5176,7 @@ sv:
           theme: "Tema"
           component: "Komponent"
           components: "Komponenter"
-          search_placeholder: "skriv för att söka…"
+          filter_all: "Alla"
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"
@@ -5204,15 +5201,13 @@ sv:
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
-          default: "Aktiv"
           settings_editor: "Inställningar för redigerare"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
           auto_update: "Uppdatera automatiskt när Discourse uppdateras"
           color_scheme: "Färgpalett"
-          edit_color_scheme: "Ändra färgpalett"
           default_light_scheme: "Ljus (standard)"
-          color_scheme_select: "Välj färger som ska användas av temat"
+          color_scheme_select: "Välj färger som ska användas av temat."
           custom_sections: "Anpassade avsnitt:"
           theme_components: "Temakomponenter"
           add_all_themes: "Lägg till alla teman"
@@ -5302,10 +5297,6 @@ sv:
           remote_theme_edits: "Om du vill redigera detta tema måste du <a href='%{repoURL}' target='_blank'>skicka in en ändring av dess lagringsplats</a>"
           repo_unreachable: "Kunde inte kontakta Git-lagringsplatsen för detta tema. Felmeddelande:"
           imported_from_archive: "Detta tema importerades från en .zip-fil"
-          settings: "Inställningar"
-          colors: "Färger"
-          discard_colors: "Förkasta"
-          colors_title: "Färger"
           scss:
             text: "CSS"
           after_header:
@@ -5344,12 +5335,12 @@ sv:
           select_base:
             title: "Välj grundfärgspalett"
             description: "Grundpalett:"
+          light: "ljust"
+          dark: "mörkt"
           title: "Färger"
           edit: "Redigera"
           filters:
             all: "Alla"
-          active_badge:
-            text: "Aktiv"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
           undo: "Ångra"
@@ -5952,7 +5943,6 @@ sv:
             cancel: "Avbryt"
         merging_user: "Slår samman användare…"
         merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
-        delete_forbidden_because_staff: "Administratörer och moderatorer kan inte tas bort."
         delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg från administratörer och moderatorer."
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"

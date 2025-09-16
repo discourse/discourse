@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module MobileDetection
+  # if the criteria for mobile_device? changes, update the code for `mobileDevice` in
+  # `javascripts/discourse/app/lib/mobile.js`
   def self.mobile_device?(user_agent)
     user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
   end
@@ -22,8 +24,8 @@ module MobileDetection
 
   MODERN_MOBILE_REGEX =
     %r{
-    \(.*iPhone\ OS\ 1[5-9].*\)|
-    \(.*iPad.*OS\ 1[5-9].*\)|
+    \(.*iPhone\ OS\ 1[6-9].*\)|
+    \(.*iPad.*OS\ 1[6-9].*\)|
     Chrome\/8[89]|
     Chrome\/9[0-9]|
     Chrome\/1[0-9][0-9]|

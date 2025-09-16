@@ -100,12 +100,12 @@ gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
-gem "execjs", require: false
 gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+# When unicorn is not used anymore, we can use Rack 3
+gem "rack", "< 3"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -117,6 +117,8 @@ gem "net-smtp", require: false
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
+
+gem "goldiloader"
 
 group :test do
   gem "capybara", require: false

@@ -50,6 +50,10 @@ th:
           name: "ขยะ"
       modals:
         select_option: "เลือกตัวเลือก..."
+      translations:
+        progress_chart:
+          bar_done:
+            other: "%{count} โพส"
       spam:
         short_title: "ขยะ"
         last_seven_days: "7 วันที่ผ่านมา"
@@ -115,8 +119,6 @@ th:
           cancel: "ยกเลิก"
         image_caption:
           save_caption: "บันทึก"
-          automatic_caption_dialog:
-            confirm: "เปิดใช้งาน"
       embeddings:
         back: "กลับ"
         save: "บันทึก"

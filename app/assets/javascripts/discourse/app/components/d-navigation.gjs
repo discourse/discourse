@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -309,8 +310,17 @@ export default class DNavigation extends Component {
       {{#if this.tag}}
         {{#if this.showToggleInfo}}
           <DButton
-            @icon={{if this.currentUser.staff "wrench" "circle-info"}}
-            @ariaLabel="tagging.info"
+            @icon={{if this.currentUser.canEditTags "wrench" "circle-info"}}
+            @ariaLabel={{if
+              this.currentUser.canEditTags
+              "tagging.edit"
+              "tagging.info"
+            }}
+            @title={{if
+              this.currentUser.canEditTags
+              "tagging.edit"
+              "tagging.info"
+            }}
             @action={{this.toggleInfo}}
             id="show-tag-info"
             class="btn-default"

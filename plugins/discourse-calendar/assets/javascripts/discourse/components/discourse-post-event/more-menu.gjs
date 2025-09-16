@@ -23,7 +23,6 @@ import PostEventInvitees from "../modal/post-event-invitees";
 export default class DiscoursePostEventMoreMenu extends Component {
   @service currentUser;
   @service dialog;
-  @service discoursePostEventApi;
   @service modal;
   @service router;
   @service siteSettings;
@@ -85,7 +84,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
         },
       ],
       {
-        recurrenceRule: event.recurrenceRule,
+        rrule: event.rrule,
         location: event.url,
         details: getAbsoluteURL(event.post.url),
       }
@@ -254,6 +253,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       @identifier="discourse-post-event-more-menu"
       @triggerClass={{concatClass
         "more-dropdown"
+        "btn-small"
         (if this.isSavingEvent "--saving")
       }}
       @icon="ellipsis"

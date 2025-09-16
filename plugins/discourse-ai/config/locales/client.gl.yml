@@ -54,6 +54,12 @@ gl:
           name: "Lixo"
       modals:
         select_option: "Seleccione unha opción..."
+      translations:
+        title: "Traducións"
+        progress_chart:
+          bar_done:
+            one: "%{count} publicación"
+            other: "%{count} publicacións"
       spam:
         short_title: "Lixo"
         enable: "Activar"
@@ -136,8 +142,6 @@ gl:
           cancel: "Cancelar"
         image_caption:
           save_caption: "Gardar"
-          automatic_caption_dialog:
-            confirm: "Activar"
       embeddings:
         back: "Volver"
         save: "Gardar"

@@ -165,7 +165,6 @@ id:
       search: "Cari"
     themes:
       default_description: "Asal"
-      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
       error_caused_by: "Disebabkan oleh '%{name}'. <a target='blank' href='%{path}'>Klik di sini</a> untuk memperbarui, mengkonfigurasi ulang, atau menonaktifkan."
       only_admins: "(pesan ini hanya ditampilkan kepada administrator situs)"
     broken_decorator_alert: "Kiriman mungkin tidak ditampilkan dengan benar karena salah satu dekorator konten kiriman pada situs Anda menimbulkan kesalahan."
@@ -1047,11 +1046,10 @@ id:
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_schemes:
         default_description: "Default tema"
-        disable_dark_scheme: "Sama seperti reguler"
         undo: "Reset"
-        regular: "Umum"
         dark: "Mode gelap"
-        default_dark_scheme: "(bawaan situs)"
+        picker:
+          active: "Aktif"
       dark_mode: "Mode Gelap"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
@@ -1643,6 +1641,7 @@ id:
       create_topic: "Buat Topik"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
+      discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "mengapa Anda menyunting?"
@@ -2309,7 +2308,7 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      filter_reports: Filter laporan
+      filter_reports: "Filter laporan..."
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2530,6 +2529,11 @@ id:
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
         settings_disabled: "Plugin ini hanya dapat diaktifkan atau dinonaktifkan, tidak memiliki pengaturan tambahan."
+        filters:
+          all: "Semua"
+          enabled: "Diaktifkan"
+          disabled: "Dinonaktifkan"
+          reset: "Reset"
       backups:
         menu:
           logs: "Log"
@@ -2568,13 +2572,13 @@ id:
           disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
+          filter_all: "Semua"
           customize_desc: "Sesuaikan:"
           create: "Buat"
           create_type: "Tipe"
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2587,10 +2591,6 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
-          settings: "Pengaturan"
-          colors: "Warna"
-          discard_colors: "Batalkan"
-          colors_title: "Warna"
           all_filter: "Semua"
           active_filter: "Aktif"
         schema:
@@ -2603,8 +2603,6 @@ id:
           edit: "Ubah"
           filters:
             all: "Semua"
-          active_badge:
-            text: "Aktif"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:

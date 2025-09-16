@@ -73,6 +73,7 @@ export default class TopicController extends Controller {
   @service siteSettings;
   @service site;
   @service appEvents;
+  @service languageNameLookup;
 
   @tracked model;
 
@@ -897,9 +898,10 @@ export default class TopicController extends Controller {
         return this._openComposerForEdit(topic, post);
       }
 
+      const language = this.languageNameLookup.getLanguageName(post.language);
       return this.dialog.alert({
         message: i18n("post.localizations.edit_warning.message", {
-          language: post.language,
+          language,
         }),
         buttons: [
           {
@@ -1829,13 +1831,16 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
 
     if (data.reload_topic) {
-      topic.reload().then(() => {
-        this.send("postChangedRoute", topic.get("post_number") || 1);
+      topic.reload(opts).then(() => {
         this.appEvents.trigger("header:update-topic", topic);
         if (data.refresh_stream) {
-          postStream.refresh();
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
         }
       });
 

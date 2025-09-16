@@ -2,7 +2,7 @@ import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { bind } from "discourse/lib/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
@@ -29,14 +29,14 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.post-stream.trigger-new-post",
   "discourse.plugin-outlet-classic-args-clash",
   "discourse.decorate-plugin-outlet",
-  "component-template-resolving",
+  "discourse.component-template-resolving",
   "discourse.script-tag-hbs",
   "discourse.script-tag-discourse-plugin",
+  "discourse.post-stream-widget-overrides",
+  "discourse.widgets-end-of-life",
 ];
 
-const REPLACEMENT_URLS = {
-  "component-template-resolving": "https://meta.discourse.org/t/370019",
-};
+const REPLACEMENT_URLS = {};
 
 if (DEBUG) {
   // used in system specs
@@ -71,11 +71,7 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const matchingConfig = DEPRECATION_WORKFLOW.find(
-      (config) => config.matchId === opts.id
-    );
-
-    if (matchingConfig?.handler === "silence") {
+    if (DeprecationWorkflow.shouldSilence(opts.id)) {
       return;
     }
 

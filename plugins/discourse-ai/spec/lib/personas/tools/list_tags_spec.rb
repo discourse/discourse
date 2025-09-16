@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Personas::Tools::ListTags do
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   before do
     enable_current_plugin

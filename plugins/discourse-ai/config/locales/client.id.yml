@@ -77,9 +77,6 @@ id:
               label: "Model"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Perintah Sistem"
-              description: "Perintah yang akan digunakan untuk melakukan triase, pastikan untuk membalas dengan satu kata yang dapat Anda gunakan untuk memicu tindakan"
             search_for_text:
               label: "Cari teks"
             category:
@@ -89,10 +86,6 @@ id:
               label: "Label"
             canned_reply:
               label: "Balas"
-            model:
-              label: "Model"
-            temperature:
-              label: "Temperatur"
     discourse_ai:
       title: "AI"
       features:
@@ -113,6 +106,10 @@ id:
           name: "Spam"
       modals:
         select_option: "Memilih sebuah pilihan..."
+      translations:
+        progress_chart:
+          bar_done:
+            other: "%{count} post"
       spam:
         short_title: "Spam"
         last_seven_days: "7 hari terakhir"
@@ -208,8 +205,6 @@ id:
           generating: "Menghasilkan keterangan..."
           credits: "Keterangan oleh AI"
           save_caption: "Simpan"
-          automatic_caption_dialog:
-            confirm: "Aktifkan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"

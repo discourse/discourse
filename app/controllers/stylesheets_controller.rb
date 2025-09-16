@@ -23,15 +23,9 @@ class StylesheetsController < ApplicationController
   def color_scheme
     params.require("id")
     params.permit("theme_id")
-    params.permit("include_dark_scheme")
 
     manager = Stylesheet::Manager.new(theme_id: params[:theme_id])
-    stylesheet =
-      manager.color_scheme_stylesheet_details(
-        params[:id],
-        fallback_to_base: true,
-        include_dark_scheme: !!params[:include_dark_scheme],
-      )
+    stylesheet = manager.color_scheme_stylesheet_details(params[:id], fallback_to_base: true)
 
     render json: stylesheet
   end
@@ -72,7 +66,7 @@ class StylesheetsController < ApplicationController
     handle_missing_cache(location, target, digest) if !stylesheet_time
 
     if cache_time.present? && stylesheet_time && stylesheet_time <= cache_time
-      return render body: nil, status: 304
+      return head :not_modified
     end
 
     unless File.exist?(location)

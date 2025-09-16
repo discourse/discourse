@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { next } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
   let(:post) { Fabricate(:post) }
   let!(:webhook_stub) do

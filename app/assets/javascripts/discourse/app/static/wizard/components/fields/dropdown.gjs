@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action, set } from "@ember/object";
+import { service } from "@ember/service";
 import { Choice } from "discourse/static/wizard/models/wizard";
 import { i18n } from "discourse-i18n";
 import ColorPalettes from "select-kit/components/color-palettes";
@@ -9,6 +10,8 @@ import FontSelector from "select-kit/components/font-selector";
 import HomepageStyleSelector from "select-kit/components/homepage-style-selector";
 
 export default class Dropdown extends Component {
+  @service siteSettings;
+
   constructor() {
     super(...arguments);
 
@@ -69,6 +72,16 @@ export default class Dropdown extends Component {
         );
       }
     }
+
+    if (this.args.field.id === "default_locale") {
+      this.args.field.choices = this.siteSettings.available_locales.map(
+        (locale) =>
+          new Choice({
+            id: locale.value,
+            label: locale.name,
+          })
+      );
+    }
   }
 
   get component() {
@@ -103,7 +116,6 @@ export default class Dropdown extends Component {
       content=@field.choices
       nameProperty="label"
       tabindex="9"
-      onChange=this.onChangeValug
       options=(hash translatedNone=false)
     }}
   </template>

@@ -390,8 +390,6 @@
 #topic-title .edit-topic-title.showing-ai-suggestions {
   #edit-title {
     flex: 1 1 90%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
   }
 
   .suggest-titles-button {
@@ -670,14 +668,6 @@
   .dialog-content {
     max-width: 555px;
   }
-}
-
-.auto-image-caption-loader {
-  margin-left: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--primary-high);
 }
 
 // AI Helper Options List

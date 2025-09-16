@@ -285,6 +285,12 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     return false;
   }
 
+  // If an inline close tag is found and there's content after it on the same line,
+  // let the inline processor handle it instead of block processing
+  if (!closeTag.block && closeTag.start + closeTag.length < max) {
+    return false;
+  }
+
   nextLine = closeTag.line || startLine;
 
   oldParent = state.parentType;

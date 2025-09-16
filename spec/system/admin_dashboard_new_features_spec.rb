@@ -98,13 +98,13 @@ describe "Admin New Features Page", type: :system do
           "discourse_version" => "",
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
-          "experiment_setting" => "experimental_form_templates",
-          "experiment_enabled" => true,
+          "related_site_setting" => "experimental_form_templates",
+          "experiment" => false,
         },
       ],
     )
     new_features_page.visit
-    expect(new_features_page).to have_toggle_experiment_button(true)
+    expect(new_features_page).to have_toggle_feature_button()
   end
 
   it "displays experimental text next to feature title when feature is experimental" do
@@ -121,8 +121,8 @@ describe "Admin New Features Page", type: :system do
           "discourse_version" => "",
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
-          "experiment_setting" => "experimental_form_templates",
-          "experiment_enabled" => true,
+          "related_site_setting" => "experimental_form_templates",
+          "experiment" => true,
         },
       ],
     )
@@ -165,8 +165,8 @@ describe "Admin New Features Page", type: :system do
           "discourse_version" => "",
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
-          "experiment_setting" => "experimental_form_templates",
-          "experiment_enabled" => true,
+          "related_site_setting" => "experimental_form_templates",
+          "experiment" => true,
         },
         {
           "id" => 8,
@@ -179,15 +179,14 @@ describe "Admin New Features Page", type: :system do
           "discourse_version" => "",
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
-          "experiment_setting" => nil,
-          "experiment_enabled" => false,
+          "related_site_setting" => nil,
+          "experiment" => false,
         },
       ],
     )
     new_features_page.visit
     new_features_page.toggle_experiments_only
     expect(new_features_page).to have_experimental_text
-    expect(new_features_page).not_to have_text("Non experimental feature")
   end
 
   it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do

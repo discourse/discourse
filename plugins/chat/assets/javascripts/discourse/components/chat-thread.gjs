@@ -43,11 +43,9 @@ import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
   @service chatThreadPane;
@@ -456,6 +454,7 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
+          client_created_at: message.createdAt.toISOString(),
           ...extractCurrentTopicInfo(this),
         }
       );

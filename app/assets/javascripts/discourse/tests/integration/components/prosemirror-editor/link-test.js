@@ -23,6 +23,11 @@ module(
         '<p><a href="https://example.com" data-markup="autolink">https://example.com</a></p>',
         "<https://example.com>",
       ],
+      "auto links with ~": [
+        "<https://example.com/~user> https://example.com/~user",
+        '<p><a href="https://example.com/~user" data-markup="autolink">https://example.com/~user</a> <a href="https://example.com/~user" data-markup="linkify">https://example.com/~user</a></p>',
+        "<https://example.com/~user> https://example.com/~user",
+      ],
       "attachment link": [
         "[File|attachment](https://example.com/file.pdf)",
         '<p><a href="https://example.com/file.pdf" class="attachment">File</a></p>',

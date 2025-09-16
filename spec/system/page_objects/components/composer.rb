@@ -93,7 +93,7 @@ module PageObjects
       end
 
       def has_value?(value)
-        expect(composer_input.value).to eq(value)
+        try_until_success { expect(composer_input.value).to eq(value) }
       end
 
       def has_popup_content?(content)
@@ -103,6 +103,10 @@ module PageObjects
       def select_action(action)
         find(action(action)).click
         self
+      end
+
+      def reply_button_focused?
+        page.has_css?("#{COMPOSER_ID} .btn-primary:focus")
       end
 
       def create
@@ -308,8 +312,12 @@ module PageObjects
         find("#{COMPOSER_ID} .save-or-cancel .create").click
       end
 
+      def discard
+        find("#{COMPOSER_ID} .discard-button").click
+      end
+
       def close
-        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+        find("#{COMPOSER_ID} .toggle-save-and-close").click
       end
 
       def has_no_in_progress_uploads?
@@ -329,11 +337,15 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch.--rte")
       end
 
       def has_no_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__left-icon.--active")
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch.--markdown")
+      end
+
+      def has_markdown_editor_active?
+        has_no_rich_editor_active?
       end
 
       def toggle_rich_editor

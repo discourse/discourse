@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "aws-sdk-mediaconvert"
 require "aws-sdk-s3" # so Aws::S3::Object::Acl is loaded
 
@@ -78,7 +77,9 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   end
 
   describe "#convert" do
-    let(:output_path) { "/uploads/default/test_0/original/1X/#{new_sha1}" }
+    let(:output_path) do
+      "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{new_sha1}"
+    end
     let(:job_id) { "job-123" }
 
     before { allow(Jobs).to receive(:enqueue_in) }

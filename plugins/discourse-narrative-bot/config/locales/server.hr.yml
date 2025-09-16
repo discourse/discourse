@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hr:
+  badges:
+    certified:
+      name: Certificiran
+      description: "Prošao tutorial za nove korisnike"
   discourse_narrative_bot:
     quote:
       trigger: "citat"

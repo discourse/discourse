@@ -27,7 +27,12 @@ export default RouteTemplate(
       <UsernamePreference @user={{@controller.model}} />
     </div>
 
-    {{#unless @controller.siteSettings.discourse_connect_overrides_avatar}}
+    {{#unless
+      (or
+        @controller.siteSettings.discourse_connect_overrides_avatar
+        @controller.siteSettings.auth_overrides_avatar
+      )
+    }}
       <div class="control-group pref-avatar" data-setting-name="user-avatar">
         <label class="control-label" id="profile-picture">{{i18n
             "user.avatar.title"
@@ -141,6 +146,13 @@ export default RouteTemplate(
         {{/if}}
       </div>
     {{/if}}
+
+    <span>
+      <PluginOutlet
+        @name="user-preferences-account-after-email"
+        @outletArgs={{lazyHash email=@controller.model.email}}
+      />
+    </span>
 
     {{#if @controller.canUpdateAssociatedAccounts}}
       <div
@@ -283,6 +295,11 @@ export default RouteTemplate(
         <div class="instructions">
           {{@controller.nameInstructions}}
         </div>
+
+        <PluginOutlet
+          @name="user-preferences-account-after-name"
+          @outletArgs={{lazyHash name=@controller.model.name}}
+        />
       </div>
     {{/if}}
 

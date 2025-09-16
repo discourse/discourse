@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "OIDC RP-Initiated Logout" do
   let(:document_url) do
     SiteSetting.openid_connect_discovery_document =

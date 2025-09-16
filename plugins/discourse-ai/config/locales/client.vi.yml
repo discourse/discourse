@@ -52,6 +52,11 @@ vi:
           name: "Rác"
       modals:
         select_option: "Chọn một tùy Chọn..."
+      translations:
+        title: "Bản dịch"
+        progress_chart:
+          bar_done:
+            other: "%{count} bài đăng"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"
@@ -139,8 +144,6 @@ vi:
           select: "Chọn"
         image_caption:
           save_caption: "Lưu lại"
-          automatic_caption_dialog:
-            confirm: "Bật"
       embeddings:
         back: "Quay lại"
         save: "Lưu lại"

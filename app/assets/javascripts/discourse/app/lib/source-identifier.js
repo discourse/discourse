@@ -28,7 +28,7 @@ export default function identifySource(error) {
     ""
   );
 
-  if (BROWSER_EXTENSION_PROTOCOLS.any((p) => stack.includes(p))) {
+  if (BROWSER_EXTENSION_PROTOCOLS.some((p) => stack.includes(p))) {
     return {
       type: "browser-extension",
     };
@@ -37,7 +37,9 @@ export default function identifySource(error) {
   const themeMatches = stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
 
   for (const match of themeMatches) {
-    const scriptElement = document.querySelector(`script[src*="${match}"`);
+    const scriptElement = document.querySelector(
+      `script[src*="${match}"], link[rel="modulepreload"][href*="${match}"]`
+    );
     if (scriptElement?.dataset.themeId) {
       return {
         type: "theme",
