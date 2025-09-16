@@ -12,7 +12,14 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
 
     if (!recipients) {
       transition.abort();
+
+      if (!transition.from) {
+        this.router.transitionTo("chat");
+        return;
+      }
+
       this.modal.show(ChatModalNewMessage);
+
       return;
     }
 
