@@ -142,10 +142,27 @@ export default class UpsertHyperlink extends Component {
     }
   }
 
+  /**
+   * @param {string | null | undefined} link
+   * @returns {string | null | undefined}
+   */
+  #normalizeLinkUrl(link) {
+    if (!link) {
+      return link;
+    }
+
+    try {
+      return encodeURI(decodeURI(link));
+    } catch {
+      return encodeURI(link);
+    }
+  }
+
   @action
   onFormSubmit(data) {
     const origLink = data.linkUrl;
-    const linkUrl = encodeURI(prefixProtocol(origLink));
+    const prefixedLink = prefixProtocol(origLink);
+    const linkUrl = this.#normalizeLinkUrl(prefixedLink);
     const sel = this.args.model.toolbarEvent.selected;
 
     if (isEmpty(linkUrl)) {

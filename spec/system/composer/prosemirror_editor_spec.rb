@@ -1221,6 +1221,25 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
+    it "does not double encode percent-encoded URLs when inserting via toolbar" do
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      sharepoint_url =
+        "https://uwrf.sharepoint.com/:v:/r/sites/cs161fa25/Shared%20Documents/Synchronous%20meetings/Recordings/House%20of%20spoons%20wrap-up.mp4"
+
+      upsert_hyperlink_modal.fill_in_link_url(sharepoint_url)
+      upsert_hyperlink_modal.fill_in_link_text("SharePoint recording")
+      upsert_hyperlink_modal.click_primary_button
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[SharePoint recording](#{sharepoint_url})")
+    end
+
     it "allows copying a link URL via toolbar" do
       cdp.allow_clipboard
       open_composer
