@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
+import { gt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
@@ -342,15 +342,15 @@ export default class SchemaSettingNewEditor extends Component {
               <DButton
                 @action={{this.moveUp}}
                 @icon="chevron-up"
-                @disabled={{unless this.canMoveUp true}}
-                @ariaLabel="Move up"
+                @disabled={{not this.canMoveUp}}
+                @ariaLabel={{i18n "admin.customize.schema.move_up"}}
                 class="btn-default schema-setting-editor__move-btn"
               />
               <DButton
                 @action={{this.moveDown}}
                 @icon="chevron-down"
-                @disabled={{unless this.canMoveDown true}}
-                @ariaLabel="Move down"
+                @disabled={{not this.canMoveDown}}
+                @ariaLabel={{i18n "admin.customize.schema.move_down"}}
                 class="btn-default schema-setting-editor__move-btn"
               />
             {{/if}}
