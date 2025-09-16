@@ -231,6 +231,12 @@ describe "Welcome banner", type: :system do
 
           visit "/admin"
           expect(banner).to be_hidden
+
+          visit "/admin/config/site-admin"
+          expect(banner).to be_hidden
+
+          visit "/admin/customize"
+          expect(banner).to be_hidden
         end
       end
 
