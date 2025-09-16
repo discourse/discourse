@@ -154,7 +154,7 @@ describe "Welcome banner", type: :system do
 
       it "shows banner without background image" do
         sign_in(current_user)
-        visit "/admin/config/interface"
+        visit "/"
         expect(banner).to be_visible
         expect(banner).to have_no_bg_img
       end
@@ -163,7 +163,7 @@ describe "Welcome banner", type: :system do
         SiteSetting.welcome_banner_image = bg_img
 
         sign_in(current_user)
-        visit "/admin/config/interface"
+        visit "/"
         expect(banner).to have_bg_img(bg_img.url)
       end
     end
@@ -230,6 +230,12 @@ describe "Welcome banner", type: :system do
           expect(banner).to be_hidden
 
           visit "/admin"
+          expect(banner).to be_hidden
+
+          visit "/admin/config/site-admin"
+          expect(banner).to be_hidden
+
+          visit "/admin/customize"
           expect(banner).to be_hidden
         end
       end
