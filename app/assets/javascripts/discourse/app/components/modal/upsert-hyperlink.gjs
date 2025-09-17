@@ -151,15 +151,24 @@ export default class UpsertHyperlink extends Component {
       try {
         linkUrl = encodeURI(decodeURI(linkUrl));
       } catch {
-        linkUrl = encodeURI(linkUrl.replace(/%(?![0-9A-Fa-f]{2})/g, "%25"));
+        try {
+          let withPercentEncoded = linkUrl.replace(
+            /%(?![0-9A-Fa-f]{2})/g,
+            "%25"
+          );
+          linkUrl = encodeURI(decodeURI(withPercentEncoded));
+        } catch {
+          // give up and do something
+          linkUrl = encodeURI(linkUrl);
+        }
       }
     }
-    const sel = this.args.model.toolbarEvent.selected;
 
     if (isEmpty(linkUrl)) {
       return;
     }
 
+    const sel = this.args.model.toolbarEvent.selected;
     const linkText = data.linkText || sel.value || origLink || "";
     this.args.model.toolbarEvent.addText(`[${linkText.trim()}](${linkUrl})`);
 
