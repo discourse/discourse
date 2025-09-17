@@ -7,7 +7,7 @@ module Holidays
   # All the definitions are available at https://github.com/holidays/holidays
   module EUROPE # :nodoc:
     def self.defined_regions
-      [:at, :be_fr, :be_nl, :ch_zh, :ch_be, :ch_lu, :ch_ur, :ch_sz, :ch_ow, :ch_nw, :ch_gl, :ch_zg, :ch_fr, :ch_so, :ch_bs, :ch_bl, :ch_sh, :ch_ar, :ch_ai, :ch_sg, :ch_gr, :ch_ag, :ch_tg, :ch_ti, :ch_vd, :ch_ne, :ch_ge, :ch_ju, :ch_vs, :ch, :cz, :dk, :de, :de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn_sorbian, :de_th_cath, :de_sn, :de_st, :de_be, :de_by_cath, :de_by_augsburg, :de_bb, :de_mv, :de_th, :de_hb, :de_hh, :de_ni, :de_sh, :gr, :es_pv, :es_na, :es_an, :es_ib, :es_cm, :es_mu, :es_m, :es_ar, :es_cl, :es_cn, :es_lo, :es_ga, :es_ce, :es_o, :es_ex, :es, :es_ct, :es_v, :es_vc, :fr_a, :fr_m, :fr, :gb, :gb_eng, :gb_wls, :gb_eaw, :gb_nir, :je, :gb_jsy, :gg, :gb_gsy, :gb_sct, :gb_con, :im, :gb_iom, :hr, :hu, :ie, :is, :it, :it_ve, :it_tv, :it_vr, :it_pd, :it_fi, :it_ge, :it_to, :it_rm, :it_vi, :it_bl, :it_ro, :li, :lt, :lv, :nl, :no, :pl, :pt, :pt_li, :pt_po, :ro, :sk, :si, :bg_en, :bg_bg, :ua]
+      [:at, :be_fr, :be_nl, :ch_zh, :ch_be, :ch_lu, :ch_ur, :ch_sz, :ch_ow, :ch_nw, :ch_gl, :ch_zg, :ch_fr, :ch_so, :ch_bs, :ch_bl, :ch_sh, :ch_ar, :ch_ai, :ch_sg, :ch_gr, :ch_ag, :ch_tg, :ch_ti, :ch_vd, :ch_ne, :ch_ge, :ch_ju, :ch_vs, :ch, :cz, :dk, :de, :de_bw, :de_by, :de_he, :de_nw, :de_rp, :de_sl, :de_sn_sorbian, :de_th_cath, :de_sn, :de_st, :de_be, :de_by_cath, :de_by_augsburg, :de_th, :de_bb, :de_mv, :de_hb, :de_hh, :de_ni, :de_sh, :gr, :es_pv, :es_na, :es_an, :es_ib, :es_cm, :es_mu, :es_m, :es_ar, :es_cl, :es_cn, :es_lo, :es_ga, :es_ce, :es_o, :es_ex, :es, :es_ct, :es_v, :es_vc, :fr_a, :fr_m, :fr, :gb, :gb_eng, :gb_wls, :gb_eaw, :gb_nir, :je, :gb_jsy, :gg, :gb_gsy, :gb_sct, :gb_con, :im, :gb_iom, :hr, :hu, :ie, :is, :it, :it_ve, :it_tv, :it_vr, :it_pd, :it_fi, :it_ge, :it_to, :it_rm, :it_vi, :it_bl, :it_ro, :li, :lt, :lv, :nl, :no, :pl, :pt, :pt_li, :pt_po, :ro, :sk, :si, :bg_en, :bg_bg, :ua]
     end
 
     def self.holidays_by_month
@@ -41,7 +41,7 @@ module Holidays
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Langfredag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :name => "Påskedag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 1, :name => "2. påskedag", :regions => [:dk]},
-            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 26, :name => "Store Bededag", :regions => [:dk]},
+            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 26, :year_ranges => { :until => 2024 },:name => "Store Bededag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 39, :name => "Kristi Himmelfartsdag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 49, :name => "Pinsedag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 50, :name => "2. Pinsedag", :regions => [:dk]},
@@ -225,6 +225,7 @@ module Holidays
             {:mday => 8, :name => "Victoire 1945", :regions => [:fr]},
             {:wday => 1, :week => 1, :year_ranges => { :until => 2019 },:name => "May Day", :regions => [:gb]},
             {:mday => 8, :year_ranges => { :limited => [2020] },:name => "May Day", :regions => [:gb]},
+            {:mday => 8, :year_ranges => { :limited => [2023] },:name => "Bank Holiday for the Coronation of King Charles III", :regions => [:gb]},
             {:wday => 1, :week => 1, :year_ranges => { :from => 2021 },:name => "May Day", :regions => [:gb]},
             {:mday => 9, :name => "Liberation Day", :regions => [:je, :gb_jsy, :gg, :gb_gsy]},
             {:wday => 1, :week => -1, :year_ranges => { :until => 2021 },:name => "Bank Holiday", :regions => [:gb]},
@@ -507,6 +508,7 @@ module Holidays
       9 => [{:mday => 22, :name => "Mauritiustag", :regions => [:ch_ai]},
             {:mday => 25, :name => "Bruderklausenfest", :regions => [:ch_ow]},
             {:mday => 28, :name => "Den české státnosti", :regions => [:cz]},
+            {:mday => 20, :year_ranges => { :from => 2019 },:name => "Weltkindertag", :regions => [:de_th]},
             {:mday => 2, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Día de Ceuta", :regions => [:es_ce]},
             {:mday => 8, :observed => "to_monday_if_sunday(date)", :observed_arguments => [:date], :name => "Día de Asturias", :regions => [:es_o]},
             {:mday => 8, :name => "Día de Extremadura", :regions => [:es_ex]},

@@ -161,6 +161,10 @@ class EuropeDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "2. svátek vánoční", (Holidays.on(Date.civil(2010, 12, 26), [:cz], [:informal])[0] || {})[:name]
 
+    assert_equal "Store Bededag", (Holidays.on(Date.civil(2023, 5, 5), [:dk])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2024, 4, 26), [:dk])[0] || {})[:name]
+
     assert_equal "Nytårsdag", (Holidays.on(Date.civil(2007, 1, 1), [:dk], [:informal])[0] || {})[:name]
 
     assert_equal "Fastelavn", (Holidays.on(Date.civil(2007, 2, 18), [:dk], [:informal])[0] || {})[:name]
@@ -266,6 +270,8 @@ class EuropeDefinitionTests < Test::Unit::TestCase  # :nodoc:
     assert_equal "Internationaler Frauentag", (Holidays.on(Date.civil(2019, 3, 8), [:de_be])[0] || {})[:name]
 
     assert_equal "Tag der Befreiung", (Holidays.on(Date.civil(2020, 5, 8), [:de_be])[0] || {})[:name]
+
+    assert_equal "Weltkindertag", (Holidays.on(Date.civil(2024, 9, 20), [:de_th])[0] || {})[:name]
 
     assert_equal "Πρωτοχρονιά", (Holidays.on(Date.civil(2011, 1, 1), [:el], [:informal])[0] || {})[:name]
 
@@ -582,6 +588,8 @@ class EuropeDefinitionTests < Test::Unit::TestCase  # :nodoc:
     assert_nil (Holidays.on(Date.civil(2022, 5, 30), [:gb])[0] || {})[:name]
 
     assert_equal "Platinum Jubilee", (Holidays.on(Date.civil(2022, 6, 3), [:gb])[0] || {})[:name]
+
+    assert_equal "Bank Holiday for the Coronation of King Charles III", (Holidays.on(Date.civil(2023, 5, 8), [:gb])[0] || {})[:name]
 
     assert_equal "Bank Holiday", (Holidays.on(Date.civil(2023, 5, 29), [:gb])[0] || {})[:name]
 
