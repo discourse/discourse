@@ -3452,6 +3452,10 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
     area: "posts_and_topics"
+  open_composer_without_category:
+    client: true
+    type: bool
+    default: false
 
   notify_about_reviewable_item_after:
     type: float
