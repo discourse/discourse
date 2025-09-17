@@ -261,7 +261,11 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
 
         context "with direct message channels" do
           fab!(:dm_channel) do
-            Fabricate(:direct_message_channel, users: [current_user, other_user])
+            Fabricate(
+              :direct_message_channel,
+              users: [current_user, other_user],
+              threading_enabled: true,
+            )
           end
           fab!(:thread) do
             chat_thread_chain_bootstrap(channel: dm_channel, users: [current_user, other_user])

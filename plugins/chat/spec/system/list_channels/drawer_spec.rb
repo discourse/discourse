@@ -123,8 +123,12 @@ RSpec.describe "List channels | Drawer", type: :system do
       fab!(:user_3, :user)
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
       fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
-      fab!(:dm_channel_3) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
-      fab!(:dm_channel_4) { Fabricate(:direct_message_channel, users: [current_user, user_3]) }
+      fab!(:dm_channel_3) do
+        Fabricate(:direct_message_channel, users: [current_user, user_2], threading_enabled: true)
+      end
+      fab!(:dm_channel_4) do
+        Fabricate(:direct_message_channel, users: [current_user, user_3], threading_enabled: true)
+      end
 
       it "sorts them by latest activity" do
         Fabricate(
