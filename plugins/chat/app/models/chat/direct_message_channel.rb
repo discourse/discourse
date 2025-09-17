@@ -4,8 +4,6 @@ module Chat
   class DirectMessageChannel < Channel
     alias_method :direct_message, :chatable
 
-    before_validation(on: :create) { self.threading_enabled = true }
-
     def direct_message_channel?
       true
     end
