@@ -94,7 +94,7 @@ module DiscourseAi
       private
 
       def semantic_suggested_key(topic_id)
-        "#{CACHE_PREFIX}#{topic_id}"
+        "#{CACHE_PREFIX}#{topic_id}-#{SiteSetting.ai_embeddings_semantic_related_age_penalty}-#{SiteSetting.ai_embeddings_selected_model}-#{SiteSetting.ai_embeddings_semantic_related_age_time_scale}"
       end
 
       def build_semantic_suggested_key(topic_id)

@@ -199,38 +199,48 @@ module DiscourseAi
         # For topics table, we can apply age penalty. For other tables, ignore the penalty.
         use_age_penalty = age_penalty > 0.0 && table == TOPICS_TABLE
 
-        if use_age_penalty
-          builder = DB.build(<<~SQL)
-            WITH le_target AS (
-              SELECT
-                embeddings
-              FROM
-                #{table}
-              WHERE
-                model_id = :vid AND
-                strategy_id = :vsid AND
-                #{target_column} = :target_id
-              LIMIT 1
-            )
-            SELECT #{target_column} FROM (
-              SELECT
-                #{target_column}, embeddings, topics.bumped_at
-              FROM
-                #{table}
-              INNER JOIN topics ON topics.id = #{table}.#{target_column}
-              /*join*/
-              /*where*/
-              ORDER BY
-                binary_quantize(embeddings)::bit(#{dimensions}) <~> (
-                  SELECT
-                    binary_quantize(embeddings)::bit(#{dimensions})
-                  FROM
-                    le_target
-                  LIMIT 1
-                )
-              LIMIT #{limit}
-            ) AS widenet
+        builder = DB.build(<<~SQL)
+          WITH le_target AS (
+            SELECT
+              embeddings
+            FROM
+              #{table}
+            WHERE
+              model_id = :vid AND
+              strategy_id = :vsid AND
+              #{target_column} = :target_id
+            LIMIT 1
+          )
+          SELECT #{target_column} FROM (
+            SELECT
+              #{target_column}, embeddings /*extra_columns*/
+            FROM
+              #{table}
+            /*join*/
+            /*extra_join*/
+            /*where*/
             ORDER BY
+              binary_quantize(embeddings)::bit(#{dimensions}) <~> (
+                SELECT
+                  binary_quantize(embeddings)::bit(#{dimensions})
+                FROM
+                  le_target
+                LIMIT 1
+              )
+            LIMIT #{limit}
+          ) AS widenet
+          /*ordering*/
+          LIMIT #{limit / 2};
+        SQL
+
+        builder.where("model_id = :vid AND strategy_id = :vsid")
+
+        if use_age_penalty
+          builder.sql_literal(
+            extra_join: "INNER JOIN topics ON topics.id = #{table}.#{target_column}",
+            extra_columns: ", topics.bumped_at",
+            ordering: <<~SQL,
+              ORDER BY
               (embeddings::halfvec(#{dimensions}) #{pg_function} (
                 SELECT
                   embeddings::halfvec(#{dimensions})
@@ -238,51 +248,20 @@ module DiscourseAi
                   le_target
                 LIMIT 1
               )) / POWER(EXTRACT(EPOCH FROM NOW() - bumped_at) / 86400 / :time_scale + 1, :age_penalty)
-            LIMIT #{limit / 2};
-          SQL
+            SQL
+          )
         else
-          builder = DB.build(<<~SQL)
-            WITH le_target AS (
+          builder.sql_literal(ordering: <<~SQL)
+            ORDER BY
+            embeddings::halfvec(#{dimensions}) #{pg_function} (
               SELECT
-                embeddings
+                embeddings::halfvec(#{dimensions})
               FROM
-                #{table}
-              WHERE
-                model_id = :vid AND
-                strategy_id = :vsid AND
-                #{target_column} = :target_id
+                le_target
               LIMIT 1
             )
-            SELECT #{target_column} FROM (
-              SELECT
-                #{target_column}, embeddings
-              FROM
-                #{table}
-              /*join*/
-              /*where*/
-              ORDER BY
-                binary_quantize(embeddings)::bit(#{dimensions}) <~> (
-                  SELECT
-                    binary_quantize(embeddings)::bit(#{dimensions})
-                  FROM
-                    le_target
-                  LIMIT 1
-                )
-              LIMIT #{limit}
-            ) AS widenet
-            ORDER BY
-              embeddings::halfvec(#{dimensions}) #{pg_function} (
-                SELECT
-                  embeddings::halfvec(#{dimensions})
-                FROM
-                  le_target
-                LIMIT 1
-              )
-            LIMIT #{limit / 2};
           SQL
         end
-
-        builder.where("model_id = :vid AND strategy_id = :vsid")
 
         yield(builder) if block_given?
 
