@@ -255,18 +255,12 @@ export default class SchemaSettingNewEditor extends Component {
     this.inputFieldObserver[fromIndex] = toCallback;
   }
 
-  get showMoveButtons() {
-    return this.activeSchemaPaths.length === 0 && this.activeData.length > 1;
-  }
-
   get canMoveUp() {
-    return this.showMoveButtons && this.activeIndex > 0;
+    return this.activeIndex > 0;
   }
 
   get canMoveDown() {
-    return (
-      this.showMoveButtons && this.activeIndex < this.activeData.length - 1
-    );
+    return this.activeIndex < this.activeData.length - 1;
   }
 
   @action
@@ -338,22 +332,20 @@ export default class SchemaSettingNewEditor extends Component {
           {{/each}}
 
           <div class="schema-setting-editor__field-actions">
-            {{#if this.showMoveButtons}}
-              <DButton
-                @action={{this.moveUp}}
-                @icon="chevron-up"
-                @disabled={{not this.canMoveUp}}
-                @ariaLabel={{i18n "admin.customize.schema.move_up"}}
-                class="btn-default schema-setting-editor__move-btn"
-              />
-              <DButton
-                @action={{this.moveDown}}
-                @icon="chevron-down"
-                @disabled={{not this.canMoveDown}}
-                @ariaLabel={{i18n "admin.customize.schema.move_down"}}
-                class="btn-default schema-setting-editor__move-btn"
-              />
-            {{/if}}
+            <DButton
+              @action={{this.moveUp}}
+              @icon="chevron-up"
+              @disabled={{not this.canMoveUp}}
+              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
+              class="btn-default schema-setting-editor__move-up-btn"
+            />
+            <DButton
+              @action={{this.moveDown}}
+              @icon="chevron-down"
+              @disabled={{not this.canMoveDown}}
+              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
+              class="btn-default schema-setting-editor__move-down-btn"
+            />
 
             {{#if (gt this.fields.length 0)}}
               <DButton
