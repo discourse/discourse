@@ -1270,6 +1270,7 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "handles malformed links gracefully" do
+      cdp.allow_clipboard
       open_composer
 
       composer.click_toolbar_button("link")
@@ -1277,14 +1278,28 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(upsert_hyperlink_modal).to be_open
 
       upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
-      upsert_hyperlink_modal.fill_in_link_url("https://example.com/100%/working")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/100%/working 1")
       upsert_hyperlink_modal.click_primary_button
 
-      expect(rich).to have_css("a[href='https://example.com/100%25/working']", text: "Encoded URL")
+      expect(rich).to have_css(
+        "a[href='https://example.com/100%25/working%201']",
+        text: "Encoded URL",
+      )
+
+      composer.send_keys(:left, :left, :left)
+      find("button.composer-link-toolbar__edit").click
+
+      expect(upsert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Encoded URL")
+      # this ensures we keeps the corrected encoding and do not decode prior to edit
+      # if we decode prior to edit user may end up being confused about why the url has spaces etc...
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com/100%25/working%201")
+
+      upsert_hyperlink_modal.close
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working)")
+      expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working%201)")
     end
 
     it "allows copying a link URL via toolbar" do
