@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "example": 42
+    },
+    "invite_key": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string",
+      "example": "http://example.com/invites/9045fd767efe201ca60c6658bcf14158"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": "string",
+      "example": "not-a-user-yet@example.com"
+    },
+    "domain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "emailed": {
+      "type": "boolean",
+      "example": false
+    },
+    "can_delete_invite": {
+      "type": "boolean"
+    },
+    "custom_message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "example": "Hello world!"
+    },
+    "created_at": {
+      "type": "string",
+      "example": "2021-01-01T12:00:00.000Z"
+    },
+    "updated_at": {
+      "type": "string",
+      "example": "2021-01-01T12:00:00.000Z"
+    },
+    "expires_at": {
+      "type": "string",
+      "example": "2021-02-01T12:00:00.000Z"
+    },
+    "expired": {
+      "type": "boolean",
+      "example": false
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "example": []
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "example": []
+    }
+  },
+  "required": [
+    "id",
+    "invite_key",
+    "link",
+    "description",
+    "email",
+    "domain",
+    "emailed",
+    "can_delete_invite",
+    "custom_message",
+    "created_at",
+    "updated_at",
+    "expires_at",
+    "expired",
+    "topics",
+    "groups"
+  ]
+}
