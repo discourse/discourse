@@ -1269,7 +1269,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("[Encoded URL](https://example.com/%20test)")
     end
 
-    it "handles links malformed links gracefully" do
+    it "handles malformed links gracefully" do
       open_composer
 
       composer.click_toolbar_button("link")
