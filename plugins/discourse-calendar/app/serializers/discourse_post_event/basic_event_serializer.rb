@@ -32,7 +32,12 @@ module DiscoursePostEvent
               ""
             end
           ),
-        topic: TopicListItemSerializer.new(object.post.topic, scope:, root: false).as_json,
+        topic:
+          DiscoursePostEvent::EventTopicSerializer.new(
+            object.post.topic,
+            scope:,
+            root: false,
+          ).as_json,
       }
     end
 

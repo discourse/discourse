@@ -110,21 +110,25 @@ module DiscoursePostEvent
     def starts_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.starts_at ||
-          event_dates.order(:updated_at, :id).last&.starts_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        end
 
-      from_event_dates || original_starts_at
+      date&.starts_at || original_starts_at
     end
 
     def ends_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.ends_at ||
-          event_dates.order(:updated_at, :id).last&.ends_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        end
 
-      from_event_dates || original_ends_at
+      date&.ends_at || original_ends_at
     end
 
     def on_going_event_invitees

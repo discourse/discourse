@@ -10,30 +10,30 @@ module DiscoursePostEvent
     end
 
     describe "#index" do
-      fab!(:event_1) { Fabricate(:event, original_starts_at: 1.day.from_now) }
-
       it "should not result in N+1 queries problem when multiple events are returned" do
-        original_queries = track_sql_queries { get "/discourse-post-event/events.json" }
+        # Warmup
+        get "/discourse-post-event/events.json"
 
+        # Test with 1 event
+        Fabricate(:event, original_starts_at: 1.day.from_now)
+        queries_with_1_event = track_sql_queries { get "/discourse-post-event/events.json" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["events"].length).to eq(1)
 
-        event_2 = Fabricate(:event, original_starts_at: 2.days.from_now)
-        event_3 = Fabricate(:event, original_starts_at: 3.days.from_now)
-
-        new_queries = track_sql_queries { get "/discourse-post-event/events.json" }
-
+        # Test with 3 events in a fresh context
+        Fabricate(:event, original_starts_at: 2.days.from_now)
+        Fabricate(:event, original_starts_at: 3.days.from_now)
+        queries_with_3_events = track_sql_queries { get "/discourse-post-event/events.json" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["events"].length).to eq(3)
 
-        # TODO: There is still N+1 query problem here so uncomment this line when it is fixed
-        # expect(new_queries.count).to eq(original_queries.count)
+        expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
     end
 
     context "with an existing post" do
       let(:user) { Fabricate(:user, admin: true) }
-      let(:topic) { Fabricate(:topic, user: user) }
+      let(:topic) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
       let(:post1) { Fabricate(:post, user: user, topic: topic) }
       let(:invitee1) { Fabricate(:user) }
       let(:invitee2) { Fabricate(:user) }
