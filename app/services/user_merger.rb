@@ -436,7 +436,7 @@ class UserMerger
       :topic_timers,
       conditions: [
         "x.status_type = y.status_type",
-        "x.topic_id = y.topic_id",
+        "x.timerable_id = y.timerable_id",
         "y.deleted_at IS NULL",
       ],
     )
