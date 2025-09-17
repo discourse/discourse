@@ -192,11 +192,6 @@ export default class History extends Component {
       if (!postStream) {
         return;
       }
-
-      postStream.triggerChangedPost(postId, this.args.model).then(() =>
-        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-        this.appEvents.trigger("post-stream:refresh", { id: postId })
-      );
     } finally {
       this.loading = false;
       this.initialLoad = false;
