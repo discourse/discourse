@@ -12,57 +12,57 @@
 months:
   0:
   - name: Μεγάλη Παρασκευή
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
     function_modifier: -2
   - name: Μεγάλο Σάββατο
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
     function_modifier: -1
   - name: Κυριακή του Πάσχα
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
   - name: Δευτέρα του Πάσχα
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
     function_modifier: 1
   - name: Καθαρά Δευτέρα
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
     function_modifier: -48
   - name: Αγίου Πνεύματος
-    regions: [el]
+    regions: [gr]
     function: orthodox_easter(year)
     function_modifier: 50
   1:
   - name: Πρωτοχρονιά
-    regions: [el]
+    regions: [gr]
     mday: 1
   - name: Θεοφάνεια
-    regions: [el]
+    regions: [gr]
     mday: 6
   3:
   - name: Επέτειος της Επανάστασης του 1821
-    regions: [el]
+    regions: [gr]
     mday: 25
   5:
   - name: Πρωτομαγιά
-    regions: [el]
+    regions: [gr]
     mday: 1
   8:
   - name: Κοίμηση της Θεοτόκου
-    regions: [el]
+    regions: [gr]
     mday: 15
   10:
   - name: Επέτειος του Όχι
-    regions: [el]
+    regions: [gr]
     mday: 28
   12:
   - name: Χριστούγεννα
-    regions: [el]
+    regions: [gr]
     mday: 25
   - name: Δεύτερη ημέρα των Χριστουγέννων
-    regions: [el]
+    regions: [gr]
     mday: 26
 
 tests:

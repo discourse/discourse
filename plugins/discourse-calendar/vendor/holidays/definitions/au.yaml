@@ -98,9 +98,24 @@ months:
     regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
     week: 2
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
+    week: 2
+    wday: 1
+    year_ranges:
+      from: 2023
   - name: Queen's Birthday
     regions: [au_qld]
     function: qld_queens_birthday_june(year)
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_qld]
+    function: qld_queens_birthday_june(year)
+    year_ranges:
+      from: 2023
   - name: Queensland Day
     regions: [au_qld]
     mday: 6
@@ -120,6 +135,14 @@ months:
     regions: [au_wa]
     week: -1
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_wa]
+    week: -1
+    wday: 1
+    year_ranges:
+      from: 2023
   - name: "Family & Community Day"
     regions: [au_act]
     week: -1
@@ -142,6 +165,13 @@ months:
   - name: Queen's Birthday
     regions: [au_qld]
     function: qld_queens_bday_october(year)
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_qld]
+    function: qld_queens_bday_october(year)
+    year_ranges:
+      from: 2023
     observed: to_monday_if_weekend(date)
   - name: Royal Hobart Show
     regions: [au_tas_south]
@@ -320,6 +350,21 @@ tests:
       regions: ["au_wa"]
     expect:
       name: "Queen's Birthday"
+  - given:
+      date: '2023-06-12'
+      regions: ["au_nsw"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: '2023-10-02'
+      regions: ["au_qld"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: '2023-09-25'
+      regions: ["au_wa"]
+    expect:
+      name: "King's Birthday"
   - given:
       date: '2014-09-29'
       regions: ["au_act"]
