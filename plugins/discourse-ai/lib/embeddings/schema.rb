@@ -192,57 +192,109 @@ module DiscourseAi
         raise MissingEmbeddingError
       end
 
-      def symmetric_similarity_search(record)
+      def symmetric_similarity_search(record, age_penalty: 0.0)
         limit = 200
         before_query = hnsw_search_workaround(limit)
 
-        builder = DB.build(<<~SQL)
-          WITH le_target AS (
-            SELECT
-              embeddings
-            FROM
-              #{table}
-            WHERE
-              model_id = :vid AND
-              strategy_id = :vsid AND
-              #{target_column} = :target_id
-            LIMIT 1
-          )
-          SELECT #{target_column} FROM (
-            SELECT
-              #{target_column}, embeddings
-            FROM
-              #{table}
-            /*join*/
-            /*where*/
+        # For topics table, we can apply age penalty. For other tables, ignore the penalty.
+        use_age_penalty = age_penalty > 0.0 && table == TOPICS_TABLE
+
+        if use_age_penalty
+          builder = DB.build(<<~SQL)
+            WITH le_target AS (
+              SELECT
+                embeddings
+              FROM
+                #{table}
+              WHERE
+                model_id = :vid AND
+                strategy_id = :vsid AND
+                #{target_column} = :target_id
+              LIMIT 1
+            )
+            SELECT #{target_column} FROM (
+              SELECT
+                #{target_column}, embeddings, topics.created_at
+              FROM
+                #{table}
+              INNER JOIN topics ON topics.id = #{table}.#{target_column}
+              /*join*/
+              /*where*/
+              ORDER BY
+                binary_quantize(embeddings)::bit(#{dimensions}) <~> (
+                  SELECT
+                    binary_quantize(embeddings)::bit(#{dimensions})
+                  FROM
+                    le_target
+                  LIMIT 1
+                )
+              LIMIT #{limit}
+            ) AS widenet
             ORDER BY
-              binary_quantize(embeddings)::bit(#{dimensions}) <~> (
+              (embeddings::halfvec(#{dimensions}) #{pg_function} (
                 SELECT
-                  binary_quantize(embeddings)::bit(#{dimensions})
+                  embeddings::halfvec(#{dimensions})
+                FROM
+                  le_target
+                LIMIT 1
+              )) / POWER(EXTRACT(EPOCH FROM NOW() - created_at) / 86400 / :time_scale + 1, :age_penalty)
+            LIMIT #{limit / 2};
+          SQL
+        else
+          builder = DB.build(<<~SQL)
+            WITH le_target AS (
+              SELECT
+                embeddings
+              FROM
+                #{table}
+              WHERE
+                model_id = :vid AND
+                strategy_id = :vsid AND
+                #{target_column} = :target_id
+              LIMIT 1
+            )
+            SELECT #{target_column} FROM (
+              SELECT
+                #{target_column}, embeddings
+              FROM
+                #{table}
+              /*join*/
+              /*where*/
+              ORDER BY
+                binary_quantize(embeddings)::bit(#{dimensions}) <~> (
+                  SELECT
+                    binary_quantize(embeddings)::bit(#{dimensions})
+                  FROM
+                    le_target
+                  LIMIT 1
+                )
+              LIMIT #{limit}
+            ) AS widenet
+            ORDER BY
+              embeddings::halfvec(#{dimensions}) #{pg_function} (
+                SELECT
+                  embeddings::halfvec(#{dimensions})
                 FROM
                   le_target
                 LIMIT 1
               )
-            LIMIT #{limit}
-          ) AS widenet
-          ORDER BY
-            embeddings::halfvec(#{dimensions}) #{pg_function} (
-              SELECT
-                embeddings::halfvec(#{dimensions})
-              FROM
-                le_target
-              LIMIT 1
-            )
-          LIMIT #{limit / 2};
-        SQL
+            LIMIT #{limit / 2};
+          SQL
+        end
 
         builder.where("model_id = :vid AND strategy_id = :vsid")
 
         yield(builder) if block_given?
 
+        query_params = { vid: vector_def.id, vsid: vector_def.strategy_id, target_id: record.id }
+        if use_age_penalty
+          query_params[:age_penalty] = age_penalty
+          query_params[:time_scale] = SiteSetting.ai_embeddings_semantic_related_age_time_scale
+        end
+
         ActiveRecord::Base.transaction do
           DB.exec(before_query) if before_query.present?
-          builder.query(vid: vector_def.id, vsid: vector_def.strategy_id, target_id: record.id)
+          builder.query(query_params)
         end
       rescue PG::Error => e
         Rails.logger.error("Error #{e} querying embeddings for model #{vector_def.display_name}")

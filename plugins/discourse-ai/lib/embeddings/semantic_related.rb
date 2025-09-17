@@ -21,7 +21,10 @@ module DiscourseAi
           .fetch(semantic_suggested_key(topic.id), expires_in: cache_for) do
             DiscourseAi::Embeddings::Schema
               .for(Topic)
-              .symmetric_similarity_search(topic)
+              .symmetric_similarity_search(
+                topic,
+                age_penalty: SiteSetting.ai_embeddings_semantic_related_age_penalty,
+              )
               .map(&:topic_id)
               .tap do |candidate_ids|
                 # Happens when the topic doesn't have any embeddings
