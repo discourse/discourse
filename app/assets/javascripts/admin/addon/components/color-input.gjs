@@ -12,6 +12,7 @@ import TextField from "discourse/components/text-field";
   @param hexValue is a reference to the color's hex value.
   @param brightnessValue is a number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
   @params valid is a boolean indicating if the input field is a valid color.
+  @params fallbackHexValue is a hex color string to use if hexValue is empty or invalid.
 **/
 
 @classNames("color-picker")
@@ -24,9 +25,11 @@ export default class ColorInput extends Component {
     return this.onlyHex ? 6 : null;
   }
 
-  @computed("hexValue")
-  get normalizedHexValue() {
-    return this.normalize(this.hexValue);
+  @computed("hexValue", "fallbackHexValue")
+  get normalizedValue() {
+    const nHexValue = this.normalize(this.hexValue);
+    const nFallbackHexValue = this.normalize(this.fallbackHexValue);
+    return !nHexValue && nFallbackHexValue ? nFallbackHexValue : nHexValue;
   }
 
   normalize(color) {
@@ -102,7 +105,8 @@ export default class ColorInput extends Component {
     <input
       class="picker"
       type="color"
-      value={{this.normalizedHexValue}}
+      value={{this.normalizedValue}}
+      title={{this.normalizedValue}}
       {{on "input" this.onPickerInput}}
       aria-labelledby={{this.ariaLabelledby}}
     />
