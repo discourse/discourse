@@ -147,7 +147,7 @@ RSpec.describe Migration::SafeMigrate do
 
     output = capture_stdout { migrate_up(path) }
 
-    expect(output).to include("change_column_default(:post, :like_count, nil)")
+    expect(output).to include("change_column_default(:posts, :like_count, nil)")
   end
 
   it "supports being disabled" do
