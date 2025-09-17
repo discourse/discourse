@@ -214,7 +214,7 @@ module DiscourseAi
             )
             SELECT #{target_column} FROM (
               SELECT
-                #{target_column}, embeddings, topics.created_at
+                #{target_column}, embeddings, topics.bumped_at
               FROM
                 #{table}
               INNER JOIN topics ON topics.id = #{table}.#{target_column}
@@ -237,7 +237,7 @@ module DiscourseAi
                 FROM
                   le_target
                 LIMIT 1
-              )) / POWER(EXTRACT(EPOCH FROM NOW() - created_at) / 86400 / :time_scale + 1, :age_penalty)
+              )) / POWER(EXTRACT(EPOCH FROM NOW() - bumped_at) / 86400 / :time_scale + 1, :age_penalty)
             LIMIT #{limit / 2};
           SQL
         else

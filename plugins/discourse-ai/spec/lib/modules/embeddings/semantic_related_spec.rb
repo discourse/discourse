@@ -86,8 +86,8 @@ describe DiscourseAi::Embeddings::SemanticRelated do
     end
 
     describe "age penalty functionality" do
-      let(:newer_topic) { Fabricate(:topic, created_at: 1.day.ago) }
-      let(:older_topic) { Fabricate(:topic, created_at: 30.days.ago) }
+      let(:newer_topic) { Fabricate(:topic, bumped_at: 1.day.ago) }
+      let(:older_topic) { Fabricate(:topic, bumped_at: 30.days.ago) }
 
       before do
         SiteSetting.ai_embeddings_semantic_related_age_penalty = 1.5
