@@ -17,7 +17,9 @@ class AddTimerableIdToTopicTimer < ActiveRecord::Migration[8.0]
       RETURNS trigger AS
       $$
       BEGIN
-        NEW.timerable_id = NEW.topic_id;
+        IF NEW.topic_id IS NOT NULL THEN
+          NEW.timerable_id = NEW.topic_id;
+        END IF;
         RETURN NEW;
       END;
       $$
