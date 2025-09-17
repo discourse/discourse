@@ -233,6 +233,7 @@ CREATE TABLE user_fields
     requirement       INTEGER,
     searchable        BOOLEAN,
     show_on_profile   BOOLEAN,
+    show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
 
