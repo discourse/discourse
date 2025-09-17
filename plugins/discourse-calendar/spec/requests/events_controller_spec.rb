@@ -20,7 +20,7 @@ module DiscoursePostEvent
         expect(response.status).to eq(200)
         expect(response.parsed_body["events"].length).to eq(1)
 
-        # Test with 3 events in a fresh context
+        # Test with 3 events
         Fabricate(:event, original_starts_at: 2.days.from_now)
         Fabricate(:event, original_starts_at: 3.days.from_now)
         queries_with_3_events = track_sql_queries { get "/discourse-post-event/events.json" }
