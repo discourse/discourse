@@ -117,6 +117,7 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
 
         vector_def = Fabricate(:embedding_definition)
         SiteSetting.ai_embeddings_selected_model = vector_def.id
+        SiteSetting.ai_embeddings_enabled = true
         SiteSetting.ai_embeddings_semantic_search_enabled = true
 
         hyde_embedding = [0.049382] * vector_def.dimensions

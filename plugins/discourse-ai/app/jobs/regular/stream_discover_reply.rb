@@ -5,6 +5,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
+      return if !SiteSetting.ai_discover_enabled
       return if (user = User.find_by(id: args[:user_id])).nil?
       return if (query = args[:query]).blank?
 
@@ -17,7 +18,7 @@ module Jobs
         return
       end
 
-      llm_model_id = ai_persona_klass.default_llm_id || SiteSetting.default_llm_id
+      llm_model_id = ai_persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
       return if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
 
       bot =

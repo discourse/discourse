@@ -411,8 +411,12 @@ discourse_ai:
     type: list
     list_type: compact
     area: "ai-features/bot"
+  ai_discover_enabled:
+    default: false
+    client: true
+    area: "ai-features/search"
   ai_bot_discover_persona:
-    default: ""
+    default: "-34"
     type: enum
     client: true
     enum: "DiscourseAi::Configuration::PersonaEnumerator"

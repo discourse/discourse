@@ -46,16 +46,13 @@ module DiscourseAi
       end
 
       def discover
-        ai_persona =
-          AiPersona
-            .all_personas(enabled_only: false)
-            .find { |persona| persona.id == SiteSetting.ai_bot_discover_persona.to_i }
+        ai_persona = AiPersona.find_by(id: SiteSetting.ai_bot_discover_persona)
 
         if ai_persona.nil? || !current_user.in_any_groups?(ai_persona.allowed_group_ids.to_a)
           raise Discourse::InvalidAccess.new
         end
 
-        if ai_persona.default_llm_id.blank?
+        if ai_persona.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
           render_json_error "Discover persona is missing a default LLM model.", status: 503
           return
         end
@@ -63,7 +60,7 @@ module DiscourseAi
         query = params[:query]
         raise Discourse::InvalidParameters.new("Missing query to discover") if query.blank?
 
-        RateLimiter.new(current_user, "ai_bot_discover_#{current_user.id}", 3, 1.minute).performed!
+        RateLimiter.new(current_user, "ai_bot_discover_#{current_user.id}", 8, 1.minute).performed!
 
         Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query: query)
 
