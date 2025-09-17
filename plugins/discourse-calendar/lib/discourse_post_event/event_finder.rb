@@ -28,7 +28,7 @@ module DiscoursePostEvent
         .joins(latest_event_date_join)
         .select("discourse_post_event_events.*, latest_event_dates.starts_at")
         .where(
-          "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL)",
+          "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL) OR (discourse_post_event_events.original_starts_at IS NOT NULL)",
         )
         .distinct
     end

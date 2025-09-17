@@ -114,6 +114,8 @@ module DiscoursePostEvent
         if association(:event_dates).loaded?
           pending = event_dates.select { |d| d.finished_at.nil? }
           pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last || event_dates.order(:updated_at, :id).last
         end
 
       date&.starts_at || original_starts_at
@@ -126,6 +128,8 @@ module DiscoursePostEvent
         if association(:event_dates).loaded?
           pending = event_dates.select { |d| d.finished_at.nil? }
           pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last || event_dates.order(:updated_at, :id).last
         end
 
       date&.ends_at || original_ends_at
