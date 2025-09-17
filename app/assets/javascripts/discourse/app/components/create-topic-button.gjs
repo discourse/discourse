@@ -6,7 +6,7 @@ import concatClass from "discourse/helpers/concat-class";
 
 export default class CreateTopicButton extends Component {
   @tracked btnTypeClass = this.args.btnTypeClass || "btn-default";
-  label = "topic.create";
+  @tracked label = this.args.label ?? "topic.create";
 
   <template>
     {{#if @canCreateTopic}}
