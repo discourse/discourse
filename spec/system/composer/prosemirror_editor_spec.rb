@@ -1269,6 +1269,24 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("[Encoded URL](https://example.com/%20test)")
     end
 
+    it "handles links malformed links gracefully" do
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/100%/working")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://example.com/100%25/working']", text: "Encoded URL")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working)")
+    end
+
     it "allows copying a link URL via toolbar" do
       cdp.allow_clipboard
       open_composer
