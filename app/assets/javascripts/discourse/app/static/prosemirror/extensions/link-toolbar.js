@@ -195,7 +195,7 @@ class LinkToolbarPluginView {
       model: {
         editing: true,
         linkText: currentLinkText,
-        linkUrl: decodeURI(this.#linkState.href),
+        linkUrl: this.#linkState.href,
         toolbarEvent: {
           addText: (text) => this.#replaceText(text),
           selected: { value: this.#linkState.href },
