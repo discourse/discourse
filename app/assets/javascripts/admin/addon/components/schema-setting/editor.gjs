@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
+import { gt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
@@ -226,6 +226,44 @@ export default class SchemaSettingNewEditor extends Component {
   }
 
   @action
+  moveUp() {
+    if (this.canMoveUp) {
+      this.#swapAdjacentItems(this.activeIndex, this.activeIndex - 1);
+      this.activeIndex = this.activeIndex - 1;
+    }
+  }
+
+  @action
+  moveDown() {
+    if (this.canMoveDown) {
+      this.#swapAdjacentItems(this.activeIndex, this.activeIndex + 1);
+      this.activeIndex = this.activeIndex + 1;
+    }
+  }
+
+  #swapAdjacentItems(fromIndex, toIndex) {
+    const item = this.activeData[fromIndex];
+    const fromCallback = this.inputFieldObserver[fromIndex];
+    const toCallback = this.inputFieldObserver[toIndex];
+
+    // Move the data
+    this.activeData.removeAt(fromIndex);
+    this.activeData.insertAt(toIndex, item);
+
+    // Swap the observer callbacks to match new positions
+    this.inputFieldObserver[toIndex] = fromCallback;
+    this.inputFieldObserver[fromIndex] = toCallback;
+  }
+
+  get canMoveUp() {
+    return this.activeIndex > 0;
+  }
+
+  get canMoveDown() {
+    return this.activeIndex < this.activeData.length - 1;
+  }
+
+  @action
   saveChanges() {
     this.saveButtonDisabled = true;
     this.args.setting
@@ -293,13 +331,30 @@ export default class SchemaSettingNewEditor extends Component {
             />
           {{/each}}
 
-          {{#if (gt this.fields.length 0)}}
+          <div class="schema-setting-editor__field-actions">
             <DButton
-              @action={{this.removeItem}}
-              @icon="trash-can"
-              class="btn-danger schema-setting-editor__remove-btn"
+              @action={{this.moveUp}}
+              @icon="chevron-up"
+              @disabled={{not this.canMoveUp}}
+              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
+              class="btn-default schema-setting-editor__move-up-btn"
             />
-          {{/if}}
+            <DButton
+              @action={{this.moveDown}}
+              @icon="chevron-down"
+              @disabled={{not this.canMoveDown}}
+              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
+              class="btn-default schema-setting-editor__move-down-btn"
+            />
+
+            {{#if (gt this.fields.length 0)}}
+              <DButton
+                @action={{this.removeItem}}
+                @icon="trash-can"
+                class="btn-danger schema-setting-editor__remove-btn"
+              />
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
