@@ -119,10 +119,8 @@ RSpec.describe SessionController do
           expect(response_body_parsed["allowed_credential_ids"]).to eq(
             [user_security_key.credential_id],
           )
-          secure_session = SecureSession.new(session["secure_session_id"])
-
           expect(response_body_parsed["challenge"]).to eq(
-            DiscourseWebauthn.challenge(user, secure_session),
+            DiscourseWebauthn.challenge(user, request.server_session),
           )
           expect(DiscourseWebauthn.rp_id).to eq("localhost")
         end

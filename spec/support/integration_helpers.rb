@@ -38,7 +38,7 @@ module IntegrationHelpers
   def read_secure_session
     id =
       begin
-        session[:secure_session_id]
+        session[:server_session_id]
       rescue NoMethodError
         nil
       end
@@ -46,7 +46,7 @@ module IntegrationHelpers
     # This route will init the secure_session for us
     get "/session/hp.json" if id.nil?
 
-    SecureSession.new(session[:secure_session_id])
+    ServerSession.new(session[:server_session_id])
   end
 
   def write_secure_session(key, value)

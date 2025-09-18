@@ -17,32 +17,32 @@ RSpec.describe DiscourseWebauthn do
   end
 
   describe ".stage_challenge" do
-    let(:secure_session) { SecureSession.new("some-prefix") }
+    let(:server_session) { ServerSession.new("some-prefix") }
 
     it "stores the challenge in the provided session object with the right expiry" do
-      described_class.stage_challenge(user, secure_session)
+      described_class.stage_challenge(user, server_session)
       key = described_class.session_challenge_key(user)
 
-      expect(secure_session[key]).to be_present
+      expect(server_session[key]).to be_present
 
-      expect(secure_session.ttl(key)).to be_within_one_second_of(
+      expect(server_session.ttl(key)).to be_within_one_second_of(
         DiscourseWebauthn::CHALLENGE_EXPIRY,
       )
     end
   end
 
   describe ".clear_challenge" do
-    let(:secure_session) { SecureSession.new("some-prefix") }
+    let(:server_session) { ServerSession.new("some-prefix") }
 
     it "clears the challenge from the provided session object" do
-      described_class.stage_challenge(user, secure_session)
+      described_class.stage_challenge(user, server_session)
       key = described_class.session_challenge_key(user)
 
-      expect(secure_session[key]).to be_present
+      expect(server_session[key]).to be_present
 
-      described_class.clear_challenge(user, secure_session)
+      described_class.clear_challenge(user, server_session)
 
-      expect(secure_session[key]).to be_nil
+      expect(server_session[key]).to be_nil
     end
   end
 end

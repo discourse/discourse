@@ -165,16 +165,17 @@ RSpec.describe SecondFactorManager do
 
   describe "#authenticate_second_factor" do
     let(:params) { {} }
-    let(:secure_session) { SecureSession.new("some-prefix") }
+    let(:server_session) { ServerSession.new("some-prefix") }
 
     context "when neither security keys nor totp/backup codes are enabled" do
       before { disable_security_key && disable_totp }
+
       it "returns OK, because it doesn't need to authenticate" do
-        expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+        expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
       end
 
       it "keeps used_2fa_method nil because no authentication is done" do
-        expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(nil)
+        expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(nil)
       end
     end
 
@@ -182,7 +183,7 @@ RSpec.describe SecondFactorManager do
       before do
         disable_totp
         simulate_localhost_webauthn_challenge
-        DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, server_session)
         DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
@@ -194,11 +195,11 @@ RSpec.describe SecondFactorManager do
           }
         end
         it "returns OK" do
-          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
         it "sets used_2fa_method to security keys" do
-          expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
             UserSecondFactor.methods[:security_key],
           )
         end
@@ -217,7 +218,7 @@ RSpec.describe SecondFactorManager do
           }
         end
         it "returns not OK" do
-          result = user.authenticate_second_factor(params, secure_session)
+          result = user.authenticate_second_factor(params, server_session)
           expect(result.ok).to eq(false)
           expect(result.error).to eq(I18n.t("webauthn.validation.not_found_error"))
           expect(result.used_2fa_method).to eq(nil)
@@ -236,11 +237,11 @@ RSpec.describe SecondFactorManager do
           }
         end
         it "returns OK" do
-          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
         it "sets used_2fa_method to totp" do
-          expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
             UserSecondFactor.methods[:totp],
           )
         end
@@ -251,7 +252,7 @@ RSpec.describe SecondFactorManager do
           { second_factor_token: "blah", second_factor_method: UserSecondFactor.methods[:totp] }
         end
         it "returns not OK" do
-          result = user.authenticate_second_factor(params, secure_session)
+          result = user.authenticate_second_factor(params, server_session)
           expect(result.ok).to eq(false)
           expect(result.error).to eq(I18n.t("login.invalid_second_factor_code"))
           expect(result.used_2fa_method).to eq(nil)
@@ -265,13 +266,13 @@ RSpec.describe SecondFactorManager do
 
       before do
         simulate_localhost_webauthn_challenge
-        DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, server_session)
         DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
       context "when method selected is invalid" do
         it "returns an error" do
-          result = user.authenticate_second_factor(params, secure_session)
+          result = user.authenticate_second_factor(params, server_session)
           expect(result.ok).to eq(false)
           expect(result.error).to eq(I18n.t("login.invalid_second_factor_method"))
           expect(result.used_2fa_method).to eq(nil)
@@ -286,11 +287,11 @@ RSpec.describe SecondFactorManager do
           let(:params) { { second_factor_token: token, second_factor_method: method } }
 
           it "validates totp OK" do
-            expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+            expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
           end
 
           it "sets used_2fa_method to totp" do
-            expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+            expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
               UserSecondFactor.methods[:totp],
             )
           end
@@ -300,7 +301,7 @@ RSpec.describe SecondFactorManager do
             before { user.totps.destroy_all }
 
             it "returns an error" do
-              result = user.authenticate_second_factor(params, secure_session)
+              result = user.authenticate_second_factor(params, server_session)
               expect(result.ok).to eq(false)
               expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
               expect(result.used_2fa_method).to eq(nil)
@@ -314,7 +315,7 @@ RSpec.describe SecondFactorManager do
 
         before do
           simulate_localhost_webauthn_challenge
-          DiscourseWebauthn.stage_challenge(user, secure_session)
+          DiscourseWebauthn.stage_challenge(user, server_session)
         end
 
         context "when security key params are valid" do
@@ -322,11 +323,11 @@ RSpec.describe SecondFactorManager do
             { second_factor_token: valid_security_key_auth_post_data, second_factor_method: method }
           end
           it "returns OK" do
-            expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+            expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
           end
 
           it "sets used_2fa_method to security keys" do
-            expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+            expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
               UserSecondFactor.methods[:security_key],
             )
           end
@@ -335,7 +336,7 @@ RSpec.describe SecondFactorManager do
             before { user.security_keys.destroy_all }
 
             it "returns an error" do
-              result = user.authenticate_second_factor(params, secure_session)
+              result = user.authenticate_second_factor(params, server_session)
               expect(result.ok).to eq(false)
               expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
               expect(result.used_2fa_method).to eq(nil)
@@ -355,11 +356,11 @@ RSpec.describe SecondFactorManager do
 
           context "when backup codes enabled" do
             it "validates codes OK" do
-              expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+              expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
             end
 
             it "sets used_2fa_method to backup codes" do
-              expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+              expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
                 UserSecondFactor.methods[:backup_codes],
               )
             end
@@ -369,7 +370,7 @@ RSpec.describe SecondFactorManager do
             before { user.user_second_factors.backup_codes.destroy_all }
 
             it "returns an error" do
-              result = user.authenticate_second_factor(params, secure_session)
+              result = user.authenticate_second_factor(params, server_session)
               expect(result.ok).to eq(false)
               expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
               expect(result.used_2fa_method).to eq(nil)
@@ -387,11 +388,11 @@ RSpec.describe SecondFactorManager do
         end
 
         it "validates the security key OK" do
-          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
         it "sets used_2fa_method to security keys" do
-          expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
             UserSecondFactor.methods[:security_key],
           )
         end
@@ -406,11 +407,11 @@ RSpec.describe SecondFactorManager do
         end
 
         it "validates totp OK" do
-          expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
+          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
         it "sets used_2fa_method to totp" do
-          expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(
+          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
             UserSecondFactor.methods[:totp],
           )
         end
