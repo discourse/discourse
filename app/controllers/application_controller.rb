@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
 
   attr_reader :theme_id
 
+  delegate :server_session, to: :request
+  alias_method :secure_session, :server_session
+
   serialization_scope :guardian
 
   protect_from_forgery
@@ -566,10 +569,6 @@ class ApplicationController < ActionController::Base
     # longer term we may want to push this into middleware
     headers.delete "Set-Cookie"
     request.session_options[:skip] = true
-  end
-
-  def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
 
   def handle_permalink(path)

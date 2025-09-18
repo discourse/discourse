@@ -22,6 +22,8 @@ RSpec.describe UsersController do
   before { SiteSetting.hide_email_address_taken = false }
 
   describe "#full account registration flow" do
+    let(:server_session) { request.server_session }
+
     it "will correctly handle honeypot and challenge" do
       get "/session/hp.json"
       expect(response.status).to eq(200)
@@ -37,10 +39,8 @@ RSpec.describe UsersController do
         password: SecureRandom.hex,
       }
 
-      secure_session = SecureSession.new(session["secure_session_id"])
-
-      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(json["value"])
-      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(json["challenge"])
+      expect(server_session[UsersController::HONEYPOT_KEY]).to eq(json["value"])
+      expect(server_session[UsersController::CHALLENGE_KEY]).to eq(json["challenge"])
 
       post "/u.json", params: params
 
@@ -50,8 +50,8 @@ RSpec.describe UsersController do
 
       expect(jane.email).to eq("jane@jane.com")
 
-      expect(secure_session[UsersController::HONEYPOT_KEY]).to eq(nil)
-      expect(secure_session[UsersController::CHALLENGE_KEY]).to eq(nil)
+      expect(server_session[UsersController::HONEYPOT_KEY]).to eq(nil)
+      expect(server_session[UsersController::CHALLENGE_KEY]).to eq(nil)
     end
   end
 
@@ -627,8 +627,7 @@ RSpec.describe UsersController do
         end
 
         it "stages a webauthn challenge for the user" do
-          secure_session = SecureSession.new(session["secure_session_id"])
-          expect(DiscourseWebauthn.challenge(user1, secure_session)).not_to eq(nil)
+          expect(DiscourseWebauthn.challenge(user1, request.server_session)).not_to be_blank
         end
 
         it "changes password with valid security key challenge and authentication" do

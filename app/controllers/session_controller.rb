@@ -36,7 +36,7 @@ class SessionController < ApplicationController
     session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
+    sso = DiscourseConnect.generate_sso(return_path, secure_session:)
     connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
     redirect_to sso_url(sso), allow_other_host: true
   end
@@ -698,13 +698,13 @@ class SessionController < ApplicationController
   end
 
   def get_honeypot_value
-    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
-    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+    server_session[HONEYPOT_KEY] = honeypot_value
+    server_session[CHALLENGE_KEY] = challenge_value
 
     render json: {
              value: honeypot_value,
              challenge: challenge_value,
-             expires_in: SecureSession.expiry,
+             expires_in: ServerSession.expiry,
            }
   end
 
