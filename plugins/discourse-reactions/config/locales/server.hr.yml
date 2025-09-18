@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 hr:
+  badges:
+    first_reaction:
+      name: Prva reakcija
+      description: Reagirao/la na objavu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada reagirate na objavu. Reagiranje na objave odličan je način da obavijestite ostale članove zajednice da je ono što su objavili bilo zanimljivo, korisno, fora ili zabavno. Podijelite svoju reakciju!
   reports:
     reactions:
       labels:
