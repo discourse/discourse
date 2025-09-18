@@ -59,6 +59,29 @@ module DiscourseAi
         DB.query_single(sql, base_locale:)
       end
 
+      def self.calculate_completion_progress_for_all_locales
+        sql = <<~SQL
+          WITH eligible_posts AS (
+            #{get.where("posts.locale IS NOT NULL").to_sql}
+          ),
+          total_count AS (
+            SELECT COUNT(*) AS count FROM eligible_posts
+          ),
+          done_count AS (
+            SELECT pl.locale, COUNT(DISTINCT p.id) AS count
+            FROM eligible_posts p
+            LEFT JOIN post_localizations pl ON p.id = pl.post_id
+            WHERE pl.locale IS NOT NULL
+            GROUP BY pl.locale
+          )
+          SELECT d.locale, d.count AS done, t.count AS total
+          FROM done_count d
+          CROSS JOIN total_count t
+        SQL
+
+        DB.query(sql).map { |row| { locale: row.locale, done: row.done, total: row.total } }
+      end
+
       def self.cache_key_for_type
         "discourse_ai::translation::post_candidates"
       end

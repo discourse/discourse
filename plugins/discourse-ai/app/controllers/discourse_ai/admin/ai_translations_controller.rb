@@ -21,9 +21,8 @@ module DiscourseAi
         candidates = DiscourseAi::Translation::PostCandidates
 
         result =
-          supported_locales.map do |locale|
-            candidates.get_completion_per_locale(locale) in { total:, done: }
-            { locale:, total:, done: }
+          candidates.calculate_completion_progress_for_all_locales.filter do |entry|
+            supported_locales.include?(entry[:locale])
           end
 
         candidates.get_total_and_with_locale_count in { total:, posts_with_detected_locale: }
