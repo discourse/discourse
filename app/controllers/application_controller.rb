@@ -747,8 +747,8 @@ class ApplicationController < ActionController::Base
     dont_cache_page
 
     if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
-      # save original URL in a session so we can redirect after login
-      session[:destination_url] = destination_url
+      # save original URL in the server session so we can redirect after login
+      server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
           Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
