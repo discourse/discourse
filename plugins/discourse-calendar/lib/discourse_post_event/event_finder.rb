@@ -21,6 +21,7 @@ module DiscoursePostEvent
       pms = private_messages(user)
 
       DiscoursePostEvent::Event
+        .visible
         .includes(:event_dates, :post, post: :topic)
         .joins(post: :topic)
         .merge(Post.secured(guardian))

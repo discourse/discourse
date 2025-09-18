@@ -29,6 +29,21 @@ module DiscoursePostEvent
 
         expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
+
+      it "should not show deleted events" do
+        active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
+        active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
+        deleted_event =
+          Fabricate(:event, original_starts_at: 3.days.from_now, deleted_at: 1.hour.ago)
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        events = response.parsed_body["events"]
+        event_ids = events.map { |e| e["id"] }
+
+        expect(event_ids).to match_array([active_event1.id, active_event2.id])
+      end
     end
 
     context "with an existing post" do
