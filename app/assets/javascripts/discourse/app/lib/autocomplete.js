@@ -11,10 +11,10 @@ import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipul
 import Site from "discourse/models/site";
 
 /**
- This is a jQuery plugin to support autocompleting values in our text fields.
+  This is a jQuery plugin to support autocompleting values in our text fields.
 
- @module $.fn.autocomplete
- **/
+  @module $.fn.autocomplete
+**/
 
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
