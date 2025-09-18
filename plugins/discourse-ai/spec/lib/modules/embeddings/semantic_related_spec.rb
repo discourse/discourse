@@ -84,5 +84,67 @@ describe DiscourseAi::Embeddings::SemanticRelated do
         expect(results).to eq([])
       end
     end
+
+    describe "age penalty functionality" do
+      let(:newer_topic) { Fabricate(:topic, bumped_at: 1.day.ago) }
+      let(:older_topic) { Fabricate(:topic, bumped_at: 30.days.ago) }
+
+      before do
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 1.5
+        SiteSetting.ai_embeddings_semantic_related_age_time_scale = 30 # Use 30 days for more dramatic effect in tests
+
+        # Create embeddings for test topics
+        embedding = Array.new(1024) { rand }
+        schema = DiscourseAi::Embeddings::Schema.for(Topic)
+
+        [target, newer_topic, older_topic].each do |topic|
+          schema.store(topic, embedding, "test_digest_#{topic.id}")
+        end
+
+        described_class.clear_cache_for(target)
+      end
+
+      it "prioritizes newer topics over older ones with same similarity" do
+        # Mock the similarity search to return consistent embeddings for all topics
+        allow_any_instance_of(DiscourseAi::Embeddings::Schema).to receive(
+          :symmetric_similarity_search,
+        ).and_call_original
+
+        results = semantic_related.related_topic_ids_for(target)
+
+        expect(results).to include(newer_topic.id)
+        expect(results).to include(older_topic.id)
+
+        # Newer topic should appear before older topic due to age penalty
+        newer_index = results.index(newer_topic.id)
+        older_index = results.index(older_topic.id)
+        expect(newer_index).to be < older_index if newer_index && older_index
+      end
+
+      it "uses no age penalty when setting is 0.0" do
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.0
+        described_class.clear_cache_for(target)
+
+        # Should work the same as without age penalty
+        expect { semantic_related.related_topic_ids_for(target) }.not_to raise_error
+      end
+
+      it "handles age penalty parameter correctly in schema" do
+        schema = DiscourseAi::Embeddings::Schema.for(Topic)
+
+        expect { schema.symmetric_similarity_search(target, age_penalty: 1.5) }.not_to raise_error
+
+        expect { schema.symmetric_similarity_search(target, age_penalty: 0.0) }.not_to raise_error
+      end
+
+      it "respects different time scale settings" do
+        # Test with a different time scale that makes the penalty less aggressive
+        SiteSetting.ai_embeddings_semantic_related_age_time_scale = 365 # 1 year time scale
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.3 # Gentle penalty
+        described_class.clear_cache_for(target)
+
+        expect { semantic_related.related_topic_ids_for(target) }.not_to raise_error
+      end
+    end
   end
 end

@@ -102,6 +102,8 @@ en:
     ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
+    ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
+    ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
