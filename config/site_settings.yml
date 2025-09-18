@@ -4234,27 +4234,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation|experimental"
-  glimmer_post_stream_mode_auto_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    area: "experimental"
-  glimmer_post_stream_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: "enabled"
-    area: "experimental"
-  deactivate_widgets_rendering:
-    client: true
-    default: true
-    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
