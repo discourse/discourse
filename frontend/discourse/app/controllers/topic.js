@@ -120,8 +120,6 @@ export default class TopicController extends Controller {
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () => {
       this._removeDeleteOnOwnerReplyBookmarks();
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh", { force: true });
     });
   }
 
@@ -175,19 +173,12 @@ export default class TopicController extends Controller {
     return mobileView && postsCount > 3;
   }
 
-  // TODO (glimmer-post-stream) this method is not used in the Glimmer Post Stream
   @discourseComputed(
     "model.postStream.posts",
     "model.postStream.postsWithPlaceholders"
   )
   postsToRender(posts, postsWithPlaceholders) {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
-  }
-
-  // TODO (glimmer-post-stream) is this still used?
-  @discourseComputed("model.postStream.loadingFilter")
-  androidLoading(loading) {
-    return this.capabilities.isAndroid && loading;
   }
 
   @discourseComputed("model")
@@ -317,11 +308,6 @@ export default class TopicController extends Controller {
     }
   }
 
-  _forceRefreshPostStream() {
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:refresh", { force: true });
-  }
-
   _updateSelectedPostIds(postIds) {
     const smallActionsPostIds = this._smallActionPostIds();
     this.selectedPostIds = Array.from(
@@ -330,7 +316,6 @@ export default class TopicController extends Controller {
         ...postIds.filter((postId) => !smallActionsPostIds.has(postId)),
       ])
     );
-    this._forceRefreshPostStream();
   }
 
   _smallActionPostIds() {
@@ -412,21 +397,18 @@ export default class TopicController extends Controller {
         (postId) => !smallActionsPostIds.has(postId)
       ),
     ];
-    this._forceRefreshPostStream();
   }
 
   @action
   deselectAll(event) {
     event?.preventDefault();
     this.selectedPostIds = [];
-    this._forceRefreshPostStream();
   }
 
   @action
   toggleMultiSelect(event) {
     event?.preventDefault();
     this.toggleProperty("multiSelect");
-    this._forceRefreshPostStream();
   }
 
   @action
@@ -585,8 +567,6 @@ export default class TopicController extends Controller {
       postStream.get("canAppendMore")
     ) {
       await postStream.appendMore();
-      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
-      refresh?.();
     }
   }
 
@@ -781,22 +761,16 @@ export default class TopicController extends Controller {
     }
 
     const user = this.currentUser;
-    const refresh = () =>
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh");
     const hasReplies = post.get("reply_count") > 0;
     const loadedPosts = this.get("model.postStream.posts");
 
     if (user.get("staff") && hasReplies) {
       ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
         if (replies.length === 0) {
-          return post
-            .destroy(user, opts)
-            .then(refresh)
-            .catch((error) => {
-              popupAjaxError(error);
-              post.undoDeleteState();
-            });
+          return post.destroy(user, opts).catch((error) => {
+            popupAjaxError(error);
+            post.undoDeleteState();
+          });
         }
 
         const buttons = [];
@@ -816,9 +790,7 @@ export default class TopicController extends Controller {
                 (p === post || directReplyIds.includes(p.id)) &&
                 p.setDeletedState(user)
             );
-            Post.deleteMany([post.id, ...directReplyIds])
-              .then(refresh)
-              .catch(popupAjaxError);
+            Post.deleteMany([post.id, ...directReplyIds]).catch(popupAjaxError);
           },
         });
 
@@ -833,9 +805,9 @@ export default class TopicController extends Controller {
                   (p === post || replies.some((r) => r.id === p.id)) &&
                   p.setDeletedState(user)
               );
-              Post.deleteMany([post.id, ...replies.map((r) => r.id)])
-                .then(refresh)
-                .catch(popupAjaxError);
+              Post.deleteMany([post.id, ...replies.map((r) => r.id)]).catch(
+                popupAjaxError
+              );
             },
           });
         }
@@ -843,13 +815,10 @@ export default class TopicController extends Controller {
         buttons.push({
           label: i18n("post.controls.delete_replies.just_the_post"),
           action: () => {
-            post
-              .destroy(user, opts)
-              .then(refresh)
-              .catch((error) => {
-                popupAjaxError(error);
-                post.undoDeleteState();
-              });
+            post.destroy(user, opts).catch((error) => {
+              popupAjaxError(error);
+              post.undoDeleteState();
+            });
           },
         });
 
@@ -864,13 +833,10 @@ export default class TopicController extends Controller {
         });
       });
     } else {
-      return post
-        .destroy(user, opts)
-        .then(refresh)
-        .catch((error) => {
-          popupAjaxError(error);
-          post.undoDeleteState();
-        });
+      return post.destroy(user, opts).catch((error) => {
+        popupAjaxError(error);
+        post.undoDeleteState();
+      });
     }
   }
 
@@ -1003,15 +969,7 @@ export default class TopicController extends Controller {
         post
       );
     } else {
-      return this._toggleTopicLevelBookmark().then((changedIds) => {
-        if (!changedIds) {
-          return;
-        }
-        changedIds.forEach((id) =>
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id })
-        );
-      });
+      return this._toggleTopicLevelBookmark();
     }
   }
 
@@ -1097,7 +1055,6 @@ export default class TopicController extends Controller {
         post.id,
         ...replyIds,
       ]);
-      this._forceRefreshPostStream();
     });
   }
 
@@ -1825,9 +1782,6 @@ export default class TopicController extends Controller {
   @bind
   onMessage(data) {
     const topic = this.model;
-    const refresh = (args) =>
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh", args);
 
     if (isPresent(data.notification_level_change)) {
       topic.set("details.notification_level", data.notification_level_change);
@@ -1857,48 +1811,39 @@ export default class TopicController extends Controller {
 
     switch (data.type) {
       case "acted":
-        postStream
-          .triggerChangedPost(data.id, data.updated_at, {
-            preserveCooked: true,
-          })
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerChangedPost(data.id, data.updated_at, {
+          preserveCooked: true,
+        });
         break;
       case "read": {
-        postStream
-          .triggerReadPost(data.id, data.readers_count)
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerReadPost(data.id, data.readers_count);
         break;
       }
       case "liked":
       case "unliked": {
-        postStream
-          .triggerLikedPost(data.id, data.likes_count, data.user_id, data.type)
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerLikedPost(
+          data.id,
+          data.likes_count,
+          data.user_id,
+          data.type
+        );
         break;
       }
       case "revised":
       case "rebaked": {
-        postStream
-          .triggerChangedPost(data.id, data.updated_at)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerChangedPost(data.id, data.updated_at);
         break;
       }
       case "deleted": {
-        postStream
-          .triggerDeletedPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerDeletedPost(data.id);
         break;
       }
       case "destroyed": {
-        postStream
-          .triggerDestroyedPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerDestroyedPost(data.id);
         break;
       }
       case "recovered": {
-        postStream
-          .triggerRecoveredPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerRecoveredPost(data.id);
         break;
       }
       case "created": {
@@ -1910,7 +1855,6 @@ export default class TopicController extends Controller {
 
           return postStream
             .triggerNewPostsInStream(postIds, { background: true })
-            .then(() => refresh())
             .catch((e) => {
               this._newPostsInStream = postIds.concat(this._newPostsInStream);
               throw e;
@@ -1946,9 +1890,7 @@ export default class TopicController extends Controller {
         }
 
         if (updateStream) {
-          postStream
-            .triggerChangedTopicStats()
-            .then((firstPostId) => refresh({ id: firstPostId }));
+          postStream.triggerChangedTopicStats();
         }
         break;
       }
@@ -1980,8 +1922,6 @@ export default class TopicController extends Controller {
       postStream.get("posts").forEach((post) => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
         }
       });
 

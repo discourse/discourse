@@ -92,8 +92,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
       this.appEvents.on("composer:preview-toggled", this.calculatePosition);
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
     this.intersectionObserver = new IntersectionObserver((entries) => {
@@ -133,8 +131,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:closed", this.calculatePosition);
       this.appEvents.off("composer:preview-toggled", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
 

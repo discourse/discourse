@@ -78,21 +78,11 @@ function registerTopicFooterButtons(api) {
         this.topic.assigned_to_group = null;
 
         await taskActions.unassign(this.topic.id, "Topic");
-
-        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
       } else {
         await modal.show(EditTopicAssignments, {
           model: {
             topic: this.topic,
           },
-          onSuccess: () =>
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
-            }),
         });
       }
     },
@@ -176,12 +166,7 @@ function registerTopicFooterButtons(api) {
 
       this.topic.assigned_to_user = null;
       this.topic.assigned_to_group = null;
-      taskActions.unassign(this.topic.id).then(() => {
-        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
-      });
+      taskActions.unassign(this.topic.id);
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
@@ -227,11 +212,6 @@ function registerTopicFooterButtons(api) {
       this.topic.assigned_to_group = null;
 
       await taskActions.reassignUserToTopic(this.currentUser, this.topic);
-
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh", {
-        id: this.topic.postStream.firstPostId,
-      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
@@ -277,11 +257,6 @@ function registerTopicFooterButtons(api) {
       await taskActions.showAssignModal(this.topic, {
         targetType: "Topic",
         isAssigned: this.topic.isAssigned(),
-        onSuccess: () =>
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          }),
       });
     },
     dropdown() {
@@ -524,21 +499,6 @@ function initialize(api) {
                 } else if (data.type === "unassigned") {
                   delete topic.indirectly_assigned_to[data.post_id];
                 }
-
-                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-                this.appEvents.trigger("post-stream:refresh", {
-                  id: topic.postStream.posts[0].id,
-                });
-                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-                this.appEvents.trigger("post-stream:refresh", {
-                  id: data.post_id,
-                });
-              }
-              if (topic.closed) {
-                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-                this.appEvents.trigger("post-stream:refresh", {
-                  id: topic.postStream.posts[0].id,
-                });
               }
             }
             // force the components tracking `topic.indirectly_assigned_to` to update
@@ -546,10 +506,6 @@ function initialize(api) {
             topic.indirectly_assigned_to = topic.indirectly_assigned_to;
 
             this.appEvents.trigger("header:update-topic", topic);
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.posts[0].id,
-            });
           });
         }
 
@@ -627,8 +583,7 @@ function customizePost(api, siteSettings) {
   );
 
   api.addPostSmallActionClassesCallback((post) => {
-    // TODO (glimmer-post-stream): only check for .action_code once the widget code is removed
-    const actionCode = post.action_code || post.actionCode;
+    const actionCode = post.action_code;
 
     if (actionCode.includes("assigned") && !siteSettings.assigns_public) {
       return ["private-assign"];

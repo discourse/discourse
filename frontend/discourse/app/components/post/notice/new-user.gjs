@@ -4,7 +4,6 @@ import emoji from "discourse/helpers/emoji";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
 
-// TODO (glimmer-post-stream) needs tests
 export default class PostNoticeNewUser extends Component {
   @service siteSettings;
 

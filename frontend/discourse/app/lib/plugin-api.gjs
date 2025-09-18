@@ -1035,7 +1035,7 @@ class _PluginApi {
    * ```
    **/
   preventCloak(postId, prevent = true) {
-    preventCloaking(postId, prevent); // glimmer-post-stream
+    preventCloaking(postId, prevent);
   }
 
   /**
