@@ -315,6 +315,21 @@ hr:
         title: "Čet"
         keyboard_shortcuts:
           mark_all_channels_read: "%{shortcut} Označi sve kanale kao pročitane"
+    user:
+      allow_private_messages: "Dopusti drugim korisnicima da mi šalju osobne poruke i izravne poruke u chatu"
+      muted_users_instructions: "Nećete primati nikakve obavijesti, osobne poruke ili izravne poruke u chatu od ovog korisnika."
+      allowed_pm_users_instructions: "Dopusti samo osobne poruke ili izravne poruke u chatu od ovih korisnika."
+      allow_private_messages_from_specific_users: "Dopusti samo određenim korisnicima da mi šalju osobne poruke ili izravne poruke u chatu"
+      ignored_users_instructions: "Nećete primati nikakve obavijesti, osobne poruke ili izravne poruke u chatu od ovog korisnika."
+    user_menu:
+      no_chat_notifications_title: "Još nemate nijednu obavijest"
+      no_chat_notifications_body: >
+        Bit ćete obaviješteni na ovoj ploči kada vam netko pošalje izravnu poruku ili vas <b>@spomene</b> u chatu. Obavijesti će također biti poslane na vašu e-poštu kada se neko vrijeme ne prijavite. <br><br> Kliknite naslov na vrhu bilo kojeg kanala za chat kako biste konfigurirali koje obavijesti primate u tom kanalu. Za više informacija pogledajte svoje <a href='%{preferencesUrl}'>postavke obavijesti</a>.
+      tabs:
+        chat_notifications_with_unread:
+          one: "Obavijesti o chatu - %{count} nepročitana obavijest"
+          few: "Obavijesti o chatu - %{count} nepročitane obavijesti"
+          other: "Obavijesti o chatu - %{count} nepročitanih obavijesti"
     styleguide:
       sections:
         chat:

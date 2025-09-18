@@ -2118,6 +2118,7 @@ sv:
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
+      read_only: "skrivskyddad"
     select_kit:
       delete_item: "Radera %{name}"
       filter_by: "Filtrera efter: %{name}"
@@ -2748,7 +2749,6 @@ sv:
         one: "%{count} inlägg i ämnet"
         other: "%{count} inlägg i ämnet"
       create: "Nytt ämne"
-      create_disabled_category: "Du får inte skapa ämnen i den här kategorin"
       create_long: "Skapa ett nytt ämne"
       open_draft: "Öppna utkast"
       private_message: "Skriv meddelande"

@@ -12,6 +12,7 @@ ur:
     deleted_chat_username: حذف کردہ
     errors:
       not_accepting_dms: "معذرت، %{username} اِس وقت پیغامات قبول نہیں کر رہا ہے۔"
+      actor_disallowed_dms: "آپ نے اراکین کو ذاتی اور براہ راست پیغامات بھیجنے سے روکنے کا انتخاب کیا ہے، لہذا آپ نئے براہ راست پیغامات نہیں بنا سکتے۔"
     reviewables:
       actions:
         agree:

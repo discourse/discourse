@@ -681,6 +681,7 @@ pl_PL:
           title: "Przeprowadź test"
           running: "Przeprowadzam test..."
           success: "Powodzenie!"
+          invalid_config: "Najpierw napraw następujące błędy w konfiguracji:"
           failure: "Próba nawiązania kontaktu z modelem zwróciła następujący błąd: %{error}"
         hints:
           max_prompt_tokens: "Maksymalna liczba tokenów, jaką model może przetworzyć w jednym żądaniu"

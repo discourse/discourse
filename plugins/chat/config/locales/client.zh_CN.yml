@@ -696,6 +696,9 @@ zh_CN:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 开始新的 DM
+        title: 创建个人聊天
       panels:
         chat:
           label: "聊天"

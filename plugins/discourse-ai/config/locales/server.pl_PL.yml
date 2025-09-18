@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Identyfikator modelu"
+        max_prompt_tokens: "Okno kontekstowe"
   discourse_automation:
     ai:
       flag_types:

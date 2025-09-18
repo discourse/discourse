@@ -184,6 +184,7 @@ ro:
         tests:
           title: "Rulează test"
           success: "Succes!"
+          invalid_config: "Remediază mai întâi următoarele erori în configurație:"
         providers:
           google: "Google"
           fake: "Personalizat"

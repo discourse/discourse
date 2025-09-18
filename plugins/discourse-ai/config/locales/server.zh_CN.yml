@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "模型 ID"
+        max_prompt_tokens: "上下文窗口"
   discourse_automation:
     ai:
       flag_types:

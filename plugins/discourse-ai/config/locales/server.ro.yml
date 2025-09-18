@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ro:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "ID model"
+        max_prompt_tokens: "Fereastră contextuală"
   discourse_automation:
     ai:
       flag_types:

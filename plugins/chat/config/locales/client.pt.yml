@@ -229,3 +229,7 @@ pt:
       types:
         reviewable_chat_message:
           title: "Mensagem sinalizada em conversa"
+    sidebar:
+      start_new_dm:
+        text: Iniciar novo DM
+        title: Criar uma conversação pessoal

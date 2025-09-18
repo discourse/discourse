@@ -12,6 +12,8 @@ uk:
           poll: "Опитування Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Опції можна додавати або видаляти."
       voters:
         one: "виборець"
         few: "виборці"
@@ -164,6 +166,8 @@ uk:
           step: Крок
         poll_public:
           label: Покажіть, хто проголосував
+        poll_dynamic:
+          label: Дозволити додавання або видалення опцій після публікації
         poll_title:
           label: Заголовок (необов'язково)
         poll_options:

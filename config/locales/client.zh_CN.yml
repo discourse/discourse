@@ -2469,6 +2469,8 @@ zh_CN:
         other: "+%{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
+      read_only: "只读"
+      read_only_description: "此类别只读，因此您无法为话题选择该类别"
     timezone_input:
       ambiguous_ist: "IST 不明确，请选择特定时区（例如：亚洲/加尔各答）"
     select_kit:
@@ -3018,6 +3020,7 @@ zh_CN:
     topics:
       new_messages_marker: "上次访问"
       bulk:
+        select: "批量选择"
         confirm: "确认"
         select_all: "全选"
         clear_all: "全部清除"
@@ -3148,8 +3151,6 @@ zh_CN:
       filter_to:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
-      create_disabled_category: "您无权在此类别中创建话题"
-      create_disabled_tag: "您无权创建带有此标签的话题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
       private_message: "开始消息"
@@ -4430,6 +4431,7 @@ zh_CN:
         other: "至少选择 %{count} 个标签…"
       choose_for_topic_required_group:
         other: "从 '%{name}' 中选择 %{count} 个标签…"
+      info: "显示标签信息"
       default_info: "此标签不限于任何类别，并且没有同义词。"
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
@@ -4455,6 +4457,7 @@ zh_CN:
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
       edit_tag: "编辑标签名称和描述"
+      edit: "编辑此标签"
       description: "描述（最多 1000 个字符）"
       sort_by: "排序依据："
       sort_by_count: "计数"
@@ -5960,7 +5963,7 @@ zh_CN:
             description: "允许主题通过覆盖一小部分核心站点设置对整个站点体验拥有更大控制的设置。"
           themes:
             title: "主题"
-            description: '可为所有用户改变站点的整体外观和风格的站点范围主题。'
+            description: "可为所有用户改变站点的整体外观和风格的站点范围主题。"
             themes_intro: "安装新主题以开始，或使用这些资源从头开始创建自己的主题。"
             new_theme: "新主题"
             back: "返回主题"
@@ -6394,6 +6397,8 @@ zh_CN:
         schema:
           title: "编辑 %{name} 设置"
           back_button: "返回 %{name}"
+          move_up: "上移"
+          move_down: "下移"
           fields:
             required: "*必选"
             groups:
@@ -7311,6 +7316,10 @@ zh_CN:
           title: "在用户卡片上显示"
           enabled: "在用户卡片上显示"
           disabled: "不在用户卡片上显示"
+        show_on_signup:
+          title: "在注册表单上显示"
+          enabled: "显示注册表单"
+          disabled: "未显示在注册表单上"
         searchable:
           title: "可搜索"
           enabled: "可搜索"

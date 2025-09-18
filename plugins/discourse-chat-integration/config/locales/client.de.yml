@@ -131,6 +131,7 @@ de:
               help: "Ein Name, um den Kanal zu beschreiben. Dieser wird nicht verwendet, um die Verbindung zu Matrix herzustellen."
             room_id:
               title: "Raum-ID"
+              help: "Die „private Kennung“ für den Raum. Sie sollte etwa so aussehen: !abcdefghijkl"
           errors:
             unknown_token: "Zugriffstoken ist ungültig"
             unknown_room: "Raum-ID ist ungültig"

@@ -5,25 +5,98 @@
 # https://translate.discourse.org/
 
 hu:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Bejegyzésre való szavazás nincs engedélyezve"
+        replying_to_post_not_permited: "Nem lehetséges bejegyzés létrehozása egy másik bejegyzésre való válaszhoz."
+        voting_not_permitted: "Erre a bejegyzésre nem szavazhatsz."
+        comment_cannot_be_downvoted: "Csak a hozzászólásokra lehet szavazni."
+        self_voting_not_permitted: "Nem szavazhatsz a saját bejegyzésedre vagy hozzászólásodra."
+        vote_archived_topic: "Archivált témákban nem lehet szavazni."
+        vote_closed_topic: "Zárt témákra nem lehet szavazni."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Bejegyzésre való szavazás nincs engedélyzve."
+        subtype_not_allowed: "A Szavazás utáni altípus csak normál témákkal használható."
+        cannot_change_to_post_voting_subtype: "Egy téma altípusának utólagos szavazásra váltása nem engedélyezett."
+      answer_count:
+        one: "%{count} Válasz"
+        other: "%{count} Válasz"
+  site_settings:
+    qa_tags: "Bejegyzés szavazásának engedélyezését szolgáló címkék"
+    post_voting_enabled: "Szavazás bővítmény engedélyezése"
+    post_voting_enable_likes_on_answers: "Tetszik gomb engedélyezése a hozzászólások szavazataival kapcsolatos témákban"
+    post_voting_undo_vote_action_window: "A percek száma, ameddig a felhasználók visszavonhatják szavazataikat a Bejegyzés Szavazás témákban (0 megadásával nincs korlát)"
+    post_voting_comment_limit_per_post: "Az egyes bejegyzésekhez engedélyezett hozzászólások maximális száma"
+    min_trust_to_flag_posts_voting_comments: "A hozzászólás szavazás bejelöléséhez szükséges minimális bizalmi szin"
+    flag_posts_voting_comments_allowed_groups: "A hozzászólás szavazás bejelölésére jogosult csoportok"
+    post_voting_comment_enabled: "Kommentek engedélyezése a bejegyzésen a Bejegyzés szavazás témákban"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
     vote:
       title: "Szavazás"
+      description: "Szavazz erre a bejegyzésre"
+      short_description: "Szavazz erre a bejegyzésre"
+      long_form: "szavazott erre a bejegyzésre"
+  vote:
+    error:
+      user_has_not_voted: "A felhasználó nem szavazott."
+      user_over_limit: "Nem lépheted túl a bizalmi szintedhez tartozó szavazatok számát."
+      already_voted: "Kérdésenként csak egyszer lehet szavazni."
+      undo_vote_action_window:
+        one: "A szavazást követő %{count} percen belül nem vonhatod vissza a szavazatot."
+        other: "A szavazást követő %{count} percen belül nem vonhatod vissza a szavazatot."
+      one_vote_per_post: "Minden bejegyzésre csak egyszer lehet szavazni."
+      one_vote_per_comment: "Minden hozzászólásra csak egyszer lehet szavazni."
   post_voting:
     comment:
+      errors:
+        post_voting_not_enabled: "Kommentelés nem megengedett olyan bejegyzésen, amely nem tartozik Bejegyzés Szavazás témához."
+        not_permitted: "A kapcsolódó bejegyzésekhez hozzászólás nem engedélyezett."
+        limit_exceeded: "Elérted a bejegyzésenkénti hozzászólások számát, ami %{limit} ."
+        perform: "Bejegyzés szavazás hozzászólás, amelyet olyan pontszámmal jelöltek meg, amely elég magas a felhasználó elnémításához."
+        auto_silence_from_flags: "Automatikusan elnémítva megjelölés miatt."
+        disabled: "Bejegyzéshez hozzászólni tilos."
       reviewables:
+        comment_already_handled: "Köszönjük, de már áttekintettük ezt a hozzászólást, és úgy döntöttünk, hogy nem kell újra megjelölni."
         actions:
+          agree_and_keep_comment:
+            title: "Hozzászólás megtartása"
+            description: "Egyetértek a megjelöléssel, de a hozzászólást változatlanul hagyom."
+          agree_and_keep_deleted:
+            title: "Hozzászólás törlése"
+            description: "Egyetértek a megjelöléssel, a hozzászólás törölve marad."
           agree_and_suspend:
             title: "Felhasználó felfüggesztése"
             description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
           agree_and_silence:
             title: "Felhasználó némítása"
             description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
+          agree_and_restore:
+            title: "Hozzászólás visszaállítása"
+            description: "Bejegyzés visszaállítása, a felhasználók láthatják."
+          agree_and_delete:
+            title: "Hozzászólás törlése"
+            description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
+          delete_and_agree:
+            title: "Jelzés figyelmen kívül hagyása és megjegyzés törlése"
+            description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
+          disagree_and_restore:
+            title: "Nem értek egyet, és visszaállítom a hozzászólást"
+            description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
           disagree:
             title: "Elutasítás"
           ignore:
             title: "Ne csináljon semmit"
             description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
+        transcript:
+          view: "Korábbi hozzászólások átiratának megtekintése"
       reviewable_score_types:
+        needs_review:
+          title: "Felülvizsgálatra van szükség"
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:

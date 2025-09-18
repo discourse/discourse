@@ -808,6 +808,8 @@ sk:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Vytvorenie osobného chatu
       panels:
         chat:
           label: "Chat"

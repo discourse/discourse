@@ -2428,7 +2428,6 @@ bg:
         name: "Изтрий"
     topic:
       create: "Нова тема"
-      create_disabled_category: "Нямате право да създавате теми в тази категория"
       create_long: "Създайте нова тема"
       open_draft: "Довърши ревизия"
       private_message: "Започни съобщение"
