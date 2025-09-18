@@ -25,7 +25,7 @@ class SessionController < ApplicationController
   def sso
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect?
 
-    destination_url = cookies[:destination_url] || session[:destination_url]
+    destination_url = cookies[:destination_url] || server_session[:destination_url]
     return_path = params[:return_path] || path("/")
 
     if destination_url && return_path == path("/")
@@ -33,7 +33,7 @@ class SessionController < ApplicationController
       return_path = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
     end
 
-    session.delete(:destination_url)
+    server_session[:destination_url] = nil
     cookies.delete(:destination_url)
 
     sso = DiscourseConnect.generate_sso(return_path, secure_session:)
