@@ -825,6 +825,18 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
+    it "ignores data URI images when pasting HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      data_uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
+      cdp.copy_paste(%(Text <img src="#{data_uri}" alt="data uri image">), html: true)
+
+      expect(rich).to have_no_css("img[src^='data:']")
+      expect(rich).to have_no_css(".composer-image-node img")
+      expect(rich).to have_css("p", text: "Text")
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
