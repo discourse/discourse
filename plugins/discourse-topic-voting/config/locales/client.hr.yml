@@ -30,3 +30,6 @@ hr:
       votes:
         title: "Glasovi"
         help: "teme s najviše glasova"
+      my_votes:
+        title: "Moji glasovi"
+        help: "teme o kojima ste glasali"

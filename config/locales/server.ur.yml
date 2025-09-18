@@ -649,7 +649,7 @@ ur:
       unsubscribe_via_email: "آپ ای میل کے ذریعہ رکنیت ختم کرنے کی زیادہ سے زیادہ تعداد تک پہنچ گئے ہیں۔ براہ کرم دوبارہ کوشش کرنے سے قبل %{time_left} انتظار کریں۔"
       topic_invitations_per_day: "آپ موضوع کی دعوتوں کی زیادہ سے زیادہ تعداد تک پہنچ گئے ہیں۔ آپ %{time_left} میں مزید دعوت نامے بھیج سکتے ہیں۔"
     hours:
-      one: "%{count} گھنٹا"
+      one: "%{count} گھنٹہ"
       other: "%{count} گھنٹے"
     minutes:
       one: "%{count} منٹ"
@@ -668,13 +668,13 @@ ur:
         one: "%{count}سیکنڈ"
         other: "%{count}سیکنڈ"
       less_than_x_minutes:
-        one: "< %{count}m"
-        other: "< %{count}m"
+        one: "< %{count}منٹ"
+        other: "< %{count}منٹ"
       x_minutes:
         one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "%{count}گھنٹا"
+        one: "%{count}گھنٹہ"
         other: "%{count}گھنٹے"
       x_days:
         one: "%{count}دن"
@@ -1336,6 +1336,7 @@ ur:
       poll_pop3_auth_error: "POP3 سرور کے ساتھ کنِکشن ایک اوَتھَینٹیکیشن خرابی سے ناکام ہو رہا ہے۔ آنے والی ای میل حاصل نہیں کی جاسکی۔ براہ مہربانی اپنی <a href='%{base_path}/admin/site_settings/category/email'>POP3 ترتیبات</a> کو چیک کریں۔"
       force_https: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
       admin_sidebar_deprecation: "پرانے منتظم لے آؤٹ کو نئے <a href='https://meta.discourse.org/t/-/289281'>سائڈبار لے آؤٹ</a> کے حق میں فرسودہ کر دیا گیا ہے اور اگلی ریلیز میں ہٹا دیا جائے گا۔ اس سے پہلے آپٹ ان کرنے کے لیے آپ <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'></a> نئے سائڈبار لے آؤٹ کو ترتیب کر سکتے ہیں۔"
+    back_from_logster_text: "فورم پر واپسی"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"
