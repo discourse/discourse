@@ -19,9 +19,17 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns translation progress data" do
-        Fabricate.times(14, :post, locale: "en")
-        Fabricate.times(1, :post, locale: "fr")
-        Fabricate.times(4, :post)
+        # Create posts with locales
+        en_posts = Fabricate.times(14, :post, locale: "en")
+        fr_posts = Fabricate.times(1, :post, locale: "fr")
+        Fabricate.times(4, :post) # Posts without locale
+
+        # Create some post localizations (translations)
+        # Translate some EN posts to FR and ES
+        en_posts.first(10).each { |post| Fabricate(:post_localization, post: post, locale: "fr") }
+        en_posts.first(5).each { |post| Fabricate(:post_localization, post: post, locale: "es") }
+        # Translate FR post to EN
+        Fabricate(:post_localization, post: fr_posts.first, locale: "en")
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -35,11 +43,14 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["total"]).to eq(19)
         expect(json["posts_with_detected_locale"]).to eq(15)
 
-        # Check structure of first locale data
-        locale_data = json["translation_progress"].first
-        expect(locale_data["locale"]).to eq("en")
-        expect(locale_data["total"]).to eq(15)
-        expect(locale_data["done"]).to eq(14)
+        # Check that we have entries for all supported locales that have translations
+        locales = json["translation_progress"].map { |entry| entry["locale"] }
+        expect(locales).to contain_exactly("en", "fr", "es")
+
+        # Check structure - find the FR entry (should have 10 translations out of 15 posts with locales)
+        fr_entry = json["translation_progress"].find { |entry| entry["locale"] == "fr" }
+        expect(fr_entry["total"]).to eq(15) # Total posts with detected locales
+        expect(fr_entry["done"]).to eq(10) # Number of FR translations
       end
 
       it "returns empty when no locales are supported" do
