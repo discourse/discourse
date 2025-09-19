@@ -292,6 +292,7 @@
   // custom user fields
   .public-user-fields {
     margin: 0;
+    text-align: left;
 
     .user-field-value-list-item:not(:last-of-type) {
       &::after {

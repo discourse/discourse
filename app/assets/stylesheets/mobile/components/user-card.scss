@@ -70,21 +70,13 @@
 .user-card {
   // badges
   .badge-section {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 
     .user-card-badge-link,
     .more-user-badges {
       display: flex;
-      flex: 0 1 50%;
-      max-width: 50%; // for text ellipsis
-      padding: 2px 0;
       box-sizing: border-box;
-
-      &:nth-child(odd) {
-        padding-right: 4px;
-      }
 
       a {
         width: 100%;
