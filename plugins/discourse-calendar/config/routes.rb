@@ -24,6 +24,8 @@ Discourse::Application.routes.draw do
 
   scope constraints: StaffConstraint.new do
     get "/admin/plugins/calendar" => "admin/plugins#index"
+    get "/admin/plugins/discourse-calendar" => "admin/plugins#index"
+    get "/admin/plugins/discourse-calendar/holidays" => "admin/plugins#index"
     get "/admin/discourse-calendar/holiday-regions/:region_code/holidays" =>
           "admin/discourse_calendar/admin_holidays#index"
     post "/admin/discourse-calendar/holidays/disable" =>

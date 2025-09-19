@@ -1,11 +1,11 @@
 en:
   admin_js:
     admin:
-      calendar: "Calendar"
+      calendar: "Calendar and Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Discourse Calendar"
+          discourse_calendar: "Calendar and Events"
   js:
     notifications:
       titles:
