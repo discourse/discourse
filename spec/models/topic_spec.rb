@@ -1419,11 +1419,11 @@ describe Topic do
         }.not_to change(topic, :bumped_at)
       end
 
-      it "bumps the topic when a new version is made of the last post" do
+      it "doesn't bump the topic when a new version is made of the last post" do
         expect {
           last_post.revise(moderator, raw: "updated contents")
           topic.reload
-        }.to change(topic, :bumped_at)
+        }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
