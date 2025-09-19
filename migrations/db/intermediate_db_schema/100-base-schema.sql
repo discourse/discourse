@@ -304,6 +304,17 @@ CREATE TABLE user_options
     watched_precedence_over_muted        BOOLEAN
 );
 
+CREATE TABLE user_profiles
+(
+    user_id                      NUMERIC NOT NULL PRIMARY KEY,
+    bio_raw                      TEXT,
+    card_background_upload_id    TEXT,
+    featured_topic_id            NUMERIC,
+    location                     TEXT,
+    profile_background_upload_id TEXT,
+    website                      TEXT
+);
+
 CREATE TABLE users
 (
     original_id               NUMERIC   NOT NULL PRIMARY KEY,
