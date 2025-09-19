@@ -20,10 +20,11 @@ module Migrations::Database::IntermediateDB
         requirement,
         searchable,
         show_on_profile,
+        show_on_signup,
         show_on_user_card
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -41,6 +42,7 @@ module Migrations::Database::IntermediateDB
       requirement: nil,
       searchable: nil,
       show_on_profile: nil,
+      show_on_signup: nil,
       show_on_user_card: nil
     )
       ::Migrations::Database::IntermediateDB.insert(
@@ -57,6 +59,7 @@ module Migrations::Database::IntermediateDB
         requirement,
         ::Migrations::Database.format_boolean(searchable),
         ::Migrations::Database.format_boolean(show_on_profile),
+        ::Migrations::Database.format_boolean(show_on_signup),
         ::Migrations::Database.format_boolean(show_on_user_card),
       )
     end
