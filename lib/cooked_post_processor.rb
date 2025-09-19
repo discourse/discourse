@@ -163,7 +163,7 @@ class CookedPostProcessor
     limit_size!(img)
 
     src = img["src"]
-    return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
+    return if src.blank? || is_a_hyperlink?(img)
 
     upload = Upload.get_from_url(src)
 
