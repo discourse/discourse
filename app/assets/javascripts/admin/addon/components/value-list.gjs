@@ -187,7 +187,7 @@ export default class ValueList extends Component {
       @value={{this.newValue}}
       @content={{this.filteredChoices}}
       @onChange={{this.selectChoice}}
-      @options={{hash allowAny=true none=this.noneKey}}
+      @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
     />
   </template>
 }
