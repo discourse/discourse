@@ -1,10 +1,14 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import RouteTemplate from "ember-route-template";
+import NavItem from "discourse/components/nav-item";
 import ReviewableItem from "discourse/components/reviewable-item";
 import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   class extends Component {
@@ -39,8 +43,25 @@ export default RouteTemplate(
 
     <template>
       {{#if this.shouldUseRefreshUI}}
+        <div class="reviewable-top-nav">
+          <LinkTo @route="review.index">
+            {{icon "arrow-left"}}
+            {{i18n "review.back_to_queue"}}
+          </LinkTo>
+        </div>
         <ReviewableItemRefresh @reviewable={{@controller.reviewable}} />
       {{else}}
+        <ul class="nav nav-pills reviewable-title">
+          <NavItem @route="review.index" @label="review.view_all" />
+          <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+          {{#if @controller.currentUser.admin}}
+            <NavItem
+              @route="review.settings"
+              @label="review.settings.title"
+              @icon="wrench"
+            />
+          {{/if}}
+        </ul>
         <ReviewableItem @reviewable={{@controller.reviewable}} />
       {{/if}}
     </template>
