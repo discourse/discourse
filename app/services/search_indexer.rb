@@ -144,16 +144,25 @@ class SearchIndexer
         search_data.values.select { |d| d.length > 0 }.join(" ")
       end
 
+    handler = DiscoursePluginRegistry.search_handlers.find { |h| h[:table_name] == table }
+    index_version = handler ? handler[:index_version] : const_get("#{table.upcase}_INDEX_VERSION")
+
     params = {
       "raw_data" => indexed_data,
       "#{foreign_key}" => id,
       "locale" => SiteSetting.default_locale,
-      "version" => const_get("#{table.upcase}_INDEX_VERSION"),
+      "version" => index_version,
       "search_data" => tsvector,
     }
 
     yield params if block_given?
-    table_name.camelize.constantize.upsert(params)
+
+    # Use registered search_data_class or infer from table_name
+    if handler
+      handler[:search_data_class].upsert(params)
+    else
+      table_name.camelize.constantize.upsert(params)
+    end
   rescue => e
     if Rails.env.test?
       raise
@@ -260,6 +269,16 @@ class SearchIndexer
 
   def self.index(obj, force: false)
     return if @disabled
+
+    # Check registered search handlers for this object type
+    handler = DiscoursePluginRegistry.search_handlers.find { |h| obj.is_a?(h[:model_class]) }
+
+    if handler
+      indexer_helper = IndexerHelper.new
+      search_weights = handler[:search_data].call(obj, indexer_helper)
+      update_index(table: handler[:table_name], id: obj.id, **search_weights)
+      return
+    end
 
     category_name = nil
     tag_names = nil
@@ -421,6 +440,13 @@ class SearchIndexer
 
     def characters(str)
       scrubbed << " #{str} "
+    end
+  end
+
+  # Helper class to provide abstracted utilities for search indexing
+  class IndexerHelper
+    def scrub_html(html)
+      HtmlScrubber.scrub(html)
     end
   end
 end

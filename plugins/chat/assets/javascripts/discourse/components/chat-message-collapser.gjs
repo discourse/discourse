@@ -1,3 +1,4 @@
+import HighlightSearch from "discourse/components/highlight-search";
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -197,11 +198,25 @@ export default class ChatMessageCollapser extends Component {
               {{/if}}
             </Collapser>
           {{else}}
-            <DecoratedHtml
-              @html={{htmlSafe cooked.body}}
-              @decorate={{@decorate}}
-              @className="chat-cooked"
-            />
+
+            {{#if @highlightedText}}
+              <HighlightSearch
+                @highlight={{@highlightedText}}
+                @partialMatch={{true}}
+              >
+                <DecoratedHtml
+                  @html={{htmlSafe cooked.body}}
+                  @decorate={{@decorate}}
+                  @className="chat-cooked"
+                />
+              </HighlightSearch>
+            {{else}}
+              <DecoratedHtml
+                @html={{htmlSafe cooked.body}}
+                @decorate={{@decorate}}
+                @className="chat-cooked"
+              />
+            {{/if}}
           {{/if}}
         {{/each}}
       {{/if}}
