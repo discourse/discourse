@@ -38,8 +38,8 @@
       align-items: center;
       justify-content: center;
       border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
-      box-shadow: var(--shadow-dropdown);
+      border: 1px solid var(--d-popover-border-color);
+      box-shadow: var(--d-popover-box-shadow);
       background: var(--secondary);
       max-width: 600px;
     }
@@ -92,6 +92,7 @@
     display: flex;
     align-items: stretch;
     height: 100%;
+    box-shadow: var(--d-box-shadow);
 
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);

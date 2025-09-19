@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
@@ -116,14 +117,17 @@ export default class ReactionsReactionButton extends Component {
     >
       {{#if @post.current_user_used_main_reaction}}
         <DButton
+          type="button"
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
-          @icon={{this.siteSettings.discourse_reactions_like_icon}}
-        />
+          title={{this.title}}
+        >
+          {{icon this.siteSettings.discourse_reactions_like_icon}}
+        </DButton>
       {{else if @post.current_user_reaction}}
         <DButton
+          type="button"
           class="btn-icon no-text btn-flat reaction-button"
-          @translatedTitle={{this.title}}
+          title={{this.title}}
         >
           <img
             class="btn-toggle-reaction-emoji reaction-button"
@@ -133,13 +137,14 @@ export default class ReactionsReactionButton extends Component {
         </DButton>
       {{else}}
         <DButton
+          type="button"
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
-          @icon={{concat
-            "far-"
-            this.siteSettings.discourse_reactions_like_icon
+          title={{this.title}}
+        >
+          {{icon
+            (concat "far-" this.siteSettings.discourse_reactions_like_icon)
           }}
-        />
+        </DButton>
       {{/if}}
     </div>
   </template>
