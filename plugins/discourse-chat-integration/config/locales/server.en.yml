@@ -3,6 +3,7 @@ en:
     chat_integration_enabled: 'Enable the discourse-chat-integration plugin'
     chat_integration_discourse_username: 'Username of user to act as when fetching content.'
     chat_integration_delay_seconds: 'Number of seconds to wait after post creation before sending chat notitifications'
+    chat_integration_ignore_unlisted_topics: 'Disable chat notifications from unlisted topics'
 
     #######################################
     ########## SLACK SETTINGS #############

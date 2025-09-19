@@ -6,6 +6,8 @@ chat_integration:
     type: username
   chat_integration_delay_seconds:
     default: 20
+  chat_integration_ignore_unlisted_topics:
+    default: false
 
 #######################################
 ########## SLACK SETTINGS #############
@@ -53,7 +55,7 @@ chat_integration:
     default: ""
   chat_integration_discord_excerpt_length:
     default: 400
-  
+
 #######################################
 ########## GUILDED SETTINGS ###########
 #######################################
@@ -61,7 +63,7 @@ chat_integration:
     default: false
   chat_integration_guilded_excerpt_length:
     default: 400
-  
+
 
 #######################################
 ######## MATTERMOST SETTINGS ##########
