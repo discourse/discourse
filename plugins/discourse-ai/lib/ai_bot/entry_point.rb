@@ -220,7 +220,7 @@ module DiscourseAi
           :current_user,
           :can_use_ai_bot_discover_persona,
           include_condition: -> do
-            SiteSetting.ai_bot_enabled && scope.authenticated? &&
+            SiteSetting.ai_discover_enabled && scope.authenticated? &&
               SiteSetting.ai_bot_discover_persona.present?
           end,
         ) do
@@ -235,7 +235,7 @@ module DiscourseAi
           :user_option,
           :ai_search_discoveries,
           include_condition: -> do
-            SiteSetting.ai_bot_enabled && SiteSetting.ai_bot_discover_persona.present? &&
+            SiteSetting.ai_discover_enabled && SiteSetting.ai_bot_discover_persona.present? &&
               scope.authenticated?
           end,
         ) { object.ai_search_discoveries }
@@ -244,7 +244,7 @@ module DiscourseAi
           :current_user_option,
           :ai_search_discoveries,
           include_condition: -> do
-            SiteSetting.ai_bot_enabled && SiteSetting.ai_bot_discover_persona.present? &&
+            SiteSetting.ai_discover_enabled && SiteSetting.ai_bot_discover_persona.present? &&
               scope.authenticated?
           end,
         ) { object.ai_search_discoveries }

@@ -61,7 +61,8 @@ module DiscourseAi
         results_limit = max_results
 
         should_try_semantic_search =
-          SiteSetting.ai_embeddings_semantic_search_enabled && search_query.present?
+          SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled &&
+            search_query.present?
 
         max_semantic_results = max_results / 4
         results_limit = results_limit - max_semantic_results if should_try_semantic_search
