@@ -1,20 +1,14 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
-import { isEmpty } from "@ember/utils";
-import { hbs } from "ember-cli-htmlbars";
-import { h } from "virtual-dom";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import discourseComputed from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
-import { iconHTML, iconNode } from "discourse/lib/icon-library";
+import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
-import RawHtml from "discourse/widgets/raw-html";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { i18n } from "discourse-i18n";
 import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
@@ -600,170 +594,6 @@ function customizePost(api, siteSettings) {
   api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
   api.addPostSmallActionIcon("reassigned", "user-plus");
   api.addPostSmallActionIcon("reassigned_group", "group-plus");
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  api.decorateWidget("post-contents:after-cooked", (dec) => {
-    const postModel = dec.getModel();
-    if (postModel) {
-      let assignedToUser, assignedToGroup, postAssignment, href;
-      if (dec.attrs.post_number === 1) {
-        return dec.widget.attach("assigned-to-first-post", {
-          topic: postModel.topic,
-        });
-      } else {
-        postAssignment =
-          postModel.topic.indirectly_assigned_to?.[postModel.id]?.assigned_to;
-        if (postAssignment?.username) {
-          assignedToUser = postAssignment;
-        }
-        if (postAssignment?.name) {
-          assignedToGroup = postAssignment;
-        }
-      }
-      if (assignedToUser || assignedToGroup) {
-        href = assignedToUser
-          ? assignedToUserPath(assignedToUser)
-          : assignedToGroupPath(assignedToGroup);
-      }
-
-      if (href) {
-        return dec.widget.attach("assigned-to-post", {
-          assignedToUser,
-          assignedToGroup,
-          href,
-          post: postModel,
-        });
-      }
-    }
-  });
-
-  api.createWidget("assigned-to-post", {
-    html(attrs) {
-      return new RenderGlimmer(
-        this,
-        "p.assigned-to",
-        hbs`
-          <AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}}
-                          @href={{@data.href}} @post={{@data.post}} />`,
-        {
-          assignedToUser: attrs.post.assigned_to_user,
-          assignedToGroup: attrs.post.assigned_to_group,
-          href: attrs.href,
-          post: attrs.post,
-        }
-      );
-    },
-  });
-
-  api.createWidget("assigned-to-first-post", {
-    html(attrs) {
-      const topic = attrs.topic;
-      const [assignedToUser, assignedToGroup, indirectlyAssignedTo] = [
-        topic.assigned_to_user,
-        topic.assigned_to_group,
-        topic.indirectly_assigned_to,
-      ];
-      const assigneeElements = [];
-
-      const assignedHtml = (username, path, type) => {
-        return `<span class="assigned-to--${type}">${htmlSafe(
-          i18n("discourse_assign.assigned_topic_to", {
-            username,
-            path,
-          })
-        )}</span>`;
-      };
-
-      let displayedName = "";
-      if (assignedToUser) {
-        displayedName = this.siteSettings.prioritize_full_name_in_ux
-          ? assignedToUser.name || assignedToUser.username
-          : assignedToUser.username;
-
-        assigneeElements.push(
-          h(
-            "span.assignee",
-            new RawHtml({
-              html: assignedHtml(
-                displayedName,
-                assignedToUserPath(assignedToUser),
-                "user"
-              ),
-            })
-          )
-        );
-      }
-
-      if (assignedToGroup) {
-        assigneeElements.push(
-          h(
-            "span.assignee",
-            new RawHtml({
-              html: assignedHtml(
-                assignedToGroup.name,
-                assignedToGroupPath(assignedToGroup),
-                "group"
-              ),
-            })
-          )
-        );
-      }
-
-      if (indirectlyAssignedTo) {
-        Object.keys(indirectlyAssignedTo).map((postId) => {
-          const assignee = indirectlyAssignedTo[postId].assigned_to;
-          const postNumber = indirectlyAssignedTo[postId].post_number;
-
-          displayedName =
-            !this.siteSettings.prioritize_username_in_ux || !assignee.username
-              ? assignee.name || assignee.username
-              : assignee.username;
-
-          assigneeElements.push(
-            h("span.assignee", [
-              h(
-                "a",
-                {
-                  attributes: {
-                    class: "assigned-indirectly",
-                    href: `${topic.url}/${postNumber}`,
-                  },
-                },
-                i18n("discourse_assign.assign_post_to_multiple", {
-                  post_number: postNumber,
-                  username: displayedName,
-                })
-              ),
-            ])
-          );
-        });
-      }
-
-      if (!isEmpty(assigneeElements)) {
-        return h("p.assigned-to", [
-          assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-          assignedToUser || assignedToGroup
-            ? ""
-            : h("span.assign-text", i18n("discourse_assign.assigned")),
-          assigneeElements,
-        ]);
-      }
-    },
-  });
-
-  // `addPostTransformCallback` doesn't have a direct translation in the new Glimmer API.
-  // We need to use a modify class in the post model instead
-  api.addPostTransformCallback((transformed) => {
-    if (isAssignSmallAction(transformed.actionCode)) {
-      transformed.isSmallAction = true;
-      transformed.canEdit = true;
-    }
-  });
 }
 
 function isAssignSmallAction(actionCode) {

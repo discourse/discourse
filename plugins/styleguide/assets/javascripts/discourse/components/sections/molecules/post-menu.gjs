@@ -1,14 +1,10 @@
-import MountWidget from "discourse/components/mount-widget";
+import PostMenu from "discourse/components/post/menu";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const PostMenu = <template>
+const PostMenuMolecule = <template>
   <StyleguideExample @title="post-menu">
-    <MountWidget
-      @widget="post-menu"
-      @args={{@dummy.transformedPost}}
-      @model={{@dummy.postModel}}
-    />
+    <PostMenu @post={{@dummy.postModel}} />
   </StyleguideExample>
 </template>;
 
-export default PostMenu;
+export default PostMenuMolecule;

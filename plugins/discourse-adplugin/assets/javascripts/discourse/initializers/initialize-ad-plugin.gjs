@@ -1,7 +1,5 @@
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 import PostBottomAd from "../components/post-bottom-ad";
 
 export default {
@@ -33,20 +31,4 @@ function customizePost(api) {
       </div>
     </template>
   );
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  registerWidgetShim(
-    "after-post-ad",
-    "div.ad-connector",
-    <template><PostBottomAd @model={{@data}} /></template>
-  );
-
-  api.decorateWidget("post:after", (helper) => {
-    return helper.attach("after-post-ad", helper.widget.model);
-  });
 }

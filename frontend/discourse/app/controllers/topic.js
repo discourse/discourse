@@ -10,10 +10,6 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import {
-  CLOSE_INITIATED_BY_BUTTON,
-  CLOSE_INITIATED_BY_ESC,
-} from "discourse/components/d-modal";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
@@ -1454,38 +1450,22 @@ export default class TopicController extends Controller {
   }
 
   _modifyPostBookmark(bookmark, post) {
-    this.modal
-      .show(BookmarkModal, {
-        model: {
-          bookmark: new BookmarkFormData(bookmark),
-          afterSave: (savedData) => {
-            this._syncBookmarks(savedData);
-            this.model.set("bookmarking", false);
-            post.createBookmark(savedData);
-            this.model.afterPostBookmarked(post, savedData);
-            return [post.id];
-          },
-          afterDelete: (topicBookmarked, bookmarkId) => {
-            this.model.removeBookmark(bookmarkId);
-            post.deleteBookmark(topicBookmarked);
-          },
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this._syncBookmarks(savedData);
+          this.model.set("bookmarking", false);
+          post.createBookmark(savedData);
+          this.model.afterPostBookmarked(post, savedData);
+          return [post.id];
         },
-      })
-      .then((closeData) => {
-        if (!closeData) {
-          return;
-        }
-
-        if (
-          closeData.closeWithoutSaving ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
-        ) {
-          post.appEvents.trigger("post-stream:refresh", {
-            id: bookmark.bookmarkable_id,
-          });
-        }
-      });
+        afterDelete: (topicBookmarked, bookmarkId) => {
+          this.model.removeBookmark(bookmarkId);
+          post.deleteBookmark(topicBookmarked);
+        },
+      },
+    });
   }
 
   _syncBookmarks(data) {
