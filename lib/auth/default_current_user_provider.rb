@@ -209,7 +209,7 @@ class Auth::DefaultCurrentUserProvider
     # under no conditions to suspended or inactive accounts get current_user
     current_user = nil if current_user && (current_user.suspended? || !current_user.active)
 
-    if current_user && should_update_last_seen?
+    if current_user && !current_user.is_impersonating && should_update_last_seen?
       ip = request.ip
       user_id = current_user.id
       old_ip = current_user.ip_address
