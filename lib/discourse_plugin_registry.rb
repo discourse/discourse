@@ -2,6 +2,9 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  class TypeMismatchError < StandardError
+  end
+
   @@register_names = Set.new
 
   # Plugins often need to be able to register additional handlers, data, or
@@ -293,14 +296,21 @@ class DiscoursePluginRegistry
     # also erases one stack frame
     length = registered_modifiers.length
     index = 0
+    result = arg
     while index < length
       plugin_instance, block = registered_modifiers[index]
-      arg = block.call(arg, *more_args) if plugin_instance.enabled?
+      result = block.call(result, *more_args) if plugin_instance.enabled?
 
       index += 1
     end
 
-    arg
+    if !valid_return_value?(result, arg)
+      raise TypeMismatchError if Rails.env.local?
+      Rails.logger.warn(
+        "Type mismatch error in modifier #{name}: expected #{arg.class}, got #{result.class}",
+      )
+    end
+    result
   end
 
   def self.reset!
@@ -312,5 +322,14 @@ class DiscoursePluginRegistry
     found_register = @@register_names.detect { |name| name == register_name }
 
     instance_variable_set(:"@#{found_register}", nil) if found_register
+  end
+
+  def self.valid_return_value?(result, initial_value)
+    case initial_value
+    when TrueClass, FalseClass
+      result.is_a?(TrueClass) || result.is_a?(FalseClass)
+    else
+      result.is_a?(initial_value.class)
+    end
   end
 end
