@@ -2,9 +2,9 @@ export function rovingButtonBar(event, containerClass = null) {
   let target = event.target;
   let siblingFinder;
 
-  if (event.code === "ArrowRight" || event.keyCode === 39) {
+  if (event.code === "ArrowRight") {
     siblingFinder = "nextElementSibling";
-  } else if (event.code === "ArrowLeft" || event.keyCode === 37) {
+  } else if (event.code === "ArrowLeft") {
     siblingFinder = "previousElementSibling";
   } else {
     return false;
