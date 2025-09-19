@@ -270,7 +270,14 @@ class ReviewablesController < ApplicationController
         end
       args.merge!(params.slice(*plugin_params.map { |pp| pp[:param] }).permit!)
 
-      result = reviewable.perform(current_user, params[:action_id].to_sym, args)
+      # Check if multiple actions are being performed
+      if params[:action_ids].present? && params[:action_id].blank?
+        # Multiple actions mode
+        result = reviewable.perform_multiple(current_user, params[:action_ids], args)
+      else
+        # Single action mode (backward compatible)
+        result = reviewable.perform(current_user, params[:action_id].to_sym, args)
+      end
     rescue Reviewable::InvalidAction => e
       if reviewable.type == "ReviewableUser" && !reviewable.pending? && reviewable.target.blank?
         raise Discourse::NotFound.new(

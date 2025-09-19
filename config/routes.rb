@@ -515,7 +515,7 @@ Discourse::Application.routes.draw do
     get "review/settings" => "reviewables#settings"
     get "review/user-menu-list" => "reviewables#user_menu_list", :format => :json
     put "review/settings" => "reviewables#settings"
-    put "review/:reviewable_id/perform/:action_id" => "reviewables#perform",
+    put "review/:reviewable_id/perform(/:action_id)" => "reviewables#perform",
         :constraints => {
           reviewable_id: /\d+/,
           action_id: /[a-z\_]+/,

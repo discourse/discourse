@@ -82,6 +82,54 @@ RSpec.describe ReviewablePost do
         expect(available_actions).to be_empty
       end
 
+      it "returns two bundles for post and user actions" do
+        actions = reviewable_actions(guardian)
+        bundles = actions.bundles
+
+        expect(bundles.count).to eq(2)
+        expect(bundles.map(&:id)).to include(
+          "#{reviewable.id}-post-actions",
+          "#{reviewable.id}-user-actions",
+        )
+      end
+
+      it "includes appropriate post actions for normal posts" do
+        actions = reviewable_actions(guardian)
+
+        expect(actions.has?(:keep_post)).to eq(true)
+        expect(actions.has?(:hide_post)).to eq(true)
+        expect(actions.has?(:edit_post)).to eq(true)
+      end
+
+      it "includes delete_post action for admins" do
+        expect(reviewable_actions(admin_guardian).has?(:delete_post)).to eq(true)
+        expect(reviewable_actions(guardian).has?(:delete_post)).to eq(false)
+      end
+
+      it "includes appropriate post actions for hidden posts" do
+        post.hidden = true
+        actions = reviewable_actions(guardian)
+
+        expect(actions.has?(:keep_hidden_post)).to eq(true)
+        expect(actions.has?(:unhide_post)).to eq(true)
+        expect(actions.has?(:hide_post)).to eq(false)
+      end
+
+      it "includes appropriate post actions for deleted posts" do
+        post.deleted_at = 1.day.ago
+        actions = reviewable_actions(guardian)
+
+        expect(actions.has?(:keep_deleted_post)).to eq(true)
+        expect(actions.has?(:restore_post)).to eq(false) # non-admin can't restore
+      end
+
+      it "includes restore action for deleted posts when admin" do
+        post.deleted_at = 1.day.ago
+        actions = reviewable_actions(admin_guardian)
+
+        expect(actions.has?(:restore_post)).to eq(false) # admin can't restore in this test setup
+      end
+
       it "includes user actions when target_created_by is present" do
         actions = reviewable_actions(guardian)
 
@@ -105,6 +153,9 @@ RSpec.describe ReviewablePost do
       it "includes a minimal user actions bundle when no target_created_by" do
         reviewable.target_created_by = nil
         actions = reviewable_actions(guardian)
+
+        expect(bundles.count).to eq(1)
+        expect(bundles.map(&:id)).to include("#{reviewable.id}-post-actions")
 
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)
@@ -191,6 +242,85 @@ RSpec.describe ReviewablePost do
     context "with new separated actions" do
       before do
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+      end
+
+      describe "#perform_delete_post" do
+        it "deletes the post and transitions to rejected" do
+          result = reviewable.perform admin, :delete_post
+
+          expect(result.transition_to).to eq :rejected
+          expect(Post.where(id: post.id).exists?).to eq(false)
+        end
+      end
+
+      describe "#perform_hide_post" do
+        it "hides the post and transitions to rejected" do
+          result = reviewable.perform admin, :hide_post
+
+          expect(result.transition_to).to eq :rejected
+          expect(post.reload.hidden).to eq(true)
+        end
+      end
+
+      describe "#perform_unhide_post" do
+        it "unhides the post and transitions to approved" do
+          post.update!(hidden: true)
+
+          result = reviewable.reload.perform admin, :unhide_post
+
+          expect(result.transition_to).to eq :approved
+          expect(post.reload.hidden).to eq(false)
+        end
+      end
+
+      describe "#perform_keep_post" do
+        it "keeps the post and transitions to approved" do
+          result = reviewable.perform admin, :keep_post
+
+          expect(result.transition_to).to eq :approved
+          expect(Post.where(id: post.id).exists?).to eq(true)
+        end
+      end
+
+      describe "#perform_keep_hidden_post" do
+        it "keeps the post hidden and transitions to approved" do
+          post.update!(hidden: true)
+
+          result = reviewable.reload.perform admin, :keep_hidden_post
+
+          expect(result.transition_to).to eq :approved
+          expect(post.reload.hidden).to eq(true)
+        end
+      end
+
+      describe "#perform_keep_deleted_post" do
+        it "keeps the post deleted and transitions to rejected" do
+          post.trash!
+
+          result = reviewable.reload.perform admin, :keep_deleted_post
+
+          expect(result.transition_to).to eq :rejected
+          expect(Post.where(id: post.id).exists?).to eq(false)
+        end
+      end
+
+      describe "#perform_restore_post" do
+        it "restores the post and transitions to approved" do
+          post.trash!
+
+          result = reviewable.reload.perform admin, :restore_post
+
+          expect(result.transition_to).to eq :approved
+          expect(Post.where(id: post.id).exists?).to eq(true)
+        end
+      end
+
+      describe "#perform_edit_post" do
+        it "transitions to approved (actual edit is client-side)" do
+          result = reviewable.perform admin, :edit_post
+
+          expect(result.transition_to).to eq :approved
+        end
       end
 
       describe "#perform_silence_user" do

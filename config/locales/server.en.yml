@@ -5845,6 +5845,45 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
+      # New separated post actions
+      post_actions:
+        bundle_title: "What do you want to do with the post?"
+      delete_post:
+        title: "Delete post"
+        description: "Delete this post"
+        complete: "Post deleted"
+      hide_post:
+        title: "Hide post"
+        description: "Hide this post from public view"
+        complete: "Post hidden"
+      unhide_post:
+        title: "Unhide post"
+        description: "Make this post visible to all users"
+        complete: "Post unhidden"
+      keep_post:
+        title: "Keep post"
+        description: "Keep this post as is"
+        complete: "Post kept unchanged"
+      keep_hidden_post:
+        title: "Keep hidden"
+        description: "Keep this post hidden"
+        complete: "Post kept hidden"
+      keep_deleted_post:
+        title: "Keep deleted"
+        description: "Keep this post deleted"
+        complete: "Post kept deleted"
+      restore_post:
+        title: "Restore post"
+        description: "Restore this deleted post"
+        complete: "Post restored"
+      edit_post:
+        title: "Edit post"
+        description: "Edit this post content"
+        complete: "Post edited"
+      convert_to_pm:
+        title: "Convert to PM"
+        description: "Convert this post to a personal message"
+        complete: "Post converted to personal message"
       # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"

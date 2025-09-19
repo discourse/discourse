@@ -3,6 +3,18 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
+  FLAGGABLE = false
+
+  # Standard post-actions bundle. Consumers should use the returned
+  # bundle value when adding post-focused actions.
+  #
+  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
+  #
+  # @return [Reviewable::Actions::Bundle] The created post actions bundle.
+  def build_post_actions_bundle(actions)
+    actions.add_bundle("#{id}-post-actions", label: "reviewables.actions.post_actions.bundle_title")
+  end
+
   # Standard user-actions bundle and default user actions.
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
@@ -142,9 +154,54 @@ module ReviewableActionBuilder
   def perform_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
+  end
 
-    delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], recalculate_score: false, &)
+  def perform_delete_post(performed_by, _args)
+    PostDestroyer.new(performed_by, post, reviewable: self).destroy
+    create_result(:success, :rejected, [created_by_id], false)
+  end
+
+  def perform_hide_post(performed_by, _args)
+    post.hide!(PostActionType.types[:inappropriate])
+    create_result(:success, :rejected, [created_by_id], false)
+  end
+
+  def perform_unhide_post(performed_by, _args)
+    post.unhide!
+    create_result(:success, :approved, [created_by_id], false)
+  end
+
+  def perform_keep_post(performed_by, _args)
+    create_result(:success, :approved, [created_by_id], false)
+  end
+
+  def perform_keep_hidden_post(performed_by, _args)
+    create_result(:success, :approved, [created_by_id], false)
+  end
+
+  def perform_keep_deleted_post(performed_by, _args)
+    create_result(:success, :rejected, [created_by_id], false)
+  end
+
+  def perform_restore_post(performed_by, _args)
+    PostDestroyer.new(performed_by, post).recover
+    create_result(:success, :approved, [created_by_id], false)
+  end
+
+  def perform_edit_post(performed_by, _args)
+    # This is handled client-side, just transition the state
+    create_result(:success, :approved, [created_by_id], false)
+  end
+
+  def perform_convert_to_pm(performed_by, _args)
+    topic = post.topic
+
+    if topic && Guardian.new(performed_by).can_moderate?(topic)
+      topic.convert_to_private_message(performed_by)
+      create_result(:success, :approved, [created_by_id], false)
+    else
+      create_result(:failure, :approved) { |r| r.errors = ["Cannot convert to PM"] }
+    end
   end
 
   private
