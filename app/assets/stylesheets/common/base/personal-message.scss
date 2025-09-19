@@ -153,12 +153,63 @@
 
     .participants {
       margin-bottom: 1.5em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+
+      & + .controls {
+        margin-top: 0.5em;
+      }
+
+      &.hide-names .user {
+        .username,
+        .group-name {
+          display: none;
+        }
+      }
 
       .user {
-        border: none;
+        @include ellipsis;
+        display: flex;
+        align-items: center;
         background: var(--primary-low);
-        padding: 2px 4px;
         border-radius: var(--d-border-radius);
+        padding-left: 0.65em;
+
+        .user-link,
+        .group-link {
+          @include ellipsis;
+          color: var(--primary-high);
+
+          &:hover {
+            color: var(--primary);
+          }
+        }
+
+        .avatar,
+        .d-icon-users {
+          margin-left: 0.25em;
+          margin-right: 0.25em;
+        }
+
+        .username,
+        .group-name {
+          margin-right: 0.25em;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .remove-invited {
+          display: flex;
+          flex: 1 0 0px;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          border-radius: 0;
+        }
       }
     }
   }
