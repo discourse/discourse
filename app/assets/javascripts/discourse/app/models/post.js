@@ -224,8 +224,6 @@ export default class Post extends RestModel {
   @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
-  @alias("deletedBy") postDeletedBy; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
-  @alias("deletedAt") postDeletedAt; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
 
   constructor() {
     super(...arguments);
@@ -680,8 +678,6 @@ export default class Post extends RestModel {
       target: "post",
       targetId: this.id,
     });
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:refresh", { id: this.id });
   }
 
   deleteBookmark(bookmarked) {

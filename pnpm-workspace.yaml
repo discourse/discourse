@@ -7,7 +7,6 @@ packages:
 - "app/assets/javascripts/discourse-i18n"
 - "app/assets/javascripts/discourse-markdown-it"
 - "app/assets/javascripts/discourse-plugins"
-- "app/assets/javascripts/discourse-widget-hbs"
 - "app/assets/javascripts/ember-cli-progress-ci"
 - "app/assets/javascripts/float-kit"
 - "app/assets/javascripts/pretty-text"

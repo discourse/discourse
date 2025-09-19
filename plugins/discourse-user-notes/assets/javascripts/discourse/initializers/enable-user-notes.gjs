@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { iconNode } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import PostMetadataUserNotes from "../components/post-metadata-user-notes";
@@ -84,97 +82,6 @@ function customizePost(api, container) {
       DesktopUserNotesIcon
     );
   }
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-/**
- * Customizes the post widget to display user notes
- *
- * @param {Object} api - Plugin API instance
- */
-function customizeWidgetPost(api) {
-  // Handler for showing user notes modal
-  function widgetShowUserNotes() {
-    showUserNotes(
-      this.store,
-      this.attrs.user_id,
-      (count) => {
-        this.sendWidgetAction("refreshUserNotes", count);
-      },
-      {
-        postId: this.attrs.id,
-      }
-    );
-  }
-
-  // Update post when notes are changed
-  api.attachWidgetAction("post", "refreshUserNotes", function (count) {
-    updatePostUserNotesCount(this.model, count);
-  });
-
-  // Helper to attach notes icon if user has notes
-  const attachUserNotesIconIfPresent = (dec) => {
-    const post = dec.getModel();
-    if (post?.user_custom_fields?.user_notes_count > 0) {
-      return dec.attach("user-notes-icon");
-    }
-  };
-
-  // Add notes icon to poster name
-
-  // place the icon before the poster name on mobile
-  api.decorateWidget(`poster-name:before`, (dec) => {
-    if (
-      api.container.lookup("service:site").desktopView ||
-      dec.widget.settings.hideNotes
-    ) {
-      return;
-    }
-
-    return attachUserNotesIconIfPresent(dec);
-  });
-
-  // place the icon after the poster name on desktop
-  api.decorateWidget(`poster-name:after`, (dec) => {
-    if (
-      api.container.lookup("service:site").mobileView ||
-      dec.widget.settings.hideNotes
-    ) {
-      return;
-    }
-
-    return attachUserNotesIconIfPresent(dec);
-  });
-
-  // Add notes icon after avatar
-  api.decorateWidget(`post-avatar:after`, (dec) => {
-    if (!dec.widget.settings.showNotes) {
-      return;
-    }
-
-    return attachUserNotesIconIfPresent(dec);
-  });
-
-  api.attachWidgetAction("post", "showUserNotes", widgetShowUserNotes);
-
-  // Create the user notes icon widget
-  api.createWidget("user-notes-icon", {
-    services: ["site-settings"],
-
-    tagName: "span.user-notes-icon",
-    click: widgetShowUserNotes,
-
-    html() {
-      if (this.siteSettings.enable_emoji) {
-        return this.attach("emoji", { name: "memo" });
-      } else {
-        return iconNode("pen-to-square");
-      }
-    },
-  });
 }
 
 /**
@@ -184,7 +91,6 @@ function customizeWidgetPost(api) {
  * @param {Object} container - Container instance
  */
 function customizePostMenu(api, container) {
-  const appEvents = container.lookup("service:app-events");
   const store = container.lookup("service:store");
 
   api.addPostAdminMenuButton((attrs) => {
@@ -197,9 +103,6 @@ function customizePostMenu(api, container) {
           attrs.user_id,
           (count) => {
             updatePostUserNotesCount(post, count);
-            appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           },
           { postId: attrs.id }
         );

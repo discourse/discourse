@@ -14,8 +14,6 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_stream_mode = "enabled";
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 1 });
     const post = store.createRecord("post", {

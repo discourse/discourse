@@ -2,10 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import {
-  CLOSE_INITIATED_BY_BUTTON,
-  CLOSE_INITIATED_BY_ESC,
-} from "discourse/components/d-modal";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
 
@@ -48,20 +44,8 @@ export default class PostBookmarkManager {
     return this.bookmarkApi.update(this.trackedBookmark);
   }
 
-  afterModalClose(closeData) {
-    if (!closeData) {
-      return;
-    }
-
-    if (
-      closeData.closeWithoutSaving ||
-      closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
-      closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
-    ) {
-      this.model.appEvents.trigger("post-stream:refresh", {
-        id: this.model.id,
-      });
-    }
+  afterModalClose() {
+    // no-op
   }
 
   afterSave(bookmarkFormData) {

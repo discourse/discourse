@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
-import { i18n } from "discourse-i18n";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
@@ -78,128 +75,6 @@ function customizePost(api) {
     }
   );
   api.renderBeforeWrapperOutlet("post-article", PostVotingAnswerHeader);
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  api.reopenWidget("post", {
-    orderByVotes() {
-      this._topicController()
-        .model.postStream.orderStreamByVotes()
-        .then(() => {
-          this._refreshController();
-        });
-    },
-
-    orderByActivity() {
-      this._topicController()
-        .model.postStream.orderStreamByActivity()
-        .then(() => {
-          this._refreshController();
-        });
-    },
-
-    _refreshController() {
-      this._topicController().updateQueryParams();
-    },
-
-    _topicController() {
-      return this.register.lookup("controller:topic");
-    },
-  });
-
-  api.decorateWidget("post-article:before", (helper) => {
-    const result = [];
-    const post = helper.getModel();
-
-    if (!post.topic.is_post_voting) {
-      return result;
-    }
-
-    const topicController = helper.widget.register.lookup("controller:topic");
-    let positionInStream;
-
-    if (
-      topicController.replies_to_post_number &&
-      parseInt(topicController.replies_to_post_number, 10) !== 1
-    ) {
-      positionInStream = 2;
-    } else {
-      positionInStream = 1;
-    }
-
-    const answersCount = post.topic.posts_count - 1;
-
-    if (
-      answersCount <= 0 ||
-      post.id !== post.topic.postStream.stream[positionInStream]
-    ) {
-      return result;
-    }
-
-    result.push(
-      helper.h("div.post-voting-answers-header.small-action", [
-        helper.h(
-          "span.post-voting-answers-headers-count",
-          i18n("post_voting.topic.answer_count", { count: answersCount })
-        ),
-        helper.h("span.post-voting-answers-headers-sort", [
-          helper.h("span", i18n("post_voting.topic.sort_by")),
-          helper.attach("button", {
-            action: "orderByVotes",
-            contents: i18n("post_voting.topic.votes"),
-            disabled: topicController.filter !== ORDER_BY_ACTIVITY_FILTER,
-            className: `post-voting-answers-headers-sort-votes ${
-              topicController.filter === ORDER_BY_ACTIVITY_FILTER
-                ? ""
-                : "active"
-            }`,
-          }),
-          helper.attach("button", {
-            action: "orderByActivity",
-            contents: i18n("post_voting.topic.activity"),
-            disabled: topicController.filter === ORDER_BY_ACTIVITY_FILTER,
-            className: `post-voting-answers-headers-sort-activity ${
-              topicController.filter === ORDER_BY_ACTIVITY_FILTER
-                ? "active"
-                : ""
-            }`,
-          }),
-        ]),
-      ])
-    );
-
-    return result;
-  });
-
-  registerWidgetShim(
-    "post-voting-vote-controls",
-    "div.post-voting-post-shim",
-    <template>
-      <PostVotingVoteControls
-        @post={{@data.post}}
-        @showLogin={{routeAction "showLogin"}}
-      />
-    </template>
-  );
-
-  api.decorateWidget("post-avatar:after", function (helper) {
-    const result = [];
-    const model = helper.getModel();
-
-    if (model.topic?.is_post_voting) {
-      const postVotingPost = helper.attach("post-voting-vote-controls", {
-        post: model,
-      });
-
-      result.push(postVotingPost);
-    }
-
-    return result;
-  });
 }
 
 function customizePostMenu(api, container) {

@@ -24,9 +24,9 @@ import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
-import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetGroupPostSmallActionCodes } from "discourse/components/post/small-action";
+import { resetPostStreamCleanupCallbacks } from "discourse/components/post-stream";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
@@ -99,10 +99,6 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { resetPostClassesCallback } from "discourse/widgets/post";
-import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
-import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";
@@ -208,8 +204,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  resetDecorators();
-  resetPostCookedDecorators();
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
@@ -264,13 +258,11 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
-  resetWidgetCleanCallbacks();
+  resetPostStreamCleanupCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
-  resetPostSmallActionClassesCallbacks();
-  resetPostClassesCallback();
 }
 
 function cleanupCssGeneratorTags() {
