@@ -2,6 +2,8 @@
 
 :root {
   --d-border-radius-small: calc(var(--d-border-radius) * 0.5);
+  --topic-list-item-background-color: var(--d-content-background);
+  --topic-list-item-background-color--visited: var(--d-content-background);
 }
 
 .topic-list .topic-list-item-separator {
@@ -57,10 +59,10 @@
   border: none;
   display: flex;
   flex-direction: column;
-  gap: 1.25em;
+  gap: var(--space-4);
 
   @include viewport.until(lg) {
-    gap: 0.5em;
+    gap: var(--space-2);
   }
 
   @include viewport.until(sm) {
@@ -71,8 +73,6 @@
 
 .topic-list-body .topic-list-item {
   position: relative;
-  background: var(--d-content-background);
-  box-shadow: 0 0 12px 1px var(--topic-card-shadow);
   text-overflow: ellipsis;
   padding: var(--space-3);
   border: 1px solid var(--primary-300);
