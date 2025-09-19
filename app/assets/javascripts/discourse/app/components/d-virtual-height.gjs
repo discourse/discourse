@@ -49,10 +49,17 @@ export default class DVirtualHeight extends Component {
       return;
     }
 
-    const height = Math.round(window.visualViewport.height);
+    let height = Math.round(window.visualViewport.height);
 
     if (this.previousHeight && Math.abs(this.previousHeight - height) <= 1) {
       return false;
+    }
+
+    const ios26 = navigator.userAgent.includes("iPhone\ OS\ 18_6");
+    if (ios26) {
+      // Allow space for floating address bar when keyboard is open.
+      // Unfortunately this is not included in the 'safe area' env.
+      height = height - 20;
     }
 
     this.previousHeight = height;
