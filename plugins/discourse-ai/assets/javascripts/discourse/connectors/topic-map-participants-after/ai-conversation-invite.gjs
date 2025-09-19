@@ -11,10 +11,8 @@ export default class AiConversationInvite extends Component {
     return args.topic.is_bot_pm;
   }
 
-  @service site;
   @service modal;
   @service header;
-  @service sidebarState;
 
   get participants() {
     const participants = [

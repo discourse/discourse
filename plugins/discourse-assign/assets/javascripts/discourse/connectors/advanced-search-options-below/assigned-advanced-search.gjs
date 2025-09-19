@@ -2,18 +2,15 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 @classNames("assigned-advanced-search")
 export default class AssignedAdvancedSearch extends Component {
-  static shouldRender(args, component) {
-    return component.currentUser?.can_assign;
+  static shouldRender(args, { currentUser }) {
+    return currentUser?.can_assign;
   }
-
-  @service currentUser;
 
   @action
   onChangeAssigned(value) {

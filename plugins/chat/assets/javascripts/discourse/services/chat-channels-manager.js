@@ -19,8 +19,6 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service currentUser;
-  @service router;
-  @service site;
   @service siteSettings;
 
   @tracked _cached = new TrackedObject();

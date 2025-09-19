@@ -207,7 +207,6 @@ export class SettingLinkFormatter {
 
 export default class AdminSearchDataSource extends Service {
   @service router;
-  @service siteSettings;
   @service adminNavManager;
 
   plugins = {};

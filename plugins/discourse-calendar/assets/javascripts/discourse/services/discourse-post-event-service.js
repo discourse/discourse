@@ -1,7 +1,6 @@
 import Service, { service } from "@ember/service";
 
 export default class DiscoursePostEventService extends Service {
-  @service siteSettings;
   @service discoursePostEventApi;
 
   async fetchEvents(params = {}) {

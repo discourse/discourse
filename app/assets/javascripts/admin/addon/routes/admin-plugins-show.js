@@ -5,7 +5,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import AdminPlugin from "admin/models/admin-plugin";
 
 export default class AdminPluginsShowRoute extends DiscourseRoute {
-  @service router;
   @service adminPluginNavManager;
 
   async model(params) {

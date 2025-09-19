@@ -35,11 +35,7 @@ const SPECIAL_LINKS_MAP = {
 };
 
 export default class CommunitySection {
-  @service appEvents;
-  @service currentUser;
-  @service modal;
   @service router;
-  @service siteSettings;
   @service topicTrackingState;
 
   @tracked links;

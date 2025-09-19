@@ -8,7 +8,6 @@ import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminWebHooksEditController extends Controller {
-  @service dialog;
   @service router;
   @service siteSettings;
 

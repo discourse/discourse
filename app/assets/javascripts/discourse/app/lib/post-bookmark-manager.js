@@ -10,7 +10,6 @@ import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
 
 export default class PostBookmarkManager {
-  @service currentUser;
   @service bookmarkApi;
   @controller("topic") topicController;
 

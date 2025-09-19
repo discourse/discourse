@@ -13,9 +13,7 @@ import { i18n } from "discourse-i18n";
 //
 // https://github.com/discourse/discourse/blob/110a3025dbf5c7205cec498c7d83dc258d994cfe/app/models/post.rb#L1013-L1035
 export default class ComposerVideoThumbnailUppy {
-  @service dialog;
   @service siteSettings;
-  @service session;
   @service capabilities;
 
   @tracked _uppyUpload;

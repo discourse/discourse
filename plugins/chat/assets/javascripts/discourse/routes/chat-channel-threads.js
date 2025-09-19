@@ -4,7 +4,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
-  @service chatThreadListPane;
   @service chatStateManager;
   @service chat;
 

@@ -53,7 +53,6 @@ export default class PostTextSelection extends Component {
   @service appEvents;
   @service capabilities;
   @service currentUser;
-  @service site;
   @service siteSettings;
   @service menu;
   @service modal;

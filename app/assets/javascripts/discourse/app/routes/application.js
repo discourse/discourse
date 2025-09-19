@@ -17,7 +17,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class ApplicationRoute extends DiscourseRoute {
-  @service capabilities;
   @service clientErrorHandler;
   @service composer;
   @service currentUser;
@@ -25,11 +24,9 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service documentTitle;
   @service historyStore;
   @service loadingSlider;
-  @service login;
   @service modal;
   @service router;
   @service site;
-  @service siteSettings;
   @service restrictedRouting;
 
   @setting("title") siteTitle;

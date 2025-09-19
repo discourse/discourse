@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
 
 export default class AdminEmbeddingIndexController extends Controller {
-  @service router;
   @service site;
   @controller adminEmbedding;
 

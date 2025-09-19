@@ -14,7 +14,6 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 */
 
 export default class ChatThreadsManager {
-  @service chatTrackingStateManager;
   @service chatChannelsManager;
   @service chatApi;
 
