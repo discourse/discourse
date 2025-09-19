@@ -44,6 +44,20 @@ module DiscoursePostEvent
 
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
+
+      it "should not show closed events" do
+        active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
+        active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
+        closed_event = Fabricate(:event, original_starts_at: 3.days.from_now, closed: true)
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        events = response.parsed_body["events"]
+        event_ids = events.map { |e| e["id"] }
+
+        expect(event_ids).to match_array([active_event1.id, active_event2.id])
+      end
     end
 
     context "with an existing post" do

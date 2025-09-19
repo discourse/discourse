@@ -17,6 +17,7 @@ module DiscoursePostEvent
     belongs_to :post, foreign_key: :id
 
     scope :visible, -> { where(deleted_at: nil) }
+    scope :open, -> { where(closed: false) }
 
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
