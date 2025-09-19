@@ -119,4 +119,36 @@ describe DiscourseAutomation::Field do
       expect(field).to be_valid
     end
   end
+
+  describe "icon field" do
+    DiscourseAutomation::Scriptable.add("test_icon_field") { field :foo, component: :icon }
+
+    fab!(:automation) { Fabricate(:automation, script: "test_icon_field") }
+
+    it "accepts a string value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "icon",
+          name: "foo",
+          metadata: {
+            value: "far-star",
+          },
+        )
+      expect(field).to be_valid
+    end
+
+    it "rejects an array value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "icon",
+          name: "foo",
+          metadata: {
+            value: %w[far-star far-heart],
+          },
+        )
+      expect(field).not_to be_valid
+    end
+  end
 end

@@ -12,6 +12,7 @@ module DiscourseAutomation
     FLAG_POST_ON_WORDS = "flag_post_on_words"
     GIFT_EXCHANGE = "gift_exchange"
     GROUP_CATEGORY_NOTIFICATION_DEFAULT = "group_category_notification_default"
+    MANUAL_TOPIC_BUTTON = "manual_topic_button"
     PIN_TOPIC = "pin_topic"
     POST = "post"
     SEND_PMS = "send_pms"

@@ -13,6 +13,7 @@ module DiscourseAutomation
     STALLED_TOPIC = "stalled_topic"
     STALLED_WIKI = "stalled_wiki"
     TOPIC = "topic"
+    TOPIC_MANUAL_BUTTON = "topic_manual_button"
     TOPIC_CLOSED = "topic_closed"
     USER_ADDED_TO_GROUP = "user_added_to_group"
     USER_BADGE_GRANTED = "user_badge_granted"

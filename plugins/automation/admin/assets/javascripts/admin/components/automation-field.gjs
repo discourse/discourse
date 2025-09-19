@@ -11,6 +11,7 @@ import DaDateTimeField from "./fields/da-date-time-field";
 import DaEmailGroupUserField from "./fields/da-email-group-user-field";
 import DaGroupField from "./fields/da-group-field";
 import DaGroupsField from "./fields/da-groups-field";
+import DaIconField from "./fields/da-icon-field";
 import DaKeyValueField from "./fields/da-key-value-field";
 import DaMessageField from "./fields/da-message-field";
 import DaPeriodField from "./fields/da-period-field";
@@ -48,6 +49,7 @@ const FIELD_COMPONENTS = {
   email_group_user: DaEmailGroupUserField,
   custom_field: DaCustomField,
   custom_fields: DaCustomFields,
+  icon: DaIconField,
 };
 
 export default class AutomationField extends Component {

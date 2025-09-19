@@ -127,6 +127,11 @@ module DiscourseAutomation
           "type" => %w[string integer null],
         },
       },
+      "icon" => {
+        "value" => {
+          "type" => %w[string null],
+        },
+      },
       "category_notification_level" => {
         "value" => {
           "type" => "integer",
