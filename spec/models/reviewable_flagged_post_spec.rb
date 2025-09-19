@@ -313,10 +313,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.user_deleted?).to eq(false)
       expect(post.hidden?).to eq(false)
     end
+
     context "when reviewable_ui_refresh enabled (separated bundles)" do
       before do
         # Stub guardian check on reviewable to simulate feature flag on
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+      end
+
+      it "builds post action bundles including agree/disagree variants" do
+        actions = reviewable.actions_for(guardian)
+        post_bundle = actions.bundles.find { |b| b.id.ends_with?("-post-actions") }
+        expect(post_bundle).to be_present
+        expect(actions.has?(:agree_and_keep)).to eq(true)
       end
 
       it "builds user actions bundle with moderation actions" do
@@ -333,6 +341,13 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:delete_user)).to eq(false)
         expect(actions.has?(:delete_and_block_user)).to eq(false)
+      end
+
+      it "shows keep_hidden instead of keep when post hidden" do
+        post.update(hidden: true, hidden_at: Time.zone.now)
+        actions = reviewable.actions_for(guardian)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
+        expect(actions.has?(:agree_and_keep)).to eq(false)
       end
     end
   end
