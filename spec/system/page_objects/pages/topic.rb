@@ -122,9 +122,10 @@ module PageObjects
       def has_who_liked_on_post?(post, count: nil)
         if count
           return(
-            within_post(post) do
-              has_css?(".who-liked.--expanded a.trigger-user-card", count: count)
-            end
+            has_css?(
+              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
+              count: count,
+            )
           )
         end
 
