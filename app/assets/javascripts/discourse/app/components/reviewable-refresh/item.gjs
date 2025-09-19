@@ -15,9 +15,9 @@ import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav"
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
-import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableActionsForm from "discourse/components/reviewable-refresh/actions-form";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
 import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
@@ -577,6 +577,12 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  @action
+  handleActionsPerformed(result) {
+    this._performResult(result, null, this.reviewable);
+    this.#unclaimAutomaticReviewable();
+  }
+
   <template>
     <div class="review-container">
 
@@ -682,13 +688,11 @@ export default class ReviewableItem extends Component {
                     class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
-                  {{#each this.reviewable.bundled_actions as |bundle|}}
-                    <ReviewableBundledAction
-                      @bundle={{bundle}}
-                      @performAction={{this.perform}}
-                      @reviewableUpdating={{this.disabled}}
-                    />
-                  {{/each}}
+                  <ReviewableActionsForm
+                    @reviewable={{this.reviewable}}
+                    @disabled={{this.disabled}}
+                    @onPerformed={{this.handleActionsPerformed}}
+                  />
 
                   {{#if this.reviewable.can_edit}}
                     <DButton

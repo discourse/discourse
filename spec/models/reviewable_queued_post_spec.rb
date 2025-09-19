@@ -380,6 +380,22 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
       end
 
+      it "creates separate bundles for post and user actions" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+        bundle_ids = actions.bundles.map(&:id)
+
+        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
+        expect(bundle_ids).to include("#{reviewable.id}-user-actions")
+      end
+
+      it "includes post actions in the post bundle" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+
+        expect(actions.has?(:approve_post)).to eq(true)
+        expect(actions.has?(:reject_post)).to eq(true)
+        expect(actions.has?(:revise_and_reject_post)).to eq(true)
+      end
+
       it "includes user actions in the user bundle" do
         actions = reviewable.actions_for(Guardian.new(admin))
 
@@ -393,6 +409,10 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       it "includes a minimal user bundle when target_created_by is nil" do
         reviewable.update!(target_created_by: nil)
         actions = reviewable.actions_for(Guardian.new(admin))
+        bundle_ids = actions.bundles.map(&:id)
+
+        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
+        expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
 
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)

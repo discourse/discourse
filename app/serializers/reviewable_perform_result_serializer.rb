@@ -11,6 +11,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :version,
     :reviewable_count,
     :unseen_reviewable_count,
+    :performed_actions,
   )
 
   def success
@@ -47,5 +48,9 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(scope.user)
+  end
+
+  def include_performed_actions?
+    object.performed_actions.present?
   end
 end
