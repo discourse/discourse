@@ -23,6 +23,7 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import concatClass from "discourse/helpers/concat-class";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
@@ -94,18 +95,7 @@ export default class DEditor extends Component {
     this.register = getRegister(this);
 
     this.setupToolbar();
-
-    if (this.siteSettings.rich_editor) {
-      // TODO (martin) Remove this once we are sure all users have migrated
-      // to the new rich editor preference, or a few months after the 3.5 release.
-      await this.handleOldRichEditorPreference();
-
-      if (this.currentUser.useRichEditor) {
-        this.editorComponent = await loadRichEditor();
-      }
-    }
-
-    this.editorComponent ??= TextareaEditor;
+    this.setupEditorMode();
   }
 
   setupToolbar() {
@@ -119,6 +109,29 @@ export default class DEditor extends Component {
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);
     }
+  }
+
+  async setupEditorMode() {
+    if (this.forceEditorMode) {
+      if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
+        this.editorComponent = await loadRichEditor();
+      } else {
+        this.editorComponent = TextareaEditor;
+      }
+      return;
+    }
+
+    if (this.siteSettings.rich_editor) {
+      // TODO (martin) Remove this once we are sure all users have migrated
+      // to the new rich editor preference, or a few months after the 3.5 release.
+      await this.handleOldRichEditorPreference();
+
+      if (this.currentUser.useRichEditor) {
+        this.editorComponent = await loadRichEditor();
+      }
+    }
+
+    this.editorComponent ??= TextareaEditor;
   }
 
   async handleOldRichEditorPreference() {
@@ -145,6 +158,11 @@ export default class DEditor extends Component {
     return null;
   }
 
+  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
+  showEditorModeToggle() {
+    return this.siteSettings.rich_editor && !this.forceEditorMode;
+  }
+
   _readyNow() {
     this.set("ready", true);
 
@@ -156,6 +174,14 @@ export default class DEditor extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
     this._previewMutationObserver = this._disablePreviewTabIndex();
+  }
+
+  get editorContainerModeClass() {
+    if (this.isRichEditorEnabled) {
+      return "--rich-editor-enabled";
+    } else {
+      return "--markdown-editor-enabled";
+    }
   }
 
   get keymap() {
@@ -739,8 +765,7 @@ export default class DEditor extends Component {
 
   <template>
     <div
-      class="d-editor-container
-        {{if this.siteSettings.rich_editor '--rich-editor-enabled'}}"
+      class={{concatClass "d-editor-container" this.editorContainerModeClass}}
     >
       <div class="d-editor-textarea-column">
         {{yield}}
@@ -768,7 +793,7 @@ export default class DEditor extends Component {
             </div>
           {{else}}
             <div class="d-editor-button-bar" role="toolbar">
-              {{#if this.siteSettings.rich_editor}}
+              {{#if this.showEditorModeToggle}}
                 <ToggleSwitch
                   @preventFocus={{true}}
                   @disabled={{@disableSubmit}}

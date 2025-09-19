@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
 export default class AdminEmailTemplatesEditController extends Controller {
@@ -33,6 +34,15 @@ export default class AdminEmailTemplatesEditController extends Controller {
   @discourseComputed("buffered")
   hasMultipleSubjects(buffered) {
     if (buffered.getProperties("subject")["subject"]) {
+      return false;
+    } else {
+      return buffered.getProperties("id")["id"];
+    }
+  }
+
+  @discourseComputed("buffered")
+  hasMultipleBodyTemplates(buffered) {
+    if (!isObject(buffered.getProperties("body")["body"])) {
       return false;
     } else {
       return buffered.getProperties("id")["id"];
