@@ -23,7 +23,6 @@ module DiscoursePostEvent
       DiscoursePostEvent::Event
         .visible
         .open
-        .includes(:event_dates, :post, post: :topic)
         .joins(post: :topic)
         .merge(Post.secured(guardian))
         .merge(topics.or(pms))
