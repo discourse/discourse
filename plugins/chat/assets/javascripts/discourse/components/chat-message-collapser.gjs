@@ -9,14 +9,19 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
-import lightbox from "../lib/lightbox";
+import loadLightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
 
   lightbox = modifier((element) => {
     if (this.args.uploads.length > 0) {
-      lightbox(element.querySelectorAll("img.chat-img-upload"));
+      const els = [];
+      element.querySelectorAll("img.chat-img-upload").forEach((img) => {
+        img.classList.add("lightbox");
+        els.push(img.parentElement);
+      });
+      loadLightbox(els, this.siteSettings);
     }
   });
 

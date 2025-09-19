@@ -1,5 +1,4 @@
 import { scheduleOnce } from "@ember/runloop";
-import $ from "jquery";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {
@@ -14,12 +13,6 @@ function _clean(transition) {
   document.querySelectorAll(`[data-toggle="dropdown"]`).forEach((element) => {
     element.parentElement.classList.remove("open");
   });
-
-  // Close the lightbox
-  if ($.magnificPopup?.instance) {
-    $.magnificPopup.instance.close();
-    document.body.classList.remove("mfp-zoom-out-cur");
-  }
 
   // Remove any link focus
   const { activeElement } = document;

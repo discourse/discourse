@@ -1,134 +1,89 @@
-import $ from "jquery";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { isTesting } from "discourse/lib/environment";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { helperContext } from "discourse/lib/helpers";
+import PhotoSwipe from "photoswipe";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { renderIcon } from "discourse/lib/icon-library";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
-import loadScript from "discourse/lib/load-script";
-import {
-  escapeExpression,
-  postRNWebviewMessage,
-} from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-
-export async function setupLightboxes({ container, selector }) {
-  const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
-  lightboxService.setupLightboxes({ container, selector });
-}
-
-export function cleanupLightboxes() {
-  const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
-  return lightboxService.cleanupLightboxes();
-}
 
 export default function lightbox(elem, siteSettings) {
   if (!elem) {
     return;
   }
 
-  const lightboxes = elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR);
+  const dlText = renderIcon("string", "download") + i18n("lightbox.download");
+  const origImgText = renderIcon("string", "image") + i18n("lightbox.open");
 
-  if (!lightboxes.length) {
-    return;
-  }
+  const lightboxEl = new PhotoSwipeLightbox({
+    gallery: elem,
+    children: ".lightbox",
+    arrowPrevTitle: i18n("lightbox.previous"),
+    arrowNextTitle: i18n("lightbox.next"),
+    errorMsg: i18n("lightbox.content_load_error"),
+    padding: { top: 20, bottom: 50, left: 20, right: 20 },
+    pswpModule: () => PhotoSwipe,
+  });
 
-  const caps = helperContext().capabilities;
-  const imageClickNavigation = caps.touch;
+  lightboxEl.on("uiRegister", function () {
+    const canDownload =
+      !siteSettings.prevent_anons_from_downloading_files || User.current();
 
-  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    $(lightboxes).magnificPopup({
-      type: "image",
-      closeOnContentClick: false,
-      removalDelay: isTesting() ? 0 : 300,
-      mainClass: "mfp-zoom-in",
-      tClose: i18n("lightbox.close"),
-      tLoading: spinnerHTML,
-      prependTo: isTesting() && document.getElementById("ember-testing"),
+    lightboxEl.pswp.ui.registerElement({
+      name: "caption",
+      order: 9,
+      isButton: false,
+      appendTo: "root",
+      html: "Caption text",
+      onInit: (caption, pswp) => {
+        pswp.on("change", () => {
+          const slideEl = pswp.currSlide.data.element;
+          let captionHTML = "";
+          let title, download, details;
 
-      gallery: {
-        enabled: true,
-        tPrev: i18n("lightbox.previous"),
-        tNext: i18n("lightbox.next"),
-        tCounter: i18n("lightbox.counter"),
-        navigateByImgClick: imageClickNavigation,
-      },
+          if (slideEl) {
+            const slideData = slideEl.dataset;
+            const slideImg = slideEl.querySelector("img");
+            const alt = slideEl.alt || slideImg?.getAttribute("alt");
+            const info = slideEl.querySelector(".informations")?.innerText;
+            const origSrc = slideData.largeSrc || slideEl.href || slideImg.src;
+            const dlHref =
+              slideData.downloadHref || slideData.largeSrc || slideImg.src;
 
-      ajax: {
-        tError: i18n("lightbox.content_load_error"),
-      },
+            title = alt ? `<div class='title'>${alt}</div>` : null;
+            details = info ? `<div class='details'>${info}</div>` : null;
+            download = canDownload ? `<a href="${dlHref}">${dlText}</a>` : null;
+            const origImg = `<a href="${origSrc}">${origImgText}</a>`;
 
-      callbacks: {
-        open() {
-          if (!imageClickNavigation) {
-            const wrap = this.wrap,
-              img = this.currItem.img,
-              maxHeight = img.css("max-height");
-
-            wrap.on("click.pinhandler", "img", function () {
-              wrap.toggleClass("mfp-force-scrollbars");
-              img.css(
-                "max-height",
-                wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
-              );
-            });
+            captionHTML = [title, details, download, origImg]
+              .filter(Boolean)
+              .join(" &middot; ");
           }
 
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".mfp-bg").css("background-color")
-            );
-          }
-        },
-        change() {
-          this.wrap.removeClass("mfp-force-scrollbars");
-        },
-        beforeClose() {
-          this.wrap.off("click.pinhandler");
-          this.wrap.removeClass("mfp-force-scrollbars");
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".d-header").css("background-color")
-            );
-          }
-        },
-      },
-
-      image: {
-        tError: i18n("lightbox.image_load_error"),
-        titleSrc(item) {
-          const href = item.el.data("download-href") || item.src;
-          let src = [
-            escapeExpression(item.el.attr("title")),
-            $("span.informations", item.el).text(),
-          ];
-          if (
-            !siteSettings.prevent_anons_from_downloading_files ||
-            User.current()
-          ) {
-            src.push(
-              '<a class="image-source-link" href="' +
-                href +
-                '">' +
-                renderIcon("string", "download") +
-                i18n("lightbox.download") +
-                "</a>"
-            );
-          }
-          src.push(
-            '<a class="image-source-link" href="' +
-              item.src +
-              '">' +
-              renderIcon("string", "image") +
-              i18n("lightbox.open") +
-              "</a>"
-          );
-          return src.join(" &middot; ");
-        },
+          caption.innerHTML = captionHTML;
+        });
       },
     });
   });
+
+  lightboxEl.addFilter("domItemData", (data, el) => {
+    if (!el) {
+      return data;
+    }
+
+    // if photoswipe data attributes are available then use those
+    let width = el.getAttribute("data-pswp-width");
+    let height = el.getAttribute("data-pswp-height");
+
+    if (!width) {
+      const imgInfo = el.querySelector(".informations")?.innerText;
+      const imgSize = imgInfo.split(" ")[0].split("×");
+      [width, height] = imgSize.map(Number);
+    }
+
+    data.src = data.src || el.getAttribute("data-large-src");
+    data.w = data.width = width;
+    data.h = data.height = height;
+
+    return data;
+  });
+
+  lightboxEl.init();
 }

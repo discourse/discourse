@@ -103,9 +103,9 @@ importers:
       lint-to-the-future-eslint:
         specifier: ^3.2.0
         version: 3.2.0(eslint@9.34.0)
-      magnific-popup:
-        specifier: 1.1.0
-        version: 1.1.0
+      photoswipe:
+        specifier: 5.4.4
+        version: 5.4.4
       pikaday:
         specifier: 1.8.2
         version: 1.8.2
@@ -6519,10 +6519,6 @@ packages:
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
 
-  magnific-popup@1.1.0:
-    resolution: {integrity: sha512-ghSa/1TKsOUL6ZlHfcfFCoB9Wms2nqaDdBEPh6QX9jFYQyMkUu7ciU1mrxedWWq4NM2m1C/llhHKLt6GKRYOzg==}
-    engines: {node: '>= 0.8.0'}
-
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -7302,6 +7298,10 @@ packages:
 
   pend@1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
+
+  photoswipe@5.4.4:
+    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
+    engines: {node: '>= 0.12.0'}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -16088,8 +16088,6 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  magnific-popup@1.1.0: {}
-
   make-dir@3.1.0:
     dependencies:
       semver: 6.3.1
@@ -16904,6 +16902,8 @@ snapshots:
   pathval@2.0.0: {}
 
   pend@1.2.0: {}
+
+  photoswipe@5.4.4: {}
 
   picocolors@1.1.1: {}
 

@@ -69,7 +69,7 @@ updates:
     ignore: # These are all vendored so need to be updated manually. See lib/tasks/javascript.rake
       - dependency-name: "chart.js"
       - dependency-name: "chartjs-plugin-datalabels"
-      - dependency-name: "magnific-popup"
+      - dependency-name: "photoswipe"
       - dependency-name: "pikaday"
       - dependency-name: "moment"
       - dependency-name: "moment-timezone"

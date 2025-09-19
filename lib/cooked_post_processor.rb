@@ -218,7 +218,7 @@ class CookedPostProcessor
       return if upload.animated?
 
       if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
-        add_lightbox!(img, original_width, original_height, upload)
+        add_lightbox!(img, original_width, original_height, upload, crop)
       end
 
       optimize_image!(img, upload, cropped: crop) if generate_thumbnail
@@ -268,7 +268,7 @@ class CookedPostProcessor
     end
   end
 
-  def add_lightbox!(img, original_width, original_height, upload)
+  def add_lightbox!(img, original_width, original_height, upload, crop)
     return if original_width < MIN_LIGHTBOX_WIDTH || original_height < MIN_LIGHTBOX_HEIGHT
 
     # first, create a div to hold our lightbox
@@ -282,6 +282,11 @@ class CookedPostProcessor
 
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
+
+    # add photoswipe attrs
+    a["data-pswp-height"] = original_height
+    a["data-pswp-width"] = original_width
+    a["data-cropped"] = "true" if crop
 
     a["data-download-href"] = Discourse.store.download_url(upload) if upload
 

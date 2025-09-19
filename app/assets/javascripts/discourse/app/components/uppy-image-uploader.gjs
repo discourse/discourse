@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
-import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -60,7 +59,8 @@ export default class UppyImageUploader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    $.magnificPopup?.instance.close();
+
+    lightbox.destroy(); // close photoswipe if it is open
   }
 
   get disabled() {
@@ -152,7 +152,7 @@ export default class UppyImageUploader extends Component {
     );
 
     if (lightboxElement) {
-      $(lightboxElement).magnificPopup("open");
+      lightbox(lightboxElement, this.siteSettings);
     }
   }
 
