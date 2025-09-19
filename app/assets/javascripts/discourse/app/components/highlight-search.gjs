@@ -4,7 +4,9 @@ import highlightSearch from "discourse/lib/highlight-search";
 
 export default class HighlightSearch extends Component {
   highlight = modifier((element) => {
-    highlightSearch(element, this.args.highlight);
+    highlightSearch(element, this.args.highlight, {
+      partialMatch: this.args.partialMatch ?? false,
+    });
   });
 
   <template>
