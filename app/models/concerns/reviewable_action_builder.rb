@@ -3,8 +3,6 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
-  FLAGGABLE = false
-
   # Standard post-actions bundle. Consumers should use the returned
   # bundle value when adding post-focused actions.
   #
