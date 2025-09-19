@@ -53,6 +53,7 @@ after_initialize do
     lib/discourse_automation/scripts/flag_post_on_words
     lib/discourse_automation/scripts/gift_exchange
     lib/discourse_automation/scripts/group_category_notification_default
+    lib/discourse_automation/scripts/manual_topic_button
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
     lib/discourse_automation/scripts/topic
@@ -74,6 +75,7 @@ after_initialize do
     lib/discourse_automation/triggers/stalled_wiki
     lib/discourse_automation/triggers/topic_tags_changed
     lib/discourse_automation/triggers/topic
+    lib/discourse_automation/triggers/topic_manual_button
     lib/discourse_automation/triggers/topic_closed
     lib/discourse_automation/triggers/user_added_to_group
     lib/discourse_automation/triggers/user_badge_granted
@@ -81,6 +83,8 @@ after_initialize do
     lib/discourse_automation/triggers/user_removed_from_group
     lib/discourse_automation/triggers/user_first_logged_in
     lib/discourse_automation/triggers/user_updated
+    lib/discourse_automation/topic_button
+    ../../lib/guardian/discourse_automation_guardian
   ].each { |path| require_relative path }
 
   reloadable_patch do
@@ -107,6 +111,18 @@ after_initialize do
       notices,
       each_serializer: DiscourseAutomation::UserGlobalNoticeSerializer,
     ).as_json
+  end
+
+  add_to_serializer(:topic_view, :discourse_automation_topic_buttons) do
+    @discourse_automation_topic_buttons ||=
+      begin
+    DiscourseAutomation::TopicButton.for_topic(object.topic, scope.user).map(&:to_h)
+  end
+  end
+
+  add_to_serializer(:topic_view, :include_discourse_automation_topic_buttons?) do
+    SiteSetting.discourse_automation_enabled && scope.user.present? &&
+      discourse_automation_topic_buttons.present?
   end
 
   on(:user_first_logged_in) do |user|

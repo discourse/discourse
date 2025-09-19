@@ -35,6 +35,10 @@ export default class PeriodField extends BaseField {
     return i18n("discourse_automation.triggerables.recurring.every");
   }
 
+  get showRecurringLabel() {
+    return !this.args.field?.extra?.hide_recurring_label;
+  }
+
   get replacedContent() {
     return (this.args.field?.extra?.content || []).map((r) => {
       return {
@@ -60,7 +64,9 @@ export default class PeriodField extends BaseField {
       <DAFieldLabel @label={{@label}} @field={{@field}} />
 
       <div class="controls">
-        {{this.recurringLabel}}
+        {{#if this.showRecurringLabel}}
+          {{this.recurringLabel}}
+        {{/if}}
 
         <Input
           @type="number"

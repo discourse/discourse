@@ -62,6 +62,9 @@ en:
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+      topic_manual_button:
+        title: Manual topic button
+        description: Creates a manual trigger that exposes a button on topics in the selected categories.
       topic_closed:
         title: Topic closed
         description: Triggers a script when a topic is closed.
@@ -155,3 +158,9 @@ en:
       random_assign:
         title: "Random Assign"
         description: "Randomly assign topics to a group"
+      manual_topic_button:
+        title: "Manual topic button actions"
+        description: "Adds a configurable topic admin menu button that runs the selected actions."
+    topic_manual_button:
+      label: "Run %{name}"
+      success: "Automation %{name} triggered"
