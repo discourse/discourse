@@ -622,6 +622,7 @@ zh_CN:
           title: "运行测试"
           running: "正在运行测试…"
           success: "成功！"
+          invalid_config: "首先修复配置中的以下错误："
           failure: "尝试联系模型时返回此错误：%{error}"
         hints:
           max_prompt_tokens: "模型在单个请求中可以处理的最大词元数"

@@ -2108,6 +2108,7 @@ te:
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
+      read_only: "చదవడానికి మాత్రమే"
     select_kit:
       delete_item: "%{name} ని తొలగించండి"
       filter_by: "దీని ద్వారా ఫిల్టర్ చేయండి: %{name}"
@@ -2747,7 +2748,6 @@ te:
         one: "విషయంలో %{count} పోస్ట్"
         other: "విషయంలో %{count} పోస్ట్‌లు"
       create: "కొత్త విషయం"
-      create_disabled_category: "ఈ వర్గంలో విషయాలను సృష్టించడానికి మీకు అనుమతి లేదు"
       create_long: "కొత్త విషయం సృష్టించండి"
       open_draft: "చిత్తుప్రతి తెరవండి"
       private_message: "సందేశాన్ని ప్రారంభించండి"

@@ -681,6 +681,8 @@ hu:
         chat:
           title: Csevegés
     sidebar:
+      start_new_dm:
+        title: Személyes csevegés létrehozása
       panels:
         chat:
           label: "Csevegés"

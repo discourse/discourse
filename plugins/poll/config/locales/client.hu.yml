@@ -12,6 +12,8 @@ hu:
           poll: "Discourse Szavazás"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Az opciók hozzáadhatók vagy eltávolíthatók."
       voters:
         one: "szavazó"
         other: "szavazó"
@@ -115,6 +117,7 @@ hu:
       error_while_fetching_voters: "Sajnáljuk, hiba történt a szavazók megjelenítésekor."
       error_while_exporting_results: "Sajnáljuk, hiba történt az szavazás eredményének exportálásakor."
       ui_builder:
+        title: Szavazás létrehozása
         insert: Szavazás beillesztése
         help:
           options_min_count: Adjon meg legalább 1 lehetőséget.
@@ -147,6 +150,8 @@ hu:
           step: Lépés
         poll_public:
           label: Szavazók megjelenítése
+        poll_dynamic:
+          label: Lehetővé teszi a beállítások hozzáadását vagy eltávolítását a közzététel után
         poll_title:
           label: Cím (nem kötelező)
         poll_options:

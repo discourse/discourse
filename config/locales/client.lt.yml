@@ -2316,6 +2316,7 @@ lt:
         few: "%{count} temos šioje kategorijoje"
         many: "%{count} temų šioje kategorijoje"
         other: "%{count} temos šioje kategorijoje"
+      read_only: "tik skaityti"
     timezone_input:
       ambiguous_ist: "IST yra dviprasmiškas, pasirinkite konkrečią laiko juostą (pvz.: Azija/Kolkata)"
     select_kit:

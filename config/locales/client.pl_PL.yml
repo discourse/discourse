@@ -2875,6 +2875,8 @@ pl_PL:
         few: "%{count} tematy w tej kategorii"
         many: "%{count} tematów w tej kategorii"
         other: "%{count} tematów w tej kategorii"
+      read_only: "tylko do odczytu"
+      read_only_description: "Ta kategoria jest tylko do odczytu, więc nie możesz jej wybrać dla tego tematu"
     timezone_input:
       ambiguous_ist: "IST jest niejednoznaczny, wybierz konkretną strefę czasową (np.: Asia/Kolkata)"
     select_kit:
@@ -3703,8 +3705,6 @@ pl_PL:
         many: "%{count} postów w temacie"
         other: "%{count} postów w temacie"
       create: "Nowy temat"
-      create_disabled_category: "Nie masz uprawnień do tworzenia tematów w tej kategorii"
-      create_disabled_tag: "Nie możesz tworzyć tematów z tym tagiem"
       create_long: "Utwórz nowy temat"
       open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
@@ -6827,7 +6827,7 @@ pl_PL:
             description: "Ustawienia umożliwiające motywom większą kontrolę nad całym działaniem witryny poprzez nadpisanie niewielkiego podzbioru podstawowych ustawień witryny."
           themes:
             title: "Motywy"
-            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników.'
+            description: "Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników."
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
@@ -7275,6 +7275,8 @@ pl_PL:
         schema:
           title: "Edytuj ustawienie %{name}"
           back_button: "Powrót do %{name}"
+          move_up: "Przenieś wyżej"
+          move_down: "Przenieś niżej"
           fields:
             required: "*wymagane"
             groups:

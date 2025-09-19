@@ -734,6 +734,8 @@ ug:
         chat:
           title: سۆھبەت
     sidebar:
+      start_new_dm:
+        title: شەخسىي سۆھبەت قۇر
       panels:
         chat:
           label: "سۆھبەت"

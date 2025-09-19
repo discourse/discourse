@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "מזהה מודל"
+        max_prompt_tokens: "חלון הקשר"
   discourse_automation:
     ai:
       flag_types:

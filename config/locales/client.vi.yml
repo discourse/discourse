@@ -1916,6 +1916,7 @@ vi:
         other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
+      read_only: "chỉ đọc"
     select_kit:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"

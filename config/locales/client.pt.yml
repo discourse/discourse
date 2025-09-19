@@ -2482,6 +2482,8 @@ pt:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
+      read_only: "apenas leitura"
+      read_only_description: "Esta categoria é de leitura apenas, pelo que não pode escolhê-la para este tópico"
     timezone_input:
       ambiguous_ist: "IST é ambíguo, por favor seleciona um fuso horário específico (por exemplo: Ásia/Kolkata)"
     select_kit:

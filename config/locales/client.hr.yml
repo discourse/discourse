@@ -1952,7 +1952,7 @@ hr:
         no_secondary: "Nema sekundarnih e-pošta"
         instructions: "Nikada neće biti javno prikazano"
         admin_note: "Napomena: Administratorski korisnik koji mijenja e-adresu drugog ne-administrativnog korisnika znači da je korisnik izgubio pristup svom izvornom računu e-pošte, pa će se e-pošta za resetiranje lozinke poslati na njegovu novu adresu. E-adresa korisnika neće se mijenjati dok ne dovrše postupak resetiranja lozinke."
-        ok: "Poslati ćemo vam e-mail za potvrdu"
+        ok: "Poslat ćemo vam e-mail za potvrdu"
         required: "Unesite e-mail adresu"
         invalid: "Molimo unesite valjanu e-mail adresu"
         authenticated: "E-mail vam je potvrđen od %{provider}"
@@ -2022,7 +2022,7 @@ hr:
         show_all: "Prikaži sve (%{count})"
         show_few: "Prikaži manje"
         was_this_you: "Jeste li to bili vi?"
-        was_this_you_description: "Ako to niste bili vi, preporučujemo da promijenite lozinku i odjavite se posvuda."
+        was_this_you_description: "Ako to niste bili vi, preporučujemo da promijenite lozinku i odjavite se sa svih mjesta."
         browser_and_device: "%{browser} na %{device}"
         secure_account: "Zaštitite moj račun"
         latest_post: "Zadnji ste odgovorili…"
@@ -2122,7 +2122,7 @@ hr:
         expires_at: "Istječe"
         edit: "Uredi"
         remove: "Ukloni"
-        copy_link: "Uzmi poveznicu"
+        copy_link: "Preuzmi poveznicu"
         reinvite: "Ponovo pošalji e-poštu"
         reinvited: "Pozivnica ponovno poslana"
         removed: "Uklonjeno"
@@ -2316,7 +2316,7 @@ hr:
         none: "(ništa)"
         instructions: "se pojavljuje nakon vašeg korisničkog imena"
       flair:
-        title: "Njuh"
+        title: "Talent"
         none: "(ništa)"
         instructions: "ikona prikazana uz sliku vašeg profila"
       status:
@@ -2362,7 +2362,7 @@ hr:
         content: "Potražite ovo zvono da prilagodite svoje postavke obavijesti za određene teme ili cijele kategorije."
       suggested_topics:
         title: "Nastavi čitati!"
-        content: "Evo nekih tema za koje mislimo da biste ih željeli pročitati sljedeće."
+        content: "Evo nekoliko tema za koje mislimo da biste sljedeće mogli pročitati."
     loading: "Učitavanje…"
     errors:
       prev_page: "pri pokušaju očitanja"
@@ -2747,6 +2747,8 @@ hr:
         one: "%{count} tema u ovoj kategoriji"
         few: "%{count} tema u ovoj kategoriji"
         other: "%{count} tema u ovoj kategoriji"
+      read_only: "samo za čitanje"
+      read_only_description: "Ova kategorija je samo za čitanje pa je ne možete odabrati za ovu temu"
     timezone_input:
       ambiguous_ist: "IST je dvosmislen, odaberite određenu vremensku zonu (npr. Azija/Kolkata)"
     select_kit:
@@ -2959,6 +2961,8 @@ hr:
       toggle_direction: "Uključi/isključi smjer"
       help: "Markdown pomoć pri izmjenama"
       collapse: "Smanjite ploču editora"
+      open: "Otvorite ploču editora"
+      abandon: "Zatvorite editor i odbacite skicu"
       exit_fullscreen_prompt: "Pritisnite <kbd>ESC</kbd> za izlaz iz cijelog zaslona"
       peek_mode_toggle: "Prebacite način gledanja"
       modal_ok: "U redu"
@@ -3145,8 +3149,8 @@ hr:
         private_message: "nova osobna poruka"
         invited_to_private_message: "pozvani ste u privatni razgovor"
         invitee_accepted: "poziv prihvaćen"
-        posted: "novi post"
-        watching_category_or_tag: "novi post"
+        posted: "nova objava"
+        watching_category_or_tag: "nova objava"
         moved_post: "post premješten"
         linked: "povezan"
         bookmark_reminder: "podsjetnik na oznaku"
@@ -3522,8 +3526,6 @@ hr:
         few: "%{count} objava u temi"
         other: "%{count} objave u temi"
       create: "Nova tema"
-      create_disabled_category: "Nije vam dopušteno kreirati teme u ovoj kategoriji"
-      create_disabled_tag: "Nije vam dopušteno stvaranje tema s ovom oznakom"
       create_long: "Otvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Pokrenite poruku"
@@ -3840,7 +3842,7 @@ hr:
           few: "Trenutno zakačenih tema na globalnoj razini: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Teme su trenutno prikvačene na globalnoj razini: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Umetni temu kao istaknutu objavu na vrh svake stranice"
-        remove_banner: "Ukloni istaknutu objavu sa vrha svake stranice"
+        remove_banner: "Ukloni istaknutu objavu s vrha svake stranice"
         banner_note: "Korisnik može ukloniti istaknutu objavu. U određenom trenutku može biti istaknuta samo jedna objava."
         no_banner_exists: "Ne postoji istaknuta objava"
         banner_exists: "Trenutno <strong class='badge badge-notification unread'>je</strong> istaknuta objava.."
@@ -4959,7 +4961,7 @@ hr:
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
         one: "Bilo koje mjesto koje trenutno koristi ovu oznaku bit će promijenjeno tako da umjesto toga <b>%{tag_name}</b> Jeste li sigurni da želite napraviti ovu promjenu?"
-        few: "Svako mjesto koje trenutno koristi ove oznake bit će promijenjeno tako da umjesto toga koristi <b>%{tag_name}</b> . Jeste li sigurni da želite napraviti ovu promjenu?"
+        few: "Svako mjesto koje trenutno koristi ove oznake bit će promijenjeno tako da umjesto toga koristi oznaku <b>%{tag_name}</b> . Jeste li sigurni da želite napraviti ovu promjenu?"
         other: "Svako mjesto koje trenutno koristi ove oznake bit će promijenjeno tako da umjesto toga koristi <b>%{tag_name}</b> . Jeste li sigurni da želite napraviti ovu promjenu?"
       add_synonyms_failed: "Sljedeće oznake nisu se mogle dodati kao sinonimi: <b>%{tag_names}</b>. Osigurajte da nemaju sinonime i da nisu sinonimi druge oznake."
       remove_synonym: "Ukloni sinonim"
@@ -5625,6 +5627,7 @@ hr:
               title: "Font zaglavlja"
             default_text_size:
               title: "Zadana veličina teksta"
+              description: "Ovu veličinu svaki korisnik može naknadno prilagoditi prema svojim željama."
           backfill_modal:
             title: "Primijenite nove zadane postavke teksta?"
             modal_yes: "Da"
@@ -5632,6 +5635,7 @@ hr:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
+          header_description: "Konfigurirajte način upravljanja i isporuke obavijesti korisnicima, uključujući postavke e-pošte, push obavijesti, ograničenja spominjanja i konsolidaciju obavijesti"
         onebox:
           title: "Onebox"
         rate_limits:
@@ -5640,6 +5644,7 @@ hr:
           title: "Postavke pretraživanja"
         search_everything:
           title: "Pretraživanje"
+          header_description: "Ovdje pronađite bilo što u administratorskom sučelju. Možete filtrirati rezultate u nastavku, a vaše će se postavke pamtiti. Kako biste otvorili ovo pretraživanje bilo gdje u administratorskom sučelju, pritisnite %{shortcutHTML}."
         security:
           title: "Sigurnost"
         spam:
@@ -5690,6 +5695,8 @@ hr:
           title: "Zadane postavke korisnika"
         watched_words:
           title: "Praćene riječi"
+        color_palettes:
+          header_description: "Ove palete kontroliraju boje koje se koriste u vašoj zajednici. Kada paletu učinite dostupnom korisnicima, članovi mogu odabrati svoje željene boje iz svojih preferencija."
         emoji:
           title: "Emoji"
         themes:
@@ -6558,6 +6565,8 @@ hr:
           inactive_filter: "Neaktivan"
           updates_available_filter: "Ažuriranja dostupna"
         schema:
+          move_up: "Pomakni gore"
+          move_down: "Pomakni dolje"
           fields:
             required: "*potrebno"
             number:
@@ -6567,6 +6576,8 @@ hr:
           select_base:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
+          non_default_theme_warning: "Vaše <a href='%{link}'>osobne postavke</a> za temu razlikuju se od zadanih. Promjene koje ovdje napravite možda se neće odnositi na vas, ali će se odnositi na sve koji koriste zadanu temu (%{themeName})."
+          custom_schemes_warning: "Vaše <a href='%{link}'>osobne postavke</a> za %{colorModes} paletu boja razlikuju se od zadane. Promjene na %{colorModes} paleti možda se neće odnositi na vas, ali će se odnositi na sve koji koriste zadanu postavku."
           light: "svijetlo"
           dark: "tamno"
           title: "Boje"
@@ -7084,6 +7095,7 @@ hr:
           title: Izvozi korisnika
           download:
             button: Zahtjevaj arhivu
+            confirm: Želite li zaista kreirati arhivu aktivnosti i postavki ovog korisnika?
         anonymize: "Anonimiziraj korisnika"
         anonymize_yes: "Da, anonimizirajte ovaj račun"
         anonymize_failed: "Došlo je do problema s anonimiziranjem računa."
@@ -7361,12 +7373,16 @@ hr:
       badges:
         status: Statust
         title: Značke
+        page_description: Značke nagrađuju korisnike za njihove aktivnosti, doprinose i postignuća kako bi se prepoznalo, potvrdilo i potaknulo pozitivno ponašanje i angažman unutar zajednice.
         new_badge: Nova značka
         new: Novo
         name: Ime
         badge: Značka
         display_name: Ime prikaza
         description: Opis
+        long_description: Dugi opis
+        badge_type: Vrsta značke
+        group_settings: Grupne postavke
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupiranja znački
@@ -7387,10 +7403,13 @@ hr:
         no_user_badges: "%{name} nije dodijeljena ni jedna značka"
         no_badges: Nema znački za dodijeliti.
         none_selected: "Odaberite značku da počnete"
+        usage_heading: Upotreba
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta
         visibility_heading: Vidljivost
         listable: Prikaži značku na javnoj stranici sa značkama
+        show_in_post_header: Prikaži značku na objavi za koju je dodijeljena
+        show_in_post_header_disabled: Potrebno je omogućiti i opcije 'Prikaži značku na stranici javnih znački' i 'Prikaži značku za dodjelu objave na stranici značke'.
         enabled: omogućeno
         disabled: onemogućen
         icon: Ikona
@@ -7442,7 +7461,15 @@ hr:
           perform: "Dodijelite značku korisnicima"
           upload_csv: Prenesite CSV s korisničkim adresama e-pošte ili korisničkim imenima
           aborted: Prenesite CSV koji sadrži korisničke poruke e-pošte ili korisnička imena
+          success:
+            one: "Vaš CSV je primljen i %{count} korisnik će uskoro dobiti svoju značku."
+            few: "Vaš CSV je primljen i %{count} korisnika će uskoro dobiti svoju značku."
+            other: "Vaš CSV je primljen i %{count} korisnika će uskoro dobiti svoju značku."
           csv_has_unmatched_users: "Sljedeće stavke nalaze se u CSV datoteci, ali se ne mogu uskladiti s postojećim korisnicima i stoga neće dobiti značku:"
+          csv_has_unmatched_users_truncated_list:
+            one: "U CSV datoteci je postojao %{count} unos koji se nije mogao uskladiti s postojećim korisnicima i stoga neće dobiti značku."
+            few: "U CSV datoteci su postojala %{count} unosa koji se nisu mogli uskladiti s postojećim korisnicima i stoga neće dobiti značku."
+            other: "U CSV datoteci je postojalo %{count} unosa koji se nisu mogli uskladiti s postojećim korisnicima i stoga neće dobiti značku. Zbog velikog broja neusklađenih unosa, prikazano je samo prvih 100:"
           replace_owners: Uklonite značku od prethodnih vlasnika
           grant_existing_holders: Dodijelite dodatne značke postojećim nositeljima bedževa
       emoji:

@@ -794,6 +794,9 @@ pl_PL:
         chat:
           title: Czat
     sidebar:
+      start_new_dm:
+        text: Rozpocznij nowy DM
+        title: Utwórz osobisty czat
       panels:
         chat:
           label: "Czat"

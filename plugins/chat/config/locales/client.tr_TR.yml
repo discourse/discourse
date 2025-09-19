@@ -736,6 +736,8 @@ tr_TR:
         chat:
           title: Sohbet
     sidebar:
+      start_new_dm:
+        title: Kişisel sohbet oluşturun
       panels:
         chat:
           label: "Sohbet"

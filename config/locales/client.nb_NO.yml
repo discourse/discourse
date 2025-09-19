@@ -2957,7 +2957,6 @@ nb_NO:
         one: "%{count} innlegg i emnet"
         other: "%{count} innlegg i emnet"
       create: "Nytt emne"
-      create_disabled_category: "Du har ikke lov til å opprette emner i denne kategorien"
       create_long: "Opprett et nytt emne"
       open_draft: "Åpne utkast"
       private_message: "Begynn en melding"
