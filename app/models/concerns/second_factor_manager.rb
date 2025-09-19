@@ -104,7 +104,7 @@ module SecondFactorManager
     self.user_second_factors&.backup_codes&.count
   end
 
-  def authenticate_second_factor(params, secure_session)
+  def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
     return ok_result if !security_keys_enabled? && !totp_or_backup_codes_enabled?
 
@@ -135,7 +135,7 @@ module SecondFactorManager
         return invalid_totp_or_backup_code_result
       end
     when UserSecondFactor.methods[:security_key]
-      if authenticate_security_key(secure_session, second_factor_token)
+      if authenticate_security_key(server_session, second_factor_token)
         ok_result.used_2fa_method = UserSecondFactor.methods[:security_key]
         return ok_result
       else
@@ -162,11 +162,11 @@ module SecondFactorManager
     false
   end
 
-  def authenticate_security_key(secure_session, security_key_credential)
+  def authenticate_security_key(server_session, security_key_credential)
     ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
-      session: secure_session,
+      session: server_session,
       factor_type: UserSecurityKey.factor_types[:second_factor],
     ).authenticate_security_key
   end
