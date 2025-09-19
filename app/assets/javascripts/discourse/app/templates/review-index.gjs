@@ -7,6 +7,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DateTimeInputRange from "discourse/components/date-time-input-range";
 import LoadMore from "discourse/components/load-more";
+import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableItem from "discourse/components/reviewable-item";
 import icon from "discourse/helpers/d-icon";
@@ -18,6 +19,17 @@ import EmailGroupUserChooser from "select-kit/components/email-group-user-choose
 
 export default RouteTemplate(
   <template>
+    <ul class="nav nav-pills reviewable-title">
+      <NavItem @route="review.index" @label="review.view_all" />
+      <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+      {{#if @controller.currentUser.admin}}
+        <NavItem
+          @route="review.settings"
+          @label="review.settings.title"
+          @icon="wrench"
+        />
+      {{/if}}
+    </ul>
     {{#if @controller.displayUnknownReviewableTypesWarning}}
       <div class="alert alert-info unknown-reviewables">
         <span class="text">{{i18n
