@@ -64,7 +64,7 @@ export function listThemes(site) {
     return null;
   }
 
-  let hasDefault = !!themes.findBy("default", true);
+  let hasDefault = !!themes.find((theme) => theme.default);
 
   let results = [];
   if (!hasDefault) {

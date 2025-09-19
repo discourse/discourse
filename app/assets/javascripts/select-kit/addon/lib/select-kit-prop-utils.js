@@ -16,7 +16,7 @@ export default function selectKitPropUtils(target) {
   target.prototype.itemForValue = function (value, content) {
     const { valueProperty } = this.selectKit;
     if (valueProperty) {
-      return content.findBy(valueProperty, value);
+      return content.find((item) => item[valueProperty] === value);
     }
     return value;
   };
@@ -73,7 +73,7 @@ export default function selectKitPropUtils(target) {
     }
 
     if (typeof property === "string") {
-      return content.findBy(property, getterFunc(item));
+      return content.find((c) => c[property] === getterFunc(item));
     }
 
     const name = getterFunc(item);

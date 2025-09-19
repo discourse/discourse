@@ -626,7 +626,7 @@ export default class Topic extends RestModel {
 
   @discourseComputed("archetype")
   archetypeObject(archetype) {
-    return Site.currentProp("archetypes").findBy("id", archetype);
+    return Site.currentProp("archetypes").find((item) => item.id === archetype);
   }
 
   toggleStatus(property) {

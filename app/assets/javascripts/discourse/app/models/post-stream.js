@@ -342,7 +342,9 @@ export default class PostStream extends RestModel {
     if (opts.forceLoad) {
       this.set("loaded", false);
     } else {
-      const postWeWant = this.posts.findBy("post_number", opts.nearPost);
+      const postWeWant = this.posts.find(
+        (p) => p.post_number === opts.nearPost
+      );
       if (postWeWant) {
         return Promise.resolve().then(() => this._checkIfShouldShowRevisions());
       }
@@ -914,7 +916,7 @@ export default class PostStream extends RestModel {
     }
 
     return Promise.resolve().then(() => {
-      const firstPost = this.posts.findBy("post_number", 1);
+      const firstPost = this.posts.find((p) => p.post_number === 1);
       return firstPost.id;
     });
   }
