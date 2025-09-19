@@ -12,7 +12,6 @@ RSpec.describe "Chat composer", type: :system do
   let(:open_thread) { PageObjects::Pages::ChatThread.new }
 
   before do
-    SiteSetting.floatkit_autocomplete_composer = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
@@ -343,31 +342,6 @@ RSpec.describe "Chat composer", type: :system do
       find(".chat-composer__input").send_keys("@#{autocomplete_user.username}")
       find(".autocomplete.ac-user", text: "ac_test_user").click
       expect(channel_page.composer).to have_value("@#{autocomplete_user.username} ")
-    end
-  end
-
-  context "with floatkit autocomplete disabled" do
-    before { SiteSetting.floatkit_autocomplete_composer = false }
-
-    context "when adding an emoji through the autocomplete" do
-      it "adds the emoji to the composer" do
-        chat_page.visit_channel(channel_1)
-        find(".chat-composer__input").send_keys(":gri")
-        find(".emoji-shortname", text: "grimacing").click
-
-        expect(channel_page.composer).to have_value(":grimacing: ")
-      end
-
-      it "doesn't suggest denied emojis and aliases" do
-        SiteSetting.emoji_deny_list = "peach|poop"
-        chat_page.visit_channel(channel_1)
-
-        find(".chat-composer__input").fill_in(with: ":peac")
-        expect(page).to have_no_selector(".emoji-shortname", text: "peach")
-
-        find(".chat-composer__input").fill_in(with: ":hank") # alias
-        expect(page).to have_no_selector(".emoji-shortname", text: "poop")
-      end
     end
   end
 end
