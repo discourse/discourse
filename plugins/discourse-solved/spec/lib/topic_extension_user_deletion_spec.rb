@@ -34,7 +34,9 @@ RSpec.describe DiscourseSolved::TopicExtension do
         topic.user.destroy!
 
         expect { topic.reload.accepted_answer_post_info }.not_to raise_error
-        expect(topic.accepted_answer_post_info[:accepter_username]).to eq(Discourse.system_user.username)
+        expect(topic.accepted_answer_post_info[:accepter_username]).to eq(
+          Discourse.system_user.username,
+        )
       end
 
       it "returns nil when answer post is deleted" do
