@@ -267,7 +267,7 @@ export default class DModal extends Component {
     waitForPromise(
       backdrop.animate([{ opacity: Math.max(0, Math.min(opacity, 0.6)) }], {
         fill: "forwards",
-      })
+      }).finished
     );
   }
 
