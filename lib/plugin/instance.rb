@@ -1305,6 +1305,61 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end
 
+  # Register a search index for a custom content type
+  #
+  # @param model_class [Class] The ActiveRecord model class
+  # @param search_data_class [Class] The search data class (e.g., Chat::MessageSearchData)
+  # @param index_version [Integer] The version number for this search index
+  # @param search_data [Proc] Block that extracts search data from an object, receives (object, indexer_helper)
+  #                          Should return hash with :a_weight, :b_weight, :c_weight, :d_weight keys
+  # @param load_unindexed_record_ids [Proc] Block that loads record IDs needing reindexing, receives (limit:, index_version:)
+  #
+  # Example:
+  #   register_search_index(
+  #     model_class: Chat::Message,
+  #     search_data_class: Chat::MessageSearchData,
+  #     index_version: 1,
+  #     search_data: proc { |message, indexer_helper|
+  #       {
+  #         a_weight: message.message,
+  #         d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000]
+  #       }
+  #     },
+  #     load_unindexed_record_ids: proc { |limit:, index_version:|
+  #       Chat::Message
+  #         .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+  #         .where(
+  #           "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+  #           SiteSetting.default_locale,
+  #           index_version,
+  #         )
+  #         .order("chat_messages.id ASC")
+  #         .limit(limit)
+  #         .pluck(:id)
+  #     }
+  #   )
+  def register_search_index(
+    model_class:,
+    search_data_class:,
+    index_version:,
+    search_data:,
+    load_unindexed_record_ids:
+  )
+    # Infer table name from model class
+    table_name = model_class.table_name.singularize
+
+    handler = {
+      table_name: table_name,
+      model_class: model_class,
+      search_data_class: search_data_class,
+      index_version: index_version,
+      search_data: search_data,
+      load_unindexed_record_ids: load_unindexed_record_ids,
+    }
+
+    DiscoursePluginRegistry.register_search_handler(handler, self)
+  end
+
   # This is an experimental API and may be changed or removed in the future without deprecation.
   #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the

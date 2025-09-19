@@ -1,3 +1,5 @@
+import { isBlank } from "@ember/utils";
+import DButton from "discourse/components/d-button";
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -47,6 +49,8 @@ import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatNotices from "./chat-notices";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
+import AsyncContent from "discourse/components/async-content";
+import { ajax } from "discourse/lib/ajax";
 
 export default class ChatChannel extends Component {
   @service capabilities;
@@ -61,6 +65,7 @@ export default class ChatChannel extends Component {
   @service currentUser;
   @service dialog;
   @service siteSettings;
+  @service router;
 
   @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
@@ -69,6 +74,9 @@ export default class ChatChannel extends Component {
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
+  @tracked channelFilterResults;
+  @tracked currentChannelFilterResult;
+  @tracked currentChannelFilterResultIndex = 0;
 
   scroller = null;
   _mentionWarningsSeen = {};
@@ -85,7 +93,11 @@ export default class ChatChannel extends Component {
   }
 
   get currentUserMembership() {
-    return this.args.channel.currentUserMembership;
+    return this.args.channel?.currentUserMembership;
+  }
+
+  get currentFilterResultPosition() {
+    return this.currentChannelFilterResultIndex + 1;
   }
 
   get hasSavedScrollPosition() {
@@ -111,6 +123,80 @@ export default class ChatChannel extends Component {
     this.debounceFillPaneAttempt();
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
+  }
+
+  @action
+  navigateToPreviousResult() {
+    if (!this.channelFilterResults?.length) return;
+
+    const newIndex =
+      this.currentChannelFilterResultIndex <
+      this.channelFilterResults.length - 1
+        ? this.currentChannelFilterResultIndex + 1
+        : 0;
+
+    this.currentChannelFilterResultIndex = newIndex;
+    this.navigateToResult(this.channelFilterResults[newIndex]);
+  }
+
+  @action
+  navigateToNextResult() {
+    if (!this.channelFilterResults?.length) return;
+
+    const newIndex =
+      this.currentChannelFilterResultIndex > 0
+        ? this.currentChannelFilterResultIndex - 1
+        : this.channelFilterResults.length - 1;
+
+    this.currentChannelFilterResultIndex = newIndex;
+    this.navigateToResult(this.channelFilterResults[newIndex]);
+  }
+
+  @action
+  navigateToResult(result) {
+    this.currentChannelFilterResult = result;
+
+    this.router.replaceWith(
+      "chat.channel.near-message",
+      ...this.args.channel.routeModels,
+      this.currentChannelFilterResult.id
+    );
+  }
+
+  @action
+  async loadSearchResults(filter) {
+    console.log(filter);
+    if (this.search) {
+      console.log("ABORT");
+      this.search.abort();
+    }
+
+    try {
+      this.search = ajax("/chat/api/search", {
+        data: {
+          query: this.args.channelFilter,
+          channel_id: this.args.channel.id,
+          exclude_threads: true,
+        },
+      });
+
+      const response = await this.search;
+      this.search = null;
+
+      console.log(response);
+
+      if (!response.messages?.length) {
+        return;
+      }
+
+      console.log("?????");
+
+      this.channelFilterResults = response.messages;
+      this.currentChannelFilterResultIndex = 0;
+      // this.navigateToResult(this.channelFilterResults[0]);
+    } catch (error) {
+      conosle.log(error);
+    }
   }
 
   @action
@@ -144,6 +230,7 @@ export default class ChatChannel extends Component {
 
   @action
   loadMessages() {
+    console.log("load messages");
     if (!this.args.channel?.id) {
       return;
     }
@@ -187,6 +274,7 @@ export default class ChatChannel extends Component {
   }
 
   async fetchMessages(findArgs = {}) {
+    console.log("fetch messages", findArgs);
     if (this.messagesLoader.loading) {
       return;
     }
@@ -703,9 +791,29 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
       data-id={{@channel.id}}
     >
+
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
+
+      {{#if this.channelFilterResults}}
+        <div class="chat-channel__filter-navigation">
+          {{this.currentFilterResultPosition}}
+          of
+          {{this.channelFilterResults.length}}
+
+          <DButton
+            @action={{this.navigateToPreviousResult}}
+            @icon="chevron-up"
+            class="btn-small"
+          />
+          <DButton
+            @action={{this.navigateToNextResult}}
+            @icon="chevron-down"
+            class="btn-small"
+          />
+        </div>
+      {{/if}}
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}
@@ -720,6 +828,7 @@ export default class ChatChannel extends Component {
               @resendStagedMessage={{this.resendStagedMessage}}
               @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="channel"
+              @highlightedText={{@channelFilter}}
             />
           {{else}}
             {{#unless this.messagesLoader.fetchedOnce}}
@@ -734,6 +843,7 @@ export default class ChatChannel extends Component {
             {{i18n "chat.all_loaded"}}
           </div>
         {{/if}}
+
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow

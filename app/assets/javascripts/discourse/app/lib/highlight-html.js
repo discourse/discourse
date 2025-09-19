@@ -48,9 +48,11 @@ export default function (node, words, opts = {}) {
     nodeName: "span",
     className: "highlighted",
     matchCase: false,
+    partialMatch: false,
   };
 
   settings = { ...settings, ...opts };
+
   words = makeArray(words)
     .filter(Boolean)
     .map((word) => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
@@ -59,7 +61,15 @@ export default function (node, words, opts = {}) {
     return node;
   }
 
-  const pattern = `(\\W|^)(${words.join(" ")})(\\W|$)`;
+  let pattern;
+  if (settings.partialMatch) {
+    // For partial matching, don't require word boundaries
+    pattern = `()(${words.join("|")})()`;
+  } else {
+    // Original exact word matching with word boundaries
+    pattern = `(\\W|^)(${words.join(" ")})(\\W|$)`;
+  }
+
   let flag;
 
   if (!settings.matchCase) {

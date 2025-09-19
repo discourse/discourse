@@ -56,6 +56,36 @@ export default {
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          const SidebarChatSearchSectionLink = class extends BaseCustomSidebarSectionLink {
+            route = "chat.search";
+            text = i18n("chat.search.title");
+            title = i18n("chat.search.title");
+            name = "chat-search";
+            prefixType = "icon";
+            prefixValue = "magnifying-glass";
+          };
+
+          const SidebarChatSearchSection = class extends BaseCustomSidebarSection {
+            hideSectionHeader = true;
+            name = "chat-search";
+            title = "";
+
+            get links() {
+              return [new SidebarChatSearchSectionLink()];
+            }
+
+            get text() {
+              return null;
+            }
+          };
+
+          return SidebarChatSearchSection;
+        },
+        CHAT_PANEL
+      );
+
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.threads";
             text = i18n("chat.my_threads.title");

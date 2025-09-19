@@ -41,6 +41,16 @@ export default class ChatRoutesChannelInfoNav extends Component {
                 {{/if}}
               </LinkTo>
             </li>
+            <li>
+              <LinkTo
+                @route="chat.channel.info.search"
+                @models={{@channel.routeModels}}
+                class={{if (eq @tab "search") "active"}}
+                @replace={{true}}
+              >
+                {{i18n "chat.channel_info.tabs.search"}}
+              </LinkTo>
+            </li>
           </ul>
         </nav>
       {{/if}}

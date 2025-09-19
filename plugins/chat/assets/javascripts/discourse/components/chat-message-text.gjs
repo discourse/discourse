@@ -1,3 +1,4 @@
+import HighlightSearch from "discourse/components/highlight-search";
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
@@ -22,13 +23,27 @@ export default class ChatMessageText extends Component {
           @decorate={{@decorate}}
           @uploads={{@uploads}}
           @onToggleCollapse={{@onToggleCollapse}}
+          @highlightedText={{@highlightedText}}
         />
       {{else}}
-        <DecoratedHtml
-          @html={{htmlSafe @cooked}}
-          @decorate={{@decorate}}
-          @className="chat-cooked"
-        />
+        {{#if @highlightedText}}
+          <HighlightSearch
+            @highlight={{@highlightedText}}
+            @partialMatch={{true}}
+          >
+            <DecoratedHtml
+              @html={{htmlSafe @cooked}}
+              @decorate={{@decorate}}
+              @className="chat-cooked"
+            />
+          </HighlightSearch>
+        {{else}}
+          <DecoratedHtml
+            @html={{htmlSafe @cooked}}
+            @decorate={{@decorate}}
+            @className="chat-cooked"
+          />
+        {{/if}}
       {{/if}}
 
       {{#if this.isEdited}}
