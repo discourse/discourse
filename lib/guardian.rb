@@ -269,8 +269,9 @@ class Guardian
     end
     return false if user.blank?
 
-    return false unless membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
-    return true if membership.owner
+    # Group ownership is decoupled from membership; owners can always see members
+    return true if GroupOwner.exists?(group_id: group.id, user_id: user.id)
+    return false unless GroupUser.exists?(group_id: group.id, user_id: user.id)
 
     return false if group.members_visibility_level == Group.visibility_levels[:owners]
     return false if group.members_visibility_level == Group.visibility_levels[:staff]
@@ -295,9 +296,13 @@ class Guardian
     end
     return false if user.blank?
 
-    memberships = GroupUser.where(group: groups, user_id: user.id).pluck(:owner)
-    return false if memberships.size < groups.size
-    return true if memberships.all? # owner of all groups
+    # If user owns all groups, they can see them
+    owner_group_ids = GroupOwner.where(group: groups, user_id: user.id).pluck(:group_id)
+    return true if owner_group_ids.size == groups.size
+
+    # Require the user to be a member of all groups to proceed further
+    membership_count = GroupUser.where(group: groups, user_id: user.id).count
+    return false if membership_count < groups.size
 
     return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:owners] }
     return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }

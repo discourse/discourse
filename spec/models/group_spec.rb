@@ -220,7 +220,7 @@ RSpec.describe Group do
             I18n.t("groups.errors.cant_allow_membership_requests"),
           )
 
-          group.group_users.build(user_id: user.id, owner: true)
+          group.group_owners.build(user_id: user.id)
 
           expect(group.valid?).to eq(true)
         end
@@ -1622,6 +1622,137 @@ RSpec.describe Group do
       expect(Group.find_by_email("abc@test.com")).to eq(group)
       expect(Group.find_by_email("somealias@test.com")).to eq(group)
       expect(Group.find_by_email("nope@test.com")).to eq(nil)
+    end
+  end
+
+  describe "ownership and membership decoupling" do
+    fab!(:owner_user) { Fabricate(:user) }
+    fab!(:member_user) { Fabricate(:user) }
+    fab!(:both_user) { Fabricate(:user) }
+
+    describe "#add_owner" do
+      it "adds a user as owner without making them a member" do
+        group.add_owner(owner_user)
+        
+        expect(group.owners).to include(owner_user)
+        expect(group.users).not_to include(owner_user)
+        expect(group.owner?(owner_user)).to be true
+      end
+
+      it "does not create duplicate ownership records" do
+        group.add_owner(owner_user)
+        group.add_owner(owner_user)
+        
+        expect(group.group_owners.where(user: owner_user).count).to eq(1)
+      end
+    end
+
+    describe "#remove_owner" do
+      it "removes a user as owner" do
+        group.add_owner(owner_user)
+        group.remove_owner(owner_user)
+        
+        expect(group.owners).not_to include(owner_user)
+        expect(group.owner?(owner_user)).to be false
+      end
+
+      it "handles removing non-owner gracefully" do
+        expect { group.remove_owner(owner_user) }.not_to raise_error
+      end
+    end
+
+    describe "#owner?" do
+      it "returns true for owners" do
+        group.add_owner(owner_user)
+        expect(group.owner?(owner_user)).to be true
+      end
+
+      it "returns false for non-owners" do
+        expect(group.owner?(owner_user)).to be false
+      end
+    end
+
+    describe "separate ownership and membership" do
+      it "allows users to be owners without being members" do
+        group.add_owner(owner_user)
+        group.add(member_user)
+        
+        expect(group.owners).to include(owner_user)
+        expect(group.users).to include(member_user)
+        expect(group.users).not_to include(owner_user)
+        expect(group.owners).not_to include(member_user)
+      end
+
+      it "allows users to be both owners and members" do
+        group.add(both_user)
+        group.add_owner(both_user)
+        
+        expect(group.owners).to include(both_user)
+        expect(group.users).to include(both_user)
+      end
+
+      it "allows removing membership while keeping ownership" do
+        group.add(both_user)
+        group.add_owner(both_user)
+        
+        group.remove(both_user)
+        
+        expect(group.owners).to include(both_user)
+        expect(group.users).not_to include(both_user)
+      end
+
+      it "allows removing ownership while keeping membership" do
+        group.add(both_user)
+        group.add_owner(both_user)
+        
+        group.remove_owner(both_user)
+        
+        expect(group.owners).not_to include(both_user)
+        expect(group.users).to include(both_user)
+      end
+    end
+
+    describe "notifications" do
+      it "sends owner notification when adding owner" do
+        expect(SystemMessage).to receive(:create_from_system_user).with(
+          owner_user,
+          :user_added_to_group_as_owner,
+          group_name: group.name_full_preferred,
+          group_path: "/g/#{group.name}"
+        )
+        
+        group.notify_added_as_owner(owner_user)
+      end
+
+      it "sends member notification when adding member" do
+        expect(SystemMessage).to receive(:create_from_system_user).with(
+          member_user,
+          :user_added_to_group_as_member,
+          group_name: group.name_full_preferred,
+          group_path: "/g/#{group.name}"
+        )
+        
+        group.notify_added_to_group(member_user, owner: false)
+      end
+    end
+
+    describe "group message notifications" do
+      fab!(:topic) { Fabricate(:topic) }
+
+      it "only notifies members, not owners" do
+        # Add member with default notification level (watching = 3)
+        group.add(member_user)
+        group_user = group.group_users.find_by(user: member_user)
+        group_user.update!(notification_level: 3) # watching
+        
+        # Add owner (should not be notified)
+        group.add_owner(owner_user)
+        
+        expect(topic.notifier).to receive(:watch!).with(member_user.id)
+        expect(topic.notifier).not_to receive(:watch!).with(owner_user.id)
+        
+        group.set_message_default_notification_levels!(topic)
+      end
     end
   end
 end

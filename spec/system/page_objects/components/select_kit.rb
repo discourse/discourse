@@ -111,6 +111,10 @@ module PageObjects
       def unselect_by_name(name)
         expanded_component.find(".selected-choice[data-name='#{name}']").click
       end
+
+      def unselect_by_value(value)
+        expanded_component.find(".selected-choice[data-value='#{value}']").click
+      end
     end
   end
 end

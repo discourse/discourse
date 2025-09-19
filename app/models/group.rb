@@ -23,6 +23,7 @@ class Group < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
+  has_many :group_owners, dependent: :destroy
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
   has_many :group_associated_groups, dependent: :destroy
@@ -33,6 +34,7 @@ class Group < ActiveRecord::Base
   has_many :moderation_categories, through: :category_moderation_groups, source: :category
   has_many :users, through: :group_users
   has_many :human_users, -> { human_users }, through: :group_users, source: :user
+  has_many :owners, through: :group_owners, source: :user
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
   has_many :group_category_notification_defaults, dependent: :destroy
@@ -184,9 +186,8 @@ class Group < ActiveRecord::Base
                 groups.id IN (
                   SELECT g.id
                     FROM groups g
-                    JOIN group_users gu ON gu.group_id = g.id
-                    AND gu.user_id = :user_id
-                    AND gu.owner
+                    JOIN group_owners go ON go.group_id = g.id
+                    AND go.user_id = :user_id
                   WHERE g.visibility_level = :owners
                 )
               SQL
@@ -208,7 +209,7 @@ class Group < ActiveRecord::Base
 
             SELECT g.id
               FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+              JOIN group_owners go ON go.group_id = g.id AND go.user_id = :user_id
             WHERE g.visibility_level IN (:staff, :owners)
           )
         SQL
@@ -239,9 +240,8 @@ class Group < ActiveRecord::Base
                 groups.id IN (
                   SELECT g.id
                     FROM groups g
-                    JOIN group_users gu ON gu.group_id = g.id
-                    AND gu.user_id = :user_id
-                    AND gu.owner
+                    JOIN group_owners go ON go.group_id = g.id
+                    AND go.user_id = :user_id
                   WHERE g.members_visibility_level = :owners
                 )
               SQL
@@ -263,7 +263,7 @@ class Group < ActiveRecord::Base
 
             SELECT g.id
               FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+              JOIN group_owners go ON go.group_id = g.id AND go.user_id = :user_id
             WHERE g.members_visibility_level IN (:staff, :owners)
           )
         SQL
@@ -300,7 +300,7 @@ class Group < ActiveRecord::Base
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           ) OR (
             groups.messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND groups.id in (
-            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+            SELECT group_id FROM group_owners WHERE user_id = :user_id)
           )",
             levels: alias_levels(user),
             user_id: user && user.id,
@@ -317,7 +317,7 @@ class Group < ActiveRecord::Base
       ) OR (
         groups.mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
         AND groups.id in (
-          SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+          SELECT group_id FROM group_owners WHERE user_id = :user_id)
       )
       SQL
 
@@ -876,11 +876,16 @@ class Group < ActiveRecord::Base
   end
 
   def add_owner(user)
-    if group_user = self.group_users.find_by(user: user)
-      group_user.update!(owner: true) if !group_user.owner
-    else
-      self.group_users.create!(user: user, owner: true)
-    end
+    self.group_owners.find_or_create_by!(user: user)
+  end
+
+  def remove_owner(user)
+    group_owner = self.group_owners.find_by(user: user)
+    group_owner&.destroy
+  end
+
+  def owner?(user)
+    self.group_owners.exists?(user: user)
   end
 
   def self.find_by_email(email)
@@ -986,7 +991,10 @@ class Group < ActiveRecord::Base
   end
 
   def self.owner_of(groups, user)
-    self.member_of(groups, user).where("gu.owner")
+    groups.joins("LEFT JOIN group_owners go ON go.group_id = groups.id").where(
+      "go.user_id = ?",
+      user.id,
+    )
   end
 
   def cache_group_users_for_destroyed_event
@@ -1104,6 +1112,15 @@ class Group < ActiveRecord::Base
     SystemMessage.create_from_system_user(
       user,
       owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
+      group_name: name_full_preferred,
+      group_path: "/g/#{self.name}",
+    )
+  end
+
+  def notify_added_as_owner(user)
+    SystemMessage.create_from_system_user(
+      user,
+      :user_added_to_group_as_owner,
       group_name: name_full_preferred,
       group_path: "/g/#{self.name}",
     )
@@ -1298,9 +1315,9 @@ class Group < ActiveRecord::Base
 
     valid =
       if self.persisted?
-        self.group_users.where(owner: true).exists?
+        self.group_owners.exists?
       else
-        self.group_users.any?(&:owner)
+        self.group_owners.any?
       end
 
     self.errors.add(:base, I18n.t("groups.errors.cant_allow_membership_requests")) if !valid

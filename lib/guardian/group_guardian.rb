@@ -11,8 +11,7 @@ module GroupGuardian
   # Automatic groups are not represented in the GROUP_USERS
   # table and thus do not allow membership changes.
   def can_edit_group?(group)
-    !group.automatic &&
-      (can_admin_group?(group) || group.users.where("group_users.owner").include?(user))
+    !group.automatic && (can_admin_group?(group) || group.owners.include?(user))
   end
 
   def can_admin_group?(group)
