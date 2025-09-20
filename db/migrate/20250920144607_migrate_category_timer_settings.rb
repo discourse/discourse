@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class MigrateCategoryTimerSettings < ActiveRecord::Migration[8.0]
+  disable_ddl_transaction!
+
   def up
     close_type = BaseTimer.types[:close]
     system_user_id = Discourse.system_user.id

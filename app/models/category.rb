@@ -8,6 +8,8 @@ class Category < ActiveRecord::Base
     :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :reviewable_by_group_id,
+    :auto_close_hours,
+    :auto_close_based_on_last_post,
   ]
 
   include Searchable
