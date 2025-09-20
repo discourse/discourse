@@ -448,11 +448,7 @@ class Admin::UsersController < Admin::StaffController
     return render body: nil, status: 404 unless SiteSetting.enable_discourse_connect
 
     begin
-      sso =
-        DiscourseConnect.parse(
-          "sso=#{params[:sso]}&sig=#{params[:sig]}",
-          secure_session: secure_session,
-        )
+      sso = DiscourseConnect.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", server_session:)
     rescue DiscourseConnect::ParseError
       return(
         render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
