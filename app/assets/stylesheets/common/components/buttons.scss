@@ -42,7 +42,7 @@
   --d-button-flat-icon-color: var(--primary-low-mid);
   --d-button-flat-icon-color--hover: var(--primary);
   --d-button-flat-bg-color: transparent;
-  --d-button-flat-bg-color--hover: transparent;
+  --d-button-flat-bg-color--hover: var(--d-hover);
   --d-button-flat-bg-color--focus: var(--primary-low);
   --d-button-flat-text-color--disabled: var(--primary);
 
