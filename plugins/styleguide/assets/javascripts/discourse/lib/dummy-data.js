@@ -356,8 +356,8 @@ export function createData(store) {
     ],
 
     buttonStates: [
+      { class: "", text: "normal" },
       { class: "btn-hover", text: "hover" },
-      { class: "btn-active", text: "active" },
       { disabled: true, text: "disabled" },
     ],
 

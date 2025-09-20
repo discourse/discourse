@@ -3,7 +3,6 @@ import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import FlatButton from "discourse/components/flat-button";
 import TextField from "discourse/components/text-field";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -51,10 +50,11 @@ export default RouteTemplate(
                   }}
                 >
                   <td class="d-table__cell --overview">
-                    <FlatButton
+                    <DButton
                       @title="admin.permalink.copy_to_clipboard"
                       @icon="far-clipboard"
                       @action={{fn @controller.copyUrl pl}}
+                      class="btn-flat"
                     />
                     <span
                       id="admin-permalink-{{pl.id}}"

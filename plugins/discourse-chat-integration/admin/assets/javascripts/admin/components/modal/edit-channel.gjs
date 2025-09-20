@@ -89,7 +89,7 @@ export default class EditChannel extends Component {
         <DButton
           @action={{@closeModal}}
           @label="chat_integration.edit_channel_modal.cancel"
-          class="btn-large"
+          class="btn-default btn-large"
         />
       </:footer>
     </DModal>

@@ -39,12 +39,12 @@ export default class InlineEditCheckbox extends Component {
         <DButton
           @action={{fn @action this.value}}
           @icon="check"
-          class="btn-primary btn-small submit-edit"
+          class="btn-success btn-small submit-edit"
         />
         <DButton
           @action={{this.reset}}
           @icon="xmark"
-          class="btn-small cancel-edit"
+          class="btn-danger btn-small cancel-edit"
         />
       {{/if}}
     </div>
