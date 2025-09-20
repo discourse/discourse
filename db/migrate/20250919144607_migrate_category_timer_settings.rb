@@ -4,7 +4,7 @@ class MigrateCategoryTimerSettings < ActiveRecord::Migration[8.0]
 
   def up
     close_type = BaseTimer.types[:close]
-    system_user_id = Discourse.system_user.id
+    system_user_id = -1
 
     execute <<~SQL
       INSERT INTO topic_timers (
