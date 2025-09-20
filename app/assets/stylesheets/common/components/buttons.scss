@@ -511,27 +511,6 @@
   }
 }
 
-.btn-link {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  color: var(--tertiary);
-
-  .discourse-no-touch & {
-    &:hover {
-      color: var(--tertiary);
-      background: transparent;
-    }
-  }
-
-  &:focus-visible {
-    color: var(--tertiary);
-    background: transparent;
-
-    @include default-focus;
-  }
-}
-
 @mixin btn-colors($btn-type) {
   color: var(--d-button-#{$btn-type}-bg-color);
 

@@ -254,7 +254,7 @@ export default class DiscoursePostEvent extends Component {
 
                   {{#if @onClose}}
                     <DButton
-                      class="btn-small discourse-post-event-close"
+                      class="btn-default btn-small discourse-post-event-close"
                       @icon="xmark"
                       @action={{@onClose}}
                     />

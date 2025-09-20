@@ -9,7 +9,7 @@ const AdminSearchFilters = <template>
       <span class={{concat "admin-search__filter --" type}}>
         <DButton
           class={{concatClass
-            "btn-small admin-search__filter-item"
+            "btn-default btn-small admin-search__filter-item"
             (if (get @typeFilters type) "is-active")
           }}
           @translatedLabel={{i18n

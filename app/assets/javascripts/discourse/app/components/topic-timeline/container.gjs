@@ -650,7 +650,7 @@ export default class TopicTimelineScrollArea extends Component {
             @icon="layer-group"
             @label="summary.short_label"
             title={{i18n "summary.short_title"}}
-            class="show-summary btn-small"
+            class="show-summary btn-default btn-small"
           />
         {{/if}}
 
