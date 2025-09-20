@@ -4689,7 +4689,6 @@ pt_BR:
       choose_for_topic_required_group:
         one: "selecione %{count} etiqueta de \"%{name}\"…"
         other: "selecione %{count} etiquetas de \"%{name}\"…"
-      info: "Informações"
       default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
@@ -7451,7 +7450,6 @@ pt_BR:
             cancel: "Cancelar"
         merging_user: "Mesclando usuário(a)…"
         merge_failed: "Ocorreu um erro ao mesclar os(as) usuários(as)."
-        delete_forbidden_because_staff: "Administradores(as) e moderadores(as) não podem ser excluídos(as)."
         delete_posts_forbidden_because_staff: "Não é possível excluir todas as postagens de administradores(as) e moderadores(as)."
         delete_forbidden:
           one: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dia não podem ser excluídas.)"

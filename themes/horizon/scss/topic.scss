@@ -68,7 +68,7 @@ body:not(.d-toc-installed) {
 
 .container.posts {
   .post-notice {
-    padding: var(--spacing-block-sm);
+    padding: var(--space-2);
     border-radius: var(--d-border-radius);
     font-size: var(--font-down-1-rem);
 
@@ -76,6 +76,17 @@ body:not(.d-toc-installed) {
       font-size: var(--font-up-1);
       width: 1em;
     }
+  }
+}
+
+.topic-post-badges {
+  .badge-notification {
+    font-size: var(--font-down-1);
+    padding: 0.15em 0.35em;
+    border-radius: 1em;
+    min-width: 1.3em;
+    box-sizing: border-box;
+    color: var(--secondary);
   }
 }
 

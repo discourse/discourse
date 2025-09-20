@@ -116,17 +116,25 @@ describe "Admin | Sidebar Navigation", type: :system do
     )
   end
 
-  it "highlights the 'Themes and components' link when the themes page is visited" do
+  it "highlights the 'Themes and components' link when either the themes, themes components or theme site settings admin page is visited" do
     visit("/admin/config/customize/themes")
+
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
-  end
 
-  # TODO(osama) unskip this test when the "Themes and components" link is
-  # changed to the new config customize page
-  xit "highlights the 'Themes and components' link when the components page is visited" do
-    visit("/admin/config/customize/components")
+    click_link("Components")
+
+    expect(page).to have_current_path("/admin/config/customize/components")
+
+    expect(page).to have_css(
+      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+    )
+
+    click_link("Theme site settings")
+
+    expect(page).to have_current_path("/admin/config/customize/theme-site-settings")
+
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )

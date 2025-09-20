@@ -1,0 +1,11 @@
+.group-selector-wrapper {
+  .d-multi-select-trigger__selected-item > {
+    .d-multi-select-trigger__selection-label {
+      max-width: 10em;
+    }
+  }
+
+  .d-multi-select-trigger {
+    width: 100%;
+  }
+}

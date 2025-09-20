@@ -4,7 +4,7 @@ module PageObjects
   module Components
     module Review
       class TopicLink < PageObjects::Components::Base
-        WRAPPER_CSS = ".post-topic"
+        WRAPPER_CSS = ".review-item__meta-topic-title"
 
         def has_closed_topic_status?
           within(WRAPPER_CSS) { has_css?(".topic-status [class*='d-icon-topic.closed']") }

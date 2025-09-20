@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
@@ -665,8 +664,26 @@ RSpec.configure do |config|
       # To work around this problem, we are going to preload all the model schemas before running any system tests so that
       # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
       # the issue to the Rails.
+
+      # TODO: halfvec in AI embedding tables is not supported by Rails
+      # it causes a noisy stderr warning cause it is missing from the PG
+      # typemap.
+      #
+      # This workaround will suppress the noise until Rails adds support
+      suppress_embedding_warnings =
+        proc do |&blk|
+          stderr_orig = $stderr
+          $stderr = StringIO.new
+          blk.call
+          warning = $stderr.string
+          if warning.present? && !warning.include?("failed to recognize type of 'embeddings'")
+            stderr_orig.print warning
+          end
+          $stderr = stderr_orig
+        end
+
       ActiveRecord::Base.connection.data_sources.map do |table|
-        ActiveRecord::Base.connection.schema_cache.add(table)
+        suppress_embedding_warnings.call { ActiveRecord::Base.connection.schema_cache.add(table) }
       end
 
       system_tests_initialized = true

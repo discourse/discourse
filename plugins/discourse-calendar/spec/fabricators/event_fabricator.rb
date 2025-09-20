@@ -1,7 +1,17 @@
 # frozen_string_literal: true
 
 Fabricator(:event, from: "DiscoursePostEvent::Event") do
-  post { |attrs| attrs[:post] || Fabricate(:post) }
+  transient :user
+
+  post do |attrs|
+    if attrs[:post]
+      attrs[:post]
+    else
+      user = attrs[:user] || Fabricate(:user, admin: true, refresh_auto_groups: true)
+      topic = attrs[:topic] || Fabricate(:topic, user:, category: Fabricate(:category))
+      Fabricate(:post, user:, topic:)
+    end
+  end
 
   id { |attrs| attrs[:post].id }
 

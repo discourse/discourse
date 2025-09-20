@@ -39,9 +39,10 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     preferred_origin = request.env["omniauth.origin"]
 
-    if session[:destination_url].present?
-      preferred_origin = session[:destination_url]
-      session.delete(:destination_url)
+    session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
+    if server_session[:destination_url].present?
+      preferred_origin = server_session[:destination_url]
+      server_session[:destination_url] = nil
     elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?

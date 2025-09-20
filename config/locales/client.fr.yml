@@ -4689,7 +4689,6 @@ fr:
       choose_for_topic_required_group:
         one: "sélectionnez %{count} étiquette de « %{name} »…"
         other: "sélectionnez %{count} étiquettes de « %{name} »…"
-      info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
@@ -7451,7 +7450,6 @@ fr:
             cancel: "Annuler"
         merging_user: "Fusion de l'utilisateur…"
         merge_failed: "Une erreur s'est produite lors de la fusion des utilisateurs."
-        delete_forbidden_because_staff: "Les administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jour ne peuvent pas être supprimés.)"

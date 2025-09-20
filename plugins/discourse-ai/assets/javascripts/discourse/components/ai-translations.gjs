@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DTooltip from "discourse/components/d-tooltip";
@@ -19,6 +20,20 @@ export default class AiTranslations extends Component {
   @tracked done = this.args.model?.posts_with_detected_locale;
   @tracked total = this.args.model?.total;
 
+  get chartRightPadding() {
+    const max = Math.max(...this.data.map(({ done }) => done));
+    switch (true) {
+      case max >= 100000:
+        return 90;
+      case max >= 10000:
+        return 80;
+      case max >= 20:
+        return 70;
+      default:
+        return 50;
+    }
+  }
+
   get descriptionKey() {
     return this.done === this.total
       ? "discourse_ai.translations.stats.complete_language_detection_description"
@@ -26,7 +41,7 @@ export default class AiTranslations extends Component {
   }
 
   get chartConfig() {
-    if (!this.data || !this.data.length) {
+    if (!this.data?.length) {
       return {};
     }
 
@@ -73,10 +88,10 @@ export default class AiTranslations extends Component {
             ctx.save();
             ctx.textBaseline = "middle";
             const items = data.datasets[0].totalItems;
-            items.forEach((done, i) => {
+            items.forEach((count, i) => {
               ctx.fillText(
                 i18n("discourse_ai.translations.progress_chart.bar_done", {
-                  done,
+                  count,
                 }),
                 scales.x.getPixelForValue(100) + 10,
                 scales.y.getPixelForValue(i)
@@ -91,7 +106,7 @@ export default class AiTranslations extends Component {
         indexAxis: "y",
         responsive: true,
         maintainAspectRatio: false,
-        layout: { padding: { right: 70 } },
+        layout: { padding: { right: this.chartRightPadding } },
         scales: {
           x: {
             beginAtZero: true,
@@ -123,9 +138,11 @@ export default class AiTranslations extends Component {
           },
           datalabels: {
             formatter: (percentage) =>
-              i18n("discourse_ai.translations.progress_chart.data_label", {
-                percentage,
-              }),
+              this.site.mobileView && percentage < 20
+                ? ""
+                : i18n("discourse_ai.translations.progress_chart.data_label", {
+                    percentage,
+                  }),
             color: "white",
           },
         },
@@ -158,33 +175,37 @@ export default class AiTranslations extends Component {
       </DPageSubheader>
 
       {{#if @model.enabled}}
-        <AdminConfigAreaCard
-          class="ai-translation__charts"
-          @heading="discourse_ai.translations.progress_chart.title"
-        >
+        <AdminConfigAreaCard class="ai-translation__charts">
+          <:header>
+            <InterpolatedTranslation
+              @key="discourse_ai.translations.progress_chart.title"
+              as |Placeholder|
+            >
+              <Placeholder @name="tooltip">
+                <DTooltip>
+                  <:trigger>
+                    {{icon "circle-question"}}
+                  </:trigger>
+                  <:content>
+                    {{i18n
+                      "discourse_ai.translations.stats.description_tooltip"
+                    }}
+                  </:content>
+                </DTooltip>
+              </Placeholder>
+            </InterpolatedTranslation>
+          </:header>
           <:content>
             <div class="ai-translation__stats-container">
               <div class="ai-translation__stat-item">
                 <span class="ai-translation__stat-label">
-                  <InterpolatedTranslation
-                    @key={{this.descriptionKey}}
-                    as |Placeholder|
-                  >
-                    <Placeholder @name="tooltip">
-                      <DTooltip>
-                        <:trigger>
-                          {{icon "circle-question"}}
-                        </:trigger>
-                        <:content>
-                          {{i18n
-                            "discourse_ai.translations.stats.description_tooltip"
-                          }}
-                        </:content>
-                      </DTooltip>
-                    </Placeholder>
-                    <Placeholder @name="done">{{this.done}}</Placeholder>
-                    <Placeholder @name="total">{{this.total}}</Placeholder>
-                  </InterpolatedTranslation>
+                  {{i18n
+                    this.descriptionKey
+                    (hash done=this.done total=this.total)
+                  }}
+                  {{#unless @model.backfill_enabled}}
+                    {{i18n "discourse_ai.translations.stats.backfill_disabled"}}
+                  {{/unless}}
                 </span>
               </div>
             </div>

@@ -16,12 +16,18 @@ describe "Upcoming Events", type: :system do
   end
 
   describe "basic functionality" do
-    fab!(:event)
+    it "displays events in the calendar", time: Time.utc(2025, 9, 10, 12, 0) do
+      post =
+        create_post(
+          user: admin,
+          category: Fabricate(:category),
+          title: "A great event to join",
+          raw: "[event  start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
+        )
 
-    it "displays events in the calendar" do
       upcoming_events.visit
 
-      expect(upcoming_events).to have_content_in_calendar(event.post.topic.title)
+      expect(upcoming_events).to have_content_in_calendar(post.topic.title)
     end
   end
 
@@ -33,8 +39,9 @@ describe "Upcoming Events", type: :system do
         it "displays event time in event timezone with (Local time) suffix",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Local time event",
             raw:
               "[event showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
@@ -61,8 +68,9 @@ describe "Upcoming Events", type: :system do
         it "displays event time converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Event with UTC time",
             raw:
               "[event timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 21:00\"]\n[/event]",
@@ -85,8 +93,9 @@ describe "Upcoming Events", type: :system do
       describe "with same timezone as user" do
         it "displays event time normally when event timezone matches user timezone",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Same timezone event",
             raw:
               "[event showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\" end=\"2025-09-12 09:05\"]\n[/event]",
@@ -112,8 +121,9 @@ describe "Upcoming Events", type: :system do
         it "displays multiple occurrences with correct local time",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Recurring local event",
             raw:
               "[event recurrence=every_week showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
@@ -153,8 +163,9 @@ describe "Upcoming Events", type: :system do
         it "displays multiple occurrences converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Recurring UTC event",
             raw:
               "[event recurrence=every_week timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 20:00\"]\n[/event]",
@@ -199,8 +210,9 @@ describe "Upcoming Events", type: :system do
         it "displays multiple occurrences without timezone conversion issues",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
-          PostCreator.create!(
-            admin,
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
             title: "Recurring same TZ event",
             raw:
               "[event recurrence=every_week showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\" end=\"2025-09-12 10:05\"]\n[/event]",
@@ -238,38 +250,37 @@ describe "Upcoming Events", type: :system do
     end
 
     describe "recurring events" do
-      fab!(:event)
-
-      before do
-        event.update!(
-          original_starts_at: Time.utc(2025, 3, 18, 13, 00),
-          timezone: "Australia/Brisbane",
-          recurrence: "every_week",
-          recurrence_until: 21.days.from_now,
-        )
-      end
-
       it "displays recurring events until the specified end date",
          time: Time.utc(2025, 6, 2, 19, 00) do
+        post =
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
+            title: "A recurring post event",
+            raw:
+              "[event recurrenceUntil=\"#{30.days.from_now.iso8601}\" timezone=\"Australia\/Brisbane\" recurrence=\"every_week\" status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
+          )
+
         upcoming_events.visit
 
         upcoming_events.expect_event_count(4)
-        upcoming_events.expect_event_at_position(event.post.topic.title, row: 2, col: 2)
-        upcoming_events.expect_event_at_position(event.post.topic.title, row: 3, col: 2)
-        upcoming_events.expect_event_at_position(event.post.topic.title, row: 4, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 3)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 3)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 3)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 3)
       end
     end
   end
 
   describe "event filtering" do
     it "loads the correct range of dates", time: Time.utc(2025, 9, 1, 12, 0) do
-      post =
-        PostCreator.create!(
-          admin,
-          title: "going to the zoo",
-          raw:
-            "[event start=\"2025-09-07 18:30\" status=\"public\" timezone=\"Europe/Prague\" end=\"2025-09-07 21:00\"]\n[/event]",
-        )
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "going to the zoo",
+        raw:
+          "[event start=\"2025-09-07 18:30\" status=\"public\" timezone=\"Europe/Prague\" end=\"2025-09-07 21:00\"]\n[/event]",
+      )
 
       visit("/upcoming-events/week/2025/9/1")
 
@@ -279,14 +290,16 @@ describe "Upcoming Events", type: :system do
     it "shows only events the user is attending when filtered",
        time: Time.utc(2025, 6, 2, 19, 00) do
       attending_event =
-        PostCreator.create!(
-          admin,
-          title: "attending post event",
+        create_post(
+          user: admin,
+          category: Fabricate(:category),
+          title: "Attending post event",
           raw: "[event status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
         )
-      PostCreator.create!(
-        admin,
-        title: "non attending post event",
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "Non attending post event",
         raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
       )
       DiscoursePostEvent::Event.find(attending_event.id).create_invitees(
@@ -313,7 +326,7 @@ describe "Upcoming Events", type: :system do
 
           upcoming_events.today
 
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/2")
+          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
         end
 
         context "in different timezone", timezone: "Europe/London" do
@@ -429,52 +442,52 @@ describe "Upcoming Events", type: :system do
         context "with recurring event" do
           it "displays longer events with appropriate visual height in time grid view",
              time: Time.utc(2025, 6, 2, 19, 00) do
-            short_event_post =
-              PostCreator.create!(
-                admin,
-                title: "Short meeting",
-                raw:
-                  "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-              )
+            create_post(
+              user: admin,
+              category: Fabricate(:category),
+              title: "This is a short meeting",
+              raw:
+                "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+            )
 
-            long_event_post =
-              PostCreator.create!(
-                admin,
-                title: "Long workshop",
-                raw:
-                  "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-              )
+            create_post(
+              user: admin,
+              category: Fabricate(:category),
+              title: "This is a long workshop",
+              raw:
+                "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+            )
 
             upcoming_events.visit
             visit("/upcoming-events/week/2025/6/2")
 
-            expect(upcoming_events).to have_event_height("Short meeting", 47)
-            expect(upcoming_events).to have_event_height("Long workshop", 143)
+            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
+            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
           end
         end
 
         context "with non recurring event" do
           it "displays longer events with appropriate visual height in time grid view",
              time: Time.utc(2025, 6, 2, 19, 00) do
-            short_event_post =
-              PostCreator.create!(
-                admin,
-                title: "Short meeting",
-                raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-              )
+            create_post(
+              user: admin,
+              category: Fabricate(:category),
+              title: "This is a short meeting",
+              raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+            )
 
-            long_event_post =
-              PostCreator.create!(
-                admin,
-                title: "Long workshop",
-                raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-              )
+            create_post(
+              user: admin,
+              category: Fabricate(:category),
+              title: "This is a long workshop",
+              raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+            )
 
             upcoming_events.visit
             visit("/upcoming-events/week/2025/6/2")
 
-            expect(upcoming_events).to have_event_height("Short meeting", 47)
-            expect(upcoming_events).to have_event_height("Long workshop", 143)
+            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
+            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
           end
         end
       end
@@ -487,8 +500,83 @@ describe "Upcoming Events", type: :system do
         upcoming_events.open_week_view
 
         upcoming_events.expect_content("Sep 15 – 21, 2025")
-        upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/9/16")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/9/15")
       end
+    end
+  end
+
+  describe "with calendar_event_display setting", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "This is a short meeting",
+        raw:
+          "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    context "with block" do
+      before { SiteSetting.calendar_event_display = "block" }
+
+      it "renders block" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-block-event")
+      end
+    end
+
+    context "with auto" do
+      before { SiteSetting.calendar_event_display = "auto" }
+
+      it "renders dot" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-dot-event")
+      end
+    end
+  end
+
+  context "with tag color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "tag", color: "rgb(231, 76, 60)", slug: "awesome-tag" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        topic: Fabricate(:topic, tags: [Fabricate(:tag, name: "awesome-tag")]),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+    end
+  end
+
+  context "with category color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "category", color: "rgb(231, 76, 60)", slug: "awesome-category" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category, slug: "awesome-category"),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
     end
   end
 end

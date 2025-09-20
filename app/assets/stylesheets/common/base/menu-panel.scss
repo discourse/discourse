@@ -334,7 +334,7 @@
         background: none;
 
         .d-icon {
-          background-color: var(--d-sidebar-highlight-background);
+          background-color: var(--d-hover);
         }
       }
     }
@@ -572,16 +572,12 @@
   }
 
   .user-menu-button-profile {
-    li svg {
-      color: var(--d-button-flat-icon-color);
-    }
-
-    li:hover svg {
-      color: var(--d-button-flat-icon-color--hover);
-    }
-
     .item-label {
       font-weight: normal;
+    }
+
+    .d-icon {
+      color: var(--primary-500);
     }
   }
 

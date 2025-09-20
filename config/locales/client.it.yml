@@ -4686,7 +4686,6 @@ it:
       choose_for_topic_required_group:
         one: "Seleziona %{count} etichetta da '%{name}'…"
         other: "Seleziona %{count} etichette da '%{name}'…"
-      info: "Info"
       default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
@@ -7448,7 +7447,6 @@ it:
             cancel: "Annulla"
         merging_user: "Unione utente in corso…"
         merge_failed: "Si è verificato un errore durante l'unione degli utenti."
-        delete_forbidden_because_staff: "Amministratori e moderatori non possono essere cancellati."
         delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."

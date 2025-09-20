@@ -318,4 +318,8 @@ RSpec.describe DiscourseJsProcessor do
 
     expect(result["code"]).not_to include("../components/my-component")
   end
+
+  it "returns the ember version" do
+    expect(DiscourseJsProcessor::Transpiler.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+  end
 end

@@ -39,11 +39,18 @@ describe "JS Deprecation Handling", type: :system do
 
     page.execute_script <<~JS
       const deprecated = require("discourse/lib/deprecated").default;
-      deprecated("Fake deprecation message", { id: "fake-deprecation" })
+      deprecated("Fake deprecation message", { id: "fake-deprecation1" })
+      deprecated("Other fake deprecation message", { id: "fake-deprecation2" })
     JS
 
-    message = find("#global-notice-critical-deprecation")
+    message = find("#global-notice-critical-deprecation--fake-deprecation1")
     expect(message).to have_text("One of your themes or plugins contains code which needs updating")
+    expect(message).to have_text("fake-deprecation1")
+    expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
+
+    message = find("#global-notice-critical-deprecation--fake-deprecation2")
+    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
+    expect(message).to have_text("fake-deprecation2")
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
 
@@ -70,6 +77,6 @@ describe "JS Deprecation Handling", type: :system do
 
     visit "/latest"
 
-    expect(page).to have_css("#global-notice-critical-deprecation")
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
   end
 end

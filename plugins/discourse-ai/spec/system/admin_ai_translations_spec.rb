@@ -37,7 +37,6 @@ RSpec.describe "Admin AI translations", type: :system do
 
       # Verify chart container is present
       expect(page).to have_css(".ai-translation__charts")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.progress_chart.title"))
       expect(page).to have_css(".ai-translation__chart")
     end
 
@@ -62,10 +61,8 @@ RSpec.describe "Admin AI translations", type: :system do
   describe "when translations are disabled" do
     before do
       SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_translation_enabled = true
+      SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
-      # Disable backfill
-      SiteSetting.ai_translation_backfill_hourly_rate = 0
 
       visit "/admin/plugins/discourse-ai/ai-translations"
     end

@@ -23,10 +23,16 @@ da:
               label: "Emne ID"
             title:
               label: "Titel"
+            days:
+              label: "Dage"
+            model:
+              label: "Model"
             categories:
               label: "Kategorier"
             tags:
               label: "Mærker"
+            exclude_tags:
+              label: "Udeluk Mærker"
         llm_triage:
           fields:
             category:
@@ -60,7 +66,9 @@ da:
       translations:
         title: "Oversættelser"
         progress_chart:
-          bar_done: "%{done} indlæg"
+          bar_done:
+            one: "%{count} indlæg"
+            other: "%{count} indlæg"
       spam:
         short_title: "Spam"
         last_seven_days: "Seneste 7 dage"

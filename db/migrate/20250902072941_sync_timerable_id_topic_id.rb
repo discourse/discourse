@@ -3,37 +3,14 @@ class SyncTimerableIdTopicId < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
   def up
-    min, max = DB.query_single "SELECT MIN(id), MAX(id) FROM topic_timers"
-    # scaling is needed to compensate for "holes" where records were deleted
-    # and pathological cases where for some reason id 100_000_000 and 0 exist
+    min_id, max_id = execute("SELECT MIN(id), MAX(id) FROM topic_timers")[0].values
+    batch_size = 10_000
 
-    # avoid doing any work on empty dbs
-    return if min.nil?
-
-    bounds = DB.query_single <<~SQL
-      SELECT t.id
-      FROM (
-        SELECT *, row_number() OVER(ORDER BY id ASC) AS row
-        FROM topic_timers
-      ) t
-      WHERE t.row % 100000 = 0
-    SQL
-
-    # subtle but loop does < not <=
-    # includes low, excludes high
-    bounds << (max + 1)
-
-    low_id = min
-    bounds.each do |high_id|
-      # using execute cause MiniSQL is not logging at the moment
-      # to_i is not needed, but specified so it is explicit there is no SQL injection
-      execute <<~SQL
-        UPDATE topic_timers SET timerable_id = topic_id
-         WHERE (id >= #{low_id.to_i} AND id < #{high_id.to_i})
+    (min_id..max_id).step(batch_size) { |start_id| execute <<~SQL.squish } if min_id && max_id
+        UPDATE topic_timers
+        SET timerable_id = topic_id
+        WHERE id >= #{start_id} AND id < #{start_id + batch_size} AND (timerable_id IS NULL OR timerable_id <> topic_id)
       SQL
-
-      low_id = high_id
-    end
   end
 
   def down

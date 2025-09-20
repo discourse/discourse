@@ -36,6 +36,7 @@ export default class UpcomingEventsList extends Component {
   timeFormat = this.args.params?.timeFormat ?? DEFAULT_TIME_FORMAT;
   count = this.args.params?.count ?? DEFAULT_COUNT;
   upcomingDays = this.args.params?.upcomingDays ?? DEFAULT_UPCOMING_DAYS;
+  includeSubcategories = this.args.params?.includeSubcategories ?? false;
 
   emptyMessage = i18n("discourse_post_event.upcoming_events_list.empty");
   allDayLabel = i18n("discourse_post_event.upcoming_events_list.all_day");
@@ -95,7 +96,12 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
+      after: moment().subtract(2, "hours").toISOString(),
     };
+
+    if (this.includeSubcategories) {
+      data.include_subcategories = true;
+    }
 
     if (this.categoryId) {
       data.category_id = this.categoryId;

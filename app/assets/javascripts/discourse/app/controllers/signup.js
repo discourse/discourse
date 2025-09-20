@@ -60,7 +60,8 @@ export default class SignupPageController extends Controller {
   });
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
-    getUserFields: () => this.site.get("user_fields"),
+    getUserFields: () =>
+      this.site.get("user_fields")?.filter((f) => f.show_on_signup),
     getAccountPassword: () => this.accountPassword,
     showValidationOnInit: false,
   });
@@ -268,15 +269,21 @@ export default class SignupPageController extends Controller {
       );
     }
 
-    if (this.authOptions?.email === email && this.authOptions?.email_valid) {
-      return EmberObject.create({
-        ok: true,
-        reason: i18n("user.email.authenticated", {
-          provider: this.authProviderDisplayName(
-            this.authOptions?.auth_provider
-          ),
-        }),
-      });
+    if (
+      this.authOptions?.email === email &&
+      this.authOptions?.email_valid &&
+      !isEmpty(this.authOptions?.auth_provider)
+    ) {
+      const provider = this.authProviderDisplayName(
+        this.authOptions.auth_provider
+      );
+
+      if (!isEmpty(provider)) {
+        return EmberObject.create({
+          ok: true,
+          reason: i18n("user.email.authenticated", { provider }),
+        });
+      }
     }
 
     return EmberObject.create({
@@ -345,11 +352,12 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  authProviderDisplayName(providerName) {
-    const matchingProvider = findAll().find((provider) => {
-      return provider.name === providerName;
-    });
-    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
+  authProviderDisplayName(name) {
+    return (
+      findAll()
+        .find((p) => p.name === name)
+        ?.get("prettyName") || name
+    );
   }
 
   @observes("emailValidation", "accountEmail")

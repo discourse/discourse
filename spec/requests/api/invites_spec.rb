@@ -12,110 +12,19 @@ RSpec.describe "invites" do
       consumes "application/json"
       parameter name: "Api-Key", in: :header, type: :string, required: true
       parameter name: "Api-Username", in: :header, type: :string, required: true
-
-      parameter name: :request_body,
-                in: :body,
-                schema: {
-                  type: :object,
-                  properties: {
-                    email: {
-                      type: :string,
-                      example: "not-a-user-yet@example.com",
-                      description: "required for email invites only",
-                    },
-                    skip_email: {
-                      type: :boolean,
-                      default: false,
-                    },
-                    custom_message: {
-                      type: :string,
-                      description: "optional, for email invites",
-                    },
-                    max_redemptions_allowed: {
-                      type: :integer,
-                      example: 5,
-                      default: 1,
-                      description: "optional, for link invites",
-                    },
-                    topic_id: {
-                      type: :integer,
-                    },
-                    group_ids: {
-                      type: :string,
-                      description:
-                        "Optional, either this or `group_names`. Comma separated list for multiple ids.",
-                      example: "42,43",
-                    },
-                    group_names: {
-                      type: :string,
-                      description:
-                        "Optional, either this or `group_ids`. Comma separated list for multiple names.",
-                      example: "foo,bar",
-                    },
-                    expires_at: {
-                      type: :string,
-                      description:
-                        "optional, if not supplied, the invite_expiry_days site setting is used",
-                    },
-                  },
-                }
+      expected_request_schema = load_spec_schema("invite_create_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces "application/json"
       response "200", "success response" do
-        schema type: :object,
-               properties: {
-                 id: {
-                   type: :integer,
-                   example: 42,
-                 },
-                 link: {
-                   type: :string,
-                   example: "http://example.com/invites/9045fd767efe201ca60c6658bcf14158",
-                 },
-                 email: {
-                   type: :string,
-                   example: "not-a-user-yet@example.com",
-                 },
-                 emailed: {
-                   type: :boolean,
-                   example: false,
-                 },
-                 custom_message: {
-                   type: %i[string null],
-                   example: "Hello world!",
-                 },
-                 topics: {
-                   type: :array,
-                   items: {
-                   },
-                   example: [],
-                 },
-                 groups: {
-                   type: :array,
-                   items: {
-                   },
-                   example: [],
-                 },
-                 created_at: {
-                   type: :string,
-                   example: "2021-01-01T12:00:00.000Z",
-                 },
-                 updated_at: {
-                   type: :string,
-                   example: "2021-01-01T12:00:00.000Z",
-                 },
-                 expires_at: {
-                   type: :string,
-                   example: "2021-02-01T12:00:00.000Z",
-                 },
-                 expired: {
-                   type: :boolean,
-                   example: false,
-                 },
-               }
+        expected_response_schema = load_spec_schema("invite_create_response")
+        schema expected_response_schema
 
-        let(:request_body) { { email: "not-a-user-yet@example.com" } }
-        run_test!
+        let(:params) { { email: "not-a-user-yet@example.com" } }
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end

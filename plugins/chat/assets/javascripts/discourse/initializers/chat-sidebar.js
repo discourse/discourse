@@ -290,6 +290,15 @@ export default {
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          const SidebarChatNewDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
+            route = "chat.new-message";
+            name = "new-chat-dm";
+            title = i18n("sidebar.start_new_dm.title");
+            text = i18n("sidebar.start_new_dm.text");
+            prefixType = "icon";
+            prefixValue = "plus";
+          };
+
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.channel";
             suffixType = "icon";
@@ -469,15 +478,29 @@ export default {
               );
             }
 
-            get sectionLinks() {
-              return this.chatChannelsManager.truncatedDirectMessageChannels.map(
-                (channel) =>
-                  new SidebarChatDirectMessagesSectionLink({
-                    channel,
-                    chatService: this.chatService,
-                    currentUser: this.currentUser,
-                  })
+            get hideSectionHeader() {
+              return (
+                this.chatChannelsManager.truncatedDirectMessageChannels
+                  .length === 0
               );
+            }
+
+            get sectionLinks() {
+              const channels =
+                this.chatChannelsManager.truncatedDirectMessageChannels;
+
+              if (channels.length > 0) {
+                return channels.map(
+                  (channel) =>
+                    new SidebarChatDirectMessagesSectionLink({
+                      channel,
+                      chatService: this.chatService,
+                      currentUser: this.currentUser,
+                    })
+                );
+              } else {
+                return [new SidebarChatNewDirectMessagesSectionLink()];
+              }
             }
 
             get name() {

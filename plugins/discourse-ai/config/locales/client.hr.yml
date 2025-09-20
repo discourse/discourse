@@ -60,7 +60,10 @@ hr:
       translations:
         title: "Prijevodi"
         progress_chart:
-          bar_done: "%{done} objava"
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Zadnjih 7 dana"

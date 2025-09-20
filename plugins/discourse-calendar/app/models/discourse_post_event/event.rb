@@ -17,6 +17,7 @@ module DiscoursePostEvent
     belongs_to :post, foreign_key: :id
 
     scope :visible, -> { where(deleted_at: nil) }
+    scope :open, -> { where(closed: false) }
 
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
@@ -30,6 +31,7 @@ module DiscoursePostEvent
               },
               unless: ->(event) { event.name.blank? }
     validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
+    validates :max_attendees, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
 
     validate :raw_invitees_length
     validate :ends_before_start
@@ -109,21 +111,31 @@ module DiscoursePostEvent
     def starts_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.starts_at ||
-          event_dates.order(:updated_at, :id).last&.starts_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
 
-      from_event_dates || original_starts_at
+      date&.starts_at || original_starts_at
     end
 
     def ends_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.ends_at ||
-          event_dates.order(:updated_at, :id).last&.ends_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
 
-      from_event_dates || original_ends_at
+      date&.ends_at || original_ends_at
     end
 
     def on_going_event_invitees
@@ -242,6 +254,15 @@ module DiscoursePostEvent
       (self.starts_at..finishes_at).cover?(Time.now)
     end
 
+    def going_count
+      invitees.where(status: Invitee.statuses[:going]).count
+    end
+
+    def at_capacity?
+      return false if max_attendees.blank?
+      going_count >= max_attendees
+    end
+
     def self.statuses
       @statuses ||= Enum.new(standalone: 0, public: 1, private: 2)
     end
@@ -331,6 +352,7 @@ module DiscoursePostEvent
           minimal: event_params[:minimal],
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
+          max_attendees: event_params[:"max-attendees"]&.to_i,
         }
 
         params[:custom_fields] = {}
@@ -504,4 +526,5 @@ end
 #  chat_channel_id    :bigint
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
+#  max_attendees      :integer
 #

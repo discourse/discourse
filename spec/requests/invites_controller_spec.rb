@@ -510,7 +510,7 @@ RSpec.describe InvitesController do
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
           error_message = response.parsed_body["errors"].first
-          expect(error_message).to eq("Email is too long (maximum is 500 characters)")
+          expect(error_message).to eq("#{email} isn't a valid email address.")
         end
       end
 

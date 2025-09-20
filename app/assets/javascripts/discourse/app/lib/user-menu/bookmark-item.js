@@ -1,3 +1,4 @@
+import { htmlSafe } from "@ember/template";
 import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 
@@ -32,7 +33,7 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   }
 
   get description() {
-    return this.bookmark.fancy_title;
+    return htmlSafe(this.bookmark.fancy_title);
   }
 
   get topicId() {

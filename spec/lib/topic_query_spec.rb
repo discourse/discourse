@@ -105,6 +105,20 @@ RSpec.describe TopicQuery do
         expect(TopicQuery.validate?(:per_page, "10")).to eq(true)
       end
     end
+
+    describe "page" do
+      it "respects SiteSetting.max_topic_query_page_param" do
+        SiteSetting.max_topic_query_page_param = 100
+
+        expect(TopicQuery.validate?(:page, -1)).to eq(false)
+        expect(TopicQuery.validate?(:page, 101)).to eq(false)
+
+        expect(TopicQuery.validate?(:page, 0)).to eq(true)
+        expect(TopicQuery.validate?(:page, 1)).to eq(true)
+        expect(TopicQuery.validate?(:page, 100)).to eq(true)
+        expect(TopicQuery.validate?(:page, "10")).to eq(true)
+      end
+    end
   end
 
   describe "#list_topics_by" do

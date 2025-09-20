@@ -13,6 +13,7 @@ de:
     discourse_reactions_desaturated_reaction_panel: "Stellt Reaktionen weniger ablenkend in Graustufen dar, bis sie im Fokus des Zeigers stehen."
     discourse_reactions_excluded_from_like: "Reaktionen, die nicht als „Gefällt mir“ gelten. Alle Reaktionen, die nicht auf dieser Liste stehen, werden in Bezug auf Abzeichen, Berichte und andere Zwecke als „Gefällt mir“ gewertet."
     discourse_reactions_like_sync_enabled: "Wenn diese Option aktiviert ist, werden für vorherige Reaktionen die entsprechenden „Gefällt mir“-Einträge erstellt, außer für die Reaktionen, die in `discourse_reactions_excluded_from_like` definiert sind. Dieser Abgleich findet regelmäßig im Hintergrund statt und auch, wenn du `discourse_reactions_excluded_from_like` änderst."
+    discourse_reactions_experimental_allow_any_emoji: "EXPERIMENTELL: Wenn diese Option aktiviert ist, wird eine Schaltfläche hinzugefügt, mit der Benutzer ein beliebiges Emoji in der Reaktionsauswahl auswählen können. Mitglieder können jedes beliebige Emoji, einschließlich benutzerdefinierter Emojis, für Reaktionen auswählen. Aktiviere dies also mit Vorsicht."
     errors:
       invalid_excluded_emoji: "Du kannst keine Emojis ausschließen, die nicht in „discourse reactions enabled reactions“ enthalten sind, und du kannst das Emoji nicht ausschließen, das für „discourse reactions reaction for like“ verwendet wird."
   badges:

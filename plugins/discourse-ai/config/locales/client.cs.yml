@@ -69,7 +69,11 @@ cs:
       translations:
         title: "Překlady"
         progress_chart:
-          bar_done: "%{done} příspěvky"
+          bar_done:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvků"
+            many: "%{count} příspěvky"
+            other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"

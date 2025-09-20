@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
 
   attr_reader :theme_id
 
+  delegate :server_session, to: :request
+  alias_method :secure_session, :server_session
+
   serialization_scope :guardian
 
   protect_from_forgery
@@ -568,10 +571,6 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
-  def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
-  end
-
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
     if permalink && permalink.target_url
@@ -748,8 +747,8 @@ class ApplicationController < ActionController::Base
     dont_cache_page
 
     if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
-      # save original URL in a session so we can redirect after login
-      session[:destination_url] = destination_url
+      # save original URL in the server session so we can redirect after login
+      server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
           Discourse.enabled_authenticators.one? && !cookies[:authentication_data]

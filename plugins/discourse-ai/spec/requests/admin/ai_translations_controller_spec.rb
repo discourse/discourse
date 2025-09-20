@@ -56,8 +56,22 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "correctly indicates if backfill is enabled" do
-        # Enable backfill
-        SiteSetting.ai_translation_backfill_hourly_rate = 10
+        SiteSetting.ai_translation_backfill_hourly_rate = 30
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["backfill_enabled"]).to eq(true)
+
+        SiteSetting.ai_translation_backfill_hourly_rate = 0
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["backfill_enabled"]).to eq(false)
+      end
+
+      it "correctly indicates if feature is enabled" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
@@ -65,8 +79,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["enabled"]).to eq(true)
 
-        # Disable backfill
-        SiteSetting.ai_translation_backfill_hourly_rate = 0
+        SiteSetting.ai_translation_backfill_max_age_days = 0
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 

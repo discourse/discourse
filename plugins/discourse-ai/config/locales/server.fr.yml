@@ -24,8 +24,8 @@ fr:
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
         flagged_post: |
           <div>Réponse du modèle :</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Déclenché par la règle <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Déclenché par la règle <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"
@@ -116,7 +116,6 @@ fr:
     ai_translation_enabled: "Active la fonction de traduction par IA"
     ai_translation_model: "Le modèle à utiliser pour la traduction. Ce modèle doit prendre en charge la traduction. Les personnages peuvent modifier ce paramètre."
     ai_translation_backfill_limit_to_public_content: "Lorsque cette option est activée, seul le contenu des catégories publiques sera traduit. Lorsque cette option est désactivée, le contenu des MP de groupe et des catégories privées sera également envoyé pour traduction."
-    ai_translation_max_post_length: "Longueur maximale des publications à traduire. Les publications plus longues ne seront pas traduites."
     ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."
   reviewables:
     reasons:
