@@ -28,6 +28,15 @@
 
   .topic-navigation {
     overflow-anchor: none;
+
+    .btn-toggle-localized-content.--active {
+      @include darken-background($bg-color, 0.3);
+      color: $hover-text-color;
+
+      .d-icon {
+        color: $hover-icon-color;
+      }
+    }
   }
 
   // timeline

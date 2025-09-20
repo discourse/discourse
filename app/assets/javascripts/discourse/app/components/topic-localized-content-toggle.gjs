@@ -45,7 +45,7 @@ export default class TopicLocalizedContentToggle extends Component {
       @title={{this.title}}
       class={{concatClass
         "btn btn-default btn-toggle-localized-content no-text"
-        (unless this.showingOriginal "btn-active")
+        (unless this.showingOriginal "--active")
       }}
       @action={{this.showOriginal}}
     />

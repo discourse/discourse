@@ -128,30 +128,6 @@
     }
   }
 
-  .discourse-no-touch &:active:not(:hover, :focus),
-  .discourse-no-touch &.btn-active:not(:hover, :focus),
-  &:active:not(:hover, :focus),
-  &.btn-active:not(:hover, :focus) {
-    @include darken-background($bg-color, 0.6);
-    color: $hover-text-color;
-
-    .d-icon {
-      color: $hover-icon-color;
-    }
-  }
-
-  .discourse-no-touch &:active,
-  .discourse-no-touch &.btn-active,
-  &:active,
-  &.btn-active {
-    @include darken-background($bg-color, 0.3);
-    color: $hover-text-color;
-
-    .d-icon {
-      color: $hover-icon-color;
-    }
-  }
-
   &[disabled],
   &.disabled {
     cursor: not-allowed;
