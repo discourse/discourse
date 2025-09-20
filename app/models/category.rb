@@ -8,6 +8,8 @@ class Category < ActiveRecord::Base
     :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :reviewable_by_group_id,
+    :auto_close_hours,
+    :auto_close_based_on_last_post,
   ]
 
   include Searchable
@@ -168,6 +170,8 @@ class Category < ActiveRecord::Base
 
   has_many :category_form_templates, dependent: :destroy
   has_many :form_templates, through: :category_form_templates
+
+  has_one :category_default_timer, dependent: :destroy, foreign_key: :timerable_id
 
   scope :latest, -> { order("topic_count DESC") }
 
@@ -1288,6 +1292,24 @@ class Category < ActiveRecord::Base
     self.category_localizations_attributes = localizations_params
   end
 
+  def set_or_create_default_timer(opts)
+    if category_default_timer
+      category_default_timer.update!(opts)
+    else
+      create_category_default_timer!(opts)
+    end
+  end
+
+  # TODO: Remove these methods when we migrate auto_close_hours and auto_close_based_on_last_post to category_default_timer
+  def auto_close_based_on_last_post
+    return false unless category_default_timer
+    category_default_timer.based_on_last_post
+  end
+
+  def auto_close_hours
+    category_default_timer&.duration_minutes&.minutes&.in_hours
+  end
+
   private
 
   def ensure_category_setting
@@ -1359,7 +1381,6 @@ end
 #  description                               :text
 #  text_color                                :string(6)        default("FFFFFF"), not null
 #  read_restricted                           :boolean          default(FALSE), not null
-#  auto_close_hours                          :float
 #  post_count                                :integer          default(0), not null
 #  latest_post_id                            :integer
 #  latest_topic_id                           :integer
@@ -1374,7 +1395,6 @@ end
 #  posts_day                                 :integer          default(0)
 #  allow_badges                              :boolean          default(TRUE), not null
 #  name_lower                                :string(50)       not null
-#  auto_close_based_on_last_post             :boolean          default(FALSE)
 #  topic_template                            :text
 #  contains_messages                         :boolean
 #  sort_order                                :string

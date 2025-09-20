@@ -483,7 +483,9 @@ RSpec.describe Category do
     end
 
     it "should not set its description topic to auto-close" do
-      category = Fabricate(:category_with_definition, name: "Closing Topics", auto_close_hours: 1)
+      category = Fabricate(:category_with_definition, name: "Closing Topics")
+      Fabricate(:category_default_timer, category:, duration_minutes: 60.0)
+
       expect(category.topic.public_topic_timer).to eq(nil)
     end
 
