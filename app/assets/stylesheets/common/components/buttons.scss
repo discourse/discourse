@@ -152,10 +152,10 @@
   }
 
   &.is-loading {
-      &.btn-small {
-        .loading-icon {
-          font-size: var(--font-down-1);
-          margin-right: 0.2em;
+    &.btn-small {
+      .loading-icon {
+        font-size: var(--font-down-1);
+        margin-right: 0.2em;
       }
     }
 
@@ -478,13 +478,15 @@
   &.btn-default, // preferably NOT used in conjuction with btn-default
   &.btn-icon,
   &.no-text {
-    background: transparent;
+    @include btn(
+      $text-color: var(--d-button-transparent-text-color),
+      $bg-color: transparent,
+      $icon-color: var(--d-button-transparent-icon-color),
+      $hover-text-color: var(--d-button-transparent-text-color--hover),
+      $hover-bg-color: transparent,
+      $hover-icon-color: currentcolor
+    );
     border: 0;
-    color: var(--d-button-transparent-text-color);
-
-    .d-icon {
-      color: var(--d-button-transparent-icon-color);
-    }
 
     &:focus-visible {
       background: transparent;
@@ -492,17 +494,6 @@
 
       .d-icon {
         color: currentcolor;
-      }
-    }
-
-    .discourse-no-touch & {
-      &:hover {
-        background: transparent;
-        color: var(--d-button-transparent-text-color--hover);
-
-        .d-icon {
-          color: currentcolor;
-        }
       }
     }
   }
