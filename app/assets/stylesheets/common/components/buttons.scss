@@ -68,22 +68,9 @@
   $hover-bg-color: var(--d-button-default-bg-color--hover),
   $hover-icon-color: var(--d-button-default-icon-color--hover)
 ) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-weight: normal;
   color: $text-color;
   background-color: $bg-color;
-  background-image: linear-gradient(
-    to bottom,
-    rgb(0, 0, 0, 0),
-    rgb(0, 0, 0, 0)
-  );
   transition: var(--d-button-transition);
-  cursor: pointer;
-
-  @include form-item-sizing;
   border: var(--d-button-border);
 
   &:visited {
@@ -206,9 +193,74 @@
   }
 }
 
-/* Default button */
+/* Generic btn */
 .btn {
   @include btn;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-weight: normal;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0, 0),
+    rgb(0, 0, 0, 0)
+  );
+  box-sizing: border-box;
+  padding: $vpad $hpad;
+  cursor: pointer;
+}
+
+/* link button */
+.btn-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--tertiary);
+
+  @include hover {
+    background-color: transparent;
+    color: var(--tertiary-hover);
+
+    .d-icon {
+      color: var(--tertiary-hover);
+
+      /* For Windows High Contrast (see whcm.scss for more) */
+      @media (forced-colors: active) {
+        color: Highlight;
+      }
+    }
+  }
+
+  &:focus-visible {
+    color: var(--tertiary);
+    background: transparent;
+
+    @include default-focus;
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--d-button-transparent-text-color);
+    cursor: not-allowed;
+
+    &:not(.is-loading) {
+      opacity: 0.4;
+    }
+
+    &:hover {
+      background: transparent;
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+}
+
+/* Default button */
+.btn-default {
+  border-radius: var(--d-button-border-radius);
 }
 
 /* Primary button */
@@ -361,28 +413,28 @@
 
 /* Bonus Buttons */
 .btn-flat {
-  background: var(--d-button-flat-bg-color);
-  transition: var(--d-button-transition);
-
-  .d-icon {
-    color: var(--d-button-flat-icon-color);
-    transition: var(--d-button-transition);
-  }
+  @include btn(
+    $text-color: var(--d-button-default-text-color),
+    $bg-color: var(--d-button-flat-bg-color),
+    $icon-color: var(--d-button-flat-icon-color),
+    $hover-text-color: var(--d-button-flat-text-color--hover),
+    $hover-bg-color: var(--d-button-flat-bg-color--hover),
+    $hover-icon-color: var(--d-button-flat-icon-color--hover)
+  );
 
   .discourse-no-touch & {
-    &:hover,
-    &:focus-visible {
-      color: var(--d-button-flat-text-color--hover);
+    // &:hover,
+    // &:focus-visible {
+    //   color: var(--d-button-flat-text-color--hover);
 
-      .d-icon {
-        color: var(--d-button-flat-icon-color--hover);
-      }
-    }
+    //   .d-icon {
+    //     color: var(--d-button-flat-icon-color--hover);
+    //   }
+    // }
 
-    &:hover {
-      background: var(--d-button-flat-bg-color--hover);
-    }
-
+    // &:hover {
+    //   background: var(--d-button-flat-bg-color--hover);
+    // }
     &:focus-visible {
       background: var(--d-button-flat-bg-color--focus);
     }
