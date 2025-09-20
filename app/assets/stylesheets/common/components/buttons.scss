@@ -176,12 +176,10 @@
   }
 
   &.is-loading {
-    &.btn-text {
       &.btn-small {
         .loading-icon {
           font-size: var(--font-down-1);
           margin-right: 0.2em;
-        }
       }
     }
 
@@ -467,36 +465,6 @@
     }
   }
 
-  &.btn-text {
-    color: var(--d-button-flat-text-color);
-
-    &[disabled] {
-      &,
-      .discourse-no-touch & {
-        &:hover,
-        &.btn-hover,
-        &:focus-visible {
-          color: var(--d-button-flat-text-color--disabled);
-        }
-      }
-
-      .discourse-no-touch & {
-        &:not([disabled]) {
-          &:hover,
-          &.btn-hover,
-          &:focus-visible {
-            color: var(--d-button-flat-text-color--hover);
-          }
-        }
-
-        &:active,
-        &.btn-active {
-          @include darken-background(transparent, 0.2);
-        }
-      }
-    }
-  }
-
   &:focus-visible {
     outline: none;
     background: var(--primary-low);
@@ -531,8 +499,7 @@
 
 .btn-transparent {
   &,
-  &.btn-default,
-  &.btn-text,
+  &.btn-default, // preferably NOT used in conjuction with btn-default
   &.btn-icon,
   &.no-text {
     background: transparent;

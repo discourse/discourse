@@ -32,8 +32,6 @@ export default class DButton extends Component {
   get btnType() {
     if (this.args.icon) {
       return this.computedLabel ? "btn-icon-text" : "btn-icon";
-    } else if (this.computedLabel) {
-      return "btn-text";
     }
   }
 
@@ -170,7 +168,7 @@ export default class DButton extends Component {
       class={{concatClass
         @class
         (if @isLoading "is-loading")
-        (if this.btnLink "btn-link" "btn")
+        (if @btnLink "btn-link" "btn")
         (if this.noText "no-text")
         this.btnType
       }}
