@@ -346,6 +346,11 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        translations_menu:
+          refresh:
+            label: "Refresh translations"
+            confirm: "Are you sure you would like to refresh translations? Doing so will re-translate all existing translations on this post."
+            success: "Translations are been successfully refreshed"
 
       spam:
         short_title: "Spam"
