@@ -1746,11 +1746,18 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     gap: var(--space-1);
 
     // avatar width + gap * max amount of users per row
-    max-width: calc((24px + var(--space-1)) * 9);
+    max-width: calc((var(--liked-users-list-avatar-size) + var(--space-1)) * 9);
     flex-wrap: wrap;
   }
 
+  &__item,
+  &__item .avatar {
+    width: var(--liked-users-list-avatar-size);
+    height: var(--liked-users-list-avatar-size);
+  }
+
   &__container {
+    --liked-users-list-avatar-size: 22px;
     padding: var(--space-2);
     display: flex;
     align-items: flex-start;
@@ -1759,15 +1766,14 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   &__count {
     display: flex;
-    align-items: center;
     gap: var(--space-2);
     color: var(--primary-medium);
     font-weight: 300;
   }
 
   &__count-icon {
-    height: 22px;
-    width: 22px;
+    height: var(--liked-users-list-avatar-size);
+    width: var(--liked-users-list-avatar-size);
     color: var(--love);
   }
 
@@ -1778,7 +1784,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   &__more-button {
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: var(--liked-users-list-avatar-size);
+    height: var(--liked-users-list-avatar-size);
   }
 }
