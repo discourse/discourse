@@ -6823,6 +6823,7 @@ en:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
+            is_disabled_title: "Restore is currently disabled. To enable it, search for 'allow restore' in site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
