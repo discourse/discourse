@@ -60,7 +60,7 @@ export default class PostSmallAction extends Component {
   get CustomComponent() {
     return applyValueTransformer("post-small-action-custom-component", null, {
       actionCode: this.code,
-      post: this.post,
+      post: this.args.post,
     });
   }
 
