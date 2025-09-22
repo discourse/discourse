@@ -641,6 +641,22 @@ class DeprecationFixer {
             }
           );
           
+          // Update controllerName = assignments
+          content = content.replace(
+            new RegExp(`controllerName\\s*=\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1`, 'g'),
+            (match, quote) => {
+              modified = true;
+              if (this.dryRun) {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Would update controllerName in ${file}: ${oldResolverName} -> ${newResolverName}`);
+              } else {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Updating controllerName in ${file}: ${oldResolverName} -> ${newResolverName}`);
+              }
+              return `controllerName = ${quote}${newResolverName}${quote}`;
+            }
+          );
+          
           if (modified && !this.dryRun) {
             await fs.writeFile(fullPath, content, 'utf-8');
           }
