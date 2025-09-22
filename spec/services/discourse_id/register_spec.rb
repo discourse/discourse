@@ -38,6 +38,51 @@ RSpec.describe DiscourseId::Register do
         SiteSetting.discourse_id_client_secret = client_secret
       end
 
+      context "when using discourse_login_api_key" do
+        let(:params) { { force: true, discourse_login_api_key: "test_api_key_123" } }
+
+        context "when registration succeeds" do
+          let(:response_data) do
+            { client_id: "new_client_id_123", client_secret: "new_client_secret_456" }
+          end
+
+          before do
+            stub_request(:post, "#{discourse_id_url}/register").with(
+              body: {
+                client_name: SiteSetting.title,
+                redirect_uri: "#{Discourse.base_url}/auth/discourse_id/callback",
+                logo_uri: SiteSetting.site_logo_url,
+                logo_small_uri: SiteSetting.site_logo_small_url,
+                description: SiteSetting.site_description,
+              }.to_json,
+              headers: {
+                "Content-Type" => "application/json",
+                "Discourse-Login-Api-Key" => "test_api_key_123",
+              },
+            ).to_return(status: 200, body: response_data.to_json)
+          end
+
+          it { is_expected.to run_successfully }
+
+          it "skips challenge request when API key is provided" do
+            result
+            expect(WebMock).not_to have_requested(:post, "#{discourse_id_url}/challenge")
+          end
+
+          it "does not store challenge token in Redis when API key is provided" do
+            result
+            expect(Discourse.redis.get("discourse_id_challenge_token")).to be_nil
+          end
+
+          it "stores credentials and enables Discourse ID" do
+            result
+            expect(SiteSetting.discourse_id_client_id).to eq("new_client_id_123")
+            expect(SiteSetting.discourse_id_client_secret).to eq("new_client_secret_456")
+            expect(SiteSetting.enable_discourse_id).to be(true)
+          end
+        end
+      end
+
       context "when challenge request fails" do
         before do
           stub_request(:post, "#{discourse_id_url}/challenge").to_raise(
@@ -101,7 +146,7 @@ RSpec.describe DiscourseId::Register do
             )
           end
 
-          it { is_expected.to fail_a_step(:register_with_challenge) }
+          it { is_expected.to fail_a_step(:register) }
         end
 
         context "when registration returns non-200 status" do
@@ -112,7 +157,7 @@ RSpec.describe DiscourseId::Register do
             )
           end
 
-          it { is_expected.to fail_a_step(:register_with_challenge) }
+          it { is_expected.to fail_a_step(:register) }
         end
 
         context "when registration response is invalid JSON" do
@@ -123,7 +168,7 @@ RSpec.describe DiscourseId::Register do
             )
           end
 
-          it { is_expected.to fail_a_step(:register_with_challenge) }
+          it { is_expected.to fail_a_step(:register) }
         end
 
         context "when registration succeeds" do
@@ -243,6 +288,25 @@ RSpec.describe DiscourseId::Register do
         expect(SiteSetting.discourse_id_client_id).to eq(client_id)
         expect(SiteSetting.discourse_id_client_secret).to eq(client_secret)
         expect(SiteSetting.enable_discourse_id).to be(true)
+      end
+
+      context "with discourse_login_api_key parameter" do
+        let(:params) { { discourse_login_api_key: "test_api_key_456" } }
+
+        before do
+          stub_request(:post, "#{discourse_id_url}/register").with(
+            headers: {
+              "Discourse-Login-Api-Key" => "test_api_key_456",
+            },
+          ).to_return(status: 200, body: { client_id:, client_secret: }.to_json)
+        end
+
+        it "bypasses challenge flow when API key is provided" do
+          result
+          expect(WebMock).not_to have_requested(:post, "#{discourse_id_url}/challenge")
+          expect(SiteSetting.discourse_id_client_id).to eq(client_id)
+          expect(SiteSetting.discourse_id_client_secret).to eq(client_secret)
+        end
       end
     end
 

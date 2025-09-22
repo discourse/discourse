@@ -33,12 +33,32 @@ RSpec.describe EnableDiscourseIdValidator do
       end
 
       describe "when value is true" do
-        it "should not be valid" do
-          expect(validator.valid_value?("t")).to eq(false)
+        context "when DiscourseId::Register service succeeds" do
+          before do
+            allow(DiscourseId::Register).to receive(:call).with(params: { force: true }).and_return(
+              instance_double("Service::Base::Context", success?: true),
+            )
+          end
 
-          expect(validator.error_message).to eq(
-            I18n.t("site_settings.errors.discourse_id_credentials"),
-          )
+          it "should be valid" do
+            expect(validator.valid_value?("t")).to eq(true)
+          end
+        end
+
+        context "when DiscourseId::Register service fails" do
+          before do
+            allow(DiscourseId::Register).to receive(:call).with(params: { force: true }).and_return(
+              instance_double("Service::Base::Context", success?: false),
+            )
+          end
+
+          it "should not be valid" do
+            expect(validator.valid_value?("t")).to eq(false)
+
+            expect(validator.error_message).to eq(
+              I18n.t("site_settings.errors.discourse_id_credentials"),
+            )
+          end
         end
       end
     end
@@ -53,12 +73,32 @@ RSpec.describe EnableDiscourseIdValidator do
       end
 
       describe "when value is true" do
-        it "should not be valid" do
-          expect(validator.valid_value?("t")).to eq(false)
+        context "when DiscourseId::Register service succeeds" do
+          before do
+            allow(DiscourseId::Register).to receive(:call).with(params: { force: true }).and_return(
+              instance_double("Service::Base::Context", success?: true),
+            )
+          end
 
-          expect(validator.error_message).to eq(
-            I18n.t("site_settings.errors.discourse_id_credentials"),
-          )
+          it "should be valid" do
+            expect(validator.valid_value?("t")).to eq(true)
+          end
+        end
+
+        context "when DiscourseId::Register service fails" do
+          before do
+            allow(DiscourseId::Register).to receive(:call).with(params: { force: true }).and_return(
+              instance_double("Service::Base::Context", success?: false),
+            )
+          end
+
+          it "should not be valid" do
+            expect(validator.valid_value?("t")).to eq(false)
+
+            expect(validator.error_message).to eq(
+              I18n.t("site_settings.errors.discourse_id_credentials"),
+            )
+          end
         end
       end
     end

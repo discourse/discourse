@@ -7,7 +7,7 @@ class EnableDiscourseIdValidator
 
   def valid_value?(val)
     return true if val == "f"
-    return false if credentials_missing?
+    return DiscourseId::Register.call(params: { force: true }).success? if credentials_missing?
     true
   end
 

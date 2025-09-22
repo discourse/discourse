@@ -597,7 +597,6 @@ login:
     default: true
   enable_discourse_id:
     default: false
-    hidden: true
     validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
