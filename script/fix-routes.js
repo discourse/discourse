@@ -28,6 +28,7 @@ class DeprecationFixer {
     // Collect all rewrites to perform in a single pass
     this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
     this.resolverRewrites = new Map(); // Map<filePath, Array<{pattern, replacement, description}>>
+    this.stubsToCreate = new Map(); // Map<filePath, content>
   }
 
   async run() {
@@ -190,6 +191,10 @@ class DeprecationFixer {
     // Process the deprecations
     await this.processDeprecations(deprecations);
 
+    for (const [resolverPath, { type, basePath }] of this.stubsToCreate) {
+      await this.createStubFile(type, resolverPath, basePath);
+    }
+
     // Apply all collected rewrites in a single pass
     await this.applyAllRewrites();
 
@@ -278,9 +283,7 @@ class DeprecationFixer {
         .then(() => true)
         .catch(() => false);
 
-      console.log(fullPath);
       if (fileExists) {
-        console.log("Base path for", oldFilePath, "is", searchPath);
         basePath = searchPath;
         break;
       }
@@ -321,7 +324,7 @@ class DeprecationFixer {
       !oldPath.includes("/")
     ) {
       const stubPath = newPath.replace("/index", "");
-      await this.createStubFile(type, stubPath, basePath);
+      this.stubsToCreate.set(stubPath, { type, basePath });
     }
 
     // Always try to rename related files regardless of the primary type
@@ -533,7 +536,7 @@ class DeprecationFixer {
 
     // Find and scan plugin directories
     const pluginDirs = await globSync(
-      `${__dirname}/../plugins/*/assets/javascripts`,
+      `${__dirname}/../plugins/*/assets/javascripts/discourse`,
       {
         nodir: false,
       }
