@@ -4163,6 +4163,7 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        add_additional: "Add new translation (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
