@@ -17,7 +17,7 @@ import Topic from "discourse/models/topic";
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
-const pluginProperties = new Set();
+const pluginSaveProperties = new Set();
 
 /**
  * @internal
@@ -27,8 +27,8 @@ const pluginProperties = new Set();
  *
  * @param {string} propertyKey - The key of the property to track.
  */
-export function _addCategoryPropertyForUpdate(propertyKey) {
-  pluginProperties.add(propertyKey);
+export function _addCategoryPropertyForSave(propertyKey) {
+  pluginSaveProperties.add(propertyKey);
 }
 
 export default class Category extends RestModel {
@@ -798,14 +798,14 @@ export default class Category extends RestModel {
         ...(this.siteSettings.content_localization_enabled && {
           category_localizations: this.localizations,
         }),
-        ...this._pluginPropertiesForUpdate(),
+        ...this._pluginSaveProperties(),
       }),
       type: id ? "PUT" : "POST",
     });
   }
 
-  _pluginPropertiesForUpdate() {
-    return Array.from(pluginProperties).reduce((obj, key) => {
+  _pluginSaveProperties() {
+    return Array.from(pluginSaveProperties).reduce((obj, key) => {
       obj[key] = this[key];
       return obj;
     }, {});

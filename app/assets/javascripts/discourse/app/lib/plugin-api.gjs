@@ -3,7 +3,6 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-import { _addCategoryPropertyForUpdate } from "discourse/models/category";
 export const PLUGIN_API_VERSION = "2.1.1";
 
 import $ from "jquery";
@@ -123,6 +122,7 @@ import {
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
+import { _addCategoryPropertyForSave } from "discourse/models/category";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -3407,14 +3407,14 @@ class PluginApi {
    * (all under the same save call), and are not using custom fields for that.
    *
    * ```
-   * api.registerCategoryUpdateProperty("property_one");
-   * api.registerCategoryUpdateProperty("property_two");
+   * api.registerCategorySaveProperty("property_one");
+   * api.registerCategorySaveProperty("property_two");
    * ```
    *
    * @param {string} property - The name of the property to include when saving a category.
    */
-  registerCategoryUpdateProperty(property) {
-    _addCategoryPropertyForUpdate(property);
+  registerCategorySaveProperty(property) {
+    _addCategoryPropertyForSave(property);
   }
 
   #deprecateModifyClass(className) {

@@ -497,11 +497,11 @@ module("Unit | Model | category", function (hooks) {
     assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
   });
 
-  test("registerCategoryUpdateProperty includes property in save request", async function (assert) {
+  test("registerCategorySaveProperty includes property in save request", async function (assert) {
     const done = assert.async();
 
     withPluginApi((api) => {
-      api.registerCategoryUpdateProperty("cats_and_dogs");
+      api.registerCategorySaveProperty("cats_and_dogs");
     });
 
     const category = Category.create({
