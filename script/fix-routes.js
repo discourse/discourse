@@ -370,7 +370,7 @@ class DeprecationFixer {
             !oldPath.includes("/")
           ) {
             const stubPath = newPath.replace("/index", "");
-            await this.createStubFile(relatedType, stubPath, basePath, true);
+            this.stubsToCreate.set(stubPath, { type: relatedType, basePath });
           }
         }
       }
