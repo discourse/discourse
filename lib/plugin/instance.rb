@@ -370,7 +370,7 @@ class Plugin::Instance
   # If the callback raises an exception, the entire category update will be rolled back.
   #
   # Example usage:
-  #   register_category_param_with_transaction_callback(:doc_index_topic_id) do |category, value|
+  #   register_category_update_param_with_callback(:doc_index_topic_id) do |category, value|
   #     DocCategories::CategoryIndexManager.new(category).assign!(value)
   #   end
   #
