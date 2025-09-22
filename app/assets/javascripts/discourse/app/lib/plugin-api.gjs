@@ -3,6 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
+import { _addCategoryPropertyForUpdate } from "discourse/models/category";
 export const PLUGIN_API_VERSION = "2.1.1";
 
 import $ from "jquery";
@@ -3396,6 +3397,24 @@ class PluginApi {
    */
   registerRichEditorExtension(extension) {
     registerRichEditorExtension(extension);
+  }
+
+  /**
+   * Registers a property that will be included when saving a category.
+   *
+   * This is useful for plugins that are adding additional parameters to the category
+   * and want to save the new property alongside the default category properties
+   * (all under the same save call), and are not using custom fields for that.
+   *
+   * ```
+   * api.registerCategoryUpdateProperty("property_one");
+   * api.registerCategoryUpdateProperty("property_two");
+   * ```
+   *
+   * @param {string} property - The name of the property to include when saving a category.
+   */
+  registerCategoryUpdateProperty(property) {
+    _addCategoryPropertyForUpdate(property);
   }
 
   #deprecateModifyClass(className) {
