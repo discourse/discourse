@@ -28,7 +28,7 @@ class DeprecationFixer {
     // Collect all rewrites to perform in a single pass
     this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
     this.resolverRewrites = new Map(); // Map<filePath, Array<{pattern, replacement, description}>>
-    this.stubsToCreate = new Map(); // Map<filePath, content>
+    this.stubsToCreate = new Set(); // Set<{stubPath, type, basePath}>
   }
 
   async run() {
@@ -101,7 +101,7 @@ class DeprecationFixer {
     // Navigate to Discourse development server
     // eslint-disable-next-line no-console
     console.log("🌐 Loading Discourse at localhost:4200...");
-    await page.goto("http://localhost:4200", {
+    await page.goto("http://localhost:4200/session/david/become", {
       waitUntil: "networkidle2",
       timeout: 30000,
     });
@@ -191,8 +191,8 @@ class DeprecationFixer {
     // Process the deprecations
     await this.processDeprecations(deprecations);
 
-    for (const [resolverPath, { type, basePath }] of this.stubsToCreate) {
-      await this.createStubFile(type, resolverPath, basePath);
+    for (const { stubPath, type, basePath } of this.stubsToCreate) {
+      await this.createStubFile(type, stubPath, basePath);
     }
 
     // Apply all collected rewrites in a single pass
@@ -253,6 +253,7 @@ class DeprecationFixer {
   }
 
   async handleFileRename({ type, oldPath, newPath }) {
+    let skipRelated = false;
     // Convert resolver names to file paths
     let oldFilePath = this.resolverNameToFilePath(type, oldPath);
     const newFilePath = this.resolverNameToFilePath(type, newPath);
@@ -263,16 +264,23 @@ class DeprecationFixer {
     }
 
     // Find the primary file across all possible locations
-    const searchPaths = [
-      this.discourseAppPath,
-      `${__dirname}/../app/assets/javascripts/admin/addon`,
+    const adminBasePath = `${__dirname}/../app/assets/javascripts/admin/addon`;
+    const searchPaths = [this.discourseAppPath];
+
+    if (type === "template" && newPath.startsWith("admin-")) {
+      searchPaths.unshift(adminBasePath);
+    } else {
+      searchPaths.push(adminBasePath);
+    }
+
+    searchPaths.push(
       ...(await globSync(
         `${__dirname}/../plugins/*/assets/javascripts/discourse`,
         {
           nodir: false,
         }
-      )),
-    ];
+      ))
+    );
 
     let basePath;
 
@@ -295,14 +303,33 @@ class DeprecationFixer {
         type,
         oldPath.replace(/^admin-/, "")
       );
-      const fullPath = path.join(basePath, oldFilePath);
+      const fullPath = path.join(adminBasePath, oldFilePath);
       const fileExists = await fs
         .access(fullPath)
         .then(() => true)
         .catch(() => false);
 
       if (fileExists) {
-        basePath = `${__dirname}/../app/assets/javascripts/admin/addon`;
+        basePath = adminBasePath;
+        skipRelated = true; // Skip related files for admin templates
+      }
+    }
+
+    if (!basePath && oldPath.startsWith("admin-") && type === "template") {
+      // Insane case: as above, but with underscores instead of dashes
+      oldFilePath = this.resolverNameToFilePath(
+        type,
+        oldPath.replace(/^admin-/, "").replaceAll("-", "_")
+      );
+      const fullPath = path.join(adminBasePath, oldFilePath);
+      const fileExists = await fs
+        .access(fullPath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (fileExists) {
+        basePath = adminBasePath;
+        skipRelated = true; // Skip related files for admin templates
       }
     }
 
@@ -324,53 +351,56 @@ class DeprecationFixer {
       !oldPath.includes("/")
     ) {
       const stubPath = newPath.replace("/index", "");
-      this.stubsToCreate.set(stubPath, { type, basePath });
+      this.stubsToCreate.add({ stubPath, type, basePath });
     }
 
-    // Always try to rename related files regardless of the primary type
-    const allTypes = ["controller", "route", "template"];
-    const relatedTypes = allTypes.filter((relatedType) => relatedType !== type);
-
-    for (const relatedType of relatedTypes) {
-      const relatedOldFilePath = this.resolverNameToFilePath(
-        relatedType,
-        oldPath
-      );
-      const relatedNewFilePath = this.resolverNameToFilePath(
-        relatedType,
-        newPath
+    if (!skipRelated) {
+      const allTypes = ["controller", "route", "template"];
+      const relatedTypes = allTypes.filter(
+        (relatedType) => relatedType !== type
       );
 
-      if (relatedOldFilePath && relatedNewFilePath) {
-        const relatedFullOldPath = path.join(basePath, relatedOldFilePath);
-        const relatedFileExists = await fs
-          .access(relatedFullOldPath)
-          .then(() => true)
-          .catch(() => false);
+      for (const relatedType of relatedTypes) {
+        const relatedOldFilePath = this.resolverNameToFilePath(
+          relatedType,
+          oldPath
+        );
+        const relatedNewFilePath = this.resolverNameToFilePath(
+          relatedType,
+          newPath
+        );
 
-        if (relatedFileExists) {
-          await this.renameFile(
-            relatedOldFilePath,
-            relatedNewFilePath,
-            basePath,
-            true
-          );
+        if (relatedOldFilePath && relatedNewFilePath) {
+          const relatedFullOldPath = path.join(basePath, relatedOldFilePath);
+          const relatedFileExists = await fs
+            .access(relatedFullOldPath)
+            .then(() => true)
+            .catch(() => false);
 
-          // Update imports for related files too
-          await this.updateImportsAfterRename(
-            relatedOldFilePath,
-            relatedNewFilePath,
-            basePath
-          );
+          if (relatedFileExists) {
+            await this.renameFile(
+              relatedOldFilePath,
+              relatedNewFilePath,
+              basePath,
+              true
+            );
 
-          // Create stub file for related files too if moving to nested structure
-          if (
-            newPath.includes("/") &&
-            newPath.endsWith("index") &&
-            !oldPath.includes("/")
-          ) {
-            const stubPath = newPath.replace("/index", "");
-            this.stubsToCreate.set(stubPath, { type: relatedType, basePath });
+            // Update imports for related files too
+            await this.updateImportsAfterRename(
+              relatedOldFilePath,
+              relatedNewFilePath,
+              basePath
+            );
+
+            // Create stub file for related files too if moving to nested structure
+            if (
+              newPath.includes("/") &&
+              newPath.endsWith("index") &&
+              !oldPath.includes("/")
+            ) {
+              const stubPath = newPath.replace("/index", "");
+              this.stubsToCreate.add({ stubPath, type: relatedType, basePath });
+            }
           }
         }
       }
@@ -464,7 +494,7 @@ class DeprecationFixer {
     // e.g., controllers/user-activity/bookmarks.js -> user-activity/bookmarks
     // Remove the type prefix (controllers/, routes/, templates/) and file extension
     const parts = filePath.split("/");
-    const pathWithoutType = parts.slice(1).join("/"); // Remove first part (controllers/routes/templates)
+    const pathWithoutType = parts.slice(1).join("."); // Remove first part (controllers/routes/templates)
     return pathWithoutType.replace(/\.(js|gjs)$/, "");
   }
 
@@ -883,11 +913,26 @@ class DeprecationFixer {
     const newResolverName = this.filePathToResolverName(newFilePath);
 
     // Store patterns for later application during the single file pass
+    // Convert dash-separated names to camelCase for controllerFor patterns
+    const camelCaseOldName = oldResolverName.replace(
+      /-([a-z])/g,
+      (match, letter) => letter.toUpperCase()
+    );
+    const camelCaseNewName = newResolverName.replace(
+      /-([a-z])/g,
+      (match, letter) => letter.toUpperCase()
+    );
+
     const patterns = [
       {
         pattern: `controllerFor\\s*\\(\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
         replacement: `controllerFor($1${newResolverName}$1)`,
         description: `controllerFor: ${oldResolverName} -> ${newResolverName}`,
+      },
+      {
+        pattern: `controllerFor\\s*\\(\\s*(['"])${camelCaseOldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
+        replacement: `controllerFor($1${camelCaseNewName}$1)`,
+        description: `controllerFor (camelCase): ${camelCaseOldName} -> ${camelCaseNewName}`,
       },
       {
         pattern: `lookup\\s*\\(\\s*(['"])controller:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
