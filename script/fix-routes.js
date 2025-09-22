@@ -2,7 +2,7 @@
 
 const fs = require("fs").promises;
 const path = require("path");
-const { glob } = require("fs");
+const { globSync } = require("fs");
 
 /**
  * Codemod to fix deprecated-resolver-normalization warnings by automatically
@@ -60,161 +60,141 @@ class DeprecationFixer {
     }
 
     let browser;
-    try {
-      // Find Chrome executable
-      const chromePath = chromeLauncher.Launcher.getInstallations()[0];
-      if (!chromePath) {
-        throw new Error("Chrome not found");
-      }
 
-      // Launch Puppeteer with Chrome executable path
-      browser = await puppeteer.launch({
-        executablePath: chromePath,
-        headless: false, // Show browser for debugging
-        devtools: false,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
-
-      const page = await browser.newPage();
-
-      // Set up error handling for page
-      page.on("pageerror", (error) => {
-        // eslint-disable-next-line no-console
-        console.log(`   ⚠️  Page error: ${error.message}`);
-      });
-
-      // Capture console messages
-      const deprecations = [];
-      page.on("console", (msg) => {
-        const text = msg.text();
-        if (
-          text.includes("deprecated-resolver-normalization") &&
-          text.includes("is no longer permitted")
-        ) {
-          deprecations.push(text);
-          // eslint-disable-next-line no-console
-          console.log("📍 Found deprecation:", text);
-        }
-      });
-
-      // Navigate to Discourse development server
-      // eslint-disable-next-line no-console
-      console.log("🌐 Loading Discourse at localhost:4200...");
-      await page.goto("http://localhost:4200", {
-        waitUntil: "networkidle2",
-        timeout: 30000,
-      });
-
-      // Wait a bit for all modules to load and deprecations to appear
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Trigger more deprecations by systematically looking up all routes/controllers/templates
-      // eslint-disable-next-line no-console
-      console.log(
-        "🔍 Triggering additional deprecations by looking up all registered routes..."
-      );
-
-      try {
-        /* eslint-disable */
-        // Look up all templates
-        await page.evaluate(() => {
-          Object.keys(
-            Discourse.lookup("service:router")._router._routerMicrolib
-              .recognizer.names
-          ).forEach((r) => {
-            try {
-              Discourse.lookup(`template:${r}`);
-            } catch {
-              // Ignore lookup errors, we just want the deprecation messages
-            }
-          });
-        });
-
-        // Look up all controllers
-        await page.evaluate(() => {
-          Object.keys(
-            Discourse.lookup("service:router")._router._routerMicrolib
-              .recognizer.names
-          ).forEach((r) => {
-            try {
-              Discourse.lookup(`controller:${r}`);
-            } catch {
-              // Ignore lookup errors, we just want the deprecation messages
-            }
-          });
-        });
-
-        // Look up all routes
-        await page.evaluate(() => {
-          Object.keys(
-            Discourse.lookup("service:router")._router._routerMicrolib
-              .recognizer.names
-          ).forEach((r) => {
-            try {
-              Discourse.lookup(`route:${r}`);
-            } catch {
-              // Ignore lookup errors, we just want the deprecation messages
-            }
-          });
-        });
-        /* eslint-enable */
-
-        // Wait a moment for any additional deprecations to be logged
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(
-          `   ⚠️  Could not trigger additional lookups: ${error.message}`
-        );
-      }
-
-      await browser.close();
-
-      // eslint-disable-next-line no-console
-      console.log(
-        `\n📊 Found ${deprecations.length} unique deprecation messages`
-      );
-
-      if (deprecations.length === 0) {
-        // eslint-disable-next-line no-console
-        console.log(
-          "✅ No deprecations found! Either they're all fixed or the server isn't running."
-        );
-        // eslint-disable-next-line no-console
-        console.log(
-          "   Make sure Discourse is running at localhost:4200 before running this script."
-        );
-        return;
-      }
-
-      // Process the deprecations
-      await this.processDeprecations(deprecations);
-
-      // Apply all collected rewrites in a single pass
-      await this.applyAllRewrites();
-
-      // Report results
-      this.reportResults();
-    } catch (error) {
-      if (browser) {
-        await browser.close();
-      }
-
-      if (error.message.includes("ERR_CONNECTION_REFUSED")) {
-        // eslint-disable-next-line no-console
-        console.error(
-          "❌ Could not connect to localhost:4200. Make sure Discourse dev server is running."
-        );
-        // eslint-disable-next-line no-console
-        console.error(
-          "   Run: bin/ember-cli -u (or use the shortcuts/boot-dev task)"
-        );
-      } else {
-        // eslint-disable-next-line no-console
-        console.error("❌ Error:", error.message);
-      }
-      process.exit(1);
+    // Find Chrome executable
+    const chromePath = chromeLauncher.Launcher.getInstallations()[0];
+    if (!chromePath) {
+      throw new Error("Chrome not found");
     }
+
+    // Launch Puppeteer with Chrome executable path
+    browser = await puppeteer.launch({
+      executablePath: chromePath,
+      headless: false, // Show browser for debugging
+      devtools: false,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
+
+    // Set up error handling for page
+    page.on("pageerror", (error) => {
+      // eslint-disable-next-line no-console
+      console.log(`   ⚠️  Page error: ${error.message}`);
+    });
+
+    // Capture console messages
+    const deprecations = [];
+    page.on("console", (msg) => {
+      const text = msg.text();
+      if (
+        text.includes("deprecated-resolver-normalization") &&
+        text.includes("is no longer permitted")
+      ) {
+        deprecations.push(text);
+        // eslint-disable-next-line no-console
+        console.log("📍 Found deprecation:", text);
+      }
+    });
+
+    // Navigate to Discourse development server
+    // eslint-disable-next-line no-console
+    console.log("🌐 Loading Discourse at localhost:4200...");
+    await page.goto("http://localhost:4200", {
+      waitUntil: "networkidle2",
+      timeout: 30000,
+    });
+
+    // Wait a bit for all modules to load and deprecations to appear
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // Trigger more deprecations by systematically looking up all routes/controllers/templates
+    // eslint-disable-next-line no-console
+    console.log(
+      "🔍 Triggering additional deprecations by looking up all registered routes..."
+    );
+
+    try {
+      /* eslint-disable */
+      // Look up all templates
+      await page.evaluate(() => {
+        Object.keys(
+          Discourse.lookup("service:router")._router._routerMicrolib.recognizer
+            .names
+        ).forEach((r) => {
+          try {
+            Discourse.lookup(`template:${r}`);
+          } catch {
+            // Ignore lookup errors, we just want the deprecation messages
+          }
+        });
+      });
+
+      // Look up all controllers
+      await page.evaluate(() => {
+        Object.keys(
+          Discourse.lookup("service:router")._router._routerMicrolib.recognizer
+            .names
+        ).forEach((r) => {
+          try {
+            Discourse.lookup(`controller:${r}`);
+          } catch {
+            // Ignore lookup errors, we just want the deprecation messages
+          }
+        });
+      });
+
+      // Look up all routes
+      await page.evaluate(() => {
+        Object.keys(
+          Discourse.lookup("service:router")._router._routerMicrolib.recognizer
+            .names
+        ).forEach((r) => {
+          try {
+            Discourse.lookup(`route:${r}`);
+          } catch {
+            // Ignore lookup errors, we just want the deprecation messages
+          }
+        });
+      });
+      /* eslint-enable */
+
+      // Wait a moment for any additional deprecations to be logged
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `   ⚠️  Could not trigger additional lookups: ${error.message}`
+      );
+    }
+
+    await browser.close();
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `\n📊 Found ${deprecations.length} unique deprecation messages`
+    );
+
+    if (deprecations.length === 0) {
+      // eslint-disable-next-line no-console
+      console.log(
+        "✅ No deprecations found! Either they're all fixed or the server isn't running."
+      );
+      // eslint-disable-next-line no-console
+      console.log(
+        "   Make sure Discourse is running at localhost:4200 before running this script."
+      );
+      return;
+    }
+
+    // Process the deprecations
+    await this.processDeprecations(deprecations);
+
+    // Apply all collected rewrites in a single pass
+    await this.applyAllRewrites();
+
+    // Report results
+    this.reportResults();
   }
 
   async processDeprecations(deprecations) {
@@ -530,27 +510,16 @@ class DeprecationFixer {
 
     // Helper function to scan a directory for JS files
     const scanDirectory = async (baseDir, pattern = "**/*.{js,gjs}") => {
-      try {
-        await fs.access(baseDir);
-        const matches = await glob(pattern, {
-          cwd: baseDir,
-          ignore: [
-            "**/node_modules/**",
-            "**/dist/**",
-            "**/tmp/**",
-            "**/.git/**",
-          ],
-          nodir: true,
-        });
+      await fs.access(baseDir);
+      const matches = await globSync(pattern, {
+        cwd: baseDir,
+        nodir: true,
+      });
 
-        return matches.map((match) => ({
-          fullPath: path.resolve(baseDir, match),
-          relativePath: match.replace(/\\/g, "/"),
-          baseDir,
-        }));
-      } catch {
-        return []; // Directory doesn't exist or has errors
-      }
+      return matches.map((match) => ({
+        fullPath: path.resolve(baseDir, match),
+        relativePath: match.replace(/\\/g, "/"),
+      }));
     };
 
     // Scan main discourse app directory
@@ -558,48 +527,28 @@ class DeprecationFixer {
     jsFiles.push(...discourseFiles);
 
     // Scan admin addon directory
-    const adminAddonDir = path.join(
-      __dirname,
-      "..",
-      "app",
-      "assets",
-      "javascripts",
-      "admin",
-      "addon"
+    const adminFiles = await scanDirectory(
+      `${__dirname}/../app/assets/javascripts/admin/addon`
     );
-    const adminFiles = await scanDirectory(adminAddonDir);
     jsFiles.push(...adminFiles);
 
     // Scan discourse tests directory
-    const testsDir = path.join(
-      __dirname,
-      "..",
-      "app",
-      "assets",
-      "javascripts",
-      "discourse",
-      "tests"
+    const testFiles = await scanDirectory(
+      `${__dirname}/../app/assets/javascripts/discourse/tests`
     );
-    const testFiles = await scanDirectory(testsDir);
     jsFiles.push(...testFiles);
 
     // Find and scan plugin directories
-    const pluginsDir = path.join(__dirname, "..", "plugins");
-
-    await fs.access(pluginsDir);
-    const pluginEntries = await fs.readdir(pluginsDir, { withFileTypes: true });
-
-    for (const entry of pluginEntries) {
-      if (entry.isDirectory()) {
-        const pluginJSDir = path.join(
-          pluginsDir,
-          entry.name,
-          "assets",
-          "javascripts"
-        );
-        const pluginFiles = await scanDirectory(pluginJSDir);
-        jsFiles.push(...pluginFiles);
+    const pluginDirs = await globSync(
+      `${__dirname}/../plugins/*/assets/javascripts`,
+      {
+        nodir: false,
       }
+    );
+
+    for (const entry of pluginDirs) {
+      const pluginFiles = await scanDirectory(entry);
+      jsFiles.push(...pluginFiles);
     }
 
     return jsFiles;
