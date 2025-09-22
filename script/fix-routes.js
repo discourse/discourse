@@ -488,6 +488,11 @@ class DeprecationFixer {
       const oldModuleName = this.filePathToModuleName(oldFilePath);
       const newModuleName = this.filePathToModuleName(newFilePath);
       
+      if (this.dryRun) {
+        // eslint-disable-next-line no-console
+        console.log(`   🔍 Scanning ${appFiles.length} files for imports of ${oldModuleName}`);
+      }
+      
       for (const file of appFiles) {
         if (file === oldFilePath || file === newFilePath) {
           continue;
@@ -570,6 +575,7 @@ class DeprecationFixer {
 
   async findJSFiles() {
     const jsFiles = [];
+    const discourseAppPath = this.discourseAppPath; // Capture this in closure
     
     async function scanDir(dir) {
       try {
@@ -581,7 +587,7 @@ class DeprecationFixer {
           if (entry.isDirectory()) {
             await scanDir(fullPath);
           } else if (entry.name.endsWith('.js') || entry.name.endsWith('.gjs')) {
-            const relativePath = path.relative(this.discourseAppPath, fullPath);
+            const relativePath = path.relative(discourseAppPath, fullPath);
             jsFiles.push(relativePath.replace(/\\/g, '/'));
           }
         }
@@ -590,7 +596,7 @@ class DeprecationFixer {
       }
     }
     
-    await scanDir.call(this, this.discourseAppPath);
+    await scanDir(this.discourseAppPath);
     return jsFiles;
   }
 
