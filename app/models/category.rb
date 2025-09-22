@@ -1306,8 +1306,20 @@ class Category < ActiveRecord::Base
     category_default_timer.based_on_last_post
   end
 
+  # TODO: Remove these methods when we migrate auto_close_hours and auto_close_based_on_last_post to category_default_timer
   def auto_close_hours
     category_default_timer&.duration_minutes&.minutes&.in_hours
+  end
+
+  def auto_close_hours=(hours)
+    set_or_create_default_timer duration_minutes: hours.hours.in_minutes,
+                                executed_at: Time.now,
+                                status_type: BaseTimer.types[:close],
+                                user: Discourse.system_user
+  end
+
+  def auto_close_based_on_last_post=(based_on_last_post)
+    category_default_timer.update!(based_on_last_post:)
   end
 
   private
