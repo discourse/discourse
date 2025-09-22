@@ -14,7 +14,13 @@ RSpec.describe Chat::CreateThread do
     fab!(:another_user, :user)
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
-    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, another_user]) }
+    fab!(:dm_channel) do
+      Fabricate(
+        :direct_message_channel,
+        users: [current_user, another_user],
+        threading_enabled: true,
+      )
+    end
     fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel) }
 
     let(:guardian) { Guardian.new(current_user) }

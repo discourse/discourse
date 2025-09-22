@@ -56,7 +56,9 @@ sq:
         select_option: "Zgjidhni një opsion..."
       translations:
         progress_chart:
-          bar_done: "%{done} postime"
+          bar_done:
+            one: "%{count} postim"
+            other: "%{count} postime"
       spam:
         short_title: "Spam"
         enable: "Aktivizo"

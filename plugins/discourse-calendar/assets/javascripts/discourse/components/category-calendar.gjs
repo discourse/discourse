@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AsyncContent from "discourse/components/async-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -18,15 +17,18 @@ export default class CategoryCalendar extends Component {
   @service discoursePostEventApi;
 
   @bind
-  async loadEvents() {
+  async loadEvents(info) {
     try {
       const params = {
+        after: info.startStr,
+        before: info.endStr,
         post_id: this.categorySetting?.postId,
         category_id: this.category.id,
         include_subcategories: true,
       };
 
-      return await this.discoursePostEventApi.events(params);
+      const events = await this.discoursePostEventApi.events(params);
+      return this.formattedEvents(events);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -103,7 +105,7 @@ export default class CategoryCalendar extends Component {
   }
 
   @action
-  formatedEvents(events = []) {
+  formattedEvents(events = []) {
     return events.map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
@@ -120,44 +122,33 @@ export default class CategoryCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorFromMap = this.tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post.category_slug
         )?.color;
         backgroundColor =
           categoryColorFromMap || `#${Category.findById(categoryId)?.color}`;
       }
 
-      let classNames;
-      if (moment(endsAt || startsAt).isBefore(moment())) {
-        classNames = "fc-past-event";
-      }
-
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        display: "list-item",
         rrule: event.rrule,
         end: endsAt || startsAt,
         duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
-        classNames,
       };
     });
   }
 
   <template>
     {{#if this.shouldRender}}
-      <AsyncContent @asyncData={{this.loadEvents}}>
-        <:content as |events|>
-          <FullCalendar
-            @events={{this.formatedEvents events}}
-            @height="650px"
-            @initialView={{this.categorySetting?.defaultView}}
-            @weekends={{this.renderWeekends}}
-          />
-        </:content>
-      </AsyncContent>
+      <FullCalendar
+        @onLoadEvents={{this.loadEvents}}
+        @height="650px"
+        @initialView={{this.categorySetting?.defaultView}}
+        @weekends={{this.renderWeekends}}
+      />
     {{/if}}
   </template>
 }

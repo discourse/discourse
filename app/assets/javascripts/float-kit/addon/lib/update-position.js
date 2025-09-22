@@ -194,22 +194,21 @@ function buildShiftMiddleware(options, detectOverflowOptions) {
 }
 
 function buildMatchSizeMiddleware(options) {
-  if (options.matchTriggerWidth) {
+  if (options.matchTriggerWidth || options.matchTriggerMinWidth) {
     return size({
       apply({ rects, elements }) {
-        Object.assign(elements.floating.style, {
-          width: `${rects.reference.width}px`,
-        });
-      },
-    });
-  }
+        const styleProps = {};
+        const widthValue = `${rects.reference.width}px`;
 
-  if (options.matchTriggerMinWidth) {
-    return size({
-      apply({ rects, elements }) {
-        Object.assign(elements.floating.style, {
-          minWidth: `${rects.reference.width}px`,
-        });
+        if (options.matchTriggerWidth) {
+          styleProps.width = widthValue;
+        }
+
+        if (options.matchTriggerMinWidth) {
+          styleProps.minWidth = widthValue;
+        }
+
+        Object.assign(elements.floating.style, styleProps);
       },
     });
   }

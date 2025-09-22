@@ -7,9 +7,9 @@
 ur:
   site_settings:
     chat_integration_enabled: 'ڈسکورس-چَیٹ-اِنٹیگرَیشَن پلگ اِن کو فعال کریں'
-    chat_integration_discourse_username: 'صارف کا صارف نام جس کی بنیاد پر مواد لایا جائے۔'
+    chat_integration_discourse_username: 'صارف کا اسمِ صارف جس کی بنیاد پر مواد لایا جائے۔'
     chat_integration_delay_seconds: 'پوسٹ کی تخلیق کے بعد چَیٹ اطلاعات بھیجنے سے پہلے کتنے سیکنڈ کا انتظار کیا جائے'
-    chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا صارف نام"
+    chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا اسمِ صارف"
     chat_integration_slack_enabled: 'سلَّیک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں'
     chat_integration_slack_access_token: 'سلَّیک کے ساتھ توثیق کیلئے OAuth ایکسَیس ٹوکن'
     chat_integration_slack_incoming_webhook_token: 'آنے والی درخواستوں کی توثیق کرنے کیلئے استعمال ہونے والا توثیقی ٹوکن'

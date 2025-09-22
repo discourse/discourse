@@ -57,7 +57,9 @@ nb_NO:
       translations:
         title: "Oversettelser"
         progress_chart:
-          bar_done: "%{done} innlegg"
+          bar_done:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"

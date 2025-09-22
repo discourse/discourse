@@ -13,7 +13,7 @@ pl_PL:
   js:
     poll:
       dynamic:
-        enabled_hint: "Ankieta jest dynamiczna. Opcje można edytować po opublikowaniu."
+        enabled_hint: "Można dodawać i usuwać opcje."
       voters:
         one: "głosujący"
         few: "głosujących"
@@ -167,7 +167,7 @@ pl_PL:
         poll_public:
           label: Pokaż kto głosował
         poll_dynamic:
-          label: Zezwól na edycję opcji po opublikowaniu (dynamiczna ankieta)
+          label: Zezwól na dodawanie lub usuwanie opcji po opublikowaniu
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:

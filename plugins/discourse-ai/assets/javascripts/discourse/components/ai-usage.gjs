@@ -331,6 +331,16 @@ export default class AiUsage extends Component {
     this.startDate = this._startDate;
     this.endDate = this._endDate;
     this.fetchData();
+    this._startDate = null;
+    this._endDate = null;
+  }
+
+  get fromDate() {
+    return this._startDate || this.startDate;
+  }
+
+  get toDate() {
+    return this._endDate || this.endDate;
   }
 
   totalSpending(inputSpending, cachedSpending, outputSpending) {
@@ -370,8 +380,8 @@ export default class AiUsage extends Component {
             <div class="ai-usage__custom-date-pickers">
 
               <DateTimeInputRange
-                @from={{this.startDate}}
-                @to={{this.endDate}}
+                @from={{this.fromDate}}
+                @to={{this.toDate}}
                 @onChange={{this.onChangeDateRange}}
                 @showFromTime={{false}}
                 @showToTime={{false}}

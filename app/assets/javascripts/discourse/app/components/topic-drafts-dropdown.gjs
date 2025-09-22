@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -105,7 +106,7 @@ export default class TopicDraftsDropdown extends Component {
       @onRegisterApi={{this.onRegisterApi}}
       @modalForMobile={{true}}
       @disabled={{@disabled}}
-      class="btn-small btn-default"
+      class={{concatClass "btn-small" @btnTypeClass}}
     >
       <:content>
         <DropdownMenu as |dropdown|>

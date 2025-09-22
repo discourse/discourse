@@ -3229,7 +3229,6 @@ sr:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"

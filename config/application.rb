@@ -40,7 +40,6 @@ require "rails_failover/active_record" if !GlobalSetting.skip_db?
 require "rails_failover/redis" if !GlobalSetting.skip_redis?
 
 require "pry-rails" if Rails.env.development?
-require "pry-byebug" if Rails.env.development?
 
 require "discourse_fonts"
 

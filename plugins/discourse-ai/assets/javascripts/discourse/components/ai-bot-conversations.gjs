@@ -9,17 +9,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import userAutocomplete from "discourse/lib/autocomplete/user";
-import {
-  hashtagAutocompleteOptions,
-  setupHashtagAutocomplete,
-} from "discourse/lib/hashtag-autocomplete";
+import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
@@ -192,37 +188,6 @@ export default class AiBotConversations extends Component {
       return;
     }
 
-    if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
-      $(textarea).autocomplete({
-        template: userAutocomplete,
-        dataSource: (term) => {
-          destroyUserStatuses();
-          return userSearch({
-            term,
-            includeGroups: true,
-          }).then((result) => {
-            initUserStatusHtml(getOwner(this), result.users);
-            return result;
-          });
-        },
-        onRender: (options) => renderUserStatusHtml(options),
-        key: "@",
-        width: "100%",
-        treatAsTextarea: true,
-        autoSelectFirstSuggestion: true,
-        transformComplete: (obj) => {
-          validateSearchResult(obj);
-          return obj.username || obj.name;
-        },
-        afterComplete: (text) => {
-          this.textarea.value = text;
-          this.focusTextarea();
-          this.updateInputValue({ target: { value: text } });
-        },
-        onClose: destroyUserStatuses,
-      });
-    }
-
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
     DAutocompleteModifier.setupAutocomplete(
       getOwner(this),
@@ -265,16 +230,6 @@ export default class AiBotConversations extends Component {
     // You can change this to "chat-composer" if that's more appropriate
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
-    if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
-      setupHashtagAutocomplete(hashtagConfig, $(textarea), {
-        treatAsTextarea: true,
-        afterComplete: (text) => {
-          this.textarea.value = text;
-          this.focusTextarea();
-          this.updateInputValue({ target: { value: text } });
-        },
-      });
-    }
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
     DAutocompleteModifier.setupAutocomplete(
       getOwner(this),

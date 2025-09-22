@@ -683,7 +683,11 @@ describe DiscoursePostEvent::Event do
 
       it "basic serializer handles expired recurring events correctly" do
         serializer =
-          DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
+          DiscoursePostEvent::BasicEventSerializer.new(
+            expired_recurring_event,
+            root: false,
+            scope: Guardian.new,
+          )
         json = JSON.parse(serializer.to_json)
 
         expect(json["starts_at"]).to be_nil
@@ -729,5 +733,24 @@ describe DiscoursePostEvent::Event do
         expect(non_recurring_event.ends_at).not_to be_nil
       end
     end
+  end
+end
+
+describe DiscoursePostEvent::Event, "#capacity" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  it "detects capacity when max_attendees set" do
+    creator = Fabricate(:user)
+    topic = Fabricate(:topic, user: creator)
+    post = Fabricate(:post, user: creator, topic: topic)
+    event = Fabricate(:event, post: post, max_attendees: 1)
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+    )
+    expect(event.at_capacity?).to eq(true)
   end
 end

@@ -181,7 +181,9 @@ hu:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
+      no_direct_message_channels: "Még nem csatlakozott közvetlen üzenetekhez!"
       no_direct_message_channels_cta: "Beszélgetés kezdése"
+      no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
@@ -247,6 +249,7 @@ hu:
         one: "%{count} fájl"
         other: "%{count} fájl"
       you_flagged: "Megjelölte ezt az üzenetet"
+      exit: "kilépés a csevegésből"
       channel_status:
         read_only_header: "A csatorna írásvédett"
         read_only: "Írásvédett"

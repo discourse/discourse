@@ -6,12 +6,11 @@ module DiscourseSolved::TopicExtension
   prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
 
   def accepted_answer_post_info
-    return nil unless solved
+    return unless solved
+    return unless answer_post = solved.answer_post
 
-    answer_post = solved.answer_post
-
-    answer_post_user = answer_post.user
-    accepter = solved.accepter
+    answer_post_user = answer_post.user || Discourse.system_user
+    accepter = solved.accepter || self.user || Discourse.system_user
 
     excerpt =
       if SiteSetting.solved_quote_length > 0

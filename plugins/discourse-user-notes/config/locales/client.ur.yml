@@ -9,9 +9,9 @@ ur:
     user_notes:
       title: "صارف نوٹس"
       attach: "صارف نوٹ شامل کریں"
-      attach_note_description: "اس صارف کے بارے میں ایک نوٹ شامل کریں۔ یہ نوٹ صرف عملے کو نظر آئے گا۔"
+      attach_note_description: "اس رکن کے بارے میں ایک نوٹ شامل کریں۔ یہ نوٹ صرف عملے کو نظر آئے گا۔"
       remove: "صارف نوٹ ہٹائیں"
-      show: "صارف کے نوٹس (%{count})"
+      show: "رکن کے نوٹس (%{count})"
       delete_confirm: "کیا آپ واقعی وہ صارف نوٹ حذف کرنا چاہتے ہیں؟"
       show_post: "پوسٹ دکھائیں"
-      copy_reviewable_note: "صارف کے پروفائل میں نوٹ کاپی کریں؟"
+      copy_reviewable_note: "رکن کے پروفائل میں نوٹ کاپی کریں؟"

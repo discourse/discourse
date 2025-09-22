@@ -60,7 +60,11 @@ sl:
         table: "Tabela"
       translations:
         progress_chart:
-          bar_done: "%{done} prispevkov"
+          bar_done:
+            one: "%{count} prispevek"
+            two: "%{count} prispevka"
+            few: "%{count} prispevki"
+            other: "%{count} prispevkov"
       spam:
         short_title: "Neželeno"
         last_seven_days: "Zadnjih 7 dni"

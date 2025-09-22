@@ -69,7 +69,9 @@ ug:
       translations:
         title: "تەرجىمە"
         progress_chart:
-          bar_done: "%{done} يازما"
+          bar_done:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"

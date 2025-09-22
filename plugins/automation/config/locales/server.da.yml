@@ -8,11 +8,17 @@ da:
   site_settings:
     discourse_automation_enabled: "Aktiver discourse-automation plugin"
   discourse_automation:
+    models:
+      automations:
+        validations:
+          trigger_blank: "Udløser kan ikke være tom"
     triggerables:
       api_call:
         title: API-kald
       category_created_edited:
         title: Kategori oprettet/redigeret
+      recurring:
+        title: Tilbagevendende
       user_added_to_group:
         title: Bruger tilføjet til gruppe
       user_removed_from_group:

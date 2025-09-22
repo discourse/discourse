@@ -1900,7 +1900,7 @@ en:
 
       add_email:
         title: "Add Email"
-        add: "add"
+        add: "Add"
 
       change_email:
         title: "Change Email"
@@ -2817,6 +2817,8 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      read_only: "read-only"
+      read_only_description: "This category is read-only so you cannot choose it for this topic"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
@@ -3445,6 +3447,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
@@ -3590,8 +3593,6 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
-      create_disabled_category: "You're not allowed to create topics in this category"
-      create_disabled_tag: "You're not allowed to create topics with this tag"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -5034,7 +5035,7 @@ en:
       choose_for_topic_required_group:
         one: "select %{count} tag from '%{name}'…"
         other: "select %{count} tags from '%{name}'…"
-      info: "Info"
+      info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -5065,6 +5066,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
+      edit: "Edit this tag"
       description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
@@ -6658,7 +6660,7 @@ en:
             description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users.'
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -7106,6 +7108,8 @@ en:
         schema:
           title: "Edit %{name} setting"
           back_button: "Back to %{name}"
+          move_up: "Move up"
+          move_down: "Move down"
           fields:
             required: "*required"
             groups:
@@ -7926,7 +7930,7 @@ en:
 
         merging_user: "Merging user…"
         merge_failed: "There was an error while merging the users."
-        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        delete_forbidden_because_staff: "Admins can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         delete_forbidden:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
@@ -8076,6 +8080,10 @@ en:
           title: "Show on user card"
           enabled: "Shown on user card"
           disabled: "Not shown on user card"
+        show_on_signup:
+          title: "Show on signup form"
+          enabled: "Shown signup form"
+          disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
           enabled: "Searchable"

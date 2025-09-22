@@ -2,19 +2,23 @@
 
 class TopicTimer < BaseTimer
   belongs_to :user
-  belongs_to :topic
+  belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
 
   validates :user_id, presence: true
-  validates :topic_id, presence: true
+  validates :timerable_id, presence: true
   validates :execute_at, presence: true
-  validates :status_type, uniqueness: { scope: %i[topic_id deleted_at] }, if: :public_type?
-  validates :status_type, uniqueness: { scope: %i[topic_id deleted_at user_id] }, if: :private_type?
+  validates :status_type, uniqueness: { scope: %i[timerable_id deleted_at] }, if: :public_type?
+  validates :status_type,
+            uniqueness: {
+              scope: %i[timerable_id deleted_at user_id],
+            },
+            if: :private_type?
 
   validate :executed_at_in_future?
 
   scope :scheduled_bump_topics,
-        -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
+        -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:timerable_id) }
   scope :pending_timers,
         ->(before_time = Time.now.utc) do
           where("execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
@@ -110,12 +114,14 @@ end
 #  updated_at         :datetime         not null
 #  category_id        :integer
 #  deleted_by_id      :integer
-#  topic_id           :integer          not null
+#  timerable_id       :integer          not null
 #  user_id            :integer          not null
 #
 # Indexes
 #
-#  idx_topic_id_public_type_deleted_at  (topic_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
-#  index_topic_timers_on_topic_id       (topic_id) WHERE (deleted_at IS NULL)
-#  index_topic_timers_on_user_id        (user_id)
+#  idx_timerable_id_public_type_deleted_at  (timerable_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
+#  idx_topic_id_public_type_deleted_at      (topic_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL) AND ((type)::text = 'TopicTimer'::text))
+#  index_topic_timers_on_timerable_id       (timerable_id) WHERE (deleted_at IS NULL)
+#  index_topic_timers_on_topic_id           (topic_id) WHERE (deleted_at IS NULL)
+#  index_topic_timers_on_user_id            (user_id)
 #

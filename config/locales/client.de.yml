@@ -298,6 +298,9 @@ de:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
       search: "Suche"
+    impersonation:
+      notice: "Du verwendest derzeit die Rolle von %{username}"
+      stop: "Nutzerrolle verlassen"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Es kann sein, dass deine Website nicht funktioniert, weil ein Theme oder eine Komponente Fehler aufweist. Überprüfe die Browser-Konsole für weitere Informationen."
@@ -2675,6 +2678,9 @@ de:
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
     composer:
+      autocomplete:
+        username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
+        name_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Namen."
       emoji: "Emoji :)"
       more_emoji: "mehr …"
       options: "Optionen"
@@ -3203,6 +3209,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        select: "Massenauswahl"
         confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
@@ -4694,7 +4701,7 @@ de:
       choose_for_topic_required_group:
         one: "%{count} Schlagwort von „%{name}“ auswählen …"
         other: "%{count} Schlagwörter von „%{name}“ auswählen …"
-      info: "Info"
+      info: "Informationen zum Schlagwort anzeigen"
       default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
@@ -4725,6 +4732,7 @@ de:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
       edit_tag: "Name und Beschreibung des Schlagwortes bearbeiten"
+      edit: "Dieses Schlagwort bearbeiten"
       description: "Beschreibung (max. 1000 Zeichen)"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
@@ -5638,10 +5646,12 @@ de:
           experiment_tooltip:
             title_disabled: "Probiere diese experimentelle Funktion aus"
             title_enabled: "Experimentelle Funktion ausschalten"
+            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
           feature_tooltip:
             title_disabled: "Probiere diese Funktion aus"
             title_enabled: "Deaktiviere diese Funktion"
+            content_disabled: "Teste diese neue Funktion! Du kannst sie jederzeit wieder deaktivieren, wenn du möchtest.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiviert."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
@@ -6325,6 +6335,8 @@ de:
             title: "Farboptionen"
             toggle: "Vom Benutzer wählbar"
             toggle_description: "Farbpalette kann von Benutzern ausgewählt werden"
+            toggle_default_light_on_theme: "Die Farbpalette ist die standardmäßige helle Palette des Standarddesigns (%{themeName})"
+            toggle_default_dark_on_theme: "Die Farbpalette ist die standardmäßige dunkle Palette des Standarddesigns (%{themeName})"
           colors:
             title: "Farben"
           save_changes: "Änderungen speichern"
@@ -7063,6 +7075,7 @@ de:
             tag_group_change: "Schlagwortgruppe ändern"
             delete_associated_accounts: "verknüpfte Konten löschen"
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
+            stop_impersonating: "Nutzerrolle verlassen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7252,6 +7265,7 @@ de:
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
         not_found: "Der Benutzer wurde nicht gefunden."
         invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
+        error: "Hoppla. Ein unerwarteter Fehler ist aufgetreten."
       users:
         title: "Benutzer"
         description: "Benutzer anzeigen und verwalten."
@@ -7479,7 +7493,7 @@ de:
             cancel: "Abbrechen"
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
-        delete_forbidden_because_staff: "Administratoren und Moderatoren können nicht gelöscht werden."
+        delete_forbidden_because_staff: "Administratoren können nicht gelöscht werden."
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
@@ -7627,6 +7641,10 @@ de:
           title: "Auf Benutzerkarte anzeigen"
           enabled: "Wird auf Benutzerkarte angezeigt"
           disabled: "Wird nicht auf Benutzerkarte angezeigt"
+        show_on_signup:
+          title: "Auf dem Registrierungsformular anzeigen"
+          enabled: "Wird auf dem Registrierungsformular angezeigt"
+          disabled: "Wird auf dem Registrierungsformular nicht angezeigt"
         searchable:
           title: "In Suche einschließen"
           enabled: "In Suche einschließen"

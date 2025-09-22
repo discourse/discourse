@@ -81,7 +81,9 @@ fa_IR:
       translations:
         title: "ترجمه‌ها"
         progress_chart:
-          bar_done: "%{done} نوشته"
+          bar_done:
+            one: "%{count} فرسته"
+            other: "%{count} نوشته"
       spam:
         short_title: "هرز‌نامه"
         last_seven_days: "۷ روز گذشته"

@@ -48,8 +48,11 @@ export default class DMenu extends Component {
 
   @action
   forwardTabToContent(event) {
+    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
+    const parentHandlerResult = this.args.onKeydown?.(event);
+
     if (!this.body) {
-      return;
+      return parentHandlerResult;
     }
 
     if (event.key === "Tab") {
@@ -60,7 +63,10 @@ export default class DMenu extends Component {
       );
 
       firstFocusable?.focus() || this.body.focus();
+      return true;
     }
+
+    return parentHandlerResult;
   }
 
   get options() {

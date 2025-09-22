@@ -80,6 +80,54 @@ describe "Post event", type: :system do
     end
   end
 
+  context "with max attendees" do
+    it "updates the going button label from Full after toggling" do
+      post =
+        PostCreator.create(
+          admin,
+          title: "Max attendees event",
+          raw: "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]",
+        )
+
+      visit(post.topic.url)
+
+      # First click: join the event; since max is 1, it reaches capacity and shows Full
+      post_event_page.going
+      expect(page).to have_css(
+        ".going-button",
+        text: I18n.t("js.discourse_post_event.models.event.full"),
+      )
+
+      # Second click: leave the event; label should no longer be Full
+      post_event_page.going
+      expect(page).to have_no_css(
+        ".going-button",
+        text: I18n.t("js.discourse_post_event.models.event.full"),
+      )
+      expect(page).to have_css(
+        ".going-button",
+        text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
+      )
+    end
+  end
+
+  context "when defaulting timezone" do
+    it "uses the user's profile timezone in the builder" do
+      admin.user_option.update!(timezone: "Europe/Paris")
+
+      visit("/new-topic")
+
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      tz_select =
+        PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
+
+      # Expect the timezone select to default to the user's timezone
+      expect(tz_select.value).to eq("Europe/Paris")
+    end
+  end
+
   context "when showing local time", timezone: "Australia/Brisbane" do
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
@@ -214,8 +262,9 @@ describe "Post event", type: :system do
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
     find(".d-modal input[name=status][value=private]").click
-    find(".d-modal input.group-selector").send_keys(group.name)
-    find(".autocomplete.ac-group").click
+    find(".group-selector").click
+    find(".d-multi-select__search-input").send_keys(group.name)
+    find(".d-multi-select__result", text: group.name).click
     find(".d-modal .custom-field-input").fill_in(with: "custom value")
     dropdown = PageObjects::Components::SelectKit.new(".available-recurrences")
     dropdown.expand
@@ -229,7 +278,7 @@ describe "Post event", type: :system do
     post_event_page.edit
 
     expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
-    expect(find(".d-modal")).to have_text(group.name)
+    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
     expect(find(".d-modal .custom-field-input").value).to eq("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"

@@ -4664,7 +4664,6 @@ hu:
       choose_for_topic_required_group:
         one: "válasszon %{count} címkét innen: „%{name}”…"
         other: "válasszon %{count} címkét innen: „%{name}”…"
-      info: "Információ"
       default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       category_restricted: "Ez a címke olyan kategóriákra korlátozódik, amelyekhez nincs hozzáférési jogosultsága."
@@ -7412,7 +7411,6 @@ hu:
             cancel: "Mégse"
         merging_user: "Felhasználó összevonása…"
         merge_failed: "Hiba történt a felhasználók összevonása során."
-        delete_forbidden_because_staff: "Az adminisztrátorokat és moderátorokat nem lehet törölni."
         delete_posts_forbidden_because_staff: "Nem törölhető az összes adminisztrátor és moderátor bejegyzése."
         delete_forbidden:
           one: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"

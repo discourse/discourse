@@ -14,11 +14,13 @@ import {
   CATEGORY_TEXT_COLORS,
 } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
+import { optionalRequire } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import ColorInput from "admin/components/color-input";
 import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
+
+const ColorInput = optionalRequire("admin/components/color-input");
 
 export default class EditCategoryGeneral extends Component {
   @service site;

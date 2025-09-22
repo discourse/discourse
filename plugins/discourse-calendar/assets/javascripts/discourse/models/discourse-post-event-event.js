@@ -46,6 +46,8 @@ export default class DiscoursePostEventEvent {
   @tracked isClosed;
   @tracked isExpired;
   @tracked isStandalone;
+  @tracked maxAttendees;
+  @tracked atCapacity;
   @tracked recurrenceUntil;
   @tracked recurrence;
   @tracked customFields;
@@ -80,6 +82,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = args.is_standalone;
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
+    this.maxAttendees = args.max_attendees;
+    this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
     this.recurrenceUntil = args.recurrence_until;
     this.canUpdateAttendance = args.can_update_attendance;
@@ -164,6 +168,8 @@ export default class DiscoursePostEventEvent {
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
     this.rrule = event.rrule;
+    this.maxAttendees = event.maxAttendees;
+    this.atCapacity = event.atCapacity;
     this.recurrence = event.recurrence;
     this.recurrenceUntil = event.recurrenceUntil;
     this.canUpdateAttendance = event.canUpdateAttendance;

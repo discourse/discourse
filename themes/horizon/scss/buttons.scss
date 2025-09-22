@@ -13,23 +13,6 @@
         var(--d-button-border-radius);
     }
   }
-
-  .topic-drafts-menu-trigger.btn.no-text {
-    background: var(--accent-color);
-
-    &:hover,
-    &:focus-visible {
-      background: light-dark(
-        oklch(from var(--accent-color) 40% c h),
-        oklch(from var(--accent-color) 50% c h)
-      ) !important;
-      box-shadow: none;
-    }
-
-    .d-icon {
-      color: var(--accent-text-color);
-    }
-  }
 }
 
 .discourse-no-touch .dropdown-menu__item .btn {
@@ -78,7 +61,6 @@
 }
 
 .btn-primary,
-#create-topic.btn,
 .discourse-no-touch .btn-default.ai-new-question-button {
   background-color: var(--accent-color);
   color: var(--accent-text-color);

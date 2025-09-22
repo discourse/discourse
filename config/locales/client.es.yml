@@ -4689,7 +4689,6 @@ es:
       choose_for_topic_required_group:
         one: "selecciona %{count} etiqueta de «%{name}»…"
         other: "selecciona %{count} etiquetas de «%{name}»…"
-      info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -7469,7 +7468,6 @@ es:
             cancel: "Cancelar"
         merging_user: "Fusionando usuario…"
         merge_failed: "Ha ocurrido un error al fusionar los usuarios."
-        delete_forbidden_because_staff: "Los administradores y moderadores no se pueden eliminar."
         delete_posts_forbidden_because_staff: "No se pueden eliminar todos las publicaciones de administradores y moderadores."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."

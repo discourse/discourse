@@ -3963,7 +3963,6 @@ da:
       choose_for_topic_required_group:
         one: "vælg %{count} mærke fra '%{name}'…"
         other: "vælg %{count} mærker fra '%{name}'…"
-      info: "Info"
       default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
@@ -5897,7 +5896,6 @@ da:
             cancel: "Annuller"
         merging_user: "Fletter bruger…"
         merge_failed: "Der opstod en fejl under sammenfletning af brugere."
-        delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:
           one: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
