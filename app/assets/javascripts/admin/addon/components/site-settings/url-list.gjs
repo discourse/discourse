@@ -4,6 +4,10 @@ import ValueList from "admin/components/value-list";
 
 export default class UrlList extends Component {
   <template>
-    <ValueList @values={{this.value}} @addKey="admin.site_settings.add_url" />
+    <ValueList
+      @disabled={{@disabled}}
+      @values={{this.value}}
+      @addKey="admin.site_settings.add_url"
+    />
   </template>
 }
