@@ -29,7 +29,7 @@ export default class PostMenuAddTranslationButton extends Component {
 
   get addTranslationsLabel() {
     if (this.showAsMenu) {
-      return i18n("post.localizations.add_additional", {
+      return i18n("post.localizations.manage", {
         count: this.args.post.post_localizations_count,
       });
     }
