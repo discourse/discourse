@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 
 export default class GroupActivityPostsController extends Controller {
   @controller group;
-  @controller groupActivity;
+  @controller("group.activity") groupActivity;
   @controller application;
 
   @action

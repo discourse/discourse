@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;
-  @controller adminBackups;
+  @controller("admin.backups") adminBackups;
 
   @alias("adminBackups.model") status;
   @computedI18n("admin.backups.upload.label") uploadLabel;

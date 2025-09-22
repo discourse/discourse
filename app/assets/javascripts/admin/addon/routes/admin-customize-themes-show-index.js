@@ -8,7 +8,7 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
   @service dialog;
 
   async model() {
-    return this.modelFor("adminCustomizeThemesShow");
+    return this.modelFor("adminCustomizeThemes.show");
   }
 
   setupController(controller, model) {

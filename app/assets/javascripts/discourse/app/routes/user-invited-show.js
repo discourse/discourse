@@ -16,7 +16,7 @@ export default class UserInvitedShow extends DiscourseRoute {
     if (!model.can_see_invite_details) {
       this.router.replaceWith("userInvited.show", "redeemed");
     }
-    this.controllerFor("user.invited").setProperties({
+    this.controllerFor("user-invited").setProperties({
       invitesCount: model.counts,
     });
   }

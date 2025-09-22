@@ -7,7 +7,7 @@ export default class ChatChannelThreadNearMessage extends DiscourseRoute {
   @service router;
 
   beforeModel() {
-    const thread = this.modelFor("chat-channel-thread");
+    const thread = this.modelFor("chat.channel.thread");
     const { messageId } = this.paramsFor(this.routeName);
 
     if (
