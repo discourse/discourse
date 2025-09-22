@@ -208,13 +208,9 @@ class DeprecationFixer {
     console.log(`   Processing ${uniqueDeprecations.length} unique messages`);
 
     for (const deprecation of uniqueDeprecations) {
-      try {
-        const parsed = this.parseDeprecationMessage(deprecation);
-        if (parsed) {
-          await this.handleFileRename(parsed);
-        }
-      } catch (error) {
-        this.errors.push(`Error processing "${deprecation}": ${error.message}`);
+      const parsed = this.parseDeprecationMessage(deprecation);
+      if (parsed) {
+        await this.handleFileRename(parsed);
       }
     }
   }
@@ -253,7 +249,7 @@ class DeprecationFixer {
 
   async handleFileRename({ type, oldPath, newPath }) {
     // Convert resolver names to file paths
-    const oldFilePath = this.resolverNameToFilePath(type, oldPath);
+    let oldFilePath = this.resolverNameToFilePath(type, oldPath);
     const newFilePath = this.resolverNameToFilePath(type, newPath);
 
     if (!oldFilePath || !newFilePath) {
@@ -261,30 +257,71 @@ class DeprecationFixer {
       return;
     }
 
-    // Check if the primary file exists before trying to rename it
-    const fullOldPath = path.join(this.discourseAppPath, oldFilePath);
-    const primaryFileExists = await fs
-      .access(fullOldPath)
-      .then(() => true)
-      .catch(() => false);
+    // Find the primary file across all possible locations
+    const searchPaths = [
+      this.discourseAppPath,
+      `${__dirname}/../app/assets/javascripts/admin/addon`,
+      ...(await globSync(
+        `${__dirname}/../plugins/*/assets/javascripts/discourse`,
+        {
+          nodir: false,
+        }
+      )),
+    ];
 
-    if (primaryFileExists) {
-      // Rename the primary file
-      await this.renameFile(oldFilePath, newFilePath);
+    let basePath;
 
-      // Update imports after rename
-      await this.updateImportsAfterRename(oldFilePath, newFilePath);
+    for (const searchPath of searchPaths) {
+      const fullPath = path.join(searchPath, oldFilePath);
+      const fileExists = await fs
+        .access(fullPath)
+        .then(() => true)
+        .catch(() => false);
 
-      // Create stub file if we're moving from simple name to nested structure
-      // e.g., group-index -> group/index means we need a group.js stub
-      if (
-        newPath.includes("/") &&
-        newPath.endsWith("index") &&
-        !oldPath.includes("/")
-      ) {
-        const stubPath = newPath.replace("/index", "");
-        await this.createStubFile(type, stubPath);
+      console.log(fullPath);
+      if (fileExists) {
+        console.log("Base path for", oldFilePath, "is", searchPath);
+        basePath = searchPath;
+        break;
       }
+    }
+
+    if (!basePath && oldPath.startsWith("admin-") && type === "template") {
+      // Special case: admin templates might be named without the admin- prefix in the filesystem
+      oldFilePath = this.resolverNameToFilePath(
+        type,
+        oldPath.replace(/^admin-/, "")
+      );
+      const fullPath = path.join(basePath, oldFilePath);
+      const fileExists = await fs
+        .access(fullPath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (fileExists) {
+        basePath = `${__dirname}/../app/assets/javascripts/admin/addon`;
+      }
+    }
+
+    if (!basePath) {
+      return;
+    }
+
+    // Rename the primary file
+    await this.renameFile(oldFilePath, newFilePath, basePath);
+
+    // Update imports after rename
+    await this.updateImportsAfterRename(oldFilePath, newFilePath, basePath);
+
+    // Create stub file if we're moving from simple name to nested structure
+    // e.g., group-index -> group/index means we need a group.js stub
+    if (
+      newPath.includes("/") &&
+      newPath.endsWith("index") &&
+      !oldPath.includes("/")
+    ) {
+      const stubPath = newPath.replace("/index", "");
+      await this.createStubFile(type, stubPath, basePath);
     }
 
     // Always try to rename related files regardless of the primary type
@@ -302,22 +339,25 @@ class DeprecationFixer {
       );
 
       if (relatedOldFilePath && relatedNewFilePath) {
-        const relatedFullOldPath = path.join(
-          this.discourseAppPath,
-          relatedOldFilePath
-        );
+        const relatedFullOldPath = path.join(basePath, relatedOldFilePath);
         const relatedFileExists = await fs
           .access(relatedFullOldPath)
           .then(() => true)
           .catch(() => false);
 
         if (relatedFileExists) {
-          await this.renameFile(relatedOldFilePath, relatedNewFilePath, true);
+          await this.renameFile(
+            relatedOldFilePath,
+            relatedNewFilePath,
+            basePath,
+            true
+          );
 
           // Update imports for related files too
           await this.updateImportsAfterRename(
             relatedOldFilePath,
-            relatedNewFilePath
+            relatedNewFilePath,
+            basePath
           );
 
           // Create stub file for related files too if moving to nested structure
@@ -327,16 +367,16 @@ class DeprecationFixer {
             !oldPath.includes("/")
           ) {
             const stubPath = newPath.replace("/index", "");
-            await this.createStubFile(relatedType, stubPath, true);
+            await this.createStubFile(relatedType, stubPath, basePath, true);
           }
         }
       }
     }
   }
 
-  async renameFile(oldFilePath, newFilePath, isRelated = false) {
-    const fullOldPath = path.join(this.discourseAppPath, oldFilePath);
-    const fullNewPath = path.join(this.discourseAppPath, newFilePath);
+  async renameFile(oldFilePath, newFilePath, basePath, isRelated = false) {
+    const fullOldPath = path.join(basePath, oldFilePath);
+    const fullNewPath = path.join(basePath, newFilePath);
 
     try {
       // Check if old file exists
@@ -399,78 +439,20 @@ class DeprecationFixer {
     }
   }
 
-  async updateImportsAfterRename(oldFilePath, newFilePath) {
-    try {
-      // eslint-disable-next-line no-console
-      console.log(
-        `   🔄 Collecting import updates for: ${oldFilePath} -> ${newFilePath}`
-      );
+  async updateImportsAfterRename(oldFilePath, newFilePath, basePath) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `   🔄 Collecting import updates for: ${oldFilePath} -> ${newFilePath}`
+    );
 
-      // Collect outgoing import updates (imports within the renamed file)
-      await this.collectOutgoingImportUpdates(oldFilePath, newFilePath);
+    // Collect outgoing import updates (imports within the renamed file)
+    await this.collectOutgoingImportUpdates(oldFilePath, newFilePath, basePath);
 
-      // Collect incoming import updates (other files importing this file)
-      await this.collectIncomingImportUpdates(oldFilePath, newFilePath);
+    // Collect incoming import updates (other files importing this file)
+    await this.collectIncomingImportUpdates(oldFilePath, newFilePath, basePath);
 
-      // Collect resolver reference updates (controllerFor, lookup calls, etc.)
-      await this.collectResolverReferenceUpdates(oldFilePath, newFilePath);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `   ⚠️  Error collecting import updates for ${oldFilePath}: ${error.message}`
-      );
-    }
-  }
-
-  async findImportUpdates(oldFilePath, newFilePath) {
-    const outgoing = [];
-    const incoming = [];
-
-    try {
-      const fullNewPath = path.join(this.discourseAppPath, newFilePath);
-
-      // Check outgoing imports in the file itself
-      if (
-        await fs
-          .access(fullNewPath)
-          .then(() => true)
-          .catch(() => false)
-      ) {
-        const content = await fs.readFile(fullNewPath, "utf-8");
-        const importMatches =
-          content.match(/from\s+['"](\.\.?\/[^'"]*)['"]/g) || [];
-        outgoing.push(...importMatches);
-      }
-
-      // Check incoming imports from other files
-      const appFiles = await this.findJSFiles();
-      for (const file of appFiles) {
-        const { fullPath, relativePath } = file;
-        if (relativePath === oldFilePath || relativePath === newFilePath) {
-          continue;
-        }
-
-        try {
-          const content = await fs.readFile(fullPath, "utf-8");
-          const oldModuleName = this.filePathToModuleName(oldFilePath);
-
-          // Check for imports of the old file
-          const importRegex = new RegExp(
-            `from\\s+['"](${oldModuleName}|\\.\\.?/[^'"]*${oldModuleName})['"]`,
-            "g"
-          );
-          if (importRegex.test(content)) {
-            incoming.push(relativePath);
-          }
-        } catch {
-          // Skip files we can't read
-        }
-      }
-    } catch {
-      // Return empty arrays on error
-    }
-
-    return { outgoing, incoming };
+    // Collect resolver reference updates (controllerFor, lookup calls, etc.)
+    await this.collectResolverReferenceUpdates(oldFilePath, newFilePath);
   }
 
   filePathToResolverName(filePath) {
@@ -483,10 +465,21 @@ class DeprecationFixer {
     return pathWithoutType.replace(/\.(js|gjs)$/, "");
   }
 
-  filePathToModuleName(filePath) {
+  filePathToModuleName(filePath, basePath) {
     // Convert file path to Discourse module name
     // e.g., controllers/group-index.js -> discourse/controllers/group-index
-    return "discourse/" + filePath.replace(/\.(js|gjs)$/, "");
+
+    let prefix;
+    if (basePath.includes("javascripts/discourse/app")) {
+      prefix = "discourse/";
+    } else if (basePath.includes("javascripts/admin/addon")) {
+      prefix = "admin/";
+    } else if (basePath.includes("plugins/")) {
+      const pluginNameMatch = basePath.match(/plugins\/([^\/]+)\//);
+      prefix = `discourse/plugins/${pluginNameMatch[1]}/discourse/`;
+    }
+
+    return prefix + filePath.replace(/\.(js|gjs)$/, "");
   }
 
   getRelativeImportPath(fromFile, toFile) {
@@ -554,13 +547,13 @@ class DeprecationFixer {
     return jsFiles;
   }
 
-  async createStubFile(type, resolverPath, isRelated = false) {
+  async createStubFile(type, resolverPath, basePath, isRelated = false) {
     const stubFilePath = this.resolverNameToFilePath(type, resolverPath);
     if (!stubFilePath) {
       return;
     }
 
-    const fullStubPath = path.join(this.discourseAppPath, stubFilePath);
+    const fullStubPath = path.join(basePath, stubFilePath);
 
     try {
       // Check if stub file already exists
@@ -806,10 +799,10 @@ class DeprecationFixer {
     );
   }
 
-  async collectOutgoingImportUpdates(oldFilePath, newFilePath) {
+  async collectOutgoingImportUpdates(oldFilePath, newFilePath, basePath) {
     try {
       const filePathToRead = this.dryRun ? oldFilePath : newFilePath;
-      const fullFilePath = path.join(this.discourseAppPath, filePathToRead);
+      const fullFilePath = path.join(basePath, filePathToRead);
       const content = await fs.readFile(fullFilePath, "utf-8");
 
       // Calculate the depth change for relative imports
@@ -866,9 +859,9 @@ class DeprecationFixer {
     }
   }
 
-  async collectIncomingImportUpdates(oldFilePath, newFilePath) {
-    const oldModuleName = this.filePathToModuleName(oldFilePath);
-    const newModuleName = this.filePathToModuleName(newFilePath);
+  async collectIncomingImportUpdates(oldFilePath, newFilePath, basePath) {
+    const oldModuleName = this.filePathToModuleName(oldFilePath, basePath);
+    const newModuleName = this.filePathToModuleName(newFilePath, basePath);
 
     // Add the import update pattern for later application during the single file pass
     const relativeUpdate = {
