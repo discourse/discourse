@@ -1,5 +1,3 @@
-import { isBlank } from "@ember/utils";
-import DButton from "discourse/components/d-button";
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -9,8 +7,12 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isBlank } from "@ember/utils";
 import { and, not } from "truth-helpers";
+import AsyncContent from "discourse/components/async-content";
+import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -49,8 +51,6 @@ import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatNotices from "./chat-notices";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
-import AsyncContent from "discourse/components/async-content";
-import { ajax } from "discourse/lib/ajax";
 
 export default class ChatChannel extends Component {
   @service capabilities;
@@ -127,7 +127,9 @@ export default class ChatChannel extends Component {
 
   @action
   navigateToPreviousResult() {
-    if (!this.channelFilterResults?.length) return;
+    if (!this.channelFilterResults?.length) {
+      return;
+    }
 
     const newIndex =
       this.currentChannelFilterResultIndex <
@@ -141,7 +143,9 @@ export default class ChatChannel extends Component {
 
   @action
   navigateToNextResult() {
-    if (!this.channelFilterResults?.length) return;
+    if (!this.channelFilterResults?.length) {
+      return;
+    }
 
     const newIndex =
       this.currentChannelFilterResultIndex > 0
@@ -193,7 +197,7 @@ export default class ChatChannel extends Component {
 
       this.channelFilterResults = response.messages;
       this.currentChannelFilterResultIndex = 0;
-      // this.navigateToResult(this.channelFilterResults[0]);
+      this.navigateToResult(this.channelFilterResults[0]);
     } catch (error) {
       conosle.log(error);
     }
@@ -789,6 +793,7 @@ export default class ChatChannel extends Component {
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
       {{didUpdate this.loadMessages @targetMessageId}}
+      {{didUpdate this.loadSearchResults @channelFilter}}
       data-id={{@channel.id}}
     >
 
