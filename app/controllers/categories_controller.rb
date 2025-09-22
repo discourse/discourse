@@ -189,7 +189,7 @@ class CategoriesController < ApplicationController
                                           category_params[:auto_close_hours].hours.in_minutes,
                                         based_on_last_post:
                                           category_params[:auto_close_based_on_last_post],
-                                        executed_at: Time.now,
+                                        execute_at: Time.now,
                                         status_type: CategoryDefaultTimer.types[:close],
                                         user: current_user
 
