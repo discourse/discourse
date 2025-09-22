@@ -23,16 +23,22 @@ class DeprecationFixer {
       "discourse",
       "app"
     );
+
+    // Collect all rewrites to perform in a single pass
+    this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
+    this.resolverRewrites = new Map(); // Map<filePath, Array<{pattern, replacement, description}>>
   }
 
   async run() {
     // Check for --apply flag to actually perform renames
     const args = process.argv.slice(2);
-    this.dryRun = !args.includes('--apply');
+    this.dryRun = !args.includes("--apply");
 
     if (this.dryRun) {
       // eslint-disable-next-line no-console
-      console.log("🔍 Starting deprecation detection (DRY RUN - no files will be changed)");
+      console.log(
+        "🔍 Starting deprecation detection (DRY RUN - no files will be changed)"
+      );
       // eslint-disable-next-line no-console
       console.log("   Use --apply flag to actually rename files");
     } else {
@@ -48,9 +54,7 @@ class DeprecationFixer {
       chromeLauncher = require("chrome-launcher");
     } catch {
       // eslint-disable-next-line no-console
-      console.error(
-        "❌ Puppeteer-core or chrome-launcher not found."
-      );
+      console.error("❌ Puppeteer-core or chrome-launcher not found.");
       process.exit(1);
     }
 
@@ -101,17 +105,22 @@ class DeprecationFixer {
       });
 
       // Wait a bit for all modules to load and deprecations to appear
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Trigger more deprecations by systematically looking up all routes/controllers/templates
       // eslint-disable-next-line no-console
-      console.log("🔍 Triggering additional deprecations by looking up all registered routes...");
-      
+      console.log(
+        "🔍 Triggering additional deprecations by looking up all registered routes..."
+      );
+
       try {
         /* eslint-disable */
         // Look up all templates
         await page.evaluate(() => {
-          Object.keys(Discourse.lookup("service:router")._router._routerMicrolib.recognizer.names).forEach((r) => {
+          Object.keys(
+            Discourse.lookup("service:router")._router._routerMicrolib
+              .recognizer.names
+          ).forEach((r) => {
             try {
               Discourse.lookup(`template:${r}`);
             } catch {
@@ -120,9 +129,12 @@ class DeprecationFixer {
           });
         });
 
-        // Look up all controllers  
+        // Look up all controllers
         await page.evaluate(() => {
-          Object.keys(Discourse.lookup("service:router")._router._routerMicrolib.recognizer.names).forEach((r) => {
+          Object.keys(
+            Discourse.lookup("service:router")._router._routerMicrolib
+              .recognizer.names
+          ).forEach((r) => {
             try {
               Discourse.lookup(`controller:${r}`);
             } catch {
@@ -133,7 +145,10 @@ class DeprecationFixer {
 
         // Look up all routes
         await page.evaluate(() => {
-          Object.keys(Discourse.lookup("service:router")._router._routerMicrolib.recognizer.names).forEach((r) => {
+          Object.keys(
+            Discourse.lookup("service:router")._router._routerMicrolib
+              .recognizer.names
+          ).forEach((r) => {
             try {
               Discourse.lookup(`route:${r}`);
             } catch {
@@ -144,10 +159,12 @@ class DeprecationFixer {
         /* eslint-enable */
 
         // Wait a moment for any additional deprecations to be logged
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.log(`   ⚠️  Could not trigger additional lookups: ${error.message}`);
+        console.log(
+          `   ⚠️  Could not trigger additional lookups: ${error.message}`
+        );
       }
 
       await browser.close();
@@ -171,6 +188,9 @@ class DeprecationFixer {
 
       // Process the deprecations
       await this.processDeprecations(deprecations);
+
+      // Apply all collected rewrites in a single pass
+      await this.applyAllRewrites();
 
       // Report results
       this.reportResults();
@@ -262,7 +282,10 @@ class DeprecationFixer {
 
     // Check if the primary file exists before trying to rename it
     const fullOldPath = path.join(this.discourseAppPath, oldFilePath);
-    const primaryFileExists = await fs.access(fullOldPath).then(() => true).catch(() => false);
+    const primaryFileExists = await fs
+      .access(fullOldPath)
+      .then(() => true)
+      .catch(() => false);
 
     if (primaryFileExists) {
       // Rename the primary file
@@ -273,33 +296,56 @@ class DeprecationFixer {
 
       // Create stub file if we're moving from simple name to nested structure
       // e.g., group-index -> group/index means we need a group.js stub
-      if (newPath.includes('/') && newPath.endsWith('index') && !oldPath.includes('/')) {
-        const stubPath = newPath.replace('/index', '');
+      if (
+        newPath.includes("/") &&
+        newPath.endsWith("index") &&
+        !oldPath.includes("/")
+      ) {
+        const stubPath = newPath.replace("/index", "");
         await this.createStubFile(type, stubPath);
       }
     }
 
     // Always try to rename related files regardless of the primary type
     const allTypes = ["controller", "route", "template"];
-    const relatedTypes = allTypes.filter(relatedType => relatedType !== type);
-    
+    const relatedTypes = allTypes.filter((relatedType) => relatedType !== type);
+
     for (const relatedType of relatedTypes) {
-      const relatedOldFilePath = this.resolverNameToFilePath(relatedType, oldPath);
-      const relatedNewFilePath = this.resolverNameToFilePath(relatedType, newPath);
-      
+      const relatedOldFilePath = this.resolverNameToFilePath(
+        relatedType,
+        oldPath
+      );
+      const relatedNewFilePath = this.resolverNameToFilePath(
+        relatedType,
+        newPath
+      );
+
       if (relatedOldFilePath && relatedNewFilePath) {
-        const relatedFullOldPath = path.join(this.discourseAppPath, relatedOldFilePath);
-        const relatedFileExists = await fs.access(relatedFullOldPath).then(() => true).catch(() => false);
-        
+        const relatedFullOldPath = path.join(
+          this.discourseAppPath,
+          relatedOldFilePath
+        );
+        const relatedFileExists = await fs
+          .access(relatedFullOldPath)
+          .then(() => true)
+          .catch(() => false);
+
         if (relatedFileExists) {
           await this.renameFile(relatedOldFilePath, relatedNewFilePath, true);
-          
+
           // Update imports for related files too
-          await this.updateImportsAfterRename(relatedOldFilePath, relatedNewFilePath);
-          
+          await this.updateImportsAfterRename(
+            relatedOldFilePath,
+            relatedNewFilePath
+          );
+
           // Create stub file for related files too if moving to nested structure
-          if (newPath.includes('/') && newPath.endsWith('index') && !oldPath.includes('/')) {
-            const stubPath = newPath.replace('/index', '');
+          if (
+            newPath.includes("/") &&
+            newPath.endsWith("index") &&
+            !oldPath.includes("/")
+          ) {
+            const stubPath = newPath.replace("/index", "");
             await this.createStubFile(relatedType, stubPath, true);
           }
         }
@@ -317,7 +363,9 @@ class DeprecationFixer {
 
       if (this.dryRun) {
         // Dry run: just log what would happen
-        const prefix = isRelated ? "   📎 Would rename related file:" : "   ✅ Would rename:";
+        const prefix = isRelated
+          ? "   📎 Would rename related file:"
+          : "   ✅ Would rename:";
         // eslint-disable-next-line no-console
         console.log(`${prefix} ${oldFilePath} -> ${newFilePath}`);
         this.renamedFiles.push({ oldPath: oldFilePath, newPath: newFilePath });
@@ -329,7 +377,9 @@ class DeprecationFixer {
         await fs.access(fullNewPath);
         if (isRelated) {
           // eslint-disable-next-line no-console
-          console.log(`   ℹ️  Related target file already exists: ${newFilePath}`);
+          console.log(
+            `   ℹ️  Related target file already exists: ${newFilePath}`
+          );
         } else {
           // eslint-disable-next-line no-console
           console.log(`   ⚠️  Target file already exists: ${newFilePath}`);
@@ -346,7 +396,9 @@ class DeprecationFixer {
       // Rename the file
       await fs.rename(fullOldPath, fullNewPath);
 
-      const prefix = isRelated ? "   📎 Related file renamed:" : "   ✅ Renamed:";
+      const prefix = isRelated
+        ? "   📎 Related file renamed:"
+        : "   ✅ Renamed:";
       // eslint-disable-next-line no-console
       console.log(`${prefix} ${oldFilePath} -> ${newFilePath}`);
       this.renamedFiles.push({ oldPath: oldFilePath, newPath: newFilePath });
@@ -369,54 +421,63 @@ class DeprecationFixer {
   async updateImportsAfterRename(oldFilePath, newFilePath) {
     try {
       // eslint-disable-next-line no-console
-      console.log(`   🔄 ${this.dryRun ? 'Would update' : 'Updating'} imports for: ${oldFilePath} -> ${newFilePath}`);
-      
-      // In dry-run mode, read from the old path; otherwise read from new path
-      const filePathToRead = this.dryRun ? oldFilePath : newFilePath;
-      
-      // Update imports in the renamed file (outgoing)
-      await this.updateOutgoingImports(path.join(this.discourseAppPath, filePathToRead), oldFilePath, newFilePath);
-      
-      // Update imports in other files that reference this file (incoming)  
-      await this.updateIncomingImports(oldFilePath, newFilePath);
-      
-      // Update resolver string references (controllerFor, lookup calls, etc.)
-      await this.updateResolverReferences(oldFilePath, newFilePath);
-      
+      console.log(
+        `   🔄 Collecting import updates for: ${oldFilePath} -> ${newFilePath}`
+      );
+
+      // Collect outgoing import updates (imports within the renamed file)
+      await this.collectOutgoingImportUpdates(oldFilePath, newFilePath);
+
+      // Collect incoming import updates (other files importing this file)
+      await this.collectIncomingImportUpdates(oldFilePath, newFilePath);
+
+      // Collect resolver reference updates (controllerFor, lookup calls, etc.)
+      await this.collectResolverReferenceUpdates(oldFilePath, newFilePath);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(`   ⚠️  Error updating imports for ${oldFilePath}: ${error.message}`);
+      console.log(
+        `   ⚠️  Error collecting import updates for ${oldFilePath}: ${error.message}`
+      );
     }
   }
 
   async findImportUpdates(oldFilePath, newFilePath) {
     const outgoing = [];
     const incoming = [];
-    
+
     try {
       const fullNewPath = path.join(this.discourseAppPath, newFilePath);
-      
+
       // Check outgoing imports in the file itself
-      if (await fs.access(fullNewPath).then(() => true).catch(() => false)) {
-        const content = await fs.readFile(fullNewPath, 'utf-8');
-        const importMatches = content.match(/from\s+['"](\.\.?\/[^'"]*)['"]/g) || [];
+      if (
+        await fs
+          .access(fullNewPath)
+          .then(() => true)
+          .catch(() => false)
+      ) {
+        const content = await fs.readFile(fullNewPath, "utf-8");
+        const importMatches =
+          content.match(/from\s+['"](\.\.?\/[^'"]*)['"]/g) || [];
         outgoing.push(...importMatches);
       }
-      
+
       // Check incoming imports from other files
       const appFiles = await this.findJSFiles();
       for (const file of appFiles) {
         if (file === oldFilePath || file === newFilePath) {
           continue;
         }
-        
+
         const fullPath = path.join(this.discourseAppPath, file);
         try {
-          const content = await fs.readFile(fullPath, 'utf-8');
+          const content = await fs.readFile(fullPath, "utf-8");
           const oldModuleName = this.filePathToModuleName(oldFilePath);
-          
+
           // Check for imports of the old file
-          const importRegex = new RegExp(`from\\s+['"](${oldModuleName}|\\.\\.?/[^'"]*${oldModuleName})['"]`, 'g');
+          const importRegex = new RegExp(
+            `from\\s+['"](${oldModuleName}|\\.\\.?/[^'"]*${oldModuleName})['"]`,
+            "g"
+          );
           if (importRegex.test(content)) {
             incoming.push(file);
           }
@@ -427,247 +488,8 @@ class DeprecationFixer {
     } catch {
       // Return empty arrays on error
     }
-    
+
     return { outgoing, incoming };
-  }
-
-  async updateOutgoingImports(fullFilePath, oldFilePath, newFilePath) {
-    try {
-      let content = await fs.readFile(fullFilePath, 'utf-8');
-      let modified = false;
-      
-      // Calculate the depth change for relative imports
-      const oldDepth = oldFilePath.split('/').length - 1;
-      const newDepth = newFilePath.split('/').length - 1;
-      const depthChange = newDepth - oldDepth;
-      
-      // Update relative imports
-      content = content.replace(/from\s+(['"])(\.\.?\/[^'"]*)\1/g, (match, quote, importPath) => {
-        if (depthChange === 0) {
-          return match;
-        }
-        
-        let newImportPath = importPath;
-        if (depthChange > 0) {
-          // Going deeper, add more ../
-          newImportPath = '../'.repeat(depthChange) + importPath;
-        } else {
-          // Going shallower, remove ../
-          const prefixToRemove = '../'.repeat(-depthChange);
-          if (importPath.startsWith(prefixToRemove)) {
-            newImportPath = importPath.substring(prefixToRemove.length);
-            if (!newImportPath.startsWith('./') && !newImportPath.startsWith('../')) {
-              newImportPath = './' + newImportPath;
-            }
-          }
-        }
-        
-        if (newImportPath !== importPath) {
-          modified = true;
-          if (this.dryRun) {
-            // eslint-disable-next-line no-console
-            console.log(`   🔄 Would update import: ${importPath} -> ${newImportPath}`);
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(`   🔄 Updating import: ${importPath} -> ${newImportPath}`);
-          }
-          return `from ${quote}${newImportPath}${quote}`;
-        }
-        return match;
-      });
-      
-      if (modified && !this.dryRun) {
-        await fs.writeFile(fullFilePath, content, 'utf-8');
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(`   ⚠️  Error updating outgoing imports: ${error.message}`);
-    }
-  }
-
-  async updateIncomingImports(oldFilePath, newFilePath) {
-    try {
-      const appFiles = await this.findJSFiles();
-      const oldModuleName = this.filePathToModuleName(oldFilePath);
-      const newModuleName = this.filePathToModuleName(newFilePath);
-      
-      if (this.dryRun) {
-        // eslint-disable-next-line no-console
-        console.log(`   🔍 Scanning ${appFiles.length} files for imports of ${oldModuleName}`);
-      }
-      
-      for (const file of appFiles) {
-        if (file === oldFilePath || file === newFilePath) {
-          continue;
-        }
-        
-        const fullPath = path.join(this.discourseAppPath, file);
-        try {
-          let content = await fs.readFile(fullPath, 'utf-8');
-          let modified = false;
-          
-          // Update absolute imports (discourse module names)
-          content = content.replace(
-            new RegExp(`from\\s+(['"])${oldModuleName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update import in ${file}: ${oldModuleName} -> ${newModuleName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating import in ${file}: ${oldModuleName} -> ${newModuleName}`);
-              }
-              return `from ${quote}${newModuleName}${quote}`;
-            }
-          );
-          
-          // Update relative imports
-          const relativeOld = this.getRelativeImportPath(file, oldFilePath);
-          const relativeNew = this.getRelativeImportPath(file, newFilePath);
-          
-          if (relativeOld !== relativeNew) {
-            content = content.replace(
-              new RegExp(`from\\s+(['"])${relativeOld.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1`, 'g'),
-              (match, quote) => {
-                modified = true;
-                if (this.dryRun) {
-                  // eslint-disable-next-line no-console
-                  console.log(`   🔄 Would update relative import in ${file}: ${relativeOld} -> ${relativeNew}`);
-                } else {
-                  // eslint-disable-next-line no-console
-                  console.log(`   🔄 Updating relative import in ${file}: ${relativeOld} -> ${relativeNew}`);
-                }
-                return `from ${quote}${relativeNew}${quote}`;
-              }
-            );
-          }
-          
-          if (modified && !this.dryRun) {
-            await fs.writeFile(fullPath, content, 'utf-8');
-          }
-        } catch {
-          // Skip files we can't read/write
-        }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(`   ⚠️  Error updating incoming imports: ${error.message}`);
-    }
-  }
-
-  async updateResolverReferences(oldFilePath, newFilePath) {
-    try {
-      const appFiles = await this.findJSFiles();
-      const oldResolverName = this.filePathToResolverName(oldFilePath);
-      const newResolverName = this.filePathToResolverName(newFilePath);
-      
-      if (this.dryRun) {
-        // eslint-disable-next-line no-console
-        console.log(`   🔍 Scanning files for resolver references: ${oldResolverName} -> ${newResolverName}`);
-      }
-      
-      for (const file of appFiles) {
-        if (file === oldFilePath || file === newFilePath) {
-          continue;
-        }
-        
-        const fullPath = path.join(this.discourseAppPath, file);
-        try {
-          let content = await fs.readFile(fullPath, 'utf-8');
-          let modified = false;
-          
-          // Update controllerFor() calls
-          content = content.replace(
-            new RegExp(`controllerFor\\s*\\(\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update controllerFor in ${file}: ${oldResolverName} -> ${newResolverName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating controllerFor in ${file}: ${oldResolverName} -> ${newResolverName}`);
-              }
-              return `controllerFor(${quote}${newResolverName}${quote})`;
-            }
-          );
-          
-          // Update lookup() calls for controllers
-          content = content.replace(
-            new RegExp(`lookup\\s*\\(\\s*(['"])controller:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update lookup controller in ${file}: controller:${oldResolverName} -> controller:${newResolverName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating lookup controller in ${file}: controller:${oldResolverName} -> controller:${newResolverName}`);
-              }
-              return `lookup(${quote}controller:${newResolverName}${quote})`;
-            }
-          );
-          
-          // Update lookup() calls for routes
-          content = content.replace(
-            new RegExp(`lookup\\s*\\(\\s*(['"])route:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update lookup route in ${file}: route:${oldResolverName} -> route:${newResolverName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating lookup route in ${file}: route:${oldResolverName} -> route:${newResolverName}`);
-              }
-              return `lookup(${quote}route:${newResolverName}${quote})`;
-            }
-          );
-          
-          // Update lookup() calls for templates
-          content = content.replace(
-            new RegExp(`lookup\\s*\\(\\s*(['"])template:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update lookup template in ${file}: template:${oldResolverName} -> template:${newResolverName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating lookup template in ${file}: template:${oldResolverName} -> template:${newResolverName}`);
-              }
-              return `lookup(${quote}template:${newResolverName}${quote})`;
-            }
-          );
-          
-          // Update controllerName = assignments
-          content = content.replace(
-            new RegExp(`controllerName\\s*=\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1`, 'g'),
-            (match, quote) => {
-              modified = true;
-              if (this.dryRun) {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Would update controllerName in ${file}: ${oldResolverName} -> ${newResolverName}`);
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`   🔄 Updating controllerName in ${file}: ${oldResolverName} -> ${newResolverName}`);
-              }
-              return `controllerName = ${quote}${newResolverName}${quote}`;
-            }
-          );
-          
-          if (modified && !this.dryRun) {
-            await fs.writeFile(fullPath, content, 'utf-8');
-          }
-        } catch {
-          // Skip files we can't read/write
-        }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(`   ⚠️  Error updating resolver references: ${error.message}`);
-    }
   }
 
   filePathToResolverName(filePath) {
@@ -675,54 +497,59 @@ class DeprecationFixer {
     // e.g., controllers/user-activity-bookmarks.js -> user-activity-bookmarks
     // e.g., controllers/user-activity/bookmarks.js -> user-activity/bookmarks
     // Remove the type prefix (controllers/, routes/, templates/) and file extension
-    const parts = filePath.split('/');
-    const pathWithoutType = parts.slice(1).join('/'); // Remove first part (controllers/routes/templates)
-    return pathWithoutType.replace(/\.(js|gjs)$/, '');
+    const parts = filePath.split("/");
+    const pathWithoutType = parts.slice(1).join("/"); // Remove first part (controllers/routes/templates)
+    return pathWithoutType.replace(/\.(js|gjs)$/, "");
   }
 
   filePathToModuleName(filePath) {
     // Convert file path to Discourse module name
     // e.g., controllers/group-index.js -> discourse/controllers/group-index
-    return 'discourse/' + filePath.replace(/\.(js|gjs)$/, '');
+    return "discourse/" + filePath.replace(/\.(js|gjs)$/, "");
   }
 
   getRelativeImportPath(fromFile, toFile) {
     const fromDir = path.dirname(fromFile);
     const relativePath = path.relative(fromDir, toFile);
-    
+
     // Normalize to use forward slashes and add ./ prefix if needed
-    const normalized = relativePath.replace(/\\/g, '/').replace(/\.(js|gjs)$/, '');
-    
-    if (!normalized.startsWith('../') && !normalized.startsWith('./')) {
-      return './' + normalized;
+    const normalized = relativePath
+      .replace(/\\/g, "/")
+      .replace(/\.(js|gjs)$/, "");
+
+    if (!normalized.startsWith("../") && !normalized.startsWith("./")) {
+      return "./" + normalized;
     }
-    
+
     return normalized;
   }
 
   async findJSFiles() {
     const jsFiles = [];
     const discourseAppPath = this.discourseAppPath; // Capture this in closure
-    
+
     async function scanDir(dir) {
       try {
         const entries = await fs.readdir(dir, { withFileTypes: true });
-        
+
         for (const entry of entries) {
           const fullPath = path.join(dir, entry.name);
-          
+
           if (entry.isDirectory()) {
             await scanDir(fullPath);
-          } else if (entry.name.endsWith('.js') || entry.name.endsWith('.gjs')) {
+          } else if (
+            entry.name.endsWith(".js") ||
+            entry.name.endsWith(".gjs")
+          ) {
             const relativePath = path.relative(discourseAppPath, fullPath);
-            jsFiles.push(relativePath.replace(/\\/g, '/'));
+            jsFiles.push(relativePath.replace(/\\/g, "/"));
           }
         }
       } catch {
         // Skip directories we can't read
       }
     }
-    
+
     await scanDir(this.discourseAppPath);
     return jsFiles;
   }
@@ -744,7 +571,9 @@ class DeprecationFixer {
     }
 
     if (this.dryRun) {
-      const prefix = isRelated ? "   📋 Would create related stub:" : "   📋 Would create stub:";
+      const prefix = isRelated
+        ? "   📋 Would create related stub:"
+        : "   📋 Would create stub:";
       // eslint-disable-next-line no-console
       console.log(`${prefix} ${stubFilePath}`);
       return;
@@ -772,13 +601,17 @@ class DeprecationFixer {
       await fs.mkdir(stubDir, { recursive: true });
 
       // Write the stub file
-      await fs.writeFile(fullStubPath, stubContent, 'utf8');
+      await fs.writeFile(fullStubPath, stubContent, "utf8");
 
-      const prefix = isRelated ? "   📋 Created related stub:" : "   📋 Created stub:";
+      const prefix = isRelated
+        ? "   📋 Created related stub:"
+        : "   📋 Created stub:";
       // eslint-disable-next-line no-console
       console.log(`${prefix} ${stubFilePath}`);
     } catch (error) {
-      this.errors.push(`Failed to create stub ${stubFilePath}: ${error.message}`);
+      this.errors.push(
+        `Failed to create stub ${stubFilePath}: ${error.message}`
+      );
     }
   }
 
@@ -806,7 +639,7 @@ class DeprecationFixer {
   reportResults() {
     // eslint-disable-next-line no-console
     console.log("\n📋 Summary:");
-    
+
     const verb = this.dryRun ? "would be renamed" : "renamed";
     // eslint-disable-next-line no-console
     console.log(`✅ Files that ${verb}: ${this.renamedFiles.length}`);
@@ -849,6 +682,242 @@ class DeprecationFixer {
       // eslint-disable-next-line no-console
       console.log("\n✨ No files needed to be renamed!");
     }
+  }
+
+  async applyAllRewrites() {
+    // Initialize pending updates if not already done
+    this.pendingIncomingUpdates = this.pendingIncomingUpdates || [];
+    this.pendingResolverUpdates = this.pendingResolverUpdates || [];
+
+    if (
+      this.importRewrites.size === 0 &&
+      this.pendingIncomingUpdates.length === 0 &&
+      this.pendingResolverUpdates.length === 0
+    ) {
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `\n🔄 Applying all collected rewrites in a single file pass...`
+    );
+
+    // Get all JS files for the incoming and resolver updates
+    const allJSFiles = await this.findJSFiles();
+
+    let totalChanges = 0;
+    let filesModified = 0;
+
+    for (const filePath of allJSFiles) {
+      try {
+        const fullPath = path.join(this.discourseAppPath, filePath);
+        let content = await fs.readFile(fullPath, "utf-8");
+        const originalContent = content;
+        let fileChanges = 0;
+
+        // Apply import rewrites for this specific file
+        const importUpdates = this.importRewrites.get(filePath) || [];
+        for (const { oldImport, newImport, description } of importUpdates) {
+          const regex = new RegExp(
+            `from\\s+(['"])${oldImport.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1`,
+            "g"
+          );
+          const beforeCount = (content.match(regex) || []).length;
+          if (beforeCount > 0) {
+            content = content.replace(regex, `from $1${newImport}$1`);
+            fileChanges += beforeCount;
+
+            if (this.dryRun) {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   📦 Would update import in ${filePath}: ${description}`
+              );
+            } else {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   📦 Updated import in ${filePath}: ${description}`
+              );
+            }
+          }
+        }
+
+        // Apply all pending incoming import updates to this file
+        for (const { pattern, replacement, description } of this
+          .pendingIncomingUpdates) {
+          const regex = new RegExp(pattern, "g");
+          const beforeCount = (content.match(regex) || []).length;
+          if (beforeCount > 0) {
+            content = content.replace(regex, replacement);
+            fileChanges += beforeCount;
+
+            if (this.dryRun) {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   📦 Would update import in ${filePath}: ${description}`
+              );
+            } else {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   📦 Updated import in ${filePath}: ${description}`
+              );
+            }
+          }
+        }
+
+        // Apply all pending resolver updates to this file
+        for (const { pattern, replacement, description } of this
+          .pendingResolverUpdates) {
+          const regex = new RegExp(pattern, "g");
+          const beforeCount = (content.match(regex) || []).length;
+          if (beforeCount > 0) {
+            content = content.replace(regex, replacement);
+            fileChanges += beforeCount;
+
+            if (this.dryRun) {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   🔧 Would update resolver in ${filePath}: ${description}`
+              );
+            } else {
+              // eslint-disable-next-line no-console
+              console.log(
+                `   🔧 Updated resolver in ${filePath}: ${description}`
+              );
+            }
+          }
+        }
+
+        // Write the file if changes were made and not in dry-run mode
+        if (content !== originalContent) {
+          if (!this.dryRun) {
+            await fs.writeFile(fullPath, content, "utf-8");
+          }
+          filesModified++;
+          totalChanges += fileChanges;
+        }
+      } catch {
+        // Skip files we can't read/write
+      }
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `✅ ${this.dryRun ? "Would apply" : "Applied"} ${totalChanges} changes across ${filesModified} files`
+    );
+  }
+
+  async collectOutgoingImportUpdates(oldFilePath, newFilePath) {
+    try {
+      const filePathToRead = this.dryRun ? oldFilePath : newFilePath;
+      const fullFilePath = path.join(this.discourseAppPath, filePathToRead);
+      const content = await fs.readFile(fullFilePath, "utf-8");
+
+      // Calculate the depth change for relative imports
+      const oldDepth = oldFilePath.split("/").length - 1;
+      const newDepth = newFilePath.split("/").length - 1;
+      const depthChange = newDepth - oldDepth;
+
+      if (depthChange === 0) {
+        return; // No depth change, no updates needed
+      }
+
+      const importMatches = content.matchAll(/from\s+(['"])(\.\.?\/[^'"]*)\1/g);
+      const updates = [];
+
+      for (const match of importMatches) {
+        const [, , importPath] = match;
+        let newImportPath = importPath;
+
+        if (depthChange > 0) {
+          // Going deeper, add more ../
+          newImportPath = "../".repeat(depthChange) + importPath;
+        } else {
+          // Going shallower, remove ../
+          const prefixToRemove = "../".repeat(-depthChange);
+          if (importPath.startsWith(prefixToRemove)) {
+            newImportPath = importPath.substring(prefixToRemove.length);
+            if (
+              !newImportPath.startsWith("./") &&
+              !newImportPath.startsWith("../")
+            ) {
+              newImportPath = "./" + newImportPath;
+            }
+          }
+        }
+
+        if (newImportPath !== importPath) {
+          updates.push({
+            oldImport: importPath,
+            newImport: newImportPath,
+            description: `${importPath} -> ${newImportPath}`,
+          });
+        }
+      }
+
+      if (updates.length > 0) {
+        const targetFile = this.dryRun ? oldFilePath : newFilePath;
+        this.importRewrites.set(
+          targetFile,
+          (this.importRewrites.get(targetFile) || []).concat(updates)
+        );
+      }
+    } catch {
+      // File might not exist or be readable, skip
+    }
+  }
+
+  async collectIncomingImportUpdates(oldFilePath, newFilePath) {
+    const oldModuleName = this.filePathToModuleName(oldFilePath);
+    const newModuleName = this.filePathToModuleName(newFilePath);
+
+    // Add the import update pattern for later application during the single file pass
+    const relativeUpdate = {
+      pattern: `from\\s+(['"])${oldModuleName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1`,
+      replacement: `from $1${newModuleName}$1`,
+      description: `${oldModuleName} -> ${newModuleName}`,
+    };
+
+    // We'll apply this to all files during the single pass
+    this.pendingIncomingUpdates = this.pendingIncomingUpdates || [];
+    this.pendingIncomingUpdates.push(relativeUpdate);
+  }
+
+  async collectResolverReferenceUpdates(oldFilePath, newFilePath) {
+    const oldResolverName = this.filePathToResolverName(oldFilePath);
+    const newResolverName = this.filePathToResolverName(newFilePath);
+
+    // Store patterns for later application during the single file pass
+    const patterns = [
+      {
+        pattern: `controllerFor\\s*\\(\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
+        replacement: `controllerFor($1${newResolverName}$1)`,
+        description: `controllerFor: ${oldResolverName} -> ${newResolverName}`,
+      },
+      {
+        pattern: `lookup\\s*\\(\\s*(['"])controller:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
+        replacement: `lookup($1controller:${newResolverName}$1)`,
+        description: `lookup controller: ${oldResolverName} -> ${newResolverName}`,
+      },
+      {
+        pattern: `lookup\\s*\\(\\s*(['"])route:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
+        replacement: `lookup($1route:${newResolverName}$1)`,
+        description: `lookup route: ${oldResolverName} -> ${newResolverName}`,
+      },
+      {
+        pattern: `lookup\\s*\\(\\s*(['"])template:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
+        replacement: `lookup($1template:${newResolverName}$1)`,
+        description: `lookup template: ${oldResolverName} -> ${newResolverName}`,
+      },
+      {
+        pattern: `controllerName\\s*=\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1`,
+        replacement: `controllerName = $1${newResolverName}$1`,
+        description: `controllerName: ${oldResolverName} -> ${newResolverName}`,
+      },
+    ];
+
+    // We'll apply these to all files during the single pass
+    this.pendingResolverUpdates = this.pendingResolverUpdates || [];
+    this.pendingResolverUpdates.push(...patterns);
   }
 }
 
