@@ -380,6 +380,9 @@ class DeprecationFixer {
       // Update imports in other files that reference this file (incoming)  
       await this.updateIncomingImports(oldFilePath, newFilePath);
       
+      // Update resolver string references (controllerFor, lookup calls, etc.)
+      await this.updateResolverReferences(oldFilePath, newFilePath);
+      
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(`   ⚠️  Error updating imports for ${oldFilePath}: ${error.message}`);
@@ -551,6 +554,114 @@ class DeprecationFixer {
       // eslint-disable-next-line no-console
       console.log(`   ⚠️  Error updating incoming imports: ${error.message}`);
     }
+  }
+
+  async updateResolverReferences(oldFilePath, newFilePath) {
+    try {
+      const appFiles = await this.findJSFiles();
+      const oldResolverName = this.filePathToResolverName(oldFilePath);
+      const newResolverName = this.filePathToResolverName(newFilePath);
+      
+      if (this.dryRun) {
+        // eslint-disable-next-line no-console
+        console.log(`   🔍 Scanning files for resolver references: ${oldResolverName} -> ${newResolverName}`);
+      }
+      
+      for (const file of appFiles) {
+        if (file === oldFilePath || file === newFilePath) {
+          continue;
+        }
+        
+        const fullPath = path.join(this.discourseAppPath, file);
+        try {
+          let content = await fs.readFile(fullPath, 'utf-8');
+          let modified = false;
+          
+          // Update controllerFor() calls
+          content = content.replace(
+            new RegExp(`controllerFor\\s*\\(\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
+            (match, quote) => {
+              modified = true;
+              if (this.dryRun) {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Would update controllerFor in ${file}: ${oldResolverName} -> ${newResolverName}`);
+              } else {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Updating controllerFor in ${file}: ${oldResolverName} -> ${newResolverName}`);
+              }
+              return `controllerFor(${quote}${newResolverName}${quote})`;
+            }
+          );
+          
+          // Update lookup() calls for controllers
+          content = content.replace(
+            new RegExp(`lookup\\s*\\(\\s*(['"])controller:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
+            (match, quote) => {
+              modified = true;
+              if (this.dryRun) {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Would update lookup controller in ${file}: controller:${oldResolverName} -> controller:${newResolverName}`);
+              } else {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Updating lookup controller in ${file}: controller:${oldResolverName} -> controller:${newResolverName}`);
+              }
+              return `lookup(${quote}controller:${newResolverName}${quote})`;
+            }
+          );
+          
+          // Update lookup() calls for routes
+          content = content.replace(
+            new RegExp(`lookup\\s*\\(\\s*(['"])route:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
+            (match, quote) => {
+              modified = true;
+              if (this.dryRun) {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Would update lookup route in ${file}: route:${oldResolverName} -> route:${newResolverName}`);
+              } else {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Updating lookup route in ${file}: route:${oldResolverName} -> route:${newResolverName}`);
+              }
+              return `lookup(${quote}route:${newResolverName}${quote})`;
+            }
+          );
+          
+          // Update lookup() calls for templates
+          content = content.replace(
+            new RegExp(`lookup\\s*\\(\\s*(['"])template:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*\\)`, 'g'),
+            (match, quote) => {
+              modified = true;
+              if (this.dryRun) {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Would update lookup template in ${file}: template:${oldResolverName} -> template:${newResolverName}`);
+              } else {
+                // eslint-disable-next-line no-console
+                console.log(`   🔄 Updating lookup template in ${file}: template:${oldResolverName} -> template:${newResolverName}`);
+              }
+              return `lookup(${quote}template:${newResolverName}${quote})`;
+            }
+          );
+          
+          if (modified && !this.dryRun) {
+            await fs.writeFile(fullPath, content, 'utf-8');
+          }
+        } catch {
+          // Skip files we can't read/write
+        }
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`   ⚠️  Error updating resolver references: ${error.message}`);
+    }
+  }
+
+  filePathToResolverName(filePath) {
+    // Convert file path to resolver name
+    // e.g., controllers/user-activity-bookmarks.js -> user-activity-bookmarks
+    // e.g., controllers/user-activity/bookmarks.js -> user-activity/bookmarks
+    // Remove the type prefix (controllers/, routes/, templates/) and file extension
+    const parts = filePath.split('/');
+    const pathWithoutType = parts.slice(1).join('/'); // Remove first part (controllers/routes/templates)
+    return pathWithoutType.replace(/\.(js|gjs)$/, '');
   }
 
   filePathToModuleName(filePath) {
