@@ -913,6 +913,11 @@ class DeprecationFixer {
         replacement: `controllerName = $1${newResolverName}$1`,
         description: `controllerName: ${oldResolverName} -> ${newResolverName}`,
       },
+      {
+        pattern: `templateName\\s*=\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1`,
+        replacement: `templateName = $1${newResolverName}$1`,
+        description: `templateName: ${oldResolverName} -> ${newResolverName}`,
+      },
     ];
 
     // We'll apply these to all files during the single pass
