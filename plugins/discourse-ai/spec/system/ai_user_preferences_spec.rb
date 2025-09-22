@@ -18,16 +18,25 @@ RSpec.describe "User AI preferences", type: :system do
 
   describe "search discoveries setting" do
     context "when discoveries are enabled" do
-      before { SiteSetting.ai_bot_enabled = true }
+      before { SiteSetting.ai_discover_enabled = true }
+
       it "should have the setting present in the user preferences page" do
         user_preferences_ai_page.visit(user)
         expect(user_preferences_ai_page).to have_ai_preference("pref-ai-search-discoveries")
       end
+
+      context "when the user can't use personas" do
+        it "doesn't render the option in the preferences page" do
+          Group.find_by(id: Group::AUTO_GROUPS[:admins]).remove(user)
+
+          user_preferences_ai_page.visit(user)
+          expect(user_preferences_ai_page).to have_no_ai_preference("pref-ai-search-discoveries")
+        end
+      end
     end
 
     context "when discoveries are disabled" do
-      SiteSetting.ai_bot_enabled = false
-      SiteSetting.ai_bot_discover_persona = nil
+      SiteSetting.ai_discover_enabled = false
 
       it "should not have the setting present in the user preferences page" do
         user_preferences_ai_page.visit(user)
