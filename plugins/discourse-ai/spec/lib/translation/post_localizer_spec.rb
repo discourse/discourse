@@ -87,6 +87,26 @@ describe DiscourseAi::Translation::PostLocalizer do
         expect(out.cooked).to eq(cooked)
       }.to_not change { PostLocalization.count }
     end
+
+    context "with oneboxes" do
+      fab!(:topic_to_onebox) { Fabricate(:topic) }
+      let(:onebox_url) { topic_to_onebox.url }
+      let(:post) { Fabricate(:post, raw: onebox_url) }
+      let(:translated_raw) { onebox_url }
+      let(:onebox_html) do
+        "<aside class=\"onebox\"><a href=\"#{onebox_url}\">#{topic_to_onebox.title}</a></aside>"
+      end
+
+      before { Oneboxer.stubs(:onebox).with(onebox_url, anything).returns(onebox_html) }
+
+      it "creates oneboxes in the cooked HTML" do
+        post_raw_translator_stub(
+          { text: post.raw, target_locale: "ja", translated: translated_raw },
+        )
+        localization = described_class.localize(post, "ja")
+        expect(localization.cooked).to include(onebox_html)
+      end
+    end
   end
 
   describe ".has_relocalize_quota?" do
