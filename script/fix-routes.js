@@ -368,25 +368,14 @@ class DeprecationFixer {
 
   async updateImportsAfterRename(oldFilePath, newFilePath) {
     try {
-      if (this.dryRun) {
-        // eslint-disable-next-line no-console
-        console.log(`   🔄 Would update imports for: ${oldFilePath} -> ${newFilePath}`);
-        
-        // Check what imports would need updating
-        const importUpdates = await this.findImportUpdates(oldFilePath, newFilePath);
-        if (importUpdates.outgoing.length > 0) {
-          // eslint-disable-next-line no-console
-          console.log(`   📤 Would update ${importUpdates.outgoing.length} outgoing imports in the renamed file`);
-        }
-        if (importUpdates.incoming.length > 0) {
-          // eslint-disable-next-line no-console
-          console.log(`   📥 Would update ${importUpdates.incoming.length} incoming imports from other files`);
-        }
-        return;
-      }
+      // eslint-disable-next-line no-console
+      console.log(`   🔄 ${this.dryRun ? 'Would update' : 'Updating'} imports for: ${oldFilePath} -> ${newFilePath}`);
+      
+      // In dry-run mode, read from the old path; otherwise read from new path
+      const filePathToRead = this.dryRun ? oldFilePath : newFilePath;
       
       // Update imports in the renamed file (outgoing)
-      await this.updateOutgoingImports(path.join(this.discourseAppPath, newFilePath), oldFilePath, newFilePath);
+      await this.updateOutgoingImports(path.join(this.discourseAppPath, filePathToRead), oldFilePath, newFilePath);
       
       // Update imports in other files that reference this file (incoming)  
       await this.updateIncomingImports(oldFilePath, newFilePath);
@@ -562,7 +551,7 @@ class DeprecationFixer {
   filePathToModuleName(filePath) {
     // Convert file path to Discourse module name
     // e.g., controllers/group-index.js -> discourse/controllers/group-index
-    return 'discourse/' + filePath.replace(/\.js$/, '');
+    return 'discourse/' + filePath.replace(/\.(js|gjs)$/, '');
   }
 
   getRelativeImportPath(fromFile, toFile) {
@@ -570,7 +559,7 @@ class DeprecationFixer {
     const relativePath = path.relative(fromDir, toFile);
     
     // Normalize to use forward slashes and add ./ prefix if needed
-    const normalized = relativePath.replace(/\\/g, '/').replace(/\.js$/, '');
+    const normalized = relativePath.replace(/\\/g, '/').replace(/\.(js|gjs)$/, '');
     
     if (!normalized.startsWith('../') && !normalized.startsWith('./')) {
       return './' + normalized;
@@ -591,7 +580,7 @@ class DeprecationFixer {
           
           if (entry.isDirectory()) {
             await scanDir(fullPath);
-          } else if (entry.name.endsWith('.js')) {
+          } else if (entry.name.endsWith('.js') || entry.name.endsWith('.gjs')) {
             const relativePath = path.relative(this.discourseAppPath, fullPath);
             jsFiles.push(relativePath.replace(/\\/g, '/'));
           }
@@ -672,7 +661,7 @@ class DeprecationFixer {
         filePath = `routes/${resolverPath}.js`;
         break;
       case "template":
-        filePath = `templates/${resolverPath}.hbs`;
+        filePath = `templates/${resolverPath}.gjs`;
         break;
       default:
         return null;
