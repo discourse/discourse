@@ -37,6 +37,7 @@ module Jobs
         DiscourseAi::Personas::BotContext.new(
           messages: [{ type: :user, content: query }],
           skip_tool_details: true,
+          feature_name: "discover",
         )
 
       bot.reply(context) do |partial|

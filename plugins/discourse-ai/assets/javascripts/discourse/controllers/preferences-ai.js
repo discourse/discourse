@@ -21,7 +21,7 @@ export default class PreferencesAiController extends Controller {
           return (
             this.siteSettings.ai_bot_discover_persona &&
             this.model?.can_use_ai_bot_discover_persona &&
-            this.siteSettings.ai_bot_enabled
+            this.siteSettings.ai_discover_enabled
           );
         })(),
       },
