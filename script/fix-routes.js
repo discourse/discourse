@@ -24,6 +24,13 @@ class DeprecationFixer {
       "app"
     );
 
+    // Additional paths to scan for JS files
+    this.additionalScanPaths = [
+      path.join(__dirname, "..", "app", "assets", "javascripts", "admin", "addon"),
+      path.join(__dirname, "..", "app", "assets", "javascripts", "discourse", "tests"),
+      path.join(__dirname, "..", "plugins", "*", "assets", "javascripts")
+    ];
+
     // Collect all rewrites to perform in a single pass
     this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
     this.resolverRewrites = new Map(); // Map<filePath, Array<{pattern, replacement, description}>>
@@ -464,11 +471,11 @@ class DeprecationFixer {
       // Check incoming imports from other files
       const appFiles = await this.findJSFiles();
       for (const file of appFiles) {
-        if (file === oldFilePath || file === newFilePath) {
+        const { fullPath, relativePath } = file;
+        if (relativePath === oldFilePath || relativePath === newFilePath) {
           continue;
         }
 
-        const fullPath = path.join(this.discourseAppPath, file);
         try {
           const content = await fs.readFile(fullPath, "utf-8");
           const oldModuleName = this.filePathToModuleName(oldFilePath);
@@ -479,7 +486,7 @@ class DeprecationFixer {
             "g"
           );
           if (importRegex.test(content)) {
-            incoming.push(file);
+            incoming.push(relativePath);
           }
         } catch {
           // Skip files we can't read
@@ -526,31 +533,84 @@ class DeprecationFixer {
 
   async findJSFiles() {
     const jsFiles = [];
-    const discourseAppPath = this.discourseAppPath; // Capture this in closure
+    
+    // Helper function to expand glob patterns (specifically for plugins/*/assets/javascripts)
+    const expandGlobPath = async (globPath) => {
+      const paths = [];
+      if (globPath.includes("*")) {
+        const parts = globPath.split("*");
+        const beforeGlob = parts[0];
+        const afterGlob = parts[1];
+        
+        try {
+          const parentDir = path.dirname(beforeGlob);
+          const entries = await fs.readdir(parentDir, { withFileTypes: true });
+          
+          for (const entry of entries) {
+            if (entry.isDirectory()) {
+              const expandedPath = path.join(parentDir, entry.name, afterGlob.substring(1));
+              // Check if the directory exists
+              try {
+                await fs.access(expandedPath);
+                paths.push(expandedPath);
+              } catch {
+                // Directory doesn't exist, skip
+              }
+            }
+          }
+        } catch {
+          // Parent directory doesn't exist, skip
+        }
+      } else {
+        // Check if the path exists
+        try {
+          await fs.access(globPath);
+          paths.push(globPath);
+        } catch {
+          // Path doesn't exist, skip
+        }
+      }
+      return paths;
+    };
 
-    async function scanDir(dir) {
+    // Function to scan a directory and collect JS files
+    const scanDir = async (baseDir, relativeTo) => {
       try {
-        const entries = await fs.readdir(dir, { withFileTypes: true });
+        const entries = await fs.readdir(baseDir, { withFileTypes: true });
 
         for (const entry of entries) {
-          const fullPath = path.join(dir, entry.name);
+          const fullPath = path.join(baseDir, entry.name);
 
           if (entry.isDirectory()) {
-            await scanDir(fullPath);
+            await scanDir(fullPath, relativeTo);
           } else if (
             entry.name.endsWith(".js") ||
             entry.name.endsWith(".gjs")
           ) {
-            const relativePath = path.relative(discourseAppPath, fullPath);
-            jsFiles.push(relativePath.replace(/\\/g, "/"));
+            const relativePath = path.relative(relativeTo, fullPath);
+            jsFiles.push({
+              fullPath,
+              relativePath: relativePath.replace(/\\/g, "/"),
+              baseDir: relativeTo
+            });
           }
         }
       } catch {
         // Skip directories we can't read
       }
+    };
+
+    // Scan main discourse app directory
+    await scanDir(this.discourseAppPath, this.discourseAppPath);
+
+    // Scan additional paths
+    for (const scanPath of this.additionalScanPaths) {
+      const expandedPaths = await expandGlobPath(scanPath);
+      for (const expandedPath of expandedPaths) {
+        await scanDir(expandedPath, expandedPath);
+      }
     }
 
-    await scanDir(this.discourseAppPath);
     return jsFiles;
   }
 
@@ -708,15 +768,15 @@ class DeprecationFixer {
     let totalChanges = 0;
     let filesModified = 0;
 
-    for (const filePath of allJSFiles) {
+    for (const file of allJSFiles) {
       try {
-        const fullPath = path.join(this.discourseAppPath, filePath);
+        const { fullPath, relativePath } = file;
         let content = await fs.readFile(fullPath, "utf-8");
         const originalContent = content;
         let fileChanges = 0;
 
         // Apply import rewrites for this specific file
-        const importUpdates = this.importRewrites.get(filePath) || [];
+        const importUpdates = this.importRewrites.get(relativePath) || [];
         for (const { oldImport, newImport, description } of importUpdates) {
           const regex = new RegExp(
             `from\\s+(['"])${oldImport.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1`,
@@ -730,12 +790,12 @@ class DeprecationFixer {
             if (this.dryRun) {
               // eslint-disable-next-line no-console
               console.log(
-                `   📦 Would update import in ${filePath}: ${description}`
+                `   📦 Would update import in ${relativePath}: ${description}`
               );
             } else {
               // eslint-disable-next-line no-console
               console.log(
-                `   📦 Updated import in ${filePath}: ${description}`
+                `   📦 Updated import in ${relativePath}: ${description}`
               );
             }
           }
@@ -753,12 +813,12 @@ class DeprecationFixer {
             if (this.dryRun) {
               // eslint-disable-next-line no-console
               console.log(
-                `   📦 Would update import in ${filePath}: ${description}`
+                `   📦 Would update import in ${relativePath}: ${description}`
               );
             } else {
               // eslint-disable-next-line no-console
               console.log(
-                `   📦 Updated import in ${filePath}: ${description}`
+                `   📦 Updated import in ${relativePath}: ${description}`
               );
             }
           }
@@ -776,12 +836,12 @@ class DeprecationFixer {
             if (this.dryRun) {
               // eslint-disable-next-line no-console
               console.log(
-                `   🔧 Would update resolver in ${filePath}: ${description}`
+                `   🔧 Would update resolver in ${relativePath}: ${description}`
               );
             } else {
               // eslint-disable-next-line no-console
               console.log(
-                `   🔧 Updated resolver in ${filePath}: ${description}`
+                `   🔧 Updated resolver in ${relativePath}: ${description}`
               );
             }
           }
