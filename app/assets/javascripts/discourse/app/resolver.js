@@ -1,6 +1,6 @@
 import { dasherize, decamelize } from "@ember/string";
 import Resolver from "ember-resolver";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { findHelper } from "discourse/lib/helpers";
 import SuffixTrie from "discourse/lib/suffix-trie";
@@ -343,7 +343,7 @@ export function buildResolver(baseName) {
       for (const candidate of candidates) {
         let result;
         if ((result = this.discourseTemplateModule(candidate))) {
-          if (candidate !== original && !candidate.includes("admin")) {
+          if (candidate !== original) {
             deprecated(
               `Looking up 'template:${candidate}' is no longer permitted. Rename to 'template:${original}' instead`,
               { id: "discourse.deprecated-resolver-normalization" }
@@ -386,8 +386,11 @@ export function buildResolver(baseName) {
         );
 
         for (const [candidate, prefix] of candidates) {
-          let result;
-          if ((result = this.findTemplate(candidate, prefix))) {
+          const result = withSilencedDeprecations(
+            "discourse.deprecated-resolver-normalization",
+            () => this.findTemplate(candidate, prefix)
+          );
+          if (result) {
             if (candidate !== parsedName) {
               deprecated(
                 `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
