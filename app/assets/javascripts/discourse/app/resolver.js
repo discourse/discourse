@@ -181,6 +181,8 @@ export function buildResolver(baseName) {
         fullName = deprecationInfo.newName;
       }
 
+      const original = super._normalize(fullName);
+
       const split = fullName.split(":");
       const type = split[0];
 
@@ -229,6 +231,12 @@ export function buildResolver(baseName) {
         }
       }
 
+      if (original !== normalized) {
+        deprecated(
+          `Looking up '${normalized}' is no longer permitted. Rename to '${original}' instead`,
+          { id: "discourse.deprecated-resolver-normalization" }
+        );
+      }
       return normalized;
     }
 
@@ -313,26 +321,37 @@ export function buildResolver(baseName) {
         underscored = decamelize(withoutType).replace(/-/g, "_"),
         segments = withoutType.split("/");
 
-      return (
+      // Default unmodified behavior of original resolveTemplate.
+      const original = prefix + withoutType;
+
+      const candidates = [
         // Convert dots and dashes to slashes
-        this.discourseTemplateModule(
-          prefix + withoutType.replace(/[\.-]/g, "/")
-        ) ||
-        // Default unmodified behavior of original resolveTemplate.
-        this.discourseTemplateModule(prefix + withoutType) ||
+        prefix + withoutType.replace(/[\.-]/g, "/"),
+        original,
         // Underscored without namespace
-        this.discourseTemplateModule(prefix + underscored) ||
+        prefix + underscored,
         // Underscored with first segment as directory
-        this.discourseTemplateModule(prefix + underscored.replace("_", "/")) ||
+        prefix + underscored.replace("_", "/"),
         // Underscore only the last segment
-        this.discourseTemplateModule(
-          `${prefix}${segments.slice(0, -1).join("/")}/${segments[
-            segments.length - 1
-          ].replace(/-/g, "_")}`
-        ) ||
+        `${prefix}${segments.slice(0, -1).join("/")}/${segments[
+          segments.length - 1
+        ].replace(/-/g, "_")}`,
         // All dasherized
-        this.discourseTemplateModule(prefix + withoutType.replace(/\//g, "-"))
-      );
+        prefix + withoutType.replace(/\//g, "-"),
+      ];
+
+      for (const candidate of candidates) {
+        let result;
+        if ((result = this.discourseTemplateModule(candidate))) {
+          if (candidate !== original && !candidate.includes("admin")) {
+            deprecated(
+              `Looking up 'template:${candidate}' is no longer permitted. Rename to 'template:${original}' instead`,
+              { id: "discourse.deprecated-resolver-normalization" }
+            );
+          }
+          return result;
+        }
+      }
     }
 
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
@@ -357,17 +376,28 @@ export function buildResolver(baseName) {
         namespaced = `${match[1].toLowerCase()}${match[2]}`;
       }
 
-      let resolved;
+      const candidates = [[parsedName, "admin/templates/"]];
 
       if (namespaced) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
-        resolved =
-          this.findTemplate(adminParsedName, "admin/templates/") ||
-          this.findTemplate(parsedName, "admin/templates/") ||
-          this.findTemplate(adminParsedName, "admin/"); // Nested under discourse/templates/admin (e.g. from plugin)
-      }
+        candidates.push(
+          [adminParsedName, "admin/templates/"],
+          [adminParsedName, "admin/"]
+        );
 
-      return resolved;
+        for (const [candidate, prefix] of candidates) {
+          let result;
+          if ((result = this.findTemplate(candidate, prefix))) {
+            if (candidate !== parsedName) {
+              deprecated(
+                `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
+                { id: "discourse.deprecated-resolver-normalization" }
+              );
+            }
+            return result;
+          }
+        }
+      }
     }
   };
 }
