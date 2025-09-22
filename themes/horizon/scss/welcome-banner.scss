@@ -83,9 +83,8 @@
 
   .search-menu .search-input,
   .search-menu-container .search-input {
-    background: var(--primary-100);
-    border: 1px solid var(--primary-100);
-    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--d-border-radius);
   }
 
   .search-menu .search-input:focus-within,
