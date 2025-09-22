@@ -2,6 +2,7 @@
 
 const fs = require("fs").promises;
 const path = require("path");
+const { glob } = require("fs");
 
 /**
  * Codemod to fix deprecated-resolver-normalization warnings by automatically
@@ -23,13 +24,6 @@ class DeprecationFixer {
       "discourse",
       "app"
     );
-
-    // Additional paths to scan for JS files
-    this.additionalScanPaths = [
-      path.join(__dirname, "..", "app", "assets", "javascripts", "admin", "addon"),
-      path.join(__dirname, "..", "app", "assets", "javascripts", "discourse", "tests"),
-      path.join(__dirname, "..", "plugins", "*", "assets", "javascripts")
-    ];
 
     // Collect all rewrites to perform in a single pass
     this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
@@ -533,81 +527,78 @@ class DeprecationFixer {
 
   async findJSFiles() {
     const jsFiles = [];
-    
-    // Helper function to expand glob patterns (specifically for plugins/*/assets/javascripts)
-    const expandGlobPath = async (globPath) => {
-      const paths = [];
-      if (globPath.includes("*")) {
-        const parts = globPath.split("*");
-        const beforeGlob = parts[0];
-        const afterGlob = parts[1];
-        
-        try {
-          const parentDir = path.dirname(beforeGlob);
-          const entries = await fs.readdir(parentDir, { withFileTypes: true });
-          
-          for (const entry of entries) {
-            if (entry.isDirectory()) {
-              const expandedPath = path.join(parentDir, entry.name, afterGlob.substring(1));
-              // Check if the directory exists
-              try {
-                await fs.access(expandedPath);
-                paths.push(expandedPath);
-              } catch {
-                // Directory doesn't exist, skip
-              }
-            }
-          }
-        } catch {
-          // Parent directory doesn't exist, skip
-        }
-      } else {
-        // Check if the path exists
-        try {
-          await fs.access(globPath);
-          paths.push(globPath);
-        } catch {
-          // Path doesn't exist, skip
-        }
-      }
-      return paths;
-    };
 
-    // Function to scan a directory and collect JS files
-    const scanDir = async (baseDir, relativeTo) => {
+    // Helper function to scan a directory for JS files
+    const scanDirectory = async (baseDir, pattern = "**/*.{js,gjs}") => {
       try {
-        const entries = await fs.readdir(baseDir, { withFileTypes: true });
+        await fs.access(baseDir);
+        const matches = await glob(pattern, {
+          cwd: baseDir,
+          ignore: [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/tmp/**",
+            "**/.git/**",
+          ],
+          nodir: true,
+        });
 
-        for (const entry of entries) {
-          const fullPath = path.join(baseDir, entry.name);
-
-          if (entry.isDirectory()) {
-            await scanDir(fullPath, relativeTo);
-          } else if (
-            entry.name.endsWith(".js") ||
-            entry.name.endsWith(".gjs")
-          ) {
-            const relativePath = path.relative(relativeTo, fullPath);
-            jsFiles.push({
-              fullPath,
-              relativePath: relativePath.replace(/\\/g, "/"),
-              baseDir: relativeTo
-            });
-          }
-        }
+        return matches.map((match) => ({
+          fullPath: path.resolve(baseDir, match),
+          relativePath: match.replace(/\\/g, "/"),
+          baseDir,
+        }));
       } catch {
-        // Skip directories we can't read
+        return []; // Directory doesn't exist or has errors
       }
     };
 
     // Scan main discourse app directory
-    await scanDir(this.discourseAppPath, this.discourseAppPath);
+    const discourseFiles = await scanDirectory(this.discourseAppPath);
+    jsFiles.push(...discourseFiles);
 
-    // Scan additional paths
-    for (const scanPath of this.additionalScanPaths) {
-      const expandedPaths = await expandGlobPath(scanPath);
-      for (const expandedPath of expandedPaths) {
-        await scanDir(expandedPath, expandedPath);
+    // Scan admin addon directory
+    const adminAddonDir = path.join(
+      __dirname,
+      "..",
+      "app",
+      "assets",
+      "javascripts",
+      "admin",
+      "addon"
+    );
+    const adminFiles = await scanDirectory(adminAddonDir);
+    jsFiles.push(...adminFiles);
+
+    // Scan discourse tests directory
+    const testsDir = path.join(
+      __dirname,
+      "..",
+      "app",
+      "assets",
+      "javascripts",
+      "discourse",
+      "tests"
+    );
+    const testFiles = await scanDirectory(testsDir);
+    jsFiles.push(...testFiles);
+
+    // Find and scan plugin directories
+    const pluginsDir = path.join(__dirname, "..", "plugins");
+
+    await fs.access(pluginsDir);
+    const pluginEntries = await fs.readdir(pluginsDir, { withFileTypes: true });
+
+    for (const entry of pluginEntries) {
+      if (entry.isDirectory()) {
+        const pluginJSDir = path.join(
+          pluginsDir,
+          entry.name,
+          "assets",
+          "javascripts"
+        );
+        const pluginFiles = await scanDirectory(pluginJSDir);
+        jsFiles.push(...pluginFiles);
       }
     }
 
