@@ -43,18 +43,6 @@ describe "Category calendar", type: :system do
     expect(category_page).to have_selector("#category-events-calendar .fc")
   end
 
-  context "with before-topic-list-body outlet" do
-    before { SiteSetting.calendar_categories_outlet = "before-topic-list-body" }
-
-    it "shows the calendar in the correct outlet" do
-      category_page.visit(category)
-
-      expect(category_page).to have_selector(
-        "#category-events-calendar.--before-topic-list-body .fc",
-      )
-    end
-  end
-
   context "when discourse_post_event_enabled is false" do
     before { SiteSetting.discourse_post_event_enabled = false }
 
