@@ -192,10 +192,7 @@ RSpec.describe Email::MessageBuilder do
           it "only includes a button for respond_instructions" do
             expect(builder.template_args[:respond_instructions]).to eq(
               Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t(
-                  "user_notifications.only_reply_by_email_pm_button_only",
-                  builder.template_args,
-                ),
+                I18n.t("user_notifications.reply_by_email_pm_button_only", builder.template_args),
             )
           end
         end
