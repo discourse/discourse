@@ -6,6 +6,8 @@ import DButton from "discourse/components/d-button";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import PostTranslationsModal from "discourse/components/modal/post-translations";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
@@ -98,22 +100,27 @@ export default class PostMenuAddTranslationButton extends Component {
         >
           <:content>
             <DropdownMenu as |dropdown|>
-              <dropdown.item class="update-translations-menu__view">
-                <DButton
-                  class="post-action-menu__view-translation"
-                  @translatedLabel={{this.viewTranslationLabel}}
-                  @icon="eye"
-                  @action={{this.viewTranslations}}
-                />
-              </dropdown.item>
-              <dropdown.item class="update-translations-menu__add">
-                <DButton
-                  class="post-action-menu__add-translation"
-                  @label="post.localizations.add"
-                  @icon="plus"
-                  @action={{this.addTranslation}}
-                />
-              </dropdown.item>
+              <PluginOutlet
+                @name="post-menu-translations-dropdown"
+                @outletArgs={{lazyHash dropdown=dropdown post=@post}}
+              >
+                <dropdown.item class="update-translations-menu__view">
+                  <DButton
+                    class="post-action-menu__view-translation"
+                    @translatedLabel={{this.viewTranslationLabel}}
+                    @icon="eye"
+                    @action={{this.viewTranslations}}
+                  />
+                </dropdown.item>
+                <dropdown.item class="update-translations-menu__add">
+                  <DButton
+                    class="post-action-menu__add-translation"
+                    @label="post.localizations.add"
+                    @icon="plus"
+                    @action={{this.addTranslation}}
+                  />
+                </dropdown.item>
+              </PluginOutlet>
             </DropdownMenu>
           </:content>
         </DMenu>

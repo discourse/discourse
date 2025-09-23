@@ -16,6 +16,21 @@
   &__wrapper {
     box-sizing: border-box;
     display: flex;
+    border-radius: 6.25em;
+    margin-top: 4px; // hover & focus effect visibility
+
+    &:focus-visible,
+    &:hover {
+      .discourse-no-touch & {
+        background-color: var(--accent-color);
+        box-shadow: 0 0 0 4px var(--button-box-shadow);
+        color: var(--accent-text-color);
+
+        .d-icon {
+          color: var(--accent-text-color);
+        }
+      }
+    }
 
     .mobile-view & {
       margin: 0 0 1rem;
@@ -30,6 +45,17 @@
             oklch(from var(--primary-300) l c h),
             oklch(from var(--primary-700) l c h)
           ) !important;
+
+        &:focus-visible,
+        &:hover {
+          .discourse-no-touch & {
+            box-shadow: none;
+            background: light-dark(
+              oklch(from var(--accent-color) 40% c h),
+              oklch(from var(--accent-color) 50% c h)
+            );
+          }
+        }
       }
     }
 
@@ -42,6 +68,17 @@
       margin: 0;
       border-radius: 0 var(--d-button-border-radius)
         var(--d-button-border-radius) 0;
+
+      &:focus-visible,
+      &:hover {
+        .discourse-no-touch & {
+          box-shadow: none;
+          background: light-dark(
+            oklch(from var(--accent-color) 40% c h),
+            oklch(from var(--accent-color) 50% c h)
+          );
+        }
+      }
     }
 
     .fk-d-button-tooltip:has(button[disabled]) {

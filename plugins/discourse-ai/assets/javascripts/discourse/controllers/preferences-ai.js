@@ -19,9 +19,9 @@ export default class PreferencesAiController extends Controller {
         checked: this.model.user_option.ai_search_discoveries,
         isIncluded: (() => {
           return (
-            this.siteSettings.ai_bot_discover_persona &&
-            this.model?.can_use_ai_bot_discover_persona &&
-            this.siteSettings.ai_bot_enabled
+            this.siteSettings.ai_discover_persona &&
+            this.model?.can_use_ai_discover_persona &&
+            this.siteSettings.ai_discover_enabled
           );
         })(),
       },
