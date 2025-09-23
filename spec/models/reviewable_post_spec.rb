@@ -271,28 +271,28 @@ RSpec.describe ReviewablePost do
       end
 
       describe "#perform_no_action_post" do
-        it "keeps the post and transitions to rejected" do
+        it "keeps the post and transitions to ignored" do
           result = reviewable.perform admin, :no_action_post
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :ignored
           expect(Post.where(id: post.id).exists?).to eq(true)
         end
 
-        it "keeps the post hidden and transitions to rejected" do
+        it "keeps the post hidden and transitions to ignored" do
           post.update!(hidden: true)
 
           result = reviewable.reload.perform admin, :no_action_post
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :ignored
           expect(post.reload.hidden).to eq(true)
         end
 
-        it "keeps the post deleted and transitions to rejected" do
+        it "keeps the post deleted and transitions to ignored" do
           post.trash!
 
           result = reviewable.reload.perform admin, :no_action_post
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :ignored
           expect(Post.where(id: post.id).exists?).to eq(false)
         end
       end
@@ -333,10 +333,10 @@ RSpec.describe ReviewablePost do
       end
 
       describe "#perform_no_action_user" do
-        it "transitions to rejected" do
+        it "transitions to ignored" do
           result = reviewable.perform admin, :no_action_user
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :ignored
         end
       end
     end

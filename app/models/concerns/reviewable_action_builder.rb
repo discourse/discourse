@@ -166,11 +166,11 @@ module ReviewableActionBuilder
   end
 
   def perform_no_action_user(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(:success, :ignored)
   end
 
   def perform_no_action_post(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(:success, :ignored)
   end
 
   def perform_silence_user(performed_by, args)
