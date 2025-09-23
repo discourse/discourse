@@ -30,12 +30,10 @@ export default class LikedUsersList extends Component {
     this.loadingLikedUsers = true;
 
     try {
-      const users = await this.store.find("post-action-user", {
+      this.likedUsers = await this.store.find("post-action-user", {
         id: this.args.post.id,
         post_action_type_id: LIKE_ACTION,
       });
-
-      this.likedUsers = users;
     } finally {
       this.loadingLikedUsers = false;
     }
