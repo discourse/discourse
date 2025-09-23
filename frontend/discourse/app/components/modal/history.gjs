@@ -192,6 +192,8 @@ export default class History extends Component {
       if (!postStream) {
         return;
       }
+
+      await postStream.triggerChangedPost(postId, this.args.model);
     } finally {
       this.loading = false;
       this.initialLoad = false;
