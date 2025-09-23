@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostSmallAction from "discourse/components/post/small-action";
+import { shortDate } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n from "discourse-i18n";
@@ -24,7 +25,10 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       topic,
       like_count: 3,
       action_code: "open_topic",
+      action_code_who: "tester",
+      action_code_path: "/p/123",
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
+      created_at: "2025-09-23T16:10:28.695Z",
     });
 
     this.post = post;
@@ -68,15 +72,41 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   });
 
   test("can use a custom component", async function (assert) {
+    let contextCode, contextPost;
+
     withPluginApi((api) => {
-      api.registerValueTransformer("post-small-action-custom-component", () => {
-        return <template>
-          <div class="custom-component">CUSTOM COMPONENT</div>
-        </template>;
-      });
+      api.registerValueTransformer(
+        "post-small-action-custom-component",
+        ({ context: { code, post } }) => {
+          contextCode = code;
+          contextPost = post;
+
+          return <template>
+            <div class="custom-component">
+              CUSTOM COMPONENT for
+              <span class="test-code">{{@code}}</span>
+              <span class="test-post">{{@post.post_number}}</span>
+              <span class="test-who">{{@who}}</span>
+              <span class="test-created-at">{{shortDate @createdAt}}</span>
+              <span class="test-path">{{@path}}</span>
+            </div>
+          </template>;
+        }
+      );
     });
 
     await renderComponent(this.post);
+
+    assert.strictEqual(
+      contextCode,
+      "open_topic",
+      "the action code was passed as parameter to the transformer"
+    );
+    assert.strictEqual(
+      contextPost.id,
+      this.post.id,
+      "the post was passed as parameter to the transformer"
+    );
 
     assert
       .dom(".small-action .custom-component")
@@ -84,6 +114,25 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     assert
       .dom(".small-action .small-action-custom-message")
       .doesNotExist("won't render the cooked test");
+
+    assert
+      .dom(".small-action .custom-component .test-code")
+      .hasText("open_topic", "the custom component received the correct code");
+    assert
+      .dom(".small-action .custom-component .test-post")
+      .hasText("1", "the custom component received the correct post number");
+    assert
+      .dom(".small-action .custom-component .test-who")
+      .hasText("tester", "the custom component received the correct who");
+    assert
+      .dom(".small-action .custom-component .test-created-at")
+      .hasText(
+        "Sep 23, 2025",
+        "the custom component received the correct created_at"
+      );
+    assert
+      .dom(".small-action .custom-component .test-path")
+      .hasText("/p/123", "the custom component received the correct path");
   });
 
   test("can customize the icon of the component", async function (assert) {
