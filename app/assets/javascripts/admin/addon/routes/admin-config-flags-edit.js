@@ -6,7 +6,9 @@ export default class AdminConfigFlagsEditRoute extends DiscourseRoute {
   @service site;
 
   model(params) {
-    return this.site.flagTypes.findBy("id", parseInt(params.flag_id, 10));
+    return this.site.flagTypes.find(
+      (value) => value.id === parseInt(params.flag_id, 10)
+    );
   }
 
   titleToken() {

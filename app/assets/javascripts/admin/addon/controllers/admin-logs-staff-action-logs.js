@@ -97,8 +97,9 @@ export default class AdminLogsStaffActionLogsController extends Controller {
     if (filterActionId) {
       this.changeFilters({
         action_name: filterActionId,
-        action_id: this.userHistoryActions.findBy("id", filterActionId)
-          .action_id,
+        action_id: this.userHistoryActions.find(
+          (value) => value.id === filterActionId
+        ).action_id,
       });
     }
   }
