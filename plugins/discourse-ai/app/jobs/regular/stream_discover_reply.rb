@@ -5,19 +5,20 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
+      return if !SiteSetting.ai_discover_enabled
       return if (user = User.find_by(id: args[:user_id])).nil?
       return if (query = args[:query]).blank?
 
       ai_persona_klass =
         AiPersona
           .all_personas(enabled_only: false)
-          .find { |persona| persona.id == SiteSetting.ai_bot_discover_persona.to_i }
+          .find { |persona| persona.id == SiteSetting.ai_discover_persona.to_i }
 
       if ai_persona_klass.nil? || !user.in_any_groups?(ai_persona_klass.allowed_group_ids.to_a)
         return
       end
 
-      llm_model_id = ai_persona_klass.default_llm_id || SiteSetting.default_llm_id
+      llm_model_id = ai_persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
       return if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
 
       bot =
@@ -36,6 +37,7 @@ module Jobs
         DiscourseAi::Personas::BotContext.new(
           messages: [{ type: :user, content: query }],
           skip_tool_details: true,
+          feature_name: "discover",
         )
 
       bot.reply(context) do |partial|
@@ -53,7 +55,7 @@ module Jobs
     end
 
     def publish_update(user, payload)
-      MessageBus.publish("/discourse-ai/ai-bot/discover", payload, user_ids: [user.id])
+      MessageBus.publish("/discourse-ai/discoveries", payload, user_ids: [user.id])
     end
   end
 end
