@@ -368,7 +368,7 @@ export function buildResolver(baseName) {
           this.findTemplate(parsedName, "admin/templates/") ||
           this.findTemplate(parsedName, "admin/") // Nested under discourse/templates/admin (e.g. from plugins)
         );
-      } else if (/^admin[_\.-\/]/.test(parsedName.fullNameWithoutType)) {
+      } else if (/^admin[_\.\/-]/.test(parsedName.fullNameWithoutType)) {
         namespaced = parsedName.fullNameWithoutType.slice(6);
       } else if (
         (match = parsedName.fullNameWithoutType.match(/^admin([A-Z])(.+)$/))
