@@ -27,6 +27,7 @@ class Plugin::Metadata
         discourse-code-review
         discourse-data-explorer
         discourse-details
+        discourse-doc-categories
         discourse-docs
         discourse-follow
         discourse-fontawesome-pro
