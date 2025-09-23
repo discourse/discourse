@@ -384,21 +384,21 @@ export function buildResolver(baseName) {
           [adminParsedName, "admin/templates/"],
           [adminParsedName, "admin/"]
         );
+      }
 
-        for (const [candidate, prefix] of candidates) {
-          const result = withSilencedDeprecations(
-            "discourse.deprecated-resolver-normalization",
-            () => this.findTemplate(candidate, prefix)
-          );
-          if (result) {
-            if (candidate !== parsedName) {
-              deprecated(
-                `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
-                { id: "discourse.deprecated-resolver-normalization" }
-              );
-            }
-            return result;
+      for (const [candidate, prefix] of candidates) {
+        const result = withSilencedDeprecations(
+          "discourse.deprecated-resolver-normalization",
+          () => this.findTemplate(candidate, prefix)
+        );
+        if (result) {
+          if (candidate !== parsedName) {
+            deprecated(
+              `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
+              { id: "discourse.deprecated-resolver-normalization" }
+            );
           }
+          return result;
         }
       }
     }
