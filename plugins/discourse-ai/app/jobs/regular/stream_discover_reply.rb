@@ -12,7 +12,7 @@ module Jobs
       ai_persona_klass =
         AiPersona
           .all_personas(enabled_only: false)
-          .find { |persona| persona.id == SiteSetting.ai_bot_discover_persona.to_i }
+          .find { |persona| persona.id == SiteSetting.ai_discover_persona.to_i }
 
       if ai_persona_klass.nil? || !user.in_any_groups?(ai_persona_klass.allowed_group_ids.to_a)
         return

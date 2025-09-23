@@ -24,9 +24,11 @@ DiscourseAi::Engine.routes.draw do
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"
     get "show-debug-info/:id" => "bot#show_debug_info_by_id"
     post "post/:post_id/stop-streaming" => "bot#stop_streaming_response"
+  end
 
-    get "discover" => "bot#discover"
-    post "discover/continue-convo" => "bot#discover_continue_convo"
+  scope module: :discover, path: "/discoveries", defaults: { format: :json } do
+    get "reply" => "discoveries#reply"
+    post "continue-convo" => "discoveries#continue_convo"
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do

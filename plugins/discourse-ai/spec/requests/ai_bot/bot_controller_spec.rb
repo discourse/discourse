@@ -138,7 +138,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     context "when the user doesn't have access to the persona" do
-      before { SiteSetting.ai_bot_discover_persona = ai_persona.id }
+      before { SiteSetting.ai_discover_persona = ai_persona.id }
 
       it "returns a 403" do
         get "/discourse-ai/ai-bot/discover", params: { query: "What is Discourse?" }
@@ -149,7 +149,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     context "when the user is allowed to use discover" do
       before do
-        SiteSetting.ai_bot_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_persona = ai_persona.id
         group.add(user)
       end
 
@@ -183,7 +183,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     context "when the user is allowed to discover" do
       before do
-        SiteSetting.ai_bot_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_persona = ai_persona.id
         group.add(user)
       end
 

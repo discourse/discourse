@@ -15,7 +15,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
 
     before do
       SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_bot_discover_persona = ai_persona.id
+      SiteSetting.ai_discover_persona = ai_persona.id
       group.add(user)
     end
 

@@ -94,7 +94,7 @@ export default class DiscobotDiscoveries extends Service {
     try {
       this.lastQuery = query;
 
-      await ajax("/discourse-ai/ai-bot/discover", {
+      await ajax("/discourse-ai/discoveries/reply", {
         data: { query },
       });
     } catch {

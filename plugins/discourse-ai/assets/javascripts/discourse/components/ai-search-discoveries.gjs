@@ -114,7 +114,7 @@ export default class AiSearchDiscoveries extends Component {
 
     const discoverPersona = personas.find(
       (persona) =>
-        persona.id === parseInt(this.siteSettings?.ai_bot_discover_persona, 10)
+        persona.id === parseInt(this.siteSettings?.ai_discover_persona, 10)
     );
     const discoverPersonaHasBot = discoverPersona?.username;
 
@@ -153,7 +153,7 @@ export default class AiSearchDiscoveries extends Component {
     try {
       this.loadingConversationTopic = true;
       const continueRequest = await ajax(
-        `/discourse-ai/ai-bot/discover/continue-convo`,
+        `/discourse-ai/discoveries/continue-convo`,
         {
           type: "POST",
           data,

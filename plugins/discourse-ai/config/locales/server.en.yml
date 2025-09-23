@@ -123,7 +123,7 @@ en:
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
 
     ai_discover_enabled: "Enable the discover feature"
-    ai_bot_discover_persona: "Persona to use for discover feature"
+    ai_discover_persona: "Persona to use for discover feature"
 
     ai_stability_api_key: "API key for the stability.ai API"
     ai_stability_engine: "Image generation engine to use for the stability.ai API"

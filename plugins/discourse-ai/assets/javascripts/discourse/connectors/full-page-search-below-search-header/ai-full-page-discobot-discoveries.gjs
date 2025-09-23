@@ -10,8 +10,8 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
       siteSettings.ai_discover_enabled &&
-      siteSettings.ai_bot_discover_persona &&
-      currentUser?.can_use_ai_bot_discover_persona &&
+      siteSettings.ai_discover_persona &&
+      currentUser?.can_use_ai_discover_persona &&
       currentUser?.user_option?.ai_search_discoveries
     );
   }
