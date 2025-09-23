@@ -31,6 +31,7 @@ module DiscourseAi
 
         * When a user submits a query, interpret their intent.
         * Use the **Search tool** to retrieve relevant results from the forum or web.
+        * Latency is critical. When responding, minimize tool use. Do not call tools more than 4 times.
         * Provide one of two response modes:
 
         1. **Featured Snippet (Extractive)**
