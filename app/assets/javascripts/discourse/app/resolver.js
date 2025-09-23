@@ -368,7 +368,7 @@ export function buildResolver(baseName) {
           this.findTemplate(parsedName, "admin/templates/") ||
           this.findTemplate(parsedName, "admin/") // Nested under discourse/templates/admin (e.g. from plugins)
         );
-      } else if (/^admin[_\.-]/.test(parsedName.fullNameWithoutType)) {
+      } else if (/^admin[_\.-\/]/.test(parsedName.fullNameWithoutType)) {
         namespaced = parsedName.fullNameWithoutType.slice(6);
       } else if (
         (match = parsedName.fullNameWithoutType.match(/^admin([A-Z])(.+)$/))
@@ -376,29 +376,28 @@ export function buildResolver(baseName) {
         namespaced = `${match[1].toLowerCase()}${match[2]}`;
       }
 
-      const candidates = [[parsedName, "admin/templates/"]];
-
       if (namespaced) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
-        candidates.push(
+        const candidates = [
+          [parsedName, "admin/templates/"],
           [adminParsedName, "admin/templates/"],
-          [adminParsedName, "admin/"]
-        );
-      }
+          [adminParsedName, "admin/"],
+        ];
 
-      for (const [candidate, prefix] of candidates) {
-        const result = withSilencedDeprecations(
-          "discourse.deprecated-resolver-normalization",
-          () => this.findTemplate(candidate, prefix)
-        );
-        if (result) {
-          if (candidate !== parsedName) {
-            deprecated(
-              `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
-              { id: "discourse.deprecated-resolver-normalization" }
-            );
+        for (const [candidate, prefix] of candidates) {
+          const result = withSilencedDeprecations(
+            "discourse.deprecated-resolver-normalization",
+            () => this.findTemplate(candidate, prefix)
+          );
+          if (result) {
+            if (candidate !== parsedName) {
+              deprecated(
+                `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
+                { id: "discourse.deprecated-resolver-normalization" }
+              );
+            }
+            return result;
           }
-          return result;
         }
       }
     }
