@@ -391,46 +391,6 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Performs multiple actions in sequence
-  def perform_multiple(performed_by, action_ids, args = nil)
-    args ||= {}
-    performed_actions = []
-    final_result = nil
-
-    action_ids.each do |action_id|
-      next if action_id.blank?
-
-      begin
-        result = perform(performed_by, action_id.to_sym, args)
-        performed_actions << {
-          action_id: action_id,
-          success: result.success?,
-          transition_to: result.transition_to,
-        }
-
-        # Use the last successful result as the final result
-        final_result = result if result.success?
-
-        # Stop processing if action failed and we're not continuing on errors
-        break unless result.success?
-      rescue InvalidAction => e
-        # Log the invalid action but continue with others
-        performed_actions << { action_id: action_id, success: false, error: e.message }
-      end
-    end
-
-    # Return a combined result
-    if final_result
-      final_result.performed_actions = performed_actions
-      final_result
-    else
-      PerformResult.new(
-        success: performed_actions.any? { |a| a[:success] },
-        performed_actions: performed_actions,
-      )
-    end
-  end
-
   # Override this in specific reviewable type to include scores for
   # non-pending reviewables
   def updatable_reviewable_scores
