@@ -9,10 +9,10 @@ import TextField from "discourse/components/text-field";
 /**
   An input field for a color.
 
-  @param hexValue is a reference to the color's hex value.
-  @param brightnessValue is a number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
-  @params valid is a boolean indicating if the input field is a valid color.
-  @params fallbackHexValue is a hex color string to use if hexValue is empty or invalid.
+  @param {string} hexValue Reference to the color's hex value.
+  @param {number} brightnessValue Number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
+  @param {boolean} valid If the input field is a valid color.
+  @param {string} [fallbackHexValue] Hex color string to use if hexValue is empty. Optional.
 **/
 
 @classNames("color-picker")
