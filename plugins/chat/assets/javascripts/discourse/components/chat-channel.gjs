@@ -9,13 +9,13 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { and, not } from "truth-helpers";
-import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
@@ -116,6 +116,13 @@ export default class ChatChannel extends Component {
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
     this.updateLastReadMessage();
+
+    // Cancel any pending search request and debounced calls
+    cancel(this, this._performSearch);
+    if (this.searchRequest) {
+      this.searchRequest.abort();
+      this.searchRequest = null;
+    }
   }
 
   @action
@@ -168,15 +175,28 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  async loadSearchResults(filter) {
-    console.log(filter);
-    if (this.search) {
-      console.log("ABORT");
-      this.search.abort();
+  loadSearchResults() {
+    const actualFilter = this.args.channelFilter;
+
+    if (isBlank(actualFilter)) {
+      this.searchRequest?.abort?.();
+
+      cancel(this, this._performSearch);
+
+      this.channelFilterResults = null;
+      this.currentChannelFilterResult = null;
+      this.currentChannelFilterResultIndex = 0;
+      return;
     }
 
+    discourseDebounce(this, this._performSearch, INPUT_DELAY);
+  }
+
+  async _performSearch() {
+    this.searchRequest?.abort?.();
+
     try {
-      this.search = ajax("/chat/api/search", {
+      this.searchRequest = ajax("/chat/api/search", {
         data: {
           query: this.args.channelFilter,
           channel_id: this.args.channel.id,
@@ -184,22 +204,18 @@ export default class ChatChannel extends Component {
         },
       });
 
-      const response = await this.search;
-      this.search = null;
+      const response = await this.searchRequest;
 
-      console.log(response);
+      this.channelFilterResults = response.messages;
+      this.currentChannelFilterResultIndex = 0;
 
       if (!response.messages?.length) {
         return;
       }
 
-      console.log("?????");
-
-      this.channelFilterResults = response.messages;
-      this.currentChannelFilterResultIndex = 0;
       this.navigateToResult(this.channelFilterResults[0]);
     } catch (error) {
-      conosle.log(error);
+      popupAjaxError(error);
     }
   }
 
@@ -234,7 +250,6 @@ export default class ChatChannel extends Component {
 
   @action
   loadMessages() {
-    console.log("load messages");
     if (!this.args.channel?.id) {
       return;
     }
@@ -278,7 +293,6 @@ export default class ChatChannel extends Component {
   }
 
   async fetchMessages(findArgs = {}) {
-    console.log("fetch messages", findArgs);
     if (this.messagesLoader.loading) {
       return;
     }
@@ -803,9 +817,8 @@ export default class ChatChannel extends Component {
 
       {{#if this.channelFilterResults}}
         <div class="chat-channel__filter-navigation">
-          {{this.currentFilterResultPosition}}
-          of
-          {{this.channelFilterResults.length}}
+          <span
+          >{{this.currentFilterResultPosition}}/{{this.channelFilterResults.length}}</span>
 
           <DButton
             @action={{this.navigateToPreviousResult}}
@@ -848,7 +861,6 @@ export default class ChatChannel extends Component {
             {{i18n "chat.all_loaded"}}
           </div>
         {{/if}}
-
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
