@@ -62,6 +62,10 @@ DiscourseAi::Engine.routes.draw do
   scope module: :sentiment, path: "/sentiment", defaults: { format: :json } do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
   end
+
+  scope module: :translation, path: "/translate", defaults: { format: :json } do
+    post "/posts/:post_id" => "translation#translate"
+  end
 end
 
 Discourse::Application.routes.draw do

@@ -640,6 +640,10 @@ en:
       set: "set"
       removed: "removed"
 
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
+
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
       quota_required: "You must specify maximum tokens or usages for this model"

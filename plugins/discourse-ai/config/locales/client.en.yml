@@ -347,9 +347,10 @@ en:
             one: "%{count} post"
             other: "%{count} posts"
         translations_menu:
-          refresh:
-            label: "Refresh translations"
-            confirm: "Are you sure you would like to refresh translations? Doing so will re-translate all existing translations on this post."
+          translate:
+            label: "Translate post"
+            title: "Translates this post to all supported languages"
+            confirm: "This will update any existing translations on this post. Are you sure?"
             success: "Translations are been successfully refreshed"
 
       spam:
