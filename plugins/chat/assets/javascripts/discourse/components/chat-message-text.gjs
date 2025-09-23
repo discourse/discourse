@@ -1,7 +1,7 @@
-import HighlightSearch from "discourse/components/highlight-search";
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
+import HighlightSearch from "discourse/components/highlight-search";
 import { i18n } from "discourse-i18n";
 import { isCollapsible } from "discourse/plugins/chat/discourse/components/chat-message-collapser";
 import ChatMessageCollapser from "./chat-message-collapser";
