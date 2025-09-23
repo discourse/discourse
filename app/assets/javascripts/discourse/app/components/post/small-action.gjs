@@ -125,7 +125,7 @@ export default class PostSmallAction extends Component {
   }
 
   get username() {
-    return this.args.post.action_code_who;
+    return this.args.post.user.username;
   }
 
   <template>
@@ -162,7 +162,7 @@ export default class PostSmallAction extends Component {
             {{#if this.CustomComponent}}
               <this.CustomComponent
                 @code={{this.code}}
-                @post={{this.post}}
+                @post={{this.args.post}}
                 @createdAt={{this.createdAt}}
                 @path={{this.path}}
                 @username={{this.username}}
