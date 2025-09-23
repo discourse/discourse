@@ -11,7 +11,9 @@ module InviteGuardian
 
   def can_invite_to_forum?(groups = nil)
     return false if !authenticated?
-    return false if !@user.in_any_groups?(SiteSetting.invite_allowed_groups_map)
+    if !@user.in_any_groups?(SiteSetting.invite_allowed_groups_map)
+      return fail("not_in_allowed_groups")
+    end
     return false if !SiteSetting.max_invites_per_day.to_i.positive? && !is_staff?
 
     groups.blank? || groups.all? { |g| can_edit_group?(g) }

@@ -10,7 +10,9 @@ module FlagGuardian
   end
 
   def can_toggle_flag?
-    @user.admin?
+    return fail("not an admin") if !@user.admin?
+
+    pass
   end
 
   def can_reorder_flag?(flag)
