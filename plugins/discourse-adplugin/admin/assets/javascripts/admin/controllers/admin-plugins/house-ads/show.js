@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import Preview from "../components/modal/preview";
+import Preview from "../../../components/modal/preview";
 
 export default class adminPluginsHouseAdsShow extends Controller {
   @service router;

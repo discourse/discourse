@@ -34,7 +34,9 @@ export default class AdminPluginsDiscourseSubscriptionsProductsShowRoute extends
         plan
           .destroy()
           .then(() => {
-            this.controllerFor("adminPluginsDiscourseSubscriptionsProductsShow")
+            this.controllerFor(
+              "adminPlugins.discourseSubscriptions.products.show"
+            )
               .get("model.plans")
               .removeObject(plan);
           })

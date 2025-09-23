@@ -22,7 +22,7 @@ export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extend
           .destroy()
           .then(() => {
             this.controllerFor(
-              "adminPluginsDiscourseSubscriptionsProductsIndex"
+              "adminPlugins.discourseSubscriptions.products.index"
             )
               .get("model")
               .removeObject(product);

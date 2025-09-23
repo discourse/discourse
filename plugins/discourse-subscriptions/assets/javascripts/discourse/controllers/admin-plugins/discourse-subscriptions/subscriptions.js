@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import AdminCancelSubscription from "../components/modal/admin-cancel-subscription";
-import AdminSubscription from "../models/admin-subscription";
+import AdminCancelSubscription from "../../../components/modal/admin-cancel-subscription";
+import AdminSubscription from "../../../models/admin-subscription";
 
 export default class AdminPluginsDiscourseSubscriptionsSubscriptionsController extends Controller {
   @service modal;
