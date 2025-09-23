@@ -12,6 +12,7 @@
 
 .sidebar-new-topic-button {
   flex: 1 1 auto;
+  margin-top: 4px; // hover & focus effect visibility
 
   &__wrapper {
     box-sizing: border-box;
