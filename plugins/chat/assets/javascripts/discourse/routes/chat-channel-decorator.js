@@ -75,7 +75,7 @@ export default function withChatChannel(extendedClass) {
           this.router.replaceWith("chat.channel", ...model.routeModels);
         }
       } else {
-        this.controllerFor("chat-channel").set("targetMessageId", null);
+        this.controllerFor("chat.channel").set("targetMessageId", null);
       }
     }
   };

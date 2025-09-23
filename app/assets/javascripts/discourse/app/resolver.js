@@ -196,7 +196,7 @@ export function buildResolver(baseName) {
       }
 
       // This is code that we don't really want to keep long term. The main situation where we need it is for
-      // doing stuff like `controllerFor('adminWatchedWordsAction')` where the real route name
+      // doing stuff like `controllerFor('adminWatchedWords.action')` where the real route name
       // is actually `adminWatchedWords.action`. The default behavior for the former is to
       // normalize to `adminWatchedWordsAction` where the latter becomes `adminWatchedWords.action`.
       // While these end up looking up the same file ultimately, they are treated as different

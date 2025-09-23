@@ -15,9 +15,9 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 export default class NewCategory extends DiscourseRoute {
   @service router;
 
-  controllerName = "edit-category-tabs";
+  controllerName = "edit-category.tabs";
 
-  templateName = "edit-category-tabs";
+  templateName = "edit-category.tabs";
 
   beforeModel() {
     if (!this.currentUser) {

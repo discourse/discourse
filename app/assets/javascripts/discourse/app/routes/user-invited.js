@@ -5,7 +5,7 @@ export default class UserInvited extends DiscourseRoute {
   setupController(controller) {
     const can_see_invite_details =
       this.currentUser.staff ||
-      this.controllerFor("user").id === this.currentUser?.id;
+      this.controllerFor("admin-user").id === this.currentUser?.id;
 
     controller.setProperties({
       can_see_invite_details,

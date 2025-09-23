@@ -92,7 +92,7 @@ export default (inboxType, path, filter) => {
       // want to create a stand-alone `setSearchType` on the search service so
       // we can instead explicitly set the search context and pass in the `type`
       const pmSearchContext = {
-        ...this.controllerFor("user").get("model.searchContext"),
+        ...this.controllerFor("admin-user").get("model.searchContext"),
         type: "private_messages",
       };
       this.searchService.searchContext = pmSearchContext;
@@ -114,7 +114,7 @@ export default (inboxType, path, filter) => {
     deactivate() {
       this.controllerFor("user-topics-list").unsubscribe();
 
-      this.searchService.searchContext = this.controllerFor("user").get(
+      this.searchService.searchContext = this.controllerFor("admin-user").get(
         "model.searchContext"
       );
     }

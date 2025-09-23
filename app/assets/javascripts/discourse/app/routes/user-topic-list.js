@@ -15,7 +15,7 @@ export default class UserTopicsListRoute extends DiscourseRoute {
     setTopicList(model);
 
     const userActionType = this.userActionType;
-    this.controllerFor("user").set("userActionType", userActionType);
+    this.controllerFor("admin-user").set("userActionType", userActionType);
     this.controllerFor("user-activity").set("userActionType", userActionType);
     controller.setProperties({
       model,

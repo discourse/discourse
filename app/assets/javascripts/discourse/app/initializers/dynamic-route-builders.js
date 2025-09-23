@@ -3,7 +3,7 @@ import DiscoveryListController from "discourse/controllers/discovery/list";
 import Site from "discourse/models/site";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
-import { buildTagRoute } from "discourse/routes/tag-show";
+import { buildTagRoute } from "discourse/routes/tag/show";
 
 export default {
   after: "inject-discourse-objects",

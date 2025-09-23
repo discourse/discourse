@@ -15,7 +15,7 @@ export default class AdminUsersRoute extends DiscourseRoute {
   @action
   exportUsers() {
     exportEntity("user_list", {
-      trust_level: this.controllerFor("admin-users-list-show").get("query"),
+      trust_level: this.controllerFor("admin-users-list.show").get("query"),
     }).then(outputExportResult);
   }
 
