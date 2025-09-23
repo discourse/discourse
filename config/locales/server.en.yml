@@ -2761,6 +2761,7 @@ en:
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
+
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
@@ -5844,6 +5845,37 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
+      # New separated post actions
+      post_actions:
+        bundle_title: "What do you want to do with the post?"
+      no_action_post:
+        title: "No action"
+        description: "Take no action on the post"
+        complete: "No action taken on post"
+      delete_post:
+        title: "Delete post"
+        description: "Delete this post"
+        complete: "Post deleted"
+      hide_post:
+        title: "Hide post"
+        description: "Hide this post from public view"
+        complete: "Post hidden"
+      unhide_post:
+        title: "Unhide post"
+        description: "Make this post visible to all users"
+        complete: "Post unhidden"
+      restore_post:
+        title: "Restore post"
+        description: "Restore this deleted post"
+        complete: "Post restored"
+      edit_post:
+        title: "Edit post"
+        description: "Edit this post content"
+        complete: "Post edited"
+      convert_to_pm:
+        title: "Convert to PM"
+        description: "Convert this post to a personal message"
+        complete: "Post converted to personal message"
       # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
