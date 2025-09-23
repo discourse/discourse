@@ -27,7 +27,22 @@ export default class AdminPluginsListItem extends Component {
     try {
       plugin.enabled = newValue;
       await SiteSetting.update(plugin.enabledSetting, newValue);
-      this.session.requiresRefresh = true;
+
+      if (newValue && this.showPluginSettingsButton) {
+        if (plugin.useNewShowRoute) {
+          this.router.transitionTo("adminPlugins.show", plugin);
+        } else {
+          this.router.transitionTo(
+            "adminSiteSettingsCategory",
+            plugin.settingCategoryName,
+            {
+              queryParams: { filter: `plugin:${plugin.name}` },
+            }
+          );
+        }
+      } else {
+        this.session.requiresRefresh = true;
+      }
     } catch (err) {
       plugin.enabled = oldValue;
       popupAjaxError(err);

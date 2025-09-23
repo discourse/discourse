@@ -37,21 +37,6 @@ export default class AdminPluginsIndexController extends Controller {
     ];
   }
 
-  @action
-  async togglePluginEnabled(plugin) {
-    const oldValue = plugin.enabled;
-    const newValue = !oldValue;
-
-    try {
-      plugin.enabled = newValue;
-      await SiteSetting.update(plugin.enabledSetting, newValue);
-      this.session.requiresRefresh = true;
-    } catch (e) {
-      plugin.enabled = oldValue;
-      popupAjaxError(e);
-    }
-  }
-
   // NOTE: See also AdminPluginsController, there is some duplication here
   // while we convert plugins to use_new_show_route
   get adminRoutes() {
