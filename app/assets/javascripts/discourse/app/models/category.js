@@ -17,6 +17,19 @@ import Topic from "discourse/models/topic";
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
+const pluginSaveProperties = new Set();
+
+/**
+ * @internal
+ * Adds a tracked property to the post model.
+ *
+ * Intended to be used only in the plugin API.
+ *
+ * @param {string} propertyKey - The key of the property to track.
+ */
+export function _addCategoryPropertyForSave(propertyKey) {
+  pluginSaveProperties.add(propertyKey);
+}
 
 export default class Category extends RestModel {
   // Sort subcategories directly under parents
@@ -785,9 +798,17 @@ export default class Category extends RestModel {
         ...(this.siteSettings.content_localization_enabled && {
           category_localizations: this.localizations,
         }),
+        ...this._pluginSaveProperties(),
       }),
       type: id ? "PUT" : "POST",
     });
+  }
+
+  _pluginSaveProperties() {
+    return Array.from(pluginSaveProperties).reduce((obj, key) => {
+      obj[key] = this[key];
+      return obj;
+    }, {});
   }
 
   _permissionsForUpdate() {
