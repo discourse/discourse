@@ -19,9 +19,6 @@ export default class PostMenuLikeButton extends Component {
   @service currentUser;
 
   @tracked isAnimated = false;
-  @tracked likedUsers = null;
-  @tracked totalLikedUsers = 0;
-  @tracked loadingLikedUsers = false;
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
