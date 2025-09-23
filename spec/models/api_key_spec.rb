@@ -177,6 +177,26 @@ RSpec.describe ApiKey do
       end
     end
 
+    context "with users:create scope" do
+      let(:scope) { ApiKeyScope.new(resource: "users", action: "create") }
+
+      let(:request) do
+        ActionDispatch::TestRequest.create.tap do |request|
+          request.path_parameters = { controller: "users", action: "create" }
+          request.request_method = "POST"
+        end
+      end
+
+      it "allows user creation requests" do
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it "rejects non-user creation requests" do
+        request.path_parameters = { controller: "topics", action: "create" }
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+    end
+
     context "with global:read scope" do
       let(:scope) { ApiKeyScope.new(resource: "global", action: "read") }
 

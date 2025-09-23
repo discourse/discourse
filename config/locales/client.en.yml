@@ -6318,6 +6318,7 @@ en:
               suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+              create: Create a new user.
             user_status:
               read: Read user status.
               update: Update user status.
