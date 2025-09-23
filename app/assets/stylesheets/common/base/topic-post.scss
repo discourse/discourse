@@ -1745,7 +1745,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     justify-content: end;
     gap: var(--space-1);
 
-    // avatar width + gap * max amount of users per row
+    // avatar width + gap * (max amount of users per row + 1)
     max-width: calc((var(--liked-users-list-avatar-size) + var(--space-1)) * 9);
     flex-wrap: wrap;
   }
