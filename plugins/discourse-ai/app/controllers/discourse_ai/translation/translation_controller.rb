@@ -7,6 +7,7 @@ module DiscourseAi
 
       before_action :ensure_logged_in
       before_action :check_permissions
+      before_action :rate_limit!
 
       def translate
         post = Post.find_by(id: params[:post_id])
@@ -30,6 +31,14 @@ module DiscourseAi
       def check_permissions
         if !current_user&.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
           raise Discourse::InvalidAccess
+        end
+      end
+
+      def rate_limit!
+        begin
+          RateLimiter.new(current_user, "ai_translate_post", 3, 5.minutes).performed!
+        rescue RateLimiter::LimitExceeded
+          render_json_error(I18n.t("rate_limiter.slow_down"))
         end
       end
     end
