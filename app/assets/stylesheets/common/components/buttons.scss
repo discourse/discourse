@@ -43,7 +43,7 @@
   --d-button-flat-icon-color--hover: var(--primary);
   --d-button-flat-bg-color: transparent;
   --d-button-flat-bg-color--hover: var(--d-hover);
-  --d-button-flat-bg-color--focus: var(--primary-low);
+  --d-button-flat-bg-color--focus: var(--d-hover);
   --d-button-flat-text-color--disabled: var(--primary);
 
   // .btn-flat.close
@@ -395,20 +395,9 @@
     $hover-bg-color: var(--d-button-flat-bg-color--hover),
     $hover-icon-color: var(--d-button-flat-icon-color--hover)
   );
+  border-radius: var(--d-button-border-radius);
 
   .discourse-no-touch & {
-    // &:hover,
-    // &:focus-visible {
-    //   color: var(--d-button-flat-text-color--hover);
-
-    //   .d-icon {
-    //     color: var(--d-button-flat-icon-color--hover);
-    //   }
-    // }
-
-    // &:hover {
-    //   background: var(--d-button-flat-bg-color--hover);
-    // }
     &:focus-visible {
       background: var(--d-button-flat-bg-color--focus);
     }
