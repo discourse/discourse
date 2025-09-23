@@ -68,7 +68,7 @@ export default class LikedUsersList extends Component {
   <template>
     <DMenu
       @modalForMobile={{true}}
-      @identifier={{concat "post-like-users_" @post.id}}
+      @identifier="post-like-users_{{@post.id}}"
       @triggers="click"
       @onShow={{this.fetchLikedUsers}}
       @triggerClass={{concatClass
