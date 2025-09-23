@@ -19,17 +19,14 @@ register_svg_icon "far-star"
 require_relative "lib/reaction_for_like_site_setting_enum.rb"
 require_relative "lib/reactions_excluded_from_like_site_setting_validator.rb"
 
+module ::DiscourseReactions
+  PLUGIN_NAME = "discourse-reactions"
+end
+
+require_relative "lib/discourse_reactions/engine"
+
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s
-
-  module ::DiscourseReactions
-    PLUGIN_NAME = "discourse-reactions"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscourseReactions
-    end
-  end
 
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb

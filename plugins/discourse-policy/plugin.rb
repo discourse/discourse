@@ -15,18 +15,15 @@ register_svg_icon "file-signature"
 
 enabled_site_setting :policy_enabled
 
+module ::DiscoursePolicy
+  PLUGIN_NAME = "discourse-policy"
+  HAS_POLICY = "HasPolicy"
+  POLICY_USER_DEFAULT_LIMIT = 25
+end
+
+require_relative "lib/discourse_policy/engine"
+
 after_initialize do
-  module ::DiscoursePolicy
-    PLUGIN_NAME = "discourse-policy"
-    HAS_POLICY = "HasPolicy"
-    POLICY_USER_DEFAULT_LIMIT = 25
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscoursePolicy
-    end
-  end
-
   require_relative "app/controllers/policy_controller"
   require_relative "app/models/policy_user"
   require_relative "app/models/post_policy_group"

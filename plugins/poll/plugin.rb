@@ -15,22 +15,16 @@ register_svg_icon "far-square-check"
 
 enabled_site_setting :poll_enabled
 
+module ::DiscoursePoll
+  PLUGIN_NAME = "poll"
+  DATA_PREFIX = "data-poll-"
+  HAS_POLLS = "has_polls"
+  DEFAULT_POLL_NAME = "poll"
+end
+
+require_relative "lib/poll/engine"
+
 after_initialize do
-  module ::DiscoursePoll
-    PLUGIN_NAME = "poll"
-    DATA_PREFIX = "data-poll-"
-    HAS_POLLS = "has_polls"
-    DEFAULT_POLL_NAME = "poll"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscoursePoll
-    end
-
-    class Error < StandardError
-    end
-  end
-
   require_relative "app/controllers/polls_controller"
   require_relative "app/models/poll_option"
   require_relative "app/models/poll_vote"

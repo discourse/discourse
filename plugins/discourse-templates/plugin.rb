@@ -13,16 +13,13 @@ register_asset "stylesheets/discourse-templates.scss"
 
 register_svg_icon "far-clipboard" if respond_to?(:register_svg_icon)
 
+module ::DiscourseTemplates
+  PLUGIN_NAME = "discourse-templates"
+end
+
+require_relative "lib/discourse_templates/engine"
+
 after_initialize do
-  module ::DiscourseTemplates
-    PLUGIN_NAME = "discourse-templates".freeze
-
-    class Engine < ::Rails::Engine
-      engine_name DiscourseTemplates::PLUGIN_NAME
-      isolate_namespace DiscourseTemplates
-    end
-  end
-
   require_relative "app/controllers/discourse_templates/templates_controller"
   require_relative "app/models/discourse_templates/usage_count"
   require_relative "app/serializers/discourse_templates/templates_serializer"
