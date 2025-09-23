@@ -1876,6 +1876,7 @@ he:
         in_progress: "(דוא״ל בשליחה)"
         error: "(שגיאה)"
         action: "שליחת דוא״ל לאיפוס סיסמה"
+        staged_user: "משתמשים מבוימים לא יכולים לקבל הודעות דוא״ל לאיפוס סיסמה."
         set_password: "הזן סיסמה"
         choose_new: "בחירת סיסמה חדשה"
         choose: "בחירת סיסמה"
@@ -2850,11 +2851,13 @@ he:
     welcome_banner_page_visibility:
       top_menu_pages: "עמודים מהתפריט העליון"
       homepage: "דף הבית"
+      discovery: "חשיפה"
       all_pages: "כל העמודים"
     composition_mode:
       markdown: "Markdown"
       rich: "טקסט עשיר"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2940,6 +2943,9 @@ he:
       confirm_publish: "לפרסם את הטיוטה הזו?"
       publishing: "נושא מתפרסם…"
     composer:
+      autocomplete:
+        username_missing: "תוצאת ההשלמה האוטומטית שנבחרה היא שם משתמש חסר."
+        name_missing: "תוצאת ההשלמה האוטומטית שנבחרה היא שם חסר."
       emoji: "אמוג׳י :)"
       more_emoji: "עוד…"
       options: "אפשרויות"
@@ -3092,7 +3098,15 @@ he:
       list_item: "פריט ברשימה"
       toggle_direction: "הפיכת כיוון"
       help: "עזרה בכתיבת Markdown"
+      collapse: "מזעור לוח העריכה"
+      open: "פתיחת לוח העריכה"
+      abandon: "סגירת העורך והשלכת הטיוטה"
+      enter_fullscreen: "כניסה לעריכה במסך מלא"
+      exit_fullscreen: "יציאה מעריכה במסך מלא"
       exit_fullscreen_prompt: "לחיצה על <kbd>ESC</kbd> תוציא אותך ממסך מלא"
+      show_toolbar: "הצגת סרגל עריכת הודעות"
+      hide_toolbar: "הסתרת סרגל עריכת הודעות"
+      peek_mode_toggle: "הפעלת/כיבוי מצב הצצה"
       modal_ok: "אישור"
       cant_send_pm: "אין לך אפשרות לשלוח הודעה אל %{username}, עמך הסליחה."
       create_message_error: "אירעה שגיאה ביצירת ההודעה הזאת, נא לנסות שוב, עמך הסליחה."
@@ -4980,6 +4994,7 @@ he:
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
     invalid_video_url: אי אפשר לנגן את הסרטון הזה כי הכתובת שגויה או לא זמינה.
     keyboard_shortcuts_help:
+      search_placeholder: "חיפוש אחר קיצור דרך לפי תיאור או צירוף מקשים."
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} או %{shortcut2}"
@@ -5168,7 +5183,6 @@ he:
         two: "בחירת %{count} תגיות מתוך ‚%{name}…"
         many: "בחירת %{count} תגיות מתוך ‚%{name}…"
         other: "בחירת %{count} תגיות מתוך ‚%{name}…"
-      info: "פרטים"
       default_info: "תגית זו אינה מוגבלת לקטגוריות כלשהן ואין לה מילים נרדפות."
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
@@ -5729,6 +5743,10 @@ he:
             bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
             default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
+    content_localization:
+      toggle_localized:
+        translated: "העמוד מתורגם על ידי מכונה. יש ללחוץ כדי לצפות במקור."
+        not_translated: "העמוד לא מתורגם. נא ללחוץ כדי לתרגם."
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -7613,6 +7631,7 @@ he:
             tag_group_change: "החלפת קבוצת תגיות"
             delete_associated_accounts: "מחיקת חשבונות משויכים"
             change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
+            stop_impersonating: "הפסקת התחזות"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -7804,6 +7823,7 @@ he:
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
         not_found: "לא ניתן למצוא את המשתמש הזה."
         invalid: "סליחה, אך אינך מורשה להתחזות למשתמש הזה."
+        error: "אופס, אירעה שגיאה בלתי צפויה."
       users:
         title: "משתמשים"
         description: "הצגת וניהול משתמשים."
@@ -8041,7 +8061,6 @@ he:
             cancel: "ביטול"
         merging_user: "המשתמש ממוזג…"
         merge_failed: "אירעה שגיאה במיזוג המשתמשים."
-        delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומפקחים."
         delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיום %{count} לא ניתן למחוק.)"

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
+import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -41,17 +42,12 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    const hideForRoutes = [
-      "signup",
-      "login",
-      "invites.show",
-      "activate-account",
-    ];
-
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      hideForRoutes.some((name) => name === this.router.currentRouteName) ||
+      ALL_PAGES_EXCLUDED_ROUTES.some(
+        (name) => name === this.router.currentRouteName
+      ) ||
       this.search.welcomeBannerSearchInViewport
     ) {
       return false;

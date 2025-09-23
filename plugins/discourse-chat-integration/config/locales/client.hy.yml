@@ -83,7 +83,6 @@ hy:
               help: "օրինակ՝ #ալիք, @օգտանուն:"
           errors:
             action_prohibited: "Բոտ այդ ալիքում գրառում կատարելու թույլտվություն չունի"
-            channel_not_found: "Տվյալ ալիքը գոյություն չունի slack-wum"
         telegram:
           title: "Telegram"
           param:

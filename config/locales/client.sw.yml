@@ -3264,7 +3264,6 @@ sw:
             cancel: "Ghairi"
           confirmation:
             cancel: "Ghairi"
-        delete_forbidden_because_staff: "Viongozi na wasimamizi hawawezi kufutwa."
         delete_posts_forbidden_because_staff: "Hauwezi kufuta machapisho yote za viongozi na wasimamizi."
         cant_delete_all_posts:
           one: "Hauwezi kufuta taarifa zote. Kuna taarifa ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"

@@ -6,9 +6,10 @@ module DiscoursePostEvent
       guardian = Guardian.new(user)
 
       build_base_query(guardian, user)
-        .then { |query| apply_filters(query, params, guardian, user) }
-        .then { |query| apply_date_filters(query, params) }
-        .then { |query| apply_category_filters(query, params) }
+        .then { |query| filter_by_post_id(query, params) }
+        .then { |query| filter_by_attending_user(query, params, guardian, user) }
+        .then { |query| filter_by_dates(query, params) }
+        .then { |query| filter_by_category(query, params) }
         .then { |query| apply_ordering(query) }
         .then { |query| apply_limit(query, params) }
     end
@@ -20,13 +21,16 @@ module DiscoursePostEvent
       pms = private_messages(user)
 
       DiscoursePostEvent::Event
-        .includes(:event_dates, :post, post: :topic)
+        .visible
+        .open
         .joins(post: :topic)
         .merge(Post.secured(guardian))
         .merge(topics.or(pms))
         .joins(latest_event_date_join)
         .select("discourse_post_event_events.*, latest_event_dates.starts_at")
-        .where("latest_event_dates.starts_at IS NOT NULL")
+        .where(
+          "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL) OR (discourse_post_event_events.original_starts_at IS NOT NULL)",
+        )
         .distinct
     end
 
@@ -41,18 +45,6 @@ module DiscoursePostEvent
           ORDER BY event_id, finished_at DESC NULLS FIRST, starts_at DESC
         ) latest_event_dates ON latest_event_dates.event_id = discourse_post_event_events.id
       SQL
-    end
-
-    def self.apply_filters(events, params, guardian, user)
-      events
-        .then { |query| filter_by_expiration(query, params) }
-        .then { |query| filter_by_post_id(query, params) }
-        .then { |query| filter_by_attending_user(query, params, guardian, user) }
-    end
-
-    def self.filter_by_expiration(events, params)
-      return events if params[:include_expired].to_s == "true"
-      events.where("latest_event_dates.finished_at IS NULL")
     end
 
     def self.filter_by_post_id(events, params)
@@ -83,50 +75,59 @@ module DiscoursePostEvent
       # If no user, can only see non-private events
       return events.where.not(status: private_status) if user.nil?
 
-      events.where(<<~SQL, private_status, private_status, user.id)
-  discourse_post_event_events.status != ? OR (
-    discourse_post_event_events.status = ? AND EXISTS (
-      SELECT 1 FROM discourse_post_event_invitees dpei
-      WHERE dpei.post_id = discourse_post_event_events.id
-      AND dpei.user_id = ?
-    )
-  )
-SQL
-    end
-
-    def self.apply_date_filters(events, params)
-      events
-        .then { |query| apply_before_date_filter(query, params) }
-        .then { |query| apply_after_date_filter(query, params) }
-        .then { |query| apply_end_date_filter(query, params) }
-    end
-
-    def self.apply_before_date_filter(events, params)
-      return events if params[:before].blank?
-
-      before_date = params[:before].to_datetime
-      events.where("discourse_post_event_events.original_starts_at < ?", before_date)
-    end
-
-    def self.apply_after_date_filter(events, params)
-      return events if params[:after].blank?
-
-      after_date = params[:after].to_datetime
+      # User can see private events if they are invited to them
       events.where(
-        "(discourse_post_event_events.recurrence_until IS NULL OR " \
-          "discourse_post_event_events.recurrence_until >= ?)",
-        after_date,
+        "discourse_post_event_events.status != ? OR (discourse_post_event_events.status = ? AND EXISTS (SELECT 1 FROM discourse_post_event_invitees WHERE post_id = discourse_post_event_events.id AND user_id = ?))",
+        private_status,
+        private_status,
+        user.id,
       )
     end
 
-    def self.apply_end_date_filter(events, params)
-      return events if params[:end_date].blank?
+    def self.filter_by_dates(events, params)
+      return events if params[:before].blank? && params[:after].blank?
 
-      end_date = params[:end_date].to_datetime
-      events.where("discourse_post_event_events.original_starts_at <= ?", end_date)
+      before_date = params[:before]&.to_datetime
+      after_date = params[:after]&.to_datetime
+
+      recurring_scope = build_recurring_date_scope(after_date, before_date)
+      non_recurring_scope = build_non_recurring_date_scope(after_date, before_date)
+
+      # Apply the combined scope using OR logic
+      events.merge(recurring_scope.or(non_recurring_scope))
     end
 
-    def self.apply_category_filters(events, params)
+    private
+
+    def self.build_recurring_date_scope(after_date, before_date)
+      scope = DiscoursePostEvent::Event.where.not(recurrence: nil)
+
+      if after_date
+        # For recurring events: original start date OR recurrence_until should be >= after_date
+        scope =
+          scope.where(
+            "original_starts_at >= ? OR recurrence_until IS NULL OR recurrence_until >= ?",
+            after_date,
+            after_date,
+          )
+      end
+
+      if before_date
+        # For recurring events: original start date should be < before_date
+        scope = scope.where("original_starts_at < ?", before_date)
+      end
+
+      scope
+    end
+
+    def self.build_non_recurring_date_scope(after_date, before_date)
+      scope = DiscoursePostEvent::Event.where(recurrence: nil)
+      scope = scope.where("latest_event_dates.starts_at >= ?", after_date) if after_date
+      scope = scope.where("latest_event_dates.starts_at < ?", before_date) if before_date
+      scope
+    end
+
+    def self.filter_by_category(events, params)
       return events if params[:category_id].blank?
 
       category_id = params[:category_id].to_i

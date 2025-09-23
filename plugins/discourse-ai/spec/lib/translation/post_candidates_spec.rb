@@ -84,9 +84,12 @@ describe DiscourseAi::Translation::PostCandidates do
     context "when (scenario B) 'done' determined by post localizations" do
       it "returns done = total if all posts have a localization in the locale" do
         locale = "pt_BR"
-        Fabricate(:post)
-        Post.all.each { |post| Fabricate(:post_localization, post:, locale:) }
-        Fabricate(:post_localization, locale: "pt")
+        Fabricate(:post, locale: "en")
+        Post.all.each do |post|
+          post.update(locale: "en")
+          Fabricate(:post_localization, post:, locale:)
+        end
+        PostLocalization.order("RANDOM()").first.update(locale: "pt")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
         expect(completion).to eq({ done: Post.count, total: Post.count })
@@ -94,11 +97,14 @@ describe DiscourseAi::Translation::PostCandidates do
 
       it "returns correct done and total if some posts have a localization in the locale" do
         locale = "es"
-        Fabricate(:post_localization, locale:)
-        Fabricate(:post_localization, locale: "not_es")
+        post1 = Fabricate(:post, locale: "en")
+        post2 = Fabricate(:post, locale: "fr")
+        Fabricate(:post_localization, post: post1, locale:)
+        Fabricate(:post_localization, post: post2, locale: "not_es")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq({ done: 1, total: Post.count })
+        posts_with_locale = Post.where.not(locale: nil).count
+        expect(completion).to eq({ done: 1, total: posts_with_locale })
       end
     end
 
@@ -107,15 +113,15 @@ describe DiscourseAi::Translation::PostCandidates do
 
       # translated candidates
       Fabricate(:post, locale:)
-      post2 = Fabricate(:post)
+      post2 = Fabricate(:post, locale: "en")
       Fabricate(:post_localization, post: post2, locale:)
 
       # untranslated candidate
-      post4 = Fabricate(:post)
+      post4 = Fabricate(:post, locale: "fr")
       Fabricate(:post_localization, post: post4, locale: "zh_CN")
 
       # not a candidate as it is a bot post
-      post3 = Fabricate(:post, user: Discourse.system_user)
+      post3 = Fabricate(:post, user: Discourse.system_user, locale: "de")
       Fabricate(:post_localization, post: post3, locale:)
 
       completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)

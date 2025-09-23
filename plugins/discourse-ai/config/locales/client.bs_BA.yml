@@ -55,6 +55,11 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
       spam:
         short_title: "Spam"
         enable: "Omogući"

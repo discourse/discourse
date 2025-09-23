@@ -28,7 +28,7 @@ export default class DiscoveryFilterNavigation extends Component {
       { site: this.site }
     );
 
-    return this.site.mobileView || (enableOnDesktop && this.args.canBulkSelect);
+    return this.args.canBulkSelect && (this.site.mobileView || enableOnDesktop);
   }
 
   <template>

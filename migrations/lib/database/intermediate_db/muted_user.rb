@@ -16,6 +16,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(created_at: nil, muted_user_id:, user_id:)
       ::Migrations::Database::IntermediateDB.insert(

@@ -168,6 +168,10 @@ export default class EmojiPicker extends Component {
 
   @action
   focusFilter(target) {
+    if (this.capabilities.isIOS) {
+      return;
+    }
+
     target?.focus({ preventScroll: true });
   }
 

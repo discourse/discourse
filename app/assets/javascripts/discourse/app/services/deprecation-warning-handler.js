@@ -3,6 +3,7 @@ import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
+import dasherize from "discourse/helpers/dasherize";
 import { bind } from "discourse/lib/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
@@ -40,7 +41,7 @@ const REPLACEMENT_URLS = {};
 
 if (DEBUG) {
   // used in system specs
-  CRITICAL_DEPRECATIONS.push("fake-deprecation");
+  CRITICAL_DEPRECATIONS.push(/fake-deprecation.*/);
 }
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
@@ -58,7 +59,7 @@ export default class DeprecationWarningHandler extends Service {
   @service currentUser;
   @service siteSettings;
 
-  #adminWarned = false;
+  #adminWarned = new Set();
 
   constructor() {
     super(...arguments);
@@ -84,10 +85,6 @@ export default class DeprecationWarningHandler extends Service {
   }
 
   maybeNotifyAdmin(opts, source) {
-    if (this.#adminWarned) {
-      return;
-    }
-
     if (!this.currentUser?.admin) {
       return;
     }
@@ -110,11 +107,15 @@ export default class DeprecationWarningHandler extends Service {
   }
 
   notifyAdmin({ id, url }, source) {
+    if (this.#adminWarned.has(id)) {
+      return;
+    }
+
+    this.#adminWarned.add(id);
+
     if (REPLACEMENT_URLS[id]) {
       url = REPLACEMENT_URLS[id];
     }
-
-    this.#adminWarned = true;
 
     let sourceString;
     if (source?.type === "theme") {
@@ -146,7 +147,7 @@ export default class DeprecationWarningHandler extends Service {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
     }
 
-    addGlobalNotice(notice, "critical-deprecation", {
+    addGlobalNotice(notice, `critical-deprecation--${dasherize(id)}`, {
       dismissable: true,
       dismissDuration: moment.duration(1, "day"),
       level: "warn",

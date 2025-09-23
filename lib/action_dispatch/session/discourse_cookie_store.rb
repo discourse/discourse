@@ -22,6 +22,9 @@ class ActionDispatch::Session::DiscourseCookieStore < ActionDispatch::Session::C
       end
     end
     cookie_jar(request)[@key] = cookie
+  rescue ActionDispatch::Cookies::CookieOverflow
+    Rails.logger.error("Cookie overflow occurred for #{@key}: #{request.session.to_h.inspect}")
+    raise
   end
 
   def session_has_changed?(request, session)

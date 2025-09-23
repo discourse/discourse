@@ -27,6 +27,16 @@ export default class PostMenuAddTranslationButton extends Component {
     );
   }
 
+  get addTranslationsLabel() {
+    if (this.showAsMenu) {
+      return i18n("post.localizations.manage", {
+        count: this.args.post.post_localizations_count,
+      });
+    }
+
+    return i18n("post.localizations.add");
+  }
+
   get viewTranslationLabel() {
     return i18n("post.localizations.view", {
       count: this.args.post.post_localizations_count,
@@ -81,7 +91,7 @@ export default class PostMenuAddTranslationButton extends Component {
           ...attributes
           @identifier="post-action-menu-edit-translations"
           class="update-translations-menu"
-          @title={{i18n "post.localizations.add"}}
+          @title={{this.addTranslationsLabel}}
           @icon="discourse-add-translation"
           @onRegisterApi={{this.onRegisterApi}}
           @arrow={{false}}

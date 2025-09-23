@@ -84,7 +84,6 @@ gl:
               help: "i.e. #canle, @usuario."
           errors:
             action_prohibited: "O bot non ten permisos para publicar nesta canle"
-            channel_not_found: "A canle especificada non existe en Slack"
         telegram:
           title: "Telegram"
           param:

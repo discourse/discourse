@@ -2475,7 +2475,6 @@ it:
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
     content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
     content_localization_allowed_groups: "Gruppi autorizzati ad aggiornare i contenuti localizzati. Richiede \"localizzazione dei contenuti abilitata\"."
-    content_localization_anon_language_switcher: "Abilita il selettore di lingua, che consente ai visitatori del sito che non hanno effettuato l'accesso di passare dalle versioni tradotte di Discourse ai contenuti forniti dagli utenti. Dipende dall'elenco delle lingue definite in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
       invalid_email: "Indirizzo email non valido."
@@ -2547,7 +2546,6 @@ it:
       invalid_uncategorized_category_setting: 'La categoria "Senza categoria" non può essere selezionata se gli argomenti senza categoria non sono consentiti.'
       invalid_search_ranking_weights: "Il valore non è valido per l'impostazione del sito search_ranking_weights. Esempio: '{0.1,0.2,0.3,1.0}'. Si noti che il valore massimo per ciascun peso è 1,0."
       content_localization_locale_limit: "Il numero di impostazioni locali supportate non può superare %{max}."
-      content_localization_anon_language_switcher_requirements: "Il selettore della lingua richiede che l'impostazione del sito `imposta le impostazioni di localizzazione dal cookie` sia abilitata e che in `Impostazioni locali supportate per la localizzazione dei contenuti` sia presente almeno una lingua."
       mediaconvert_role_arn_required: "Quando si utilizza AWS MediaConvert per la conversione video, è necessario l'ARN del ruolo AWS IAM."
       s3_credentials_required_for_video_conversion: "Per la conversione video sono necessarie le credenziali S3. Configura le chiavi di accesso S3 o abilita il profilo IAM."
     keywords:

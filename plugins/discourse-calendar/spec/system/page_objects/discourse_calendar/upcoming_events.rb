@@ -22,18 +22,26 @@ module PageObjects
 
         def open_year_view
           find(".fc-listYear-button").click
+          expect(page).to have_css(".fc-listYear-view")
+          wait_for_timeout
         end
 
         def open_day_view
           find(".fc-timeGridDay-button").click
+          expect(page).to have_css(".fc-timeGridDay-view")
+          wait_for_timeout
         end
 
         def open_week_view
           find(".fc-timeGridWeek-button").click
+          expect(page).to have_css(".fc-timeGridWeek-view")
+          wait_for_timeout
         end
 
         def open_month_view
           find(".fc-dayGridMonth-button").click
+          expect(page).to have_css(".fc-dayGridMonth-view")
+          wait_for_timeout
         end
 
         def open_mine_events
@@ -114,6 +122,44 @@ module PageObjects
 
         def expect_event_at_position(title, row:, col:)
           expect(self).to have_event_at_position(title, row: row, col: col)
+        end
+
+        def find_event_by_title(title)
+          find(".fc-event", text: title)
+        end
+
+        def has_event_with_time?(title, time)
+          event = find_event_by_title(title)
+          event.has_css?(".fc-list-event-time", text: time)
+        end
+
+        def get_event_height(title)
+          find_event_by_title(title).native.bounding_box["height"]
+        end
+
+        def find_all_events_by_title(title)
+          all(".fc-event", text: title)
+        end
+
+        def has_event_height?(title, expected_height)
+          height = get_event_height(title)
+          height >= expected_height - 1 && height <= expected_height + 1
+        end
+
+        def first_weekday_header_text
+          find(".fc-col-header .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion").text
+        end
+
+        def has_first_column_as_sunday?
+          has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-sun", minimum: 1)
+        end
+
+        def has_first_column_as_saturday?
+          has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-sat", minimum: 1)
+        end
+
+        def has_first_column_as_monday?
+          has_css?(".fc-daygrid-body tr td:nth-child(1).fc-day-mon", minimum: 1)
         end
       end
     end

@@ -24,6 +24,14 @@ discourse_calendar:
     list_type: simple
     client: true
     default: ""
+  calendar_event_display:
+    client: true
+    default: "auto"
+    type: enum
+    choices:
+      - auto
+      - block
+      - list-item
   calendar_categories_outlet:
     client: true
     default: "discovery-list-container-top"
@@ -113,6 +121,8 @@ discourse_calendar:
     client: true
     default: ""
     json_schema: DiscourseCalendar::SiteSettings::MapEventsTitleJsonSchema
-  include_expired_events_on_calendar:
-    default: false
+  calendar_first_day_of_week:
+    type: enum
+    enum: "CalendarFirstDayOfWeek"
+    default: monday
     client: true

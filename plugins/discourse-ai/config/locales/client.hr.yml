@@ -59,6 +59,11 @@ hr:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prijevodi"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Zadnjih 7 dana"

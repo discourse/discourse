@@ -128,15 +128,15 @@ ur:
           created: بنایا گیا
           topics: تمام موضوعات
           with_images: تصاویر
-          with_links: لنکس
+          with_links: رابطے
           with_code: کَوڈ
           with_uploads: اَپ لوڈز
         user_updated:
           fields:
             once_per_user:
-              label: ایک بار فی صارف
+              label: ایک بار فی رکن
             new_users_only:
-              label: صرف نئے صارفین
+              label: صرف نئے اراکین
         category_created_edited:
           fields:
             restricted_category:
@@ -161,13 +161,13 @@ ur:
         post:
           fields:
             creator:
-              updated_user_context: تازہ ترین صارف
+              updated_user_context: تازہ ترین رکن
             topic:
               label: ٹاپک ID
         topic:
           fields:
             creator:
-              updated_user_context: تازہ ترین صارف
+              updated_user_context: تازہ ترین رکن
             title:
               label: موضوع کا عنوان
             category:
@@ -194,8 +194,8 @@ ur:
             group:
               label: گروپ
             update_user_title_and_flair:
-              label: صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
-              description: اختیاری، صارف کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
+              label: رکن کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
+              description: اختیاری، رکن کے عنوان اور صلاحیتی پہچان کو اپ ڈیٹ کریں
             badge:
               label: تمغہ
         suspend_user_by_email:

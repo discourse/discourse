@@ -243,7 +243,7 @@ ja:
           proofread: テキストの校正
           title_suggestions: "タイトルの提案"
           explain: "説明"
-          illustrate_post: "投稿のイラスト作成"
+          illustrate_post: "イラスト投稿"
           smart_dates: "スマート日付"
           translate: "翻訳"
           markdown_tables: "Markdown テーブルの生成"
@@ -282,9 +282,8 @@ ja:
             configure: "翻訳を構成"
             empty_label: "自動翻訳は無効です。構成するには以下をクリックしてください"
         progress_chart:
-          title: "翻訳の進捗状況"
-          completed: "完了"
-          remaining: "残り"
+          bar_done:
+            other: "投稿 %{count} 件"
       spam:
         short_title: "迷惑"
         title: "迷惑処理の構成"
@@ -301,7 +300,7 @@ ja:
         enable: "有効化"
         spam_tip: "AI 迷惑検出機能は、公開トピックのすべての新規ユーザーによる最初の 3 件の投稿をスキャンします。レビューを行うために通報し、迷惑の可能性がある場合はユーザーをブロックします。"
         settings_saved: "設定が保存されました"
-        spam_description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで検査できるように通報します"
+        spam_description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
         no_llms: "使用できる LLM はありません"
         test_button: "テスト..."
         save_button: "変更を保存"
@@ -572,7 +571,7 @@ ja:
           ai_spam: "迷惑"
           automation: "自動化 (%{persona})"
         in_use_warning:
-          other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。"
+          other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
           anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"

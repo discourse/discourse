@@ -167,6 +167,15 @@ zh_CN:
             flag_post:
               label: "标记帖子"
               description: "标记帖子（垃圾信息或请求审核）"
+            notify_author_pm:
+              label: "通过 PM 通知作者"
+              description: "当帖子排队并删除时，向帖子作者发送个人消息"
+            notify_author_pm_user:
+              label: "PM 发送者"
+              description: "发送 PM 的用户（默认为系统）"
+            notify_author_pm_message:
+              label: "PM 消息"
+              description: "可选发送给作者的自定义消息"
             include_personal_messages:
               label: "包括个人消息"
               description: "同时扫描个人消息并对其进行分类"
@@ -281,10 +290,14 @@ zh_CN:
           disabled_state:
             configure: "配置翻译"
             empty_label: "自动翻译已禁用，点击下方进行配置"
+        stats:
+          complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
+          incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
+          backfill_disabled: "回填功能目前已禁用。"
         progress_chart:
-          title: "翻译进度"
-          completed: "已完成"
-          remaining: "剩余"
+          title: "翻译进度 %{tooltip}"
+          bar_done:
+            other: "%{count} 个帖子"
       spam:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"

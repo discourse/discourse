@@ -33,6 +33,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(
       original_id:,

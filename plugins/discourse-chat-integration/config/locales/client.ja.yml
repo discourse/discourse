@@ -84,7 +84,6 @@ ja:
               help: "例: #channel、@username。"
           errors:
             action_prohibited: "ボットには、そのチャンネルに投稿する権限がありません"
-            channel_not_found: "指定されたチャンネルは Slack に存在しません"
         telegram:
           title: "Telegram"
           param:

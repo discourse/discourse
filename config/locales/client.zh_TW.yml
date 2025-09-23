@@ -4244,7 +4244,6 @@ zh_TW:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
         other: "從 '%{name}' 中選擇 %{count} 個標記…"
-      info: "資訊"
       default_info: "此標記不限於任何類別，並且沒有同義詞。"
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
@@ -6675,7 +6674,6 @@ zh_TW:
             cancel: "取消"
         merging_user: "合併使用者…"
         merge_failed: "合併用戶時發生錯誤。"
-        delete_forbidden_because_staff: "管理員與板主不可刪除。"
         delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
           other: "不能刪除擁有貼文的使用者。請先刪除所有貼文後才能刪除該使用者。( 發表超過 %{count} 天的貼文不能刪除 )"

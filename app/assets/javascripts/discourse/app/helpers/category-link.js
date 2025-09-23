@@ -35,6 +35,9 @@ export function addExtraIconRenderer(renderer) {
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
     @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
     @param {Array}   [opts.ancestors] The ancestors of the category to generate the badge for.
+    @param {String}  [opts.styleType] Badge style, either "icon", "emoji" or "square" (default).
+    @param {String}  [opts.emoji] The emoji to use for the badge (if styleType is "emoji").
+    @param {String}  [opts.icon] The icon to use for the badge (if styleType is "icon").
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();
@@ -62,10 +65,14 @@ export function categoryBadgeHTML(category, opts) {
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
     const { ancestors, ...otherOpts } = opts;
+
+    // allow each ancestor to use its own styles
+    ["styleType", "icon", "emoji"].forEach((k) => delete otherOpts[k]);
+
     return [category, ...ancestors]
       .reverse()
       .map((c) => {
-        return categoryBadgeHTML(c, { ...otherOpts, styleType: null });
+        return categoryBadgeHTML(c, { ...otherOpts });
       })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
@@ -229,6 +236,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
       "category_row.subcategory_count",
       { count: opts.subcategoryCount }
     )}</span>`;
+  }
+
+  if (opts.readOnly) {
+    const desc = i18n("category_row.read_only");
+    html += `<span class="read-only" aria-label="${desc}">${desc}</span>`;
   }
 
   if (href) {

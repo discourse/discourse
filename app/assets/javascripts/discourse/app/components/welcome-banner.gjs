@@ -13,6 +13,14 @@ import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
+export const ALL_PAGES_EXCLUDED_ROUTES = [
+  "activate-account",
+  "invites.show",
+  "login",
+  "password-reset",
+  "signup",
+];
+
 export default class WelcomeBanner extends Component {
   @service router;
   @service siteSettings;
@@ -51,22 +59,26 @@ export default class WelcomeBanner extends Component {
   });
 
   get displayForRoute() {
-    switch (this.siteSettings.welcome_banner_page_visibility) {
+    const { currentRouteName } = this.router;
+    const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
+
+    switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
-        return this.siteSettings.top_menu
+        return top_menu
           .split("|")
-          .any(
-            (menuItem) =>
-              `discovery.${menuItem}` === this.router.currentRouteName
-          );
+          .any((menuItem) => `discovery.${menuItem}` === currentRouteName);
       case "homepage":
-        return (
-          this.router.currentRouteName === `discovery.${defaultHomepage()}`
-        );
+        return currentRouteName === `discovery.${defaultHomepage()}`;
       case "discovery":
-        return this.router.currentRouteName.startsWith("discovery.");
+        return currentRouteName.startsWith("discovery.");
       case "all_pages":
-        return true;
+        return (
+          currentRouteName !== "full-page-search" &&
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
       default:
         return false;
     }

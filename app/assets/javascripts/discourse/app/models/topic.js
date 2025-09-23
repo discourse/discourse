@@ -823,10 +823,14 @@ export default class Topic extends RestModel {
     return this;
   }
 
-  reload() {
-    return ajax(`/t/${this.id}`, { type: "GET" }).then((topic_json) =>
-      this.updateFromJson(topic_json)
-    );
+  reload(opts = {}) {
+    const url = opts.post_number
+      ? `/t/${this.id}?post_number=${opts.post_number}`
+      : `/t/${this.id}`;
+
+    return ajax(url, { type: "GET" }).then((topic_json) => {
+      this.updateFromJson(topic_json);
+    });
   }
 
   clearPin() {

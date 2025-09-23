@@ -417,12 +417,19 @@ hr:
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
     default_descriptions:
+      admins: "Odgovorni za konfiguriranje i održavanje ove stranice, s pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
   education:
     until_posts:
       one: "%{count} objava"
       few: "%{count} objava"
       other: "%{count} objava"
+    "new-topic": |
+      Hvala na doprinosu u %{site_name}!
+
+      Prije nego što objavite, odaberite kategoriju ili oznaku kako biste grupirali ovu temu s povezanim raspravama kako bi je drugi lakše pronašli.
+
+      Za više savjeta i uputa o sudjelovanju u našoj zajednici, [pogledajte naše smjernice zajednice](%{base_path}/smjernice).
   activerecord:
     attributes:
       category:
@@ -489,6 +496,21 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
+  discourse_welcome_topic:
+    body: |
+      Drago nam je što ste nam se pridružili.
+
+      %{site_info_quote}
+
+      Evo nekoliko stvari koje možete učiniti za početak:
+
+      :speaking_head: **Predstavite se** dodavanjem svoje slike i informacija o sebi i svojim interesima u [svoj profil](%{base_path}/my/preferences/account). O čemu biste željeli da vas pitamo?
+
+      :open_book: **Upoznajte zajednicu** [pregledavanjem rasprava](%{base_path}/latest) koje se ovdje već događaju. Kada smatrate da je objava zanimljiva, informativna ili zabavna, upotrijebite :heart: kako biste pokazali svoju zahvalnost ili podršku!
+
+      :handshake: **Doprinesite** komentiranjem, dijeljenjem vlastite perspektive, postavljanjem pitanja ili davanjem povratnih informacija u raspravi. Prije nego što odgovorite ili započnete nove teme, molimo vas da pregledate [Smjernice zajednice](%{base_path}/faq).
+
+      > Ako vam je potrebna pomoć ili imate prijedlog, slobodno pitajte u %{feedback_category} ili [kontaktirajte administratore](%{base_path}/about).
   category:
     topic_prefix: "O %{category} kategoriji"
     post_template: "%{replace_paragraph}\n\nKoristite sljedeće odlomke za dulji opis ili za postavljanje smjernica ili pravila kategorije:\n\n- Zašto bi ljudi trebali koristiti ovu kategoriju? Čemu služi?\n\n- Po čemu se točno ovo razlikuje od ostalih kategorija koje već imamo?\n\n- Što bi teme u ovoj kategoriji općenito trebale sadržavati?\n\n- Trebamo li ovu kategoriju? Možemo li se spojiti s drugom kategorijom ili potkategorijom?\n"
@@ -699,7 +721,7 @@ hr:
     connected: "(povezano)"
   activation:
     already_done: "Žao nam je, poveznica za aktivaciju računa više nije važeća. Možda vam je račun već aktivan?"
-    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
+    approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobit ćete email kad vam račun bude odobren!"
     missing_session: "Ne možemo utvrditi je li vaš korisnički račun kreiran, molimo osigurajte da su vam omogućeni cookieji (kolačići)."
     activated: "Žao nam je, ovaj korisnički račun je već aktiviran."
     admin_confirm:
@@ -2257,6 +2279,86 @@ hr:
     rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
   guidelines_topic:
     guidelines_title: "Vodić za uporabu"
+    body: |
+      ## Ovo je civilizirano mjesto za javnu raspravu
+
+      Molimo vas da se prema ovom forumu odnosite s istim poštovanjem kao prema javnom parku. I mi smo zajednički resurs zajednice – mjesto za dijeljenje vještina, znanja i interesa kroz stalnu razmjenu mišljenja.
+
+      Ovo nisu stroga pravila, nego smjernice koje pomažu očuvati ovo mjesto ugodnim, prijateljskim i prikladnim za civiliziranu javnu raspravu.
+
+      ## Poboljšajte raspravu
+
+      Pomozite nam da ovo bude izvrsno mjesto za razmjenu mišljenja tako što ćete uvijek dodati nešto korisno i pozitivno, ma koliko malo. Ako niste sigurni doprinosi li vaša objava razgovoru, zastanite, razmislite i pokušajte ponovno kasnije.
+
+      Jedan od načina za poboljšanje rasprave jest otkrivanje onih koje se već vode. Provedite vrijeme pregledavajući objave prije nego što započnete vlastitu, pa ćete lakše pronaći ljude koji dijele vaše interese.
+
+      Poštujte objave i ljude koji u njima sudjeluju, čak i kada se ne slažete s njima.
+
+      ## Budite susretljivi, čak i kada se ne slažete
+
+      Neslaganje je dopušteno. Kritizirajte ideje, a ne osobe. Molimo vas da izbjegavate:
+
+      *vrijeđanje
+
+      *osobne napade
+
+      Umjesto toga, nudite promišljene uvide koji obogaćuju raspravu.
+
+      ## Vaše sudjelovanje je važno
+
+      Pomozite nam oblikovati budućnost zajednice tako da sudjelujete u objavama koje čine forum zanimljivim mjestom – i izbjegavajte one koje ga osiromašuju.
+
+      Forum nudi alate za prepoznavanje najboljih doprinosa: oznake, lajkove, prijave, odgovore, uređivanja, praćenje, obavijesti i drugo. Koristite ih kako biste poboljšali svoje i tuđe iskustvo.
+
+      Ostavimo zajednicu boljom nego što smo je zatekli.
+
+      ## Ako vidite problem, prijavite ga
+
+      Moderatori imaju posebne ovlasti i odgovorni su za forum. Ali i vi ste odgovorni. Uz vašu pomoć, moderatori mogu biti vodiči zajednice, a ne samo čuvari reda.
+
+      Kad naiđete na loše ponašanje, nemojte odgovarati – to ga samo potiče. Umjesto toga, prijavite ga. Ako se skupi dovoljno prijava, poduzet će se mjere, bilo automatski ili uz pomoć moderatora.
+
+      Moderatori zadržavaju pravo ukloniti bilo koju objavu ili korisnički račun u bilo kojem trenutku, iz bilo kojeg razloga. Oni ne pregledavaju nove objave unaprijed i ne snose odgovornost za sadržaj koji objavljuje zajednica.
+
+      ## Budite pristojni
+
+      Ništa ne narušava zdravu raspravu kao grubost:
+
+      *Budite pristojni. Ne objavljujte ništa što bi razumna osoba smatrala uvredljivim ili govorom mržnje.
+
+      *Održavajte čistoću. Ne objavljujte ništa opsceno ili seksualno eksplicitno.
+
+      *Poštujte druge. Ne uznemiravajte, ne vrijeđajte i ne razotkrivajte privatne podatke.
+
+      *Poštujte forum. Ne objavljujte neželjeni sadržaj i ne kvarite tuđe iskustvo.
+
+      Ako niste sigurni je li nešto primjereno, zapitajte se: “Kako bih se osjećao/la da ovo izađe na naslovnici dnevnih novina?”
+
+      ## Održavajte urednost
+
+      Trudite se objavljivati na pravom mjestu:
+
+      *ne započinjite objavu u krivoj kategoriji – pročitajte opise kategorija.
+
+      *ne objavljujte istu objavu u više kategorija.
+
+      *ne šaljite odgovore bez sadržaja.
+
+      *ne preusmjeravajte raspravu mijenjajući originalnu objavu.
+
+      *ne potpisujte objave – svaka već ima vaše korisničke podatke.
+
+      Umjesto „+1“ ili „Slažem se“, koristite gumb „Sviđa mi se“. Ako želite raspravu odvesti u drugom smjeru, otvorite povezanu objavu.
+
+      Ovo je javni forum, a rasprave indeksiraju tražilice. Zato neka jezik, poveznice i slike budu prikladni za obitelj i prijatelje
+
+      ## Objavljujte samo vlastite stvari
+
+      Nemojte dijeliti tuđe sadržaje bez dozvole. Ne smijete objavljivati poveznice, upute ili materijale koji krše autorska prava (npr. softver, glazbu, video ili slike), niti poticati kršenje zakona.
+
+      ## Powered by Schrack
+
+      Ovu stranicu vodi vaš prijateljski tim moderatora i vi, the community. Ako imate dodatna pitanja o tome kako stvari ovdje trebaju funkcionirati, otvorite novu temu i razgovarajmo! Ako postoji kritični ili hitni problem koji se ne može riješiti objavom ili prijavom, kontaktirajte moderatore.
   tos_topic:
     title: "Uvjeti korištenja"
   privacy_topic:
@@ -2267,6 +2369,7 @@ hr:
       description: Prva izmjena objave
     basic_user:
       name: Osnovno
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobrene</a> sve osnovne funkcije
     member:
       name: Član
     regular:
@@ -2311,11 +2414,18 @@ hr:
       name: Prvi citat
     read_guidelines:
       name: Pročitao smjernice
+      description: Pročitajte <a href="%{base_uri}/guidelines">smjernice zajednice</a>
     reader:
       name: Čitatelj
+    first_emoji:
+      name: Prvi emotikon
+      description: Korišten je emotikon u objavi
     first_onebox:
       long_description: |
         Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
+    enthusiast:
+      name: Entuzijast
+      description: Posjetio 10 dana za redom
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   tags:
     title: "Oznake"

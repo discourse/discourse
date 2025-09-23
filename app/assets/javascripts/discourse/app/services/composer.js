@@ -6,7 +6,6 @@ import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
@@ -113,6 +112,7 @@ export default class ComposerService extends Service {
   editReason = null;
   scopedCategoryId = null;
   prioritizedCategoryId = null;
+  readOnlyCategoryId = null;
   lastValidatedAt = null;
   isUploading = false;
   isProcessingUpload = false;
@@ -836,8 +836,6 @@ export default class ComposerService extends Service {
   // Toggle the reply view
   @action
   async toggle() {
-    this.closeAutocomplete();
-
     const composer = this.model;
 
     if (composer?.viewOpenOrFullscreen) {
@@ -1345,6 +1343,7 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.disableScopedCategory]
    @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
    @param {Number} [opts.prioritizedCategoryId]
+   @param {Number} [opts.readOnlyCategoryId] Shows category as read-only in category chooser, with a read-only badge
    @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
@@ -1372,6 +1371,7 @@ export default class ComposerService extends Service {
       editReason: null,
       scopedCategoryId: null,
       prioritizedCategoryId: null,
+      readOnlyCategoryId: null,
       skipAutoSave: true,
     });
 
@@ -1401,6 +1401,10 @@ export default class ComposerService extends Service {
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
+    }
+
+    if (opts.readOnlyCategoryId) {
+      this.set("readOnlyCategoryId", opts.readOnlyCategoryId);
     }
 
     // If we want a different draft than the current composer, close it and clear our model.
@@ -1462,6 +1466,9 @@ export default class ComposerService extends Service {
 
   @action
   async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
+    const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    tags = await this.filterTags(tags);
+
     return this.open({
       prioritizedCategoryId: category?.id,
       topicCategoryId: category?.id,
@@ -1473,6 +1480,7 @@ export default class ComposerService extends Service {
       draftKey: this.topicDraftKey,
       draftSequence: 0,
       locale: null,
+      readOnlyCategoryId,
     });
   }
 
@@ -1487,6 +1495,23 @@ export default class ComposerService extends Service {
       draftKey: this.privateMessageDraftKey,
       hasGroups,
     });
+  }
+
+  async filterTags(tags) {
+    if (!tags || this.currentUser?.staff) {
+      return tags;
+    }
+
+    if (typeof tags === "string") {
+      tags = await this.store.findAll("listTag", {
+        only_tags: tags.split(","),
+      });
+    }
+
+    return tags
+      .filter((t) => !t.staff)
+      .map((t) => t.name)
+      .join(",");
   }
 
   // Given a potential instance and options, set the model for this composer.
@@ -1817,10 +1842,6 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
-  }
-
-  closeAutocomplete() {
-    $(".d-editor-input").autocomplete({ cancel: true });
   }
 
   @discourseComputed("model.action")

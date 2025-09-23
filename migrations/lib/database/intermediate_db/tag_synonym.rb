@@ -6,6 +6,7 @@ module Migrations::Database::IntermediateDB
       INSERT INTO tag_synonyms (synonym_tag_id, target_tag_id)
       VALUES (?, ?)
     SQL
+    private_constant :SQL
 
     def self.create(synonym_tag_id:, target_tag_id:)
       ::Migrations::Database::IntermediateDB.insert(SQL, synonym_tag_id, target_tag_id)

@@ -2483,7 +2483,6 @@ es:
     content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
     content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
     content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
-    content_localization_anon_language_switcher: "Activa el selector de idiomas, que permite que los visitantes del sitio que no hayan iniciado sesión puedan cambiar entre versiones traducidas de Discourse y contenido aportado por los usuarios. Depende de la lista de idiomas configurados en «idiomas compatibles con la localización de contenido»."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2555,7 +2554,6 @@ es:
       invalid_uncategorized_category_setting: 'No se puede seleccionar la categoría «Sin categoría» si no está activada la opción «Permitir temas sin categorizar».'
       invalid_search_ranking_weights: "El valor no es válido para la configuración del sitio search_ranking_weights. Por ejemplo: «{0.1,0.2,0.3,1.0}». Ten en cuenta que el valor máximo para cada peso es 1,0."
       content_localization_locale_limit: "La cantidad de idiomas locales compatibles no puede ser superior a %{max}."
-      content_localization_anon_language_switcher_requirements: "El selector de idioma requiere que el ajuste del sitio «set locale from cookie» esté activado y que la opción «content localization supported locales» tenga al menos un idioma."
       mediaconvert_role_arn_required: "ARN de función de AWS IAM es obligatorio para usar MediaConvert para la conversión de vídeo."
       s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:

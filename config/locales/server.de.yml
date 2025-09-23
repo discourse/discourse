@@ -2459,6 +2459,8 @@ de:
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
+    experimental_impersonation: "Schlüpfe in die Rolle eines anderen Benutzers, ohne dich von deinem Administratorkonto abmelden zu müssen."
+    experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
@@ -2475,7 +2477,7 @@ de:
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
-    content_localization_anon_language_switcher: "Aktiviere den Sprachumschalter, mit dem nicht eingeloggte Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Die verfügbaren Sprachen entsprechen der Liste in ‚content localization supported locales‘."
+    content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in ‚content localization supported locales‘ festgelegt wurden."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2547,7 +2549,7 @@ de:
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
       content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
-      content_localization_anon_language_switcher_requirements: "Für den Sprachumschalter muss die Seiteneinstellung `set locale from cookie` aktiviert sein und `content localization supported locales` muss mindestens eine Sprache enthalten."
+      content_localization_language_switcher_requirements: "Für den Sprachumschalter müssen die Seiteneinstellungen ‚set locale from cookie‘ und ‚allow user locale‘ aktiviert sein und ‚content localization supported locales‘ muss mindestens eine Sprache enthalten."
       mediaconvert_role_arn_required: "Die AWS IAM role ARN ist erforderlich, wenn du AWS MediaConvert für die Videokonvertierung verwendest."
       s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
     keywords:
@@ -2620,7 +2622,10 @@ de:
       in_muted: "Stummgeschaltete Themen anzeigen"
       in_normal: "Themen mit normaler Benachrichtigungsstufe anzeigen"
       in_watching_first_post: "Themen anzeigen, bei denen du den ersten Beitrag beobachtest"
+      in_new: "Themen anzeigen, die neu sind oder neue Antworten haben"
+      in_new_replies: "Themen mit neuen Antworten anzeigen"
       in_new_topics: "Zeige neue Themen"
+      in_unseen: "Themen anzeigen, die du noch nicht gesehen hast"
       order_activity: "Nach letzter Aktivität sortieren (die neuesten zuerst)"
       order_activity_asc: "Nach letzter Aktivität sortieren (die ältesten zuerst)"
       order_category: "Nach Kategoriename sortieren (Z-A)"
@@ -5327,19 +5332,30 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      user_actions:
+        bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:
         title: "Keine Aktion"
+        description: "Keine Maßnahmen gegen den Benutzer ergreifen"
+        complete: "Keine Maßnahmen gegen den Benutzer ergriffen"
       silence_user:
         title: "Benutzer stummschalten"
+        description: "Benutzer daran hindern Beiträge zu veröffentlichen"
         complete: "Benutzer stummgeschaltet"
+        reason: "Benutzer von der Warteschlange zur Überprüfung aus stummgeschaltet"
       suspend_user:
         title: "Benutzer sperren"
+        description: "Das Benutzerkonto sperren"
         complete: "Benutzer gesperrt"
+        reason: "Benutzer von der Warteschlange zur Überprüfung aus gesperrt"
       delete_user:
         title: "Benutzer löschen"
+        description: "Diesen Benutzer aus dem Forum löschen"
         complete: "Benutzer gelöscht"
         reason: "Gelöscht via Warteschlange zur Überprüfung"
       delete_and_block_user:
+        title: "Löschen & Blockieren"
+        description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
         complete: "Benutzer gelöscht und gesperrt"
   email_style:
     html_missing_placeholder: "Die HTML-Vorlage muss %{placeholder} beinhalten"
@@ -5384,6 +5400,8 @@ de:
       reserved_id: "hat ein reserviertes Schlüsselwort als ID: %{id}"
       unsafe_description: "hat eine unsichere HTML-Beschreibung"
       invalid_tag_group: "hat eine ungültige Schlagwortgruppe: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Diese Webseite ist bereits mit Discourse ID registriert"
   activemodel:
     errors:
       <<: *errors

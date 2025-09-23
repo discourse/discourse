@@ -83,7 +83,6 @@ ca:
               help: "per exemple #canal, @nomdusuari."
           errors:
             action_prohibited: "El bot no té permís per a publicar en aquest canal"
-            channel_not_found: "El canal especificat no existeix en Slack"
         telegram:
           title: "Telegram"
           param:

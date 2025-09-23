@@ -54,7 +54,6 @@ it:
     calendar_automatic_holidays_enabled: "Imposta automaticamente lo stato di vacanza in base all'area geografica degli utenti (nota: puoi disabilitare specifiche festività automatiche nelle impostazioni del plugin)"
     event_participation_buttons: "Elenco dei pulsanti di partecipazione agli eventi che gli utenti possono utilizzare."
     sidebar_show_upcoming_events: "Mostra il link ai prossimi eventi nella barra laterale sotto \"Altro\"."
-    include_expired_events_on_calendar: "Includi eventi passati/scaduti nel calendario delle categorie e nelle visualizzazioni dei prossimi eventi."
   discourse_calendar:
     invite_user_notification: "%{username} ti ha invitato a: %{description}"
     calendar_must_be_in_first_post: "Il tag del calendario può essere utilizzato solo nel primo messaggio di un argomento."

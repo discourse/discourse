@@ -1785,6 +1785,7 @@ zh_CN:
     auth_overrides_email: "在每次登录时使用外部网站电子邮件替换本地电子邮件，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于本地电子邮件的规范化，可能会出现差异）"
     auth_overrides_username: "在每次登录时使用外部网站用户名替换本地用户名，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于用户名长度/要求的差异，可能会出现差异）"
     auth_overrides_name: "在每次登录时使用外部网站全名替换本地全名，并禁止进行本地更改。适用于所有身份验证服务提供商。"
+    auth_overrides_avatar: "每次登录时使用外部站点头像覆盖本地头像，并防止本地更改。适用于所有身份验证提供商。"
     discourse_connect_overrides_avatar: "使用来自 DiscourseConnect 有效负载的值替换用户头像。如果启用，将不允许用户在 Discourse 上上传头像。"
     discourse_connect_overrides_location: "使用来自 DiscourseConnect 有效负载的值替换用户位置，并禁止进行本地更改。"
     discourse_connect_overrides_website: "使用来自 DiscourseConnect 有效负载的值替换用户网站，并禁止进行本地更改。"
@@ -2407,7 +2408,6 @@ zh_CN:
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
-    content_localization_anon_language_switcher: "启用语言切换器，允许未登录的站点访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。取决于 'content localization supported locales' 中定义的语言列表"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2476,7 +2476,6 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
-      content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 站点设置，并且 `content localization supported locales` 至少有一种语言。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
       s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:

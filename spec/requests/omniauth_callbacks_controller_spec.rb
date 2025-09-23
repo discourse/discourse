@@ -1093,7 +1093,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         # Log in normally
         post "/auth/google_oauth2?origin=http://test.localhost/atesturl"
         expect(response.status).to eq(302)
-        expect(session[:destination_url]).to eq("http://test.localhost/atesturl")
+        expect(request.server_session[:destination_url]).to eq("http://test.localhost/atesturl")
 
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(302)

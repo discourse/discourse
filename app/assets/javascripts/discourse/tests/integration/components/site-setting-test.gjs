@@ -313,7 +313,127 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
     assert.dom(".desc.site-setting").doesNotExist();
   });
+
+  test("doesn't display the save/cancel buttons when the selected value is returned to the current value", async function (assert) {
+    const setting = SiteSetting.create({
+      setting: "some_enum",
+      value: "2",
+      default: "1",
+      type: "enum",
+      valid_values: [
+        { name: "Option 1", value: 1 },
+        { name: "Option 2", value: 2 },
+      ],
+    });
+
+    await render(
+      <template><SiteSettingComponent @setting={{setting}} /></template>
+    );
+
+    const selector = selectKit(".select-kit");
+
+    await selector.expand();
+    await selector.selectRowByValue("1");
+
+    assert
+      .dom(".setting-controls__ok")
+      .exists("the save button is shown after changing the value");
+    assert
+      .dom(".setting-controls__cancel")
+      .exists("the cancel button is shown after changing the value");
+
+    await selector.expand();
+    await selector.selectRowByValue("2");
+
+    assert
+      .dom(".setting-controls__ok")
+      .doesNotExist(
+        "the save button is not shown after changing the value back to the original"
+      );
+    assert
+      .dom(".setting-controls__cancel")
+      .doesNotExist(
+        "the cancel button is not shown after changing the value back to the original"
+      );
+  });
 });
+
+module(
+  "Integration | Component | SiteSetting | Themeable Settings",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("disables input for themeable site settings", async function (assert) {
+      const self = this;
+
+      this.site = this.container.lookup("service:site");
+      this.site.set("user_themes", [
+        { theme_id: 5, default: true, name: "Default Theme" },
+      ]);
+
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "test_themeable_setting",
+          value: "test value",
+          type: "string",
+          themeable: true,
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      );
+
+      assert.dom(".input-setting-string").hasAttribute("disabled", "");
+      assert
+        .dom(".setting-controls__ok")
+        .doesNotExist("save button is not shown");
+    });
+
+    test("shows warning text for themeable site settings", async function (assert) {
+      const self = this;
+
+      this.site = this.container.lookup("service:site");
+      this.site.set("user_themes", [
+        { theme_id: 5, default: true, name: "Default Theme" },
+      ]);
+
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "test_themeable_setting",
+          value: "test value",
+          type: "string",
+          themeable: true,
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      );
+
+      assert
+        .dom(".setting-theme-warning")
+        .exists("warning wrapper is displayed");
+
+      assert
+        .dom(".setting-theme-warning__text")
+        .exists("warning text element is displayed");
+
+      const expectedText = i18n(
+        "admin.theme_site_settings.site_setting_warning",
+        {
+          basePath: "",
+          defaultThemeName: "Default Theme",
+          defaultThemeId: 5,
+        }
+      );
+
+      assert.dom(".setting-theme-warning__text").includesHtml(expectedText);
+    });
+  }
+);
 
 module(
   "Integration | Component | SiteSetting | file_size_restriction type",

@@ -233,7 +233,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_color_palettes",
-        route: "adminCustomize.colors",
+        route: "adminConfig.colorPalettes",
         label: "admin.config.color_palettes.title",
         description: "admin.config.color_palettes.header_description",
         icon: "palette",
@@ -272,6 +272,8 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
         keywords: "admin.config.themes_and_components.keywords",
+        currentWhen:
+          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings",
         links: [
           {
             name: "admin_theme_site_settings",

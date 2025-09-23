@@ -28,7 +28,7 @@ export default class HostList extends Component {
       @settingName={{this.setting.setting}}
       @choices={{this.settingValue}}
       @onChange={{this.onChange}}
-      @options={{hash allowAny=this.allowAny}}
+      @options={{hash allowAny=this.allowAny disabled=@disabled}}
     />
   </template>
 }

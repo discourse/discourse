@@ -326,7 +326,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       Fabricate.times(4, :theme, component: true)
 
       stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 4) do
-        resize_window(height: 800) do
+        resize_window(height: 400) do
           config_area.visit
 
           expect(config_area).to have_exactly_n_components(4)

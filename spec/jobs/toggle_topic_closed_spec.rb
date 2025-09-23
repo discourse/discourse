@@ -62,7 +62,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
       expect do
         described_class.new.execute(topic_timer_id: topic.public_topic_timer.id, state: true)
-      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+      end.to change { TopicTimer.exists?(topic:) }.from(true).to(false)
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
       expect do
         described_class.new.execute(topic_timer_id: topic.public_topic_timer.id, state: true)
-      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+      end.to change { TopicTimer.exists?(topic:) }.from(true).to(false)
     end
   end
 
@@ -88,7 +88,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
       expect do
         described_class.new.execute(topic_timer_id: topic.public_topic_timer.id, state: true)
-      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+      end.to change { TopicTimer.exists?(topic:) }.from(true).to(false)
 
       expect(topic.reload.closed).to eq(false)
     end

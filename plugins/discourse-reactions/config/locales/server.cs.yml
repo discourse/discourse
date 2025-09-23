@@ -13,6 +13,7 @@ cs:
     discourse_reactions_desaturated_reaction_panel: "Snižuje vizuální šum reakcí tím, že je zobrazí až po najetí myší."
     discourse_reactions_excluded_from_like: "Reakce, které se nepočítají jako \"Líbí se\". Reakce, které nejsou na tomto seznamu, se budou počítat jako \"Líbí se\" pro účely odznaků, reporting a další účely."
     discourse_reactions_like_sync_enabled: "Pokud je toto povoleno, budou mít historické reakce vytvořeny odpovídající záznamy Líbí se, kromě reakcí definovaných v `discourse_reactions_excluded_from_like`. Tato synchronizace bude probíhat pravidelně na pozadí a také když změníte `discourse_reactions_excluded_from_like`."
+    discourse_reactions_experimental_allow_any_emoji: "EXPERIMENTÁLNÍ: Pokud je tato možnost povolena, bude přidáno tlačítko, které uživatelům umožní vybrat ze seznamu reakcí libovolné emoji. Členové si budou moci pro reakce vybrat libovolný emoji, včetně vlastních, proto ji povolujte opatrně."
     errors:
       invalid_excluded_emoji: "Nemůžete vyloučit emotikony, které nejsou v 'discourse reactions enabled reactions' a nemůžete vyloučit emotikony používané pro 'discourse reactions reaction for like'."
   badges:
