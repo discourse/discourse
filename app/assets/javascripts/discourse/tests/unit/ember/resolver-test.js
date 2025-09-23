@@ -343,13 +343,6 @@ module("Unit | Ember | resolver", function (hooks) {
 
     lookupTemplate(
       assert,
-      "template:admin-dashboard-general",
-      "admin/templates/dashboard_general",
-      "finds namespaced and underscored version"
-    );
-
-    lookupTemplate(
-      assert,
       "template:admin-baz/qux",
       "discourse/templates/admin-baz-qux",
       "also tries dasherized"
