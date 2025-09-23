@@ -17,7 +17,6 @@ export default class PostMenuLikeButton extends Component {
   }
 
   @service currentUser;
-  @service store;
 
   @tracked isAnimated = false;
   @tracked likedUsers = null;
