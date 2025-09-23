@@ -282,6 +282,15 @@ class DeprecationFixer {
       ))
     );
 
+    searchPaths.push(
+      ...(await globSync(
+        `${__dirname}/../plugins/*/admin/assets/javascripts/{admin,discourse}`,
+        {
+          nodir: false,
+        }
+      ))
+    );
+
     let basePath;
 
     for (const searchPath of searchPaths) {
@@ -576,6 +585,15 @@ class DeprecationFixer {
       ...(await globSync(`${__dirname}/../plugins/*/test/javascripts`, {
         nodir: false,
       }))
+    );
+
+    pluginDirs.push(
+      ...(await globSync(
+        `${__dirname}/../plugins/*/admin/assets/javascripts/{admin,discourse}`,
+        {
+          nodir: false,
+        }
+      ))
     );
 
     for (const entry of pluginDirs) {
