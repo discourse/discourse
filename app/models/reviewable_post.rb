@@ -80,35 +80,7 @@ class ReviewablePost < Reviewable
 
   # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
   def build_new_separated_actions(actions, guardian, args)
-    # Post actions bundle
-    post_actions_bundle = build_post_actions_bundle(actions)
-
-    # Add post-specific actions based on current post state
-    if post.trashed?
-      build_action(actions, :keep_deleted_post, bundle: post_actions_bundle)
-      if guardian.can_recover_post?(post)
-        build_action(actions, :restore_post, bundle: post_actions_bundle)
-      end
-    elsif post.hidden?
-      build_action(actions, :keep_hidden_post, bundle: post_actions_bundle)
-      build_action(actions, :unhide_post, bundle: post_actions_bundle)
-      if guardian.can_delete_post_or_topic?(post)
-        build_action(actions, :delete_post, bundle: post_actions_bundle)
-      end
-    else
-      build_action(actions, :keep_post, bundle: post_actions_bundle)
-      build_action(actions, :hide_post, bundle: post_actions_bundle)
-      if guardian.can_delete_post_or_topic?(post)
-        build_action(actions, :delete_post, bundle: post_actions_bundle)
-      end
-    end
-
-    # Edit is available regardless of post state
-    build_action(actions, :edit_post, bundle: post_actions_bundle, client_action: "edit")
-
-    build_action(actions, :convert_to_pm, bundle: post_actions_bundle)
-
-    # User actions bundle
+    build_post_actions_bundle(actions, guardian)
     build_user_actions_bundle(actions, guardian)
   end
 

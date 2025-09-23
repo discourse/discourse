@@ -72,8 +72,8 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_new_separated_actions(actions, guardian, args)
-    # Post actions bundle
-    post_actions_bundle = build_post_actions_bundle(actions)
+    # Because a queued post isn't a real post, we need to create our own post actions bundle
+    post_actions_bundle = build_post_actions_bundle(actions, guardian)
 
     unless approved?
       if topic&.closed?

@@ -150,30 +150,7 @@ class ReviewableFlaggedPost < Reviewable
 
   # TODO (reviewable-refresh): Merge into build_actions post rollout.
   def build_new_separated_actions(actions, guardian, args)
-    post_actions_bundle = build_post_actions_bundle(actions)
-
-    if !post.user_deleted? && !post.hidden?
-      build_action(actions, :agree_and_hide, bundle: post_actions_bundle)
-    end
-
-    if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, bundle: post_actions_bundle)
-    else
-      build_action(actions, :agree_and_keep, bundle: post_actions_bundle)
-      build_action(actions, :agree_and_edit, bundle: post_actions_bundle, client_action: "edit")
-    end
-
-    if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_agree, bundle: post_actions_bundle)
-      if post.reply_count > 0
-        build_action(actions, :delete_and_agree_replies, bundle: post_actions_bundle, confirm: true)
-      end
-    end
-
-    build_action(actions, :agree_and_restore, bundle: post_actions_bundle) if post.user_deleted?
-
-    build_action(actions, :disagree_and_restore, bundle: post_actions_bundle) if post.hidden?
-
+    build_post_actions_bundle(actions, guardian)
     build_user_actions_bundle(actions, guardian)
   end
 

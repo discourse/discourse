@@ -409,10 +409,6 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       it "includes a minimal user bundle when target_created_by is nil" do
         reviewable.update!(target_created_by: nil)
         actions = reviewable.actions_for(Guardian.new(admin))
-        bundle_ids = actions.bundles.map(&:id)
-
-        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
-        expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
 
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)

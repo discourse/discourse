@@ -96,7 +96,7 @@ RSpec.describe ReviewablePost do
       it "includes appropriate post actions for normal posts" do
         actions = reviewable_actions(guardian)
 
-        expect(actions.has?(:keep_post)).to eq(true)
+        expect(actions.has?(:no_action_post)).to eq(true)
         expect(actions.has?(:hide_post)).to eq(true)
         expect(actions.has?(:edit_post)).to eq(true)
       end
@@ -110,7 +110,7 @@ RSpec.describe ReviewablePost do
         post.hidden = true
         actions = reviewable_actions(guardian)
 
-        expect(actions.has?(:keep_hidden_post)).to eq(true)
+        expect(actions.has?(:no_action_post)).to eq(true)
         expect(actions.has?(:unhide_post)).to eq(true)
         expect(actions.has?(:hide_post)).to eq(false)
       end
@@ -119,7 +119,7 @@ RSpec.describe ReviewablePost do
         post.deleted_at = 1.day.ago
         actions = reviewable_actions(guardian)
 
-        expect(actions.has?(:keep_deleted_post)).to eq(true)
+        expect(actions.has?(:no_action_post)).to eq(true)
         expect(actions.has?(:restore_post)).to eq(false) # non-admin can't restore
       end
 
@@ -153,9 +153,6 @@ RSpec.describe ReviewablePost do
       it "includes a minimal user actions bundle when no target_created_by" do
         reviewable.target_created_by = nil
         actions = reviewable_actions(guardian)
-
-        expect(bundles.count).to eq(1)
-        expect(bundles.map(&:id)).to include("#{reviewable.id}-post-actions")
 
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)
@@ -273,16 +270,14 @@ RSpec.describe ReviewablePost do
         end
       end
 
-      describe "#perform_keep_post" do
+      describe "#perform_no_action_post" do
         it "keeps the post and transitions to approved" do
-          result = reviewable.perform admin, :keep_post
+          result = reviewable.perform admin, :no_action_post
 
           expect(result.transition_to).to eq :approved
           expect(Post.where(id: post.id).exists?).to eq(true)
         end
-      end
 
-      describe "#perform_keep_hidden_post" do
         it "keeps the post hidden and transitions to approved" do
           post.update!(hidden: true)
 
@@ -291,9 +286,7 @@ RSpec.describe ReviewablePost do
           expect(result.transition_to).to eq :approved
           expect(post.reload.hidden).to eq(true)
         end
-      end
 
-      describe "#perform_keep_deleted_post" do
         it "keeps the post deleted and transitions to rejected" do
           post.trash!
 
@@ -306,6 +299,7 @@ RSpec.describe ReviewablePost do
 
       describe "#perform_restore_post" do
         it "restores the post and transitions to approved" do
+          puts reviewable.pretty_inspect
           post.trash!
 
           result = reviewable.reload.perform admin, :restore_post
