@@ -22,7 +22,7 @@ module ::DiscoursePoll
   DEFAULT_POLL_NAME = "poll"
 end
 
-require_relative "lib/poll/engine"
+require_relative "lib/discourse_poll/engine"
 
 after_initialize do
   require_relative "app/controllers/polls_controller"
