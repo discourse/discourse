@@ -28,20 +28,10 @@
     color: var(--accent-color);
   }
 
+  &:focus-visible,
   &:hover {
-    border-color: transparent;
-    box-shadow: 0 0 8px 1px var(--button-box-shadow);
-    background: var(--d-content-background);
-    color: var(--accent-color);
-
-    .d-icon {
-      color: var(--accent-color);
-    }
-  }
-
-  &:focus-visible {
-    background: var(--d-content-background);
-    color: var(--accent-color);
+    background: var(--primary-100);
+    color: var(--primary);
     box-shadow: 0 0 0 3px var(--button-box-shadow);
 
     .d-icon {
@@ -69,29 +59,16 @@
     color: var(--accent-text-color);
   }
 
+  &:focus-visible,
   &:hover {
     .discourse-no-touch & {
-      background: light-dark(
-        oklch(from var(--accent-color) 40% c h),
-        oklch(from var(--accent-color) 50% c h)
-      );
-      box-shadow: 0 0 6px 1px var(--button-box-shadow);
+      background-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--button-box-shadow);
       color: var(--accent-text-color);
 
       .d-icon {
         color: var(--accent-text-color);
       }
-    }
-  }
-
-  &:focus-visible {
-    .discourse-no-touch & {
-      background: light-dark(
-        oklch(from var(--accent-color) 40% c h),
-        oklch(from var(--accent-color) 50% c h)
-      );
-      box-shadow: 0 0 0 4px var(--button-box-shadow);
-      color: var(--accent-text-color);
     }
   }
 

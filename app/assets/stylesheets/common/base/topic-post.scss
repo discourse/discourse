@@ -411,7 +411,7 @@ nav.post-controls {
             // Like button when like count is present
             .discourse-no-touch & {
               &:hover {
-                background: var(--primary-low);
+                background: var(--d-hover);
               }
             }
           }
