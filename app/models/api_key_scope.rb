@@ -145,6 +145,9 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[users#check_emails],
             params: %i[username],
           },
+          create: {
+            actions: %w[users#create],
+          },
           update: {
             actions: %w[
               users#update
