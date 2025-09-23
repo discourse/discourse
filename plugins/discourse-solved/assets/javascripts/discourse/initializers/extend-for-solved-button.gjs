@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
@@ -77,25 +75,6 @@ function customizePost(api) {
       </template>
     }
   );
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  api.decorateWidget("post-contents:after-cooked", (helper) => {
-    let post = helper.getModel();
-
-    if (helper.attrs.post_number === 1 && post?.topic?.accepted_answer) {
-      return new RenderGlimmer(
-        helper.widget,
-        "div",
-        <template><SolvedAcceptedAnswer @post={{@data.post}} /></template>,
-        { post }
-      );
-    }
-  });
 }
 
 function customizePostMenu(api) {

@@ -4,20 +4,14 @@ import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class PostMetaDataLanguage extends Component {
-  // TODO (glimmer-post-stream) once we switch to glimmer, we can remove `this.args.data.x` from the following 2 getters
-
   @service languageNameLookup;
 
   get language() {
-    const lang = this.args.data?.language || this.args.post?.language;
-    return this.languageNameLookup.getLanguageName(lang);
+    return this.languageNameLookup.getLanguageName(this.args.post?.language);
   }
 
   get outdated() {
-    return (
-      this.args.data?.localization_outdated ||
-      this.args.post?.localization_outdated
-    );
+    return this.args.post?.localization_outdated;
   }
 
   get tooltip() {

@@ -333,13 +333,6 @@ export default class SearchMenu extends Component {
           // we ensure the current search term is the one used
           // when starting the query
           if (results) {
-            if (this.searchContext) {
-              // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-              this.appEvents.trigger("post-stream:refresh", {
-                force: true,
-              });
-            }
-
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
           }

@@ -8,6 +8,7 @@ import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ExpandPost from "discourse/components/expand-post";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
@@ -19,7 +20,20 @@ import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { userPath } from "discourse/lib/url";
-import { actionDescription } from "discourse/widgets/post-small-action";
+
+function actionDescription(actionCode, createdAt, username, path = null) {
+  return computed(actionCode, createdAt, function () {
+    const ac = this.get(actionCode);
+    if (ac) {
+      return actionDescriptionHtml(
+        ac,
+        this.get(createdAt),
+        this.get(username),
+        path ? this.get(path) : null
+      );
+    }
+  });
+}
 
 @tagName("li")
 @classNameBindings(

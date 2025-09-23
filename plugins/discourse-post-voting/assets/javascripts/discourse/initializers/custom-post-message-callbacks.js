@@ -30,10 +30,6 @@ export default {
                 cooked: message.comment_cooked,
               };
               post.comments.replace(indexToUpdate, 1, [updatedComment]);
-
-              topicController.appEvents.trigger("post-stream:refresh", {
-                id: post.id,
-              });
             }
           }
         }
@@ -59,10 +55,6 @@ export default {
             }
 
             post.set("comments_count", message.comments_count);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
@@ -87,10 +79,6 @@ export default {
             ) {
               post.comments.pushObject(message.comment);
             }
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
@@ -116,10 +104,6 @@ export default {
             }
 
             post.setProperties(props);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );

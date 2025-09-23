@@ -9,7 +9,6 @@ import {
   isRailsTesting,
   isTesting,
 } from "discourse/lib/environment";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -131,8 +130,7 @@ class DecorateHtmlHelper {
   renderGlimmer(targetElement, component, data, opts = {}) {
     if (!(targetElement instanceof Element)) {
       deprecated(
-        "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors.",
-        POST_STREAM_DEPRECATION_OPTIONS
+        "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors."
       );
 
       return;
@@ -140,8 +138,7 @@ class DecorateHtmlHelper {
 
     if (component.name === "factory") {
       deprecated(
-        "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors.",
-        POST_STREAM_DEPRECATION_OPTIONS
+        "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors."
       );
 
       return;
@@ -168,24 +165,10 @@ class DecorateHtmlHelper {
     return this.model;
   }
 
-  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
   get widget() {
     deprecated(
-      "Accessing `helper.widget` is not supported when using `api.decorateCookedElement` with the Glimmer Post Stream and can yield unexpected results.",
-      POST_STREAM_DEPRECATION_OPTIONS
+      "Using `helper.widget` has been decommissioned. See https://meta.discourse.org/t/372063/1"
     );
-
-    const attrs = this.model;
-
-    return {
-      get attrs() {
-        return attrs;
-      },
-      scheduleRerender() {
-        // This is a no-op when using the new glimmer components.
-        // The component will rerender automatically when the model changes.
-      },
-    };
   }
 
   teardown() {
