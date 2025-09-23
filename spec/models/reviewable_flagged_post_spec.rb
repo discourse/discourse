@@ -320,11 +320,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
       end
 
-      it "builds post action bundles including agree/disagree variants" do
+      it "builds post action bundles" do
         actions = reviewable.actions_for(guardian)
         post_bundle = actions.bundles.find { |b| b.id.ends_with?("-post-actions") }
         expect(post_bundle).to be_present
-        expect(actions.has?(:agree_and_keep)).to eq(true)
+        expect(actions.has?(:no_action_post)).to eq(true)
+        expect(actions.has?(:hide_post)).to eq(true)
       end
 
       it "builds user actions bundle with moderation actions" do
@@ -343,11 +344,11 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:delete_and_block_user)).to eq(false)
       end
 
-      it "shows keep_hidden instead of keep when post hidden" do
+      it "shows unhide_post when post hidden" do
         post.update(hidden: true, hidden_at: Time.zone.now)
         actions = reviewable.actions_for(guardian)
-        expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
-        expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:unhide_post)).to eq(true)
+        expect(actions.has?(:hide_post)).to eq(false)
       end
     end
   end

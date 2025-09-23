@@ -42,6 +42,8 @@ module ReviewableActionBuilder
     build_action(actions, :edit_post, bundle:, client_action: "edit")
 
     build_action(actions, :convert_to_pm, bundle:)
+
+    bundle
   end
 
   # Standard user-actions bundle and default user actions.
@@ -164,57 +166,54 @@ module ReviewableActionBuilder
   end
 
   def perform_no_action_user(performed_by, args)
-    create_result(:success, :approved)
+    create_result(:success, :rejected)
+  end
+
+  def perform_no_action_post(performed_by, args)
+    create_result(:success, :rejected)
   end
 
   def perform_silence_user(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(:success, :approved)
   end
 
   def perform_suspend_user(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(:success, :approved)
   end
 
   def perform_delete_user(performed_by, args, &)
     delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], recalculate_score: false, &)
+    create_result(:success, :approved, [], false, &)
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
+    if Rails.env.production?
+      delete_options = delete_options.merge(block_email: true, block_ip: true)
+    end
+
+    delete_user(target_user, delete_options, performed_by) if target_user
+    create_result(:success, :approved, [], false, &)
   end
 
   def perform_delete_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post, reviewable: self).destroy
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_hide_post(performed_by, _args)
     target_post.hide!(PostActionType.types[:inappropriate])
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_unhide_post(performed_by, _args)
     target_post.unhide!
-    create_result(:success, :approved, [created_by_id], false)
-  end
-
-  def perform_keep_post(performed_by, _args)
-    create_result(:success, :approved, [created_by_id], false)
-  end
-
-  def perform_keep_hidden_post(performed_by, _args)
-    create_result(:success, :approved, [created_by_id], false)
-  end
-
-  def perform_keep_deleted_post(performed_by, _args)
     create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_restore_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post).recover
-    create_result(:success, :approved, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_edit_post(performed_by, _args)
