@@ -9,6 +9,11 @@
   }
 }
 
+.search-menu .search-input,
+.search-menu-container .search-input {
+  border-color: var(--header_primary-low-mid);
+}
+
 .user-menu .quick-access-panel,
 .user-notifications-list {
   li {
