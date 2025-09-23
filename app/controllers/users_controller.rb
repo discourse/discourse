@@ -763,8 +763,8 @@ class UsersController < ApplicationController
       associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
-      server_session[HONEYPOT_KEY] = nil
-      server_session[CHALLENGE_KEY] = nil
+      server_session.delete(HONEYPOT_KEY)
+      server_session.delete(CHALLENGE_KEY)
 
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
@@ -918,8 +918,8 @@ class UsersController < ApplicationController
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
-          server_session["password-#{token}"] = nil
-          server_session["second-factor-#{token}"] = nil
+          server_session.delete("password-#{token}")
+          server_session.delete("second-factor-#{token}")
 
           if SiteSetting.delete_associated_accounts_on_password_reset
             @user.user_associated_accounts.destroy_all

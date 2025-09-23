@@ -74,9 +74,9 @@ class DiscourseConnect < DiscourseConnectBase
   def expire_nonce!
     if nonce
       if SiteSetting.discourse_connect_csrf_protection
-        @server_session[nonce_key] = nil
+        @server_session.delete(nonce_key)
       else
-        Discourse.cache.delete nonce_key
+        Discourse.cache.delete(nonce_key)
       end
 
       Discourse.cache.write(
