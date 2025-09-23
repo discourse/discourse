@@ -862,7 +862,8 @@ class DeprecationFixer {
 
         if (depthChange > 0) {
           // Going deeper, add more ../
-          newImportPath = "../".repeat(depthChange) + importPath;
+          newImportPath =
+            "../".repeat(depthChange) + importPath.replace(/^\.\//, "");
         } else {
           // Going shallower, remove ../
           const prefixToRemove = "../".repeat(-depthChange);
