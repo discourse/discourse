@@ -26,10 +26,14 @@ export default class ColorInput extends Component {
   }
 
   @computed("hexValue", "fallbackHexValue")
+  get hexValueWithFallback() {
+    const { hexValue, fallbackHexValue } = this;
+    return hexValue || (fallbackHexValue ? fallbackHexValue : hexValue);
+  }
+
+  @computed("hexValueWithFallback")
   get normalizedValue() {
-    const nHexValue = this.normalize(this.hexValue);
-    const nFallbackHexValue = this.normalize(this.fallbackHexValue);
-    return !nHexValue && nFallbackHexValue ? nFallbackHexValue : nHexValue;
+    return this.normalize(this.hexValueWithFallback);
   }
 
   normalize(color) {
