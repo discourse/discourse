@@ -30,23 +30,19 @@ export default class PostMenuAddTranslationButton extends Component {
   }
 
   get addTranslationsLabel() {
-    if (this.showAsMenu) {
-      return i18n("post.localizations.manage", {
-        count: this.args.post.post_localizations_count,
-      });
-    }
+    return i18n("post.localizations.manage", {
+      count: this.args.post.post_localizations_count,
+    });
+  }
 
-    return i18n("post.localizations.add");
+  get showViewTranslations() {
+    return this.args.post.post_localizations_count > 0;
   }
 
   get viewTranslationLabel() {
     return i18n("post.localizations.view", {
       count: this.args.post.post_localizations_count,
     });
-  }
-
-  get showAsMenu() {
-    return this.args.post.post_localizations_count > 0;
   }
 
   @action
@@ -88,22 +84,22 @@ export default class PostMenuAddTranslationButton extends Component {
 
   <template>
     {{#if this.showTranslationButton}}
-      {{#if this.showAsMenu}}
-        <DMenu
-          ...attributes
-          @identifier="post-action-menu-edit-translations"
-          class="update-translations-menu"
-          @title={{this.addTranslationsLabel}}
-          @icon="discourse-add-translation"
-          @onRegisterApi={{this.onRegisterApi}}
-          @arrow={{false}}
-        >
-          <:content>
-            <DropdownMenu as |dropdown|>
-              <PluginOutlet
-                @name="post-menu-translations-dropdown"
-                @outletArgs={{lazyHash dropdown=dropdown post=@post}}
-              >
+      <DMenu
+        ...attributes
+        @identifier="post-action-menu-edit-translations"
+        class="update-translations-menu"
+        @title={{this.addTranslationsLabel}}
+        @icon="discourse-add-translation"
+        @onRegisterApi={{this.onRegisterApi}}
+        @arrow={{false}}
+      >
+        <:content>
+          <DropdownMenu as |dropdown|>
+            <PluginOutlet
+              @name="post-menu-translations-dropdown"
+              @outletArgs={{lazyHash dropdown=dropdown post=@post}}
+            >
+              {{#if this.showViewTranslations}}
                 <dropdown.item class="update-translations-menu__view">
                   <DButton
                     class="post-action-menu__view-translation"
@@ -112,27 +108,19 @@ export default class PostMenuAddTranslationButton extends Component {
                     @action={{this.viewTranslations}}
                   />
                 </dropdown.item>
-                <dropdown.item class="update-translations-menu__add">
-                  <DButton
-                    class="post-action-menu__add-translation"
-                    @label="post.localizations.add"
-                    @icon="plus"
-                    @action={{this.addTranslation}}
-                  />
-                </dropdown.item>
-              </PluginOutlet>
-            </DropdownMenu>
-          </:content>
-        </DMenu>
-      {{else}}
-        <DButton
-          class="post-action-menu__add-translation"
-          @title="post.localizations.add"
-          @icon="discourse-add-translation"
-          @action={{this.addTranslation}}
-          ...attributes
-        />
-      {{/if}}
+              {{/if}}
+              <dropdown.item class="update-translations-menu__add">
+                <DButton
+                  class="post-action-menu__add-translation"
+                  @label="post.localizations.add"
+                  @icon="plus"
+                  @action={{this.addTranslation}}
+                />
+              </dropdown.item>
+            </PluginOutlet>
+          </DropdownMenu>
+        </:content>
+      </DMenu>
     {{/if}}
   </template>
 }
