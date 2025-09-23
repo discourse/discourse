@@ -572,6 +572,12 @@ class DeprecationFixer {
       }
     );
 
+    pluginDirs.push(
+      ...(await globSync(`${__dirname}/../plugins/*/test/javascripts`, {
+        nodir: false,
+      }))
+    );
+
     for (const entry of pluginDirs) {
       const pluginFiles = await scanDirectory(entry);
       jsFiles.push(...pluginFiles);
