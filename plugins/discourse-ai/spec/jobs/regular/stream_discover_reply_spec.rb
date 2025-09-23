@@ -26,7 +26,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
     it "publishes updates with a partial summary" do
       with_responses(["dummy"]) do
         messages =
-          MessageBus.track_publish("/discourse-ai/ai-bot/discover") do
+          MessageBus.track_publish("/discourse-ai/discoveries") do
             job.execute(user_id: user.id, query: "Testing search")
           end
 
@@ -40,7 +40,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
     it "publishes a final update to signal we're done" do
       with_responses(["dummy"]) do
         messages =
-          MessageBus.track_publish("/discourse-ai/ai-bot/discover") do
+          MessageBus.track_publish("/discourse-ai/discoveries") do
             job.execute(user_id: user.id, query: "Testing search")
           end
 
