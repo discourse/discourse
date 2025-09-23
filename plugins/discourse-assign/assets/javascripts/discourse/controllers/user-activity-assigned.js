@@ -1,6 +1,5 @@
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import discourseDebounce from "discourse/lib/debounce";
@@ -11,7 +10,6 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityAssigned extends UserTopicsList {
-  @service taskActions;
   @controller user;
 
   queryParams = ["order", "ascending", "search"];

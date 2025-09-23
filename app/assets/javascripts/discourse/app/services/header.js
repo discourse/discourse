@@ -11,7 +11,6 @@ const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
-  @service siteSettings;
   @service scrollDirection;
   @service site;
 

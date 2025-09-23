@@ -24,7 +24,6 @@ export default class ScreenTrack extends Service {
   @service currentUser;
   @service keyValueStore;
   @service session;
-  @service siteSettings;
   @service topicTrackingState;
 
   _ajaxFailures = 0;

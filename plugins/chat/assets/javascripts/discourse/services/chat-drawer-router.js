@@ -254,7 +254,6 @@ export default class ChatDrawerRouter extends Service {
   @service chatHistory;
   @service chat;
   @service siteSettings;
-  @service chatStateManager;
   @service chatChannelsManager;
 
   @tracked component = null;

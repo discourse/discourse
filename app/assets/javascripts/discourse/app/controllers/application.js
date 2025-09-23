@@ -11,9 +11,9 @@ import { isTesting } from "discourse/lib/environment";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
-  @service router;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service router; // used in the route template
   @service footer;
-  @service header;
   @service sidebarState;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];

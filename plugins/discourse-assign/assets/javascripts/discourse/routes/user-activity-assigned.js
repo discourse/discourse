@@ -1,10 +1,7 @@
-import { service } from "@ember/service";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityAssigned extends UserTopicListRoute {
-  @service router;
-
   templateName = "user-activity-assigned";
   controllerName = "user-activity-assigned";
 

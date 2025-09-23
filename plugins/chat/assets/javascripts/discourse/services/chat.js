@@ -23,13 +23,11 @@ export default class Chat extends Service {
   @service chatApi;
   @service appEvents;
   @service currentUser;
-  @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service chatDraftsManager;
   @service presence;
   @service router;
-  @service site;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
 

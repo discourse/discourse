@@ -16,7 +16,6 @@ export default class DTemplatesEditorPreview extends Component {
   }
 
   @service appEvents;
-  @service site;
 
   templatesVisible = false;
   onInsertTemplate;

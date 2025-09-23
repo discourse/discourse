@@ -8,7 +8,6 @@ import SiteSetting from "admin/models/site-setting";
 
 export default class AdminPluginsIndexController extends Controller {
   @service session;
-  @service adminPluginNavManager;
   @service router;
 
   get searchableProps() {

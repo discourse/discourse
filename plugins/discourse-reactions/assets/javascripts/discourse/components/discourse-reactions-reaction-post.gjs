@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import UserStreamItem from "discourse/components/user-stream-item";
 import avatar from "discourse/helpers/avatar";
@@ -14,14 +13,10 @@ let cachedNames = new Map();
 let pendingSearch = null;
 
 export default class DiscourseReactionsReactionPost extends Component {
-  @service site;
   @service siteSettings;
 
   @tracked updatedExcerpt = this.args.reaction.post.excerpt;
   @tracked updatedExpandedExcerpt = this.args.reaction.post.expandedExcerpt;
-
-  @equal("args.reaction.post.post_type", "site.post_types.moderator_action")
-  moderatorAction;
 
   constructor() {
     super(...arguments);

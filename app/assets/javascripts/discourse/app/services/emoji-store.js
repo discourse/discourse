@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import KeyValueStore from "discourse/lib/key-value-store";
@@ -12,8 +12,6 @@ export const MAX_TRACKED_EMOJIS = MAX_DISPLAYED_EMOJIS * 2;
 export const DEFAULT_DIVERSITY = 1;
 
 export default class EmojiStore extends Service {
-  @service siteSettings;
-
   @tracked list;
 
   store = new KeyValueStore(STORE_NAMESPACE);
