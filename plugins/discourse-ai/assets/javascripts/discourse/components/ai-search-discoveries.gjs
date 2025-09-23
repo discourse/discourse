@@ -58,7 +58,7 @@ export default class AiSearchDiscoveries extends Component {
   @bind
   unsubscribe() {
     this.messageBus.unsubscribe(
-      "/discourse-ai/ai-bot/discover",
+      "/discourse-ai/discoveries",
       this._updateDiscovery
     );
   }
@@ -66,7 +66,7 @@ export default class AiSearchDiscoveries extends Component {
   @bind
   subscribe() {
     this.messageBus.subscribe(
-      "/discourse-ai/ai-bot/discover",
+      "/discourse-ai/discoveries",
       this._updateDiscovery
     );
   }
