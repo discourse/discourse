@@ -23,16 +23,16 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
     );
   });
 
-  test.skip("viewing assigned messages", async function (assert) {
+  test("viewing assigned messages", async function (assert) {
     updateCurrentUser({ redesigned_user_page_nav_enabled: true });
 
     await visit("/u/eviltrout/messages");
     await click(".messages-dropdown-trigger");
     assert
-      .dom(".dropdown-menu li:nth-child(3)")
+      .dom(".dropdown-menu li:nth-child(2)")
       .hasText(i18n("discourse_assign.assigned"));
 
-    await click(".dropdown-menu li:nth-child(3) .btn");
+    await click(".dropdown-menu li:nth-child(2) .btn");
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/messages/assigned",

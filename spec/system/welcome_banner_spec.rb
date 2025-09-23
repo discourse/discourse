@@ -172,15 +172,13 @@ describe "Welcome banner", type: :system do
         before { SiteSetting.welcome_banner_text_color = red }
 
         it "doesn't set text color without background image" do
-          sign_in(current_user)
-          visit "/admin/config/interface"
+          visit "/"
           expect(banner).to have_no_custom_text_color(red)
         end
 
         it "applies text color if background image is set" do
           SiteSetting.welcome_banner_image = bg_img
-          sign_in(current_user)
-          visit "/admin/config/interface"
+          visit "/"
           expect(banner).to have_custom_text_color(red)
         end
       end
