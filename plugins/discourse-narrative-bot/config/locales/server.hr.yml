@@ -8,7 +8,9 @@ hr:
   badges:
     certified:
       name: Certificiran
-      description: "Prošao tutorial za nove korisnike"
+      description: "Proučio/la vodič za nove korisnik"
+      long_description: |
+        Ova značka se dodjeljuje nakon uspješnog završetka proučavanja interaktivnog vodiča za nove korisnike. Preuzeli ste inicijativu za učenje osnovnih alata za raspravu i sada ste certificirani!
   discourse_narrative_bot:
     quote:
       trigger: "citat"

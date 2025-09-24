@@ -23,23 +23,23 @@ ur:
             tb: ٹیرابائٹ
       percent: "%{count}%"
       short:
-        thousands: "%{number}کلو"
+        thousands: "%{number} هزار"
         millions: "%{number}میلین"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       time_short: "h:mm"
-      time_with_zone: "hh:mm a (z)"
-      time_short_day: "ddd، h:mm a"
-      timeline_date: "MMM YYYY"
-      long_no_year: "MMM D، h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, YYYY h:mm a"
-      long_with_year_no_time: "MMM D, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "dddd، HH:mm"
+      timeline_date: "MMMM YYYY"
+      long_no_year: "D MMMM، HH:mm"
+      long_no_year_no_time: "D MMMM"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMMM، YYYY HH:mm"
+      long_with_year_no_time: "D MMMM، YYYY"
+      full_with_year_no_time: "Do MMMM، YYYY"
       long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D، YYYY"
+      long_date_with_year_without_time: "D MMMM، YYYY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D، YYYY <br/>LT"
       wrap_ago: "%{date} قبل"
@@ -47,26 +47,26 @@ ur:
       tiny:
         half_a_minute: "ایک لحظہ قبل"
         less_than_x_seconds:
-          one: "< %{count}س"
-          other: "< %{count}س"
+          one: "< %{count} سیکنڈ"
+          other: "< %{count} سیکنڈ"
         x_seconds:
-          one: "%{count}س"
-          other: "%{count}س"
+          one: "%{count} سیکنڈ"
+          other: "%{count} سیکنڈ"
         less_than_x_minutes:
-          one: "< %{count}م"
-          other: "< %{count}م"
+          one: "< %{count}منٹ"
+          other: "< %{count}منٹ"
         x_minutes:
-          one: "%{count}م"
-          other: "%{count}م"
+          one: "%{count} منٹ"
+          other: "%{count} منٹ"
         about_x_hours:
-          one: "%{count}گ"
-          other: "%{count}گ"
+          one: "%{count}گھنٹہ"
+          other: "%{count}گھنٹے"
         x_days:
           one: "%{count} دن"
           other: "%{count} دن"
         x_months:
-          one: "%{count} ماہ"
-          other: "%{count} ماہ"
+          one: "%{count}ماہ"
+          other: "%{count}مہینے"
         about_x_years:
           one: "%{count} سال"
           other: "%{count} سال"
@@ -81,10 +81,10 @@ ur:
       medium:
         less_than_x_minutes:
           one: "%{count} منٹ سے کم"
-          other: "%{count} منٹس سے کم"
+          other: "%{count} منٹ سے کم"
         x_minutes:
           one: "%{count} منٹ"
-          other: "%{count} منٹس"
+          other: "%{count} منٹ"
         x_hours:
           one: "%{count} گھنٹہ"
           other: "%{count} گھنٹے"
@@ -415,9 +415,9 @@ ur:
         last_day: "24 گھنٹے"
         last_7_days: "7 دن"
         last_30_days: "30 دن"
-      like_count: "لائیکس"
+      like_count: "پسندیدگیاں"
       topic_count: "موضوعات"
-      post_count: "پوسٹ"
+      post_count: "دھاگے"
       user_count: "سائن اپس"
       active_user_count: "فعال اراکین"
       visitor_count: "زائرین"
@@ -440,8 +440,8 @@ ur:
           one: "%{formatted_number} موضوع"
           other: "%{formatted_number} موضوعات"
         posts:
-          one: "%{formatted_number} پوسٹ"
-          other: "%{formatted_number} پوسٹس"
+          one: "%{formatted_number} دھاگہ"
+          other: "%{formatted_number} دھاگے"
         active_users:
           one: "%{formatted_number} فعال رکن"
           other: "%{formatted_number} فعال اراکین"
@@ -470,8 +470,8 @@ ur:
         one: "%{formatted_number} منتظم"
         other: "%{formatted_number} منتظمین"
       moderator_count:
-        one: "%{formatted_number} ناظم"
-        other: "%{formatted_number} نتظمین"
+        one: "%{formatted_number} نگران"
+        other: "%{formatted_number} نگرانوں"
       report_inappropriate_content: "اگر آپ کو کوئی نامناسب مواد نظر آتا ہے، تو ہمارے نگرانوں اور منتظمین کے ساتھ بات چیت شروع کرنے میں ہچکچاہٹ محسوس نہ کریں۔ رابطہ سے پہلے لاگ ان کرنا یاد رکھیں۔"
       site_age:
         less_than_one_month: "تخلیق کیا گیا < 1 ماہ پہلے"
@@ -608,7 +608,7 @@ ur:
     continue: "جاری رکھی"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
-    select_placeholder: "منتخب ۔۔۔"
+    select_placeholder: "منتخب۔۔۔"
     none_placeholder: "کوئی نہیں"
     banner:
       close: "اس بینر کو مسترد کریں"
@@ -647,8 +647,8 @@ ur:
         why: "وضاحت کریں کہ یہ شے آخر میں قطار میں کیوں داخل ہو گئی"
         title: "قابل تجدید اسکورنگ"
         formula: "فارمولا"
-        subtotal: "ذیلی کل"
-        total: "کُل"
+        subtotal: "جزوی میزان"
+        total: "حاصل جمع"
         min_score_visibility: "نموداری کیلئے کم از کم اسکور"
         score_to_hide: "پوسٹ چھپانے کیلئے اسکور"
         take_action_bonus:
@@ -659,7 +659,7 @@ ur:
           title: "جن اراکین کے فلَیگز کے ساتھ تاریخی طور پر اتفاق کیا گیا ہو انہیں بَونَس دیا جاتا ہے۔"
         trust_level_bonus:
           name: "اعتماد کی سطح"
-          title: "اعلیٰ اعتماد کی سطح کے اراکین کے ذریعہ تخلیق کردہ قابلِ جائزہ اشیاء کا اسکور زیادہ ہوتا ہے۔"
+          title: "اعلیٰ فعالیت کا درجہ رکھنے والے اراکین کے ذریعہ تخلیق کردہ قابلِ جائزہ متن کا اسکور زیادہ ہوتا ہے۔"
         type_bonus:
           name: "قِسم بَونَس"
           title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
@@ -687,7 +687,7 @@ ur:
       settings:
         saved: "محفوظ کر لیا گیا"
         save_changes: "تبدیلیاں محفوظ کریں"
-        title: "سیٹِنگ"
+        title: "ترتیبات"
         priorities:
           title: "قابل تجدید ترجیحات"
       moderation_history: "ماڈرَیشن ہِسٹری"
@@ -701,10 +701,10 @@ ur:
       title: "جائزہ لیں"
       topic: "موضوع:"
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
-      filtered_user: "صارف"
+      filtered_user: "رکن"
       filtered_reviewed_by: "کی طرف سے جائزہ کردہ"
       show_all_topics: "تمام موضوعات دکھائیں"
-      deleted_post: "(پوسٹ مٹادی گئی)"
+      deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
       user:
         bio: "بائیو"
@@ -782,7 +782,7 @@ ur:
       conversation:
         view_full: "مکمل گفتگو دیکھیں"
       scores:
-        about: "اس اسکور کا حساب رپورٹر کے اعتماد کی سطح، ان کے سابقہ نشان دہیوں کی درستگی اور اطلاع دی جانے والی شے کی ترجیح کی بنیاد پر کیا جاتا ہے۔"
+        about: "اس اسکور کا حساب رپورٹر کے فعالیت کے درجہ، ان کے سابقہ نشان دہیوں کی درستگی اور اطلاع دی جانے والی شے کی ترجیح کی بنیاد پر کیا جاتا ہے۔"
         score: "اسکور"
         date: "رپورٹ کی تاریخ"
         type: "وجہ"
@@ -796,21 +796,21 @@ ur:
         approved:
           title: "منظورشدہ"
         approved_flag:
-          title: "پرچم منظور"
+          title: "فلیگ منظور"
         approved_user:
           title: "رکن منظور"
         approved_post:
-          title: "پوسٹ منظور"
+          title: "دھاگہ منظور"
         rejected:
-          title: "مسترد کر دی گئی"
+          title: "مسترد کر دیا"
         rejected_flag:
-          title: "پرچم مسترد"
+          title: "فلیگ مسترد"
         rejected_user:
           title: "رکن مسترد"
         rejected_post:
-          title: "پوسٹ مسترد"
+          title: "دھاگہ مسترد"
         ignored:
-          title: "پرچم نظرانداز"
+          title: "فلیگ نظرانداز"
         deleted:
           title: "موضوع یا دھاگہ حذف"
         reviewed:
@@ -831,29 +831,29 @@ ur:
           noun: "موضوع"
         reviewable_queued_post:
           title: "قطار شدہ پوسٹ"
-          noun: "پوسٹ"
+          noun: "دھاگہ"
         reviewable_user:
-          title: "صارف"
-          noun: "صارف"
+          title: "رکن"
+          noun: "رکن"
         reviewable_post:
-          title: "پوسٹ"
+          title: "دھاگہ"
           noun: "پوسٹ"
       flagged_as: "کے طور پرفلَیگ"
       assigned_to: "کو تفویض کیا گیا"
-      moderator_actions: "ناظم کے اعمال"
+      moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
       timeline:
-        target_created: "پوسٹ بنائی گئی"
-        target_created_by: "%{relativeDate}پر %{username}نےپوسٹ بنائی گئی"
+        target_created: "دھاگہ بنایا گیا"
+        target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
         reviewed: "جائزہ لیا گیا"
         reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
-        view_conversation: "PM دیکھیں"
-        note_added: "ناظم نوٹ"
-        note_added_by: "ناظم نوٹ بذریعہ %{username} · %{relativeDate}"
+        view_conversation: "ذاتی پیغام دیکھیں"
+        note_added: "نگران کا نوٹ"
+        note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
         add_note_description: "صرف منتظمین کے لیے مرئی۔ جائزہ کے بارے میں سیاق و سباق یا فیصلے شامل کرنے کے لیے اس نوٹ کا استعمال کریں۔"
@@ -876,15 +876,15 @@ ur:
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
-        similar_posts: "اسی طرح کی ماضی کی پوسٹس"
+        similar_posts: "اسی طرح کے ماضی ک دھاگے"
         flagged_in_timeframe: "%{count} پہلےکی نشان دہی"
         user_activity: "صارف سرگرمی"
         activities:
           new_account: "نیا اکاؤنٹ"
-          trust_level: "اعتماد کی سطح: %{trustLevelName}"
+          trust_level: "فعالیت کا درجہ: %{trustLevelName}"
           posts:
-            one: "%{count} پوسٹ"
-            other: "%{count} پوسٹس"
+            one: "%{count} دھاگہ"
+            other: "%{count} دھاگے"
         solution_marked: "حل ہوا"
         topic_has_solution: "اس موضوع میں حل ہے"
         visibility: "نموداری"
@@ -894,11 +894,11 @@ ur:
         flag_priorities: "رکن کی ساکھ اور نشان دہی کی ترجیحات کا انتظام"
         spam_detection: "سپیم کا پتہ لگانا"
       approval:
-        title: "پوسٹ کو منظوری کی ضرورت ہے"
+        title: "دھاگہ کو منظوری کی ضرورت ہے"
         description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
         pending_posts:
-          one: "آپ کی <strong>%{count}</strong> پوسٹ زیرِاِلتوَاء ہے۔"
-          other: "آپ کی <strong>%{count}</strong> پوسٹس زیرِاِلتوَاء ہیں۔"
+          one: "آپ کا <strong>%{count}</strong> دھاگہ زیرِاِلتوَاء ہے۔"
+          other: "آپ کے <strong>%{count}</strong> دھاگے زیرِاِلتوَاء ہیں۔"
         ok: "ٹھیک"
       example_username: "اسمِ صارف"
       reject_reason:
@@ -930,7 +930,7 @@ ur:
       three_days: "تین دن میں"
       next_business_day: "اگلے کاروباری دن"
       tomorrow: "کَل"
-      post_local_date: "پوسٹ میں تاریخ"
+      post_local_date: "دھاگہ میں تاریخ"
       later_this_week: "اِس ہفتے بعد میں"
       this_weekend: "اس ہفتے کے آخر میں"
       start_of_next_business_week: "پیر"
@@ -1018,10 +1018,10 @@ ur:
       requests:
         title: "درخواستیں"
         reason: "وجہ"
-        accept: "منظور"
-        accepted: "منظور"
+        accept: "قبول"
+        accepted: "قبول کیا"
         deny: "انکار"
-        denied: "انکار کر دیا"
+        denied: "انکار کیا"
         undone: "درخواست کالعدم"
         handle: "رکنیت کی درخواست سے نمٹیں"
         undo: "کالعدم کریں"
@@ -1030,7 +1030,7 @@ ur:
         name: "نام"
         full_name: "پورا نام"
         add_members: "اراکین کو شامل کریں"
-        invite_members: "دعوت دیں"
+        invite_members: "دعوت"
         delete_member_confirm: "'%{username}' کو '%{group}' گروپ سے ہٹائیں؟"
         profile:
           title: پروفائل
@@ -1079,7 +1079,7 @@ ur:
             username: "اسمِ صارف"
             password: "پاسورڈ"
           settings:
-            title: "سیٹِنگ"
+            title: "ترتیبات"
             allow_unknown_sender_topic_replies: "نامعلوم ارسال کنندہ کے موضوع کے جوابات کی اجازت دیں۔"
             allow_unknown_sender_topic_replies_hint: "نامعلوم بھیجنے والوں کو گروپ کے موضوعات کا جواب دینے کی اجازت دیتا ہے۔ اگر یہ فعال نہیں ہے تو، ای میل پتوں کے جوابات جو پہلے ہی موضوع پر مدعو نہیں کیے گئے ہیں ایک نیا موضوع بنائیں گے۔"
             from_alias: "عرف سے"
@@ -1151,7 +1151,7 @@ ur:
       user_count: "اراکین"
       bio: "گروپ کے بارے میں"
       selector_placeholder: "اسمِ صارف درج کریں"
-      owner: "مالِک"
+      owner: "مالک"
       index:
         title: "گروپس"
         all: "تمام گروپس"
@@ -1161,14 +1161,14 @@ ur:
         close_groups: "بند گروپس"
         automatic_groups: "خودکار گروپس"
         automatic: "خود کار طریقے سے"
-        closed: "بند"
+        closed: "بند کیا"
         public: "عوامی"
-        private: "ذاتی"
+        private: "نجی"
         public_groups: "عوامی گروپس"
         my_groups: "میرے گروپس"
         group_type: "گروپ قِسم"
         is_group_user: "ممبر"
-        is_group_owner: "مالِک"
+        is_group_owner: "مالک"
         search_results: "تلاش کے نتائج نیچے ظاہر ہوں گے۔"
       title:
         one: "گروپ"
@@ -1322,7 +1322,7 @@ ur:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
       username: "اسمِ صارف"
-      trust_level: "اعتماد کی سطح"
+      trust_level: "فعالیت کا درجہ"
       read_time: "پڑھنے کا وقت"
       topics_entered: "درج کردہ موضوعات"
       post_count: "پوسٹ`"
@@ -1414,7 +1414,7 @@ ur:
       bio: "سائٹ کے بارے میں"
       timezone: "خطہ کے وقت"
       invited_by: "کی طرف سے مدعو کیا گیا:"
-      trust_level: "اعتماد کی سطح"
+      trust_level: "فعالیت کا درجہ"
       notifications: "اطلاعات"
       statistics: "اعدادوشمار"
       desktop_notifications:
@@ -2415,7 +2415,7 @@ ur:
     last_seen: "دیکھا گیا"
     created: "بنایا گیا"
     created_lowercase: "بنایا گیا"
-    trust_level: "اعتماد کی سطح"
+    trust_level: "فعالیت کا درجہ"
     search_hint: "اسمِ صارف، ای میل یا آئی پی ایڈریس"
     create_account:
       header_title: "خوش آمدید!"
@@ -3554,8 +3554,8 @@ ur:
           "2_4": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ نے اِس ٹاپک پر ایک جواب پوسٹ کیا۔"
           "2_2": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس ٹاپک کو ٹرَیک کر رہے ہیں۔"
           "2": 'آپ کو نئے جوابات کی گنتی نظر آئے گی کیونکہ آپ نے<a href="%{basePath}/u/%{username}/preferences/notifications">یہ موضوع</a> پڑھا۔'
-          "1_2": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
-          "1": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          "1_2": "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          "1": "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "0_7": "آپ اِس زمرہ میں تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
           "0_2": "آپ اِس ٹاپک کی تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
           "0": "آپ اِس ٹاپک کی تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
@@ -3567,16 +3567,16 @@ ur:
           description: "آپ کو اِس ٹاپک میں ہر نئے جواب کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
         tracking_pm:
           title: "ٹریک کیا جا رہا"
-          description: "اِس پیغام پر نئے جوابات کی گنتی دیکھائی جائے گی۔ اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اِس پیغام پر نئے جوابات کی گنتی دیکھائی جائے گی۔ اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         tracking:
           title: "ٹریک کیا جا رہا"
-          description: "اِس ٹاپک پر نئے جوابات کی گنتی دیکھائی جائے گی۔ اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اِس ٹاپک پر نئے جوابات کی گنتی دیکھائی جائے گی۔ اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         regular:
           title: "عمومی"
-          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         regular_pm:
           title: "عمومی"
-          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted_pm:
           title: "خاموش کِیا ہوا"
           description: "آپ کو اِس پیغام کی کسی بھی چیز کے بارے میں کبھی بھی مطلع نہیں کیا جائے گا۔"
@@ -3690,8 +3690,8 @@ ur:
       login_reply: "جواب دینے کیلئے لاگ اِن کریں"
       filters:
         n_posts:
-          one: "%{count} پوسٹ"
-          other: "%{count} پوسٹس"
+          one: "%{count} دھاگہ"
+          other: "%{count} دھاگے"
         cancel: "فِلٹر ہٹائیں"
       move_to:
         title: "میں منتقل کریں"
@@ -4221,7 +4221,7 @@ ur:
           description: "آپ خود بخود اس زمرے کے تمام موضوعات کو ٹریک کریں گے۔ اگر کوئی آپ کے @نام کا ذکر کرتا ہے یا آپ کو جواب دیتا ہے تو آپ کو مطلع کیا جائے گا، اور نئے جوابات کی تعداد دکھائی جائے گی۔"
         regular:
           title: "عمومی"
-          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
           description: "آپ کو اس زمرے میں نئے موضوعات کے بارے میں کبھی بھی مطلع نہیں کیا جائے گا، اور وہ تازہ ترین میں ظاہر نہیں ہوں گے۔"
@@ -4668,7 +4668,7 @@ ur:
         community:
           name: کمیونٹی
         trust_level:
-          name: اعتماد کی سطح
+          name: فعالیت کا درجہ
         other:
           name: دیگر
         posting:
@@ -4770,7 +4770,7 @@ ur:
           description: "آپ خود کار طریقے سے اِس ٹیگ کے ساتھ موجود تمام ٹاپکس کو ٹریک کریں گے۔ بغیر پڑھی اور نئی پوسٹس کی گنتی ٹاپک کے ساتھ دکھائی جائے گی۔"
         regular:
           title: "عمومی"
-          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا آپ کی پوسٹ پر جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا آپ کی پوسٹ پر جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
           description: "آپ کو اِس ٹیگ کے ساتھ موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
@@ -5402,8 +5402,8 @@ ur:
           title: "سپَیم"
           header_description: "صارف کی رجسٹریشن اور پوسٹنگ رویّے کے تجزیے کے ذریعے اسپام کی شناخت اور تحدید کا تعین کریں۔"
         trust_levels:
-          title: "اعتماد کی سطحیں"
-          header_description: "اعتماد کی سطح کی ترتیبات آپ کو اپنی کمیونٹی کے ترقی کے نظام کے تقاضوں اور اطلاعات کو ٹھیک کرنے کی اجازت دیتی ہیں، جو اراکین کو خود بخود اعلیٰ اعتماد کی سطح پر ترقی دیتی ہے کیونکہ وہ آپ کے فورم کے ساتھ مستقل، مثبت مشغولیت کا مظاہرہ کرتے ہیں۔"
+          title: "فعالیت کے درجات"
+          header_description: "فعالیت کے درجہ کی ترتیبات آپ کو اپنی کمیونٹی کے ترقی کے نظام کے تقاضوں اور اطلاعات کو ٹھیک کرنے کی اجازت دیتی ہیں، جو اراکین کو خود بخود اعلیٰ فعالیت کے درجہ پر ترقی دیتی ہے کیونکہ وہ آپ کے فورم کے ساتھ مستقل، مثبت مشغولیت کا مظاہرہ کرتے ہیں۔"
         user_api:
           title: "یُوزَر API"
           header_description: "تعین کریں کہ کون سے صارفین کا مجموعہ API تک رسائی حاصل کر سکتے ہیں، نیز کن اسکوپس کی اجازت ہے۔"
@@ -5688,6 +5688,9 @@ ur:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"
           percent_change_tooltip_previous_value:
+            yesterday:
+              one: "یہ تعداد دو دن پہلے %{count} تھی"
+              other: "یہ تعداد دو دن پہلے %{count} تھی"
             two_weeks_ago:
               one: "دو ہفتے پہلے %{count} تھا۔"
               other: "دو ہفتے پہلے %{count} تھا۔"
@@ -5771,7 +5774,7 @@ ur:
           membership:
             automatic: خود کار طریقے سے
             automatic_tooltip: "یہ گروپ خودکار ہے، آپ اسے حذف نہیں کر سکتے, اس میں اراکین کو خود بخود شامل اور حذف کیا جائے گا۔"
-            trust_levels_title: "اراکین کو شامل ہونے پر اعتماد کی سطح خود بخود دی جاتی ہے:"
+            trust_levels_title: "اراکین کو شامل ہونے پر فعالیت کے درجہ خود بخود دی جاتی ہے:"
             effects: اثرات
             trust_levels_none: "کوئی نہیں"
             automatic_membership_email_domains: "جو صارفین ایک ایسے اِیمیل ڈومین کے ساتھ رجسٹر کرتے ہیں جو اِس فہرست میں سے کسی ایک سے پورا ملتا ہے، تو اُن کو خود کار طریقے سے اِس گروپ میں شامل کر دیا جائے گا:"
@@ -5797,6 +5800,9 @@ ur:
         delete_details:
           one: "%{count} شخص اس گروپ تک رسائی کھو دے گا"
           other: "%{count} لوگ اس گروپ تک رسائی کھو دیں گے"
+        delete_with_messages_confirm:
+          one: "%{count} پیغام گروپ کے اراکین کے لیے ناقابلِ رسائی ہو جائے گا"
+          other: "%{count} پیغامات گروپ کے اراکین کے لیے ناقابلِ رسائی ہو جائیں گے"
         delete_warning: "حذف شدہ گروپس کو بحال نہیں کیا جا سکتا۔"
         delete_failed: "گروپ کو مٹانے میں ناکامی۔ اگر یہ ایک خودکار گروپ ہے تو اسے ختم نہیں کیا جا سکتا۔"
         delete_automatic_group: یہ ایک خودکار گروپ ہے اور اسے حذف نہیں کیا جا سکتا۔
@@ -5899,8 +5905,8 @@ ur:
             tag_groups:
               list: ٹیگز گروپس کی فہرست حاصل کریں
               show: آئی ڈی کے ذریعے ایک واحد ٹیگ گروپ حاصل کریں
-              create: ایک ٹیگ گروپ بناتا ہے
-              update: آئی ڈی کے ذریعے متعین کردہ ٹیگ گروپ کو اپ ڈیٹ کرتا ہے
+              create: ایک ٹیگ گروپ بناتا ہے-
+              update: آئی ڈی کے ذریعے متعین کردہ ٹیگ گروپ کو اپ ڈیٹ کرتا ہے-
             categories:
               list: زمروں کی فہرست حاصل کریں۔
               show: ID کے لحاظ سے ایک زمرہ حاصل کریں۔
@@ -5909,11 +5915,12 @@ ur:
             users:
               bookmarks: رکن کے بُک مارکس کی فہرست بنائیں۔ یہ ICS فارمیٹ استعمال کرتے وقت بُک مارک ریمائنڈرز لوٹاتا ہے۔
               sync_sso: DiscourseConnect کا استعمال کرتے ہوئے رکن کو سنکرونائز کریں۔
-              show: کسی ممبر کے بارے میں معلومات حاصل کریں
+              show: کسی رکن کے بارے میں معلومات حاصل کریں-
               check_emails: رکن ای میلز کی فہرست.
               update: رکن کی پروفائل کی معلومات کو اپ ڈیٹ کریں۔
               log_out: رکن کے لیے تمام سیشن لاگ آؤٹ کریں۔
               anonymize: رکن اکاؤنٹس کو گمنام بنائیں۔
+              suspend: رکن کے اکاؤنٹس معطل کریں-
               delete: رکن کے اکاؤنٹس کوحذف کریں۔
               list: اراکین کی فہرست حاصل کریں۔
             user_status:
@@ -5934,24 +5941,42 @@ ur:
             groups:
               manage_groups: گروپ ممبران کی فہرست بنائیں، شامل کریں اور ہٹا دیں۔
               administer_groups: گروپس کی فہرست بنائیں، دکھائیں، تخلیق، اپ ڈیٹ اور حذف کریں۔
+            search:
+              show: اینڈ پوائنٹ کے ذریعے`/search.json?q=term` تلاش کریں
+              query: اینڈ پوائنٹ `/search/query?term=term` کے ذریعے تلاش کریں
+            wordpress:
+              publishing: WP Discourse پلگ اِن کی اشاعت کی خصوصیات کے لیے ضروری (لازمی)-
+              commenting: WP Discourse پلگ اِن کی تبصرہ جات کی خصوصیات کے لیے ضروری-
+              discourse_connect: WP Discourse پلگ اِن کی DiscourseConnect خصوصیات کے لیے، ضروری.
+              utilities: یہ ضروری ہے اگر آپ WP Discourse پلگ اِن کی یوٹیلٹیز استعمال کرتے ہیں.
+            logs:
+              messages: لاگز سے پیغامات کی فہرست حاصل کریں یا کوئی مخصوص لاگ پیغام دیکھیں
       web_hooks:
         title: "وَیب ھُوک٘س٘"
+        none: "آپ کے پاس ابھی تک کوئی ویب ہُک موجود نہیں ہے"
         instruction: "جب آپ کی ویب سائٹ میں مخصوص واقعات پیش آتے ہیں تو وَیب ھُوک٘س٘ ڈِسکورس کو بیرونی سروسوں کو مطلع کرنے کے قابل بناتے ہیں۔ جب وَیب ھُوک٘ کو متحرک کیا جائے گا، فراہم کیے گئے یو.آر.ایلز. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
         detailed_instruction: "جب منتخب کیا گیا واقعہ پیش آئے گا تو فراہم کیے گئے یو.آر.ایل. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
+        add: "نیا ویب ہُک بنائیں"
         create: "بنائیں"
         edit: "ترمیم کریں"
         save: "محفوظ کریں"
+        show: "ایوینٹس"
         delete: "مٹائیں"
         cancel: "منسوخ"
+        description_label: "ایوینٹ ٹرگرز"
         controls: "کنٹرولز"
+        back: "ویب ہکس پر واپس جائیں"
         payload_url: "پَیلوڈ یو.آر.ایل."
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "سیکرٹ میں کوئی بھی خالی حروف نہ ہونا ضروری ہے۔"
         secret_too_short: "سیکرٹس کا کم از کم 12 حروف پر مشتمل ہونا ضروری ہے۔"
+        secret_placeholder: "دستخط بنانے کے لیے استعمال ہونے والی سٹرنگ"
         event_type_missing: "آپ کو کم از کم ایک واقعہ کی قسم قائم کرنا ضروری ہے۔"
         content_type: "کونٹنٹ کی قسم"
         secret: "سیکرٹ"
         event_chooser: "کونسے واقعات اِس وَیب ھُوک٘ کو متحرک کریں؟"
+        wildcard_event: "مجھے ہر چیز بھیجیں"
+        individual_event: "الگ الگ ایونٹس منتخب کریں"
         verify_certificate: "پَیلوڈ یو.آر.ایل. کا TLS سرٹیفکیٹ چیک کریں"
         active: "فعال"
         active_notice: "جب واقعہ پیش آئے گا تو ہم اُس کی تفصیلات پہنچا دیں گے۔"
@@ -5969,18 +5994,42 @@ ur:
           topic_edited: "موضوع کو اپ ڈیٹ کیا گیا"
           topic_destroyed: "موضوع حذف کر دیا گیا"
           topic_recovered: "موضوع بازیافت ہوا"
+        post_event:
+          group_name: "پوسٹ ایونٹس"
+          post_created: "پوسٹ تخلیق کر دی گئی ہے"
+          post_edited: "مراسلہ اپ ڈیٹ ہو گیا ہے"
+          post_destroyed: "مراسلہ حذف ہو گیا ہے"
+          post_recovered: "مراسلہ بحال کر دیا گیا ہے"
         group_event:
+          group_name: "گروہی ایونٹس"
           group_created: "گروپ بن گیا"
           group_updated: "گروپ اپ ڈیٹ ہو گیا"
           group_destroyed: "گروپ حذف ہوگیا"
+        tag_event:
+          group_name: "ٹیگ ایونٹس"
+          tag_created: "ٹیگ بنا دیا گیا ہے"
+          tag_updated: "ٹیگ کو اپ ڈیٹ کر دیا گیا ہے"
+          tag_destroyed: "ٹیگ حذف کر دیا گیا ہے"
         category_event:
+          group_name: "کیٹگری ایونٹس"
           category_created: "زمرہ بن گیا"
           category_updated: "زمرہ اپ ڈیٹ ہو گیا"
           category_destroyed: "زمرہ حذف ہو گیا"
         user_event:
+          group_name: "اراکین ایونٹس"
           user_logged_in: "رکن لاگ ان ہوا"
           user_logged_out: "رکن لاگ آؤٹ ہوا"
           user_confirmed_email: "رکن کی تصدیق شدہ ای میل"
+          user_created: "رکن بن گیا"
+          user_approved: "رکن منظورہوا"
+          user_updated: "رکن کو اپ ڈیٹ کیا گیا"
+          user_destroyed: "رکن حذف ہو گیا"
+          user_suspended: "رکن کو معطل کر دیا گیا"
+          user_unsuspended: "رکن کو بحال کر دیا گیا"
+        reviewable_event:
+          group_name: "قابلِ جائزہ ایونٹس"
+          reviewable_created: "قابلِ جائزہ آئٹم تیار ہے"
+          reviewable_updated: "قابلِ جائزہ آئٹم اپ ڈیٹ ہے"
         user_badge_event:
           group_name: "تمغات ایونٹس"
           user_badge_granted: "رکن کا تمغہ دیا گیا ہے۔"
@@ -6601,6 +6650,7 @@ ur:
         sent_at: "پر بھیجا گیا"
         time: "وقت"
         user: "صارف"
+        email_type: "نوع ای میل"
         test_email_address: "ٹیسٹ کرنے کے لیے اِیمیل ایڈریس"
         sent_test: "بھیج دی گئی!"
         preview_digest_desc: "غیر فعال اراکین کو بھیجے گئے ڈائجسٹ اِی میلز کے متن کا مشاہدہ کریں۔"
@@ -6707,16 +6757,16 @@ ur:
             unsilence_user: "صارف کی خاموشی ختم کریں"
             removed_silence_user: "صارف خاموش (ہٹا دیا)"
             removed_unsilence_user: "صارف غیر خاموشی (ہٹا دیا)"
-            grant_admin: "اَیڈمِن عطا کریں"
+            grant_admin: "منتظم بنائیں"
             revoke_admin: "اَیڈمِن منسوخ کریں"
-            grant_moderation: "ماڈرَیشَن عطا کریں"
+            grant_moderation: "نگران بنائیں"
             revoke_moderation: "نگرانی منسوخ کریں"
             backup_create: "بیک اَپ بنائیں"
             deleted_tag: "مٹایا گیا ٹیگ"
             deleted_unused_tags: "حذف کردہ غیر استعمال شدہ ٹیگز"
             renamed_tag: "نام تبدیل کیا گیا ٹیگ"
             revoke_email: "اِیمیل منسوخ کریں"
-            lock_trust_level: "اعتماد کی سطح کو بند کریں"
+            lock_trust_level: "فعالیت کے درجہ کو بند کریں"
             unlock_trust_level: "ٹرسٹ لَیول کا لاک ختم کریں"
             activate_user: "صارف فعال کریں"
             deactivate_user: "صارف غیر فعال کریں"
@@ -6802,6 +6852,7 @@ ur:
           types:
             all_search_types: "تلاش کی تمام اقسام"
             header: "ہَیڈر"
+            full_page: "مکمل صفحہ"
             click_through_only: "تمام (صرف کلِک تھرُو)"
       watched_words:
         search: "سرچ"
@@ -6877,6 +6928,11 @@ ur:
               key: "زیادہ سے زیادہ"
             type:
               key: "قِسم"
+        field_placeholders:
+          choices:
+            first: "اختيار 1"
+            second: "اختيار 2"
+            third: "اختيار 3"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -6890,8 +6946,10 @@ ur:
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال"
         status: "سٹیٹس"
+        show_emails: "ای میلیں دکھائیں"
         bulk_actions:
           delete:
+            label: "حذف اراکین…"
             confirmation_modal:
               close: "بند کریں"
               confirm: "مٹائیں"
@@ -6907,11 +6965,11 @@ ur:
           active: "فعال اراکین"
           new: "نئے اراکین"
           pending: "اراکین کا جائزہ زیر التواء"
-          newuser: "اعتماد کی سطح 0 پہ اراکین (نئے رکن)"
-          basic: "اعتماد کی سطح 1 پہ اراکین (بنیادی رکن)"
-          member: "اعتماد کی سطح 2 پہ اراکین (رکن)"
-          regular: "اعتماد کی سطح 3 پہ اراکین (مستقل)"
-          leader: "اعتماد کی سطح 4 پہ اراکین (رہبر)"
+          newuser: "فعالیت کے درجہ 0 پہ اراکین (نئے رکن)"
+          basic: "فعالیت کے درجہ 1 پہ اراکین (بنیادی رکن)"
+          member: "فعالیت کے درجہ 2 پہ اراکین (رکن)"
+          regular: "فعالیت کے درجہ 3 پہ اراکین (مستقل)"
+          leader: "فعالیت کے درجہ 4 پہ اراکین (رہبر)"
           staff: "سٹاف"
           moderators: "نگرانوں"
         not_verified: "غیر تصدیق شدہ"
@@ -6976,11 +7034,11 @@ ur:
         log_out: "لاگ آُوٹ"
         logged_out: "صارف کو تمام ڈِیوائیسِز سے لاگ آؤٹ کر دیا گیا"
         revoke_admin: "اَیڈمِن منسوخ کریں"
-        grant_admin: "اَیڈمِن عطا کریں"
+        grant_admin: "منتظم بنائیں"
         grant_admin_success: "نئے منتظم کی تصدیق ہوئی۔"
         grant_admin_confirm: "نئے ایڈمِنِسٹریٹر کی توثیق کیلئے ہم نے آپ کو ایک ای میل بھیجی ہے۔ براہ مہربانی اسے کھولیں اور ہدایات پر عمل کریں۔"
         revoke_moderation: "نگرانی منسوخ کریں"
-        grant_moderation: "ماڈرَیشَن عطا کریں"
+        grant_moderation: "نگران بنائیں"
         unsuspend: "معطلی ختم کریں"
         suspend: "معطل کریں"
         show_flags_received: "ملے فلَیگز دکھائیں"
@@ -7010,6 +7068,9 @@ ur:
         post_edits_count: "دھاگے کی ترامیم"
         exports:
           download:
+            expires_in:
+              one: '%{count} گھنٹے میں ختم ہو جائے گا'
+              other: '%{count} گھنٹے میں ختم ہو جائے گا'
             button: محفوظ کرنے کی درخواست کریں
         anonymize: "صارف گمنام بنائیں"
         disable_second_factor_confirm: "کیا آپ واقعی اس اکاؤنٹ کے لیے دو عنصری توثیق کو غیر فعال کرنا چاہتے ہیں؟"
@@ -7093,26 +7154,26 @@ ur:
           none: "اس اِیمیل سے حال میں کوئی باؤنسِز موصول نہیں ہوئے۔"
           some: "اس اِیمیل سے حال میں چند باؤنسِز موصول ہوئے تھے۔"
           threshold_reached: "اس اِیمیل سے بہت زیادہ باؤنسِز موصول ہوئے۔"
-        trust_level_change_failed: "رکن کے اعتماد کی سطح کو تبدیل کرنے میں ایک مسئلہ۔"
+        trust_level_change_failed: "رکن کے فعالیت کے درجہ کو تبدیل کرنے میں ایک مسئلہ۔"
         suspend_modal_title: "صارف معطل کریں"
         confirm_cancel_penalty: "کیا آپ واقعی جرمانہ رد کرنا چاہتے ہیں؟"
-        trust_level_2_users: "اعتماد کی سطح 2 پہ اراکین"
-        trust_level_3_requirements: "اعتماد کی سطح 3 تقاضے"
-        trust_level_locked_tip: "اعتماد کی سطح مقفل ہے، سسٹم رکن کو فروغ یا تنزلی نہیں کرے گا"
-        trust_level_unlocked_tip: "اعتماد کی سطح غیر مقفل ہے، سسٹم رکن کو فروغ یا تنزلی کر سکتا ہے۔"
-        lock_trust_level: "اعتماد کی سطح بند"
-        unlock_trust_level: "اعتماد کی سطح کھولیں"
+        trust_level_2_users: "فعالیت کے درجہ 2 پہ اراکین"
+        trust_level_3_requirements: "فعالیت کے درجہ 3 تقاضے"
+        trust_level_locked_tip: "فعالیت کا درجہ مقفل ہے، سسٹم رکن کو فروغ یا تنزلی نہیں کرے گا"
+        trust_level_unlocked_tip: "فعالیت کا درجہ غیر مقفل ہے، سسٹم رکن کو فروغ یا تنزلی کر سکتا ہے۔"
+        lock_trust_level: "فعالیت کا درجہ بند"
+        unlock_trust_level: "فعالیت کا درجہ کھولیں"
         silenced_count: "خاموش"
         suspended_count: "معطل کردہ"
         last_six_months: "گزشتہ 6 ماہ"
         other_matches_list:
           username: "اسمِ صارف"
-          trust_level: "اعتماد کی سطح"
+          trust_level: "فعالیت کا درجہ"
           read_time: "پڑھنے کا وقت"
           topics_entered: "درج کردہ موضوعات"
           posts: "پوسٹس"
         tl3_requirements:
-          title: "اعتماد کی سطح 3 کے تقاضے"
+          title: "فعالیت کے درجہ 3 کے تقاضے"
           table_title:
             one: "پچھلے دن میں"
             other: "پچھلے %{count}دنوں میں"
@@ -7132,13 +7193,13 @@ ur:
           likes_received_users: "لائیکس موصول ہوے: منفرد صارفین سے"
           suspended: "معطل کردہ (گزشتہ 6 ماہ)"
           silenced: "خاموش کردہ (گزشتہ 6 ماہ)"
-          qualifies: "اعتماد کی سطح 3 کے لئے اہل۔"
-          does_not_qualify: "اعتماد کی سطح 3 کے لئے اہل نہیں۔"
+          qualifies: "فعالیت کے درجہ 3 کے لئے اہل۔"
+          does_not_qualify: "فعالیت کے درجہ 3 کے لئے اہل نہیں۔"
           will_be_promoted: "جلد ہی ترقی دے دی جائے گا۔"
           will_be_demoted: "جلد ہی تنزلی کر دی جائے گی۔"
           on_grace_period: "فی الحال ترقی کے رعایتی مدت میں، تنزلی نہیں کی جائے گی۔"
-          locked_will_not_be_promoted: "اعتماد کی سطح مقفل۔ کبھی بھی ترقی نہیں دی جائے گی۔"
-          locked_will_not_be_demoted: "اعتماد کی سطح مقفل۔ کبھی بھی تنزلی نہیں کی جائے گی۔"
+          locked_will_not_be_promoted: "فعالیت کا درجہ مقفل۔ کبھی بھی ترقی نہیں دی جائے گی۔"
+          locked_will_not_be_demoted: "فعالیت کا درجہ مقفل۔ کبھی بھی تنزلی نہیں کی جائے گی۔"
         discourse_connect:
           title: "DiscourseConnect اکیلا سائن آن"
           external_id: "بیرونی آئی ڈی"
@@ -7222,7 +7283,7 @@ ur:
           posting: "پوسٹ کرنا"
           email: "اِیمیل"
           files: "فائلیں"
-          trust: "اعتماد کی سطحیں"
+          trust: "فعالیت کے درجات"
           security: "سیکورٹی"
           onebox: "وَن باکس"
           seo: "SEO"
@@ -7318,7 +7379,7 @@ ur:
           none: "روزانہ اَپ ڈَیٹ کریں"
           post_action: "جب صارف پوسٹ پر کوئی کاروائی کرے"
           post_revision: "جب صارف پوسٹ میں ترمیم یا اُسے تخلیق کرے"
-          trust_level_change: "جب رکن اعتماد کی سطح کو تبدیل کرتا ہے"
+          trust_level_change: "جب رکن فعالیت کے درجہ کو تبدیل کرتا ہے"
           user_change: "جب ایک صارف ترمیم یا تخلیق کیا جاتا ہے۔"
         preview:
           link_text: "دیے گئے تمغوں کا مشاہدہ کریں"
