@@ -7,7 +7,7 @@ module ::Jobs
     def execute(args)
       if SiteSetting.patreon_enabled && SiteSetting.patreon_creator_access_token &&
            SiteSetting.patreon_creator_refresh_token
-        ::Patreon::Tokens.update!
+        Patreon::Tokens.update!
       end
     end
   end

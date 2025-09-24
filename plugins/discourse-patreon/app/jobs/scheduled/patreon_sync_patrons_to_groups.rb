@@ -11,8 +11,8 @@ module ::Jobs
         return
       end
 
-      ::Patreon::Patron.update!
-      ::Patreon.set("last_sync", at: Time.now)
+      Patreon::Patron.update!
+      Patreon.set("last_sync", at: Time.now)
     end
   end
 end

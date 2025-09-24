@@ -12,8 +12,8 @@ class Patreon::PatreonAdminController < Admin::AdminController
 
   def list
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
-    rewards = ::Patreon::Reward.all
-    last_sync = ::Patreon.get("last_sync") || {}
+    rewards = Patreon::Reward.all
+    last_sync = Patreon.get("last_sync") || {}
 
     groups = ::Group.all.pluck(:id)
 
@@ -23,7 +23,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def rewards
-    rewards = ::Patreon::Reward.all
+    rewards = Patreon::Reward.all
 
     render json: rewards
   end
@@ -84,7 +84,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
-    render json: { email: ::Patreon::Patron.attr("email", user) }
+    render json: { email: Patreon::Patron.attr("email", user) }
   end
 
   def patreon_tokens_present?

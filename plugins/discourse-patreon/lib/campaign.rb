@@ -2,14 +2,14 @@
 
 require "json"
 
-module ::Patreon
+module Patreon
   class Campaign
     def self.update!
       rewards = {}
       campaign_rewards = []
       pledges_uris = []
 
-      response = ::Patreon::Api.campaign_data
+      response = Patreon::Api.campaign_data
 
       return false if response.blank? || response["data"].blank?
 
