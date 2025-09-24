@@ -196,9 +196,13 @@ describe Jobs::DetectTranslateTopic do
         group_pm_topic,
       ).and_return("en")
       allow(DiscourseAi::Translation::TopicLocalizer).to receive(:localize).and_return(true)
-      MessageBus.expects(:publish).with("/topic/#{group_pm_topic.id}", reload_topic: true).once
 
-      job.execute({ topic_id: group_pm_topic.id, force: true })
+      message =
+        MessageBus.track_publish { job.execute({ topic_id: group_pm_topic.id, force: true }) }
+
+      expect(message.count).to eq(1)
+      expect(message.first.channel).to eq("/topic/#{group_pm_topic.id}")
+      expect(message.first.data).to eq(reload_topic: true)
     end
   end
 end
