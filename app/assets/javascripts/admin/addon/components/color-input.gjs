@@ -9,9 +9,10 @@ import TextField from "discourse/components/text-field";
 /**
   An input field for a color.
 
-  @param hexValue is a reference to the color's hex value.
-  @param brightnessValue is a number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
-  @params valid is a boolean indicating if the input field is a valid color.
+  @param {string} hexValue Reference to the color's hex value.
+  @param {number} brightnessValue Number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
+  @param {boolean} valid If the input field is a valid color.
+  @param {string} [fallbackHexValue] Hex color string to use if hexValue is empty. Optional.
 **/
 
 @classNames("color-picker")
@@ -24,9 +25,15 @@ export default class ColorInput extends Component {
     return this.onlyHex ? 6 : null;
   }
 
-  @computed("hexValue")
-  get normalizedHexValue() {
-    return this.normalize(this.hexValue);
+  @computed("hexValue", "fallbackHexValue")
+  get hexValueWithFallback() {
+    const { hexValue, fallbackHexValue } = this;
+    return hexValue || (fallbackHexValue ? fallbackHexValue : hexValue);
+  }
+
+  @computed("hexValueWithFallback")
+  get normalizedValue() {
+    return this.normalize(this.hexValueWithFallback);
   }
 
   normalize(color) {
@@ -102,7 +109,8 @@ export default class ColorInput extends Component {
     <input
       class="picker"
       type="color"
-      value={{this.normalizedHexValue}}
+      value={{this.normalizedValue}}
+      title={{this.normalizedValue}}
       {{on "input" this.onPickerInput}}
       aria-labelledby={{this.ariaLabelledby}}
     />
