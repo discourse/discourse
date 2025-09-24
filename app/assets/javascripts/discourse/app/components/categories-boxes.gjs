@@ -24,12 +24,12 @@ import discourseComputed from "discourse/lib/decorators";
 export default class CategoriesBoxes extends Component {
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
-    return this.categories.any((c) => !isEmpty(c.get("uploaded_logo.url")));
+    return this.categories.some((c) => !isEmpty(c.get("uploaded_logo.url")));
   }
 
   @discourseComputed("categories.[].subcategories")
   hasSubcategories() {
-    return this.categories.any((c) => !isEmpty(c.get("subcategories")));
+    return this.categories.some((c) => !isEmpty(c.get("subcategories")));
   }
 
   categoryName(category) {
