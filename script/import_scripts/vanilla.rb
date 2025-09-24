@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "csv"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # NOTE: this importer expects a text file obtained through Vanilla Porter
 # user documentation: https://meta.discourse.org/t/how-to-migrate-import-from-vanilla-to-discourse/27273

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "./quandora_question.rb"
-require File.expand_path(File.dirname(__FILE__) + "/../base.rb")
+require_relative "quandora_question"
+require_relative "../base"
 
 class ImportScripts::Quandora < ImportScripts::Base
   JSON_FILES_DIR = "output"

@@ -2,7 +2,7 @@
 
 require "pg"
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/fusionforge.rb

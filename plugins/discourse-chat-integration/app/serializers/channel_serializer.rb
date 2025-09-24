@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./rule_serializer"
+require_relative "rule_serializer"
 
 class DiscourseChatIntegration::ChannelSerializer < ApplicationSerializer
   attributes :id, :provider, :error_key, :error_info, :data, :rules

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 require "htmlentities"
 begin
   require "php_serialize" # https://github.com/jqr/php-serialize
@@ -504,7 +504,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
                  (SELECT forumpermissions & 96 > 0 FROM #{TABLE_PREFIX}forumpermission fp WHERE fp.forumid = f.forumid AND usergroupid = 2) AS registered_reply,
                  (SELECT max(forumpermissions & 524288 > 0) FROM #{TABLE_PREFIX}forumpermission fp WHERE fp.forumid = f.forumid AND usergroupid IN (5,6)) AS staff_access,
                  (SELECT count(DISTINCT coalesce(fp.forumpermissions & 524288 > 0, 2)) > 1 FROM #{TABLE_PREFIX}usergroup ug LEFT OUTER JOIN #{TABLE_PREFIX}forumpermission fp ON fp.forumid = f.forumid AND fp.usergroupid = ug.usergroupid WHERE ug.ispublicgroup = 1) AS special_access
-            FROM #{TABLE_PREFIX}forum f 
+            FROM #{TABLE_PREFIX}forum f
         ORDER BY forumid
       SQL
 

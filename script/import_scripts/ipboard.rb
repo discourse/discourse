@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 require "htmlentities"
 begin
   require "reverse_markdown" # https://github.com/jqr/php-serialize

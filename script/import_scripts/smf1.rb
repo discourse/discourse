@@ -2,7 +2,7 @@
 
 require "mysql2"
 require "htmlentities"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::Smf1 < ImportScripts::Base
   BATCH_SIZE = 5000
