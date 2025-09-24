@@ -348,8 +348,8 @@ export function buildResolver(baseName) {
       ];
 
       for (const candidate of candidates) {
-        let result;
-        if ((result = this.discourseTemplateModule(candidate))) {
+        const result = this.discourseTemplateModule(candidate);
+        if (result) {
           if (candidate !== original) {
             deprecated(
               `Looking up 'template:${candidate}' is no longer permitted. Rename to 'template:${original}' instead`,
