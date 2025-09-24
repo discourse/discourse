@@ -20,7 +20,7 @@ import discourseComputed from "discourse/lib/decorators";
 export default class CategoriesBoxesWithTopics extends Component {
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
-    return this.categories.some((c) => {
+    return this.categories.any((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
   }
