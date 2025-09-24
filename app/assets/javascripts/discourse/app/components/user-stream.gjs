@@ -134,10 +134,13 @@ export default class UserStreamComponent extends Component {
       message: i18n("drafts.bulk_delete_message", { count }),
       didConfirm: async () => {
         try {
-          for (const draft of selectedDrafts) {
-            await Draft.clear(draft.draft_key, draft.sequence);
+          await Draft.bulkClear(selectedDrafts);
+
+          // Batch DOM updates after successful bulk delete
+          selectedDrafts.forEach((draft) => {
             this.args.stream.remove(draft);
-          }
+          });
+
           // Clear the bulk selection after successful deletion
           this.bulkSelectHelper?.clearAll();
         } catch (error) {

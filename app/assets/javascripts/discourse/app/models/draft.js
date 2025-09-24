@@ -9,6 +9,19 @@ export default class Draft extends EmberObject {
     });
   }
 
+  static bulkClear(drafts) {
+    const draft_keys = drafts.map((d) => d.draft_key);
+    const sequences = {};
+    drafts.forEach((d) => {
+      sequences[d.draft_key] = d.sequence;
+    });
+
+    return ajax("/drafts/bulk_destroy.json", {
+      type: "DELETE",
+      data: { draft_keys, sequences },
+    });
+  }
+
   static get(key) {
     return ajax(`/drafts/${key}.json`);
   }

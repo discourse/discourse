@@ -337,5 +337,50 @@ module("Integration | Component | PostList | Index", function (hooks) {
       assert.dom(checkbox).isNotChecked();
       assert.dom(".post-list-bulk-controls").doesNotExist();
     });
+
+    test("bulk action execution calls provided action function", async function (assert) {
+      const posts = cloneJSON(postModel);
+      const bulkSelectHelper = new PostBulkSelectHelper(this, posts);
+
+      let bulkActionCalled = false;
+      let bulkActionPosts = null;
+
+      const bulkActions = [
+        {
+          label: "test.bulk_delete",
+          icon: "trash-can",
+          action: (selectedPosts) => {
+            bulkActionCalled = true;
+            bulkActionPosts = selectedPosts;
+          },
+          class: "btn-danger",
+        },
+      ];
+
+      await render(
+        <template>
+          <PostList
+            @posts={{posts}}
+            @bulkSelectEnabled={{true}}
+            @bulkSelectHelper={{bulkSelectHelper}}
+            @bulkActions={{bulkActions}}
+          />
+        </template>
+      );
+
+      // Select a post
+      await click(".bulk-select-checkbox");
+
+      // Open dropdown and click bulk action
+      await click(".bulk-actions-dropdown");
+      await click(".dropdown-menu .btn-danger");
+
+      assert.true(bulkActionCalled, "Bulk action should have been called");
+      assert.strictEqual(
+        bulkActionPosts.length,
+        1,
+        "Should pass selected posts to action"
+      );
+    });
   });
 });
