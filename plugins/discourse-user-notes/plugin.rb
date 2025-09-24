@@ -27,12 +27,6 @@ after_initialize do
 
   Discourse::Application.routes.append { mount ::DiscourseUserNotes::Engine, at: "/user_notes" }
 
-  DiscourseUserNotes::Engine.routes.draw do
-    get "/" => "user_notes#index"
-    post "/" => "user_notes#create"
-    delete "/:id" => "user_notes#destroy"
-  end
-
   allow_staff_user_custom_field(DiscourseUserNotes::COUNT_FIELD)
 
   add_to_class(Guardian, :can_delete_user_notes?) do
