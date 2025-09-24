@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import emoji from "discourse/helpers/emoji";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
 
@@ -16,7 +16,7 @@ export default class PostNoticeNewUser extends Component {
   }
 
   <template>
-    {{icon "handshake-angle"}}
+    {{emoji "tada"}}
     <p>{{i18n "post.notice.new_user" user=this.user}}</p>
   </template>
 }
