@@ -283,9 +283,6 @@ class CookedPostProcessor
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
-    # add photoswipe attrs
-    a["data-pswp-height"] = original_height
-    a["data-pswp-width"] = original_width
     a["data-cropped"] = "true" if crop
 
     a["data-download-href"] = Discourse.store.download_url(upload) if upload

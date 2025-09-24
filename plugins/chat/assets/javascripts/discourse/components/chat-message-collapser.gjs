@@ -16,12 +16,7 @@ export default class ChatMessageCollapser extends Component {
 
   lightbox = modifier((element) => {
     if (this.args.uploads.length > 0) {
-      const els = [];
-      element.querySelectorAll("img.chat-img-upload").forEach((img) => {
-        img.classList.add("lightbox");
-        els.push(img.parentElement);
-      });
-      loadLightbox(els, this.siteSettings);
+      loadLightbox(element, this.siteSettings);
     }
   });
 

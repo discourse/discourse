@@ -1,4 +1,3 @@
-import PhotoSwipe from "photoswipe";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { renderIcon } from "discourse/lib/icon-library";
 import User from "discourse/models/user";
@@ -17,11 +16,12 @@ export default function lightbox(elem, siteSettings) {
     children: ".lightbox",
     arrowPrevTitle: i18n("lightbox.previous"),
     arrowNextTitle: i18n("lightbox.next"),
-    errorMsg: i18n("lightbox.content_load_error"),
+    errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
     padding: { top: 20, bottom: 50, left: 20, right: 20 },
-    pswpModule: () => PhotoSwipe,
+    pswpModule: async () => await import("photoswipe"),
   });
 
+  // adds a custom caption to lightbox
   lightboxEl.on("uiRegister", function () {
     const canDownload =
       !siteSettings.prevent_anons_from_downloading_files || User.current();
@@ -31,9 +31,13 @@ export default function lightbox(elem, siteSettings) {
       order: 9,
       isButton: false,
       appendTo: "root",
-      html: "Caption text",
+      html: "",
       onInit: (caption, pswp) => {
         pswp.on("change", () => {
+          if (pswp.currSlide.data.inlineSVG) {
+            return;
+          }
+
           const slideEl = pswp.currSlide.data.element;
           let captionHTML = "";
           let title, download, details;
@@ -43,9 +47,9 @@ export default function lightbox(elem, siteSettings) {
             const slideImg = slideEl.querySelector("img");
             const alt = slideEl.alt || slideImg?.getAttribute("alt");
             const info = slideEl.querySelector(".informations")?.innerText;
-            const origSrc = slideData.largeSrc || slideEl.href || slideImg.src;
+            const origSrc = slideData.largeSrc || slideEl.href || slideImg?.src;
             const dlHref =
-              slideData.downloadHref || slideData.largeSrc || slideImg.src;
+              slideData.downloadHref || slideData.largeSrc || slideImg?.src;
 
             title = alt ? `<div class='title'>${alt}</div>` : null;
             details = info ? `<div class='details'>${info}</div>` : null;
@@ -68,14 +72,26 @@ export default function lightbox(elem, siteSettings) {
       return data;
     }
 
-    // if photoswipe data attributes are available then use those
-    let width = el.getAttribute("data-pswp-width");
-    let height = el.getAttribute("data-pswp-height");
+    // use data attributes for width/height when available
+    let width = el.getAttribute("data-target-width");
+    let height = el.getAttribute("data-target-height");
+    const isSVG = el.querySelector("svg[viewBox]") !== null;
 
-    if (!width) {
-      const imgInfo = el.querySelector(".informations")?.innerText;
-      const imgSize = imgInfo.split(" ")[0].split("×");
-      [width, height] = imgSize.map(Number);
+    if (isSVG) {
+      const encodedSVG = encodeURIComponent(el.innerHTML.trim());
+      data.src = `data:image/svg+xml,${encodedSVG}`;
+      data.inlineSVG = true;
+      width = 4000;
+      height = 3000;
+    }
+
+    if (!width || !height) {
+      const imgInfo = el.querySelector(".informations")?.innerText || "";
+
+      if (imgInfo?.includes("×")) {
+        const imgSize = imgInfo.split(" ")[0].split("×");
+        [width, height] = imgSize.map(Number);
+      }
     }
 
     data.src = data.src || el.getAttribute("data-large-src");

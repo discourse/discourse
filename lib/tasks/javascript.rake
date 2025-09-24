@@ -67,8 +67,6 @@ def dependencies
   [
     { source: "chart.js/dist/chart.min.js", public: true },
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
-    { source: "photoswipe/dist/photoswipe-lightbox.esm.min.js", public: true },
-    { source: "photoswipe/dist/photoswipe.esm.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",

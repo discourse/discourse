@@ -5,8 +5,5 @@ export const PUBLIC_JS_VERSIONS = {
   "chart.min.js": "chart.js/3.5.1/chart.min.js",
   "chartjs-plugin-datalabels.min.js":
     "chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js",
-  "photoswipe-lightbox.esm.min.js":
-    "photoswipe/5.4.4/photoswipe-lightbox.esm.min.js",
-  "photoswipe.esm.min.js": "photoswipe/5.4.4/photoswipe.esm.min.js",
   "pikaday.js": "pikaday/1.8.2/pikaday.js",
 };
