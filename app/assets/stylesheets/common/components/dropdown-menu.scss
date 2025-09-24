@@ -10,6 +10,17 @@
       width: 100%;
       justify-content: flex-start;
       text-align: left;
+
+      &.--danger {
+        &:hover,
+        :focus-visible {
+          background: var(--danger-low);
+        }
+
+        .d-icon {
+          color: var(--danger);
+        }
+      }
     }
   }
 
