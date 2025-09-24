@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency "application_controller"
-
-class ::Patreon::PatreonAdminController < Admin::AdminController
-  PLUGIN_NAME = "discourse-patreon".freeze
-
-  requires_plugin PLUGIN_NAME
+class Patreon::PatreonAdminController < Admin::AdminController
+  requires_plugin Patreon::PLUGIN_NAME
 
   before_action :patreon_enabled?
   before_action :patreon_tokens_present?

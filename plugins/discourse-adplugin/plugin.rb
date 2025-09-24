@@ -20,11 +20,11 @@ end
 require_relative "lib/adplugin/engine"
 
 after_initialize do
-  require_relative "app/models/house_ad"
-  require_relative "app/models/house_ad_setting"
-  require_relative "app/controllers/house_ads_controller"
-  require_relative "app/controllers/house_ad_settings_controller"
+  require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
+  require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
+  require_relative "app/models/ad_plugin/house_ad_setting"
+  require_relative "app/models/ad_plugin/house_ad"
   require_relative "lib/adplugin/guardian_extensions"
 
   reloadable_patch { Guardian.prepend ::AdPlugin::GuardianExtensions }

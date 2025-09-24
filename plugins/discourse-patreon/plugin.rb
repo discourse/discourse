@@ -27,8 +27,8 @@ require_relative "lib/discourse_patreon/engine"
 after_initialize do
   require_dependency "admin_constraint"
 
-  require_relative "app/controllers/patreon_admin_controller"
-  require_relative "app/controllers/patreon_webhook_controller"
+  require_relative "app/controllers/patreon/patreon_admin_controller"
+  require_relative "app/controllers/patreon/patreon_webhook_controller"
   require_relative "app/jobs/regular/sync_patron_groups"
   require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
   require_relative "app/jobs/scheduled/patreon_update_tokens"

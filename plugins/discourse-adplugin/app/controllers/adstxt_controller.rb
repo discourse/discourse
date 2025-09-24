@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 class AdstxtController < ::ApplicationController
   requires_plugin AdPlugin::PLUGIN_NAME
 

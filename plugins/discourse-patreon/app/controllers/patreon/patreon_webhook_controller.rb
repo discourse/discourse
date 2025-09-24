@@ -3,8 +3,8 @@
 require "openssl"
 require "json"
 
-class ::Patreon::PatreonWebhookController < ApplicationController
-  requires_plugin ::Patreon::PLUGIN_NAME
+class Patreon::PatreonWebhookController < ApplicationController
+  requires_plugin Patreon::PLUGIN_NAME
 
   skip_before_action :redirect_to_login_if_required,
                      :preload_json,

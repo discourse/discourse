@@ -22,7 +22,7 @@ end
 require_relative "lib/poll/engine"
 
 after_initialize do
-  require_relative "app/controllers/polls_controller"
+  require_relative "app/controllers/discourse_poll/polls_controller"
   require_relative "app/models/poll_option"
   require_relative "app/models/poll_vote"
   require_relative "app/models/poll"

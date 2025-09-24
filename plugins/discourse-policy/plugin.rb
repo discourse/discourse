@@ -22,7 +22,7 @@ end
 require_relative "lib/discourse_policy/engine"
 
 after_initialize do
-  require_relative "app/controllers/policy_controller"
+  require_relative "app/controllers/discourse_policy/policy_controller"
   require_relative "app/models/policy_user"
   require_relative "app/models/post_policy_group"
   require_relative "app/models/post_policy"
