@@ -1,15 +1,16 @@
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { renderIcon } from "discourse/lib/icon-library";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default function lightbox(elem, siteSettings) {
+export default async function lightbox(elem, siteSettings) {
   if (!elem) {
     return;
   }
 
   const dlText = renderIcon("string", "download") + i18n("lightbox.download");
   const origImgText = renderIcon("string", "image") + i18n("lightbox.open");
+
+  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
 
   const lightboxEl = new PhotoSwipeLightbox({
     gallery: elem,
