@@ -420,15 +420,10 @@ class Reviewable < ActiveRecord::Base
     end
 
     # Return a combined result
-    if final_result
-      final_result.performed_actions = performed_actions
-      final_result
-    else
-      PerformResult.new(
-        success: performed_actions.any? { |a| a[:success] },
-        performed_actions: performed_actions,
-      )
-    end
+    final_result ||= PerformResult.new(self, :failure)
+
+    final_result.performed_actions = performed_actions
+    final_result
   end
 
   # Override this in specific reviewable type to include scores for
