@@ -138,10 +138,13 @@ export default class WelcomeBanner extends Component {
   }
 
   get textColorStyle() {
-    const { welcome_banner_image, welcome_banner_text_color } =
-      this.siteSettings;
-    if (welcome_banner_image && welcome_banner_text_color) {
-      return htmlSafe(`color:${escapeExpression(welcome_banner_text_color)};`);
+    if (
+      this.siteSettings.welcome_banner_image &&
+      this.siteSettings.welcome_banner_text_color
+    ) {
+      return htmlSafe(
+        `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
+      );
     }
   }
 
