@@ -2,7 +2,7 @@
 
 module ::DiscourseSubscriptions
   class Engine < ::Rails::Engine
-    engine_name "discourse-subscriptions"
+    engine_name PLUGIN_NAME
     isolate_namespace DiscourseSubscriptions
   end
 end

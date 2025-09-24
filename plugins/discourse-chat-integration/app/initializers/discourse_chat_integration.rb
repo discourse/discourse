@@ -4,17 +4,17 @@ module ::DiscourseChatIntegration
   PLUGIN_NAME = "discourse-chat-integration".freeze
 
   class AdminEngine < ::Rails::Engine
-    engine_name "#{::DiscourseChatIntegration::PLUGIN_NAME}-admin"
+    engine_name "#{PLUGIN_NAME}-admin"
     isolate_namespace ::DiscourseChatIntegration
   end
 
   class PublicEngine < ::Rails::Engine
-    engine_name "#{::DiscourseChatIntegration::PLUGIN_NAME}-public"
+    engine_name "#{PLUGIN_NAME}-public"
     isolate_namespace ::DiscourseChatIntegration
   end
 
   def self.plugin_name
-    ::DiscourseChatIntegration::PLUGIN_NAME
+    PLUGIN_NAME
   end
 
   def self.pstore_get(key)

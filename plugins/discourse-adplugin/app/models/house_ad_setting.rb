@@ -14,7 +14,7 @@ module ::AdPlugin
       settings = DEFAULTS.dup
 
       PluginStoreRow
-        .where(plugin_name: AdPlugin.plugin_name)
+        .where(plugin_name: AdPlugin::PLUGIN_NAME)
         .where("key LIKE 'ad-setting:%'")
         .each { |psr| settings[psr.key[11..-1].to_sym] = psr.value }
 
