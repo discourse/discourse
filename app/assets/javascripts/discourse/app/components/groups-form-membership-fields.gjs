@@ -4,22 +4,30 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { not, readOnly } from "@ember/object/computed";
+import { service } from "@ember/service";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import ListSetting from "select-kit/components/list-setting";
 
 export default class GroupsFormMembershipFields extends Component {
+  @service dialog;
+  @service currentUser;
+
   tokenSeparator = "|";
 
   @readOnly("site.can_associate_groups") showAssociatedGroups;
   @not("model.automatic") canEdit;
+
+  owners = [];
 
   trustLevelOptions = [
     {
@@ -37,6 +45,11 @@ export default class GroupsFormMembershipFields extends Component {
 
     if (this.showAssociatedGroups) {
       this.loadAssociatedGroups();
+    }
+
+    // Preload current owners for the owner selector
+    if (this.model?.id) {
+      this.loadOwners();
     }
   }
 
@@ -78,6 +91,81 @@ export default class GroupsFormMembershipFields extends Component {
       "model.automatic_membership_email_domains",
       value.join(this.tokenSeparator)
     );
+  }
+
+  /**
+   * Load current group owners into `owners` as an array of usernames.
+   */
+  async loadOwners() {
+    try {
+      const identifier = this.model.name || this.model.id;
+      const resp = await ajax(`/groups/${identifier}/members.json`);
+      const owners = (resp.owners || []).filter(Boolean);
+      const usernames = owners.map((o) => o.username).filter(Boolean);
+      this.set("owners", usernames);
+      this.model.setProperties({
+        ownerUsernamesSnapshot: usernames,
+        pendingOwnerUsernamesToAdd: [],
+        pendingOwnerUsernamesToRemove: [],
+      });
+    } catch {
+      // ignore; owners field will simply start empty
+      this.set("owners", []);
+      this.model.setProperties({
+        ownerUsernamesSnapshot: [],
+        pendingOwnerUsernamesToAdd: [],
+        pendingOwnerUsernamesToRemove: [],
+      });
+      // no preloaded content; owner selections will hydrate on search
+    }
+  }
+
+  /**
+   * Handle owner changes by diffing and deferring API calls until group save.
+   * @param {string[]} newOwners
+   */
+  @action
+  async onChangeOwners(newOwners) {
+    const desiredOwners = (newOwners || []).filter(Boolean);
+    const previousOwners = this.owners || [];
+    const baseline = (this.model.ownerUsernamesSnapshot || []).filter(Boolean);
+    const baselineSet = new Set(baseline);
+    const desiredSet = new Set(desiredOwners);
+
+    const removingSelf =
+      this.currentUser?.username &&
+      baselineSet.has(this.currentUser.username) &&
+      !desiredSet.has(this.currentUser.username);
+
+    if (removingSelf) {
+      const confirmed = await new Promise((resolve) => {
+        this.dialog.confirm({
+          message: i18n("groups.manage.membership.remove_self_warning", {
+            group_name: this.model.full_name || this.model.name,
+          }),
+          didConfirm: () => resolve(true),
+          didCancel: () => resolve(false),
+        });
+      });
+
+      if (!confirmed) {
+        this.set("owners", previousOwners);
+        return;
+      }
+    }
+
+    const toAdd = desiredOwners.filter(
+      (username) => !baselineSet.has(username)
+    );
+    const toRemove = baseline.filter((username) => !desiredSet.has(username));
+
+    this.model.setProperties({
+      pendingOwnerUsernamesToAdd: toAdd,
+      pendingOwnerUsernamesToRemove: toRemove,
+      ownerUsernamesSelection: desiredOwners,
+    });
+
+    this.set("owners", desiredOwners);
   }
 
   <template>
@@ -135,6 +223,20 @@ export default class GroupsFormMembershipFields extends Component {
           />
         </div>
       {{/if}}
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="owner-selector">{{i18n
+          "groups.manage.membership.group_owners"
+        }}</label>
+
+      <EmailGroupUserChooser
+        @id="owner-selector"
+        @value={{this.owners}}
+        @onChange={{this.onChangeOwners}}
+        @options={{hash filterPlaceholder="groups.selector_placeholder"}}
+        class="input-xxlarge"
+      />
     </div>
 
     {{#if this.model.can_admin_group}}

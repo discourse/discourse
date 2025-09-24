@@ -131,7 +131,7 @@ export default class Group extends RestModel {
   }
 
   async removeOwner(member) {
-    await ajax(`/admin/groups/${this.id}/owners.json`, {
+    await ajax(`/groups/${this.id}/owners.json`, {
       type: "DELETE",
       data: { user_id: member.id },
     });
@@ -427,11 +427,46 @@ export default class Group extends RestModel {
     await this.reloadMembers();
   }
 
-  save(opts = {}) {
-    return ajax(`/groups/${this.id}`, {
+  async save(opts = {}) {
+    const pendingAdds = [...(this.pendingOwnerUsernamesToAdd || [])];
+    const pendingRemovals = [...(this.pendingOwnerUsernamesToRemove || [])];
+    const ownerSelection = this.ownerUsernamesSelection;
+
+    const response = await ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: { group: this.asJSON(), ...opts },
     });
+
+    if (pendingAdds.length > 0) {
+      await ajax(`/groups/${this.id}/owners.json`, {
+        type: "PUT",
+        data: { usernames: pendingAdds.join(",") },
+      });
+    }
+
+    if (pendingRemovals.length > 0) {
+      await ajax(`/groups/${this.id}/owners.json`, {
+        type: "DELETE",
+        data: { usernames: pendingRemovals.join(",") },
+      });
+    }
+
+    if (pendingAdds.length > 0 || pendingRemovals.length > 0) {
+      await this.reloadMembers({}, true);
+      this.setProperties({
+        pendingOwnerUsernamesToAdd: [],
+        pendingOwnerUsernamesToRemove: [],
+      });
+    }
+
+    if (ownerSelection) {
+      this.setProperties({
+        ownerUsernamesSnapshot: ownerSelection,
+        ownerUsernamesSelection: null,
+      });
+    }
+
+    return response;
   }
 
   destroy() {

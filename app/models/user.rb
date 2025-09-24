@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_many :user_badges, -> { for_enabled_badges }, dependent: :destroy
   has_many :user_auth_tokens, dependent: :destroy
   has_many :group_users, dependent: :destroy
+  has_many :group_owners, dependent: :destroy
   has_many :user_warnings, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
@@ -119,6 +120,7 @@ class User < ActiveRecord::Base
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
+  has_many :owned_groups, through: :group_owners, source: :group
   has_many :secure_categories, -> { distinct }, through: :groups, source: :categories
   has_many :associated_groups, through: :user_associated_groups, dependent: :destroy
 

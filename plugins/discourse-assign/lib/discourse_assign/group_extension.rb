@@ -16,7 +16,7 @@ module DiscourseAssign
                     SELECT group_id FROM group_users AS gu WHERE gu.user_id = :user_id)
                   ) OR (
                     groups.assignable_level = #{Group::ALIAS_LEVELS[:owners_mods_and_admins]} AND groups.id in (
-                    SELECT group_id FROM group_users as gu WHERE gu.user_id = :user_id AND gu.owner IS TRUE)
+                    SELECT group_id FROM group_owners AS go WHERE go.user_id = :user_id)
                   )",
                 levels: alias_levels(user),
                 user_id: user&.id,

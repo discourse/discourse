@@ -107,7 +107,8 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def groups
-    owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
+    # group ownership is decoupled from membership; use GroupOwner join
+    owned_group_ids = GroupOwner.where(user_id: id).pluck(:group_id).to_set
 
     object
       .visible_groups

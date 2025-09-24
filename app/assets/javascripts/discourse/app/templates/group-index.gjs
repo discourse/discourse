@@ -14,7 +14,6 @@ import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -116,12 +115,6 @@ export default RouteTemplate(
                 class="directory-table__column-header--username username"
               />
 
-              {{#if @controller.canManageGroup}}
-                <div
-                  class="directory-table__column-header directory-table__column-header--can-manage"
-                ></div>
-              {{/if}}
-
               <PluginOutlet
                 @name="group-index-table-header-after-username"
                 @outletArgs={{lazyHash
@@ -158,7 +151,6 @@ export default RouteTemplate(
                 @automatic={{true}}
                 class="directory-table__column-header--last-seen"
               />
-
               {{#if @controller.canManageGroup}}
                 <div
                   class="directory-table__column-header directory-table__column-header--member-settings"
@@ -190,28 +182,6 @@ export default RouteTemplate(
                     />
                   </div>
 
-                  {{#if @controller.canManageGroup}}
-                    <div
-                      class="directory-table__cell directory-table__cell--can-manage group-owner"
-                    >
-                      {{#if (or m.owner m.primary)}}
-                        <span class="directory-table__label">
-                          <span>{{i18n "groups.members.status"}}</span>
-                        </span>
-                      {{/if}}
-                      <span class="directory-table__value">
-                        {{#if m.owner}}
-                          {{icon "shield-halved"}}
-                          {{i18n "groups.members.owner"}}<br />
-                        {{/if}}
-                        {{#if m.primary}}
-                          {{i18n "groups.members.primary"}}
-                        {{/if}}
-                      </span>
-
-                    </div>
-                  {{/if}}
-
                   <PluginOutlet
                     @name="group-index-table-row-after-username"
                     @outletArgs={{lazyHash member=m}}
@@ -227,6 +197,19 @@ export default RouteTemplate(
                       {{ageWithTooltip m.added_at format="medium"}}
                     </span>
                   </div>
+                  {{#if @controller.canManageGroup}}
+                    <div
+                      class="directory-table__cell directory-table__cell--member-settings member-settings"
+                    >
+                      <GroupMemberDropdown
+                        @member={{m}}
+                        @canAdminGroup={{@controller.model.can_admin_group}}
+                        @canEditGroup={{@controller.model.can_edit_group}}
+                        @onChange={{fn @controller.actOnGroup m}}
+                      />
+                      {{! group parameter is used by plugins }}
+                    </div>
+                  {{/if}}
                   <div
                     class="directory-table__cell{{unless
                         m.last_posted_at
@@ -259,19 +242,6 @@ export default RouteTemplate(
                       {{ageWithTooltip m.last_seen_at format="medium"}}
                     </span>
                   </div>
-                  {{#if @controller.canManageGroup}}
-                    <div
-                      class="directory-table__cell directory-table__cell--member-settings member-settings"
-                    >
-                      <GroupMemberDropdown
-                        @member={{m}}
-                        @canAdminGroup={{@controller.model.can_admin_group}}
-                        @canEditGroup={{@controller.model.can_edit_group}}
-                        @onChange={{fn @controller.actOnGroup m}}
-                      />
-                      {{! group parameter is used by plugins }}
-                    </div>
-                  {{/if}}
                 </div>
               {{/each}}
             </:body>
