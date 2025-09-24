@@ -117,7 +117,7 @@ export default class PostStream extends RestModel {
       return false;
     }
 
-    return !!this.posts.findBy("post_number", 1);
+    return !!this.posts.find((item) => item.post_number === 1);
   }
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
@@ -134,7 +134,7 @@ export default class PostStream extends RestModel {
       return true;
     }
 
-    return !!this.posts.findBy("id", lastPostId);
+    return !!this.posts.find((item) => item.id === lastPostId);
   }
 
   /**

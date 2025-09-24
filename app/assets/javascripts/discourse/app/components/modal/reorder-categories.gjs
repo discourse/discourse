@@ -107,9 +107,8 @@ export default class ReorderCategories extends Component {
       const ancestors = this.sortedEntries[targetPosition]?.category?.ancestors;
       if (ancestors) {
         // Target category is a subcategory, adjust targetPosition to account for ancestors
-        const highestAncestorEntry = this.sortedEntries.findBy(
-          "category.id",
-          ancestors[0].id
+        const highestAncestorEntry = this.sortedEntries.find(
+          (value) => value.category.id === ancestors[0].id
         );
         targetPosition = highestAncestorEntry.position;
       }

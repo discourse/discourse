@@ -1404,7 +1404,9 @@ export default class TopicController extends Controller {
 
   _jumpToPostNumber(postNumber) {
     const postStream = this.get("model.postStream");
-    const post = postStream.get("posts").findBy("post_number", postNumber);
+    const post = postStream
+      .get("posts")
+      .find((item) => item.post_number === postNumber);
 
     if (post) {
       DiscourseURL.routeTo(

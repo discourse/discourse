@@ -255,6 +255,11 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: "deprecate-import-meta-from-ember",
   },
   {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.findBy",
+    env: ["development", "test"],
+  },
+  {
     handler: ["silence", "counter"],
     matchId: /^discourse\.native-array-extensions\..+$/,
     env: ["test"],
