@@ -284,6 +284,17 @@ RSpec.describe Site do
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
+  it "includes tos_url and privacy_policy_url when login_required" do
+    SiteSetting.login_required = true
+    SiteSetting.tos_url = "https://discourse.org"
+    SiteSetting.privacy_policy_url = "https://discourse.org/privacy"
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+
+    expect(data["tos_url"]).to eq(SiteSetting.tos_url)
+    expect(data["privacy_policy_url"]).to eq(SiteSetting.privacy_policy_url)
+  end
+
   describe ".all_categories_cache" do
     fab!(:category)
     fab!(:category2, :category)
