@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pt:
+  site_settings:
+    sign_in_with_apple_enabled: 'Permitir iniciar a sessão com Apple?'
+    apple_team_id: '(Iniciar sessão com a Apple) Id. da Equipa da Apple (10 carateres)'
+    apple_key_id: '(Iniciar sessão com a Apple) Id. da Chave da Apple (10 carateres)'
+    apple_pem: '(Iniciar sessão com a Apple) Conteúdo do Ficheiro Pem Apple. Incluir as linhas COMEÇO e FIM.'

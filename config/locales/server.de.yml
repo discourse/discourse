@@ -1568,8 +1568,12 @@ de:
         total_views: Gesamt
       description: "Die 100 meistgesehenen Themen in einem Zeitraum, basierend auf Aufrufen durch angemeldete und anonyme Benutzer. Kann nach Kategorie gefiltert werden."
     associated_accounts_by_provider:
+      title: "Verknüpfte Konten nach Anmeldemethode"
       labels:
+        provider: Anmeldeanbieter
+        no_accounts: "Keine verknüpften Konten"
         total_users: "Gesamtzahl der Mitglieder"
+      description: "Zeigt die Anzahl der verknüpften Konten gruppiert nach Anmeldeanbieter an. Gilt nur, wenn Anmeldungen über soziale Netzwerke aktiviert sind."
   dashboard:
     problem:
       twitter_login: 'Die Anmeldung über Twitter scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
@@ -2446,6 +2450,7 @@ de:
     show_bottom_topic_map: "Zeigt die Themenübersicht am Ende des Themas an, wenn es 10 Antworten oder mehr hat."
     show_topic_map_in_topics_without_replies: "Zeigt die Themenübersicht an, auch wenn es zum Thema keine Antworten gibt."
     enable_welcome_banner: "Zeige auf den Hauptseiten mit Themenlisten ein Banner an, um Mitglieder willkommen zu heißen und ihnen die Suche nach Website-Inhalten zu ermöglichen"
+    welcome_banner_image: "Lege ein Bild fest, das im Hintergrund des Willkommensbanners angezeigt werden soll."
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
@@ -2457,6 +2462,7 @@ de:
     glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragsstrom-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und veröffentlicht ist."
     deactivate_widgets_rendering: "Deaktiviert die veraltete Rendering-Engine für Widgets. Dadurch werden alle Widgets deaktiviert, die nicht auf Glimmer-Komponenten umgestellt wurden. Außerdem wird der Glimmer-Post-Stream unabhängig vom Wert der Einstellung `glimmer_post_stream_mode` bedingungslos aktiviert. Diese Einstellung wird für Produktionsumgebungen nicht empfohlen, da sie bestehende Themes und Plug-ins beeinträchtigen kann."
     floatkit_autocomplete_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle JQuery-basierte Autovervollständigungsmenü ersetzt."
+    floatkit_autocomplete_input_fields: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü für Eingabefelder in der Ganzseitensuche und in Gruppenauswahlfeldern. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     floatkit_autocomplete_chat_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Chat-Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"

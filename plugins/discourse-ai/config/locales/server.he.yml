@@ -602,6 +602,7 @@ he:
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
     ai_staff_action_logger:
       updated: "עודכן"
+      set: "הגדרה"
       removed: "הוסרה"
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."

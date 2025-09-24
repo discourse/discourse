@@ -66,8 +66,8 @@ pt:
           <pre>%{post_excerpt}</pre>
         status:
           header: |
-            <b>Regras para este canall
-            (Se múltiplas regras corresponderem a uma mensagem, a regra superior será executada)
+            <b>Regras para este canal
+            (Se múltiplas regras corresponderem a uma publicação, a regra superior será executada)
           no_rules: "Não existem regras configuradas para este canal. Execute <code>/help</code> para instruções."
           rule_string: "<b>%{index})</b> <b>%{filter}</b> publica na <b>%{category}</b>"
           rule_string_tags_suffix: " com etiquetas: <b>%{tags}</b>"

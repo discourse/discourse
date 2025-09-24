@@ -6725,6 +6725,7 @@ de:
           view: "Ansehen"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
           set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
+          set_default_success: "%{schemeName} als Standard-Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
           from_theme: "Vom Theme: %{name}"
           filters:
