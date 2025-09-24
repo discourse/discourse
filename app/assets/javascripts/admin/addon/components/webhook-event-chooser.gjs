@@ -10,7 +10,7 @@ export default class WebhookEventChooser extends Component {
   }
 
   get eventTypeExists() {
-    return this.args.eventTypes.any(
+    return this.args.eventTypes.some(
       (event) => event.name === this.args.type.name
     );
   }

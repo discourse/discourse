@@ -113,7 +113,7 @@ export default class LocalDateBuilder {
       displayedTimezone === this.localTimezone &&
       this.timezone !== displayedTimezone &&
       !this._isEqualZones(displayedTimezone, this.timezone) &&
-      !this.timezones.any((t) => this._isEqualZones(t, this.timezone))
+      !this.timezones.some((t) => this._isEqualZones(t, this.timezone))
     ) {
       timezones.unshift(this.timezone);
     }

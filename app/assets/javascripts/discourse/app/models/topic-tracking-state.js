@@ -43,7 +43,7 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
   }
   return (
     (siteSettings.remove_muted_tags_from_latest === "always" &&
-      topicTags.any((topicTag) => mutedTags.includes(topicTag))) ||
+      topicTags.some((topicTag) => mutedTags.includes(topicTag))) ||
     (siteSettings.remove_muted_tags_from_latest === "only_muted" &&
       topicTags.every((topicTag) => mutedTags.includes(topicTag)))
   );
