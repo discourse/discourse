@@ -696,6 +696,8 @@ ja:
         chat:
           title: チャット
     sidebar:
+      start_new_dm:
+        title: パーソナルチャットを作成
       panels:
         chat:
           label: "チャット"

@@ -27,7 +27,7 @@ pt:
   discourse_narrative_bot:
     bio: "Oi, eu não sou uma pessoa real. Eu sou um bot que pode te ensinar sobre este site. Para interagir comigo, envie-me uma mensagem ou mencione-me pelo nome."
     tl2_promotion_message:
-      subject_template: "Agora que você foi promovido, é hora de aprender sobre alguns recursos avançados!"
+      subject_template: "Agora que foi promovido, é hora de aprender sobre algumas funcionalidades avançadas!"
       text_body_template: |
         Responda a esta mensagem com `@%{discobot_username} %{reset_trigger}`para saber mais sobre o que você pode fazer.
     timeout:
@@ -299,7 +299,7 @@ pt:
     advanced_user_narrative:
       reset_trigger: "tutorial avançado"
       cert_title: "Como reconhecimento da conclusão bem-sucedida do tutorial do utilizador avançado"
-      title: ":arrow_up: Funcionalidades de utilizador avançadas"
+      title: ":arrow_up: Funcionalidades avançadas do utilizador"
       start_message: |-
         Como um usuário _avançado_, você já visitou [sua página de preferências] (%{base_uri}/my/preferences) @%{username}? Existem várias maneiras de personalizar sua experiência, como selecionar um tema escuro ou claro.
 

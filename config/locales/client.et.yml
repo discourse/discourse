@@ -1001,7 +1001,7 @@ et:
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       add_email:
         title: "Lisa meiliaadress"
-        add: "lisa"
+        add: "isa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."

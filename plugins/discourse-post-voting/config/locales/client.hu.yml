@@ -5,9 +5,44 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Szavazás
+  post_voting:
+    reviewables:
+      comment_already_handled: "Köszönjük, de már áttekintettük ezt a hozzászólást, és úgy döntöttünk, hogy nem kell újra megjelölni."
   js:
+    discourse_post_voting:
+      title: "Szavazás"
     notifications:
       question_answer_user_commented: "<span>%{username}</span>%{description}"
+      titles:
+        question_answer_user_commented: "új hozzászólás"
+      popup:
+        question_answer_user_commented: '%{username} hozzászólt a(z) "%{topic}" bejegyzéshez - %{site_title}'
+    category:
+      post_voting_settings_heading: Szavazás
+      create_as_post_voting_default: Az új témák alapértelmezés szerint a „Szavazás utáni” témák lesznek ebben a kategóriában.
+      only_post_voting_in_this_category: Az új témák csak szavazás utáni témák lehetnek ebben a kategóriában.
+    composer:
+      create_post_voting:
+        label: "Szavazás bejegyzés létrehozása"
+      composer_actions:
+        create_as_post_voting:
+          label: "Szavazás kapcsoló"
+          desc: "A téma szavazható bejegyzésekkel lesz létrehozva."
+        remove_as_post_voting:
+          label: "Szavazás eltávolítás"
+          desc: "A téma a szokásos formátumban lesz létrehozva."
+    vote:
+      already_voted: "Kérdésenként csak egyszer lehet szavazni."
+      user_over_limit: "Nem lépheted túl a bizalmi szintedhez tartozó szavazatok számát."
+      one_vote_per_post: "Minden bejegyzésre csak egyszer lehet szavazni."
+    last_answer_lowercase: utolsó válasz
+    answer_lowercase:
+      one: válasz
+      other: válasz
     post_voting:
       post:
         post_voting_comment:
@@ -15,29 +50,75 @@ hu:
             too_short:
               one: "Nem lehet %{count} karakternél rövidebb"
               other: "Adjon meg legalább %{count} karaktert"
+            length_ok:
+              one: "%{count} karakter van hátra..."
+              other: "%{count} karakter van hátra..."
+            too_long:
+              one: "A megjegyzés nem lehet hosszabb, mint %{count} karakter"
+              other: "A megjegyzés nem lehet hosszabb, mint %{count} karakter"
+          submit: "Hozzászólás írása"
           edit: "szerkesztés"
           cancel: "mégse"
+          add: "Hozzászólás írása"
+          show:
+            one: Mutass %{count} további hozzászólást
+            other: Mutass %{count} további hozzászólást
+          delete:
+            confirm: "Biztosan törölni szeretnéd ezt a hozzászólást?"
           user:
             deleted: "(felhasználó törölve)"
           reviewables:
+            comment_already_handled: "Köszönjük, de már áttekintettük ezt a hozzászólást, és úgy döntöttünk, hogy nem kell újra megjelölni."
             actions:
               agree:
                 title: "Egyetértek…"
+              agree_and_keep_comment:
+                title: "Hozzászólás megtartása"
+                description: "Egyetértek a megjelöléssel, de a hozzászólást változatlanul hagyom."
+              agree_and_keep_deleted:
+                title: "Hozzászólás törlése"
+                description: "Egyetértek a megjelöléssel, a hozzászólás törölve marad."
               agree_and_suspend:
                 title: "Felhasználó felfüggesztése"
                 description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
               agree_and_silence:
                 title: "Felhasználó némítása"
                 description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
+              agree_and_restore:
+                title: "Hozzászólás visszaállítása"
+                description: "Bejegyzés visszaállítása, a felhasználók láthatják."
+              agree_and_delete:
+                title: "Hozzászólás törlése"
+                description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
+              delete_and_agree:
+                title: "Jelzés figyelmen kívül hagyása és megjegyzés törlése"
+                description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
+              disagree_and_restore:
+                title: "Nem értek egyet, és visszaállítom a hozzászólást"
+                description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
               disagree:
                 title: "Elutasítás"
               ignore:
                 title: "Ne csináljon semmit"
                 description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
+            transcript:
+              view: "Korábbi hozzászólások átiratának megtekintése"
       topic:
+        answer:
+          label: "Válasz"
+          help: "kezdj el válaszolni"
         sort_by: "Rendezés"
         votes: "Szavazatok"
         activity: "Tevékenység"
+        answer_count:
+          one: "%{count} Válasz"
+          other: "%{count} Válasz"
+        voters_count_diff:
+          one: "és %{count} további felhasználó..."
+          other: "és %{count} további felhasználó..."
     review:
       transcript:
         view: "Korábbi üzenetek átirata"
+      types:
+        reviewable_post_voting_comment:
+          title: "Megjelölt bejegyzéshez tartozó szavazó hozzászólás"

@@ -683,6 +683,8 @@ fi:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Luo yksityis-chat
       panels:
         chat:
           label: "Chat"

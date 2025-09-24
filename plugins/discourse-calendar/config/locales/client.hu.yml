@@ -10,7 +10,6 @@ hu:
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Discourse naptár"
   js:
     notifications:
       titles:

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pt:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Id. do Modelo"
+        max_prompt_tokens: "Janela de contexto"
   reports:
     overall_sentiment:
       yaxis: "Data"

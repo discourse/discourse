@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fr:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Fenêtre contextuelle"
   discourse_automation:
     ai:
       flag_types:
