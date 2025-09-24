@@ -257,7 +257,6 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   {
     handler: "log",
     matchId: "discourse.native-array-extensions.findBy",
-    env: ["development", "test"],
   },
   {
     handler: ["silence", "counter"],
