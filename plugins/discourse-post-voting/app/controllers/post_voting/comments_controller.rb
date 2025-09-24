@@ -2,7 +2,7 @@
 
 module PostVoting
   class CommentsController < ::ApplicationController
-    requires_plugin PostVoting::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     before_action :find_post, only: %i[load_more_comments create]
     before_action :ensure_post_voting_enabled, only: %i[load_more_comments create]
