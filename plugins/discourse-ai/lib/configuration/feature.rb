@@ -30,7 +30,7 @@ module DiscourseAi
           feature_cache[:search] ||= [
             new(
               "discoveries",
-              "ai_bot_discover_persona",
+              "ai_discover_persona",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
             ),

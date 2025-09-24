@@ -359,6 +359,83 @@ module("Integration | Component | SiteSetting", function (hooks) {
 });
 
 module(
+  "Integration | Component | SiteSetting | Themeable Settings",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("disables input for themeable site settings", async function (assert) {
+      const self = this;
+
+      this.site = this.container.lookup("service:site");
+      this.site.set("user_themes", [
+        { theme_id: 5, default: true, name: "Default Theme" },
+      ]);
+
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "test_themeable_setting",
+          value: "test value",
+          type: "string",
+          themeable: true,
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      );
+
+      assert.dom(".input-setting-string").hasAttribute("disabled", "");
+      assert
+        .dom(".setting-controls__ok")
+        .doesNotExist("save button is not shown");
+    });
+
+    test("shows warning text for themeable site settings", async function (assert) {
+      const self = this;
+
+      this.site = this.container.lookup("service:site");
+      this.site.set("user_themes", [
+        { theme_id: 5, default: true, name: "Default Theme" },
+      ]);
+
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "test_themeable_setting",
+          value: "test value",
+          type: "string",
+          themeable: true,
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      );
+
+      assert
+        .dom(".setting-theme-warning")
+        .exists("warning wrapper is displayed");
+
+      assert
+        .dom(".setting-theme-warning__text")
+        .exists("warning text element is displayed");
+
+      const expectedText = i18n(
+        "admin.theme_site_settings.site_setting_warning",
+        {
+          basePath: "",
+          defaultThemeName: "Default Theme",
+          defaultThemeId: 5,
+        }
+      );
+
+      assert.dom(".setting-theme-warning__text").includesHtml(expectedText);
+    });
+  }
+);
+
+module(
   "Integration | Component | SiteSetting | file_size_restriction type",
   function (hooks) {
     setupRenderingTest(hooks);

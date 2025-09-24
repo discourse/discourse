@@ -230,13 +230,13 @@ RSpec.describe UsersController do
     context "when logged in with no associated account, no passkeys" do
       before { sign_in(user) }
 
-      it "fails without a secure session" do
+      it "fails without a server session" do
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
 
-      it "fails with a secure session" do
-        stub_secure_session_confirmed
+      it "fails with a server session" do
+        stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
@@ -249,14 +249,14 @@ RSpec.describe UsersController do
         sign_in(user)
       end
 
-      it "fails without a secure session" do
+      it "fails without a server session" do
         user.update!(created_at: Time.zone.now - 8.minutes)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
 
-      it "succeeds with a secure session" do
-        stub_secure_session_confirmed
+      it "succeeds with a server session" do
+        stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
@@ -292,14 +292,14 @@ RSpec.describe UsersController do
         sign_in(user)
       end
 
-      it "fails without a secure session" do
+      it "fails without a server session" do
         user.update!(created_at: Time.zone.now - 8.minutes)
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
 
-      it "succeeds with a secure session" do
-        stub_secure_session_confirmed
+      it "succeeds with a server session" do
+        stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
@@ -610,7 +610,7 @@ RSpec.describe UsersController do
           simulate_localhost_webauthn_challenge
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
-          # store challenge in secure session by visiting the email login page
+          # store challenge in server session by visiting the email login page
           get "/u/password-reset/#{email_token.token}"
         end
 
@@ -5949,7 +5949,7 @@ RSpec.describe UsersController do
         it "fails on incorrect password" do
           ApplicationController
             .any_instance
-            .expects(:secure_session)
+            .expects(:server_session)
             .returns("confirmed-session-#{user1.id}" => "false")
           post "/users/create_second_factor_totp.json"
 
@@ -5980,7 +5980,7 @@ RSpec.describe UsersController do
         it "succeeds on correct password" do
           ApplicationController
             .any_instance
-            .stubs(:secure_session)
+            .stubs(:server_session)
             .returns("confirmed-session-#{user1.id}" => "true")
           post "/users/create_second_factor_totp.json"
 
@@ -6012,14 +6012,13 @@ RSpec.describe UsersController do
     before { sign_in(user1) }
 
     def create_totp
-      stub_secure_session_confirmed
+      stub_server_session_confirmed
       post "/users/create_second_factor_totp.json"
     end
 
     it "creates a totp for the user successfully" do
       create_totp
-      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
-      token = ROTP::TOTP.new(staged_totp_key).now
+      token = ROTP::TOTP.new(server_session["staged-totp-#{user1.id}"]).now
 
       post "/users/enable_second_factor_totp.json",
            params: {
@@ -6035,8 +6034,7 @@ RSpec.describe UsersController do
       RateLimiter.enable
 
       create_totp
-      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
-      token = ROTP::TOTP.new(staged_totp_key).now
+      token = ROTP::TOTP.new(server_session["staged-totp-#{user1.id}"]).now
 
       7.times do |x|
         post "/users/enable_second_factor_totp.json",
@@ -6053,8 +6051,7 @@ RSpec.describe UsersController do
       RateLimiter.enable
 
       create_totp
-      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
-      token = ROTP::TOTP.new(staged_totp_key).now
+      token = ROTP::TOTP.new(server_session["staged-totp-#{user1.id}"]).now
 
       7.times do |x|
         post "/users/enable_second_factor_totp.json",
@@ -6108,8 +6105,7 @@ RSpec.describe UsersController do
       Fabricate(:user_second_factor_totp, user: user1)
 
       create_totp
-      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
-      token = ROTP::TOTP.new(staged_totp_key).now
+      token = ROTP::TOTP.new(server_session["staged-totp-#{user1.id}"]).now
 
       stub_const(UserSecondFactor, "MAX_TOTPS_PER_USER", 1) do
         post "/users/enable_second_factor_totp.json",
@@ -6127,8 +6123,7 @@ RSpec.describe UsersController do
 
     it "doesn't allow the TOTP name to exceed the limit" do
       create_totp
-      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
-      token = ROTP::TOTP.new(staged_totp_key).now
+      token = ROTP::TOTP.new(server_session["staged-totp-#{user1.id}"]).now
 
       post "/users/enable_second_factor_totp.json",
            params: {
@@ -6174,7 +6169,7 @@ RSpec.describe UsersController do
         end
 
         context "when token is valid" do
-          before { stub_secure_session_confirmed }
+          before { stub_server_session_confirmed }
           it "should allow second factor for the user to be renamed" do
             put "/users/second_factor.json",
                 params: {
@@ -6217,7 +6212,7 @@ RSpec.describe UsersController do
           before do
             ApplicationController
               .any_instance
-              .stubs(:secure_session)
+              .stubs(:server_session)
               .returns("confirmed-session-#{user1.id}" => "true")
           end
           it "should allow second factor backup for the user to be disabled" do
@@ -6257,7 +6252,7 @@ RSpec.describe UsersController do
         it "fails on incorrect password" do
           ApplicationController
             .any_instance
-            .expects(:secure_session)
+            .expects(:server_session)
             .returns("confirmed-session-#{user1.id}" => "false")
           put "/users/second_factors_backup.json"
 
@@ -6288,7 +6283,7 @@ RSpec.describe UsersController do
         it "succeeds on correct password" do
           ApplicationController
             .any_instance
-            .expects(:secure_session)
+            .expects(:server_session)
             .returns("confirmed-session-#{user1.id}" => "true")
 
           put "/users/second_factors_backup.json"
@@ -6307,9 +6302,8 @@ RSpec.describe UsersController do
   describe "#create_second_factor_security_key" do
     it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
       create_second_factor_security_key
-      secure_session = read_secure_session
       response_parsed = response.parsed_body
-      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, server_session))
       expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
       expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
       expect(response_parsed["user_secure_id"]).to eq(
@@ -6421,10 +6415,10 @@ RSpec.describe UsersController do
   end
 
   describe "#disable_second_factor" do
-    context "when logged in with secure session" do
+    context "when logged in with server session" do
       before do
         sign_in(user1)
-        stub_secure_session_confirmed
+        stub_server_session_confirmed
       end
 
       context "when user has a registered totp and security key" do
@@ -6467,7 +6461,7 @@ RSpec.describe UsersController do
   describe "#create_passkey" do
     before do
       SiteSetting.enable_passkeys = true
-      stub_secure_session_confirmed
+      stub_server_session_confirmed
     end
 
     it "fails if user is not logged in" do
@@ -6480,9 +6474,8 @@ RSpec.describe UsersController do
       sign_in(user1)
       post "/u/create_passkey.json"
 
-      secure_session = read_secure_session
       response_parsed = response.parsed_body
-      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, server_session))
       expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
       expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
       expect(response_parsed["user_secure_id"]).to eq(user1.reload.secure_identifier)
@@ -6569,7 +6562,7 @@ RSpec.describe UsersController do
     end
 
     context "with a confirmed session" do
-      before { stub_secure_session_confirmed }
+      before { stub_server_session_confirmed }
 
       it "fails if user is not logged in" do
         delete "/u/delete_passkey/#{passkey.id}.json"
@@ -6621,7 +6614,7 @@ RSpec.describe UsersController do
     end
 
     it "fails if user is not logged in" do
-      stub_secure_session_confirmed
+      stub_server_session_confirmed
       post "/u/register_passkey.json"
 
       expect(response.status).to eq(403)
@@ -6642,7 +6635,7 @@ RSpec.describe UsersController do
 
       before do
         sign_in(user1)
-        stub_secure_session_confirmed
+        stub_server_session_confirmed
         simulate_localhost_passkey_challenge
       end
 
@@ -8045,11 +8038,11 @@ RSpec.describe UsersController do
 
   def create_second_factor_security_key
     sign_in(user1)
-    stub_secure_session_confirmed
+    stub_server_session_confirmed
     post "/u/create_second_factor_security_key.json"
   end
 
-  def stub_secure_session_confirmed
-    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
+  def stub_server_session_confirmed
+    UsersController.any_instance.stubs(:server_session_confirmed?).returns(true)
   end
 end

@@ -126,7 +126,7 @@ after_initialize do
 
   # DISCOURSE CALENDAR HOLIDAYS
 
-  add_admin_route "admin.calendar", "calendar"
+  add_admin_route "admin.calendar", "discourse-calendar", use_new_show_route: true
 
   # DISCOURSE POST EVENT
 

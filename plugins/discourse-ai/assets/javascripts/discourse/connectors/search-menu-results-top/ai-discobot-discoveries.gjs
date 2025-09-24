@@ -8,8 +8,9 @@ import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-t
 export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
-      siteSettings.ai_bot_discover_persona &&
-      currentUser?.can_use_ai_bot_discover_persona &&
+      siteSettings.ai_discover_enabled &&
+      siteSettings.ai_discover_persona &&
+      currentUser?.can_use_ai_discover_persona &&
       currentUser?.user_option?.ai_search_discoveries
     );
   }

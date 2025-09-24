@@ -6,7 +6,6 @@ import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
@@ -837,8 +836,6 @@ export default class ComposerService extends Service {
   // Toggle the reply view
   @action
   async toggle() {
-    this.closeAutocomplete();
-
     const composer = this.model;
 
     if (composer?.viewOpenOrFullscreen) {
@@ -1845,10 +1842,6 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
-  }
-
-  closeAutocomplete() {
-    $(".d-editor-input").autocomplete({ cancel: true });
   }
 
   @discourseComputed("model.action")

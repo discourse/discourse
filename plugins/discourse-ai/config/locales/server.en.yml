@@ -124,6 +124,9 @@ en:
     ai_bot_add_to_header: "Display a button in the header to start a PM with a AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
 
+    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_persona: "Persona to use for discovery search feature"
+
     ai_stability_api_key: "API key for the stability.ai API"
     ai_stability_engine: "Image generation engine to use for the stability.ai API"
     ai_stability_api_url: "URL for the stability.ai API"
@@ -421,6 +424,9 @@ en:
         report_runner:
           name: "Report runner"
           description: "Default persona used in the report automation script"
+        discover:
+          name: "Discover"
+          description: "Default persona used in the discoveries feature (complimentary search)"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
@@ -639,6 +645,10 @@ en:
       updated: "updated"
       set: "set"
       removed: "removed"
+
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."

@@ -9,7 +9,9 @@ import deprecated, {
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import {
   disableRaiseOnDeprecation,
+  disableRaiseOnDeprecationQUnitResult,
   enableRaiseOnDeprecation,
+  enableRaiseOnDeprecationQUnitResult,
 } from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utility | deprecated", function (hooks) {
@@ -25,6 +27,8 @@ module("Unit | Utility | deprecated", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    this.warnStub.restore();
+    this.counterStub.restore();
     enableRaiseOnDeprecation();
   });
 
@@ -349,5 +353,25 @@ module("Unit | Utility | deprecated", function (hooks) {
       0,
       "counter is not incremented"
     );
+  });
+});
+
+module("Unit | Utility | deprecated | raise-on-deprecation", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    disableRaiseOnDeprecationQUnitResult();
+    this.warnStub = Sinon.stub(console, "warn");
+  });
+
+  hooks.afterEach(function () {
+    enableRaiseOnDeprecationQUnitResult();
+    this.warnStub.restore();
+  });
+
+  test("unhandled deprecations raises an error in tests", function (assert) {
+    assert.throws(() => {
+      deprecated("My message");
+    }, "the error was raised");
   });
 });

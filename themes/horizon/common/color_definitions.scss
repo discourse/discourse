@@ -66,12 +66,6 @@ html {
     oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.25) h)
   ) !important;
 
-  // Topic Card Colors
-  --topic-card-shadow: light-dark(
-    oklch(from #{$tertiary} calc(l * 1.85) calc(c * 0.5) h),
-    oklch(from #{$tertiary} calc(l * 0.2) calc(c * 0.01) h / 0.25)
-  ) !important;
-
   // Button Colors
   --button-box-shadow: light-dark(
     oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.35) h),

@@ -77,7 +77,7 @@ module DiscourseWebauthn
   end
 
   ##
-  # Clears the challenge from the user's secure session.
+  # Clears the challenge from the user's server session.
   #
   # @param user [User] the user to clear the challenge for
   # @param server_session [ServerSession] the session to clear the challenge from
