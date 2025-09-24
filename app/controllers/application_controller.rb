@@ -1049,7 +1049,7 @@ class ApplicationController < ActionController::Base
   end
 
   def clean_xml
-    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+    response.body = response.body.gsub(XmlCleaner::INVALID_CHARACTERS, "")
   end
 
   def service_params

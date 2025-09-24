@@ -40,6 +40,7 @@ ignored:
     - stringio # Ruby (default gem)
     - strscan # Ruby (default gem)
     - timeout # Ruby (default gem)
+    - tsort # Ruby (default gem)
     - uri # Ruby (default gem)
 
 reviewed:
