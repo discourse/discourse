@@ -3,6 +3,7 @@ import { action, get } from "@ember/object";
 import { empty, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import toASCIIDigits from "discourse/lib/to-ascii-numerals";
 import EmailPreview from "admin/models/email-preview";
 
 export default class AdminEmailPreviewDigestController extends Controller {
@@ -40,10 +41,14 @@ export default class AdminEmailPreviewDigestController extends Controller {
       this.set("username", username);
     }
 
-    EmailPreview.findDigest(username, this.lastSeen).then((email) => {
-      model.setProperties(email.getProperties("html_content", "text_content"));
-      this.set("loading", false);
-    });
+    EmailPreview.findDigest(username, toASCIIDigits(this.lastSeen)).then(
+      (email) => {
+        model.setProperties(
+          email.getProperties("html_content", "text_content")
+        );
+        this.set("loading", false);
+      }
+    );
   }
 
   @action
@@ -51,7 +56,11 @@ export default class AdminEmailPreviewDigestController extends Controller {
     this.set("sendingEmail", true);
     this.set("sentEmail", false);
 
-    EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
+    EmailPreview.sendDigest(
+      this.username,
+      toASCIIDigits(this.lastSeen),
+      this.email
+    )
       .then((result) => {
         if (result.errors) {
           this.dialog.alert(result.errors);
