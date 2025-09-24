@@ -11,6 +11,7 @@ import { HOLIDAY_REGIONS } from "../lib/regions";
 @selectKitOptions({
   filterable: true,
   allowAny: false,
+  none: "discourse_calendar.region.select_region",
 })
 @pluginApiIdentifiers("timezone-input")
 @classNames("timezone-input", "region-input")

@@ -1,9 +1,17 @@
+@use "lib/viewport";
+
 .region-input {
   width: 50%;
+
+  @include viewport.until(md) {
+    width: 100%;
+  }
 }
 
-.disabled td {
-  background-color: var(--primary-very-low);
-  color: var(--primary-medium);
-  font-style: italic;
+.admin-holidays-list {
+  .d-table__row.--disabled td {
+    background-color: var(--primary-very-low);
+    color: var(--primary-medium);
+    font-style: italic;
+  }
 }
