@@ -40,7 +40,7 @@ export default {
 
           if (router.currentRouteName === "invites.show") {
             owner
-              .lookup("controller:invites-show")
+              .lookup("controller:invites.show")
               .authenticationComplete(options);
           } else {
             const siteSettings = owner.lookup("service:site-settings");
