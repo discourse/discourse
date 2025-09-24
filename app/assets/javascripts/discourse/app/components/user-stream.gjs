@@ -12,6 +12,7 @@ import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
+import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
@@ -21,6 +22,40 @@ export default class UserStreamComponent extends Component {
   @service dialog;
   @service composer;
   @service router;
+
+  get bulkSelectHelper() {
+    if (this.isDraftsRoute) {
+      if (!this._bulkSelectHelper) {
+        this._bulkSelectHelper = new PostBulkSelectHelper(this);
+      }
+      // Update posts reference when it changes
+      this._bulkSelectHelper.posts = this.args.stream?.content;
+      return this._bulkSelectHelper;
+    }
+    return null;
+  }
+
+  get isDraftsRoute() {
+    return this.router.currentRouteName === "userActivity.drafts";
+  }
+
+  get bulkSelectEnabled() {
+    return this.isDraftsRoute;
+  }
+
+  get bulkActions() {
+    if (this.isDraftsRoute) {
+      return [
+        {
+          label: "drafts.bulk_delete",
+          icon: "trash-can",
+          action: this.bulkDeleteDrafts,
+          class: "btn-danger",
+        },
+      ];
+    }
+    return [];
+  }
 
   get filterClassName() {
     const filter = this.args.stream?.filter;
@@ -92,6 +127,27 @@ export default class UserStreamComponent extends Component {
   }
 
   @action
+  async bulkDeleteDrafts(selectedDrafts) {
+    const count = selectedDrafts.length;
+    this.dialog.deleteConfirm({
+      title: i18n("drafts.bulk_delete_confirmation"),
+      message: i18n("drafts.bulk_delete_message", { count }),
+      didConfirm: async () => {
+        try {
+          for (const draft of selectedDrafts) {
+            await Draft.clear(draft.draft_key, draft.sequence);
+            this.args.stream.remove(draft);
+          }
+          // Clear the bulk selection after successful deletion
+          this.bulkSelectHelper?.clearAll();
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
+  }
+
+  @action
   async loadMore() {
     await this.args.stream.findItems();
 
@@ -126,6 +182,9 @@ export default class UserStreamComponent extends Component {
       @showUserInfo={{false}}
       @resumeDraft={{this.resumeDraft}}
       @removeDraft={{this.removeDraft}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @bulkSelectHelper={{this.bulkSelectHelper}}
+      @bulkActions={{this.bulkActions}}
       class={{concatClass "user-stream" this.filterClassName}}
       {{on "click" this.handleClick}}
     >
