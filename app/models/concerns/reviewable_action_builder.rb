@@ -200,6 +200,8 @@ module ReviewableActionBuilder
   end
 
   def perform_hide_post(performed_by, _args)
+    # TODO (reviewable-refresh): This hard-coded post action type needs to make use of the
+    # original flag type. See ReviewableFlaggedPost::perform_agree_and_hide for reference.
     target_post.hide!(PostActionType.types[:inappropriate])
     create_result(:success, :rejected, [created_by_id], false)
   end
