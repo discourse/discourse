@@ -28,7 +28,7 @@ function resizeWithAspect(
 function logIfDebug(...messages) {
   if (DedicatedWorkerGlobalScope.debugMode) {
     // eslint-disable-next-line no-console
-    console.log(...messages);
+    console.log("[media-optimization-worker]", ...messages);
   }
 }
 
