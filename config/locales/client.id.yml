@@ -1211,7 +1211,7 @@ id:
         taken: "Maaf, username tersebut sudah ada yang menggunakan"
         invalid: "Username tersebut tidak valid. Username harus berupa angka dan huruf"
       add_email:
-        add: "menambahkan"
+        add: "Menambahkan"
       change_email:
         title: "Ganti Alamat Surel"
         taken: "Maaf, alamat surel tersebut tidak tersedia."

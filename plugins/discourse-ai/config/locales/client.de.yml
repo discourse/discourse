@@ -196,6 +196,24 @@ de:
             tagger_persona:
               label: "KI-Persona"
               description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
+            tag_mode:
+              label: "Schlagwort-Auswahlmodus"
+              description: "Wähle, wie die KI Schlagwörter auswählt"
+            available_tags:
+              label: "Verfügbare Schlagwörter"
+              description: "Schlagwörter, aus denen die KI wählen kann (wird nur im manuellen Modus verwendet)"
+            confidence_threshold:
+              label: "Vertrauensschwelle"
+              description: "Minimaler Prozentsatz für Vertrauen (0-100), um vorgeschlagene Schlagwörter anzuwenden"
+            max_tags_per_post:
+              label: "Maximale Anzahl an Schlagwörtern pro Beitrag"
+              description: "Maximale Anzahl an Schlagwörtern, mit denen ein einzelner Beitrag versehen werden kann"
+            max_post_tokens:
+              label: "Maximale Beitrags-Token"
+              description: "Maximale Anzahl von Token aus dem Beitrags-Inhalt, die analysiert werden sollen"
+            allow_restricted_tags:
+              label: "Eingeschränkte Schlagwörter zulassen"
+              description: "Erlaube der KI, Schlagwörter mit eingeschränkten Berechtigungen oder Sichtbarkeit vorzuschlagen und anzuwenden."
             max_posts_for_context:
               label: "Maximale Beiträge für Kontext"
               description: "Maximale Anzahl von Beiträgen aus dem Thema, die in den Analysekontext einbezogen werden sollen (Standard: 5)"
@@ -306,6 +324,7 @@ de:
             empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
         stats:
           title: "Übersetzungsstatistiken"
+          backfill_disabled: "Rückwirkende Übersetzung ist derzeit deaktiviert."
         progress_chart:
           title: "Übersetzungsfortschritt %{tooltip}"
           data_label: "%{percentage}%"
@@ -642,6 +661,7 @@ de:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
           success: "Erfolg!"
+          invalid_config: "Behebe zunächst die folgenden Fehler in deiner Konfiguration:"
           failure: "Beim Versuch, das Modell zu kontaktieren, wurde dieser Fehler zurückgegeben: %{error}"
         hints:
           max_prompt_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage verarbeiten kann"

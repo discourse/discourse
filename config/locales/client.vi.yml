@@ -1294,7 +1294,7 @@ vi:
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự là chữ cái và chữ số. "
       add_email:
         title: "Thêm Email"
-        add: "thêm vào"
+        add: "Thêm"
       change_email:
         title: "Thay đổi Email"
         taken: "Xin lỗi, email này không dùng được. "
@@ -1916,6 +1916,7 @@ vi:
         other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
+      read_only: "chỉ đọc"
     select_kit:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"

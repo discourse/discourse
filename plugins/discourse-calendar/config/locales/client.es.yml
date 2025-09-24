@@ -7,11 +7,9 @@
 es:
   admin_js:
     admin:
-      calendar: "Calendario"
       site_settings:
         categories:
           discourse_post_event: "Evento de Discourse"
-          discourse_calendar: "Calendario de Discourse"
   js:
     notifications:
       titles:

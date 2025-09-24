@@ -7,11 +7,11 @@
 uk:
   admin_js:
     admin:
-      calendar: "Календар"
+      calendar: "Календар та події"
       site_settings:
         categories:
           discourse_post_event: "Подія Discourse"
-          discourse_calendar: "Календар Discourse"
+          discourse_calendar: "Календар та події"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ uk:
         header_title: "Свята"
         pick_region_description: "Оберіть регіон, щоб побачити свята для цього регіону."
         disabled_holidays_description: "При вимкненні свят вони будуть виключені з календаря персоналу."
+        header_description: "Виберіть регіон, щоб переглянути свята для нього. Свята для людей з інвалідністю будуть виключені з календаря свят персоналу."
       date: "Дата"
       add_to_calendar: "Додати до календаря Google"
       toggle_timezone_offset_title: "Змінити часовий пояс"
@@ -44,6 +45,7 @@ uk:
         title: "Регіон"
         none: "Немає"
         use_current_region: "Використовувати поточний регіон"
+        select_region: "Виберіть регіон..."
         names:
           ae: "Об'єднані Арабські Емірати"
           ar: "Аргентина"

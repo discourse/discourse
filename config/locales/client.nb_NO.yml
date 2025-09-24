@@ -1551,7 +1551,7 @@ nb_NO:
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       add_email:
         title: "Send e-post"
-        add: "legg til"
+        add: "Legg til"
       change_email:
         title: "Endre e-postadresse"
         taken: "Beklager, den e-postadressen er ikke tilgjengelig."
@@ -2957,7 +2957,6 @@ nb_NO:
         one: "%{count} innlegg i emnet"
         other: "%{count} innlegg i emnet"
       create: "Nytt emne"
-      create_disabled_category: "Du har ikke lov til å opprette emner i denne kategorien"
       create_long: "Opprett et nytt emne"
       open_draft: "Åpne utkast"
       private_message: "Begynn en melding"

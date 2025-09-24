@@ -68,6 +68,9 @@ he:
       topic:
         title: נושא
         description: הסקריפט המשויך ישמש רק לנושא שצוין, חיוני לסקריפטים שמבצעים אימות למשל
+      topic_closed:
+        title: הנושא סגור
+        description: מזניק סקריפט כשנושא נסגר.
       after_post_cook:
         title: אחרי בישול פוסט
         description: כאשר תוכן פוסט מבושל האוטומציה תופעל

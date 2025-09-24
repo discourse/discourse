@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fi:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Konteksti-ikkuna"
   discourse_automation:
     ai:
       flag_types:

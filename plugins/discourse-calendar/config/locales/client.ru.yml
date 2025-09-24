@@ -7,11 +7,9 @@
 ru:
   admin_js:
     admin:
-      calendar: "Календарь"
       site_settings:
         categories:
           discourse_post_event: "Мероприятие Discourse"
-          discourse_calendar: "Календарь Discourse"
   js:
     notifications:
       titles:

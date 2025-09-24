@@ -1136,7 +1136,7 @@ bs_BA:
         invalid: "To korisničko ime nije validno. Mora sadržavati samo brojeve i slova"
       add_email:
         title: "Dodaj e-poštu"
-        add: "Dodaj"
+        add: "Add"
       change_email:
         title: "Promijeni Email"
         taken: "Nažalost, taj email nije dostupan."
