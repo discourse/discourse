@@ -161,9 +161,8 @@ export default class ChatThreadList extends Component {
   }
 
   handleDeleteMessage(data) {
-    const deletedOriginalMessageThread = this.threadsManager.threads.findBy(
-      "originalMessage.id",
-      data.deleted_id
+    const deletedOriginalMessageThread = this.threadsManager.threads.find(
+      (item) => item.originalMessage.id === data.deleted_id
     );
 
     if (!deletedOriginalMessageThread) {
@@ -174,9 +173,8 @@ export default class ChatThreadList extends Component {
   }
 
   handleRestoreMessage(data) {
-    const restoredOriginalMessageThread = this.threadsManager.threads.findBy(
-      "originalMessage.id",
-      data.chat_message.id
+    const restoredOriginalMessageThread = this.threadsManager.threads.find(
+      (item) => item.originalMessage.id === data.chat_message.id
     );
 
     if (!restoredOriginalMessageThread) {

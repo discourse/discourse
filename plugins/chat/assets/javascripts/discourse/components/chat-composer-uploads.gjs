@@ -33,14 +33,18 @@ export default class ChatComposerUploads extends Component {
       }
 
       this.uppyUpload.uppyWrapper.onPreProcessProgress((file) => {
-        const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
+        const inProgressUpload = this.inProgressUploads.find(
+          (item) => item.id === file.id
+        );
         if (!inProgressUpload?.processing) {
           inProgressUpload?.set("processing", true);
         }
       });
 
       this.uppyUpload.uppyWrapper.onPreProcessComplete((file) => {
-        const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
+        const inProgressUpload = this.inProgressUploads.find(
+          (item) => item.id === file.id
+        );
         inProgressUpload?.set("processing", false);
       });
     },

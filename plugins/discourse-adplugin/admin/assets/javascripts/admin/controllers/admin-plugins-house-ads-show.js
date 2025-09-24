@@ -127,7 +127,9 @@ export default class adminPluginsHouseAdsShow extends Controller {
         }
       );
       this.houseAdsController.model.removeObject(
-        this.houseAdsController.model.findBy("id", this.buffered.id)
+        this.houseAdsController.model.find(
+          (item) => item.id === this.buffered.id
+        )
       );
       this.router.transitionTo("adminPlugins.houseAds.index");
     } catch (error) {

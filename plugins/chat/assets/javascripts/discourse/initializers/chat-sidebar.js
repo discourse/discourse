@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { get } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
@@ -423,8 +424,10 @@ export default {
               const user = this.channel.chatable.users[0];
 
               if (
-                !!activeUsers?.findBy("id", user?.id) ||
-                !!activeUsers?.findBy("username", user?.username)
+                !!activeUsers?.find((item) => get(item, "id") === user?.id) ||
+                !!activeUsers?.find(
+                  (item) => get(item, "username") === user?.username
+                )
               ) {
                 return "active";
               }

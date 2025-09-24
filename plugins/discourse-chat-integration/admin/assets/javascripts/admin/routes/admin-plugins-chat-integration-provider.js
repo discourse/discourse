@@ -7,9 +7,8 @@ export default class AdminPluginsChatIntegrationProvider extends DiscourseRoute 
   async model(params) {
     const [channels, provider, groups] = await Promise.all([
       this.store.findAll("channel", { provider: params.provider }),
-      this.modelFor("admin-plugins-chat-integration").findBy(
-        "id",
-        params.provider
+      this.modelFor("admin-plugins-chat-integration").find(
+        (item) => item.id === params.provider
       ),
       Group.findAll(),
     ]);

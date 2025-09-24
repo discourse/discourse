@@ -6,7 +6,7 @@ export default class AdminPluginsShowDiscourseAiPersonasEdit extends DiscourseRo
       "adminPlugins.show.discourse-ai-personas"
     );
     const id = parseInt(params.id, 10);
-    return allPersonas.findBy("id", id);
+    return allPersonas.find((item) => item.id === id);
   }
 
   setupController(controller, model) {
