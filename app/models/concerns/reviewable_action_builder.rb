@@ -174,16 +174,16 @@ module ReviewableActionBuilder
   end
 
   def perform_silence_user(performed_by, args)
-    create_result(:success, :approved)
+    create_result(:success, :rejected)
   end
 
   def perform_suspend_user(performed_by, args)
-    create_result(:success, :approved)
+    create_result(:success, :rejected)
   end
 
   def perform_delete_user(performed_by, args, &)
     delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :approved, [], false, &)
+    create_result(:success, :rejected, [], &)
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
@@ -193,27 +193,27 @@ module ReviewableActionBuilder
     end
 
     delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :approved, [], false, &)
+    create_result(:success, :rejected, [created_by_id], false, &)
   end
 
   def perform_delete_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post, reviewable: self).destroy
-    create_result(:success, :approved, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_hide_post(performed_by, _args)
     target_post.hide!(PostActionType.types[:inappropriate])
-    create_result(:success, :approved, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_unhide_post(performed_by, _args)
     target_post.unhide!
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_restore_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post).recover
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_edit_post(performed_by, _args)
@@ -299,7 +299,7 @@ module ReviewableActionBuilder
   def create_result(status, transition_to = nil, flagging_user_ids = [], recalculate_score = true)
     result = Reviewable::PerformResult.new(self, status)
     result.transition_to = transition_to
-    if flagging_user_ids.any?
+    if flagging_user_ids.any? && target_post
       result.update_flag_stats = {
         status: map_reviewable_status_to_flag_status(transition_to),
         user_ids: flagging_user_ids,

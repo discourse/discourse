@@ -242,30 +242,30 @@ RSpec.describe ReviewablePost do
       end
 
       describe "#perform_delete_post" do
-        it "deletes the post and transitions to a" do
+        it "deletes the post and transitions to rejected" do
           result = reviewable.perform admin, :delete_post
 
-          expect(result.transition_to).to eq :approved
+          expect(result.transition_to).to eq :rejected
           expect(Post.where(id: post.id).exists?).to eq(false)
         end
       end
 
       describe "#perform_hide_post" do
-        it "hides the post and transitions to approved" do
+        it "hides the post and transitions to rejected" do
           result = reviewable.perform admin, :hide_post
 
-          expect(result.transition_to).to eq :approved
+          expect(result.transition_to).to eq :rejected
           expect(post.reload.hidden).to eq(true)
         end
       end
 
       describe "#perform_unhide_post" do
-        it "unhides the post and transitions to rejected" do
+        it "unhides the post and transitions to approved" do
           post.update!(hidden: true)
 
           result = reviewable.reload.perform admin, :unhide_post
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :approved
           expect(post.reload.hidden).to eq(false)
         end
       end
@@ -298,12 +298,12 @@ RSpec.describe ReviewablePost do
       end
 
       describe "#perform_restore_post" do
-        it "restores the post and transitions to rejected" do
+        it "restores the post and transitions to approved" do
           post.trash!
 
           result = reviewable.reload.perform admin, :restore_post
 
-          expect(result.transition_to).to eq :rejected
+          expect(result.transition_to).to eq :approved
           expect(Post.where(id: post.id).exists?).to eq(true)
         end
       end
@@ -317,18 +317,18 @@ RSpec.describe ReviewablePost do
       end
 
       describe "#perform_silence_user" do
-        it "transitions to approved" do
+        it "transitions to rejected" do
           result = reviewable.perform admin, :silence_user
 
-          expect(result.transition_to).to eq :approved
+          expect(result.transition_to).to eq :rejected
         end
       end
 
       describe "#perform_suspend_user" do
-        it "transitions to approved" do
+        it "transitions to rejected" do
           result = reviewable.perform admin, :suspend_user
 
-          expect(result.transition_to).to eq :approved
+          expect(result.transition_to).to eq :rejected
         end
       end
 
