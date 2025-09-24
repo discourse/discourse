@@ -21,7 +21,7 @@ export default class AssignedToFilter extends Component {
     .filter(Boolean);
   allowedGroups = this.site.groups
     .filter((group) => this.groupIDs.includes(group.id.toString()))
-    .mapBy("name");
+    .map((item) => item.name);
 
   @action
   updateAssignedTo(selected) {

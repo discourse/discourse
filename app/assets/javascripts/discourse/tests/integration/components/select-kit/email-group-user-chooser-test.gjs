@@ -82,7 +82,7 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("a");
 
-      let suggestions = this.subject.displayedContent().mapBy("id");
+      let suggestions = this.subject.displayedContent().map((item) => item.id);
       assert.deepEqual(suggestions, ["sam"]);
 
       this.set("excludedUsernames", ["osama"]);
@@ -97,7 +97,10 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("a");
 
-      suggestions = this.subject.displayedContent().mapBy("id").sort();
+      suggestions = this.subject
+        .displayedContent()
+        .map((item) => item.id)
+        .sort();
       assert.deepEqual(suggestions, ["joshua", "sam"]);
     });
 

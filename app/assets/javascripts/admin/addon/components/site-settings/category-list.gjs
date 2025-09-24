@@ -39,7 +39,9 @@ export default class CategoryList extends Component {
 
   @action
   onChangeSelectedCategories(value) {
-    this.args.changeValueCallback((value || []).mapBy("id").join("|"));
+    this.args.changeValueCallback(
+      (value || []).map((item) => item.id).join("|")
+    );
   }
 
   <template>

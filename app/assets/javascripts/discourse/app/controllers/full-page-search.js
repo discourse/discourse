@@ -550,7 +550,7 @@ export default class FullPageSearchController extends Controller {
   @action
   selectAll() {
     this.bulkSelectHelper.selected.addObjects(
-      this.get("searchResultPosts").mapBy("topic")
+      this.get("searchResultPosts").map((item) => item.topic)
     );
 
     // Doing this the proper way is a HUGE pain,

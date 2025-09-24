@@ -31,7 +31,9 @@ export default class AdminPluginNavManager extends Service {
 
     // Automatically inject the settings link.
     if (
-      !configNav.links.mapBy("route").includes("adminPlugins.show.settings")
+      !configNav.links
+        .map((item) => item.route)
+        .includes("adminPlugins.show.settings")
     ) {
       configNav.links.unshift(settingsNav.links[0]);
     }

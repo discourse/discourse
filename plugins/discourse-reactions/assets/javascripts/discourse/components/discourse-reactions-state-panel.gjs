@@ -14,7 +14,9 @@ export default class DiscourseReactionsStatePanel extends Component {
 
     const { post } = this.args;
     if (post?.reactions) {
-      const maxCount = Math.max(...post.reactions.mapBy("count"));
+      const maxCount = Math.max(
+        ...post.reactions.map((reaction) => reaction.count)
+      );
       const charsCount = maxCount.toString().length;
       classes.push(`max-length-${charsCount}`);
     }

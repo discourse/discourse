@@ -31,16 +31,15 @@ module("Unit | Model | site", function (hooks) {
     });
 
     assert.present(site.categories, "The categories are present");
-    assert.deepEqual(site.categories.mapBy("name"), [
-      "Test Subcategory",
-      "Test",
-      "Invalid Subcategory",
-    ]);
+    assert.deepEqual(
+      site.categories.map((item) => item.name),
+      ["Test Subcategory", "Test", "Invalid Subcategory"]
+    );
 
-    assert.deepEqual(site.sortedCategories.mapBy("name"), [
-      "Test",
-      "Test Subcategory",
-    ]);
+    assert.deepEqual(
+      site.sortedCategories.map((item) => item.name),
+      ["Test", "Test Subcategory"]
+    );
 
     // remove invalid category and child
     site.categories.removeObject(site.categories[2]);
@@ -89,16 +88,19 @@ module("Unit | Model | site", function (hooks) {
       ],
     });
 
-    assert.deepEqual(site.sortedCategories.mapBy("name"), [
-      "Test2",
-      "Test2 Sub",
-      "Test2 Sub Sub2",
-      "Test2 Sub Sub",
-      "Test",
-      "Test Sub",
-      "Test Sub Sub",
-      "Test Sub Sub Sub2",
-      "Test Sub Sub Sub",
-    ]);
+    assert.deepEqual(
+      site.sortedCategories.map((item) => item.name),
+      [
+        "Test2",
+        "Test2 Sub",
+        "Test2 Sub Sub2",
+        "Test2 Sub Sub",
+        "Test",
+        "Test Sub",
+        "Test Sub Sub",
+        "Test Sub Sub Sub2",
+        "Test Sub Sub Sub",
+      ]
+    );
   });
 });

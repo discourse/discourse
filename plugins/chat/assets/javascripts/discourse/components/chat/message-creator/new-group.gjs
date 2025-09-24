@@ -38,11 +38,11 @@ export default class NewGroup extends Component {
     try {
       const usernames = this.args.members
         .filter((member) => member.type === "user")
-        .mapBy("model.username");
+        .map((member) => member.model.username);
 
       const groups = this.args.members
         .filter((member) => member.type === "group")
-        .mapBy("model.name");
+        .map((member) => member.model.name);
 
       const channel = await this.chat.createDmChannel(
         { usernames, groups },

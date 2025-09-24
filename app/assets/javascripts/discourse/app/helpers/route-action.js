@@ -13,7 +13,9 @@ function getCurrentRouteInfos(router) {
 }
 
 function getRoutes(router) {
-  return A(getCurrentRouteInfos(router)).mapBy("_route").reverse();
+  return A(getCurrentRouteInfos(router))
+    .map((item) => item._route)
+    .reverse();
 }
 
 function getRouteWithAction(router, actionName) {

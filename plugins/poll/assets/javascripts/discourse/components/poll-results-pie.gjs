@@ -117,8 +117,8 @@ export default class PollResultsPieComponent extends Component {
   async drawPie() {
     await loadScript("/javascripts/Chart.min.js");
 
-    const data = this.args.options.mapBy("votes");
-    const labels = this.args.options.mapBy("html");
+    const data = this.args.options.map((option) => option.votes);
+    const labels = this.args.options.map((option) => option.html);
     const config = this.pieChartConfig(data, labels, {
       legendContainerId: this.legendElement.id,
     });

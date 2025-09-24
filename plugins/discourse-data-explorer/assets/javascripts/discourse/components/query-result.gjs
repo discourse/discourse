@@ -100,7 +100,7 @@ export default class QueryResult extends Component {
 
   get chartValues() {
     // return an array with the second value of this.row
-    return this.rows.mapBy(1);
+    return this.rows.map((item) => item[1]);
   }
 
   get colCount() {

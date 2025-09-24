@@ -164,7 +164,7 @@ export default class EmojiValueList extends Component {
   }
 
   _saveValues() {
-    this.set("values", this.collection.mapBy("value").join("|"));
+    this.set("values", this.collection.map((item) => item.value).join("|"));
   }
 
   <template>

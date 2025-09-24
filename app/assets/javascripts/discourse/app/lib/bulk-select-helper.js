@@ -33,7 +33,7 @@ export default class BulkSelectHelper {
   }
 
   get selectedCategoryIds() {
-    return this.selected.mapBy("category_id").uniq();
+    return this.selected.map((item) => item.category_id).uniq();
   }
 
   @action

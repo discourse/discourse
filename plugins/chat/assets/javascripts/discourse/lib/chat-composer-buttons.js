@@ -61,7 +61,7 @@ function isFunction(descriptor) {
 export function chatComposerButtonsDependentKeys() {
   return [].concat(
     ...Object.values(_chatComposerButtons)
-      .mapBy("dependentKeys")
+      .map((item) => item.dependentKeys)
       .filter(Boolean)
   );
 }

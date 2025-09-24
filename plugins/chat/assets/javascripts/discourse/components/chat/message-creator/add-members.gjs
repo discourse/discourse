@@ -37,11 +37,11 @@ export default class AddMembers extends Component {
 
       const usernames = this.args.members
         .filter((member) => member.type === "user")
-        .mapBy("model.username");
+        .map((member) => member.model.username);
 
       const groups = this.args.members
         .filter((member) => member.type === "group")
-        .mapBy("model.name");
+        .map((member) => member.model.name);
 
       await this.chatApi.addMembersToChannel(this.args.channel.id, {
         usernames,

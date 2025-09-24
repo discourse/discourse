@@ -17,7 +17,7 @@ export default class ChatThreadPane extends ChatChannelPane {
   }
 
   get selectedMessageIds() {
-    return this.thread.messagesManager.selectedMessages.mapBy("id");
+    return this.thread.messagesManager.selectedMessages.map((item) => item.id);
   }
 
   async close() {

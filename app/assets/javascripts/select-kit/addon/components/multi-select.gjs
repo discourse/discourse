@@ -83,7 +83,9 @@ export default class MultiSelect extends SelectKitComponent {
     );
 
     this.selectKit.change(
-      this.valueProperty ? newContent.mapBy(this.valueProperty) : newContent,
+      this.valueProperty
+        ? newContent.map((contentItem) => contentItem[this.valueProperty])
+        : newContent,
       newContent
     );
   }

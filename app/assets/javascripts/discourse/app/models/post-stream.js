@@ -1315,7 +1315,7 @@ export default class PostStream extends RestModel {
     if (_lastEditNotificationClick) {
       const copy = _lastEditNotificationClick;
       resetLastEditNotificationClick();
-      const postsNumbers = this.posts.mapBy("post_number");
+      const postsNumbers = this.posts.map((post) => post.post_number);
       if (
         copy.topicId === this.topic.id &&
         postsNumbers.includes(copy.postNumber)

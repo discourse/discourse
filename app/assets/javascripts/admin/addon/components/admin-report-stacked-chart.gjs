@@ -11,21 +11,23 @@ export default class AdminReportStackedChart extends Component {
     const options = this.args.options || {};
     options.hiddenLabels ??= [];
 
-    const chartData = makeArray(model.chartData || model.data).map((cd) => ({
-      label: cd.label,
-      color: cd.color,
-      data: Report.collapse(model, cd.data),
-      req: cd.req,
-    }));
+    const chartData = makeArray(model.chartData || model.data).map(
+      (series) => ({
+        label: series.label,
+        color: series.color,
+        data: Report.collapse(model, series.data),
+        req: series.req,
+      })
+    );
 
     const data = {
-      labels: chartData[0].data.mapBy("x"),
-      datasets: chartData.map((cd) => ({
-        label: cd.label,
+      labels: chartData[0].data.map((point) => point.x),
+      datasets: chartData.map((series) => ({
+        label: series.label,
         stack: "pageviews-stack",
-        data: cd.data,
-        backgroundColor: cd.color,
-        hidden: options.hiddenLabels.includes(cd.req),
+        data: series.data,
+        backgroundColor: series.color,
+        hidden: options.hiddenLabels.includes(series.req),
       })),
     };
 

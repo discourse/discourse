@@ -8,24 +8,26 @@ export default class AdminReportRadar extends Component {
   get chartConfig() {
     const { model } = this.args;
 
-    const chartData = makeArray(model.chartData || model.data).map((cd) => ({
-      label: cd.label,
-      color: cd.color,
-      data: Report.collapse(model, cd.data),
-    }));
+    const chartData = makeArray(model.chartData || model.data).map(
+      (series) => ({
+        label: series.label,
+        color: series.color,
+        data: Report.collapse(model, series.data),
+      })
+    );
 
     const data = {
-      labels: chartData[0].data.mapBy("x"),
-      datasets: chartData.map((cd) => ({
-        label: cd.label,
-        data: cd.data.mapBy("y"),
+      labels: chartData[0].data.map((point) => point.x),
+      datasets: chartData.map((series) => ({
+        label: series.label,
+        data: series.data.map((point) => point.y),
         fill: true,
-        backgroundColor: hexToRGBA(cd.color, 0.3),
-        borderColor: cd.color,
-        pointBackgroundColor: cd.color,
+        backgroundColor: hexToRGBA(series.color, 0.3),
+        borderColor: series.color,
+        pointBackgroundColor: series.color,
         pointBorderColor: "#fff",
         pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: cd.color,
+        pointHoverBorderColor: series.color,
       })),
     };
 

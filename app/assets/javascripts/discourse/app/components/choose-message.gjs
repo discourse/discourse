@@ -28,7 +28,7 @@ export default class ChooseMessage extends Component {
     });
 
     const messages = results?.posts
-      ?.mapBy("topic")
+      ?.map((item) => item.topic)
       .filter((topic) => topic.id !== this.args.currentTopicId);
 
     if (messages.length === 1) {

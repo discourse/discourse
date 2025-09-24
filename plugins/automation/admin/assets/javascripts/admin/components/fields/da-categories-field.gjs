@@ -15,7 +15,7 @@ export default class CategoriesField extends BaseField {
       return;
     }
 
-    this.mutValue(categories.mapBy("id"));
+    this.mutValue(categories.map((item) => item.id));
   }
 
   <template>

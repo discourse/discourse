@@ -42,7 +42,7 @@ export default class TopicChooser extends ComboBoxComponent {
       searchParams
     ).then((results) => {
       if (results?.posts?.length > 0) {
-        return results.posts.mapBy("topic");
+        return results.posts.map((item) => item.topic);
       }
     });
   }

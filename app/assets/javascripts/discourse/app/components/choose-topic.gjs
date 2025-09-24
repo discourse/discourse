@@ -31,8 +31,8 @@ export default class ChooseTopic extends Component {
     }
 
     return results.posts
-      .mapBy("topic")
-      .filter((t) => t.id !== this.args.currentTopicId);
+      .map((post) => post.topic)
+      .filter((topic) => topic.id !== this.args.currentTopicId);
   }
 
   @action
@@ -83,7 +83,7 @@ export default class ChooseTopic extends Component {
     }
 
     const topics = results.posts
-      .mapBy("topic")
+      .map((item) => item.topic)
       .filter((t) => t.id !== this.args.currentTopicId);
 
     if (topics.length === 1) {
