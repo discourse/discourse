@@ -22,8 +22,8 @@ require_relative "lib/discourse_user_notes/engine"
 after_initialize do
   require_dependency "user"
 
-  require_relative "app/serializers/user_note_serializer.rb"
-  require_relative "app/controllers/discourse_user_notes/user_notes_controller.rb"
+  require_relative "app/serializers/user_note_serializer"
+  require_relative "app/controllers/discourse_user_notes/user_notes_controller"
 
   Discourse::Application.routes.append { mount ::DiscourseUserNotes::Engine, at: "/user_notes" }
 

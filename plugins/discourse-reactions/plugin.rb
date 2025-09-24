@@ -16,8 +16,8 @@ register_asset "stylesheets/mobile/discourse-reactions.scss", :mobile
 register_svg_icon "star"
 register_svg_icon "far-star"
 
-require_relative "lib/reaction_for_like_site_setting_enum.rb"
-require_relative "lib/reactions_excluded_from_like_site_setting_validator.rb"
+require_relative "lib/reaction_for_like_site_setting_enum"
+require_relative "lib/reactions_excluded_from_like_site_setting_validator"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s

@@ -2,7 +2,7 @@
 
 require "mysql2"
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
