@@ -15,6 +15,10 @@ module DiscourseAi
 
         if DiscourseAi::Translation.enabled?
           Jobs.enqueue(:detect_translate_post, post_id: post.id, force: true)
+
+          if post.is_first_post?
+            Jobs.enqueue(:detect_translate_topic, topic_id: post.topic.id, force: true)
+          end
         else
           return(
             render json:

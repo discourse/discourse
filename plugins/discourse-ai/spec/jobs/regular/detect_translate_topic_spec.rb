@@ -170,5 +170,25 @@ describe Jobs::DetectTranslateTopic do
         job.execute({ topic_id: personal_pm_topic.id })
       end
     end
+
+    describe "force arg" do
+      it "processes private content when force is true" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_topic)
+          .once
+
+        job.execute({ topic_id: group_pm_topic.id, force: true })
+      end
+
+      it "processes PM content when force is true" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_topic)
+          .once
+
+        job.execute({ topic_id: personal_pm_topic.id, force: true })
+      end
+    end
   end
 end
