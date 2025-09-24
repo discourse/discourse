@@ -29,10 +29,9 @@ function RGBToHex(rgb) {
 export default class Color extends Component {
   get fallbackColor() {
     if (SETTINGS_WITH_FALLBACK_COLORS.includes(this.args.setting?.setting)) {
-      const root = document.querySelector(":root");
-      const computedStyle = getComputedStyle(root);
-      const primaryColor = computedStyle.getPropertyValue("--primary");
-      return primaryColor;
+      return getComputedStyle(document.documentElement).getPropertyValue(
+        "--primary"
+      );
     }
     return null;
   }
