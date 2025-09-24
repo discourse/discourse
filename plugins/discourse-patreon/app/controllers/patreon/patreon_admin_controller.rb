@@ -11,7 +11,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def list
-    filters = PluginStore.get(PLUGIN_NAME, "filters") || {}
+    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
     rewards = ::Patreon::Reward.all
     last_sync = ::Patreon.get("last_sync") || {}
 
@@ -41,11 +41,11 @@ class Patreon::PatreonAdminController < Admin::AdminController
       return render json: { message: "Error" }, status: 500
     end
 
-    filters = PluginStore.get(PLUGIN_NAME, "filters") || {}
+    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
 
     filters[params[:group_id]] = params[:rewards_ids]
 
-    PluginStore.set(PLUGIN_NAME, "filters", filters)
+    PluginStore.set(Patreon::PLUGIN_NAME, "filters", filters)
 
     render json: success_json
   end
@@ -53,11 +53,11 @@ class Patreon::PatreonAdminController < Admin::AdminController
   def delete
     return render json: { message: "Error" }, status: 500 unless is_number?(params[:group_id])
 
-    filters = PluginStore.get(PLUGIN_NAME, "filters")
+    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
 
     filters.delete(params[:group_id])
 
-    PluginStore.set(PLUGIN_NAME, "filters", filters)
+    PluginStore.set(Patreon::PLUGIN_NAME, "filters", filters)
 
     render json: success_json
   end
