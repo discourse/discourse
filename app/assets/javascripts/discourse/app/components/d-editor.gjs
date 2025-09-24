@@ -237,7 +237,7 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor) {
+    if (this.siteSettings.rich_editor && !this.forceEditorMode) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -630,6 +630,11 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
+    // Can't toggle if only rich/markdown is allowed.
+    if (this.forceEditorMode) {
+      return;
+    }
+
     // The ProsemirrorEditor component is loaded here, adding this comment because
     // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled

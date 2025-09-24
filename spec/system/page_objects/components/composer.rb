@@ -53,7 +53,7 @@ module PageObjects
       end
 
       def focus
-        find(COMPOSER_INPUT_SELECTOR).click
+        find(composer_input_selector).click
         self
       end
 
@@ -197,14 +197,16 @@ module PageObjects
         page.has_no_css?(emoji_preview_selector(emoji))
       end
 
-      COMPOSER_INPUT_SELECTOR = "#{@composer_id} .d-editor-input"
+      def composer_input_selector
+        "#{@composer_id} .d-editor-input"
+      end
 
       def has_no_composer_input?
-        page.has_no_css?(COMPOSER_INPUT_SELECTOR)
+        page.has_no_css?(composer_input_selector)
       end
 
       def has_composer_input?
-        page.has_css?(COMPOSER_INPUT_SELECTOR)
+        page.has_css?(composer_input_selector)
       end
 
       def has_composer_preview?
@@ -296,7 +298,7 @@ module PageObjects
       end
 
       def select_all
-        find(COMPOSER_INPUT_SELECTOR).send_keys([PLATFORM_KEY_MODIFIER, "a"])
+        find(composer_input_selector).send_keys([PLATFORM_KEY_MODIFIER, "a"])
       end
 
       def select_range(start_index, length)
