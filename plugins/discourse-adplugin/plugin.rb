@@ -14,7 +14,7 @@ add_admin_route "admin.adplugin.house_ads.title", "houseAds"
 enabled_site_setting :discourse_adplugin_enabled
 
 module ::AdPlugin
-  PLUGIN_NAME = "adplugin"
+  PLUGIN_NAME = "discourse-adplugin"
 end
 
 require_relative "lib/adplugin/engine"
