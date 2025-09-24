@@ -29,7 +29,8 @@ class DeprecationFixer {
     this.importRewrites = new Map(); // Map<filePath, Array<{oldImport, newImport}>>
     this.resolverRewrites = new Map(); // Map<filePath, Array<{pattern, replacement, description}>>
     this.stubsToCreate = new Set(); // Set<{stubPath, type, basePath}>
-    this.oldResolverNames = new Set();
+    this.resolverNameMaps = new Map();
+    this.importNameMaps = new Map();
   }
 
   async run() {
@@ -202,7 +203,14 @@ class DeprecationFixer {
     // Report results
     this.reportResults();
 
-    fs.writeFile("old-names.txt", [...this.oldResolverNames].join("\n") + "\n");
+    fs.writeFile(
+      "resolver-changes.txt",
+      JSON.stringify(Object.fromEntries(this.resolverNameMaps.entries()))
+    );
+    fs.writeFile(
+      "import-changes.txt",
+      JSON.stringify(Object.fromEntries(this.importNameMaps.entries()))
+    );
   }
 
   async processDeprecations(deprecations) {
@@ -952,11 +960,11 @@ class DeprecationFixer {
       (match, letter) => letter.toUpperCase()
     );
 
-    const type = oldFilePath.split("/")[0]; // controllers, routes, templates
+    const type = oldFilePath.split("/")[0].replace(/s$/, ""); // controller, route, template
 
     const patterns = [];
 
-    if (type === "routes") {
+    if (type === "route") {
       patterns.push(
         {
           pattern: `controllerFor\\s*\\(\\s*(['"])${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
@@ -984,9 +992,14 @@ class DeprecationFixer {
           description: `lookup route: ${oldResolverName} -> ${newResolverName}`,
         }
       );
+      this.resolverNameMaps.set(
+        `route:${oldResolverName}`,
+        `route:${newResolverName}`
+      );
+      this.importNameMaps.set(oldFilePath, newFilePath);
     }
 
-    if (type === "controllers") {
+    if (type === "controller") {
       patterns.push(
         {
           pattern: `lookup\\s*\\(\\s*(['"])controller:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
@@ -999,9 +1012,14 @@ class DeprecationFixer {
           description: `controllerName: ${oldResolverName} -> ${newResolverName}`,
         }
       );
+      this.resolverNameMaps.set(
+        `controller:${oldResolverName}`,
+        `controller:${newResolverName}`
+      );
+      this.importNameMaps.set(oldFilePath, newFilePath);
     }
 
-    if (type === "templates") {
+    if (type === "template") {
       patterns.push(
         {
           pattern: `lookup\\s*\\(\\s*(['"])template:${oldResolverName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\1\\s*\\)`,
@@ -1019,7 +1037,6 @@ class DeprecationFixer {
     // We'll apply these to all files during the single pass
     this.pendingResolverUpdates = this.pendingResolverUpdates || [];
     this.pendingResolverUpdates.push(...patterns);
-    this.oldResolverNames.add(oldResolverName);
   }
 }
 
