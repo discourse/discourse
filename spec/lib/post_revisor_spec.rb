@@ -569,6 +569,26 @@ describe PostRevisor do
           )
         }.not_to change { post.topic.bumped_at }
       end
+
+      it "doesn't bump the topic when editing the topic title" do
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { title: "This is an updated topic title" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
+      end
+
+      it "doesn't bump the topic when editing the topic category" do
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { category_id: Fabricate(:category).id },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
+      end
     end
 
     describe "edit reasons" do
@@ -1276,6 +1296,12 @@ describe PostRevisor do
             expect(result).to eq(true)
             post.reload
             expect(post.topic.tags.size).to eq(0)
+          end
+
+          it "doesn't bump the topic when editing tags" do
+            expect { post_revisor.revise!(post.user, { tags: %w[totally update] }) }.not_to change {
+              post.topic.bumped_at
+            }
           end
 
           it "can't add staff-only tags" do

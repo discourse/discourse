@@ -587,7 +587,7 @@ class PostRevisor
   end
 
   def create_revision
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
 
     modifications["raw"][0] = cached_original_raw || modifications["raw"][0] if modifications["raw"]
 
@@ -608,7 +608,7 @@ class PostRevisor
   def update_revision
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
 
     modifications.each_key do |field|
       if revision.modifications.has_key?(field)
@@ -641,7 +641,7 @@ class PostRevisor
   end
 
   def topic_diff
-    @topic_changes.diff
+    @topic_changes.diff.with_indifferent_access
   end
 
   def perform_edit
@@ -662,14 +662,19 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || post_changes.any? || @topic_changes.errored? ||
-      @opts[:bypass_bump] == true || @post.whisper? || only_hidden_tags_changed?
+    return true if @opts[:bypass_bump] == true
+    return true if @post.whisper? || !@post_successfully_saved || post_changes.any?
+    return true if @topic_changes.errored?
+    return true if topic_title_changed? || topic_category_changed? || topic_tags_changed?
+    return true if only_hidden_tags_changed?
+
+    false
   end
 
   def only_hidden_tags_changed?
     return false if (hidden_tag_names = DiscourseTagging.hidden_tag_names).blank?
 
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
     if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
       a, b = tags_diff[0] || [], tags_diff[1] || []
       changed_tags = ((a + b) - (a & b)).map(&:presence).compact
@@ -732,7 +737,7 @@ class PostRevisor
 
   def publish_changes
     options =
-      if !@topic_changes.diff.empty? && !@topic_changes.errored?
+      if !topic_diff.empty? && !@topic_changes.errored?
         { reload_topic: true }
       else
         {}
@@ -761,6 +766,16 @@ class PostRevisor
 
   def topic_title_changed?
     topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def topic_category_changed?
+    topic_changed? && @fields.has_key?(:category_id) && topic_diff.has_key?(:category_id) &&
+      !@topic_changes.errored?
+  end
+
+  def topic_tags_changed?
+    topic_changed? && @fields.has_key?(:tags) && topic_diff.has_key?(:tags) &&
       !@topic_changes.errored?
   end
 
