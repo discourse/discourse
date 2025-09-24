@@ -18,7 +18,7 @@ class SystemThemesManager
 
     if is_initial_install
       if theme_id == Theme::CORE_THEMES["horizon"]
-        theme.update!(dark_color_scheme: remote_theme.color_schemes.find_by(name: "Horizon Dark"))
+        theme.update!(dark_color_scheme: theme.color_schemes.find_by(name: "Horizon Dark"))
       end
     end
 
