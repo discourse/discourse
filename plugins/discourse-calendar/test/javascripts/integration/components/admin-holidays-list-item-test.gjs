@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminHolidaysListItem from "discourse/plugins/discourse-calendar/discourse/components/admin-holidays-list-item";
 
-module("Integration | Component | admin-holidays-list-item", function (hooks) {
+module("Integration | Component | AdminHolidaysListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when a holiday is disabled, it displays an enable button and adds a disabled CSS class", async function (assert) {
@@ -27,7 +27,7 @@ module("Integration | Component | admin-holidays-list-item", function (hooks) {
     );
 
     assert.dom("button").hasText("Enable", "it displays an enable button");
-    assert.dom("tr").hasClass("disabled", "it adds a 'disabled' CSS class");
+    assert.dom("tr").hasClass("--disabled", "it adds a '--disabled' CSS class");
   });
 
   test("when a holiday is enabled, it displays a disable button and does not add a disabled CSS class", async function (assert) {
@@ -53,6 +53,9 @@ module("Integration | Component | admin-holidays-list-item", function (hooks) {
     assert.dom("button").hasText("Disable", "it displays a disable button");
     assert
       .dom("tr")
-      .doesNotHaveClass("disabled", "it does not add a 'disabled' CSS class");
+      .doesNotHaveClass(
+        "--disabled",
+        "it does not add a '--disabled' CSS class"
+      );
   });
 });
