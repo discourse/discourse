@@ -27,6 +27,9 @@ module DiscourseChatIntegration
       topic = post.topic
       return if topic.blank?
 
+      # Abort if we are in an unlisted topic, and the appropriate setting is true
+      return if SiteSetting.chat_integration_ignore_unlisted_topics && !topic.visible
+
       # If it's a private message, filter rules by groups, otherwise filter rules by category
       if topic.archetype == Archetype.private_message
         group_ids_with_access = topic.topic_allowed_groups.pluck(:group_id)
