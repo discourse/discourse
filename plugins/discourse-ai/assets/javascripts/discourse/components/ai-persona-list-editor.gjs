@@ -163,7 +163,9 @@ export default class AiPersonaListEditor extends Component {
     })
       .then((result) => {
         let persona = AiPersona.create(result);
-        let existingPersona = this.args.personas.findBy("id", persona.id);
+        let existingPersona = this.args.personas.find(
+          (item) => item.id === persona.id
+        );
         if (existingPersona) {
           this.args.personas.removeObject(existingPersona);
         }

@@ -435,7 +435,7 @@ export default class InvitePanel extends Component {
 
   @action
   updateInvitee(selected, content) {
-    let invitee = content.findBy("id", selected[0]);
+    let invitee = content.find((c) => c.id === selected[0]);
     if (!invitee && content.length) {
       invitee =
         typeof content[0] === "string" ? { id: content[0] } : content[0];

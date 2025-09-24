@@ -12,7 +12,9 @@ export default class DiscourseGamificationLeaderboardShow extends DiscourseRoute
     );
     const id = parseInt(params.id, 10);
 
-    const leaderboard = leaderboardsData.leaderboards.findBy("id", id);
+    const leaderboard = leaderboardsData.leaderboards.find(
+      (item) => item.id === id
+    );
     if (leaderboard) {
       return leaderboard;
     }

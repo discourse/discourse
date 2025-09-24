@@ -132,7 +132,9 @@ export default class PostPolicy extends Component {
       this.post.policy_not_accepted_by_count + 1
     );
 
-    const obj = this.post.policy_accepted_by.findBy("id", this.currentUser.id);
+    const obj = this.post.policy_accepted_by.find(
+      (item) => item.id === this.currentUser.id
+    );
     if (obj) {
       this.post.policy_accepted_by.removeObject(obj);
       this.post.set(
@@ -161,9 +163,8 @@ export default class PostPolicy extends Component {
       this.post.policy_accepted_by_count + 1
     );
 
-    const obj = this.post.policy_not_accepted_by.findBy(
-      "id",
-      this.currentUser.id
+    const obj = this.post.policy_not_accepted_by.find(
+      (item) => item.id === this.currentUser.id
     );
 
     if (obj) {

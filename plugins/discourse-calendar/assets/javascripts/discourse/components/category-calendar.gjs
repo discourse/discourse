@@ -105,7 +105,9 @@ export default class CategoryCalendar extends Component {
         return data;
       });
 
-    return settings.findBy("categoryId", this.category.id.toString());
+    return settings.find(
+      (item) => item.categoryId === this.category.id.toString()
+    );
   }
 
   @action

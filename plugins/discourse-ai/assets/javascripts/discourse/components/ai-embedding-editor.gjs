@@ -126,9 +126,8 @@ export default class AiEmbeddingEditor extends Component {
   @action
   configurePreset(preset) {
     this.selectedPreset =
-      this.args.embeddings.resultSetMeta.presets.findBy(
-        "preset_id",
-        preset.id
+      this.args.embeddings.resultSetMeta.presets.find(
+        (item) => item.preset_id === preset.id
       ) || {};
 
     if (this.selectedPreset.provider) {

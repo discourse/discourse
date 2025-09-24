@@ -26,7 +26,9 @@ export default class GroupTimezones extends Component {
       if (this.#shouldAddMemberToGroup(this.filter, member)) {
         const timezone = member.timezone;
         const identifier = parseInt(moment.tz(timezone).format("YYYYMDHm"), 10);
-        let groupedTimezone = groupedTimezones.findBy("identifier", identifier);
+        let groupedTimezone = groupedTimezones.find(
+          (item) => item.identifier === identifier
+        );
 
         if (groupedTimezone) {
           groupedTimezone.members.push(member);

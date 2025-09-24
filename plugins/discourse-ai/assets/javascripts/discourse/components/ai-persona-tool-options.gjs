@@ -11,7 +11,7 @@ export default class AiPersonaToolOptions extends Component {
       return false;
     }
     return this.args.data?.tools.any(
-      (tool) => allTools.findBy("id", tool)?.options
+      (tool) => allTools.find((item) => item.id === tool)?.options
     );
   }
 

@@ -35,7 +35,7 @@ export function addSidebarPanel(func) {
 }
 
 export function addSidebarSection(func, panelKey) {
-  const panel = customPanels.findBy("key", panelKey);
+  const panel = customPanels.find((p) => p.key === panelKey);
   if (!panel) {
     // eslint-disable-next-line no-console
     return console.warn(
@@ -52,7 +52,7 @@ export function resetPanelSections(
   newSections = null,
   sectionBuilder = null
 ) {
-  const panel = customPanels.findBy("key", panelKey);
+  const panel = customPanels.find((item) => item.key === panelKey);
   if (newSections) {
     panel.sections = [];
     sectionBuilder(newSections);

@@ -70,7 +70,9 @@ export default class AdminApiKeysNewController extends Controller {
 
       this.model.set("scopes", selectedScopes);
     } else if (this.scopeMode === "read_only") {
-      this.model.set("scopes", [this.globalScopes.findBy("key", "read")]);
+      this.model.set("scopes", [
+        this.globalScopes.find((scope) => scope.key === "read"),
+      ]);
     } else if (this.scopeMode === "all") {
       this.model.set("scopes", null);
     }

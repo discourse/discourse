@@ -866,9 +866,8 @@ export default class ComposerService extends Service {
     if (this.get("model.editingPost")) {
       const replyToPostNumber = this.get("model.post.reply_to_post_number");
       if (replyToPostNumber) {
-        const replyPost = postStream.posts.findBy(
-          "post_number",
-          replyToPostNumber
+        const replyPost = postStream.posts.find(
+          (item) => item.post_number === replyToPostNumber
         );
 
         if (replyPost) {
