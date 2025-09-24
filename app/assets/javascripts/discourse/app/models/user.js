@@ -794,7 +794,7 @@ export default class User extends RestModel.extend(Evented) {
     if (isEmpty(this.stats)) {
       return [];
     }
-    return this.stats.rejectBy("isPM");
+    return this.stats.filter((stat) => !stat.isPM);
   }
 
   findDetails(options) {
@@ -1361,7 +1361,7 @@ User.reopenClass({
     });
 
     const result = A();
-    result.pushObjects(stats.rejectBy("isResponse"));
+    result.pushObjects(stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;
     result.forEach((item, index) => {

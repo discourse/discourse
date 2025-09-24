@@ -30,7 +30,9 @@ export default class GroupAddMembers extends Component {
   }
 
   get usernames() {
-    return this.usernamesAndEmails.reject(emailValid).join(",");
+    return this.usernamesAndEmails
+      .filter((item) => !emailValid(item))
+      .join(",");
   }
 
   get emails() {
