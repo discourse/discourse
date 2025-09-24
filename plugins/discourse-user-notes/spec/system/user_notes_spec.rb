@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "User Notes", type: :system do
   fab!(:admin)
   fab!(:user)
