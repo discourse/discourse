@@ -351,7 +351,7 @@ en:
             label: "Translate post"
             title: "Translates this post to all supported languages"
             confirm: "This will update any existing translations on this post. Are you sure?"
-            success: "Translations are been successfully refreshed"
+            success: "Post has been sent for translation"
 
       spam:
         short_title: "Spam"
