@@ -146,7 +146,7 @@ export default class ReviewableActionsForm extends Component {
           >
             <field.Select as |select|>
               {{#each bundle.actions as |bundleAction|}}
-                <select.Option @value={{bundleAction.id}}>
+                <select.Option @value={{bundleAction.server_action}}>
                   {{bundleAction.label}}
                 </select.Option>
               {{/each}}
