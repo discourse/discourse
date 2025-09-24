@@ -23,9 +23,7 @@ describe "PM user removal", type: :system do
 
         topic_page.visit_topic(pm)
 
-        find(".add-remove-participant-btn").click
         find(".user[data-id='#{other_user.id}'] .remove-invited").click
-        dialog.click_danger
 
         expect(page).to have_selector(
           ".small-action-contents",
@@ -48,9 +46,7 @@ describe "PM user removal", type: :system do
 
         topic_page.visit_topic(pm)
 
-        find(".add-remove-participant-btn").click
         find(".group[data-id='#{group.id}'] .remove-invited").click
-        dialog.click_danger
 
         expect(page).to have_selector(
           ".small-action-contents",
