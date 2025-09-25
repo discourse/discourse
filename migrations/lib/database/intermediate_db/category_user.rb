@@ -17,6 +17,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(category_id:, user_id:, last_seen_at: nil, notification_level:)
       ::Migrations::Database::IntermediateDB.insert(

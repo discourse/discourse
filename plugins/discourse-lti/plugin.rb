@@ -22,7 +22,7 @@ after_initialize do
   # Check for invite URL in LTI custom fields
   # If present, and this is a new user, redirect the user to the invite url.
   # Otherwise, continue as normal
-  on(:after_auth) do |authenticator, auth_result, session|
+  on(:after_auth) do |authenticator, auth_result, session, cookies, request|
     next if !(authenticator.name.to_sym == :lti)
     next if auth_result.user # Only redirect new users to invite
 
@@ -52,7 +52,7 @@ after_initialize do
     route = Discourse.route_for(parsed.path)
     next if !(route[:controller] == "invites" && route[:action] == "show")
 
-    session[:destination_url] = parsed.to_s
+    request.server_session[:destination_url] = parsed.to_s
   end
 
   on(:after_auth) do |authenticator, auth_result, session, cookies|

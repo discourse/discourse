@@ -1,8 +1,10 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default class ChatNewMessageRoute extends DiscourseRoute {
   @service chat;
+  @service modal;
   @service router;
 
   beforeModel(transition) {
@@ -10,7 +12,15 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
 
     if (!recipients) {
       transition.abort();
-      return this.router.transitionTo("chat");
+
+      if (!transition.from) {
+        this.router.transitionTo("chat");
+        return;
+      }
+
+      this.modal.show(ChatModalNewMessage);
+
+      return;
     }
 
     this.chat.upsertDmChannel({ usernames: recipients }).then((channel) => {

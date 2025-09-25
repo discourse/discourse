@@ -109,7 +109,9 @@ export default class BasicTopicList extends Component {
           }
         }
 
-        const topic = this.topics.findBy("id", parseInt(topicId, 10));
+        const topic = this.topics.find(
+          (value) => value.id === parseInt(topicId, 10)
+        );
         this.appEvents.trigger("topic-entrance:show", {
           topic,
           position: target.offset(),

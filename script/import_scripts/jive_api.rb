@@ -2,7 +2,7 @@
 
 require "nokogiri"
 require "htmlentities"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # https://developers.jivesoftware.com/api/v3/cloud/rest/index.html
 

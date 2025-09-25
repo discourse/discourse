@@ -497,7 +497,7 @@ class ImportScripts::Base
         position: opts[:position],
         parent_category_id: opts[:parent_category_id],
         color: opts[:color] || category_color(opts[:parent_category_id]),
-        text_color: opts[:text_color] || "FFF",
+        text_color: opts[:text_color] || "FFFFFF",
         read_restricted: opts[:read_restricted] || false,
       )
 

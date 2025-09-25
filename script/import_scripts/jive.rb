@@ -3,7 +3,7 @@
 # Jive importer
 require "nokogiri"
 require "csv"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::Jive < ImportScripts::Base
   BATCH_SIZE = 1000

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Bağlam penceresi"
   discourse_automation:
     ai:
       flag_types:
@@ -24,8 +28,8 @@ tr_TR:
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         flagged_post: |
           <div>Modelden gelen yanıt:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> kuralı ile tetiklenir.</b>
+          <p>%{llm_response}</p>
+          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> kuralı ile tetiklenir.</b>
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
@@ -116,7 +120,6 @@ tr_TR:
     ai_translation_enabled: "YZ çeviri özelliğini etkinleştirir"
     ai_translation_model: "Çeviri için kullanılacak model. Bu modelin çeviriyi desteklemesi gerekir. Kişilikler bu ayarı geçersiz kılabilir."
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
-    ai_translation_max_post_length: "Çevrilecek gönderinin maksimum uzunluğu. Bu uzunluktan daha uzun gönderiler çevrilmez."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
   reviewables:
     reasons:

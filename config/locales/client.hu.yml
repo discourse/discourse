@@ -1775,7 +1775,7 @@ hu:
         invalid: "Ez a felhasználónév érvénytelen. Csak számokat és betűket tartalmazhat."
       add_email:
         title: "E-mail-cím hozzáadása"
-        add: "hozzáadás"
+        add: "Hozzáad"
       change_email:
         title: "E-mail-cím módosítása"
         taken: "Sajnos ez az e-mail-cím nem érhető el."
@@ -2595,6 +2595,7 @@ hu:
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
+      read_only: "csak olvasható"
     timezone_input:
       ambiguous_ist: "Az IST nem egyértelmű, válasszon egy konkrét időzónát (például Ázsia/Kolkata)"
     select_kit:
@@ -3313,8 +3314,6 @@ hu:
         one: "%{count} bejegyzés a témában"
         other: "%{count} bejegyzés a témában"
       create: "Új téma"
-      create_disabled_category: "Ebben a kategóriában nem hozhat létre témákat"
-      create_disabled_tag: "Nem hozhat létre témákat ezzel a címkével"
       create_long: "Új téma létrehozása"
       open_draft: "Vázlat megnyitása"
       private_message: "Üzenet indítása"
@@ -4664,7 +4663,6 @@ hu:
       choose_for_topic_required_group:
         one: "válasszon %{count} címkét innen: „%{name}”…"
         other: "válasszon %{count} címkét innen: „%{name}”…"
-      info: "Információ"
       default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       category_restricted: "Ez a címke olyan kategóriákra korlátozódik, amelyekhez nincs hozzáférési jogosultsága."
@@ -6212,7 +6210,7 @@ hu:
             title: "Téma oldal beállításai"
           themes:
             title: "Témák"
-            description: 'Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát minden felhasználó számára.'
+            description: "Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát minden felhasználó számára."
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
             new_theme: "Új téma"
             back: "Vissza a témákhoz"
@@ -6641,6 +6639,8 @@ hu:
         schema:
           title: "%{name} beállítások szerkesztése"
           back_button: "%{name}-hoz vissza"
+          move_up: "Mozgatás fel"
+          move_down: "Mozgatás le"
           fields:
             required: "*kötelező"
             groups:
@@ -7412,7 +7412,6 @@ hu:
             cancel: "Mégse"
         merging_user: "Felhasználó összevonása…"
         merge_failed: "Hiba történt a felhasználók összevonása során."
-        delete_forbidden_because_staff: "Az adminisztrátorokat és moderátorokat nem lehet törölni."
         delete_posts_forbidden_because_staff: "Nem törölhető az összes adminisztrátor és moderátor bejegyzése."
         delete_forbidden:
           one: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"

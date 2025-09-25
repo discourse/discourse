@@ -25,7 +25,7 @@ export default class AdminBackupsIndexController extends Controller {
   @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
     if (!allowRestore) {
-      return "admin.backups.operations.restore.is_disabled";
+      return "admin.backups.operations.restore.is_disabled_title";
     } else if (isOperationRunning) {
       return "admin.backups.operations.is_running";
     } else {

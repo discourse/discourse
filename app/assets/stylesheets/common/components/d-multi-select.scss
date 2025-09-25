@@ -11,15 +11,8 @@
   border: 1px solid var(--primary-medium);
   justify-content: space-between;
 
-  &:hover {
-    &:not(.--has-selection) {
-      background-color: var(--primary-medium);
-      color: var(--secondary);
-
-      .btn-transparent .d-icon-angle-down {
-        color: var(--secondary);
-      }
-    }
+  &.-expanded {
+    @include default-focus;
   }
 }
 
@@ -33,6 +26,7 @@
 .d-multi-select-trigger__label {
   font-size: var(--font-0);
   line-height: normal;
+  color: var(--primary-medium);
 }
 
 .d-multi-select__search-no-result,
@@ -65,7 +59,6 @@
   padding: 0.25em;
   gap: 0.25em;
   height: 150px;
-  overflow-y: auto;
 }
 
 .d-multi-select__search-no-results {
@@ -108,10 +101,6 @@
   }
 }
 
-.d-multi-select__result-checkbox {
-  margin: 0 !important;
-}
-
 .d-multi-select__skeletons {
   display: flex;
   flex-direction: column;
@@ -149,4 +138,19 @@
   height: 24px;
   animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: var(--d-border-radius);
+}
+
+.fk-d-menu[data-identifier="d-multi-select"] {
+  z-index: z("modal", "dialog") + 1;
+
+  // This ensures child elements of the main d-multi-select container maintain the same width
+  // even if content width changes as options are selected to ensure consistency with the UI
+  // and click-on-outside behaviour
+  .fk-d-menu__inner-content {
+    width: inherit;
+
+    .d-multi-select__content {
+      width: inherit;
+    }
+  }
 }

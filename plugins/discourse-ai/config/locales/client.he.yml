@@ -122,6 +122,9 @@ he:
           fields:
             persona:
               label: "דמות"
+            whisper:
+              label: "להגיב בלחישה"
+              description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
         llm_triage:
@@ -158,6 +161,15 @@ he:
             flag_post:
               label: "סימון פוסט"
               description: "סימון פוסט (או כספאם או לסקירה)"
+            notify_author_pm:
+              label: "להודיע למחבר/ת בהודעה פרטית"
+              description: "לשלוח הודעה אישית לכותב/ת הפוסט כאשר הפוסט שלו/ה מועבר לתור ונמחק"
+            notify_author_pm_user:
+              label: "מוען או מוענת ההודעה הפרטית"
+              description: "המשתמש שישלח את ההודעה הפרטית (ברירת מחדל היא המערכת)"
+            notify_author_pm_message:
+              label: "הודעה פרטית"
+              description: "הודעה מותאמת אישית לשליחה לכותב/ת"
             include_personal_messages:
               label: "כולל הודעות פרטיות"
               description: "לסרוק ולאמת הודעות אישיות"
@@ -169,10 +181,30 @@ he:
               description: "דמות בינה מלאכותית לשימוש לתגובות (חייב להיות LLM/מש״ג כברירת מחדל), יתועדף על פני תגובה מראש"
             max_output_tokens:
               label: "כמות אסימוני פלט מרבית"
+        llm_tagger:
+          tag_mode:
+            manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
+          fields:
+            tagger_persona:
+              label: "דמות בינה מלאכותית"
+            tag_mode:
+              label: "מצב בחירת תגיות"
+              description: "בחירה איך הבינה המלאכותית בוחר תגיות"
+            available_tags:
+              label: "תגיות זמינות"
+            max_tags_per_post:
+              label: "כמות תגים מרבית לפוסט"
+              description: "מספר התגיות המרבי שאפשר להחיל על פוסט יחיד"
+            max_post_tokens:
+              label: "כמות אסימונים מרבית לפוסט"
+              description: "מספר האסימונים המרבי מתוכן הפוסט לניתוח"
+            allow_restricted_tags:
+              label: "לאפשר תגיות מוגבלות"
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
+        description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -202,6 +234,8 @@ he:
         bot:
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
+        nav:
+          configured: "מוגדר"
         filters:
           all: "הכול"
           text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
@@ -266,10 +300,20 @@ he:
           disabled_state:
             configure: "הגדרת תרגומים"
             empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+        stats:
+          title: "סטטיסטיקת תרגום"
+          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
+          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
+          description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
         progress_chart:
-          title: "התקדמות התרגום"
-          completed: "הושלם"
-          remaining: "נותרו"
+          title: "תהליך התרגום %{tooltip}"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
+          bar_done:
+            one: "פוסט"
+            two: "שני פוסטים"
+            many: "שני פוסטים"
+            other: "שני פוסטים"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
@@ -595,6 +639,7 @@ he:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"
           success: "הצליח!"
+          invalid_config: "נא לתקן את השגיאות הבאות בהגדרות שלך תחילה:"
           failure: "הניסיון ליצור קשר עם המודל החזיר את השגיאה הבאה: %{error}"
         hints:
           max_prompt_tokens: "מספר האסימונים המרבי שהמודל יכול לעבד בבקשה בודדת"
@@ -621,6 +666,7 @@ he:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "מותאם"
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
@@ -848,9 +894,21 @@ he:
           title: "סיכום הודעות"
           description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
           summarize: "סיכום"
+          since:
+            one: "השעה האחרונה"
+            two: "השעתיים האחרונות"
+            many: "%{count} השעות האחרונות"
+            other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
+          regenerate: "לסכם בקצרה מחדש"
+          regenerate_bulk: "לסכם תקצירים מחדש"
+          regenerate_success:
+            one: "התקציר הקצר נוצר מחדש בהצלחה"
+            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
+            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
+            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
         topic_list_layout:
           button:
             compact: "מצומצם"

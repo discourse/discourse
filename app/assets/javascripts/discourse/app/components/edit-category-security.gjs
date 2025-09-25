@@ -19,7 +19,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 
   @discourseComputed("category.permissions.@each.permission_type")
   everyonePermission(permissions) {
-    return permissions.findBy("group_name", "everyone");
+    return permissions.find((p) => p.group_name === "everyone");
   }
 
   @discourseComputed("category.permissions.@each.permission_type")

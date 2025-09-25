@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
 import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
@@ -70,14 +71,16 @@ export default class DModal extends Component {
     if (this.site.mobileView) {
       this.animating = true;
 
-      await el.animate(
-        [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
-        {
-          duration: getMaxAnimationTimeMs(),
-          easing: "ease",
-          fill: "forwards",
-        }
-      ).finished;
+      await waitForPromise(
+        el.animate(
+          [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+          {
+            duration: getMaxAnimationTimeMs(),
+            easing: "ease",
+            fill: "forwards",
+          }
+        ).finished
+      );
 
       this.animating = false;
     }
@@ -260,21 +263,26 @@ export default class DModal extends Component {
     }
 
     const opacity = 1 - position / this.modalContainer.clientHeight;
-    backdrop.animate([{ opacity: Math.max(0, Math.min(opacity, 0.6)) }], {
-      fill: "forwards",
-    });
+
+    waitForPromise(
+      backdrop.animate([{ opacity: Math.max(0, Math.min(opacity, 0.6)) }], {
+        fill: "forwards",
+      }).finished
+    );
   }
 
   async #animateWrapperPosition(position) {
     this.#animateBackdropOpacity(position);
 
-    await this.modalContainer.animate(
-      [{ transform: `translateY(${position}px)` }],
-      {
-        fill: "forwards",
-        duration: getMaxAnimationTimeMs(),
-      }
-    ).finished;
+    await waitForPromise(
+      this.modalContainer.animate(
+        [{ transform: `translateY(${position}px)` }],
+        {
+          fill: "forwards",
+          duration: getMaxAnimationTimeMs(),
+        }
+      ).finished
+    );
   }
 
   async #animatePopOff() {
@@ -284,24 +292,26 @@ export default class DModal extends Component {
       return;
     }
 
-    await Promise.all([
-      this.modalContainer.animate(
-        [
-          { transform: "scale(1)", opacity: 1, offset: 0 },
-          { transform: "scale(0)", opacity: 0, offset: 1 },
-        ],
-        {
+    await waitForPromise(
+      Promise.all([
+        this.modalContainer.animate(
+          [
+            { transform: "scale(1)", opacity: 1, offset: 0 },
+            { transform: "scale(0)", opacity: 0, offset: 1 },
+          ],
+          {
+            fill: "forwards",
+            duration: getMaxAnimationTimeMs(300),
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          }
+        ).finished,
+        backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
           fill: "forwards",
           duration: getMaxAnimationTimeMs(300),
           easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-        }
-      ).finished,
-      backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
-        fill: "forwards",
-        duration: getMaxAnimationTimeMs(300),
-        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-      }).finished,
-    ]);
+        }).finished,
+      ])
+    );
   }
 
   <template>

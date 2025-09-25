@@ -742,6 +742,7 @@ he:
     review:
       show_more: "להציג יותר"
       show_less: "להציג פחות"
+      back_to_queue: "חזרה לתור"
       order_by: "סידור לפי"
       date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
@@ -1876,6 +1877,7 @@ he:
         in_progress: "(דוא״ל בשליחה)"
         error: "(שגיאה)"
         action: "שליחת דוא״ל לאיפוס סיסמה"
+        staged_user: "משתמשים מבוימים לא יכולים לקבל הודעות דוא״ל לאיפוס סיסמה."
         set_password: "הזן סיסמה"
         choose_new: "בחירת סיסמה חדשה"
         choose: "בחירת סיסמה"
@@ -2850,11 +2852,13 @@ he:
     welcome_banner_page_visibility:
       top_menu_pages: "עמודים מהתפריט העליון"
       homepage: "דף הבית"
+      discovery: "חשיפה"
       all_pages: "כל העמודים"
     composition_mode:
       markdown: "Markdown"
       rich: "טקסט עשיר"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2872,6 +2876,8 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
+      read_only: "לקריאה בלבד"
+      read_only_description: "הקטגוריה הזאת היא לקריאה בלבד כך שלא ניתן לבחור אותה לנושא הזה"
     timezone_input:
       ambiguous_ist: "IST אינו חד־משמעי, נא לבחור אזור זמן מסוים (למשל: אסיה/קולקטה)"
     select_kit:
@@ -2940,6 +2946,9 @@ he:
       confirm_publish: "לפרסם את הטיוטה הזו?"
       publishing: "נושא מתפרסם…"
     composer:
+      autocomplete:
+        username_missing: "תוצאת ההשלמה האוטומטית שנבחרה היא שם משתמש חסר."
+        name_missing: "תוצאת ההשלמה האוטומטית שנבחרה היא שם חסר."
       emoji: "אמוג׳י :)"
       more_emoji: "עוד…"
       options: "אפשרויות"
@@ -3092,7 +3101,15 @@ he:
       list_item: "פריט ברשימה"
       toggle_direction: "הפיכת כיוון"
       help: "עזרה בכתיבת Markdown"
+      collapse: "מזעור לוח העריכה"
+      open: "פתיחת לוח העריכה"
+      abandon: "סגירת העורך והשלכת הטיוטה"
+      enter_fullscreen: "כניסה לעריכה במסך מלא"
+      exit_fullscreen: "יציאה מעריכה במסך מלא"
       exit_fullscreen_prompt: "לחיצה על <kbd>ESC</kbd> תוציא אותך ממסך מלא"
+      show_toolbar: "הצגת סרגל עריכת הודעות"
+      hide_toolbar: "הסתרת סרגל עריכת הודעות"
+      peek_mode_toggle: "הפעלת/כיבוי מצב הצצה"
       modal_ok: "אישור"
       cant_send_pm: "אין לך אפשרות לשלוח הודעה אל %{username}, עמך הסליחה."
       create_message_error: "אירעה שגיאה ביצירת ההודעה הזאת, נא לנסות שוב, עמך הסליחה."
@@ -3524,6 +3541,7 @@ he:
     topics:
       new_messages_marker: "ביקור אחרון"
       bulk:
+        select: "בחירה במרוכז"
         confirm: "אישור"
         select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
@@ -3687,8 +3705,6 @@ he:
         many: "%{count} פוסטים בנושא"
         other: "%{count} פוסטים בנושא"
       create: "נושא חדש"
-      create_disabled_category: "אסור לך ליצור נושאים בקטגוריה הזאת"
-      create_disabled_tag: "אסור לך ליצור נושאים עם התגית הזאת"
       create_long: "יצירת נושא חדש"
       open_draft: "פתח טיוטה"
       private_message: "תחילת הודעה"
@@ -4980,6 +4996,7 @@ he:
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
     invalid_video_url: אי אפשר לנגן את הסרטון הזה כי הכתובת שגויה או לא זמינה.
     keyboard_shortcuts_help:
+      search_placeholder: "חיפוש אחר קיצור דרך לפי תיאור או צירוף מקשים."
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} או %{shortcut2}"
@@ -5168,7 +5185,7 @@ he:
         two: "בחירת %{count} תגיות מתוך ‚%{name}…"
         many: "בחירת %{count} תגיות מתוך ‚%{name}…"
         other: "בחירת %{count} תגיות מתוך ‚%{name}…"
-      info: "פרטים"
+      info: "הצגת פרטי תגית"
       default_info: "תגית זו אינה מוגבלת לקטגוריות כלשהן ואין לה מילים נרדפות."
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
@@ -5209,6 +5226,7 @@ he:
         many: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
         other: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
       edit_tag: "עריכת שם התגית ותיאורה"
+      edit: "עריכת התגית הזאת"
       description: "תיאור (1000 תווים לכל היותר)"
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
@@ -5729,6 +5747,10 @@ he:
             bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
             default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
+    content_localization:
+      toggle_localized:
+        translated: "העמוד מתורגם על ידי מכונה. יש ללחוץ כדי לצפות במקור."
+        not_translated: "העמוד לא מתורגם. נא ללחוץ כדי לתרגם."
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -6082,6 +6104,7 @@ he:
         overridden_value: "ערך שנדרס: %{value}"
         select_setting: "נא לבחור הגדרת אתר כדי לצפות בערכי ערכת העיצוב הנוכחיים"
         help: "ערכת הנושא בשימוש כרגע היא <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. יש לגשת אל <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>עמוד הגדרות ערכת העיצוב</a> כדי לשנות את הגדרות ערכת העיצוב של האתר או ללחוץ על ערכת עיצוב מקושרת בטבלה שלהלן כדי לערוך את ההגדרות שלה."
+        site_setting_warning: 'ההגדרה הזאת מנוהלת על ידי ערכת העיצוב כברירת המחדל של האתר שלך (%{defaultThemeName}). אפשר לשנות אותה דרך <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">עמוד עריכת ערכת העיצוב</a>.'
       search:
         modal_title: "חיפוש בכול הניהול"
         title: "חיפוש"
@@ -6157,6 +6180,7 @@ he:
           feature_tooltip:
             title_disabled: "התנסות ביכולת הזאת"
             title_enabled: "כיבוי היכולת"
+            content_disabled: "כדאי להתנסות ביכולת החדשה! אפשר להפסיק את ההתנסות בכל רגע נתון.<br/><br/>שינוי ההגדרה הזאת יפעיל את היכולת לכל המשתמשים."
             content_enabled: "שינוי מצב ההגדרה הזאת ישבית את היכולת לכל המשתמשים."
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
@@ -6791,9 +6815,10 @@ he:
           install: "התקנה"
           theme_site_settings:
             title: "הגדרות ערכת העיצוב של האתר"
+            description: "הגדרות שמעניקות לערכות העיצוב שליטה טובה יותר בחוויית האתר המלאה על ידי דריסה של סדרה מצומצמת של הגדרות ליבת האתר."
           themes:
             title: "תמות"
-            description: 'ערכות עיצוב של האתר שמשנות את המראה והתחושה הכלליים של האתר שלך לכל המשתמשים.'
+            description: "ערכות עיצוב של האתר שמשנות את המראה והתחושה הכלליים של האתר שלך לכל המשתמשים."
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             new_theme: "ערכת עיצוב חדשה"
             back: "חזרה לערכות עיצוב"
@@ -6861,6 +6886,8 @@ he:
             title: "אפשרויות צבע"
             toggle: "לבחירת המשתמש"
             toggle_description: "המשתמשים יכולים לבחור את ערכת הצבעים"
+            toggle_default_light_on_theme: "ערכת הצבעים היא ערכת הצבעים הבהירה כברירת מחדל בערכת העיצוב של האתר (%{themeName})"
+            toggle_default_dark_on_theme: "ערכת הצבעים היא ערכת הצבעים הכהה כברירת מחדל בערכת העיצוב של האתר (%{themeName})"
           colors:
             title: "צבעים"
           save_changes: "שמירת השינויים"
@@ -6951,6 +6978,7 @@ he:
             confirm: "להשמיד את הגיבוי הזה?"
           restore:
             is_disabled: "השחזור מושבת כעת. כדי להפעיל אותו, יש לגשת <a href='%{url}'>להגדרות האתר</a>."
+            is_disabled_title: "השחזור מושבת. כדי להפעיל אותו, יש לחפש את ‚לאפשר שחזור’ (allow restore) בהגדרות האתר."
             label: "שחזור"
             title: "שחזר את הגיבוי"
             confirm: "לשחזר את הגיבוי הזה?"
@@ -7238,6 +7266,8 @@ he:
         schema:
           title: "עריכת הגדרת %{name}"
           back_button: "חזרה אל %{name}"
+          move_up: "העלאה למעלה"
+          move_down: "הורדה למטה"
           fields:
             required: "*נדרש"
             groups:
@@ -7271,6 +7301,7 @@ he:
           select_base:
             title: "בחירת לוח צבעים בסיסי"
             description: "לוח בסיסי:"
+          non_default_theme_warning: "<a href='%{link}'>ההעדפות האישיות</a> שלך לערכת העיצוב שונות מברירת המחדל. השינויים שיבוצעו כאן עלולים שלא לחול עליך אך יחולו על כל משתמשי הגדרות ברירת המחדל (%{themeName})."
           light: "בהיר"
           dark: "כהה"
           title: "צבעים"
@@ -7613,6 +7644,7 @@ he:
             tag_group_change: "החלפת קבוצת תגיות"
             delete_associated_accounts: "מחיקת חשבונות משויכים"
             change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
+            stop_impersonating: "הפסקת התחזות"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -7804,6 +7836,7 @@ he:
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
         not_found: "לא ניתן למצוא את המשתמש הזה."
         invalid: "סליחה, אך אינך מורשה להתחזות למשתמש הזה."
+        error: "אופס, אירעה שגיאה בלתי צפויה."
       users:
         title: "משתמשים"
         description: "הצגת וניהול משתמשים."
@@ -8041,7 +8074,7 @@ he:
             cancel: "ביטול"
         merging_user: "המשתמש ממוזג…"
         merge_failed: "אירעה שגיאה במיזוג המשתמשים."
-        delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומפקחים."
+        delete_forbidden_because_staff: "אי אפשר למחוק מנהלים."
         delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיום %{count} לא ניתן למחוק.)"
@@ -8199,6 +8232,10 @@ he:
           title: "הצגה על כרטיס משתמש"
           enabled: "מופיע בכרטיס המשתמש"
           disabled: "לא מופיע בכרטיס המשתמש"
+        show_on_signup:
+          title: "הצגה בטופס ההרשמה"
+          enabled: "מופיע בטופס ההרשמה"
+          disabled: "לא מופיע בטופס ההרשמה"
         searchable:
           title: "זמין לחיפוש"
           enabled: "זמין לחיפוש"

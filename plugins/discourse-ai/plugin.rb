@@ -80,6 +80,7 @@ after_initialize do
   require_relative "discourse_automation/llm_report"
   require_relative "discourse_automation/llm_tool_triage"
   require_relative "discourse_automation/llm_persona_triage"
+  require_relative "discourse_automation/llm_tagger"
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
@@ -93,6 +94,7 @@ after_initialize do
     DiscourseAi::AiBot::EntryPoint.new,
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
+    DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus

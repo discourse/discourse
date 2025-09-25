@@ -43,7 +43,7 @@ export default class EmojiValueList extends Component {
       return;
     }
 
-    const item = this.collection.findBy("isEditing");
+    const item = this.collection.find((emoji) => emoji.isEditing);
     if (item) {
       setProperties(item, {
         value: code,

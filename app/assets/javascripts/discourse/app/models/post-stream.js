@@ -117,7 +117,7 @@ export default class PostStream extends RestModel {
       return false;
     }
 
-    return !!this.posts.findBy("post_number", 1);
+    return !!this.posts.find((item) => item.post_number === 1);
   }
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
@@ -134,7 +134,7 @@ export default class PostStream extends RestModel {
       return true;
     }
 
-    return !!this.posts.findBy("id", lastPostId);
+    return !!this.posts.find((item) => item.id === lastPostId);
   }
 
   /**
@@ -327,7 +327,9 @@ export default class PostStream extends RestModel {
   **/
   refresh(opts) {
     opts = opts || {};
-    opts.nearPost = parseInt(opts.nearPost, 10);
+    if (opts.nearPost) {
+      opts.nearPost = parseInt(opts.nearPost, 10);
+    }
 
     if (opts.cancelFilter) {
       this.cancelFilter();
@@ -340,7 +342,9 @@ export default class PostStream extends RestModel {
     if (opts.forceLoad) {
       this.set("loaded", false);
     } else {
-      const postWeWant = this.posts.findBy("post_number", opts.nearPost);
+      const postWeWant = this.posts.find(
+        (p) => p.post_number === opts.nearPost
+      );
       if (postWeWant) {
         return Promise.resolve().then(() => this._checkIfShouldShowRevisions());
       }
@@ -912,7 +916,7 @@ export default class PostStream extends RestModel {
     }
 
     return Promise.resolve().then(() => {
-      const firstPost = this.posts.findBy("post_number", 1);
+      const firstPost = this.posts.find((p) => p.post_number === 1);
       return firstPost.id;
     });
   }

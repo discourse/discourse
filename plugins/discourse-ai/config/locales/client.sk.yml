@@ -272,6 +272,12 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        progress_chart:
+          bar_done:
+            one: "jeden príspevok"
+            few: "%{count} príspevky"
+            many: "%{count} príspevkov"
+            other: "%{count} príspevkov"
       spam:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"

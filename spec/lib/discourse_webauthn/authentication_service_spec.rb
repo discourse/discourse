@@ -58,7 +58,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   let(:credential_id) do
     "mJAJ4CznTO0SuLkJbYwpgK75ao4KMNIPlU5KWM92nq39kRbXzI9mSv6GxTcsMYoiPgaouNw7b7zBiS4vsQaO6A=="
   end
-  let(:secure_session) { SecureSession.new("tester") }
+  let(:server_session) { ServerSession.new("tester") }
   let(:challenge) { "81d4acfbd69eafa8f02bc2ecbec5267be8c9b28c1e0ba306d52b79f0f13d" }
   let(:client_data_challenge) { Base64.strict_encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.get" }
@@ -92,7 +92,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   end
 
   let(:options) do
-    { session: secure_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
+    { session: server_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
   end
   let(:current_user) { Fabricate(:user) }
 
@@ -273,7 +273,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
 
   describe "authenticating passkeys" do
     let(:options) do
-      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: server_session }
     end
 
     ##

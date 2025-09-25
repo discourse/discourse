@@ -24,6 +24,11 @@ da:
     discourse_automation:
       triggerables:
         first_accepted_solution:
+          max_trust_level:
+            tl1: < TN1
+            tl2: < TN2
+            tl3: < TN3
+            tl4: < TN4
           fields:
             maximum_trust_level:
               label: Tillidsniveau

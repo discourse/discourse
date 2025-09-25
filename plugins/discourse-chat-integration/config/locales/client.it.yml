@@ -84,7 +84,6 @@ it:
               help: "es. #canale, @nomeutente."
           errors:
             action_prohibited: "Il bot non ha il permesso di pubblicare su quel canale"
-            channel_not_found: "Il canale specificato non esiste su Slack"
         telegram:
           title: "Telegram"
           param:

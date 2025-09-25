@@ -1,6 +1,7 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import RouteTemplate from "ember-route-template";
 import AceEditor from "discourse/components/ace-editor";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -229,6 +230,7 @@ export default RouteTemplate(
           {{/if}}
         {{else}}
           <DButton
+            {{didInsert @controller.runOnLoad}}
             @action={{@controller.run}}
             @icon="play"
             @label="explorer.run"

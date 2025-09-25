@@ -1322,7 +1322,7 @@ sl:
         invalid: "Uporabniško ime ni pravilno. Vsebuje lahko samo črke in številke. Preslednica in posebni znaki niso dovoljeni."
       add_email:
         title: "Dodaj e-naslov"
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Spremeni e-naslov"
         taken: "Ta e-naslov ni na voljo."
@@ -4588,7 +4588,6 @@ sl:
           confirmation:
             cancel: "Prekliči"
         merging_user: "Združujem uporabnika…"
-        delete_forbidden_because_staff: "Administratorjev in moderatorjev se ne da izbrisati."
         delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:
           one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"

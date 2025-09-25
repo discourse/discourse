@@ -84,7 +84,7 @@ pl_PL:
               help: "np. #kanał, @użytkownik."
           errors:
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
-            channel_not_found: "Ten kanał nie istnieje na Slacku"
+            channel_not_found: "Podany kanał nie istnieje w Slacku"
         telegram:
           title: "Telegram"
           param:

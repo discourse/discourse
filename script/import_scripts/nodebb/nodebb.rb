@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "../base"
-require_relative "./redis"
-require_relative "./mongo"
+require_relative "redis"
+require_relative "mongo"
 
 class ImportScripts::NodeBB < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER

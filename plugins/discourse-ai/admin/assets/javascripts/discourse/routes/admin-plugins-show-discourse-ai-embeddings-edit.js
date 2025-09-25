@@ -6,7 +6,7 @@ export default class AdminPluginsShowDiscourseAiEmbeddingsEdit extends Discourse
       "adminPlugins.show.discourse-ai-embeddings"
     );
     const id = parseInt(params.id, 10);
-    const record = allEmbeddings.findBy("id", id);
+    const record = allEmbeddings.find((item) => item.id === id);
     record.provider_params = record.provider_params || {};
     return record;
   }

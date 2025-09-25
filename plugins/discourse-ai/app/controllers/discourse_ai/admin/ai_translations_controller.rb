@@ -9,37 +9,42 @@ module DiscourseAi
         supported_locales =
           SiteSetting.content_localization_supported_locales.presence&.split("|") || []
 
+        if supported_locales.empty?
+          return(
+            render json:
+                     base_result.merge(
+                       { translation_progress: [], total: 0, posts_with_detected_locale: 0 },
+                     )
+          )
+        end
+
+        candidates = DiscourseAi::Translation::PostCandidates
+
         result =
           supported_locales.map do |locale|
-            completion_data =
-              DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-
-            total = completion_data[:total].to_f
-            done = completion_data[:done].to_f
-            remaining = total - done
-
-            completion_percentage = safe_percentage(done, total)
-            remaining_percentage = safe_percentage(remaining, total)
-
-            {
-              locale: locale,
-              completion_percentage: completion_percentage,
-              remaining_percentage: remaining_percentage,
-            }
+            candidates.get_completion_per_locale(locale) in { total:, done: }
+            { locale:, total:, done: }
           end
 
-        render json: {
-                 translation_progress: result,
-                 translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
-                 enabled: DiscourseAi::Translation.backfill_enabled?,
-               }
+        candidates.get_total_and_with_locale_count in { total:, posts_with_detected_locale: }
+
+        render json:
+                 base_result.merge(
+                   { translation_progress: result, total:, posts_with_detected_locale: },
+                 )
       end
 
       private
 
-      def safe_percentage(part, total)
-        return 0.0 if total <= 0
-        (part / total) * 100
+      def base_result
+        {
+          translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
+          # the progress chart will be empty if max_age_days is 0
+          enabled:
+            DiscourseAi::Translation.enabled? &&
+              SiteSetting.ai_translation_backfill_max_age_days > 0,
+          backfill_enabled: DiscourseAi::Translation.backfill_enabled?,
+        }
       end
     end
   end

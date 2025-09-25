@@ -24,9 +24,9 @@
     box-sizing: border-box;
     position: relative;
     padding: var(--space-6) 0 3em;
-    border-radius: var(--d-border-radius);
 
     .--with-bg-img & {
+      border-radius: var(--d-border-radius);
       padding-inline: var(--space-4);
       background-size: cover;
       background-position: center;

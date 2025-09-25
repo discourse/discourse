@@ -327,7 +327,7 @@ ro:
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search: "Caută"
     impersonation:
-      notice: "Preia identitatea utilizatorului %{username}"
+      notice: "Preiei identitatea utilizatorului %{username}"
       stop: "Oprește preluarea identității"
     themes:
       default_description: "Implicit"
@@ -1550,7 +1550,7 @@ ro:
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       add_email:
         title: "Adaugă e-mail"
-        add: "adaugă"
+        add: "Adaugă"
       change_email:
         title: "Schimbă e-mail"
         taken: "Această adresă există deja în baza de date."
@@ -2579,7 +2579,6 @@ ro:
         few: "%{count} postări în subiect"
         other: "%{count} de postări în subiect"
       create: "Subiect nou"
-      create_disabled_tag: "Nu ai voie să creezi subiecte cu această etichetă"
       create_long: "Creează un subiect nou"
       open_draft: "Deschide schiță"
       private_message: "Scrie un mesaj."
@@ -3117,6 +3116,10 @@ ro:
         add: "Adaugă locală nouă"
         remove: "Elimină"
         hint: "Momentan nu există localizări pentru această categorie. Dă clic pe „Adaugă locală nouă” pentru a începe să adaugi localizări."
+      tags_allowed_tags: "Restricționează aceste etichete la categoria „%{categoryName}”:"
+      tags_allowed_tags_new_category: "Restricționează aceste etichete la această categorie:"
+      tags_allowed_tag_groups: "Restricționează aceste grupuri de etichete la categoria „%{categoryName}”:"
+      tags_allowed_tag_groups_new_category: "Restricționează aceste grupuri de etichete la această categorie:"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
       required_tag_group:
@@ -4286,6 +4289,7 @@ ro:
         show_details: Detalii
         description: Descriere
         user_mode: Nivel utilizator
+        impersonate_all_users: Preia identitatea oricărui utilizator
         single_user: "Utilizator unic"
         save: Salvează
         delete: Șterge definitiv
@@ -4697,6 +4701,7 @@ ro:
           user_selectable: "Tema poate fi aleasă de către utilizatori"
           user_selectable_badge_label: "Selectabilă de către utilizator"
           user_selectable_button_label: "Permite utilizatorilor să selecteze"
+          user_selectable_unavailable_button_label: "Nu permite utilizatorilor să selecteze"
           broken_badge_label: "Temă stricată"
           color_scheme_user_selectable: "Paleta de culori poate fi selectată de utilizatori"
           dark_color_scheme: "Paletă de culori întunecate"
@@ -4748,6 +4753,8 @@ ro:
         schema:
           title: "Editează setarea %{name}"
           back_button: "Înapoi la %{name}"
+          move_up: "Mută sus"
+          move_down: "Mută jos"
           fields:
             required: "*obligatoriu"
             groups:
@@ -4790,6 +4797,8 @@ ro:
             no_results: "Nu am găsit palete de culori"
           default_light_badge:
             reset: "Resetează filtre"
+          default_dark_badge:
+            title: "Paletă implicită de culori întunecate"
           system_palette: "Aceasta este o paletă de culori încorporată, nu poate fi editată sau ștearsă."
           back_to_colors: "Înapoi la paletele de culori"
           long_title: "Paletă de culori"
@@ -4957,7 +4966,7 @@ ro:
             delete_topic: "șterge subiectul"
             recover_topic: "recuperează discuția"
             delete_post: "șterge postarea"
-            impersonate: "joacă rolul utilizatorului"
+            impersonate: "preia identitatea"
             anonymize_user: "transformă în utilizator anonim"
             roll_up: "consolidează blocurile de IP"
             change_category_settings: "schimbă setările categoriei"
@@ -4989,6 +4998,7 @@ ro:
             tag_group_destroy: "șterge etichetă grup"
             tag_group_change: "schimbă etichetă grup"
             delete_associated_accounts: "șterge conturile asociate"
+            stop_impersonating: "oprește preluarea identității"
         screened_emails:
           description: "Când cineva încearcă să creeze un cont nou, următorul email va fi verificat iar înregistrarea va fi blocată, sau o altă acțiune va fi inițiată."
           email: "Adresă email"
@@ -5086,10 +5096,10 @@ ro:
             type:
               key: "tip"
       impersonate:
-        title: "Joacă rolul utilizatorului"
-        help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
+        title: "Preia identitatea"
+        help: "Folosește această unealtă pentru a prelua identitatea unui cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
-        invalid: "Ne pare rău, nu poți prelua acest rol."
+        invalid: "Scuze, nu poți prelua această identitate."
         error: "Hopa. A apărut o eroare neașteptată."
       users:
         title: "Utilizatori"
@@ -5221,7 +5231,7 @@ ro:
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
-        delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
+        delete_forbidden_because_staff: "Administratorii nu pot fi șterși."
         delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
@@ -5437,6 +5447,9 @@ ro:
           add_document_types: "Documente"
           add_types_title: "Permite extensiile %{types}"
           add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
+        job_status:
+          completed: "Actualizare completă"
+          enqueued: "Actualizare în curs"
       badges:
         status: Stare
         title: Insigne

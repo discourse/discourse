@@ -12,7 +12,7 @@
 require "php_serialize"
 require "miro"
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::DiscuzX < ImportScripts::Base
   DISCUZX_DB = "ultrax"

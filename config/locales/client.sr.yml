@@ -1369,7 +1369,7 @@ sr:
         taken: "Žao nam je, to je ime zauzeto."
         invalid: "Korisničko ime je nevažeće. Može sadržati samo slova i brojeve."
       add_email:
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Promeni e-mail"
         taken: "Žao nam je, taj e-mail nije dostupan"
@@ -3229,7 +3229,6 @@ sr:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"

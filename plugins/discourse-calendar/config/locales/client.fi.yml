@@ -7,11 +7,9 @@
 fi:
   admin_js:
     admin:
-      calendar: "Kalenteri"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Discourse Calendar"
   js:
     notifications:
       titles:

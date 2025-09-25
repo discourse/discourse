@@ -1001,7 +1001,7 @@ et:
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       add_email:
         title: "Lisa meiliaadress"
-        add: "lisa"
+        add: "isa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -3594,7 +3594,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_forbidden_because_staff: "Adminne ja moderaatoreid ei saa kustutada."
         delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"

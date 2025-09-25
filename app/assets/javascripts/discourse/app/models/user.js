@@ -384,7 +384,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = details?.allowed_groups;
 
     // directly targeted so go to inbox
-    if (!groups || allowedUsers?.findBy("id", this.id)) {
+    if (!groups || allowedUsers?.find((user) => user.id === this.id)) {
       return userPath(`${username}/messages`);
     } else if (groups) {
       const firstAllowedGroup = groups.find((allowedGroup) =>
@@ -425,9 +425,8 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("trust_level")
   trustLevel(trustLevel) {
-    return Site.currentProp("trustLevels").findBy(
-      "id",
-      parseInt(trustLevel, 10)
+    return Site.currentProp("trustLevels").find(
+      (l) => l.id === parseInt(trustLevel, 10)
     );
   }
 

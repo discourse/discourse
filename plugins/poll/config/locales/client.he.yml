@@ -12,6 +12,8 @@ he:
           poll: "סקר של Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "אפשר להוסיף או להסיר אפשרויות."
       voters:
         one: "מצביע"
         two: "מצביעים"
@@ -164,6 +166,8 @@ he:
           step: צעד
         poll_public:
           label: להציג מי המצביעים
+        poll_dynamic:
+          label: לאפשר הוספת או הסרת אפשרויות לאחר פרסום
         poll_title:
           label: כותרת (רשות)
         poll_options:

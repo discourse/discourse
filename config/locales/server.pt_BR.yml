@@ -1654,7 +1654,6 @@ pt_BR:
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
     download_remote_images_to_local: "Converta imagens remotas (hotlinked) em locais baixando-as. Isso preserva o conteúdo mesmo que estas sejam removidas do site remoto no futuro."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
-    disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     block_hotlinked_media: "Impedir que os usuários introduzam mídia remota (hotlinked) em suas publicações. A mídia remota que não for baixada via 'download_remote_images_to_local' será substituída por um link de espaço reservado."
     block_hotlinked_media_exceptions: "Uma lista de URLs de base, isentos da configuração block_hotlinked_media. Inclua o protocolo (por exemplo, https://example.com)."
     editing_grace_period: "Durante (n) segundos após a postagem, as edições não criarão uma nova versão no histórico da postagem."
@@ -1705,7 +1704,6 @@ pt_BR:
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
     x_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura, não pode ser .svg). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image, desde que também não sejam um .svg."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
-    email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
     enforce_second_factor: "Exija que os(as) usuários(as) ativem autenticação de dois fatores antes de acessarem a IU do Discourse. Esta configuração não afeta a autenticação por API ou \"DiscourseConnect provider\". Se enforce_second_factor_on_external_auth estiver ativado, os(as) usuários(as) não poderão fazer login com provedores de autenticação externos após a configuração da autenticação de dois fatores."
@@ -1820,8 +1818,6 @@ pt_BR:
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
     hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem ser postagens ocultas."
     allow_index_in_robots_txt: "Especifique no robots.txt que este site tem permissão para ser indexado por mecanismos de pesquisa da web. Você pode <a href='%{base_path}/admin/customize/robots'>substituir seu robots.txt aqui.</a> <b>WARNING</b>: regras configuradas incorretamente poderão impedir que seu site seja rastreado como o esperado."
-    blocked_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários não têm permissão para registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. Exemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não são permitidos(as)!"
     normalize_emails: "Verifique se o e-mail normalizado é único. E-mails normalizados removem todos os pontos do nome do(a) usuário(a) e tudo entre os símbolos + e @."
     auto_approve_email_domains: "Usuários(as) com endereços de e-mail desta lista de domínios serão aprovados automaticamente. Subdomínios são tratados automaticamente para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis."
     hide_email_address_taken: "Não informe ao(as) usuários(as) que uma conta existe com um determinado endereço de e-mail durante o cadastro ou processo de recuperação de senha. Exija o e-mail completo para solicitações de \"senha esquecida\"."
@@ -2237,7 +2233,6 @@ pt_BR:
     clean_up_unused_staged_users_after_days: "Quantidade de dias antes de um(a) usuário(a) encenado(a) não usado(a) (sem nenhuma postagem) ser removido(a). Para desativar a limpeza, defina para 0."
     user_selected_primary_groups: "Permitir que os(as) usuários(as) definam seu próprio grupo primário"
     max_notifications_per_user: "Quantidade máxima de notificações por usuário(a). Se esse número for excedido, as notificações antigas serão excluídas. Aplicado semanalmente."
-    allowed_user_website_domains: "O site do(a) usuário(a) será verificado em comparação a estes domínios. Lista delimitada por barras."
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
     get_a_room_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado(a)."
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
@@ -2476,7 +2471,6 @@ pt_BR:
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
     content_localization_allowed_groups: "Grupos com permissão para enviar conteúdo localizado. Requer \"content localization enabled\"."
-    content_localization_anon_language_switcher: "Ative o seletor de idioma para que os visitantes do site que não tiverem feito login possam alternar entre as versões traduzidas do Discourse e do conteúdo fornecido pelo(a) usuário(a). Depende da lista de idiomas definida em \"locais compatíveis com localização de conteúdo\"."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"
@@ -2548,7 +2542,6 @@ pt_BR:
       invalid_uncategorized_category_setting: 'A categoria "Não categorizado" não pode ser selecionada se "permitir tópicos não categorizados" não estiver ativado.'
       invalid_search_ranking_weights: "O valor é inválido para a configuração do site search_ranking_weights. Exemplo: '{0.1,0.2,0.3,1.0}'. Observe que o valor máximo para cada peso é 1,0."
       content_localization_locale_limit: "A quantidade de locais compatíveis não pode exceder %{max}."
-      content_localization_anon_language_switcher_requirements: "É preciso ativar a configuração do site \"set locale from cookie\" para usar o seletor de idioma e \"content localization supported locales\" para ter pelo menos um idioma."
       mediaconvert_role_arn_required: "A função ARN da AWS IAM é obrigatória ao usar o AWS MediaConvert para a conversão de vídeo."
       s3_credentials_required_for_video_conversion: "As credenciais S3 são obrigatórias para a conversão de vídeo. Configure as chaves de acesso S3 ou ative o perfil IAM."
     keywords:

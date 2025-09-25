@@ -102,6 +102,13 @@ module DiscourseAi
                       input_cost: 0.075,
                       output_cost: 0.30,
                     },
+                    {
+                      name: "gemini-2.5-flash-image-preview",
+                      tokens: 800_000,
+                      endpoint:
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview",
+                      display_name: "Gemini 2.5 Flash Image",
+                    },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
                   provider: "google",

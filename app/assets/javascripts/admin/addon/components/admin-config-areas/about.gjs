@@ -63,7 +63,7 @@ export default class AdminConfigAreasAbout extends Component {
   }
 
   #lookupSettingFromData(name) {
-    return this.args.data.findBy("setting", name);
+    return this.args.data.find((value) => value.setting === name);
   }
 
   <template>

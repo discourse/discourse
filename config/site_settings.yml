@@ -564,18 +564,6 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
-  floatkit_autocomplete_composer:
-    client: true
-    default: true
-    area: "interface"
-  floatkit_autocomplete_input_fields:
-    client: true
-    default: true
-    area: "interface"
-  floatkit_autocomplete_chat_composer:
-    client: true
-    default: true
-    area: "interface"
 
 login:
   invite_only:
@@ -609,7 +597,6 @@ login:
     default: true
   enable_discourse_id:
     default: false
-    hidden: true
     validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
@@ -708,6 +695,7 @@ login:
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_overrides_avatar: false
   auth_require_interaction: true
   enable_discourse_connect:
     client: true
@@ -3640,10 +3628,16 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
     client: true
+
+  max_topic_query_page_param:
+    default: 2000
+    min: 100
+    hidden: true
 
   create_revision_on_bulk_topic_moves:
     default: true
@@ -3676,19 +3670,22 @@ uncategorized:
     default: true
     themeable: true
     area: "interface"
-
   welcome_banner_image:
     client: true
     default: ""
     type: upload
     area: "interface"
-
+  welcome_banner_text_color:
+    client: true
+    type: color
+    default: ""
+    validator: "CssColorWithBlankValidator"
+    area: "interface"
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
     default: "above_topic_content"
     area: "interface"
-
   welcome_banner_page_visibility:
     client: true
     enum: "WelcomeBannerPageVisibility"

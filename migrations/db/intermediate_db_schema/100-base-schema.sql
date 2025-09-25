@@ -191,6 +191,17 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE user_associated_accounts
+(
+    provider_name TEXT      NOT NULL,
+    user_id       NUMERIC,
+    created_at    DATETIME,
+    info          JSON_TEXT,
+    last_used     DATETIME,
+    provider_uid  TEXT      NOT NULL,
+    PRIMARY KEY (user_id, provider_name)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -222,6 +233,7 @@ CREATE TABLE user_fields
     requirement       INTEGER,
     searchable        BOOLEAN,
     show_on_profile   BOOLEAN,
+    show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
 

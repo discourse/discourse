@@ -46,6 +46,13 @@ be:
           name: "Пошук"
         spam:
           name: "Спам"
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
       spam:
         short_title: "Спам"
         enable: "Уключыць"

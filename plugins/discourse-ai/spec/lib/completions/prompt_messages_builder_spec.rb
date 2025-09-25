@@ -532,6 +532,63 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
+    it "handles uploads correctly in topic style messages (and times)" do
+      freeze_time 1.month.ago
+
+      # Use Discourse's upload format in the post raw content
+      upload_markdown = "![test1|658x372](#{image_upload1.short_url})"
+
+      post1 =
+        Fabricate(
+          :post,
+          topic: pm,
+          user: admin,
+          raw: "This is the original #{upload_markdown} I just added",
+        )
+
+      UploadReference.create!(target: post1, upload: image_upload1)
+
+      long_title = "A" * 40
+      upload2_markdown = "![#{long_title}|658x372](#{image_upload2.short_url})"
+
+      freeze_time 1.month.from_now
+
+      post2_with_upload =
+        Fabricate(
+          :post,
+          topic: pm,
+          user: admin,
+          raw: "This post has a different image #{upload2_markdown} I just added",
+        )
+
+      UploadReference.create!(target: post2_with_upload, upload: image_upload2)
+
+      messages =
+        described_class.messages_from_post(
+          post2_with_upload,
+          style: :topic,
+          max_posts: 3,
+          bot_usernames: [bot_user.username],
+          include_uploads: true,
+        )
+
+      expect(messages.length).to eq(1)
+      content = messages[0][:content]
+
+      upload_hashes = content.select { |c| c.is_a?(Hash) }
+      expect(upload_hashes).to include(
+        { upload_id: image_upload1.id },
+        { upload_id: image_upload2.id },
+      )
+
+      text = content.select { |c| c.is_a?(String) }.join(" ")
+
+      expect(text).to include("This is the original")
+      expect(text).to include("(1 month ago)")
+      expect(text).to include("#{upload_markdown}")
+      expect(text).to include("#{upload2_markdown}")
+    end
+
     it "only include regular posts" do
       first_post.update!(post_type: Post.types[:whisper])
 

@@ -52,6 +52,11 @@ et:
           name: "Spämm"
       modals:
         select_option: "Vali võimalus..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
       spam:
         short_title: "Spämm"
         enable: "Luba"

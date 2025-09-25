@@ -2,7 +2,8 @@ import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import $ from "jquery";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
+import deprecated from "discourse/lib/deprecated";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -20,6 +21,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
 
 const ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
 let _autoCompletePopper, _inputTimeout;
+let skipDeprecationWarningInTests = false;
 
 const keys = {
   backSpace: 8,
@@ -47,7 +49,35 @@ const keys = {
   z: 90,
 };
 
+/**
+ * Disables deprecation warning output during QUnit tests.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ */
+export function disableDeprecationWarningInTests() {
+  skipDeprecationWarningInTests = true;
+}
+
+/**
+ * Enables deprecation warning output during QUnit tests.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ */
+export function enableDeprecationWarningInTests() {
+  skipDeprecationWarningInTests = false;
+}
+
 export default function (options) {
+  if (!isTesting() || !skipDeprecationWarningInTests) {
+    deprecated(
+      "$.fn.autocomplete is deprecated and will be removed in a future release. Please use the DMultiSelect component or the DAutocomplete modifier instead.",
+      {
+        id: "discourse.jquery-autocomplete",
+        since: "3.6.0.beta1-dev",
+      }
+    );
+  }
+
   if (this.length === 0) {
     return;
   }
@@ -178,7 +208,7 @@ export default function (options) {
 
     const divs = transformed.map((itm) => {
       let d = $(
-        `<div class='item'><span>${itm}<a class='remove' href>${iconHTML(
+        `<div class="item"><span>${itm}<a class="remove" href>${iconHTML(
           "xmark"
         )}</a></span></div>`
       );

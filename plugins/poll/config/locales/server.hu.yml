@@ -41,6 +41,8 @@ hu:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "%{minutes} perc után nem lehet módosítani a szavazást."
       cannot_edit_named_poll_with_votes: "Az első %{minutes} perc után nem módosíthatja a(z) <strong>${name}</strong> szavazás nevét."
+    dynamic_poll:
+      enabled_hint: "Az opciók hozzáadhatók vagy eltávolíthatók."
     no_poll_with_this_name: "Ehhez a bejegyzéshez nem tartozik <strong>%{name}</strong> nevű szavazás."
     post_is_deleted: "Nem végezhet műveletet törölt bejegyzésen."
     user_cant_post_in_topic: "Nem szavazhat, mert nem tehet bejegyzést ebben a témában."

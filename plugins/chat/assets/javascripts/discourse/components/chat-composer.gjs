@@ -10,7 +10,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import $ from "jquery";
 import {
   emojiSearch,
   isSkinTonableEmoji,
@@ -121,11 +120,6 @@ export default class ChatComposer extends Component {
   }
 
   applyAutocomplete(textarea, options) {
-    if (!this.siteSettings.floatkit_autocomplete_composer) {
-      const $textarea = $(textarea);
-      return $textarea.autocomplete(options);
-    }
-
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
     return DAutocompleteModifier.setupAutocomplete(
       getOwner(this),
@@ -561,11 +555,6 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          if (!this.siteSettings.floatkit_autocomplete_chat_composer) {
-            const $textarea = $(textarea);
-            $textarea.autocomplete({ cancel: true });
-          }
-
           const menuOptions = {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../support/assign_allowed_group"
-require_relative "../fabricators/assign_hook_fabricator.rb"
+require_relative "../fabricators/assign_hook_fabricator"
 
 describe "integration tests" do
   before { SiteSetting.assign_enabled = true }

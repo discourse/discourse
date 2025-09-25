@@ -7,11 +7,9 @@
 cs:
   admin_js:
     admin:
-      calendar: "Kalendář"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
-          discourse_calendar: "Kalendář Discourse"
   js:
     notifications:
       titles:
@@ -44,6 +42,7 @@ cs:
         title: "Region"
         none: "Žádná"
         use_current_region: "Použít současný region"
+        select_region: "Vyberte region…"
         names:
           ae: "Spojené arabské emiráty"
           ar: "Argentina"
@@ -423,6 +422,7 @@ cs:
         event:
           expired: "Platnost vypršela"
           closed: "Zavřené"
+          full: "Obsazeno"
           status:
             standalone:
               title: "Samostatná"
@@ -480,6 +480,9 @@ cs:
         minimal:
           label: "Mini-událost"
           checkbox_label: "Skrýt tlačítka Zúčastním/Nuzúčastním a stav pozvaných osob"
+        max_attendees:
+          label: "Maximální počet účastníků"
+          placeholder: "Bez omezení"
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"

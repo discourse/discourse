@@ -61,7 +61,6 @@ ja:
     calendar_automatic_holidays_enabled: "ユーザーの地域に基づいて休暇ステータスを自動的に設定します (注意: 特定の自動休暇はプラグインの設定で無効にできます)"
     event_participation_buttons: "ユーザーが使用できるイベント参加ボタンのリスト。"
     sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
-    include_expired_events_on_calendar: "カテゴリカレンダーと今後のイベントビューに過去/期限切れのイベントを含める。"
   discourse_calendar:
     invite_user_notification: "%{username} があなたを招待しました: %{description}"
     calendar_must_be_in_first_post: "Calendar タグは、トピックの最初の投稿でのみ使用できます。"

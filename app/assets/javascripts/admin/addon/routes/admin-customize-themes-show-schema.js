@@ -3,7 +3,9 @@ import Route from "@ember/routing/route";
 export default class AdminCustomizeThemesShowSchemaRoute extends Route {
   async model(params) {
     const theme = this.modelFor("adminCustomizeThemesShow");
-    const setting = theme.settings.findBy("setting", params.setting_name);
+    const setting = theme.settings.find(
+      (value) => value.setting === params.setting_name
+    );
 
     await setting.loadMetadata(theme.id);
 

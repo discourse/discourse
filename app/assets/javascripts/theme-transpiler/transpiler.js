@@ -3,8 +3,13 @@ import "./postcss";
 import "./theme-rollup";
 import { transform as babelTransform } from "@babel/standalone";
 import DecoratorTransforms from "decorator-transforms";
+import EMBER_PACKAGE from "ember-source/package.json";
 import { minify as terserMinify } from "terser";
 import { browsers } from "../discourse/config/targets";
+
+globalThis.emberVersion = function () {
+  return EMBER_PACKAGE.version;
+};
 
 globalThis.transpile = function (source, options = {}) {
   const { moduleId, filename, skipModule, generateMap } = options;

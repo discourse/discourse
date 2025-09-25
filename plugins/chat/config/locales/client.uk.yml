@@ -822,6 +822,9 @@ uk:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Почати нове особисте повідомлення
+        title: Створити особистий чат
       panels:
         chat:
           label: "Чат"

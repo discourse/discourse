@@ -54,9 +54,10 @@ function initializeDiscourseReactions(api) {
             value: this.siteSettings.discourse_reactions_reaction_for_like,
           });
         } else {
-          const mainEmoji = this.collection.findBy(
-            "value",
-            this.siteSettings.discourse_reactions_reaction_for_like
+          const mainEmoji = this.collection.find(
+            (item) =>
+              item.value ===
+              this.siteSettings.discourse_reactions_reaction_for_like
           );
 
           if (mainEmoji) {

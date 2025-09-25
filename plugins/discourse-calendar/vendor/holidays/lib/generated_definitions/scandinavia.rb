@@ -18,7 +18,7 @@ module Holidays
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => -2, :name => "Langfredag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :name => "Påskedag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 1, :name => "2. påskedag", :regions => [:dk]},
-            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 26, :name => "Store Bededag", :regions => [:dk]},
+            {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 26, :year_ranges => { :until => 2024 },:name => "Store Bededag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 39, :name => "Kristi Himmelfartsdag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 49, :name => "Pinsedag", :regions => [:dk]},
             {:function => "easter(year)", :function_arguments => [:year], :function_modifier => 50, :name => "2. Pinsedag", :regions => [:dk]},

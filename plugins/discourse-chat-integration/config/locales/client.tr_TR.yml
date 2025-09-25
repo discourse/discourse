@@ -84,7 +84,6 @@ tr_TR:
               help: "ör. #kanal, @kullanıcıadı."
           errors:
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
-            channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
         telegram:
           title: "Telegram"
           param:

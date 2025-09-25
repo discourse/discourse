@@ -742,6 +742,7 @@ cs:
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"
+      back_to_queue: "Zpět do fronty"
       order_by: "Seřadit podle"
       date_filter: "Publikováno mezi"
       in_reply_to: "v odpovědi na"
@@ -1878,6 +1879,7 @@ cs:
         in_progress: "(odesílám)"
         error: "(chyba)"
         action: "Odeslat email na obnovu hesla"
+        staged_user: "Předběžně založení uživatelé nemohou přijímat e-maily pro obnovení hesla."
         set_password: "Nastavit heslo"
         choose_new: "Zvolte si nové heslo"
         choose: "Vyber si heslo"
@@ -2885,6 +2887,8 @@ cs:
         few: "%{count} témata v této kategorii"
         many: "%{count} témat v této kategorii"
         other: "%{count} témat v této kategorii"
+      read_only: "pouze pro čtení"
+      read_only_description: "Tato kategorie je pouze pro čtení, takže si ji pro toto téma nemůžete vybrat."
     timezone_input:
       ambiguous_ist: "Časový pásmo IST je nejednoznačné, vyberte prosím konkrétní časové pásmo (např. Asie/Kalkata)"
     select_kit:
@@ -3050,7 +3054,9 @@ cs:
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
       title: "Nebo stiskněte %{modifier}Enter"
+      save_and_close: "Uložit a zavřít"
       discard: "Zrušit"
+      draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
       title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
@@ -3106,7 +3112,15 @@ cs:
       list_item: "Položka seznamu"
       toggle_direction: "Přepnout směr"
       help: "Nápověda pro Markdown"
+      collapse: "Minimalizovat panel editoru"
+      open: "Otevřít panel editoru"
+      abandon: "Zavřít editor a zahodit koncept"
+      enter_fullscreen: "Otevřít editor na celou obrazovku"
+      exit_fullscreen: "Ukončit režim celé obrazovky editoru"
       exit_fullscreen_prompt: "Stiskněte <kbd>ESC</kbd> pro ukončení celé obrazovky"
+      show_toolbar: "Zobrazit panel nástrojů editoru"
+      hide_toolbar: "Skrýt panel nástrojů editoru"
+      peek_mode_toggle: "Přepnout režim náhledu"
       modal_ok: "OK"
       cant_send_pm: "Bohužel, nemůžete poslat zprávu uživateli %{username}."
       create_message_error: "Omlouváme se, při vytváření této zprávy došlo k chybě. Zkuste to prosím znovu."
@@ -3539,6 +3553,7 @@ cs:
     topics:
       new_messages_marker: "poslední návštěva"
       bulk:
+        select: "Hromadný výběr"
         confirm: "Potvrdit"
         select_all: "Vybrat vše"
         clear_all: "Zrušit vše"
@@ -3702,8 +3717,6 @@ cs:
         many: "%{count} příspěvků v tématu"
         other: "%{count} příspěvků v tématu"
       create: "Nové téma"
-      create_disabled_category: "V této kategorii nemáte povoleno vytvářet témata"
-      create_disabled_tag: "Nemáte povoleno vytvářet témata s tímto štítkem"
       create_long: "Vytvořit nové téma"
       open_draft: "Otevřít koncept"
       private_message: "Vytvořit zprávu"
@@ -3865,7 +3878,7 @@ cs:
         title: "Automaticky zavřít téma"
         label: "Automaticky zavřít téma po:"
         error: "Prosím zadejte platnou hodnotu."
-        based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
+        based_on_last_post: "Neuzavírat téma, dokud poslední příspěvek v tomto tématu není alespoň takto starý."
       auto_close_after_last_post:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
@@ -4292,6 +4305,7 @@ cs:
           edit: "Upravit"
           delete: "Smazat"
         add: "Přidat nový překlad"
+        manage: "Správa překladů (%{count} existujících)"
         view:
           one: "Zobrazit %{count} překlad"
           few: "Zobrazit %{count} překlady"
@@ -5198,7 +5212,7 @@ cs:
         few: "vyberte %{count} štítky z '%{name}'..."
         many: "vyberte %{count} štítků z '%{name}'..."
         other: "vyberte %{count} štítků z '%{name}'..."
-      info: "Informace"
+      info: "Zobrazit informace o štítku"
       default_info: "Tento štítek není omezen na žádné kategorie a nemá žádná synonyma."
       staff_info: "Chcete-li přidat omezení, vložte tento štítek do <a href=%{basePath}/tag_groups>skupiny štítků</a>."
       category_restricted: "Tento štítek je omezen na kategorie, ke kterým nemáte oprávnění k přístupu."
@@ -5239,6 +5253,7 @@ cs:
         many: "Jeho %{count} synonym bude také smazáno."
         other: "Jeho %{count} synonym bude také smazáno."
       edit_tag: "Upravit název a popis štítku"
+      edit: "Upravit tento štítek"
       description: "Popis (max. 1000 znaků)"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
@@ -6123,6 +6138,7 @@ cs:
         help: "Motiv, který právě používáte, je <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Přejděte na <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>stránku konfigurace motivu</a> a změňte nastavení webu motivem nebo klikněte na odkazovaný motiv v tabulce níže a upravte jeho nastavení."
         filter: "Filtrujte nastavení motivu pomocí názvu nastavení, popisu nebo názvu motivu..."
         filter_no_results: "Vašemu filtru neodpovídá žádné nastavení"
+        site_setting_warning: 'Toto nastavení je spravováno výchozím motivem vašeho webu (%{defaultThemeName}). Můžete jej upravit na <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">stránce úprav motivu</a>.'
       search:
         modal_title: "Hledat vše v administraci"
         title: "Vyhledat"
@@ -6837,7 +6853,7 @@ cs:
             description: "Nastavení, která umožňují motivům mít větší kontrolu nad celým webem přepsáním malé podmnožiny základních nastavení."
           themes:
             title: "Motivy"
-            description: 'Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele.'
+            description: "Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele."
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
             back: "Zpět na motivy"
@@ -6903,8 +6919,10 @@ cs:
           delete: "Smazat"
           color_options:
             title: "Možnosti barev"
-            toggle: "Volitelný uživatelem"
+            toggle: "Volitelná uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
+            toggle_default_light_on_theme: "Paleta barev je výchozí světlou paletou ve výchozím motivu (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta barev je výchozí tmavou paletou ve výchozím motivu (%{themeName})"
           colors:
             title: "Barvy"
           save_changes: "Uložit změny"
@@ -6995,6 +7013,7 @@ cs:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Obnovení je aktuálně zakázáno. Chcete-li jej povolit, navštivte <a href='%{url}'>nastavení webu</a>."
+            is_disabled_title: "Obnovení je momentálně zakázáno. Chcete-li ho povolit, vyhledejte v nastavení webu „allow restore“."
             label: "Obnovit"
             title: "Obnovit zálohu"
             confirm: "Opravdu chcete obnovit tuto zálohu?"
@@ -7283,6 +7302,8 @@ cs:
         schema:
           title: "Upravit nastavení %{name}"
           back_button: "Zpět na %{name}"
+          move_up: "Posunout nahoru"
+          move_down: "Posunout dolů"
           fields:
             required: "*povinné"
             groups:
@@ -7660,6 +7681,7 @@ cs:
             tag_group_change: "změnit skupinu štítků"
             delete_associated_accounts: "odstranit přidružené účty"
             change_theme_site_setting: "změnit nastavení webu motivem"
+            stop_impersonating: "zastavit impersonaci"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -7851,6 +7873,7 @@ cs:
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
         not_found: "Tento uživatel nebyl nalezen."
         invalid: "Bohužel, za tohoto uživatele se nemůžete vydávat."
+        error: "Jejda. Došlo k neočekávané chybě."
       users:
         title: "Uživatelé"
         description: "Zobrazení a správa uživatelů."
@@ -8098,7 +8121,7 @@ cs:
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         merge_failed: "Při slučování uživatelů došlo k chybě."
-        delete_forbidden_because_staff: "Správci ani moderátoři nemůžou být odstraněni."
+        delete_forbidden_because_staff: "Nelze smazat správce."
         delete_posts_forbidden_because_staff: "Nelze smazat všechny příspěvky administrátorů a moderátorů."
         delete_forbidden:
           one: "Uživatele nelze odstranit, pokud mají příspěvky. Než se pokusíte uživatele odstranit, smažte všechny příspěvky. (Příspěvky starší než %{count} den nelze smazat.)"
@@ -8256,6 +8279,10 @@ cs:
           title: "Zobrazit na kartě uživatele"
           enabled: "Zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
+        show_on_signup:
+          title: "Zobrazit na registračním formuláři"
+          enabled: "Zobrazeno na registračním formuláři"
+          disabled: "Nezobrazeno na registračním formuláři"
         searchable:
           title: "Prohledávatelné"
           enabled: "Prohledávatelné"

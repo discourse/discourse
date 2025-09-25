@@ -50,7 +50,7 @@ class UploadsController < ApplicationController
 
     if type == "avatar" &&
          (
-           SiteSetting.discourse_connect_overrides_avatar ||
+           SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar ||
              !me.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
          )
       return render json: failed_json, status: 422

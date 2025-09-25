@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
@@ -120,7 +119,7 @@ Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
-require_relative "./helpers/redis_snapshot_helper"
+require_relative "helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
@@ -484,27 +483,31 @@ RSpec.configure do |config|
       end
     end
 
-    [
-      [PostAction, :post_action_type_id],
-      [Reviewable, :target_id],
-      [ReviewableHistory, :reviewable_id],
-      [ReviewableScore, :reviewable_id],
-      [ReviewableScore, :reviewable_score_type],
-      [SidebarSectionLink, :linkable_id],
-      [SidebarSectionLink, :sidebar_section_id],
-      [User, :last_seen_reviewable_id],
-      [User, :required_fields_version],
-    ].each do |model, column|
-      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-      model.reset_column_information
-    end
+    if ENV["CI"].present?
+      [
+        [PostAction, :post_action_type_id],
+        [Reviewable, :target_id],
+        [ReviewableHistory, :reviewable_id],
+        [ReviewableScore, :reviewable_id],
+        [ReviewableScore, :reviewable_score_type],
+        [SidebarSectionLink, :linkable_id],
+        [SidebarSectionLink, :sidebar_section_id],
+        [User, :last_seen_reviewable_id],
+        [User, :required_fields_version],
+      ].each do |model, column|
+        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+        model.reset_column_information
+      end
 
-    # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
-    # type mistmatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
-    # instead of 2**31-1 so that the values are easier to read.
-    DB
-      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
+      # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
+      # type mismatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
+      # instead of 2**31-1 so that the values are easier to read.
+      DB
+        .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
+        .each do |row|
+          DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
+        end
+    end
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
@@ -661,8 +664,26 @@ RSpec.configure do |config|
       # To work around this problem, we are going to preload all the model schemas before running any system tests so that
       # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
       # the issue to the Rails.
+
+      # TODO: halfvec in AI embedding tables is not supported by Rails
+      # it causes a noisy stderr warning cause it is missing from the PG
+      # typemap.
+      #
+      # This workaround will suppress the noise until Rails adds support
+      suppress_embedding_warnings =
+        proc do |&blk|
+          stderr_orig = $stderr
+          $stderr = StringIO.new
+          blk.call
+          warning = $stderr.string
+          if warning.present? && !warning.include?("failed to recognize type of 'embeddings'")
+            stderr_orig.print warning
+          end
+          $stderr = stderr_orig
+        end
+
       ActiveRecord::Base.connection.data_sources.map do |table|
-        ActiveRecord::Base.connection.schema_cache.add(table)
+        suppress_embedding_warnings.call { ActiveRecord::Base.connection.schema_cache.add(table) }
       end
 
       system_tests_initialized = true

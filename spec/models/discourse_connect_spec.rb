@@ -39,7 +39,7 @@ RSpec.describe DiscourseConnect do
   end
 
   def new_discourse_sso
-    DiscourseConnect.new(secure_session: secure_session)
+    DiscourseConnect.new(server_session:)
   end
 
   def test_parsed(parsed, sso)
@@ -77,7 +77,7 @@ RSpec.describe DiscourseConnect do
   end
 
   let(:ip_address) { "127.0.0.1" }
-  let(:secure_session) { SecureSession.new("abc") }
+  let(:server_session) { ServerSession.new("abc") }
 
   it "bans bad external id" do
     sso = new_discourse_sso
@@ -756,13 +756,13 @@ RSpec.describe DiscourseConnect do
   end
 
   it "validates nonce" do
-    _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+    _, payload = DiscourseConnect.generate_url(server_session:).split("?")
 
-    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, server_session:)
     expect(sso.nonce_valid?).to eq true
 
     other_session_sso =
-      DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
+      DiscourseConnect.parse(payload, server_session: ServerSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq false
 
     sso.expire_nonce!
@@ -772,13 +772,13 @@ RSpec.describe DiscourseConnect do
 
   it "allows disabling CSRF protection" do
     SiteSetting.discourse_connect_csrf_protection = false
-    _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+    _, payload = DiscourseConnect.generate_url(server_session:).split("?")
 
-    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, server_session:)
     expect(sso.nonce_valid?).to eq true
 
     other_session_sso =
-      DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
+      DiscourseConnect.parse(payload, server_session: ServerSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq true
 
     sso.expire_nonce!
@@ -787,18 +787,18 @@ RSpec.describe DiscourseConnect do
   end
 
   it "generates a correct sso url" do
-    url, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+    url, payload = DiscourseConnect.generate_url(server_session:).split("?")
     expect(url).to eq discourse_connect_url
 
-    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, server_session:)
     expect(sso.nonce).to_not be_nil
   end
 
   describe "nonce error" do
     it "generates correct error message when nonce has already been used" do
-      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(server_session:).split("?")
 
-      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, server_session:)
       expect(sso.nonce_valid?).to eq true
 
       sso.expire_nonce!
@@ -806,9 +806,9 @@ RSpec.describe DiscourseConnect do
     end
 
     it "generates correct error message when nonce is expired" do
-      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(server_session:).split("?")
 
-      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, server_session:)
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)
@@ -819,9 +819,9 @@ RSpec.describe DiscourseConnect do
 
     it "generates correct error message when nonce is expired, and csrf protection disabled" do
       SiteSetting.discourse_connect_csrf_protection = false
-      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(server_session:).split("?")
 
-      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, server_session:)
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)

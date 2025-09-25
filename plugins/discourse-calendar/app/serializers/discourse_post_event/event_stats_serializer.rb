@@ -6,6 +6,7 @@ module DiscoursePostEvent
     attributes :interested
     attributes :not_going
     attributes :invited
+    attributes :capacity
 
     def invited
       unanswered = counts[nil] || 0
@@ -31,6 +32,10 @@ module DiscoursePostEvent
 
     def counts
       @counts ||= object.invitees.group(:status).count
+    end
+
+    def capacity
+      object.max_attendees
     end
   end
 end

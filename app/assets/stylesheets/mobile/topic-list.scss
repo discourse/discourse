@@ -496,6 +496,8 @@ td .main-link {
   width: 100%;
   display: flex;
   justify-content: center;
+  z-index: 1; // making sure the underline offset is on top of the topiclist
+  position: relative;
 
   .topics-replies-toggle {
     flex-grow: 1;

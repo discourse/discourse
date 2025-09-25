@@ -57,7 +57,7 @@ const extension = {
       draggable: true,
       parseDOM: [
         {
-          tag: "img[src]",
+          tag: 'img[src]:not([src^="data:"])',
           getAttrs(dom) {
             const originalSrc =
               dom.dataset.origSrc ??

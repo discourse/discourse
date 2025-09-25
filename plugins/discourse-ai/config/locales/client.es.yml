@@ -285,9 +285,9 @@ es:
             configure: "Configurar traducciones"
             empty_label: "Las traducciones automáticas están desactivadas, haz clic a continuación para configurarlas"
         progress_chart:
-          title: "Progreso de la traducción"
-          completed: "Completado"
-          remaining: "Restante"
+          bar_done:
+            one: "%{count} publicación"
+            other: "%{count} publicaciones"
       spam:
         short_title: "Spam"
         title: "Configurar el manejo de spam"

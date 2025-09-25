@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 de:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Modell-ID"
+        max_prompt_tokens: "Kontextfenster"
   discourse_automation:
     ai:
       flag_types:
         review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
+        review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
@@ -24,11 +30,22 @@ de:
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
         flagged_post: |
           <div>Antwort des Modells:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+          <p>%{llm_response}</p>
+          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
+        notify_author_pm:
+          subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
+          body: |
+            Hallo @%{username},
+
+            Dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
+
+            Referenz: %{post_url}
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
+      llm_tagger:
+        title: Themen mithilfe von KI mit Schlagwörtern versehen
+        description: "Themen mithilfe von KI automatisch mit Schlagwörtern versehen"
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
     ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
@@ -116,7 +133,7 @@ de:
     ai_translation_enabled: "Aktiviert die KI-Übersetzungsfunktion"
     ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
-    ai_translation_max_post_length: "Die maximale Länge eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
+    ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
   reviewables:
     reasons:
@@ -589,6 +606,7 @@ de:
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
+        model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
       bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."

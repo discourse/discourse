@@ -1,4 +1,4 @@
-function isObject(obj) {
+export function isObject(obj) {
   return obj && typeof obj === "object";
 }
 

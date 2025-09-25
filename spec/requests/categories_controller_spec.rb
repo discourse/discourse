@@ -950,6 +950,72 @@ RSpec.describe CategoriesController do
         end
       end
     end
+
+    describe "plugin category parameters" do
+      let(:plugin_instance) { Plugin::Instance.new.tap { |p| p.stubs(:enabled?).returns(true) } }
+      let(:callback) do
+        Proc.new do |category, value|
+          @callback_category = category
+          @callback_value = value
+        end
+      end
+
+      before { sign_in(admin) }
+
+      after { DiscoursePluginRegistry.reset_register!(:category_update_param_with_callback) }
+
+      it "processes plugin parameters when plugin is enabled" do
+        plugin_instance.register_category_update_param_with_callback(:test_param, &callback)
+
+        put "/categories/#{category.id}.json",
+            params: {
+              name: category.name,
+              color: category.color,
+              test_param: "test_value",
+            }
+
+        expect(response.status).to eq(200)
+        expect(@callback_category.id).to eq(category.id)
+        expect(@callback_value).to eq("test_value")
+      end
+
+      it "ignores plugin parameters when plugin is disabled" do
+        plugin_instance.register_category_update_param_with_callback(:test_param, &callback)
+        plugin_instance.stubs(:enabled?).returns(false)
+
+        put "/categories/#{category.id}.json",
+            params: {
+              name: category.name,
+              color: category.color,
+              test_param: "test_value",
+            }
+
+        expect(response.status).to eq(200)
+        expect(@callback_category).to eq(nil)
+        expect(@callback_value).to eq(nil)
+      end
+
+      it "safely handles when attribute is absent" do
+        plugin_instance.register_category_update_param_with_callback(:test_param, &callback)
+
+        put "/categories/#{category.id}.json", params: {}
+
+        expect(response.status).to eq(200)
+      end
+
+      it "rolls back category update if plugin callback fails" do
+        original_name = category.name
+        plugin_instance.register_category_update_param_with_callback(:test_param) do |_|
+          raise "Plugin callback error"
+        end
+
+        put "/categories/#{category.id}.json", params: { test_param: 1 }
+
+        expect(response.status).to eq(500)
+        category.reload
+        expect(category.name).to eq(original_name)
+      end
+    end
   end
 
   describe "#update_slug" do

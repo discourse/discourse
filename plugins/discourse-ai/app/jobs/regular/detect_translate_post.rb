@@ -15,7 +15,11 @@ module Jobs
       topic = post.topic
       return if topic.blank?
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
+      force = args[:force] || false
+
+      if force
+        # no restrictions
+      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
         return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
       else
         if topic.archetype == Archetype.private_message &&

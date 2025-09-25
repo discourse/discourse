@@ -46,7 +46,7 @@ he:
       cannot_edit_default_poll_with_votes: "אין לך אפשרות לשנות סקר לאחר %{minutes} הדקות הראשונות."
       cannot_edit_named_poll_with_votes: "לא ניתן לשנות את שם הסקר <strong>${name}</strong> לאחר %{minutes} הדקות הראשונות."
     dynamic_poll:
-      enabled_hint: "הסקר הזה דינמי. אפשר לערוך את האפשרויות אחרי הפרסום."
+      enabled_hint: "אפשר להוסיף או להסיר אפשרויות."
     no_poll_with_this_name: "אין סקר בשם <strong>%{name}</strong> שמקושר לפוסט הזה."
     post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
     user_cant_post_in_topic: "אין לך אפשרות להצביע כיוון שאין לך אפשרות לפרסם בנושא זה."

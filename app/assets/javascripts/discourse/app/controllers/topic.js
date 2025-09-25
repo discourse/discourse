@@ -299,9 +299,8 @@ export default class TopicController extends Controller {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy(
-      "bookmarkable_type",
-      "Topic"
+    const forTopicBookmark = this.model.bookmarks.find(
+      (b) => b.bookmarkable_type === "Topic"
     );
     if (
       forTopicBookmark?.auto_delete_preference ===
@@ -1405,7 +1404,9 @@ export default class TopicController extends Controller {
 
   _jumpToPostNumber(postNumber) {
     const postStream = this.get("model.postStream");
-    const post = postStream.get("posts").findBy("post_number", postNumber);
+    const post = postStream
+      .get("posts")
+      .find((item) => item.post_number === postNumber);
 
     if (post) {
       DiscourseURL.routeTo(
@@ -1512,7 +1513,7 @@ export default class TopicController extends Controller {
       this.model.set("bookmarks", []);
     }
 
-    const bookmark = this.model.bookmarks.findBy("id", data.id);
+    const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
       this.model.bookmarks.pushObject(Bookmark.create(data));
     } else {
@@ -1532,9 +1533,8 @@ export default class TopicController extends Controller {
     }
 
     if (this.model.bookmarkCount === 1) {
-      const topicBookmark = this.model.bookmarks.findBy(
-        "bookmarkable_type",
-        "Topic"
+      const topicBookmark = this.model.bookmarks.find(
+        (b) => b.bookmarkable_type === "Topic"
       );
       if (topicBookmark) {
         return this._modifyTopicBookmark(topicBookmark);
@@ -1831,13 +1831,16 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
 
     if (data.reload_topic) {
-      topic.reload().then(() => {
-        this.send("postChangedRoute", topic.get("post_number") || 1);
+      topic.reload(opts).then(() => {
         this.appEvents.trigger("header:update-topic", topic);
         if (data.refresh_stream) {
-          postStream.refresh();
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
         }
       });
 

@@ -20,6 +20,8 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
   @service toasts;
+  @service dialog;
+  @service router;
 
   @tracked isUpdating = false;
 
@@ -38,6 +40,18 @@ export default class ThemeCard extends Component {
 
   get themePreviewUrl() {
     return `/admin/themes/${this.args.theme.id}/preview`;
+  }
+
+  get destroyDisabled() {
+    return this.args.theme.default || this.args.theme.system;
+  }
+
+  get editUrl() {
+    return this.router.urlFor(
+      "adminCustomizeThemes.show",
+      "themes",
+      this.args.theme.id
+    );
   }
 
   @action
@@ -79,7 +93,6 @@ export default class ThemeCard extends Component {
           theme: this.args.theme.name,
         }),
       },
-      duration: "short",
     });
 
     window.location.reload();
@@ -102,7 +115,6 @@ export default class ThemeCard extends Component {
       data: {
         message: i18n("admin.customize.theme.setting_was_saved"),
       },
-      duration: "short",
     });
   }
 
@@ -122,13 +134,37 @@ export default class ThemeCard extends Component {
               theme: this.args.theme.name,
             }),
           },
-          duration: "short",
         });
       })
       .catch(popupAjaxError)
       .finally(() => {
         this.isUpdating = false;
       });
+  }
+
+  @action
+  destroyTheme() {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.delete_confirm", {
+        theme_name: this.args.theme.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await this.args.theme.destroyRecord();
+          this.args.allThemes.removeObject(this.args.theme);
+
+          this.toasts.success({
+            data: {
+              message: i18n("admin.customize.theme.delete_success", {
+                theme: this.args.theme.name,
+              }),
+            },
+          });
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
   }
 
   <template>
@@ -147,7 +183,7 @@ export default class ThemeCard extends Component {
           {{/if}}
         </div>
         <div class="theme-card__content">
-          <div class="theme-card__title">{{@theme.name}}</div>
+          <a class="theme-card__title" href={{this.editUrl}}>{{@theme.name}}</a>
           {{#if @theme.description}}
             <p class="theme-card__description">{{@theme.description}}</p>
           {{/if}}
@@ -259,6 +295,15 @@ export default class ThemeCard extends Component {
                         class="btn btn-transparent theme-card__button preview"
                       >{{icon "eye"}}
                         {{i18n "admin.customize.theme.preview"}}</a>
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        @action={{this.destroyTheme}}
+                        @label="admin.customize.delete"
+                        @icon="trash-can"
+                        @disabled={{this.destroyDisabled}}
+                        class="theme-card__button btn-danger btn-transparent delete"
+                      />
                     </dropdown.item>
                   </DropdownMenu>
                 </:content>

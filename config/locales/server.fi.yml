@@ -1660,7 +1660,6 @@ fi:
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
     download_remote_images_to_local: "Muunna etäkuvat (linkitetyt) paikallisiksi kuviksi lataamalle ne. Tämä säilyttää sisällön myös silloin, jos kuvat poistetaan etäsivustolta tulevaisuudessa."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
-    disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
     block_hotlinked_media: "Estä käyttäjiä käyttämästä etämediasisältöä (linkitettyä) viesteissään. Etämediasisältö, jota ei ole ladattu \"download_remote_images_to_local\"-asetuksen kautta, korvataan paikkamerkkilinkillä."
     block_hotlinked_media_exceptions: "Luettelo perus-URL-osoitteista, joihin ei sovelleta block_hotlinked_media-asetusta. Liitä mukaan protokolla (esim. https://example.com)."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."
@@ -1711,7 +1710,6 @@ fi:
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
-    email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     enforce_second_factor: "Vaadi käyttäjiä ottamaan käyttöön kaksivaiheinen tunnistus ennen kuin he voivat käyttää Discoursen käyttöliittymää. Tämä asetus ei vaikuta API- tai DiscourseConnect-palveluntarjoajatodennukseen. Jos enforce_second_factor_on_external_auth on käytössä, käyttäjät eivät voi kirjautua sisään ulkoisilla todennuspalveluilla kaksivaiheisen tunnistuksen määrittämisen jälkeen."
@@ -1826,8 +1824,6 @@ fi:
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
     hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Ylläpidon jäsenet voivat aina tarkastella piilotettuja viestejä."
     allow_index_in_robots_txt: "Määritä robots.txt:ssä, että verkkohakukoneet voivat indeksoida tämän sivuston. Voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n täällä.</a> <b>VAROITUS</b>: väärin määritetyt säännöt voivat estää sivustosi indeksoinnin odotetulla tavalla."
-    blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät saa rekisteröidä tilejä. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta. Esimerkki: mailinator.com|trashmail.net"
-    allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY rekisteröidä tilit. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     normalize_emails: "Tarkista, onko normalisoitu sähköpostiosoite yksilöllinen. Normalisoitu sähköpostiosoite poistaa kaikki pisteet käyttäjätunnuksesta ja kaiken +- ja @-symbolien väliltä."
     auto_approve_email_domains: "Käyttäjät, joilla on sähköpostiosoite tästä verkkotunnusten luettelosta, hyväksytään automaattisesti. Määritettyjen verkkotunnusten aliverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta."
     hide_email_address_taken: "Älä ilmoita käyttäjille rekisteröitymisen tai unohtuneen salasanan palautuksen aikana, että annetulla sähköpostiosoitteella on olemassa tili. Vaadi täydellinen sähköpostiosoite unohtuneen salasanan pyynnöissä."
@@ -2243,7 +2239,6 @@ fi:
     clean_up_unused_staged_users_after_days: "Kuinka monen päivän kuluttua käyttämätön esikäyttäjä (ei yhtään viestiä) poistetaan. Arvo 0 poistaa siivouksen käytöstä."
     user_selected_primary_groups: "Salli käyttäjän asettaa ensisijainen ryhmänsä itse"
     max_notifications_per_user: "Ilmoitusten enimmäismäärä käyttäjää kohden. Jos tämä määrä ylitetään, vanhat ilmoitukset poistetaan. Pakotetaan viikoittain. Poista käytöstä valitsemalla 0"
-    allowed_user_website_domains: "Käyttäjän verkkosivusto voi olla näiden verkkotunnusten alainen. Pystyviivoin erotettu lista."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
     dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
@@ -2481,7 +2476,6 @@ fi:
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
     content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
     content_localization_allowed_groups: "Ryhmät, jotka voivat päivittää lokalisoitua sisältöä. Edellyttää \"content localization enabled\" -asetusta."
-    content_localization_anon_language_switcher: "Ota käyttöön kielivalitsin, jolla sivuston kävijät, jotka eivät ole kirjautuneet sisään, voivat vaihtaa Discoursen käännettyjen versioiden ja käyttäjien tuottaman sisällön välillä. Riippuu \"content localization supported locales\" -asetuksessa määritetyistä kielistä."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2553,7 +2547,6 @@ fi:
       invalid_uncategorized_category_setting: 'Luokittelemattomat-aluetta ei voi valita, jos "allow uncategorized topics" ei ole käytössä.'
       invalid_search_ranking_weights: "Arvo on virheellinen search_ranking_weights-sivustoasetukselle. Esimerkki: '{0.1,0.2,0.3,1.0}'. Huomaa, että kunkin painon enimmäisarvo on 1.0."
       content_localization_locale_limit: "Tuettujen kielialueiden määrä ei voi olla yli %{max}."
-      content_localization_anon_language_switcher_requirements: "Kielivalitsin edellyttää, että \"set locale from cookie\" -sivustoasetus on käytössä ja että \"content localization supported locales\" -asetuksessa on vähintään yksi kieli."
       mediaconvert_role_arn_required: "AWS:n IAM-roolin ARN on pakollinen käytettäessä MediaConvertia videoiden muuntamiseen."
       s3_credentials_required_for_video_conversion: "Videomuunnokseen vaaditaan S3-tunnistetiedot. Määritä S3-käyttöoikeusavaimet tai ota IAM-profiili käyttöön."
     keywords:

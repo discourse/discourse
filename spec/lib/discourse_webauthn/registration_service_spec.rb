@@ -4,7 +4,7 @@ require "discourse_webauthn"
 RSpec.describe DiscourseWebauthn::RegistrationService do
   subject(:service) { described_class.new(current_user, params, **options) }
 
-  let(:secure_session) { SecureSession.new("tester") }
+  let(:server_session) { ServerSession.new("tester") }
   let(:client_data_challenge) { Base64.encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.create" }
   let(:client_data_origin) { "http://test.localhost" }
@@ -34,10 +34,10 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   # The above attestation was generated in localhost; Discourse.current_hostname
   # returns test.localhost which we do not want
   let(:options) do
-    { session: secure_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
+    { session: server_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
   end
 
-  let(:challenge) { DiscourseWebauthn.stage_challenge(current_user, secure_session).challenge }
+  let(:challenge) { DiscourseWebauthn.stage_challenge(current_user, server_session).challenge }
 
   let(:current_user) { Fabricate(:user) }
 
@@ -178,7 +178,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
 
   describe "registering a second factor key as first factor" do
     let(:options) do
-      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: server_session }
     end
 
     it "does not work since second-factor key does not have the user verification flag" do
@@ -191,7 +191,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
 
   describe "registering a passkey" do
     let(:options) do
-      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: server_session }
     end
 
     ##

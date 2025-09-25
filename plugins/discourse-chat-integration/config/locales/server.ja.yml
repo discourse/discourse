@@ -173,7 +173,7 @@ ja:
           - <b>mute</b> - このチャンネルへの通知をミュートにする
 
           <b>ルールの削除:</b> <code>/remove [ルール番号]</code>
-          （<code>[ルール番号]</code>は <code>/status</code> を実行することで見つけることができます)
+          (<code>[ルール番号]</code>は <code>/status</code> を実行することで見つけることができます)
 
           <b>ルール一覧:</b> <code>/status</code>
 

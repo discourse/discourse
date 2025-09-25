@@ -79,6 +79,7 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
     def self.create(
       user_id:,

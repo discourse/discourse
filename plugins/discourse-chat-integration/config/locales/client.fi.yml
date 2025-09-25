@@ -84,7 +84,6 @@ fi:
               help: "esim. #kanava, @käyttäjänimi."
           errors:
             action_prohibited: "Botilla ei ole oikeuksia lähettää viestejä tälle kanavalle"
-            channel_not_found: "Kyseistä kanavaa ei ole olemassa Slackissa"
         telegram:
           title: "Telegram"
           param:

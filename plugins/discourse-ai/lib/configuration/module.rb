@@ -53,9 +53,8 @@ module DiscourseAi
             new(
               SEARCH_ID,
               SEARCH,
-              enabled_by_setting: "ai_bot_enabled",
+              enabled_by_setting: "ai_discover_enabled",
               features: DiscourseAi::Configuration::Feature.search_features,
-              extra_check: -> { SiteSetting.ai_bot_discover_persona.present? },
             ),
             new(
               DISCORD_ID,

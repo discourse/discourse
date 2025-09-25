@@ -53,8 +53,8 @@ RSpec.describe Chat::DirectMessageChannel do
   end
 
   describe "#threading_enabled" do
-    it "defaults to true" do
-      expect(channel.threading_enabled).to be(true)
+    it "defaults to false" do
+      expect(channel.threading_enabled).to be(false)
     end
   end
 

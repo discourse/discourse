@@ -84,7 +84,6 @@ ru:
               help: "например, #channel, @username."
           errors:
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
-            channel_not_found: "Указанный канал не существует в Slack"
         telegram:
           title: "Telegram"
           param:

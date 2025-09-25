@@ -7,11 +7,9 @@
 tr_TR:
   admin_js:
     admin:
-      calendar: "Takvim"
       site_settings:
         categories:
           discourse_post_event: "Discourse Etkinliği"
-          discourse_calendar: "Discourse Takvimi"
   js:
     notifications:
       titles:

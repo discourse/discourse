@@ -9,6 +9,7 @@ class Admin::UserFieldsController < Admin::AdminController
       description
       requirement
       show_on_profile
+      show_on_signup
       show_on_user_card
       position
       searchable

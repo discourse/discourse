@@ -7,11 +7,9 @@
 sk:
   admin_js:
     admin:
-      calendar: "Kalendár"
       site_settings:
         categories:
           discourse_post_event: "Discourse udalosť"
-          discourse_calendar: "Kalendár Discourse"
   js:
     notifications:
       titles:

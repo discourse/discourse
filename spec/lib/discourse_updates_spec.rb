@@ -249,6 +249,34 @@ RSpec.describe DiscourseUpdates do
       expect(result[2]["title"]).to eq("Bells")
     end
 
+    it "correctly shows features by commit hash" do
+      features_with_versions = [
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
+        {
+          "emoji" => "🙈",
+          "title" => "Whistles",
+          "created_at" => 120.minutes.ago,
+          "discourse_version" => "208cc7b0dd4bcd134297ce076e7263d2898740e9",
+        },
+        {
+          "emoji" => "🙈",
+          "title" => "Confetti",
+          "created_at" => 15.minutes.ago,
+          "discourse_version" => "05a7fc954a620800ee99ecdbabcfd41572706674",
+        },
+      ]
+
+      GitUtils.stubs(:has_commit?).with("208cc7b0dd4bcd134297ce076e7263d2898740e9").returns(true)
+      GitUtils.stubs(:has_commit?).with("05a7fc954a620800ee99ecdbabcfd41572706674").returns(false)
+
+      Discourse.redis.set("new_features", MultiJson.dump(features_with_versions))
+      result = DiscourseUpdates.new_features
+
+      expect(result.length).to eq(2)
+      expect(result[0]["title"]).to eq("Whistles")
+      expect(result[1]["title"]).to eq("Bells")
+    end
+
     it "correctly shows features with correct boolean site settings" do
       features_with_versions = [
         {

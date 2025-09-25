@@ -38,6 +38,7 @@ export default class AdminUserFieldsForm extends Component {
       "requirement",
       "editable",
       "show_on_profile",
+      "show_on_signup",
       "show_on_user_card",
       "searchable",
       "options",
@@ -52,8 +53,20 @@ export default class AdminUserFieldsForm extends Component {
     if (value === "for_all_users") {
       this.editableDisabled = true;
       set("editable", true);
+      set("show_on_signup", true);
+    } else if (value === "on_signup") {
+      set("show_on_signup", true);
     } else {
       this.editableDisabled = false;
+    }
+  }
+
+  @action
+  setEditable(value, { set }) {
+    set("editable", value);
+
+    if (value === false) {
+      set("show_on_signup", true);
     }
   }
 
@@ -98,6 +111,10 @@ export default class AdminUserFieldsForm extends Component {
   @action
   cancel() {
     this.router.transitionTo("adminUserFields.index");
+  }
+
+  showOnSignupDisabled(formData) {
+    return formData.requirement !== "optional" || formData.editable === false;
   }
 
   _focusName() {
@@ -209,44 +226,56 @@ export default class AdminUserFieldsForm extends Component {
         </field.RadioGroup>
       </form.Field>
 
-      <form.CheckboxGroup
-        class="user-field-preferences"
-        @title={{i18n "admin.user_fields.preferences"}}
-        as |group|
-      >
-        <group.Field
-          @name="editable"
-          @showTitle={{false}}
-          @title={{i18n "admin.user_fields.editable.title"}}
-          as |field|
+      <div class="user-field-preferences">
+        <form.CheckboxGroup
+          @title={{i18n "admin.user_fields.preferences"}}
+          as |group|
         >
-          <field.Checkbox disabled={{this.editableDisabled}} />
-        </group.Field>
-        <group.Field
-          @name="show_on_profile"
-          @showTitle={{false}}
-          @title={{i18n "admin.user_fields.show_on_profile.title"}}
-          as |field|
-        >
-          <field.Checkbox />
-        </group.Field>
-        <group.Field
-          @name="show_on_user_card"
-          @showTitle={{false}}
-          @title={{i18n "admin.user_fields.show_on_user_card.title"}}
-          as |field|
-        >
-          <field.Checkbox />
-        </group.Field>
-        <group.Field
-          @name="searchable"
-          @showTitle={{false}}
-          @title={{i18n "admin.user_fields.searchable.title"}}
-          as |field|
-        >
-          <field.Checkbox />
-        </group.Field>
-      </form.CheckboxGroup>
+          <group.Field
+            @name="editable"
+            @showTitle={{false}}
+            @onSet={{this.setEditable}}
+            @title={{i18n "admin.user_fields.editable.title"}}
+            as |field|
+          >
+            <field.Checkbox disabled={{this.editableDisabled}} />
+          </group.Field>
+          <group.Field
+            @name="show_on_profile"
+            @showTitle={{false}}
+            @title={{i18n "admin.user_fields.show_on_profile.title"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </group.Field>
+          <group.Field
+            @name="show_on_user_card"
+            @showTitle={{false}}
+            @title={{i18n "admin.user_fields.show_on_user_card.title"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </group.Field>
+          <group.Field
+            @name="searchable"
+            @showTitle={{false}}
+            @title={{i18n "admin.user_fields.searchable.title"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </group.Field>
+          <group.Field
+            @name="show_on_signup"
+            @showTitle={{false}}
+            @title={{i18n "admin.user_fields.show_on_signup.title"}}
+            as |field|
+          >
+            <field.Checkbox
+              disabled={{this.showOnSignupDisabled transientData}}
+            />
+          </group.Field>
+        </form.CheckboxGroup>
+      </div>
 
       <PluginOutlet
         @name="after-admin-user-fields"

@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -44,6 +47,10 @@ export default class AdminConfigAreasColorPalette extends Component {
     );
   }
 
+  get installedWithTheme() {
+    return !!this.args.colorPalette.theme_id;
+  }
+
   @cached
   get data() {
     return {
@@ -65,6 +72,9 @@ export default class AdminConfigAreasColorPalette extends Component {
   @action
   toggleEditingName() {
     this.editingName = !this.editingName;
+    if (!this.editingName) {
+      this.fkApi.set("name", this.args.colorPalette.name);
+    }
   }
 
   @action
@@ -173,17 +183,16 @@ export default class AdminConfigAreasColorPalette extends Component {
   @action
   async duplicate() {
     const copy = this.args.colorPalette.copy();
+    const originalName = this.args.colorPalette.name;
     copy.name = i18n("admin.config_areas.color_palettes.copy_of", {
-      name: this.args.colorPalette.name,
+      name: originalName,
     });
     await copy.save();
-    await this.router.replaceWith("adminConfig.colorPalettes");
-    await this.router.refresh();
     await this.router.replaceWith("adminConfig.colorPalettes.show", copy);
     this.toasts.success({
       data: {
         message: i18n("admin.config_areas.color_palettes.copy_created", {
-          name: this.args.colorPalette.name,
+          name: originalName,
         }),
       },
     });
@@ -196,7 +205,6 @@ export default class AdminConfigAreasColorPalette extends Component {
       didConfirm: async () => {
         await this.args.colorPalette.destroy();
         await this.router.replaceWith("adminConfig.colorPalettes");
-        await this.router.refresh();
       },
     });
   }
@@ -250,63 +258,88 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   <template>
-    <Form
-      data-palette-id={{@colorPalette.id}}
-      @data={{this.data}}
-      @onSubmit={{this.handleSubmit}}
-      @onRegisterApi={{this.onRegisterApi}}
-      as |form transientData|
-    >
-      <div>
-        <div class="admin-config-color-palettes__top-controls">
-          {{#if this.editingName}}
-            <form.Field
-              @name="name"
-              @showTitle={{false}}
-              @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
-              @validation="required"
-              @format="full"
-              @onSet={{this.handleNameChange}}
-              as |field|
-            >
+    <div class="admin-config-area__primary-content">
+      <div class="admin-config-color-palettes__back">
+        <LinkTo @route="adminConfig.colorPalettes">
+          {{icon "angle-left"}}
+          {{i18n "admin.customize.colors.back_to_colors"}}
+        </LinkTo>
+      </div>
+      <Form
+        data-palette-id={{@colorPalette.id}}
+        @data={{this.data}}
+        @onSubmit={{this.handleSubmit}}
+        @onRegisterApi={{this.onRegisterApi}}
+        as |form transientData|
+      >
+        <div class="admin-config-color-palettes__header">
+          <div class="admin-config-color-palettes__top-controls">
+            {{#if this.editingName}}
+              <form.Field
+                @name="name"
+                @showTitle={{false}}
+                @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
+                @validation="required"
+                @format="full"
+                @onSet={{this.handleNameChange}}
+                as |field|
+              >
+                <div class="admin-config-color-palettes__name-control">
+                  <field.Input />
+                  <DButton
+                    class="btn-primary admin-config-color-palettes__save-name"
+                    @icon="check"
+                    @action={{this.triggerNameSave}}
+                  />
+                  <DButton
+                    class="btn-flat admin-config-color-palettes__cancel-edit-name"
+                    @icon="xmark"
+                    @action={{this.toggleEditingName}}
+                  />
+                </div>
+              </form.Field>
+            {{else}}
               <div class="admin-config-color-palettes__name-control">
-                <field.Input />
-                <DButton
-                  class="btn-primary admin-config-color-palettes__save-name"
-                  @icon="check"
-                  @action={{this.triggerNameSave}}
-                />
-                <DButton
-                  class="btn-flat"
-                  @icon="xmark"
-                  @action={{this.toggleEditingName}}
-                />
+                <h2
+                  class="admin-config-color-palettes__name"
+                >{{@colorPalette.name}}</h2>
+                {{#unless this.installedWithTheme}}
+                  <DButton
+                    class="btn-flat admin-config-color-palettes__edit-name"
+                    @icon="pencil"
+                    @action={{this.toggleEditingName}}
+                  />
+                {{/unless}}
               </div>
-            </form.Field>
-          {{else}}
-            <div class="admin-config-color-palettes__name-control">
-              <h2
-                class="admin-config-color-palettes__name"
-              >{{@colorPalette.name}}</h2>
+            {{/if}}
+            <div class="admin-config-color-palettes__top-actions">
               <DButton
-                class="btn-flat admin-config-color-palettes__edit-name"
-                @icon="pencil"
-                @action={{this.toggleEditingName}}
+                class="duplicate-palette"
+                @label="admin.config_areas.color_palettes.duplicate"
+                @action={{this.duplicate}}
               />
+              {{#unless this.installedWithTheme}}
+                <DButton
+                  class="btn-danger delete-palette"
+                  @label="admin.config_areas.color_palettes.delete"
+                  @action={{this.delete}}
+                />
+              {{/unless}}
+            </div>
+          </div>
+          {{#if this.installedWithTheme}}
+            <div class="admin-config-color-palettes__theme-owner">
+              {{icon "circle-info"}}
+              <span>{{i18n "admin.customize.theme_owner"}}
+                <LinkTo
+                  @route="adminCustomizeThemes.show"
+                  @models={{array "themes" @colorPalette.theme_id}}
+                >
+                  {{@colorPalette.theme_name}}
+                </LinkTo>
+              </span>
             </div>
           {{/if}}
-          <div class="admin-config-color-palettes__top-actions">
-            <DButton
-              class="duplicate-palette"
-              @label="admin.config_areas.color_palettes.duplicate"
-              @action={{this.duplicate}}
-            />
-            <DButton
-              class="btn-danger delete-palette"
-              @label="admin.config_areas.color_palettes.delete"
-              @action={{this.delete}}
-            />
-          </div>
         </div>
         <div class="admin-config-color-palettes__sections">
           <AdminConfigAreaCard
@@ -381,6 +414,7 @@ export default class AdminConfigAreasColorPalette extends Component {
               >
                 <field.Custom>
                   <ColorPaletteEditor
+                    @disabled={{this.installedWithTheme}}
                     @colors={{transientData.colors}}
                     @onColorChange={{this.onColorChange}}
                   />
@@ -409,7 +443,7 @@ export default class AdminConfigAreasColorPalette extends Component {
             </:content>
           </AdminConfigAreaCard>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </div>
   </template>
 }

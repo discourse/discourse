@@ -218,6 +218,53 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs= ",
       });
     });
+
+    server.get("/g/testgroup/reports/2", () => {
+      return helper.response({
+        query: {
+          id: 2,
+          sql: 'SELECT 0 zero, null "null", false "false"',
+          name: "Group Test Query",
+          description: "Test query for group reports",
+          param_info: [],
+          created_at: "2023-05-04T22:16:06.007Z",
+          username: "system",
+          group_ids: [1],
+          last_run_at: "2023-05-04T22:16:23.858Z",
+          hidden: false,
+          user_id: 1,
+        },
+        query_group: {
+          id: 1,
+          group_id: 1,
+          query_id: 2,
+        },
+      });
+    });
+
+    server.post("/g/testgroup/reports/2/run", () => {
+      return helper.response({
+        success: true,
+        errors: [],
+        duration: 1.0,
+        result_count: 1,
+        params: {},
+        columns: ["zero", "null", "false"],
+        default_limit: 1000,
+        relations: {},
+        colrender: {},
+        rows: [[0, null, false]],
+      });
+    });
+
+    server.get("/groups/testgroup.json", () => {
+      return helper.response({
+        group: {
+          id: 1,
+          name: "testgroup",
+        },
+      });
+    });
   });
 
   test("runs query and renders data and a chart", async function (assert) {
@@ -343,5 +390,19 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert
       .dom("div.query-results tbody td:nth-child(3)")
       .hasText("false", "renders 'false' values");
+  });
+
+  test("automatically runs query when run query parameter is present", async function (assert) {
+    await visit("/admin/plugins/explorer/queries/2?run");
+
+    assert
+      .dom("div.query-results table tbody tr")
+      .exists({ count: 1 }, "query results should be displayed");
+  });
+
+  test("automatically runs query when run query parameter is present on group report route", async function (assert) {
+    await visit("/g/testgroup/reports/2?run=1");
+
+    assert.dom("div.query-results").exists("query results should be displayed");
   });
 });

@@ -381,7 +381,7 @@ export default class Composer extends RestModel {
 
   @discourseComputed("archetypeId")
   archetype(archetypeId) {
-    return this.archetypes.findBy("id", archetypeId);
+    return this.archetypes.find((archetype) => archetype.id === archetypeId);
   }
 
   @observes("archetype")
@@ -964,10 +964,12 @@ export default class Composer extends RestModel {
     });
 
     // We set the category id separately for topic templates on opening of composer
-    this.set(
-      "categoryId",
-      opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
-    );
+    if (!opts.readOnlyCategoryId) {
+      this.set(
+        "categoryId",
+        opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
+      );
+    }
 
     if (!this.categoryId && this.creatingTopic) {
       const categories = this.site.categories;

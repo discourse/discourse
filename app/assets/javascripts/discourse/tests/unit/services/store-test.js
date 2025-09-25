@@ -147,7 +147,7 @@ module("Unit | Service | store", function (hooks) {
     const result = await store.findAll("widget");
     assert.strictEqual(result.length, 2);
 
-    const widget = result.findBy("id", 124);
+    const widget = result.find((item) => item.id === 124);
     assert.false(widget.isNew, "found records are not new");
     assert.strictEqual(widget.name, "Evil Repellant");
   });

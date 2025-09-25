@@ -2145,11 +2145,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2170,11 +2166,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        _user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        _user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2203,11 +2195,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2264,11 +2252,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"

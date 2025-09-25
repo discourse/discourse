@@ -35,6 +35,8 @@ ro:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Nu poți schimba un sondaj după primele %{minutes} minute."
       cannot_edit_named_poll_with_votes: "Nu poți schimba numele sondajului <strong>${name}</strong> după primele %{minutes} minute."
+    dynamic_poll:
+      enabled_hint: "Opțiunile pot fi adăugate sau eliminate."
     no_poll_with_this_name: "Nu există nici un sondaj cu numele <strong>%{name}</strong> asociat acestei postări."
     post_is_deleted: "Postările șterse nu se pot modifica."
     user_cant_post_in_topic: "Nu poți vota deoarece nu poți posta în acest subiect."

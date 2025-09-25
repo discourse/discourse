@@ -298,6 +298,9 @@ de:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
       search: "Suche"
+    impersonation:
+      notice: "Du verwendest derzeit die Rolle von %{username}"
+      stop: "Nutzerrolle verlassen"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Es kann sein, dass deine Website nicht funktioniert, weil ein Theme oder eine Komponente Fehler aufweist. Überprüfe die Browser-Konsole für weitere Informationen."
@@ -1679,6 +1682,7 @@ de:
         in_progress: "(E-Mail wird gesendet)"
         error: "(Fehler)"
         action: "Sende eine E-Mail zum Zurücksetzen des Passworts"
+        staged_user: "Vorbereitete Benutzer können keine E-Mails zum Zurücksetzen des Passworts erhalten."
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
@@ -1787,7 +1791,7 @@ de:
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       add_email:
         title: "E-Mail hinzufügen"
-        add: "hinzufügen"
+        add: "Hinzufügen"
       change_email:
         title: "E-Mail-Adresse ändern"
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
@@ -2613,6 +2617,7 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
+      read_only: "nur Lesen"
     timezone_input:
       ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z. B. Asien/Kolkata)"
     select_kit:
@@ -2675,6 +2680,9 @@ de:
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
     composer:
+      autocomplete:
+        username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
+        name_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Namen."
       emoji: "Emoji :)"
       more_emoji: "mehr …"
       options: "Optionen"
@@ -2751,7 +2759,9 @@ de:
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
       title: "Oder drücke %{modifier}Eingabetaste"
+      save_and_close: "Speichern und schließen"
       discard: "Verwerfen"
+      draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
@@ -2807,7 +2817,14 @@ de:
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
       help: "Hilfe zur Markdown-Formatierung"
+      collapse: "Editor minimieren"
+      open: "Editor öffnen"
+      abandon: "Editor schließen und Entwurf verwerfen"
+      enter_fullscreen: "Vollbild-Editor öffnen"
+      exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
+      show_toolbar: "Editor-Werkzeugleiste anzeigen"
+      hide_toolbar: "Editor-Werkzeugleiste ausblenden"
       modal_ok: "OK"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
@@ -3194,6 +3211,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        select: "Massenauswahl"
         confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
@@ -3335,8 +3353,6 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
-      create_disabled_tag: "Du darfst keine Themen mit diesem Schlagwort erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -4685,7 +4701,7 @@ de:
       choose_for_topic_required_group:
         one: "%{count} Schlagwort von „%{name}“ auswählen …"
         other: "%{count} Schlagwörter von „%{name}“ auswählen …"
-      info: "Info"
+      info: "Informationen zum Schlagwort anzeigen"
       default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
@@ -4716,6 +4732,7 @@ de:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
       edit_tag: "Name und Beschreibung des Schlagwortes bearbeiten"
+      edit: "Dieses Schlagwort bearbeiten"
       description: "Beschreibung (max. 1000 Zeichen)"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
@@ -5629,10 +5646,12 @@ de:
           experiment_tooltip:
             title_disabled: "Probiere diese experimentelle Funktion aus"
             title_enabled: "Experimentelle Funktion ausschalten"
+            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
           feature_tooltip:
             title_disabled: "Probiere diese Funktion aus"
             title_enabled: "Deaktiviere diese Funktion"
+            content_disabled: "Teste diese neue Funktion! Du kannst sie jederzeit wieder deaktivieren, wenn du möchtest.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiviert."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
@@ -6250,7 +6269,7 @@ de:
             description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: 'Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern.'
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6316,6 +6335,8 @@ de:
             title: "Farboptionen"
             toggle: "Vom Benutzer wählbar"
             toggle_description: "Farbpalette kann von Benutzern ausgewählt werden"
+            toggle_default_light_on_theme: "Die Farbpalette ist die standardmäßige helle Palette des Standarddesigns (%{themeName})"
+            toggle_default_dark_on_theme: "Die Farbpalette ist die standardmäßige dunkle Palette des Standarddesigns (%{themeName})"
           colors:
             title: "Farben"
           save_changes: "Änderungen speichern"
@@ -6688,6 +6709,8 @@ de:
         schema:
           title: "Einstellung „%{name}“ bearbeiten"
           back_button: "Zurück zu %{name}"
+          move_up: "Nach oben"
+          move_down: "Nach unten"
           fields:
             required: "*erforderlich"
             groups:
@@ -6720,6 +6743,7 @@ de:
           view: "Ansehen"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
           set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
+          set_default_success: "%{schemeName} als Standard-Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
           from_theme: "Vom Theme: %{name}"
           filters:
@@ -7054,6 +7078,7 @@ de:
             tag_group_change: "Schlagwortgruppe ändern"
             delete_associated_accounts: "verknüpfte Konten löschen"
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
+            stop_impersonating: "Nutzerrolle verlassen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7243,6 +7268,7 @@ de:
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
         not_found: "Der Benutzer wurde nicht gefunden."
         invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
+        error: "Hoppla. Ein unerwarteter Fehler ist aufgetreten."
       users:
         title: "Benutzer"
         description: "Benutzer anzeigen und verwalten."
@@ -7470,7 +7496,7 @@ de:
             cancel: "Abbrechen"
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
-        delete_forbidden_because_staff: "Administratoren und Moderatoren können nicht gelöscht werden."
+        delete_forbidden_because_staff: "Administratoren können nicht gelöscht werden."
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
@@ -7618,6 +7644,10 @@ de:
           title: "Auf Benutzerkarte anzeigen"
           enabled: "Wird auf Benutzerkarte angezeigt"
           disabled: "Wird nicht auf Benutzerkarte angezeigt"
+        show_on_signup:
+          title: "Auf dem Registrierungsformular anzeigen"
+          enabled: "Wird auf dem Registrierungsformular angezeigt"
+          disabled: "Wird auf dem Registrierungsformular nicht angezeigt"
         searchable:
           title: "In Suche einschließen"
           enabled: "In Suche einschließen"

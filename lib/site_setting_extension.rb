@@ -360,7 +360,12 @@ module SiteSettingExtension
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
 
-        value = public_send(s)
+        if themeable[s]
+          value = public_send(s, { theme_id: SiteSetting.default_theme_id })
+        else
+          value = public_send(s)
+        end
+
         value = value.map(&:to_s).join("|") if type_hash[:type].to_s == "uploaded_image_list"
 
         if type_hash[:type].to_s == "upload" && default.to_i < Upload::SEEDED_ID_THRESHOLD

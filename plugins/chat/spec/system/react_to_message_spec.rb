@@ -233,4 +233,18 @@ RSpec.describe "React to message", type: :system do
       end
     end
   end
+
+  context "when using one click reaction" do
+    before { current_user.user_option.update!(chat_quick_reactions_custom: "tada|smiley") }
+
+    it "appears in frequently used" do
+      sign_in(current_user)
+      chat.visit_channel(category_channel_1)
+
+      channel.click_quick_reaction(message_1, "tada")
+      channel.open_emoji_picker(message_1)
+
+      expect(page).to have_selector(".emoji-picker [data-emoji=\"tada\"]")
+    end
+  end
 end

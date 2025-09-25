@@ -411,7 +411,7 @@ nav.post-controls {
             // Like button when like count is present
             .discourse-no-touch & {
               &:hover {
-                background: var(--primary-low);
+                background: var(--d-hover);
               }
             }
           }
@@ -1115,6 +1115,8 @@ kbd {
 // will remove margins from first (top) and last (bottom) child elements
 blockquote,
 blockquote .post__contents-cooked-quote {
+  overflow-wrap: break-word;
+
   > *:first-child {
     margin-top: 0 !important;
   }

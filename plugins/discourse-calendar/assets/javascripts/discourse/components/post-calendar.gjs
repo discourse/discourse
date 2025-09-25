@@ -37,7 +37,8 @@ export default class PostCalendar extends Component {
     return this.args.options.calendarFullDay === "true";
   }
 
-  get events() {
+  @action
+  loadEvents() {
     const events = [];
 
     if (this.isStatic) {
@@ -302,7 +303,7 @@ export default class PostCalendar extends Component {
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
-        @events={{this.events}}
+        @onLoadEvents={{this.loadEvents}}
         @height={{@height}}
       />
     </div>

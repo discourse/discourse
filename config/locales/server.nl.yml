@@ -1654,7 +1654,6 @@ nl:
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen (gehotlinkt) converteren naar lokale afbeeldingen door ze te downloaden; Zo blijft de inhoud behouden, ook als de afbeeldingen in de toekomst van de externe website worden verwijderd."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
-    disabled_image_download_domains: "Externe afbeeldingen worden nooit gedownload vanaf deze domeinen. Lijst gescheiden door pijpsymbolen."
     block_hotlinked_media: "Voorkomen dat gebruikers externe media (gehotlinkt) opnemen in hun berichten. Externe media die niet via 'download_remote_images_to_local' zijn gedownload, worden vervangen door een tijdelijke link."
     block_hotlinked_media_exceptions: "Een lijst van basis-URL's die zijn uitgezonderd van de instelling block_hotlinked_media. Voeg het protocol toe (bijvoorbeeld https://voorbeeld.com)."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
@@ -1705,7 +1704,6 @@ nl:
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
-    email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Verplicht gebruikers om tweeledige verificatie in te schakelen voordat ze toegang krijgen tot de Discourse-interface. Deze instelling heeft geen invloed op verificatie via API of 'DiscourseConnect-provider'. Als enforce_second_factor_on_external_auth is ingeschakeld, kunnen gebruikers zich niet aanmelden met externe verificatieproviders nadat ze tweeledige verificatie hebben ingesteld."
@@ -1820,8 +1818,6 @@ nl:
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     hidden_post_visible_groups: "Sta leden van deze groepen toe om verborgen berichten te bekijken. Personeelgebruikers kunnen altijd verborgen berichten bekijken."
     allow_index_in_robots_txt: "Geef in robots.txt aan dat deze site mag worden geïndexeerd door webzoekmachines. Je kunt <a href='%{base_path}/admin/customize/robots'>je robots.txt hier overschrijven</a>. <b>WAARSCHUWING</b>: onjuist geconfigureerde regels kunnen verhinderen dat je site wordt gecrawld zoals verwacht."
-    blocked_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
     auto_approve_email_domains: "Gebruikers met e-mailadressen uit deze domeinenlijst worden automatisch goedgekeurd. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
@@ -2237,7 +2233,6 @@ nl:
     clean_up_unused_staged_users_after_days: "Aantal dagen voordat een niet-gebruikte gefaseerde gebruiker (zonder berichten) wordt verwijderd. Stel dit in op 0 om opschonen uit te schakelen."
     user_selected_primary_groups: "Gebruikers mogen hun eigen primaire groep instellen"
     max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
-    allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Lijst gescheiden door pijpsymbolen."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
@@ -2476,7 +2471,6 @@ nl:
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
-    content_localization_anon_language_switcher: "Schakel een taalkiezer in waarmee niet-aangemelde sitebezoekers kunnen schakelen tussen vertaalde versies van Discourse en door gebruikers bijgedragen content. Afhankelijk van de lijst van talen die is gedefinieerd in 'content localization supported locales'."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -2548,7 +2542,6 @@ nl:
       invalid_uncategorized_category_setting: 'De categorie ''Ongecategoriseerd'' kan niet worden geselecteerd als ''Ongecategoriseerde topics toestaan'' niet is ingeschakeld.'
       invalid_search_ranking_weights: "Waarde is ongeldig voor site-instelling search_ranking_weights. Voorbeeld: '{0.1,0.2,0.3,1.0}'. Merk op dat de maximale waarde voor elk gewicht 1,0 is."
       content_localization_locale_limit: "Het aantal ondersteunde talen mag niet meer dan %{max} zijn."
-      content_localization_anon_language_switcher_requirements: "De taalkiezer vereist dat de site-instelling 'set locale from cookie' is ingeschakeld en dat 'content localization supported locales' minimaal één taal bevat."
       mediaconvert_role_arn_required: "AWS IAM-rol ARN is vereist wanneer je AWS MediaConvert gebruikt voor videoconversie."
       s3_credentials_required_for_video_conversion: "S3-aanmeldgegevens zijn vereist voor videoconversie. Configureer S3-toegangssleutels of schakel het IAM-profiel in."
     keywords:

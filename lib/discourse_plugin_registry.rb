@@ -74,6 +74,7 @@ class DiscoursePluginRegistry
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
   define_register :discourse_dev_populate_reviewable_types, Set
+  define_register :category_update_param_with_callback, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -229,9 +230,9 @@ class DiscoursePluginRegistry
     html_builders[name] << block
   end
 
-  def self.build_html(name, ctx = nil)
+  def self.build_html(name, ctx = nil, **kwargs)
     builders = html_builders[name] || []
-    builders.map { |b| b.call(ctx) }.join("\n").html_safe
+    builders.map { |b| b.call(ctx, **kwargs) }.join("\n").html_safe
   end
 
   def self.seed_paths

@@ -23,16 +23,35 @@ export default RouteTemplate(
         <h3><LinkTo
             @route="adminSiteText"
             @query={{hash q=@controller.hasMultipleSubjects}}
+            class="email-template__has-multiple-subjects"
           >{{i18n
               "admin.customize.email_templates.multiple_subjects"
             }}</LinkTo></h3>
       {{else}}
-        <Input @value={{@controller.buffered.subject}} />
+        <Input
+          @value={{@controller.buffered.subject}}
+          class="email-template__subject"
+        />
       {{/if}}
       <br />
 
       <label>{{i18n "admin.customize.email_templates.body"}}</label>
-      <DEditor @value={{@controller.buffered.body}} />
+
+      {{#if @controller.hasMultipleBodyTemplates}}
+        <h3><LinkTo
+            @route="adminSiteText"
+            @query={{hash q=@controller.hasMultipleBodyTemplates}}
+            class="email-template__has-multiple-bodies"
+          >{{i18n
+              "admin.customize.email_templates.multiple_bodies"
+            }}</LinkTo></h3>
+      {{else}}
+        <DEditor
+          @value={{@controller.buffered.body}}
+          @forceEditorMode="markdown"
+          class="email-template__body"
+        />
+      {{/if}}
 
       <SaveControls
         @model={{@controller.emailTemplate}}

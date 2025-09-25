@@ -26,7 +26,7 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
 
   test("default", async function (assert) {
     const categories = this.site.categoriesList;
-    const category = categories.findBy("id", 2);
+    const category = categories.find((item) => item.id === 2);
 
     await render(
       <template>

@@ -250,6 +250,18 @@ discourse_ai:
   ai_embeddings_semantic_related_include_closed_topics:
     default: true
     area: "ai-features/embeddings"
+  ai_embeddings_semantic_related_age_penalty:
+    default: 0.3
+    type: float
+    min: 0.0
+    max: 2.0
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_related_age_time_scale:
+    default: 365
+    type: integer
+    min: 1
+    max: 3650
+    area: "ai-features/embeddings"
   ai_embeddings_backfill_batch_size:
     default: 250
     hidden: true
@@ -411,12 +423,19 @@ discourse_ai:
     type: list
     list_type: compact
     area: "ai-features/bot"
-  ai_bot_discover_persona:
-    default: ""
+  ai_discover_enabled:
+    default: false
+    client: true
+    area: "ai-features/search"
+  ai_discover_persona:
+    default: "-34"
     type: enum
     client: true
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/search"
+  ai_bot_discover_persona: # Replaced by ai_discover_persona. TODO(roman): Remove 2026-01-01
+    default: ""
+    hidden: true
   ai_automation_max_triage_per_minute:
     default: 60
     hidden: true

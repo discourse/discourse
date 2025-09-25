@@ -7,12 +7,21 @@ class EnableDiscourseIdValidator
 
   def valid_value?(val)
     return true if val == "f"
-    return false if credentials_missing?
+
+    if credentials_missing?
+      @result = DiscourseId::Register.call
+      return @result.success?
+    end
+
     true
   end
 
   def error_message
-    I18n.t("site_settings.errors.discourse_id_credentials") if credentials_missing?
+    if @result&.error.present?
+      @result.error
+    elsif credentials_missing?
+      I18n.t("site_settings.errors.discourse_id_credentials")
+    end
   end
 
   private
