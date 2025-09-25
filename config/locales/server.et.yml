@@ -1105,6 +1105,10 @@ et:
           complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      no_action_post:
+        title: "Tegevust pole"
+      delete_post:
+        complete: "Postitus kustutatud"
       no_action_user:
         title: "Tegevust pole"
       delete_user:

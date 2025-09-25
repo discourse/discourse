@@ -56,7 +56,7 @@ hr:
         spam:
           name: "Nepoželjno"
       modals:
-        select_option: "Odaberi opciju..."
+        select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
         progress_chart:
@@ -169,7 +169,7 @@ hr:
           request: "Zahtjev"
           response: "Odgovor"
           next_log: "Sljedeći"
-          previous_log: "Predhodno"
+          previous_log: "Prethodni"
         invite_ai_conversation:
           button: "Pozovite"
         share_modal:

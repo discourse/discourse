@@ -4613,6 +4613,11 @@ cs:
         title: "Ponechat příspěvek smazaný"
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+      no_action_post:
+        title: "Bez akce"
+      delete_post:
+        title: "Odstranit příspěvek"
+        complete: "Příspěvek smazán"
       no_action_user:
         title: "Bez akce"
       silence_user:

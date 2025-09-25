@@ -105,7 +105,7 @@ pl_PL:
             skip_empty:
               label: Pomiń wysyłanie wiadomości prywatnej, jeśli nie ma żadnych wyników
             attach_csv:
-              label: Dołącz plik CSV do PM
+              label: Dołącz plik CSV do PW
             users_from_group:
               label: Wyślij indywidualną wiadomość prywatną do każdego członka grupy
         recurring_data_explorer_result_topic:

@@ -3284,6 +3284,11 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        title: "Slet indlæg"
+        complete: "Indlæg slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

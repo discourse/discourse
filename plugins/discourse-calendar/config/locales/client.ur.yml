@@ -82,6 +82,8 @@ ur:
           every_week: "ہر ہفتے اس ہفتے کے دن"
           every_two_weeks: "ہر دو ہفتے بعد اس ہفتے کے دن"
           every_four_weeks: "ہر چار ہفتے بعد اس ہفتے کے دن"
+        allow_chat:
+          label: "چیٹ انٹیگریشن"
         url:
           label: "URL"
           placeholder: "اختیاری"

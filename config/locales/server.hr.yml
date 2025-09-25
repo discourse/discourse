@@ -1419,7 +1419,6 @@ hr:
     enable_group_directory: "Omogućite direktorij grupa za pregledavanje"
     enable_category_group_moderation: "Dopustite grupama moderiranje sadržaja u određenim kategorijama"
     group_in_subject: "Postavite %%{optional_pm} u predmetu e-pošte prema imenu prve grupe u PM-u, pogledajte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prilagodite format predmeta za standardne e-poruke</a>"
-    anonymous_posting_min_trust_level: "Minimalna razina povjerenja potrebna za omogućavanje anonimnog objavljivanja"
     show_copy_button_on_codeblocks: "Dodajte gumb kodnim blokovima za kopiranje sadržaja bloka u korisnički međuspremnik."
     embed_any_origin: "Dopusti sadržaj koji se može ugraditi bez obzira na podrijetlo. Ovo je potrebno za mobilne aplikacije sa statičnim HTML-om."
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
@@ -2809,6 +2808,11 @@ hr:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      no_action_post:
+        title: "Nema akcije"
+      delete_post:
+        title: "Izbrišite objavu"
+        complete: "Post izbrisan"
       no_action_user:
         title: "Nema akcije"
       delete_user:

@@ -556,6 +556,8 @@ lv:
           complete: "Lietotājs dzēsts."
       reject:
         title: "Noraidīt"
+      delete_post:
+        complete: "Ieraksts dzēsts"
       delete_user:
         complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"

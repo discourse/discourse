@@ -71,7 +71,7 @@ hr:
           every_day: "Svaki dan"
         url:
           label: "URL"
-          placeholder: "Neobvezno"
+          placeholder: "Opcionalno"
         location:
           label: "Lokacija"
         description:
