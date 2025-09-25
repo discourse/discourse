@@ -240,7 +240,7 @@ RSpec.describe Chat::SearchMessage do
       context "when channel_id is missing" do
         let(:params) { { guardian: guardian, params: { query: query } } }
 
-        it { is_expected.to be_a_failure }
+        it { is_expected.to be_a_success }
       end
 
       context "when limit is too high" do

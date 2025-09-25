@@ -59,7 +59,11 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.find_by(id: params.channel_id) if params.channel_id
+      return nil unless params.channel_id
+
+      channel = ::Chat::Channel.find_by(id: params.channel_id)
+      raise ActiveRecord::RecordNotFound if channel.nil?
+      channel
     end
 
     def can_view_channel(guardian:, channel:)
