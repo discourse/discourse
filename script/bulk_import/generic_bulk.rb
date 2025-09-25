@@ -371,7 +371,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing category moderation groups..."
 
     moderation_groups = query(<<~SQL)
-      SELECT c.id AS category_id, 
+      SELECT c.id AS category_id,
             m.value AS group_id
       FROM categories c,
            JSON_EACH(c.moderation_group_ids) m
@@ -1125,15 +1125,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def event_bbcode(event)
-    return unless defined?(::DiscoursePostEvent)
+    return unless defined?(DiscoursePostEvent)
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
-    status = ::DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
-        name.ljust(::DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
-          ::DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
+          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
         )
       end
     url = event["url"]
@@ -2327,7 +2327,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_events
     puts "", "Importing events..."
 
-    unless defined?(::DiscoursePostEvent)
+    unless defined?(DiscoursePostEvent)
       puts "  Skipping import of events because the plugin is not installed."
       return
     end
@@ -2340,7 +2340,7 @@ class BulkImport::Generic < BulkImport::Base
 
     default_custom_fields = "{}"
     timezone = "UTC"
-    public_group_invitees = "{#{::DiscoursePostEvent::Event::PUBLIC_GROUP}}"
+    public_group_invitees = "{#{DiscoursePostEvent::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
     existing_events = DiscoursePostEvent::Event.pluck(:id).to_set
@@ -2360,7 +2360,7 @@ class BulkImport::Generic < BulkImport::Base
         timezone: timezone,
         raw_invitees:
           (
-            if row["status"] == ::DiscoursePostEvent::Event.statuses[:public]
+            if row["status"] == DiscoursePostEvent::Event.statuses[:public]
               public_group_invitees
             else
               standalone_invitees

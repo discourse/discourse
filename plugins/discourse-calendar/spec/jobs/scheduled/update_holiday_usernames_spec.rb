@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::UpdateHolidayUsernames do
+describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
+  let(:job) { described_class.new }
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 
   before do
@@ -15,12 +16,12 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     raw = 'Rome [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
     post = create_post(raw: raw, topic: calendar_post.topic)
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     expect(DiscourseCalendar.users_on_holiday).to eq([post.user.username])
 
     freeze_time Time.utc(2018, 6, 7, 18, 40)
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     expect(DiscourseCalendar.users_on_holiday).to eq([])
   end
@@ -34,7 +35,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     raw2 = 'Rome [date="2018-06-05"]' # the whole day
     post2 = create_post(raw: raw2, topic: calendar_post.topic)
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
     expect(
       UserCustomField.exists?(
         name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
@@ -49,7 +50,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     ).to be_truthy
 
     freeze_time Time.utc(2018, 6, 6, 10, 00)
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
     expect(
       UserCustomField.exists?(
         name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
@@ -64,7 +65,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     ).to be_falsey
 
     freeze_time Time.utc(2018, 6, 7, 10, 00)
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
     expect(
       UserCustomField.exists?(
         name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
@@ -86,7 +87,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     raw = 'Rome [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
     post = create_post(raw: raw, topic: calendar_post.topic)
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     status = post.user.user_status
@@ -103,7 +104,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     raw = 'Rome [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
     post = create_post(raw: raw, topic: calendar_post.topic)
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     expect(post.user.user_status).to be_nil
@@ -118,7 +119,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     custom_status = { description: "I am working on holiday", emoji: "construction_worker_man" }
     post.user.set_status!(custom_status[:description], custom_status[:emoji])
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     status = post.user.user_status
@@ -149,7 +150,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     )
 
     freeze_time tomorrow + 2.day
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     status = post.user.user_status
@@ -166,7 +167,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
     raw = 'Rome [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
     post = create_post(raw: raw, topic: calendar_post.topic)
 
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     expect(post.user.user_status).to be_present
@@ -178,7 +179,7 @@ describe DiscourseCalendar::UpdateHolidayUsernames do
       { raw: 'Rome [date="2018-06-05" time="10:20:00"] to [date="2018-12-10" time="10:20:00"]' },
       revised_at: Time.now,
     )
-    DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+    job.execute(nil)
 
     post.user.reload
     expect(post.user.user_status).to be_present

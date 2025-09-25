@@ -20,7 +20,7 @@ end
 
 Discourse::Application.routes.draw do
   mount DiscourseCalendar::Engine, at: "/"
-  mount ::DiscoursePostEvent::Engine, at: "/"
+  mount DiscoursePostEvent::Engine, at: "/"
 
   scope constraints: StaffConstraint.new do
     get "/admin/plugins/calendar" => "admin/plugins#index"
