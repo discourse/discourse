@@ -10,7 +10,6 @@ module DiscourseUserNotes
       user = User.where(id: params[:user_id]).first
       raise Discourse::NotFound if user.blank?
 
-      # TODO: add modifier?
       notes = ::DiscourseUserNotes.notes_for(params[:user_id])
       render json: { extras: { username: user.username }, user_notes: create_json(notes.reverse) }
     end
