@@ -131,7 +131,7 @@ export default class NavItem extends EmberObject {
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.new_new_view_enabled) {
-      items = items.reject((item) => item === "unread");
+      items = items.filter((item) => item !== "unread");
     }
     const filterType = (args.filterMode || "").split("/").pop();
 

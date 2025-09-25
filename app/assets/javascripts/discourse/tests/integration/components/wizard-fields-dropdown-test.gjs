@@ -179,7 +179,7 @@ module(
       await colorPalettesSelector.expand();
 
       lightColors
-        .reject((colorDef) => colorDef.name === "secondary")
+        .filter((colorDef) => colorDef.name !== "secondary")
         .forEach((colorDef) => {
           assert
             .dom(
@@ -190,7 +190,7 @@ module(
         });
 
       darkColors
-        .reject((colorDef) => colorDef.name === "secondary")
+        .filter((colorDef) => colorDef.name !== "secondary")
         .forEach((colorDef) => {
           assert
             .dom(

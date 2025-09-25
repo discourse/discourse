@@ -57,7 +57,7 @@ export async function joinChannel(name, user) {
 export async function leaveChannel(name, user) {
   const channel = getChannelInfo(name);
   if (channel.users.any((u) => u.id === user.id)) {
-    channel.users = channel.users.reject((u) => u.id === user.id);
+    channel.users = channel.users.filter((u) => u.id !== user.id);
     channel.count -= 1;
     channel.last_message_id += 1;
     await publishToMessageBus(
