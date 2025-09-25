@@ -30,8 +30,8 @@ export default class VoteBox extends Component {
         content.label = i18n("topic_voting.voted_title");
         content.title = i18n("topic_voting.voted_title");
       } else if (this.currentUser.vote_limit_0) {
-        content.label = i18n("topic_voting.not_allowed_to_vote");
-        content.title = i18n("topic_voting.not_allowed_to_vote_title");
+        content.label = i18n("topic_voting.locked");
+        content.title = i18n("topic_voting.locked_description");
       } else if (this.currentUser.votes_exceeded) {
         content.label = i18n("topic_voting.voting_limit");
         content.title = i18n("topic_voting.reached_limit");
@@ -47,12 +47,22 @@ export default class VoteBox extends Component {
     return content;
   }
 
-  get userHasExceededVotingLimit() {
-    return this.currentUser.votes_exceeded && !this.topic.user_voted;
+  get disabled() {
+    return (
+      this.currentUser.votes_exceeded &&
+      !this.topic.user_voted &&
+      !this.currentUser.vote_limit_0
+    );
   }
 
   get showVotedMenu() {
     return this.hasVoted && !this.hasSeenSuccessMenu;
+  }
+
+  get buttonClasses() {
+    return this.currentUser.vote_limit_0
+      ? "btn-default vote-button"
+      : "btn-primary vote-button";
   }
 
   @action
@@ -60,6 +70,10 @@ export default class VoteBox extends Component {
     applyBehaviorTransformer("topic-vote-button-click", () => {
       if (!this.currentUser) {
         return this.args.showLogin();
+      }
+
+      if (this.currentUser.vote_limit_0) {
+        return;
       }
 
       // If user has already voted and seen the success menu, don't do anything
@@ -111,8 +125,8 @@ export default class VoteBox extends Component {
       @label={{this.buttonContent.label}}
       @onShow={{this.onShowMenu}}
       @onClose={{this.onCloseMenu}}
-      class="btn-primary vote-button topic-voting-menu__trigger"
-      @disabled={{this.userHasExceededVotingLimit}}
+      class={{this.buttonClasses}}
+      @disabled={{this.disabled}}
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:content>
@@ -130,6 +144,11 @@ export default class VoteBox extends Component {
                   path="/my/activity/votes"
                 )
               }}
+            </dropdown.item>
+          {{else if this.currentUser.vote_limit_0}}
+            <dropdown.item class="topic-voting-menu__title --locked">
+              {{icon "lock"}}
+              <span>{{i18n "topic_voting.locked_description"}}</span>
             </dropdown.item>
           {{else}}
             <dropdown.item>

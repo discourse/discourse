@@ -16,8 +16,8 @@ en:
       voting_closed_title: "Closed"
       voting_limit: "Limit"
       see_votes: "My Votes"
-      not_allowed_to_vote: "Locked"
-      not_allowed_to_vote_title: "Increase your trust level to vote"
+      locked: "Locked"
+      locked_description: "Increase your trust level to vote"
       votes_left:
         one: "You have %{count} vote left, see <a href='%{path}'>your votes</a>."
         other: "You have %{count} votes left, see <a href='%{path}'>your votes</a>."
