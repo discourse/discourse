@@ -2095,7 +2095,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_voting_votes
     puts "", "Importing votes for posts..."
 
-    unless defined?(::PostVoting)
+    unless defined?(PostVoting)
       puts "  Skipping import of votes for posts because the plugin is not installed."
       return
     end
