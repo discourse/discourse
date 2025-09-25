@@ -516,7 +516,7 @@ class BulkImport::Base
     created_at
     updated_at
   ]
-  GROUP_COLUMNS << :assignable_level if defined?(::DiscourseAssign)
+  GROUP_COLUMNS << :assignable_level if defined?(DiscourseAssign)
 
   USER_COLUMNS = %i[
     id
