@@ -425,7 +425,7 @@ export default class SearchMenu extends Component {
               @label="search.in_this_topic"
               @title="search.in_this_topic_tooltip"
               @action={{this.clearTopicContext}}
-              class="btn-small search-context"
+              class="btn-default btn-small search-context"
             />
           {{else if this.inPMInboxContext}}
             <DButton
@@ -433,7 +433,7 @@ export default class SearchMenu extends Component {
               @label="search.in_messages"
               @title="search.in_messages_tooltip"
               @action={{this.clearPMInboxContext}}
-              class="btn-small search-context"
+              class="btn-default btn-small search-context"
             />
           {{/if}}
 

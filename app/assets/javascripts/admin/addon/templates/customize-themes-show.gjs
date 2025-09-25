@@ -53,7 +53,7 @@ export default RouteTemplate(
             <DButton
               @action={{@controller.cancelEditingName}}
               @icon="xmark"
-              class="btn-small cancel-edit"
+              class="btn-default btn-small cancel-edit"
             />
           </div>
         {{else}}

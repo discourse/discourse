@@ -224,7 +224,7 @@ export default class AiSearchDiscoveries extends Component {
           <DButton
             @action={{this.continueConversation}}
             @label={{this.continueConvoBtnLabel}}
-            class="btn-small"
+            class="btn-default btn-small"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>

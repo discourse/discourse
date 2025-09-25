@@ -232,7 +232,7 @@ export default class EditRule extends Component {
         <DButton
           @label="chat_integration.edit_rule_modal.cancel"
           @action={{@closeModal}}
-          class="btn-large"
+          class="btn-default btn-large"
         />
       </:footer>
     </DModal>

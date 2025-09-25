@@ -84,7 +84,7 @@ export default class TestIntegration extends Component {
           <DButton
             @action={{@closeModal}}
             @label="chat_integration.test_modal.close"
-            class="btn-large"
+            class="btn-default btn-large"
           />
         </ConditionalLoadingSpinner>
       </:footer>

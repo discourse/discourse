@@ -347,7 +347,7 @@ export default class InstallThemeModal extends Component {
                         <span>{{i18n "admin.customize.theme.installed"}}</span>
                       {{else}}
                         <DButton
-                          class="btn-small"
+                          class="btn-default btn-small"
                           @label="admin.customize.theme.install"
                           @disabled={{this.installDisabled}}
                           @icon="upload"

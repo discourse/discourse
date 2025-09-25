@@ -28,6 +28,19 @@
 
   .topic-navigation {
     overflow-anchor: none;
+
+    .btn-toggle-localized-content.--active {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(var(--primary-rgb), 0.6) 100%,
+        rgb(var(--primary-rgb), 0.6) 100%
+      );
+      color: var(--d-button-default-text-color--hover);
+
+      .d-icon {
+        color: var(--d-button-default-text-color--hover);
+      }
+    }
   }
 
   // timeline
