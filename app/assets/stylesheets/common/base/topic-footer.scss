@@ -117,7 +117,8 @@
 }
 
 .container.posts .topic-navigation {
-  @include viewport.until(lg) {
+  @media screen and (width <= 924px) {
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     display: flex;
     justify-content: flex-end;
     align-items: center;

@@ -31,7 +31,7 @@ export default RouteTemplate(
       {{#if @controller.holidays}}
         <AdminHolidaysList
           @holidays={{@controller.holidays}}
-          @region_code={{@controller.selectedRegion}}
+          @regionCode={{@controller.selectedRegion}}
         />
       {{/if}}
     </div>

@@ -9,7 +9,7 @@ hr:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
     category:
-      create_as_post_voting_default: Nove teme se prema zadanim postavkama u ovoj kategoriji smatraju temama za glasanje nakon objave.
+      create_as_post_voting_default: Nakon objave, nove teme u ovoj kategoriji se, prema zadanim postavkama, smatraju temama za glasanje.
     composer:
       create_post_voting:
         label: "Kreirajte temu u kojoj možete glasati za pojedinu objavu."

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../fabricators/reaction_fabricator.rb"
+require_relative "../fabricators/reaction_fabricator"
 
 describe DiscourseReactions::Reaction do
   before { SiteSetting.discourse_reactions_enabled = true }

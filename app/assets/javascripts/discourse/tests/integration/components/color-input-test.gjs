@@ -28,4 +28,49 @@ module("Integration | Component | ColorInput", function (hooks) {
     await triggerEvent(".hex-input", "blur");
     assert.strictEqual(result, "052e3d", "with 6 digit hex");
   });
+
+  module("with fallback hex value provided", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.set("fallbackHexValue", "abcdef");
+    });
+
+    test("with empty hex value", async function (assert) {
+      this.set("hexValue", "");
+
+      await render(
+        <template>
+          <ColorInput
+            @hexValue={{this.hexValue}}
+            @fallbackHexValue={{this.fallbackHexValue}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("input.picker")
+        .hasValue("#abcdef", "uses fallback color when hexValue is empty")
+        .hasAttribute("title", "#abcdef", "sets title to fallback color");
+    });
+
+    test("with hex value", async function (assert) {
+      this.set("hexValue", "123456");
+
+      await render(
+        <template>
+          <ColorInput
+            @hexValue={{this.hexValue}}
+            @fallbackHexValue={{this.fallbackHexValue}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".hex-input")
+        .hasValue("123456", "ignores fallback if hexValue is provided");
+      assert
+        .dom("input.picker")
+        .hasValue("#123456", "uses hexValue when provided")
+        .hasAttribute("title", "#123456", "uses hexValue when provided");
+    });
+  });
 });

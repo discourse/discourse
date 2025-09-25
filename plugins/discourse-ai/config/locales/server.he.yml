@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "מזהה מודל"
+        max_prompt_tokens: "חלון הקשר"
   discourse_automation:
     ai:
       flag_types:
@@ -36,6 +41,9 @@ he:
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
+      llm_tagger:
+        title: תיוג נושאים באמצעות בינה מלאכותית
+        description: "לתייג נושאים אוטומטית באמצעות בינה מלאכותית"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
     ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
@@ -610,6 +618,7 @@ he:
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
     ai_staff_action_logger:
       updated: "עודכן"
+      set: "הגדרה"
       removed: "הוסרה"
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."

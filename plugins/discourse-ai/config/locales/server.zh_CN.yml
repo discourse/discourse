@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "模型 ID"
+        max_prompt_tokens: "上下文窗口"
   discourse_automation:
     ai:
       flag_types:
@@ -110,6 +115,8 @@ zh_CN:
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
     ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动私信"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
+    ai_discover_enabled: "启用发现搜索功能"
+    ai_discover_persona: "用于发现搜索功能的 Persona"
     ai_stability_api_key: "stability.ai API 的 API 密钥"
     ai_stability_engine: "用于 stability.ai API 的图片生成引擎"
     ai_stability_api_url: "stability.ai API 的 URL"
@@ -396,6 +403,9 @@ zh_CN:
         report_runner:
           name: "报告运行器"
           description: "报告自动化脚本中使用的默认角色"
+        discover:
+          name: "发现"
+          description: "发现功能中使用的默认 Persona（免费搜索）"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -593,6 +603,9 @@ zh_CN:
       updated: "已更新"
       set: "已设置"
       removed: "已移除"
+    translation:
+      errors:
+        disabled: "人工智能翻译功能未完全配置。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"

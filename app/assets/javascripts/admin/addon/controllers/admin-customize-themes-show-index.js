@@ -381,7 +381,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @action
   addChildTheme() {
     let themeId = parseInt(this.selectedChildThemeId, 10);
-    let theme = this.allThemes.findBy("id", themeId);
+    let theme = this.allThemes.find((t) => t.id === themeId);
     this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
   }
 

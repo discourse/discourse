@@ -69,7 +69,9 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id || category.model.id);
+      return Category.list().find(
+        (c) => c.id === (category.id || category.model.id)
+      );
     })
     .compact();
 
@@ -270,7 +272,7 @@ export function updateRecentSearches(currentUser, term) {
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {
-    recentSearches = recentSearches.without(term);
+    recentSearches = recentSearches.filter((item) => item !== term);
   } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
     recentSearches.popObject();
   }

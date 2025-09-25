@@ -10,7 +10,6 @@ ko:
       site_settings:
         categories:
           discourse_post_event: "Discourse 이벤트"
-          discourse_calendar: "Discourse 캘린더"
   js:
     notifications:
       titles:

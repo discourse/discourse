@@ -7,11 +7,9 @@
 cs:
   admin_js:
     admin:
-      calendar: "Kalendář"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
-          discourse_calendar: "Kalendář Discourse"
   js:
     notifications:
       titles:
@@ -44,6 +42,7 @@ cs:
         title: "Region"
         none: "Žádná"
         use_current_region: "Použít současný region"
+        select_region: "Vyberte region…"
         names:
           ae: "Spojené arabské emiráty"
           ar: "Argentina"

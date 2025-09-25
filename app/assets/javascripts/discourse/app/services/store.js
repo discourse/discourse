@@ -157,7 +157,9 @@ export default class StoreService extends Service {
     hydrated.set(
       "content",
       hydrated.get("content").map((item) => {
-        let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
+        let staleItem = stale.content.find(
+          (i) => i.primaryKey === item.get(primaryKey)
+        );
         if (staleItem) {
           for (const [key, value] of Object.entries(
             Object.getOwnPropertyDescriptors(staleItem)

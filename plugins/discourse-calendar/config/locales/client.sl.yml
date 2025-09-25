@@ -10,7 +10,6 @@ sl:
       site_settings:
         categories:
           discourse_post_event: "Dogodek Discourse"
-          discourse_calendar: "Koledar Discourse"
   js:
     discourse_automation:
       triggerables:
@@ -30,6 +29,7 @@ sl:
         title: "Regija"
         none: "Brez"
         use_current_region: "Uporabi trenutno regijo"
+        select_region: "Izberi regijo..."
         names:
           ar: "Argentina"
           at: "Avstrija"

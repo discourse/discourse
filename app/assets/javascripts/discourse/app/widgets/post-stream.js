@@ -108,9 +108,8 @@ createWidget("posts-filtered-notice", {
         this.attach("filter-show-all", attrs),
       ];
     } else if (filters.replies_to_post_number) {
-      const sourcePost = attrs.posts.findBy(
-        "post_number",
-        filters.replies_to_post_number
+      const sourcePost = attrs.posts.find(
+        (item) => item.post_number === filters.replies_to_post_number
       );
 
       return [

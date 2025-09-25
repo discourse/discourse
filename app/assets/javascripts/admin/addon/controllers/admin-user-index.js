@@ -602,7 +602,9 @@ export default class AdminUserIndexController extends Controller {
 
     bufferedIds
       .filter((id) => !currentIds.includes(id))
-      .forEach((id) => this.groupAdded(availableGroups.findBy("id", id)));
+      .forEach((id) =>
+        this.groupAdded(availableGroups.find((value) => value.id === id))
+      );
 
     currentIds
       .filter((id) => !bufferedIds.includes(id))

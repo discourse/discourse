@@ -8,13 +8,15 @@ export default class CreateTopicButton extends Component {
   @tracked btnTypeClass = this.args.btnTypeClass || "btn-default";
   @tracked label = this.args.label ?? "topic.create";
 
+  btnId = this.args.btnId ?? "create-topic";
+
   <template>
     {{#if @canCreateTopic}}
       <DButton
         @action={{@action}}
         @icon="far-pen-to-square"
         @label={{this.label}}
-        id="create-topic"
+        id={{this.btnId}}
         class={{concatClass @btnClass this.btnTypeClass}}
       />
 

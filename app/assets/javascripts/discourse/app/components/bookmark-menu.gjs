@@ -313,7 +313,7 @@ export default class BookmarkMenu extends Component {
                 @icon="trash-can"
                 @label="delete"
                 @action={{this.onRemoveBookmark}}
-                class="bookmark-menu__row-btn btn-transparent btn-danger"
+                class="bookmark-menu__row-btn --danger"
               />
             </dropdown.item>
 

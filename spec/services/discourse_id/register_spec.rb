@@ -160,10 +160,6 @@ RSpec.describe DiscourseId::Register do
             expect(SiteSetting.discourse_id_client_secret).to eq("new_client_secret_456")
           end
 
-          it "enables Discourse ID" do
-            expect { result }.to change { SiteSetting.enable_discourse_id }.to(true)
-          end
-
           it "sets Redis expiration for challenge token" do
             result
             expect(Discourse.redis.ttl("discourse_id_challenge_token")).to be > 0
@@ -242,7 +238,6 @@ RSpec.describe DiscourseId::Register do
         result
         expect(SiteSetting.discourse_id_client_id).to eq(client_id)
         expect(SiteSetting.discourse_id_client_secret).to eq(client_secret)
-        expect(SiteSetting.enable_discourse_id).to be(true)
       end
     end
 

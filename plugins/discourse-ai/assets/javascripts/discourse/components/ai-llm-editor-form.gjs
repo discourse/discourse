@@ -36,8 +36,10 @@ export default class AiLlmEditorForm extends Component {
         return { provider_params: {} };
       }
 
-      const info = this.args.llms.resultSetMeta.presets.findBy("id", id);
-      const modelInfo = info.models.findBy("name", modelName);
+      const info = this.args.llms.resultSetMeta.presets.find(
+        (item) => item.id === id
+      );
+      const modelInfo = info.models.find((item) => item.name === modelName);
 
       return {
         max_prompt_tokens: modelInfo.tokens,

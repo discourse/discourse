@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 pt:
+  admin_js:
+    admin:
+      calendar: "Calendário e Eventos"
+      site_settings:
+        categories:
+          discourse_calendar: "Calendário e Eventos"
   js:
     discourse_automation:
       triggerables:
@@ -16,6 +22,8 @@ pt:
     discourse_calendar:
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"
+      holidays:
+        header_description: "Escolha uma região para ver as férias dessa região. Os feriados desativados serão excluídos do calendário de férias dos funcionários."
       date: "Data"
       region:
         none: "Nenhuma"

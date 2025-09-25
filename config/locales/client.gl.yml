@@ -1189,7 +1189,7 @@ gl:
         invalid: "Este nome de usuario non é correcto. Só pode conter números e letras."
       add_email:
         title: "Engadir correo electrónico"
-        add: "engadir"
+        add: "Engadir"
       change_email:
         title: "Cambiar o correo electrónico"
         taken: "Sentímolo pero este correo non está dispoñíbel."

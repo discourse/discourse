@@ -1682,6 +1682,7 @@ de:
         in_progress: "(E-Mail wird gesendet)"
         error: "(Fehler)"
         action: "Sende eine E-Mail zum Zurücksetzen des Passworts"
+        staged_user: "Vorbereitete Benutzer können keine E-Mails zum Zurücksetzen des Passworts erhalten."
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
@@ -1790,7 +1791,7 @@ de:
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       add_email:
         title: "E-Mail hinzufügen"
-        add: "hinzufügen"
+        add: "Hinzufügen"
       change_email:
         title: "E-Mail-Adresse ändern"
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
@@ -2616,6 +2617,7 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
+      read_only: "nur Lesen"
     timezone_input:
       ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z. B. Asien/Kolkata)"
     select_kit:
@@ -3351,8 +3353,6 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
-      create_disabled_tag: "Du darfst keine Themen mit diesem Schlagwort erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -6269,7 +6269,7 @@ de:
             description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: 'Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern.'
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6709,6 +6709,8 @@ de:
         schema:
           title: "Einstellung „%{name}“ bearbeiten"
           back_button: "Zurück zu %{name}"
+          move_up: "Nach oben"
+          move_down: "Nach unten"
           fields:
             required: "*erforderlich"
             groups:
@@ -6741,6 +6743,7 @@ de:
           view: "Ansehen"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
           set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
+          set_default_success: "%{schemeName} als Standard-Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
           from_theme: "Vom Theme: %{name}"
           filters:

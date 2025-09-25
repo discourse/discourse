@@ -13,9 +13,8 @@ export default class AdminPluginsHouseAdsShow extends DiscourseRoute {
       });
     } else {
       return new TrackedObject(
-        this.modelFor("adminPlugins.houseAds").findBy(
-          "id",
-          parseInt(params.ad_id, 10)
+        this.modelFor("adminPlugins.houseAds").find(
+          (item) => item.id === parseInt(params.ad_id, 10)
         )
       );
     }

@@ -170,5 +170,39 @@ describe Jobs::DetectTranslateTopic do
         job.execute({ topic_id: personal_pm_topic.id })
       end
     end
+
+    describe "force arg" do
+      it "processes private content when force is true" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_topic)
+          .once
+
+        job.execute({ topic_id: group_pm_topic.id, force: true })
+      end
+
+      it "processes PM content when force is true" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_topic)
+          .once
+
+        job.execute({ topic_id: personal_pm_topic.id, force: true })
+      end
+    end
+
+    it "publishes a MessageBus event to update the topic" do
+      allow(DiscourseAi::Translation::TopicLocaleDetector).to receive(:detect_locale).with(
+        group_pm_topic,
+      ).and_return("en")
+      allow(DiscourseAi::Translation::TopicLocalizer).to receive(:localize).and_return(true)
+
+      message =
+        MessageBus.track_publish { job.execute({ topic_id: group_pm_topic.id, force: true }) }
+
+      expect(message.count).to eq(1)
+      expect(message.first.channel).to eq("/topic/#{group_pm_topic.id}")
+      expect(message.first.data).to eq(reload_topic: true)
+    end
   end
 end

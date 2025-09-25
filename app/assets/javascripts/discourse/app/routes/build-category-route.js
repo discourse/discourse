@@ -119,7 +119,9 @@ class AbstractCategoryRoute extends DiscourseRoute {
     let categoryName = category.displayName;
     if (category.parent_category_id) {
       const list = Category.list();
-      const parentCategory = list.findBy("id", category.parent_category_id);
+      const parentCategory = list.find(
+        (c) => c.id === category.parent_category_id
+      );
       categoryName = `${parentCategory.displayName}/${categoryName}`;
     }
 

@@ -96,7 +96,7 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed("currentThemeId")
   defaultDarkSchemeId(themeId) {
-    const theme = this.userSelectableThemes?.findBy("id", themeId);
+    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
     return theme?.dark_color_scheme_id || -1;
   }
 
@@ -167,12 +167,14 @@ export default class InterfaceController extends Controller {
       return false;
     }
 
-    const theme = userThemes.findBy("id", themeId);
+    const theme = userThemes.find((t) => t.id === themeId);
     if (!theme) {
       return false;
     }
 
-    return userColorSchemes.findBy("id", theme.color_scheme_id);
+    return userColorSchemes.find(
+      (colorScheme) => colorScheme.id === theme.color_scheme_id
+    );
   }
 
   @discourseComputed("model.user_option.theme_ids", "themeId")
@@ -279,7 +281,7 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed("selectedDarkColorSchemeId", "currentThemeId")
   showInterfaceColorModeSelector(selectedDarkColorSchemeId, themeId) {
-    const theme = this.userSelectableThemes?.findBy("id", themeId);
+    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
     return (
       (this.defaultDarkSchemeId > 0 &&
         theme.color_scheme_id &&
@@ -357,15 +359,14 @@ export default class InterfaceController extends Controller {
       return;
     }
 
-    const theme = this.userSelectableThemes?.findBy("id", this.themeId);
+    const theme = this.userSelectableThemes?.find((t) => t.id === this.themeId);
 
     // we don't want to display the numeric ID of a scheme
     // when it is set by the theme but not marked as user selectable
     if (
       theme?.color_scheme_id === this.session.userColorSchemeId &&
-      !this.userSelectableColorSchemes.findBy(
-        "id",
-        this.session.userColorSchemeId
+      !this.userSelectableColorSchemes.find(
+        (t) => t.id === this.session.userColorSchemeId
       )
     ) {
       return;

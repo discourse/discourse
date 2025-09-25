@@ -130,9 +130,20 @@ export default class WelcomeBanner extends Component {
   get bgImgStyle() {
     if (this.siteSettings.welcome_banner_image) {
       return htmlSafe(
-        `background-image: url(${escapeExpression(
+        `background-image:url(${escapeExpression(
           this.siteSettings.welcome_banner_image
-        )})`
+        )});`
+      );
+    }
+  }
+
+  get textColorStyle() {
+    if (
+      this.siteSettings.welcome_banner_image &&
+      this.siteSettings.welcome_banner_text_color
+    ) {
+      return htmlSafe(
+        `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
     }
   }
@@ -153,7 +164,10 @@ export default class WelcomeBanner extends Component {
           class="custom-search-banner-wrap welcome-banner__wrap"
           style={{if this.bgImgStyle this.bgImgStyle}}
         >
-          <div class="welcome-banner__title">
+          <div
+            class="welcome-banner__title"
+            style={{if this.textColorStyle this.textColorStyle}}
+          >
             {{htmlSafe this.headerText}}
             {{#if this.subheaderText}}
               <p class="welcome-banner__subheader">

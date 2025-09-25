@@ -19,7 +19,7 @@ export default class UserField extends RestModel {
   }
 
   static fieldTypeById(id) {
-    return this.fieldTypes().findBy("id", id);
+    return this.fieldTypes().find((value) => value.id === id);
   }
 
   @tracked field_type;

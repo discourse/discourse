@@ -24,7 +24,9 @@ export default class AdminWatchedWordsActionController extends Controller {
   showWordsList;
 
   findAction(actionName) {
-    return (this.adminWatchedWords.model || []).findBy("nameKey", actionName);
+    return (this.adminWatchedWords.model || []).find(
+      (item) => item.nameKey === actionName
+    );
   }
 
   @discourseComputed("actionNameKey", "adminWatchedWords.model")
@@ -63,7 +65,7 @@ export default class AdminWatchedWordsActionController extends Controller {
           continue;
         }
 
-        const match = otherAction.words.findBy("id", arg.id);
+        const match = otherAction.words.find((w) => w.id === arg.id);
         if (match) {
           otherAction.words.removeObject(match);
           break;

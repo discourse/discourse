@@ -20,9 +20,8 @@ export default class FlairChooser extends ComboBoxComponent {
 
   @computed("value", "content.[]", "selectKit.noneItem")
   get selectedContent() {
-    const content = (this.content || []).findBy(
-      this.selectKit.valueProperty,
-      this.value
+    const content = (this.content || []).find(
+      (value) => value[this.selectKit.valueProperty] === this.value
     );
 
     if (content) {
