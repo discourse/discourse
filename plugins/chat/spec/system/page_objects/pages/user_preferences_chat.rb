@@ -34,13 +34,7 @@ module PageObjects
         button_element = page.find(".save-changes")
         button_element.click
 
-        try_until_success do
-          # When page reloads, the old reference to the button will be stale
-          expect { button_element == page.find(".save-changes") }.to raise_error(
-            Playwright::Error,
-            /handle from a different document/,
-          )
-        end
+        wait_until_hidden(button_element)
       end
     end
   end
