@@ -76,15 +76,13 @@ module Jobs
 
     def rebuild_registered_search_handlers(limit: 5_000, indexer: SearchIndexer)
       DiscoursePluginRegistry.search_handlers.each do |handler|
-        puts "rebuilding #{handler[:table_name]} search data" if @verbose
-
         unindexed_record_ids =
           handler[:load_unindexed_record_ids].call(
             limit: limit,
             index_version: handler[:index_version],
           )
 
-        puts "indexing #{unindexed_record_ids.size} record(s)" if @verbose
+        puts "rebuilding #{unindexed_record_ids.size} chat messages" if @verbose
 
         unindexed_record_ids.each do |id|
           record = handler[:model_class].find_by(id: id)
