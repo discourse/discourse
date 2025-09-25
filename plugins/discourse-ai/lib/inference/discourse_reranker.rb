@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Inference
     class DiscourseReranker
       def self.perform!(endpoint, model, content, candidates, api_key)

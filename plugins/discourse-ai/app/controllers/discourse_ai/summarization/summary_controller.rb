@@ -3,7 +3,7 @@
 module DiscourseAi
   module Summarization
     class SummaryController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def show
         topic = Topic.find(params[:topic_id])

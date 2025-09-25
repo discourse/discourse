@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiLlmQuotasController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         quotas = LlmQuota.includes(:group)

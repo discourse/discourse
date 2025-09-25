@@ -3,7 +3,7 @@
 module DiscourseAi
   module Discover
     class DiscoveriesController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
       requires_login
 
       def reply

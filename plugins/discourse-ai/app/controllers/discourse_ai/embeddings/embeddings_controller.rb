@@ -3,7 +3,7 @@
 module DiscourseAi
   module Embeddings
     class EmbeddingsController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       SEMANTIC_SEARCH_TYPE = "semantic_search"
 

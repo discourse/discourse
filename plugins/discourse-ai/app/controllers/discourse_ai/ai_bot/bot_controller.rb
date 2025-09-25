@@ -3,7 +3,7 @@
 module DiscourseAi
   module AiBot
     class BotController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
       requires_login
 
       def show_debug_info_by_id

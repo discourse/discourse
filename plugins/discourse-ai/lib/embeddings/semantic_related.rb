@@ -30,12 +30,12 @@ module DiscourseAi
                 # Happens when the topic doesn't have any embeddings
                 # I'd rather not use Exceptions to control the flow, so this should be refactored soon
                 if candidate_ids.empty? || !candidate_ids.include?(topic.id)
-                  raise ::DiscourseAi::Embeddings::Schema::MissingEmbeddingError,
+                  raise DiscourseAi::Embeddings::Schema::MissingEmbeddingError,
                         "No embeddings found for topic #{topic.id}"
                 end
               end
           end
-      rescue ::DiscourseAi::Embeddings::Schema::MissingEmbeddingError
+      rescue DiscourseAi::Embeddings::Schema::MissingEmbeddingError
         # avoid a flood of jobs when visiting topic
         if Discourse.redis.set(
              build_semantic_suggested_key(topic.id),

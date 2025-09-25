@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class RagDocumentFragmentsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def indexing_status_check
         if params[:target_type] == "AiPersona"

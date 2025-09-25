@@ -20,7 +20,7 @@ module DiscourseAi
           end
 
           @related_topics ||=
-            ::DiscourseAi::Embeddings::SemanticTopicQuery.new(@user).list_semantic_related_topics(
+            DiscourseAi::Embeddings::SemanticTopicQuery.new(@user).list_semantic_related_topics(
               topic,
             )
         end
@@ -47,7 +47,7 @@ module DiscourseAi
         end
 
         plugin.register_html_builder("server:topic-show-after-posts-crawler") do |controller|
-          ::DiscourseAi::Embeddings::SemanticRelated.related_topics_for_crawler(controller)
+          DiscourseAi::Embeddings::SemanticRelated.related_topics_for_crawler(controller)
         end
 
         # embeddings generation.
