@@ -23,17 +23,17 @@ module DiscourseChatIntegration
           else
             error_key = nil
           end
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                request: req.body,
-                                                                response_code: response.code,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              request: req.body,
+                                                              response_code: response.code,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 
       def self.mattermost_message(post, channel)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 

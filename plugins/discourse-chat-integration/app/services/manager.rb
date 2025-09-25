@@ -102,8 +102,8 @@ module DiscourseChatIntegration
       matching_rules.each do |rule|
         # If there are any issues, skip to the next rule
         next unless channel = rule.channel
-        next unless provider = ::DiscourseChatIntegration::Provider.get_by_name(channel.provider)
-        next unless is_enabled = ::DiscourseChatIntegration::Provider.is_enabled(provider)
+        next unless provider = DiscourseChatIntegration::Provider.get_by_name(channel.provider)
+        next unless is_enabled = DiscourseChatIntegration::Provider.is_enabled(provider)
 
         begin
           provider.trigger_notification(post, channel, rule)

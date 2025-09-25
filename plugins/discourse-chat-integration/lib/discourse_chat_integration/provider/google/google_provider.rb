@@ -28,11 +28,11 @@ module DiscourseChatIntegration
         response = http.request(req)
 
         unless response.kind_of? Net::HTTPSuccess
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                request: req.body,
-                                                                response_code: response.code,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              request: req.body,
+                                                              response_code: response.code,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 

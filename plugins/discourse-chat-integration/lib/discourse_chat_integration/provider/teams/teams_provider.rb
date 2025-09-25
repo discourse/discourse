@@ -26,12 +26,12 @@ module DiscourseChatIntegration::Provider::TeamsProvider
       else
         error_key = nil
       end
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            request: req.body,
-                                                            response_code: response.code,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          request: req.body,
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
     end
   end
 

@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
-module ::DiscourseChatIntegration
-  PLUGIN_NAME = "discourse-chat-integration".freeze
-
+module DiscourseChatIntegration
   class AdminEngine < ::Rails::Engine
     engine_name "#{PLUGIN_NAME}-admin"
-    isolate_namespace ::DiscourseChatIntegration
+    isolate_namespace DiscourseChatIntegration
   end
 
   class PublicEngine < ::Rails::Engine
     engine_name "#{PLUGIN_NAME}-public"
-    isolate_namespace ::DiscourseChatIntegration
+    isolate_namespace DiscourseChatIntegration
   end
 
   def self.pstore_get(key)

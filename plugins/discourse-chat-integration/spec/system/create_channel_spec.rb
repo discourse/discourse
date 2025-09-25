@@ -5,7 +5,7 @@ RSpec.describe "Create channel", type: :system do
   fab!(:admin)
 
   include_context "with dummy provider"
-  let(:manager) { ::DiscourseChatIntegration::Manager }
+  let(:manager) { DiscourseChatIntegration::Manager }
   let(:chan1) { DiscourseChatIntegration::Channel.create!(provider: "dummy") }
   let(:category) { Fabricate(:category) }
   let(:topic) { Fabricate(:topic, category_id: category.id) }

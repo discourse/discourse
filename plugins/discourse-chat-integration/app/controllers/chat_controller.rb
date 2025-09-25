@@ -9,7 +9,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
   def list_providers
     providers =
-      ::DiscourseChatIntegration::Provider.enabled_providers.map do |x|
+      DiscourseChatIntegration::Provider.enabled_providers.map do |x|
         {
           name: x::PROVIDER_NAME,
           id: x::PROVIDER_NAME,
@@ -26,8 +26,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       topic_id = params[:topic_id].to_i
 
       channel = DiscourseChatIntegration::Channel.find(channel_id)
-
-      provider = ::DiscourseChatIntegration::Provider.get_by_name(channel.provider)
+      provider = DiscourseChatIntegration::Provider.get_by_name(channel.provider)
 
       raise Discourse::NotFound if !DiscourseChatIntegration::Provider.is_enabled(provider)
 
@@ -49,7 +48,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def list_channels
-    providers = ::DiscourseChatIntegration::Provider.enabled_provider_names
+    providers = DiscourseChatIntegration::Provider.enabled_provider_names
     requested_provider = params[:provider]
 
     raise Discourse::InvalidParameters if !providers.include?(requested_provider)
@@ -60,8 +59,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
   def create_channel
     begin
-      providers =
-        ::DiscourseChatIntegration::Provider.enabled_providers.map { |x| x::PROVIDER_NAME }
+      providers = DiscourseChatIntegration::Provider.enabled_providers.map { |x| x::PROVIDER_NAME }
 
       if !defined?(params[:channel]) && defined?(params[:channel][:provider])
         raise Discourse::InvalidParameters, "Provider is not valid"

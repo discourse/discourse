@@ -28,7 +28,7 @@ RSpec.describe DiscourseChatIntegration::Provider::GuildedProvider do
         stub_request(:post, "https://media.guilded.gg/webhooks/1234/abcd").to_return(status: 400)
       expect(stub1).to have_been_requested.times(0)
       expect { described_class.trigger_notification(post, chan1, nil) }.to raise_exception(
-        ::DiscourseChatIntegration::ProviderError,
+        DiscourseChatIntegration::ProviderError,
       )
       expect(stub1).to have_been_requested.once
     end
