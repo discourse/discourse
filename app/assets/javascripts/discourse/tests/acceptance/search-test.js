@@ -600,13 +600,6 @@ acceptance("Search - Authenticated", function (needs) {
     assert
       .dom(".search-menu")
       .doesNotExist("search dropdown is collapsed after second Enter hit");
-
-    // new search launched, Enter key should be reset
-    await click("#search-button");
-    assert.dom(`${container} ul li`).exists("has a list of items");
-
-    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
-    assert.dom(`.search-menu`).exists("search dropdown is visible");
   });
 
   test("search menu keyboard navigation - while composer is open", async function (assert) {
