@@ -55,6 +55,9 @@ after_initialize do
       Discourse::SYSTEM_USER_ID,
       topic_id: self.topic_id,
     )
+
+    # Fire event after note is created for other plugins to hook into
+    DiscourseEvent.trigger(:user_warning_created, self)
   end
 
   add_report("user_notes") do |report|
