@@ -19,8 +19,8 @@ en:
         one: "You have %{count} vote left, see <a href='%{path}'>your votes</a>."
         other: "You have %{count} votes left, see <a href='%{path}'>your votes</a>."
       votes_left_button_title:
-        one: "You have %{count} vote left."
-        other: "You have %{count} votes left."
+        one: "%{count} vote left."
+        other: "Votes Left:%{count}"
       votes:
         one: "%{count} vote"
         other: "%{count} votes"
