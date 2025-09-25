@@ -55,8 +55,10 @@
   padding: 0.5rem 0.8rem 0.5rem 0.25rem;
 }
 
-.c-navbar__search {
+.c-navbar__search-input {
   margin: 0 !important;
+  border-color: var(--primary-very-low) !important;
+  width: 100% !important;
 }
 
 .c-navbar__channel-title {

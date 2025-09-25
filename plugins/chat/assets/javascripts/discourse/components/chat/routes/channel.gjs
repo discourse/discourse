@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatSidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
 import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-chat";
-import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 
 export default class ChatRoutesChannel extends Component {
   @service site;
@@ -25,7 +25,7 @@ export default class ChatRoutesChannel extends Component {
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |action|>
-          <action.SearchButton
+          <action.SearchInput
             @channel={{@channel}}
             @onFilter={{fn (mut this.channelFilter)}}
           />

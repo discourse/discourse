@@ -17,26 +17,14 @@ export default class ChatMessageText extends Component {
 
   <template>
     <div class="chat-message-text">
-      {{#if this.isCollapsible}}
-        <ChatMessageCollapser
-          @cooked={{@cooked}}
-          @decorate={{@decorate}}
-          @uploads={{@uploads}}
-          @onToggleCollapse={{@onToggleCollapse}}
-          @highlightedText={{@highlightedText}}
-        />
-      {{else}}
-        {{#if @highlightedText}}
-          <HighlightSearch
-            @highlight={{@highlightedText}}
-            @partialMatch={{true}}
-          >
-            <DecoratedHtml
-              @html={{htmlSafe @cooked}}
-              @decorate={{@decorate}}
-              @className="chat-cooked"
-            />
-          </HighlightSearch>
+      <HighlightSearch @highlight={{@highlightedText}} @partialMatch={{true}}>
+        {{#if this.isCollapsible}}
+          <ChatMessageCollapser
+            @cooked={{@cooked}}
+            @decorate={{@decorate}}
+            @uploads={{@uploads}}
+            @onToggleCollapse={{@onToggleCollapse}}
+          />
         {{else}}
           <DecoratedHtml
             @html={{htmlSafe @cooked}}
@@ -44,7 +32,7 @@ export default class ChatMessageText extends Component {
             @className="chat-cooked"
           />
         {{/if}}
-      {{/if}}
+      </HighlightSearch>
 
       {{#if this.isEdited}}
         <span class="chat-message-edited">({{i18n "chat.edited"}})</span>

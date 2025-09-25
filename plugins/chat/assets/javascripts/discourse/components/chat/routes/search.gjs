@@ -5,6 +5,8 @@ import Navbar from "../navbar";
 const ChatRoutesSearch = <template>
   <div class="c-routes --search">
     <Navbar as |navbar|>
+      <navbar.BackButton />
+
       <navbar.Title @title={{i18n "chat.search.title"}} />
 
       <navbar.Actions as |action|>
