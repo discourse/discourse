@@ -267,6 +267,14 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   },
   {
     handler: "log",
+    matchId: "discourse.native-array-extensions.reject",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.rejectBy",
+  },
+  {
+    handler: "log",
     matchId: "discourse.native-array-extensions.without",
   },
   {

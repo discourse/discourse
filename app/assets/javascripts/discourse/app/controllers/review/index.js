@@ -126,9 +126,9 @@ export default class ReviewIndexController extends Controller {
       return;
     }
 
-    let newList = this.reviewables.reject((reviewable) => {
-      return ids.includes(reviewable.id);
-    });
+    let newList = this.reviewables.filter(
+      (reviewable) => !ids.includes(reviewable.id)
+    );
 
     if (newList.length === 0) {
       this.refreshModel();

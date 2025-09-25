@@ -94,7 +94,10 @@ export default class ValueList extends Component {
     this.collection.addObject(value);
 
     if (this.choices) {
-      this.set("choices", this.choices.rejectBy("id", value));
+      this.set(
+        "choices",
+        this.choices.filter((choice) => choice.id !== value)
+      );
     } else {
       this.set("choices", []);
     }

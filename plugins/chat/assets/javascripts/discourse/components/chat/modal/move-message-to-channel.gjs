@@ -37,7 +37,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
     return (
       this.args.model.availableChannels ||
       this.chatChannelsManager.publicMessageChannels
-    ).rejectBy("id", this.sourceChannel.id);
+    ).filter((channel) => channel.id !== this.sourceChannel.id);
   }
 
   get instructionsText() {

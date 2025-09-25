@@ -42,8 +42,8 @@ export default class AdminPluginNavManager extends Service {
 
   get currentPluginDefaultRoute() {
     const currentConfigNavLinks = this.currentConfigNav.links;
-    const linksExceptSettings = currentConfigNavLinks.reject(
-      (link) => link.route === "adminPlugins.show.settings"
+    const linksExceptSettings = currentConfigNavLinks.filter(
+      (link) => link.route !== "adminPlugins.show.settings"
     );
 
     // Some plugins only have the Settings route, if so it's fine to use it as default.
