@@ -11,10 +11,5 @@ class CreateChatMessageSearchData < ActiveRecord::Migration[7.1]
     end
 
     add_index :chat_message_search_data, :search_data, using: :gin, name: "idx_search_chat_message"
-    add_foreign_key :chat_message_search_data,
-                    :chat_messages,
-                    column: :chat_message_id,
-                    primary_key: :id,
-                    on_delete: :cascade
   end
 end
