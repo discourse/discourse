@@ -307,21 +307,45 @@ module("Unit | deprecation-workflow", function (hooks) {
       assert.true(wf.shouldCount("empty"), "empty handler -> count");
     });
 
-    test("shouldThrow handles throw and includeUnhandled", function (assert) {
+    test("shouldThrow handles throw and includeUnsilenced", function (assert) {
       const wf = new DiscourseDeprecationWorkflow([
         { handler: "throw", matchId: "t" },
         { handler: "log", matchId: "l" },
+        { handler: "silence", matchId: "s" },
       ]);
 
-      assert.true(wf.shouldThrow("t"), "throw handler -> true");
-      assert.false(wf.shouldThrow("l"), "non-throw handler -> false");
+      assert.true(
+        wf.shouldThrow("t"),
+        "throw handler without includeUnsilenced -> true"
+      );
+      assert.false(
+        wf.shouldThrow("l"),
+        "non-throw handler without includeUnsilenced -> false"
+      );
+      assert.false(
+        wf.shouldThrow("s"),
+        "silenced handler without includeUnsilenced -> false"
+      );
       assert.false(
         wf.shouldThrow("unhandled"),
-        "unhandled without includeUnhandled -> false"
+        "unhandled without includeUnsilenced -> false"
+      );
+
+      assert.true(
+        wf.shouldThrow("t", true),
+        "throw handler with includeUnsilenced -> true"
       );
       assert.true(
-        wf.shouldThrow("unhandled", true),
-        "unhandled with includeUnhandled -> true"
+        wf.shouldThrow("l", true),
+        "non-throw handler with includeUnsilenced -> false"
+      );
+      assert.false(
+        wf.shouldThrow("s", true),
+        "silenced handler with includeUnsilenced -> false"
+      );
+      assert.true(
+        wf.shouldThrow("unhandled with includeUnsilenced", true),
+        "unhandled without includeUnsilenced -> false"
       );
     });
   });
