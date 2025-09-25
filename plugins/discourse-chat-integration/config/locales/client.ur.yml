@@ -201,5 +201,7 @@ ur:
               label: چَینل
         send_chat_integration_message:
           fields:
+            channel_name:
+              description: "آپ چیٹ انٹیگریشن ترتیبات میں چینل کا نام تلاش کر سکتے ہیں۔"
             provider:
               label: پرووَائیڈر

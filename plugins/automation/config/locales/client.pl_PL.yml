@@ -408,7 +408,7 @@ pl_PL:
             sendable_pms:
               label: Prywatne wiadomości
             sender:
-              label: Nadawca wiadomości prywatnych
+              label: Nadawca prywatnych wiadomości
               description: "Upewnij się, że nadawca ma odpowiednie uprawnienia do wysyłania wiadomości prywatnych do odbiorcy."
         close_topic:
           fields:
