@@ -33,7 +33,7 @@ export default class UserStreamComponent extends Component {
   get usernamePath() {
     // We want the draft_username for the drafts route,
     // in-case you are editing a post that was created by another user
-    // the draft usernmae will show the post item to show the editing user
+    // the draft username will show the post item to show the editing user
     if (this.router.currentRouteName === "userActivity.drafts") {
       return "draft_username";
     }
