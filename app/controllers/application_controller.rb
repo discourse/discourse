@@ -889,6 +889,7 @@ class ApplicationController < ActionController::Base
     @container_class = "wrap not-found-container"
     @page_title = I18n.t("page_not_found.page_title")
     @title = opts[:title] || I18n.t("page_not_found.title")
+    @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
 
