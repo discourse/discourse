@@ -18,54 +18,17 @@ register_svg_icon "patreon-new"
 # Site setting validators must be loaded before initialize
 require_relative "lib/validators/patreon_login_enabled_validator"
 
+module ::Patreon
+  PLUGIN_NAME = "discourse-patreon".freeze
+end
+
+require_relative "lib/discourse_patreon/engine"
+
 after_initialize do
   require_dependency "admin_constraint"
 
-  module ::Patreon
-    PLUGIN_NAME = "discourse-patreon".freeze
-    USER_DETAIL_FIELDS = %w[id amount_cents rewards declined_since].freeze
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace Patreon
-    end
-
-    def self.store
-      @store ||= PluginStore.new(PLUGIN_NAME)
-    end
-
-    def self.get(key)
-      store.get(key)
-    end
-
-    def self.set(key, value)
-      store.set(key, value)
-    end
-
-    def self.show_donation_prompt_to_user?(user)
-      return false unless SiteSetting.patreon_donation_prompt_enabled?
-
-      filters = get("filters") || {}
-      filters = filters.keys.map(&:to_i)
-
-      (user.visible_groups.pluck(:id) & filters).size <= 0
-    end
-
-    class Reward
-      def self.all
-        Patreon.get("rewards") || {}
-      end
-    end
-
-    class RewardUser
-      def self.all
-        Patreon.get("reward-users") || {}
-      end
-    end
-  end
-
-  require_relative "app/controllers/patreon_admin_controller"
-  require_relative "app/controllers/patreon_webhook_controller"
+  require_relative "app/controllers/patreon/patreon_admin_controller"
+  require_relative "app/controllers/patreon/patreon_webhook_controller"
   require_relative "app/jobs/regular/sync_patron_groups"
   require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
   require_relative "app/jobs/scheduled/patreon_update_tokens"
@@ -76,16 +39,6 @@ after_initialize do
   require_relative "lib/pledge"
   require_relative "lib/patron"
   require_relative "lib/tokens"
-
-  Patreon::Engine.routes.draw do
-    get "/rewards" => "patreon_admin#rewards", :constraints => AdminConstraint.new
-    get "/list" => "patreon_admin#list", :constraints => AdminConstraint.new
-    post "/list" => "patreon_admin#edit", :constraints => AdminConstraint.new
-    delete "/list" => "patreon_admin#delete", :constraints => AdminConstraint.new
-    post "/sync_groups" => "patreon_admin#sync_groups", :constraints => AdminConstraint.new
-    post "/update_data" => "patreon_admin#update_data", :constraints => AdminConstraint.new
-    post "/webhook" => "patreon_webhook#index"
-  end
 
   Discourse::Application.routes.prepend { mount ::Patreon::Engine, at: "/patreon" }
 

@@ -2026,6 +2026,8 @@ sl:
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       reject:
         title: "Zavrni"
+      delete_post:
+        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

@@ -2672,6 +2672,10 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_post:
+        title: "Jokių veiksmų"
+      delete_post:
+        complete: "Įrašas ištrintas"
       no_action_user:
         title: "Jokių veiksmų"
       delete_user:

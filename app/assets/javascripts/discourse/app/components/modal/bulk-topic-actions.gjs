@@ -161,7 +161,7 @@ export default class BulkTopicActions extends Component {
         }
 
         let groupPrivateMessages = getOwner(this).lookup(
-          "controller:group-messages"
+          "controller:group.messages"
         );
 
         if (groupPrivateMessages.isGroup) {

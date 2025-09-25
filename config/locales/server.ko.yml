@@ -1662,7 +1662,6 @@ ko:
     enable_group_directory: "탐색을 위해 그룹의 디렉터리 제공"
     enable_category_group_moderation: "그룹이 특정 카테고리의 콘텐츠를 관리하도록 허용"
     group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목에 %%{optional_pm} 을 설정합니다. 참조: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
-    anonymous_posting_min_trust_level: "익명 게시를 활성화하기 위한 최소 신뢰 레벨"
     anonymous_account_duration_minutes: "익명성을 보호하기 위해 각 사용자에 대해 N분마다 새 익명 계정을 만듭니다. 예: 600으로 설정하면 마지막 게시물로부터 600분이 경과하고 사용자가 익명으로 전환하는 즉시 새 익명 계정이 생성됩니다."
     hide_user_profiles_from_public: "익명 사용자의 사용자 카드, 사용자 프로필 및 사용자 디렉터리를 비활성화합니다."
     allow_users_to_hide_profile: "사용자가 자신의 프로필과 현재 상태를 숨기도록 허용"
@@ -3729,6 +3728,10 @@ ko:
         title: "게시물 삭제 유지"
       approve_and_restore:
         title: "게시물 승인 및 복원"
+      no_action_post:
+        title: "조치 없음"
+      delete_post:
+        complete: "게시물 삭제됨"
       no_action_user:
         title: "조치 없음"
       delete_user:
