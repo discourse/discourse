@@ -1290,7 +1290,7 @@ ur:
       title: "پسندیدگی کے لحاظ سے سرفہرست اراکین موصول ہوئے"
       labels:
         user: صارف
-        qtt_like: لائیکس موصول ہوے
+        qtt_like: پسندیدگیاں موصول ہوئیں
       description: "سب سے اوپر 10 اراکین جنہیں پسندیدگی موصول ہوئی، ہیں۔"
     top_users_by_likes_received_from_inferior_trust_level:
       title: "کم فعالیت کے درجہ والے رکن کی طرف سے موصول ہونے والی پسندیدگیوں کے لحاظ سے سرفہرست اراکین"
@@ -1303,7 +1303,7 @@ ur:
       title: "مختلف قسم کے لوگوں کی جانب سے موصول ہونے والی پسندیدگی کے لحاظ سے سرفہرست اراکین"
       labels:
         user: صارف
-        qtt_like: لائیکس موصول ہوے
+        qtt_like: پسندیدگیاں موصول ہوئیں
       description: "سرفہرست 10 اراکین جنہیں لوگوں کی ایک وسیع رینج سے پسندیدگی ملی ہے۔"
     topic_view_stats:
       labels:
@@ -3020,7 +3020,7 @@ ur:
       since_last_visit: "آپ کے آخری دورے کے بعد سے"
       new_topics: "نئے ٹاپک"
       unread_notifications: "غیر پڑھی اطلاعات"
-      liked_received: "لائیکس موصول ہوے"
+      liked_received: "پسندیدگیاں موصول ہوئیں"
       new_users: "نئے صارفین"
       popular_topics: "مقبول موضوعات"
       join_the_discussion: "مزید پڑھیں"

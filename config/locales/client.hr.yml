@@ -2112,9 +2112,9 @@ hr:
         expired_tab: "Isteklo"
         expired_tab_with_count: "Isteklo (%{count})"
         redeemed_tab: "Nadoknadi"
-        redeemed_tab_with_count: "odabrano (%{count})"
+        redeemed_tab_with_count: "Iskorišteno (%{count})"
         invited_via: "Pozivnica"
-        invited_via_link: "Veza %{key} (%{count} / %{max} iskorišten)"
+        invited_via_link: "poveznica %{key} (%{count} / %{max} iskorištena)"
         groups: "Grupe"
         topic: "Tema"
         sent: "Stvoreno/Zadnja poslana"
@@ -2137,31 +2137,31 @@ hr:
           one: "Prikazuje se prva pozivnica."
           few: "Prikazuje se prvih %{count} pozivnica."
           other: "Prikazuje se prvih %{count} pozivnica."
-        redeemed: "Nadoknadi Pozivnice"
-        redeemed_at: "Nadoknadi"
-        pending: "Tekuće pozivnice"
-        topics_entered: "Pogledane Teme"
+        redeemed: "Iskorištene pozivnice"
+        redeemed_at: "Iskorišteno"
+        pending: "Pozivnice na čekanju"
+        topics_entered: "Pregledane teme"
         posts_read_count: "Pročitani članci"
         expired: "Ova je pozivnica istekla."
         remove_all: "Ukloni istekle pozivnice"
         removed_all: "Sve istekle pozivnice uklonjene!"
         remove_all_confirm: "Jeste li sigurni da želite ukloniti sve istekle pozivnice?"
-        reinvite_all: "Ponovno pošalji sve pozivnice"
+        reinvite_all: "Ponovno pošaljite sve pozivnice"
         reinvite_all_confirm: "Jeste li sigurni da želite ponovo poslati sve pozivnice?"
         reinvited_all: "Sve pozivnice poslane!"
         time_read: "Vrijeme čitanja"
-        days_visited: "Dana posjećeno"
-        account_age_days: "Računaj starost u danima"
+        days_visited: "Posjećeno dana"
+        account_age_days: "Starost računa u danima"
         create: "Pozovite"
-        generate_link: "Stvori link pozivnicu"
+        generate_link: "Kreiraj poveznicu pozivnice"
         link_generated: "Izvoli pozivnicu!"
-        valid_for: "Pozivnica je važeća isključivo sa elektroničke pošte: %{email}"
+        valid_for: "Pozivnica je važeća isključivo s adrese elektroničke pošte: %{email}"
         single_user: "Pozovi putem e-maila"
-        multiple_user: "Pozovi putem linka"
+        multiple_user: "Pozovite putem pozivnice"
         invite_link:
-          title: "Veza pozivnice"
-          success: "Pozivnica uspješno napravljena"
-          error: "Došlo je do pogreške generiranja linka za pozivnicu"
+          title: "Poveznica pozivnice"
+          success: "Pozivnica je uspješno generirana!"
+          error: "Došlo je do pogreške generiranja poveznice za pozivnicu"
         cannot_invite_to_forum: "Žao nam je, nemate dopuštenje za stvaranje pozivnica. Obratite se administratoru kako biste dobili dopuštenje za slanje pozivnica."
         invite:
           new_title: "Pozovite članove"
@@ -2172,9 +2172,9 @@ hr:
           copy_link_and_share_it: "Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
           copy_link: "Kopiraj poveznicu"
           link_copied: "Poveznica kopirana!"
-          share_link: "Podijelite poveznicu"
+          share_link: "Podijeli poveznicu"
           link_validity_MF: |
-            Link vrijedi za { user_count, plural,
+            Poveznica vrijedi za { user_count, plural,
                 one {# korisnika}
                 few {# korisnika}
               other {# korisnika}
@@ -2187,13 +2187,13 @@ hr:
           show_advanced: "Prikaži napredne mogućnosti"
           hide_advanced: "Sakrij napredne opcije"
           description: "Opis"
-          restrict: "Ograničiti na"
-          restrict_email: "Ograničite na e-poštu"
+          restrict: "Ograniči na"
+          restrict_email: "Ograničite na e-mail"
           restrict_domain: "Ograniči na domenu"
           email_or_domain_placeholder: "ime@primjer.com ili primjer.com"
-          max_redemptions_allowed: "Max korisnika"
+          max_redemptions_allowed: "Maks. korisnika"
           add_to_groups: "Dodaj u grupe"
-          invite_to_topic: "Dođite do teme"
+          invite_to_topic: "Dolazak na temu"
           expires_at: "Istječe"
           expires_after: "Istječe nakon"
           custom_message: "Prilagođena poruka"
@@ -2201,18 +2201,19 @@ hr:
           send_invite_email: "Spremi i pošalji e-mail"
           send_invite_email_instructions: "Ograničite pozivnicu na e-poštu za slanje e-pošte s pozivnicom"
           update_invite: "Ažuriraj"
-          update_invite_and_send_email: "Ažurirajte i pošaljite e-poštu"
+          update_invite_and_send_email: "Ažurirajte i pošaljite e-mail"
           cancel: "Odustani"
           create_link: "Kreirajte poveznicu"
-          create_link_and_send_email: "Napravite poveznicu i pošaljite e-poštu"
+          create_link_and_send_email: "Napravite poveznicu i pošaljite e-mail"
           invite_saved_without_sending_email: "Pozivnica je spremljena. Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
+          invite_saved_with_sending_email: "E-mail s pozivnicom je poslan. Također možete kopirati donju poveznicu i podijeliti je kako biste odmah odobrili pristup ovoj stranici."
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
           instructions: |
-            <p>Pozovite popis korisnika da biste ubrzali svoju zajednicu. Pripremite <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV datoteka</a> koji sadrži najmanje jedan redak po adresi e-pošte korisnika koje želite pozvati. Sljedeće informacije odvojene zarezom možete navesti ako želite dodati osobe u grupe ili ih poslati na određenu temu prilikom prve prijave.</p>
-            <pre>john@smith.com, prvo_group_name; second_group_name, tema_id</pre>
-            <p>Svaka adresa e-pošte u vašoj učitanoj CSV datoteci poslat će se pozivnica i moći ćete je kasnije upravljati.</p>
+            <p>Pozovite listu korisnika kako biste brzo pokrenuli svoju zajednicu. Pripremite <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV datoteku</a> koja sadrži najmanje jedan red za svaku e-mail adresu korisnika koje želite pozvati. Sljedeći podaci odvojeni zarezima mogu se dodati ako želite dodati ljude u grupe ili ih preusmjeriti na određenu temu prilikom prve prijave.</p>
+            <pre>ivan@horvat.com,ime_prve_grupe;ime_druge_grupe,id_teme</pre>
+            <p>Svakoj e-mail adresi u vašoj učitanoj CSV datoteci bit će poslana pozivnica i moći ćete njome upravljati kasnije.</p>
           progress: "Preneseno %{progress}%…"
           success: "Datoteka je uspješno prenesena. Bit ćete obaviješteni putem poruke kada je postupak dovršen."
           error: "Nažalost, datoteka bi trebala biti u CSV formatu."
@@ -2311,7 +2312,7 @@ hr:
         name_and_description: "%{name} - %{description}"
         edit: "Uredi sliku profila"
       title:
-        title: "Naslov"
+        title: "Titula"
         none: "(ništa)"
         instructions: "se pojavljuje nakon vašeg korisničkog imena"
       flair:

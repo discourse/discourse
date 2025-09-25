@@ -616,7 +616,7 @@ pl_PL:
     top_weekly: "Najpopularniejsze tematy w tym tygodniu"
     top_daily: "Najpopularniejsze tematy dzisiaj"
     posts: "Aktualne wpisy"
-    private_posts: "Ostatnie wiadomości prywatne"
+    private_posts: "Ostatnie prywatne wiadomości"
     group_posts: "Ostatni wpis z %{group_name}"
     group_mentions: "Ostatnie wspomnienie z %{group_name}"
     user_posts: "Ostatnie wpisy @%{username}"
@@ -4005,7 +4005,7 @@ pl_PL:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Użytkownik zaproszony grupy do PM"
+      title: "Użytkownik zaproszony grupy do PW"
       subject_template: "[%{email_prefix}]%{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -4173,7 +4173,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Użytkownik Napisał PM"
+      title: "Użytkownik opublikował PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4184,7 +4184,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Użytkownik dodał stopniowe PM"
+      title: "Użytkownik dodał stopniowe PW"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
