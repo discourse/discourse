@@ -2148,9 +2148,6 @@ zh_CN:
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_likes_in_anonymous_mode: "启用此设置可让匿名浏览站点的用户点赞帖子。激活后，用户在站点上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_mode`。"
-    anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
-    anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
@@ -5217,6 +5214,14 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      no_action_post:
+        title: "无行动"
+      delete_post:
+        title: "删除帖子"
+      hide_post:
+        title: "隐藏帖子"
+      restore_post:
+        title: "恢复帖子"
       no_action_user:
         title: "无行动"
       silence_user:

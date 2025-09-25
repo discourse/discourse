@@ -5,7 +5,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import SmoothStreamer from "../lib/smooth-streamer";
 
-const DISCOVERY_TIMEOUT_MS = 10000;
+const DISCOVERY_TIMEOUT_MS = 20000;
 
 export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.

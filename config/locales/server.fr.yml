@@ -2219,9 +2219,6 @@ fr:
     enable_category_group_moderation: "Autoriser les groupes à modérer le contenu dans des catégories spécifiques"
     group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>personnaliser le format du sujet des e-mails ordinaires</a>"
     allow_anonymous_mode: "Activez l'option permettant aux utilisateurs de passer en mode anonyme pour publier. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lors de la création de publications ou de sujets sur le site. Voir aussi « allow_anonymous_likes »."
-    allow_likes_in_anonymous_mode: "Activez ce paramètre pour permettre aux utilisateurs qui naviguent sur votre site de manière anonyme d'ajouter des mentions J'aime aux publications. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lorsqu'ils ajoutent une mention J'aime aux publications ou aux sujets du site. Voir aussi « allow_anonymous_mode »."
-    anonymous_posting_min_trust_level: "Le niveau de confiance minimal pour passer en mode anonyme."
-    anonymous_posting_allowed_groups: "Groupes autorisés à activer la publication anonyme"
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
     hide_user_profiles_from_public: "Désactiver les cartes, les profils et le répertoire d'utilisateurs pour les visiteurs."
     hide_new_user_profiles: "Masquez les profils d'utilisateurs de niveau de confiance 1 ou inférieur au public et les utilisateurs de niveau de confiance 1 jusqu'à ce qu'ils envoient une publication pour la première fois. Cette fonctionnalité est désactivée sans condition sur les sites must_approve_users et invite_only."
@@ -5339,6 +5336,16 @@ fr:
       approve_and_unhide:
         title: "Approuver et afficher la publication"
         complete: "Publication approuvée et visible"
+      no_action_post:
+        title: "Aucune action"
+      delete_post:
+        title: "Supprimer la publication"
+        complete: "Publication supprimée"
+      hide_post:
+        title: "Masquer le message"
+      restore_post:
+        title: "Rétablir le message"
+        complete: "Publication restaurée"
       no_action_user:
         title: "Aucune action"
       silence_user:

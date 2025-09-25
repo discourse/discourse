@@ -56,7 +56,7 @@ module Jobs
         end
       end
 
-      MessageBus.publish("/topic/#{topic.id}", type: :localized, id: 1)
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
   end
 end

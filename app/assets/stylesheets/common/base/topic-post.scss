@@ -1516,7 +1516,7 @@ span.mention {
 .post-notice {
   box-sizing: border-box;
   align-items: center;
-  background-color: var(--tertiary-low);
+  background-color: var(--tertiary-very-low);
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
@@ -1525,7 +1525,12 @@ span.mention {
       var(--topic-avatar-width)
   );
   padding: var(--topic-body-width-padding);
-  padding-left: 0;
+  font-size: var(--font-down-1-rem);
+  border-radius: var(--d-border-radius);
+
+  &.new-user {
+    gap: var(--space-2);
+  }
 
   &.old {
     background-color: unset;
@@ -1534,6 +1539,11 @@ span.mention {
     .d-icon {
       color: var(--primary-medium);
     }
+  }
+
+  .emoji {
+    width: 1.5em;
+    height: 1.5em;
   }
 
   .post-notice-message {

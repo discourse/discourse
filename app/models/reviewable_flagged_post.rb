@@ -150,6 +150,7 @@ class ReviewableFlaggedPost < Reviewable
 
   # TODO (reviewable-refresh): Merge into build_actions post rollout.
   def build_new_separated_actions(actions, guardian, args)
+    build_post_actions_bundle(actions, guardian)
     build_user_actions_bundle(actions, guardian)
   end
 
