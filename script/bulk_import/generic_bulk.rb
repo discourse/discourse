@@ -3171,7 +3171,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reaction_users
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "",
            "Skipping reaction users import, because the Discourse Reactions plugin is not installed."
       return
@@ -3211,7 +3211,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reactions
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "", "Skipping reactions import, because the Discourse Reactions plugin is not installed."
       return
     end
@@ -3253,7 +3253,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reaction_shadow_likes
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "",
            "Skipping reaction shadow likes import, because the Discourse Reactions plugin is not installed."
       return

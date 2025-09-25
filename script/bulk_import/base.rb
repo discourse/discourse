@@ -315,7 +315,7 @@ class BulkImport::Base
     @chat_message_mapping = load_index(MAPPING_TYPES[:chat_message])
     @last_chat_message_id = last_id(Chat::Message)
 
-    if defined?(::DiscourseReactions)
+    if defined?(DiscourseReactions)
       puts "Loading reaction indexes..."
       @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
       @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)

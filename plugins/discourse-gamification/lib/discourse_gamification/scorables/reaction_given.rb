@@ -2,7 +2,7 @@
 module DiscourseGamification
   class ReactionGiven < Scorable
     def self.enabled?
-      defined?(::DiscourseReactions) && SiteSetting.discourse_reactions_enabled &&
+      defined?(DiscourseReactions) && SiteSetting.discourse_reactions_enabled &&
         score_multiplier > 0
     end
 
