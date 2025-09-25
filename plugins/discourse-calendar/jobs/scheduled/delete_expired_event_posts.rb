@@ -14,7 +14,7 @@ module Jobs
         calendar_topic_ids =
           Post
             .joins(:_custom_fields)
-            .where(post_custom_fields: { name: DiscourseCalendar::CALENDAR_CUSTOM_FIELD })
+            .where(post_custom_fields: { name: ::DiscourseCalendar::CALENDAR_CUSTOM_FIELD })
             .pluck(:topic_id)
 
         post_events =

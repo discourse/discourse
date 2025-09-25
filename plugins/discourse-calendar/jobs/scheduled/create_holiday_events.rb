@@ -18,7 +18,7 @@ module Jobs
         regions_and_user_ids = Hash.new { |h, k| h[k] = [] }
 
         UserCustomField
-          .where(name: DiscourseCalendar::REGION_CUSTOM_FIELD)
+          .where(name: ::DiscourseCalendar::REGION_CUSTOM_FIELD)
           .pluck(:user_id, :value)
           .each { |user_id, region| regions_and_user_ids[region] << user_id if region.present? }
 
@@ -59,13 +59,13 @@ module Jobs
           .joins(user: :_custom_fields)
           .where(post_id: nil)
           .where("start_date > ?", today)
-          .where("user_custom_fields.name = ?", DiscourseCalendar::REGION_CUSTOM_FIELD)
+          .where("user_custom_fields.name = ?", ::DiscourseCalendar::REGION_CUSTOM_FIELD)
           .where("LENGTH(COALESCE(user_custom_fields.value, '')) > 0")
           .where("user_custom_fields.value != calendar_events.region")
           .destroy_all
 
         regions_and_user_ids.each do |region, user_ids|
-          DiscourseCalendar::Holiday
+          ::DiscourseCalendar::Holiday
             .find_holidays_for(
               region_code: region,
               start_date: today,
