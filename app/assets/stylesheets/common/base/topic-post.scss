@@ -1532,15 +1532,6 @@ span.mention {
     gap: var(--space-2);
   }
 
-  &.old {
-    background-color: unset;
-    color: var(--primary-medium);
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
-  }
-
   .emoji {
     width: 1.5em;
     height: 1.5em;
