@@ -2143,9 +2143,6 @@ ja:
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
     group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_mode: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
-    allow_likes_in_anonymous_mode: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示にすることを選択できます。`allow_anonymous_mode` も参照してください。"
-    anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
-    anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
     hide_user_profiles_from_public: "匿名ユーザーのユーザーカード、ユーザープロファイル、およびユーザーディレクトリを無効にする。"
     hide_new_user_profiles: "信頼レベル 1 以下のユーザープロファイルは、そのユーザーが初めて投稿するまで一般ユーザーと信頼レベル 1 のユーザーに対して非表示になります。この機能は must_approve_users と invite_only サイトでは無条件に無効になります。"
@@ -5195,6 +5192,15 @@ ja:
       approve_and_unhide:
         title: "投稿を承認して非表示を解除"
         complete: "投稿を承認して非表示状態を解除しました"
+      no_action_post:
+        title: "未対応"
+      delete_post:
+        title: "投稿を削除"
+        complete: "削除された投稿"
+      hide_post:
+        title: "投稿を非表示にする"
+      restore_post:
+        title: "投稿を復元する"
       no_action_user:
         title: "未対応"
       silence_user:

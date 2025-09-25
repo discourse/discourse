@@ -1364,6 +1364,10 @@ nb_NO:
           complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        complete: "Post slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

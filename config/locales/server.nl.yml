@@ -2213,9 +2213,6 @@ nl:
     enable_category_group_moderation: "Groepen mogen inhoud in bepaalde categorieën modereren"
     group_in_subject: "Stel %%{optional_pm} in het e-mailonderwerp in op de naam van de eerste groep in PB; zie <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Onderwerpnotatie aanpassen voor standaard e-mails</a>"
     allow_anonymous_mode: "Schakel deze instelling in om gebruikers toe te staan naar de anonieme modus te schakelen voor het plaatsen van berichten. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics maken op de site. Zie ook `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Schakel deze instelling in om gebruikers die uw site anoniem bezoeken toe te staan berichten te liken. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics liken op de site. Zie ook 'allow_anonymous_mode'."
-    anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
-    anonymous_posting_allowed_groups: "Groepen die anoniem plaatsen mogen inschakelen"
     anonymous_account_duration_minutes: "Om anonimiteit te beschermen, elke N minuten voor iedere gebruiker een nieuwe anoniem account maken. Voorbeeld: als dit is ingesteld op 600, wordt een nieuwe anonieme account gemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker naar anon overschakelt."
     hide_user_profiles_from_public: "Gebruikerskaarten, gebruikersprofielen en gebruikerslijst voor anonieme gebruikers uitschakelen."
     hide_new_user_profiles: "Verberg gebruikersprofielen met vertrouwensniveau 1 of lager voor het publiek en gebruikers met vertrouwensniveau 1 totdat ze voor het eerst een bericht plaatsen. Deze functie is onvoorwaardelijk uitgeschakeld op sites met must_approve_users en invite_only."
@@ -5326,6 +5323,16 @@ nl:
       approve_and_unhide:
         title: "Bericht goedkeuren en zichtbaar maken"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
+      no_action_post:
+        title: "Geen actie"
+      delete_post:
+        title: "Bericht verwijderen"
+        complete: "Bericht verwijderd"
+      hide_post:
+        title: "Bericht verbergen"
+      restore_post:
+        title: "Bericht herstellen"
+        complete: "Bericht hersteld"
       no_action_user:
         title: "Geen actie"
       silence_user:
