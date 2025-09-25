@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module ::DiscourseGamification
+module DiscourseGamification
   class ReactionGiven < Scorable
     def self.enabled?
       defined?(::DiscourseReactions) && SiteSetting.discourse_reactions_enabled &&

@@ -2285,7 +2285,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_gamification_scores
     puts "", "Importing gamification scores..."
 
-    unless defined?(::DiscourseGamification)
+    unless defined?(DiscourseGamification)
       puts "  Skipping import of gamification scores because the plugin is not installed."
       return
     end

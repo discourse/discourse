@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class DayVisited < Scorable
     def self.score_multiplier
       SiteSetting.day_visited_score_value

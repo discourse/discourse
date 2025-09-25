@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module ::DiscourseGamification
+module DiscourseGamification
   class ChatReactionGiven < Scorable
     def self.enabled?
       SiteSetting.chat_enabled && score_multiplier > 0

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class PostCreated < Scorable
     def self.score_multiplier
       SiteSetting.post_created_score_value

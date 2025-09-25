@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class FlagCreated < Scorable
     def self.score_multiplier
       SiteSetting.flag_created_score_value
