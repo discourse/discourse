@@ -6,7 +6,8 @@ const FullPageChat = <template>
     <ChatChannel
       @channel={{channel}}
       @targetMessageId={{@targetMessageId}}
-      @channelFilter={{@channelFilter}}
+      @isFiltering={{@isFiltering}}
+      @onToggleFilter={{@onToggleFilter}}
     />
   {{/each}}
 </template>;
