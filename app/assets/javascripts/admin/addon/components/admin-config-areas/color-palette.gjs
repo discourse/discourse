@@ -414,7 +414,6 @@ export default class AdminConfigAreasColorPalette extends Component {
               >
                 <field.Custom>
                   <ColorPaletteEditor
-                    @disabled={{this.installedWithTheme}}
                     @colors={{transientData.colors}}
                     @onColorChange={{this.onColorChange}}
                   />

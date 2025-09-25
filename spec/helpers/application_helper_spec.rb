@@ -991,7 +991,7 @@ RSpec.describe ApplicationHelper do
     it "renders a 'light' color-scheme if no dark scheme is set and the current scheme is light" do
       ColorSchemeRevisor.revise(
         color_scheme,
-        colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }],
+        { colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }] },
       )
 
       helper.request.cookies["color_scheme_id"] = color_scheme.id
@@ -1004,7 +1004,7 @@ RSpec.describe ApplicationHelper do
     it "renders a 'dark' color-scheme if no dark scheme is set and the default scheme is dark" do
       ColorSchemeRevisor.revise(
         color_scheme,
-        colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }],
+        { colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }] },
       )
       @scheme_id = color_scheme.id
 

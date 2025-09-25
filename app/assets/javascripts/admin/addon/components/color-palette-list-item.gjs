@@ -32,12 +32,6 @@ export default class ColorPaletteListItem extends Component {
     return this.args.scheme?.theme_id;
   }
 
-  get editButtonLabel() {
-    return this.isThemePalette && !this.isBuiltInDefault
-      ? "admin.customize.colors.view"
-      : "admin.customize.colors.edit";
-  }
-
   get canDelete() {
     return !this.isBuiltInDefault && !this.args.scheme?.theme_id;
   }
@@ -177,7 +171,7 @@ export default class ColorPaletteListItem extends Component {
               <DButton
                 @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
-                @label={{this.editButtonLabel}}
+                @label="admin.customize.colors.edit"
                 class="btn-secondary"
                 @disabled={{not this.canEdit}}
               />

@@ -331,6 +331,8 @@ class ColorScheme < ActiveRecord::Base
     @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
   end
 
+  default_scope { where(remote_copy: false) }
+
   attr_accessor :is_base
   attr_accessor :skip_publish
   attr_accessor :is_builtin_default
@@ -343,8 +345,9 @@ class ColorScheme < ActiveRecord::Base
   after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
   after_save_commit :dump_caches
   after_destroy :dump_caches
+  after_destroy :destroy_remote_original
   belongs_to :theme
-  belongs_to :base_scheme, class_name: "ColorScheme"
+  belongs_to :base_scheme, -> { unscope(where: :remote_copy) }, class_name: "ColorScheme"
 
   validates_associated :color_scheme_colors
 
@@ -572,6 +575,37 @@ class ColorScheme < ActiveRecord::Base
   def is_wcag?
     base_scheme_id == NAMES_TO_ID_MAP["WCAG"] || base_scheme_id == NAMES_TO_ID_MAP["WCAG Dark"]
   end
+
+  def diverge_from_remote
+    new_scheme = dup
+    new_scheme.colors = self.colors_hashes
+    new_scheme.via_wizard = false
+    new_scheme.user_selectable = false
+    new_scheme.base_scheme_id = nil
+    new_scheme.skip_publish = true
+    new_scheme.remote_copy = true
+
+    DistributedMutex.synchronize("color_scheme_fork_#{self.id}") do
+      self.reload
+      if self.base_scheme_id.blank?
+        new_scheme.save!
+        self.base_scheme_id = new_scheme.id
+        self.save!
+      end
+    end
+
+    self
+  end
+
+  def destroy_remote_original
+    return if theme_id.blank?
+    return if base_scheme_id.blank? || base_scheme_id < 0
+
+    ColorScheme
+      .unscoped
+      .where(theme_id: theme_id, id: base_scheme_id, remote_copy: true)
+      .destroy_all
+  end
 end
 
 # == Schema Information
@@ -580,6 +614,7 @@ end
 #
 #  id              :integer          not null, primary key
 #  name            :string           not null
+#  remote_copy     :boolean          default(FALSE), not null
 #  user_selectable :boolean          default(FALSE), not null
 #  version         :integer          default(1), not null
 #  via_wizard      :boolean          default(FALSE), not null

@@ -179,6 +179,7 @@ export default class ColorScheme extends EmberObject {
       if (result.id) {
         this.set("id", result.id);
       }
+      this.set("base_scheme_id", result.base_scheme_id);
 
       if (!opts?.saveNameOnly) {
         if (!opts || !opts.enabledOnly) {
