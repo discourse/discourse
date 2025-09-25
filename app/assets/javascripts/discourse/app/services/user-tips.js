@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
@@ -24,8 +25,7 @@ export default class UserTips extends Service {
     }
 
     const newId = tipsArray
-      .sortBy("priority")
-      .reverse()
+      .sort((a, b) => compare(b?.priority, a?.priority)) // sort descending
       .find((tip) => this.canSeeUserTip(tip.id))?.id;
 
     if (this.#renderedId !== newId) {

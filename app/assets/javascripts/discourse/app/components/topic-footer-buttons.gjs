@@ -4,6 +4,7 @@ import { concat, hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import { eq, gt } from "truth-helpers";
 import BookmarkMenu from "discourse/components/bookmark-menu";
@@ -54,8 +55,7 @@ export default class TopicFooterButtons extends Component {
       .filterBy("dropdown", false)
       .filterBy("anonymousOnly", false)
       .concat(this.inlineDropdowns)
-      .sortBy("priority")
-      .reverse();
+      .sort((a, b) => compare(b?.priority, a?.priority)); // sort descending
   }
 
   @computed("topic")

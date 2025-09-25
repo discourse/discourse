@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -16,7 +17,9 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
 
   @discourseComputed("model.leaderboards.@each.updatedAt")
   sortedLeaderboards(leaderboards) {
-    return leaderboards?.sortBy("updatedAt").reverse() || [];
+    return (
+      leaderboards?.sort((a, b) => compare(b?.updatedAt, a?.updatedAt)) || [] // sort descending
+    );
   }
 
   @action

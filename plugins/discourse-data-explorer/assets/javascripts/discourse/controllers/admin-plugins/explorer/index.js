@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -27,7 +28,9 @@ export default class PluginsExplorerController extends Controller {
   form = null;
 
   get sortedQueries() {
-    const sortedQueries = this.model.sortBy(this.sortByProperty);
+    const sortedQueries = this.model.sort((a, b) =>
+      compare(a?.[this.sortByProperty], b?.[this.sortByProperty])
+    );
     return this.sortDescending ? sortedQueries.reverse() : sortedQueries;
   }
 

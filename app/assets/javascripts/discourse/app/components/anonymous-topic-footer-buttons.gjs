@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
+import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -19,8 +20,7 @@ export default class AnonymousTopicFooterButtons extends Component {
   get buttons() {
     return this.allButtons
       .filterBy("anonymousOnly", true)
-      .sortBy("priority")
-      .reverse();
+      .sort((a, b) => compare(b?.priority, a?.priority)); // sort descending
   }
 
   <template>

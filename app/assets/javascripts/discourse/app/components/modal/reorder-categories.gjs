@@ -4,6 +4,7 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -32,7 +33,7 @@ export default class ReorderCategories extends Component {
   @tracked highlightedCategoryId = null;
 
   get sortedEntries() {
-    return this.entries.sortBy("position");
+    return this.entries.sort((a, b) => compare(a?.position, b?.position));
   }
 
   reorder(from) {
@@ -41,7 +42,9 @@ export default class ReorderCategories extends Component {
       position: category.position,
     }));
 
-    return this.createEntries([...from.sortBy("position")]);
+    return this.createEntries([
+      ...from.sort((a, b) => compare(a?.position, b?.position)),
+    ]);
   }
 
   /**

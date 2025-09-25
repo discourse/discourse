@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
@@ -70,7 +71,7 @@ export default class AdminUserBadgesController extends Controller {
       }
     });
 
-    return expanded.sortBy("granted_at").reverse();
+    return expanded.sort((a, b) => compare(b?.granted_at, a?.granted_at)); // sort descending
   }
 
   @action
