@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryDetailsSerializer < QuerySerializer
     attributes :sql, :param_info, :created_at, :hidden
 

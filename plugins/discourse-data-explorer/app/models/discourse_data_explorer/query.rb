@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryFinder
     def self.find(id)
       default_query = Queries.default[id.to_s]

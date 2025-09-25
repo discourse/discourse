@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryGroupSerializer < ActiveModel::Serializer
     attributes :id, :group_id, :query_id, :bookmark
 

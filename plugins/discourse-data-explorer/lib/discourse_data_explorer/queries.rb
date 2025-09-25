@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class Queries
     def self.default
       # WARNING: Edit the query hash carefully
