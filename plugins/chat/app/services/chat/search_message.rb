@@ -163,7 +163,7 @@ module Chat
           SELECT ct.original_message_id
           FROM chat_threads ct
           WHERE ct.id = chat_messages.thread_id
-        )"
+        )",
       )
     end
   end

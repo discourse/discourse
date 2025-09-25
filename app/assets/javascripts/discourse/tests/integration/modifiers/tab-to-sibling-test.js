@@ -1,7 +1,7 @@
+import { focus, render, triggerKeyEvent } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render, triggerKeyEvent, focus } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Modifier | tab-to-sibling", function (hooks) {
   setupRenderingTest(hooks);
@@ -43,7 +43,9 @@ module("Integration | Modifier | tab-to-sibling", function (hooks) {
 
     await triggerKeyEvent(secondItem, "keydown", "Tab", { shiftKey: true });
 
-    assert.dom(firstItem).isFocused("First item should be focused after Shift+Tab");
+    assert
+      .dom(firstItem)
+      .isFocused("First item should be focused after Shift+Tab");
   });
 
   test("skips non-focusable siblings", async function (assert) {
@@ -62,7 +64,9 @@ module("Integration | Modifier | tab-to-sibling", function (hooks) {
     await focus(firstItem);
     await triggerKeyEvent(firstItem, "keydown", "Tab");
 
-    assert.dom(thirdItem).isFocused("Should skip non-focusable siblings and focus third item");
+    assert
+      .dom(thirdItem)
+      .isFocused("Should skip non-focusable siblings and focus third item");
   });
 
   test("does not prevent default when no focusable sibling found", async function (assert) {
@@ -84,7 +88,7 @@ module("Integration | Modifier | tab-to-sibling", function (hooks) {
 
     // The focus might move to browser UI elements, but that's expected
     // when there are no more focusable elements in the page
-    assert.ok(true, "No error should occur when no focusable sibling is found");
+    assert.true("No error should occur when no focusable sibling is found");
   });
 
   test("works with buttons and other naturally focusable elements", async function (assert) {
@@ -102,7 +106,9 @@ module("Integration | Modifier | tab-to-sibling", function (hooks) {
     await focus(firstButton);
     await triggerKeyEvent(firstButton, "keydown", "Tab");
 
-    assert.dom(inputField).isFocused("Should focus input field after Tab from button");
+    assert
+      .dom(inputField)
+      .isFocused("Should focus input field after Tab from button");
   });
 
   test("ignores non-Tab key events", async function (assert) {
