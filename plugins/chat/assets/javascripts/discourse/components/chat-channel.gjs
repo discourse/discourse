@@ -179,6 +179,13 @@ export default class ChatChannel extends Component {
   }
 
   @action
+  clearFilteringState() {
+    this.channelFilterResults = null;
+    this.currentChannelFilterResult = null;
+    this.currentChannelFilterResultIndex = 0;
+  }
+
+  @action
   loadSearchResults(event) {
     this.currentChannelFilter = event.target.value;
     if (isBlank(this.currentChannelFilter)) {
@@ -823,7 +830,10 @@ export default class ChatChannel extends Component {
       <ChatMentionWarnings />
 
       {{#if @isFiltering}}
-        <div class="chat-channel__filter-bar">
+        <div
+          class="chat-channel__filter-bar"
+          {{didInsert this.clearFilteringState}}
+        >
           <FilterInput
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
@@ -835,18 +845,20 @@ export default class ChatChannel extends Component {
           {{#if this.channelFilterResults.length}}
             <span
             >{{this.currentFilterResultPosition}}/{{this.channelFilterResults.length}}</span>
+
+            <DButton
+              @action={{this.navigateToPreviousResult}}
+              @icon="chevron-up"
+              class="btn-small"
+            />
+            <DButton
+              @action={{this.navigateToNextResult}}
+              @icon="chevron-down"
+              class="btn-small"
+            />
+
           {{/if}}
 
-          <DButton
-            @action={{this.navigateToPreviousResult}}
-            @icon="chevron-up"
-            class="btn-small"
-          />
-          <DButton
-            @action={{this.navigateToNextResult}}
-            @icon="chevron-down"
-            class="btn-small"
-          />
           <DButton
             @action={{fn @onToggleFilter false}}
             class="btn-primary btn-small"
