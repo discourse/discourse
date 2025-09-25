@@ -23,7 +23,3 @@ end
 #
 #  idx_search_chat_message  (search_data) USING gin
 #
-# Foreign Keys
-#
-#  fk_rails_...  (chat_message_id => chat_messages.id) ON DELETE => cascade
-#
