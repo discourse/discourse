@@ -17,7 +17,7 @@
     "@swc/core": "^1.13.19",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
-    "chrome-launcher": "^1.2.0",
+    "chrome-launcher": "^1.2.1",
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
