@@ -15,6 +15,7 @@ en:
       voted_title: "Voted"
       voting_closed_title: "Closed"
       voting_limit: "Limit"
+      see_votes: "My Votes"
       votes_left:
         one: "You have %{count} vote left, see <a href='%{path}'>your votes</a>."
         other: "You have %{count} votes left, see <a href='%{path}'>your votes</a>."

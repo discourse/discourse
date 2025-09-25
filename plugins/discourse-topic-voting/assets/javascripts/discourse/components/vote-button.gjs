@@ -21,29 +21,27 @@ export default class VoteBox extends Component {
   alreadyVoted = this.topic.user_voted;
 
   get buttonContent() {
+    const content = {};
     if (this.currentUser) {
       if (this.topic.closed) {
-        return i18n("topic_voting.voting_closed_title");
+        content.label = i18n("topic_voting.voting_closed_title");
+        content.title = i18n("topic_voting.voting_closed_title");
+      } else if (this.topic.user_voted) {
+        content.label = i18n("topic_voting.voted_title");
+        content.title = i18n("topic_voting.voted_title");
+      } else if (this.currentUser.votes_exceeded) {
+        content.label = i18n("topic_voting.voting_limit");
+        content.title = i18n("topic_voting.reached_limit");
+      } else {
+        content.label = i18n("topic_voting.vote_title");
+        content.title = i18n("topic_voting.vote_title");
       }
-
-      if (this.topic.user_voted) {
-        return i18n("topic_voting.voted_title");
-      }
-
-      if (this.currentUser.votes_exceeded) {
-        return i18n("topic_voting.voting_limit");
-      }
-
-      return i18n("topic_voting.vote_title");
+    } else {
+      content.label = i18n("topic_voting.anonymous_button", { count: 1 });
+      content.title = i18n("topic_voting.anonymous_button", { count: 1 });
     }
 
-    if (this.topic.vote_count) {
-      return i18n("topic_voting.anonymous_button", {
-        count: this.topic.vote_count,
-      });
-    }
-
-    return i18n("topic_voting.anonymous_button", { count: 1 });
+    return content;
   }
 
   get userHasVoted() {
@@ -55,7 +53,7 @@ export default class VoteBox extends Component {
   }
 
   get userHasExceededVotingLimit() {
-    return this.currentUser.votes_exceeded;
+    return this.currentUser.votes_exceeded && !this.topic.user_voted;
   }
 
   get showVotedMenu() {
@@ -76,11 +74,7 @@ export default class VoteBox extends Component {
       }
 
       // If user hasn't voted yet, add vote and show success menu
-      if (
-        !this.topic.closed &&
-        !this.topic.user_voted &&
-        !this.currentUser.votes_exceeded
-      ) {
+      if (!this.topic.closed && !this.topic.user_voted) {
         this.args.addVote();
         this.hasVoted = true;
         // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
@@ -118,8 +112,8 @@ export default class VoteBox extends Component {
   <template>
     <DMenu
       @identifier="topic-voting-menu"
-      @title={{this.buttonContent}}
-      @label={{this.buttonContent}}
+      @title={{this.buttonContent.title}}
+      @label={{this.buttonContent.label}}
       @onShow={{this.onShowMenu}}
       @onClose={{this.onCloseMenu}}
       class="btn-primary vote-button topic-voting-menu__trigger"
@@ -150,6 +144,13 @@ export default class VoteBox extends Component {
                   @action={{this.removeVote}}
                   @icon="xmark"
                   class="btn-transparent topic-voting-menu__row-btn --danger"
+                />
+              </dropdown.item>
+              <dropdown.item class="topic-voting-menu__row">
+                <DButton
+                  @translatedLabel={{i18n "topic_voting.see_votes"}}
+                  @href="/my/activity/votes"
+                  @icon="list"
                 />
               </dropdown.item>
             {{/if}}
