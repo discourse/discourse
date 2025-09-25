@@ -31,11 +31,13 @@ module PageObjects
       end
 
       def save_changes_and_refresh
-        page.find(".save-changes").click
-        # reloading the page happens in JS on save but capybara doesnt wait for it
-        # which can mess up navigating away too soon in tests
-        # so doing a manual refresh here to mimic
-        page.refresh
+        button_element = page.find(".save-changes")
+        button_element.click
+
+        run_until_success do
+          # When page reloads, the element will have been replaced
+          expect(find(".save-changes")).not_to eq(page.find(".save-changes"))
+        end
       end
     end
   end
