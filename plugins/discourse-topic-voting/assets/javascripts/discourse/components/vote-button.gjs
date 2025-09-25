@@ -29,6 +29,9 @@ export default class VoteBox extends Component {
       } else if (this.topic.user_voted) {
         content.label = i18n("topic_voting.voted_title");
         content.title = i18n("topic_voting.voted_title");
+      } else if (this.currentUser.vote_limit_0) {
+        content.label = i18n("topic_voting.not_allowed_to_vote");
+        content.title = i18n("topic_voting.not_allowed_to_vote_title");
       } else if (this.currentUser.votes_exceeded) {
         content.label = i18n("topic_voting.voting_limit");
         content.title = i18n("topic_voting.reached_limit");
@@ -42,14 +45,6 @@ export default class VoteBox extends Component {
     }
 
     return content;
-  }
-
-  get userHasVoted() {
-    return this.topic.user_voted;
-  }
-
-  get userHasNotVoted() {
-    return !this.topic.user_voted;
   }
 
   get userHasExceededVotingLimit() {
@@ -137,23 +132,21 @@ export default class VoteBox extends Component {
               }}
             </dropdown.item>
           {{else}}
-            {{#if this.userHasVoted}}
-              <dropdown.item>
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.remove_vote"}}
-                  @action={{this.removeVote}}
-                  @icon="xmark"
-                  class="btn-transparent topic-voting-menu__row-btn --danger"
-                />
-              </dropdown.item>
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.see_votes"}}
-                  @href="/my/activity/votes"
-                  @icon="list"
-                />
-              </dropdown.item>
-            {{/if}}
+            <dropdown.item>
+              <DButton
+                @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                @action={{this.removeVote}}
+                @icon="xmark"
+                class="btn-transparent topic-voting-menu__row-btn --danger"
+              />
+            </dropdown.item>
+            <dropdown.item class="topic-voting-menu__row">
+              <DButton
+                @translatedLabel={{i18n "topic_voting.see_votes"}}
+                @href="/my/activity/votes"
+                @icon="list"
+              />
+            </dropdown.item>
           {{/if}}
         </DropdownMenu>
       </:content>
