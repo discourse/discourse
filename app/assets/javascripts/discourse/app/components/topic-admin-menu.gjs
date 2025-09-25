@@ -123,7 +123,7 @@ export default class TopicAdminMenu extends Component {
                     @label="topic.actions.delete"
                     @action={{fn this.onButtonAction "deleteTopic"}}
                     @icon="trash-can"
-                    class="popup-menu-btn-danger btn-danger"
+                    class="popup-menu-btn-danger --danger"
                   />
                 </dropdown.item>
               {{else if this.canRecover}}
