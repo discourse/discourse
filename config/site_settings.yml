@@ -4158,19 +4158,15 @@ experimental:
     area: "experimental"
     upcoming_change:
       status: "alpha"
-      risk: "medium"
-      type: "feature"
-      restrict_to_groups: ""
+      impact: "feature,staff"
       promote_at_version: ""
-      meta_topic_id: ""
+      learn_more_url: ""
   formkit_site_settings:
     client: true
     default: false
     hidden: true
     upcoming_change:
-      status: "alpha"
-      risk: "medium"
-      type: "misc"
-      restrict_to_groups: ""
+      status: "pre_alpha"
+      impact: "other,admins"
       promote_at_version: ""
-      meta_topic_id: ""
+      learn_more_url: ""

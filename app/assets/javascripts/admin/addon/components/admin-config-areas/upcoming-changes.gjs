@@ -3,8 +3,8 @@ import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -43,29 +43,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         filterFn: (change) => !change.value,
       },
       {
-        label: i18n("admin.upcoming_changes.filter.low_risk"),
-        value: "low_risk",
-        filterFn: (change) => change.upcoming_change.risk === "low",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.medium_risk"),
-        value: "medium_risk",
-        filterFn: (change) => change.upcoming_change.risk === "medium",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.high_risk"),
-        value: "high_risk",
-        filterFn: (change) => change.upcoming_change.risk === "high",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.type_feature"),
+        label: i18n("admin.upcoming_changes.filter.impact_type_feature"),
         value: "feature",
-        filterFn: (change) => change.upcoming_change.type === "feature",
+        filterFn: (change) => change.upcoming_change.impact_type === "feature",
       },
       {
-        label: i18n("admin.upcoming_changes.filter.type_misc"),
-        value: "misc",
-        filterFn: (change) => change.upcoming_change.type === "misc",
+        label: i18n("admin.upcoming_changes.filter.impact_type_other"),
+        value: "other",
+        filterFn: (change) => change.upcoming_change.impact_type === "other",
       },
       {
         label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
@@ -131,16 +116,18 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
     return !!change.upcoming_change.image_url;
   }
 
-  riskIcon(risk) {
-    switch (risk) {
-      case "low":
-        return "circle-check";
-      case "medium":
-        return "circle-half-stroke";
-      case "high":
-        return "triangle-exclamation";
-      default:
-        return "question";
+  impactRoleIcon(impactRole) {
+    switch (impactRole) {
+      case "admins":
+        return "shield-halved";
+      case "moderators":
+        return "shield-halved";
+      case "staff":
+        return "shield-halved";
+      case "all_members":
+        return "users";
+      case "developers":
+        return "code";
     }
   }
 
@@ -203,6 +190,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                       class="d-table__overview-about upcoming-change__description"
                     >
                       {{change.description}}
+                      {{#if change.upcoming_change.learn_more_url}}
+                        {{htmlSafe
+                          (i18n
+                            "learn_more_with_link"
+                            url=change.upcoming_change.learn_more_url
+                          )
+                        }}
+                      {{/if}}
                     </div>
                   {{/if}}
 
@@ -241,40 +236,22 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                     <span
                       title={{i18n
                         (concat
-                          "admin.upcoming_changes.risks."
-                          change.upcoming_change.risk
+                          "admin.upcoming_changes.impact_roles."
+                          change.upcoming_change.impact_role
                         )
                       }}
                       class="upcoming-change__badge"
                     >
-                      {{icon (this.riskIcon change.upcoming_change.risk)}}
+                      {{icon
+                        (this.impactRoleIcon change.upcoming_change.impact_role)
+                      }}
                       {{i18n
                         (concat
-                          "admin.upcoming_changes.risks."
-                          change.upcoming_change.risk
+                          "admin.upcoming_changes.impact_roles."
+                          change.upcoming_change.impact_role
                         )
                       }}
                     </span>
-
-                    {{#unless (eq change.upcoming_change.type "misc")}}
-                      <span
-                        title={{i18n
-                          (concat
-                            "admin.upcoming_changes.types."
-                            change.upcoming_change.type
-                          )
-                        }}
-                        class="upcoming-change__badge"
-                      >
-                        {{icon (this.typeIcon change.upcoming_change.type)}}
-                        {{i18n
-                          (concat
-                            "admin.upcoming_changes.types."
-                            change.upcoming_change.type
-                          )
-                        }}
-                      </span>
-                    {{/unless}}
                   </div>
                 </td>
                 <td class="d-table__cell --detail">

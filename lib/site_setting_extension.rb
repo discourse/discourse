@@ -905,11 +905,13 @@ module SiteSettingExtension
       end
     end
 
-    if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
-      define_singleton_method("#{clean_name}_groups_map") do
-        upcoming_change_metadata[name][:restrict_to_groups].to_s.split("|").map(&:to_i)
-      end
-    end
+    # TODO (martin) Base this on a site_setting_groups DB table instead
+    #
+    # if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
+    #   define_singleton_method("#{clean_name}_groups_map") do
+    #     upcoming_change_metadata[name][:restrict_to_groups].to_s.split("|").map(&:to_i)
+    #   end
+    # end
 
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
@@ -978,7 +980,12 @@ module SiteSettingExtension
         end
       )
 
-      upcoming_change_metadata[name] = opts[:upcoming_change] if opts[:upcoming_change]
+      if opts[:upcoming_change]
+        upcoming_change_metadata[name] = opts[:upcoming_change]
+        impact_type, impact_role = upcoming_change_metadata[name][:impact].split(",")
+        upcoming_change_metadata[name][:impact_type] = impact_type
+        upcoming_change_metadata[name][:impact_role] = impact_role
+      end
 
       categories[name] = opts[:category] || :uncategorized
 

@@ -5647,16 +5647,19 @@ en:
         enabled: "Enabled"
         show_image: "Show image"
         statuses:
+          pre_alpha: "Pre-Alpha"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stable"
-        risks:
-          low: "Low"
-          medium: "Medium"
-          high: "High"
-        types:
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+          all_members: "All members"
+          developers: "Developers"
+        impact_types:
           feature: "Feature"
-          misc: "Miscellaneous"
+          other: "Other"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -5666,8 +5669,8 @@ en:
           low_risk: "Risk: Low"
           medium_risk: "Risk: Medium"
           high_risk: "Risk: High"
-          type_feature: "Type: Feature"
-          type_misc: "Type: Miscellaneous"
+          impact_type_feature: "Type: Feature"
+          impact_type_other: "Type: Other"
           status_pre_alpha: "Status: Pre-Alpha"
           status_alpha: "Status: Alpha"
           status_beta: "Status: Beta"

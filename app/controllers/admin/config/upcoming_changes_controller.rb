@@ -25,6 +25,7 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
                    # TODO (martin) Maybe later we add a URL or something? Not sure
                    setting[:plugin] = plugin.humanized_name
                  end
-               } if request.xhr?
+               }
+               .sort_by { |s| s[:setting] } if request.xhr?
   end
 end
