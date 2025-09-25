@@ -2222,7 +2222,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    unless defined?(::DiscourseSolved)
+    unless defined?(DiscourseSolved)
       puts "  Skipping import of solved topics"
       return
     end
