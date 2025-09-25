@@ -141,7 +141,7 @@ RSpec.describe Plugin::Instance do
     it "uses registered index when indexing objects" do
       test_obj = mock_model_class.new(id: 123)
 
-      expect(mock_search_data_class).to receive(:upsert) do |params|
+      expect(mock_search_data_class).to have_received(:upsert) do |params|
         expect(params["test_model_id"]).to eq(123)
         expect(params["version"]).to eq(1)
         expect(params["locale"]).to eq(SiteSetting.default_locale)
@@ -155,7 +155,7 @@ RSpec.describe Plugin::Instance do
       unregistered_obj = Object.new
 
       # Should not raise an error and should not call our mock
-      expect(mock_search_data_class).not_to receive(:upsert)
+      expect(mock_search_data_class).not_to have_received(:upsert)
       expect { SearchIndexer.index(unregistered_obj) }.not_to raise_error
     end
   end
