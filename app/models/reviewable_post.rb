@@ -80,6 +80,7 @@ class ReviewablePost < Reviewable
 
   # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
   def build_new_separated_actions(actions, guardian, args)
+    build_post_actions_bundle(actions, guardian)
     build_user_actions_bundle(actions, guardian)
   end
 

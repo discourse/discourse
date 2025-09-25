@@ -49,6 +49,10 @@
         border-bottom: 1px solid var(--content-border-color);
       }
     }
+
+    .reviewable-actions-form .btn-primary {
+      width: 100%;
+    }
   }
 
   &__flag-summary {
