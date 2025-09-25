@@ -7,8 +7,7 @@ export function getNext(list, current = null) {
 
   if (current?.identifier) {
     const currentIndex = list
-      .map((item) => item.identifier)
-      .indexOf(current?.identifier);
+      .findIndex((item) => item.identifier === current?.identifier);
 
     if (currentIndex < list.length - 1) {
       return list.objectAt(currentIndex + 1);
@@ -29,8 +28,7 @@ export function getPrevious(list, current = null) {
 
   if (current?.identifier) {
     const currentIndex = list
-      .map((item) => item.identifier)
-      .indexOf(current?.identifier);
+      .findIndex((item) => item.identifier === current?.identifier);
 
     if (currentIndex > 0) {
       return list.objectAt(currentIndex - 1);
