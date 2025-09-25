@@ -2,7 +2,7 @@
 
 module DiscourseDataExplorer
   class QueryController < ApplicationController
-    requires_plugin PLUGIN_NAME
+    requires_plugin DiscourseDataExplorer::PLUGIN_NAME
 
     before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
     before_action :set_query, only: %i[group_reports_show group_reports_run show update public_run]

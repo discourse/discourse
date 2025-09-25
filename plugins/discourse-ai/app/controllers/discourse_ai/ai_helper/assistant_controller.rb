@@ -3,7 +3,7 @@
 module DiscourseAi
   module AiHelper
     class AssistantController < ::ApplicationController
-      requires_plugin PLUGIN_NAME
+      requires_plugin DiscourseAi::PLUGIN_NAME
       requires_login
       before_action :ensure_can_request_suggestions
       before_action :rate_limiter_performed!

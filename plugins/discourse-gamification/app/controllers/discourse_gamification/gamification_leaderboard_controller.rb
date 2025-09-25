@@ -2,7 +2,7 @@
 
 module DiscourseGamification
   class GamificationLeaderboardController < ::ApplicationController
-    requires_plugin PLUGIN_NAME
+    requires_plugin DiscourseGamification::PLUGIN_NAME
 
     def respond
       discourse_expires_in 1.minute
