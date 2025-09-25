@@ -71,7 +71,7 @@ module ::AdPlugin
 
     def self.all
       PluginStoreRow
-        .where(plugin_name: AdPlugin.plugin_name)
+        .where(plugin_name: AdPlugin::PLUGIN_NAME)
         .where("key LIKE 'ad:%'")
         .where("key != 'ad:_id'")
         .map { |psr| from_hash(PluginStore.cast_value(psr.type_name, psr.value)) }

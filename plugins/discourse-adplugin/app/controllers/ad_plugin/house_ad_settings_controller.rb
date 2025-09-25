@@ -2,7 +2,7 @@
 
 module ::AdPlugin
   class HouseAdSettingsController < ::ApplicationController
-    requires_plugin AdPlugin.plugin_name
+    requires_plugin AdPlugin::PLUGIN_NAME
 
     def update
       HouseAdSetting.update(params[:id], params[:value])

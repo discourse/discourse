@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ::DiscourseLocalDates
+module ::DiscourseTemplates
   class Engine < ::Rails::Engine
     engine_name PLUGIN_NAME
-    isolate_namespace DiscourseLocalDates
+    isolate_namespace DiscourseTemplates
   end
 end

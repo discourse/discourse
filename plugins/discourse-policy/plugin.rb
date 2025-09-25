@@ -15,19 +15,14 @@ register_svg_icon "file-signature"
 
 enabled_site_setting :policy_enabled
 
+module ::DiscoursePolicy
+  PLUGIN_NAME = "discourse-policy"
+end
+
+require_relative "lib/discourse_policy/engine"
+
 after_initialize do
-  module ::DiscoursePolicy
-    PLUGIN_NAME = "discourse-policy"
-    HAS_POLICY = "HasPolicy"
-    POLICY_USER_DEFAULT_LIMIT = 25
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscoursePolicy
-    end
-  end
-
-  require_relative "app/controllers/policy_controller"
+  require_relative "app/controllers/discourse_policy/policy_controller"
   require_relative "app/models/policy_user"
   require_relative "app/models/post_policy_group"
   require_relative "app/models/post_policy"
@@ -40,13 +35,6 @@ after_initialize do
   require_relative "lib/policy_mailer"
 
   Discourse::Application.routes.append { mount ::DiscoursePolicy::Engine, at: "/policy" }
-
-  DiscoursePolicy::Engine.routes.draw do
-    put "/accept" => "policy#accept"
-    put "/unaccept" => "policy#unaccept"
-    get "/accepted" => "policy#accepted"
-    get "/not-accepted" => "policy#not_accepted"
-  end
 
   Post.prepend DiscoursePolicy::PostExtension
   PostSerializer.prepend DiscoursePolicy::PostSerializerExtension

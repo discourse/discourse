@@ -15,23 +15,14 @@ register_svg_icon "far-square-check"
 
 enabled_site_setting :poll_enabled
 
+module ::DiscoursePoll
+  PLUGIN_NAME = "poll"
+end
+
+require_relative "lib/poll/engine"
+
 after_initialize do
-  module ::DiscoursePoll
-    PLUGIN_NAME = "poll"
-    DATA_PREFIX = "data-poll-"
-    HAS_POLLS = "has_polls"
-    DEFAULT_POLL_NAME = "poll"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscoursePoll
-    end
-
-    class Error < StandardError
-    end
-  end
-
-  require_relative "app/controllers/polls_controller"
+  require_relative "app/controllers/discourse_poll/polls_controller"
   require_relative "app/models/poll_option"
   require_relative "app/models/poll_vote"
   require_relative "app/models/poll"
@@ -45,14 +36,6 @@ after_initialize do
   require_relative "lib/post_validator"
   require_relative "lib/post_extension"
   require_relative "lib/user_extension"
-
-  DiscoursePoll::Engine.routes.draw do
-    put "/vote" => "polls#vote"
-    delete "/vote" => "polls#remove_vote"
-    put "/toggle_status" => "polls#toggle_status"
-    get "/voters" => "polls#voters"
-    get "/grouped_poll_results" => "polls#grouped_poll_results"
-  end
 
   Discourse::Application.routes.append { mount ::DiscoursePoll::Engine, at: "/polls" }
 
