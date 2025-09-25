@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ::DiscourseCalendar::UpdateHolidayUsernames < ::Jobs::Scheduled
+  class DiscourseCalendar::UpdateHolidayUsernames < ::Jobs::Scheduled
     every 10.minutes
 
     def execute(args)

@@ -19,7 +19,7 @@ DiscoursePostEvent::Engine.routes.draw do
 end
 
 Discourse::Application.routes.draw do
-  mount ::DiscourseCalendar::Engine, at: "/"
+  mount DiscourseCalendar::Engine, at: "/"
   mount ::DiscoursePostEvent::Engine, at: "/"
 
   scope constraints: StaffConstraint.new do

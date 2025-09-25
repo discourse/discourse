@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Jobs
-  class ::DiscourseCalendar::MonitorEventDates < ::Jobs::Scheduled
+  class DiscourseCalendar::MonitorEventDates < ::Jobs::Scheduled
     every 1.minute
 
     def execute(args)

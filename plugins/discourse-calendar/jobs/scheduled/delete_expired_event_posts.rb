@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ::DiscourseCalendar::DeleteExpiredEventPosts < ::Jobs::Scheduled
+  class DiscourseCalendar::DeleteExpiredEventPosts < ::Jobs::Scheduled
     every 10.minutes
 
     def execute(args)
