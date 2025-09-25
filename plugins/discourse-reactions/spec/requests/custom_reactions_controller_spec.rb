@@ -283,7 +283,7 @@ describe DiscourseReactions::CustomReactionsController do
         parsed = response.parsed_body
         expect(parsed.length).to eq(2)
 
-        PostDestroyer.new(Discourse.system_user, deleted_post).destroy
+        PostDestroyer.new(Discourse.system_user, deleted_post, context: "spec").destroy
 
         get "/discourse-reactions/posts/reactions.json", params: { username: user.username }
         parsed = response.parsed_body
@@ -305,7 +305,7 @@ describe DiscourseReactions::CustomReactionsController do
 
         expect(response.parsed_body.length).to eq(2)
 
-        PostDestroyer.new(Discourse.system_user, op).destroy
+        PostDestroyer.new(Discourse.system_user, op, context: "spec").destroy
         get "/discourse-reactions/posts/reactions.json", params: { username: user_1.username }
 
         parsed = response.parsed_body

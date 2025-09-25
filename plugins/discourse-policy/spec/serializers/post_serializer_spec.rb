@@ -58,8 +58,6 @@ describe PostSerializer do
     group.destroy!
 
     json = PostSerializer.new(post, scope: Guardian.new).as_json
-    puts json.inspect
-
     not_accepted = json[:post][:policy_not_accepted_by]
 
     expect(not_accepted).to eq(nil)
