@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscoursePolicy
+module DiscoursePolicy
   HAS_POLICY = "HasPolicy"
   POLICY_USER_DEFAULT_LIMIT = 25
 

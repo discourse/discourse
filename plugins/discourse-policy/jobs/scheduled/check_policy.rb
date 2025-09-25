@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ::DiscoursePolicy::CheckPolicy < ::Jobs::Scheduled
+  class DiscoursePolicy::CheckPolicy < ::Jobs::Scheduled
     every 6.hours
 
     def execute(args = nil)

@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-describe DiscoursePolicy::CheckPolicy do
-  before do
-    enable_current_plugin
-    Jobs.run_immediately!
-  end
-
+describe Jobs::DiscoursePolicy::CheckPolicy do
+  let(:job) { described_class.new }
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
 
@@ -14,6 +10,11 @@ describe DiscoursePolicy::CheckPolicy do
     group.add(user1)
     group.add(user2)
     group
+  end
+
+  before do
+    enable_current_plugin
+    Jobs.run_immediately!
   end
 
   def accept_policy(post)
@@ -35,13 +36,13 @@ describe DiscoursePolicy::CheckPolicy do
     accept_policy(post)
 
     freeze_time Time.utc(2022)
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to contain_exactly(user1, user2)
 
     freeze_time Time.utc(2023)
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to be_empty
@@ -63,7 +64,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     freeze_time Time.utc(2022)
     PolicyUser.where(user_id: user2.id).update(accepted_at: Time.now)
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to contain_exactly(user2)
@@ -92,7 +93,7 @@ describe DiscoursePolicy::CheckPolicy do
     accept_policy(post2)
 
     freeze_time Time.utc(2022)
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to be_empty
@@ -113,7 +114,7 @@ describe DiscoursePolicy::CheckPolicy do
     accept_policy(post)
 
     freeze_time Time.utc(2020)
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     # did not hit renew start
@@ -121,7 +122,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     freeze_time Time.utc(2020, 10, 18)
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to be_empty
@@ -132,7 +133,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     PolicyUser.add!(user2, post.post_policy)
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     post.reload
     expect(post.post_policy.accepted_by).to contain_exactly(user2)
@@ -163,14 +164,14 @@ describe DiscoursePolicy::CheckPolicy do
 
       freeze_time Time.utc(2020, 10, 17)
 
-      DiscoursePolicy::CheckPolicy.new.execute
+      job.execute
 
       post.reload
       expect(post.post_policy.accepted_by).to contain_exactly(user1, user2)
 
       freeze_time Time.utc(2020, 10, 18)
 
-      DiscoursePolicy::CheckPolicy.new.execute
+      job.execute
 
       post.reload
       expect(post.post_policy.accepted_by).to be_empty
@@ -203,14 +204,14 @@ describe DiscoursePolicy::CheckPolicy do
 
       freeze_time Time.utc(2020, 10, 30)
 
-      DiscoursePolicy::CheckPolicy.new.execute
+      job.execute
 
       post.reload
       expect(post.post_policy.accepted_by).to contain_exactly(user1, user2)
 
       freeze_time Time.utc(2020, 10, 16) + period + 1.day
 
-      DiscoursePolicy::CheckPolicy.new.execute
+      job.execute
 
       post.reload
       expect(post.post_policy.accepted_by).to be_empty
@@ -230,7 +231,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     post = create_post(raw: raw, user: Fabricate(:admin))
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     expect(
       user1.notifications.where(notification_type: Notification.types[:topic_reminder]).count,
@@ -241,8 +242,8 @@ describe DiscoursePolicy::CheckPolicy do
 
     freeze_time 2.weeks.from_now
 
-    DiscoursePolicy::CheckPolicy.new.execute
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
+    job.execute
 
     user1_notifications =
       user1.notifications.where(
@@ -274,7 +275,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     post = create_post(raw: raw, user: Fabricate(:admin))
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     expect(
       user1.notifications.where(notification_type: Notification.types[:topic_reminder]).count,
@@ -282,7 +283,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     freeze_time 2.weeks.from_now
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     user1_notification =
       user1
@@ -297,7 +298,7 @@ describe DiscoursePolicy::CheckPolicy do
 
     freeze_time 2.weeks.from_now
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     expect(
       user1
@@ -315,7 +316,7 @@ describe DiscoursePolicy::CheckPolicy do
   it "clears the next_renew_at when renew_start is nil" do
     policy = Fabricate(:post_policy, next_renew_at: 3.hours.ago, renew_start: nil, renew_days: 10)
 
-    DiscoursePolicy::CheckPolicy.new.execute
+    job.execute
 
     expect(policy.reload.next_renew_at).to be_nil
   end
