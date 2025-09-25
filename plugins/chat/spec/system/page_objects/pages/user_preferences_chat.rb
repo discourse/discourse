@@ -36,7 +36,7 @@ module PageObjects
 
         run_until_success do
           # When page reloads, the element will have been replaced
-          expect(find(".save-changes")).not_to eq(page.find(".save-changes"))
+          expect(find(".save-changes")).not_to eq(button_element)
         end
       end
     end
