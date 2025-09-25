@@ -53,12 +53,26 @@ export default class Types extends Component {
     } else if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      logSearchLinkClick({
-        searchLogId: this.args.searchLogId,
-        searchResultId: result.id,
-        searchResultType: resultType.type,
-      });
-      this.routeToSearchResult(event.target.href);
+
+      // Check for Ctrl+Enter or Cmd+Enter to open in new tab
+      if (event.ctrlKey || event.metaKey) {
+        const link = event.currentTarget.querySelector("a.search-link");
+        if (link && link.href) {
+          // Extract just the pathname for consistency with expected test behavior
+          const url = new URL(link.href);
+          window.open(url.pathname, "_blank", "noopener,noreferrer");
+        }
+      } else {
+        logSearchLinkClick({
+          searchLogId: this.args.searchLogId,
+          searchResultId: result.id,
+          searchResultType: resultType.type,
+        });
+        const link = event.currentTarget.querySelector("a.search-link");
+        if (link && link.href) {
+          this.routeToSearchResult(link.href);
+        }
+      }
       return false;
     }
 

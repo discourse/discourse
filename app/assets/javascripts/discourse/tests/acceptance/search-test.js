@@ -656,6 +656,140 @@ acceptance("Search - Authenticated", function (needs) {
     );
   });
 
+  test("search menu keyboard navigation - Ctrl+Enter opens in new tab", async function (assert) {
+    const originalWindowOpen = window.open;
+    let openedUrls = [];
+
+    // Mock window.open
+    window.open = (url, target, features) => {
+      openedUrls.push({ url, target, features });
+    };
+
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const focusedElement = document.activeElement;
+    assert
+      .dom(focusedElement)
+      .hasAttribute(
+        "href",
+        "/t/development-mode-super-slow/2179",
+        "first search result is highlighted"
+      );
+
+    assert.true(
+      focusedElement.classList.contains("search-link"),
+      "focused element should have search-link class"
+    );
+
+    // Simulate Ctrl+Enter on the focused search result
+    await triggerKeyEvent(focusedElement, "keydown", "Enter", {
+      ctrlKey: true,
+    });
+
+    // Verify that window.open was called with the correct parameters
+    assert.strictEqual(
+      openedUrls.length,
+      1,
+      "window.open should be called once"
+    );
+    assert.strictEqual(
+      openedUrls[0].url,
+      "/t/development-mode-super-slow/2179",
+      "should open the correct URL"
+    );
+    assert.strictEqual(
+      openedUrls[0].target,
+      "_blank",
+      "should open in new tab"
+    );
+    assert.strictEqual(
+      openedUrls[0].features,
+      "noopener,noreferrer",
+      "should have security features"
+    );
+
+    // The URL should not change since we opened in new tab
+    assert.strictEqual(
+      currentURL(),
+      "/",
+      "current tab URL should not change when opening in new tab"
+    );
+
+    window.open = originalWindowOpen;
+  });
+
+  test("search menu keyboard navigation - Cmd+Enter opens in new tab (Mac)", async function (assert) {
+    const originalWindowOpen = window.open;
+    let openedUrls = [];
+
+    // Mock window.open
+    window.open = (url, target, features) => {
+      openedUrls.push({ url, target, features });
+    };
+
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const focusedElement = document.activeElement;
+    assert
+      .dom(focusedElement)
+      .hasAttribute(
+        "href",
+        "/t/development-mode-super-slow/2179",
+        "first search result is highlighted"
+      );
+
+    assert.true(
+      focusedElement.classList.contains("search-link"),
+      "focused element should have search-link class"
+    );
+
+    // Simulate Cmd+Enter on the focused search result
+    await triggerKeyEvent(focusedElement, "keydown", "Enter", {
+      metaKey: true,
+    });
+
+    // Verify that window.open was called with the correct parameters
+    assert.strictEqual(
+      openedUrls.length,
+      1,
+      "window.open should be called once"
+    );
+    assert.strictEqual(
+      openedUrls[0].url,
+      "/t/development-mode-super-slow/2179",
+      "should open the correct URL"
+    );
+    assert.strictEqual(
+      openedUrls[0].target,
+      "_blank",
+      "should open in new tab"
+    );
+    assert.strictEqual(
+      openedUrls[0].features,
+      "noopener,noreferrer",
+      "should have security features"
+    );
+
+    // The URL should not change since we opened in new tab
+    assert.strictEqual(
+      currentURL(),
+      "/",
+      "current tab URL should not change when opening in new tab"
+    );
+
+    window.open = originalWindowOpen;
+  });
+
   test("initial options - search history - no context", async function (assert) {
     await visit("/");
     await click("#search-button");
