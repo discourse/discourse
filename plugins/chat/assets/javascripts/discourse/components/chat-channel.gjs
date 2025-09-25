@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,6 +11,7 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -21,6 +23,7 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -75,6 +78,7 @@ export default class ChatChannel extends Component {
   @tracked uploadDropZone;
   @tracked isScrolling = false;
   @tracked channelFilterResults;
+  @tracked currentChannelFilter = "";
   @tracked currentChannelFilterResult;
   @tracked currentChannelFilterResultIndex = 0;
 
@@ -175,10 +179,9 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  loadSearchResults() {
-    const actualFilter = this.args.channelFilter;
-
-    if (isBlank(actualFilter)) {
+  loadSearchResults(event) {
+    this.currentChannelFilter = event.target.value;
+    if (isBlank(this.currentChannelFilter)) {
       this.searchRequest?.abort?.();
 
       cancel(this, this._performSearch);
@@ -189,16 +192,21 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    discourseDebounce(this, this._performSearch, INPUT_DELAY);
+    discourseDebounce(
+      this,
+      this._performSearch,
+      this.currentChannelFilter,
+      INPUT_DELAY
+    );
   }
 
-  async _performSearch() {
+  async _performSearch(query) {
     this.searchRequest?.abort?.();
 
     try {
       this.searchRequest = ajax("/chat/api/search", {
         data: {
-          query: this.args.channelFilter,
+          query,
           channel_id: this.args.channel.id,
           exclude_threads: true,
         },
@@ -807,7 +815,6 @@ export default class ChatChannel extends Component {
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
       {{didUpdate this.loadMessages @targetMessageId}}
-      {{didUpdate this.loadSearchResults @channelFilter}}
       data-id={{@channel.id}}
     >
 
@@ -815,10 +822,20 @@ export default class ChatChannel extends Component {
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
 
-      {{#if this.channelFilterResults}}
-        <div class="chat-channel__filter-navigation">
-          <span
-          >{{this.currentFilterResultPosition}}/{{this.channelFilterResults.length}}</span>
+      {{#if @isFiltering}}
+        <div class="chat-channel__filter-bar">
+          <FilterInput
+            placeholder={{i18n "chat.search.title"}}
+            @filterAction={{this.loadSearchResults}}
+            @icons={{hash left="magnifying-glass"}}
+            class="no-blur"
+            {{autoFocus}}
+          />
+
+          {{#if this.channelFilterResults.length}}
+            <span
+            >{{this.currentFilterResultPosition}}/{{this.channelFilterResults.length}}</span>
+          {{/if}}
 
           <DButton
             @action={{this.navigateToPreviousResult}}
@@ -829,6 +846,11 @@ export default class ChatChannel extends Component {
             @action={{this.navigateToNextResult}}
             @icon="chevron-down"
             class="btn-small"
+          />
+          <DButton
+            @action={{fn @onToggleFilter false}}
+            class="btn-primary btn-small"
+            @label="done"
           />
         </div>
       {{/if}}
@@ -846,7 +868,7 @@ export default class ChatChannel extends Component {
               @resendStagedMessage={{this.resendStagedMessage}}
               @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="channel"
-              @highlightedText={{@channelFilter}}
+              @highlightedText={{this.currentChannelFilter}}
             />
           {{else}}
             {{#unless this.messagesLoader.fetchedOnce}}
