@@ -88,35 +88,55 @@ module("Unit | Ember | resolver", function (hooks) {
     );
 
     // Convert dots to slash
-    lookupTemplate(
-      assert,
-      "template:foo.bar_baz",
-      "discourse/templates/foo/bar_baz",
-      "with subdir defined by dot"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo.bar_baz",
+          "discourse/templates/foo/bar_baz",
+          "with subdir defined by dot"
+        );
+      }
     );
 
     // Convert dashes to slash
-    lookupTemplate(
-      assert,
-      "template:foo-bar_baz",
-      "discourse/templates/foo/bar_baz",
-      "with subdir defined by dash"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo-bar_baz",
+          "discourse/templates/foo/bar_baz",
+          "with subdir defined by dash"
+        );
+      }
     );
 
     // Underscored with first segment as directory
-    lookupTemplate(
-      assert,
-      "template:fooBarBaz",
-      "discourse/templates/foo/bar_baz",
-      "with subdir defined by first camel case and the rest of camel cases converted to underscores"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:fooBarBaz",
+          "discourse/templates/foo/bar_baz",
+          "with subdir defined by first camel case and the rest of camel cases converted to underscores"
+        );
+      }
     );
 
     // Already underscored with first segment as directory
-    lookupTemplate(
-      assert,
-      "template:foo_bar_baz",
-      "discourse/templates/foo/bar_baz",
-      "with subdir defined by first underscore"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo_bar_baz",
+          "discourse/templates/foo/bar_baz",
+          "with subdir defined by first underscore"
+        );
+      }
     );
   });
 
@@ -130,19 +150,29 @@ module("Unit | Ember | resolver", function (hooks) {
     ]);
 
     // Directories are prioritized when dotted
-    lookupTemplate(
-      assert,
-      "template:foo.bar",
-      "discourse/templates/foo/bar",
-      "preferring first level subdir for dotted name"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo.bar",
+          "discourse/templates/foo/bar",
+          "preferring first level subdir for dotted name"
+        );
+      }
     );
 
     // Directories are prioritized when dashed
-    lookupTemplate(
-      assert,
-      "template:foo-bar",
-      "discourse/templates/foo/bar",
-      "preferring first level subdir for dotted name"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo-bar",
+          "discourse/templates/foo/bar",
+          "preferring first level subdir for dotted name"
+        );
+      }
     );
 
     // Default unmodified before directories, except when dotted
@@ -162,11 +192,16 @@ module("Unit | Ember | resolver", function (hooks) {
     );
 
     // Use directory version if top-level isn't found
-    lookupTemplate(
-      assert,
-      "template:baz-qux",
-      "discourse/templates/baz/qux",
-      "fallback subdir for dashed name"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:baz-qux",
+          "discourse/templates/baz/qux",
+          "fallback subdir for dashed name"
+        );
+      }
     );
   });
 
@@ -182,27 +217,42 @@ module("Unit | Ember | resolver", function (hooks) {
     );
 
     // Converts dotted to slashed
-    lookupTemplate(
-      assert,
-      "template:foo.bar.baz.qux",
-      "discourse/templates/foo/bar/baz/qux",
-      "for subdirs defined by dots"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo.bar.baz.qux",
+          "discourse/templates/foo/bar/baz/qux",
+          "for subdirs defined by dots"
+        );
+      }
     );
 
     // Converts first camelized segment to slashed
-    lookupTemplate(
-      assert,
-      "template:foo/bar/bazQux",
-      "discourse/templates/foo/bar/baz/qux",
-      "for subdirs defined by slashes plus one camel case"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo/bar/bazQux",
+          "discourse/templates/foo/bar/baz/qux",
+          "for subdirs defined by slashes plus one camel case"
+        );
+      }
     );
 
     // Converts first underscore to slashed
-    lookupTemplate(
-      assert,
-      "template:foo/bar/baz_qux",
-      "discourse/templates/foo/bar/baz/qux",
-      "for subdirs defined by slashes plus one underscore"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:foo/bar/baz_qux",
+          "discourse/templates/foo/bar/baz/qux",
+          "for subdirs defined by slashes plus one underscore"
+        );
+      }
     );
 
     // Only converts first camelized segment to slashed so this isn't matched
@@ -286,27 +336,42 @@ module("Unit | Ember | resolver", function (hooks) {
     ]);
 
     // Switches prefix to admin/templates when camelized
-    lookupTemplate(
-      assert,
-      "template:adminFoo",
-      "admin/templates/foo",
-      "when prefix is separated by camel case"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:adminFoo",
+          "admin/templates/foo",
+          "when prefix is separated by camel case"
+        );
+      }
     );
 
     // Switches prefix to admin/templates when underscored
-    lookupTemplate(
-      assert,
-      "template:admin_foo",
-      "admin/templates/foo",
-      "when prefix is separated by underscore"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin_foo",
+          "admin/templates/foo",
+          "when prefix is separated by underscore"
+        );
+      }
     );
 
     // Switches prefix to admin/templates when dotted
-    lookupTemplate(
-      assert,
-      "template:admin.foo",
-      "admin/templates/foo",
-      "when prefix is separated by dot"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin.foo",
+          "admin/templates/foo",
+          "when prefix is separated by dot"
+        );
+      }
     );
 
     // Doesn't match unseparated prefix
@@ -341,25 +406,28 @@ module("Unit | Ember | resolver", function (hooks) {
       "but not when template with the exact dotted name exists"
     );
 
-    lookupTemplate(
-      assert,
-      "template:admin-dashboard-general",
-      "admin/templates/dashboard_general",
-      "finds namespaced and underscored version"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin-baz/qux",
+          "discourse/templates/admin-baz-qux",
+          "also tries dasherized"
+        );
+      }
     );
 
-    lookupTemplate(
-      assert,
-      "template:admin-baz/qux",
-      "discourse/templates/admin-baz-qux",
-      "also tries dasherized"
-    );
-
-    lookupTemplate(
-      assert,
-      "template:admin-plugin/template",
-      "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
-      "looks up templates in plugins"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin-plugin/template",
+          "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
+          "looks up templates in plugins"
+        );
+      }
     );
 
     lookupTemplate(
@@ -485,11 +553,16 @@ module("Unit | Ember | resolver", function (hooks) {
       "removes components segment"
     );
 
-    lookupTemplate(
-      assert,
-      "template:connectors/foo-bar/baz-qux",
-      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/baz_qux",
-      "underscores last segment"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:connectors/foo-bar/baz-qux",
+          "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/baz_qux",
+          "underscores last segment"
+        );
+      }
     );
 
     lookupTemplate(
@@ -499,11 +572,16 @@ module("Unit | Ember | resolver", function (hooks) {
       "handles camelcase file names"
     );
 
-    lookupTemplate(
-      assert,
-      resolver.normalize("template:connectors/foo-bar/camelCase"),
-      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/camelCase",
-      "handles camelcase file names when normalized"
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          resolver.normalize("template:connectors/foo-bar/camelCase"),
+          "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/camelCase",
+          "handles camelcase file names when normalized"
+        );
+      }
     );
   });
 
