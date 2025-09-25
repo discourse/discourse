@@ -156,10 +156,23 @@ RSpec.describe Chat::SearchMessage do
       end
 
       context "with exclude_threads parameter" do
-        fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel, message: "original test message") }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: original_message) }
-        fab!(:thread_reply) { Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread reply test") }
-        fab!(:regular_message) { Fabricate(:chat_message, chat_channel: channel, message: "regular test message") }
+        fab!(:original_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "original test message")
+        end
+        fab!(:thread) do
+          Fabricate(:chat_thread, channel: channel, original_message: original_message)
+        end
+        fab!(:thread_reply) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: thread,
+            message: "thread reply test",
+          )
+        end
+        fab!(:regular_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "regular test message")
+        end
 
         let(:query) { "test" }
 
@@ -172,7 +185,14 @@ RSpec.describe Chat::SearchMessage do
 
         context "when exclude_threads is false (default)" do
           let(:params) do
-            { guardian: guardian, params: { channel_id: channel.id, query: query, exclude_threads: false } }
+            {
+              guardian: guardian,
+              params: {
+                channel_id: channel.id,
+                query: query,
+                exclude_threads: false,
+              },
+            }
           end
 
           it "includes all matching messages including thread replies" do
@@ -182,7 +202,14 @@ RSpec.describe Chat::SearchMessage do
 
         context "when exclude_threads is true" do
           let(:params) do
-            { guardian: guardian, params: { channel_id: channel.id, query: query, exclude_threads: true } }
+            {
+              guardian: guardian,
+              params: {
+                channel_id: channel.id,
+                query: query,
+                exclude_threads: true,
+              },
+            }
           end
 
           it "excludes thread replies but keeps original thread messages and regular messages" do
@@ -231,7 +258,6 @@ RSpec.describe Chat::SearchMessage do
 
         it { is_expected.to be_a_failure }
       end
-
     end
   end
 end
