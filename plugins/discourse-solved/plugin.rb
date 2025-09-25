@@ -26,7 +26,7 @@ require_relative "lib/discourse_solved/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
-  module DiscourseSolved
+  module ::DiscourseSolved
     def self.accept_answer!(post, acting_user, topic: nil)
       topic ||= post.topic
 
