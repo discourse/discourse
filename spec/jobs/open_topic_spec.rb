@@ -26,8 +26,14 @@ RSpec.describe Jobs::OpenTopic do
   end
 
   describe "when category has auto close configured" do
-    fab!(:category) do
-      Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)
+    fab!(:category)
+    fab!(:category_default_timer) do
+      Fabricate(
+        :category_default_timer,
+        category: category,
+        duration_minutes: 300,
+        based_on_last_post: true,
+      )
     end
 
     fab!(:topic) { Fabricate(:topic, category: category, closed: true) }
@@ -65,7 +71,8 @@ RSpec.describe Jobs::OpenTopic do
     end
 
     it "should reconfigure topic timer if category's topics are set to autoclose" do
-      category = Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)
+      category = Fabricate(:category)
+      Fabricate(:category_default_timer, category:, duration_minutes: 300, based_on_last_post: true)
 
       topic = Fabricate(:topic, category: category)
       topic.public_topic_timer.update!(user: user)

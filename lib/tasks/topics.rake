@@ -32,6 +32,7 @@ def apply_auto_close(category)
         SELECT 1
         FROM topic_timers
         WHERE topic_timers.timerable_id = topics.id
+          AND topic_timers.type = 'TopicTimer'
           AND topic_timers.status_type = ?
           AND topic_timers.deleted_at IS NULL
       )
@@ -56,9 +57,10 @@ def apply_auto_close(category)
 end
 
 task "topics:apply_autoclose" => :environment do
-  categories = Category.where("auto_close_hours > 0")
+  timers = CategoryDefaultTimer.where(status_type: CategoryDefaultTimer.types[:close])
 
-  categories.find_each do |category|
+  timers.find_each do |timer|
+    category = timer.category
     puts "", "Applying auto-close to category '#{category.name}' ..."
     close_old_topics(category)
     puts ""
