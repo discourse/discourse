@@ -22,7 +22,7 @@
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.10",
-    "eslint": "9.34.0",
+    "eslint": "9.36.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.13.4",
     "licensee": "^11.1.1",
@@ -35,7 +35,7 @@
     "prettier": "3.5.3",
     "puppeteer-core": "^24.22.3",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
-    "stylelint": "16.23.1",
+    "stylelint": "16.24.0",
     "terser": "^5.44.0",
     "typescript": "5.6.x"
   },
