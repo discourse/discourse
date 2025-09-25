@@ -2150,7 +2150,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_voting_votes
-    unless defined?(::DiscourseTopicVoting)
+    unless defined?(DiscourseTopicVoting)
       puts "", "Skipping topic voting votes, because the topic voting plugin is not installed."
       return
     end
