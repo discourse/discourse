@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
+import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
@@ -37,6 +38,7 @@ export default class Icons extends Component {
   @service header;
   @service search;
   @service interfaceColor;
+  @service router;
 
   get showHamburger() {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
@@ -54,16 +56,23 @@ export default class Icons extends Component {
   }
 
   get showSearchButton() {
-    if (this.header.headerButtonsHidden.includes("search")) {
+    if (
+      this.header.headerButtonsHidden.includes("search") ||
+      ALL_PAGES_EXCLUDED_ROUTES.some(
+        (name) => name === this.router.currentRouteName
+      )
+    ) {
       return false;
     }
 
     return (
       this.site.mobileView ||
+      this.args.narrowDesktop ||
       (this.search.searchExperience === "search_icon" &&
         !this.search.welcomeBannerSearchInViewport) ||
-      this.args.topicInfoVisible ||
-      this.args.narrowDesktop
+      (this.search.searchExperience === "search_field" &&
+        this.router.currentRouteName.startsWith("admin")) ||
+      this.args.topicInfoVisible
     );
   }
 

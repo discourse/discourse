@@ -192,8 +192,12 @@ describe "Search", type: :system do
         expect(search_page).to have_no_search_icon
       end
 
-      it "does not display on login, signup or activate account pages" do
+      it "does not display on login, search, signup or activate account pages" do
         visit("/login")
+        expect(search_page).to have_no_search_icon
+        expect(search_page).to have_no_search_field
+
+        visit("/search")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
@@ -214,6 +218,17 @@ describe "Search", type: :system do
           visit("/invites/#{invite.invite_key}")
           expect(search_page).to have_no_search_icon
           expect(search_page).to have_no_search_field
+        end
+      end
+
+      describe "when on admin pages" do
+        fab!(:admin)
+
+        it "displays search icon regardless of Search experience setting" do
+          sign_in(admin)
+          visit("/admin")
+          expect(search_page).to have_no_search_field
+          expect(search_page).to have_search_icon
         end
       end
     end
