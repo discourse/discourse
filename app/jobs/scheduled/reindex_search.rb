@@ -84,6 +84,8 @@ module Jobs
             index_version: handler[:index_version],
           )
 
+        puts "indexing #{unindexed_record_ids.size} record(s)" if @verbose
+
         unindexed_record_ids.each do |id|
           record = handler[:model_class].find_by(id: id)
           if record
