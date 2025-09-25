@@ -525,7 +525,7 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       search:
-        title: Search messages
+        title: Search chat
         aria_label: "Switch to chat search"
 
       my_threads:
