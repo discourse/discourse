@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class PatreonSyncPatronsToGroups < ::Jobs::Scheduled
     every 6.hours
     sidekiq_options retry: false

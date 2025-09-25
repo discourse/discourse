@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class PatreonUpdateTokens < ::Jobs::Scheduled
     every 7.days
 

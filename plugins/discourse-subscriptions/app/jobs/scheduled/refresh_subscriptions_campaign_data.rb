@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class RefreshSubscriptionsCampaignData < ::Jobs::Scheduled
     include DiscourseSubscriptions::Stripe
     every 30.minutes
