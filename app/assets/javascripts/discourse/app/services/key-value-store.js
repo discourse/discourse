@@ -4,7 +4,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 
 const PROXIED_METHODS = Object.getOwnPropertyNames(
   KeyValueStore.prototype
-).reject((p) => p === "constructor");
+).filter((p) => p !== "constructor");
 
 /**
  * This is the global key-value-store which is injectable as a service.
