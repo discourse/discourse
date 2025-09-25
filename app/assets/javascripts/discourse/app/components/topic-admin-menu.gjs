@@ -32,11 +32,17 @@ export default class TopicAdminMenu extends Component {
   }
 
   get extraButtons() {
-    return this.adminTopicMenuButtons.callbacks
-      .map((callback) => {
-        return callback(this.args.topic);
-      })
-      .filter(Boolean);
+    return this.adminTopicMenuButtons.callbacks.reduce((acc, callback) => {
+      const result = callback(this.args.topic);
+
+      if (Array.isArray(result)) {
+        result.filter(Boolean).forEach((button) => acc.push(button));
+      } else if (result) {
+        acc.push(result);
+      }
+
+      return acc;
+    }, []);
   }
 
   get details() {
