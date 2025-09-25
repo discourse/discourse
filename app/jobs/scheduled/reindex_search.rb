@@ -74,7 +74,7 @@ module Jobs
       end
     end
 
-    def rebuild_registered_search_handlers(limit: 5_000, indexer: SearchIndexer)
+    def rebuild_registered_search_handlers(limit: 10_000, indexer: SearchIndexer)
       DiscoursePluginRegistry.search_handlers.each do |handler|
         unindexed_record_ids =
           handler[:load_unindexed_record_ids].call(
