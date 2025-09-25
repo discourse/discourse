@@ -444,9 +444,21 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  describe "message bus notifications" do
+  describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    it "rolls back the transaction when the action fails" do
+      reviewable = Fabricate(:reviewable_queued_post)
+
+      reviewable.stubs(:perform_approve_post).returns(
+        Reviewable::PerformResult.new(reviewable, :failure),
+      )
+
+      expect { reviewable.perform(moderator, :approve_post) }.not_to change {
+        reviewable.reload.version
+      }
+    end
 
     it "triggers a notification on create" do
       reviewable = Fabricate(:reviewable_queued_post)
