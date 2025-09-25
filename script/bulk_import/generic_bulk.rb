@@ -1648,7 +1648,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_notes
     puts "", "Importing user notes..."
 
-    unless defined?(::DiscourseUserNotes)
+    unless defined?(DiscourseUserNotes)
       puts "  Skipping import of user notes because the plugin is not installed."
       return
     end
@@ -1701,7 +1701,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_note_counts
     puts "", "Importing user note counts..."
 
-    unless defined?(::DiscourseUserNotes)
+    unless defined?(DiscourseUserNotes)
       puts "  Skipping import of user notes because the plugin is not installed."
       return
     end
