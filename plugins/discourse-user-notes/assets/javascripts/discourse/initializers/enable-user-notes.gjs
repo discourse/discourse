@@ -54,10 +54,7 @@ function customizePost(api, container) {
 
   // Handle placement next to avatar
   if (placement === "avatar") {
-    api.renderAfterWrapperOutlet(
-      "poster-avatar",
-      UserNotesPostMetadataFlairIcon
-    );
+    api.renderAfterWrapperOutlet("post-avatar", UserNotesPostMetadataFlairIcon);
   }
   // Handle placement next to username
   else if (placement === "name") {
