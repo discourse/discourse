@@ -1519,7 +1519,6 @@ span.mention {
   background-color: var(--tertiary-very-low);
   border-top: 1px solid var(--content-border-color);
   display: flex;
-  gap: var(--space-2);
   width: 100%;
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
@@ -1528,6 +1527,10 @@ span.mention {
   padding: var(--topic-body-width-padding);
   font-size: var(--font-down-1-rem);
   border-radius: var(--d-border-radius);
+
+  &.new-user {
+    gap: var(--space-2);
+  }
 
   &.old {
     background-color: unset;
