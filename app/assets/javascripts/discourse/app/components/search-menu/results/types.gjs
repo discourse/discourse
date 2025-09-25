@@ -54,22 +54,18 @@ export default class Types extends Component {
       event.preventDefault();
       event.stopPropagation();
 
-      // Check for Ctrl+Enter or Cmd+Enter to open in new tab
-      if (event.ctrlKey || event.metaKey) {
-        const link = event.currentTarget.querySelector("a.search-link");
-        if (link && link.href) {
-          // Extract just the pathname for consistency with expected test behavior
+      logSearchLinkClick({
+        searchLogId: this.args.searchLogId,
+        searchResultId: result.id,
+        searchResultType: resultType.type,
+      });
+
+      const link = event.currentTarget.querySelector("a.search-link");
+      if (link?.href) {
+        if (event.ctrlKey || event.metaKey) {
           const url = new URL(link.href);
           window.open(url.pathname, "_blank", "noopener,noreferrer");
-        }
-      } else {
-        logSearchLinkClick({
-          searchLogId: this.args.searchLogId,
-          searchResultId: result.id,
-          searchResultType: resultType.type,
-        });
-        const link = event.currentTarget.querySelector("a.search-link");
-        if (link && link.href) {
+        } else {
           this.routeToSearchResult(link.href);
         }
       }

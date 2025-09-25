@@ -660,7 +660,6 @@ acceptance("Search - Authenticated", function (needs) {
     const originalWindowOpen = window.open;
     let openedUrls = [];
 
-    // Mock window.open
     window.open = (url, target, features) => {
       openedUrls.push({ url, target, features });
     };
@@ -675,59 +674,30 @@ acceptance("Search - Authenticated", function (needs) {
     const focusedElement = document.activeElement;
     assert
       .dom(focusedElement)
-      .hasAttribute(
-        "href",
-        "/t/development-mode-super-slow/2179",
-        "first search result is highlighted"
-      );
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
 
-    assert.true(
-      focusedElement.classList.contains("search-link"),
-      "focused element should have search-link class"
-    );
+    assert.true(focusedElement.classList.contains("search-link"));
 
-    // Simulate Ctrl+Enter on the focused search result
     await triggerKeyEvent(focusedElement, "keydown", "Enter", {
       ctrlKey: true,
     });
 
-    // Verify that window.open was called with the correct parameters
-    assert.strictEqual(
-      openedUrls.length,
-      1,
-      "window.open should be called once"
-    );
+    assert.strictEqual(openedUrls.length, 1);
     assert.strictEqual(
       openedUrls[0].url,
-      "/t/development-mode-super-slow/2179",
-      "should open the correct URL"
+      "/t/development-mode-super-slow/2179"
     );
-    assert.strictEqual(
-      openedUrls[0].target,
-      "_blank",
-      "should open in new tab"
-    );
-    assert.strictEqual(
-      openedUrls[0].features,
-      "noopener,noreferrer",
-      "should have security features"
-    );
-
-    // The URL should not change since we opened in new tab
-    assert.strictEqual(
-      currentURL(),
-      "/",
-      "current tab URL should not change when opening in new tab"
-    );
+    assert.strictEqual(openedUrls[0].target, "_blank");
+    assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");
+    assert.strictEqual(currentURL(), "/");
 
     window.open = originalWindowOpen;
   });
 
-  test("search menu keyboard navigation - Cmd+Enter opens in new tab (Mac)", async function (assert) {
+  test("search menu keyboard navigation - Cmd+Enter opens in new tab", async function (assert) {
     const originalWindowOpen = window.open;
     let openedUrls = [];
 
-    // Mock window.open
     window.open = (url, target, features) => {
       openedUrls.push({ url, target, features });
     };
@@ -742,50 +712,22 @@ acceptance("Search - Authenticated", function (needs) {
     const focusedElement = document.activeElement;
     assert
       .dom(focusedElement)
-      .hasAttribute(
-        "href",
-        "/t/development-mode-super-slow/2179",
-        "first search result is highlighted"
-      );
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
 
-    assert.true(
-      focusedElement.classList.contains("search-link"),
-      "focused element should have search-link class"
-    );
+    assert.true(focusedElement.classList.contains("search-link"));
 
-    // Simulate Cmd+Enter on the focused search result
     await triggerKeyEvent(focusedElement, "keydown", "Enter", {
       metaKey: true,
     });
 
-    // Verify that window.open was called with the correct parameters
-    assert.strictEqual(
-      openedUrls.length,
-      1,
-      "window.open should be called once"
-    );
+    assert.strictEqual(openedUrls.length, 1);
     assert.strictEqual(
       openedUrls[0].url,
-      "/t/development-mode-super-slow/2179",
-      "should open the correct URL"
+      "/t/development-mode-super-slow/2179"
     );
-    assert.strictEqual(
-      openedUrls[0].target,
-      "_blank",
-      "should open in new tab"
-    );
-    assert.strictEqual(
-      openedUrls[0].features,
-      "noopener,noreferrer",
-      "should have security features"
-    );
-
-    // The URL should not change since we opened in new tab
-    assert.strictEqual(
-      currentURL(),
-      "/",
-      "current tab URL should not change when opening in new tab"
-    );
+    assert.strictEqual(openedUrls[0].target, "_blank");
+    assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");
+    assert.strictEqual(currentURL(), "/");
 
     window.open = originalWindowOpen;
   });
