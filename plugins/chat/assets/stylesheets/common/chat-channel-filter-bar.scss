@@ -12,5 +12,7 @@
   .filter-input-container {
     margin-right: auto;
     border-color: var(--primary-low);
+    width: 100%;
+    max-width: 320px;
   }
 }
