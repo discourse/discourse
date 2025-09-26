@@ -23,14 +23,19 @@ export default class UserStreamComponent extends Component {
   @service composer;
   @service router;
 
+  #bulkSelectHelper = null;
+
   get bulkSelectHelper() {
     if (this.isDraftsRoute) {
-      if (!this._bulkSelectHelper) {
-        this._bulkSelectHelper = new PostBulkSelectHelper(this);
+      if (!this.#bulkSelectHelper) {
+        this.#bulkSelectHelper = new PostBulkSelectHelper(
+          this,
+          this.args.stream?.content
+        );
+      } else {
+        this.#bulkSelectHelper.updatePosts(this.args.stream?.content);
       }
-      // Update posts reference when it changes
-      this._bulkSelectHelper.posts = this.args.stream?.content;
-      return this._bulkSelectHelper;
+      return this.#bulkSelectHelper;
     }
     return null;
   }
@@ -40,7 +45,7 @@ export default class UserStreamComponent extends Component {
   }
 
   get bulkSelectEnabled() {
-    return this.isDraftsRoute;
+    return this.isDraftsRoute && this.args.stream?.content?.length > 0;
   }
 
   get bulkActions() {
