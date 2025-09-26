@@ -90,6 +90,11 @@ schema:
       columns:
         exclude:
           - "id"
+    permalinks:
+      primary_key_column_names: [ "url" ]
+      columns:
+        exclude:
+          - "id"
     tag_group_memberships:
       primary_key_column_names: [ "tag_group_id", "tag_id" ]
       columns:
@@ -322,7 +327,6 @@ schema:
         - "onceoff_logs"
         - "optimized_images"
         - "optimized_videos"
-        - "permalinks"
         - "plugin_store_rows"
         - "policy_users"
         - "poll_options"
