@@ -127,9 +127,9 @@ export default class SubscribeShowController extends Controller {
   @action
   stripePaymentHandler() {
     this.set("loading", true);
-    const plan = this.get("model.plans")
-      .filterBy("id", this.selectedPlan)
-      .get("firstObject");
+    const plan = this.get("model.plans").filter(
+      (item) => item.id === this.selectedPlan
+    )[0];
     const cardholderAddress = this.cardholderAddress;
     const cardholderName = this.cardholderName;
 

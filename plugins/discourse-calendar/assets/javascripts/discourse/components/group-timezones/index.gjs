@@ -23,35 +23,40 @@ export default class GroupTimezones extends Component {
   get groupedTimezones() {
     let groupedTimezones = [];
 
-    this.args.members.filterBy("timezone").forEach((member) => {
-      if (this.#shouldAddMemberToGroup(this.filter, member)) {
-        const timezone = member.timezone;
-        const identifier = parseInt(moment.tz(timezone).format("YYYYMDHm"), 10);
-        let groupedTimezone = groupedTimezones.find(
-          (item) => item.identifier === identifier
-        );
+    this.args.members
+      .filter((member) => member.timezone)
+      .forEach((member) => {
+        if (this.#shouldAddMemberToGroup(this.filter, member)) {
+          const timezone = member.timezone;
+          const identifier = parseInt(
+            moment.tz(timezone).format("YYYYMDHm"),
+            10
+          );
+          let groupedTimezone = groupedTimezones.find(
+            (item) => item.identifier === identifier
+          );
 
-        if (groupedTimezone) {
-          groupedTimezone.members.push(member);
-        } else {
-          const now = this.#roundMoment(moment.tz(timezone));
-          const workingDays = this.#workingDays();
-          const offset = moment.tz(moment.utc(), timezone).utcOffset();
+          if (groupedTimezone) {
+            groupedTimezone.members.push(member);
+          } else {
+            const now = this.#roundMoment(moment.tz(timezone));
+            const workingDays = this.#workingDays();
+            const offset = moment.tz(moment.utc(), timezone).utcOffset();
 
-          groupedTimezone = {
-            identifier,
-            offset,
-            type: "discourse-group-timezone",
-            nowWithOffset: now.add(this.localTimeOffset, "minutes"),
-            closeToWorkingHours: this.#closeToWorkingHours(now, workingDays),
-            inWorkingHours: this.#inWorkingHours(now, workingDays),
-            utcOffset: this.#utcOffset(offset),
-            members: [member],
-          };
-          groupedTimezones.push(groupedTimezone);
+            groupedTimezone = {
+              identifier,
+              offset,
+              type: "discourse-group-timezone",
+              nowWithOffset: now.add(this.localTimeOffset, "minutes"),
+              closeToWorkingHours: this.#closeToWorkingHours(now, workingDays),
+              inWorkingHours: this.#inWorkingHours(now, workingDays),
+              utcOffset: this.#utcOffset(offset),
+              members: [member],
+            };
+            groupedTimezones.push(groupedTimezone);
+          }
         }
-      }
-    });
+      });
 
     groupedTimezones = groupedTimezones
       .sort((a, b) => compare(a?.offset, b?.offset))

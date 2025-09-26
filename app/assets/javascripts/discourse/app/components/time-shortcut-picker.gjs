@@ -226,7 +226,7 @@ export default class TimeShortcutPicker extends Component {
   selectShortcut(type) {
     if (
       this.options
-        .filterBy("hidden")
+        .filter((opt) => opt.hidden)
         .map((item) => item.id)
         .includes(type)
     ) {

@@ -57,7 +57,7 @@ export default class ProfileController extends Controller {
 
     // Staff can edit fields that are not `editable`
     if (!this.currentUser.staff) {
-      siteUserFields = siteUserFields.filterBy("editable", true);
+      siteUserFields = siteUserFields.filter((field) => field.editable);
     }
 
     return siteUserFields

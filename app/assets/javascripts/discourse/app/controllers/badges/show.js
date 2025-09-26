@@ -15,7 +15,7 @@ export default class ShowController extends Controller {
 
   @discourseComputed("userBadgesAll")
   filteredList(userBadgesAll) {
-    return userBadgesAll.filterBy("badge.allow_title", true);
+    return userBadgesAll.filter((item) => item.badge.allow_title);
   }
 
   @discourseComputed("filteredList")

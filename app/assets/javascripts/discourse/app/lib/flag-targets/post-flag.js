@@ -26,8 +26,8 @@ export default class PostFlag extends Flag {
     });
 
     // "message user" option should be at the top
-    const notifyUserIndex = flagsAvailable.indexOf(
-      flagsAvailable.filterBy("name_key", "notify_user")[0]
+    const notifyUserIndex = flagsAvailable.findIndex(
+      (flag) => flag.name_key === "notify_user"
     );
 
     if (notifyUserIndex !== -1) {

@@ -20,7 +20,7 @@ export default class AnonymousTopicFooterButtons extends Component {
   get buttons() {
     return (
       this.allButtons
-        .filterBy("anonymousOnly", true)
+        .filter((button) => button.anonymousOnly === true)
         .sort((a, b) => compare(a?.priority, b?.priority))
         // Reversing the array is necessary because when priorities are not set,
         // we want to show the most recently added item first

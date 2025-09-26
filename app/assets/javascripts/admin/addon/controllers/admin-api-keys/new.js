@@ -66,7 +66,7 @@ export default class AdminApiKeysNewController extends Controller {
     if (this.scopeMode === "granular") {
       const selectedScopes = Object.values(this.scopes)
         .flat()
-        .filterBy("selected");
+        .filter((item) => item.selected);
 
       this.model.set("scopes", selectedScopes);
     } else if (this.scopeMode === "read_only") {

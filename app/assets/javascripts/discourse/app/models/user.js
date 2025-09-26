@@ -1356,9 +1356,11 @@ User.reopenClass({
       action_type: UserAction.TYPES.replies,
     });
 
-    stats.filterBy("isResponse").forEach((stat) => {
-      responses.set("count", responses.get("count") + stat.get("count"));
-    });
+    stats
+      .filter((stat) => stat.isResponse)
+      .forEach((stat) => {
+        responses.set("count", responses.get("count") + stat.get("count"));
+      });
 
     const result = A();
     result.pushObjects(stats.filter((stat) => !stat.isResponse));

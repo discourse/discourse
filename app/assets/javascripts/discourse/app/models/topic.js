@@ -719,7 +719,7 @@ export default class Topic extends RestModel {
     this.toggleProperty("bookmarked");
 
     const postIds = this.bookmarks
-      .filterBy("bookmarkable_type", "Post")
+      .filter((bookmark) => bookmark.bookmarkable_type === "Post")
       .map((bookmark) => bookmark.bookmarkable_id);
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
