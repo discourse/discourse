@@ -47,6 +47,156 @@ RSpec.describe Upload do
     end
   end
 
+  describe "video conversion" do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      # Add mp4 to authorized extensions for video uploads
+      extensions = SiteSetting.authorized_extensions.split("|")
+      SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
+
+      SiteSetting.video_conversion_service = "aws_mediaconvert"
+      SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_use_iam_profile = true
+      SiteSetting.video_conversion_enabled = true
+      allow(Jobs).to receive(:enqueue)
+    end
+
+    context "when video conversion is enabled" do
+      it "enqueues a convert_video job for supported video files on create" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        expect(Jobs).to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job for unsupported video files" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(false)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job when video conversion is disabled" do
+        SiteSetting.video_conversion_enabled = false
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job when S3 uploads are disabled" do
+        SiteSetting.enable_s3_uploads = false
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job for non-video files" do
+        upload = Fabricate(:upload, original_filename: "image.png", extension: "png", user: user)
+
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job if OptimizedVideo already exists" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
+
+        # Create original upload
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Create OptimizedVideo record for the original upload
+        optimized_video = Fabricate(:optimized_video, upload: upload)
+
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
+
+        # Update the original upload to trigger after_commit
+        upload.update!(filesize: 12_345)
+
+        # The original upload should not enqueue a job because OptimizedVideo already exists
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job on update, only on create" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
+
+        # Update the upload - should not trigger video conversion since it's after_create, not after_update
+        upload.update!(filesize: 12_345)
+
+        expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+
+      it "does not enqueue a convert_video job for optimized video uploads to prevent infinite loop" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
+
+        # Create original upload
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
+
+        # Use OptimizedVideo.create_for to simulate the real flow
+        # This creates the optimized upload and then the OptimizedVideo record
+        optimized_video =
+          OptimizedVideo.create_for(
+            upload,
+            "video_converted.mp4",
+            user.id,
+            filesize: 1000,
+            sha1: "abcdef1234567890",
+            url: "https://example.com/video_converted.mp4",
+            adapter: "aws_mediaconvert",
+          )
+
+        expect(optimized_video).not_to be_nil
+        optimized_upload = optimized_video.optimized_upload
+
+        # The optimized upload should not enqueue a job because it's already an optimized video
+        expect(Jobs).not_to have_received(:enqueue).with(
+          :convert_video,
+          upload_id: optimized_upload.id,
+        )
+      end
+
+      it "enqueues a convert_video job for user uploads with _converted in filename" do
+        allow(FileHelper).to receive(:is_supported_video?).with(
+          "my_video_converted.mp4",
+        ).and_return(true)
+
+        # User uploads a file with "_converted" in the name - should still be converted
+        upload =
+          Fabricate(
+            :upload,
+            original_filename: "my_video_converted.mp4",
+            extension: "mp4",
+            user: user,
+          )
+
+        expect(Jobs).to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
+    end
+  end
+
   describe ".create_thumbnail!" do
     it "does not create a thumbnail when disabled" do
       SiteSetting.create_thumbnails = false

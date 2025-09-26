@@ -30,6 +30,7 @@ class Upload < ActiveRecord::Base
   has_many :posts, through: :upload_references, source: :target, source_type: "Post"
   has_many :topic_thumbnails
   has_many :badges, foreign_key: :image_upload_id, dependent: :nullify
+  after_create :enqueue_video_conversion_job, if: :should_convert_video?
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
@@ -38,6 +39,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_site_setting
   attr_accessor :for_gravatar
   attr_accessor :validate_file_size
+  attr_accessor :skip_video_conversion
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -659,6 +661,16 @@ class Upload < ActiveRecord::Base
 
   def short_url_basename
     "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
+  end
+
+  def should_convert_video?
+    !skip_video_conversion && SiteSetting.video_conversion_enabled &&
+      SiteSetting.Upload.enable_s3_uploads && FileHelper.is_supported_video?(original_filename) &&
+      !OptimizedVideo.exists?(upload_id: id)
+  end
+
+  def enqueue_video_conversion_job
+    Jobs.enqueue(:convert_video, upload_id: id)
   end
 end
 
