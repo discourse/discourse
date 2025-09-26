@@ -175,7 +175,7 @@ export default class DiscoveryListController extends Controller {
       category: this.createTopicTargetCategory,
       tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
-        .reject((t) => ["none", "all"].includes(t))
+        .filter((t) => !["none", "all"].includes(t))
         .join(","),
     });
   }

@@ -2578,7 +2578,7 @@ en:
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    old_post_notice_days: "The number of days after which a post notice is considered old. This visually differentiates it from newer notices on the site."
+    old_post_notice_days: "The number of days after which a post notice is considered old. Old notices will be hidden."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
@@ -5847,6 +5847,37 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
+      # New separated post actions
+      post_actions:
+        bundle_title: "What do you want to do with the post?"
+      no_action_post:
+        title: "No action"
+        description: "Take no action on the post"
+        complete: "No action taken on post"
+      delete_post:
+        title: "Delete post"
+        description: "Delete this post"
+        complete: "Post deleted"
+      hide_post:
+        title: "Hide post"
+        description: "Hide this post from public view"
+        complete: "Post hidden"
+      unhide_post:
+        title: "Unhide post"
+        description: "Make this post visible to all users"
+        complete: "Post unhidden"
+      restore_post:
+        title: "Restore post"
+        description: "Restore this deleted post"
+        complete: "Post restored"
+      edit_post:
+        title: "Edit post"
+        description: "Edit this post content"
+        complete: "Post edited"
+      convert_to_pm:
+        title: "Convert to PM"
+        description: "Convert this post to a personal message"
+        complete: "Post converted to personal message"
       # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"

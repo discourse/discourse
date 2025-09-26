@@ -2213,9 +2213,6 @@ pt_BR:
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
     group_in_subject: "Definir %%{optional_pm} no assunto do e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_mode: "Ative esta opção para os(as) usuários(as) trocarem para o modo anônimo para postagem. Após a ativação, eles(as) podem escolher ocultar suas identidades ao criar postagens ou tópicos através do site. Consulte também \"allow anonymous likes\"."
-    allow_likes_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem navegando no seu site anonimamente curtam as postagens. Após a ativação, os(as) usuários(as) podem escolher ocultar suas identidades ao curtir postagens ou tópicos através do site. Consulte também \"allow_anonymous_mode\"."
-    anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
-    anonymous_posting_allowed_groups: "Grupos com permissão para ativar postagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desative cartões de usuário(a), perfis de usuário(a) e diretório do(a) usuário(a) para usuários(as) anônimos(as)."
     hide_new_user_profiles: "Ocultar perfis de usuário(a) de nível de confiança 1 ou menor e confiar em usuários(as) de nível 1 até postarem pela primeira vez. Este recurso é desabilitado obrigatoriamente em caso de must_approve_users e invite_only sites."
@@ -5314,6 +5311,16 @@ pt_BR:
       approve_and_unhide:
         title: "Aprovar e revelar postagem."
         complete: "Postagem aprovada e revelada"
+      no_action_post:
+        title: "Sem ação"
+      delete_post:
+        title: "Excluir postagem"
+        complete: "Postagem excluída"
+      hide_post:
+        title: "Ocultar postagem"
+      restore_post:
+        title: "Restaurar postagem"
+        complete: "Postagem restaurada"
       no_action_user:
         title: "Sem ação"
       silence_user:

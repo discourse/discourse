@@ -249,7 +249,7 @@ export default class ChatemojiReactions {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryActions.has(button.id));
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
