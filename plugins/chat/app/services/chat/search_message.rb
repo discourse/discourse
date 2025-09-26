@@ -45,6 +45,17 @@ module Chat
       end
     end
 
+    advanced_filter(/\A\#(\S+)\z/i) do |messages, match|
+      channel_slug = match.downcase
+      channel_id = ::Chat::Channel.where(slug: channel_slug).pick(:id)
+
+      if channel_id && @guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
+        messages.where("chat_channels.id = ?", channel_id)
+      else
+        messages.where("1 = 0")
+      end
+    end
+
     params do
       attribute :query, :string, default: ""
       attribute :channel_id, :integer
@@ -184,8 +195,10 @@ module Chat
     def apply_sorting(messages, sort)
       case sort
       when "latest"
-        messages.order(created_at: :desc)
+        messages = messages.order(created_at: :desc)
       end
+
+      messages
     end
   end
 end

@@ -527,6 +527,9 @@ en:
       search:
         title: Search chat
         aria_label: "Switch to chat search"
+        sort:
+          relevance: "Relevance"
+          latest: "Latest"
 
       my_threads:
         title: My Threads
