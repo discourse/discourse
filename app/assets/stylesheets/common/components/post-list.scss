@@ -1,5 +1,26 @@
+@use "lib/viewport";
+
 .post-list {
   margin: 0;
+
+  &--bulk-select {
+    .post-list-item {
+      &--selected {
+        background: var(--d-selected);
+        border-left: 3px solid var(--tertiary);
+      }
+
+      &__bulk-select {
+        margin-right: 0.75rem;
+        align-self: flex-start;
+        margin-top: 0.2rem;
+
+        .bulk-select-checkbox {
+          margin: 0;
+        }
+      }
+    }
+  }
 
   .post-list-item {
     background: var(--d-content-background, var(--secondary));
@@ -89,5 +110,43 @@
 
   .post-member-info {
     display: flex;
+  }
+}
+
+// Bulk controls styles
+.post-list-bulk-controls {
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--d-border-radius);
+
+  &__selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+
+  &__count {
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    .btn {
+      margin: 0;
+    }
   }
 }
