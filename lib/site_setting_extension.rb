@@ -90,6 +90,11 @@ module SiteSettingExtension
     @humanized_names[name] ||= humanized_name(name)
   end
 
+  def site_setting_group_ids
+    @site_setting_group_ids ||= {}
+    @site_setting_group_ids[provider.current_site] ||= {}
+  end
+
   def defaults
     @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
@@ -452,6 +457,10 @@ module SiteSettingExtension
                 .flatten
             )
           ]
+
+        provider.setting_group_ids.each do |name, group_ids|
+          site_setting_group_ids[name.to_sym] = group_ids
+        end
 
         defaults_view = defaults.all(new_hash[:default_locale])
 
@@ -905,13 +914,15 @@ module SiteSettingExtension
       end
     end
 
-    # TODO (martin) Base this on a site_setting_groups DB table instead
-    #
-    # if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
-    #   define_singleton_method("#{clean_name}_groups_map") do
-    #     upcoming_change_metadata[name][:restrict_to_groups].to_s.split("|").map(&:to_i)
-    #   end
-    # end
+    # Upcoming change settings have a supplemental array of group IDs that are used to opt-in
+    # certain groups to the change early. We use the data from SiteSettingGroup to define
+    # a getter with _groups_map on the end, e.g. allow_unlimited_uploads_groups_map,
+    # to avoid having to manually split and convert to integer for these settings.
+    if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
+      define_singleton_method("#{clean_name}_groups_map") do
+        site_setting_group_ids[name].presence || []
+      end
+    end
 
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
