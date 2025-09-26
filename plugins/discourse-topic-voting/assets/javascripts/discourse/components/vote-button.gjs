@@ -46,14 +46,6 @@ export default class VoteBox extends Component {
     return content;
   }
 
-  get disabled() {
-    return (
-      this.currentUser.votes_exceeded &&
-      !this.topic.user_voted &&
-      !this.currentUser.vote_limit_0
-    );
-  }
-
   get showVotedMenu() {
     return this.hasVoted && !this.hasSeenSuccessMenu;
   }
