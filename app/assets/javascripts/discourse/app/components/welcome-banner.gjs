@@ -77,7 +77,7 @@ export default class WelcomeBanner extends Component {
         return currentRouteName.startsWith("discovery.");
       case "all_pages":
         return (
-          !currentRouteName.startsWith("admin") &&
+          !currentRouteName.startsWith("admin.") &&
           !ALL_PAGES_EXCLUDED_ROUTES.some(
             (routeName) => routeName === currentRouteName
           )

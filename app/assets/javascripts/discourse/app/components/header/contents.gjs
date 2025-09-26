@@ -49,7 +49,7 @@ export default class Contents extends Component {
         (name) => name === this.router.currentRouteName
       ) ||
       this.search.welcomeBannerSearchInViewport ||
-      this.router.currentRouteName.startsWith("admin")
+      this.router.currentRouteName.startsWith("admin.")
     ) {
       return false;
     }
