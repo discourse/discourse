@@ -196,7 +196,7 @@ export default class ChatSearch extends Component {
         <:empty>
           {{#if @query.length}}
             <div class="alert alert-info">
-              {{i18n "chat.search_view.no_results"}}
+              {{i18n "chat.search.no_results"}}
             </div>
           {{/if}}
         </:empty>

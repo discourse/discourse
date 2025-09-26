@@ -332,7 +332,6 @@ en:
 
       search_view:
         filter_placeholder: Search messages
-        no_results: No results
         message_result_label: "Chat message from %{username}: %{preview} %{threadInfo}"
         in_thread: "in thread %{title}"
         sr_instructions: "Press Enter or Space to open message. Use Tab to navigate between results."
