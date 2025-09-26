@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 import EmailLog from "admin/models/email-log";
 
 export default class EmailLogsList extends Component {
+  @tracked allLoaded = false;
   @tracked loading = false;
   @tracked model = null;
   @tracked filterValues = {};
@@ -82,21 +83,21 @@ export default class EmailLogsList extends Component {
       this.loadMoreEnabled &&
       this.model &&
       this.model.length > 0 &&
-      !this.model.allLoaded &&
+      !this.allLoaded &&
       !this.loading
     );
   }
 
   @action
   async loadLogs(loadMore = false) {
-    if ((loadMore && this.loading) || (loadMore && this.model?.allLoaded)) {
+    if ((loadMore && this.loading) || (loadMore && this.allLoaded)) {
       return;
     }
 
     this.loading = true;
 
     if (!loadMore && this.model) {
-      this.model.set("allLoaded", false);
+      this.allLoaded = false;
     }
 
     try {
@@ -108,11 +109,11 @@ export default class EmailLogsList extends Component {
       if (this.model && loadMore) {
         this.model.addObjects(logs);
         if (logs.length < 50) {
-          this.model.set("allLoaded", true);
+          this.allLoaded = true;
         }
       } else {
         this.model = logs;
-        this.model.set("allLoaded", logs.length < 50);
+        this.allLoaded = logs.length < 50;
         this.loadMoreEnabled = true;
       }
     } finally {

@@ -29,7 +29,7 @@ export default class SettingObjectHelper {
       return this.settingObj.get("valueProperty");
     }
 
-    if (isPresent(this.validValues.get("firstObject.value"))) {
+    if (isPresent(this.validValues?.[0]?.value)) {
       return "value";
     }
     return null;
@@ -41,7 +41,7 @@ export default class SettingObjectHelper {
       return this.settingObj.get("nameProperty");
     }
 
-    if (isPresent(this.validValues.get("firstObject.name"))) {
+    if (isPresent(this.validValues?.[0]?.name)) {
       return "name";
     }
     return null;

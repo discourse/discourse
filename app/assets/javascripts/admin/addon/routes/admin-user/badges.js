@@ -14,7 +14,7 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
     // Find all badges.
     controller.set("loading", true);
     Badge.findAll().then(function (badges) {
-      controller.set("badges", badges);
+      controller.setProperties({ badges, expandedBadges: [] });
       if (badges.length > 0) {
         let grantableBadges = controller.get("availableBadges");
         if (grantableBadges.length > 0) {
