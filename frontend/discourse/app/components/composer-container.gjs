@@ -34,6 +34,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
+import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerContainer extends Component {
@@ -43,6 +44,19 @@ export default class ComposerContainer extends Component {
   @service siteSettings;
   @service appEvents;
   @service keyValueStore;
+
+  constructor() {
+    super(...arguments);
+
+    // Restore saved composer width
+    const savedWidth = this.keyValueStore.get("composerWidth");
+    if (savedWidth) {
+      document.documentElement.style.setProperty(
+        "--composer-width",
+        savedWidth
+      );
+    }
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -134,6 +148,20 @@ export default class ComposerContainer extends Component {
     this.appEvents.trigger("composer:resized");
   }
 
+  @bind
+  didResizeComposer(element, { width }) {
+    if (width) {
+      this.keyValueStore.set({
+        key: "composerWidth",
+        value: `${width}px`,
+      });
+      document.documentElement.style.setProperty(
+        "--composer-width",
+        `${width}px`
+      );
+    }
+  }
+
   <template>
     <ComposerBody
       @composer={{this.composer.model}}
@@ -142,6 +170,17 @@ export default class ComposerContainer extends Component {
       @typed={{this.composer.typed}}
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
+      {{resizableNode
+        ".composer-resizer"
+        this.didResizeComposer
+        (hash
+          horizontal=true
+          vertical=false
+          position=false
+          mutate=true
+          resetOnWindowResize=true
+        )
+      }}
     >
       <div
         class="grippie"
@@ -155,6 +194,9 @@ export default class ComposerContainer extends Component {
           )
         }}
       ></div>
+      {{#unless this.site.mobileView}}
+        <div class="composer-resizer"></div>
+      {{/unless}}
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 

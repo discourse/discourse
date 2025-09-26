@@ -1,0 +1,49 @@
+.composer-resizer {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  z-index: 1;
+  cursor: col-resize;
+  transition: background-color 0.15s;
+  background-color: transparent;
+
+  .rtl & {
+    left: auto;
+    right: -5px;
+  }
+
+  .touch & {
+    width: 15px;
+    left: -7px;
+
+    .rtl & {
+      left: auto;
+      right: -7px;
+    }
+  }
+
+  &:hover,
+  &:active {
+    background-color: var(--tertiary);
+  }
+}
+
+body.composer-resizing {
+  cursor: col-resize;
+  user-select: none;
+
+  .rtl & {
+    cursor: col-resize;
+  }
+}
+
+#reply-control {
+  position: relative;
+
+  &.resizable {
+    min-width: 320px;
+    max-width: 80vw;
+  }
+}
