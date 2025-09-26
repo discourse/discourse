@@ -149,7 +149,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif invite_required?
       @auth_result.requires_invite = true
     else
-      session[:authentication] = @auth_result.session_data
+      server_session[:authentication] = @auth_result.session_data
     end
   end
 
@@ -207,7 +207,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       log_on_user(user, { authenticated_with_oauth: true })
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
-      session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
+      server_session.delete(:authentication) # don't carry around old auth info
       @auth_result.authenticated = true
     else
       if SiteSetting.must_approve_users? && !user.approved?
@@ -221,7 +221,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def persist_auth_token(auth)
     secret = SecureRandom.hex
     key = Users::AssociateAccountsController.key(secret)
-    server_session.set key, auth.to_json, expires: 10.minutes
+    server_session.set(key, auth.to_json, expires: 10.minutes)
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end
