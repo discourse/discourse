@@ -11,6 +11,8 @@ register_asset "stylesheets/common/topic-voting.scss"
 register_asset "stylesheets/desktop/topic-voting.scss", :desktop
 register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
+register_svg_icon "check-to-slot"
+
 enabled_site_setting :topic_voting_enabled
 
 Discourse.top_menu_items.push(:votes)
@@ -121,6 +123,7 @@ after_initialize do
   add_to_serializer(:current_user, :votes_count) { object.vote_count }
   add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
   add_to_serializer(:current_user, :vote_limit_0) { object.vote_limit_0? }
+  add_to_serializer(:current_user, :votes_max) { object.vote_limit }
 
   filter_order_votes = ->(scope, order_direction, _guardian) do
     scope.joins(:topic_vote_count).order(

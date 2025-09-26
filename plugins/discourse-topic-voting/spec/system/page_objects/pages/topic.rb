@@ -7,17 +7,6 @@ module TopicVotingTopic
     find(".voting .vote-count")
   end
 
-  def has_votes_left_popup?(count)
-    expected_html =
-      I18n
-        .t("js.topic_voting.votes_left", count:, path: "/my/activity/votes")
-        .gsub(/'([^']*)'/) { "\"#{$1}\"" }
-    selector = ".topic-voting-menu__row-title"
-    has_css?(selector)
-    actual_html = find(selector)[:innerHTML].strip
-    actual_html.include?(expected_html)
-  end
-
   def has_locked_popup?
     expected_html = I18n.t("js.topic_voting.locked_description")
     selector = ".topic-voting-menu__title.--locked"
@@ -27,7 +16,7 @@ module TopicVotingTopic
   end
 
   def vote_popup
-    find(".voting-popup-menu")
+    find(".topic-voting-menu__votes-left")
   end
 
   def vote
@@ -37,12 +26,12 @@ module TopicVotingTopic
 
   def remove_vote
     vote
-    find(".remove-vote").click
+    find("button.remove-vote").click
     self
   end
 
-  def click_vote_popup_activity
-    find(".voting-popup-menu a").click
+  def click_my_votes
+    find(".topic-voting-menu__votes-left").click
   end
 end
 

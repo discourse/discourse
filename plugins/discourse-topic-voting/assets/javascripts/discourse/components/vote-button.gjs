@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -83,7 +82,11 @@ export default class VoteBox extends Component {
       }
 
       // If user hasn't voted yet, add vote and show success menu
-      if (!this.topic.closed && !this.topic.user_voted) {
+      if (
+        !this.topic.closed &&
+        !this.topic.user_voted &&
+        !this.currentUser.votes_exceeded
+      ) {
         this.args.addVote();
         this.hasVoted = true;
         // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
@@ -126,7 +129,6 @@ export default class VoteBox extends Component {
       @onShow={{this.onShowMenu}}
       @onClose={{this.onCloseMenu}}
       class={{this.buttonClasses}}
-      @disabled={{this.disabled}}
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:content>
@@ -136,34 +138,55 @@ export default class VoteBox extends Component {
               {{icon "circle-check"}}
               <span>{{i18n "topic_voting.voted_title"}}</span>
             </dropdown.item>
-            <dropdown.item class="topic-voting-menu__row-title">
-              {{htmlSafe
-                (i18n
-                  "topic_voting.votes_left"
+            <dropdown.item class="topic-voting-menu__votes-left">
+              <DButton
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
                   count=this.currentUser.votes_left
-                  path="/my/activity/votes"
-                )
-              }}
+                  max=this.currentUser.votes_max
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
+              />
             </dropdown.item>
           {{else if this.currentUser.vote_limit_0}}
             <dropdown.item class="topic-voting-menu__title --locked">
               {{icon "lock"}}
               <span>{{i18n "topic_voting.locked_description"}}</span>
             </dropdown.item>
-          {{else}}
-            <dropdown.item>
+          {{else if this.currentUser.votes_exceeded}}
+            <dropdown.item class="topic-voting-menu__row">
               <DButton
-                @translatedLabel={{i18n "topic_voting.remove_vote"}}
-                @action={{this.removeVote}}
-                @icon="xmark"
-                class="btn-transparent topic-voting-menu__row-btn --danger"
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
+                  count=this.currentUser.votes_left
+                  max=this.currentUser.votes_max
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
+              />
+            </dropdown.item>
+          {{else}}
+            <dropdown.item class="topic-voting-menu__row">
+              <DButton
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
+                  count=this.currentUser.votes_left
+                  max=this.currentUser.votes_max
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
               />
             </dropdown.item>
             <dropdown.item class="topic-voting-menu__row">
               <DButton
-                @translatedLabel={{i18n "topic_voting.see_votes"}}
-                @href="/my/activity/votes"
-                @icon="list"
+                @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                @action={{this.removeVote}}
+                @icon="arrow-rotate-left"
+                class="btn-transparent remove-vote topic-voting-menu__row-btn --danger"
               />
             </dropdown.item>
           {{/if}}

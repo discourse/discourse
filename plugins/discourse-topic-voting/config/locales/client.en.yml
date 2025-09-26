@@ -15,15 +15,9 @@ en:
       voted_title: "Voted"
       voting_closed_title: "Closed"
       voting_limit: "Limit"
-      see_votes: "My Votes"
+      see_votes: "My Votes: %{count}/%{max} Left"
       locked: "Locked"
       locked_description: "Increase your trust level to vote"
-      votes_left:
-        one: "You have %{count} vote left, see <a href='%{path}'>your votes</a>."
-        other: "You have %{count} votes left, see <a href='%{path}'>your votes</a>."
-      votes_left_button_title:
-        one: "%{count} vote left."
-        other: "Votes Left:%{count}"
       votes:
         one: "%{count} vote"
         other: "%{count} votes"

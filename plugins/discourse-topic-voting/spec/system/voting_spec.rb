@@ -41,11 +41,11 @@ RSpec.describe "Topic voting", type: :system do
 
     expect(topic_page.vote_count).to have_text("0")
     topic_page.vote
-    expect(topic_page.vote_popup).to have_text("You have 9 votes left, see your votes")
+    expect(topic_page.vote_popup).to have_text("My Votes: 9/10 Left")
     expect(topic_page.vote_count).to have_text("1")
 
     # visit user activity page
-    topic_page.click_vote_popup_activity
+    topic_page.click_my_votes
     expect(user_page.active_user_primary_navigation).to have_text("Activity")
     expect(user_page.active_user_secondary_navigation).to have_text("Votes")
     expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]", text: "1 vote")
@@ -66,7 +66,7 @@ RSpec.describe "Topic voting", type: :system do
       category_page.visit(category1).select_topic(topic1)
       topic_page.vote
 
-      expect(topic_page).to have_votes_left_popup(0)
+      expect(topic_page.vote_popup).to have_text("My Votes: 0/1 Left")
     end
   end
 end
