@@ -88,7 +88,7 @@ export default class AiToolEditorForm extends Component {
         duration: "short",
       });
 
-      if (!this.args.tools.any((tool) => tool.id === this.args.model.id)) {
+      if (!this.args.tools.some((tool) => tool.id === this.args.model.id)) {
         this.args.tools.pushObject(this.args.model);
       }
 

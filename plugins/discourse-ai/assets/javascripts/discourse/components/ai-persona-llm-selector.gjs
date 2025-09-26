@@ -34,7 +34,7 @@ export default class AiPersonaLlmSelector extends Component {
   }
 
   get hasLlmSelector() {
-    return this.currentUser.ai_enabled_chat_bots.any((bot) => !bot.is_persona);
+    return this.currentUser.ai_enabled_chat_bots.some((bot) => !bot.is_persona);
   }
 
   get botOptions() {
@@ -165,7 +165,7 @@ export default class AiPersonaLlmSelector extends Component {
     this._value = this.botOptions[0].id;
     if (personaId) {
       personaId = parseInt(personaId, 10);
-      if (this.botOptions.any((bot) => bot.id === personaId)) {
+      if (this.botOptions.some((bot) => bot.id === personaId)) {
         this._value = personaId;
       }
     }

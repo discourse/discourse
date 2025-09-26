@@ -46,7 +46,7 @@ export function getBotType(user) {
 export function isPostFromAiBot(post, currentUser) {
   return (
     post.user_id <= MAX_PERSONA_USER_ID ||
-    !!currentUser?.ai_enabled_chat_bots?.any(
+    !!currentUser?.ai_enabled_chat_bots?.some(
       (bot) => post.username === bot.username
     )
   );

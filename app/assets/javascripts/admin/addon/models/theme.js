@@ -135,7 +135,7 @@ class Theme extends RestModel {
   @discourseComputed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
     return (
-      fields && fields.any((field) => field.error && field.error.length > 0)
+      fields && fields.some((field) => field.error && field.error.length > 0)
     );
   }
 
@@ -162,7 +162,7 @@ class Theme extends RestModel {
       return !isEmpty(this.getField(target, name));
     } else {
       let fields = this.theme_fields || [];
-      return fields.any(
+      return fields.some(
         (field) => field.target === target && !isEmpty(field.value)
       );
     }
@@ -171,7 +171,7 @@ class Theme extends RestModel {
   hasError(target, name) {
     return this.theme_fields
       .filter((f) => f.target === target && (!name || name === f.name))
-      .any((f) => f.error);
+      .some((f) => f.error);
   }
 
   getError(target, name) {

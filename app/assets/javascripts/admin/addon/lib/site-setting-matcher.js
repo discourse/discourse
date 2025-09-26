@@ -21,7 +21,7 @@ export default class SiteSettingMatcher {
   }
 
   get isKeywordMatch() {
-    return (this.siteSetting.keywords || []).any((keyword) =>
+    return (this.siteSetting.keywords || []).some((keyword) =>
       keyword
         .replace(/_/g, " ")
         .toLowerCase()
