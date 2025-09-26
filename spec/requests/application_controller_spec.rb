@@ -3,6 +3,29 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  context "for cache control headers" do
+    it "sets the `no-cache, no-store` cache control response header when no error is raised" do
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when ActionController::RoutingError is raised" do
+      get "/invalid-urlllllllllll"
+
+      expect(response.status).to eq(404)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when Discourse::InvalidAccess is raised" do
+      get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
+
+      expect(response.status).to eq(403)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+  end
+
   context "when visiting an invalid URL" do
     it "displays the not found page with the user's active theme" do
       theme = Fabricate(:theme, user_selectable: true)

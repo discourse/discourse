@@ -251,7 +251,7 @@ RSpec.describe MetadataController do
         get "/.well-known/discourse-id-challenge"
 
         expect(response.status).to eq(404)
-        expect(response.cache_control).to eq({})
+        expect(response["Cache-Control"]).to eq("no-cache, no-store")
       end
     end
   end
