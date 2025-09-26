@@ -9,6 +9,7 @@ module Chat
   #    params: {
   #      query: "foo",
   #      channel_id: 1,
+  #      sort: "latest",
   #    }
   #  )
   #
@@ -21,6 +22,7 @@ module Chat
     #   @option params [String] :query The query used to query the results
     #   @option params [Integer] :channel_id ID of the channel to scope the search
     #   @option params [Boolean] :exclude_threads Whether to exclude thread messages (keeps original thread messages)
+    #   @option params [String] :sort Sort order for results ("relevance" or "latest", defaults to "relevance")
     #   @return [Service::Base::Context]
 
     def self.advanced_filter(trigger, &block)
@@ -48,8 +50,10 @@ module Chat
       attribute :channel_id, :integer
       attribute :limit, :integer, default: 20
       attribute :exclude_threads, :boolean, default: false
+      attribute :sort, :string, default: "relevance"
 
       validates :limit, numericality: { in: 1..40 }
+      validates :sort, inclusion: { in: %w[relevance latest] }
     end
 
     model :channel, optional: true
@@ -104,7 +108,8 @@ module Chat
         return ::Chat::Message.none
       end
 
-      messages.order(created_at: :desc).limit(params.limit)
+      messages = apply_sorting(messages, params.sort)
+      messages.limit(params.limit)
     end
 
     private
@@ -169,6 +174,18 @@ module Chat
           WHERE ct.id = chat_messages.thread_id
         )",
       )
+    end
+
+    # Applies sorting to messages based on the specified sort option.
+    #
+    # @param [ActiveRecord::Relation] messages The messages query to sort
+    # @param [String] sort The sort option ("relevance" or "latest")
+    # @return [ActiveRecord::Relation] The sorted messages query
+    def apply_sorting(messages, sort)
+      case sort
+      when "latest"
+        messages.order(created_at: :desc)
+      end
     end
   end
 end

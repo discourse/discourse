@@ -2,7 +2,7 @@
 
 class Chat::Api::SearchController < Chat::ApiController
   def index
-    Chat::SearchMessage.call(service_params) do
+    Chat::SearchMessage.call(service_params) do |result|
       on_success do |messages:|
         render json: {
                  messages:
@@ -15,7 +15,10 @@ class Chat::Api::SearchController < Chat::ApiController
                    ).as_json,
                }
       end
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure do
+        p result
+        render(json: failed_json, status: 422)
+      end
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
