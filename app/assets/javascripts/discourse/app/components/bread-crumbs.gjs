@@ -88,9 +88,9 @@ export default class BreadCrumbs extends Component {
       return parentCategories;
     }
 
-    return parentCategories
-      .sort((a, b) => compare(a?.totalTopicCount, b?.totalTopicCount))
-      .reverse();
+    return parentCategories.sort(
+      (a, b) => compare(b?.totalTopicCount, a?.totalTopicCount) // sort descending
+    );
   }
 
   @discourseComputed("category")

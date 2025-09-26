@@ -26,6 +26,8 @@ export default class UserTips extends Service {
 
     const newId = tipsArray
       .sort((a, b) => compare(a?.priority, b?.priority))
+      // Reversing the array is necessary because when priorities are not set,
+      // we want to show the most recently added tip first
       .reverse()
       .find((tip) => this.canSeeUserTip(tip.id))?.id;
 
