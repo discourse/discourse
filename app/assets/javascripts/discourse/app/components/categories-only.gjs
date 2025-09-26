@@ -48,11 +48,11 @@ export default class CategoriesOnly extends Component {
     }
 
     // hide in single category pages
-    if (categories[0].parent_category_id) {
+    if (categories.firstObject.parent_category_id) {
       return [];
     }
 
-    return categories.filter((cat) => cat.hasMuted);
+    return categories.filterBy("hasMuted");
   }
 
   @action
