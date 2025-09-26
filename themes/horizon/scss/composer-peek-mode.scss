@@ -36,6 +36,7 @@ html:not(.fullscreen-composer) {
         bottom: var(--main-grid-gap);
         left: unset;
         height: unset;
+        min-width: 320px;
 
         @include viewport.between(lg, xl) {
           position: fixed;

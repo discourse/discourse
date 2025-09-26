@@ -40,19 +40,6 @@ export default class ComposerContainer extends Component {
   @service appEvents;
   @service keyValueStore;
 
-  constructor() {
-    super(...arguments);
-
-    // Restore saved composer width
-    const savedWidth = this.keyValueStore.get("composerWidth");
-    if (savedWidth) {
-      document.documentElement.style.setProperty(
-        "--composer-width",
-        savedWidth
-      );
-    }
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
@@ -97,7 +84,12 @@ export default class ComposerContainer extends Component {
   }
 
   @bind
-  didResizeComposer(element, { width }) {
+  onHorizontalResizeDragStart() {
+    // Could add event triggering here if needed
+  }
+
+  @bind
+  onHorizontalResizeDrag(element, { width }) {
     if (width) {
       this.keyValueStore.set({
         key: "composerWidth",
@@ -110,6 +102,11 @@ export default class ComposerContainer extends Component {
     }
   }
 
+  @bind
+  onHorizontalResizeDragEnd() {
+    // Could add event triggering here if needed
+  }
+
   <template>
     <ComposerBody
       @composer={{this.composer.model}}
@@ -120,7 +117,7 @@ export default class ComposerContainer extends Component {
       @save={{this.composer.saveAction}}
       {{resizableNode
         ".composer-resizer"
-        this.didResizeComposer
+        this.onHorizontalResizeDrag
         (hash
           horizontal=true
           vertical=false
