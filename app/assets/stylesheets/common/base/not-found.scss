@@ -12,7 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-6);
+    gap: var(--space-8);
 
     @include viewport.until(sm) {
       flex-direction: column;
@@ -42,7 +42,7 @@
     text-align: center;
 
     svg {
-      width: clamp(150px, 25vw, 350px);
+      width: clamp(150px, 20vw, 20px);
     }
   }
 
