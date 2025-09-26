@@ -135,7 +135,7 @@ export default class ChatSearch extends Component {
         {{autoFocus}}
         @filterAction={{this.onFilterChange}}
         @value={{@query}}
-        @icons={{hash right="magnifying-glass"}}
+        @icons={{hash left="magnifying-glass"}}
         placeholder={{i18n "chat.search_view.filter_placeholder"}}
         class="no-blur"
       />
