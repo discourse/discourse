@@ -100,14 +100,25 @@ export default class PenalizeUser extends Component {
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
-        result = await this.args.model.user.suspend(opts);
+
+        if (this.args.confirmCallback) {
+          result = await this.args.confirmCallback(opts);
+        } else {
+          result = await this.args.model.user.suspend(opts);
+        }
       } else if (this.args.model.penaltyType === "silence") {
         opts.silenced_till = this.penalizeUntil;
-        result = await this.args.model.user.silence(opts);
+
+        if (this.args.confirmCallback) {
+          result = await this.args.confirmCallback(opts);
+        } else {
+          result = await this.args.model.user.silence(opts);
+        }
       } else {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
+
       this.args.closeModal({ success: true });
       if (this.successCallback) {
         await this.successCallback(result);
