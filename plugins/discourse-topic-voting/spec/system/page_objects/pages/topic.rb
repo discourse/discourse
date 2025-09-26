@@ -12,7 +12,15 @@ module TopicVotingTopic
       I18n
         .t("js.topic_voting.votes_left", count:, path: "/my/activity/votes")
         .gsub(/'([^']*)'/) { "\"#{$1}\"" }
-    selector = ".voting-popup-menu"
+    selector = ".topic-voting-menu__row-title"
+    has_css?(selector)
+    actual_html = find(selector)[:innerHTML].strip
+    actual_html.include?(expected_html)
+  end
+
+  def has_locked_popup?
+    expected_html = I18n.t("js.topic_voting.locked_description")
+    selector = ".topic-voting-menu__title.--locked"
     has_css?(selector)
     actual_html = find(selector)[:innerHTML].strip
     actual_html.include?(expected_html)
