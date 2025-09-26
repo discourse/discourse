@@ -51,13 +51,15 @@ RSpec.describe Upload do
     let(:user) { Fabricate(:user) }
 
     before do
-      # Set up required MediaConvert settings
+      # Add mp4 to authorized extensions for video uploads
+      extensions = SiteSetting.authorized_extensions.split("|")
+      SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
+
       SiteSetting.video_conversion_service = "aws_mediaconvert"
       SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_use_iam_profile = true
       SiteSetting.video_conversion_enabled = true
-      SiteSetting.Upload.enable_s3_uploads = true
-
-      # Setup Jobs as a spy
       allow(Jobs).to receive(:enqueue)
     end
 
@@ -88,7 +90,7 @@ RSpec.describe Upload do
       end
 
       it "does not enqueue a convert_video job when S3 uploads are disabled" do
-        SiteSetting.Upload.enable_s3_uploads = false
+        SiteSetting.enable_s3_uploads = false
         allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
 
         upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
@@ -104,16 +106,24 @@ RSpec.describe Upload do
 
       it "does not enqueue a convert_video job if OptimizedVideo already exists" do
         allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
 
+        # Create original upload
         upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
-        Fabricate(:optimized_video, upload: upload)
 
-        # Clear the previous enqueue call from upload creation
-        allow(Jobs).to receive(:enqueue).and_call_original
+        # Create OptimizedVideo record for the original upload
+        optimized_video = Fabricate(:optimized_video, upload: upload)
 
-        # Update the upload to trigger after_commit
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
+
+        # Update the original upload to trigger after_commit
         upload.update!(filesize: 12_345)
 
+        # The original upload should not enqueue a job because OptimizedVideo already exists
         expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
       end
 
@@ -122,10 +132,11 @@ RSpec.describe Upload do
 
         upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
 
-        # Clear the previous enqueue call from upload creation
-        allow(Jobs).to receive(:enqueue).and_call_original
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
 
-        # Update the upload - should not trigger video conversion
+        # Update the upload - should not trigger video conversion since it's after_create, not after_update
         upload.update!(filesize: 12_345)
 
         expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
