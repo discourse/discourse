@@ -5643,7 +5643,7 @@ en:
       upcoming_changes:
         name: "Name"
         plugin: "Plugin"
-        labels: "Labels"
+        metadata: "Metadata"
         enabled: "Enabled"
         show_image: "Show image"
         statuses:
@@ -5657,18 +5657,12 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
-        impact_types:
-          feature: "Feature"
-          other: "Other"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
           all: "All"
           enabled: "Enabled"
           disabled: "Disabled"
-          low_risk: "Risk: Low"
-          medium_risk: "Risk: Medium"
-          high_risk: "Risk: High"
           impact_type_feature: "Type: Feature"
           impact_type_other: "Type: Other"
           status_pre_alpha: "Status: Pre-Alpha"
@@ -5708,7 +5702,7 @@ en:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Upcoming changes"
-          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by risk level, change type, and status."
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status."
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
