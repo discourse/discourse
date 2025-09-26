@@ -685,7 +685,7 @@ acceptance("Search - Authenticated", function (needs) {
     assert.strictEqual(openedUrls.length, 1);
     assert.strictEqual(
       openedUrls[0].url,
-      "/t/development-mode-super-slow/2179"
+      `${window.location.origin}/t/development-mode-super-slow/2179`
     );
     assert.strictEqual(openedUrls[0].target, "_blank");
     assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");
@@ -723,7 +723,7 @@ acceptance("Search - Authenticated", function (needs) {
     assert.strictEqual(openedUrls.length, 1);
     assert.strictEqual(
       openedUrls[0].url,
-      "/t/development-mode-super-slow/2179"
+      `${window.location.origin}/t/development-mode-super-slow/2179`
     );
     assert.strictEqual(openedUrls[0].target, "_blank");
     assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");

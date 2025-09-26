@@ -63,8 +63,7 @@ export default class Types extends Component {
       const link = event.currentTarget.querySelector("a.search-link");
       if (link?.href) {
         if (event.ctrlKey || event.metaKey) {
-          const url = new URL(link.href);
-          window.open(url.pathname, "_blank", "noopener,noreferrer");
+          window.open(link.href, "_blank", "noopener,noreferrer");
         } else {
           this.routeToSearchResult(link.href);
         }
