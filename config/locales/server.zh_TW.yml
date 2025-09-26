@@ -2438,10 +2438,7 @@ zh_TW:
   page_not_found:
     page_title: "找不到頁面"
     title: "抱歉！這個頁面不存在或者是私密的。"
-    popular_topics: "熱門"
-    recent_topics: "最近"
     see_more: "更多"
-    search_title: "搜尋該網頁"
     search_button: "搜索"
   offline:
     title: "無法載入App"

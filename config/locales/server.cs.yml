@@ -3813,10 +3813,7 @@ cs:
   page_not_found:
     page_title: "Stránka nenalezena"
     title: "Jejda! Tato stránka neexistuje nebo je soukromá."
-    popular_topics: "Populární"
-    recent_topics: "Nedávné"
     see_more: "Více"
-    search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
   offline:
     title: "Nelze načíst aplikaci"

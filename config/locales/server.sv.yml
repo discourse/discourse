@@ -3442,10 +3442,7 @@ sv:
   page_not_found:
     page_title: "Sidan hittades inte"
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
-    popular_topics: "Populära"
-    recent_topics: "Senaste"
     see_more: "Mer"
-    search_title: "Sök i webbplatsen"
     search_button: "Sök"
   offline:
     title: "Det går inte att ladda appen"

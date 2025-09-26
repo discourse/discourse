@@ -2417,9 +2417,7 @@ hr:
         Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
-    popular_topics: "Popularno"
     see_more: "Više"
-    search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."

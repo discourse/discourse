@@ -2318,7 +2318,6 @@ fi:
     disable_watched_word_checking_in_user_fields: "poista tarkkailtujen sanojen tarkistus käytöstä käyttäjäkentissä"
     watched_words_regular_expressions: "Sallii säännöllisten lausekkeiden käytön sanojen suodattamiseen. Jos tämä on käytössä, tämä ominaisuus ryhmittelee arkaluontoiset sanat kirjainkoon mukaan. Sen jälkeen se kokoaa kaikki valitut sanat yhdeksi säännölliseksi lausekkeeksi ja lisää sanarajat säännöllisesti tarkkailuille sanoille. Näin ollen tämä regex-pohjainen suodatusmenetelmä lisää ylimääräisen valvontatason sisällön moderointiin tukemalla kehittyneempiä sanamalleja. Asetus mahdollistaa myös alkuperäisen tekstin helposti korvaamisen halutulla korvauksella."
     enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
-    old_post_notice_days: "Päivien lukumäärä, jonka jälkeen viesti-ilmoitus katsotaan vanhaksi. Tämä erottaa sen visuaalisesti sivuston uudemmista ilmoituksista."
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_users_days: "Kuinka monen päivän kuluttua käyttäjä tulkitaan palaavaksi."
@@ -4208,10 +4207,7 @@ fi:
   page_not_found:
     page_title: "Sivua ei löytynyt"
     title: "Hups! Sivua ei ole tai se on yksityinen."
-    popular_topics: "Suosittuja"
-    recent_topics: "Tuoreimpia"
     see_more: "Lisää"
-    search_title: "Hae tältä sivustolta"
     search_button: "Haku"
   offline:
     title: "Sovellusta ei voida ladata"

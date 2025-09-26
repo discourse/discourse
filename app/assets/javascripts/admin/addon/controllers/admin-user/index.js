@@ -46,7 +46,7 @@ export default class AdminUserIndexController extends Controller {
 
   @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
-    return customGroups.mapBy("id");
+    return customGroups.map((group) => group.id);
   }
 
   @discourseComputed("customGroupIdsBuffer", "customGroupIds")
@@ -613,7 +613,10 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   resetCustomGroups() {
-    this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
+    this.set(
+      "customGroupIdsBuffer",
+      this.model.customGroups.map((group) => group.id)
+    );
   }
 
   @action

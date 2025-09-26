@@ -2073,10 +2073,7 @@ el:
   page_not_found:
     page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."
-    popular_topics: "Δημοφιλή"
-    recent_topics: "Πρόσφατα"
     see_more: "Περισσότερα"
-    search_title: "Αναζήτηση στην ιστοσελίδα"
     search_button: "Αναζήτηση"
   offline:
     title: "Cannot load app"
