@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { isPresent } from "@ember/utils";
+import { isBlank, isPresent } from "@ember/utils";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -53,6 +53,10 @@ export default class ChatSearch extends Component {
 
   @bind
   async searchMessages() {
+    if (isBlank(this.args.query)) {
+      return;
+    }
+
     const response = await ajax("/chat/api/search", {
       data: {
         query: this.args.query,
