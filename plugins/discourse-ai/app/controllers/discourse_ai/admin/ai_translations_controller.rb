@@ -19,18 +19,15 @@ module DiscourseAi
         end
 
         candidates = DiscourseAi::Translation::PostCandidates
-
-        result =
-          supported_locales.map do |locale|
-            candidates.get_completion_per_locale(locale) in { total:, done: }
-            { locale:, total:, done: }
-          end
-
         candidates.get_total_and_with_locale_count in { total:, posts_with_detected_locale: }
 
         render json:
                  base_result.merge(
-                   { translation_progress: result, total:, posts_with_detected_locale: },
+                   {
+                     translation_progress: candidates.get_completion_all_locales,
+                     total:,
+                     posts_with_detected_locale:,
+                   },
                  )
       end
 

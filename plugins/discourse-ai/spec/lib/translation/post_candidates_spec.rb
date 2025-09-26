@@ -59,91 +59,52 @@ describe DiscourseAi::Translation::PostCandidates do
     end
   end
 
-  describe ".get_completion_per_locale" do
-    context "when (scenario A) 'done' determined by post's locale" do
-      it "returns total = done if all posts are in the locale" do
-        locale = "pt_BR"
-        Fabricate(:post, locale:)
-        Post.update_all(locale: locale)
-        Fabricate(:post, locale: "pt")
+  describe ".get_completion_all_locales" do
+    before { SiteSetting.content_localization_supported_locales = "en_GB|pt|es" }
 
-        completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq({ done: 2, total: 2 })
-      end
+    it "returns empty state when no posts exist" do
+      Post.delete_all
 
-      it "returns correct done and total if some posts are in the locale" do
-        locale = "es"
-        Fabricate(:post, locale:)
-        Fabricate(:post, locale: "not_es")
-
-        completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq({ done: 1, total: 2 })
-      end
+      result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
+      expect(result).to eq(
+        [
+          { done: 0, locale: "en_GB", total: 0 },
+          { done: 0, locale: "pt", total: 0 },
+          { done: 0, locale: "es", total: 0 },
+        ],
+      )
     end
 
-    context "when (scenario B) 'done' determined by post localizations" do
-      it "returns done = total if all posts have a localization in the locale" do
-        locale = "pt_BR"
-        Fabricate(:post, locale: "en")
-        Post.all.each do |post|
-          post.update(locale: "en")
-          Fabricate(:post_localization, post:, locale:)
-        end
-        PostLocalization.order("RANDOM()").first.update(locale: "pt")
+    it "returns progress grouped by base locale (of en_GB) and correct totals" do
+      post1 = Fabricate(:post, locale: "en_GB")
+      post2 = Fabricate(:post, locale: "fr")
+      Fabricate(:post, locale: "es")
+      Fabricate(:post, locale: nil) # not eligible
 
-        completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-        expect(completion).to eq({ done: Post.count, total: Post.count })
-      end
+      # add an en_GB localization to a non-en base post
+      Fabricate(:post_localization, post: post2, locale: "en")
 
-      it "returns correct done and total if some posts have a localization in the locale" do
-        locale = "es"
-        post1 = Fabricate(:post, locale: "en")
-        post2 = Fabricate(:post, locale: "fr")
-        Fabricate(:post_localization, post: post1, locale:)
-        Fabricate(:post_localization, post: post2, locale: "not_es")
+      result = DiscourseAi::Translation::PostCandidates.completion_all_locales
+      expect(result.length).to eq(3)
 
-        completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-        posts_with_locale = Post.where.not(locale: nil).count
-        expect(completion).to eq({ done: 1, total: posts_with_locale })
-      end
-    end
+      expect(result).to all(include(:locale, :done, :total))
 
-    it "returns the correct done and total based on (scenario A & B) `post.locale` and `PostLocalization` in the specified locale" do
-      locale = "es"
+      en_entry = result.find { |r| r[:locale] == "en_GB" }
+      expect(en_entry).to be_present
+      # post1 (en_GB base=en) + post2 (localization en_GB base=en)
+      expect(en_entry[:done]).to eq(2)
+      expect(en_entry[:total]).to eq(3)
 
-      # translated candidates
-      Fabricate(:post, locale:)
-      post2 = Fabricate(:post, locale: "en")
-      Fabricate(:post_localization, post: post2, locale:)
-
-      # untranslated candidate
-      post4 = Fabricate(:post, locale: "fr")
-      Fabricate(:post_localization, post: post4, locale: "zh_CN")
-
-      # not a candidate as it is a bot post
-      post3 = Fabricate(:post, user: Discourse.system_user, locale: "de")
-      Fabricate(:post_localization, post: post3, locale:)
-
-      completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-      translated_candidates = 2 # post1 + post2
-      total_candidates = Post.count - 1 # excluding the bot post
-      expect(completion).to eq({ done: translated_candidates, total: total_candidates })
-    end
-
-    it "does not allow done to exceed total when post.locale and post_localization both exist" do
-      locale = "es"
-      post = Fabricate(:post, locale:)
-      Fabricate(:post_localization, post:, locale:)
-
-      completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-      expect(completion).to eq({ done: 1, total: 1 })
-    end
-
-    it "returns nil - nil for done and total when no posts are present" do
-      SiteSetting.ai_translation_backfill_max_age_days = 0
-
-      completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale("es")
-      expect(completion).to eq({ done: 0, total: 0 })
+      pt_entry = result.find { |r| r[:locale] == "pt" }
+      expect(pt_entry).to be_present
+      expect(pt_entry[:done]).to eq(0)
+      expect(pt_entry[:total]).to eq(3)
+      es_entry = result.find { |r| r[:locale] == "es" }
+      expect(es_entry).to be_present
+      expect(es_entry[:done]).to eq(1)
+      expect(es_entry[:total]).to eq(3)
+      fr_entry = result.find { |r| r[:locale] == "fr" }
+      expect(fr_entry).to be_nil
     end
   end
 end
