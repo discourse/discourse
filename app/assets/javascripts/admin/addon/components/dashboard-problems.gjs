@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { compare } from "@ember/utils";
 import { eq } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
@@ -23,7 +24,7 @@ export default class DashboardProblems extends Component {
   }
 
   get problems() {
-    return this.args.problems.sortBy("priority");
+    return this.args.problems.sort((a, b) => compare(a?.priority, b?.priority));
   }
 
   <template>
