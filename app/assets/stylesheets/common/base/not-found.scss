@@ -1,8 +1,9 @@
 @use "lib/viewport";
 
 // Page not found styles
-.not-found-container {
+#main-outlet.not-found-container {
   background: var(--d-content-background);
+  padding-top: var(--space-8);
 }
 
 .page-not-found {
@@ -42,7 +43,7 @@
     text-align: center;
 
     svg {
-      width: clamp(150px, 20vw, 20px);
+      width: clamp(150px, 20vw, 200px);
     }
   }
 
