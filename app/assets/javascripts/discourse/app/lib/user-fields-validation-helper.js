@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { isEmpty } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
 
@@ -95,13 +95,15 @@ export default class UserFieldsValidationHelper {
     if (userFields) {
       const getValidationVisible = () => this.validationVisible;
       this.userFields = new TrackedArray(
-        userFields.sortBy("position").map((f) => {
-          return new TrackedUserField({
-            field: f,
-            getValidationVisible,
-            getAccountPassword: this.getAccountPassword,
-          });
-        })
+        userFields
+          .sort((a, b) => compare(a?.position, b?.position))
+          .map((f) => {
+            return new TrackedUserField({
+              field: f,
+              getValidationVisible,
+              getAccountPassword: this.getAccountPassword,
+            });
+          })
       );
     }
   }
