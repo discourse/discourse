@@ -20,7 +20,8 @@ export default class AnonymousTopicFooterButtons extends Component {
   get buttons() {
     return this.allButtons
       .filterBy("anonymousOnly", true)
-      .sort((a, b) => compare(b?.priority, a?.priority)); // sort descending
+      .sort((a, b) => compare(a?.priority, b?.priority))
+      .reverse();
   }
 
   <template>

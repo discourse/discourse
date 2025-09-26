@@ -18,7 +18,9 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   @discourseComputed("model.leaderboards.@each.updatedAt")
   sortedLeaderboards(leaderboards) {
     return (
-      leaderboards?.sort((a, b) => compare(b?.updatedAt, a?.updatedAt)) || [] // sort descending
+      leaderboards
+        ?.sort((a, b) => compare(a?.updatedAt, b?.updatedAt))
+        .reverse() || []
     );
   }
 

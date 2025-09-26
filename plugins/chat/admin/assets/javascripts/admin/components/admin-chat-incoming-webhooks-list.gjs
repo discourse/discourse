@@ -19,8 +19,8 @@ export default class AdminChatIncomingWebhooksList extends Component {
 
   get sortedWebhooks() {
     return (
-      this.args.webhooks?.sort(
-        (a, b) => compare(b?.updated_at, a?.updated_at) // sort descending
+      this.args.webhooks?.sort((a, b) =>
+        compare(a?.updated_at, b?.updated_at).reverse()
       ) || []
     );
   }

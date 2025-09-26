@@ -55,7 +55,8 @@ export default class TopicFooterButtons extends Component {
       .filterBy("dropdown", false)
       .filterBy("anonymousOnly", false)
       .concat(this.inlineDropdowns)
-      .sort((a, b) => compare(b?.priority, a?.priority)); // sort descending
+      .sort((a, b) => compare(a?.priority, b?.priority))
+      .reverse();
   }
 
   @computed("topic")

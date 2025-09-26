@@ -71,7 +71,9 @@ export default class AdminUserBadgesController extends Controller {
       }
     });
 
-    return expanded.sort((a, b) => compare(b?.granted_at, a?.granted_at)); // sort descending
+    return expanded
+      .sort((a, b) => compare(a?.granted_at, b?.granted_at))
+      .reverse();
   }
 
   @action

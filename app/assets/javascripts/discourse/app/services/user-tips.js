@@ -25,7 +25,8 @@ export default class UserTips extends Service {
     }
 
     const newId = tipsArray
-      .sort((a, b) => compare(b?.priority, a?.priority)) // sort descending
+      .sort((a, b) => compare(a?.priority, b?.priority))
+      .reverse()
       .find((tip) => this.canSeeUserTip(tip.id))?.id;
 
     if (this.#renderedId !== newId) {
