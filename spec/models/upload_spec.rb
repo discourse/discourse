@@ -141,6 +141,59 @@ RSpec.describe Upload do
 
         expect(Jobs).not_to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
       end
+
+      it "does not enqueue a convert_video job for optimized video uploads to prevent infinite loop" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
+
+        # Create original upload
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Reset the job spy to clear previous calls and re-stub
+        RSpec::Mocks.space.proxy_for(Jobs).reset
+        allow(Jobs).to receive(:enqueue)
+
+        # Use OptimizedVideo.create_for to simulate the real flow
+        # This creates the optimized upload and then the OptimizedVideo record
+        optimized_video =
+          OptimizedVideo.create_for(
+            upload,
+            "video_converted.mp4",
+            user.id,
+            filesize: 1000,
+            sha1: "abcdef1234567890",
+            url: "https://example.com/video_converted.mp4",
+            adapter: "aws_mediaconvert",
+          )
+
+        expect(optimized_video).not_to be_nil
+        optimized_upload = optimized_video.optimized_upload
+
+        # The optimized upload should not enqueue a job because it's already an optimized video
+        expect(Jobs).not_to have_received(:enqueue).with(
+          :convert_video,
+          upload_id: optimized_upload.id,
+        )
+      end
+
+      it "enqueues a convert_video job for user uploads with _converted in filename" do
+        allow(FileHelper).to receive(:is_supported_video?).with(
+          "my_video_converted.mp4",
+        ).and_return(true)
+
+        # User uploads a file with "_converted" in the name - should still be converted
+        upload =
+          Fabricate(
+            :upload,
+            original_filename: "my_video_converted.mp4",
+            extension: "mp4",
+            user: user,
+          )
+
+        expect(Jobs).to have_received(:enqueue).with(:convert_video, upload_id: upload.id)
+      end
     end
   end
 

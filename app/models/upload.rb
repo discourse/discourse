@@ -39,6 +39,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_site_setting
   attr_accessor :for_gravatar
   attr_accessor :validate_file_size
+  attr_accessor :skip_video_conversion
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -663,8 +664,9 @@ class Upload < ActiveRecord::Base
   end
 
   def should_convert_video?
-    SiteSetting.video_conversion_enabled && SiteSetting.Upload.enable_s3_uploads &&
-      FileHelper.is_supported_video?(original_filename) && !OptimizedVideo.exists?(upload_id: id)
+    !skip_video_conversion && SiteSetting.video_conversion_enabled &&
+      SiteSetting.Upload.enable_s3_uploads && FileHelper.is_supported_video?(original_filename) &&
+      !OptimizedVideo.exists?(upload_id: id)
   end
 
   def enqueue_video_conversion_job
