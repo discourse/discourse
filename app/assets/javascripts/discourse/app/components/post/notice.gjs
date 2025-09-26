@@ -24,10 +24,6 @@ export default class PostNotice extends Component {
     );
   }
 
-  get classNames() {
-    return [dasherize(this.type)];
-  }
-
   get type() {
     return this.args.post.notice.type;
   }
