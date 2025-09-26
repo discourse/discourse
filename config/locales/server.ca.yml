@@ -2393,10 +2393,7 @@ ca:
   page_not_found:
     page_title: "Pàgina no trobada"
     title: "Ai! Aquesta pàgina no existeix o és privada."
-    popular_topics: "Populars"
-    recent_topics: "Recents"
     see_more: "Més"
-    search_title: "Cerca aquest lloc web"
     search_button: "Cerca"
   offline:
     title: "No es pot carregar l'aplicació"

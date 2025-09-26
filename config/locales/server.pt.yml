@@ -1794,10 +1794,7 @@ pt:
   page_not_found:
     page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."
-    popular_topics: "Popular"
-    recent_topics: "Recente"
     see_more: "Mais"
-    search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
   upload:
     edit_reason: "cópias das imagens locais transferidas"

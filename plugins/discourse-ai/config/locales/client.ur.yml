@@ -233,7 +233,7 @@ ur:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
-        regular_results: "ٹاپک"
+        regular_results: "موضوعات"
         collapse: "بند کریں"
         tooltip:
           header: "AI سے چلنے والی تلاش"
