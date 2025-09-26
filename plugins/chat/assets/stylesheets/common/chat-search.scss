@@ -1,4 +1,8 @@
 .c-routes.--search .c-search {
   padding-block: 1.25rem;
   margin-inline: 1rem;
+
+  .filter-input-container {
+    max-width: 320px;
+  }
 }
