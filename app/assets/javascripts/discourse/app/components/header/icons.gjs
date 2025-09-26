@@ -71,7 +71,7 @@ export default class Icons extends Component {
       (this.search.searchExperience === "search_icon" &&
         !this.search.welcomeBannerSearchInViewport) ||
       (this.search.searchExperience === "search_field" &&
-        this.router.currentRouteName.startsWith("admin.")) ||
+        this.router.currentRouteName.startsWith("admin")) ||
       this.args.topicInfoVisible
     );
   }

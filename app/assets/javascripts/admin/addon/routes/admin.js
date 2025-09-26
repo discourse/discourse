@@ -46,7 +46,7 @@ export default class AdminRoute extends DiscourseRoute {
       [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
     });
 
-    if (!transition?.to.name.startsWith("admin.")) {
+    if (!transition?.to.name.startsWith("admin")) {
       this.adminSidebarStateManager.stopForcingAdminSidebar();
     }
   }
