@@ -1155,10 +1155,7 @@ bg:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:
     page_title: "Страницата не е намерена"
-    popular_topics: "Популярни"
-    recent_topics: "Скорошни"
     see_more: "Повече"
-    search_title: "Търси този сайт"
     search_button: "Търсене"
   upload:
     edit_reason: "изтеглено локално копие на изображенията"

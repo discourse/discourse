@@ -2318,7 +2318,6 @@ fr:
     disable_watched_word_checking_in_user_fields: "désactiver la vérification des mots surveillés dans les champs d'utilisateur"
     watched_words_regular_expressions: "Permet d'utiliser des expressions régulières pour filtrer les mots. Si cette fonctionnalité est activée, elle regroupe les mots sensibles en fonction de leur sensibilité aux majuscules et minuscules. Elle compile ensuite tous les mots sélectionnés en une seule expression régulière, en ajoutant des limites de mots pour les mots surveillés réguliers. Ainsi, cette méthode de filtrage basée sur les expressions régulières ajoute une couche supplémentaire de contrôle sur la modération du contenu en prenant en charge des modèles de mots plus sophistiqués. Le réglage permet également de remplacer facilement le texte d'origine par le remplacement de votre choix."
     enable_fast_edit: "Ajoute un bouton au menu de sélection des messages pour modifier une petite sélection en ligne."
-    old_post_notice_days: "Nombre de jours après lesquels un avis de publication est considéré comme ancien. Cela le différencie visuellement des nouvelles notifications sur le site."
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
@@ -4221,10 +4220,7 @@ fr:
   page_not_found:
     page_title: "Page introuvable"
     title: "Oups ! Cette page n'existe pas ou est privée."
-    popular_topics: "Populaires"
-    recent_topics: "Récents"
     see_more: "Plus"
-    search_title: "Rechercher sur ce site"
     search_button: "Rechercher"
   offline:
     title: "Impossible de charger l'application"

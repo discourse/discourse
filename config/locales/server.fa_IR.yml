@@ -2517,10 +2517,7 @@ fa_IR:
   page_not_found:
     page_title: "صفحه پیدا نشد"
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
-    popular_topics: "محبوب"
-    recent_topics: "اخیر"
     see_more: "بیشتر"
-    search_title: "جستجو در سایت"
     search_button: "جستجو"
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"

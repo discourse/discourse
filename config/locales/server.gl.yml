@@ -3060,10 +3060,7 @@ gl:
   page_not_found:
     page_title: "Páxina non atopada"
     title: "Oopa! Esta páxina non existe ou é privada."
-    popular_topics: "Destacados"
-    recent_topics: "Recentes"
     see_more: "Máis"
-    search_title: "Buscar neste sitio"
     search_button: "Buscar"
   offline:
     title: "Non se pode cargar a aplicación"

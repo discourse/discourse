@@ -1919,10 +1919,7 @@ be:
       subject_template: "[%{site_name}] New Login from %{location}"
   page_not_found:
     title: "На жаль! Гэтая старонка не існуе або з'яўляецца прыватнай уласнасцю."
-    popular_topics: "папулярны"
-    recent_topics: "Надаўнія"
     see_more: "Больш"
-    search_title: "Пошук па сайце"
     search_button: "Пошук"
   offline:
     title: "Не ўдаецца загрузіць дадатак"

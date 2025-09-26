@@ -3148,10 +3148,7 @@ ko:
   page_not_found:
     page_title: "페이지를 찾을 수 없음"
     title: "이 페이지가 존재하지 않거나 비공개입니다."
-    popular_topics: "인기"
-    recent_topics: "최근"
     see_more: "더 보기"
-    search_title: "이 사이트 검색"
     search_button: "검색"
   offline:
     title: "앱을 로드할 수 없음"

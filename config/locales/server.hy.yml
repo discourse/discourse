@@ -2411,10 +2411,7 @@ hy:
   page_not_found:
     page_title: "Էջը Չի Գտնվել"
     title: "Օյ! Այդ էջը գոյություն չունի կամ մասնավոր է:"
-    popular_topics: "Տարածված"
-    recent_topics: "Վերջին "
     see_more: "Ավելին"
-    search_title: "Որոնել այս կայքում"
     search_button: "Որոնում"
   offline:
     title: "Հնարավոր չէ բեռնել հավելված"

@@ -2126,10 +2126,7 @@ te:
   site_setting_missing: "`%{name}` సైట్ సెట్టింగ్‌ని సెట్ చేయాలి."
   page_not_found:
     page_title: "పేజీ కనుగొనబడలేదు"
-    popular_topics: "ప్రముఖ"
-    recent_topics: "తాజా"
     see_more: "ఇంకా"
-    search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
   offline:
     title: "యాప్ లోడ్ కాలేదు"
