@@ -45,7 +45,7 @@ export default class ChatReplyingIndicator extends Component {
   }
 
   get usernames() {
-    return this.users.mapBy("username");
+    return this.users.map((item) => item.username);
   }
 
   get text() {

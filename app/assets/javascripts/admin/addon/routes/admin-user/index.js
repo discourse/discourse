@@ -15,8 +15,8 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
   setupController(controller, model) {
     controller.setProperties({
       originalPrimaryGroupId: model.primary_group_id,
-      availableGroups: this.site.groups.filter((g) => !g.automatic),
-      customGroupIdsBuffer: model.customGroups.mapBy("id"),
+      availableGroups: this.site.groups.filter((group) => !group.automatic),
+      customGroupIdsBuffer: model.customGroups.map((group) => group.id),
       ssoExternalEmail: null,
       ssoLastPayload: null,
       model,

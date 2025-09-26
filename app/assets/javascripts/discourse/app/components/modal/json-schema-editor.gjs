@@ -34,7 +34,7 @@ export default class JsonSchemaEditorModal extends Component {
       this.args.model.updateValue(this.value);
       this.args.closeModal();
     } else {
-      this.flash = errors.mapBy("message").join("\n");
+      this.flash = errors.map((item) => item.message).join("\n");
       this.flashType = "error";
     }
   }

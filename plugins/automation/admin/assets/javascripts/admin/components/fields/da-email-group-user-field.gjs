@@ -36,7 +36,7 @@ export default class EmailGroupUserField extends BaseField {
 
   @action
   updateRecipients(selected, content) {
-    const newGroups = content.filterBy("isGroup").mapBy("id");
+    const newGroups = content.filterBy("isGroup").map((item) => item.id);
     this._updateGroups(selected, newGroups);
     this.recipients = selected.join(",");
   }
