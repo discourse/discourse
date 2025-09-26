@@ -165,6 +165,15 @@ schema:
           - "suspended_at"
           - "suspended_till"
           - "username_lower"
+    user_profiles:
+      primary_key_column_names: [ "user_id" ]
+      columns:
+        exclude:
+          - "bio_cooked"
+          - "dismissed_banner_key"
+          - "bio_cooked_version"
+          - "views"
+          - "granted_title_badge_id"
 
   global:
     columns:
@@ -436,7 +445,6 @@ schema:
         - "user_open_ids"
         - "user_passwords"
         - "user_profile_views"
-        - "user_profiles"
         - "user_required_fields_versions"
         - "user_search_data"
         - "user_second_factors"
