@@ -825,16 +825,40 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
-    it "ignores data URI images when pasting HTML" do
+    it "handles multiple data URI images pasted simultaneously" do
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      valid_jpeg_data_uri =
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/wA=="
+
       cdp.allow_clipboard
+
       open_composer
 
-      data_uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
-      cdp.copy_paste(%(Text <img src="#{data_uri}" alt="data uri image">), html: true)
+      html = <<~HTML
+          before 1<br>
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+          <img src="#{valid_png_data_uri}" alt="img2">
+          between<br>
+          <img src="#{valid_jpeg_data_uri}">
+          after 2
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_css("img[alt='img1'][width='100'][height='100'][data-orig-src]")
+      expect(rich).to have_css("img[alt='img2'][data-orig-src]")
+      expect(rich).to have_css("img[alt='image'][data-orig-src]")
+      expect(rich).to have_css("p", text: "before 1")
+      expect(rich).to have_css("p", text: "between")
+      expect(rich).to have_css("p", text: "after 2")
+      expect(rich).to have_no_css("img[src^='data:']")
+
+      # pasting a second time to make sure there's no cache pollution
+      cdp.copy_paste("<img src='#{valid_png_data_uri}' alt='img1'>", html: true)
 
       expect(rich).to have_no_css("img[src^='data:']")
-      expect(rich).to have_no_css(".composer-image-node img")
-      expect(rich).to have_css("p", text: "Text")
+      expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
     end
 
     it "merges text with link marks created from parsing" do

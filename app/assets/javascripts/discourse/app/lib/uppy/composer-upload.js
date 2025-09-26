@@ -338,7 +338,9 @@ export default class UppyComposerUpload {
             })
           );
 
-          this.placeholderHandler.insert(file);
+          if (!file.meta.skipPlaceholder) {
+            this.placeholderHandler.insert(file);
+          }
 
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
@@ -379,7 +381,9 @@ export default class UppyComposerUpload {
           () => {
             this.#removeInProgressUpload(file.id);
 
-            this.placeholderHandler.success(file, markdown);
+            if (!file.meta.skipPlaceholder) {
+              this.placeholderHandler.success(file, markdown);
+            }
 
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -581,7 +585,10 @@ export default class UppyComposerUpload {
             name: file.name,
             type: file.type,
             data: file,
-            meta: { pasted: opts.pasted },
+            meta: {
+              pasted: opts.pasted,
+              skipPlaceholder: opts.skipPlaceholder,
+            },
           };
         })
       );
