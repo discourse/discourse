@@ -19,7 +19,8 @@ module FileStore
 
     def self.s3_options_from_site_settings
       {
-        client_options: S3Helper.s3_options(SiteSetting),
+        client_options:
+          S3Helper.s3_options(SiteSetting, SiteSetting.s3_file_uploads_profile.presence),
         bucket: SiteSetting.Upload.s3_upload_bucket,
       }
     end
