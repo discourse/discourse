@@ -882,7 +882,7 @@ export default class ChatChannel extends Component {
               @resendStagedMessage={{this.resendStagedMessage}}
               @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="channel"
-              @highlightedText={{this.currentChannelFilter}}
+              @highlightedText={{if @isFiltering this.currentChannelFilter ""}}
             />
           {{else}}
             {{#unless this.messagesLoader.fetchedOnce}}
