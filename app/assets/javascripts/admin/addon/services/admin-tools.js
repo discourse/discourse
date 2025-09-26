@@ -52,6 +52,7 @@ export default class AdminToolsService extends Service {
         user: loadedUser,
         before: opts.before,
         successCallback: opts.successCallback,
+        confirmCallback: opts.confirmCallback,
       },
     });
   }
