@@ -40,7 +40,7 @@ export default class PostNotice extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      <div class={{concatClass "post-notice" this.classNames}}>
+      <div class={{concatClass "post-notice" (dasherize this.type)}}>
         <this.Component @notice={{@post.notice}} @post={{@post}} />
       </div>
     {{/if}}
