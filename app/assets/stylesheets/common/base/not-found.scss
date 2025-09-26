@@ -1,6 +1,10 @@
 @use "lib/viewport";
 
 // Page not found styles
+html:has(.not-found-container) {
+  background-color: var(--d-content-background) !important;
+}
+
 #main-outlet.not-found-container {
   background: var(--d-content-background);
   padding-top: var(--space-8);
