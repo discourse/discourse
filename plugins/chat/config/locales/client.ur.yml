@@ -286,7 +286,7 @@ ur:
         type: "قِسم"
         types:
           category: "زمرہ"
-          topic: "ٹاپک"
+          topic: "موضوع"
       reviewable:
         type: "گپ شپ کا پیغام"
       composer:
@@ -387,6 +387,13 @@ ur:
           custom: "اپنی مرضی کے رد عمل"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: '"%{channel}" میں آپ کا تذکرہ کیا'
+          direct_html: '<span>%{username}</span> <span>نے "%{channel}" میں آپ کا تذکرہ کیا</span>'
+        direct_message_chat_mention:
+          direct: "نجی چیٹ میں آپ کا تذکرہ کیا"
+          direct_html: "<span>%{username}</span> <span>نے نجی چیٹ میں آپ کا تذکرہ کیا</span>"
     discourse_automation:
       scriptables:
         send_chat_message:
