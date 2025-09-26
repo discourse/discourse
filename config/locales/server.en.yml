@@ -4696,11 +4696,12 @@ en:
     page_title: "Page Not Found"
     title: "Oops! That page doesn’t exist or is private."
     subtitle: "We looked everywhere but couldn't find the page you were looking for."
-    popular_topics: "Popular"
-    recent_topics: "Recent"
+    popular_topics: "Popular topics"
+    recent_topics: "Recent topics"
     see_more: "More"
     search_title: "Try searching instead?"
     search_button: "Search"
+    home: "Take me home"
 
   offline:
     title: "Cannot load app"

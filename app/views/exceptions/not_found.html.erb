@@ -31,15 +31,19 @@
 <div class="title_wrapper">
   <h1 class="title"><%= @title %></h1>
   <p class="subtitle"><%= @subtitle %></p>
+  <a class="btn btn-primary --home" href="/"> <%= SvgSprite.raw_svg('house') %> <%= I18n.t('page_not_found.home') %>
+  </a>
   </div>
 </div>
-
   <%- unless @hide_search%>
   <div class="row">
     <div class="page-not-found-search">
       <form action='<%= path "/search" %>' id='discourse-search'>
         <label for="search-input"><%= t 'page_not_found.search_title' %></label>
-        <input type="text" id="search-input" placeholder="Search topics by title or keywords…" name="q" value="<%= @slug %>">
+        <div class="search-input__wrapper">
+        <input type="text" id="search-input" class="search-input" placeholder="Search topics by title or keywords…" name="q" value="<%= @slug %>">
+        <div class="search-input__icon" aria-hidden="true"><%= SvgSprite.raw_svg('magnifying-glass') %></div>
+        </div>
         <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
       </form>
     </div>
@@ -47,10 +51,6 @@
 
   <%= preload_script('onpopstate-handler') %>
 <%- end %>
-
-  <%- if !@current_user %>
-    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
-  <%- end %>
 
   <%- if @group&.dig(:allow_membership_requests) %>
     <a href="<%= group_path @group[:name] %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.request_membership') %></a>
