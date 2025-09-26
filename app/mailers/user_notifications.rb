@@ -179,14 +179,20 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_deleted(email, reviewable)
-    post_action_type_id =
-      reviewable.reviewable_scores.first&.reviewable_score_type ||
-        PostActionTypeView.new.types[:spam]
-    build_email(
-      email,
-      template: "user_notifications.account_deleted",
-      flag_reason: I18n.t("flag_reasons.#{PostActionTypeView.new.types[post_action_type_id]}"),
-    )
+    post_action_type_view = PostActionTypeView.new
+    post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
+
+    flag_reason =
+      if post_action_type_id
+        reason_key = post_action_type_view.flag_and_score_types[post_action_type_id]
+
+        (I18n.t("flag_reasons.#{reason_key}", default: nil) if reason_key) ||
+          post_action_type_view.descriptions[post_action_type_id].presence
+      end
+
+    flag_reason ||= I18n.t("flag_reasons.spam")
+
+    build_email(email, template: "user_notifications.account_deleted", flag_reason: flag_reason)
   end
 
   def account_suspended(user, opts = nil)
