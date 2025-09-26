@@ -54,7 +54,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     assert.dom("#render-glimmer").hasText("Hello from Glimmer Component");
   });
 
-  test("can decorate content with renderGlimmer using a curried componet", async function (assert) {
+  test("can decorate content with renderGlimmer using a curried component", async function (assert) {
     const state = new (class {
       @tracked html = htmlSafe("<h1>Initial</h1>");
     })();

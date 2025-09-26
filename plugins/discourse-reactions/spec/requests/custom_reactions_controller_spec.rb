@@ -583,7 +583,7 @@ describe DiscourseReactions::CustomReactionsController do
   end
 
   describe "reaction notifications" do
-    it "calls ReactinNotification service" do
+    it "calls ReactingNotification service" do
       sign_in(user_1)
       DiscourseReactions::ReactionNotification.any_instance.expects(:create).once
       DiscourseReactions::ReactionNotification.any_instance.expects(:delete).once
