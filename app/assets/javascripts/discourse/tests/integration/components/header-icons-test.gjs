@@ -40,7 +40,7 @@ module("Integration | Component | Header | Icons", function (hooks) {
         "it does not display when the search_experience setting is search_field"
       );
 
-    routerStub.value("admin");
+    routerStub.value("admin.dashboard.general");
 
     await render(
       <template>
