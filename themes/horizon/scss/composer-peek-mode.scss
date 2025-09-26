@@ -37,6 +37,7 @@ html:not(.fullscreen-composer) {
         left: unset;
         height: unset;
         max-width: 36.5vw;
+        min-width: 320px;
 
         @include viewport.between(lg, xl) {
           position: fixed;
