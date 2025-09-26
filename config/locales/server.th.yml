@@ -558,6 +558,8 @@ th:
           complete: "ผู้ใช้ถูกลบ."
       reject:
         title: "ละทิ้ง"
+      delete_post:
+        complete: "โพสต์ถูกลบ"
       delete_user:
         complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"

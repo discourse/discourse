@@ -2,7 +2,7 @@
 
 module ::DiscourseLocalDates
   class Engine < ::Rails::Engine
-    engine_name DiscourseLocalDates::PLUGIN_NAME
+    engine_name PLUGIN_NAME
     isolate_namespace DiscourseLocalDates
   end
 end

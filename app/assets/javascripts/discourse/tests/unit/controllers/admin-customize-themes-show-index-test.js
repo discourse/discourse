@@ -15,7 +15,7 @@ module(
         settings: [{}],
       });
       const controller = this.owner.lookup(
-        "controller:admin-customize-themes-show-index"
+        "controller:admin-customize-themes.show.index"
       );
       controller.setProperties({ model: theme });
       assert.true(
@@ -32,7 +32,7 @@ module(
         settings: [],
       });
       const controller = this.owner.lookup(
-        "controller:admin-customize-themes-show-index"
+        "controller:admin-customize-themes.show.index"
       );
       controller.setProperties({ model: theme });
       assert.false(

@@ -700,8 +700,8 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      // note due to the way args are passed to actions we need
-      // to treate the explicity toolbarEvent as a fallback for no
+      // note: due to the way args are passed to actions we need
+      // to create the explicity toolbarEvent as a fallback for no
       // event
       // Long term we want to avoid needing this awkwardness and pass
       // the event explicitly

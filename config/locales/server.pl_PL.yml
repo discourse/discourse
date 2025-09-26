@@ -616,7 +616,7 @@ pl_PL:
     top_weekly: "Najpopularniejsze tematy w tym tygodniu"
     top_daily: "Najpopularniejsze tematy dzisiaj"
     posts: "Aktualne wpisy"
-    private_posts: "Ostatnie wiadomości prywatne"
+    private_posts: "Ostatnie prywatne wiadomości"
     group_posts: "Ostatni wpis z %{group_name}"
     group_mentions: "Ostatnie wspomnienie z %{group_name}"
     user_posts: "Ostatnie wpisy @%{username}"
@@ -2379,9 +2379,9 @@ pl_PL:
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_mode: "Włącz opcję przełączania użytkowników na tryb anonimowy podczas publikowania. Po włączeniu tej opcji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas tworzenia postów lub tematów w całej witrynie. Zobacz także `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają Twoją witrynę anonimowo, polubienie postów. Po aktywacji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas polubienia postów lub tematów w całej witrynie. Zobacz także `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny, aby aktywować anonimowe wpisy"
-    anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
+    allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom anonimowo przeglądającym Twoją witrynę polubienie postów. Po aktywacji użytkownicy mogą ukryć swoją tożsamość podczas polubienia postów lub tematów w witrynie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
+    anonymous_posting_min_trust_level: "Minimalny poziom zaufania wymagany do włączenia anonimowego publikowania. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
+    anonymous_posting_allowed_groups: "Grupy, które mogą zezwalać na anonimowe publikowanie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
     hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
     hide_new_user_profiles: "Ukryj profile użytkowników poziomu zaufania 1 lub niższego przed innymi i użytkownikami poziomu zaufania 1, dopóki nie opublikują po raz pierwszy. Ta funkcja jest bezwarunkowo wyłączona w witrynach must_approve_users i invite_only."
@@ -4019,7 +4019,7 @@ pl_PL:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Użytkownik zaproszony grupy do PM"
+      title: "Użytkownik zaproszony grupy do PW"
       subject_template: "[%{email_prefix}]%{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -4187,7 +4187,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Użytkownik Napisał PM"
+      title: "Użytkownik opublikował PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4198,7 +4198,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Użytkownik dodał stopniowe PM"
+      title: "Użytkownik dodał stopniowe PW"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -5592,6 +5592,36 @@ pl_PL:
       approve_and_unhide:
         title: "Zatwierdź i pokaż post"
         complete: "Post zatwierdzony i nieukryty"
+      post_actions:
+        bundle_title: "Co chcesz zrobić z tym wpisem?"
+      no_action_post:
+        title: "Brak akcji"
+        description: "Nie podejmuj żadnych działań w związku ze wpisem"
+        complete: "Nie podjęto żadnych działań w związku ze wpisem"
+      delete_post:
+        title: "Usuń wpis"
+        description: "Usuń ten wpis"
+        complete: "Wpis usunięty"
+      hide_post:
+        title: "Ukryj wpis"
+        description: "Ukryj ten wpis przed widokiem publicznym"
+        complete: "Wpis ukryty"
+      unhide_post:
+        title: "Odkryj wpis"
+        description: "Udostępnij ten wpis wszystkim użytkownikom"
+        complete: "Wpis nieukryty"
+      restore_post:
+        title: "Przywróć wpis"
+        description: "Przywróć ten usunięty wpis"
+        complete: "Wpis przywrócony"
+      edit_post:
+        title: "Edytuj wpis"
+        description: "Edytuj treść tego wpisu"
+        complete: "Wpis edytowany"
+      convert_to_pm:
+        title: "Konwertuj na PW"
+        description: "Zmień ten post na prywatną wiadomość"
+        complete: "Wpis przekształcony w prywatną wiadomość"
       user_actions:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       no_action_user:

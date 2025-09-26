@@ -353,7 +353,7 @@ class DiscoursePoll::Poll
           grouped_selected_options[id] = { digest: option[:digest], html: option[:html], votes: 0 }
         end
 
-        # Now go back and update the vote counts. Using hashes so we dont have n^2
+        # Now go back and update the vote counts. Using hashes so we don't have n^2
         votes
           .group_by { |v| v["poll_option_id"] }
           .each do |option_id, votes_for_option|

@@ -130,12 +130,7 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-# let's not run seed_fu every test
-SeedFu.quiet = true if SeedFu.respond_to? :quiet
-
 SiteSetting.automatically_download_gravatars = false
-
-SeedFu.seed
 
 # we need this env var to ensure that we can impersonate in test
 # this enable integration_helpers sign_in helper
@@ -233,6 +228,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Default is :fork, but this causes problems if any miniracer context have started
+  config.bisect_runner = :shell
 
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"

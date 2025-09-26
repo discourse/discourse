@@ -3,7 +3,7 @@ import {
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
-} from "discourse/plugins/chat/discourse/controllers/preferences-chat";
+} from "discourse/plugins/chat/discourse/controllers/preferences/chat";
 
 export function hasChatIndicator(user) {
   const pref = user.user_option.chat_header_indicator_preference;

@@ -198,7 +198,7 @@ module DiscoursePostEvent
       end
       result = self.invitees.insert_all!(attrs)
 
-      # batch event does not call calleback
+      # batch event does not call callback
       ChatChannelSync.sync(self) if chat_enabled?
 
       result

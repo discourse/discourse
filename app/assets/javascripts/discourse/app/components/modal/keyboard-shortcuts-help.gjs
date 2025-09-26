@@ -30,7 +30,7 @@ const translationForExtraShortcuts = {
 
 function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
-    .reject((keys) => keys.length === 0)
+    .filter((keys) => keys.length !== 0)
     .map((keys) =>
       keys
         .map((key) => {
