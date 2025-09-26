@@ -216,6 +216,7 @@ export default class ChatChannel extends Component {
           query,
           channel_id: this.args.channel.id,
           exclude_threads: true,
+          sort: "latest",
         },
       });
 
