@@ -2,7 +2,14 @@
   padding-block: 1.25rem;
   margin-inline: 1rem;
 
-  .filter-input-container {
-    max-width: 320px;
+  .chat-search__filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .filter-input-container {
+      width: 100%;
+      max-width: 500px;
+    }
   }
 }

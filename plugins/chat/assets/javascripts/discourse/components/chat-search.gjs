@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -6,6 +7,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import AsyncContent from "discourse/components/async-content";
+import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,6 +19,7 @@ import DiscourseURL from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
 import tabToSibling from "discourse/modifiers/tab-to-sibling";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ChatMessageComponent from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-thread-heading";
@@ -24,6 +28,8 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatSearch extends Component {
   @service router;
+
+  @tracked currentSort = "relevance";
 
   query = this.args.query;
 
@@ -48,7 +54,11 @@ export default class ChatSearch extends Component {
   @bind
   async searchMessages() {
     const response = await ajax("/chat/api/search", {
-      data: { query: this.args.query, channel_id: this.args.scopedChannelId },
+      data: {
+        query: this.args.query,
+        channel_id: this.args.scopedChannelId,
+        sort: this.currentSort,
+      },
     });
 
     if (!response.messages?.length) {
@@ -61,6 +71,17 @@ export default class ChatSearch extends Component {
         messageObject
       );
     });
+  }
+
+  @action
+  sortLabel(sort) {
+    return i18n(`chat.search.sort.${sort}`);
+  }
+
+  @action
+  setCurrentSorting(sort, closeMenu) {
+    this.currentSort = sort;
+    closeMenu();
   }
 
   @action
@@ -131,14 +152,41 @@ export default class ChatSearch extends Component {
 
   <template>
     <div class="c-search" {{didInsert this.loadExistingQuery}}>
-      <FilterInput
-        {{autoFocus}}
-        @filterAction={{this.onFilterChange}}
-        @value={{@query}}
-        @icons={{hash left="magnifying-glass"}}
-        placeholder={{i18n "chat.search_view.filter_placeholder"}}
-        class="no-blur"
-      />
+      <div class="chat-search__filters">
+        <FilterInput
+          {{autoFocus}}
+          @filterAction={{this.onFilterChange}}
+          @value={{@query}}
+          @icons={{hash left="magnifying-glass"}}
+          placeholder={{i18n "chat.search_view.filter_placeholder"}}
+          class="no-blur"
+        />
+
+        <DMenu
+          @identifier="search-sort-options"
+          @label={{this.sortLabel this.currentSort}}
+          @icon="sort"
+        >
+          <:content as |menu|>
+            <DropdownMenu as |dropdown|>
+              <dropdown.item>
+                <DButton
+                  @translatedLabel={{this.sortLabel "relevance"}}
+                  class="btn-transparent"
+                  @action={{fn this.setCurrentSorting "relevance" menu.close}}
+                />
+              </dropdown.item>
+              <dropdown.item>
+                <DButton
+                  @translatedLabel={{this.sortLabel "latest"}}
+                  class="btn-transparent"
+                  @action={{fn this.setCurrentSorting "latest" menu.close}}
+                />
+              </dropdown.item>
+            </DropdownMenu>
+          </:content>
+        </DMenu>
+      </div>
 
       <AsyncContent @asyncData={{this.searchMessages}}>
         <:empty>
