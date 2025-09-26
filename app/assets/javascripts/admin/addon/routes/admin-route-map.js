@@ -238,6 +238,7 @@ export default function () {
         });
 
         this.route("about");
+        this.route("upcomingChanges", { path: "/upcoming-changes" });
         this.route(
           "loginAndAuthentication",
           { path: "/login-and-authentication" },

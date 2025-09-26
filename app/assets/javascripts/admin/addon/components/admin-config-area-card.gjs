@@ -89,6 +89,11 @@ export default class AdminConfigAreaCard extends Component {
           {{yield to="content"}}
         </div>
       {{/unless}}
+      {{#if (has-block "footer")}}
+        <div class="admin-config-area-card__footer">
+          {{yield to="footer"}}
+        </div>
+      {{/if}}
     </section>
   </template>
 }

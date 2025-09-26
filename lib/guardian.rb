@@ -613,8 +613,9 @@ class Guardian
   end
 
   def can_see_reviewable_ui_refresh?
-    SiteSetting.reviewable_ui_refresh_map.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
+    # TODO (martin) Fix this once I add the _map method properly
+    return false
+    @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_groups_map)
   end
 
   def is_me?(other)
