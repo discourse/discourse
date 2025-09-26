@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class FastTrackTopicGist < ::Jobs::Base
     sidekiq_options retry: false
 

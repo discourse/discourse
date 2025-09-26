@@ -26,7 +26,7 @@ module DiscourseSolved
                 FROM topics t
                 JOIN category_custom_fields cc
                   ON t.category_id = cc.category_id
-                 AND cc.name = '#{::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD}'
+                 AND cc.name = '#{DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD}'
                  AND cc.value = 'true'
             )
             OR

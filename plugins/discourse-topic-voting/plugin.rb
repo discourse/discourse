@@ -216,7 +216,7 @@ after_initialize do
   end
 
   Discourse::Application.routes.append do
-    mount ::DiscourseTopicVoting::Engine, at: "/voting"
+    mount DiscourseTopicVoting::Engine, at: "/voting"
 
     get "topics/voted-by/:username" => "list#voted_by",
         :as => "voted_by",

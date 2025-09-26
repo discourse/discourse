@@ -264,7 +264,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     end
 
     def fetch_user_data
-      http = ::DiscourseChatIntegration::Provider::SlackProvider.slack_api_http
+      http = DiscourseChatIntegration::Provider::SlackProvider.slack_api_http
 
       cursor = nil
       req = Net::HTTP::Post.new(URI("https://slack.com/api/users.list"))

@@ -687,7 +687,7 @@ describe Post do
 
         raw = 'Vacation [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
         post = create_post(raw: raw, topic: calendar_post.topic)
-        DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+        Jobs::DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
 
         # the job has set the holiday status:
         status = post.user.user_status
@@ -708,7 +708,7 @@ describe Post do
 
         raw = 'Vacation [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
         post = create_post(raw: raw, topic: calendar_post.topic)
-        DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+        Jobs::DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
 
         # the job has set the holiday status:
         status = post.user.user_status

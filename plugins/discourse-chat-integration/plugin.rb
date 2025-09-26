@@ -14,6 +14,10 @@ register_asset "stylesheets/chat-integration.scss"
 register_svg_icon "rocket" if respond_to?(:register_svg_icon)
 register_svg_icon "arrow-circle-o-right" if respond_to?(:register_svg_icon)
 
+module ::DiscourseChatIntegration
+  PLUGIN_NAME = "discourse-chat-integration".freeze
+end
+
 # Site setting validators must be loaded before initialize
 require_relative "lib/discourse_chat_integration/provider/slack/slack_enabled_setting_validator"
 require_relative "lib/discourse_chat_integration/chat_integration_reference_post"

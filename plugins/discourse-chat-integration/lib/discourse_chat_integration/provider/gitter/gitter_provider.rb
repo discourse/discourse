@@ -21,11 +21,11 @@ module DiscourseChatIntegration
         response = Net::HTTP.post_form(URI(channel.data["webhook_url"]), message: message)
         unless response.kind_of? Net::HTTPSuccess
           error_key = nil
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                message: message,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              message: message,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 

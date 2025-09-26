@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseHcaptcha
+module DiscourseHcaptcha
   class HcaptchaController < ::ApplicationController
     requires_plugin DiscourseHcaptcha::PLUGIN_NAME
 

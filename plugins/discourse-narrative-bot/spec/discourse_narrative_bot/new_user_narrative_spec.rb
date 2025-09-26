@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:welcome_topic) { Fabricate(:topic, title: "Welcome to Discourse") }
-  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }

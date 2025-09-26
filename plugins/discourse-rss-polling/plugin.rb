@@ -18,5 +18,5 @@ end
 require_relative "lib/discourse_rss_polling/engine"
 
 Discourse::Application.routes.append do
-  mount ::DiscourseRssPolling::Engine, at: "/admin/plugins/rss_polling"
+  mount DiscourseRssPolling::Engine, at: "/admin/plugins/rss_polling"
 end

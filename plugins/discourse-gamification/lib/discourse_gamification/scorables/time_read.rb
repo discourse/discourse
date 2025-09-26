@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class TimeRead < Scorable
     def self.score_multiplier
       SiteSetting.time_read_score_value

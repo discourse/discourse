@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::DiscourseGamification do
+describe DiscourseGamification do
   let(:user) { Fabricate(:user) }
   let!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id) }
 
@@ -21,7 +21,7 @@ describe ::DiscourseGamification do
   end
 end
 
-describe ::DiscourseGamification do
+describe DiscourseGamification do
   let(:guardian) { Guardian.new }
   let!(:default_gamification_leaderboard) { Fabricate(:gamification_leaderboard) }
 

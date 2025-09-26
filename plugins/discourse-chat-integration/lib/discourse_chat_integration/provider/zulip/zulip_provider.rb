@@ -30,7 +30,7 @@ module DiscourseChatIntegration
       end
 
       def self.generate_zulip_message(post, stream, subject)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         message =
           I18n.t(
@@ -64,12 +64,12 @@ module DiscourseChatIntegration
             "chat_integration.provider.zulip.errors.does_not_exist" if response.body.include?(
             "does not exist",
           )
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                message: message,
-                                                                response_code: response.code,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              message: message,
+                                                              response_code: response.code,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 

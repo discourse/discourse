@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class LeaderboardCachedView
     class NotReadyError < StandardError
     end
@@ -142,7 +142,7 @@ module ::DiscourseGamification
             u.staged = FALSE
           AND
             u.active
-          AND 
+          AND
             (u.suspended_till IS NULL OR u.suspended_till < CURRENT_TIMESTAMP)
           AND
             u.id > 0

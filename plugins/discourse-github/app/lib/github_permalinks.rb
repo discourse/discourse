@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::GithubPermalinks
+module GithubPermalinks
   def self.replace_github_non_permalinks(post)
     # replaces github non-permalinks with permalinks containing a specific commit id
     regex = %r{https?://github\.com/[^/]+/[^/\s]+/blob/[^\s]+}i

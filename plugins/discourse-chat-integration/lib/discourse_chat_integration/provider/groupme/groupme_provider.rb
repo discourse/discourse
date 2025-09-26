@@ -6,7 +6,7 @@ module DiscourseChatIntegration::Provider::GroupmeProvider
   CHANNEL_PARAMETERS = [{ key: "groupme_instance_name", regex: '[\s\S]*', unique: true }]
 
   def self.generate_groupme_message(post)
-    display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+    display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
     topic = post.topic
 
@@ -77,7 +77,7 @@ module DiscourseChatIntegration::Provider::GroupmeProvider
     if last_error_raised
       successfully_sent = instance_names.length() - num_errors
       last_error_raised[:success_rate] = "#{successfully_sent}/#{instance_names.length()}"
-      raise ::DiscourseChatIntegration::ProviderError.new info: last_error_raised
+      raise DiscourseChatIntegration::ProviderError.new info: last_error_raised
     end
   end
 

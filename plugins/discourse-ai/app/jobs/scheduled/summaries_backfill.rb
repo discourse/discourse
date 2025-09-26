@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class SummariesBackfill < ::Jobs::Scheduled
     every 5.minutes
     cluster_concurrency 1

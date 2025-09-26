@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   module GuardianExtension
     def can_see_leaderboard?(leaderboard)
       return true if leaderboard.visible_to_groups_ids.empty?

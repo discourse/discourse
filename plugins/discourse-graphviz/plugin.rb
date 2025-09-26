@@ -11,22 +11,20 @@ enabled_site_setting :discourse_graphviz_enabled
 
 register_asset "stylesheets/common/graphviz.scss"
 
-after_initialize do
-  module DiscourseGraphviz
-    class << self
-      def context
-        context = MiniRacer::Context.new
-        context.load("#{Rails.root}/plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")
-        context
-      end
-
-      def allowed_svg_xpath
-        @@allowed_svg_xpath ||=
-          "//*[#{UploadCreator::ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ")}]"
-      end
-    end
+module ::DiscourseGraphviz
+  def self.context
+    context = MiniRacer::Context.new
+    context.load("#{Rails.root}/plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")
+    context
   end
 
+  def self.allowed_svg_xpath
+    @@allowed_svg_xpath ||=
+      "//*[#{UploadCreator::ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ")}]"
+  end
+end
+
+after_initialize do
   on(:before_post_process_cooked) do |doc, post|
     if SiteSetting.discourse_graphviz_enabled
       doc

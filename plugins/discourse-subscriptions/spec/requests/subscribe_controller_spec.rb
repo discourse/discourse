@@ -109,7 +109,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       end
 
       it "is not subscribed" do
-        ::DiscourseSubscriptions::Customer.delete_all
+        DiscourseSubscriptions::Customer.delete_all
         ::Stripe::Product
           .expects(:list)
           .with({ ids: product_ids, active: true })

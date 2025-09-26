@@ -5,7 +5,7 @@ module DiscourseAi
     class Feature
       class << self
         def feature_cache
-          @feature_cache ||= ::DiscourseAi::MultisiteHash.new("feature_cache")
+          @feature_cache ||= DiscourseAi::MultisiteHash.new("feature_cache")
         end
 
         def summarization_features

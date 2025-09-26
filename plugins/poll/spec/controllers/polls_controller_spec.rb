@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe ::DiscoursePoll::PollsController do
-  routes { ::DiscoursePoll::Engine.routes }
+RSpec.describe DiscoursePoll::PollsController do
+  routes { DiscoursePoll::Engine.routes }
 
   let!(:user) { log_in }
   let(:topic) { Fabricate(:topic) }

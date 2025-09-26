@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscoursePoll
+module DiscoursePoll
   DATA_PREFIX = "data-poll-"
   HAS_POLLS = "has_polls"
   DEFAULT_POLL_NAME = "poll"

@@ -6,7 +6,7 @@ module Jobs
 
     def execute(args)
       return if !SiteSetting.chat_integration_enabled?
-      ::DiscourseChatIntegration::Manager.trigger_notifications(args[:post_id])
+      DiscourseChatIntegration::Manager.trigger_notifications(args[:post_id])
     end
   end
 end

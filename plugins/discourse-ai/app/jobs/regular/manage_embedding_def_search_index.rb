@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class ManageEmbeddingDefSearchIndex < ::Jobs::Base
     def execute(args)
       embedding_def = EmbeddingDefinition.find_by(id: args[:id])

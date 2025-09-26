@@ -20,7 +20,7 @@ module DiscourseChatIntegration::Provider::FlowdockProvider
   end
 
   def self.generate_flowdock_message(post, flow_token)
-    display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+    display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
     message = {
       flow_token: flow_token,
@@ -54,11 +54,11 @@ module DiscourseChatIntegration::Provider::FlowdockProvider
 
     unless response.kind_of?(Net::HTTPSuccess)
       error_key = nil
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            message: message,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          message: message,
+                                                          response_body: response.body,
+                                                        }
     end
   end
 

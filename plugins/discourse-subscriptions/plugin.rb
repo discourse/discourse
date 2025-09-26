@@ -75,7 +75,7 @@ after_initialize do
     url: "https://github.com/discourse/discourse-subscriptions",
   )
 
-  Discourse::Application.routes.append { mount ::DiscourseSubscriptions::Engine, at: "s" }
+  Discourse::Application.routes.append { mount DiscourseSubscriptions::Engine, at: "s" }
 
   add_to_serializer(:site, :show_campaign_banner) do
     begin

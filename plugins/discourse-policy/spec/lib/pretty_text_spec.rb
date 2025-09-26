@@ -76,11 +76,11 @@ describe PrettyText do
     PolicyUser.add!(user, post.post_policy)
 
     freeze_time(199.days.from_now)
-    ::DiscoursePolicy::CheckPolicy.new.execute(nil)
+    Jobs::DiscoursePolicy::CheckPolicy.new.execute(nil)
     expect(post.post_policy.accepted_by).to eq([user])
 
     freeze_time(2.days.from_now)
-    ::DiscoursePolicy::CheckPolicy.new.execute(nil)
+    Jobs::DiscoursePolicy::CheckPolicy.new.execute(nil)
     expect(post.post_policy.accepted_by).to be_empty
   end
 

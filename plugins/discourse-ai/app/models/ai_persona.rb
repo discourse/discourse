@@ -41,7 +41,7 @@ class AiPersona < ActiveRecord::Base
   before_update :regenerate_rag_fragments
 
   def self.persona_cache
-    @persona_cache ||= ::DiscourseAi::MultisiteHash.new("persona_cache")
+    @persona_cache ||= DiscourseAi::MultisiteHash.new("persona_cache")
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }

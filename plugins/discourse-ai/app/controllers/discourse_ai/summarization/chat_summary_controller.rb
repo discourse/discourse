@@ -3,7 +3,7 @@
 module DiscourseAi
   module Summarization
     class ChatSummaryController < ::Chat::ApiController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin DiscourseAi::PLUGIN_NAME
       requires_plugin ::Chat::PLUGIN_NAME
 
       VALID_SINCE_VALUES = [1, 3, 6, 12, 24, 72, 168]

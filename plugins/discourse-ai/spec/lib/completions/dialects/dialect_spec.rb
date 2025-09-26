@@ -77,7 +77,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::Dialect do
             id: "123",
             name: "echo",
             content:
-              "<function_results>\n<result>\n<tool_name>echo</tool_name>\n<json>\n\"test message\"\n</json>\n</result>\n</function_results>\n\n#{::DiscourseAi::Completions::Dialects::XmlTools::DONE_MESSAGE}",
+              "<function_results>\n<result>\n<tool_name>echo</tool_name>\n<json>\n\"test message\"\n</json>\n</result>\n</function_results>\n\n#{DiscourseAi::Completions::Dialects::XmlTools::DONE_MESSAGE}",
           },
         ],
       )

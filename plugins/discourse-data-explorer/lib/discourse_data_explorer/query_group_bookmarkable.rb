@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryGroupBookmarkable < BaseBookmarkable
     def self.model
       QueryGroup

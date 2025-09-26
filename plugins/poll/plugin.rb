@@ -37,7 +37,7 @@ after_initialize do
   require_relative "lib/post_extension"
   require_relative "lib/user_extension"
 
-  Discourse::Application.routes.append { mount ::DiscoursePoll::Engine, at: "/polls" }
+  Discourse::Application.routes.append { mount DiscoursePoll::Engine, at: "/polls" }
 
   allow_new_queued_post_payload_attribute("is_poll")
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryGroupBookmarkSerializer < UserBookmarkBaseSerializer
     def title
       fancy_title

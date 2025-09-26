@@ -65,7 +65,7 @@ module DiscourseAi
           @posts = @posts.where(topic_id: topic_ids_with_tags)
         end
 
-        if defined?(::DiscourseSolved)
+        if defined?(DiscourseSolved)
           @solutions =
             DiscourseSolved::SolvedTopic
               .where(topic_id: @posts.select(:topic_id))

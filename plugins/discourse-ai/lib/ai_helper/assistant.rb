@@ -16,7 +16,7 @@ module DiscourseAi
       IMAGE_CAPTION = "image_caption"
 
       def self.prompt_cache
-        @prompt_cache ||= ::DiscourseAi::MultisiteHash.new("prompt_cache")
+        @prompt_cache ||= DiscourseAi::MultisiteHash.new("prompt_cache")
       end
 
       def self.clear_prompt_cache!

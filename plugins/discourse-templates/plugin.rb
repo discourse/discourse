@@ -29,7 +29,7 @@ after_initialize do
   require_relative "lib/discourse_templates/user_extension"
 
   Discourse::Application.routes.append do
-    mount ::DiscourseTemplates::Engine, at: "/discourse_templates"
+    mount DiscourseTemplates::Engine, at: "/discourse_templates"
   end
 
   reloadable_patch do |plugin|

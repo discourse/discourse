@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class SharedConversationAdjustUploadSecurity < ::Jobs::Base
     def execute(args)
       if args[:conversation_id].present?

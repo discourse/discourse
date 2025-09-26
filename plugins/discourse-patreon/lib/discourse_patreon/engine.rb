@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Patreon
+module Patreon
   USER_DETAIL_FIELDS = %w[id amount_cents rewards declined_since].freeze
 
   class Engine < ::Rails::Engine

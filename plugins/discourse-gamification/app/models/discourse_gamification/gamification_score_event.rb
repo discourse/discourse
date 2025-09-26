@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class GamificationScoreEvent < ::ActiveRecord::Base
     self.table_name = "gamification_score_events"
 

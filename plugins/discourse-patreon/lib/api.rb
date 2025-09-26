@@ -2,7 +2,7 @@
 
 require "json"
 
-module ::Patreon
+module Patreon
   class InvalidApiResponse < ::StandardError
   end
 
@@ -43,7 +43,7 @@ module ::Patreon
       when 401
         ProblemCheckTracker[:access_token_invalid].problem!
       else
-        e = ::Patreon::InvalidApiResponse.new(response.body.presence || "")
+        e = Patreon::InvalidApiResponse.new(response.body.presence || "")
         e.set_backtrace(caller)
         Discourse.warn_exception(e, message: I18n.t(INVALID_RESPONSE), env: { api_uri: uri })
       end

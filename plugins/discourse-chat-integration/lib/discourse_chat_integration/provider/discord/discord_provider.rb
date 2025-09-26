@@ -35,7 +35,7 @@ module DiscourseChatIntegration
       end
 
       def self.generate_discord_message(post)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 
@@ -99,7 +99,7 @@ module DiscourseChatIntegration
         end
 
         if !response.kind_of?(Net::HTTPSuccess)
-          raise ::DiscourseChatIntegration::ProviderError.new(
+          raise DiscourseChatIntegration::ProviderError.new(
                   info: {
                     error_key: nil,
                     message: message,

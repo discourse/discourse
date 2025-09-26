@@ -10,6 +10,9 @@ enabled_site_setting :lazy_videos_enabled
 
 register_asset "stylesheets/lazy-videos.scss"
 
+module ::DiscourseLazyVideos
+end
+
 require_relative "lib/discourse_lazy_videos/lazy_youtube"
 require_relative "lib/discourse_lazy_videos/lazy_vimeo"
 require_relative "lib/discourse_lazy_videos/lazy_tiktok"
