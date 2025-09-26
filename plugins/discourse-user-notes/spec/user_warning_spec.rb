@@ -3,7 +3,8 @@
 describe UserWarning do
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
-  let(:topic) { Fabricate(:topic) }
+  let(:category) { Fabricate(:category) }
+  let(:topic) { Fabricate(:topic, category: category) }
 
   describe "when a user warning is created" do
     context "when staff notes plugin is enabled" do
@@ -27,6 +28,22 @@ describe UserWarning do
 
         notes = PluginStore.get("user_notes", "notes:#{user.id}")
         expect(notes[0]["raw"]).to eq(notes[1]["raw"])
+      end
+
+      it "should trigger user_warning_created event" do
+        callback_called = false
+
+        event_handler = Proc.new { |warning| callback_called = true }
+
+        DiscourseEvent.on(:user_warning_created, &event_handler)
+
+        begin
+          UserWarning.create!(topic_id: topic.id, user_id: user.id, created_by_id: admin.id)
+          expect(callback_called).to be true
+        ensure
+          # Clean up event listener
+          DiscourseEvent.off(:user_warning_created, &event_handler)
+        end
       end
     end
   end
