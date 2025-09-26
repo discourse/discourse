@@ -21,6 +21,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_quotes = options[:keep_quotes] == true
     @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
+    @keep_img_tags = options[:keep_img_tags] == true
     @start_excerpt = false
     @start_hashtag_icon = false
     @in_details_depth = 0
@@ -76,6 +77,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           return characters(attributes["alt"])
         end
       end
+
+      return include_tag(name, attributes) if @keep_img_tags
 
       unless @strip_images
         # If include_images is set, include the image in markdown

@@ -186,4 +186,19 @@ RSpec.describe UserNotificationsHelper do
       end
     end
   end
+
+  describe "#format_for_email" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:modify_html) { Proc.new { |html, post, use_excerpt| html = "modified html" } }
+    fab!(:post)
+
+    it "allows plugins to control #email_excerpt" do
+      DiscoursePluginRegistry.register_modifier(plugin, :format_for_email_modifier, &modify_html)
+
+      html = helper.format_for_email(post, true)
+      expect(html).to eq("modified html")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :format_for_email_modifier, &modify_html)
+    end
+  end
 end
