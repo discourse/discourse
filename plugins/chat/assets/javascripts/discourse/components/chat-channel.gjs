@@ -856,7 +856,8 @@ export default class ChatChannel extends Component {
               @icon="chevron-down"
               class="btn-small"
             />
-
+          {{else if this.currentChannelFilter.length}}
+            <span>{{i18n "chat.search.no_results"}}</span>
           {{/if}}
 
           <DButton
