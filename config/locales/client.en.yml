@@ -8102,7 +8102,7 @@ en:
           multiselect: "Multiselect"
 
       site_text:
-        description: "You can customize any of the text on your forum."
+        description: "You can customize any of the text on your forum. Please start by searching below:"
         search: "Search for the text you'd like to edit"
         title: "Site texts"
         edit: "Edit"
