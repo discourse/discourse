@@ -9,11 +9,11 @@ function isBotMessage(composer, currentUser) {
     composer.targetRecipients &&
     currentUser.ai_enabled_chat_bots
   ) {
-    const reciepients = composer.targetRecipients.split(",");
+    const recipients = composer.targetRecipients.split(",");
 
     return currentUser.ai_enabled_chat_bots
       .filter((bot) => bot.username)
-      .any((bot) => reciepients.any((username) => username === bot.username));
+      .any((bot) => recipients.any((username) => username === bot.username));
   }
   return false;
 }

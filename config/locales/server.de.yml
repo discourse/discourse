@@ -2227,9 +2227,6 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_mode: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow anonymous mode`."
-    anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
-    anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf Websites mit must_approve_users und invite_only bedingungslos deaktiviert."
@@ -2330,7 +2327,6 @@ de:
     disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Erlaubt die Verwendung von regulären Ausdrücken zum Filtern von Wörtern. Wenn diese Funktion aktiviert ist, gruppiert sie sensible Wörter nach ihrer Groß- und Kleinschreibung. Anschließend werden alle ausgewählten Wörter in einem einzigen regulären Ausdruck zusammengefasst, wobei Wortgrenzen für regulär überwachte Wörter hinzugefügt werden. Diese Regex-basierte Filtermethode fügt also eine zusätzliche Kontrollebene für die Inhaltsmoderation hinzu, indem sie komplexere Wortmuster unterstützt. Die Einstellung ermöglicht es außerdem, den ursprünglichen Text einfach durch die Ersetzung deiner Wahl zu ersetzen."
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
-    old_post_notice_days: "Die Anzahl der Tage, nach denen eine Beitragsbenachrichtigung als alt gilt. Dies unterscheidet sie visuell von neueren Meldungen auf der Website."
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
@@ -4228,10 +4224,7 @@ de:
   page_not_found:
     page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
-    popular_topics: "Beliebt"
-    recent_topics: "Aktuell"
     see_more: "Mehr"
-    search_title: "Diese Website durchsuchen"
     search_button: "Suche"
   offline:
     title: "App kann nicht geladen werden"
@@ -5344,6 +5337,16 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      no_action_post:
+        title: "Keine Aktion"
+      delete_post:
+        title: "Beitrag löschen"
+        complete: "Beitrag gelöscht"
+      hide_post:
+        title: "Beitrag ausblenden"
+      restore_post:
+        title: "Beitrag wiederherstellen"
+        complete: "Beitrag wiederhergestellt"
       user_actions:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:

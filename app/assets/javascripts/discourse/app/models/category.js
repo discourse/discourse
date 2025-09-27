@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -398,7 +399,7 @@ export default class Category extends RestModel {
       }
     }
 
-    return data.sortBy("read_restricted");
+    return data.sort((a, b) => compare(a?.read_restricted, b?.read_restricted));
   }
 
   static async asyncHierarchicalSearch(term, opts) {

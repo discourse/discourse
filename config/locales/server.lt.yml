@@ -2188,10 +2188,7 @@ lt:
   page_not_found:
     page_title: "Puslapis nerastas"
     title: "Oi! Šis puslapis neegzistuoja arba yra privatus."
-    popular_topics: "Populiaros"
-    recent_topics: "Naujausios"
     see_more: "Daugiau"
-    search_title: "Ieškoti svetainėje"
     search_button: "Paieška"
   offline:
     title: "Nepavyko įkelti programos"
@@ -2672,6 +2669,10 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_post:
+        title: "Jokių veiksmų"
+      delete_post:
+        complete: "Įrašas ištrintas"
       no_action_user:
         title: "Jokių veiksmų"
       delete_user:

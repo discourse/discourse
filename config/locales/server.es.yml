@@ -2219,9 +2219,6 @@ es:
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear publicaciones o temas en todo el sitio. Véase también «allow_anonymous_likes»."
-    allow_likes_in_anonymous_mode: "Activa esta opción para permitir que los usuarios que navegan por tu sitio de forma anónima puedan dar «me gusta» a tus publicaciones. Cuando está activada, los usuarios pueden optar por ocultar su identidad al dar «me gusta» a entradas o temas en todo el sitio. Consulta también «allow_anonymous_mode»."
-    anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
-    anonymous_posting_allowed_groups: "Grupos que pueden permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     hide_new_user_profiles: "Oculta los perfiles de usuarios de nivel de confianza 1 o inferior al público y a los usuarios de nivel de confianza 1 hasta que publiquen por primera vez. Esta característica está desactivada incondicionalmente en los sitios must_approve_users y invite_only."
@@ -2321,7 +2318,6 @@ es:
     disable_watched_word_checking_in_user_fields: "desactivar la comprobación de palabras vigiladas en los campos de usuario"
     watched_words_regular_expressions: "Permite utilizar expresiones regulares para filtrar palabras. Si está activada, esta función agrupa las palabras sensibles según su distinción entre mayúsculas y minúsculas. A continuación, compila todas las palabras seleccionadas en una única expresión regular, añadiendo límites de palabra para las palabras regulares vigiladas. En consecuencia, este método de filtrado basado en expresiones regulares añade una capa adicional de control sobre la moderación de contenidos, al admitir patrones de palabras más sofisticados. También permite sustituir fácilmente el texto original por el sustituto elegido."
     enable_fast_edit: "Añade un botón al menú de selección de publicaciones para editar una pequeña selección en línea."
-    old_post_notice_days: "El número de días tras los cuales un aviso se considera antiguo. Esto lo diferencia visualmente de los avisos más recientes del sitio."
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de publicaciones de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
@@ -4215,10 +4211,7 @@ es:
   page_not_found:
     page_title: "Página no encontrada"
     title: "¡Ups! Esa página no existe o es privada."
-    popular_topics: "Popular"
-    recent_topics: "Recientes"
     see_more: "Más"
-    search_title: "Buscar en este sitio"
     search_button: "Buscar"
   offline:
     title: "Se se puede cargar la app"
@@ -5330,6 +5323,16 @@ es:
       approve_and_unhide:
         title: "Aprobar y dejar de ocultar publicación"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
+      no_action_post:
+        title: "Ninguna acción"
+      delete_post:
+        title: "Eliminar publicación"
+        complete: "Publicación eliminada"
+      hide_post:
+        title: "Ocultar publicación"
+      restore_post:
+        title: "Restaurar publicación"
+        complete: "Publicación restaurada"
       no_action_user:
         title: "Ninguna acción"
       silence_user:

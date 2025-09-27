@@ -461,17 +461,20 @@ module("Unit | Model | category", function (hooks) {
       { id: 999, name: "Test2 Sub Sub", parent_category_id: 1000 },
     ];
 
-    assert.deepEqual(Category.sortCategories(categories).mapBy("name"), [
-      "Test",
-      "Test Sub",
-      "Test Sub Sub",
-      "Test Sub Sub Sub",
-      "Test Sub Sub Sub2",
-      "Test2",
-      "Test2 Sub",
-      "Test2 Sub Sub2",
-      "Test2 Sub Sub",
-    ]);
+    assert.deepEqual(
+      Category.sortCategories(categories).map((item) => item.name),
+      [
+        "Test",
+        "Test Sub",
+        "Test Sub Sub",
+        "Test Sub Sub Sub",
+        "Test Sub Sub Sub2",
+        "Test2",
+        "Test2 Sub",
+        "Test2 Sub Sub2",
+        "Test2 Sub Sub",
+      ]
+    );
   });
 
   test("asyncFindByIds - do not request categories that have been loaded already", async function (assert) {

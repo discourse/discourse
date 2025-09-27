@@ -146,7 +146,7 @@
         grid-column-start: 2;
         grid-row: 1 / -1;
         box-sizing: border-box;
-        padding: 0 0.5em 0 2em;
+        padding: var(--search-result-element-padding);
         margin: 0.75em 0 0 0;
         border-left: 1px solid var(--primary-low);
 

@@ -1444,7 +1444,6 @@ ca:
     enable_user_directory: "Proporciona un directori d'usuaris per a navegar-hi"
     enable_group_directory: "Proporciona un directori de grups per a navegar-hi"
     group_in_subject: "Estableix %%{optional_pm} en l'assumpte del correu al nom del primer grup en MP. Vegeu: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalitza el format de l'assumpte en correus estàndard</a>."
-    anonymous_posting_min_trust_level: "Nivell de confiança mínim per a activar la publicació anònima"
     anonymous_account_duration_minutes: "Per a protegir l'anonimat, crea un compte anònim nou per a cada usuari cada N minuts. Per exemple: si és configurat a 600, tan bon punt passin 600 minuts des de la darrera publicació *i* l'usuari canviï a anònim, es crearà un nou compte anònim."
     hide_user_profiles_from_public: "Inhabilita targetes d'usuari, perfils d'usuari i directori d'usuaris per a usuaris anònims."
     show_inactive_accounts: "Permet que els usuaris que han iniciat la sessió explorin els perfils dels comptes inactius."
@@ -2394,10 +2393,7 @@ ca:
   page_not_found:
     page_title: "Pàgina no trobada"
     title: "Ai! Aquesta pàgina no existeix o és privada."
-    popular_topics: "Populars"
-    recent_topics: "Recents"
     see_more: "Més"
-    search_title: "Cerca aquest lloc web"
     search_button: "Cerca"
   offline:
     title: "No es pot carregar l'aplicació"
@@ -2885,6 +2881,10 @@ ca:
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       reject:
         title: "Rebutja"
+      no_action_post:
+        title: "Cap acció"
+      delete_post:
+        complete: "Publicació suprimida"
       no_action_user:
         title: "Cap acció"
       delete_user:

@@ -351,7 +351,7 @@ RSpec.describe "Managing Posts solved status" do
 
       expect(topic.solved.answer_post_id).to eq(reply.id)
 
-      PostDestroyer.new(Discourse.system_user, reply).destroy
+      PostDestroyer.new(Discourse.system_user, reply, context: "spec").destroy
       reply.topic.reload
 
       expect(topic.solved).to be(nil)

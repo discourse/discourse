@@ -1887,6 +1887,15 @@ id:
           complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      no_action_post:
+        title: "Tidak ada tindakan"
+      delete_post:
+        title: "Hapus postingan"
+        complete: "Pos dihapus"
+      hide_post:
+        title: "Sembunyikan pos"
+      restore_post:
+        title: "Pulihkan post"
       no_action_user:
         title: "Tidak ada tindakan"
       silence_user:

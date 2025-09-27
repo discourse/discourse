@@ -2204,9 +2204,6 @@ hu:
     enable_category_group_moderation: "Csoportok számára engedélyezi a tartalom moderálását specifikus kategóriákban"
     group_in_subject: "Állítsa be az e-mail tárgyában a %%{optional_pm} értéket a privát üzenetben szereplő első csoport nevére, lásd: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standard e-mailek tárgyformátumának testreszabása</a>"
     allow_anonymous_mode: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
-    allow_likes_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy az oldalát névtelenül böngésző felhasználók is lájkolhassák a bejegyzéseket. Ha aktiválva van, a felhasználók dönthetnek úgy, hogy a bejegyzések vagy témák lájkolásakor az egész webhelyen elrejtik a személyazonosságukat. Lásd még `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimális bizalmi szint a névtelen bejegyzés engedélyezéséhez."
-    anonymous_posting_allowed_groups: "Csoportok, amelyek engedélyezik a névtelen bejegyzést"
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
     hide_user_profiles_from_public: "Felhasználói kártyák, felhasználói profilok és felhasználói címtár letiltása névtelen felhasználók számára."
     hide_new_user_profiles: "Rejti az 1-es vagy alacsonyabb bizalmi szinttel rendelkező felhasználói profilokat a nyilvánosság és az 1-es szintű felhasználók elől, amíg azok nem posztolnak először. Ez a funkció feltétel nélkül le van tiltva azokon az oldalakon, ahol kötelező a felhasználók jóváhagyása vagy ahol csak meghívással lehet regisztrálni."
@@ -2305,7 +2302,6 @@ hu:
     disable_watched_word_checking_in_user_fields: "a figyelt szavak ellenőrzésének kikapcsolása a felhasználói mezőkben"
     watched_words_regular_expressions: "Lehetővé teszi a reguláris kifejezések használatát a szavak szűrésére. Ha engedélyezve van, ez a funkció csoportosítja az érzékeny szavakat azok kis- és nagybetű érzékenysége alapján. Ezután az összes kiválasztott szót egyetlen reguláris kifejezésbe fordítja le, hozzáadva szóhatárokat a rendszeresen figyelt szavakhoz. Ennek eredményeként ez a regex-alapú szűrési módszer további kontrollréteget biztosít a tartalom moderálásához, támogatva az összetettebb szómintákat. A beállítás lehetővé teszi az eredeti szöveg egyszerű helyettesítését egy választott alternatívával is."
     enable_fast_edit: "Szerkesztés gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen szerkesztéséhez."
-    old_post_notice_days: "Azoknak a napoknak a száma, amely után egy bejegyzés értesítése elavultnak minősül. Ez vizuálisan megkülönbözteti az újabb értesítésektől az oldalon."
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."
     returning_users_days: "Hány napnak kell eltelnie, mielőtt egy felhasználó visszatérőnek tekinthető."
@@ -4053,10 +4049,7 @@ hu:
   page_not_found:
     page_title: "Az oldal nem található"
     title: "Hoppá! Az az oldal nem létezik, vagy magánjellegű."
-    popular_topics: "Népszerű"
-    recent_topics: "Friss"
     see_more: "Több"
-    search_title: "Keresés az oldalon"
     search_button: "Keresés"
   offline:
     title: "Nem lehet betölteni az alkalmazást"
@@ -5167,6 +5160,16 @@ hu:
       approve_and_unhide:
         title: "Bejegyzés jóváhagyása és felfedése"
         complete: "Bejegyzés jóváhagyva és felfedve"
+      no_action_post:
+        title: "Nincs művelet"
+      delete_post:
+        title: "Bejegyzés törlése"
+        complete: "Bejegyzés törölve"
+      hide_post:
+        title: "Bejegyzés elrejtése"
+      restore_post:
+        title: "Bejegyzés visszaállítása"
+        complete: "A bejegyzés visszaállítva"
       no_action_user:
         title: "Nincs művelet"
       silence_user:

@@ -2219,9 +2219,6 @@ tr_TR:
     enable_category_group_moderation: "Grupların belirli kategorilerdeki içeriği denetlemesine izin verin"
     group_in_subject: "Kişisel mesajdaki ilk grubun adına e-posta konusunda %%{optional_pm} olarak ayarlayın, bkz.: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standart e-postalar için konu formatını özelleştirme</a>"
     allow_anonymous_mode: "Kullanıcıların gönderi paylaşmak için anonim moda geçme seçeneğini etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderi veya konu oluştururken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca \"anonim beğenilere izin ver\" bölümüne bakın."
-    allow_likes_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların gönderileri beğenmesine izin vermek için bu ayarı etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderileri veya konuları beğenirken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca `allow_anonymous_mode` ögesine bakın."
-    anonymous_posting_min_trust_level: "Anonim gönderimi etkinleştirmek için gereken minimum güven seviyesi"
-    anonymous_posting_allowed_groups: "Anonim gönderimi etkinleştirmesine izin verilen gruplar"
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
     hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırakın."
     hide_new_user_profiles: "Güven seviyesi 1 veya daha düşük kullanıcı profillerini herkesten gizleyin ve güven seviyesi 1 olan kullanıcıları ilk kez gönderi yapana kadar koruyun. Bu özellik must_approve_users ve invite_only sitelerinde koşulsuz olarak devre dışıdır."
@@ -2321,7 +2318,6 @@ tr_TR:
     disable_watched_word_checking_in_user_fields: "kullanıcı alanlarında izlenen kelime kontrolünü devre dışı bırak"
     watched_words_regular_expressions: "Kelimeleri filtrelemek için düzenli ifadelerin kullanılmasına izin verir. Etkinleştirilirse bu özellik hassas sözcükleri büyük/küçük harf duyarlılıklarına göre gruplar. Ardından, seçilen tüm kelimeleri tek bir düzenli ifadede derler ve düzenli olarak izlenen kelimeler için kelime sınırları ekler. Sonuç olarak, bu regex tabanlı filtreleme yöntemi, daha karmaşık kelime kalıplarını destekleyerek içerik denetimi üzerinde ekstra bir kontrol katmanı ekler. Bu ayar aynı zamanda orijinal metnin yerine tercih edilen metnin kolayca yerleştirilmesine de olanak tanır."
     enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
-    old_post_notice_days: "Bir gönderi bildiriminin kaç gün sonra eski sayılacağı. Bu, onu sitedeki daha yeni bildirimlerden görsel olarak ayırır."
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_users_days: "Bir kullanıcının geri döndüğünün kabul edilmesi için kaç gün geçmesi gerektiği."
@@ -4176,10 +4172,7 @@ tr_TR:
   page_not_found:
     page_title: "Sayfa Bulunamadı"
     title: "Hay aksi! Bu sayfa mevcut değil ya da gizli."
-    popular_topics: "Popüler"
-    recent_topics: "Yakın zaman"
     see_more: "Daha fazla"
-    search_title: "Bu sitede ara"
     search_button: "Ara"
   offline:
     title: "Uygulama yüklenemiyor"
@@ -5291,6 +5284,16 @@ tr_TR:
       approve_and_unhide:
         title: "Gönderiyi onayla ve Gizlemesini kaldır"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
+      no_action_post:
+        title: "Eylem yok"
+      delete_post:
+        title: "Gönderiyi sil"
+        complete: "Gönderi silindi"
+      hide_post:
+        title: "Gönderiyi gizle"
+      restore_post:
+        title: "Gönderiyi geri yükle"
+        complete: "Gönderi geri yüklendi"
       no_action_user:
         title: "Eylem yok"
       silence_user:

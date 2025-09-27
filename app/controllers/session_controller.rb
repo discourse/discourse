@@ -33,7 +33,7 @@ class SessionController < ApplicationController
       return_path = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
     end
 
-    server_session[:destination_url] = nil
+    server_session.delete(:destination_url)
     cookies.delete(:destination_url)
 
     sso = DiscourseConnect.generate_sso(return_path, server_session:)
@@ -895,7 +895,7 @@ class SessionController < ApplicationController
       email: sso.email,
       redeeming_user: redeeming_user,
     ).redeem
-    server_session["invite-key"] = nil
+    server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e

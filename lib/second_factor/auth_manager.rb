@@ -216,7 +216,7 @@ class SecondFactor::AuthManager
             )
     end
 
-    server_session["current_second_factor_auth_challenge"] = nil
+    server_session.delete("current_second_factor_auth_challenge")
     callback_params = challenge[:callback_params]
     data = @action.second_factor_auth_completed!(callback_params)
     data

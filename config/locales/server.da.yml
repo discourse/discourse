@@ -2758,10 +2758,7 @@ da:
   page_not_found:
     page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
-    popular_topics: "Populære"
-    recent_topics: "Nye"
     see_more: "Flere"
-    search_title: "Søg på dette websted"
     search_button: "Søg"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
@@ -3284,6 +3281,11 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        title: "Slet indlæg"
+        complete: "Indlæg slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

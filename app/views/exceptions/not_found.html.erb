@@ -9,11 +9,48 @@
 <% end %>
 
 <div class="page-not-found">
-  <h1 class="title"><%= @title %></h1>
 
-  <%- if !@current_user %>
-    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
-  <%- end %>
+<div class="heading">
+<div class="illustration-not-found">
+  <svg viewBox="0 0 219 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="101" cy="163" rx="96" ry="7" fill="var(--secondary)"/>
+<path d="M149.726 24.5874C151.174 24.9801 152.037 26.4529 151.644 27.9005C151.374 28.8958 150.563 29.6472 149.558 29.8602L147.46 30.4324L147.331 30.9074C147.221 31.3146 146.796 31.5392 146.411 31.4349C146.004 31.3244 145.773 30.9218 145.884 30.5147L146.129 29.6099C146.197 29.3611 146.371 29.1655 146.634 29.0912L149.201 28.4033C149.715 28.2998 150.074 27.9602 150.197 27.5078C150.368 26.8744 149.967 26.2069 149.333 26.035L146.89 25.3723C146.483 25.2618 146.081 25.4926 145.97 25.8997C145.872 26.2616 145.441 26.5089 145.056 26.4046C144.649 26.2941 144.418 25.8915 144.522 25.507C144.848 24.3081 146.084 23.5993 147.283 23.9246L149.726 24.5874ZM146.117 32.5206C146.614 32.6556 146.905 33.1959 146.776 33.6709C146.641 34.1685 146.123 34.4652 145.626 34.3302C145.105 34.1891 144.825 33.7002 144.966 33.18C145.101 32.6823 145.596 32.3795 146.117 32.5206Z" fill="var(--tertiary-high)"/>
+<path d="M58.1071 115.793C58.4765 115.94 58.7754 116.22 58.9328 116.586L61.7934 123.239C62.1267 124.014 61.7615 124.886 61.0079 125.21L55.4958 127.58C54.7206 127.913 53.8585 127.569 53.5253 126.794L49.9703 118.526C49.6463 117.772 49.9807 116.889 50.7558 116.555L54.653 114.88C55.0191 114.722 55.4284 114.725 55.7979 114.872L58.1071 115.793ZM60.7599 123.683L60.7383 123.693L58.0721 117.492L56.3711 118.223C55.9836 118.39 55.5525 118.218 55.3859 117.83L54.6545 116.129L51.2094 117.61C51.0157 117.694 50.9297 117.909 51.0131 118.103L54.5588 126.35C54.6421 126.543 54.8576 126.629 55.0514 126.546L60.5635 124.176C60.7358 124.102 60.8432 123.877 60.7599 123.683ZM54.037 122.288C53.9166 122.008 54.0301 121.679 54.3316 121.549L57.4321 120.216C57.712 120.096 58.0507 120.231 58.1711 120.51C58.3007 120.812 58.1564 121.129 57.8765 121.249L54.7759 122.583C54.4745 122.712 54.1666 122.589 54.037 122.288ZM58.3209 122.283C58.6008 122.163 58.9395 122.298 59.0598 122.578C59.1894 122.879 59.0451 123.196 58.7652 123.316L55.6647 124.65C55.3632 124.779 55.0553 124.656 54.9257 124.355C54.8054 124.075 54.9189 123.746 55.2203 123.616L58.3209 122.283Z" fill="var(--tertiary-high)"/>
+<path d="M10.6672 15.165C10.8922 15.5133 10.7695 15.9899 10.4043 16.1864C10.2331 16.2875 10.0339 16.3088 9.85236 16.2621C9.64809 16.2095 9.48403 16.0947 9.3829 15.9234L7.61313 12.9267L4.59371 14.6906C4.42247 14.7918 4.22336 14.8131 4.04178 14.7664C3.83751 14.7138 3.67345 14.599 3.57232 14.4277C3.34737 14.0794 3.47006 13.6027 3.83524 13.4063L6.83781 11.6139L5.06804 8.61714C4.84308 8.26882 4.96577 7.79217 5.33095 7.59575C5.67928 7.37079 6.15593 7.49349 6.35234 7.85867L8.14481 10.8612L11.1415 9.09146C11.4899 8.86651 11.9665 8.9892 12.1629 9.35438C12.3879 9.70271 12.2652 10.1794 11.9 10.3758L8.89744 12.1682L10.6672 15.165Z" fill="#var(--tertiary-high)"/>
+<circle cx="73" cy="47" r="46" fill="var(--secondary)" stroke="var(--tertiary-high)" stroke-width="2"/>
+<rect x="101" y="85.2603" width="14" height="31" transform="rotate(-47.1283 101 85.2603)" fill="var(--tertiary-medium)"/>
+<rect x="113" y="106.626" width="29.5091" height="65.3415" rx="6" transform="rotate(-47.1283 113 106.626)" fill="var(--tertiary-high)"/>
+<circle cx="73" cy="47" r="37.5" fill="var(--tertiary-medium)" stroke="var(--tertiary-high)"/>
+<circle cx="60.5" cy="36.5" r="4" fill="var(--secondary)" stroke="var(--secondary)"/>
+<circle cx="85.5" cy="36.5" r="4" fill="var(--secondary)" stroke="var(--secondary)"/>
+<path d="M58 61.8011C66.2918 53.492 75.574 55.8621 83 63.0002" stroke="var(--secondary)" stroke-width="2"/>
+<path d="M200.473 105.782C200.473 95.2311 201.557 82.8566 193.945 74.5196C189.225 69.3502 174.712 64.2654 174.712 64.2654C163.984 62.2082 157.391 67.0725 163.108 77.871C165.857 83.0642 172.298 87.4386 177.964 88.4503C186.94 90.0531 198.843 86.3663 205.425 80.1219C214.619 71.3993 223.721 36.595 211.728 27" stroke="var(--tertiary-high)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 4"/>
+</svg>
+</div>
+
+<div class="title_wrapper">
+  <h1 class="title"><%= @title %></h1>
+  <p class="subtitle"><%= @subtitle %></p>
+  <a class="btn btn-primary btn-large --home" href="<%= Discourse.base_url %>"> <%= SvgSprite.raw_svg('house') %> <%= I18n.t('page_not_found.home') %>
+  </a>
+  </div>
+</div>
+  <%- unless @hide_search%>
+  <div class="row">
+    <div class="page-not-found-search">
+      <form action='<%= path "/search" %>' id='discourse-search'>
+        <label for="search-input"><%= t 'page_not_found.search_title' %></label>
+        <div class="search-input__wrapper">
+        <input type="text" id="search-input" class="search-input" placeholder="Search topics by title or keywords…" name="q" value="<%= @slug %>">
+        <div class="search-input__icon" aria-hidden="true"><%= SvgSprite.raw_svg('magnifying-glass') %></div>
+        </div>
+        <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
+      </form>
+    </div>
+  </div>
+
+  <%= preload_script('onpopstate-handler') %>
+<%- end %>
 
   <%- if @group&.dig(:allow_membership_requests) %>
     <a href="<%= group_path @group[:name] %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.request_membership') %></a>
@@ -26,16 +63,4 @@
 
 <%= @topics_partial %>
 
-<%- unless @hide_search%>
-  <div class="row">
-    <div class="page-not-found-search">
-      <form action='<%= path "/search" %>' id='discourse-search'>
-        <label for="search-input"><%= t 'page_not_found.search_title' %></label>
-        <input type="text" id="search-input" name="q" value="<%= @slug %>">
-        <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
-      </form>
-    </div>
-  </div>
 
-  <%= preload_script('onpopstate-handler') %>
-<%- end %>

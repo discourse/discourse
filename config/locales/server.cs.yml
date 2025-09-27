@@ -3813,10 +3813,7 @@ cs:
   page_not_found:
     page_title: "Stránka nenalezena"
     title: "Jejda! Tato stránka neexistuje nebo je soukromá."
-    popular_topics: "Populární"
-    recent_topics: "Nedávné"
     see_more: "Více"
-    search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
   offline:
     title: "Nelze načíst aplikaci"
@@ -4613,6 +4610,11 @@ cs:
         title: "Ponechat příspěvek smazaný"
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+      no_action_post:
+        title: "Bez akce"
+      delete_post:
+        title: "Odstranit příspěvek"
+        complete: "Příspěvek smazán"
       no_action_user:
         title: "Bez akce"
       silence_user:

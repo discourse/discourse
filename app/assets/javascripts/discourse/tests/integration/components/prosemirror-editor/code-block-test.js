@@ -22,7 +22,7 @@ module(
         )}</pre>`,
         "```plaintext\nconsole.log('Hello, world!');\n```",
       ],
-      "basic code block without a lanuage": [
+      "basic code block without a language": [
         "```\nconsole.log('Hello, world!');\n```",
         `<pre><code>console.log('Hello, world!');</code>${select()}</pre>`,
         "```\nconsole.log('Hello, world!');\n```",

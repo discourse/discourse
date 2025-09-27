@@ -78,6 +78,10 @@
       oklch(from var(--accent-color) 50% c h)
     );
   }
+
+  &:visited {
+    color: var(--accent-text-color);
+  }
 }
 
 .btn-danger {

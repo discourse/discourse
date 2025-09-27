@@ -5,7 +5,7 @@ import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import { isEmpty } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import {
   attributeBindings,
   classNameBindings,
@@ -160,7 +160,7 @@ export default class UserCardContents extends CardContentsBase {
       const userFields = this.get("user.user_fields");
       return siteUserFields
         .filterBy("show_on_user_card", true)
-        .sortBy("position")
+        .sort((a, b) => compare(a?.position, b?.position))
         .map((field) => {
           set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields ? userFields[field.get("id")] : null;

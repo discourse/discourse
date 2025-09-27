@@ -130,7 +130,7 @@ export default class GroupIndexController extends Controller {
       case "removeMembers":
         return ajax(`/groups/${this.model.id}/members.json`, {
           type: "DELETE",
-          data: { user_ids: selection.mapBy("id").join(",") },
+          data: { user_ids: selection.map((u) => u.id).join(",") },
         }).then(() => {
           this.model.reloadMembers(this.memberParams, true);
           this.set("isBulk", false);
@@ -140,7 +140,7 @@ export default class GroupIndexController extends Controller {
         return ajax(`/groups/${this.model.id}/owners.json`, {
           type: "PUT",
           data: {
-            usernames: selection.mapBy("username").join(","),
+            usernames: selection.map((u) => u.username).join(","),
           },
         }).then(() => {
           selection.forEach((s) => s.set("owner", true));

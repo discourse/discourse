@@ -1,9 +1,11 @@
 .d-breadcrumbs {
   display: flex;
+  flex-wrap: wrap;
   margin: var(--space-2) 0 var(--space-4) 0;
 
   &__item {
     list-style-type: none;
+    white-space: nowrap;
   }
 
   &__link,
