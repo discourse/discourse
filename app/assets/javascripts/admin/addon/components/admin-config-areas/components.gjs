@@ -234,6 +234,10 @@ export default class AdminConfigAreasComponents extends Component {
         >
           <:content>
             <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+              <PluginOutlet
+                @name="admin-config-area-components-above-table"
+                @outletArgs={{lazyHash components=this.components}}
+              />
               <table class="d-table component-list">
                 <thead class="d-table__header">
                   <tr class="d-table__row">

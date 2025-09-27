@@ -168,7 +168,10 @@ export default class ThemeCard extends Component {
   }
 
   <template>
-    <AdminConfigAreaCard class={{this.themeCardClasses}}>
+    <AdminConfigAreaCard
+      class={{this.themeCardClasses}}
+      data-theme-id={{@theme.id}}
+    >
       <:content>
 
         <div class="theme-card__image-wrapper">
