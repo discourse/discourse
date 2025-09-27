@@ -15,7 +15,11 @@ en:
     openid_connect_overrides_email: "On every login, override the user's email using the openid-connect value. Works the same as the `auth_overrides_email` setting, but is specific to OpenID Connect logins."
     openid_connect_claims: "Explicitly define the claims for use with providers that don't pass data back based on scopes. (JSON)"
     openid_connect_match_by_email: "Use email address to match OpenID Connect authentications to existing Discourse user accounts."
+    openid_connect_match_by_username: "Use username to match OpenID Connect authentications to existing Discourse user accounts. username_change_period must be 0."
     openid_connect_use_pkce: "Enable Proof Key for Code Exchange (PKCE) for OpenID Connect authentication."
+    openid_connect_groups_enabled: "Enable group membership from mapping of OpenID Connect group membership."
+    openid_connect_groups_maps: "Mappings of OpenID Connect group names to comma-separated list of discourse group names, e.g. '/keycloak-developers:discourse_devgroup_members,discourse_usergroup_moderators' will add a user in keycloak group '/keycloak-developers' to both groups 'discourse_devgroup_members' and 'discourse_usergroup_moderators'.  Discourse groups can appear more than once."
+    openid_connect_groups_remove_unmapped_groups: "If user is not in any OpenID Connect group that maps to a discourse group, remove existing membership from that discourse group.  Only groups set in openid_connect_groups_maps will be removed."
   login:
     omniauth_error:
       openid_connect_discovery_error: Unable to fetch configuration from identity provider. Please try again.

@@ -35,5 +35,16 @@ discourse_openid_connect:
     textarea: true
   openid_connect_match_by_email:
     default: true
+  openid_connect_match_by_username:
+    default: false
   openid_connect_use_pkce:
     default: false
+  openid_connect_groups_enabled:
+    default: false
+    client: true
+  openid_connect_groups_maps:
+    default: ""
+    type: list
+    list_type: simple
+  openid_connect_groups_remove_unmapped_groups:
+    default: true
