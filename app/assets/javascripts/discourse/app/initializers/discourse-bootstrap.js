@@ -5,6 +5,7 @@ import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
+import { registerServiceWorker } from "discourse/lib/register-service-worker";
 import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
 import I18n from "discourse-i18n";
@@ -91,6 +92,12 @@ export default {
     if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
+
+    // Register the service worker.
+    app.deferReadiness();
+    registerServiceWorker(setupData.serviceWorkerUrl).then(() => {
+      app.advanceReadiness();
+    });
 
     RSVP.configure("onerror", function (e) {
       // Ignore TransitionAborted exceptions that bubble up

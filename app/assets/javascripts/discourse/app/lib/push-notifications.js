@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { getServiceWorkerRegistration } from "discourse/lib/register-service-worker";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -18,122 +19,134 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
   });
 }
 
+export const PushNotificationSupport = {
+  Supported: "Supported",
+  PWARequired: "PWARequired", // (iOS only) Push notifications are supported when the app is installed as a PWA.
+  NotSupported: "NotSupported",
+};
+
 export function isPushNotificationsSupported() {
   let caps = helperContext().capabilities;
-  if (
-    !(
-      "serviceWorker" in navigator &&
-      typeof ServiceWorkerRegistration !== "undefined" &&
-      typeof Notification !== "undefined" &&
-      "showNotification" in ServiceWorkerRegistration.prototype &&
-      "PushManager" in window &&
-      !caps.isAppWebview &&
-      navigator.serviceWorker.controller &&
-      navigator.serviceWorker.controller.state === "activated"
-    )
-  ) {
-    return false;
+
+  if (caps.isAppWebview) {
+    // DiscourseHub app. This implements notifications via native APIs.
+    return PushNotificationSupport.NotSupported;
   }
 
-  return true;
+  if (
+    !("serviceWorker" in navigator) ||
+    typeof ServiceWorkerRegistration === "undefined"
+  ) {
+    return PushNotificationSupport.NotSupported;
+  }
+
+  const registration = getServiceWorkerRegistration();
+  if (!registration) {
+    return PushNotificationSupport.NotSupported;
+  }
+
+  // On iOS, push notifications are only supported when the app is running as a PWA.
+  // https://github.com/andreinwald/webpush-ios-example/blob/75a4e707046ebf7f3b88cc1bbbb8aedecc4cf377/frontend.js#L24-L36
+  if (!registration.pushManager) {
+    if (!window.navigator.standalone) {
+      // Not running in standalone mode? A PWA is probably needed.
+      return PushNotificationSupport.PWARequired;
+    }
+
+    // Not really sure how we can reach this point, but just in-case.
+    return PushNotificationSupport.NotSupported;
+  }
+
+  // As a final sanity check, see if `Notification` is implemented. We should typically never hit this.
+  if (typeof Notification === "undefined") {
+    return PushNotificationSupport.NotSupported;
+  }
+
+  return PushNotificationSupport.Supported;
 }
 
 export function isPushNotificationsEnabled(user) {
   return (
     user &&
     !user.isInDoNotDisturb() &&
-    isPushNotificationsSupported() &&
+    isPushNotificationsSupported() === PushNotificationSupport.Supported &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );
 }
 
-export function register(user, router, appEvents) {
-  if (!isPushNotificationsSupported()) {
+// Register an existing subscription with the backend.
+export async function register(user, router, appEvents) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
     return;
   }
   if (Notification.permission === "denied" || !user) {
     return;
   }
 
-  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    serviceWorkerRegistration.pushManager
-      .getSubscription()
-      .then((subscription) => {
-        if (subscription) {
-          sendSubscriptionToServer(subscription, false);
-          // Resync localStorage
-          keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
-        }
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
-  });
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.getSubscription();
 
-  navigator.serviceWorker.addEventListener("message", (event) => {
-    if ("url" in event.data) {
-      router.transitionTo(event.data.url);
-      appEvents.trigger("push-notification-opened", { url: event.data.url });
-    }
-  });
+  if (subscription) {
+    sendSubscriptionToServer(subscription, false);
+    // Resync localStorage
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if ("url" in event.data) {
+        router.transitionTo(event.data.url);
+        appEvents.trigger("push-notification-opened", { url: event.data.url });
+      }
+    });
+  }
 }
 
-export function subscribe(callback, applicationServerKey) {
-  if (!isPushNotificationsSupported()) {
+export async function subscribe(callback, applicationServerKey) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
     return;
   }
 
-  return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    return serviceWorkerRegistration.pushManager
-      .subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
-      })
-      .then((subscription) => {
-        sendSubscriptionToServer(subscription, true);
-        if (callback) {
-          callback();
-        }
-        return true;
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return false;
-      });
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
   });
-}
 
-export function unsubscribe(user, callback) {
-  if (!isPushNotificationsSupported()) {
-    return;
-  }
-
-  keyValueStore.setItem(userSubscriptionKey(user), "");
-  return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    serviceWorkerRegistration.pushManager
-      .getSubscription()
-      .then((subscription) => {
-        if (subscription) {
-          subscription.unsubscribe().then((successful) => {
-            if (successful) {
-              ajax("/push_notifications/unsubscribe", {
-                type: "POST",
-                data: { subscription: subscription.toJSON() },
-              });
-            }
-          });
-        }
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
-
+  if (subscription) {
+    sendSubscriptionToServer(subscription, true);
     if (callback) {
       callback();
     }
     return true;
-  });
+  }
+
+  return false;
+}
+
+export async function unsubscribe(user, callback) {
+  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
+    return;
+  }
+
+  const registration = getServiceWorkerRegistration();
+  const subscription = await registration.pushManager.getSubscription();
+
+  if (subscription) {
+    keyValueStore.setItem(userSubscriptionKey(user), "");
+
+    subscription.unsubscribe().then((successful) => {
+      if (successful) {
+        ajax("/push_notifications/unsubscribe", {
+          type: "POST",
+          data: { subscription: subscription.toJSON() },
+        });
+      }
+    });
+
+    if (callback) {
+      callback();
+    }
+
+    return true;
+  } else {
+    return false;
+  }
 }
