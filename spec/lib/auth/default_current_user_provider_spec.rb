@@ -285,6 +285,19 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
+    describe "when impersonating another user" do
+      it "should not update User#last_seen_at" do
+        old_timestamp = 1.week.ago
+        user.update!(last_seen_at: old_timestamp)
+        User.any_instance.stubs(:is_impersonating).returns(true)
+
+        provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+        u = provider2.current_user
+
+        expect(u.reload.last_seen_at).to eq_time(old_timestamp)
+      end
+    end
+
     it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
       SiteSetting.login_required = true
       user = Fabricate(:user)
