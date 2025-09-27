@@ -569,6 +569,26 @@ describe PostRevisor do
           )
         }.not_to change { post.topic.bumped_at }
       end
+
+      it "doesn't bump the topic when editing the topic title" do
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { title: "This is an updated topic title" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
+      end
+
+      it "doesn't bump the topic when editing the topic category" do
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { category_id: Fabricate(:category).id },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
+      end
     end
 
     describe "edit reasons" do
@@ -1278,6 +1298,12 @@ describe PostRevisor do
             expect(post.topic.tags.size).to eq(0)
           end
 
+          it "doesn't bump the topic when editing tags" do
+            expect { post_revisor.revise!(post.user, { tags: %w[totally update] }) }.not_to change {
+              post.topic.bumped_at
+            }
+          end
+
           it "can't add staff-only tags" do
             create_staff_only_tags(["important"])
             result =
@@ -1417,7 +1443,7 @@ describe PostRevisor do
               }.to_not change { topic.reload.bumped_at }
             end
 
-            it "bumps topic if non staff-only tags are added" do
+            it "doesn't bump topic if non staff-only tags are added" do
               expect {
                 result =
                   post_revisor.revise!(
@@ -1426,7 +1452,7 @@ describe PostRevisor do
                     tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
                   )
                 expect(result).to eq(true)
-              }.to change { topic.reload.bumped_at }
+              }.to_not change { topic.reload.bumped_at }
             end
 
             it "creates a hidden revision" do
