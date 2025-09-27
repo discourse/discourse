@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
-  SiteSetting.rss_polling_enabled = true
-
   subject(:job) { described_class.new }
+
+  before { SiteSetting.rss_polling_enabled = true }
 
   describe "#execute" do
     before do

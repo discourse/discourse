@@ -2,7 +2,7 @@
 
 describe Jobs::DiscourseCalendar::CreateHolidayEvents do
   subject(:job) { described_class.new }
-  
+
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 
   let(:frenchy) do

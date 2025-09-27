@@ -2,7 +2,7 @@
 
 describe Jobs::DiscourseCalendar::MonitorEventDates do
   subject(:job) { described_class.new }
-  
+
   fab!(:post_1) { Fabricate(:post) }
   fab!(:post_2) { Fabricate(:post) }
   fab!(:post_3) { Fabricate(:post) }
