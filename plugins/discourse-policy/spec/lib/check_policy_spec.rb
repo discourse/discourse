@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe Jobs::DiscoursePolicy::CheckPolicy do
-  let(:job) { described_class.new }
+  subject(:job) { described_class.new }
+
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
 

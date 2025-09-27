@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
-  let(:job) { described_class.new }
+  subject(:job) { described_class.new }
 
   before do
     Jobs.run_immediately!

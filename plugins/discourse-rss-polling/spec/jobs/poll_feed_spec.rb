@@ -5,7 +5,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
   let(:feed_url) { "https://blog.discourse.org/feed/" }
   let(:author) { Fabricate(:user, trust_level: 1) }
   let(:raw_feed) { file_from_fixtures("feed.rss", "feed") }
-  let(:job) { described_class.new }
+  subject(:job) { described_class.new }
 
   describe "#execute" do
     before do

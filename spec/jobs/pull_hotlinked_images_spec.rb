@@ -639,7 +639,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
   describe "#disable_if_low_on_disk_space" do
     fab!(:post) { Fabricate(:post, user: user, created_at: 20.days.ago) }
-    let(:job) { described_class.new }
+    subject(:job) { described_class.new }
 
     before do
       SiteSetting.download_remote_images_to_local = true

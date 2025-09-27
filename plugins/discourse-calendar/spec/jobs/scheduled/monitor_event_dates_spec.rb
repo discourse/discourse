@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe Jobs::DiscourseCalendar::MonitorEventDates do
-  let(:job) { described_class.new }
+  subject(:job) { described_class.new }
+  
   fab!(:post_1) { Fabricate(:post) }
   fab!(:post_2) { Fabricate(:post) }
   fab!(:post_3) { Fabricate(:post) }

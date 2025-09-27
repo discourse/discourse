@@ -3,7 +3,7 @@
 RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
   SiteSetting.rss_polling_enabled = true
 
-  let(:job) { described_class.new }
+  subject(:job) { described_class.new }
 
   describe "#execute" do
     before do
