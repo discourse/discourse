@@ -14,6 +14,8 @@ Since Discourse runs in Docker, you should be able to run Discourse directly fro
 
 :x: Cons: Will be slightly slower than the native dev environment on Ubuntu, and much slower than a native install on MacOS.
 
+See also https://meta.discourse.org/t/developing-discourse-using-a-dev-container/336366
+
 ## Step 1: Install Docker
 
 ### Ubuntu
