@@ -102,6 +102,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
     it "should reconfigure topic timer if category's topics are set to autoclose" do
       category = Fabricate(:category)
       Fabricate(:category_default_timer, category:, duration_minutes: 300, based_on_last_post: true)
+      category.reload
 
       topic = Fabricate(:topic, category: category)
       topic.public_topic_timer.update!(user: user)

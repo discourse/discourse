@@ -185,14 +185,18 @@ class CategoriesController < ApplicationController
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       if category_params[:auto_close_hours]
-        cat.set_or_create_default_timer duration_minutes:
-                                          category_params[:auto_close_hours].hours.in_minutes,
-                                        based_on_last_post:
-                                          category_params[:auto_close_based_on_last_post],
-                                        execute_at: Time.now,
-                                        status_type: CategoryDefaultTimer.types[:close],
-                                        user: current_user
+        timer_params = {
+          duration_minutes: category_params[:auto_close_hours].to_f.hours.in_minutes,
+          execute_at: Time.now,
+          status_type: CategoryDefaultTimer.types[:close],
+          user: current_user,
+        }
 
+        if category_params[:auto_close_based_on_last_post]
+          timer_params[:based_on_last_post] = category_params[:auto_close_based_on_last_post]
+        end
+
+        cat.set_or_create_default_timer timer_params
         category_params.delete(:auto_close_hours)
         category_params.delete(:auto_close_based_on_last_post)
       end
