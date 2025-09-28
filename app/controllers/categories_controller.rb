@@ -139,6 +139,10 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
 
+    # TODO: move these params to somewhere
+    auto_close_hours = category_params.delete(:auto_close_hours)
+    based_on_last_post = category_params.delete(:auto_close_based_on_last_post)
+
     @category =
       begin
         Category.new(required_create_params.merge(user: current_user))
@@ -148,6 +152,16 @@ class CategoriesController < ApplicationController
 
     if @category.save
       @category.move_to(position.to_i) if position
+
+      timer_opts = {
+        status_type: CategoryDefaultTimer.types[:close],
+        duration_minutes: auto_close_hours.to_f.hours.in_minutes,
+        based_on_last_post:,
+        user: current_user,
+        execute_at: Time.now,
+      }
+
+      @category.set_or_create_default_timer timer_opts
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)

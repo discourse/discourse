@@ -1293,6 +1293,7 @@ class Category < ActiveRecord::Base
   end
 
   def set_or_create_default_timer(opts)
+    opts.delete(:based_on_last_post) if opts[:based_on_last_post] == nil
     if category_default_timer
       category_default_timer.update!(opts)
     else
