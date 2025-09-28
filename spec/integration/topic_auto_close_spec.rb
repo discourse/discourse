@@ -29,9 +29,9 @@ RSpec.describe Topic do
       before { freeze_time }
 
       context "when category has a default auto-close" do
-        let(:category) { Fabricate(:category) }
+        fab!(:category)
         fab!(:category_default_timer) do
-          Fabricate(:category_default_timer, duration_minutes: 120.0)
+          Fabricate(:category_default_timer, duration_minutes: 120.0, category:)
         end
 
         it "should schedule the topic to auto-close" do
