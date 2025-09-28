@@ -153,15 +153,17 @@ class CategoriesController < ApplicationController
     if @category.save
       @category.move_to(position.to_i) if position
 
-      timer_opts = {
-        status_type: CategoryDefaultTimer.types[:close],
-        duration_minutes: auto_close_hours.to_f.hours.in_minutes,
-        based_on_last_post:,
-        user: current_user,
-        execute_at: Time.now,
-      }
+      if auto_close_hours.present?
+        timer_opts = {
+          status_type: CategoryDefaultTimer.types[:close],
+          duration_minutes: auto_close_hours.to_f.hours.in_minutes,
+          based_on_last_post:,
+          user: current_user,
+          execute_at: Time.now,
+        }
 
-      @category.set_or_create_default_timer timer_opts
+        @category.set_or_create_default_timer timer_opts
+      end
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
