@@ -14,7 +14,7 @@ export default class AdminConfigColorPalettesShowController extends Controller {
   @computed("model.colors.[]", "onlyOverridden")
   get colors() {
     if (this.onlyOverridden) {
-      return this.model.colors?.filterBy("overridden");
+      return this.model.colors?.filter((color) => color.overridden);
     } else {
       return this.model.colors;
     }

@@ -54,7 +54,7 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
   }
 
   get allBaseColorSchemes() {
-    return this.model?.filterBy("is_base", true) || [];
+    return this.model?.filter((scheme) => scheme.is_base) || [];
   }
 
   _captureInitialState() {
