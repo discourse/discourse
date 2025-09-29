@@ -89,7 +89,15 @@ el:
       objects:
         required: "πρέπει να υπάρχει"
         invalid_type: "%{type} δεν είναι έγκυρος τύπος"
+        not_valid_string_value: "πρέπει να είναι string"
         not_valid_integer_value: "πρέπει να είναι ακέραιος αριθμός"
+        not_valid_float_value: "πρέπει να είναι float"
+        not_valid_boolean_value: "πρέπει να είναι boolean"
+        string_value_not_valid_max:
+          one: "πρέπει να είναι το πολύ %{count} χαρακτήρα"
+          other: "πρέπει να είναι το πολύ %{count} χαρακτήρες"
+        number_value_not_valid_min: "πρέπει να είναι μεγαλύτερο από ή ίσο με %{min}"
+        number_value_not_valid_max: "πρέπει να είναι μικρότερο από ή ίσο με %{max}"
         string_value_not_valid_url: "πρέπει να είναι μια έγκυρη διεύθυνση URL"
     locale_errors:
       top_level_locale: "Το κλειδί ανώτατου επιπέδου σε ένα αρχείο τοπικών ρυθμίσεων πρέπει να συμφωνεί με το όνομα της τοπικής ρύθμισης"
@@ -101,6 +109,8 @@ el:
       maximum_staged_user_per_email_reached: "Φτάστηκε ο μέγιστος αριθμός σταδιακών χρηστών που δημιουργούνται ανά email."
       no_subject: "(χωρίς θέμα)"
       no_body: "(χωρίς σώμα)"
+      attachments: "(συνημμένα)"
+      missing_attachment: "(Το συνημμένο %{filename} λείπει)"
       errors:
         empty_email_error: "Συμβαίνει όταν το ακατέργαστο μήνυμα που λάβαμε ήταν κενό."
         no_message_id_error: "Συμβαίνει όταν το email δεν έχει επικεφαλίδα 'Message-Id' ."
@@ -121,10 +131,14 @@ el:
         unsubscribe_not_allowed: "Συμβαίνει όταν η απεγγραφή μέσω email δεν επιτρέπεται για αυτόν τον χρήστη."
         email_not_allowed: "Συμβαίνει όταν η διεύθυνση email δε βρίσκεται στη λίστα επιτρεπόμενων ή βρίσκεται στη λίστα αποκλεισμού."
       unrecognized_error: "Άγνωστο Σφάλμα"
+    view_redacted_media: "Προβολή Πολυμέσων"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      too_long_validation:
+        one: "περιορίζεται σε %{count} χαρακτήρα, έχεις εισάγει %{length}."
+        other: "περιορίζεται σε %{count} χαρακτήρες, έχεις εισάγει %{length}."
       invalid_boolean: "Λανθασμένη τιμή boolean."
       taken: "έχει ήδη χρησιμοποιηθεί"
       accepted: πρέπει να γίνει δεκτό
@@ -141,11 +155,13 @@ el:
       inclusion: δεν περιλαμβάνεται στην λίστα
       invalid: δεν είναι έγκυρο
       is_invalid: "φαίνεται ασαφές, είναι μια ολοκληρωμένη πρόταση;"
+      invalid_timezone: "'%{tz}' δεν είναι έγκυρη ζώνη ώρας"
       contains_censored_words: "περιέχει τις ακόλουθες λογοκριμένες λέξεις: %{censored_words}"
       less_than: πρέπει να είναι λιγότερο από %{count}
       less_than_or_equal_to: πρέπει να είναι λιγότερο ή ίσο με %{count}
       not_a_number: δεν είναι αριθμός
       not_an_integer: πρέπει να είναι ακέραιος αριθμός
+      must_all_be_positive: πρέπει να είναι όλα θετικά
       odd: πρέπει να είναι μονός αριθμός
       record_invalid: ! "Η επικύρωση απέτυχε: %{errors}"
       max_emojis: "δε μπορεί να έχει περισσότερα από %{max_emojis_count} emoji"
@@ -164,6 +180,7 @@ el:
         one: έχει λάθος μήκος (πρέπει να είναι %{count} χαρακτήρα)
         other: έχει λάθος μήκος (πρέπει να είναι %{count} χαρακτήρες)
       other_than: "πρέπει να μην είναι %{count}"
+      required: "πρέπει να υπάρχει"
     template:
       body: ! "Παρουσιάστηκαν προβλήματα με τα παρακάτω πεδία:"
       header:
@@ -172,6 +189,7 @@ el:
     embed:
       load_from_remote: "Παρουσιάστηκε ένα σφάλμα κατά τη φόρτωση της ανάρτησης."
     site_settings:
+      invalid_site_setting: "Δεν υπάρχει ρύθμιση με όνομα '%{name}'"
       invalid_category_id: "Καθορίσατε μια κατηγορία που δεν υπάρχει"
       default_categories_already_selected: "Δεν μπορείς να επιλέξεις μια κατηγορία που χρησιμοποιείται σε άλλη λίστα."
       default_tags_already_selected: "Δε μπορείτε να επιλέξετε μια ετικέτα που χρησιμοποιείται σε άλλη λίστα."
@@ -181,12 +199,15 @@ el:
       share_quote_facebook_requirements: "Πρέπει να ορίσετε ένα αναγνωριστικό εφαρμογής Facebook για να ενεργοποιήσετε την κοινοποίηση παραθέσεων για το Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Δε μπορείτε να επιβάλετε 2FA εάν οι τοπικές συνδέσεις είναι απενεργοποιημένες."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Δε μπορείτε να απενεργοποιήσετε την τοπική σύνδεση εάν επιβάλλεται 2FA. Απενεργοποιήστε το επιβεβλημένο 2FA πριν από την απενεργοποίηση των τοπικών συνδέσεων."
+  word_connector:
+    comma: ", "
   invite:
     not_found: "Το τεκμήριο πρόσκλησης δεν είναι έγκυρο. Παρακαλώ <a href='%{base_url}/about'>επικοινωνήστε με το προσωπικό</a>."
     not_found_json: "Το τεκμήριο πρόσκλησης δεν είναι έγκυρο. Παρακαλώ επικοινωνήστε με το προσωπικό."
     confirm_email: "<p>Έχετε σχεδόν τελειώσει! Στείλαμε ένα email ενεργοποίησης στη διεύθυνση email σας. Παρακαλούμε ακολουθήστε τις οδηγίες στο μήνυμα για να ενεργοποιήσετε τον λογαριασμό σας.</p><p>Εάν δε φτάσει, ελέγξτε τον φάκελο ανεπιθύμητων μηνυμάτων.</p>"
     disabled_errors:
       invalid_access: "Δεν έχεις δικαίωμα να δεις τους πόρους που ζήτησες."
+    max_redemptions_allowed_one: "για προσκλήσεις μέσω email θα πρέπει να είναι 1."
   bulk_invite:
     file_should_be_csv: "To ανεβασμένο αρχείο πρέπει να έχει μορφή csv."
     max_rows: "Οι πρώτες %{max_bulk_invites} προσκλήσεις έχουν σταλεί. Δοκιμάστε να χωρίσετε το αρχείο σε μικρότερα μέρη."
@@ -196,6 +217,7 @@ el:
   topic_invite:
     failed_to_invite: "Ο χρήστης δε μπορεί να προσκληθεί σε αυτό το θέμα χωρίς συμμετοχή σε κάποια από τις ακόλουθες ομάδες: %{group_names}."
     user_exists: "Λυπούμαστε, αυτός ο χρήστης έχει ήδη προσκληθεί. Μπορείτε να προσκαλέσετε έναν χρήστη σε ένα θέμα μόνο μία φορά."
+    user_cannot_see_topic: "Ο/Η %{username} δεν μπορεί να δει το θέμα."
   backup:
     operation_already_running: "Μια λειτουργία εκτελείται αυτήν τη στιγμή. Δεν μπορείς να ξεκινήσεις μια νέα διεργασία τώρα."
     backup_file_should_be_tar_gz: "Το αντίγραφο ασφαλείας πρέπει να είναι αρχείο .tar.gz"
@@ -238,6 +260,7 @@ el:
     more_replies:
       one: "μια ακόμη απάντηση"
       other: "%{count} ακόμη απαντήσεις"
+    loading: "Φόρτωση Συζήτησης…"
     permalink: "Μόνιμος σύνδεσμος"
     imported_from: "Αυτό είναι ένα συνοδό θέμα συζητησης για την αρχική ανάρτηση στο %{link}"
     in_reply_to: "▶ %{username}"
@@ -247,7 +270,9 @@ el:
     likes:
       one: "%{count} «μου αρέσει»"
       other: "%{count} «μου αρέσει»"
+    last_reply: "Τελευταία απάντηση"
     created: "Δημιουργήθηκε"
+    new_topic: "Δημιουργία νέου θέματος"
   no_mentions_allowed: "Λυπούμαστε, δεν μπορείς να αναφέρεις άλλους χρήστες."
   too_many_mentions:
     one: "Λυπούμαστε, μπορείς να αναφέρεις μόνο έναν χρήστη σε κάθε ανάρτηση."
@@ -269,11 +294,13 @@ el:
   topic_not_found: "Κάτι πήγε στραβά. Ίσως αυτό το θέμα έκλεισε ή διαγράφηκε ενώ το κοιτούσατε."
   not_accepting_pms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
   max_pm_recipients: "Λυπούμαστε, μπορείτε να στείλετε μήνυμα το μέγιστο σε %{recipients_limit} παραλήπτες."
+  slow_mode_enabled: "Αυτό το θέμα είναι σε αργή λειτουργία."
   just_posted_that: "είναι παρόμοιο με αυτό που δημοσιεύσατε πρόσφατα"
   invalid_characters: "περιέχει μη έγκυρους χαρακτήρες"
   is_invalid: "φαίνεται ασαφές, είναι μια ολοκληρωμένη πρόταση;"
   next_page: "επόμενη σελίδα →"
   prev_page: "← προηγούμενη σελίδα"
+  show_post_in_topic: "εμφάνιση ανάρτησης στο θέμα"
   page_num: "Σελίδα %{num}"
   home_title: "Αρχική Σελίδα"
   topics_in_category: "Θέματα στην κατηγορία '%{category}'"
@@ -282,9 +309,13 @@ el:
   rss_num_posts:
     one: "%{count} ανάρτηση"
     other: "%{count} αναρτήσεις"
+  rss_num_participants:
+    one: "%{count} συμμετέχων"
+    other: "%{count} συμμετέχοντες"
   read_full_topic: "Διαβάστε όλο το νήμα"
   private_message_abbrev: "Μνμ"
   rss_description:
+    hot: "Καυτά θέματα"
     latest: "Τελευταία θέματα"
     top: "Κορυφαία θέματα"
     top_all: "Όλα τα κορυφαία θέματα"
@@ -294,6 +325,7 @@ el:
     top_weekly: "Εβδομαδιαία κορυφαία θέματα"
     top_daily: "Ημερήσια κορυφαία θέματα"
     posts: "Τελευταίες αναρτήσεις"
+    private_posts: "Τελευταία προσωπικά μηνύματα"
     group_posts: "Τελευταίες αναρτήσεις από %{group_name}"
     group_mentions: "Τελευταίες αναφορές από %{group_name}"
     user_posts: "Τελευταίες αναρτήσεις από @%{username}"
@@ -302,6 +334,7 @@ el:
     badge: "%{display_name} παράσημο στην %{site_title}"
   too_late_to_edit: "Αυτή η ανάρτηση δημιουργήθηκε πολύ καιρό πριν. Δεν μπορεί πλέον να γίνει επεξεργασία της ή να διαγραφεί."
   revert_version_same: "Η τρέχουσα έκδοση είναι η ίδια με την έκδοση που προσπαθείς να επαναφέρεις."
+  reverted_to_version: "επανήλθε στην έκδοση #%{version}"
   excerpt_image: "εικόνα"
   bookmarks:
     reminders:
@@ -369,7 +402,12 @@ el:
               same_as_username: "είναι το ίδιο με το όνομα χρήστη σας. Παρακαλώ χρησιμοποιήστε εναν πιο ασφαλή κωδικό πρόσβασης."
               same_as_email: "είναι το ίδιο με το email σας. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης."
               same_as_current: "είναι ο ίδιος με τον τρέχοντα κωδικό."
+              same_as_name: "είναι το ίδιο με το όνομά σου."
               unique_characters: "περιέχει πολλούς επαναλαμβανόμενους χαρακτήρες. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης. "
+            username:
+              same_as_password: "είναι το ίδιο με τον κωδικό πρόσβασής σου."
+            name:
+              same_as_password: "είναι το ίδιο με τον κωδικό πρόσβασής σου."
             ip_address:
               blocked: "Δεν επιτρέπονται νεές εγγραφές από την IP διεύθυνσή σου."
               max_new_accounts_per_registration_ip: "Δεν επιτρέπονται νεές εγγραφές από την IP διεύθυνσή σου (το ανώτατο όριο έχει επιτευχθεί). Επικοινώνησε με ένα μέλος του προσωπικού."
@@ -380,6 +418,7 @@ el:
               same_as_username: "είναι το ίδιο με το όνομα χρήστη σας. Παρακαλώ χρησιμοποιήστε εναν πιο ασφαλή κωδικό πρόσβασης."
               same_as_email: "είναι το ίδιο με το email σας. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης."
               same_as_current: "είναι ο ίδιος με τον τρέχοντα κωδικό."
+              same_as_name: "είναι το ίδιο με το όνομά σου."
               unique_characters: "περιέχει πολλούς επαναλαμβανόμενους χαρακτήρες. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης. "
         color_scheme_color:
           attributes:
@@ -408,16 +447,23 @@ el:
           attributes:
             linkable_type:
               invalid: "δεν είναι έγκυρο"
+        api_key:
+          base:
+            at_least_one_granular_scope: "πρέπει να επιλεγεί τουλάχιστον ένα"
       <<: *errors
   general_category_name: "Γενικά"
   meta_category_name: "Σχολιασμός Ιστοσελίδας"
   meta_category_description: "Συζήτηση σχετικά με την ιστοσελίδα, την οργάνωσή της, τον τρόπο λειτουργίας της και πώς αυτή μπορεί να βελτιωθεί."
   staff_category_name: "Συνεργάτες"
   staff_category_description: "Ιδιωτική κατηγορία για συζητήσεις των συνεργατών. Τα θέματα είναι ορατά μόνο σε διαχειριστές και συντονιστές."
+  discourse_welcome_topic:
+    title: "Καλώς ήλθατε στο %{site_title}! :wave:"
+  admin_quick_start_title: "Οδηγός Διαχειριστή: Ξεκινώντας"
   category:
     topic_prefix: "Σχετικά με την κατηγορία %{category} "
     post_template: "%{replace_paragraph}\n\nΧρησιμοποιήστε τις επόμενες παραγράφους για μια μεγαλύτερη περιγραφή ή για να ορίσεις οδηγίες και κανόνες για τις κατηγορίες:\n\n- Γιατί μπορεί να χρησιμοποιηθεί αυτή η κατηγορία; Ποιος είναι ο σκοπός της;\n\n- Αυτή η κατηγορία είναι διαφορετική από αυτές που έχουμε ήδη;\n\n- Τι πρέπει να περιέχουν τα θέματα αυτής της κατηγορίας γενικότερα;\n\n- Χρειαζόμαστε αυτή την κατηγορία; Μπορούμε να την ενώσουμε με άλλη κατηγορία ή υποκατηγορία;\n"
     errors:
+      not_found: "Η κατηγορία δεν βρέθηκε!"
       uncategorized_parent: "Μη κατηγοριοποιημένο δεν μπορεί να έχει κύρια κατηγορία"
       self_parent: "Η γονική κατηγορία μιας υποκατηγορίας δεν μπορεί να είναι ο εαυτός της"
       depth: "Δεν μπορείτε να βάλετε μια υποκατηγορία κάτω από άλλη"
@@ -425,6 +471,8 @@ el:
       email_already_used_in_group: "'%{email}' χρησιμοποιείται ήδη από την ομάδα '%{group_name}'"
       email_already_used_in_category: "%{email}' χρησιμοποιείται ήδη από την κατηγορία '%{caregory_name}'."
       description_incomplete: "Η ανάρτηση περιγραφής κατηγορίας θα πρέπει να έχει τουλάχιστον μία παράγραφο."
+      slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
+      is_already_in_use: "είναι ήδη σε χρήση"
     cannot_delete:
       has_subcategories: "Δεν είναι δυνατή η διαγραφή αυτής της κατηγορίας, επειδή έχει υπο-κατηγορίες."
       topic_exists_no_oldest: "Δεν είναι δυνατή η διαγραφή αυτής της κατηγορίας, διότι ο αριθμός νημάτων είναι %{count}."
@@ -436,6 +484,11 @@ el:
   post:
     image_placeholder:
       broken: "Η εικόνα είναι χαλασμένη"
+      blocked_hotlinked_title: "Εικόνα που φιλοξενείται σε άλλον ιστότοπο. Κάντε κλικ για να ανοίξετε σε νέα καρτέλα."
+      blocked_hotlinked: "Εξωτερική Εικόνα"
+    media_placeholder:
+      blocked_hotlinked_title: "Πολυμέσο που φιλοξενείται σε άλλον ιστότοπο. Κάντε κλικ για να ανοίξετε σε νέα καρτέλα."
+      blocked_hotlinked: "Εξωτερικό Πολυμέσο"
     has_likes:
       one: "%{count} «Μου αρέσει»"
       other: "%{count} «Μου αρέσει»"
@@ -449,6 +502,7 @@ el:
     seconds:
       one: "%{count} δευτερόλεπτο"
       other: "%{count} δευτερόλεπτα"
+    short_time: "λίγα δευτερόλεπτα"
   datetime:
     distance_in_words:
       half_a_minute: "< 1λ"
@@ -522,16 +576,44 @@ el:
     title: "Επαναφορά κωδικού πρόσβασης"
     success: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας και έχετε συνδεθεί."
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
+  email_login:
+    title: "Σύνδεση μέσω email"
   user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "Εφαρμογή DiscourseHub"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "άγνωστος περιηγητής"
     device:
+      android: "Συσκευή Android"
+      chromebook: "Chrome OS"
+      ipad: "iPad"
       iphone: "iPhone"
+      ipod: "iPod"
+      linux: "Υπολογιστής GNU/Linux"
+      mac: "Mac"
+      mobile: "Κινητή Συσκευή"
+      windows: "Υπολογιστής Windows"
+      unknown: "άγνωστη συσκευή"
     os:
       android: "Android"
+      chromeos: "Chrome OS"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
+      unknown: "άγνωστο λειτουργικό σύστημα"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "
     already_done: "Λυπούμαστε, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως η διεύθυνση email σας να έχει αλλάξει ήδη."
     confirm: "Επιβεβαίωση"
+  associated_accounts:
+    connected: "(συνδεδεμένος)"
   activation:
     already_done: "Συγνώμη, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως ο λογαριασμός σας είναι ήδη ενεργός;"
     approval_required: "Ένας συντονιστής θα πρέπει να εγκρίνει το νέο σας λογαριασμό πριν αποκτήσετε πρόσβαση στην ιστοσελίδα. Θα λάβετε ένα email όταν ο λογαριασμός σας εγκριθεί!"
@@ -559,6 +641,8 @@ el:
     inappropriate:
       title: "Ανάρμοστο"
     illegal:
+      title: "Παράνομο"
+      short_description: "Αυτό είναι παράνομο"
       email_title: 'Μια ανάρτηση στο "%{title}" απαιτεί έλεγχο από τους συνεργάτες'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -584,6 +668,7 @@ el:
       title: "Ανεπιθύμητα"
       description: "Αυτό το θέμα είναι διαφήμιση. Δεν είναι χρήσιμο ή σχετικό με την ιστοσελίδα, αλλά αποσκοπεί σε διαφημιστική προώθηση."
       long_form: "το επισήμαναν ως ανεπιθύμητο"
+      short_description: "Αυτό είναι διαφήμιση"
     inappropriate:
       title: "Ανάρμοστο"
       long_form: "το επισήμαναν ως ανάρμοστο"
@@ -594,11 +679,15 @@ el:
       email_title: 'Το θέμα "%{title}" χρειάζεται έλεγχο από συντονιστή'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "Παράνομο"
+      short_description: "Αυτό είναι παράνομο"
       email_title: 'Μια ανάρτηση στο "%{title}" απαιτεί έλεγχο από τους συνεργάτες'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '</p>Η ανάρτησή σου έχει επισημανθεί από την κοινότητα. Παρακαλώ <a href="%{path}">δες τα μηνύματά σου</a>.</p>'
     user_must_edit: "<p>Αυτή η ανάρτηση έχει επισημανθεί από την κοινότητα και είναι προσωρινά κρυφή.</p>"
+  ignored:
+    hidden_content: "<p>Αγνοημένο περιεχόμενο</p>"
   archetypes:
     regular:
       title: "Κανονικό Θέμα"
@@ -608,6 +697,7 @@ el:
         make: "Aυτό το νήμα είναι πλέον νήμα ανακοίνωσης. Θα εμφανίζεται στην κορυφή κάθε σελίδας, μέχρι να απορριφθεί από το χρήστη."
         remove: "Αυτό το νήμα δεν είναι πλέον νήμα ανακοίνωσης. Δε θα εμφανίζεται στην κορυφή κάθε σελίδας."
   unsubscribed:
+    title: "Οι προτιμήσεις email ενημερώθηκαν!"
     topic_description: "Για να εγγραφείτε ξανά στο %{link}, χρησιμοποιήστε τον έλεγχο ειδοποιήσεων στην κάτω ή στην δεξιά πλευρά του νήματος."
   unsubscribe:
     title: "Απεγγραφή"
@@ -617,6 +707,7 @@ el:
     mailing_list_mode: "Απενεργοποιήστε τη λειτουργία της ταχυδρομικής λίστας"
     different_user_description: "Έχετε συνδεθεί ως διαφορετικός χρήστης από αυτόν που επικοινωνήσαμε μέσω email. Παρακαλούμε αποσυνδεθείτε ή χρησιμοποιήστε την ανώνυμη λειτουργία και δοκιμάστε ξανά."
     log_out: "Αποσύνδεση"
+    submit: "Αποθήκευση προτιμήσεων"
     digest_frequency:
       never: "ποτέ"
       every_30_minutes: "κάθε 30 λεπτά"
@@ -648,13 +739,17 @@ el:
     default:
       labels:
         count: Άθροισμα
+        percent: Ποσοστό
         day: Ημέρα
     post_edits:
+      title: "Επεξεργασίες Αναρτήσεων"
       labels:
         edited_at: Ημερομηνία
         post: Ανάρτηση
         editor: Συντάκτης
+        author: Συντάκτης
         edit_reason: Αιτία
+      description: "Αριθμός νέων επεξεργασιών αναρτήσεων."
     user_flagging_ratio:
       labels:
         user: Χρήστης
@@ -662,7 +757,14 @@ el:
     moderators_activity:
       labels:
         moderator: Συντονιστής
+        time_read: Χρόνος ανάγνωσης
+        topic_count: Δημιουργημένα θέματα
+        post_count: Δημιουργημένες αναρτήσεις
+        pm_count: Δημιουργημένα ΠΜ
+        revision_count: Αναθεωρήσεις
     flags_status:
+      values:
+        no_action: Καμία ενέργεια
       labels:
         flag: Τύπος
     visits:
@@ -670,16 +772,26 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Αριθμός επισκέψεων"
     signups:
+      title: "Εγγραφές"
       xaxis: "Ημέρα"
+      yaxis: "Αριθμός εγγραφών"
+      description: "Νέες εγγραφές λογαριασμών για αυτήν την περίοδο."
     new_contributors:
+      title: "Νέοι Συνεισφέροντες"
       xaxis: "Ημέρα"
+      yaxis: "Αριθμός νέων συνεισφερόντων"
+      description: "Αριθμός χρηστών που έκαναν την πρώτη τους ανάρτηση κατά τη διάρκεια αυτής της περιόδου."
     trust_level_growth:
       yaxis: "Ημέρα"
     consolidated_page_views:
+      xaxis:
+        page_view_anon: "Ανώνυμοι χρήστες"
+        page_view_logged_in: "Συνδεδεμένοι χρήστες"
       yaxis: "Ημέρα"
       labels:
         post: Ανάρτηση
         editor: Συντάκτης
+        author: Συντάκτης
         edit_reason: Αιτία
     consolidated_api_requests:
       xaxis:
@@ -687,6 +799,9 @@ el:
         user_api: "User API"
       yaxis: "Ημέρα"
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "Ανώνυμος Περιηγητής"
+        page_view_logged_in_browser: "Συνδεδεμένος Περιηγητής"
       yaxis: "Ημέρα"
     site_traffic:
       title: "Κίνηση ιστότοπου"
@@ -865,17 +980,32 @@ el:
         page_views: "Προβολές σελίδας"
     web_hook_events_daily_aggregate:
       xaxis: "Ημέρα"
+      yaxis: "Αριθμός συμβάντων"
     suspicious_logins:
+      title: "Ύποπτες Συνδέσεις"
       labels:
         user: Χρήστης
+        client_ip: IP Πελάτη
         location: Τοποθεσία
+        browser: Περιηγητής
+        device: Συσκευή
+        os: Λειτουργικό Σύστημα
+        login_time: Ώρα Σύνδεσης
     staff_logins:
+      title: "Σύνδεση Διαχειριστή"
       labels:
         user: Χρήστης
         location: Τοποθεσία
+        login_at: Σύνδεση στις
+      description: "Λίστα ωρών σύνδεσης διαχειριστών με τοποθεσίες."
     top_uploads:
+      title: "Κορυφαίες Μεταφορτώσεις"
       labels:
         filename: Όνομα αρχείου
+        extension: Επέκταση
+        author: Συντάκτης
+        filesize: Μέγεθος αρχείου
+      description: "Λίστα όλων των μεταφορτώσεων κατά επέκταση, μέγεθος αρχείου και συντάκτη."
     top_users_by_likes_received:
       labels:
         user: Χρήστης
@@ -889,6 +1019,7 @@ el:
         user: Χρήστης
         qtt_like: Μου αρέσει που λήφθησαν
     topic_view_stats:
+      title: "Στατιστικά Προβολών Θέματος"
       labels:
         topic: Νήμα
         logged_in_views: Συνδεδεμένοι
@@ -906,6 +1037,7 @@ el:
         other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
       poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
       poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
+    back_from_logster_text: "Πίσω στον ιστότοπο"
   site_settings:
     disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
@@ -927,7 +1059,6 @@ el:
     educate_until_posts: "Όταν ο χρήστης ξεκινά να πληκτρολογεί τις πρώτες (n) νέες αναρτήσεις, εμφάνισε το αναδυόμενο πάνελ εκπαίδευσης νέου χρήστη στο συνθέτη."
     crawl_images: "Ανάκτηση εικόνων από απομακρυσμένα URLs για να προστεθούν οι σωστές διαστάσεις πλάτους και ύψους."
     download_remote_images_threshold: "Ελάχιστη απαιτούμενη χωρητικότητα δίσκου για το κατέβασμα απομακρυσμένων εικόνων τοπικά (σε ποσοστό)"
-    disabled_image_download_domains: "Οι απομακρυσμένες εικόνες δεν θα κατέβουν ποτέ από αυτούς τους τομείς. Λίστα pipe-delimited"
     editing_grace_period: "Για (n) δευτερόλεπτα μετά από την ανάρτηση, η επεξεργασία δεν θα δημιουργήσει νεα έκδoση στο ιστορικό της ανάρτησης. "
     edit_history_visible_to_public: "Επίτρεψε σε όλους να δουν προηγούμενες εκδοχές από μια επεξεργασμένη ανάρτηση. Όταν είναι απενεργοποιημένο, μόνο οι συνεργάτες μπορούν να τις δούν. "
     delete_removed_posts_after: "Αναρτήσεις που διαγράφονται από τον συγγραφέα θα διαγράφονται αυτόματα μετά από (n) ώρες. Εάν το ορίσεις στο 0, τότε θα διαγράφονται αμέσως."
@@ -941,7 +1072,6 @@ el:
     post_onebox_maxlength: "Μέγιστο μέγεθος μιας oneboxed ανάρτησης σε χαρακτήρες."
     allowed_inline_onebox_domains: "Μια λίστα από domains τα οποία θα γίνουν onebox σε σκίκρυνση αν αναφερθούν χωρίς τίτλο"
     notification_email: "Η από: διεύθυνση email που χρησιμοποιείται για την αποστολή όλων των απαραιτήτων μηνυμάτων του συστήματος. Ο τομέας που καθορίζεται εδώ πρέπει να έχει SPF, DKIM και reverse PTR αρχεία ρυθμισμένα σωστά για να φθάσει το μήνυμα."
-    email_custom_headers: "Μια pipe-delimited λίστα που περιέχει τις προσαρμοσμένες κεφαλίδες των μηνυμάτων email. "
     force_https: "Αναγκάζει το site σας να χρησιμοποιεί μόνο HTTPS. ΠΡΟΣΟΧΗ: Μην το ενεργοποιήσετε, μέχρι να επαληθεύσετε ότι το HTTPS είναι πλήρως εγκατεστημένο και λειτουργεί απολύτως παντού! Ελέγξατε το CDN σας, όλες τις κοινωνικές συνδέσεις και τα εξωτερικά σας λογότυπα / εξαρτήσεις για να βεβαιωθείτε ότι είναι όλα συμβατά με HTTPS;"
     summary_score_threshold: "Η ελάχιστη βαθμολογία που απαιτείται από μια ανάρτηση για να συμπεριληφθεί στο «Συνοψίστε αυτό το θέμα»"
     summary_percent_filter: "Όταν ο χρήστης επιλέξει «Συνοψίστε αυτό το θέμα», δείξε το κορυφαίο % των αναρτήσεων"
@@ -1150,11 +1280,9 @@ el:
     max_daily_gravatar_crawls: "Μέγιστος αριθμός φορών που το Discourse θα ελέγξει το Gravatar για προσαρμοσμένα avatars σε μία μέρα"
     enable_user_directory: "Παροχή καταλόγου χρηστών για περιήγηση"
     enable_group_directory: "Παροχή καταλόγου με ομάδες για περιήγηση"
-    anonymous_posting_min_trust_level: "Το ελάχιστο απαιτούμενο επίπεδο εμπιστοσύνης για ενεργοποίηση της ανώνυμης ανάρτησης"
     anonymous_account_duration_minutes: "Για να προστατευθεί η ανωνυμία δημιούργησε ένα νέο ανώνυμο λογαριασμό κάθε Ν λεπτά για κάθε χρήστη. Παράδειγμα: εάν τεθεί στο 600, μόλις περάσουν 600 λεπτά από την τελευταία ανάρτηση ΚΑΙ ο χρήστης αλλάξει σε ανώνυμος, ένας νέος ανώνυμος λογαριασμός δημιουργείται."
     hide_user_profiles_from_public: "Απενεργοποιήσε τις κάρτες χρηστών, τα προφίλ χρηστών και τον κατάλογο χρηστών για ανώνυμους χρήστες. "
     hide_suspension_reasons: "Να μην εμφανίζονται οι λόγοι αποβολής δημόσια στα προφίλ των χρηστών."
-    allowed_user_website_domains: "Ο ιστότοπος του χρήστη θα επιβεβαιώνεται με αυτά τα domains. Pipe-delimited λίστα"
     allow_profile_backgrounds: "Επίτρεψε στους χρήστες να μεταφορτώνουν εικόνες φόντου στο προφίλ."
     get_a_room_threshold: "Ο αριθμός των αναρτήσεων που πρέπει να κάνει ένας χρήστης στον ίδιο άνθρωπο και στο ίδιο θέμα προτού να προειδοποιηθεί. "
     enable_mobile_theme: "Οι κινητές συσκευές χρησιμοποιούν θέματα φιλικά προς τα κινητά, με δυνατότητα αλλαγής στον ολοκληρωμένο ιστότοπο. Απενεργοποιήστε το εάν θέλετε να χρησιμοποιήσετε ένα fully responsive stylesheet."
@@ -2077,10 +2205,7 @@ el:
   page_not_found:
     page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."
-    popular_topics: "Δημοφιλή"
-    recent_topics: "Πρόσφατα"
     see_more: "Περισσότερα"
-    search_title: "Αναζήτηση στην ιστοσελίδα"
     search_button: "Αναζήτηση"
   offline:
     title: "Cannot load app"
@@ -2440,6 +2565,9 @@ el:
           complete: "Ο χρήστης διαγράφηκε."
       reject:
         title: "Απόρριψη"
+      delete_post:
+        title: "Διαγραφή ανάρτησης"
+        complete: "Η ανάρτΗσΗ διαγράφΗκε"
       delete_user:
         complete: "Ο χρήστης διαγράφηκε"
   fallback_username: "χρήστης"

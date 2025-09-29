@@ -105,4 +105,4 @@ module DiscourseChatIntegration
   end
 end
 
-require_relative "mattermost_command_controller.rb"
+require_relative "mattermost_command_controller"

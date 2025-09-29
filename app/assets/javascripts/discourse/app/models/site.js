@@ -317,7 +317,7 @@ export default class Site extends RestModel {
 
   removeCategory(id) {
     const categories = this.categories;
-    const existingCategory = categories.findBy("id", id);
+    const existingCategory = categories.find((c) => c.id === id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
     }
@@ -326,7 +326,7 @@ export default class Site extends RestModel {
   updateCategory(newCategory) {
     const categories = this.categories;
     const categoryId = get(newCategory, "id");
-    const existingCategory = categories.findBy("id", categoryId);
+    const existingCategory = categories.find((c) => c.id === categoryId);
 
     // Don't update null permissions
     if (newCategory.permission === null) {

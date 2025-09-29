@@ -55,9 +55,21 @@ module PageObjects
       def has_bg_img?(url)
         has_css?(
           ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap",
-          style: "background-image: url(#{url})",
+          style: "background-image:url(#{url});",
           visible: :visible,
         )
+      end
+
+      def has_custom_text_color?(color)
+        has_css?(
+          ".welcome-banner .welcome-banner__title",
+          style: "color:#{color};",
+          visible: :visible,
+        )
+      end
+
+      def has_no_custom_text_color?(color)
+        has_no_css?(".welcome-banner .welcome-banner__title", style: "color:#{color};")
       end
 
       def above_topic_content?

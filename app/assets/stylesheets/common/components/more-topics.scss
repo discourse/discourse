@@ -18,12 +18,6 @@
         font-size: var(--d-topic-list-data-font-size);
         line-height: var(--line-height-medium);
 
-        .discourse-no-touch & {
-          &:hover {
-            background: var(--d-hover);
-          }
-        }
-
         .d-icon,
         &:hover .d-icon,
         &:active .d-icon {

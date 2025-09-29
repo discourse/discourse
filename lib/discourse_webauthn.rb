@@ -77,12 +77,12 @@ module DiscourseWebauthn
   end
 
   ##
-  # Clears the challenge from the user's secure session.
+  # Clears the challenge from the user's server session.
   #
   # @param user [User] the user to clear the challenge for
   # @param server_session [ServerSession] the session to clear the challenge from
   def self.clear_challenge(user, server_session)
-    server_session[self.session_challenge_key(user)] = nil
+    server_session.delete(session_challenge_key(user))
   end
 
   def self.allowed_credentials(user, server_session)
@@ -90,12 +90,12 @@ module DiscourseWebauthn
 
     {
       allowed_credential_ids: user.second_factor_security_key_credential_ids,
-      challenge: self.challenge(user, server_session),
+      challenge: challenge(user, server_session),
     }
   end
 
   def self.challenge(user, server_session)
-    server_session[self.session_challenge_key(user)]
+    server_session[session_challenge_key(user)]
   end
 
   def self.rp_id

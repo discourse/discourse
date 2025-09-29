@@ -136,6 +136,13 @@
     margin-bottom: var(--space-2);
     font-size: var(--font-down-2);
     word-break: break-word;
+
+    // special exception case because this class gets applied where it shouldn't, example in excerpts in bookmark pages
+    .only-emoji {
+      width: 1em;
+      height: 1em;
+      margin-block: 0;
+    }
   }
 }
 

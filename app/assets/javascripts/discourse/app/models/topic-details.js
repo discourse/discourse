@@ -62,7 +62,7 @@ export default class TopicDetails extends RestModel {
       type: "PUT",
       data: { name },
     }).then(() => {
-      groups.removeObject(groups.findBy("name", name));
+      groups.removeObject(groups.find((item) => item.name === name));
     });
   }
 
@@ -74,7 +74,7 @@ export default class TopicDetails extends RestModel {
       type: "PUT",
       data: { username },
     }).then(() => {
-      users.removeObject(users.findBy("username", username));
+      users.removeObject(users.find((item) => item.username === username));
     });
   }
 }

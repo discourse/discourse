@@ -54,11 +54,8 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        DB.query_single(sql, base_locale:)
-      end
-
-      def self.cache_key_for_type
-        "discourse_ai::translation::topic_candidates"
+        done, total = DB.query_single(sql, base_locale:)
+        { done:, total: }
       end
     end
   end

@@ -1117,9 +1117,8 @@ export default class SelectKit extends Component {
     if (this.value && this.mainCollection) {
       let highlighted;
       if (this.valueProperty) {
-        highlighted = this.mainCollection.findBy(
-          this.valueProperty,
-          this.value
+        highlighted = this.mainCollection.find(
+          (item) => item[this.valueProperty] === this.value
         );
       } else {
         const index = this.mainCollection.indexOf(this.value);

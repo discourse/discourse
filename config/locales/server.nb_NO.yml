@@ -936,7 +936,6 @@ nb_NO:
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
-    disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
     editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
@@ -953,7 +952,6 @@ nb_NO:
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
     allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
-    email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
@@ -1157,10 +1155,7 @@ nb_NO:
   page_not_found:
     page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
-    popular_topics: "Populært"
-    recent_topics: "Nylig"
     see_more: "Mer"
-    search_title: "Søk i denne siden"
     search_button: "Søk"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
@@ -1366,6 +1361,10 @@ nb_NO:
           complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        complete: "Post slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

@@ -790,6 +790,9 @@ he:
         chat:
           title: צ׳אט
     sidebar:
+      start_new_dm:
+        text: התחלת הודעה פרטית חדשה
+        title: יצירת צ׳אט אישי
       panels:
         chat:
           label: "צ׳אט"

@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+:root {
+  --d-post-control-background--hover: var(--d-hover);
+}
+
 .post-stream {
   .contents {
     font-size: var(--font-up-1);

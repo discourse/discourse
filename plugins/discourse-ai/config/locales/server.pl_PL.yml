@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Identyfikator modelu"
+        max_prompt_tokens: "Okno kontekstowe"
   discourse_automation:
     ai:
       flag_types:
@@ -96,6 +101,8 @@ pl_PL:
     ai_embeddings_semantic_search_use_hyde: "Użyj HyDE do semantycznego wyszukiwania na całej stronie. Używa LLM do utworzenia hipotetycznego wpisu na podstawie wyszukiwanego przez użytkownika terminu, aby ułatwić wyszukiwanie."
     ai_embeddings_semantic_quick_search_enabled: "Włącz opcję wyszukiwania semantycznego w wyskakującym menu wyszukiwania."
     ai_embeddings_semantic_related_include_closed_topics: "Uwzględnij zamknięte tematy w semantycznych wynikach wyszukiwania"
+    ai_embeddings_semantic_related_age_penalty: "Zastosuj wykładniczą karę wiekową do tematów w wynikach wyszukiwania semantycznego. 0,0 = brak kary, 0,3 = delikatne nastawienie do ostatnio aktywnych treści, 1,0+ = silne nastawienie do niedawno aktywnych treści."
+    ai_embeddings_semantic_related_age_time_scale: "Skala czasowa w dniach obliczania kary wiekowej. Tematy nieaktywne przez wiele dni otrzymują ~ 50% kary z karą = 1,0. Użyj 365 dla skali rocznej, 90 dla skali kwartalnej."
     ai_embeddings_semantic_search_hyde_model: "Model używany do rozwijania słów kluczowych w celu uzyskania lepszych wyników podczas wyszukiwania semantycznego"
     ai_embeddings_per_post_enabled: Generuj osadzenia dla każdego wpisu
     ai_summarization_enabled: "Włącz funkcję podsumowania"
@@ -113,6 +120,8 @@ pl_PL:
     ai_bot_public_sharing_allowed_groups: "Zezwól tym grupom na udostępnianie osobistych wiadomości AI publicznie za pośrednictwem unikalnego, publicznie dostępnego linku. Uwaga: jeśli Twoja witryna wymaga logowania, udostępnianie również będzie wymagało logowania."
     ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć PW z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
+    ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
+    ai_discover_persona: "Osobowość do wykorzystania w funkcji wyszukiwania odkrywczego"
     ai_stability_api_key: "Klucz dla API stability.ai"
     ai_stability_engine: "Silnik generowania obrazów do wykorzystania w stability.ai API"
     ai_stability_api_url: "Adres URL interfejsu API stability.ai"
@@ -402,6 +411,9 @@ pl_PL:
         report_runner:
           name: "Runner raportów"
           description: "Domyślna osobowość używana w skrypcie automatyzacji raportów"
+        discover:
+          name: "Odkrywaj"
+          description: "Domyślna osobowość używana w funkcji odkrywania (bezpłatne wyszukiwanie)"
       topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
       summarizing: "Podsumowanie tematu"
       searching: "Wyszukiwanie: '%{query}'"
@@ -633,6 +645,9 @@ pl_PL:
       updated: "zaktualizowane"
       set: "ustaw"
       removed: "usunięto"
+    translation:
+      errors:
+        disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"

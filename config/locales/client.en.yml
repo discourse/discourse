@@ -691,6 +691,7 @@ en:
     review:
       show_more: "Show more"
       show_less: "Show less"
+      back_to_queue: "Back to queue"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -4162,6 +4163,7 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        manage: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -5172,6 +5174,7 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
 
@@ -5964,6 +5967,7 @@ en:
         help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
         filter: "Filter theme site settings by setting name, description, or theme name..."
         filter_no_results: "No theme site settings match your filter"
+        site_setting_warning: 'This setting is managed by the default theme for your site (%{defaultThemeName}). You can modify it from <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">the theme''s edit page</a>.'
 
       search:
         modal_title: "Search everything in admin"
@@ -6315,6 +6319,7 @@ en:
               suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+              create: Create a new user.
             user_status:
               read: Read user status.
               update: Update user status.
@@ -6821,6 +6826,7 @@ en:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
+            is_disabled_title: "Restore is currently disabled. To enable it, search for 'allow restore' in site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -6879,6 +6885,7 @@ en:
           title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
+          multiple_bodies: "This email template has multiple bodies."
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"

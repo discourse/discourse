@@ -42,7 +42,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
     if server_session[:destination_url].present?
       preferred_origin = server_session[:destination_url]
-      server_session[:destination_url] = nil
+      server_session.delete(:destination_url)
     elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?
@@ -221,7 +221,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def persist_auth_token(auth)
     secret = SecureRandom.hex
     key = Users::AssociateAccountsController.key(secret)
-    secure_session.set key, auth.to_json, expires: 10.minutes
+    server_session.set key, auth.to_json, expires: 10.minutes
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

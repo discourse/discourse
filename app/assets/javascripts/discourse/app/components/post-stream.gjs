@@ -363,7 +363,7 @@ export default class PostStream extends Component {
             class="post-stream__bottom-boundary"
             {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
           ></div>
-          {{! this pluging outlet is only inserted when the real bottom of the post-stream is rendered
+          {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
            this is useful for plugins that want to render something at the bottom of the post-stream
            e.g. a "no more posts" message }}
           <PluginOutlet

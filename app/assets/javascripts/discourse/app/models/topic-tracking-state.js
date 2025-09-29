@@ -206,11 +206,11 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   isMutedTopic(topicId) {
-    return !!this.mutedTopics.findBy("topicId", topicId);
+    return !!this.mutedTopics.find((t) => t.topicId === topicId);
   }
 
   isUnmutedTopic(topicId) {
-    return !!this.unmutedTopics.findBy("topicId", topicId);
+    return !!this.unmutedTopics.find((t) => t.topicId === topicId);
   }
 
   /**

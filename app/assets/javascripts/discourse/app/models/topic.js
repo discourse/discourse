@@ -180,7 +180,7 @@ export default class Topic extends RestModel {
 
   static bulkOperation(topics, operation, options, isTracked) {
     const data = {
-      topic_ids: topics.mapBy("id"),
+      topic_ids: topics.map((topic) => topic.id),
       operation,
       tracked: isTracked,
     };
@@ -626,7 +626,7 @@ export default class Topic extends RestModel {
 
   @discourseComputed("archetype")
   archetypeObject(archetype) {
-    return Site.currentProp("archetypes").findBy("id", archetype);
+    return Site.currentProp("archetypes").find((item) => item.id === archetype);
   }
 
   toggleStatus(property) {
@@ -720,7 +720,7 @@ export default class Topic extends RestModel {
 
     const postIds = this.bookmarks
       .filterBy("bookmarkable_type", "Post")
-      .mapBy("bookmarkable_id");
+      .map((bookmark) => bookmark.bookmarkable_id);
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {

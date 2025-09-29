@@ -7,11 +7,11 @@
 he:
   admin_js:
     admin:
-      calendar: "לוח שנה"
+      calendar: "לוח שנה ואירועים"
       site_settings:
         categories:
           discourse_post_event: "אירוע Discourse"
-          discourse_calendar: "לוח שנה Discourse"
+          discourse_calendar: "לוח שנה ואירועים"
   js:
     notifications:
       titles:

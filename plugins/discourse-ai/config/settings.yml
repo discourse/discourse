@@ -423,12 +423,19 @@ discourse_ai:
     type: list
     list_type: compact
     area: "ai-features/bot"
-  ai_bot_discover_persona:
-    default: ""
+  ai_discover_enabled:
+    default: false
+    client: true
+    area: "ai-features/search"
+  ai_discover_persona:
+    default: "-34"
     type: enum
     client: true
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/search"
+  ai_bot_discover_persona: # Replaced by ai_discover_persona. TODO(roman): Remove 2026-01-01
+    default: ""
+    hidden: true
   ai_automation_max_triage_per_minute:
     default: 60
     hidden: true

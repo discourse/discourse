@@ -39,6 +39,10 @@ export default class CategoryCalendar extends Component {
   }
 
   get shouldRender() {
+    if (!this.siteSettings.discourse_post_event_enabled) {
+      return false;
+    }
+
     if (this.siteSettings.login_required && !this.currentUser) {
       return false;
     }
@@ -101,7 +105,9 @@ export default class CategoryCalendar extends Component {
         return data;
       });
 
-    return settings.findBy("categoryId", this.category.id.toString());
+    return settings.find(
+      (item) => item.categoryId === this.category.id.toString()
+    );
   }
 
   @action

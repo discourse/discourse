@@ -79,7 +79,9 @@ DiscourseAi::Personas::Persona.system_personas.each do |persona_class, id|
     end
   end
 
-  persona.tools = tools.map { |name, value| [name, value] }
+  forced_tool_names = instance.force_tool_use.map { |tool| tool.to_s.split("::").last }
+  persona.tools = tools.map { |name, value| [name, value, forced_tool_names.include?(name)] }
+  persona.forced_tool_count = instance.forced_tool_count
 
   persona.response_format = instance.response_format
   persona.examples = instance.examples

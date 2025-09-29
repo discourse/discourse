@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { eq } from "truth-helpers";
 import { i18n } from "discourse-i18n";
 import roundTime from "../../lib/round-time";
@@ -26,7 +27,9 @@ export default class GroupTimezones extends Component {
       if (this.#shouldAddMemberToGroup(this.filter, member)) {
         const timezone = member.timezone;
         const identifier = parseInt(moment.tz(timezone).format("YYYYMDHm"), 10);
-        let groupedTimezone = groupedTimezones.findBy("identifier", identifier);
+        let groupedTimezone = groupedTimezones.find(
+          (item) => item.identifier === identifier
+        );
 
         if (groupedTimezone) {
           groupedTimezone.members.push(member);
@@ -51,7 +54,7 @@ export default class GroupTimezones extends Component {
     });
 
     groupedTimezones = groupedTimezones
-      .sortBy("offset")
+      .sort((a, b) => compare(a?.offset, b?.offset))
       .filter((g) => g.members.length);
 
     let newDayIndex;

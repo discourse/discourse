@@ -158,6 +158,7 @@ hu:
     mention_warning:
       dismiss: "elvetés"
       cannot_see: "%{first_identifier} nem tud hozzáférni ehhez a csatornához, és nem kapott értesítést."
+      cannot_see_group: "A %{group_name} néhány tagja nem férhet hozzá ehhez a csatornához, és nem is értesítették őket."
       cannot_see_multiple:
         one: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."
         other: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."

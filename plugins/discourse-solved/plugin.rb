@@ -21,7 +21,7 @@ module ::DiscourseSolved
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
 end
 
-require_relative "lib/discourse_solved/engine.rb"
+require_relative "lib/discourse_solved/engine"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s

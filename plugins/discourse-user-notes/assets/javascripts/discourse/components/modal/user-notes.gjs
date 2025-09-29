@@ -1,17 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
-import UserLink from "discourse/components/user-link";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import UserNote from "../user-note";
 
 export default class UserNotesModal extends Component {
   @service dialog;
@@ -25,6 +21,12 @@ export default class UserNotesModal extends Component {
     if (this.callback) {
       this.callback(this.args.model.note.length);
     }
+  }
+
+  get subtitle() {
+    return applyValueTransformer("user-notes-modal-subtitle", "", {
+      model: this.args.model,
+    });
   }
 
   /**
@@ -86,6 +88,7 @@ export default class UserNotesModal extends Component {
     <DModal
       @closeModal={{@closeModal}}
       @title={{i18n "user_notes.title"}}
+      @subtitle={{this.subtitle}}
       class="user-notes-modal"
     >
       <Form
@@ -109,42 +112,7 @@ export default class UserNotesModal extends Component {
       </Form>
 
       {{#each @model.note as |n|}}
-        <div class="user-note">
-          <div class="posted-by">
-            <UserLink @user={{n.created_by}}>
-              {{avatar n.created_by imageSize="small"}}
-            </UserLink>
-          </div>
-          <div class="note-contents">
-            <div class="note-info">
-              <span class="username">{{n.created_by.username}}</span>
-              <span class="post-date">{{ageWithTooltip n.created_at}}</span>
-
-              {{#if n.can_delete}}
-                <span class="controls">
-                  <DButton
-                    @action={{fn this.removeNote n}}
-                    @icon="far-trash-can"
-                    @title="user_notes.remove"
-                    class="btn-small btn-danger"
-                  />
-                </span>
-              {{/if}}
-            </div>
-
-            <div class="cooked">
-              <CookText @rawText={{n.raw}} />
-            </div>
-
-            {{#if n.post_id}}
-              <a href={{n.post_url}} class="btn btn-small">
-                {{i18n "user_notes.show_post"}}
-              </a>
-            {{/if}}
-          </div>
-
-          <div class="clearfix"></div>
-        </div>
+        <UserNote @note={{n}} @removeNote={{this.removeNote}} />
       {{/each}}
     </DModal>
   </template>

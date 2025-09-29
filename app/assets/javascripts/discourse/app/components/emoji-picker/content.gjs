@@ -266,7 +266,7 @@ export default class EmojiPicker extends Component {
 
       const nextEmoji = allEmojis()
         .filter((c) => c.offsetTop > event.target.offsetTop)
-        .findBy("offsetLeft", event.target.offsetLeft);
+        .find((value) => value.offsetLeft === event.target.offsetLeft);
 
       if (nextEmoji) {
         nextEmoji.focus();
@@ -287,7 +287,7 @@ export default class EmojiPicker extends Component {
       const prevEmoji = allEmojis()
         .reverse()
         .filter((c) => c.offsetTop < event.target.offsetTop)
-        .findBy("offsetLeft", event.target.offsetLeft);
+        .find((value) => value.offsetLeft === event.target.offsetLeft);
 
       if (prevEmoji) {
         prevEmoji.focus();

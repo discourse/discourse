@@ -386,7 +386,7 @@ export default class AdminReport extends Component {
 
     const sort = (report) => {
       if (report.length > 1) {
-        return report.findBy("type", this.args.dataSourceName);
+        return report.find((value) => value.type === this.args.dataSourceName);
       } else {
         return report;
       }

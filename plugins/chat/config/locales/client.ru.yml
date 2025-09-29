@@ -822,6 +822,9 @@ ru:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Начать новый DM
+        title: Создать личный чат
       panels:
         chat:
           label: "Чат"

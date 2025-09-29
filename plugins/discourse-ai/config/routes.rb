@@ -24,9 +24,11 @@ DiscourseAi::Engine.routes.draw do
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"
     get "show-debug-info/:id" => "bot#show_debug_info_by_id"
     post "post/:post_id/stop-streaming" => "bot#stop_streaming_response"
+  end
 
-    get "discover" => "bot#discover"
-    post "discover/continue-convo" => "bot#discover_continue_convo"
+  scope module: :discover, path: "/discoveries", defaults: { format: :json } do
+    get "reply" => "discoveries#reply"
+    post "continue-convo" => "discoveries#continue_convo"
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
@@ -61,6 +63,10 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :sentiment, path: "/sentiment", defaults: { format: :json } do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
+  end
+
+  scope module: :translation, path: "/translate", defaults: { format: :json } do
+    post "/posts/:post_id" => "translation#translate"
   end
 end
 

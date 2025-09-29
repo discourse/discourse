@@ -67,9 +67,9 @@ describe CalendarEvent do
     raw = %{Rome [date="2018-06-05" time="10:20:00"]}
     post = create_post(raw: raw, topic: calendar_post.topic)
 
-    PostDestroyer.new(Discourse.system_user, post).destroy
-    PostDestroyer.new(Discourse.system_user, calendar_post).destroy
-    PostDestroyer.new(Discourse.system_user, post.reload).recover
+    PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy
+    PostDestroyer.new(Discourse.system_user, calendar_post, context: "spec").destroy
+    PostDestroyer.new(Discourse.system_user, post.reload, context: "spec").recover
 
     expect(post.deleted_at).to eq(nil)
   end
@@ -78,10 +78,10 @@ describe CalendarEvent do
     post = create_post(raw: 'Rome [date="2018-06-05" time="10:20:00"]', topic: calendar_post.topic)
     expect(CalendarEvent.count).to eq(1)
 
-    PostDestroyer.new(Discourse.system_user, calendar_post.reload).destroy
+    PostDestroyer.new(Discourse.system_user, calendar_post.reload, context: "spec").destroy
     expect(CalendarEvent.count).to eq(0)
 
-    PostDestroyer.new(Discourse.system_user, calendar_post.reload).recover
+    PostDestroyer.new(Discourse.system_user, calendar_post.reload, context: "spec").recover
     expect(CalendarEvent.count).to eq(1)
   end
 
@@ -150,7 +150,7 @@ describe CalendarEvent do
 
       expect(CalendarEvent.find_by(post_id: post.id)).to be_present
 
-      PostDestroyer.new(Discourse.system_user, post).destroy
+      PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy
 
       expect(CalendarEvent.find_by(post_id: post.id)).to_not be_present
     end

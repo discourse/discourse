@@ -127,7 +127,7 @@ export async function setDefaultColorScheme(scheme, store, options = {}) {
     }
 
     const themes = await store.findAll("theme");
-    const defaultTheme = themes.findBy("default", true);
+    const defaultTheme = themes.find((value) => value.default === true);
 
     if (!defaultTheme) {
       throw new Error("Could not find default theme");

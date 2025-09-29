@@ -4,7 +4,7 @@ require "mysql2"
 require "time"
 require "date"
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::FLARUM < ImportScripts::Base
   #SET THE APPROPRIATE VALUES FOR YOUR MYSQL CONNECTION

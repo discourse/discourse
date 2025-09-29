@@ -17,7 +17,7 @@
     "@babel/core": "^7.28.4",
     "@ember/render-modifiers": "^3.0.0",
     "@floating-ui/dom": "^1.7.4",
-    "ember-auto-import": "^2.10.0",
+    "ember-auto-import": "^2.10.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-curry-component": "^0.3.1",

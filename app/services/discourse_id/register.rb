@@ -10,7 +10,6 @@ class DiscourseId::Register
   step :store_challenge_token
   step :register_with_challenge
   step :store_credentials
-  step :enable_discourse_id
 
   private
 
@@ -92,11 +91,7 @@ class DiscourseId::Register
     SiteSetting.discourse_id_client_secret = data["client_secret"]
   end
 
-  def enable_discourse_id
-    SiteSetting.enable_discourse_id = true
-  end
-
   def discourse_id_url
-    SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
+    @url ||= SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
   end
 end

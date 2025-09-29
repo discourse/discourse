@@ -184,7 +184,7 @@ export default class PostQuotedContent extends Component {
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
-        we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
+        we need to handle the attributes below in the existing wrapper received as @wrapperElement in this case }}
         {{elementClass
           (if this.isQuotedPostIgnored "ignored-user")
           target=@wrapperElement

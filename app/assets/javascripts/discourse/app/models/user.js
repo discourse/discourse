@@ -384,7 +384,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = details?.allowed_groups;
 
     // directly targeted so go to inbox
-    if (!groups || allowedUsers?.findBy("id", this.id)) {
+    if (!groups || allowedUsers?.find((user) => user.id === this.id)) {
       return userPath(`${username}/messages`);
     } else if (groups) {
       const firstAllowedGroup = groups.find((allowedGroup) =>
@@ -425,9 +425,8 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("trust_level")
   trustLevel(trustLevel) {
-    return Site.currentProp("trustLevels").findBy(
-      "id",
-      parseInt(trustLevel, 10)
+    return Site.currentProp("trustLevels").find(
+      (l) => l.id === parseInt(trustLevel, 10)
     );
   }
 
@@ -795,7 +794,7 @@ export default class User extends RestModel.extend(Evented) {
     if (isEmpty(this.stats)) {
       return [];
     }
-    return this.stats.rejectBy("isPM");
+    return this.stats.filter((stat) => !stat.isPM);
   }
 
   findDetails(options) {
@@ -1362,7 +1361,7 @@ User.reopenClass({
     });
 
     const result = A();
-    result.pushObjects(stats.rejectBy("isResponse"));
+    result.pushObjects(stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;
     result.forEach((item, index) => {

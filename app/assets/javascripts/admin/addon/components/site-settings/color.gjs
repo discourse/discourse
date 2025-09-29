@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import ColorInput from "admin/components/color-input";
 
+const SETTINGS_WITH_FALLBACK_COLORS = ["welcome_banner_text_color"];
+
 function RGBToHex(rgb) {
   // Choose correct separator
   let sep = rgb.includes(",") ? "," : " ";
@@ -25,6 +27,15 @@ function RGBToHex(rgb) {
 }
 
 export default class Color extends Component {
+  get fallbackColor() {
+    if (SETTINGS_WITH_FALLBACK_COLORS.includes(this.args.setting?.setting)) {
+      return getComputedStyle(document.documentElement).getPropertyValue(
+        "--primary"
+      );
+    }
+    return null;
+  }
+
   get valid() {
     let value = this.args.value.toLowerCase();
 
@@ -48,6 +59,7 @@ export default class Color extends Component {
   <template>
     <ColorInput
       @hexValue={{readonly @value}}
+      @fallbackHexValue={{this.fallbackColor}}
       @valid={{@valid}}
       @onlyHex={{false}}
       @styleSelection={{false}}

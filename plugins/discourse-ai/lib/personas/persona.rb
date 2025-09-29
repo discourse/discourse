@@ -71,6 +71,7 @@ module DiscourseAi
             SpamDetector => -31,
             ContentCreator => -32,
             ReportRunner => -33,
+            Discover => -34,
           }
         end
 

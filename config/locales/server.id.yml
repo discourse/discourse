@@ -1222,8 +1222,6 @@ id:
     top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
     hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
-    blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
-    allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
     include_in_discourse_discover: "Izinkan CDCK, Inc (\"Discourse\") untuk menampilkan komunitas ini di <a href='https://discover.discourse.org' target='_blank'>halaman Discover</a> dan dalam materi pemasaran Discourse. Dengan demikian, Anda akan membagikan data yang diperlukan agar situs Anda dapat disertakan dalam layanan ini. Harap diperhatikan bahwa promosi komunitas merupakan kebijakan Discourse."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
@@ -1889,6 +1887,15 @@ id:
           complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      no_action_post:
+        title: "Tidak ada tindakan"
+      delete_post:
+        title: "Hapus postingan"
+        complete: "Pos dihapus"
+      hide_post:
+        title: "Sembunyikan pos"
+      restore_post:
+        title: "Pulihkan post"
       no_action_user:
         title: "Tidak ada tindakan"
       silence_user:

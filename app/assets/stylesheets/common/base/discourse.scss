@@ -808,6 +808,11 @@ form {
       padding-left: env(safe-area-inset-left);
     }
   }
+
+  .no-ember & {
+    padding-left: max(var(--space-4), var(--main-outlet-padding-x));
+    padding-right: max(var(--space-4), var(--main-outlet-padding-x));
+  }
 }
 
 #main {
