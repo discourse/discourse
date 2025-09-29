@@ -17,6 +17,12 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `topic_allowed_groups` record in the IntermediateDB.
+    #
+    # @param group_id   [Integer, String]
+    # @param topic_id   [Integer, String]
+    #
+    # @return [void]
     def self.create(group_id:, topic_id:)
       ::Migrations::Database::IntermediateDB.insert(SQL, group_id, topic_id)
     end
