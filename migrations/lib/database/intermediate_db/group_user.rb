@@ -20,6 +20,15 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `group_users` record in the IntermediateDB.
+    #
+    # @param group_id             [Integer, String]
+    # @param user_id              [Integer, String]
+    # @param created_at           [Time, nil]
+    # @param notification_level   [Integer, nil]
+    # @param owner                [Boolean, nil]
+    #
+    # @return [void]
     def self.create(group_id:, user_id:, created_at: nil, notification_level: nil, owner: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

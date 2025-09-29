@@ -29,6 +29,24 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `user_fields` record in the IntermediateDB.
+    #
+    # @param original_id         [Integer, String]
+    # @param created_at          [Time, nil]
+    # @param description         [String]
+    # @param editable            [Boolean, nil]
+    # @param external_name       [String, nil]
+    # @param external_type       [String, nil]
+    # @param field_type_enum     [Integer]
+    # @param name                [String]
+    # @param position            [Integer, nil]
+    # @param requirement         [Integer, nil]
+    # @param searchable          [Boolean, nil]
+    # @param show_on_profile     [Boolean, nil]
+    # @param show_on_signup      [Boolean, nil]
+    # @param show_on_user_card   [Boolean, nil]
+    #
+    # @return [void]
     def self.create(
       original_id:,
       created_at: nil,
