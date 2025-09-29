@@ -605,6 +605,11 @@ en:
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      bulk_delete: "Delete selected"
+      bulk_delete_confirmation: "Delete drafts"
+      bulk_delete_message:
+        one: "Are you sure you want to delete this draft?"
+        other: "Are you sure you want to delete these %{count} drafts?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
@@ -4073,6 +4078,13 @@ en:
       title: "Latest posts"
       empty: "There are no posts"
       aria_post_number: "%{title} - post #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} post selected"
+          other: "%{count} posts selected"
+        select_all: "Select all"
+        clear_all: "Clear all"
+        actions: "Bulk actions"
 
     post:
       confirm_delete: "Are you sure you want to delete this post?"
