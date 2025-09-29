@@ -1313,7 +1313,7 @@ class Category < ActiveRecord::Base
   end
 
   def auto_close_hours=(hours)
-    if hours.present?
+    if hours.present? && hours.to_f > 0
       set_or_create_default_timer duration_minutes: hours.to_f.hours.in_minutes,
                                   execute_at: Time.now,
                                   status_type: BaseTimer.types[:close],
