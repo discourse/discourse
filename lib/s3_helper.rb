@@ -279,7 +279,7 @@ class S3Helper
     if obj.s3_use_iam_profile
       opts[:profile] = profile if profile.present?
     else
-      # Legacy behavior for self-hosters
+      # Legacy behavior
       opts[:access_key_id] = obj.s3_access_key_id
       opts[:secret_access_key] = obj.s3_secret_access_key
     end
