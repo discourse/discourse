@@ -3113,6 +3113,8 @@ en:
         visit: "Open link in external tab"
         link_copied: "Link copied!"
 
+      unsupported_token: "The rich editor doesn't support all features you're using; switching to Markdown"
+
     notifications:
       tooltip:
         regular:
