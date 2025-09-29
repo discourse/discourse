@@ -1514,7 +1514,6 @@ span.mention {
 }
 
 .post-notice {
-  box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-very-low);
   border-top: 1px solid var(--content-border-color);
@@ -1527,35 +1526,27 @@ span.mention {
   padding: var(--topic-body-width-padding);
   font-size: var(--font-down-1-rem);
   border-radius: var(--d-border-radius);
-
-  &.new-user {
-    gap: var(--space-2);
-  }
+  gap: var(--space-2);
+  box-sizing: border-box;
 
   .emoji {
     width: 1.5em;
     height: 1.5em;
   }
 
-  .post-notice-message {
-    p {
-      display: inline;
-    }
-
-    .custom_created_by {
-      display: inline-block;
-    }
+  .d-icon {
+    width: 1.25em;
+    height: 1.25em;
+    color: var(--primary-medium);
   }
 
   p {
+    display: inline;
     margin: 0;
   }
 
-  .d-icon {
-    font-size: 2em;
-    width: var(--topic-avatar-width);
-    color: var(--primary-high);
-    margin-right: var(--topic-body-width-padding);
+  .custom_created_by {
+    display: inline-block;
   }
 }
 
