@@ -261,6 +261,7 @@ module DiscourseAi
 
       def find_tool(partial, bot_user:, llm:, context:, existing_tools: [])
         return nil if !partial.is_a?(DiscourseAi::Completions::ToolCall)
+        pp partial.to_s
         tool_instance(
           partial,
           bot_user: bot_user,
