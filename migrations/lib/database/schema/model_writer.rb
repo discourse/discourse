@@ -5,8 +5,9 @@ require "syntax_tree/rake_tasks"
 
 module Migrations::Database::Schema
   class ModelWriter
-    def initialize(namespace, header)
-      @namespace = namespace
+    def initialize(model_namespace, enum_namespace, header)
+      @model_namespace = model_namespace
+      @enum_namespace = enum_namespace
       @header = header.gsub(/^/, "# ")
     end
 
@@ -14,32 +15,16 @@ module Migrations::Database::Schema
       "#{table.name.singularize}.rb"
     end
 
-    def self.format_files(path)
-      glob_pattern = File.join(path, "**/*.rb")
-
-      system(
-        "bundle",
-        "exec",
-        "stree",
-        "write",
-        glob_pattern,
-        exception: true,
-        out: File::NULL,
-        err: File::NULL,
-      )
-    rescue StandardError
-      raise "Failed to run `bundle exec stree write '#{glob_pattern}'`"
-    end
-
     def output_table(table, output_stream)
+      module_name = ::Migrations::Database::Schema.to_singular_classname(table.name)
       columns = table.sorted_columns
 
       output_stream.puts "# frozen_string_literal: true"
       output_stream.puts
       output_stream.puts @header
       output_stream.puts
-      output_stream.puts "module #{@namespace}"
-      output_stream.puts "  module #{to_singular_classname(table.name)}"
+      output_stream.puts "module #{@model_namespace}"
+      output_stream.puts "  module #{module_name}"
       output_stream.puts "    SQL = <<~SQL"
       output_stream.puts "      INSERT INTO #{escape_identifier(table.name)} ("
       output_stream.puts column_names(columns)
@@ -50,6 +35,7 @@ module Migrations::Database::Schema
       output_stream.puts "    SQL"
       output_stream.puts "    private_constant :SQL"
       output_stream.puts
+      output_stream.puts method_documentation(table.name, columns)
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
@@ -63,10 +49,6 @@ module Migrations::Database::Schema
     end
 
     private
-
-    def to_singular_classname(snake_case_string)
-      snake_case_string.downcase.singularize.camelize
-    end
 
     def column_names(columns)
       columns.map { |c| "        #{escape_identifier(c.name)}" }.join(",\n")
@@ -95,6 +77,81 @@ module Migrations::Database::Schema
       end
 
       placeholders
+    end
+
+    def method_documentation(table_name, columns)
+      max_column_name_length = columns.map { |c| c.name.length }.max
+
+      documentation = +"    # Creates a new `#{table_name}` record in the IntermediateDB.\n"
+      documentation << "    #\n"
+
+      param_documentation =
+        columns.map do |c|
+          param_name = c.name.ljust(max_column_name_length)
+          datatypes = datatypes_for_documentation(c)
+          "    # @param #{param_name}   [#{datatypes}]"
+        end
+
+      max_line_length = param_documentation.map(&:length).max
+      see_documenation = []
+
+      columns.each_with_index do |column, index|
+        if (enum = column.enum)
+          enum_module_name = ::Migrations::Database::Schema.to_singular_classname(enum.name)
+          enum_value_names = enum.values.sort_by { |_k, v| v }.map(&:first)
+          first_const_name = ::Migrations::Database::Schema.to_const_name(enum_value_names.first)
+
+          enum_documentation =
+            "    #   Any constant from #{enum_module_name} (e.g. #{enum_module_name}::#{first_const_name})"
+
+          line = param_documentation[index].ljust(max_line_length)
+          param_documentation[index] = "#{line}\n#{enum_documentation}"
+
+          see_documenation << "#{@enum_namespace}::#{enum_module_name}"
+        end
+      end
+
+      documentation << param_documentation.join("\n")
+      documentation << "\n    #\n"
+      documentation << "    # @return [void]"
+
+      if see_documenation.any?
+        documentation << "\n    #\n"
+        documentation << see_documenation.map { |see| "    # @see #{see}" }.join("\n")
+      end
+
+      documentation
+    end
+
+    def datatypes_for_documentation(column)
+      datatypes =
+        Array(
+          case column.datatype
+          when :datetime, :date
+            "Time"
+          when :boolean
+            "Boolean"
+          when :inet
+            "IPAddr"
+          when :blob
+            "String"
+          when :json
+            "Object"
+          when :float
+            "Float"
+          when :integer
+            "Integer"
+          when :numeric
+            %w[Integer String]
+          when :text
+            "String"
+          else
+            raise "Unknown datatype: #{column.datatype}"
+          end,
+        )
+
+      datatypes << "nil" if column.nullable
+      datatypes.join(", ")
     end
 
     def method_parameters(columns)
@@ -126,7 +183,7 @@ module Migrations::Database::Schema
             when :float, :integer, :numeric, :text
               c.name
             else
-              raise "Unknown dataype: #{type}"
+              raise "Unknown datatype: #{c.datatype}"
             end
           "        #{argument},"
         end

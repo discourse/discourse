@@ -2,15 +2,17 @@
 
 module Migrations::Database
   module Schema
-    Table =
+    Definition = Data.define(:tables, :enums)
+    TableDefinition =
       Data.define(:name, :columns, :indexes, :primary_key_column_names, :constraints) do
         def sorted_columns
           columns.sort_by { |c| [c.is_primary_key ? 0 : 1, c.name] }
         end
       end
-    Column = Data.define(:name, :datatype, :nullable, :max_length, :is_primary_key)
-    Index = Data.define(:name, :column_names, :unique, :condition)
-    Constraint = Data.define(:name, :type, :condition)
+    ColumnDefinition = Data.define(:name, :datatype, :nullable, :max_length, :is_primary_key, :enum)
+    IndexDefinition = Data.define(:name, :column_names, :unique, :condition)
+    ConstraintDefinition = Data.define(:name, :type, :condition)
+    EnumDefinition = Data.define(:name, :values, :datatype)
 
     class ConfigError < StandardError
     end
@@ -171,6 +173,31 @@ module Migrations::Database
       else
         identifier
       end
+    end
+
+    def self.to_singular_classname(snake_case_string)
+      snake_case_string.downcase.singularize.camelize
+    end
+
+    def self.to_const_name(name)
+      name.parameterize.underscore.upcase
+    end
+
+    def self.format_ruby_files(path)
+      glob_pattern = File.join(path, "*.rb")
+
+      system(
+        "bundle",
+        "exec",
+        "stree",
+        "write",
+        glob_pattern,
+        exception: true,
+        out: File::NULL,
+        err: File::NULL,
+      )
+    rescue StandardError
+      raise "Failed to run `bundle exec stree write '#{glob_pattern}'`"
     end
   end
 end
