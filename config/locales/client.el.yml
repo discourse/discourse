@@ -833,6 +833,9 @@ el:
         solution_marked: "Λύση επισημάνθηκε"
         topic_has_solution: "Αυτό το θέμα έχει λύση"
         visibility: "Ορατότητα"
+      help:
+        moderation_guide: "Οδηγός εποπτείας Discourse"
+        spam_detection: "Ανίχνευση spam"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
         description: "Λάβαμε την ανάρτησή σου, αλλά πρέπει πρώτα να εγκριθεί από έναν συντονιστή πριν εμφανιστεί. Παρακαλώ περιμένετε."

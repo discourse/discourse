@@ -74,6 +74,7 @@ hu:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     ember_selector_error: "Sajnáljuk, az #ember vagy az .ember-view CSS-szelektorok használata nem engedélyezett, mert ezek a nevek dinamikusan generálódnak futás közben és idővel változnak, ami végül a CSS meghibásodását eredményezi. Próbálkozzon másik választóval."
+    setting_not_themeable: "A(z) „%{name}” beállítás nem témázható."
     import_error:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
@@ -1567,7 +1568,10 @@ hu:
         total_views: Összes
       description: "A 100 legnézettebb téma egy adott dátumtartományban, a bejelentkezett és az anonim megtekintések kombinálásával. Kategóriák szerint szűrhető."
     associated_accounts_by_provider:
+      title: "Kapcsolódó fiókok bejelentkezési mód szerint"
       labels:
+        provider: Belépési szolgáltató
+        no_accounts: "Nincsenek társított fiókok"
         total_users: "Tagok száma összesen"
   dashboard:
     problem:

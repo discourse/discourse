@@ -15,9 +15,15 @@ hr:
         label: "Kreirajte temu u kojoj možete glasati za pojedinu objavu."
       composer_actions:
         create_as_post_voting:
+          label: "Uključi/isključi glasanje za objavu"
           desc: "Tema će biti kreirana s objavama za koje se može glasati."
         remove_as_post_voting:
+          label: "Ukloni glasanje za objavu"
           desc: "Tema će biti kreirana u uobičajenom formatu."
+    answer_lowercase:
+      one: odgovor
+      few: odgovora
+      other: odgovora
     post_voting:
       post:
         post_voting_comment:
@@ -39,6 +45,17 @@ hr:
               disagree:
                 title: "Odbaci"
       topic:
+        answer:
+          label: "Odgovori"
+          help: "započnite sastavljanje odgovora"
         sort_by: "Sortiraj po"
         votes: "Glasovi"
         activity: "Aktivnosti"
+        answer_count:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        voters_count_diff:
+          one: "i još %{count} korisnik..."
+          few: "i još %{count} korisnika..."
+          other: "i još %{count} korisnika..."
