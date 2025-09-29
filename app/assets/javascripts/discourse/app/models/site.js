@@ -133,6 +133,10 @@ export default class Site extends RestModel {
       );
     }
 
+    if (Mobile.mobileForced) {
+      return true;
+    }
+
     if (this.siteSettings.viewport_based_mobile_mode) {
       return withSilencedDeprecations(
         "discourse.static-viewport-initialization",
