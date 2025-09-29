@@ -6509,6 +6509,7 @@ cs:
               suspend: Pozastavit uživatelské účty.
               delete: Odstranit uživatelské účty.
               list: Získat seznam uživatelů.
+              create: Vytvoření nového uživatele.
             user_status:
               read: Číst stav uživatele.
               update: Aktualizovat stav uživatele.
@@ -7069,6 +7070,7 @@ cs:
           title: "Email"
           subject: "Předmět"
           multiple_subjects: "Tato šablona emailu má více předmětů."
+          multiple_bodies: "Tato šablona e-mailu má více těl."
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"

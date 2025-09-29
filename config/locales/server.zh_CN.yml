@@ -5210,6 +5210,8 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      post_actions:
+        bundle_title: "您想对这篇帖子做什么？"
       no_action_post:
         title: "无行动"
       delete_post:
@@ -5218,6 +5220,8 @@ zh_CN:
         title: "隐藏帖子"
       restore_post:
         title: "恢复帖子"
+      user_actions:
+        bundle_title: "您想对这位用户做什么？"
       no_action_user:
         title: "无行动"
       silence_user:

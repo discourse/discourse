@@ -9,6 +9,12 @@ ru:
     discourse_automation_enabled: "Включить плагин «discourse-automation»"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Скрипт не может быть пустым"
+          trigger_blank: "Триггер не может быть пустым"
+          script_missing_required_fields: "В скрипте отсутствуют обязательные поля: %{fields}"
+          trigger_missing_required_fields: "В триггере отсутствуют обязательные поля: %{fields}"
       fields:
         required_field: 'Поле `%{name}` должно быть заполнено: `%{target}:%{target_name}`.'
         invalid_field: Компонент поля `%{component}` не может использоваться для `%{target}:%{target_name}`.
@@ -62,6 +68,9 @@ ru:
       topic:
         title: Тема
         description: Связанный скрипт будет использоваться только в указанной теме (например, это удобно для скриптов, выполняющих проверку)
+      topic_closed:
+        title: Тема закрыта
+        description: Запускает скрипт при закрытии темы.
       after_post_cook:
         title: После финализации публикации
         description: Автоматизация будет запущена, когда будет финализирован контент публикации
