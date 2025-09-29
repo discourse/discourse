@@ -53,6 +53,18 @@ RSpec.describe SecondFactor::Actions::GrantAdmin do
       )
     end
 
+    it "respects allowed_unicode_username_characters in username" do
+      SiteSetting.unicode_usernames = true
+      SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
+
+      user.update!(username: "Anführerin")
+
+      instance = create_instance(admin)
+      hash = instance.second_factor_auth_required!(params({ user_id: user.id }))
+      expect(hash[:callback_params]).to eq({ user_id: user.id })
+      expect(hash[:redirect_url]).to eq("/admin/users/#{user.id}/Anf%C3%BChrerin")
+    end
+
     it "ensures the acting user is admin" do
       instance = create_instance(user)
       expect { instance.second_factor_auth_required!(params({ user_id: user.id })) }.to raise_error(
