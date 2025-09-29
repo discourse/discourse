@@ -8,9 +8,23 @@ module Migrations::Database::Schema
     end
 
     def load_schema
+      enums = load_enums
+      tables = load_tables
+      Definition.new(tables:, enums:)
+    end
+
+    private
+
+    def load_enums
+      enums = EnumResolver.new(@schema_config[:enums]).resolve
+      @enums_by_name = enums.map { |enum| [enum.name, enum] }.to_h
+      enums
+    end
+
+    def load_tables
       @db = ActiveRecord::Base.lease_connection
 
-      schema = []
+      tables = []
       existing_table_names = @db.tables.to_set
 
       @schema_config[:tables].sort.each do |table_name, config|
@@ -24,17 +38,15 @@ module Migrations::Database::Schema
         end
 
         if existing_table_names.include?(table_name)
-          schema << table(table_name, config, table_alias)
+          tables << table(table_name, config, table_alias)
         end
       end
 
       @db = nil
       ActiveRecord::Base.release_connection
 
-      schema
+      tables
     end
-
-    private
 
     def table(table_name, config, table_alias = nil)
       primary_key_column_names =
@@ -42,16 +54,20 @@ module Migrations::Database::Schema
 
       columns =
         filtered_columns_of(table_name, config).map do |column|
-          Column.new(
+          modified_column = modified_column_for(column, config)
+          enum = @enums_by_name[modified_column[:enum]] if modified_column&.key?(:enum)
+
+          ColumnDefinition.new(
             name: name_for(column),
-            datatype: datatype_for(column),
-            nullable: nullable_for(column, config),
+            datatype: datatype_for(column, modified_column, enum),
+            nullable: nullable_for(column, modified_column),
             max_length: column.type == :text ? column.limit : nil,
             is_primary_key: primary_key_column_names.include?(column.name),
+            enum:,
           )
         end + added_columns(config, primary_key_column_names)
 
-      Table.new(
+      TableDefinition.new(
         table_alias || table_name,
         columns,
         indexes(config),
@@ -65,6 +81,8 @@ module Migrations::Database::Schema
       columns_by_name.except!(*@global.excluded_column_names)
 
       if (included_columns = config.dig(:columns, :include))
+        modified_columns = config.dig(:columns, :modify)&.map { |c| c[:name] }
+        included_columns = included_columns + modified_columns if modified_columns
         columns_by_name.slice!(*included_columns)
       elsif (excluded_columns = config.dig(:columns, :exclude))
         columns_by_name.except!(*excluded_columns)
@@ -76,13 +94,16 @@ module Migrations::Database::Schema
     def added_columns(config, primary_key_column_names)
       columns = config.dig(:columns, :add) || []
       columns.map do |column|
-        datatype = column[:datatype].to_sym
-        Column.new(
+        enum = @enums_by_name[column[:enum]] if column[:enum]
+        datatype = enum ? enum.datatype : column[:datatype].to_sym
+
+        ColumnDefinition.new(
           name: column[:name],
           datatype:,
           nullable: column.fetch(:nullable, true),
           max_length: datatype == :text ? column[:max_length] : nil,
           is_primary_key: primary_key_column_names.include?(column[:name]),
+          enum:,
         )
       end
     end
@@ -91,8 +112,10 @@ module Migrations::Database::Schema
       @global.modified_name(column.name) || column.name
     end
 
-    def datatype_for(column)
-      datatype = @global.modified_datatype(column.name) || column.type
+    def datatype_for(column, modified_column, enum)
+      datatype = enum.datatype if enum
+      datatype ||= modified_column[:datatype]&.to_sym if modified_column
+      datatype ||= @global.modified_datatype(column.name) || column.type
 
       case datatype
       when :binary
@@ -108,8 +131,11 @@ module Migrations::Database::Schema
       end
     end
 
-    def nullable_for(column, config)
-      modified_column = config.dig(:columns, :modify)&.find { |col| col[:name] == column.name }
+    def modified_column_for(column, config)
+      config.dig(:columns, :modify)&.find { |col| col[:name] == column.name }
+    end
+
+    def nullable_for(column, modified_column)
       return modified_column[:nullable] if modified_column&.key?(:nullable)
 
       global_nullable = @global.modified_nullable(column.name)
@@ -120,7 +146,7 @@ module Migrations::Database::Schema
 
     def indexes(config)
       config[:indexes]&.map do |index|
-        Index.new(
+        IndexDefinition.new(
           name: index[:name],
           column_names: Array.wrap(index[:columns]),
           unique: index.fetch(:unique, false),
@@ -131,7 +157,7 @@ module Migrations::Database::Schema
 
     def constraints(config)
       config[:constraints]&.map do |constraint|
-        Constraint.new(
+        ConstraintDefinition.new(
           name: constraint[:name],
           type: constraint.fetch(:type, :check).to_sym,
           condition: constraint[:condition],

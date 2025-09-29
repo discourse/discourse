@@ -4,6 +4,8 @@ output:
   schema_file: "db/intermediate_db_schema/100-base-schema.sql"
   models_directory: "lib/database/intermediate_db"
   models_namespace: Migrations::Database::IntermediateDB
+  enums_directory: nil
+  enums_namespace: nil
 
 schema:
   tables:
