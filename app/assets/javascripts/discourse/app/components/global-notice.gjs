@@ -8,9 +8,9 @@ import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
+import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
-import { currentThemeId } from "discourse/lib/theme-selector";
 
 const _pluginNotices = new DeferredTrackedSet();
 
