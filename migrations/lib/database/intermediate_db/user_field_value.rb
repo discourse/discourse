@@ -20,6 +20,15 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `user_field_values` record in the IntermediateDB.
+    #
+    # @param created_at             [Time, nil]
+    # @param field_id               [Integer, String]
+    # @param is_multiselect_field   [Boolean, nil]
+    # @param user_id                [Integer, String]
+    # @param value                  [String, nil]
+    #
+    # @return [void]
     def self.create(created_at: nil, field_id:, is_multiselect_field: nil, user_id:, value: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

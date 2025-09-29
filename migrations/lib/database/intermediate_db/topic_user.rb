@@ -27,6 +27,22 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `topic_users` record in the IntermediateDB.
+    #
+    # @param topic_id                   [Integer, String]
+    # @param user_id                    [Integer, String]
+    # @param cleared_pinned_at          [Time, nil]
+    # @param first_visited_at           [Time, nil]
+    # @param last_emailed_post_number   [Integer, nil]
+    # @param last_posted_at             [Time, nil]
+    # @param last_read_post_number      [Integer, nil]
+    # @param last_visited_at            [Time, nil]
+    # @param notification_level         [Integer, nil]
+    # @param notifications_changed_at   [Time, nil]
+    # @param notifications_reason_id    [Integer, String, nil]
+    # @param total_msecs_viewed         [Integer, nil]
+    #
+    # @return [void]
     def self.create(
       topic_id:,
       user_id:,
