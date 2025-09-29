@@ -40,8 +40,6 @@ body.composer-resizing {
 }
 
 #reply-control {
-  position: relative;
-
   &.resizable {
     min-width: 320px;
     max-width: 80vw;
