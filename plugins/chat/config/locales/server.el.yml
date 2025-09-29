@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    chat_enabled: "Ενεργοποίηση συνομιλίας."
+    enable_public_channels: "Ενεργοποίηση δημόσιων καναλιών με βάση τις κατηγορίες."
+  system_messages:
+    private_channel_title: "Κανάλι %{id}"
   chat:
     deleted_chat_username: διεγράφη
     errors:
@@ -25,11 +30,31 @@ el:
           other: "%{comma_separated_usernames} και %{count} ακόμη"
     mention_warning:
       dismiss: "απόρριψη"
+      invitations_sent:
+        one: "Η πρόσκληση στάλθηκε"
+        other: "Οι προσκλήσεις στάλθηκαν"
+      invite: "Πρόσκληση στο κανάλι"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
+        is_already_in_use: "είναι ήδη σε χρήση"
+    bookmarkable:
+      notification_title: "μήνυμα στο %{channel_name}"
+    personal_chat: "προσωπική συνομιλία"
     onebox:
+      inline_to_channel: "Συνομιλία #%{chat_channel}"
+      inline_to_topic_channel: "Συνομιλία για το θέμα %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Νήμα στο #%{chat_channel}"
       thread_title_connector: "σε"
       x_members:
         one: "%{count} μέλος"
         other: "%{count} μέλη"
+      and_x_others:
+        one: "και %{count} ακόμη"
+        other: "και %{count} ακόμη"
+    transcript:
+      default_thread_title: "Νήμα"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -42,6 +67,7 @@ el:
   user_notifications:
     chat_summary:
       deleted_user: "Διαγραμμένος χρήστης"
+      from: "%{site_name}"
   unsubscribe:
     chat_summary:
       never: Ποτέ
