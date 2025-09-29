@@ -4,7 +4,7 @@ module DiscourseAi
   module Sentiment
     class SentimentController < ::Admin::StaffController
       include Constants
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       DEFAULT_POSTS_LIMIT = 50
       MAX_POSTS_LIMIT = 100

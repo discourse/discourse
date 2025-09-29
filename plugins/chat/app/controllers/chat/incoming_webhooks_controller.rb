@@ -2,7 +2,7 @@
 
 module Chat
   class IncomingWebhooksController < ::ApplicationController
-    requires_plugin Chat::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 

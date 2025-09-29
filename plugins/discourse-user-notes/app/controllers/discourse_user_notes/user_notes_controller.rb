@@ -2,7 +2,7 @@
 
 module DiscourseUserNotes
   class UserNotesController < ::ApplicationController
-    requires_plugin DiscourseUserNotes::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
     before_action :ensure_logged_in
     before_action :ensure_staff
 

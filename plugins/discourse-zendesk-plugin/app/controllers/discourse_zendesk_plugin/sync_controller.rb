@@ -4,7 +4,7 @@ module DiscourseZendeskPlugin
   class SyncController < ApplicationController
     include DiscourseZendeskPlugin::Helper
 
-    requires_plugin DiscourseZendeskPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     layout false
     before_action :zendesk_token_valid?, only: :webhook

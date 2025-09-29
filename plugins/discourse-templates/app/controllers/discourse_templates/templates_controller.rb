@@ -2,7 +2,7 @@
 
 module DiscourseTemplates
   class TemplatesController < ::ApplicationController
-    requires_plugin DiscourseTemplates::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     before_action :ensure_logged_in
     before_action :ensure_discourse_templates_enabled

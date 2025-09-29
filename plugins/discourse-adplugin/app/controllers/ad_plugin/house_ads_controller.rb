@@ -2,7 +2,7 @@
 
 module ::AdPlugin
   class HouseAdsController < ::ApplicationController
-    requires_plugin AdPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     def index
       render_json_dump(

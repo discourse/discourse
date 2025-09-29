@@ -4,7 +4,7 @@ module DiscourseZendeskPlugin
   class IssuesController < ApplicationController
     include DiscourseZendeskPlugin::Helper
 
-    requires_plugin DiscourseZendeskPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     def create
       topic = Topic.find(params[:topic_id])
