@@ -191,6 +191,13 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE topic_allowed_groups
+(
+    group_id NUMERIC NOT NULL,
+    topic_id NUMERIC NOT NULL,
+    PRIMARY KEY (topic_id, group_id)
+);
+
 CREATE TABLE topic_allowed_users
 (
     topic_id   NUMERIC  NOT NULL,
