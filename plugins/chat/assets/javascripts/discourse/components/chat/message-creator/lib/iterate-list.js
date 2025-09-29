@@ -3,7 +3,7 @@ export function getNext(list, current = null) {
     return null;
   }
 
-  list = list.filterBy("enabled");
+  list = list.filter((item) => item.enabled);
 
   if (current?.identifier) {
     const currentIndex = list.findIndex(
@@ -25,7 +25,7 @@ export function getPrevious(list, current = null) {
     return null;
   }
 
-  list = list.filterBy("enabled");
+  list = list.filter((item) => item.enabled);
 
   if (current?.identifier) {
     const currentIndex = list.findIndex(

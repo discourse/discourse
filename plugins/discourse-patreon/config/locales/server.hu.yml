@@ -5,3 +5,27 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    patreon_enabled: 'Engedélyezze a discourse-patreon bővítményt'
+    patreon_login_enabled: 'Engedélyezze a Patreon közösségi bejelentkezést'
+    patreon_client_id: 'Generált Patreon ügyfél azonosító'
+    patreon_client_secret: 'Generált Patreon ügyfél titkos azonosító'
+    patreon_webhook_secret: 'Patreon webhook titkos kód generálása'
+    patreon_creator_discourse_username: "A Discourse fiók felhasználóneve, amelyet a Patreon alkotói fiókján keresztül a „Patreon Social Login” használatával történő bejelentkezéshez használnak."
+    patreon_creator_access_token: "Patreon alkotói hozzáférési token generálva"
+    patreon_creator_refresh_token: "Patreon alkotói frissített token generálva"
+    patreon_declined_pledges_grace_period_days: "Türelmi időszak (napokban), mielőtt a fogadást teljesen elutasítják."
+    max_patreon_api_reqs_per_hr: "Patreon API-kérések maximális száma óránként"
+    max_patreon_api_reqs_per_day: "Patreon API-kérések maximális száma naponta"
+    patreon_verbose_log: 'Patreon hasznos adat részletes naplózásának engedélyezése'
+    patreon_donation_prompt_enabled: "Engedélyezi az adományozási értesítést?"
+    patreon_donation_prompt_show_after_topics: "Adományozási figyelmeztetés megjelenítése n téma után"
+    patreon_donation_prompt_campaign_url: "Adománygyűjtési kampány URL-címe"
+    errors:
+      patreon_creator_username_not_set: "A Patreon bejelentkezés engedélyezése előtt be kell állítanod a Patreon Creator Discourse felhasználónevet."
+  dashboard:
+    problem:
+      access_token_invalid: "A Patreon-készítő hozzáférési és frissítési tokenértékei helytelenek. Az új tokeneket a <a href='https://www.patreon.com/platform/documentation/clients'>Patreon weboldal</a> oldalról kell beilleszteni a <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>webhelybeállítások</a>oldalra."
+  patreon:
+    error:
+      invalid_response: "Érvénytelen válasz a Patreon API-tól"

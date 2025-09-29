@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    discourse_hCaptcha:
+      missing_token: "Kérlek, töltsd ki a hCaptcha kihívást."
+      placeholder: helyőrző
+      contact_system_administrator: "Probléma merült fel a hCaptcha-val. Ha a probléma továbbra is fennáll, kérjük, vegye fel a kapcsolatot a rendszergazdával."
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_hcaptcha: "Discourse hCaptcha"

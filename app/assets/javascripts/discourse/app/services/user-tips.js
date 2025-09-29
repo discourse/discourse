@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
@@ -24,7 +25,9 @@ export default class UserTips extends Service {
     }
 
     const newId = tipsArray
-      .sortBy("priority")
+      .sort((a, b) => compare(a?.priority, b?.priority))
+      // Reversing the array is necessary because when priorities are not set,
+      // we want to show the most recently added tip first
       .reverse()
       .find((tip) => this.canSeeUserTip(tip.id))?.id;
 
