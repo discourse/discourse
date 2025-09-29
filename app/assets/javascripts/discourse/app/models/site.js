@@ -121,9 +121,8 @@ export default class Site extends RestModel {
       }
 
       deprecated(
-        "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase is deprecated. " +
-          "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
-          "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization " +
+          "can lead to errors and inconsistencies when the browser window is " +
           "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
           " rendering.",
         {
@@ -132,6 +131,10 @@ export default class Site extends RestModel {
           url: "https://meta.discourse.org/t/367810",
         }
       );
+    }
+
+    if (Mobile.mobileForced) {
+      return true;
     }
 
     if (this.siteSettings.viewport_based_mobile_mode) {
