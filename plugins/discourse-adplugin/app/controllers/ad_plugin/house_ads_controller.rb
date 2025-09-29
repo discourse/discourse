@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::AdPlugin
+module AdPlugin
   class HouseAdsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
