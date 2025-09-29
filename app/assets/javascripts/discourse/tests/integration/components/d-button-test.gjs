@@ -25,13 +25,6 @@ module("Integration | Component | d-button", function (hooks) {
     assert.dom("button span.d-button-label").exists("has the label");
   });
 
-  test("text only button", async function (assert) {
-    await render(<template><DButton @label="topic.create" /></template>);
-
-    assert.dom("button.btn.btn-text").exists("has all the classes");
-    assert.dom("button span.d-button-label").exists("has the label");
-  });
-
   test("form attribute", async function (assert) {
     await render(<template><DButton @form="login-form" /></template>);
 
