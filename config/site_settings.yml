@@ -3037,7 +3037,7 @@ developer:
     hidden: true
     client: true
   viewport_based_mobile_mode:
-    default: false
+    default: true
     client: true
 
 navigation:
