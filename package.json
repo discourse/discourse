@@ -14,7 +14,7 @@
     "@glint/environment-ember-template-imports": "^2.0.0-alpha.3",
     "@glint/template": "^1.6.0-alpha.2",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.13.20",
+    "@swc/core": "^1.13.5",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.2.1",
