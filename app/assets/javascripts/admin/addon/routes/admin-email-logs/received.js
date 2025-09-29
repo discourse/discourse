@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
-import AdminEmailIncomings from "admin/routes/admin-email-incomings";
+import AdminEmailLogsRoute from "admin/routes/admin-email-logs";
 
-export default class AdminEmailLogsReceivedRoute extends AdminEmailIncomings {
+export default class AdminEmailLogsReceivedRoute extends AdminEmailLogsRoute {
   status = "received";
 
   titleToken() {

@@ -22,6 +22,10 @@ RSpec.describe "Admin viewing email logs" do
         expect(row).to have_subject(incoming_email.subject)
         expect(row).to have_error(incoming_email.error)
       end
+
+      row = admin_email_logs_page.row_for(rejected_incoming_email)
+
+      expect(row.open_incoming_email).to be_open
     end
   end
 
@@ -39,6 +43,10 @@ RSpec.describe "Admin viewing email logs" do
         expect(row).to have_to_address(incoming_email.to_addresses)
         expect(row).to have_subject(incoming_email.subject)
       end
+
+      row = admin_email_logs_page.row_for(incoming_email)
+
+      expect(row.open_incoming_email).to be_open
     end
   end
 
