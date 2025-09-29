@@ -1537,12 +1537,16 @@ span.mention {
   .d-icon {
     width: 1.25em;
     height: 1.25em;
-    color: var(--primary-medium);
+    color: var(--primary-high);
   }
 
   p {
     display: inline;
     margin: 0;
+  }
+
+  &.custom {
+    background: var(--danger-low);
   }
 
   .custom_created_by {
