@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
@@ -23,21 +24,18 @@ export default class UserStreamComponent extends Component {
   @service composer;
   @service router;
 
-  #bulkSelectHelper = null;
+  bulkSelectHelper = new PostBulkSelectHelper(this);
 
-  get bulkSelectHelper() {
-    if (this.isDraftsRoute) {
-      if (!this.#bulkSelectHelper) {
-        this.#bulkSelectHelper = new PostBulkSelectHelper(
-          this,
-          this.args.stream?.content
-        );
-      } else {
-        this.#bulkSelectHelper.updatePosts(this.args.stream?.content);
-      }
-      return this.#bulkSelectHelper;
+  constructor() {
+    super(...arguments);
+    this.updateBulkSelectPosts();
+  }
+
+  @action
+  updateBulkSelectPosts() {
+    if (this.isDraftsRoute && this.args.stream?.content) {
+      this.bulkSelectHelper.updatePosts(this.args.stream.content);
     }
-    return null;
   }
 
   get isDraftsRoute() {
@@ -46,6 +44,10 @@ export default class UserStreamComponent extends Component {
 
   get bulkSelectEnabled() {
     return this.isDraftsRoute && this.args.stream?.content?.length > 0;
+  }
+
+  get showBulkSelectHelper() {
+    return this.isDraftsRoute ? this.bulkSelectHelper : null;
   }
 
   get bulkActions() {
@@ -147,7 +149,7 @@ export default class UserStreamComponent extends Component {
           });
 
           // Clear the bulk selection after successful deletion
-          this.bulkSelectHelper?.clearAll();
+          this.showBulkSelectHelper?.clearAll();
         } catch (error) {
           popupAjaxError(error);
         }
@@ -191,10 +193,11 @@ export default class UserStreamComponent extends Component {
       @resumeDraft={{this.resumeDraft}}
       @removeDraft={{this.removeDraft}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
+      @bulkSelectHelper={{this.showBulkSelectHelper}}
       @bulkActions={{this.bulkActions}}
       class={{concatClass "user-stream" this.filterClassName}}
       {{on "click" this.handleClick}}
+      {{didUpdate this.updateBulkSelectPosts @stream.content}}
     >
       <:abovePostItemHeader as |post|>
         <PluginOutlet
