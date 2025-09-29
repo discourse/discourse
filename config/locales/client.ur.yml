@@ -6170,6 +6170,7 @@ ur:
             description: "بارے میں صفحہ پر دکھانے کے لیے اضافی گروپس۔"
             groups: "گروپس"
             order: "ترتیب لگائیں"
+            initial_members: "مزید اراکین"
             show_description: "بشمول تفصیل"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
@@ -6201,8 +6202,11 @@ ur:
             topic: "موضوعات"
             post: "پوسٹ`"
             chat_message: "گپ شپ کے پیغامات"
+            create_warning: "ایک بار کوئی کسٹم فلیگ استعمال ہو جائے تو اسے ڈس ایبل یا ایڈٹ تو کیا جا سکتا ہے مگر ڈیلیٹ نہیں کیا جا سکتا۔"
             edit_flag: "نشان دہی میں ترمیم"
             delete_flag: "نشان دہی حذف"
+            require_message_description: "جب یہ فلیگ منتخب کیا جائے، ایک ٹیکسٹ فیلڈ رکن کو مزید تفصیل مہیا کرنے کے لیے دکھائی جائے گی کہ وہ مواد کو فلیگ کیوں کر رہے ہیں۔"
+            auto_action_type: "فلیگڈ مواد کو خودبخود چھپا دیں"
           more_options:
             title: "مزید اختیارات"
             move_up: "اوپر جائیں"
@@ -6272,6 +6276,8 @@ ur:
             move_up: "اوپر جائیں"
             move_down: "نیچے جائیں"
           delete: "مٹائیں"
+          delete_successful: "رکن کی فیلڈ مٹا دی گئی۔"
+          save_successful: "رکن کی فیلڈ محفوظ ہو گئی۔"
         color_palettes:
           palette_name: "نام"
           copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
@@ -6279,8 +6285,12 @@ ur:
           copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
           duplicate: "نقل"
           delete: "مٹائیں"
+          color_options:
+            title: "رنگوں کی اقسام"
           colors:
             title: "رنگ"
+          save_changes: "تبدیلیاں محفوظ کریں"
+          unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -6294,6 +6304,7 @@ ur:
         author: "%{author} کی طرف سے"
         experimental_badge: "تجرباتی"
         learn_more: "مزید جانیں"
+        preinstalled: "پہلے سے انسٹال ہے"
         filters:
           all: "تمام"
           enabled: "فعال شدہ"
@@ -6346,6 +6357,7 @@ ur:
           download:
             label: "ڈاؤن لوڈ"
             title: "ڈاؤن لوڈ رابطہ کے ساتھ ای میل بھیجیں"
+            alert: "اس بیک اپ کو ڈاؤنلوڈ کرنے کے لیے ایک ربط آپ کو ای میل کیا گیا ہے"
           destroy:
             title: "مٹائیں"
             confirm: "کیا آپ واقعی اِس بیک اَپ کو ختم کرنا چاہتے ہیں؟"
@@ -6791,7 +6803,7 @@ ur:
             grant_admin: "منتظم بنائیں"
             revoke_admin: "اَیڈمِن منسوخ کریں"
             grant_moderation: "نگران بنایا"
-            revoke_moderation: "نگرانی منسوخ کریں"
+            revoke_moderation: "نگرانی منسوخ"
             backup_create: "بیک اَپ بنایا"
             deleted_tag: "مٹایا گیا ٹیگ"
             deleted_unused_tags: "حذف کردہ غیر استعمال شدہ ٹیگز"

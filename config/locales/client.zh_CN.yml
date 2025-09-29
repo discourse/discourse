@@ -270,6 +270,9 @@ zh_CN:
         logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
       search: "搜索"
+    impersonation:
+      notice: "您正在模拟 %{username}"
+      stop: "停止模拟"
     themes:
       default_description: "默认"
       broken_theme_alert: "由于主题/组件有错误，您的站点可能无法正常运行。请查看浏览器控制台了解详情。"
