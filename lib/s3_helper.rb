@@ -277,8 +277,7 @@ class S3Helper
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
     if obj.s3_use_iam_profile
-      raise ArgumentError, "Profile required when using IAM profiles" if profile.blank?
-      opts[:profile] = profile
+      opts[:profile] = profile if profile.present?
     else
       # Legacy behavior for self-hosters
       opts[:access_key_id] = obj.s3_access_key_id
