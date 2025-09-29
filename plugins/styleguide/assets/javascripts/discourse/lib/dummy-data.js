@@ -351,7 +351,7 @@ export function createData(store) {
 
     buttonSizes: [
       { class: "btn-large", text: "large" },
-      { class: "btn-default", text: "default" },
+      { class: "", text: "default" },
       { class: "btn-small", text: "small" },
     ],
 
