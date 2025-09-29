@@ -1313,14 +1313,18 @@ class Category < ActiveRecord::Base
   end
 
   def auto_close_hours=(hours)
-    set_or_create_default_timer duration_minutes: hours.to_f.hours.in_minutes,
-                                execute_at: Time.now,
-                                status_type: BaseTimer.types[:close],
-                                user: Discourse.system_user
+    if hours.present?
+      set_or_create_default_timer duration_minutes: hours.to_f.hours.in_minutes,
+                                  execute_at: Time.now,
+                                  status_type: BaseTimer.types[:close],
+                                  user: Discourse.system_user
+    else
+      category_default_timer&.destroy
+    end
   end
 
   def auto_close_based_on_last_post=(based_on_last_post)
-    category_default_timer.update!(based_on_last_post:)
+    category_default_timer&.update!(based_on_last_post:)
   end
 
   private
