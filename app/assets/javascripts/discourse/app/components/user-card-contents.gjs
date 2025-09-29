@@ -159,7 +159,7 @@ export default class UserCardContents extends CardContentsBase {
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("user.user_fields");
       return siteUserFields
-        .filterBy("show_on_user_card", true)
+        .filter((field) => field.show_on_user_card)
         .sort((a, b) => compare(a?.position, b?.position))
         .map((field) => {
           set(field, "dasherized_name", dasherize(field.get("name")));

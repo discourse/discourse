@@ -260,7 +260,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return postActionTypes.filterBy("is_flag", true);
+    return postActionTypes.filter((type) => type.is_flag);
   }
 
   collectUserFields(fields) {
