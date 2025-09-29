@@ -1635,7 +1635,7 @@ export default class TopicController extends Controller {
 
   @dependentKeyCompat
   get canDeleteSelected() {
-    const isStaff = this.currentUser.staff;
+    const isStaff = this.currentUser?.staff;
 
     return (
       this.selectedPostsCount > 0 &&
