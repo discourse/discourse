@@ -10,6 +10,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
+import { currentThemeId } from "discourse/lib/theme-selector";
 
 const _pluginNotices = new DeferredTrackedSet();
 
@@ -119,13 +120,27 @@ export default class GlobalNotice extends Component {
       );
     }
 
-    if (this.router.currentRoute?.queryParams?.preview_theme_id) {
-      notices.push(
-        Notice.create({
-          text: i18n("theme_preview_notice"),
-          id: "theme-preview",
-        })
-      );
+    const previewThemeId =
+      this.router.currentRoute?.queryParams?.preview_theme_id;
+    if (previewThemeId) {
+      if (currentThemeId() === parseInt(previewThemeId, 10)) {
+        notices.push(
+          Notice.create({
+            text: i18n("theme_preview_notice"),
+            id: "theme-preview",
+          })
+        );
+      } else {
+        notices.push(
+          Notice.create({
+            text: i18n("theme_preview_failed"),
+            id: "theme-preview-failed",
+            options: {
+              level: "error",
+            },
+          })
+        );
+      }
     }
 
     if (this.siteSettings.disable_emails === "yes") {

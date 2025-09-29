@@ -5174,6 +5174,7 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
 
