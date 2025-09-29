@@ -74,6 +74,7 @@ hu:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     ember_selector_error: "Sajnáljuk, az #ember vagy az .ember-view CSS-szelektorok használata nem engedélyezett, mert ezek a nevek dinamikusan generálódnak futás közben és idővel változnak, ami végül a CSS meghibásodását eredményezi. Próbálkozzon másik választóval."
+    setting_not_themeable: "A(z) „%{name}” beállítás nem témázható."
     import_error:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
@@ -1566,6 +1567,14 @@ hu:
         anon_views: Névtelen
         total_views: Összes
       description: "A 100 legnézettebb téma egy adott dátumtartományban, a bejelentkezett és az anonim megtekintések kombinálásával. Kategóriák szerint szűrhető."
+    associated_accounts_by_provider:
+      title: "Kapcsolódó fiókok bejelentkezési mód szerint"
+      labels:
+        provider: Belépési szolgáltató
+        no_accounts: "Nincsenek társított fiókok"
+        discourse_connect: "Egyszeri bejelentkezés Discourse Connecten keresztül"
+        no_sso_accounts: "SSO-rekord nélküli fiókok"
+        total_users: "Összes aktív felhasználói fiók"
   dashboard:
     problem:
       twitter_login: 'Úgy tűnik, hogy az X bejelentkezés jelenleg nem működik. Ellenőrizze a hitelesítő adatokat a <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Webhelybeállítások</a>részben.'
