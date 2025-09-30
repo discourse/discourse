@@ -9,7 +9,7 @@ module Jobs
 
         title = I18n.t("system_messages.#{type}.subject_template", params)
         raw = I18n.t("system_messages.#{type}.text_body_template", params)
-        discobot_user = ::DiscourseNarrativeBot::Base.new.discobot_user
+        discobot_user = DiscourseNarrativeBot::Base.new.discobot_user
 
         post =
           PostCreator.create!(

@@ -311,7 +311,7 @@ describe DiscourseDataExplorer::QueryController do
 
         # Manual Test - change out the following line:
         #
-        #  module ::DiscourseDataExplorer
+        #  module DiscourseDataExplorer
         #   def self.run_query(...)
         #     if query.sql =~ /;/
         #

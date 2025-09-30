@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::MonitorEventDates do
+describe Jobs::DiscourseCalendar::MonitorEventDates do
+  subject(:job) { described_class.new }
+
   fab!(:post_1) { Fabricate(:post) }
   fab!(:post_2) { Fabricate(:post) }
   fab!(:post_3) { Fabricate(:post) }
@@ -31,9 +33,7 @@ describe DiscourseCalendar::MonitorEventDates do
 
   describe "#send_reminder" do
     it "lodge reminder jobs in correct times" do
-      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) do
-        described_class.new.execute({})
-      end
+      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
 
       freeze_time(7.days.after - 59.minutes)
       expect_enqueued_with(
@@ -42,7 +42,7 @@ describe DiscourseCalendar::MonitorEventDates do
           event_id: past_event.id,
           reminder: "notification.1.hours",
         },
-      ) { described_class.new.execute({}) }
+      ) { job.execute({}) }
 
       freeze_time(7.days.after - 14.minutes)
       expect_enqueued_with(
@@ -51,7 +51,7 @@ describe DiscourseCalendar::MonitorEventDates do
           event_id: past_event.id,
           reminder: "notification.15.minutes",
         },
-      ) { described_class.new.execute({}) }
+      ) { job.execute({}) }
 
       freeze_time(7.days.after - 9.minutes)
       expect_not_enqueued_with(
@@ -60,26 +60,22 @@ describe DiscourseCalendar::MonitorEventDates do
           event_id: past_event.id,
           reminder: "notification.10.minutes",
         },
-      ) { described_class.new.execute({}) }
+      ) { job.execute({}) }
 
       freeze_time 7.days.after
-      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) do
-        described_class.new.execute({})
-      end
+      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
     end
 
     it "does not lodge reminder jobs when event is deleted" do
       freeze_time(7.days.after - 59.minutes)
       past_event.update!(deleted_at: Time.now)
-      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) do
-        described_class.new.execute({})
-      end
+      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
     end
   end
 
   describe "#trigger_events" do
     it "sends singe event 1 hours before and when due" do
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
       expect(events).not_to include(
         event_name: :discourse_post_event_event_will_start,
         params: [past_event],
@@ -89,10 +85,10 @@ describe DiscourseCalendar::MonitorEventDates do
         params: [past_event],
       )
 
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
 
       freeze_time(7.days.after - 59.minutes)
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
       expect(events).to include(
         event_name: :discourse_post_event_event_will_start,
         params: [past_event],
@@ -103,7 +99,7 @@ describe DiscourseCalendar::MonitorEventDates do
       )
 
       freeze_time(7.days.after)
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
       expect(events).not_to include(
         event_name: :discourse_post_event_event_will_start,
         params: [past_event],
@@ -113,7 +109,7 @@ describe DiscourseCalendar::MonitorEventDates do
         params: [past_event],
       )
 
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
       expect(events).not_to include(
         event_name: :discourse_post_event_event_will_start,
         params: [past_event],
@@ -127,13 +123,13 @@ describe DiscourseCalendar::MonitorEventDates do
 
   describe "#finish" do
     it "finishes past event" do
-      described_class.new.execute({})
+      job.execute({})
       expect(future_date.finished_at).to eq(nil)
       expect(past_date.finished_at).to eq(nil)
 
       freeze_time 8.days.after
 
-      described_class.new.execute({})
+      job.execute({})
       future_date.reload
       expect(future_date.finished_at).to eq(nil)
       expect(past_event.event_dates.pending.count).to eq(0)
@@ -149,7 +145,7 @@ describe DiscourseCalendar::MonitorEventDates do
 
       freeze_time 8.days.after
 
-      events = DiscourseEvent.track_events { described_class.new.execute({}) }
+      events = DiscourseEvent.track_events { job.execute({}) }
       expect(future_date.finished_at).to eq(nil)
 
       expect(past_event.event_dates.pending.count).to eq(1)
@@ -193,10 +189,9 @@ describe DiscourseCalendar::MonitorEventDates do
 
     it "doesn’t list events with invalid reminders" do
       freeze_time(7.days.after - 1.minutes)
-      event_dates_monitor = DiscourseCalendar::MonitorEventDates.new
 
-      expect(event_dates_monitor.due_reminders(invalid_event.event_dates.first)).to be_blank
-      expect(event_dates_monitor.due_reminders(valid_event.event_dates.first).length).to eq(1)
+      expect(job.due_reminders(invalid_event.event_dates.first)).to be_blank
+      expect(job.due_reminders(valid_event.event_dates.first).length).to eq(1)
     end
   end
 end

@@ -2,7 +2,7 @@
 
 module DiscourseAutomation
   class AdminAutomationsController < ::Admin::AdminController
-    requires_plugin DiscourseAutomation::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     def index
       automations =

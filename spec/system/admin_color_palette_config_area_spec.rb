@@ -171,11 +171,9 @@ describe "Admin Color Palette Config Area Page", type: :system do
       visible: false,
     )
 
-    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
-      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-      )
-    end
+    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+    )
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do

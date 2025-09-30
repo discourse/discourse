@@ -25,7 +25,7 @@ after_initialize do
   require_relative "app/serializers/user_note_serializer"
   require_relative "app/controllers/discourse_user_notes/user_notes_controller"
 
-  Discourse::Application.routes.append { mount ::DiscourseUserNotes::Engine, at: "/user_notes" }
+  Discourse::Application.routes.append { mount DiscourseUserNotes::Engine, at: "/user_notes" }
 
   allow_staff_user_custom_field(DiscourseUserNotes::COUNT_FIELD)
 
@@ -49,12 +49,10 @@ after_initialize do
           warning_link: "[#{warning_topic.title}](#{warning_topic.url})",
         )
       end
-    ::DiscourseUserNotes.add_note(
-      user,
-      raw_note,
-      Discourse::SYSTEM_USER_ID,
-      topic_id: self.topic_id,
-    )
+    DiscourseUserNotes.add_note(user, raw_note, Discourse::SYSTEM_USER_ID, topic_id: self.topic_id)
+
+    # Fire event after note is created for other plugins to hook into
+    DiscourseEvent.trigger(:user_warning_created, self)
   end
 
   add_report("user_notes") do |report|

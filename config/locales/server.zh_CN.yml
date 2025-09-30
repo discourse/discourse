@@ -2399,7 +2399,6 @@ zh_CN:
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
-    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
@@ -2496,7 +2495,6 @@ zh_CN:
   filter:
     description:
       status: "按状态筛选话题"
-      in: "在个人列表中筛选话题"
       order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
       category_any: "显示任意指定类别（以逗号分隔）中的话题"
@@ -5210,6 +5208,8 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      post_actions:
+        bundle_title: "您想对这篇帖子做什么？"
       no_action_post:
         title: "无行动"
       delete_post:
@@ -5218,6 +5218,8 @@ zh_CN:
         title: "隐藏帖子"
       restore_post:
         title: "恢复帖子"
+      user_actions:
+        bundle_title: "您想对这位用户做什么？"
       no_action_user:
         title: "无行动"
       silence_user:

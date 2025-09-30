@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::DeleteExpiredEventPosts do
+describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
+  subject(:job) { described_class.new }
+
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true
@@ -25,7 +27,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
         raw: "Summer ☀️ Solstice [date=#{Date.current.year + 1}-06-21]",
       )
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post_with_one_date.id)).to eq(false)
     expect(Post.exists?(post_with_two_dates.id)).to eq(false)
@@ -51,7 +53,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
         description: "Matariki",
       )
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.exists?(matariki.id)).to eq(true)
   end
@@ -60,7 +62,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
     post = create_post(raw: "Discourse 💬 Launch 🚀 on [date=2013-02-05]")
     CalendarEvent.create!(topic: post.topic, post: post, start_date: Date.new(2013, 2, 5))
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post.id)).to eq(true)
   end
@@ -72,7 +74,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
         raw: 'WWW - Weekly Wednesday Watercooler [date=2022-01-05 recurring="1.week"] 🐸',
       )
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post.id)).to eq(true)
   end
@@ -86,7 +88,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
 
     calendar_topic.update!(archived: true)
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post.id)).to eq(true)
   end
@@ -100,7 +102,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
 
     calendar_topic.update!(closed: true)
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post.id)).to eq(true)
   end
@@ -151,7 +153,7 @@ describe DiscourseCalendar::DeleteExpiredEventPosts do
 
     freeze_time Time.parse("2018-10-01 00:00:00 UTC")
 
-    DiscourseCalendar::DeleteExpiredEventPosts.new.execute(nil)
+    job.execute(nil)
 
     expect(Post.exists?(post.id)).to eq(false)
     expect(Post.exists?(reply_without_event.id)).to eq(false)

@@ -13,7 +13,8 @@ hr:
     solved:
       title: "Riješeno"
       allow_accepted_answers: "Dopusti vlasniku teme i osoblju da označi odgovor kao rješenje"
-      accept_answer: "Odaberite ¸ako ovaj odgovor rješava problem"
+      solved_topics_auto_close_hours: "Automatsko zatvaranje teme (n) sati nakon zadnjeg odgovora jednom kad je tema označena kao riješena."
+      accept_answer: "Odaberite rješava li ovaj odgovor problem"
       accepted_description: "Ovo je prihvaćeno rješenje za ovu temu"
       has_no_accepted_answer: "Ova tema nema rješenje"
       unaccept_answer: "Poništite odabir ako ovaj odgovor više ne rješava problem"
@@ -24,6 +25,9 @@ hr:
         all: "sve"
         solved: "riješeno"
       no_solved_topics_title_others: "%{username} još nije riješio/la nijednu temu"
+      no_answer:
+        title: Je li odgovoreno na vaše pitanje?
+        description: "Označite odgovor i pomozite drugima pomoću gumba za rješenje ispod točnog odgovora."
     topic_statuses:
       solved:
         help: "Ova tema ima rješenje"

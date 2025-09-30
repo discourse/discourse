@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Inference
     class GeminiEmbeddings
       def initialize(embedding_url, api_key, dimensions = nil, referer = Discourse.base_url)

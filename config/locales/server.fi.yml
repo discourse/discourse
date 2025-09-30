@@ -2467,7 +2467,6 @@ fi:
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
     rich_editor: "Ota käyttöön kirjoitustilan muotoilueditori, jotta kaikki käyttäjät voivat vaihtaa nykyisen Markdown-tilan ja uuden muotoilutekstieditorin välillä, joka tarjoaa intuitiivisemman ja käyttäjäystävällisemmän kirjoituskokemuksen."
     default_composition_mode: "Aseta yhteisösi kirjoitustilan oletustila. Muotoilutila tarjoaa useimmille käyttäjille modernimman ja tutumman kirjoituskokemuksen, kun taas markdown-tila saattaa sopia teknisemmälle yleisölle. Jäsenet voivat vaihtaa tilojen välillä kirjoitustilan työkalupalkin valitsimella."
-    viewport_based_mobile_mode: "KOKEELLINEN: Poista käyttäjäagenttipohjaiset mobiili- ja työpöytätilat käytöstä ja käytä sen sijaan näyttöikkunan leveyttä."
     reviewable_ui_refresh: "Ryhmät, jotka voivat käyttää kokeellista uutta käyttöliittymää tarkastusjonossa."
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
     content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
@@ -2567,7 +2566,6 @@ fi:
   filter:
     description:
       status: "Suodata ketjuja niiden tilan mukaan"
-      in: "Suodata ketjuja henkilökohtaisten luetteloiden mukaan"
       order: "Järjestä ketjut tietyn kentän mukaan"
       category: "Näytä ketjut tietyssä luokassa"
       category_any: "Näytä ketjut missä tahansa määritetyistä luokista (pilkuilla erotettuna)"

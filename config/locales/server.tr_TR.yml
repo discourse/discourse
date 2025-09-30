@@ -2468,7 +2468,6 @@ tr_TR:
     view_raw_email_allowed_groups: "Gelen bir e-posta tarafından oluşturulmuşsa gönderinin ham e-posta içeriğini görüntüleyebilen gruplar. Buna e-posta başlıkları ve diğer teknik bilgiler dâhildir."
     rich_editor: "Besteci için zengin düzenleyiciyi etkinleştirin, böylece tüm kullanıcılar mevcut Markdown modu ile daha sezgisel ve kullanıcı dostu kompozisyonlar için yeni zengin metin düzenleyicisi arasında geçiş yapabilirler."
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
-    viewport_based_mobile_mode: "DENEYSEL: Kullanıcı temsilcisi tabanlı mobil/masaüstü modlarını devre dışı bırakın ve bunun yerine görünüm genişliğini kullanın."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
     content_localization_enabled: "Kullanıcılara tarayıcı veya kullanıcı dil tercihlerine göre yerelleştirilmiş içerik görüntüler. Bu içerik kategoriler, etiketler, gönderiler ve konular içerebilir. Desteklenen yerel ayarlar, \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde belirtilmiştir."
     content_localization_supported_locales: "Kullanıcı içeriğinin çevrilebileceği desteklenen yerel ayarların listesi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
@@ -2568,7 +2567,6 @@ tr_TR:
   filter:
     description:
       status: "Konuları durumlarına göre filtreleyin"
-      in: "Kişisel listelerdeki konuları filtreleyin"
       order: "Konuları belirli bir alana göre sıralayın"
       category: "Belirli bir kategorideki konuları gösterin"
       category_any: "Belirtilen kategorilerden herhangi birindeki konuları gösterin (virgülle ayrılmış)"

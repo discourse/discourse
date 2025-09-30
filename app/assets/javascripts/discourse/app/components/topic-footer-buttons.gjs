@@ -53,8 +53,10 @@ export default class TopicFooterButtons extends Component {
   get inlineActionables() {
     return (
       this.inlineButtons
-        .filterBy("dropdown", false)
-        .filterBy("anonymousOnly", false)
+        .filter(
+          (button) =>
+            button.dropdown === false && button.anonymousOnly === false
+        )
         .concat(this.inlineDropdowns)
         .sort((a, b) => compare(a?.priority, b?.priority))
         // Reversing the array is necessary because when priorities are not set,

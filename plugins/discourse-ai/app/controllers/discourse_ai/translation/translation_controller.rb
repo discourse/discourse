@@ -3,7 +3,7 @@
 module DiscourseAi
   module Translation
     class TranslationController < ::ApplicationController
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       before_action :ensure_logged_in
       before_action :check_permissions

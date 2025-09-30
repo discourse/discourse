@@ -39,7 +39,7 @@ export function getChannelInfo(name) {
 
 export async function joinChannel(name, user) {
   const channel = getChannelInfo(name);
-  if (!channel.users.any((u) => u.id === user.id)) {
+  if (!channel.users.some((u) => u.id === user.id)) {
     channel.users.push(user);
     channel.count += 1;
     channel.last_message_id += 1;
@@ -56,7 +56,7 @@ export async function joinChannel(name, user) {
 
 export async function leaveChannel(name, user) {
   const channel = getChannelInfo(name);
-  if (channel.users.any((u) => u.id === user.id)) {
+  if (channel.users.some((u) => u.id === user.id)) {
     channel.users = channel.users.filter((u) => u.id !== user.id);
     channel.count -= 1;
     channel.last_message_id += 1;

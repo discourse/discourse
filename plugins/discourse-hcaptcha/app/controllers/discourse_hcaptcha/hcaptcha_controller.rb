@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ::DiscourseHcaptcha
+module DiscourseHcaptcha
   class HcaptchaController < ::ApplicationController
-    requires_plugin DiscourseHcaptcha::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     before_action :ensure_config
     skip_before_action :redirect_to_login_if_required

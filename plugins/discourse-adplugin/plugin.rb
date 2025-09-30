@@ -27,11 +27,11 @@ after_initialize do
   require_relative "app/models/ad_plugin/house_ad"
   require_relative "lib/adplugin/guardian_extensions"
 
-  reloadable_patch { Guardian.prepend ::AdPlugin::GuardianExtensions }
+  reloadable_patch { Guardian.prepend AdPlugin::GuardianExtensions }
 
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
-    mount ::AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
+    mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
   end
 
   add_to_serializer :site, :house_creatives do

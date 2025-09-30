@@ -14,8 +14,7 @@ class ProblemCheck::ChannelErrors < ProblemCheck
 
   def channel_errors?
     DiscourseChatIntegration::Channel.find_each.any? do |channel|
-      channel.error_key.present? &&
-        ::DiscourseChatIntegration::Provider.is_enabled(channel.provider)
+      channel.error_key.present? && DiscourseChatIntegration::Provider.is_enabled(channel.provider)
     end
   end
 end

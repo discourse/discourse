@@ -2,7 +2,7 @@
 
 module DiscourseNarrativeBot
   class CertificatesController < ::ApplicationController
-    requires_plugin DiscourseNarrativeBot::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
     layout false
     skip_before_action :check_xhr
     requires_login

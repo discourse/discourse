@@ -270,6 +270,9 @@ zh_CN:
         logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
       search: "搜索"
+    impersonation:
+      notice: "您正在模拟 %{username}"
+      stop: "停止模拟"
     themes:
       default_description: "默认"
       broken_theme_alert: "由于主题/组件有错误，您的站点可能无法正常运行。请查看浏览器控制台了解详情。"
@@ -571,6 +574,7 @@ zh_CN:
     review:
       show_more: "展开"
       show_less: "收起"
+      back_to_queue: "返回队列"
       order_by: "排序依据"
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
@@ -1579,6 +1583,7 @@ zh_CN:
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
         action: "发送密码重置电子邮件"
+        staged_user: "暂存用户无法接收密码重置电子邮件。"
         set_password: "设置密码"
         choose_new: "选择一个新密码"
         choose: "选择一个密码"
@@ -2600,7 +2605,9 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
+      save_and_close: "保存并关闭"
       discard: "舍弃"
+      draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
@@ -2656,7 +2663,14 @@ zh_CN:
       list_item: "列表条目"
       toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
+      collapse: "最小化编辑器面板"
+      open: "打开编辑器面板"
+      abandon: "关闭编辑器并舍弃草稿"
+      enter_fullscreen: "进入全屏编辑器"
+      exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
+      show_toolbar: "显示编辑器工具栏"
+      hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确定"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       create_message_error: "抱歉，创建该消息时出错。请重试。"
@@ -3567,6 +3581,9 @@ zh_CN:
       title: "最新帖子"
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
+      bulk:
+        clear_all: "全部清除"
+        actions: "批量操作"
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -3637,6 +3654,7 @@ zh_CN:
           edit: "编辑"
           delete: "删除"
         add: "添加新翻译"
+        manage: "管理翻译（现有 %{count}）"
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
@@ -4552,6 +4570,7 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
+    theme_preview_failed: "无法预览主题，因为它不存在，或者您没有访问它的权限。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"

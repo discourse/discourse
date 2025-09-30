@@ -3209,6 +3209,8 @@ da:
     post_list:
       title: "Seneste indlæg"
       aria_post_number: "%{title} - indlæg #%{postNumber}"
+      bulk:
+        clear_all: "Ryd alle"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
