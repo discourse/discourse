@@ -344,6 +344,7 @@ export default class DiscoveryTopics extends Component {
             tag=@tag
             loadingMore=@model.loadingMore
             canLoadMore=@model.canLoadMore
+            loadMore=this.loadMore
           }}
         />
       </span>
