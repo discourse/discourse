@@ -943,7 +943,11 @@ def global_setting(name, value)
 
   GlobalSetting.stubs(name).returns(value)
 
-  before_next_spec { GlobalSetting.reset_s3_cache! }
+  before_next_spec do
+    SiteSetting.hidden_settings_provider.remove_hidden(name)
+    SiteSetting.shadowed_settings.delete(name)
+    GlobalSetting.reset_s3_cache!
+  end
 end
 
 def set_cdn_url(cdn_url)
