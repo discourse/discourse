@@ -3795,6 +3795,9 @@ hu:
       title: "Legújabb bejegyzések"
       empty: "Nincsenek bejegyzések"
       aria_post_number: "%{title} – %{postNumber}. bejegyzés"
+      bulk:
+        clear_all: "Összes törlése"
+        actions: "Csoportos műveletek"
     post:
       confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"

@@ -2340,7 +2340,6 @@ cs:
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"
-      in: "Filtrovat témata v..."
       order: "Seřadit témata podle konkrétního pole"
       category: "Zobrazit témata v konkrétní kategorii"
       category_any: "Zobrazit témata v kterékoli ze zadaných kategorií (oddělené čárkami)"
