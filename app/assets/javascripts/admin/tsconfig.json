@@ -1,0 +1,16 @@
+{
+  "include": [
+    "./addon/**/*",
+  ],
+  "extends": "../../../../jsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "../",
+    "outDir": "./declarations",
+    "types": ["ember-source/types"]
+  },
+  "references": [
+    { "path": "../discourse" }
+  ]
+
+}

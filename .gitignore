@@ -126,4 +126,5 @@ openapi/*
 types/
 
 app/assets/javascripts/discourse/declarations
+app/assets/javascripts/admin/declarations
 *.tsbuildinfo

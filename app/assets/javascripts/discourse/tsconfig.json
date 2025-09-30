@@ -2,6 +2,7 @@
   "include": [
     "./app/**/*"
   ],
+  "exclude": ["./declarations"],
   "extends": "../../../../jsconfig-base.json",
   "compilerOptions": {
     "composite": true,
@@ -9,7 +10,8 @@
     "outDir": "./declarations",
     "types": ["ember-source/types"],
     "paths": {
-      "discourse/*": ["./app/*"]
-    },
+      "discourse/*": ["./app/*"],
+    }
+
   }
 }

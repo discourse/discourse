@@ -2,7 +2,7 @@
 {
   "references": [
     { "path": "app/assets/javascripts/discourse" },
-    // { "path": "app/assets/javascripts/admin" },
+    { "path": "app/assets/javascripts/admin" },
   ],
   "include": [],
   // "include": [
