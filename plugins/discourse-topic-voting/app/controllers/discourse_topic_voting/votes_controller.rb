@@ -2,7 +2,7 @@
 
 module DiscourseTopicVoting
   class VotesController < ::ApplicationController
-    requires_plugin DiscourseTopicVoting::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     before_action :ensure_logged_in
 

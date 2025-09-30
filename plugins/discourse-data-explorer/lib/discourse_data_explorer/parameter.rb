@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class Parameter
     attr_accessor :identifier, :type, :default, :nullable
 

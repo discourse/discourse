@@ -3,7 +3,7 @@
 module DiscourseAi
   module AiBot
     class ArtifactKeyValuesController < ::ApplicationController
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
       before_action :ensure_logged_in, only: %i[set destroy]
       before_action :find_artifact
 

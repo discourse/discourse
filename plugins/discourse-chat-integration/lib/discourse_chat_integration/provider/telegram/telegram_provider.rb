@@ -51,7 +51,7 @@ module DiscourseChatIntegration
       end
 
       def self.message_text(post)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 
@@ -104,11 +104,11 @@ module DiscourseChatIntegration
           elsif response["description"].include? "Forbidden"
             error_key = "chat_integration.provider.telegram.errors.forbidden"
           end
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                message: message,
-                                                                response_body: response,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              message: message,
+                                                              response_body: response,
+                                                            }
         end
       end
 

@@ -2,9 +2,9 @@
 
 module DiscourseZendeskPlugin
   class SyncController < ApplicationController
-    include ::DiscourseZendeskPlugin::Helper
+    include DiscourseZendeskPlugin::Helper
 
-    requires_plugin ::DiscourseZendeskPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     layout false
     before_action :zendesk_token_valid?, only: :webhook
@@ -30,7 +30,7 @@ module DiscourseZendeskPlugin
       if latest_comment.present?
         existing_comment =
           PostCustomField.where(
-            name: ::DiscourseZendeskPlugin::ZENDESK_ID_FIELD,
+            name: DiscourseZendeskPlugin::ZENDESK_ID_FIELD,
             value: latest_comment.id,
           ).first
 

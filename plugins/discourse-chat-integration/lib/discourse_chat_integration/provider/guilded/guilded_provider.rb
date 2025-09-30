@@ -22,7 +22,7 @@ module DiscourseChatIntegration
         response = send_message(webhook_url, message)
 
         if !response.kind_of?(Net::HTTPSuccess)
-          raise ::DiscourseChatIntegration::ProviderError.new(
+          raise DiscourseChatIntegration::ProviderError.new(
                   info: {
                     error_key: nil,
                     message: message,
@@ -45,7 +45,7 @@ module DiscourseChatIntegration
               end
             )
         end
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         icon_url =
           if (url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)).present?
