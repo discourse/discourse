@@ -56,7 +56,7 @@ export default class AdminUserIndexController extends Controller {
     }
 
     return buffer.length === original.length
-      ? buffer.any((id) => !original.includes(id))
+      ? buffer.some((id) => !original.includes(id))
       : true;
   }
 
