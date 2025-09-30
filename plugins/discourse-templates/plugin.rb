@@ -14,7 +14,7 @@ register_asset "stylesheets/discourse-templates.scss"
 register_svg_icon "far-clipboard" if respond_to?(:register_svg_icon)
 
 module ::DiscourseTemplates
-  PLUGIN_NAME = "discourse-templates".freeze
+  PLUGIN_NAME = "discourse-templates"
 end
 
 require_relative "lib/discourse_templates/engine"

@@ -14,7 +14,7 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
   validate :provider_valid?, :data_valid?
 
   def self.key_prefix
-    "channel:".freeze
+    "channel:"
   end
 
   def rules

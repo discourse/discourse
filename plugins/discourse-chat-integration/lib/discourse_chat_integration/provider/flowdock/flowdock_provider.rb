@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module DiscourseChatIntegration::Provider::FlowdockProvider
-  PROVIDER_NAME = "flowdock".freeze
+  PROVIDER_NAME = "flowdock"
   PROVIDER_ENABLED_SETTING = :chat_integration_flowdock_enabled
-  CHANNEL_IDENTIFIER_KEY = "flow_token".freeze # this is really weird but is the only way to identify a channel in this provider
+  CHANNEL_IDENTIFIER_KEY = "flow_token" # this is really weird but is the only way to identify a channel in this provider
   CHANNEL_PARAMETERS = [{ key: "flow_token", regex: '^\S+', unique: true, hidden: true }]
 
   def self.send_message(url, message)

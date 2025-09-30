@@ -7,8 +7,8 @@ module Patreon
   end
 
   class Api
-    ACCESS_TOKEN_INVALID = "dashboard.patreon.access_token_invalid".freeze
-    INVALID_RESPONSE = "patreon.error.invalid_response".freeze
+    ACCESS_TOKEN_INVALID = "dashboard.patreon.access_token_invalid"
+    INVALID_RESPONSE = "patreon.error.invalid_response"
 
     def self.campaign_data
       get(
