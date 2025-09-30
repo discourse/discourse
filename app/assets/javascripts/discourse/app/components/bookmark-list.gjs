@@ -24,6 +24,7 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -314,7 +315,9 @@ export default class BookmarkList extends Component {
                         {{/if}}
                         {{#if bookmark.name}}
                           <span class="bookmark-metadata-item">
-                            {{icon "circle-info"}}<span>{{bookmark.name}}</span>
+                            {{icon "circle-info"}}<span>{{replaceEmoji
+                                bookmark.name
+                              }}</span>
                           </span>
                         {{/if}}
                       </div>
