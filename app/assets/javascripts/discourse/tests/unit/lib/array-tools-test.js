@@ -2,7 +2,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import { removeObject } from "discourse/lib/array-tools";
 
-module("Unit | array-tools", function () {
+module("Unit | Lib | array-tools", function () {
   module("removeObject()", function () {
     test("removes all occurrences of a primitive value from a plain array", function (assert) {
       const input = [1, 2, 3, 2, 4, 2, 5];
